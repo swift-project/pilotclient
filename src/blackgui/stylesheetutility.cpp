@@ -27,6 +27,7 @@
 #include <QTextStream>
 #include <QWidget>
 #include <QtGlobal>
+#include <QStringBuilder>
 
 using namespace BlackConfig;
 using namespace BlackMisc;
@@ -143,6 +144,8 @@ namespace BlackGui
 
         QMap<QString, QString> newStyleSheets;
         const QFileInfoList fileInfoList = directory.entryInfoList();
+
+        // here we generate the style sheets
         for (const QFileInfo &fileInfo : fileInfoList)
         {
             const QString absolutePath = fileInfo.absoluteFilePath();
@@ -153,6 +156,13 @@ namespace BlackGui
                 QTextStream in(&file);
                 const QString c = removeComments(in.readAll(), true, true);
                 const QString f = fileInfo.fileName().toLower();
+
+                // save files for debugging
+                if (CBuildConfig::isLocalDeveloperDebugBuild())
+                {
+                    const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), f);
+                    CFileUtils::writeStringToFile(c, fn);
+                }
 
                 // keep even empty files as placeholders
                 newStyleSheets.insert(f, c); // set an empty string here to disable all stylesheet
@@ -199,10 +209,12 @@ namespace BlackGui
             {
                 s = m_styleSheets[key];
             }
-            if (s.isEmpty()) continue;
-            if (!style.isEmpty()) style.append("\n\n");
-            style.append("/** file: ").append(fileName).append(" **/\n");
-            style.append(s);
+            if (s.isEmpty()) { continue; }
+
+            style +=
+                (style.isEmpty() ? QString() : "\n\n") %
+                u"/** file: " % fileName % " **/\n" %
+                s;
         }
         return style;
     }
@@ -476,15 +488,15 @@ namespace BlackGui
         QString specific;
         if (CBuildConfig::isRunningOnWindowsNtPlatform())
         {
-            specific = fn + ".win" + qss;
+            specific = fn % u".win" % qss;
         }
         else if (CBuildConfig::isRunningOnMacOSPlatform())
         {
-            specific = fn + ".mac" + qss;
+            specific = fn % u".mac" % qss;
         }
         else if (CBuildConfig::isRunningOnLinuxPlatform())
         {
-            specific = fn + ".linux" + qss;
+            specific = fn % u".linux" % qss;
         }
         return qssFileExists(specific) ? specific : fn + qss;
     }
