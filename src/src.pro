@@ -3,8 +3,12 @@ load(common_pre)
 TEMPLATE = subdirs
 CONFIG += ordered
 
+CONFIG -= declarative_debug
+CONFIG -= qml_debug
+
 SUBDIRS += blackconfig
 SUBDIRS += blackmisc
+
 swiftConfig(libs.blacksound) {
     SUBDIRS += blacksound
 }
