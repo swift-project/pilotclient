@@ -527,12 +527,21 @@ namespace BlackMisc
 
     bool CDirectoryUtils::isSubDirectoryOf(const QString &dir1, const QString &dir2)
     {
-        QDir d1(dir1);
+        if (dir1.isEmpty() || dir2.isEmpty()) { return false; }
         const QDir d2(dir2);
+        return CDirectoryUtils::isSubDirectoryOf(dir1, d2);
+    }
+
+    bool CDirectoryUtils::isSubDirectoryOf(const QString &dir1, const QDir &dir2)
+    {
+        QDir d1(dir1);
         do
         {
-            if (d1 == d2) { return true; }
-        } while (d1.cdUp());
+            if (d1 == dir2) { return true; }
+        }
+        while (d1.cdUp());
+
+        // not found
         return false;
     }
 
