@@ -547,38 +547,55 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::loadCslPackages()
         {
-            struct Prefix { QString s; };
+            // An ad-hoc type for keeping track of packages as they are discovered.
+            // A model is a member of a package if the model path starts with the package path.
+            // A trailing separator is appended only for checking if a model path starts with this path.
+            struct Prefix
+            {
+                Prefix(const QString &p) : s(p + '/') {}
+                operator QString() const { return s.chopped(1); }
+                bool isPrefixOf(const QString &o) const { return o.startsWith(s); }
+                QString s;
+            };
+
+            // Heterogeneous comparison so a package can be found by binary search
+            // (e.g. std::lower_bound) using a model path as the search key.
             struct PrefixComparator
             {
                 bool operator()(const Prefix &a, const QString &b) const { return QStringRef(&a.s) < b.leftRef(a.s.size()); }
                 bool operator()(const QString &a, const Prefix &b) const { return a.leftRef(b.s.size()) < QStringRef(&b.s); }
             };
+
+            // The list of packages discovered so far.
             QList<Prefix> packages;
 
             Q_ASSERT(isConnected());
             const CAircraftModelList models = this->getModelSet();
+
+            // Find the CSL packages for all models in the list
             for (const auto &model : models)
             {
                 const QString &modelFile = model.getFileName();
                 if (modelFile.isEmpty() || ! QFile::exists(modelFile)) { continue; }
+
+                // Check if this model's package was already found
                 auto it = std::lower_bound(packages.begin(), packages.end(), modelFile, PrefixComparator());
-                if (it != packages.end() && modelFile.startsWith(it->s)) { continue; }
+                if (it != packages.end() && it->isPrefixOf(modelFile)) { continue; }
+
+                // This model's package was not already found, so find it and add it to the list
                 QString package = findCslPackage(modelFile);
                 if (package.isEmpty()) { continue; }
-                packages.insert(it, { package.append('/') });
+                packages.insert(it, package);
             }
 
             // comment KB 2019-06
             // a package is one xsb_aircraft.txt file BB has 9, X-CSL has 76
-            // the reason for the append("/")/chop "/" is explained here: https://discordapp.com/channels/539048679160676382/539925070550794240/594891288751505418
             const QDir simDir = getSimulatorSettings().getSimulatorDirectoryOrDefault();
-            for (auto &package : packages)
+            for (const Prefix &package : as_const(packages))
             {
-                Q_ASSERT(package.s.endsWith('/'));
-                package.s.chop(1);
-                if (CDirectoryUtils::isSameOrSubDirectoryOf(package.s, simDir))
+                if (CDirectoryUtils::isSameOrSubDirectoryOf(package, simDir))
                 {
-                    m_trafficProxy->loadPlanesPackage(package.s);
+                    m_trafficProxy->loadPlanesPackage(package);
                 }
                 else
                 {
