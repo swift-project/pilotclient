@@ -171,8 +171,8 @@ namespace BlackGui
         //! Check existance of qss file
         static bool qssFileExists(const QString &filename);
 
-        QMap<QString, QString> m_styleSheets;         //!< filename, stylesheet
-        QFileSystemWatcher     m_fileWatcher {this};  //!< Monitor my qss files
+        QMap<QString, QString> m_styleSheets;           //!< filename, stylesheet
+        QFileSystemWatcher     m_fileWatcher { this };  //!< monitor my qss files
     };
 }
 #endif // guard
