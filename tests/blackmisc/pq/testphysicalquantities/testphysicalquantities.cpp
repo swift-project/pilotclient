@@ -241,6 +241,11 @@ namespace BlackMiscTest
         QVERIFY2(CMathUtils::epsilonEqual(t6.value(), 1.0101), "Switching the unit produced a wrong a value");
         t7.parseFromString("27:30:55");
         QVERIFY2(t7.formattedHrsMinSec() == "27:30:55", "Parsed time greater than 24h failed");
+
+        CTime t8(7680, CTimeUnit::s());
+        t8.switchUnit(CTimeUnit::hrmin());
+        qDebug() << t8.valueRoundedWithUnit();
+        QVERIFY2(t8.valueRoundedWithUnit() == "02h08.0m", "valueRoundedWithUnit in hrmin correctly formatted");
     }
 
     void CTestPhysicalQuantities::accelerationTests()

@@ -51,9 +51,9 @@ namespace BlackMisc
                 double de = CMathUtils::trunc(value);
                 double mi = CMathUtils::trunc((value - de) * 100.0);
                 double se = CMathUtils::trunc((value - de - mi / 100.0) * 1000000) / 100.0;
-                const char *fmt = value < 0 ? "-%L1 %L2 %L3" : "%L1 %L2 %L3";
+                const char *fmt = value < 0 ? "-%1 %2 %3" : "%1 %2 %3";
                 s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
-                s = s.arg(fabs(de), 0, 'f', 0).arg(fabs(mi), 2, 'f', 0, '0').arg(fabs(se), 2, 'f', digits, '0');
+                s = s.arg(fabs(de), 0, 'f', 0).arg(fabs(mi), 2, 'f', 0, '0').arg(fabs(se), 3 + digits, 'f', digits, '0');
             }
             else if ((*this) == CAngleUnit::sexagesimalDegMin())
             {
@@ -61,9 +61,9 @@ namespace BlackMisc
                 Q_ASSERT(digits >= 0);
                 double de = CMathUtils::trunc(value);
                 double mi = CMathUtils::trunc((value - de) * 100.0);
-                const char *fmt = value < 0 ? "-%L1 %L2" : "%L1 %L2";
+                const char *fmt = value < 0 ? "-%1 %2" : "%1 %2";
                 s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
-                s = s.arg(fabs(de), 0, 'f', 0).arg(fabs(mi), 2, 'f', digits, '0');
+                s = s.arg(fabs(de), 0, 'f', 0).arg(fabs(mi), 3 + digits, 'f', digits, '0');
             }
             else
             {
@@ -83,9 +83,9 @@ namespace BlackMisc
                 double hr = CMathUtils::trunc(value);
                 double mi = CMathUtils::trunc((value - hr) * 100.0);
                 double se = CMathUtils::trunc((value - hr - mi / 100.0) * 1000000) / 100.0;
-                const char *fmt = value < 0 ? "-%L1h%L2m%L3s" : "%L1h%L2m%L3s";
+                const char *fmt = value < 0 ? "-%1h%2m%3s" : "%1h%2m%3s";
                 s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
-                s = s.arg(fabs(hr), 2, 'f', 0, '0').arg(fabs(mi), 2, 'f', 0, '0').arg(fabs(se), 2, 'f', digits, '0');
+                s = s.arg(fabs(hr), 2, 'f', 0, '0').arg(fabs(mi), 2, 'f', 0, '0').arg(fabs(se), 3 + digits, 'f', digits, '0');
             }
             else if ((*this) == CTimeUnit::hrmin())
             {
@@ -93,9 +93,9 @@ namespace BlackMisc
                 Q_ASSERT(digits >= 0);
                 double hr = CMathUtils::trunc(value);
                 double mi = CMathUtils::trunc((value - hr) * 100.0);
-                const char *fmt = value < 0 ? "-%L1h%L2m" : "%L1h%L2m";
+                const char *fmt = value < 0 ? "-%1h%2m" : "%1h%2m";
                 s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
-                s = s.arg(fabs(hr), 2, 'f', 0, '0').arg(fabs(mi), 2, 'f', digits, '0');
+                s = s.arg(fabs(hr), 2, 'f', 0, '0').arg(fabs(mi), 3 + digits, 'f', digits, '0');
             }
             else if ((*this) == CTimeUnit::minsec())
             {
@@ -103,9 +103,9 @@ namespace BlackMisc
                 Q_ASSERT(digits >= 0);
                 double mi = CMathUtils::trunc(value);
                 double se = CMathUtils::trunc((value - mi) * 100.0);
-                const char *fmt = value < 0 ? "-%L2m%L3s" : "%L2m%L3s";
+                const char *fmt = value < 0 ? "-%2m%3s" : "%2m%3s";
                 s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
-                s = s.arg(fabs(mi), 2, 'f', 0, '0').arg(fabs(se), 2, 'f', digits, '0');
+                s = s.arg(fabs(mi), 2, 'f', 0, '0').arg(fabs(se), 3 + digits, 'f', digits, '0');
             }
             else
             {
