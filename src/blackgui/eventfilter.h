@@ -23,9 +23,19 @@ namespace BlackGui
     public:
         using QObject::QObject;
 
+        //! Not allowed characters
+        void setIllegalCharacters(const QString &illegal) { m_illegalChars = illegal; }
+
+        //! Allow only ASCII
+        void setOnlyAscii() { m_onlyAscii = true; }
+
     protected:
         //! Filter
         bool eventFilter(QObject *object, QEvent *event);
+
+    private:
+        QString m_illegalChars;
+        bool m_onlyAscii = false;
     };
 } // namespace
 

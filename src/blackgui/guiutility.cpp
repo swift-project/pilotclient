@@ -245,6 +245,36 @@ namespace BlackGui
         return false;
     }
 
+    bool CGuiUtility::setComboBoxValueByContainingString(QComboBox *box, const QString &candidate, const QString &unspecified)
+    {
+        if (!box) { return false; }
+        if (!candidate.isEmpty())
+        {
+            for (int i = 0; i < box->count(); i++)
+            {
+                const QString t(box->itemText(i));
+                if (t.contains(candidate, Qt::CaseInsensitive))
+                {
+                    box->setCurrentIndex(i);
+                    return true;
+                }
+            }
+        }
+
+        // not found
+        if (unspecified.isEmpty()) { return false; }
+        for (int i = 0; i < box->count(); i++)
+        {
+            const QString t(box->itemText(i));
+            if (t.contains(unspecified, Qt::CaseInsensitive))
+            {
+                box->setCurrentIndex(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
     bool CGuiUtility::hasSwiftVariantMimeType(const QMimeData *mime)
     {
         return mime && mime->hasFormat(swiftJsonDragAndDropMimeType());

@@ -224,6 +224,9 @@ namespace BlackGui
             //! Update the remarks histories
             void updateRemarksHistories();
 
+            //! Set remark values
+            void setRemarksUIValues(const QString &remarks);
+
             //! Load from SimBrief
             void loadFromSimBrief();
 

@@ -45,6 +45,14 @@ namespace BlackMisc
             if (parse) { this->parseFlightPlanRemarks(); }
         }
 
+        bool CFlightPlanRemarks::setSelcalCode(const QString &selcal)
+        {
+            if (m_selcalCode == selcal || selcal.length() != 4) { return false; }
+            const QString r = CFlightPlanRemarks::replaceRemark(m_remarks, QStringLiteral("SEL/"), QStringLiteral("SEL/%1").arg(selcal));
+            m_remarks = r;
+            return true;
+        }
+
         void CFlightPlanRemarks::setVoiceCapabilities(const CVoiceCapabilities &capabilities)
         {
             m_voiceCapabilities = capabilities;
@@ -67,9 +75,9 @@ namespace BlackMisc
             const QString s =
                 (m_registration.isEmpty() ? QString() : u"reg.: " % m_registration.toQString(i18n))
                 % (!this->hasValidAirlineIcao() ? QString() : u" airline: " % m_airlineIcao.getDesignator())
-                % (m_radioTelephony.isEmpty() ?  QString() : u" radio tel.:" % m_radioTelephony)
-                % (m_flightOperator.isEmpty() ? QString() : u" operator: " % m_flightOperator)
-                % (!m_selcalCode.isValid() ? QString() : u" SELCAL: " % m_selcalCode.getCode())
+                % (m_radioTelephony.isEmpty()   ? QString() : u" radio tel.:" % m_radioTelephony)
+                % (m_flightOperator.isEmpty()   ? QString() : u" operator: "  % m_flightOperator)
+                % (!m_selcalCode.isValid()      ? QString() : u" SELCAL: " % m_selcalCode.getCode())
                 % u" voice: " % m_voiceCapabilities.toQString(i18n);
             return s.simplified().trimmed();
         }
@@ -111,13 +119,13 @@ namespace BlackMisc
             m_isParsed = true;
             if (m_remarks.isEmpty()) { return; }
             const QString remarks = m_remarks.toUpper();
-            const QString callsign = CCallsign::unifyCallsign(this->cut(remarks, "REG/")); // registration is a callsign
+            const QString callsign = CCallsign::unifyCallsign(this->getRemark(remarks, "REG/")); // registration is a callsign
             if (CCallsign::isValidAircraftCallsign(callsign)) { m_registration = CCallsign(callsign, CCallsign::Aircraft); }
             m_voiceCapabilities = m_voiceCapabilities.isUnknown() ? CVoiceCapabilities(m_remarks) : m_voiceCapabilities;
-            m_flightOperator = this->cut(remarks, "OPR/"); // operator, e.g. British airways, sometimes people use ICAO code here
-            m_selcalCode = CSelcal(this->cut(remarks, "SEL/"));
-            m_radioTelephony = cut(remarks, "CALLSIGN/"); // used similar to radio telephony
-            if (m_radioTelephony.isEmpty()) { m_radioTelephony = cut(remarks, "RT/"); }
+            m_flightOperator = this->getRemark(remarks, "OPR/"); // operator, e.g. British airways, sometimes people use ICAO code here
+            m_selcalCode = CSelcal(this->getRemark(remarks, "SEL/"));
+            m_radioTelephony = getRemark(remarks, "CALLSIGN/"); // used similar to radio telephony
+            if (m_radioTelephony.isEmpty()) { m_radioTelephony = getRemark(remarks, "RT/"); }
             if (!m_flightOperator.isEmpty() && CAirlineIcaoCode::isValidAirlineDesignator(m_flightOperator))
             {
                 // if people use ICAO code as flight operator swap with airline ICAO
@@ -151,7 +159,7 @@ namespace BlackMisc
             this->parseFlightPlanRemarks(true);
         }
 
-        QString CFlightPlanRemarks::cut(const QString &remarks, const QString &marker)
+        QString CFlightPlanRemarks::getRemark(const QString &remarks, const QString &marker)
         {
             const int maxIndex = remarks.size() - 1;
             int f = remarks.indexOf(marker);
@@ -168,10 +176,30 @@ namespace BlackMisc
             int to1 = remarks.indexOf(nextMarker, f + 1); // for case 2,3
             if (to1 < 0) { to1 = maxIndex + 1; }
             int to2 = remarks.indexOf('/', f + 1); // for case 1
-            if (to2 < 0) { to2 = maxIndex + 1; } // no more end markes, ends after last character
+            if (to2 < 0) { to2 = maxIndex + 1; }   // no more end markers, ends after last character
             const int to = qMin(to1, to2);
             const QString cut = remarks.mid(f, to - f).simplified();
             return cut;
+        }
+
+        QString CFlightPlanRemarks::replaceRemark(const QString &remarks, const QString &marker, const QString &newRemark)
+        {
+            QString r(remarks);
+            const int maxIndex = remarks.size() - 1;
+            int f = remarks.indexOf(marker);
+            if (f >= 0)
+            {
+                f += marker.length();
+                if (maxIndex <= f) { return remarks; }
+                thread_local const QRegularExpression nextMarker("\\s+\\w*/|$");
+                int to1 = remarks.indexOf(nextMarker, f + 1); // for case 2,3
+                if (to1 < 0) { to1 = maxIndex + 1; }
+                int to2 = remarks.indexOf('/', f + 1); // for case 1
+                if (to2 < 0) { to2 = maxIndex + 1; }   // no more end markers, ends after last character
+                const int to = qMin(to1, to2);
+                r.remove(f, to - f);
+            }
+            return r.isEmpty() ? newRemark : r % u" " % newRemark;
         }
 
         const CLogCategoryList &CFlightPlan::getLogCategories()
@@ -538,11 +566,24 @@ namespace BlackMisc
                 const int b = equipment.indexOf('-');
                 const int e = equipment.indexOf('/');
 
+                CFlightPlanRemarks r = fp.getFlightPlanRemarks();
+                bool remarksChanged = false;
                 if (e > b && e >= 0 && b >= 0 && equipment.size() > e)
                 {
-                    CFlightPlanRemarks r = fp.getFlightPlanRemarks();
                     const QString icao = equipment.mid(b + 1, e - b - 1);
                     r.setIcaoEquipmentCodes(icao);
+                    remarksChanged = true;
+                }
+
+                const QString selcal = aircraft.firstChildElement("selcal").text();
+                if (selcal.length() == 4)
+                {
+                    const bool c = r.setSelcalCode(selcal);
+                    remarksChanged = c || remarksChanged;
+                }
+
+                if (remarksChanged)
+                {
                     fp.setFlightPlanRemarks(r);
                 }
             }

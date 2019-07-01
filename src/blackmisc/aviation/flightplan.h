@@ -72,6 +72,9 @@ namespace BlackMisc
             //! SELCAL code
             const CSelcal &getSelcalCode() const { return m_selcalCode; }
 
+            //! SELCAL code
+            bool setSelcalCode(const QString &selcal);
+
             //! Get registration (a callsign, but normally not the flight callsign)
             const CCallsign &getRegistration() const { return m_registration; }
 
@@ -141,7 +144,10 @@ namespace BlackMisc
             );
 
             //! Cut the remarks part
-            static QString cut(const QString &remarks, const QString &marker);
+            static QString getRemark(const QString &remarks, const QString &marker);
+
+            //! Replace a remark part
+            static QString replaceRemark(const QString &remarks, const QString &marker, const QString &newRemark);
         };
 
         //! Value object for a flight plan
