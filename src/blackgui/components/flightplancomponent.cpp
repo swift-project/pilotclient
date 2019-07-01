@@ -108,21 +108,25 @@ namespace BlackGui
             ui->le_EquipmentSuffix->setCompleter(completer);
 
             CUpperCaseEventFilter *ef = new CUpperCaseEventFilter(ui->pte_Route);
+            ef->setOnlyAscii();
             ui->pte_Route->installEventFilter(ef);
             ef = new CUpperCaseEventFilter(ui->pte_Remarks);
+            ef->setOnlyAscii();
             ui->pte_Remarks->installEventFilter(ef);
             ef = new CUpperCaseEventFilter(ui->pte_AdditionalRemarks);
+            ef->setOnlyAscii();
             ui->pte_AdditionalRemarks->installEventFilter(ef);
-            ef = new CUpperCaseEventFilter(ui->pte_RemarksGenerated);
-            ui->pte_RemarksGenerated->installEventFilter(ef);
+            // readonly
+            // ef = new CUpperCaseEventFilter(ui->pte_RemarksGenerated);
+            // ui->pte_RemarksGenerated->installEventFilter(ef);
 
             // connect
-            connect(ui->pb_Send, &QPushButton::pressed,  this, &CFlightPlanComponent::sendFlightPlan, Qt::QueuedConnection);
-            connect(ui->pb_Load, &QPushButton::pressed,  this, &CFlightPlanComponent::loadFlightPlanFromNetwork, Qt::QueuedConnection);
+            connect(ui->pb_Send,  &QPushButton::pressed, this, &CFlightPlanComponent::sendFlightPlan, Qt::QueuedConnection);
+            connect(ui->pb_Load,  &QPushButton::pressed, this, &CFlightPlanComponent::loadFlightPlanFromNetwork, Qt::QueuedConnection);
             connect(ui->pb_Reset, &QPushButton::pressed, this, &CFlightPlanComponent::resetFlightPlan, Qt::QueuedConnection);
             connect(ui->pb_ValidateFlightPlan, &QPushButton::pressed, this, &CFlightPlanComponent::validateFlightPlan, Qt::QueuedConnection);
             connect(ui->tb_SyncWithSimulator, &QPushButton::released, this, &CFlightPlanComponent::syncWithSimulator,  Qt::QueuedConnection);
-            connect(ui->pb_Prefill, &QPushButton::pressed, this, &CFlightPlanComponent::anticipateValues,  Qt::QueuedConnection);
+            connect(ui->pb_Prefill,  &QPushButton::pressed, this, &CFlightPlanComponent::anticipateValues,  Qt::QueuedConnection);
             connect(ui->pb_SimBrief, &QPushButton::pressed, this, &CFlightPlanComponent::loadFromSimBrief, Qt::QueuedConnection);
 
             connect(ui->cb_VoiceCapabilities, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
@@ -267,6 +271,10 @@ namespace BlackGui
                 this->showOverlayMessage(m);
             }
 
+            if (!flightPlan.getRemarks().isEmpty())
+            {
+                this->setRemarksUIValues(flightPlan.getRemarks());
+            }
         }
 
         const CLogCategoryList &CFlightPlanComponent::getLogCategories()
@@ -931,6 +939,47 @@ namespace BlackGui
             }
         }
 
+        void CFlightPlanComponent::setRemarksUIValues(const QString &remarks)
+        {
+            if (remarks.isEmpty()) { return; }
+            const QString r = remarks.toUpper();
+
+            if (remarks.contains("/V"))
+            {
+                CGuiUtility::setComboBoxValueByContainingString(ui->cb_VoiceCapabilitiesFirstPage, "FULL");
+                CGuiUtility::setComboBoxValueByContainingString(ui->cb_VoiceCapabilities, "FULL");
+            }
+            else if (remarks.contains("/T"))
+            {
+                CGuiUtility::setComboBoxValueByContainingString(ui->cb_VoiceCapabilitiesFirstPage, "TEXT ONLY");
+                CGuiUtility::setComboBoxValueByContainingString(ui->cb_VoiceCapabilities, "FULL");
+            }
+            else if (remarks.contains("/R"))
+            {
+                CGuiUtility::setComboBoxValueByContainingString(ui->cb_VoiceCapabilitiesFirstPage, "RECEIVE");
+                CGuiUtility::setComboBoxValueByContainingString(ui->cb_VoiceCapabilities, "RECEIVE");
+            }
+
+            if (remarks.contains("NAV/GPSRNAV"))
+            {
+                CGuiUtility::setComboBoxValueByContainingString(ui->cb_NavigationEquipment, "GPS OR FMC");
+            }
+            else if (remarks.contains("NAV/VORNDB"))
+            {
+                CGuiUtility::setComboBoxValueByContainingString(ui->cb_NavigationEquipment, "DIRECT VOR");
+            }
+
+            const int selcal = remarks.indexOf("SEL/");
+            if (selcal >= 0 && remarks.length() > selcal + 7)
+            {
+                const QString code = remarks.mid(selcal + 4, 4);
+                if (code.length() == 4)
+                {
+                    ui->frp_SelcalCode->setSelcal(code);
+                }
+            }
+        }
+
         void CFlightPlanComponent::loadFromSimBrief()
         {
             if (!sGui || sGui->isShuttingDown()) { return; }
@@ -1059,7 +1108,10 @@ namespace BlackGui
             {
                 ui->cb_VoiceCapabilities->setCurrentText(text);
                 const QString r = CFlightPlanRemarks::replaceVoiceCapabilities(CFlightPlanRemarks::textToVoiceCapabilitiesRemarks(text), ui->pte_Remarks->toPlainText());
-                ui->pte_Remarks->setPlainText(r);
+                if (ui->pte_Remarks->toPlainText() != r)
+                {
+                    ui->pte_Remarks->setPlainText(r);
+                }
             }
         }
     } // namespace

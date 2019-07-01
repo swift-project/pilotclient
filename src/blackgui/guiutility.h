@@ -100,6 +100,9 @@ namespace BlackGui
         //! Find best match in comboBox
         static bool setComboBoxValueByStartingString(QComboBox *box, const QString &candidate, const QString &unspecified = QString());
 
+        //! Find best match in comboBox
+        static bool setComboBoxValueByContainingString(QComboBox *box, const QString &candidate, const QString &unspecified = QString());
+
         //! Mime data with swift type
         static bool hasSwiftVariantMimeType(const QMimeData *mime);
 
