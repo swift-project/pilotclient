@@ -39,7 +39,8 @@ builders['Build swift Linux'] = {
                     """
                 }
 
-                recordIssues tool: gcc4(id: 'gcc', name: 'GCC', reportEncoding: 'UTF-8'), sourceCodeEncoding: 'UTF-8', unstableTotalAll: 0
+                recordIssues tool: gcc4(id: 'gcc', name: 'GCC', reportEncoding: 'UTF-8'), sourceCodeEncoding: 'UTF-8',
+                    qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
 
                 xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()],
                     tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml',
@@ -53,7 +54,8 @@ builders['Build swift Linux'] = {
                 sh 'cppcheck --xml --xml-version=2 --inline-suppr --std=c++14 -ibuild --enable=style,unusedFunction -i externals ' +
                         '--suppressions-list=cppcheck.supp --library=qt.cfg --library=posix.cfg . 2> cppcheck.xml'
 
-                recordIssues tool: cppCheck(reportEncoding: 'UTF-8', pattern: 'cppcheck.xml'), sourceCodeEncoding: 'UTF-8', unstableTotalAll: 0
+                recordIssues tool: cppCheck(reportEncoding: 'UTF-8', pattern: 'cppcheck.xml'), sourceCodeEncoding: 'UTF-8',
+                    qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
             }
 
             stage('Linux Archive') {
@@ -94,7 +96,8 @@ builders['Build swift MacOS'] = {
                     """
                 }
 
-                recordIssues tool: clang(id: 'clang', name: 'Clang', reportEncoding: 'UTF-8'), sourceCodeEncoding: 'UTF-8', unstableTotalAll: 0
+                recordIssues tool: clang(id: 'clang', name: 'Clang', reportEncoding: 'UTF-8'), sourceCodeEncoding: 'UTF-8',
+                    qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
 
                 xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()],
                     tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml',
@@ -138,7 +141,8 @@ builders['Build swift Win32'] = {
                     python -u scripts/jenkins.py -w 32 -t msvc -d -e ${getEolInMonth()} ${shouldUploadSymbols()} -q SWIFT_CONFIG_JSON+=vatsim.json
                 """
 
-                recordIssues tool: msBuild(id: 'msvc32', name: 'MSVC 32', reportEncoding: 'UTF-8'), sourceCodeEncoding: 'UTF-8', unstableTotalAll: 0
+                recordIssues tool: msBuild(id: 'msvc32', name: 'MSVC 32', reportEncoding: 'UTF-8'), sourceCodeEncoding: 'UTF-8',
+                    qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
 
                 xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()],
                     tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml',
@@ -185,7 +189,8 @@ builders['Build swift Win64'] = {
                     python -u scripts/jenkins.py -w 64 -t msvc -d -e ${getEolInMonth()} ${shouldUploadSymbols()} -q SWIFT_CONFIG_JSON+=vatsim.json
                 """
 
-                recordIssues tool: msBuild(id: 'msvc64', name: 'MSVC 64', reportEncoding: 'UTF-8'), sourceCodeEncoding: 'UTF-8', unstableTotalAll: 0
+                recordIssues tool: msBuild(id: 'msvc64', name: 'MSVC 64', reportEncoding: 'UTF-8'), sourceCodeEncoding: 'UTF-8',
+                    qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
 
                 xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()],
                     tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml',
