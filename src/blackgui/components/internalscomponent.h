@@ -81,6 +81,12 @@ namespace BlackGui
             //! Checkbox toggled
             void onCrashDumpUploadToggled(bool checked);
 
+            //! Show network statistics
+            void networkStatistics();
+
+            //! Enable/disable statistics
+            void onNetworkStatisticsToggled(bool checked);
+
             QScopedPointer<Ui::CInternalsComponent> ui;
         };
     } // namespace

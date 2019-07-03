@@ -72,11 +72,11 @@ namespace BlackGui
             connect(ui->pb_SendAircraftPartsJson, &QPushButton::released, this, &CInternalsComponent::sendAircraftParts);
             connect(ui->pb_CurrentParts, &QPushButton::released, this, &CInternalsComponent::setCurrentParts);
 
-            connect(ui->cb_DebugContextAudio, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
+            connect(ui->cb_DebugContextAudio,       &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
             connect(ui->cb_DebugContextApplication, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
-            connect(ui->cb_DebugContextNetwork, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
+            connect(ui->cb_DebugContextNetwork,     &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
             connect(ui->cb_DebugContextOwnAircraft, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
-            connect(ui->cb_DebugContextSimulator, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
+            connect(ui->cb_DebugContextSimulator,   &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
 
             connect(ui->pb_SendTextMessageDirectly, &QPushButton::released, this, &CInternalsComponent::sendTextMessage, Qt::QueuedConnection);
             connect(ui->pb_SendTextMessageDeferred, &QPushButton::released, this, &CInternalsComponent::sendTextMessage, Qt::QueuedConnection);
@@ -85,10 +85,14 @@ namespace BlackGui
             connect(ui->le_StatusMessage, &QLineEdit::returnPressed, this, &CInternalsComponent::logStatusMessage);
 
             connect(ui->pb_LatestInterpolationLog, &QPushButton::released, this, &CInternalsComponent::showLogFiles);
-            connect(ui->pb_LatestPartsLog, &QPushButton::released, this, &CInternalsComponent::showLogFiles);
-            connect(ui->pb_RequestFromNetwork, &QPushButton::released, this, &CInternalsComponent::requestPartsFromNetwork);
-            connect(ui->pb_DisplayLog, &QPushButton::released, this, &CInternalsComponent::displayLogInSimulator);
-            connect(ui->pb_SendAtis, &QPushButton::released, this, &CInternalsComponent::sendAtis);
+            connect(ui->pb_LatestPartsLog,         &QPushButton::released, this, &CInternalsComponent::showLogFiles);
+            connect(ui->pb_RequestFromNetwork,     &QPushButton::released, this, &CInternalsComponent::requestPartsFromNetwork);
+            connect(ui->pb_DisplayLog,             &QPushButton::released, this, &CInternalsComponent::displayLogInSimulator);
+            connect(ui->pb_SendAtis,               &QPushButton::released, this, &CInternalsComponent::sendAtis);
+
+            connect(ui->pb_NetworkUpdateAndReset,  &QPushButton::released, this, &CInternalsComponent::networkStatistics);
+            connect(ui->pb_NetworkUpdate,          &QPushButton::released, this, &CInternalsComponent::networkStatistics);
+            connect(ui->cb_NetworkStatistics,    &QCheckBox::stateChanged, this, &CInternalsComponent::onNetworkStatisticsToggled);
 
             connect(ui->comp_RemoteAircraftSelector, &CRemoteAircraftSelector::changedCallsign, this, &CInternalsComponent::selectorChanged);
 
@@ -353,6 +357,21 @@ namespace BlackGui
                 if (current == checked) { return; }
                 sGui->enableCrashDumpUpload(checked);
             }
+        }
+
+        void CInternalsComponent::networkStatistics()
+        {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork()) { return; }
+            const bool reset = (QObject::sender() == ui->pb_NetworkUpdateAndReset);
+            const QString statistics = sGui->getIContextNetwork()->getNetworkStatistics(reset, "\n");
+            ui->pte_NetworkCalls->setPlainText(statistics);
+        }
+
+        void CInternalsComponent::onNetworkStatisticsToggled(bool checked)
+        {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork()) { return; }
+            const bool on = sGui->getIContextNetwork()->setNetworkStatisticsEnable(checked);
+            CLogMessage(this).info(u"Network statistics is %1") << boolToOnOff(on);
         }
     } // namespace
 } // namespace
