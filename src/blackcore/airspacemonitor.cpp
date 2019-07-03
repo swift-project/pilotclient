@@ -111,8 +111,8 @@ namespace BlackCore
         connect(m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, this, &CAirspaceMonitor::airspaceAircraftSnapshot, Qt::QueuedConnection);
 
         // Analyzer
-        connect(m_analyzer, &CAirspaceAnalyzer::timeoutAircraft, this, &CAirspaceMonitor::onPilotDisconnected, Qt::QueuedConnection);
-        connect(m_analyzer, &CAirspaceAnalyzer::timeoutAtc, this, &CAirspaceMonitor::onAtcControllerDisconnected, Qt::QueuedConnection);
+        connect(m_analyzer, &CAirspaceAnalyzer::timeoutAircraft, this, &CAirspaceMonitor::onPilotDisconnected,         Qt::QueuedConnection);
+        connect(m_analyzer, &CAirspaceAnalyzer::timeoutAtc,      this, &CAirspaceMonitor::onAtcControllerDisconnected, Qt::QueuedConnection);
     }
 
     bool CAirspaceMonitor::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositonUpdates)
@@ -725,7 +725,8 @@ namespace BlackCore
         const ReverseLookupLogging reverseLookupEnabled = this->isReverseLookupMessagesEnabled();
         CStatusMessageList reverseLookupMessages;
         CStatusMessageList *pReverseLookupMessages = reverseLookupEnabled.testFlag(RevLogEnabled) ? &reverseLookupMessages : nullptr;
-        CMatchingUtils::addLogDetailsToList(pReverseLookupMessages, callsign, QString("Data from network: aircraft '%1', airline '%2', livery '%3'").
+        CMatchingUtils::addLogDetailsToList(pReverseLookupMessages, callsign,
+                                            QStringLiteral("Data from network: aircraft '%1', airline '%2', livery '%3'").
                                             arg(aircraftIcaoDesignator, airlineIcaoDesignator, livery),
                                             CAirspaceMonitor::getLogCategories());
 
@@ -1112,9 +1113,11 @@ namespace BlackCore
     void CAirspaceMonitor::onAircraftConfigReceived(const CCallsign &callsign, const QJsonObject &jsonObject, qint64 currentOffsetMs)
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
-        this->storeAircraftParts(callsign, jsonObject, currentOffsetMs);
         BLACK_AUDIT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
         if (callsign.isEmpty()) { return; }
+
+        // store parts
+        this->storeAircraftParts(callsign, jsonObject, currentOffsetMs);
 
         // update client capability
         CClient client = this->getClientOrDefaultForCallsign(callsign);
