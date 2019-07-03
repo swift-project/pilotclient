@@ -46,7 +46,7 @@ class QCommandLineOption;
 
 namespace BlackMisc
 {
-    namespace Aviation { class CFlightPlan; }
+    namespace Aviation   { class CFlightPlan; }
     namespace Simulation { class CSimulatedAircraft; }
 }
 
@@ -308,7 +308,7 @@ namespace BlackCore
 
             BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TRawFsdMessageSetting> m_fsdMessageSetting { this, &CNetworkVatlib::fsdMessageSettingsChanged };
             QFile m_rawFsdMessageLogFile;
-            bool m_rawFsdMessagesEnabled = false;
+            bool m_rawFsdMessagesEnabled   = false;
             bool m_filterPasswordFromLogin = false;
         };
     } //namespace

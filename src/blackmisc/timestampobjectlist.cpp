@@ -420,8 +420,8 @@ namespace BlackMisc
                 const ITimestampBased &l = last;
                 const ITimestampBased &o = object;
                 const qint64 diff = l.getAbsTimeDifferenceMs(o);
-                if (diff > mmm.max) { mmm.max  = diff; }
-                if (diff < mmm.min) { mmm.min = diff;  }
+                if (diff > mmm.max) { mmm.max = diff; }
+                if (diff < mmm.min) { mmm.min = diff; }
                 mean += diff;
             }
             c++;
