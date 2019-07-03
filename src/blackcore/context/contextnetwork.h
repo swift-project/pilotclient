@@ -323,6 +323,12 @@ namespace BlackCore
             //! Version of the underlying library (e.g. VATLIB)
             virtual QString getLibraryInfo(bool detailed) const = 0;
 
+            //! Statistics info
+            virtual QString getNetworkStatistics(bool reset, const QString &separator) = 0;
+
+            //! Statistics enable/disable
+            virtual bool setNetworkStatisticsEnable(bool enabled) = 0;
+
             // ------------------------ testing ------------------------
 
             //! Create dummy ATC stations for performance tests etc.

@@ -192,6 +192,8 @@ namespace BlackCore
             virtual int aircraftPartsAdded() const override;
             virtual qint64 situationsLastModified(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual qint64 partsLastModified(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual QString getNetworkStatistics(bool reset, const QString &separator) override;
+            virtual bool setNetworkStatisticsEnable(bool enabled) override;
             virtual bool testAddAltitudeOffset(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &offset = BlackMisc::PhysicalQuantities::CLength::null()) override;
             //! @}
 

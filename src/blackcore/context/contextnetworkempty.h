@@ -470,6 +470,23 @@ namespace BlackCore
                 Q_UNUSED(enabled);
             }
 
+            //! \copydoc IContextNetwork::getNetworkStatistics
+            virtual QString getNetworkStatistics(bool reset, const QString &separator) override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                Q_UNUSED(reset);
+                Q_UNUSED(separator);
+                return {};
+            }
+
+            //! \copydoc IContextNetwork::setNetworkStatisticsEnable
+            virtual bool setNetworkStatisticsEnable(bool enabled) override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                Q_UNUSED(enabled;);
+                return false;
+            }
+
         public:
             //! \copydoc IContextNetwork::connectRawFsdMessageSignal
             virtual QMetaObject::Connection connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot) override

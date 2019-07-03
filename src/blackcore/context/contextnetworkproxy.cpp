@@ -308,6 +308,16 @@ namespace BlackCore
             m_dBusInterface->callDBus(QLatin1String("enableAircraftPartsHistory"), enabled);
         }
 
+        QString CContextNetworkProxy::getNetworkStatistics(bool reset, const QString &separator)
+        {
+            return m_dBusInterface->callDBusRet<QString>(QLatin1String("getNetworkStatistics"), reset, separator);
+        }
+
+        bool CContextNetworkProxy::setNetworkStatisticsEnable(bool enabled)
+        {
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("setNetworkStatisticsEnable"), enabled);
+        }
+
         void CContextNetworkProxy::testCreateDummyOnlineAtcStations(int number)
         {
             m_dBusInterface->callDBus(QLatin1String("testCreateDummyOnlineAtcStations"), number);

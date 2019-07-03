@@ -807,6 +807,20 @@ namespace BlackCore
             return m_airspace->partsLastModified(callsign);
         }
 
+        QString CContextNetwork::getNetworkStatistics(bool reset, const QString &separator)
+        {
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (!m_network) { return QString(); }
+            return m_network->getNetworkStatisticsAsText(reset, separator);
+        }
+
+        bool CContextNetwork::setNetworkStatisticsEnable(bool enabled)
+        {
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (!m_network) { return false; }
+            return m_network->setStatisticsEnable(enabled);
+        }
+
         bool CContextNetwork::testAddAltitudeOffset(const CCallsign &callsign, const CLength &offset)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
