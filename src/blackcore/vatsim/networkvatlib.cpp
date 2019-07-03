@@ -206,6 +206,9 @@ namespace BlackCore
                     pos.rating = vatAtcRatingObserver;
                     pos.frequency = 199998;
                     Vat_SendATCUpdate(m_net.data(), &pos);
+
+                    // statistics
+                    this->increaseStatisticsValue(QStringLiteral("Vat_SendATCUpdate"));
                 }
                 else
                 {
@@ -230,6 +233,9 @@ namespace BlackCore
                     default: pos.transponderMode = vatTransponderModeStandby; break;
                     }
                     Vat_SendPilotUpdate(m_net.data(), &pos);
+
+                    // statistics
+                    this->increaseStatisticsValue(QStringLiteral("Vat_SendPilotUpdate"));
                 }
             }
         }
@@ -254,6 +260,9 @@ namespace BlackCore
                     for (const auto &receiver : as_const(m_interimPositionReceivers))
                     {
                         Vat_SendInterimPilotUpdate(m_net.data(), toFSD(receiver), &pos);
+
+                        // statistics
+                        this->increaseStatisticsValue(QStringLiteral("Vat_SendInterimPilotUpdate"));
                     }
                 }
             }
@@ -505,6 +514,9 @@ namespace BlackCore
                                     toFSDnoColon(m_server.getUser().getId()),
                                     toFSDnoColon(m_server.getUser().getPassword()),
                                     &info);
+
+                // statistics
+                this->increaseStatisticsValue(QStringLiteral("Vat_SpecifyATCLogon"));
             }
             else
             {
@@ -519,10 +531,16 @@ namespace BlackCore
                                       toFSDnoColon(m_server.getUser().getId()),
                                       toFSDnoColon(m_server.getUser().getPassword()),
                                       &info);
+
+                // statistics
+                this->increaseStatisticsValue(QStringLiteral("Vat_SpecifyPilotLogon"));
             }
 
             Vat_Logon(m_net.data());
             this->startPositionTimers();
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_Logon"));
         }
 
         void CNetworkVatlib::terminateConnection()
@@ -533,6 +551,9 @@ namespace BlackCore
                 // Process all pending tasks before logging off
                 process();
                 Vat_Logoff(m_net.data());
+
+                // statistics
+                this->increaseStatisticsValue(QStringLiteral("Vat_Logoff"));
             }
             this->clearState();
         }
@@ -549,6 +570,9 @@ namespace BlackCore
                 if (message.getRecipientCallsign().isEmpty()) { continue; }
                 Vat_SendTextMessage(m_net.data(), toFSD(message.getRecipientCallsign()), toFSD(message.getMessage()));
                 emit this->textMessageSent(message);
+
+                // statistics
+                this->increaseStatisticsValue(QStringLiteral("Vat_SendTextMessage"));
             }
 
             CTextMessageList radioMessages = messages.getRadioMessages();
@@ -569,6 +593,9 @@ namespace BlackCore
                 freqsVec.push_back(freqkHz);
                 Vat_SendRadioMessage(m_net.data(), freqsVec.data(), static_cast<unsigned int>(freqsVec.size()), toFSDnoColon(message.getMessage()));
                 emit this->textMessageSent(message);
+
+                // statistics
+                this->increaseStatisticsValue(QStringLiteral("Vat_SendRadioMessage"));
             }
         }
 
@@ -578,30 +605,45 @@ namespace BlackCore
             BLACK_VERIFY_X(this->isConnected(), Q_FUNC_INFO, "Sending wallop, but not connected");
             if (!this->isConnected()) { return; }
             Vat_SendWallop(m_net.data(), toFSDnoColon(simplifyTextMessage(message)));
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendWallop"));
         }
 
         void CNetworkVatlib::sendCustomPacket(const CCallsign &callsign, const QString &packetId, const QStringList &data)
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
             Vat_SendCustomPilotPacket(m_net.data(), toFSD(callsign), toFSD(packetId), toFSD(data)(), data.size());
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendCustomPilotPacket"));
         }
 
         void CNetworkVatlib::sendIpQuery()
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
             Vat_SendClientQuery(m_net.data(), vatClientQueryIP, nullptr);
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"));
         }
 
         void CNetworkVatlib::sendFrequencyQuery(const CCallsign &callsign)
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
             Vat_SendClientQuery(m_net.data(), vatClientQueryFreq, toFSD(callsign));
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"));
         }
 
         void CNetworkVatlib::sendUserInfoQuery(const CCallsign &callsign)
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
             Vat_SendClientQuery(m_net.data(), vatClientQueryInfo, toFSD(callsign));
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"));
         }
 
         void CNetworkVatlib::setInterimPositionReceivers(const CCallsignSet &receivers)
@@ -631,12 +673,18 @@ namespace BlackCore
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
             Vat_SendClientQuery(m_net.data(), vatClientQueryServer, toFSD(callsign));
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"));
         }
 
         void CNetworkVatlib::sendAtcQuery(const CCallsign &callsign)
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
             Vat_SendClientQuery(m_net.data(), vatClientQueryAtc, toFSD(callsign));
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"));
         }
 
         void CNetworkVatlib::sendAtisQuery(const CCallsign &callsign)
@@ -647,6 +695,9 @@ namespace BlackCore
                 m_pendingAtisQueries.insert(callsign, {});
             }
             Vat_SendClientQuery(m_net.data(), vatClientQueryAtis, toFSD(callsign));
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"));
         }
 
         void CNetworkVatlib::sendFlightPlan(const CFlightPlan &flightPlan)
@@ -695,36 +746,54 @@ namespace BlackCore
             case CFlightPlan::DVFR: vatlibFP.flightType = vatFlightTypeDVFR; break;
             }
             Vat_SendFlightPlan(m_net.data(), &vatlibFP);
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendFlightPlan"));
         }
 
         void CNetworkVatlib::sendFlightPlanQuery(const CCallsign &callsign)
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
             Vat_SendClientQuery(m_net.data(), vatClientQueryFP, toFSD(callsign));
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"));
         }
 
         void CNetworkVatlib::sendRealNameQuery(const CCallsign &callsign)
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
             Vat_SendClientQuery(m_net.data(), vatClientQueryName, toFSD(callsign));
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"));
         }
 
         void CNetworkVatlib::sendCapabilitiesQuery(const CCallsign &callsign)
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
             Vat_SendClientQuery(m_net.data(), vatClientQueryCaps, toFSD(callsign));
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"));
         }
 
         void CNetworkVatlib::replyToFrequencyQuery(const CCallsign &callsign) // private
         {
             QStringList response { QString::number(getOwnAircraft().getCom1System().getFrequencyActive().value(CFrequencyUnit::MHz()), 'f', 3)};
             Vat_SendClientQueryResponse(m_net.data(), vatClientQueryFreq, toFSD(callsign), toFSD(response)(), response.size());
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQueryResponse"));
         }
 
         void CNetworkVatlib::replyToNameQuery(const CCallsign &callsign) // private
         {
             QStringList response { removeColon(m_server.getUser().getRealNameAndHomeBase()), "" };
             Vat_SendClientQueryResponse(m_net.data(), vatClientQueryName, toFSD(callsign), toFSD(response)(), response.size());
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQueryResponse"));
         }
 
         void CNetworkVatlib::replyToConfigQuery(const CCallsign &callsign)
@@ -734,12 +803,18 @@ namespace BlackCore
             QString data = QJsonDocument(QJsonObject { { "config", config } }).toJson(QJsonDocument::Compact);
             data = convertToUnicodeEscaped(data);
             Vat_SendAircraftConfig(m_net.data(), toFSD(callsign), toFSD(data));
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendAircraftConfig"));
         }
 
         void CNetworkVatlib::sendIcaoCodesQuery(const CCallsign &callsign)
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
             Vat_RequestAircraftInfo(m_net.data(), toFSD(callsign));
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_RequestAircraftInfo"));
         }
 
         void CNetworkVatlib::sendAircraftInfo(const CCallsign &callsign) // private
@@ -751,6 +826,9 @@ namespace BlackCore
 
             VatAircraftInfo aircraftInfo {acTypeICAObytes, airlineICAObytes, liverybytes};
             Vat_SendAircraftInfo(m_net.data(), toFSD(callsign), &aircraftInfo);
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendAircraftInfo"));
         }
 
         void CNetworkVatlib::sendIncrementalAircraftConfig()
@@ -783,12 +861,18 @@ namespace BlackCore
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
             Vat_SendPing(m_net.data(), toFSD(callsign));
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendPing"));
         }
 
         void CNetworkVatlib::sendMetarQuery(const CAirportIcaoCode &airportIcao)
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
             Vat_RequestMetar(m_net.data(), toFSD(airportIcao.asString()));
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_RequestMetar"));
         }
 
         const QList<QCommandLineOption> &CNetworkVatlib::getCmdLineOptions()
@@ -858,6 +942,9 @@ namespace BlackCore
             const QString dataStr = convertToUnicodeEscaped(QJsonDocument(QJsonObject { { "config", config } }).toJson(QJsonDocument::Compact));
             const QByteArray data(toFSD(dataStr));
             Vat_SendAircraftConfigBroadcast(m_net.data(), data);
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendAircraftConfigBroadcast"));
         }
 
         void CNetworkVatlib::sendAircraftConfigQuery(const CCallsign &callsign)
@@ -865,6 +952,9 @@ namespace BlackCore
             static const QString dataStr { QJsonDocument(JsonPackets::aircraftConfigRequest()).toJson(QJsonDocument::Compact) };
             static const QByteArray data(toFSD(dataStr));
             Vat_SendAircraftConfig(m_net.data(), toFSD(callsign), data);
+
+            // statistics
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendAircraftConfig"));
         }
 
         /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
@@ -885,6 +975,10 @@ namespace BlackCore
         void CNetworkVatlib::onTextMessageReceived(VatFsdClient *, const char *from, const char *to, const char *msg, void *cbvar)
         {
             auto *self = cbvar_cast(cbvar);
+
+            // statistics
+            self->increaseStatisticsValue(__func__);
+
             const CCallsign sender(self->fromFSD(from));
             const CCallsign receiver(self->fromFSD(to));
             const QString message(self->fromFSD(msg));
@@ -909,6 +1003,10 @@ namespace BlackCore
         void CNetworkVatlib::onRadioMessageReceived(VatFsdClient *, const char *from, unsigned int numFreq, int *freqList, const char *msg, void *cbvar)
         {
             auto *self = cbvar_cast(cbvar);
+
+            // statistics
+            self->increaseStatisticsValue(__func__);
+
             const CFrequency com1 = self->getOwnAircraft().getCom1System().getFrequencyActive();
             const CFrequency com2 = self->getOwnAircraft().getCom2System().getFrequencyActive();
             QList<CFrequency> frequencies;
@@ -944,6 +1042,9 @@ namespace BlackCore
         void CNetworkVatlib::onPilotPositionUpdate(VatFsdClient *, const char *callsignChar, const VatPilotPosition *position, void *cbvar)
         {
             auto *self = cbvar_cast(cbvar);
+
+            // statistics
+            self->increaseStatisticsValue(__func__);
 
             const CCallsign callsign(callsignChar, CCallsign::Aircraft);
             CAircraftSituation situation(
@@ -992,6 +1093,10 @@ namespace BlackCore
         void CNetworkVatlib::onAircraftConfigReceived(VatFsdClient *, const char *callsignChar, const char *aircraftConfig, void *cbvar)
         {
             auto *self = cbvar_cast(cbvar);
+            const CCallsign callsign(self->fromFSD(callsignChar), CCallsign::Aircraft);
+
+            // statistics
+            self->increaseStatisticsValue(__func__);
 
             QJsonParseError parserError;
             const QByteArray json = self->fromFSD(aircraftConfig).toUtf8();
@@ -1003,7 +1108,6 @@ namespace BlackCore
                 return; // we cannot parse the packet, so we give up here
             }
 
-            const CCallsign callsign(self->fromFSD(callsignChar), CCallsign::Aircraft);
             const QJsonObject packet = doc.object();
             if (packet == JsonPackets::aircraftConfigRequest())
             {
@@ -1023,6 +1127,9 @@ namespace BlackCore
         {
             CNetworkVatlib *self = cbvar_cast(cbvar);
             if (!self->isInterimPositionReceivingEnabledForServer()) { return; }
+
+            // statistics
+            self->increaseStatisticsValue(__func__);
 
             CAircraftSituation situation(
                 CCallsign(self->fromFSD(sender), CCallsign::Aircraft),
@@ -1044,20 +1151,25 @@ namespace BlackCore
 
         void CNetworkVatlib::onAtcPositionUpdate(VatFsdClient *, const char *callsign, const VatAtcPosition *pos, void *cbvar)
         {
+            CNetworkVatlib *self = cbvar_cast(cbvar);
+
+            // statistics
+            self->increaseStatisticsValue(__func__);
+
             const int frequencyKHz = pos->frequency;
             CFrequency freq(frequencyKHz, CFrequencyUnit::kHz());
             freq.switchUnit(CFrequencyUnit::MHz()); // we would not need to bother, but this makes it easier to identify
             CLength range(pos->visibleRange, CLengthUnit::NM());
-            QString cs = cbvar_cast(cbvar)->fromFSD(callsign);
+            const QString cs = cbvar_cast(cbvar)->fromFSD(callsign);
 
             // Filter non-ATC like OBS stations, like pilots logging in as shared cockpit co-pilots.
             if (pos->facility == vatFacilityTypeUnknown && !cs.endsWith("_OBS")) { return; }
 
             // ATIS often have a range of 0 nm. Correct this to a proper value.
             if (cs.contains("_ATIS") && pos->visibleRange == 0) { range.setValueSameUnit(150.0); }
-            CCoordinateGeodetic position(pos->latitude, pos->longitude, 0);
+            const CCoordinateGeodetic position(pos->latitude, pos->longitude, 0);
 
-            emit cbvar_cast(cbvar)->atcPositionUpdate(CCallsign(cs, CCallsign::Atc), freq, position, range);
+            emit self->atcPositionUpdate(CCallsign(cs, CCallsign::Atc), freq, position, range);
         }
 
         void CNetworkVatlib::onKicked(VatFsdClient *, const char *reason, void *cbvar)
@@ -1072,7 +1184,10 @@ namespace BlackCore
 
         void CNetworkVatlib::onCustomPacketReceived(VatFsdClient *, const char *callsign, const char *packetId, const char **data, int dataSize, void *cbvar)
         {
-            cbvar_cast(cbvar)->customPacketDispatcher(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(packetId), cbvar_cast(cbvar)->fromFSD(data, dataSize));
+            // statistics en detail handled in customPacketDispatcher
+            CNetworkVatlib *self = cbvar_cast(cbvar);
+            self->increaseStatisticsValue(__func__);
+            self->customPacketDispatcher(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(packetId), cbvar_cast(cbvar)->fromFSD(data, dataSize));
         }
 
         void CNetworkVatlib::onRawFsdMessage(VatFsdClient *, const char *message, void *cbvar)
@@ -1092,7 +1207,10 @@ namespace BlackCore
                 {
                     // It doesn't matter whether it was a query or response. The information
                     // is the same for both.
-                    emit customFSInnPacketReceived(callsign, data[1], data[2], data[7], data[8]);
+                    emit this->customFSInnPacketReceived(callsign, data[1], data[2], data[7], data[8]);
+
+                    // statistics
+                    this->increaseStatisticsValue(__func__, packetId);
                 }
             }
             else if (packetId.compare("FSIPIR", Qt::CaseInsensitive) == 0)
@@ -1103,22 +1221,34 @@ namespace BlackCore
                 }
                 else
                 {
-                    sendCustomFsinnReponse(callsign);
+                    this->sendCustomFsinnReponse(callsign);
                     // It doesn't matter whether it was a query or response. The information
                     // is the same for both.
-                    emit customFSInnPacketReceived(callsign, data[1], data[2], data[7], data[8]);
+                    emit this->customFSInnPacketReceived(callsign, data[1], data[2], data[7], data[8]);
+
+                    // statistics
+                    this->increaseStatisticsValue(__func__, packetId);
                 }
             }
             else if (packetId.compare("FSIP2PR", Qt::CaseInsensitive) == 0)
             {
                 // FSInn peer2peer protocol - ignore, not supported
+
+                // statistics
+                this->increaseStatisticsValue(__func__, packetId);
             }
             else if (packetId.compare("FSIP2P", Qt::CaseInsensitive) == 0)
             {
                 // FSInn peer2peer protocol - ignore, not supported
+
+                // statistics
+                this->increaseStatisticsValue(__func__, packetId);
             }
             else
             {
+                // statistics
+                this->increaseStatisticsValue(__func__, packetId);
+
                 CLogMessage(this).warning(u"Unknown custom packet from %1 - id: %2") << callsign.toQString() << packetId;
             }
         }
@@ -1166,23 +1296,23 @@ namespace BlackCore
             if (setting.getFileWriteMode() == CRawFsdMessageSettings::None || setting.getFileDir().isEmpty()) { return; }
             if (setting.getFileWriteMode() == CRawFsdMessageSettings::Truncate)
             {
-                QString filePath = CFileUtils::appendFilePaths(setting.getFileDir(), "rawfsdmessages.log");
+                const QString filePath = CFileUtils::appendFilePaths(setting.getFileDir(), "rawfsdmessages.log");
                 m_rawFsdMessageLogFile.setFileName(filePath);
                 m_rawFsdMessageLogFile.open(QIODevice::Text | QIODevice::WriteOnly);
             }
             else if (setting.getFileWriteMode() == CRawFsdMessageSettings::Append)
             {
-                QString filePath = CFileUtils::appendFilePaths(setting.getFileDir(), "rawfsdmessages.log");
+                const QString filePath = CFileUtils::appendFilePaths(setting.getFileDir(), "rawfsdmessages.log");
                 m_rawFsdMessageLogFile.setFileName(filePath);
                 m_rawFsdMessageLogFile.open(QIODevice::Text | QIODevice::WriteOnly | QIODevice::Append);
             }
             else if (setting.getFileWriteMode() == CRawFsdMessageSettings::Timestamped)
             {
-                QString filename("rawfsdmessages");
-                filename += QLatin1String("_");
-                filename += QDateTime::currentDateTime().toString(QStringLiteral("yyMMddhhmmss"));
-                filename += QLatin1String(".log");
-                QString filePath = CFileUtils::appendFilePaths(setting.getFileDir(), filename);
+                const QString filename = u"rawfsdmessages" %
+                                         QLatin1String("_") %
+                                         QDateTime::currentDateTime().toString(QStringLiteral("yyMMddhhmmss")) %
+                                         QLatin1String(".log");
+                const QString filePath = CFileUtils::appendFilePaths(setting.getFileDir(), filename);
                 m_rawFsdMessageLogFile.setFileName(filePath);
                 m_rawFsdMessageLogFile.open(QIODevice::Text | QIODevice::WriteOnly);
             }
@@ -1500,7 +1630,7 @@ namespace BlackCore
             case vatServerErrorServFull:        CLogMessage(self).error(u"The server is full"); emit self->terminate(); break;
             case vatServerErrorCsSuspended:     CLogMessage(self).error(u"Your user account is suspended"); emit self->terminate(); break;
             case vatServerErrorInvPos:          CLogMessage(self).error(u"You are not authorized to use the requested rating"); emit self->terminate(); break;
-            case vatServerErrorUnAuth:          CLogMessage(self).error(u"This software is not authorized for use on this network"); emit self->terminate(); break;
+            case vatServerErrorUnAuth:          CLogMessage(self).error(u"This software is not authorized for use on this network %1") << self->m_server.getName(); emit self->terminate(); break;
 
             case vatServerErrorNone:            CLogMessage(self).info(u"OK"); break;
             case vatServerErrorSyntax:          CLogMessage(self).info(u"Malformed packet: Syntax error: %1") << self->fromFSD(data); break;
@@ -1516,7 +1646,7 @@ namespace BlackCore
 
             // default:                         qFatal("vatlib: %s (error %d)", msg, error); emit self->terminate();
             // KB: Why the hard termination?
-            default:                            CLogMessage(self).error(u"vatlib: %1 (error %2)") << msg << error; emit self->terminate(); break;
+            default:                            CLogMessage(self).error(u"vatlib: %1 (error %2) server: '%3'") << msg << error << self->m_server.getName(); emit self->terminate(); break;
             }
         }
 

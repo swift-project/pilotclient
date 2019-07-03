@@ -105,6 +105,20 @@ namespace BlackCore
         };
         Q_ENUM(ConnectionStatus)
 
+        //! Statistics enable functions @{
+        bool setStatisticsEnable(bool enabled) { m_statistics = enabled; return enabled; }
+        bool isStatisticsEnabled() const { return m_statistics; }
+        //! @}
+
+        //! Increase the statistics value for given identifier
+        int increaseStatisticsValue(const QString &identifier, const QString &appendix = {});
+
+        //! Clear the statistics
+        void clearStatistics() { m_callStatistics.clear(); }
+
+        //! Text statistics
+        QString getNetworkStatisticsAsText(bool reset, const QString &separator = "\n");
+
         //! Convert a ConnectionStatus to a string.
         static QString connectionStatusToString(ConnectionStatus status)
         {
@@ -581,6 +595,10 @@ namespace BlackCore
         void metarReplyReceived(const QString &data);
 
         //! @}
+
+    private:
+        bool m_statistics = false;
+        QMap <QString, int> m_callStatistics;
     };
 } // namespace
 
