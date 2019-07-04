@@ -158,7 +158,8 @@ namespace BlackMisc
                 }
 
                 // set directory with name filters, get aircraft.cfg and sub directories
-                QDir dir(directory, "", QDir::Name, QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot);
+                static const QString NoNameFilter;
+                QDir dir(directory, NoNameFilter, QDir::Name, QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot);
                 dir.setNameFilters(fileNameFilters());
                 if (!dir.exists())
                 {
@@ -170,8 +171,15 @@ namespace BlackMisc
                 emit this->loadingProgress(this->getSimulator(), QStringLiteral("Parsing '%1'").arg(currentDir), -1);
 
                 // Dirs last is crucial, since I will break recursion on "aircraft.cfg" level
-                // with T514 this behavious has been changed
+                // with T514 this behaviour has been changed
                 const QFileInfoList files = dir.entryInfoList(QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot, QDir::DirsLast);
+
+                // the sim.cfg/aircraft.cfg file should have an *.air file sibling
+                // if not we assume these files can be ignored
+                const QDir dirForAir(directory, QStringLiteral("*.air"), QDir::Name, QDir::Files | QDir::NoDotAndDotDot);
+                const int airFilesCount = dirForAir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot, QDir::DirsLast).size();
+                const bool hasAirFile =  airFilesCount > 0;
+
                 for (const auto &fileInfo : files)
                 {
                     if (m_cancelLoading) { return CAircraftCfgEntriesList(); }
@@ -194,14 +202,16 @@ namespace BlackMisc
                     }
                     else
                     {
-                        // due to the filter we expect only "aircraft.cfg" here
+                        if (!hasAirFile) { continue; }
+
+                        // due to the filter we expect only "aircraft.cfg"/"sim.cfg" here
                         // remark: in a 1st version I have used QSettings to parse to file as ini file
                         // unfortunately some files are malformed which could end up in wrong data
 
-                        const QString fileName = fileInfo.absoluteFilePath();
+                        const QString fileName = fileInfo.absoluteFilePath(); // full path and name
                         bool fileOk = false;
                         CStatusMessageList fileMsgs;
-                        CAircraftCfgEntriesList fileResults = CAircraftCfgParser::performParsingOfSingleFile(fileName, fileOk, fileMsgs);
+                        const CAircraftCfgEntriesList fileResults = CAircraftCfgParser::performParsingOfSingleFile(fileName, fileOk, fileMsgs);
                         if (!fileOk)
                         {
                             const CStatusMessage m = CStatusMessage(this).warning(u"Parsing of '%1' failed") << fileName;

@@ -421,7 +421,7 @@ namespace BlackMisc
                 QSet<QString> files;
                 for (const QString &path : locations)
                 {
-                    QString pathUp = CFileUtils::appendFilePaths(CFileUtils::pathUp(path), "Lockheed Martin");
+                    const QString pathUp = CFileUtils::appendFilePaths(CFileUtils::pathUp(path), "Lockheed Martin");
                     const QDir d(pathUp);
                     if (!d.exists()) { continue; }
 
@@ -493,8 +493,13 @@ namespace BlackMisc
 
             QSet<QString> CFsCommonUtil::allP3dAddOnSimObjectPaths(const QString &versionHint)
             {
-                const QStringList configFiles = CFsCommonUtil::findP3dAddOnConfigFiles(versionHint).toList();
-                const QStringList addOnPaths = CFsCommonUtil::allConfigFilesPathValues(configFiles, true, {}).toList();
+                // all add-ons.cfg files
+                const QStringList addOnConfigFiles = CFsCommonUtil::findP3dAddOnConfigFiles(versionHint).toList();
+
+                // all PATH values in those files
+                const QStringList addOnPaths = CFsCommonUtil::allConfigFilesPathValues(addOnConfigFiles, true, {}).toList();
+
+                // based on all paths of all config
                 const QSet<QString> all = CFsCommonUtil::allP3dAddOnSimObjectPaths(addOnPaths, true);
                 return all;
             }
