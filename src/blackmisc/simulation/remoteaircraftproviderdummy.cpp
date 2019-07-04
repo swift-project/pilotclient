@@ -17,6 +17,12 @@ namespace BlackMisc
 {
     namespace Simulation
     {
+        CRemoteAircraftProviderDummy *CRemoteAircraftProviderDummy::instance()
+        {
+            static CRemoteAircraftProviderDummy *dummy = new CRemoteAircraftProviderDummy();
+            return dummy;
+        }
+
         CRemoteAircraftProviderDummy::CRemoteAircraftProviderDummy(QObject *parent) : CRemoteAircraftProvider(parent)
         { }
 

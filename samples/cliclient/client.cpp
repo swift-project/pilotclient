@@ -28,6 +28,7 @@
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/simulation/ownaircraftproviderdummy.h"
+#include "blackmisc/simulation/remoteaircraftproviderdummy.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/stringutils.h"
 
@@ -55,7 +56,12 @@ namespace BlackSample
         : QObject(parent),
           COwnAircraftAware(COwnAircraftProviderDummy::instance()),
           CIdentifiable("samples:cmdClient"),
-          m_net(new CNetworkVatlib(CClientProviderDummy::instance(), COwnAircraftProviderDummy::instance(), this))
+          m_net(
+              new CNetworkVatlib(
+                  CClientProviderDummy::instance(),
+                  COwnAircraftProviderDummy::instance(),
+                  CRemoteAircraftProviderDummy::instance(),
+                  this))
     {
         connect(m_net, &INetwork::atcPositionUpdate,                this, &Client::atcPositionUpdate);
         connect(m_net, &INetwork::atcDisconnected,                  this, &Client::atcDisconnected);

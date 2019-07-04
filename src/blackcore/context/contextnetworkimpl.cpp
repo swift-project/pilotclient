@@ -67,7 +67,11 @@ namespace BlackCore
             CContextNetwork::registerHelp();
 
             // 1. Init by "network driver"
-            m_network = new CNetworkVatlib(nullptr, this->getRuntime()->getCContextOwnAircraft(), this);
+            m_network = new CNetworkVatlib(
+                this,
+                this->getRuntime()->getCContextOwnAircraft(),
+                this,
+                this);
             connect(m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::onFsdConnectionStatusChanged);
             connect(m_network, &INetwork::kicked, this, &CContextNetwork::kicked);
             connect(m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::textMessagesReceived);
