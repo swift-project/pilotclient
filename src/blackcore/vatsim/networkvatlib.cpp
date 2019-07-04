@@ -1119,6 +1119,8 @@ namespace BlackCore
                 return;
             }
 
+            const bool inRange = self->isAircraftInRange(callsign);
+            if (!inRange) { return; } // sort out all broadcasted we DO NOT NEED
             if (!self->getSetupForServer().receiveAircraftParts()) { return; }
             const QJsonObject config = doc.object().value("config").toObject();
             if (config.empty()) { return; }
