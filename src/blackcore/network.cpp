@@ -32,6 +32,7 @@ namespace BlackCore
             m_statistics = true;
         }
     }
+
     int INetwork::increaseStatisticsValue(const QString &identifier, const QString &appendix)
     {
         if (identifier.isEmpty() || !m_statistics) { return -1; }
@@ -47,18 +48,19 @@ namespace BlackCore
 
     QString INetwork::getNetworkStatisticsAsText(bool reset, const QString &separator)
     {
-        QMap<int, QString> transformed;
+        QVector<std::pair<int, QString>> transformed;
         for (const auto pair : makePairsRange(as_const(m_callStatistics)))
         {
             // key is pair.first, value is pair.second
-            transformed.insertMulti(pair.second, pair.first);
+            transformed.push_back({ pair.second, pair.first });
         }
 
         if (reset) { this->clearStatistics(); }
 
         // sorted by value
+        std::sort(transformed.begin(), transformed.end(), std::greater<>());
         QString stats;
-        for (const auto pair : makePairsRange(as_const(transformed)))
+        for (const auto &pair : transformed)
         {
             stats +=
                 (stats.isEmpty() ? QString() : separator) %
@@ -66,4 +68,5 @@ namespace BlackCore
         }
         return stats;
     }
+
 } // ns

@@ -636,7 +636,7 @@ namespace BlackCore
             Vat_SendClientQuery(m_net.data(), vatClientQueryFreq, toFSD(callsign));
 
             // statistics
-            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"));
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), vatClientQueryFreq);
         }
 
         void CNetworkVatlib::sendUserInfoQuery(const CCallsign &callsign)
@@ -645,7 +645,7 @@ namespace BlackCore
             Vat_SendClientQuery(m_net.data(), vatClientQueryInfo, toFSD(callsign));
 
             // statistics
-            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"));
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), vatClientQueryInfo);
         }
 
         void CNetworkVatlib::setInterimPositionReceivers(const CCallsignSet &receivers)
@@ -686,7 +686,7 @@ namespace BlackCore
             Vat_SendClientQuery(m_net.data(), vatClientQueryAtc, toFSD(callsign));
 
             // statistics
-            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"));
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), vatClientQueryAtc);
         }
 
         void CNetworkVatlib::sendAtisQuery(const CCallsign &callsign)
@@ -699,7 +699,7 @@ namespace BlackCore
             Vat_SendClientQuery(m_net.data(), vatClientQueryAtis, toFSD(callsign));
 
             // statistics
-            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"));
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), vatClientQueryAtis);
         }
 
         void CNetworkVatlib::sendFlightPlan(const CFlightPlan &flightPlan)
@@ -759,7 +759,7 @@ namespace BlackCore
             Vat_SendClientQuery(m_net.data(), vatClientQueryFP, toFSD(callsign));
 
             // statistics
-            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"));
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), vatClientQueryFP);
         }
 
         void CNetworkVatlib::sendRealNameQuery(const CCallsign &callsign)
@@ -768,7 +768,7 @@ namespace BlackCore
             Vat_SendClientQuery(m_net.data(), vatClientQueryName, toFSD(callsign));
 
             // statistics
-            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"));
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), vatClientQueryName);
         }
 
         void CNetworkVatlib::sendCapabilitiesQuery(const CCallsign &callsign)
@@ -777,7 +777,7 @@ namespace BlackCore
             Vat_SendClientQuery(m_net.data(), vatClientQueryCaps, toFSD(callsign));
 
             // statistics
-            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"));
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), vatClientQueryCaps);
         }
 
         void CNetworkVatlib::replyToFrequencyQuery(const CCallsign &callsign) // private
@@ -786,7 +786,7 @@ namespace BlackCore
             Vat_SendClientQueryResponse(m_net.data(), vatClientQueryFreq, toFSD(callsign), toFSD(response)(), response.size());
 
             // statistics
-            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQueryResponse"));
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQueryResponse"), vatClientQueryFreq);
         }
 
         void CNetworkVatlib::replyToNameQuery(const CCallsign &callsign) // private
@@ -795,7 +795,7 @@ namespace BlackCore
             Vat_SendClientQueryResponse(m_net.data(), vatClientQueryName, toFSD(callsign), toFSD(response)(), response.size());
 
             // statistics
-            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQueryResponse"));
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQueryResponse"), vatClientQueryName);
         }
 
         void CNetworkVatlib::replyToConfigQuery(const CCallsign &callsign)
@@ -1100,6 +1100,7 @@ namespace BlackCore
             // statistics
             self->increaseStatisticsValue(__func__);
 
+            // if (!isInRange) { return; } // sort out all broadcasted we DO NOT NEED
             QJsonParseError parserError;
             const QByteArray json = self->fromFSD(aircraftConfig).toUtf8();
             const QJsonDocument doc = QJsonDocument::fromJson(json, &parserError);
@@ -1113,6 +1114,7 @@ namespace BlackCore
             const QJsonObject packet = doc.object();
             if (packet == JsonPackets::aircraftConfigRequest())
             {
+                // this MUST work for NOT IN RANGE aircraft as well
                 self->replyToConfigQuery(callsign);
                 return;
             }
