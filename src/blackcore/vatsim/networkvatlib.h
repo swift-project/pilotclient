@@ -64,10 +64,10 @@ namespace BlackCore
             static const BlackMisc::CLogCategoryList &getLogCategories();
 
             //! Constructor
-            CNetworkVatlib(
-                BlackMisc::Network::IClientProvider *clientProvider,
-                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                QObject *parent = nullptr);
+            CNetworkVatlib(BlackMisc::Network::IClientProvider            *clientProvider,
+                           BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
+                           BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                           QObject *parent);
 
             //! Destructor
             virtual ~CNetworkVatlib() override;
@@ -313,4 +313,5 @@ namespace BlackCore
         };
     } //namespace
 } //namespace
+
 #endif // guard

@@ -29,6 +29,9 @@ namespace BlackMisc
             Q_OBJECT
 
         public:
+            //! Singleton
+            static CRemoteAircraftProviderDummy *instance();
+
             //! Constructor
             CRemoteAircraftProviderDummy(QObject *parent = nullptr);
 

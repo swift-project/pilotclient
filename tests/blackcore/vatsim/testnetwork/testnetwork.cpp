@@ -25,6 +25,7 @@
 #include "blackmisc/pq/time.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/ownaircraftproviderdummy.h"
+#include "blackmisc/simulation/remoteaircraftproviderdummy.h"
 #include "blackmisc/stringutils.h"
 #include "test.h"
 
@@ -69,7 +70,12 @@ namespace BlackCoreTest
 
     void CTestNetwork::initTestCase()
     {
-        m_networkVatlib = new CNetworkVatlib(CClientProviderDummy::instance(), COwnAircraftProviderDummy::instance());
+        m_networkVatlib = new CNetworkVatlib(
+            CClientProviderDummy::instance(),
+            COwnAircraftProviderDummy::instance(),
+            CRemoteAircraftProviderDummy::instance(),
+            this
+        );
     }
 
     void CTestNetwork::networkTest(BlackCore::INetwork *net)

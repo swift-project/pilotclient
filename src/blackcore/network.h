@@ -13,6 +13,7 @@
 
 #include "blackcoreexport.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/simulationenvironmentprovider.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
@@ -62,7 +63,9 @@ namespace BlackCore
         public BlackMisc::Network::IEcosystemProvider,            // provide info about used ecosystem
         public BlackMisc::Network::CClientAware,                  // network can set client information
         public BlackMisc::Simulation::COwnAircraftAware,          // network vatlib consumes own aircraft data and sets ICAO/callsign data
+        public BlackMisc::Simulation::CRemoteAircraftAware,       // check if we really need to process network packets (e.g. parts)
         public BlackMisc::Simulation::CSimulationEnvironmentAware // allows to consume ground elevations
+
     {
         Q_OBJECT
         Q_INTERFACES(BlackMisc::Network::IEcosystemProvider)
@@ -70,12 +73,10 @@ namespace BlackCore
     protected:
         //! Constructor
         INetwork(
-            BlackMisc::Network::IClientProvider *clientProvider,
-            BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-            QObject *parent = nullptr) :
-            QObject(parent),
-            BlackMisc::Network::CClientAware(clientProvider),
-            BlackMisc::Simulation::COwnAircraftAware(ownAircraftProvider) {}
+            BlackMisc::Network::IClientProvider            *clientProvider,
+            BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
+            BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+            QObject *parent = nullptr);
 
     public:
         //! Destructor
@@ -110,8 +111,10 @@ namespace BlackCore
         bool isStatisticsEnabled() const { return m_statistics; }
         //! @}
 
-        //! Increase the statistics value for given identifier
+        //! Increase the statistics value for given identifier @{
         int increaseStatisticsValue(const QString &identifier, const QString &appendix = {});
+        int increaseStatisticsValue(const QString &identifier, int value);
+        //! @}
 
         //! Clear the statistics
         void clearStatistics() { m_callStatistics.clear(); }
