@@ -278,8 +278,7 @@ namespace BlackGui
             const QMessageBox::StandardButton reply = static_cast<QMessageBox::StandardButton>(msgBox.exec());
             if (reply != QMessageBox::Ok) { return; }
 
-            QPointer<CDbOwnModelsComponent> ownModelsComp(qobject_cast<CDbOwnModelsComponent *>(this->parent()));
-            ownModelsComp->requestSimulatorModels(simulator, IAircraftModelLoader::InBackgroundNoCache);
+            this->requestSimulatorModels(simulator, IAircraftModelLoader::InBackgroundNoCache);
         }
 
         void CDbOwnModelsComponent::CLoadModelsMenu::customMenu(CMenuActions &menuActions)
