@@ -305,6 +305,7 @@ namespace BlackCore
                     this->clearState();
                     this->setLastEcosystem(m_server.getEcosystem());
                     this->setCurrentEcosystem(CEcosystem::NoSystem);
+                    this->saveNetworkStatistics(m_server.getName());
                 }
 
                 emit this->connectionStatusChanged(convertConnectionStatus(status), convertConnectionStatus(m_status));
@@ -627,7 +628,7 @@ namespace BlackCore
             Vat_SendClientQuery(m_net.data(), vatClientQueryIP, nullptr);
 
             // statistics
-            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"));
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), enumToString(vatClientQueryIP));
         }
 
         void CNetworkVatlib::sendFrequencyQuery(const CCallsign &callsign)
@@ -636,7 +637,7 @@ namespace BlackCore
             Vat_SendClientQuery(m_net.data(), vatClientQueryFreq, toFSD(callsign));
 
             // statistics
-            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), vatClientQueryFreq);
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), enumToString(vatClientQueryFreq));
         }
 
         void CNetworkVatlib::sendUserInfoQuery(const CCallsign &callsign)
@@ -645,7 +646,7 @@ namespace BlackCore
             Vat_SendClientQuery(m_net.data(), vatClientQueryInfo, toFSD(callsign));
 
             // statistics
-            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), vatClientQueryInfo);
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), enumToString(vatClientQueryInfo));
         }
 
         void CNetworkVatlib::setInterimPositionReceivers(const CCallsignSet &receivers)
@@ -677,7 +678,7 @@ namespace BlackCore
             Vat_SendClientQuery(m_net.data(), vatClientQueryServer, toFSD(callsign));
 
             // statistics
-            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"));
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), enumToString(vatClientQueryServer));
         }
 
         void CNetworkVatlib::sendAtcQuery(const CCallsign &callsign)
@@ -686,7 +687,7 @@ namespace BlackCore
             Vat_SendClientQuery(m_net.data(), vatClientQueryAtc, toFSD(callsign));
 
             // statistics
-            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), vatClientQueryAtc);
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), enumToString(vatClientQueryAtc));
         }
 
         void CNetworkVatlib::sendAtisQuery(const CCallsign &callsign)
@@ -699,7 +700,7 @@ namespace BlackCore
             Vat_SendClientQuery(m_net.data(), vatClientQueryAtis, toFSD(callsign));
 
             // statistics
-            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), vatClientQueryAtis);
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), enumToString(vatClientQueryAtis));
         }
 
         void CNetworkVatlib::sendFlightPlan(const CFlightPlan &flightPlan)
@@ -759,7 +760,7 @@ namespace BlackCore
             Vat_SendClientQuery(m_net.data(), vatClientQueryFP, toFSD(callsign));
 
             // statistics
-            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), vatClientQueryFP);
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), enumToString(vatClientQueryFP));
         }
 
         void CNetworkVatlib::sendRealNameQuery(const CCallsign &callsign)
@@ -768,7 +769,7 @@ namespace BlackCore
             Vat_SendClientQuery(m_net.data(), vatClientQueryName, toFSD(callsign));
 
             // statistics
-            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), vatClientQueryName);
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), enumToString(vatClientQueryName));
         }
 
         void CNetworkVatlib::sendCapabilitiesQuery(const CCallsign &callsign)
@@ -777,7 +778,7 @@ namespace BlackCore
             Vat_SendClientQuery(m_net.data(), vatClientQueryCaps, toFSD(callsign));
 
             // statistics
-            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), vatClientQueryCaps);
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQuery"), enumToString(vatClientQueryCaps));
         }
 
         void CNetworkVatlib::replyToFrequencyQuery(const CCallsign &callsign) // private
@@ -786,7 +787,7 @@ namespace BlackCore
             Vat_SendClientQueryResponse(m_net.data(), vatClientQueryFreq, toFSD(callsign), toFSD(response)(), response.size());
 
             // statistics
-            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQueryResponse"), vatClientQueryFreq);
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQueryResponse"), enumToString(vatClientQueryFreq));
         }
 
         void CNetworkVatlib::replyToNameQuery(const CCallsign &callsign) // private
@@ -795,7 +796,7 @@ namespace BlackCore
             Vat_SendClientQueryResponse(m_net.data(), vatClientQueryName, toFSD(callsign), toFSD(response)(), response.size());
 
             // statistics
-            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQueryResponse"), vatClientQueryName);
+            this->increaseStatisticsValue(QStringLiteral("Vat_SendClientQueryResponse"), enumToString(vatClientQueryName));
         }
 
         void CNetworkVatlib::replyToConfigQuery(const CCallsign &callsign)
@@ -1476,9 +1477,31 @@ namespace BlackCore
             return r.remove(':');
         }
 
+        const QString &CNetworkVatlib::enumToString(VatClientQueryType type)
+        {
+            switch (type)
+            {
+            case vatClientQueryFP:     { static const QString fp("vatClientQueryFP");     return fp; }
+            case vatClientQueryFreq:   { static const QString fr("vatClientQueryFreq");   return fr; }
+            case vatClientQueryInfo:   { static const QString in("vatClientQueryInfo");   return in; }
+            case vatClientQueryAtis:   { static const QString at("vatClientQueryAtis");   return at; }
+            case vatClientQueryServer: { static const QString se("vatClientQueryServer"); return se; }
+            case vatClientQueryName:   { static const QString na("vatClientQueryName");   return na; }
+            case vatClientQueryAtc:    { static const QString ac("vatClientQueryAtc");    return ac; }
+            case vatClientQueryCaps:   { static const QString ca("vatClientQueryCaps");   return ca; }
+            case vatClientQueryIP:     { static const QString ip("vatClientQueryIP");     return ip; }
+            }
+            static const QString unknown = "????";
+            return unknown;
+        }
+
         void CNetworkVatlib::onInfoQueryRequestReceived(VatFsdClient *, const char *callsignString, VatClientQueryType type, const char *, void *cbvar)
         {
             QPointer<CNetworkVatlib> self(cbvar_cast(cbvar));
+
+            // statistics
+            self->increaseStatisticsValue(__func__, enumToString(type));
+
             const CCallsign callsign(self->fromFSD(callsignString));
             const bool valid = !callsign.isEmpty();
             BLACK_AUDIT_X(valid, Q_FUNC_INFO, "No callsign");
@@ -1500,6 +1523,10 @@ namespace BlackCore
         void CNetworkVatlib::onInfoQueryReplyReceived(VatFsdClient *, const char *callsign, VatClientQueryType type, const char *data, const char *data2, void *cbvar)
         {
             auto *self = cbvar_cast(cbvar);
+
+            // statistics
+            self->increaseStatisticsValue(__func__, enumToString(type));
+
             switch (type)
             {
             case vatClientQueryFreq:   emit self->frequencyReplyReceived(self->fromFSD(callsign), CFrequency(self->fromFSD(data).toDouble(), CFrequencyUnit::MHz())); break;
@@ -1519,12 +1546,20 @@ namespace BlackCore
             if (capabilityFlags & vatCapsAircraftInfo)   { caps |= CClient::FsdWithIcaoCodes; }
             if (capabilityFlags & vatCapsAircraftConfig) { caps |= CClient::FsdWithAircraftConfig; }
             auto *self = cbvar_cast(cbvar);
+
+            // statistics
+            self->increaseStatisticsValue(__func__);
+
             emit self->capabilitiesReplyReceived(self->fromFSD(callsign), static_cast<int>(caps));
         }
 
         void CNetworkVatlib::onAtisReplyReceived(VatFsdClient *, const char *callsign, const VatControllerAtis *atis, void *cbvar)
         {
             auto *self = cbvar_cast(cbvar);
+
+            // statistics
+            self->increaseStatisticsValue(__func__);
+
             const CCallsign cs(self->fromFSD(callsign), CCallsign::Atc);
             emit self->atisVoiceRoomReplyReceived(cs, self->fromFSD(atis->voiceRoom));
             emit self->atisLogoffTimeReplyReceived(cs, self->fromFSD(atis->zuluLogoff));
@@ -1566,6 +1601,10 @@ namespace BlackCore
             }
 
             auto *self = cbvar_cast(cbvar);
+
+            // statistics
+            self->increaseStatisticsValue(__func__);
+
             QString cruiseAltString = self->fromFSD(fp->cruiseAltitude).trimmed();
             if (!cruiseAltString.isEmpty() && is09OnlyString(cruiseAltString))
             {
@@ -1599,8 +1638,8 @@ namespace BlackCore
             CAltitude cruiseAlt;
             cruiseAlt.parseFromString(cruiseAltString, CPqString::SeparatorBestGuess);
 
-            const QString depTimePlanned = QString("0000").append(QString::number(fp->departTime)).right(4);
-            const QString depTimeActual  = QString("0000").append(QString::number(fp->departTimeActual)).right(4);
+            const QString depTimePlanned = QStringLiteral("0000").append(QString::number(fp->departTime)).right(4);
+            const QString depTimeActual  = QStringLiteral("0000").append(QString::number(fp->departTimeActual)).right(4);
 
             const CCallsign callsign(self->fromFSD(callsignChar), CCallsign::Aircraft);
             const CFlightPlan flightPlan(
@@ -1659,6 +1698,10 @@ namespace BlackCore
         void CNetworkVatlib::onPilotInfoRequestReceived(VatFsdClient *, const char *callsignChar, void *cbvar)
         {
             QPointer<CNetworkVatlib> self(cbvar_cast(cbvar));
+
+            // statistics
+            self->increaseStatisticsValue(__func__);
+
             const CCallsign callsign(self->fromFSD(callsignChar));
             QTimer::singleShot(0, self, [ = ]() { if (self) { self->sendAircraftInfo(callsign); }});
         }
@@ -1666,6 +1709,10 @@ namespace BlackCore
         void CNetworkVatlib::onPilotInfoReceived(VatFsdClient *, const char *callsignChar, const VatAircraftInfo *aircraftInfo, void *cbvar)
         {
             auto *self = cbvar_cast(cbvar);
+
+            // statistics
+            self->increaseStatisticsValue(__func__);
+
             const CCallsign callsign(self->fromFSD(callsignChar), CCallsign::Aircraft);
             emit self->icaoCodesReplyReceived(
                 callsign,

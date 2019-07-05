@@ -264,6 +264,9 @@ namespace BlackCore
             //! Remove colon
             static QString removeColon(const QString &candidate);
 
+            //! Enum as type
+            static const QString &enumToString(VatClientQueryType type);
+
             //! Deletion policy for QScopedPointer
             struct VatFsdClientDeleter
             {

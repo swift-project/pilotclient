@@ -7,6 +7,8 @@
  */
 
 #include "network.h"
+#include "blackmisc/fileutils.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/range.h"
 #include "blackconfig/buildconfig.h"
@@ -33,11 +35,19 @@ namespace BlackCore
         }
     }
 
+    INetwork::~INetwork()
+    { }
+
     int INetwork::increaseStatisticsValue(const QString &identifier, const QString &appendix)
     {
         if (identifier.isEmpty() || !m_statistics) { return -1; }
-        int &v = appendix.isEmpty() ? m_callStatistics[identifier] : m_callStatistics[identifier % u"." % appendix];
+        const QString i = appendix.isEmpty() ? identifier : identifier % u"." % appendix;
+        int &v =  m_callStatistics[i];
         v++;
+
+        constexpr int MaxTimeValues = 50;
+        m_callByTime.push_front(QPair<qint64, QString>(QDateTime::currentMSecsSinceEpoch(), i));
+        if (m_callByTime.size() > MaxTimeValues) { m_callByTime.removeLast(); }
         return v;
     }
 
@@ -46,16 +56,22 @@ namespace BlackCore
         return this->increaseStatisticsValue(identifier, QString::number(value));
     }
 
+    void INetwork::clearStatistics()
+    {
+        m_callStatistics.clear();
+        m_callByTime.clear();
+    }
+
     QString INetwork::getNetworkStatisticsAsText(bool reset, const QString &separator)
     {
         QVector<std::pair<int, QString>> transformed;
+        if (m_callStatistics.isEmpty()) { return QString(); }
+
         for (const auto pair : makePairsRange(as_const(m_callStatistics)))
         {
             // key is pair.first, value is pair.second
             transformed.push_back({ pair.second, pair.first });
         }
-
-        if (reset) { this->clearStatistics(); }
 
         // sorted by value
         std::sort(transformed.begin(), transformed.end(), std::greater<>());
@@ -66,7 +82,37 @@ namespace BlackCore
                 (stats.isEmpty() ? QString() : separator) %
                 pair.second % u": " % QString::number(pair.first);
         }
+
+        for (const auto &pair : transformed)
+        {
+            stats +=
+                (stats.isEmpty() ? QString() : separator) %
+                pair.second % u": " % QString::number(pair.first);
+        }
+
+        if (!m_callByTime.isEmpty())
+        {
+            const qint64 lastTs = m_callByTime.front().first;
+            for (const auto &pair : m_callByTime)
+            {
+                const qint64 deltaTs = lastTs - pair.first;
+                stats += separator % QStringLiteral("%1").arg(deltaTs, 5, 10, QChar('0')) % u": " % pair.second;
+            }
+        }
+
+        if (reset) { this->clearStatistics(); }
         return stats;
+    }
+
+    bool INetwork::saveNetworkStatistics(const QString &server)
+    {
+        if (m_callStatistics.isEmpty()) { return false; }
+
+        const QString s = this->getNetworkStatisticsAsText(false, "\n");
+        if (s.isEmpty()) { return false; }
+        const QString fn = QStringLiteral("networkstatistics_%1_%2.log").arg(QDateTime::currentDateTimeUtc().toString("yyMMddhhmmss"), server);
+        const QString fp = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), fn);
+        return CFileUtils::writeStringToFile(s, fp);
     }
 
 } // ns

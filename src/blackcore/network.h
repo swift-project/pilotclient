@@ -80,7 +80,7 @@ namespace BlackCore
 
     public:
         //! Destructor
-        virtual ~INetwork() {}
+        virtual ~INetwork();
 
         //! Underlying library info.
         virtual const QString &getLibraryInfo(bool detailed) const = 0;
@@ -117,7 +117,7 @@ namespace BlackCore
         //! @}
 
         //! Clear the statistics
-        void clearStatistics() { m_callStatistics.clear(); }
+        void clearStatistics();
 
         //! Text statistics
         QString getNetworkStatisticsAsText(bool reset, const QString &separator = "\n");
@@ -599,9 +599,14 @@ namespace BlackCore
 
         //! @}
 
+    protected:
+        //! Save the statistics
+        bool saveNetworkStatistics(const QString &server);
+
     private:
-        bool m_statistics = false;
-        QMap <QString, int> m_callStatistics;
+        bool                             m_statistics = false;
+        QMap    <QString, int>           m_callStatistics;
+        QVector <QPair<qint64, QString>> m_callByTime;
     };
 } // namespace
 
