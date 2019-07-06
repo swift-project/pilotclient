@@ -7,6 +7,7 @@
  */
 
 #include "network.h"
+#include "blackcore/application.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/logmessage.h"
@@ -113,6 +114,17 @@ namespace BlackCore
         const QString fn = QStringLiteral("networkstatistics_%1_%2.log").arg(QDateTime::currentDateTimeUtc().toString("yyMMddhhmmss"), server);
         const QString fp = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), fn);
         return CFileUtils::writeStringToFile(s, fp);
+    }
+
+    void INetwork::connectedToNewtork()
+    {
+        if (!sApp || sApp->isShuttingDown()) { return; }
+        if (!m_statistics && (CBuildConfig::isLocalDeveloperDebugBuild() || sApp->getOwnDistribution().isRestricted()))
+        {
+            // enable for local and restricted versions (alpha, ...)
+            CLogMessage("Enabled network statistics");
+            m_statistics = true;
+        }
     }
 
 } // ns
