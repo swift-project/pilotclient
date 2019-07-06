@@ -157,6 +157,9 @@ namespace BlackMisc
                 //! Validate if known SimObjects path are used
                 //! \remark only for P3D
                 static CStatusMessageList validateSimObjectsPath(const QSet<QString> &simObjectDirs, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped);
+
+                //! Log the reading of config files
+                static bool logConfigPathReading();
             };
         } // namespace
     } // namespace
