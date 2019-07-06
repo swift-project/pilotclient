@@ -603,6 +603,9 @@ namespace BlackCore
         //! Save the statistics
         bool saveNetworkStatistics(const QString &server);
 
+        //! Connected to network
+        void connectedToNewtork();
+
     private:
         bool                             m_statistics = false;
         QMap    <QString, int>           m_callStatistics;

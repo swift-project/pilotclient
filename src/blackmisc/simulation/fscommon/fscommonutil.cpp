@@ -418,6 +418,7 @@ namespace BlackMisc
 
             QSet<QString> CFsCommonUtil::findP3dConfigFiles(const QString &configFile, const QString &versionHint)
             {
+                // locations will be swift paths, I will go one level up and then search for Lockheed Martin
                 const QStringList locations = QStandardPaths::standardLocations(QStandardPaths::AppDataLocation);
                 QSet<QString> files;
                 for (const QString &path : locations)
@@ -425,6 +426,7 @@ namespace BlackMisc
                     const QString pathUp = CFileUtils::appendFilePaths(CFileUtils::pathUp(path), "Lockheed Martin");
                     const QDir d(pathUp);
                     if (!d.exists()) { continue; }
+                    if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"P3D config dir: '%1'") << d.absolutePath(); }
 
                     // all versions sub directories
                     // looking for "add-ons.cfg" or simobjects.cfg
@@ -657,7 +659,10 @@ namespace BlackMisc
                 return CFsCommonUtil::validateSimObjectsPath(simObjectDirs, models, validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, stopped);
             }
 
-            CStatusMessageList CFsCommonUtil::validateSimObjectsPath(const QSet<QString> &simObjectDirs, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped)
+            CStatusMessageList CFsCommonUtil::validateSimObjectsPath(
+                const QSet<QString> &simObjectDirs, const CAircraftModelList &models,
+                CAircraftModelList &validModels, CAircraftModelList &invalidModels,
+                bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped)
             {
                 CAircraftModelList sorted(models);
                 sorted.sortByFileName();

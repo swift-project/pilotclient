@@ -293,6 +293,7 @@ namespace BlackCore
                 {
                     m_server.setConnectedSinceNow();
                     this->setCurrentEcosystem(m_server.getEcosystem());
+                    this->connectedToNewtork();
                 }
                 else
                 {
