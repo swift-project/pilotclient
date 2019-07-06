@@ -109,6 +109,12 @@ namespace BlackCore
             return m_ownAircraft.getTransponder();
         }
 
+        CCallsign CContextOwnAircraft::getOwnCallsign() const
+        {
+            QReadLocker l(&m_lockAircraft);
+            return m_ownAircraft.getCallsign();
+        }
+
         CCoordinateGeodetic CContextOwnAircraft::getOwnAircraftPosition() const
         {
             QReadLocker l(&m_lockAircraft);

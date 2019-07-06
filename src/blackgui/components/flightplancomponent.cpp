@@ -122,15 +122,15 @@ namespace BlackGui
 
             // connect
             connect(ui->pb_Send,  &QPushButton::pressed, this, &CFlightPlanComponent::sendFlightPlan, Qt::QueuedConnection);
-            connect(ui->pb_Load,  &QPushButton::pressed, this, &CFlightPlanComponent::loadFlightPlanFromNetwork, Qt::QueuedConnection);
+            connect(ui->pb_Download, &QPushButton::pressed, this, &CFlightPlanComponent::loadFlightPlanFromNetwork, Qt::QueuedConnection);
             connect(ui->pb_Reset, &QPushButton::pressed, this, &CFlightPlanComponent::resetFlightPlan, Qt::QueuedConnection);
             connect(ui->pb_ValidateFlightPlan, &QPushButton::pressed, this, &CFlightPlanComponent::validateFlightPlan, Qt::QueuedConnection);
             connect(ui->tb_SyncWithSimulator, &QPushButton::released, this, &CFlightPlanComponent::syncWithSimulator,  Qt::QueuedConnection);
             connect(ui->pb_Prefill,  &QPushButton::pressed, this, &CFlightPlanComponent::anticipateValues,  Qt::QueuedConnection);
             connect(ui->pb_SimBrief, &QPushButton::pressed, this, &CFlightPlanComponent::loadFromSimBrief, Qt::QueuedConnection);
 
-            connect(ui->cb_VoiceCapabilities, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
-            connect(ui->cb_VoiceCapabilities, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::syncVoiceComboBoxes, Qt::QueuedConnection);
+            connect(ui->cb_VoiceCapabilities,          &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
+            connect(ui->cb_VoiceCapabilities,          &QComboBox::currentTextChanged, this, &CFlightPlanComponent::syncVoiceComboBoxes, Qt::QueuedConnection);
             connect(ui->cb_VoiceCapabilitiesFirstPage, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::syncVoiceComboBoxes, Qt::QueuedConnection);
             connect(ui->cb_NavigationEquipment, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
             connect(ui->cb_PerformanceCategory, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
@@ -273,7 +273,8 @@ namespace BlackGui
 
             if (!flightPlan.getRemarks().isEmpty())
             {
-                this->setRemarksUIValues(flightPlan.getRemarks());
+                const QString rem = flightPlan.getRemarks();
+                this->setRemarksUIValues(rem);
             }
         }
 
@@ -287,7 +288,7 @@ namespace BlackGui
         {
             CStatusMessageList messages;
             const bool strict = ui->cb_StrictCheck->isChecked();
-            const bool vfr = this->isVfr();
+            const bool vfr    = this->isVfr();
             const CStatusMessage::StatusSeverity severity = strict ? CStatusMessage::SeverityError : CStatusMessage::SeverityWarning;
             messages.push_back(CStatusMessage(this).validationInfo(strict ? QStringLiteral("Strict validation") : QStringLiteral("Lenient validation")));
 
@@ -952,7 +953,7 @@ namespace BlackGui
             else if (remarks.contains("/T"))
             {
                 CGuiUtility::setComboBoxValueByContainingString(ui->cb_VoiceCapabilitiesFirstPage, "TEXT ONLY");
-                CGuiUtility::setComboBoxValueByContainingString(ui->cb_VoiceCapabilities, "FULL");
+                CGuiUtility::setComboBoxValueByContainingString(ui->cb_VoiceCapabilities, "TEXT ONLY");
             }
             else if (remarks.contains("/R"))
             {

@@ -22,6 +22,12 @@ namespace BlackMisc
             return m_ownAircraft;
         }
 
+        CCallsign COwnAircraftProviderDummy::getOwnCallsign() const
+        {
+            QReadLocker l(&m_lock);
+            return m_ownAircraft.getCallsign();
+        }
+
         CComSystem COwnAircraftProviderDummy::getOwnComSystem(CComSystem::ComUnit unit) const
         {
             QReadLocker l(&m_lock);

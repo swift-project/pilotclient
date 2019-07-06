@@ -56,6 +56,9 @@ namespace BlackMisc
             //! \copydoc IOwnAircraftProvider::getOwnAircraft
             virtual CSimulatedAircraft getOwnAircraft() const override;
 
+            //! \copydoc IOwnAircraftProvider::getOwnCallsign
+            virtual Aviation::CCallsign getOwnCallsign() const override;
+
             //! \copydoc IOwnAircraftProvider::getOwnComSystem
             virtual Aviation::CComSystem getOwnComSystem(Aviation::CComSystem::ComUnit unit) const override;
 

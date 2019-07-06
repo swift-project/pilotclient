@@ -33,6 +33,12 @@ namespace BlackMisc
             return this->provider()->getOwnAircraft();
         }
 
+        CCallsign COwnAircraftAware::getOwnCallsign() const
+        {
+            Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
+            return this->provider()->getOwnCallsign();
+        }
+
         CCoordinateGeodetic COwnAircraftAware::getOwnAircraftPosition() const
         {
             Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");

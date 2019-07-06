@@ -160,14 +160,17 @@ namespace BlackCore
 
         // use cache, but not for own callsign (always reload)
         if (m_flightPlanCache.contains(callsign)) { plan = m_flightPlanCache[callsign]; }
-        if (!plan.wasSentOrLoaded() || plan.timeDiffSentOrLoadedMs() > 30 * 1000)
+        const bool ownAircraft = this->getOwnCallsign() == callsign;
+        if (ownAircraft || !plan.wasSentOrLoaded() || plan.timeDiffSentOrLoadedMs() > 30 * 1000)
         {
-            // outdated, or not in cache at all
+            // outdated, or not in cache at all, or NOT own aircraft
+            plan = CFlightPlan(); // reset
+            m_flightPlanCache.remove(callsign);
             m_network->sendFlightPlanQuery(callsign);
 
             // with this little trick we try to make an asynchronous signal / slot
             // based approach a synchronous return value
-            const QTime waitForFlightPlan = QTime::currentTime().addMSecs(1000);
+            const QTime waitForFlightPlan = QTime::currentTime().addMSecs(1500);
             while (sApp && QTime::currentTime() < waitForFlightPlan)
             {
                 // process some other events and hope network answer is received already

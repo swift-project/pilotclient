@@ -17,6 +17,7 @@
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/selcal.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/length.h"
@@ -33,7 +34,6 @@ namespace BlackMisc
     {
         class CAircraftIcaoCode;
         class CAircraftSituation;
-        class CCallsign;
     }
 
     namespace Simulation
@@ -45,6 +45,10 @@ namespace BlackMisc
             //! Own aircraft
             //! \threadsafe
             virtual CSimulatedAircraft getOwnAircraft() const = 0;
+
+            //! Own aircraft's callsign
+            //! \threadsafe
+            virtual Aviation::CCallsign getOwnCallsign() const = 0;
 
             //! Own aircraft COM unit
             //! \threadsafe
@@ -128,6 +132,9 @@ namespace BlackMisc
 
             //! \copydoc IOwnAircraftProvider::getOwnAircraft
             CSimulatedAircraft getOwnAircraft() const;
+
+            //! \copydoc IOwnAircraftProvider::getOwnCallsign
+            Aviation::CCallsign getOwnCallsign() const;
 
             //! \copydoc IOwnAircraftProvider::getOwnAircraftPosition
             BlackMisc::Geo::CCoordinateGeodetic getOwnAircraftPosition() const;

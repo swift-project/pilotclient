@@ -250,11 +250,13 @@ namespace BlackGui
         if (!box) { return false; }
         if (!candidate.isEmpty())
         {
+            const int ci = box->currentIndex();
             for (int i = 0; i < box->count(); i++)
             {
                 const QString t(box->itemText(i));
                 if (t.contains(candidate, Qt::CaseInsensitive))
                 {
+                    if (ci == i) { return true; } // avoid signals
                     box->setCurrentIndex(i);
                     return true;
                 }
@@ -263,11 +265,13 @@ namespace BlackGui
 
         // not found
         if (unspecified.isEmpty()) { return false; }
+        const int ci = box->currentIndex();
         for (int i = 0; i < box->count(); i++)
         {
             const QString t(box->itemText(i));
             if (t.contains(unspecified, Qt::CaseInsensitive))
             {
+                if (ci == i) { return true; } // avoid signals
                 box->setCurrentIndex(i);
                 return true;
             }
