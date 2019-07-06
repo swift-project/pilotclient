@@ -11,6 +11,7 @@
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/logmessage.h"
 #include "blackconfig/buildconfig.h"
 
 #include <QDir>
@@ -435,9 +436,13 @@ namespace BlackMisc
                         {
                             const QString f = CFileUtils::appendFilePaths(d.absolutePath(), entry, configFile);
                             const QFileInfo fi(f);
-                            if (fi.exists()) { files.insert(f); }
-                        }
-                    }
+                            if (fi.exists())
+                            {
+                                files.insert(f);
+                                if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"P3D config file: '%1'") << f; }
+                            }
+                        } // contains
+                    } // entries
                 }
                 return files;
             }
@@ -485,9 +490,15 @@ namespace BlackMisc
                         const QDomElement path = component.firstChildElement("Path");
                         const QString pathValue = path.text();
                         if (pathValue.isEmpty()) { continue; }
-                        if (!checked || QDir(pathValue).exists()) { simObjectPaths.insert(CFileUtils::normalizeFilePathToQtStandard(pathValue)); }
-                    }
-                }
+                        if (!checked || QDir(pathValue).exists())
+                        {
+                            const QString path = CFileUtils::normalizeFilePathToQtStandard(pathValue);
+                            simObjectPaths.insert(path);
+                            if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"P3D SimObjects path: '%1'") << path; }
+                        }
+                    } // components
+                } // paths
+
                 return simObjectPaths;
             }
 
@@ -526,7 +537,11 @@ namespace BlackMisc
                 {
                     const QString file = CFileUtils::appendFilePaths(CFileUtils::pathUp(path), "Microsoft/FSX/fsx.cfg");
                     const QFileInfo fi(file);
-                    if (fi.exists()) { files.push_back(fi.absoluteFilePath()); }
+                    if (fi.exists())
+                    {
+                        files.push_back(fi.absoluteFilePath());
+                        if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"FSX config file: '%1'") << fi.absoluteFilePath(); }
+                    }
                 }
                 return files;
             }
@@ -560,14 +575,10 @@ namespace BlackMisc
                     const QFileInfo fi(soPath);
 
                     // relative or absolute paths
-                    if (fi.isAbsolute() && (!checked || fi.exists()))
-                    {
-                        paths.insert(fi.absolutePath());
-                    }
-                    else
-                    {
-                        paths.insert(soPath);
-                    }
+                    const QString p = (fi.isAbsolute() && (!checked || fi.exists())) ?
+                                      fi.absolutePath() : soPath;
+                    paths.insert(p);
+                    if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"FSX SimObjects path: '%1'") << p; }
                 }
                 return paths;
             }
@@ -700,6 +711,11 @@ namespace BlackMisc
                 } // models
 
                 return msgs;
+            }
+
+            bool CFsCommonUtil::logConfigPathReading()
+            {
+                return true;
             }
         } // namespace
     } // namespace
