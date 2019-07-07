@@ -338,8 +338,8 @@ namespace BlackMisc
             bool CFsCommonUtil::adjustFileDirectory(CAircraftModel &model, const QString &simObjectsDirectory)
             {
                 if (model.hasExistingCorrespondingFile()) { return true; }
-                if (simObjectsDirectory.isEmpty()) { return false; }
-                if (!model.hasFileName()) { return false; } // we can do nothing here
+                if (simObjectsDirectory.isEmpty())        { return false; }
+                if (!model.hasFileName())                 { return false; } // we can do nothing here
 
                 const QString simObjectsDirectoryFix = CFileUtils::fixWindowsUncPath(simObjectsDirectory);
                 const QDir dir(simObjectsDirectoryFix);
@@ -459,7 +459,7 @@ namespace BlackMisc
                     const QString fileContent = CFileUtils::readFileToString(configFile);
                     if (fileContent.isEmpty()) { continue; }
                     const QList<QStringRef> lines = splitLinesRefs(fileContent);
-                    static const QString p("PATH=");
+                    static const QString p("Path=");
                     for (const QStringRef &line : lines)
                     {
                         const int i = line.lastIndexOf(p, -1, Qt::CaseInsensitive);
@@ -482,21 +482,30 @@ namespace BlackMisc
                     QDomDocument doc;
                     QFile file(filename);
                     if (!file.open(QIODevice::ReadOnly) || !doc.setContent(&file)) { continue; }
+                    if (CFsCommonUtil::logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"Reading '%1' from addon path: '%2'") << file.fileName() << addOnPath; }
+
                     const QDomNodeList components = doc.elementsByTagName("AddOn.Component");
                     for (int i = 0; i < components.size(); i++)
                     {
-                        const QDomNode component = components.item(i);
-                        const QDomElement category = component.firstChildElement("Category");
+                        const QDomNode component    = components.item(i);
+                        const QDomElement category  = component.firstChildElement("Category");
                         const QString categoryValue = category.text();
                         if (!caseInsensitiveStringCompare(categoryValue, QStringLiteral("SimObjects"))) { continue; }
-                        const QDomElement path = component.firstChildElement("Path");
-                        const QString pathValue = path.text();
-                        if (pathValue.isEmpty()) { continue; }
-                        if (!checked || QDir(pathValue).exists())
+                        const QDomElement path  = component.firstChildElement("Path");
+                        const QString pathValue = CFileUtils::normalizeFilePathToQtStandard(path.text());
+                        const bool correctPath  = pathValue.contains("Airplanes", Qt::CaseInsensitive) ||
+                                                  pathValue.contains("Rotorcraft", Qt::CaseInsensitive);
+                        if (!correctPath) { continue; }
+
+                        // absolute or relative path
+                        const QString fp = pathValue.left(3).contains(':') ?
+                                           pathValue :
+                                           CFileUtils::appendFilePaths(addOnPath, pathValue);
+                        if (CFsCommonUtil::logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"Testing '%1' as addon path: '%2'") << fp << addOnPath; }
+                        if (!checked || QDir(fp).exists())
                         {
-                            const QString path = CFileUtils::normalizeFilePathToQtStandard(pathValue);
-                            simObjectPaths.insert(path);
-                            if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"P3D SimObjects path: '%1'") << path; }
+                            simObjectPaths.insert(CFileUtils::normalizeFilePathToQtStandard(fp));
+                            if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"P3D SimObjects path: '%1'") << fp; }
                         }
                     } // components
                 } // paths
