@@ -789,7 +789,7 @@ namespace BlackCore
             if (!aircraftIcao.hasValidDbKey())
             {
                 aircraftIcao = CAircraftIcaoCode(aircraftIcaoString);
-                const bool knownAircraftIcao = CAircraftMatcher::isKnowAircraftDesignator(aircraftIcaoString, callsign, log);
+                const bool knownAircraftIcao = CAircraftMatcher::isKnownAircraftDesignator(aircraftIcaoString, callsign, log);
                 if (airlineIcao.isLoadedFromDb() && !knownAircraftIcao)
                 {
                     // we have no valid aircraft ICAO, so we do a fuzzy search among those

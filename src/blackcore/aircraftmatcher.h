@@ -199,9 +199,12 @@ namespace BlackCore
             const QString &candidate, const BlackMisc::Aviation::CCallsign &callsign = {},
             BlackMisc::CStatusMessageList *log = nullptr);
 
-        //! Is this designator known?
+        //! Is this aircraft designator known?
         //! \threadsafe
-        static bool isKnowAircraftDesignator(
+        static bool isKnownAircraftDesignator(
+            const QString &candidate, const BlackMisc::Aviation::CCallsign &callsign = {},
+            BlackMisc::CStatusMessageList *log = nullptr);
+
             const QString &candidate, const BlackMisc::Aviation::CCallsign &callsign = {},
             BlackMisc::CStatusMessageList *log = nullptr);
 

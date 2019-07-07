@@ -915,7 +915,7 @@ namespace BlackCore
         return {};
     }
 
-    bool CAircraftMatcher::isKnowAircraftDesignator(const QString &candidate, const CCallsign &callsign, CStatusMessageList *log)
+    bool CAircraftMatcher::isKnownAircraftDesignator(const QString &candidate, const CCallsign &callsign, CStatusMessageList *log)
     {
         if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return false; }
         if (!CAircraftIcaoCode::isValidDesignator(candidate))
