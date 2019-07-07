@@ -525,6 +525,34 @@ namespace BlackMisc
             return icaos;
         }
 
+        QMap<CAirlineIcaoCode, int> CAircraftModelList::countPerAirlineIcao() const
+        {
+            QMap<CAirlineIcaoCode, int> icaos;
+            for (const CAircraftModel &model : *this)
+            {
+                if (!model.hasAirlineDesignator()) { continue; }
+                if (icaos.contains(model.getAirlineIcaoCode()))
+                {
+                    icaos[model.getAirlineIcaoCode()]++;
+                }
+                else
+                {
+                    icaos[model.getAirlineIcaoCode()] = 1;
+                }
+            }
+            return icaos;
+        }
+
+        CAirlineIcaoCode CAircraftModelList::getAirlineWithMaxCount() const
+        {
+            const QMap<CAirlineIcaoCode, int> ac = this->countPerAirlineIcao();
+            if (ac.size() < 1) { return {}; }
+            if (ac.size() == 1) { return ac.firstKey(); }
+            const QList<int> values = ac.values();
+            const int max = *std::max_element(values.begin(), values.end());
+            return ac.key(max);
+        }
+
         QString CAircraftModelList::findModelIconPathByModelString(const QString &modelString) const
         {
             if (modelString.isEmpty()) { return {}; }

@@ -155,6 +155,9 @@ namespace BlackMisc
         //! Avoid compiler warnings when using with int
         int sizeInt() const { return static_cast<int>(this->size()); }
 
+        //! Convenience function
+        QString sizeString() const { return QString::number(m_impl.size()); }
+
         //! Returns true if the sequence is empty.
         bool empty() const { return m_impl.isEmpty(); }
 
@@ -412,7 +415,8 @@ namespace BlackMisc
         }
 
         //! Reversed order
-        CSequence reversed() const {
+        CSequence reversed() const
+        {
             CSequence result = *this;
             result.reverse();
             return result;

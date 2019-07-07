@@ -364,6 +364,12 @@ namespace BlackMisc
             //! Aircraft ICAO plus count
             QMap<BlackMisc::Aviation::CAircraftIcaoCode, int> countPerAircraftIcao() const;
 
+            //! Airline ICAO plus count
+            QMap<BlackMisc::Aviation::CAirlineIcaoCode, int> countPerAirlineIcao() const;
+
+            //! The airline with the max count
+            Aviation::CAirlineIcaoCode getAirlineWithMaxCount() const;
+
             //! Which simulator(s) have the most entries?
             CSimulatorInfo simulatorsWithMaxEntries() const;
 
