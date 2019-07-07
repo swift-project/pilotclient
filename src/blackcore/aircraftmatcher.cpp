@@ -95,11 +95,11 @@ namespace BlackCore
             CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Two invalid airline ICAO codes (primary/secondary) '%1', '%2'").arg(primaryIcao, secondaryIcao), getLogCategories());
             if (airlineFromCallsign)
             {
-                const QString airlineSuffix = callsign.getAirlinePrefix();
-                if (CAircraftMatcher::isValidAirlineIcaoDesignator(airlineSuffix, useWebServices))
+                const QString airlinePrefix = callsign.getAirlinePrefix();
+                if (CAircraftMatcher::isValidAirlineIcaoDesignator(airlinePrefix, useWebServices))
                 {
-                    CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Using airline from callsign '%1', suffix: '%2'").arg(callsign.toQString(), airlineSuffix), getLogCategories());
-                    code = stringToAirlineIcaoObject(airlineSuffix, useWebServices);
+                    CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Using airline from callsign '%1', suffix: '%2'").arg(callsign.toQString(), airlinePrefix), getLogCategories());
+                    code = stringToAirlineIcaoObject(airlinePrefix, useWebServices);
                     break;
                 }
             }
@@ -107,6 +107,72 @@ namespace BlackCore
         while (false);
         CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Resolved to airline designator: %1").arg(code.toQString(true)));
         return code;
+    }
+
+    CAirlineIcaoCode CAircraftMatcher::failoverValidAirlineIcaoDesignator(const CCallsign &callsign, const QString &primaryIcao, const QString &secondaryIcao, bool airlineFromCallsign, const CAircraftModelList &models, CStatusMessageList *log)
+    {
+        CMatchingUtils::addLogDetailsToList(log, callsign,
+                                            QStringLiteral("Find airline designator from 1st: '%1' 2nd: '%2' callsign: '%3', use airline callsign: %4, models: %5").
+                                            arg(primaryIcao, secondaryIcao, callsign.getAirlinePrefix(), boolToYesNo(airlineFromCallsign), models.sizeString()), getLogCategories());
+
+        if (models.isEmpty())
+        {
+            CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("No models to find airline from"));
+            return CAirlineIcaoCode();
+        }
+
+        CAirlineIcaoCode code;
+        do
+        {
+            if (!primaryIcao.isEmpty())
+            {
+                const CAircraftModelList modelsWithAirline = models.findByIcaoDesignators({}, primaryIcao);
+                if (modelsWithAirline.size() > 0)
+                {
+                    code = modelsWithAirline.getAirlineWithMaxCount();
+                    CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Using primary airline ICAO '%1' found '%2'").arg(primaryIcao, code.getDesignatorDbKey()), getLogCategories());
+                    break;
+                }
+            }
+
+            if (!secondaryIcao.isEmpty())
+            {
+                const CAircraftModelList modelsWithAirline = models.findByIcaoDesignators({}, secondaryIcao);
+                if (modelsWithAirline.size() > 0)
+                {
+                    code = modelsWithAirline.getAirlineWithMaxCount();
+                    CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Using secondary airline ICAO '%1' found '%2'").arg(primaryIcao, code.getDesignatorDbKey()), getLogCategories());
+                    break;
+                }
+            }
+
+            if (airlineFromCallsign)
+            {
+                const QString airlinePrefix = callsign.getAirlinePrefix();
+                const CAircraftModelList modelsWithAirline = models.findByIcaoDesignators({}, airlinePrefix);
+                if (modelsWithAirline.size() > 0)
+                {
+                    code = modelsWithAirline.getAirlineWithMaxCount();
+                    CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Using secondary airline ICAO '%1' found '%2'").arg(primaryIcao, code.getDesignatorDbKey()), getLogCategories());
+                    break;
+                }
+            }
+        }
+        while (false);
+
+        CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Resolved to airline designator: %1").arg(code.toQString(true)));
+        return code;
+    }
+
+    CAirlineIcaoCode CAircraftMatcher::failoverValidAirlineIcaoDesignatorModelsFirst(const CCallsign &callsign, const QString &primaryIcao, const QString &secondaryIcao, bool airlineFromCallsign, const CAircraftModelList &models, CStatusMessageList *log)
+    {
+        if (!models.isEmpty())
+        {
+            const CAirlineIcaoCode airline = CAircraftMatcher::failoverValidAirlineIcaoDesignator(callsign, primaryIcao, secondaryIcao, airlineFromCallsign, models, log);
+            if (airline.hasValidDbKey()) { return airline; }
+        }
+
+        return CAircraftMatcher::failoverValidAirlineIcaoDesignator(callsign, primaryIcao, secondaryIcao, airlineFromCallsign, true, log);
     }
 
     CAircraftModel CAircraftMatcher::getClosestMatch(const CSimulatedAircraft &remoteAircraft, MatchingLog whatToLog, CStatusMessageList *log, bool useMatchingScript) const
@@ -1687,7 +1753,7 @@ namespace BlackCore
     {
         if (!useSwiftDbData) { return CAirlineIcaoCode(designator); }
         if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return CAirlineIcaoCode(designator); }
-        CAirlineIcaoCode code = sApp->getWebDataServices()->getAirlineIcaoCodeForUniqueDesignatorOrDefault(designator, true);
+        const CAirlineIcaoCode code = sApp->getWebDataServices()->getAirlineIcaoCodeForUniqueDesignatorOrDefault(designator, true);
         return code.isLoadedFromDb() ? code : CAirlineIcaoCode(designator);
     }
 

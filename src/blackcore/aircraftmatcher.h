@@ -89,6 +89,26 @@ namespace BlackCore
             const QString &primaryIcao, const QString &secondaryIcao,
             bool airlineFromCallsign, bool useWebServices, BlackMisc::CStatusMessageList *log = nullptr);
 
+        //! Return an valid airline ICAO code from a given model list
+        //! \remarks model list could be the model set
+        //! \threadsafe
+        static BlackMisc::Aviation::CAirlineIcaoCode failoverValidAirlineIcaoDesignator(
+            const BlackMisc::Aviation::CCallsign &callsign,
+            const QString &primaryIcao, const QString &secondaryIcao,
+            bool airlineFromCallsign,
+            const BlackMisc::Simulation::CAircraftModelList &models,
+            BlackMisc::CStatusMessageList *log = nullptr);
+
+        //! Return an valid airline ICAO code from a given model list and use webservices if NOT found
+        //! \remarks model list could be the model set
+        //! \threadsafe
+        static BlackMisc::Aviation::CAirlineIcaoCode failoverValidAirlineIcaoDesignatorModelsFirst(
+            const BlackMisc::Aviation::CCallsign &callsign,
+            const QString &primaryIcao, const QString &secondaryIcao,
+            bool airlineFromCallsign,
+            const BlackMisc::Simulation::CAircraftModelList &models,
+            BlackMisc::CStatusMessageList *log = nullptr);
+
         //! Run the network reverse lookup script
         //! \threadsafe
         //! \ingroup reverselookup
