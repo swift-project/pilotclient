@@ -697,9 +697,10 @@ namespace BlackCore
             return CAircraftModel();
         }
         CAircraftModel model = sApp->getWebDataServices()->getModelForModelString(modelString);
+        const bool isDBModel = model.hasValidDbKey();
         if (log)
         {
-            if (model.hasValidDbKey())
+            if (isDBModel)
             {
                 CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Found model in DB for model string '%1'").arg(model.getModelStringAndDbKey()));
             }
@@ -708,6 +709,10 @@ namespace BlackCore
                 CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Did not find model in DB for model string '%1'").arg(modelString));
             }
         }
+
+        if (!isDBModel) { return CAircraftModel(); } // not found
+
+        // found
         model.setCallsign(callsign);
         model.setModelType(CAircraftModel::TypeReverseLookup);
         return model;
@@ -927,6 +932,16 @@ namespace BlackCore
         const bool known = sApp->getWebDataServices()->containsAircraftIcaoDesignator(candidate);
         static const QString sKnown("Known ICAO '%1'");
         static const QString sUnknown("Unknown ICAO '%1'");
+        CMatchingUtils::addLogDetailsToList(log, callsign, known ? sKnown.arg(candidate) : sUnknown.arg(candidate));
+        return known;
+    }
+
+    bool CAircraftMatcher::isKnownModelString(const QString &candidate, const CCallsign &callsign, CStatusMessageList *log)
+    {
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return false; }
+        const bool known = sApp->getWebDataServices()->containsModelString(candidate);
+        static const QString sKnown("Known modelstring '%1'");
+        static const QString sUnknown("Unknown modelstring '%1'");
         CMatchingUtils::addLogDetailsToList(log, callsign, known ? sKnown.arg(candidate) : sUnknown.arg(candidate));
         return known;
     }

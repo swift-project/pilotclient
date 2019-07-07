@@ -708,10 +708,17 @@ namespace BlackCore
             const ReverseLookupLogging reverseLookupEnabled = this->isReverseLookupMessagesEnabled();
             CStatusMessageList reverseLookupMessages;
             CStatusMessageList *pReverseLookupMessages = reverseLookupEnabled.testFlag(RevLogEnabled) ? &reverseLookupMessages : nullptr;
+            if (!CAircraftMatcher::isKnownModelString(modelString, callsign, pReverseLookupMessages))
+            {
+                // from the T701 test, do NOT use if model string is unknown
+                // this can overrride "swift livery strings", FsInn here only is useful with a known model string
+                CMatchingUtils::addLogDetailsToList(pReverseLookupMessages, callsign,
+                                                    QStringLiteral("FsInn data ignored, as modelstring '%1' is not known").arg(modelString));
+                return;
+            }
             CMatchingUtils::addLogDetailsToList(pReverseLookupMessages, callsign,
                                                 QStringLiteral("FsInn data from network: aircraft '%1', airline '%2', model '%3', combined '%4'").
                                                 arg(aircraftIcaoDesignator, airlineIcaoDesignator, modelString, combinedAircraftType));
-
             this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, "", modelString, CAircraftModel::TypeFSInnData, pReverseLookupMessages);
             this->addReverseLookupMessages(callsign, reverseLookupMessages);
             this->sendReadyForModelMatching(callsign); // from FSInn
