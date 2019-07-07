@@ -241,6 +241,10 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Simulation::CAircraftModel getModelForModelString(const QString &modelString) const;
 
+        //! Existing modelstring?
+        //! \threadsafe
+        bool containsModelString(const QString &modelString) const;
+
         //! Model for key if any
         //! \threadsafe
         BlackMisc::Simulation::CAircraftModel getModelForDbKey(int dbKey) const;

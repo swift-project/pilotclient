@@ -106,6 +106,12 @@ namespace BlackCore
             return models.findFirstByModelStringOrDefault(modelString);
         }
 
+        bool CModelDataReader::containsModelString(const QString &modelString) const
+        {
+            if (modelString.isEmpty()) { return false; }
+            return this->getModels().containsModelString(modelString);
+        }
+
         CAircraftModel CModelDataReader::getModelForDbKey(int dbKey) const
         {
             if (dbKey < 0) { return CAircraftModel(); }

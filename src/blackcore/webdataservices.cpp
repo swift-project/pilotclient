@@ -668,6 +668,12 @@ namespace BlackCore
         return CAircraftModel();
     }
 
+    bool CWebDataServices::containsModelString(const QString &modelString) const
+    {
+        if (m_modelDataReader) { return m_modelDataReader->containsModelString(modelString); }
+        return false;
+    }
+
     CAircraftModel CWebDataServices::getModelForDbKey(int dbKey) const
     {
         if (m_modelDataReader) { return m_modelDataReader->getModelForDbKey(dbKey); }
