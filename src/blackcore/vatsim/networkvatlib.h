@@ -264,7 +264,13 @@ namespace BlackCore
             //! Remove colon
             static QString removeColon(const QString &candidate);
 
-            //! Enum as type
+            //! Fix ATC station range
+            static const BlackMisc::PhysicalQuantities::CLength &fixAtcRange(const BlackMisc::PhysicalQuantities::CLength &networkRange, const BlackMisc::Aviation::CCallsign &cs);
+
+            //! Max or 1st non-null value
+            static const BlackMisc::PhysicalQuantities::CLength &maxOrNotNull(const BlackMisc::PhysicalQuantities::CLength &l1, const BlackMisc::PhysicalQuantities::CLength &l2);
+
+            //! Enum as
             static const QString &enumToString(VatClientQueryType type);
 
             //! Deletion policy for QScopedPointer
