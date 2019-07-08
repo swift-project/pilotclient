@@ -102,10 +102,10 @@ namespace BlackCore
             m_positionUpdateTimer.setObjectName(this->objectName().append(":m_positionUpdateTimer"));
             m_interimPositionUpdateTimer.setObjectName(this->objectName().append(":m_interimPositionUpdateTimer"));
 
-            connect(&m_processingTimer, &QTimer::timeout, this, &CNetworkVatlib::process);
-            connect(&m_positionUpdateTimer, &QTimer::timeout, this, &CNetworkVatlib::sendPositionUpdate);
+            connect(&m_processingTimer,            &QTimer::timeout, this, &CNetworkVatlib::process);
+            connect(&m_positionUpdateTimer,        &QTimer::timeout, this, &CNetworkVatlib::sendPositionUpdate);
             connect(&m_interimPositionUpdateTimer, &QTimer::timeout, this, &CNetworkVatlib::sendInterimPositions);
-            connect(&m_scheduledConfigUpdate, &QTimer::timeout, this, &CNetworkVatlib::sendIncrementalAircraftConfig);
+            connect(&m_scheduledConfigUpdate,      &QTimer::timeout, this, &CNetworkVatlib::sendIncrementalAircraftConfig);
             m_scheduledConfigUpdate.setSingleShot(true);
 
             m_processingTimer.start(c_processingIntervalMsec);
@@ -1167,18 +1167,49 @@ namespace BlackCore
             const int frequencyKHz = pos->frequency;
             CFrequency freq(frequencyKHz, CFrequencyUnit::kHz());
             freq.switchUnit(CFrequencyUnit::MHz()); // we would not need to bother, but this makes it easier to identify
-            CLength range(pos->visibleRange, CLengthUnit::NM());
-            const QString cs = cbvar_cast(cbvar)->fromFSD(callsign);
+            const CLength networkRange(pos->visibleRange, CLengthUnit::NM());
+            const CCallsign cs(cbvar_cast(cbvar)->fromFSD(callsign), CCallsign::Atc);
 
             // Filter non-ATC like OBS stations, like pilots logging in as shared cockpit co-pilots.
-            if (pos->facility == vatFacilityTypeUnknown && !cs.endsWith("_OBS")) { return; }
+            if (pos->facility == vatFacilityTypeUnknown && !cs.isObserverCallsign()) { return; }
 
-            // ATIS often have a range of 0 nm. Correct this to a proper value.
-            if (cs.contains("_ATIS") && pos->visibleRange == 0) { range.setValueSameUnit(150.0); }
+            const CLength range = fixAtcRange(networkRange, cs);
             const CCoordinateGeodetic position(pos->latitude, pos->longitude, 0);
 
-            emit self->atcPositionUpdate(CCallsign(cs, CCallsign::Atc), freq, position, range);
+            emit self->atcPositionUpdate(cs, freq, position, range);
         }
+
+        const CLength &CNetworkVatlib::fixAtcRange(const CLength &networkRange, const CCallsign &cs)
+        {
+            /** T702, https://discordapp.com/channels/539048679160676382/539846348275449887/597814208125730826
+            DEL 5 NM
+            GND 10 NM
+            TWR 25 NM
+            DEP/APP 150 NM
+            CTR 300 NM
+            FSS fixed 1500NM, no minimum
+            **/
+
+            // ATIS often have a range of 0 nm. Correct this to a proper value.
+            const QString suffix = cs.getSuffix();
+            if (suffix.contains(QStringLiteral("ATIS"), Qt::CaseInsensitive)) { static const CLength l_Atis(150.0, CLengthUnit::NM()); return maxOrNotNull(networkRange, l_Atis); }
+            if (suffix.contains(QStringLiteral("GND"),  Qt::CaseInsensitive)) { static const CLength l_Gnd(10.0, CLengthUnit::NM());   return maxOrNotNull(networkRange, l_Gnd);  }
+            if (suffix.contains(QStringLiteral("TWR"),  Qt::CaseInsensitive)) { static const CLength l_Twr(25.0, CLengthUnit::NM());   return maxOrNotNull(networkRange, l_Twr);  }
+            if (suffix.contains(QStringLiteral("DEP"),  Qt::CaseInsensitive)) { static const CLength l_Dep(150.0, CLengthUnit::NM());  return maxOrNotNull(networkRange, l_Dep);  }
+            if (suffix.contains(QStringLiteral("APP"),  Qt::CaseInsensitive)) { static const CLength l_App(150.0, CLengthUnit::NM());  return maxOrNotNull(networkRange, l_App);  }
+            if (suffix.contains(QStringLiteral("CTR"),  Qt::CaseInsensitive)) { static const CLength l_Ctr(300.0, CLengthUnit::NM());  return maxOrNotNull(networkRange, l_Ctr);  }
+            if (suffix.contains(QStringLiteral("FSS"),  Qt::CaseInsensitive)) { static const CLength l_Fss(1500.0, CLengthUnit::NM()); return maxOrNotNull(networkRange, l_Fss);  }
+
+            return networkRange;
+        }
+
+        const CLength &CNetworkVatlib::maxOrNotNull(const CLength &l1, const CLength &l2)
+        {
+            if (l1.isNull()) { return l2; }
+            if (l2.isNull()) { return l1; }
+            return (l2 > l1) ? l2 : l1;
+        }
+
 
         void CNetworkVatlib::onKicked(VatFsdClient *, const char *reason, void *cbvar)
         {
