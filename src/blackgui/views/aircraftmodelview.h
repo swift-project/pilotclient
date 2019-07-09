@@ -114,7 +114,7 @@ namespace BlackGui
 
             //! Corresponding simulator
             //! \remark used for validation or loading data will be restricted to simulator
-            void setCorrespondingSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) { m_correspondingSimulator = simulator; }
+            void setCorrespondingSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator, const QString &simDir);
 
             //! Enable the validation context menu
             void setValidationContextMenu(const bool enabled) { m_withValidationContextMenu = enabled; }
@@ -175,6 +175,7 @@ namespace BlackGui
             CAircraftModelStatisticsDialog       *m_statisticsDialog     = nullptr;
             CAircraftModelValidationDialog       *m_fileValidationDialog = nullptr;
             BlackMisc::Simulation::CSimulatorInfo m_correspondingSimulator; //!< validation, simulator required when loading
+            QString m_correspondingSimulatorDir;
         };
     } // ns
 } // ns

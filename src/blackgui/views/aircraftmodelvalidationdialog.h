@@ -38,7 +38,9 @@ namespace BlackGui
             //! Models
             void setModels(
                 const BlackMisc::Simulation::CAircraftModelList &models,
-                const BlackMisc::Simulation::CSimulatorInfo &simulator);
+                const BlackMisc::Simulation::CSimulatorInfo &simulator,
+                const QString &simulatorDir
+            );
 
             //! Trigger a validation
             void triggerValidation(int delayMs = 2500);
@@ -50,6 +52,7 @@ namespace BlackGui
             QScopedPointer<Ui::CAircraftModelValidationDialog> ui;
             BlackMisc::Simulation::CAircraftModelList m_models;
             BlackMisc::Simulation::CSimulatorInfo m_simulator { BlackMisc::Simulation::CSimulatorInfo::None };
+            QString m_simulatorDir;
         };
     } // ns
 } // ns

@@ -209,6 +209,12 @@ namespace BlackGui
             return this->derivedModel()->highlightModels();
         }
 
+        void CAircraftModelView::setCorrespondingSimulator(const CSimulatorInfo &simulator, const QString &simDir)
+        {
+            m_correspondingSimulator = simulator;
+            m_correspondingSimulatorDir = simDir;
+        }
+
         void CAircraftModelView::dropEvent(QDropEvent *event)
         {
             // moves from myself are ignored
@@ -473,7 +479,7 @@ namespace BlackGui
         void CAircraftModelView::displayModelValidationDialog()
         {
             if (!m_fileValidationDialog) { m_fileValidationDialog = new CAircraftModelValidationDialog(this); }
-            m_fileValidationDialog->setModels(this->selectedObjects(), m_correspondingSimulator);
+            m_fileValidationDialog->setModels(this->selectedObjects(), m_correspondingSimulator, m_correspondingSimulatorDir);
             m_fileValidationDialog->triggerValidation(1000);
             m_fileValidationDialog->exec();
         }
