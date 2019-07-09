@@ -95,6 +95,8 @@ namespace BlackGui
         QWidget     *m_widget = nullptr;                  //!< corresponding window or dock widget
         QSizeGrip   *m_framelessSizeGrip = nullptr;       //!< size grip object
         QByteArray   m_framelessPropertyName;             //!< property name for frameless widgets
+        int          m_windowFrameSizeW = -1;             //!< window frame width
+        int          m_windowFrameSizeH = -1;             //!< window frame height
 
         //! Can be used as notification if window mode changes
         virtual void windowFlagsChanged();
