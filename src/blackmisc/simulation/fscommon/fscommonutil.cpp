@@ -216,14 +216,38 @@ namespace BlackMisc
                 return dir;
             }
 
-            QStringList CFsCommonUtil::p3dSimObjectsDirPlusAddOnSimObjectsDirs(const QString &simObjectsDir, const QString &versionHint)
+            QStringList CFsCommonUtil::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir)
             {
                 // finding the user settings only works on P3D machine
-                const QSet<QString> allP3dAddOnSimObjectPaths = CFsCommonUtil::allP3dAddOnSimObjectPaths(versionHint);
-                QStringList all(allP3dAddOnSimObjectPaths.toList());
-                all.push_front(simObjectsDir.isEmpty() ? p3dSimObjectsDir() : simObjectsDir);
-                all.sort(Qt::CaseInsensitive);
-                return all;
+                QStringList allPaths = CFsCommonUtil::allFsxSimObjectPaths().toList();
+                const QString sod = simObjectsDir.isEmpty() ? CFsCommonUtil::fsxSimObjectsDir() : simObjectsDir;
+                if (!sod.isEmpty() && !allPaths.contains(sod, Qt::CaseInsensitive))
+                {
+                    // case insensitive is important here
+                    allPaths.push_front(sod);
+                }
+
+                allPaths.removeAll({}); // remove all empty
+                allPaths.removeDuplicates();
+                allPaths.sort(Qt::CaseInsensitive);
+                return allPaths;
+            }
+
+            QStringList CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir, const QString &versionHint)
+            {
+                // finding the user settings only works on P3D machine
+                QStringList allPaths = CFsCommonUtil::allP3dAddOnXmlSimObjectPaths(versionHint).toList();
+                const QString sod = simObjectsDir.isEmpty() ? CFsCommonUtil::p3dSimObjectsDir() : simObjectsDir;
+                if (!sod.isEmpty() && !allPaths.contains(sod, Qt::CaseInsensitive))
+                {
+                    // case insensitive is important here
+                    allPaths.push_front(sod);
+                }
+
+                allPaths.removeAll({}); // remove all empty
+                allPaths.removeDuplicates();
+                allPaths.sort(Qt::CaseInsensitive);
+                return allPaths;
             }
 
             QString CFsCommonUtil::p3dSimObjectsDirFromSimDir(const QString &simDir)
@@ -472,7 +496,7 @@ namespace BlackMisc
                 return paths;
             }
 
-            QSet<QString> CFsCommonUtil::allP3dAddOnSimObjectPaths(const QStringList &addOnPaths, bool checked)
+            QSet<QString> CFsCommonUtil::allP3dAddOnXmlSimObjectPaths(const QStringList &addOnPaths, bool checked)
             {
                 if (addOnPaths.isEmpty()) { return QSet<QString>(); }
                 QSet<QString> simObjectPaths;
@@ -513,7 +537,7 @@ namespace BlackMisc
                 return simObjectPaths;
             }
 
-            QSet<QString> CFsCommonUtil::allP3dAddOnSimObjectPaths(const QString &versionHint)
+            QSet<QString> CFsCommonUtil::allP3dAddOnXmlSimObjectPaths(const QString &versionHint)
             {
                 // all add-ons.cfg files
                 const QStringList addOnConfigFiles = CFsCommonUtil::findP3dAddOnConfigFiles(versionHint).toList();
@@ -521,23 +545,14 @@ namespace BlackMisc
                 // all PATH values in those files
                 const QStringList addOnPaths = CFsCommonUtil::allConfigFilesPathValues(addOnConfigFiles, true, {}).toList();
 
-                // based on all paths of all config
-                const QSet<QString> all = CFsCommonUtil::allP3dAddOnSimObjectPaths(addOnPaths, true);
+                // based on all paths of all config files search the XML files
+                const QSet<QString> all = CFsCommonUtil::allP3dAddOnXmlSimObjectPaths(addOnPaths, true);
                 return all;
             }
 
-            QSet<QString> CFsCommonUtil::allP3dSimObjectsConfigPaths(const QString &simulatorDir, const QString &versionHint)
+            QSet<QString> CFsCommonUtil::allFsxSimObjectPaths()
             {
-                const QStringList configFiles = CFsCommonUtil::findP3dSimObjectsConfigFiles(versionHint).toList();
-                return CFsCommonUtil::allConfigFilesPathValues(configFiles, true, simulatorDir);
-            }
-
-            QSet<QString> CFsCommonUtil::allP3dSimObjectPaths(const QString &simulatorDir, const QString &versionHint)
-            {
-                const QSet<QString> configFiles = CFsCommonUtil::allP3dSimObjectsConfigPaths(simulatorDir, versionHint);
-                const QSet<QString> addOnFiles  = CFsCommonUtil::allP3dAddOnSimObjectPaths(versionHint);
-                QSet<QString> all(configFiles);
-                return all.unite(addOnFiles);
+                return CFsCommonUtil::fsxSimObjectsPaths(CFsCommonUtil::findFsxConfigFiles(), true);
             }
 
             QStringList CFsCommonUtil::findFsxConfigFiles()
@@ -594,13 +609,13 @@ namespace BlackMisc
                 return paths;
             }
 
-            CStatusMessageList CFsCommonUtil::validateConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped)
+            CStatusMessageList CFsCommonUtil::validateAircraftConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped)
             {
                 CStatusMessage m;
                 CAircraftModelList sorted(models);
                 sorted.sortByFileName();
                 stopped = false;
-                CStatusMessageList msgs = sorted.validateFiles(validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, stopped, "", true);
+                CStatusMessageList msgs = sorted.validateFiles(validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, stopped, QString(), true);
                 if (stopped || validModels.isEmpty()) { return msgs; }
 
                 const CAircraftModelList nonFsModels = validModels.findNonFsFamilyModels();
@@ -658,14 +673,16 @@ namespace BlackMisc
 
             CStatusMessageList CFsCommonUtil::validateP3DSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped, const QString &simulatorDir)
             {
-                const QSet<QString> simObjectDirs = CFsCommonUtil::allP3dSimObjectPaths(simulatorDir, "v4");
-                return CFsCommonUtil::validateSimObjectsPath(simObjectDirs, models, validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, stopped);
+                const QString simObjectsDir = simulatorDir.isEmpty() ? CFsCommonUtil::p3dSimObjectsDir() : CFsCommonUtil::p3dSimObjectsDirFromSimDir(simulatorDir);
+                const QSet<QString> simObjectPaths = CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(simObjectsDir, "v4").toSet();
+                return CFsCommonUtil::validateSimObjectsPath(simObjectPaths, models, validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, stopped);
             }
 
-            CStatusMessageList CFsCommonUtil::validateFSXSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped)
+            CStatusMessageList CFsCommonUtil::validateFSXSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped, const QString &simulatorDir)
             {
-                const QSet<QString> simObjectDirs = CFsCommonUtil::fsxSimObjectsPaths(CFsCommonUtil::findFsxConfigFiles(), true);
-                return CFsCommonUtil::validateSimObjectsPath(simObjectDirs, models, validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, stopped);
+                Q_UNUSED(simulatorDir);
+                const QSet<QString> simObjectPaths = CFsCommonUtil::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths().toSet();
+                return CFsCommonUtil::validateSimObjectsPath(simObjectPaths, models, validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, stopped);
             }
 
             CStatusMessageList CFsCommonUtil::validateSimObjectsPath(
@@ -673,22 +690,24 @@ namespace BlackMisc
                 CAircraftModelList &validModels, CAircraftModelList &invalidModels,
                 bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped)
             {
-                CAircraftModelList sorted(models);
-                sorted.sortByFileName();
                 CStatusMessageList msgs;
-                if (sorted.isEmpty())
-                {
-                    msgs.push_back(CStatusMessage(getLogCategories()).validationInfo(u"No models to validate"));
-                    return msgs;
-                }
                 if (simObjectDirs.isEmpty())
                 {
                     msgs.push_back(CStatusMessage(getLogCategories()).validationInfo(u"No SimObject directories from cfg files, skipping validation"));
                     return msgs;
                 }
 
+                CAircraftModelList sortedModels(models);
+                sortedModels.sortByFileName();
+                if (sortedModels.isEmpty())
+                {
+                    msgs.push_back(CStatusMessage(getLogCategories()).validationInfo(u"No models to validate"));
+                    return msgs;
+                }
+
                 // info
-                msgs.push_back(CStatusMessage(getLogCategories()).validationInfo(u"Validating %1 models against %2 SimObject paths: %3") << models.size() << simObjectDirs.size() << joinStringSet(simObjectDirs, ", "));
+                const QString simObjDirs = joinStringSet(simObjectDirs, ", ");
+                msgs.push_back(CStatusMessage(getLogCategories()).validationInfo(u"Validating %1 models against %2 SimObject paths: '%3'") << models.size() << simObjectDirs.size() << simObjDirs);
 
                 // validate
                 int failed = 0;
