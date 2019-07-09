@@ -30,16 +30,17 @@ namespace BlackGui
 
             QPushButton *validateButton = new QPushButton("Validate", ui->bb_ValidationDialog);
             ui->bb_ValidationDialog->addButton(validateButton, QDialogButtonBox::ActionRole);
-            connect(validateButton, &QPushButton::released, this, &CAircraftModelValidationDialog::validate);
+            connect(validateButton, &QPushButton::released, this, &CAircraftModelValidationDialog::validate, Qt::QueuedConnection);
         }
 
         CAircraftModelValidationDialog::~CAircraftModelValidationDialog()
         { }
 
-        void CAircraftModelValidationDialog::setModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+        void CAircraftModelValidationDialog::setModels(const CAircraftModelList &models, const CSimulatorInfo &simulator, const QString &simulatorDir)
         {
-            m_models = models;
-            m_simulator = simulator;
+            m_models       = models;
+            m_simulator    = simulator;
+            m_simulatorDir = simulatorDir;
         }
 
         void CAircraftModelValidationDialog::triggerValidation(int delayMs)
@@ -63,7 +64,7 @@ namespace BlackGui
             const bool ignoreEmpty = false;
             const int  maxFailedFiles = 25;
             bool wasStopped = false;
-            const CStatusMessageList msgs = CAircraftModelUtilities::validateModelFiles(m_simulator, m_models, valid, invalid, ignoreEmpty, maxFailedFiles, wasStopped, "");
+            const CStatusMessageList msgs = CAircraftModelUtilities::validateModelFiles(m_simulator, m_models, valid, invalid, ignoreEmpty, maxFailedFiles, wasStopped, m_simulatorDir);
             ui->comp_StatusMessage->clear();
             ui->comp_StatusMessage->setNoSorting(); // we use the pre-sorted list
             ui->comp_StatusMessage->appendStatusMessagesToList(msgs);
