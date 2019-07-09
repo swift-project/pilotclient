@@ -86,7 +86,7 @@ namespace BlackGui
             explicit CDbMappingComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbMappingComponent();
+            virtual ~CDbMappingComponent() override;
 
             //! Graceful shutdown
             void gracefulShutdown();
@@ -322,7 +322,7 @@ namespace BlackGui
             QScopedPointer<Ui::CDbMappingComponent>             ui;
             QScopedPointer<CDbAutoStashingComponent>            m_autoStashDialog;     //!< dialog auto stashing
             QScopedPointer<CDbAutoSimulatorStashingComponent>   m_autoSimulatorDialog; //!< dialog auto simulator update
-            QScopedPointer<CDbModelMappingModifyDialog>      m_modelModifyDialog;   //!< dialog when modifying models
+            QScopedPointer<CDbModelMappingModifyDialog>         m_modelModifyDialog;   //!< dialog when modifying models
             BlackMisc::Simulation::FsCommon::CVPilotRulesReader m_vPilotReader;        //!< read vPilot rules
             BlackMisc::CDigestSignal                            m_dsStashedModelsChanged { this, &CDbMappingComponent::onStashedModelsChangedDigest, 750, 25 };
             BlackMisc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this, &CDbMappingComponent::onUserChanged };

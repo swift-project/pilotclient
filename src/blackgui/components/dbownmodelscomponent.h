@@ -14,12 +14,13 @@
 #include "blackgui/components/simulatorselector.h"
 #include "blackgui/menus/menudelegate.h"
 #include "blackgui/overlaymessagesframe.h"
-#include "blackmisc/datacache.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/aircraftmodelinterfaces.h"
 #include "blackmisc/simulation/data/modelcaches.h"
+#include "blackmisc/simulation/settings/modelsettings.h"
 #include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/datacache.h"
 #include "blackmisc/directories.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/connectionguard.h"
@@ -132,6 +133,7 @@ namespace BlackGui
             BlackMisc::Simulation::IAircraftModelLoader *m_modelLoader = nullptr; //!< read own aircraft models, aka models on disk
             BlackMisc::Simulation::CSimulatorInfo m_simulator; //!< currently init to simulator
             BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_directorySettings { this }; //!< the swift directories
+            BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings     { this }; //!< for directories
 
             //! Request own models
             void requestOwnModelsUpdate();

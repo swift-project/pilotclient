@@ -51,7 +51,9 @@ namespace BlackGui
             ui->tvp_OwnAircraftModels->addFilterDialog();
             ui->tvp_OwnAircraftModels->setDisplayAutomatically(true);
             ui->tvp_OwnAircraftModels->setCustomMenu(new CLoadModelsMenu(this));
-            ui->tvp_OwnAircraftModels->setCorrespondingSimulator(ui->comp_SimulatorSelector->getValue());
+
+            const CSimulatorInfo sim = ui->comp_SimulatorSelector->getValue();
+            ui->tvp_OwnAircraftModels->setCorrespondingSimulator(sim, m_simulatorSettings.getSimulatorDirectoryOrDefault(sim));
 
             bool c = connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestUpdate, this, &CDbOwnModelsComponent::requestOwnModelsUpdate);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
@@ -155,7 +157,7 @@ namespace BlackGui
             this->requestSimulatorModelsWithCacheInBackground(simulator);
             ui->comp_SimulatorSelector->setValue(simulator);
             this->setUiSimulatorString(simulator);
-            ui->tvp_OwnAircraftModels->setCorrespondingSimulator(simulator);
+            ui->tvp_OwnAircraftModels->setCorrespondingSimulator(simulator, m_simulatorSettings.getSimulatorDirectoryOrDefault(simulator));
             return true;
         }
 
