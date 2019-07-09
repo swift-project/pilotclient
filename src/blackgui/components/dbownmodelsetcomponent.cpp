@@ -70,7 +70,9 @@ namespace BlackGui
             ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuLoadAndSave | CAircraftModelView::MenuRefresh | CAircraftModelView::MenuOrderable);
             ui->tvp_OwnModelSet->setSorting(CAircraftModel::IndexOrderString);
             ui->tvp_OwnModelSet->initAsOrderable();
-            ui->tvp_OwnModelSet->setCorrespondingSimulator(ui->comp_SimulatorSelector->getValue());
+
+            const CSimulatorInfo sim = ui->comp_SimulatorSelector->getValue();
+            ui->tvp_OwnModelSet->setCorrespondingSimulator(sim, m_simulatorSettings.getSimulatorDirectoryOrDefault(sim));
             ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
             ui->comp_SimulatorSelector->setRememberSelectionAndSetToLastSelection();
             const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
@@ -428,7 +430,7 @@ namespace BlackGui
 
             m_simulator = simulator;
             ui->comp_SimulatorSelector->setValue(simulator);
-            ui->tvp_OwnModelSet->setCorrespondingSimulator(simulator);
+            ui->tvp_OwnModelSet->setCorrespondingSimulator(simulator, m_simulatorSettings.getSimulatorDirectoryOrDefault(m_simulator));
             ui->le_Simulator->setText(simulator.toQString(true));
             this->synchronizeCache(simulator);
             this->updateViewToCurrentModels();

@@ -16,6 +16,7 @@
 #include "blackgui/menus/menudelegate.h"
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/settings/modelsettings.h"
+#include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/aircraftmodelinterfaces.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/simulatorinfo.h"
@@ -185,6 +186,7 @@ namespace BlackGui
             BlackMisc::Simulation::CSimulatorInfo m_simulator; //!< currently set simulator
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this, &CDbOwnModelSetComponent::distributorPreferencesChanged }; //!< distributor preferences
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModel> m_modelSettings { this }; //!< settings for models
+            BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings         { this }; //!< for directories
 
             // -------------------------- custom menus -----------------------------------
 
