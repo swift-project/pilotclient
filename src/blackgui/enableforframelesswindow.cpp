@@ -60,9 +60,37 @@ namespace BlackGui
 
     void CEnableForFramelessWindow::setFrameless(bool frameless)
     {
+        const bool isFrameless = this->isFrameless();
+        if (isFrameless == frameless) { return; }
+
+        QWidget *w = this->getWidget();
+        if (!w) { return; }
+        const QRect oldFrameGeometry =  w->frameGeometry();
+        const QRect oldGeometry = w->geometry();
+
         WindowMode nonFrameLessMode = m_originalWindowMode; // Tool/Normal Window
         if (nonFrameLessMode == WindowFrameless) { nonFrameLessMode = WindowNormal; }
         this->setMode(frameless ? WindowFrameless : nonFrameLessMode);
+
+        if (frameless)
+        {
+            // from framed to frameless
+            w->setGeometry(oldFrameGeometry);
+            m_windowFrameSizeW = oldFrameGeometry.width()  - oldGeometry.width();
+            m_windowFrameSizeH = oldFrameGeometry.height() - oldGeometry.height();
+        }
+        else
+        {
+            if (m_windowFrameSizeW >= 0 && m_windowFrameSizeH >= 0)
+            {
+                QRect newGeometry = oldGeometry;
+                // newGeometry.setWidth(oldGeometry.width() - m_windowFrameSizeW);
+                // newGeometry.setHeight(oldGeometry.height() - m_windowFrameSizeH);
+                newGeometry.setX(oldGeometry.x() + m_windowFrameSizeW);
+                newGeometry.setY(oldGeometry.y() + m_windowFrameSizeH);
+                w->setGeometry(newGeometry);
+            }
+        }
     }
 
     void CEnableForFramelessWindow::alwaysOnTop(bool onTop)
