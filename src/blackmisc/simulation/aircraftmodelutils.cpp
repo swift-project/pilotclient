@@ -166,7 +166,7 @@ namespace BlackMisc
             CStatusMessageList specificTests;
             if (simulator.isMicrosoftOrPrepare3DSimulator() || models.isLikelyFsFamilyModelList())
             {
-                const CStatusMessageList specificTests1 = FsCommon::CFsCommonUtil::validateConfigFiles(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped);
+                const CStatusMessageList specificTests1 = FsCommon::CFsCommonUtil::validateAircraftConfigFiles(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped);
                 specificTests.push_back(specificTests1);
 
                 if (simulator.isP3D())
@@ -176,7 +176,7 @@ namespace BlackMisc
                 }
                 else if (simulator.isFSX())
                 {
-                    const CStatusMessageList specificTests2 = FsCommon::CFsCommonUtil::validateFSXSimObjectsPath(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped);
+                    const CStatusMessageList specificTests2 = FsCommon::CFsCommonUtil::validateFSXSimObjectsPath(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped, simulatorDir);
                     specificTests.push_back(specificTests2);
                 }
             }

@@ -1420,7 +1420,7 @@ namespace BlackMisc
             return msgs;
         }
 
-        CStatusMessageList CAircraftModelList::validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped, const QString &rootDirectory, bool alreadySortedByFn) const
+        CStatusMessageList CAircraftModelList::validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped, const QString &simRootDirectory, bool alreadySortedByFn) const
         {
             stopped = false;
 
@@ -1434,11 +1434,11 @@ namespace BlackMisc
             if (!alreadySortedByFn) { sorted.sortByFileName(); }
 
             const bool caseSensitive = CFileUtils::isFileNameCaseSensitive();
-            const QString rDir = CFileUtils::normalizeFilePathToQtStandard(
-                                     CFileUtils::stripLeadingSlashOrDriveLetter(
-                                         caseSensitive ? rootDirectory : rootDirectory.toLower()
-                                     )
-                                 );
+            const QString simRootDir = CFileUtils::normalizeFilePathToQtStandard(
+                                           CFileUtils::stripLeadingSlashOrDriveLetter(
+                                               caseSensitive ? simRootDirectory : simRootDirectory.toLower()
+                                           )
+                                       );
 
             for (const CAircraftModel &model : as_const(sorted))
             {
@@ -1467,9 +1467,10 @@ namespace BlackMisc
 
                     if (workingFiles.contains(fn) || model.hasExistingCorrespondingFile())
                     {
-                        if (!rootDirectory.isEmpty()  && !fn.contains(rDir))
+                        if (!simRootDirectory.isEmpty()  && !fn.contains(simRootDir))
                         {
-                            msgs.push_back(CStatusMessage(this).validationError(u"'%1', not in root directory '%2', '%3' skipped") << model.getModelStringAndDbKey() << rDir << model.getFileName());
+                            // check if in root directory
+                            msgs.push_back(CStatusMessage(this).validationError(u"'%1', not in root directory '%2', '%3' skipped") << model.getModelStringAndDbKey() << simRootDir << model.getFileName());
                             failedFiles.insert(fn);
                             failedFilesCount++;
                             break;

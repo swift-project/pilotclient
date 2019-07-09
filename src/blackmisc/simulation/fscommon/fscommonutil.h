@@ -52,6 +52,12 @@ namespace BlackMisc
                 //! Exclude directories for simObjects
                 static const QStringList &fsxSimObjectsExcludeDirectoryPatterns();
 
+                //! FSX's simObject dir and the add on dirs
+                static QStringList fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir = "");
+
+                //! P3D's simObject dir and the add on dirs
+                static QStringList p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir = "", const QString &versionHint = "v4");
+
                 //! P3D directory obtained from registry
                 static const QString &p3dDirFromRegistry();
 
@@ -63,9 +69,6 @@ namespace BlackMisc
 
                 //! P3D's simObject dir, resolved from multiple sources
                 static const QString &p3dSimObjectsDir();
-
-                //! P3D's simObject dir and the add on dirs
-                static QStringList p3dSimObjectsDirPlusAddOnSimObjectsDirs(const QString &simObjectsDir = "", const QString &versionHint = "v4");
 
                 //! P3D aircraft dir, relative to simulator directory
                 static QString p3dSimObjectsDirFromSimDir(const QString &simDir);
@@ -113,20 +116,17 @@ namespace BlackMisc
                 //! All PATH values from the config files
                 static QSet<QString> allConfigFilesPathValues(const QStringList &configFiles, bool checked, const QString &pathPrefix);
 
-                //! All add-on paths from the config files
-                static QSet<QString> allP3dAddOnSimObjectPaths(const QStringList &addOnPaths, bool checked);
+                //! All add-on paths from the XML add-on files "add-on.xml"
+                static QSet<QString> allP3dAddOnXmlSimObjectPaths(const QStringList &addOnPaths, bool checked);
 
-                //! All add-on paths from the config files
-                static QSet<QString> allP3dAddOnSimObjectPaths(const QString &versionHint = "v4");
+                //! All add-on paths from the XML add-on files "add-on.xml" files, use CFsCommonUtil::findP3dAddOnConfigFiles to find config files
+                static QSet<QString> allP3dAddOnXmlSimObjectPaths(const QString &versionHint = "v4");
 
-                //! All paths from the simobjects.cfg files
-                static QSet<QString> allP3dSimObjectsConfigPaths(const QString &simulatorDir, const QString &versionHint = "v4");
-
-                //! All add-on paths from the config files and the simobjects.cfg files
-                static QSet<QString> allP3dSimObjectPaths(const QString &simulatorDir, const QString &versionHint = "v4");
+                //! Get all the SimObjects paths from all config files
+                static QSet<QString> allFsxSimObjectPaths();
 
                 //! Find the config files (fsx.cfg)
-                // C:/Users/Joe Doe/AppData/Roaming/Lockheed Martin/Prepar3D v4
+                // C:/Users/Joe Doe/AppData/Roaming/Microsoft/FSX/fsx.cfg
                 static QStringList findFsxConfigFiles();
 
                 //! Get all the SimObjects paths from fsx.cfg
@@ -137,9 +137,9 @@ namespace BlackMisc
                 // SimObjectPaths.0=SimObjects\Airplanes
                 static QSet<QString> fsxSimObjectsPaths(const QString &fsxFile, bool checked);
 
-                //! Validate aircraft.cfg entries
+                //! Validate aircraft.cfg entries (sometimes also sim.cfg)
                 //! \remark only for FSX/P3D/FS9 models
-                static CStatusMessageList validateConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped);
+                static CStatusMessageList validateAircraftConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped);
 
                 //! Validate if known SimObjects path are used
                 //! \remark only for P3D
@@ -147,7 +147,7 @@ namespace BlackMisc
 
                 //! Validate if known SimObjects path are used
                 //! \remark only for FSX
-                static CStatusMessageList validateFSXSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped);
+                static CStatusMessageList validateFSXSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped, const QString &simulatorDir);
 
             private:
                 //! Utility functions @{
@@ -155,7 +155,7 @@ namespace BlackMisc
                 //! @}
 
                 //! Validate if known SimObjects path are used
-                //! \remark only for P3D
+                //! \remark only for P3D/FSX
                 static CStatusMessageList validateSimObjectsPath(const QSet<QString> &simObjectDirs, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped);
 
                 //! Log the reading of config files
