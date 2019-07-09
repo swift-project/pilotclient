@@ -93,6 +93,7 @@ namespace BlackGui
 
         void CSettingsFontComponent::changeFont()
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
             const QString fontSize = ui->cb_SettingsGuiFontSize->currentText().append("pt");
             const QString fontFamily = ui->cb_SettingsGuiFont->currentFont().family();
             const QString fontStyleCombined = ui->cb_SettingsGuiFontStyle->currentText();
