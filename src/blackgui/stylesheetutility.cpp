@@ -9,6 +9,7 @@
 #include "blackconfig/buildconfig.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/logmessage.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/restricted.h"
 
@@ -39,6 +40,12 @@ namespace BlackGui
         this->read();
         connect(&m_fileWatcher, &QFileSystemWatcher::directoryChanged, this, &CStyleSheetUtility::qssDirectoryChanged);
         connect(&m_fileWatcher, &QFileSystemWatcher::fileChanged, this, &CStyleSheetUtility::qssDirectoryChanged);
+    }
+
+    const CLogCategoryList &CStyleSheetUtility::getLogCategories()
+    {
+        static const CLogCategoryList cats { CLogCategory::guiComponent() };
+        return cats;
     }
 
     const QString &CStyleSheetUtility::fontStyleAsString(const QFont &font)
@@ -247,11 +254,9 @@ namespace BlackGui
 
     bool CStyleSheetUtility::updateFont(const QString &qss)
     {
-        QString qssWidget("QWidget {\n");
-        qssWidget.append(qss);
-        qssWidget.append("}\n");
-
-        QFile fontFile(CDirectoryUtils::stylesheetsDirectory() + "/" + fileNameFontsModified());
+        const QString qssWidget(u"QWidget {\n" % qss % u"}\n");
+        const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::stylesheetsDirectory(), fileNameFontsModified());
+        QFile fontFile(fn);
         bool ok = fontFile.open(QFile::Text | QFile::WriteOnly);
         if (ok)
         {
@@ -259,6 +264,10 @@ namespace BlackGui
             out << qssWidget;
             fontFile.close();
             ok = this->read();
+        }
+        else
+        {
+            CLogMessage(getLogCategories()).warning(u"Cannot open file '%1' for writing") << fn;
         }
         return ok;
     }

@@ -12,6 +12,7 @@
 #define BLACKGUI_STYLESHEETUTILITY_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackmisc/logcategorylist.h"
 #include "blackmisc/restricted.h"
 #include "blackmisc/digestsignal.h"
 
@@ -39,6 +40,9 @@ namespace BlackGui
     public:
         //! Constructor
         explicit CStyleSheetUtility(BlackMisc::Restricted<CGuiApplication>, QObject *parent = nullptr);
+
+        //! Log cats.
+        static const BlackMisc::CLogCategoryList &getLogCategories();
 
         //! Style for given file name
         QString style(const QString &fileName) const;
