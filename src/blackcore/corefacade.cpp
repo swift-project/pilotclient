@@ -117,13 +117,14 @@ namespace BlackCore
         m_contextOwnAircraft = IContextOwnAircraft::create(this, m_config.getModeOwnAircraft(), m_dbusServer, m_dbusConnection);
         times.insert("Own aircraft", time.restart());
 
-        if (m_contextNetwork) { m_contextNetwork->deleteLater(); }
-        m_contextNetwork = IContextNetwork::create(this, m_config.getModeNetwork(), m_dbusServer, m_dbusConnection);
-        times.insert("Network", time.restart());
-
         if (m_contextSimulator) { m_contextSimulator->deleteLater(); }
         m_contextSimulator = IContextSimulator::create(this, m_config.getModeSimulator(), m_dbusServer, m_dbusConnection);
         times.insert("Simulator", time.restart());
+
+        // depends on own aircraft and simulator context, which is bad style
+        if (m_contextNetwork) { m_contextNetwork->deleteLater(); }
+        m_contextNetwork = IContextNetwork::create(this, m_config.getModeNetwork(), m_dbusServer, m_dbusConnection);
+        times.insert("Network", time.restart());
 
         // checks --------------
         // 1. own aircraft and simulator should reside in same location
