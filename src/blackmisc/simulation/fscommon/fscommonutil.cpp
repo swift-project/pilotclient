@@ -577,7 +577,7 @@ namespace BlackMisc
                 QSet<QString> paths;
                 for (const QString &fsxFile : fsxFiles)
                 {
-                    paths.unite(fsxSimObjectsPaths(fsxFile, checked));
+                    paths.unite(CFsCommonUtil::fsxSimObjectsPaths(fsxFile, checked));
                 }
                 return paths;
             }
@@ -589,6 +589,9 @@ namespace BlackMisc
                 const QList<QStringRef> lines = splitLinesRefs(fileContent);
                 static const QString p("SimObjectPaths.");
 
+                const QFileInfo fsxFileInfo(fsxFile);
+                const QString relPath = fsxFileInfo.absolutePath();
+
                 QSet<QString> paths;
                 for (const QStringRef &line : lines)
                 {
@@ -597,14 +600,32 @@ namespace BlackMisc
                     const int i2 = line.lastIndexOf('=');
                     if (i2 < 0 || i1 >= i2 || line.endsWith('=')) { continue; }
                     const QStringRef path = line.mid(i2 + 1);
-                    const QString soPath = QDir::fromNativeSeparators(path.toString());
-                    const QFileInfo fi(soPath);
+                    QString soPath = QDir::fromNativeSeparators(path.toString());
+                    if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"FSX SimObjects path checked: '%1' in '%2'") << line << fsxFile; }
 
-                    // relative or absolute paths
-                    const QString p = (fi.isAbsolute() && (!checked || fi.exists())) ?
-                                      fi.absolutePath() : soPath;
-                    paths.insert(p);
-                    if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"FSX SimObjects path: '%1'") << p; }
+                    // ignore exclude patterns
+                    if (containsAny(soPath, CFsCommonUtil::fsxSimObjectsExcludeDirectoryPatterns(), Qt::CaseInsensitive)) { continue; }
+
+                    // make absolute
+                    if (!soPath.left(3).contains(':')) { soPath = CFileUtils::appendFilePaths(relPath, soPath); }
+
+                    const QDir p(soPath); // always absolute path now
+                    if (checked && !p.exists())
+                    {
+                        // skip, not existing
+                        if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"FSX SimObjects path skipped, not existing: '%1' in '%2'") << p.absolutePath() << fsxFile; }
+                        continue;
+                    }
+
+                    const QString afp = p.absolutePath().toLower();
+                    if (!CDirectoryUtils::containsFileInDir(afp, airFileFilter(), true))
+                    {
+                        if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"FSX SimObjects path: Skipping '%1' from '%2', no '%3' file") << afp << fsxFile << airFileFilter(); }
+                        continue;
+                    }
+
+                    paths.insert(afp);
+                    if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"FSX SimObjects path: '%1' from '%2'") << afp << fsxFile; }
                 }
                 return paths;
             }
@@ -683,6 +704,12 @@ namespace BlackMisc
                 Q_UNUSED(simulatorDir);
                 const QSet<QString> simObjectPaths = CFsCommonUtil::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths().toSet();
                 return CFsCommonUtil::validateSimObjectsPath(simObjectPaths, models, validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, stopped);
+            }
+
+            const QString CFsCommonUtil::airFileFilter()
+            {
+                static const QString a("*.air");
+                return a;
             }
 
             CStatusMessageList CFsCommonUtil::validateSimObjectsPath(
