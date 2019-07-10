@@ -86,6 +86,9 @@ namespace BlackGui
             //! SELCAL messages?
             void setPopupSelcalMessages(bool popup) { m_popupSelcalMessages = popup; }
 
+            //! Entirely disable
+            void disableAllPopups();
+
             //! Popup the given message? Quick check without frequency checks.
             bool popup(const BlackMisc::Network::CTextMessage &textMessage) const;
 

@@ -41,6 +41,16 @@ namespace BlackGui
             return this->getPopupAllMessages() || m_popupSelcalMessages;
         }
 
+        void CTextMessageSettings::disableAllPopups()
+        {
+            m_popupPrivateMessages    = false;
+            m_popupSupervisorMessages = false;
+            m_popupFrequencyMessages  = false;
+            m_popupAllMessages        = false;
+            m_popupSelcalMessages     = false;
+            m_focus                   = false;
+        }
+
         bool CTextMessageSettings::popup(const CTextMessage &textMessage) const
         {
             if (this->getPopupAllMessages()) { return true; }
