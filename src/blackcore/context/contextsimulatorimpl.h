@@ -23,6 +23,7 @@
 #include "blackmisc/simulation/settings/modelmatchersettings.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/settings/interpolationrenderingsetupsettings.h"
+#include "blackmisc/simulation/aircraftmodelsetprovider.h"
 #include "blackmisc/simulation/backgroundvalidation.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/interpolationsetuplist.h"
@@ -62,10 +63,12 @@ namespace BlackCore
         //! Network simulator concrete implementation
         class BLACKCORE_EXPORT CContextSimulator :
             public IContextSimulator,
+            public BlackMisc::Simulation::IAircraftModelSetProvider,
             public BlackMisc::Simulation::CRemoteAircraftAware, // gain access to in memory remote aircraft data
             public BlackMisc::CIdentifiable
         {
             Q_OBJECT
+            Q_INTERFACES(BlackMisc::Simulation::IAircraftModelSetProvider)
             Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME)
             friend class BlackCore::CCoreFacade;
             friend class IContextSimulator;
@@ -84,7 +87,6 @@ namespace BlackCore
             virtual int getSimulatorStatus() const override;
             virtual BlackMisc::Simulation::CSimulatorInternals getSimulatorInternals() const override;
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange(bool recalculateDistance) const override;
-            virtual BlackMisc::Simulation::CAircraftModelList getModelSet() const override;
             virtual BlackMisc::Simulation::CSimulatorInfo getModelSetLoaderSimulator() const override;
             virtual void setModelSetLoaderSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
             virtual BlackMisc::Simulation::CSimulatorInfo simulatorsWithInitializedModelSet() const override;
@@ -92,7 +94,6 @@ namespace BlackCore
             virtual QStringList getModelSetStrings() const override;
             virtual QStringList getModelSetCompleterStrings(bool sorted) const override;
             virtual bool isKnownModelInSet(const QString &modelString) const override;
-            virtual int getModelSetCount() const override;
             virtual void disableModelsForMatching(const BlackMisc::Simulation::CAircraftModelList &removedModels, bool incremental) override;
             virtual BlackMisc::Simulation::CAircraftModelList getDisabledModelsForMatching() const override;
             virtual void restoreDisabledModels() override;
@@ -125,6 +126,10 @@ namespace BlackCore
             virtual void setMatchingSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup) override;
             virtual BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const override;
             virtual BlackMisc::CStatusMessageList copyFsxTerrainProbe(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+
+            // also in IAircraftModelSetProvider
+            virtual BlackMisc::Simulation::CAircraftModelList getModelSet() const override;
+            virtual int getModelSetCount() const override;
             //! @}
 
             //! \addtogroup swiftdotcommands

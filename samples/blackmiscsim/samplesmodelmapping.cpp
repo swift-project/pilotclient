@@ -71,7 +71,7 @@ namespace BlackSample
 
         const CAircraftIcaoCode icao("C172");
         streamOut << "Searching for " << icao << endl;
-        streamOut << matcher.getModelSet().findByIcaoDesignators(icao, CAirlineIcaoCode()) << endl;
+        streamOut << matcher.getModelSetRef().findByIcaoDesignators(icao, CAirlineIcaoCode()) << endl;
 
         // restore settings: DO NOT SAVE !!!
         multiSettings.setSettings(originalSettings, sim);

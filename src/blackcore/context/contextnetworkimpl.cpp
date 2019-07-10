@@ -61,6 +61,7 @@ namespace BlackCore
         CContextNetwork::CContextNetwork(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
             IContextNetwork(mode, runtime)
         {
+            //! \fixme KB 2019-07 bad style we implicitly depend on 2 other contexts
             Q_ASSERT(this->getRuntime());
             Q_ASSERT(this->getIContextOwnAircraft());
             Q_ASSERT(this->getIContextOwnAircraft()->isUsingImplementingObject());
@@ -85,7 +86,11 @@ namespace BlackCore
 
             // 3. Airspace contents
             Q_ASSERT_X(this->getRuntime()->getCContextOwnAircraft(), Q_FUNC_INFO, "this and own aircraft context must be local");
-            m_airspace = new CAirspaceMonitor(this->getRuntime()->getCContextOwnAircraft(), m_network, this);
+            Q_ASSERT_X(this->getRuntime()->getCContextSimulator(),   Q_FUNC_INFO, "this and own simulator context must be local");
+            m_airspace = new CAirspaceMonitor(
+                this->getRuntime()->getCContextOwnAircraft(),
+                this->getRuntime()->getCContextSimulator(),
+                m_network, this);
             m_network->setClientProvider(m_airspace);
             connect(m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this, &CContextNetwork::changedAtcStationsOnline, Qt::QueuedConnection);
             connect(m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked, Qt::QueuedConnection);

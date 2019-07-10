@@ -13,6 +13,7 @@
 
 #include "blackcore/webdataservicesms.h"
 #include "blackcore/blackcoreexport.h"
+#include "blackmisc/simulation/aircraftmodelsetprovider.h"
 #include "blackmisc/simulation/aircraftmatchersetup.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/matchingscriptmisc.h"
@@ -42,9 +43,12 @@ namespace BlackCore
     //! Matcher for all models.
     //! \details Reads the model set (ie the models the user wants to use).
     //!          Also Allows to reverse lookup a model (from network to DB data).
-    class BLACKCORE_EXPORT CAircraftMatcher : public QObject
+    class BLACKCORE_EXPORT CAircraftMatcher :
+        public QObject,
+        public BlackMisc::Simulation::IAircraftModelSetProvider
     {
         Q_OBJECT
+        Q_INTERFACES(BlackMisc::Simulation::IAircraftModelSetProvider)
 
     public:
         //! Log categories
