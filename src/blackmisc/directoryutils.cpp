@@ -434,6 +434,23 @@ namespace BlackMisc
         return dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks);
     }
 
+    bool CDirectoryUtils::containsFileInDir(const QString &dir, const QString &filter, bool recursively)
+    {
+        QDir directory(dir);
+        if (!directory.exists()) { return false; }
+
+        const QStringList nameFilter({ filter });
+        if (!directory.entryInfoList(nameFilter, QDir::Files | QDir::NoDot | QDir::NoDotDot).isEmpty()) { return true; }
+
+        if (!recursively) { return false; }
+        const QStringList subDirs = CDirectoryUtils::getSubDirectories(dir);
+        for (const QString &subDir : subDirs)
+        {
+            if (CDirectoryUtils::containsFileInDir(subDir, filter, recursively)) { return true; }
+        }
+        return false;
+    }
+
     QStringList CDirectoryUtils::verifyRuntimeDirectoriesAndFiles()
     {
         QStringList failed;
