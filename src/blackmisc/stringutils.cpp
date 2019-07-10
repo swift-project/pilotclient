@@ -454,6 +454,16 @@ namespace BlackMisc
         return candidate;
     }
 
+    bool containsAny(const QString &testString, const QStringList &any, Qt::CaseSensitivity cs)
+    {
+        if (testString.isEmpty() || any.isEmpty()) { return false; }
+        for (const QString &a : any)
+        {
+            if (testString.contains(a, cs)) { return true; }
+        }
+        return false;
+    }
+
 } // ns
 
 //! \endcond

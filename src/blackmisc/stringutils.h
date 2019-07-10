@@ -295,6 +295,9 @@ namespace BlackMisc
     //! Default string if string is empty
     BLACKMISC_EXPORT const QString &defaultIfEmpty(const QString &candidate, const QString &defaultIfEmpty);
 
+    //! Contains any string of the list?
+    BLACKMISC_EXPORT bool containsAny(const QString &testString, const QStringList &any, Qt::CaseSensitivity cs);
+
     namespace Mixin
     {
         /*!

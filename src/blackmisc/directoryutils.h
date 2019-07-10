@@ -157,6 +157,9 @@ namespace BlackMisc
         //! All sub directories of given dir
         static QStringList getSubDirectories(const QString &rootDir);
 
+        //! Any file with filter like "*.txt"
+        static bool containsFileInDir(const QString &dir, const QString &filter, bool recursively);
+
         //! Check if the (most important) runtime directories are available
         static QStringList verifyRuntimeDirectoriesAndFiles();
 
