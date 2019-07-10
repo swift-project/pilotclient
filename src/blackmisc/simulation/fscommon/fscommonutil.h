@@ -149,6 +149,9 @@ namespace BlackMisc
                 //! \remark only for FSX
                 static CStatusMessageList validateFSXSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped, const QString &simulatorDir);
 
+                //! .air file filter
+                static const QString airFileFilter();
+
             private:
                 //! Utility functions @{
                 static QSet<QString> findP3dConfigFiles(const QString &configFile, const QString &versionHint = "v4");

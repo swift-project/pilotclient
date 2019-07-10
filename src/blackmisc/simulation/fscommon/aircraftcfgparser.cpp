@@ -176,7 +176,7 @@ namespace BlackMisc
 
                 // the sim.cfg/aircraft.cfg file should have an *.air file sibling
                 // if not we assume these files can be ignored
-                const QDir dirForAir(directory, QStringLiteral("*.air"), QDir::Name, QDir::Files | QDir::NoDotAndDotDot);
+                const QDir dirForAir(directory, CFsCommonUtil::airFileFilter(), QDir::Name, QDir::Files | QDir::NoDotAndDotDot);
                 const int airFilesCount = dirForAir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot, QDir::DirsLast).size();
                 const bool hasAirFile =  airFilesCount > 0;
 

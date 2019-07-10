@@ -436,7 +436,7 @@ namespace BlackMisc
 
     bool CDirectoryUtils::containsFileInDir(const QString &dir, const QString &filter, bool recursively)
     {
-        QDir directory(dir);
+        const QDir directory(dir);
         if (!directory.exists()) { return false; }
 
         const QStringList nameFilter({ filter });
