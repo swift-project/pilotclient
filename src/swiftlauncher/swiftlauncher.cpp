@@ -61,7 +61,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(ui->tb_Database,            &QPushButton::pressed, this, &CSwiftLauncher::startButtonPressed);
     connect(ui->tb_BackToMain,          &QToolButton::pressed, this, &CSwiftLauncher::showMainPage);
     connect(ui->tb_ConfigurationWizard, &QToolButton::pressed, this, &CSwiftLauncher::startWizard);
-    connect(ui->tb_Launcher,        &QToolBox::currentChanged, this, &CSwiftLauncher::tabChanged);
+    connect(ui->tb_Launcher,            &QToolBox::currentChanged, this, &CSwiftLauncher::tabChanged);
 
     connect(ui->rb_SwiftCoreAudioOnCore, &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased, Qt::QueuedConnection);
     connect(ui->rb_SwiftCoreAudioOnGui,  &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased, Qt::QueuedConnection);
@@ -71,6 +71,10 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(ui->comp_UpdateInfo,   &CUpdateInfoComponent::newerPilotClientAvailable, this, &CSwiftLauncher::setHeaderInfo,         Qt::QueuedConnection);
     connect(ui->comp_DBusSelector, &CDBusServerAddressSelector::editingFinished,     this, &CSwiftLauncher::onDBusEditingFinished, Qt::QueuedConnection);
     connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftLauncher::onStyleSheetsChanged, Qt::QueuedConnection);
+
+    connect(ui->pb_Log,    &QPushButton::released, this, &CSwiftLauncher::showLogPage, Qt::QueuedConnection);
+    connect(ui->pb_Log,    &QPushButton::released, this, &CSwiftLauncher::showLogPage, Qt::QueuedConnection);
+    connect(ui->pb_LogDir, &QPushButton::released, sGui, &CGuiApplication::openStandardLogDirectory, Qt::QueuedConnection);
 
     const QShortcut *logPageShortCut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(showLogPage()));
     Q_UNUSED(logPageShortCut);
@@ -151,7 +155,8 @@ void CSwiftLauncher::displayLatestNews(QNetworkReply *reply)
         const qint64 deltaT = CNetworkUtils::lastModifiedSinceNow(nwReply.data());
         if (deltaT > 0 && deltaT < newNews)
         {
-            ui->tb_Launcher->setCurrentWidget(ui->pg_LatestNews);
+            ui->tb_Launcher->setCurrentWidget(ui->pg_LatestNewsAndAbout);
+            ui->tw_LatestNewsAbout->setCurrentWidget(ui->tb_LatestNews);
         }
     }
     else
@@ -182,6 +187,7 @@ void CSwiftLauncher::init()
     ui->lbl_HeaderInfo->setVisible(false);
     ui->sw_SwiftLauncher->setCurrentWidget(ui->pg_SwiftLauncherMain);
     ui->tb_Launcher->setCurrentWidget(ui->pg_CoreMode);
+    ui->tw_LatestNewsAbout->setCurrentWidget(ui->tb_LatestNews);
 }
 
 void CSwiftLauncher::initStyleSheet()

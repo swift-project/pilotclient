@@ -190,6 +190,9 @@ namespace BlackGui
         //! Opens the standard stylesheet
         bool openStandardWidgetStyleSheet();
 
+        //! Opens the standard log directory
+        bool openStandardLogDirectory();
+
         //! Update the fonts
         bool updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor);
 
