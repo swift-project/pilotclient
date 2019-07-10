@@ -235,6 +235,8 @@ namespace BlackMisc
         //! \see QString::arg
         //! @{
         Derived &operator <<(const QString &v) { return arg(v); }
+        Derived &operator <<(const QStringRef &v) { return arg(v.toString()); }
+        Derived &operator <<(QStringView v) { return arg(v.toString()); }
         Derived &operator <<(int v) { return arg(QString::number(v)); }
         Derived &operator <<(uint v) { return arg(QString::number(v)); }
         Derived &operator <<(long v) { return arg(QString::number(v)); }
