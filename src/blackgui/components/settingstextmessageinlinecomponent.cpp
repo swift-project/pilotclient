@@ -11,6 +11,11 @@
 #include "settingstextmessageinlinecomponent.h"
 #include "ui_settingstextmessageinlinecomponent.h"
 
+#include <QPushButton>
+#include <QCheckBox>
+#include <QTimer>
+#include <QPointer>
+
 using namespace BlackGui::Settings;
 using namespace BlackMisc;
 
@@ -23,11 +28,14 @@ namespace BlackGui
             ui(new Ui::CSettingsTextMessageInlineComponent)
         {
             ui->setupUi(this);
-            connect(ui->cb_All,        &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
-            connect(ui->cb_Frequency,  &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
-            connect(ui->cb_Private,    &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
-            connect(ui->cb_Supervisor, &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
-            connect(ui->cb_Focus,      &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
+            connect(ui->cb_All,        &QCheckBox::released,   this, &CSettingsTextMessageInlineComponent::changeSettings);
+            connect(ui->cb_Frequency,  &QCheckBox::released,   this, &CSettingsTextMessageInlineComponent::changeSettings);
+            connect(ui->cb_Private,    &QCheckBox::released,   this, &CSettingsTextMessageInlineComponent::changeSettings);
+            connect(ui->cb_Supervisor, &QCheckBox::released,   this, &CSettingsTextMessageInlineComponent::changeSettings);
+            connect(ui->cb_Focus,      &QCheckBox::released,   this, &CSettingsTextMessageInlineComponent::changeSettings);
+            connect(ui->pb_Disable,    &QPushButton::released, this, &CSettingsTextMessageInlineComponent::disableAllOverlayMessages);
+            connect(ui->pb_Reset,      &QPushButton::released, this, &CSettingsTextMessageInlineComponent::resetOverlayMessages);
+
             this->settingsChanged();
         }
 
@@ -56,6 +64,33 @@ namespace BlackGui
             s.setFocusOverlayWindows(ui->cb_Focus->isChecked());
             const CStatusMessage m = m_settings.setAndSave(s);
             CLogMessage::preformatted(m);
+        }
+
+        void CSettingsTextMessageInlineComponent::disableAllOverlayMessages()
+        {
+            CTextMessageSettings s(m_settings.get());
+            s.disableAllPopups();
+            const CStatusMessage m = m_settings.setAndSave(s);
+            CLogMessage::preformatted(m);
+
+            QPointer<CSettingsTextMessageInlineComponent> myself(this);
+            QTimer::singleShot(500, this, [ = ]
+            {
+                if (myself) { myself->settingsChanged(); }
+            });
+        }
+
+        void CSettingsTextMessageInlineComponent::resetOverlayMessages()
+        {
+            CTextMessageSettings s;
+            const CStatusMessage m = m_settings.setAndSave(s);
+            CLogMessage::preformatted(m);
+
+            QPointer<CSettingsTextMessageInlineComponent> myself(this);
+            QTimer::singleShot(500, this, [ = ]
+            {
+                if (myself) { myself->settingsChanged(); }
+            });
         }
     } // ns
 } // ns

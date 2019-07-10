@@ -42,6 +42,12 @@ namespace BlackGui
             //! Change the settings
             void changeSettings();
 
+            //! Disable all overlay messages
+            void disableAllOverlayMessages();
+
+            //! Reset all overlay messages
+            void resetOverlayMessages();
+
             QScopedPointer<Ui::CSettingsTextMessageInlineComponent> ui;
             BlackMisc::CSetting<BlackGui::Settings::TextMessageSettings> m_settings { this, &CSettingsTextMessageInlineComponent::settingsChanged }; //!< settings changed
         };
