@@ -678,11 +678,8 @@ namespace BlackGui
         a = menu.addAction(CIcons::disk16(), "Log directory");
         c = connect(a, &QAction::triggered, this, [ = ]()
         {
-            const QString path(QDir::toNativeSeparators(CDirectoryUtils::logDirectory()));
-            if (QDir(path).exists())
-            {
-                QDesktopServices::openUrl(QUrl::fromLocalFile(path));
-            }
+            if (!sGui || sGui->isShuttingDown()) { return; }
+            this->openStandardLogDirectory();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
@@ -958,6 +955,13 @@ namespace BlackGui
     {
         const QString fn = CStyleSheetUtility::fileNameAndPathStandardWidget();
         return QDesktopServices::openUrl(QUrl::fromLocalFile(fn));
+    }
+
+    bool CGuiApplication::openStandardLogDirectory()
+    {
+        const QString path(QDir::toNativeSeparators(CDirectoryUtils::logDirectory()));
+        if (!QDir(path).exists()) { return false; }
+        return QDesktopServices::openUrl(QUrl::fromLocalFile(path));
     }
 
     bool CGuiApplication::updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor)

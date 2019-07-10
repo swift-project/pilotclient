@@ -88,12 +88,12 @@
           <item>
            <widget class="QToolBox" name="tb_Launcher">
             <property name="currentIndex">
-             <number>2</number>
+             <number>4</number>
             </property>
             <property name="tabSpacing">
              <number>6</number>
             </property>
-            <widget class="QWidget" name="pg_LatestNews">
+            <widget class="QWidget" name="pg_LatestNewsAndAbout">
              <property name="geometry">
               <rect>
                <x>0</x>
@@ -103,23 +103,47 @@
               </rect>
              </property>
              <attribute name="label">
-              <string>Latest &amp;news</string>
+              <string>Latest &amp;news and &amp;about</string>
              </attribute>
-             <layout class="QVBoxLayout" name="vl_LatestNews">
+             <layout class="QVBoxLayout" name="vl_LatestNewsAndAbout">
               <item>
-               <widget class="QTextBrowser" name="tbr_LatestNews">
-                <property name="documentTitle">
-                 <string>Latest news</string>
+               <widget class="QTabWidget" name="tw_LatestNewsAbout">
+                <property name="currentIndex">
+                 <number>0</number>
                 </property>
-                <property name="readOnly">
-                 <bool>true</bool>
-                </property>
-                <property name="placeholderText">
-                 <string>Latest news will go here</string>
-                </property>
-                <property name="openExternalLinks">
-                 <bool>true</bool>
-                </property>
+                <widget class="QWidget" name="tb_LatestNews">
+                 <attribute name="title">
+                  <string>News</string>
+                 </attribute>
+                 <layout class="QVBoxLayout" name="vl_LatestNews">
+                  <item>
+                   <widget class="QTextBrowser" name="tbr_LatestNews">
+                    <property name="documentTitle">
+                     <string>Latest news</string>
+                    </property>
+                    <property name="readOnly">
+                     <bool>true</bool>
+                    </property>
+                    <property name="placeholderText">
+                     <string>Latest news will go here</string>
+                    </property>
+                    <property name="openExternalLinks">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+                <widget class="QWidget" name="tb_About">
+                 <attribute name="title">
+                  <string>About</string>
+                 </attribute>
+                 <layout class="QVBoxLayout" name="vl_About">
+                  <item>
+                   <widget class="BlackGui::Components::CAboutHtmlComponent" name="comp_AboutHTML"/>
+                  </item>
+                 </layout>
+                </widget>
                </widget>
               </item>
              </layout>
@@ -488,7 +512,7 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="pg_About">
+            <widget class="QWidget" name="pg_Tools">
              <property name="geometry">
               <rect>
                <x>0</x>
@@ -498,9 +522,9 @@
               </rect>
              </property>
              <attribute name="label">
-              <string>&amp;About (credits and license)</string>
+              <string>&amp;Tools</string>
              </attribute>
-             <layout class="QVBoxLayout" name="vl_Credits">
+             <layout class="QGridLayout" name="gridLayout">
               <property name="leftMargin">
                <number>3</number>
               </property>
@@ -513,8 +537,32 @@
               <property name="bottomMargin">
                <number>3</number>
               </property>
-              <item>
-               <widget class="BlackGui::Components::CAboutHtmlComponent" name="comp_AboutHTML"/>
+              <item row="3" column="0">
+               <spacer name="vs_Tools">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="0">
+               <widget class="QPushButton" name="pb_Log">
+                <property name="text">
+                 <string>log</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QPushButton" name="pb_LogDir">
+                <property name="text">
+                 <string>log directory</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </widget>
@@ -812,7 +860,6 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>tbr_LatestNews</tabstop>
   <tabstop>rb_WindowNormal</tabstop>
   <tabstop>rb_WindowFrameless</tabstop>
   <tabstop>rb_SwiftStandalone</tabstop>
