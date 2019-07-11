@@ -84,8 +84,8 @@ namespace BlackMisc
 
         private:
             ScenarioIndex m_scenarioIndex = ClearSky;
-            QString m_scenarioName;
-            QString m_scenarioDescription;
+            QString m_scenarioName {"Clear Sky"};
+            QString m_scenarioDescription {"Clear Sky default"};
 
             BLACK_METACLASS(
                 CWeatherScenario,

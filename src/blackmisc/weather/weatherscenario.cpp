@@ -12,7 +12,6 @@ namespace BlackMisc
 {
     namespace Weather
     {
-
         void CWeatherScenario::registerMetadata()
         {
             CValueObject<CWeatherScenario>::registerMetadata();
@@ -28,15 +27,12 @@ namespace BlackMisc
         CVariant CWeatherScenario::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexScenarioIndex:
-                return CVariant::fromValue(m_scenarioIndex);
-            case IndexScenarioName:
-                return CVariant::fromValue(m_scenarioName);
-            case IndexScenarioDescription:
-                return CVariant::fromValue(m_scenarioDescription);
+            case IndexScenarioIndex:       return CVariant::fromValue(m_scenarioIndex);
+            case IndexScenarioName:        return CVariant::fromValue(m_scenarioName);
+            case IndexScenarioDescription: return CVariant::fromValue(m_scenarioDescription);
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -45,18 +41,12 @@ namespace BlackMisc
         void CWeatherScenario::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CWeatherScenario>(); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexScenarioIndex:
-                setIndex(variant.value<ScenarioIndex>());
-                break;
-            case IndexScenarioName:
-                setName(variant.value<QString>());
-                break;
-            case IndexScenarioDescription:
-                setDescription(variant.value<QString>());
-                break;
+            case IndexScenarioIndex: setIndex(variant.value<ScenarioIndex>()); break;
+            case IndexScenarioName:  setName(variant.value<QString>()); break;
+            case IndexScenarioDescription: setDescription(variant.value<QString>()); break;
             default:
                 CValueObject::setPropertyByIndex(index, variant);
                 break;
