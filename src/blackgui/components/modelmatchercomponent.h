@@ -73,6 +73,7 @@ namespace BlackGui
             void testModelMatching();
 
             //! Reverse lookup
+            //! \sa CAirspaceMonitor::reverseLookupModelWithFlightplanData is the real world lookup
             void reverseLookup();
 
             //! Init

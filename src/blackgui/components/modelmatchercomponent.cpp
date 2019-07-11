@@ -180,6 +180,8 @@ namespace BlackGui
 
         void CModelMatcherComponent::reverseLookup()
         {
+            // CAirspaceMonitor::reverseLookupModelWithFlightplanData is the real world lookup
+
             ui->te_Results->clear();
             CStatusMessageList msgs;
             m_matcher.setDefaultModel(CModelMatcherComponent::defaultModel());
