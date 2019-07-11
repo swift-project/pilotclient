@@ -14,6 +14,7 @@
 #include "samplesjson.h"
 #include "samplesmetadata.h"
 #include "samplesperformance.h"
+#include "samplesfile.h"
 
 #include <stdio.h>
 #include <QCoreApplication>
@@ -55,9 +56,10 @@ int main(int argc, char *argv[])
         qtout << "6f .. string concatenation (+=, arg, ..)" << endl;
         qtout << "6g .. const &QString vs. QStringLiteral" << endl;
         qtout << "7 .. Algorithms" << endl;
+        qtout << "8 .. File/Directory" << endl;
         qtout << "-----" << endl;
         qtout << "x .. Bye" << endl;
-        QString s = qtin.readLine().toLower().trimmed();
+        const QString s = qtin.readLine().toLower().trimmed();
 
         if (s.startsWith("1")) { CSamplesJson::samples(); }
         else if (s.startsWith("2"))  { CSamplesChangeObject::samples(); }
@@ -72,6 +74,7 @@ int main(int argc, char *argv[])
         else if (s.startsWith("6f")) { CSamplesPerformance::samplesStringConcat(qtout); }
         else if (s.startsWith("6g")) { CSamplesPerformance::samplesStringLiteralVsConstQString(qtout); }
         else if (s.startsWith("7"))  { CSamplesAlgorithm::samples(); }
+        else if (s.startsWith("8"))  { CSamplesFile::samples(qtout); }
         else if (s.startsWith("x"))  { break; }
     }
     while (true);

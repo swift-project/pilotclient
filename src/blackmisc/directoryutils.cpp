@@ -427,9 +427,9 @@ namespace BlackMisc
         return QUrl::fromPercentEncoding(directory.toUtf8());
     }
 
-    QStringList CDirectoryUtils::getSubDirectories(const QString &rootDir)
+    QStringList CDirectoryUtils::getRelativeSubDirectories(const QString &rootDir)
     {
-        QDir dir(rootDir);
+        const QDir dir(rootDir);
         if (!dir.exists()) { return QStringList(); }
         return dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks);
     }
@@ -443,10 +443,11 @@ namespace BlackMisc
         if (!directory.entryInfoList(nameFilter, QDir::Files | QDir::NoDot | QDir::NoDotDot).isEmpty()) { return true; }
 
         if (!recursively) { return false; }
-        const QStringList subDirs = CDirectoryUtils::getSubDirectories(dir);
-        for (const QString &subDir : subDirs)
+        const QStringList relSubDirs = CDirectoryUtils::getRelativeSubDirectories(dir);
+        for (const QString &relSubDir : relSubDirs)
         {
-            if (CDirectoryUtils::containsFileInDir(subDir, filter, recursively)) { return true; }
+            const QString absSubDir = CFileUtils::appendFilePaths(directory.absolutePath(), relSubDir);
+            if (CDirectoryUtils::containsFileInDir(absSubDir, filter, recursively)) { return true; }
         }
         return false;
     }
@@ -686,7 +687,7 @@ namespace BlackMisc
 
         if (nestedDirs)
         {
-            const QStringList relativeSubdirs = CDirectoryUtils::getSubDirectories(dirSource);
+            const QStringList relativeSubdirs = CDirectoryUtils::getRelativeSubDirectories(dirSource);
             if (!relativeSubdirs.isEmpty())
             {
                 for (const QString &relativeSubdir : relativeSubdirs)
