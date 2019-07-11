@@ -23,6 +23,9 @@
 #include <QRegExpValidator>
 #include <QRegularExpression>
 #include <QStringView>
+#include <QStringBuilder>
+#include <QStringLiteral>
+#include <QPointer>
 
 using namespace BlackCore;
 using namespace BlackCore::Context;
@@ -54,11 +57,11 @@ namespace BlackGui
                 ui->cb_weatherScenario->addItem(scenario.getName(), QVariant::fromValue(scenario));
             }
 
-            const auto scenario = m_weatherScenarioSetting.get();
+            const CWeatherScenario scenario = m_weatherScenarioSetting.get();
             ui->cb_weatherScenario->setCurrentIndex(scenario.getIndex());
             ui->pb_ActivateWeather->setIcon(CIcons::metar());
 
-            setupConnections();
+            this->setupConnections();
             ui->lbl_Status->setText({});
 
             // hotkeys
@@ -66,11 +69,19 @@ namespace BlackGui
             m_hotkeyBindings.append(CGuiActionBindHandler::bindButton(ui->pb_ActivateWeather, swift + "Weather/Toggle weather", true));
             m_hotkeyBindings.append(CGuiActionBindHandler::bindButton(ui->pb_ActivateWeather, swift + "Weather/Force CAVOK", true));
 
-            // Set interval to 5 min
+            // Set interval to 5 mins
             m_weatherUpdateTimer.setInterval(1000 * 60 * 5);
 
             // Call this method deferred in order to have the component fully initialized, e.g. object name set by the parent
-            QTimer::singleShot(1000, this, &CWeatherComponent::updateWeatherInformation);
+            QPointer<CWeatherComponent> myself(this);
+            QTimer::singleShot(1000, this, [ = ]
+            {
+                if (myself)
+                {
+                    myself->updateWeatherInformation();
+                    myself->updateWeatherInfoLine();
+                }
+            });
         }
 
         CWeatherComponent::~CWeatherComponent()
@@ -117,6 +128,7 @@ namespace BlackGui
 
         void CWeatherComponent::toggleWeatherActivation()
         {
+            if (!sGui || !sGui->getIContextSimulator()) { return; }
             if (m_isWeatherActivated)
             {
                 m_isWeatherActivated = false;
@@ -128,6 +140,7 @@ namespace BlackGui
                 ui->pb_ActivateWeather->setText("Deactivate");
             }
             sGui->getIContextSimulator()->setWeatherActivated(m_isWeatherActivated);
+            this->updateWeatherInfoLine();
         }
 
         void CWeatherComponent::showCoordinateDialog()
@@ -139,22 +152,36 @@ namespace BlackGui
         {
             if (index == -1) { return; }
             m_lastOwnAircraftPosition = {};
-            CWeatherScenario scenario = m_weatherScenarios[index];
+            const CWeatherScenario scenario = m_weatherScenarios[index];
             m_weatherScenarioSetting.set(scenario);
-            updateWeatherInformation();
-
+            this->updateWeatherInformation();
+            this->updateWeatherInfoLine();
         }
 
         void CWeatherComponent::setCavok()
         {
+            QPointer<CWeatherComponent> myself(this);
             for (int index = 0; index < m_weatherScenarios.size(); index++)
             {
                 if (m_weatherScenarios[index].getIndex() == CWeatherScenario::ClearSky)
                 {
                     // call queued
-                    QTimer::singleShot(0, this, [ = ] { this->setWeatherScenario(index); });
+                    QTimer::singleShot(0, this, [ = ] { if (myself) { myself->setWeatherScenario(index); }});
                     break;
                 }
+            }
+        }
+
+        void CWeatherComponent::updateWeatherInfoLine()
+        {
+            if (m_isWeatherActivated)
+            {
+                const CWeatherScenario scenario = m_weatherScenarioSetting.get();
+                ui->lbl_WeatherEngineInfo->setText(QStringLiteral("swift weather is on, '%1'").arg(scenario.getName()));
+            }
+            else
+            {
+                ui->lbl_WeatherEngineInfo->setText(QStringLiteral("swift weather is off"));
             }
         }
 
@@ -163,7 +190,7 @@ namespace BlackGui
             setWeatherGrid({});
             ui->lbl_Status->setText({});
             const bool useOwnAcftPosition = ui->cb_UseOwnAcftPosition->isChecked();
-            BlackMisc::Geo::CCoordinateGeodetic position;
+            CCoordinateGeodetic position;
             Q_ASSERT(ui->cb_weatherScenario->currentData().canConvert<CWeatherScenario>());
             CWeatherScenario scenario = ui->cb_weatherScenario->currentData().value<CWeatherScenario>();
 
@@ -208,11 +235,11 @@ namespace BlackGui
         void CWeatherComponent::setupConnections()
         {
             // UI connections
-            connect(ui->cb_weatherScenario, qOverload<int>(&QComboBox::currentIndexChanged), this, &CWeatherComponent::setWeatherScenario);
+            connect(ui->cb_weatherScenario,    qOverload<int>(&QComboBox::currentIndexChanged), this, &CWeatherComponent::setWeatherScenario);
             connect(m_coordinateDialog.data(), &CCoordinateDialog::changedCoordinate, this, &CWeatherComponent::updateWeatherInformation);
             connect(ui->cb_UseOwnAcftPosition, &QCheckBox::toggled, this, &CWeatherComponent::toggleUseOwnAircraftPosition);
-            connect(&m_weatherUpdateTimer, &QTimer::timeout, this, &CWeatherComponent::updateWeatherInformation);
-            connect(ui->pb_ActivateWeather, &QPushButton::clicked, this, &CWeatherComponent::toggleWeatherActivation);
+            connect(&m_weatherUpdateTimer,     &QTimer::timeout, this, &CWeatherComponent::updateWeatherInformation);
+            connect(ui->pb_ActivateWeather,    &QPushButton::clicked, this, &CWeatherComponent::toggleWeatherActivation);
 
             // Context connections
             Q_ASSERT(sGui->getIContextSimulator());
@@ -221,23 +248,29 @@ namespace BlackGui
 
         void CWeatherComponent::setWeatherGrid(const CWeatherGrid &weatherGrid)
         {
-            CGridPoint gridPoint = weatherGrid.frontOrDefault();
+            const CGridPoint gridPoint = weatherGrid.frontOrDefault();
             ui->tvp_TemperatureLayers->updateContainer(gridPoint.getTemperatureLayers());
             ui->tvp_CloudLayers->updateContainer(gridPoint.getCloudLayers());
             ui->tvp_WindLayers->updateContainer(gridPoint.getWindLayers());
-            CCoordinateGeodetic position = gridPoint.getPosition();
-            double pressureAtMsl = gridPoint.getPressureAtMsl().value(CPressureUnit::hPa());
-            QString status = QString("Weather Position: %1 %2").arg(position.latitude().toWgs84(), position.longitude().toWgs84());
-            status += QString("\nPressure (MSL): %1 hPa").arg(pressureAtMsl);
+            const CCoordinateGeodetic position = gridPoint.getPosition();
+            const double pressureAtMsl = gridPoint.getPressureAtMsl().value(CPressureUnit::hPa());
+            const QString status = QStringLiteral("Weather Position: %1 %2\nPressure (MSL): %3 hPa").arg(position.latitude().toWgs84(), position.longitude().toWgs84()).arg(pressureAtMsl);
             ui->lbl_Status->setText(status);
         }
 
         void CWeatherComponent::requestWeatherGrid(const CCoordinateGeodetic &position)
         {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
             ui->lbl_Status->setText(QStringLiteral("Loading around %1 %2").arg(position.latitude().toWgs84(), position.longitude().toWgs84()));
-            CWeatherGrid weatherGrid { { {}, position } };
-            auto ident = identifier();
+            const CWeatherGrid weatherGrid { { {}, position } };
+            const auto ident = identifier();
             sGui->getIContextSimulator()->requestWeatherGrid(weatherGrid, ident);
         }
+
+        void CWeatherComponent::onScenarioChanged()
+        {
+            this->updateWeatherInfoLine();
+        }
+
     } // namespace
 } // namespace
