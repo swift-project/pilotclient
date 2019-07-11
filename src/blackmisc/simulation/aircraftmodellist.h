@@ -154,6 +154,12 @@ namespace BlackMisc
             //! Find by the corresponding airline group
             CAircraftModelList findByAirlineGroup(const BlackMisc::Aviation::CAirlineIcaoCode &airline) const;
 
+            //! Find by airline name and telephony
+            CAircraftModelList findByAirlineNameAndTelephonyDesignator(const QString &name, const QString &telephony, bool onlyIfExistInModel = true) const;
+
+            //! Find by airline name and telephony, similar to CAirlineIcaoCodeList::findByNamesOrTelephonyDesignator
+            CAircraftModelList findByAirlineNamesOrTelephonyDesignator(const QString &name) const;
+
             //! Find by livery code
             CAircraftModelList findByLiveryCode(const Aviation::CLivery &livery) const;
 
