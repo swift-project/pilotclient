@@ -58,9 +58,9 @@ namespace BlackMisc
         {
             static const QVector<CWeatherScenario> scenarios =
             {
-                { CWeatherScenario::ClearSky, "Clear Sky", "Clear sky, no clouds" },
-                { CWeatherScenario::Thunderstorm, "Thunderstorm", "Raining, lightning, several cloud layers" },
-                { CWeatherScenario::RealWeather, "Realtime Weather", "As real as it gets..." },
+                { CWeatherScenario::ClearSky     },
+                { CWeatherScenario::Thunderstorm },
+                { CWeatherScenario::RealWeather  },
             };
             return scenarios;
         }
@@ -68,7 +68,7 @@ namespace BlackMisc
         const CWeatherGrid &CWeatherGrid::getByScenario(const CWeatherScenario &scenario)
         {
             static const CWeatherGrid emptyGrid {};
-            switch(scenario.getIndex())
+            switch (scenario.getIndex())
             {
             case CWeatherScenario::ClearSky: return getClearWeatherGrid();
             case CWeatherScenario::Thunderstorm: return getThunderStormGrid();
@@ -107,7 +107,7 @@ namespace BlackMisc
                 {},
                 CCloudLayerList { cloudLayer },
                 CTemperatureLayerList { temperatureLayer },
-                CVisibilityLayerList { visibilityLayer } ,
+                CVisibilityLayerList { visibilityLayer },
                 CWindLayerList { windLayer },
                 { CAltitude::standardISASeaLevelPressure() }
             };

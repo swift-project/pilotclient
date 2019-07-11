@@ -18,6 +18,10 @@ namespace BlackMisc
             qRegisterMetaType<ScenarioIndex>();
         }
 
+        CWeatherScenario::CWeatherScenario(CWeatherScenario::ScenarioIndex index) :
+            CWeatherScenario::CWeatherScenario(index, enumToString(index), enumToDescription(index))
+        { }
+
         CWeatherScenario::CWeatherScenario(ScenarioIndex index, const QString &name, const QString &description) :
             m_scenarioIndex(index),
             m_scenarioName(name),
@@ -53,9 +57,44 @@ namespace BlackMisc
             }
         }
 
-        QString CWeatherScenario::convertToQString(bool /** i18n **/) const
+        QString CWeatherScenario::convertToQString(bool i18n) const
         {
+            Q_UNUSED(i18n);
             return m_scenarioName;
+        }
+
+        const QString &CWeatherScenario::enumToString(CWeatherScenario::ScenarioIndex index)
+        {
+            static const QString cs("Clear Sky");
+            static const QString thunder("Thunderstorm");
+            static const QString real("Realtime Weather");
+            switch (index)
+            {
+            case ClearSky:     return cs;
+            case Thunderstorm: return thunder;
+            case RealWeather:  return real;
+            default: break;
+            }
+
+            static const QString unknown("???");
+            return unknown;
+        }
+
+        const QString &CWeatherScenario::enumToDescription(CWeatherScenario::ScenarioIndex index)
+        {
+            static const QString cs("Clear sky, no clouds");
+            static const QString thunder("Raining, lightning, several cloud layers");
+            static const QString real("As real as it gets...");
+            switch (index)
+            {
+            case ClearSky:     return cs;
+            case Thunderstorm: return thunder;
+            case RealWeather:  return real;
+            default: break;
+            }
+
+            static const QString unknown("???");
+            return unknown;
         }
 
     } // namespace
