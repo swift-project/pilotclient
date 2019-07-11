@@ -65,6 +65,7 @@ namespace BlackGui
             void setWeatherScenario(int index);
             void setCavok();
 
+            void updateWeatherInfoLine();
             void updateWeatherInformation();
             void weatherGridReceived(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier);
 
@@ -73,12 +74,14 @@ namespace BlackGui
             void setWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
             void requestWeatherGrid(const BlackMisc::Geo::CCoordinateGeodetic &position);
 
+            void onScenarioChanged();
+
             QScopedPointer<Ui::CWeatherComponent> ui;
             QScopedPointer<CCoordinateDialog> m_coordinateDialog { new CCoordinateDialog(this) };
             QVector<BlackMisc::Weather::CWeatherScenario> m_weatherScenarios;
             QTimer m_weatherUpdateTimer;
             BlackMisc::Geo::CCoordinateGeodetic m_lastOwnAircraftPosition;
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSelectedWeatherScenario> m_weatherScenarioSetting { this };
+            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSelectedWeatherScenario> m_weatherScenarioSetting { this, &CWeatherComponent::onScenarioChanged };
             BlackCore::CActionBindings m_hotkeyBindings; //!< allow binding of hotkey
             bool m_isWeatherActivated = false;
         };
