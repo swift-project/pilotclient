@@ -190,6 +190,35 @@ namespace BlackMisc
             });
         }
 
+        CAircraftModelList CAircraftModelList::findByAirlineNameAndTelephonyDesignator(const QString &name, const QString &telephony, bool onlyIfExistInModel) const
+        {
+            return this->findBy([ & ](const CAircraftModel & model)
+            {
+                if (!model.hasAirlineDesignator() || !model.hasValidDbKey()) { return false; }
+                const CAirlineIcaoCode &icao = model.getAirlineIcaoCode();
+                if (!name.isEmpty() && (icao.hasName() || !onlyIfExistInModel))
+                {
+                    if (!icao.getName().contains(name, Qt::CaseInsensitive)) { return false; }
+                }
+
+                if (!telephony.isEmpty() && (icao.hasTelephonyDesignator() || !onlyIfExistInModel))
+                {
+                    if (!icao.getTelephonyDesignator().contains(name, Qt::CaseInsensitive)) { return false; }
+                }
+                return true;
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::findByAirlineNamesOrTelephonyDesignator(const QString &name) const
+        {
+            return this->findBy([ & ](const CAircraftModel & model)
+            {
+                if (!model.hasAirlineDesignator() || !model.hasValidDbKey()) { return false; }
+                const CAirlineIcaoCode &icao = model.getAirlineIcaoCode();
+                return icao.matchesNamesOrTelephonyDesignator(name);
+            });
+        }
+
         CAircraftModelList CAircraftModelList::findByLiveryCode(const CLivery &livery) const
         {
             if (!livery.hasCombinedCode()) { return CAircraftModelList(); }

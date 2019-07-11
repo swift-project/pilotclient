@@ -91,7 +91,7 @@ namespace BlackCore
         static BlackMisc::Aviation::CAirlineIcaoCode failoverValidAirlineIcaoDesignator(
             const BlackMisc::Aviation::CCallsign &callsign,
             const QString &primaryIcao, const QString &secondaryIcao,
-            bool airlineFromCallsign, bool useWebServices, BlackMisc::CStatusMessageList *log = nullptr);
+            bool airlineFromCallsign, const QString &airlineName, const QString &airlineTelephony, bool useWebServices, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Return an valid airline ICAO code from a given model list
         //! \remarks model list could be the model set
@@ -358,7 +358,11 @@ namespace BlackCore
 
         //! Reduce by airline name/telephone designator
         //! \threadsafe
-        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByAirlineNameTelephonyDesignator(const BlackMisc::Aviation::CCallsign &cs, const QString &airlineName, const QString &telephony, const BlackMisc::Simulation::CAircraftModelList &inList, const QString &info, bool &reduced, BlackMisc::CStatusMessageList *log);
+        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceModelsByAirlineNameTelephonyDesignator(const BlackMisc::Aviation::CCallsign &cs, const QString &airlineName, const QString &telephony, const BlackMisc::Simulation::CAircraftModelList &inList, const QString &info, bool &reduced, BlackMisc::CStatusMessageList *log);
+
+        //! Reduce by airline name/telephone designator
+        //! \threadsafe
+        static BlackMisc::Aviation::CAirlineIcaoCodeList ifPossibleReduceIcaoByAirlineNameTelephonyDesignator(const BlackMisc::Aviation::CCallsign &cs, const QString &airlineName, const QString &telephony, const BlackMisc::Aviation::CAirlineIcaoCodeList &inList, const QString &info, bool &reduced, BlackMisc::CStatusMessageList *log);
 
         //! Installed models by combined code (ie L2J, L1P, ...)
         //! \threadsafe
@@ -378,7 +382,7 @@ namespace BlackCore
 
         //! Designator to object
         //! \threadsafe
-        static BlackMisc::Aviation::CAirlineIcaoCode stringToAirlineIcaoObject(const QString &designator, bool useSwiftDbData);
+        static BlackMisc::Aviation::CAirlineIcaoCode stringToAirlineIcaoObject(const BlackMisc::Aviation::CCallsign &cs, const QString &designator, const QString &airlineName, const QString &airlineTelephony, bool useSwiftDbData, BlackMisc::CStatusMessageList *log);
 
         //! Valid designator, allows to check against swift DB
         //! \threadsafe
