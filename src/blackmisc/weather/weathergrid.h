@@ -24,7 +24,6 @@
 namespace BlackMisc
 {
     namespace Geo { class ICoordinateGeodetic; }
-
     namespace Weather
     {
         /*!
@@ -51,7 +50,7 @@ namespace BlackMisc
             CWeatherGrid findClosest(int number, const BlackMisc::Geo::ICoordinateGeodetic &coordinate) const;
 
             //! Get all available weather scenarios
-            static const QVector<CWeatherScenario> &getAllScenarios ();
+            static const QVector<CWeatherScenario> &getAllScenarios();
 
             //! Get weather grid by fixed scenario
             static const CWeatherGrid &getByScenario(const CWeatherScenario &scenario);

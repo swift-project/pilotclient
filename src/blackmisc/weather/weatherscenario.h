@@ -50,6 +50,9 @@ namespace BlackMisc
             CWeatherScenario() = default;
 
             //! Constructor
+            CWeatherScenario(ScenarioIndex index);
+
+            //! Constructor
             CWeatherScenario(ScenarioIndex index, const QString &name, const QString &description);
 
             //! Set scenario index
@@ -82,10 +85,16 @@ namespace BlackMisc
             //! Is scenario the real weather scenario?
             static bool isRealWeatherScenario(const CWeatherScenario &scenario) { return scenario.getIndex() == RealWeather; }
 
+            //! As string
+            static const QString &enumToString(ScenarioIndex index);
+
+            //! As string
+            static const QString &enumToDescription(ScenarioIndex index);
+
         private:
             ScenarioIndex m_scenarioIndex = ClearSky;
-            QString m_scenarioName {"Clear Sky"};
-            QString m_scenarioDescription {"Clear Sky default"};
+            QString m_scenarioName        = enumToString(ClearSky);
+            QString m_scenarioDescription = enumToDescription(ClearSky);
 
             BLACK_METACLASS(
                 CWeatherScenario,
