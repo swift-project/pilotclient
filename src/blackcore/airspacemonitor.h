@@ -14,6 +14,7 @@
 #include "blackcore/network.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/simulation/settings/modelmatchersettings.h"
+#include "blackmisc/simulation/aircraftmodelsetprovider.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/matchinglog.h"
@@ -55,9 +56,10 @@ namespace BlackCore
     //! Central instance of data for \sa IRemoteAircraftProvider.
     class BLACKCORE_EXPORT CAirspaceMonitor :
         public BlackMisc::Simulation::CRemoteAircraftProvider,     // those data will be provided from the class CAirspaceMonitor
+        public BlackMisc::Network::CClientProvider,                // those data will be provided from the class CAirspaceMonitor
         public BlackMisc::Simulation::COwnAircraftAware,           // used to obtain in memory information about own aircraft
         public BlackMisc::Simulation::CSimulationEnvironmentAware, // elevation info etc. from simulator
-        public BlackMisc::Network::CClientProvider                 // those data will be provided from the class CAirspaceMonitor
+        public BlackMisc::Simulation::CAircraftModelSetAware       // model set for reverse lookup
     {
         // CRemoteAircraftProvider is QObject
         Q_OBJECT
@@ -69,7 +71,10 @@ namespace BlackCore
         static const BlackMisc::CLogCategoryList &getLogCategories();
 
         //! Constructor
-        CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, INetwork *network, QObject *parent);
+        CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider      *ownAircraft,
+                         BlackMisc::Simulation::IAircraftModelSetProvider *modelSetProvider,
+                         INetwork *network,
+                         QObject  *parent);
 
         //! Members not implenented or fully implenented by CRemoteAircraftProvider
         //! \ingroup remoteaircraftprovider

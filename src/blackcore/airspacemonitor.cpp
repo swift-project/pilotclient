@@ -65,9 +65,10 @@ using namespace BlackCore::Vatsim;
 
 namespace BlackCore
 {
-    CAirspaceMonitor::CAirspaceMonitor(IOwnAircraftProvider *ownAircraftProvider, INetwork *network, QObject *parent)
+    CAirspaceMonitor::CAirspaceMonitor(IOwnAircraftProvider *ownAircraftProvider, IAircraftModelSetProvider *modelSetProvider, INetwork *network, QObject *parent)
         : CRemoteAircraftProvider(parent),
           COwnAircraftAware(ownAircraftProvider),
+          CAircraftModelSetAware(modelSetProvider),
           m_network(network),
           m_analyzer(new CAirspaceAnalyzer(ownAircraftProvider, network, this))
     {
@@ -168,10 +169,10 @@ namespace BlackCore
             m_flightPlanCache.remove(callsign);
             m_network->sendFlightPlanQuery(callsign);
 
-            // with this little trick we try to make an asynchronous signal / slot
-            // based approach a synchronous return value
+            // with this little trick we try to make an asynchronous signal / slot based approach
+            // a synchronous return value
             const QTime waitForFlightPlan = QTime::currentTime().addMSecs(1500);
-            while (sApp && QTime::currentTime() < waitForFlightPlan)
+            while (sApp && !sApp->isShuttingDown() && QTime::currentTime() < waitForFlightPlan)
             {
                 // process some other events and hope network answer is received already
                 // CEventLoop::processEventsUntil cannot be used, as a received flight plan might be for another callsign
@@ -539,7 +540,7 @@ namespace BlackCore
         // some checks for special conditions, e.g. logout -> empty list, but still signals pending
         if (validCs)
         {
-            static const QString readyForMatching("Ready for matching '%1' with model type '%2'");
+            static const QString readyForMatching("Ready for matching callsign '%1' with model type '%2'");
             const QString readyMsg = readyForMatching.arg(callsign.toQString(), remoteAircraft.getModel().getModelTypeAsString());
             const CStatusMessage m = CMatchingUtils::logMessage(callsign, readyMsg, getLogCategories());
             this->addReverseLookupMessage(callsign, m);
@@ -752,6 +753,9 @@ namespace BlackCore
             const QString &airlineIcaoString, const QString &liveryString, const QString &modelString,
             CAircraftModel::ModelType type, CStatusMessageList *log, bool runMatchinScript)
     {
+        const int modelSetCount = this->getModelSetCount();
+        CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Reverse lookup (with FP data) model set: %1").arg(modelSetCount), CAirspaceMonitor::getLogCategories());
+
         const DBTripleIds ids = CAircraftModel::parseNetworkLiveryString(liveryString);
         const bool hasAnyId = ids.hasAnyId();
         if (hasAnyId) { this->markAsSwiftClient(callsign); }
@@ -819,23 +823,31 @@ namespace BlackCore
                     CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("FP rem.parsed: '%1'").arg(fpRemarks.toQString(true)));
                 }
 
-                airlineIcao = CAircraftMatcher::failoverValidAirlineIcaoDesignator(callsign, airlineIcaoString, fpRemarks.getAirlineIcao().getDesignator(), true, true, log);
+
+                // FP data if any
+                const QString telephonyFromFp = CAircraftMatcher::reverseLookupTelephonyDesignator(fpRemarks.getRadioTelephony(), callsign, log);
+                const QString airlineNameFromFp = CAircraftMatcher::reverseLookupAirlineName(fpRemarks.getFlightOperator(), callsign, log);
+                const QString airlineIcaoFromFp = fpRemarks.getAirlineIcao().getDesignator();
+
+                // INFO: CModelMatcherComponent::reverseLookup() contains the simulated lookup
+                // version without model set, changed with T701
+                // airlineIcao = CAircraftMatcher::failoverValidAirlineIcaoDesignator(callsign, airlineIcaoString, fpRemarks.getAirlineIcao().getDesignator(), true, true, log);
+
+                airlineIcao = CAircraftMatcher::failoverValidAirlineIcaoDesignatorModelsFirst(callsign, airlineIcaoString, airlineIcaoFromFp, true, airlineNameFromFp, telephonyFromFp, this->getModelSet(), log);
                 if (!airlineIcao.isLoadedFromDb() && fpRemarks.hasParsedAirlineRemarks())
                 {
-                    const QString airlineName = CAircraftMatcher::reverseLookupAirlineName(fpRemarks.getFlightOperator(), callsign, log);
-                    if (!airlineName.isEmpty())
+                    if (!airlineNameFromFp.isEmpty())
                     {
-                        const QString resolvedAirlineName = CAircraftMatcher::reverseLookupAirlineName(airlineName);
+                        const QString resolvedAirlineName = CAircraftMatcher::reverseLookupAirlineName(airlineNameFromFp);
                         airlineIcao.setName(resolvedAirlineName);
-                        CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Setting resolved airline name '%1' from '%2'").arg(resolvedAirlineName, airlineName), CAirspaceMonitor::getLogCategories());
+                        CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Setting resolved airline name '%1' from '%2'").arg(resolvedAirlineName, airlineNameFromFp), CAirspaceMonitor::getLogCategories());
                     }
 
-                    const QString telephony = CAircraftMatcher::reverseLookupTelephonyDesignator(fpRemarks.getRadioTelephony(), callsign, log);
-                    if (!telephony.isEmpty())
+                    if (!telephonyFromFp.isEmpty())
                     {
-                        const QString resolvedTelephony = CAircraftMatcher::reverseLookupTelephonyDesignator(telephony);
+                        const QString resolvedTelephony = CAircraftMatcher::reverseLookupTelephonyDesignator(telephonyFromFp);
                         airlineIcao.setTelephonyDesignator(resolvedTelephony);
-                        CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Setting resolved telephony designator '%1' from '%2'").arg(resolvedTelephony, telephony), CAirspaceMonitor::getLogCategories());
+                        CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Setting resolved telephony designator '%1' from '%2'").arg(resolvedTelephony, telephonyFromFp), CAirspaceMonitor::getLogCategories());
                     }
                 }
 
@@ -848,6 +860,8 @@ namespace BlackCore
 
             CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Used aircraft ICAO: '%1'").arg(aircraftIcao.toQString(true)), CAirspaceMonitor::getLogCategories());
             CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Used airline ICAO: '%1'").arg(airlineIcao.toQString(true)), CAirspaceMonitor::getLogCategories());
+
+            // matching script is used below
             lookupModel = CAircraftMatcher::reverseLookupModel(callsign, aircraftIcao, airlineIcao, liveryString, modelString, setup, type, log);
         }
         while (false);
