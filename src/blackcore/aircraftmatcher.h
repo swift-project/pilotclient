@@ -100,18 +100,19 @@ namespace BlackCore
             const BlackMisc::Aviation::CCallsign &callsign,
             const QString &primaryIcao, const QString &secondaryIcao,
             bool airlineFromCallsign,
+            const QString &airlineName, const QString &airlineTelephony,
             const BlackMisc::Simulation::CAircraftModelList &models,
             BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Return an valid airline ICAO code from a given model list and use webservices if NOT found
         //! \remarks model list could be the model set
         //! \threadsafe
-        static BlackMisc::Aviation::CAirlineIcaoCode failoverValidAirlineIcaoDesignatorModelsFirst(
-            const BlackMisc::Aviation::CCallsign &callsign,
-            const QString &primaryIcao, const QString &secondaryIcao,
-            bool airlineFromCallsign,
-            const BlackMisc::Simulation::CAircraftModelList &models,
-            BlackMisc::CStatusMessageList *log = nullptr);
+        static BlackMisc::Aviation::CAirlineIcaoCode failoverValidAirlineIcaoDesignatorModelsFirst(const BlackMisc::Aviation::CCallsign &callsign,
+                const QString &primaryIcao, const QString &secondaryIcao,
+                bool airlineFromCallsign,
+                const QString &airlineName, const QString &airlineTelephony,
+                const BlackMisc::Simulation::CAircraftModelList &models,
+                BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Run the network reverse lookup script
         //! \threadsafe
@@ -248,11 +249,14 @@ namespace BlackCore
         //! \threadsafe
         static BlackMisc::Aviation::CAirlineIcaoCode callsignToAirline(const BlackMisc::Aviation::CCallsign &callsign, BlackMisc::CStatusMessageList *log = nullptr);
 
-        //! Get the models
-        const BlackMisc::Simulation::CAircraftModelList &getModelSet() const { return m_modelSet; }
+        //! \copydoc BlackMisc::Simulation::IAircraftModelSetProvider::getModelSet
+        virtual BlackMisc::Simulation::CAircraftModelList getModelSet() const override { return m_modelSet; }
+
+        //! Model set as reference
+        virtual const BlackMisc::Simulation::CAircraftModelList &getModelSetRef() const { return m_modelSet; }
 
         //! Model set count
-        int getModelSetCount() const { return m_modelSet.sizeInt(); }
+        virtual int getModelSetCount() const override { return m_modelSet.sizeInt(); }
 
         //! Models
         bool hasModels() const { return !m_modelSet.isEmpty(); }
@@ -351,6 +355,10 @@ namespace BlackCore
         //! Reduce by airline ICAO
         //! \threadsafe
         static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByAirline(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, const QString &info, bool &reduced, BlackMisc::CStatusMessageList *log);
+
+        //! Reduce by airline name/telephone designator
+        //! \threadsafe
+        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByAirlineNameTelephonyDesignator(const BlackMisc::Aviation::CCallsign &cs, const QString &airlineName, const QString &telephony, const BlackMisc::Simulation::CAircraftModelList &inList, const QString &info, bool &reduced, BlackMisc::CStatusMessageList *log);
 
         //! Installed models by combined code (ie L2J, L1P, ...)
         //! \threadsafe
