@@ -155,7 +155,7 @@ namespace BlackMisc
         static QString decodeNormalizedDirectory(const QString &directory);
 
         //! All sub directories of given dir
-        static QStringList getSubDirectories(const QString &rootDir);
+        static QStringList getRelativeSubDirectories(const QString &rootDir);
 
         //! Any file with filter like "*.txt"
         static bool containsFileInDir(const QString &dir, const QString &filter, bool recursively);
