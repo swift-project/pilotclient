@@ -17,7 +17,7 @@
 #include <QTextStream>
 
 #if defined(Q_OS_WIN)
-#include <shlobj.h>
+#include <ShlObj.h>
 #endif
 
 using namespace BlackMisc;
@@ -28,6 +28,12 @@ namespace BlackMisc
     {
         namespace XPlane
         {
+            const CLogCategoryList &CXPlaneUtil::getLogCategories()
+            {
+                static const CLogCategoryList cats { CLogCategory::matching() };
+                return cats;
+            }
+
             // Returns the last path from filePath, which does exist on the file system
             QString getLastExistingPathFromFile(const QString &filePath)
             {
@@ -276,6 +282,31 @@ namespace BlackMisc
             {
                 static const QStringList filter({"*.xpl"});
                 return filter;
+            }
+
+            CStatusMessageList CXPlaneUtil::validateModelDirectories(const QString &simDir, const QStringList &modelDirectories)
+            {
+                if (simDir.isEmpty())
+                {
+                    return CStatusMessage(getLogCategories(), CStatusMessage::SeverityWarning, u"no simulator directory", true);
+                }
+
+                CStatusMessageList msgs;
+                if (modelDirectories.isEmpty()) { return msgs; }
+                const QDir sd(simDir);
+                const bool simDirExists = sd.exists();
+                for (const QString &modelDir : modelDirectories)
+                {
+                    const bool exists = simDirExists ?
+                                        CDirectoryUtils::isSameOrSubDirectoryOf(modelDir, sd) :
+                                        CDirectoryUtils::isSameOrSubDirectoryOfStringBased(modelDir, sd.absolutePath());
+                    const CStatusMessage m = exists ?
+                                             CStatusMessage(getLogCategories()).info(u"Model directory '%1' inside '%2'") << modelDir << sd.absolutePath() :
+                                             CStatusMessage(getLogCategories()).error(u"Model directory '%1' NOT inside '%2'") << modelDir << sd.absolutePath();
+                    msgs.push_back(m);
+                }
+                msgs.addValidationCategory();
+                return msgs;
             }
         } // namespace
     } // namespace

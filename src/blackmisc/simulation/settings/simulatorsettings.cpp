@@ -63,8 +63,8 @@ namespace BlackMisc
             void CSimulatorSettings::setModelDirectories(const QStringList &modelDirectories)
             {
                 m_modelDirectories = modelDirectories;
-                m_modelDirectories.removeAll({});
-                m_modelDirectories.removeDuplicates();
+                m_modelDirectories.removeAll({}); // empty values
+                m_modelDirectories.removeDuplicates(); // duplicates
             }
 
             void CSimulatorSettings::clearModelDirectories()
@@ -256,6 +256,32 @@ namespace BlackMisc
                 return this->setSettings(s, simulator);
             }
 
+            CStatusMessageList CMultiSimulatorSettings::setAndValidateSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator)
+            {
+                this->setSettings(settings, simulator);
+                CStatusMessageList msgs;
+                switch (simulator.getSimulator())
+                {
+                case CSimulatorInfo::FG:  break;
+                case CSimulatorInfo::FS9: break;
+                case CSimulatorInfo::FSX: break;
+                case CSimulatorInfo::P3D: break;
+                case CSimulatorInfo::XPLANE:
+                    {
+                        if (settings.hasModelDirectories())
+                        {
+                            const QString simDir = this->getSimulatorDirectoryOrDefault(simulator);
+                            msgs = CXPlaneUtil::validateModelDirectories(simDir, settings.getModelDirectories());
+                        }
+                    }
+                    break;
+                default:
+                    Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                    break;
+                }
+                return msgs;
+            }
+
             CStatusMessage CMultiSimulatorSettings::setAndSaveSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
@@ -445,7 +471,7 @@ namespace BlackMisc
             bool CSimulatorMessagesSettings::relayThisStatusMessage(const CStatusMessage &message) const
             {
                 if (message.isEmpty()) { return false; }
-                if (!this->isGloballyEnabled()) { return false; }
+                if (!this->isRelayGloballyEnabled()) { return false; }
                 if (!this->isRelayTechnicalMessages()) { return false; }
                 const int s = static_cast<int>(message.getSeverity());
                 return (s >= m_technicalLogLevel);
@@ -454,7 +480,7 @@ namespace BlackMisc
             bool CSimulatorMessagesSettings::relayThisTextMessage(const Network::CTextMessage &msg, const BlackMisc::Simulation::CSimulatedAircraft &aircraft) const
             {
                 if (msg.isEmpty()) { return false; }
-                if (!this->isGloballyEnabled()) { return false; }
+                if (!this->isRelayGloballyEnabled()) { return false; }
                 if (m_messageType == NoTextMessages) { return false; }
 
                 const TextMessageType mt = static_cast<TextMessageType>(m_messageType);
@@ -495,7 +521,7 @@ namespace BlackMisc
                 {
                     severity = CStatusMessage::severityToString(static_cast<CStatusMessage::StatusSeverity>(m_technicalLogLevel));
                 }
-                return s.arg(boolToOnOff(m_globallyEnabled)).arg(m_messageType).arg(severity);
+                return s.arg(boolToOnOff(m_relayGloballyEnabled)).arg(m_messageType).arg(severity);
             }
 
             CVariant CSimulatorMessagesSettings::propertyByIndex(const CPropertyIndex &index) const
@@ -505,8 +531,8 @@ namespace BlackMisc
                 switch (i)
                 {
                 case IndexTechnicalLogSeverity: return CVariant::fromValue(m_technicalLogLevel);
-                case IndexTextMessageRelay: return CVariant::from(m_messageType);
-                case IndexGloballyEnabled: return CVariant::from(m_globallyEnabled);
+                case IndexRelayTextMessage: return CVariant::from(m_messageType);
+                case IndexRelayGloballyEnabled: return CVariant::from(m_relayGloballyEnabled);
                 default: return CValueObject::propertyByIndex(index);
                 }
             }
@@ -518,8 +544,8 @@ namespace BlackMisc
                 switch (i)
                 {
                 case IndexTechnicalLogSeverity: this->setTechnicalLogSeverity(static_cast<CStatusMessage::StatusSeverity>(variant.toInt())); break;
-                case IndexTextMessageRelay: this->setRelayTextMessages(static_cast<CSimulatorMessagesSettings::TextMessageType>(variant.toInt())); break;
-                case IndexGloballyEnabled: this->setGloballyEnabled(variant.toBool()); break;
+                case IndexRelayTextMessage: this->setRelayTextMessages(static_cast<CSimulatorMessagesSettings::TextMessageType>(variant.toInt())); break;
+                case IndexRelayGloballyEnabled: this->setRelayGloballyEnabled(variant.toBool()); break;
                 default: CValueObject::setPropertyByIndex(index, variant); break;
                 }
             }
@@ -747,6 +773,17 @@ namespace BlackMisc
                 if (simulator == CSimulatorInfo::p3d()) { return m_simP3D.setAndSave(settings); }
                 return m_simFsx.setAndSave(settings);
             }
+
+            bool TSimulatorXP::isValid(const CSimulatorSettings &value, QString &reason)
+            {
+                const QString simDir = value.hasSimulatorDirectory() ? value.getSimulatorDirectory()
+                                       : CSpecializedSimulatorSettings::defaultSimulatorDirectory(CSimulatorInfo::XPLANE);
+                const CStatusMessageList msgs = CXPlaneUtil::validateModelDirectories(simDir, value.getModelDirectories());
+                if (msgs.isSuccess()) { return true; }
+                reason = msgs.getErrorMessages().toSingleMessage().toQString(true);
+                return false;
+            }
+
         } // ns
     } // ns
 } // ns

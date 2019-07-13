@@ -11,8 +11,9 @@
 #ifndef BLACKMISC_SIMULATION_XPLANE_XPLANEUTIL_H
 #define BLACKMISC_SIMULATION_XPLANE_XPLANEUTIL_H
 
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/blackmiscexport.h"
-
 #include <QStringList>
 
 namespace BlackMisc
@@ -27,6 +28,9 @@ namespace BlackMisc
             public:
                 //! Constructor
                 CXPlaneUtil() = delete;
+
+                //! Log categories
+                static const CLogCategoryList &getLogCategories();
 
                 //! XPlane 9 directory
                 static QString xplane9Dir();
@@ -98,6 +102,9 @@ namespace BlackMisc
 
                 //! Filter filter for xpl files
                 static const QStringList &xplFileFilter();
+
+                //! Validate the model directories
+                static CStatusMessageList validateModelDirectories(const QString &simDir, const QStringList &modelDirectories);
 
             private:
                 //! Concatenates dirs for used OS
