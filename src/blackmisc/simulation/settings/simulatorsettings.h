@@ -379,7 +379,7 @@ namespace BlackMisc
             };
 
             //! Trait for simulator settings
-            struct TSimulatorXP : public TSettingTrait<CSimulatorSettings>
+            struct BLACKMISC_EXPORT TSimulatorXP : public TSettingTrait<CSimulatorSettings>
             {
                 //! \copydoc BlackMisc::TSettingTrait::key
                 static const char *key() { return "settingssimulatorxplane"; }
@@ -388,20 +388,7 @@ namespace BlackMisc
                 static const QString &humanReadable() { static const QString name("XPlane settings"); return name; }
 
                 //! \copydoc BlackMisc::TSettingTrait::isValid
-                static bool isValid(const CSimulatorSettings &value, QString &reason)
-                {
-                    const QString simDir = value.hasSimulatorDirectory() ? value.getSimulatorDirectory()
-                                         : CSpecializedSimulatorSettings::defaultSimulatorDirectory(CSimulatorInfo::XPLANE);
-                    for (const QString &modelDir : value.getModelDirectories())
-                    {
-                        if (!CDirectoryUtils::isSubDirectoryOf(modelDir, simDir))
-                        {
-                            reason = QStringLiteral("Model directory must be within the simulator directory structure");
-                            return false;
-                        }
-                    }
-                    return true;
-                }
+                static bool isValid(const CSimulatorSettings &value, QString &reason);
             };
 
             //! Trait for simulator settings
@@ -455,6 +442,10 @@ namespace BlackMisc
 
                 //! Clear the model directory
                 CStatusMessage clearModelDirectories(const CSimulatorInfo &simulator);
+
+                //! Set settings per simulator, but do NOT save yet, but validate
+                //! \remark can be simulator specific
+                CStatusMessageList setAndValidateSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator);
 
                 //! Set settings per simulator
                 CStatusMessage setAndSaveSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator);
@@ -532,8 +523,8 @@ namespace BlackMisc
                 enum ColumnIndex
                 {
                     IndexTechnicalLogSeverity = CPropertyIndex::GlobalIndexCSimulatorMessageSettings,
-                    IndexTextMessageRelay,
-                    IndexGloballyEnabled
+                    IndexRelayTextMessage,
+                    IndexRelayGloballyEnabled
                 };
 
                 //! Enabled matching mode flags
@@ -556,10 +547,10 @@ namespace BlackMisc
                 void setTechnicalLogSeverity(CStatusMessage::StatusSeverity severity);
 
                 //! Globally enable / disable
-                void setGloballyEnabled(bool enabled) { m_globallyEnabled = enabled; }
+                void setRelayGloballyEnabled(bool enabled) { m_relayGloballyEnabled = enabled; }
 
                 //! Globally enabled?
-                bool isGloballyEnabled() const { return m_globallyEnabled; }
+                bool isRelayGloballyEnabled() const { return m_relayGloballyEnabled; }
 
                 //! No technical messages
                 void disableTechnicalMessages();
@@ -613,9 +604,9 @@ namespace BlackMisc
                 void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             private:
-                int m_technicalLogLevel = CStatusMessage::SeverityError; //!< Simulator directory
-                int m_messageType = static_cast<int>(TextMessagePrivate | TextMessageSupervisor);
-                bool m_globallyEnabled = true; //!< messsage relay enabled to simulator
+                int m_technicalLogLevel     = CStatusMessage::SeverityError; //!< log level
+                int m_messageType           = static_cast<int>(TextMessagePrivate | TextMessageSupervisor);
+                bool m_relayGloballyEnabled = true; //!< messsage relay enabled to simulator
 
                 BLACK_METACLASS(
                     CSimulatorMessagesSettings,
