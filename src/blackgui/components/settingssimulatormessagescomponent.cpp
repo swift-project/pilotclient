@@ -35,7 +35,7 @@ namespace BlackGui
         void CSettingsSimulatorMessagesComponent::save()
         {
             CSimulatorMessagesSettings settings;
-            settings.setGloballyEnabled(ui->cb_Messages->isChecked());
+            settings.setRelayGloballyEnabled(ui->cb_Messages->isChecked());
             if (ui->rb_NoTechnicalMessages->isChecked())
             {
                 settings.disableTechnicalMessages();
@@ -53,7 +53,7 @@ namespace BlackGui
                 settings.setTechnicalLogSeverity(CStatusMessage::SeverityInfo);
             }
 
-            settings.setGloballyEnabled(ui->cb_Messages->isChecked());
+            settings.setRelayGloballyEnabled(ui->cb_Messages->isChecked());
             CSimulatorMessagesSettings::TextMessageType mt = CSimulatorMessagesSettings::NoTextMessages;
 
             if (ui->cb_PrivateMessages->isChecked())    { mt |= CSimulatorMessagesSettings::TextMessagePrivate; }
@@ -69,7 +69,7 @@ namespace BlackGui
         void CSettingsSimulatorMessagesComponent::load()
         {
             const CSimulatorMessagesSettings settings(this->m_settings.get());
-            ui->cb_Messages->setChecked(settings.isGloballyEnabled());
+            ui->cb_Messages->setChecked(settings.isRelayGloballyEnabled());
             if (settings.isRelayInfoMessages())
             {
                 ui->rb_ErrorWarningsInfo->setChecked(true);

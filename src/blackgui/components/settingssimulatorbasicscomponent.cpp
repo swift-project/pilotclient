@@ -140,21 +140,29 @@ namespace BlackGui
             s.setSimulatorDirectory(simulatorDir);
             s.setModelDirectories(modelDirs);
             s.setModelExcludeDirectories(relativeDirs);
-            const CStatusMessage m = m_settings.setAndSaveSettings(s, simulator);
-            if (!m.isEmpty()) { CLogMessage::preformatted(m); }
-            if (m.isSuccess())
+            const CStatusMessageList msgs = m_settings.setAndValidateSettings(s, simulator);
+            if (msgs.isSuccess())
             {
-                this->showOverlayHTMLMessage("Saved settings", 5000);
+                const CStatusMessage m = m_settings.setAndSaveSettings(s, simulator);
+                if (!m.isEmpty()) { CLogMessage::preformatted(m); }
+                if (m.isSuccess())
+                {
+                    this->showOverlayHTMLMessage("Saved settings", 5000);
+                }
+                else
+                {
+                    this->showOverlayMessage(m);
+                }
+                m_unsavedChanges = m_unsavedChanges && !m.isSuccess(); // reset if success, but only if there were changes
+
+                // display as it was saved
+                this->displaySettings(simulator);
             }
             else
             {
-                this->showOverlayMessage(m);
+                this->showOverlayHTMLMessageOrMessages(msgs);
             }
 
-            m_unsavedChanges = m_unsavedChanges && !m.isSuccess(); // reset if success, but only if there were changes
-
-            // display as saved
-            this->displaySettings(simulator);
         }
 
         void CSettingsSimulatorBasicsComponent::copyDefaults()
