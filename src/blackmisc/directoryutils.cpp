@@ -543,24 +543,32 @@ namespace BlackMisc
         return d1.absolutePath() == d2.absolutePath();
     }
 
-    bool CDirectoryUtils::isSubDirectoryOf(const QString &dir1, const QString &dir2)
+    bool CDirectoryUtils::isSameOrSubDirectoryOf(const QString &testDir, const QString &dir2)
     {
-        if (dir1.isEmpty() || dir2.isEmpty()) { return false; }
+        if (testDir.isEmpty() || dir2.isEmpty()) { return false; }
         const QDir d2(dir2);
-        return CDirectoryUtils::isSubDirectoryOf(dir1, d2);
+        return CDirectoryUtils::isSameOrSubDirectoryOf(testDir, d2);
     }
 
-    bool CDirectoryUtils::isSubDirectoryOf(const QString &dir1, const QDir &dir2)
+    bool CDirectoryUtils::isSameOrSubDirectoryOf(const QString &dir1, const QDir &parentDir)
     {
         QDir d1(dir1);
         do
         {
-            if (d1 == dir2) { return true; }
+            if (d1 == parentDir) { return true; }
         }
         while (d1.cdUp());
 
         // not found
         return false;
+    }
+
+    bool CDirectoryUtils::isSameOrSubDirectoryOfStringBased(const QString &testDir, const QString &parentDir)
+    {
+        const Qt::CaseSensitivity cs = CFileUtils::osFileNameCaseSensitivity();
+        const QString td = CFileUtils::fixWindowsUncPath(QDir::cleanPath(testDir));
+        const QString pd = CFileUtils::fixWindowsUncPath(QDir::cleanPath(parentDir));
+        return td.contains(pd, cs);
     }
 
     QSet<QString> CDirectoryUtils::fileNamesToQSet(const QFileInfoList &fileInfoList)

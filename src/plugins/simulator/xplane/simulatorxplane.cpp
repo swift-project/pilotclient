@@ -576,7 +576,7 @@ namespace BlackSimPlugin
             {
                 Q_ASSERT(package.s.endsWith('/'));
                 package.s.chop(1);
-                if (CDirectoryUtils::isSubDirectoryOf(package.s, simDir))
+                if (CDirectoryUtils::isSameOrSubDirectoryOf(package.s, simDir))
                 {
                     m_trafficProxy->loadPlanesPackage(package.s);
                 }
