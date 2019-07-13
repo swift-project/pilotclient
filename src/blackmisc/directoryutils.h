@@ -187,13 +187,17 @@ namespace BlackMisc
         //! Same existing directories
         static bool isSameExistingDirectory(const QString &dir1, const QString &dir2);
 
-        //! Is dir1 a subdirectory (possibly nested) of dir2 or the same directory
+        //! Is "testDir" a subdirectory (possibly nested) of "parentDir" or the same directory
         //! \remark testing on real directory structure
-        static bool isSubDirectoryOf(const QString &dir1, const QString &dir2);
+        static bool isSameOrSubDirectoryOf(const QString &testDir, const QString &parentDir);
 
-        //! Is dir1 a subdirectory (possibly nested) of dir2 or the same directory
+        //! Is "testDir" a subdirectory (possibly nested) of "parentDir" or the same directory
         //! \remark testing on real directory structure
-        static bool isSubDirectoryOf(const QString &dir1, const QDir &dir2);
+        static bool isSameOrSubDirectoryOf(const QString &testDir, const QDir &parentDir);
+
+        //! Is "testDir" a subdirectory (possibly nested) of "parentDir" or the same directory
+        //! \remark String based only
+        static bool isSameOrSubDirectoryOfStringBased(const QString &testDir, const QString &parentDir);
 
         //! Result of directory comparison
         struct DirComparison
