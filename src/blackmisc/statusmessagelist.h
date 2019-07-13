@@ -78,6 +78,9 @@ namespace BlackMisc
         //! Add a category to all messages in the list
         void addCategory(const CLogCategory &category);
 
+        //! Validation category
+        void addValidationCategory();
+
         //! Add some categories to all messages in the list
         void addCategories(const CLogCategoryList &categories);
 

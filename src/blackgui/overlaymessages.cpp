@@ -383,6 +383,8 @@ namespace BlackGui
         }
 
         this->setModeToHTMLMessage();
+        ui->te_HTMLMessage->setTextColor(QColor(Qt::white)); // hardcoded color
+        ui->te_HTMLMessage->setReadOnly(true);
         ui->te_HTMLMessage->setText(htmlMessage);
         this->display(timeOutMs);
     }

@@ -156,6 +156,20 @@ namespace BlackGui
             WIDGET::repaint();
         }
 
+        //! \copydoc BlackGui::COverlayMessages::showOverlayMessages
+        void showOverlayHTMLMessageOrMessages(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1)
+        {
+            if (messages.isEmpty()) { return; }
+            if (messages.size() == 1)
+            {
+                this->showOverlayHTMLMessage(messages.front(), timeOutMs);
+            }
+            else
+            {
+                this->showOverlayMessages(messages, appendOldMessages, timeOutMs);
+            }
+        }
+
         //! \copydoc BlackGui::COverlayMessages::sortOverlayMessages
         void sortOverlayMessages(const BlackMisc::CPropertyIndex &property, Qt::SortOrder order)
         {
