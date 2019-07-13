@@ -87,6 +87,11 @@ namespace BlackMisc
         }
     }
 
+    void CStatusMessageList::addValidationCategory()
+    {
+        this->addCategory(CLogCategory::validation());
+    }
+
     void CStatusMessageList::addCategories(const CLogCategoryList &categories)
     {
         for (auto &msg : *this)
