@@ -147,6 +147,23 @@ namespace BlackCore
         //! \private for testing purposes
         void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental);
 
+        //! Matching readiness
+        enum MatchingReadinessFlag
+        {
+            NotReady             = 0,       //!< no data at all
+            ReceivedIcaoCodes    = 1 << 0,  //!< ICAO codes received
+            ReceivedFsInnPacket  = 1 << 1,  //!< FsInn pcket received
+            ReadyForMatchingSent = 1 << 2,  //!< Read for matching sending
+            RecursiveCall        = 1 << 3,  //!< recursion
+            ReceivedAll          = ReceivedIcaoCodes | ReceivedFsInnPacket
+        };
+        Q_DECLARE_FLAGS(MatchingReadiness, MatchingReadinessFlag)
+
+        //! As string @{
+        static const QString &enumFlagToString(MatchingReadinessFlag r);
+        static QString enumToString(MatchingReadiness r);
+        //! @}
+
     signals:
         //! Online ATC stations were changed
         void changedAtcStationsOnline();
@@ -184,10 +201,57 @@ namespace BlackCore
             QString modelString;
         };
 
+        //! Combined MatchingReadiness/timestamp
+        struct Readiness
+        {
+        private:
+            qint64 ts = -1;
+            MatchingReadiness readyness = NotReady;
+
+        public:
+            //! Add flag and set timestamp if required
+            Readiness &addFlag(MatchingReadinessFlag flag)
+            {
+                if (flag == RecursiveCall) { return *this; }
+                if (ts < 0) { ts = QDateTime::currentMSecsSinceEpoch(); }
+                readyness.setFlag(flag, true);
+                return *this;
+            }
+
+            //! Set the flag
+            Readiness &setFlag(MatchingReadinessFlag flag)
+            {
+                if (flag == RecursiveCall) { return *this; }
+                readyness = NotReady;
+                this->addFlag(flag);
+                return *this;
+            }
+
+            //! Received all data
+            bool receivedAll() const { return readyness.testFlag(ReceivedIcaoCodes) && readyness.testFlag(ReceivedFsInnPacket); }
+
+            //! Was matching ready sent?
+            bool wasMatchingSent() const { return readyness.testFlag(ReadyForMatchingSent); }
+
+            //! currnt age in ms
+            qint64 getAgeMs() const
+            {
+                if (ts < 0) { return -1; }
+                return QDateTime::currentMSecsSinceEpoch() - ts;
+            }
+
+            //! As string
+            QString toQString() const
+            {
+                return QStringLiteral("ts: %1 ready: %2").arg(ts).arg(CAirspaceMonitor::enumToString(readyness));
+            }
+        };
+
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline; //!< online ATC stations
         BlackMisc::Aviation::CAtcStationList m_atcStationsBooked; //!< booked ATC stations
         QHash<BlackMisc::Aviation::CCallsign, FsInnPacket> m_tempFsInnPackets;
         QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache; //!< flight plan information retrieved from network and cached
+        QHash<BlackMisc::Aviation::CCallsign, Readiness> m_readiness; //!< readiness
         BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< settings
 
         INetwork          *m_network  = nullptr;  //!< corresponding network interface
@@ -262,12 +326,12 @@ namespace BlackCore
         void copilotDetected();
 
         //! Call CAirspaceMonitor::onCustomFSInnPacketReceived with stored packet
-        void recallFsInnPacket(const BlackMisc::Aviation::CCallsign &callsign);
+        bool recallFsInnPacket(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Send the information if aircraft and(!) client are available
         //! \note it can take some time to obtain all data for model matching, so function recursively calls itself if something is still missing (trial)
         //! \sa reverseLookupModelWithFlightplanData
-        void sendReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign, int trial = 1);
+        void sendReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign, MatchingReadinessFlag rf);
 
         //! Reverse lookup, if available flight plan data are considered
         //! \remark this is where a model is created based on network data
@@ -277,7 +341,11 @@ namespace BlackCore
             const QString &airlineIcao, const QString &liveryString, const QString &modelString,
             BlackMisc::Simulation::CAircraftModel::ModelType type, BlackMisc::CStatusMessageList *log, bool runMatchinScript = true);
 
+        //! Does this look like a co-pilot callsign
         bool isCopilotAircraft(const BlackMisc::Aviation::CCallsign &callsign) const;
+
+        //! Set matching readiness flag
+        Readiness &addMatchingReadinessFlag(const BlackMisc::Aviation::CCallsign &callsign, MatchingReadinessFlag mrf);
 
         //! Create aircraft in range, this is the only place where a new aircraft should be added
         void onAircraftUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
@@ -308,5 +376,8 @@ namespace BlackCore
         void onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus);
     };
 } // namespace
+
+Q_DECLARE_METATYPE(BlackCore::CAirspaceMonitor::MatchingReadinessFlag)
+Q_DECLARE_OPERATORS_FOR_FLAGS(BlackCore::CAirspaceMonitor::MatchingReadiness)
 
 #endif // guard
