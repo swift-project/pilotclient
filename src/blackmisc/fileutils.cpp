@@ -62,7 +62,7 @@ namespace BlackMisc
         if (fileNameAndPath.isEmpty()) { return false; }
         QFile file(fileNameAndPath);
         if (!file.open(QIODevice::WriteOnly)) { return false; }
-        qint64 c = file.write(data);
+        const qint64 c = file.write(data);
         file.close();
         return c == data.count();
     }
@@ -79,7 +79,7 @@ namespace BlackMisc
         QFile file(fileNameAndPath);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) { return {}; }
         QTextStream stream(&file);
-        QString content(stream.readAll());
+        const QString content(stream.readAll());
         file.close();
         return content;
     }
@@ -205,8 +205,8 @@ namespace BlackMisc
     QString CFileUtils::normalizeFilePathToQtStandard(const QString &filePath)
     {
         if (filePath.isEmpty()) { return {}; }
-        QString n(filePath);
-        n = n.replace('\\', '/').replace("//", "/");
+        QString n = QDir::cleanPath(filePath);
+        n = n.replace('\\', '/').replace("//", "/"); // should be done alreay by cleanPath, paranoia
         return n;
     }
 
