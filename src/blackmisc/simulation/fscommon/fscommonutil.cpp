@@ -49,7 +49,7 @@ namespace BlackMisc
                 QString fsxPath;
                 if (CBuildConfig::isCompiledWithFsxSupport())
                 {
-                    FsRegistryPathPair fsxRegistryPathPairs =
+                    const FsRegistryPathPair fsxRegistryPathPairs =
                     {
                         { QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0"), QStringLiteral("AppPath") },
                         { QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Microsoft Games\\Flight Simulator - Steam Edition\\10.0"), QStringLiteral("AppPath") },
@@ -59,13 +59,13 @@ namespace BlackMisc
 
                     for (const auto &registryPair : fsxRegistryPathPairs)
                     {
-                        QSettings fsxRegistry(registryPair.first, QSettings::NativeFormat);
+                        const QSettings fsxRegistry(registryPair.first, QSettings::NativeFormat);
                         fsxPath = fsxRegistry.value(registryPair.second).toString().trimmed();
 
                         if (!fsxPath.isEmpty()) break;
                     }
                 }
-                return fsxPath;
+                return CFileUtils::normalizeFilePathToQtStandard(fsxPath);
             }
 
             const QString &CFsCommonUtil::fsxDirFromRegistry()
@@ -76,7 +76,7 @@ namespace BlackMisc
 
             QString fsxDirImpl()
             {
-                QString dir(CFsCommonUtil::fsxDirFromRegistry());
+                const QString dir(CFsCommonUtil::fsxDirFromRegistry());
                 if (!dir.isEmpty()) { return dir; }
                 QStringList someDefaultDirs(
                 {
@@ -99,7 +99,7 @@ namespace BlackMisc
 
             QString fsxSimObjectsDirFromRegistryImpl()
             {
-                const QString fsxPath = CFsCommonUtil::fsxDirFromRegistry();
+                const QString fsxPath = CFileUtils::normalizeFilePathToQtStandard(CFsCommonUtil::fsxDirFromRegistry());
                 if (fsxPath.isEmpty()) { return {}; }
                 return CFsCommonUtil::fsxSimObjectsDirFromSimDir(fsxPath);
             }
@@ -126,7 +126,7 @@ namespace BlackMisc
             QString CFsCommonUtil::fsxSimObjectsDirFromSimDir(const QString &simDir)
             {
                 if (simDir.isEmpty()) { return {}; }
-                return CFileUtils::appendFilePaths(simDir, "SimObjects");
+                return CFileUtils::appendFilePaths(CFileUtils::normalizeFilePathToQtStandard(simDir), "SimObjects");
             }
 
             const QStringList &CFsCommonUtil::fsxSimObjectsExcludeDirectoryPatterns()
@@ -155,7 +155,7 @@ namespace BlackMisc
                     };
                     for (const auto &registryPair : p3dRegistryPathPairs)
                     {
-                        QSettings p3dRegistry(registryPair.first, QSettings::NativeFormat);
+                        const QSettings p3dRegistry(registryPair.first, QSettings::NativeFormat);
                         p3dPath = p3dRegistry.value(registryPair.second).toString().trimmed();
 
                         if (!p3dPath.isEmpty()) break;
@@ -166,7 +166,7 @@ namespace BlackMisc
 
             const QString &CFsCommonUtil::p3dDirFromRegistry()
             {
-                static const QString p3dPath(p3dDirFromRegistryImpl());
+                static const QString p3dPath = CFileUtils::normalizeFilePathToQtStandard(p3dDirFromRegistryImpl());
                 return p3dPath;
             }
 
@@ -220,7 +220,7 @@ namespace BlackMisc
             {
                 // finding the user settings only works on P3D machine
                 QStringList allPaths = CFsCommonUtil::allFsxSimObjectPaths().toList();
-                const QString sod = simObjectsDir.isEmpty() ? CFsCommonUtil::fsxSimObjectsDir() : simObjectsDir;
+                const QString sod = CFileUtils::normalizeFilePathToQtStandard(simObjectsDir.isEmpty() ? CFsCommonUtil::fsxSimObjectsDir() : simObjectsDir);
                 if (!sod.isEmpty() && !allPaths.contains(sod, Qt::CaseInsensitive))
                 {
                     // case insensitive is important here
@@ -237,7 +237,7 @@ namespace BlackMisc
             {
                 // finding the user settings only works on P3D machine
                 QStringList allPaths = CFsCommonUtil::allP3dAddOnXmlSimObjectPaths(versionHint).toList();
-                const QString sod = simObjectsDir.isEmpty() ? CFsCommonUtil::p3dSimObjectsDir() : simObjectsDir;
+                const QString sod = CFileUtils::normalizeFilePathToQtStandard(simObjectsDir.isEmpty() ? CFsCommonUtil::p3dSimObjectsDir() : simObjectsDir);
                 if (!sod.isEmpty() && !allPaths.contains(sod, Qt::CaseInsensitive))
                 {
                     // case insensitive is important here
@@ -253,7 +253,7 @@ namespace BlackMisc
             QString CFsCommonUtil::p3dSimObjectsDirFromSimDir(const QString &simDir)
             {
                 if (simDir.isEmpty()) { return {}; }
-                return CFileUtils::appendFilePaths(simDir, "SimObjects");
+                return CFileUtils::normalizeFilePathToQtStandard(CFileUtils::appendFilePaths(simDir, "SimObjects"));
             }
 
             const QStringList &CFsCommonUtil::p3dSimObjectsExcludeDirectoryPatterns()
@@ -407,7 +407,7 @@ namespace BlackMisc
                 }
 
                 QString targetDir = CFileUtils::appendFilePathsAndFixUnc(simObjectDir, "Misc");
-                QDir td(targetDir);
+                const QDir td(targetDir);
                 if (!td.exists())
                 {
                     messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, u"Cannot access target directory '%1'") << targetDir);
