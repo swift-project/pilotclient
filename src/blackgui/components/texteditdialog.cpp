@@ -28,5 +28,10 @@ namespace BlackGui
         {
             return ui->te_TextEdit;
         }
+
+        void CTextEditDialog::setReadOnly()
+        {
+            ui->te_TextEdit->setReadOnly(true);
+        }
     } // ns
 } // ns
