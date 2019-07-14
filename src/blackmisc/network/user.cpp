@@ -200,7 +200,8 @@ namespace BlackMisc
         QString CUser::beautifyRealName(const QString &realName)
         {
             QString newRealName(realName.simplified().trimmed());
-            if (newRealName.isEmpty()) { return newRealName; }
+            if (newRealName.isEmpty())       { return newRealName; }
+            if (is09OnlyString(newRealName)) { return newRealName; } // new VATSIM COD, allowing id as name, see https://discordapp.com/channels/539048679160676382/539846348275449887/599969308247851018
 
             int uc = 0;
             int lc = 0;
