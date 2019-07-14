@@ -214,10 +214,10 @@ namespace BlackSimPlugin
         bool CSimulatorEmulated::changeInternalCom(const CSimulatedAircraft &aircraft)
         {
             bool changed = false;
-            if (aircraft.getCom1System() != m_myAircraft.getCom1System()) { changed = true; }
-            if (aircraft.getCom2System() != m_myAircraft.getCom2System()) { changed = true; }
+            if (aircraft.getCom1System()  != m_myAircraft.getCom1System())  { changed = true; }
+            if (aircraft.getCom2System()  != m_myAircraft.getCom2System())  { changed = true; }
             if (aircraft.getTransponder() != m_myAircraft.getTransponder()) { changed = true; }
-            if (aircraft.getSelcal() != m_myAircraft.getSelcal()) { changed = true; }
+            if (aircraft.getSelcal()      != m_myAircraft.getSelcal())      { changed = true; }
 
             if (!changed) { return false; }
             m_myAircraft.setCockpit(aircraft);
@@ -307,6 +307,13 @@ namespace BlackSimPlugin
             m_renderedAircraft.push_back(aircraft); // my simulator list
             this->updateAircraftRendered(cs, true); // in provider
             emit this->aircraftRenderingChanged(aircraft);
+
+            // debugging/logging (just here for debugging purposes)
+            const CAircraftModel networkModel = remoteAircraft.getNetworkModel();
+            const CAircraftModel currentModel = remoteAircraft.getModel();
+            Q_UNUSED(networkModel);
+            Q_UNUSED(currentModel);
+
             return true;
         }
 
