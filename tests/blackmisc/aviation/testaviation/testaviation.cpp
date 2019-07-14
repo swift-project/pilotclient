@@ -131,7 +131,7 @@ namespace BlackMiscTest
 
     void CTestAviation::transponder()
     {
-        CTransponder t1 = CTransponder::getStandardTransponder(7000, CTransponder::StateStandby);
+        const CTransponder t1 = CTransponder::getStandardTransponder(7000, CTransponder::StateStandby);
         CTransponder t2 = t1;
         QVERIFY2(t1 == t2, "Transponders shall be equal");
         t2.setTransponderMode(CTransponder::ModeC);
@@ -150,20 +150,46 @@ namespace BlackMiscTest
 
     void CTestAviation::callsignWithContainers()
     {
-        CCallsign cs1("EDDm_twr");
-        CCallsign cs2("eddm_TWR");
-        CCallsign cs3("EDDm_app", "München Radar");
+        const CCallsign cs1("EDDm_twr");
+        const CCallsign cs2("eddm_TWR");
+        const CCallsign cs3("EDDm_app", "München Radar");
         QVERIFY2(cs1 == cs2, "Callsigns shall be equal");
         QVERIFY2(cs1 != cs3, "Callsigns shall not be equal");
 
-        CCallsign pilot("DLH123");
-        CCallsign copilot1("DLH123A");
-        CCallsign copilot2("DLH1233");
-        CCallsign copilot3("DLH12");
+        const CCallsign pilot("DLH123");
+        const CCallsign copilot1("DLH123A");
+        const CCallsign copilot2("DLH1233");
+        const CCallsign copilot3("DLH12");
         QVERIFY(copilot1.isMaybeCopilotCallsign(pilot));
         QVERIFY(!pilot.isMaybeCopilotCallsign(pilot));
         QVERIFY(!copilot2.isMaybeCopilotCallsign(pilot));
         QVERIFY(!copilot3.isMaybeCopilotCallsign(pilot));
+
+        QString flightnumber;
+        QString identifier;
+
+        QString prefix = pilot.getAirlinePrefix(flightnumber, identifier);
+        QVERIFY(prefix == "DLH");
+        QVERIFY(flightnumber == "123");
+        QVERIFY(flightnumber == identifier);
+        prefix = copilot1.getAirlinePrefix(flightnumber, identifier);
+        QVERIFY(prefix == "DLH");
+        QVERIFY(flightnumber == "123");
+        QVERIFY(flightnumber != identifier);
+        prefix = copilot3.getAirlinePrefix(flightnumber);
+        QVERIFY(prefix == "DLH");
+        QVERIFY(flightnumber == "12");
+
+        const CCallsign pilotX1("DLHFOO");
+        prefix = pilotX1.getAirlinePrefix(flightnumber);
+        QVERIFY(prefix.isEmpty()); // no prefix
+        QVERIFY(flightnumber.isEmpty());
+
+        const CCallsign pilotX2("DLH1WP");
+        prefix = pilotX2.getAirlinePrefix(flightnumber, identifier);
+        QVERIFY(prefix == "DLH"); // no prefix
+        QVERIFY(flightnumber == "1");
+        QVERIFY(identifier == "1WP");
 
         CCallsignSet set;
         set.push_back(cs1);
@@ -186,50 +212,50 @@ namespace BlackMiscTest
 
     void CTestAviation::copyAndEqual()
     {
-        CFrequency f1(123.45, CFrequencyUnit::MHz());
-        CFrequency f2(f1);
+        const CFrequency f1(123.45, CFrequencyUnit::MHz());
+        const CFrequency f2(f1);
         QVERIFY2(f1 == f2, "frequencies shall be equal");
 
-        CCallsign c1("EABCD");
-        CCallsign c2(c1);
+        const CCallsign c1("EABCD");
+        const CCallsign c2(c1);
         QVERIFY2(c1 == c2, "callsigns shall be equal");
 
-        CInformationMessage im1(CInformationMessage::METAR, "I am a metar");
-        CInformationMessage im2(im1);
+        const CInformationMessage im1(CInformationMessage::METAR, "I am a metar");
+        const CInformationMessage im2(im1);
         QVERIFY2(im1 == im2, "information shall be equal");
 
-        CUser user1("112233dd", "Joe", "", "secret");
-        CUser user2(user1);
+        const CUser user1("112233dd", "Joe", "", "secret");
+        const CUser user2(user1);
         QVERIFY2(user1 == user2, "information shall be equal");
 
-        CServer server1 = CServer::swiftFsdTestServer();
-        CServer server2(server1);
+        const CServer server1 = CServer::swiftFsdTestServer();
+        const CServer server2(server1);
         QVERIFY2(server1 == server2, "server shall be equal");
 
-        CAircraftSituation situation1(
+        const CAircraftSituation situation1(
             CCoordinateGeodetic(
                 CLatitude::fromWgs84("N 049° 18' 17"),
                 CLongitude::fromWgs84("E 008° 27' 05"),
                 CAltitude(312, CLengthUnit::ft()))
         );
-        CAircraftSituation situation2(situation1);
+        const CAircraftSituation situation2(situation1);
         QVERIFY2(situation1 == situation2, "situations shall be equal");
 
-        CAircraftIcaoCode aircraftIcao1("C172", "L1P");
-        CAircraftIcaoCode aircraftIcao2(aircraftIcao1);
+        const CAircraftIcaoCode aircraftIcao1("C172", "L1P");
+        const CAircraftIcaoCode aircraftIcao2(aircraftIcao1);
         QVERIFY2(aircraftIcao1 == aircraftIcao2, "aircraft ICAOs shall be equal");
 
-        CAirlineIcaoCode airlineIcao1("GA");
-        CAirlineIcaoCode airlineIcao2(airlineIcao1);
+        const CAirlineIcaoCode airlineIcao1("GA");
+        const CAirlineIcaoCode airlineIcao2(airlineIcao1);
         QVERIFY2(airlineIcao1 == airlineIcao2, "airline ICAOs shall be equal");
 
-        CCallsign call1("EDDS_N_APP", CCallsign::Atc);
-        CCallsign call2("edds_n_app", CCallsign::Atc);
+        const CCallsign call1("EDDS_N_APP", CCallsign::Atc);
+        const CCallsign call2("edds_n_app", CCallsign::Atc);
         QVERIFY2(call1 == call2, "Callsigns shall be equal");
 
-        CAtcStation atc1(c1, user1, f1, situation1.getPosition(), CLength(), false, QDateTime(), QDateTime(), CInformationMessage(CInformationMessage::ATIS, "foo"));
-        CAtcStation atc2(c1, user1, f1, situation1.getPosition(), CLength(), false, QDateTime(), QDateTime(), CInformationMessage(CInformationMessage::ATIS, "foo"));
-        CAtcStation atc3(c1, user1, f1, situation1.getPosition(), CLength(), false, QDateTime(), QDateTime(), CInformationMessage(CInformationMessage::ATIS, "bar"));
+        const CAtcStation atc1(c1, user1, f1, situation1.getPosition(), CLength(), false, QDateTime(), QDateTime(), CInformationMessage(CInformationMessage::ATIS, "foo"));
+        const CAtcStation atc2(c1, user1, f1, situation1.getPosition(), CLength(), false, QDateTime(), QDateTime(), CInformationMessage(CInformationMessage::ATIS, "foo"));
+        const CAtcStation atc3(c1, user1, f1, situation1.getPosition(), CLength(), false, QDateTime(), QDateTime(), CInformationMessage(CInformationMessage::ATIS, "bar"));
         QVERIFY2(atc1 == atc2, "ATC stations shall be equal");
         QVERIFY2(atc1 != atc3, "ATC stations shall not be equal");
     }
