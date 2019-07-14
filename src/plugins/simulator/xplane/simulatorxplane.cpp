@@ -106,7 +106,7 @@ namespace BlackSimPlugin
             m_pendingAddedTimer.setObjectName(this->objectName().append(":m_pendingAddedTimer"));
             connect(&m_fastTimer, &QTimer::timeout, this, &CSimulatorXPlane::fastTimerTimeout);
             connect(&m_slowTimer, &QTimer::timeout, this, &CSimulatorXPlane::slowTimerTimeout);
-            connect(&m_airportUpdater, &QTimer::timeout, this, &CSimulatorXPlane::updateAirportsInRange);
+            connect(&m_airportUpdater,    &QTimer::timeout, this, &CSimulatorXPlane::updateAirportsInRange);
             connect(&m_pendingAddedTimer, &QTimer::timeout, this, &CSimulatorXPlane::addNextPendingAircraft);
             m_fastTimer.start(100);
             m_slowTimer.start(1000);

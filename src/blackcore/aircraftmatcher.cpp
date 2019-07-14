@@ -822,7 +822,7 @@ namespace BlackCore
         {
             if (isDBModel)
             {
-                CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Found model in DB for model string '%1'").arg(model.getModelStringAndDbKey()));
+                CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Found model in DB for model string '%1' dist: '%2' descr.: '%3'").arg(model.getModelStringAndDbKey(), model.getDistributor().getDbKey(), model.getDescription()));
             }
             else
             {

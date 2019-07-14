@@ -510,8 +510,9 @@ namespace BlackCore
         // checking for min. situations ensures the aircraft is stable, can be interpolated ...
         const CSimulatedAircraft remoteAircraft = this->getAircraftInRangeForCallsign(callsign);
         const bool validCs = remoteAircraft.hasValidCallsign();
-        const bool minSituations = validCs && this->remoteAircraftSituationsCount(callsign) > 1;
-        const bool complete = minSituations && (
+        const bool minSituations = this->remoteAircraftSituationsCount(callsign) > 1;
+        const bool complete = validCs &&
+                              minSituations && (
                                   (remoteAircraft.getModel().getModelType() == CAircraftModel::TypeFSInnData) || // here we know we have all data
                                   (remoteAircraft.hasModelString()) // we cannot expect more info
                               );
@@ -749,12 +750,13 @@ namespace BlackCore
         emit this->requestedNewAircraft(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery);
     }
 
-    CAircraftModel CAirspaceMonitor::reverseLookupModelWithFlightplanData(const CCallsign &callsign, const QString &aircraftIcaoString,
-            const QString &airlineIcaoString, const QString &liveryString, const QString &modelString,
-            CAircraftModel::ModelType type, CStatusMessageList *log, bool runMatchinScript)
+    CAircraftModel CAirspaceMonitor::reverseLookupModelWithFlightplanData(
+        const CCallsign &callsign, const QString &aircraftIcaoString,
+        const QString &airlineIcaoString, const QString &liveryString, const QString &modelString,
+        CAircraftModel::ModelType type, CStatusMessageList *log, bool runMatchinScript)
     {
         const int modelSetCount = this->getModelSetCount();
-        CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Reverse lookup (with FP data) model set: %1").arg(modelSetCount), CAirspaceMonitor::getLogCategories());
+        CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Reverse lookup (with FP data) model set count: %1").arg(modelSetCount), CAirspaceMonitor::getLogCategories());
 
         const DBTripleIds ids = CAircraftModel::parseNetworkLiveryString(liveryString);
         const bool hasAnyId = ids.hasAnyId();
@@ -775,7 +777,11 @@ namespace BlackCore
             CAirlineIcaoCode airlineIcao;
             CAircraftIcaoCode aircraftIcao;
 
-            if (hasAnyId)
+            if (!setup.isReverseLookupSwiftLiveryIds())
+            {
+                CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Reverse lookup of livery string '%1' disabled").arg(liveryString));
+            }
+            else if (hasAnyId)
             {
                 if (ids.model >= 0)
                 {
@@ -941,7 +947,7 @@ namespace BlackCore
                 if (!myself) { return; }
                 myself->addNewAircraftInRange(ac);
                 if (!readyForModelMatching) { return; }
-                myself->sendReadyForModelMatching(ac.getCallsign());
+                myself->sendReadyForModelMatching(ac.getCallsign()); // airspace monitor adding all aicraft
             });
         }
     }
@@ -984,19 +990,23 @@ namespace BlackCore
         const CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery,
         const QString &modelString, CAircraftModel::ModelType modelType, CStatusMessageList *log)
     {
-        CAircraftModel model = this->reverseLookupModelWithFlightplanData(callsign, aircraftIcao, airlineIcao, livery, modelString, modelType, log);
         const CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
-
         if (aircraft.hasValidCallsign())
         {
-            model.updateMissingParts(aircraft.getModel());
-            // Use anonymous as originator here, since the remote aircraft provider is ourselves and the call to updateAircraftModel() would
-            // return without doing anything.
-            this->updateAircraftModel(callsign, model, CIdentifier::null());
-            this->updateAircraftNetworkModel(callsign, model, CIdentifier::null());
+            // only if we do not have a DB model yet
+            if (!aircraft.getModel().hasValidDbKey())
+            {
+                CAircraftModel model = this->reverseLookupModelWithFlightplanData(callsign, aircraftIcao, airlineIcao, livery, modelString, modelType, log);
+                model.updateMissingParts(aircraft.getModel());
+                // Use anonymous as originator here, since the remote aircraft provider is ourselves and the call to updateAircraftModel() would
+                // return without doing anything.
+                this->updateAircraftModel(callsign, model, CIdentifier::null());
+                this->updateAircraftNetworkModel(callsign, model, CIdentifier::null());
+            }
         }
         else
         {
+            const CAircraftModel model = this->reverseLookupModelWithFlightplanData(callsign, aircraftIcao, airlineIcao, livery, modelString, modelType, log);
             const CSimulatedAircraft initAircraft(model);
             this->addNewAircraftInRange(initAircraft);
         }

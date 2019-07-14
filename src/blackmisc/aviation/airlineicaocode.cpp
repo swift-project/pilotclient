@@ -202,11 +202,12 @@ namespace BlackMisc
         QString CAirlineIcaoCode::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            return this->getDesignatorDbKey() %
-                   (this->hasName() ? u' ' % m_name : QString()) %
-                   u" Op: " % boolToYesNo(this->isOperating()) %
-                   u" VA: " % boolToYesNo(this->isVirtualAirline()) %
-                   u" Mil: " % boolToYesNo(this->isMilitary());
+            const QString s = this->getDesignatorDbKey() %
+                              (this->hasName() ? u' ' % m_name : QString()) %
+                              u" Op: " % boolToYesNo(this->isOperating()) %
+                              u" VA: " % boolToYesNo(this->isVirtualAirline()) %
+                              u" Mil: " % boolToYesNo(this->isMilitary());
+            return s.trimmed();
         }
 
         CVariant CAirlineIcaoCode::propertyByIndex(const CPropertyIndex &index) const
@@ -330,7 +331,7 @@ namespace BlackMisc
         CAirlineIcaoCode CAirlineIcaoCode::thisOrCallsignCode(const CCallsign &callsign) const
         {
             if (this->hasValidDbKey()) { return *this; }
-            if (callsign.isEmpty()) { return *this; }
+            if (callsign.isEmpty())    { return *this; }
             const QString callsignAirline = callsign.getAirlinePrefix();
             if (callsignAirline.isEmpty()) { return *this; }
             if (callsignAirline == m_designator) { return *this; }
