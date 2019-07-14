@@ -166,7 +166,7 @@ namespace BlackCore
         {
             // outdated, or not in cache at all, or NOT own aircraft
             plan = CFlightPlan(); // reset
-            m_flightPlanCache.remove(callsign);
+            m_flightPlanCache.remove(callsign); // loading FP from network
             m_network->sendFlightPlanQuery(callsign);
 
             // with this little trick we try to make an asynchronous signal / slot based approach
@@ -355,10 +355,42 @@ namespace BlackCore
                                        5000);
     }
 
+    const QString &CAirspaceMonitor::enumFlagToString(CAirspaceMonitor::MatchingReadinessFlag r)
+    {
+        static const QString nr("not ready");
+        static const QString icao("rec. ICAO");
+        static const QString fsinn("rec. FsInn");
+        static const QString ready("ready sent");
+        static const QString rec("recursive");
+        switch (r)
+        {
+        case NotReady:             return nr;
+        case ReceivedIcaoCodes:    return icao;
+        case ReceivedFsInnPacket:  return fsinn;
+        case ReadyForMatchingSent: return ready;
+        case RecursiveCall:        return rec;
+        default: break;
+        }
+        static const QString unknown("????");
+        return unknown;
+    }
+
+    QString CAirspaceMonitor::enumToString(MatchingReadiness r)
+    {
+        QStringList s;
+        if (r.testFlag(NotReady))             { s << enumFlagToString(NotReady); }
+        if (r.testFlag(ReceivedIcaoCodes))    { s << enumFlagToString(ReceivedIcaoCodes); }
+        if (r.testFlag(ReceivedFsInnPacket))  { s << enumFlagToString(ReceivedFsInnPacket); }
+        if (r.testFlag(ReadyForMatchingSent)) { s << enumFlagToString(ReadyForMatchingSent); }
+        if (r.testFlag(RecursiveCall))        { s << enumFlagToString(RecursiveCall); }
+        return s.join(", ");
+    }
+
     void CAirspaceMonitor::clear()
     {
         m_flightPlanCache.clear();
         m_tempFsInnPackets.clear();
+        m_readiness.clear();
         this->removeAllOnlineAtcStations();
         this->removeAllAircraft();
         this->clearClients();
@@ -445,12 +477,14 @@ namespace BlackCore
 
         // non thread safe parts
         m_flightPlanCache.clear();
+        m_readiness.clear();
     }
 
     void CAirspaceMonitor::removeFromAircraftCachesAndLogs(const CCallsign &callsign)
     {
         if (callsign.isEmpty()) { return; }
         m_flightPlanCache.remove(callsign);
+        m_readiness.remove(callsign);
         this->removeReverseLookupMessages(callsign);
     }
 
@@ -502,27 +536,42 @@ namespace BlackCore
         this->setClients(clients);
     }
 
-    void CAirspaceMonitor::sendReadyForModelMatching(const CCallsign &callsign, int trial)
+    CAirspaceMonitor::Readiness &CAirspaceMonitor::addMatchingReadinessFlag(const CCallsign &callsign, CAirspaceMonitor::MatchingReadinessFlag mrf)
+    {
+        Readiness &readiness = m_readiness[callsign].addFlag(mrf);
+        return readiness;
+    }
+
+    void CAirspaceMonitor::sendReadyForModelMatching(const CCallsign &callsign, MatchingReadinessFlag rf)
     {
         if (!this->isConnectedAndNotShuttingDown()) { return; }
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
 
+        // set flag and init ts
+        Readiness &readiness = this->addMatchingReadinessFlag(callsign, rf);
+
+        // skip if already sent in the last x seconds
+        const qint64 ageMs = readiness.getAgeMs();
+        if (readiness.wasMatchingSent() && readiness.getAgeMs() < 25 * 1000) { return; }
+
         // checking for min. situations ensures the aircraft is stable, can be interpolated ...
         const CSimulatedAircraft remoteAircraft = this->getAircraftInRangeForCallsign(callsign);
-        const bool validCs = remoteAircraft.hasValidCallsign();
+        const bool validRemoteCs = remoteAircraft.hasValidCallsign();
         const bool minSituations = this->remoteAircraftSituationsCount(callsign) > 1;
-        const bool complete = validCs &&
+        const bool complete = validRemoteCs &&
                               minSituations && (
+                                  readiness.receivedAll() ||
                                   (remoteAircraft.getModel().getModelType() == CAircraftModel::TypeFSInnData) || // here we know we have all data
                                   (remoteAircraft.hasModelString()) // we cannot expect more info
                               );
 
         const ReverseLookupLogging revLogEnabled = this->whatToReverseLog();
-        if (trial < 5 && !complete)
+        if (validRemoteCs && ageMs < 7500 && !complete)
         {
-            static const QString ws("Wait for further data, trial %1 ts %2");
+            static const QString ws("Wait for further data, '%1' age: %2ms ts: %3");
             static const QString format("hh:mm:ss.zzz");
-            if (!revLogEnabled.testFlag(RevLogSimplifiedInfo)) { this->addReverseLookupMessage(callsign, ws.arg(trial).arg(QDateTime::currentDateTimeUtc().toString(format))); }
+            if (!revLogEnabled.testFlag(RevLogSimplifiedInfo)) { this->addReverseLookupMessage(callsign, ws.arg(readiness.toQString()).arg(ageMs).arg(QDateTime::currentDateTimeUtc().toString(format))); }
+
             const QPointer<CAirspaceMonitor> myself(this);
             QTimer::singleShot(1500, this, [ = ]()
             {
@@ -533,24 +582,39 @@ namespace BlackCore
                     this->addReverseLookupMessage(callsign, m);
                     return;
                 }
-                this->sendReadyForModelMatching(callsign, trial + 1); // recursively
+                if (rf != ReceivedFsInnPacket)
+                {
+                    // here we call recursively like an FsInn packet was received
+                    if (this->recallFsInnPacket(callsign)) { return; }
+                }
+
+                // check again
+                this->sendReadyForModelMatching(callsign, RecursiveCall); // recursively
             });
+
+            // end as we will call again in some time
             return;
-        }
+
+        } // not yet complete
 
         // some checks for special conditions, e.g. logout -> empty list, but still signals pending
-        if (validCs)
+        if (validRemoteCs)
         {
-            static const QString readyForMatching("Ready for matching callsign '%1' with model type '%2'");
-            const QString readyMsg = readyForMatching.arg(callsign.toQString(), remoteAircraft.getModel().getModelTypeAsString());
+            static const QString readyForMatching("Ready for matching callsign '%1' with model type '%2', '%3'");
+
+            readiness.setFlag(ReadyForMatchingSent); // stored as readiness is reference
+
+            const QString readyMsg = readyForMatching.arg(callsign.toQString(), remoteAircraft.getModel().getModelTypeAsString(), readiness.toQString());
             const CStatusMessage m = CMatchingUtils::logMessage(callsign, readyMsg, getLogCategories());
             this->addReverseLookupMessage(callsign, m);
+
             emit this->readyForModelMatching(remoteAircraft);
         }
         else
         {
             const CStatusMessage m = CMatchingUtils::logMessage(callsign, "Ignoring this aircraft, not found in range list, disconnected, or no callsign", CAirspaceMonitor::getLogCategories(), CStatusMessage::SeverityWarning);
             this->addReverseLookupMessage(callsign, m);
+            m_readiness.remove(callsign);
         }
     }
 
@@ -601,8 +665,6 @@ namespace BlackCore
             const int changed = m_atcStationsOnline.applyIfCallsign(callsign, vm, true);
             if (changed > 0) { emit this->changedAtcStationsOnline(); }
         }
-
-        this->recallFsInnPacket(callsign);
     }
 
     void CAirspaceMonitor::onAtcControllerDisconnected(const CCallsign &callsign)
@@ -702,28 +764,43 @@ namespace BlackCore
         }
 
         // Request of other client, I can get the other's model from that
+        // we do not ignore model string here
         const CPropertyIndexVariantMap vm(CClient::IndexModelString, modelString);
         this->updateOrAddClient(callsign, vm);
 
         if (isAircraft)
         {
+            this->addMatchingReadinessFlag(callsign, ReceivedFsInnPacket); // in any case we did receive it
+
             const ReverseLookupLogging reverseLookupEnabled = this->isReverseLookupMessagesEnabled();
             CStatusMessageList reverseLookupMessages;
             CStatusMessageList *pReverseLookupMessages = reverseLookupEnabled.testFlag(RevLogEnabled) ? &reverseLookupMessages : nullptr;
-            if (!CAircraftMatcher::isKnownModelString(modelString, callsign, pReverseLookupMessages))
-            {
-                // from the T701 test, do NOT use if model string is unknown
-                // this can overrride "swift livery strings", FsInn here only is useful with a known model string
-                CMatchingUtils::addLogDetailsToList(pReverseLookupMessages, callsign,
-                                                    QStringLiteral("FsInn data ignored, as modelstring '%1' is not known").arg(modelString));
-                return;
-            }
+
             CMatchingUtils::addLogDetailsToList(pReverseLookupMessages, callsign,
                                                 QStringLiteral("FsInn data from network: aircraft '%1', airline '%2', model '%3', combined '%4'").
                                                 arg(aircraftIcaoDesignator, airlineIcaoDesignator, modelString, combinedAircraftType));
-            this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, "", modelString, CAircraftModel::TypeFSInnData, pReverseLookupMessages);
+
+            QString usedModelString = modelString;
+
+            const CAircraftMatcherSetup setup = m_matchingSettings.get();
+            if (!modelString.isEmpty() && !setup.isReverseLookupModelString())
+            {
+                usedModelString.clear();
+                CMatchingUtils::addLogDetailsToList(pReverseLookupMessages, callsign,
+                                                    QStringLiteral("FsInn modelstring '%1' ignored because of setuo").arg(modelString));
+            }
+            else if (!CAircraftMatcher::isKnownModelString(modelString, callsign, pReverseLookupMessages))
+            {
+                // from the T701 test, do NOT use if model string is unknown
+                // this can overrride "swift livery strings", FsInn here only is useful with a known model string
+                usedModelString.clear();
+                CMatchingUtils::addLogDetailsToList(pReverseLookupMessages, callsign,
+                                                    QStringLiteral("FsInn modelstring ignored, as modelstring '%1' is not known").arg(modelString));
+            }
+
+            this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, QString(), usedModelString, CAircraftModel::TypeFSInnData, pReverseLookupMessages);
             this->addReverseLookupMessages(callsign, reverseLookupMessages);
-            this->sendReadyForModelMatching(callsign); // from FSInn
+            this->sendReadyForModelMatching(callsign, ReceivedFsInnPacket); // from FSInn
         }
     }
 
@@ -745,7 +822,7 @@ namespace BlackCore
         const CClient client = this->getClientOrDefaultForCallsign(callsign);
         this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery, client.getQueriedModelString(), CAircraftModel::TypeQueriedFromNetwork, pReverseLookupMessages);
         this->addReverseLookupMessages(callsign, reverseLookupMessages);
-        this->sendReadyForModelMatching(callsign); // ICAO codes received
+        this->sendReadyForModelMatching(callsign, ReceivedIcaoCodes); // ICAO codes received
 
         emit this->requestedNewAircraft(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery);
     }
@@ -846,14 +923,14 @@ namespace BlackCore
                     {
                         const QString resolvedAirlineName = CAircraftMatcher::reverseLookupAirlineName(airlineNameFromFp);
                         airlineIcao.setName(resolvedAirlineName);
-                        CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Setting resolved airline name '%1' from '%2'").arg(resolvedAirlineName, airlineNameFromFp), CAirspaceMonitor::getLogCategories());
+                        CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Using resolved airline name '%1' found by FP name '%2'").arg(resolvedAirlineName, airlineNameFromFp), CAirspaceMonitor::getLogCategories());
                     }
 
                     if (!telephonyFromFp.isEmpty())
                     {
                         const QString resolvedTelephony = CAircraftMatcher::reverseLookupTelephonyDesignator(telephonyFromFp);
                         airlineIcao.setTelephonyDesignator(resolvedTelephony);
-                        CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Setting resolved telephony designator '%1' from '%2'").arg(resolvedTelephony, telephonyFromFp), CAirspaceMonitor::getLogCategories());
+                        CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("using resolved telephony designator '%1' found by FP telephoy '%2'").arg(resolvedTelephony, telephonyFromFp), CAirspaceMonitor::getLogCategories());
                     }
                 }
 
@@ -947,7 +1024,11 @@ namespace BlackCore
                 if (!myself) { return; }
                 myself->addNewAircraftInRange(ac);
                 if (!readyForModelMatching) { return; }
-                myself->sendReadyForModelMatching(ac.getCallsign()); // airspace monitor adding all aicraft
+                const CCallsign cs = ac.getCallsign();
+
+                m_readiness.remove(cs); // cleanup
+                const MatchingReadinessFlag ready = ReceivedAll;
+                myself->sendReadyForModelMatching(cs, ready); // airspace monitor adding all aicraft
             });
         }
     }
@@ -978,12 +1059,13 @@ namespace BlackCore
         // for future usage
     }
 
-    void CAirspaceMonitor::recallFsInnPacket(const CCallsign &callsign)
+    bool CAirspaceMonitor::recallFsInnPacket(const CCallsign &callsign)
     {
-        if (!m_tempFsInnPackets.contains(callsign)) { return; }
+        if (!m_tempFsInnPackets.contains(callsign)) { return false; }
         const FsInnPacket packet = m_tempFsInnPackets[callsign];
         m_tempFsInnPackets.remove(callsign);
         this->onCustomFSInnPacketReceived(callsign, packet.airlineIcaoDesignator, packet.aircraftIcaoDesignator, packet.combinedCode, packet.modelString);
+        return true;
     }
 
     CSimulatedAircraft CAirspaceMonitor::addOrUpdateAircraftInRange(
@@ -1055,8 +1137,6 @@ namespace BlackCore
             vm.addValue(CSimulatedAircraft::IndexRelativeBearing, this->calculateBearingToOwnAircraft(situation));
             this->updateAircraftInRange(callsign, vm);
         }
-
-        this->recallFsInnPacket(callsign);
     }
 
     void CAirspaceMonitor::onAircraftInterimUpdateReceived(const CAircraftSituation &situation)
