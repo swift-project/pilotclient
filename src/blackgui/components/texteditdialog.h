@@ -11,6 +11,8 @@
 #ifndef BLACKGUI_COMPONENTS_TEXTEDITDIALOG_H
 #define BLACKGUI_COMPONENTS_TEXTEDITDIALOG_H
 
+#include "blackgui/blackguiexport.h"
+
 #include <QDialog>
 #include <QScopedPointer>
 
@@ -22,7 +24,7 @@ namespace BlackGui
     namespace Components
     {
         //! Text edit as dialog
-        class CTextEditDialog : public QDialog
+        class BLACKGUI_EXPORT CTextEditDialog : public QDialog
         {
             Q_OBJECT
 
@@ -31,10 +33,13 @@ namespace BlackGui
             explicit CTextEditDialog(QWidget *parent = nullptr);
 
             //! Dtor
-            virtual ~CTextEditDialog();
+            virtual ~CTextEditDialog() override;
 
             //! Access to text edit
             QTextEdit *textEdit() const;
+
+            //! Set read only
+            void setReadOnly();
 
         private:
             QScopedPointer<Ui::CTextEditDialog> ui;

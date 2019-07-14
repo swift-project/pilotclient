@@ -537,7 +537,7 @@
               <property name="bottomMargin">
                <number>3</number>
               </property>
-              <item row="3" column="0">
+              <item row="4" column="0">
                <spacer name="vs_Tools">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -550,18 +550,50 @@
                 </property>
                </spacer>
               </item>
-              <item row="0" column="0">
-               <widget class="QPushButton" name="pb_Log">
-                <property name="text">
-                 <string>log</string>
+              <item row="3" column="0">
+               <widget class="QGroupBox" name="gb_Log">
+                <property name="title">
+                 <string>Log</string>
                 </property>
+                <layout class="QVBoxLayout" name="vl_Log">
+                 <item>
+                  <widget class="QPushButton" name="pb_Log">
+                   <property name="text">
+                    <string>log</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pb_LogDir">
+                   <property name="text">
+                    <string>log directory</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
-              <item row="2" column="0">
-               <widget class="QPushButton" name="pb_LogDir">
-                <property name="text">
-                 <string>log directory</string>
+              <item row="3" column="1">
+               <widget class="QGroupBox" name="gb_P3dFsx">
+                <property name="title">
+                 <string>P3D/FSX</string>
                 </property>
+                <layout class="QVBoxLayout" name="verticalLayout">
+                 <item>
+                  <widget class="QPushButton" name="pb_P3DConfigDirs">
+                   <property name="text">
+                    <string>P3D config dirs.</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pb_FSXConfigDirs">
+                   <property name="text">
+                    <string>FSX config dirs.</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
              </layout>

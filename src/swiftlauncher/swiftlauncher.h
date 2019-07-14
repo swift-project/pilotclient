@@ -25,7 +25,14 @@
 #include <QNetworkReply>
 
 namespace Ui { class CSwiftLauncher; }
-namespace BlackGui { namespace Components { class CConfigurationWizard; }}
+namespace BlackGui
+{
+    namespace Components
+    {
+        class CConfigurationWizard;
+        class CTextEditDialog;
+    }
+}
 
 /*!
  * swift launcher tool
@@ -86,6 +93,7 @@ private slots:
 private:
     QScopedPointer<Ui::CSwiftLauncher> ui;
     QScopedPointer<BlackGui::Components::CConfigurationWizard> m_wizard;
+    QScopedPointer<BlackGui::Components::CTextEditDialog>      m_textEditDialog;
     BlackMisc::CData<BlackCore::Data::TLauncherSetup>          m_setup { this }; //!< setup, i.e. last user selection
 
     QString     m_executable;
@@ -188,6 +196,9 @@ private:
 
     //! Display a popup with the cmd line args
     void popupExecutableArgs();
+
+    //! Show the FSX/P3D config simulator directories
+    void showSimulatorConfigDirs();
 
     //! Command line
     static QString toCmdLine(const QString &exe, const QStringList &exeArgs);

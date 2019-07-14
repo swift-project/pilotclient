@@ -8,19 +8,22 @@
 
 #include "swiftlauncher.h"
 #include "ui_swiftlauncher.h"
-#include "blackconfig/buildconfig.h"
 #include "blackgui/components/configurationwizard.h"
+#include "blackgui/components/texteditdialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/context/contextapplicationproxy.h"
 #include "blackcore/vatsim/networkvatlib.h"
 #include "blackcore/setupreader.h"
+#include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"
+#include "blackconfig/buildconfig.h"
+
 #include <QMessageBox>
 #include <QPixmap>
 #include <QBitmap>
@@ -43,6 +46,7 @@ using namespace BlackCore::Vatsim;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Simulation::FsCommon;
 
 CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     QDialog(parent, CEnableForFramelessWindow::modeToWindowFlags(CEnableForFramelessWindow::WindowNormal)),
@@ -75,6 +79,8 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(ui->pb_Log,    &QPushButton::released, this, &CSwiftLauncher::showLogPage, Qt::QueuedConnection);
     connect(ui->pb_Log,    &QPushButton::released, this, &CSwiftLauncher::showLogPage, Qt::QueuedConnection);
     connect(ui->pb_LogDir, &QPushButton::released, sGui, &CGuiApplication::openStandardLogDirectory, Qt::QueuedConnection);
+    connect(ui->pb_FSXConfigDirs, &QPushButton::released, this, &CSwiftLauncher::showSimulatorConfigDirs, Qt::QueuedConnection);
+    connect(ui->pb_P3DConfigDirs, &QPushButton::released, this, &CSwiftLauncher::showSimulatorConfigDirs, Qt::QueuedConnection);
 
     const QShortcut *logPageShortCut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(showLogPage()));
     Q_UNUSED(logPageShortCut);
@@ -534,4 +540,38 @@ void CSwiftLauncher::onCoreModeReleased()
 void CSwiftLauncher::popupExecutableArgs()
 {
     QMessageBox::information(this, "Command line", this->getCmdLine());
+}
+
+void CSwiftLauncher::showSimulatorConfigDirs()
+{
+    if (!m_textEditDialog)
+    {
+        m_textEditDialog.reset(new CTextEditDialog(this));
+    }
+
+    const QObject *s = QObject::sender();
+    QStringList dirs;
+    QString simDir;
+    QString simObjDir;
+
+    if (s == ui->pb_P3DConfigDirs)
+    {
+        dirs      = CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths();
+        simDir    = CFsCommonUtil::p3dDir();
+        simObjDir = CFsCommonUtil::p3dSimObjectsDir();
+    }
+    else if (s == ui->pb_FSXConfigDirs)
+    {
+        dirs      = CFsCommonUtil::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths();
+        simDir    = CFsCommonUtil::fsxDir();
+        simObjDir = CFsCommonUtil::fsxSimObjectsDir();
+    }
+
+    const QString info = u"Sim.dir: " % simDir % "\n" %
+                         u"Sim.objects: " % simObjDir % "\n" %
+                         (dirs.isEmpty() ? "No dirs" : dirs.join("\n"));
+
+    m_textEditDialog->setReadOnly();
+    m_textEditDialog->textEdit()->setText(info);
+    m_textEditDialog->show();
 }
