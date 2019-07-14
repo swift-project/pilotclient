@@ -195,25 +195,55 @@ namespace BlackMisc
 
         QString CCallsign::getAirlinePrefix(QString &flightNumber) const
         {
+            QString identification;
+            return this->getAirlinePrefix(flightNumber, identification);
+        }
+
+        QString CCallsign::getAirlinePrefix(QString &flightNumber, QString &flightIdentification) const
+        {
+            // DLH1WP only 11 number
+            // UPSE123 4 characters, then number
+
             flightNumber.clear();
             if (m_callsign.length() < 3) { return {}; }
             if (this->isAtcCallsign())   { return {}; }
 
-            thread_local const QRegularExpression regExp("^[A-Z]{3,}");
-            QRegularExpressionMatch match = regExp.match(m_callsign);
+            thread_local const QRegularExpression regExp("(^[A-Z]{3,})(\\d+)");
+            const QRegularExpressionMatch match = regExp.match(m_callsign);
             if (!match.hasMatch()) { return {}; }
-            const QString airline = match.captured(0);
-            flightNumber = match.captured(1);
+            // 0 is whole capture
+            const QString airline = match.captured(1);
+            flightNumber = match.captured(2); // null string if not exits
 
             // hard facts
-            if (airline.length() == 3) { return airline; } // we allow 3 letters
-            if (airline.length() == 4 && airline.startsWith('V')) { return airline; } // we allow virtual 4 letter codes, e.g. VDLD
+            if (airline.length() == 3) // we allow 3 letters
+            {
+                flightIdentification = m_callsign.length() > 3 ?  m_callsign.mid(3) : QString();
+                return airline;
+            }
+            if (airline.length() == 4 && airline.startsWith('V')) // we allow virtual 4 letter codes, e.g. VDLD
+            {
+                flightIdentification = m_callsign.length() > 4 ?  m_callsign.mid(4) : QString();
+                return airline;
+            }
 
             // some people use callsigns like UPSE123
-            flightNumber = match.captured(1);
-            if (flightNumber.length() >= 3 && airline.length() == 4) { return airline.left(3); }
+            if (flightNumber.length() >= 1 && airline.length() == 4)
+            {
+                flightIdentification = m_callsign.mid(3);
+                return airline.left(3);
+            }
 
             return {}; // invalid
+        }
+
+        QString CCallsign::getFlightIndentification() const
+        {
+            if (this->isAtcCallsign()) { return {}; }
+            QString flightNumber;
+            QString identification;
+            const QString airline = this->getAirlinePrefix(flightNumber, identification);
+            return airline.isEmpty() ? QString() : identification;
         }
 
         QString CCallsign::getFlightNumber() const
