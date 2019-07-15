@@ -8,6 +8,7 @@
 
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/matchingutils.h"
+#include "blackmisc/aviation/logutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/json.h"
 #include "blackmisc/verify.h"
@@ -687,7 +688,7 @@ namespace BlackMisc
         {
             if (callsign.isEmpty()) { return; }
             if (message.isEmpty())  { return; }
-            const CStatusMessage m = CMatchingUtils::logMessage(callsign, message, getLogCategories(), severity);
+            const CStatusMessage m = CLogUtilities::logMessage(callsign, message, getLogCategories(), severity);
             this->addReverseLookupMessage(callsign, m);
         }
 

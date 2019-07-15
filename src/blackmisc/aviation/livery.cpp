@@ -6,9 +6,9 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackmisc/simulation/matchingutils.h"
 #include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/aviation/livery.h"
+#include "blackmisc/aviation/logutils.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/logcategory.h"
@@ -438,7 +438,7 @@ namespace BlackMisc
         {
             if (this->isDbEqual(otherLivery))
             {
-                CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Equal DB code: 100"));
+                CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Equal DB code: 100"));
                 return 100;
             }
 
@@ -454,7 +454,7 @@ namespace BlackMisc
                 // 2 color liveries 25..85
                 score = 25;
                 score += 60 * colorMultiplier;
-                CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("2 color liveries, color multiplier %1: %2").arg(colorMultiplier).arg(score));
+                CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("2 color liveries, color multiplier %1: %2").arg(colorMultiplier).arg(score));
             }
             else if (this->isAirlineLivery() && otherLivery.isAirlineLivery())
             {
@@ -465,10 +465,10 @@ namespace BlackMisc
                 // same ICAO at least means 30, max 50
                 score = qRound(0.5 * this->getAirlineIcaoCode().calculateScore(otherLivery.getAirlineIcaoCode(), log));
                 score += 25 * colorMultiplier;
-                CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("2 airline liveries, color multiplier %1: %2").arg(colorMultiplier).arg(score));
+                CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("2 airline liveries, color multiplier %1: %2").arg(colorMultiplier).arg(score));
                 if (this->isMilitary() == otherLivery.isMilitary())
                 {
-                    CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Mil.flag '%1' matches: %2").arg(boolToYesNo(this->isMilitary())).arg(score));
+                    CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Mil.flag '%1' matches: %2").arg(boolToYesNo(this->isMilitary())).arg(score));
                     score += 10;
                 }
             }
@@ -479,7 +479,7 @@ namespace BlackMisc
                 // 25 is weaker as same ICAO code / 2 from above
                 score = preferColorLiveries ? 25 : 0;
                 score += 25 * colorMultiplier; // needs to be the same as in 2 airlines
-                CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Color/airline mixed, color multiplier %1: %2").arg(colorMultiplier).arg(score));
+                CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Color/airline mixed, color multiplier %1: %2").arg(colorMultiplier).arg(score));
             }
             return score;
         }

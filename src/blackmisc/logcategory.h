@@ -11,9 +11,9 @@
 #ifndef BLACKMISC_LOGCATEGORY_H
 #define BLACKMISC_LOGCATEGORY_H
 
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/valueobject.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QList>
 #include <QMetaType>
@@ -263,6 +263,13 @@ namespace BlackMisc
             return cat;
         }
 
+        //! Aviation specific
+        static const CLogCategory &aviation()
+        {
+            static const CLogCategory cat { "swift.aviation" };
+            return cat;
+        }
+
         //! All predefined special categories
         //! \note Human readable patterns are defined in CLogPattern::allHumanReadablePatterns
         static const QList<CLogCategory> &allSpecialCategories()
@@ -270,6 +277,7 @@ namespace BlackMisc
             static const QList<CLogCategory> cats
             {
                 uncategorized(),
+                aviation(),
                 cache(),
                 cmdLine(),
                 context(),

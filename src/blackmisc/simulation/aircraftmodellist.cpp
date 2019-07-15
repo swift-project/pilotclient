@@ -9,6 +9,7 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/matchingutils.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/logutils.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/iterator.h"
@@ -1343,9 +1344,9 @@ namespace BlackMisc
             ScoredModels scoreMap;
 
             // normally prefer colors if there is no airline
-            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("Prefer color liveries: '%1', airline: '%2', ignore zero scores: '%3'").arg(boolToYesNo(preferColorLiveries), remoteModel.getAirlineIcaoCodeDesignator(), boolToYesNo(ignoreZeroScores)));
-            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("--- Start scoring in list with %1 models").arg(this->size()));
-            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), this->coverageSummaryForModel(remoteModel));
+            CLogUtilities::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("Prefer color liveries: '%1', airline: '%2', ignore zero scores: '%3'").arg(boolToYesNo(preferColorLiveries), remoteModel.getAirlineIcaoCodeDesignator(), boolToYesNo(ignoreZeroScores)));
+            CLogUtilities::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("--- Start scoring in list with %1 models").arg(this->size()));
+            CLogUtilities::addLogDetailsToList(log, remoteModel.getCallsign(), this->coverageSummaryForModel(remoteModel));
 
             int c = 1;
             for (const CAircraftModel &model : *this)
@@ -1354,13 +1355,13 @@ namespace BlackMisc
                 const int score = model.calculateScore(remoteModel, preferColorLiveries, log ? &subMsgs : nullptr);
                 if (ignoreZeroScores && score < 1) { continue; }
 
-                CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("--- Calculating #%1 '%2'---").arg(c).arg(model.getModelStringAndDbKey()));
+                CLogUtilities::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("--- Calculating #%1 '%2'---").arg(c).arg(model.getModelStringAndDbKey()));
                 if (log) { log->push_back(subMsgs); }
-                CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("--- End calculating #%1 ---").arg(c));
+                CLogUtilities::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("--- End calculating #%1 ---").arg(c));
                 c++;
                 scoreMap.insertMulti(score, model);
             }
-            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("--- End scoring ---"));
+            CLogUtilities::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("--- End scoring ---"));
             return scoreMap;
         }
 
