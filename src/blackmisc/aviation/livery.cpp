@@ -355,12 +355,12 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDescription: return CVariant::fromValue(m_description);
             case IndexAirlineIcaoCode: return m_airline.propertyByIndex(index.copyFrontRemoved());
-            case IndexColorFuselage: return m_colorFuselage.propertyByIndex(index.copyFrontRemoved());;
-            case IndexColorTail: return m_colorTail.propertyByIndex(index.copyFrontRemoved());
-            case IndexCombinedCode: return CVariant::fromValue(m_combinedCode);
-            case IndexIsMilitary: return CVariant::fromValue(m_military);
+            case IndexColorFuselage:   return m_colorFuselage.propertyByIndex(index.copyFrontRemoved());;
+            case IndexColorTail:       return m_colorTail.propertyByIndex(index.copyFrontRemoved());
+            case IndexDescription:     return CVariant::fromValue(m_description);
+            case IndexCombinedCode:    return CVariant::fromValue(m_combinedCode);
+            case IndexIsMilitary:      return CVariant::fromValue(m_military);
             default: return CValueObject::propertyByIndex(index);
             }
         }
@@ -372,12 +372,12 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDescription: m_description = variant.toQString(false); break;
+            case IndexDescription:     m_description = variant.toQString(false); break;
             case IndexAirlineIcaoCode: m_airline.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexColorFuselage: m_colorFuselage.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexColorTail: m_colorTail.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexCombinedCode: this->setCombinedCode(variant.toQString(false)); break;
-            case IndexIsMilitary: this->setMilitary(variant.toBool()); break;
+            case IndexColorFuselage:   m_colorFuselage.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexColorTail:       m_colorTail.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexCombinedCode:    this->setCombinedCode(variant.toQString(false)); break;
+            case IndexIsMilitary:      this->setMilitary(variant.toBool()); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }

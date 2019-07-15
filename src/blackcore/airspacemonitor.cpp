@@ -953,7 +953,7 @@ namespace BlackCore
         // model found
         lookupModel.setCallsign(callsign);
 
-        // Script
+        // script
         if (runMatchinScript && setup.doRunMsReverseLookupScript())
         {
             const MatchingScriptReturnValues rv = CAircraftMatcher::reverseLookupScript(lookupModel, setup, log);
