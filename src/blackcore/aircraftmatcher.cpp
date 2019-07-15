@@ -1801,48 +1801,6 @@ namespace BlackCore
         **/
     }
 
-    CAirlineIcaoCodeList CAircraftMatcher::ifPossibleReduceIcaoByAirlineNameTelephonyDesignator(const CCallsign &cs, const QString &airlineName, const QString &telephony, const CAirlineIcaoCodeList &inList, const QString &info, bool &reduced, CStatusMessageList *log)
-    {
-        reduced = false;
-        if (inList.isEmpty())
-        {
-            if (log) { CMatchingUtils::addLogDetailsToList(log, cs, info % u" Empty input list, cannot reduce", getLogCategories()); }
-            return inList;
-        }
-
-        if (telephony.isEmpty() && airlineName.isEmpty())
-        {
-            if (log) { CMatchingUtils::addLogDetailsToList(log, cs, info % u" No name/telephony, cannot reduce " % QString::number(inList.size()) %  u" entries", getLogCategories()); }
-            return inList;
-        }
-
-        CAirlineIcaoCodeList step1Data = inList.findByNamesOrTelephonyDesignator(airlineName);
-        if (step1Data.size() < 1 || step1Data.size() == inList.size())
-        {
-            if (log) { CMatchingUtils::addLogDetailsToList(log, cs, info % QStringLiteral(" cannot reduce by '%1'").arg(airlineName), getLogCategories()); }
-            step1Data = inList;
-        }
-        else
-        {
-            reduced = true;
-            if (log) { CMatchingUtils::addLogDetailsToList(log, cs, info % QStringLiteral(" reduced by '%1'").arg(airlineName), getLogCategories()); }
-        }
-        if (step1Data.size() == 1) { return step1Data; }
-
-        CAirlineIcaoCodeList step2Data = inList.findByNamesOrTelephonyDesignator(telephony);
-        if (step2Data.size() < 1 || step2Data.size() == inList.size())
-        {
-            if (log) { CMatchingUtils::addLogDetailsToList(log, cs, info % QStringLiteral(" cannot reduce by '%1'").arg(telephony), getLogCategories()); }
-            step2Data = step1Data;
-        }
-        else
-        {
-            reduced = true;
-            if (log) { CMatchingUtils::addLogDetailsToList(log, cs, info % QStringLiteral(" reduced by '%1'").arg(telephony), getLogCategories()); }
-        }
-        return step2Data;
-    }
-
     CAircraftModelList CAircraftMatcher::ifPossibleReduceByCombinedType(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &inList, const CAircraftMatcherSetup &setup, bool &reduced, CStatusMessageList *log)
     {
         reduced = false;
