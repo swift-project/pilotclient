@@ -39,6 +39,9 @@ namespace BlackMisc
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAirlineIcaoCodeList)
             using CSequence::CSequence;
 
+            //! Categories
+            static const CLogCategoryList &getLogCategories();
+
             //! Default constructor.
             CAirlineIcaoCodeList();
 
@@ -75,6 +78,9 @@ namespace BlackMisc
             CAirlineIcaoCodeList findBySimplifiedNameContaining(const QString &containedString) const;
 
             //! Find by names or telephony designator (aka callsign, not to be confused with CCallsign)
+            CAirlineIcaoCodeList findByTelephonyDesignator(const QString &candidate) const;
+
+            //! Find by names or telephony designator (aka callsign, not to be confused with CCallsign)
             CAirlineIcaoCodeList findByNamesOrTelephonyDesignator(const QString &candidate) const;
 
             //! Find by military flag
@@ -86,11 +92,20 @@ namespace BlackMisc
             //! The ones with an invalid designator
             CAirlineIcaoCodeList findByInvalidDesignator() const;
 
+            //! Use callsign to conclude airline
+            CAirlineIcaoCode findBestMatchByCallsign(const CCallsign &callsign) const;
+
             //! Best selection by given pattern
             CAirlineIcaoCode smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern, const CCallsign &callsign) const;
 
-            //! Use callsign to conclude airline
-            CAirlineIcaoCode findBestMatchByCallsign(const CCallsign &callsign) const;
+            //! Reduce by airline name/telephone designator, ISO country
+            CAirlineIcaoCodeList ifPossibleReduceNameTelephonyCountry(const BlackMisc::Aviation::CCallsign &cs, const QString &airlineName, const QString &telephony, const QString &countryIso, bool &reduced, const QString &logInfo, CStatusMessageList *log) const;
+
+            //! Reduce by ISO country
+            CAirlineIcaoCodeList ifPossibleReduceByCountry(const QString &countryIso) const;
+
+            //! Reduce by telephony designator
+            CAirlineIcaoCodeList ifPossibleReduceByTelephonyDesignator(const QString &telephonyDesignator) const;
 
             //! String list for completion by ICAO designator
             QStringList toIcaoDesignatorCompleterStrings(bool combinedString = true, bool sort = true) const;

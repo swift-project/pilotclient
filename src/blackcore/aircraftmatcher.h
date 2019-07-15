@@ -360,10 +360,6 @@ namespace BlackCore
         //! \threadsafe
         static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceModelsByAirlineNameTelephonyDesignator(const BlackMisc::Aviation::CCallsign &cs, const QString &airlineName, const QString &telephony, const BlackMisc::Simulation::CAircraftModelList &inList, const QString &info, bool &reduced, BlackMisc::CStatusMessageList *log);
 
-        //! Reduce by airline name/telephone designator
-        //! \threadsafe
-        static BlackMisc::Aviation::CAirlineIcaoCodeList ifPossibleReduceIcaoByAirlineNameTelephonyDesignator(const BlackMisc::Aviation::CCallsign &cs, const QString &airlineName, const QString &telephony, const BlackMisc::Aviation::CAirlineIcaoCodeList &inList, const QString &info, bool &reduced, BlackMisc::CStatusMessageList *log);
-
         //! Installed models by combined code (ie L2J, L1P, ...)
         //! \threadsafe
         static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByCombinedType(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, bool &reduced, BlackMisc::CStatusMessageList *log);

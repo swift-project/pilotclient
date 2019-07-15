@@ -115,20 +115,20 @@ namespace BlackMisc
 
         bool CAirlineIcaoCode::matchesDesignator(const QString &designator) const
         {
-            if (designator.isEmpty()) { return false; }
-            return designator.trimmed().toUpper() == m_designator;
+            if (designator.isEmpty() || m_designator.isEmpty()) { return false; }
+            return caseInsensitiveStringCompare(m_designator, designator.trimmed());
         }
 
         bool CAirlineIcaoCode::matchesVDesignator(const QString &designator) const
         {
-            if (designator.isEmpty()) { return false; }
-            return designator.trimmed().toUpper() == this->getVDesignator();
+            if (designator.isEmpty() || m_designator.isEmpty()) { return false; }
+            return caseInsensitiveStringCompare(this->getVDesignator(), designator.trimmed());
         }
 
         bool CAirlineIcaoCode::matchesIataCode(const QString &iata) const
         {
-            if (iata.isEmpty()) { return false; }
-            return iata.trimmed().toUpper() == m_iataCode;
+            if (iata.isEmpty() || m_iataCode.isEmpty()) { return false; }
+            return caseInsensitiveStringCompare(m_iataCode, iata.trimmed());
         }
 
         bool CAirlineIcaoCode::matchesDesignatorOrIataCode(const QString &candidate) const
@@ -141,6 +141,12 @@ namespace BlackMisc
         {
             if (candidate.isEmpty()) { return false; }
             return this->matchesVDesignator(candidate) || this->matchesIataCode(candidate);
+        }
+
+        bool CAirlineIcaoCode::matchesTelephonyDesignator(const QString &candidate) const
+        {
+            if (candidate.isEmpty() || m_telephonyDesignator.isEmpty()) { return false; }
+            return caseInsensitiveStringCompare(m_telephonyDesignator, candidate.trimmed());
         }
 
         bool CAirlineIcaoCode::matchesNamesOrTelephonyDesignator(const QString &candidate) const
