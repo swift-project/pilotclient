@@ -80,7 +80,7 @@ namespace BlackMisc
             enum ModelType
             {
                 TypeUnknown,
-                TypeQueriedFromNetwork,        //!< model was queried by network protocol
+                TypeQueriedFromNetwork,        //!< model was queried by network protocol (ICAO data)
                 TypeFSInnData,                 //!< model based on FSD ICAO data
                 TypeReverseLookup,             //!< reverse lookup model
                 TypeModelMatching,             //!< model is result of model matching
@@ -530,7 +530,7 @@ namespace BlackMisc
             static const QString &liveryStringPrefix();
 
             //! swift livery string
-            static bool isSwiftLiyeryString(const QString &liveryString);
+            static bool isSwiftLiveryString(const QString &liveryString);
 
             //! Split swift network string
             //! \sa getSwiftLiveryString

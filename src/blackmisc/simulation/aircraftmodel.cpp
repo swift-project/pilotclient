@@ -8,6 +8,7 @@
 
 #include "matchingutils.h"
 #include "aircraftmodel.h"
+#include "blackmisc/aviation/logutils.h"
 #include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/fileutils.h"
@@ -495,8 +496,8 @@ namespace BlackMisc
         {
             switch (this->getModelMode())
             {
-            case Include: return CIcon::iconByIndex(CIcons::ModelInclude);
-            case Exclude: return CIcon::iconByIndex(CIcons::ModelExclude);
+            case Include:   return CIcon::iconByIndex(CIcons::ModelInclude);
+            case Exclude:   return CIcon::iconByIndex(CIcons::ModelExclude);
             case Undefined: return CIcon::iconByIndex(CIcons::StandardIconUnknown16);
             default:
                 Q_ASSERT_X(false, Q_FUNC_INFO, "wrong mode");
@@ -580,7 +581,7 @@ namespace BlackMisc
             return p;
         }
 
-        bool CAircraftModel::isSwiftLiyeryString(const QString &liveryString)
+        bool CAircraftModel::isSwiftLiveryString(const QString &liveryString)
         {
             return (liveryString.length() > liveryStringPrefix().length() && liveryString.startsWith(liveryStringPrefix(), Qt::CaseInsensitive));
         }
@@ -598,7 +599,7 @@ namespace BlackMisc
         DBTripleIds CAircraftModel::parseNetworkLiveryString(const QString &liveryString)
         {
             // "swift_m22l33a11"
-            if (!CAircraftModel::isSwiftLiyeryString(liveryString)) {return DBTripleIds(); }
+            if (!CAircraftModel::isSwiftLiveryString(liveryString)) { return DBTripleIds(); }
 
             DBTripleIds ids;
             const QString ls = liveryString.mid(liveryStringPrefix().length()).toLower();
