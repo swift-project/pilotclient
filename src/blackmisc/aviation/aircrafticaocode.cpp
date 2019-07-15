@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackmisc/simulation/matchingutils.h"
+#include "blackmisc/aviation/logutils.h"
 #include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/db/datastoreutility.h"
@@ -131,7 +131,7 @@ namespace BlackMisc
         {
             if (this->isDbEqual(otherCode))
             {
-                CMatchingUtils::addLogDetailsToList(log, *this, QString("Equal DB code: 100"));
+                CLogUtilities::addLogDetailsToList(log, *this, QString("Equal DB code: 100"));
                 return 100;
             }
 
@@ -142,7 +142,7 @@ namespace BlackMisc
                 score += 50; // same designator
                 if (log)
                 {
-                    CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Same designator: %1").arg(score));
+                    CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Same designator: %1").arg(score));
                 }
 
                 int scoreOld = score;
@@ -151,7 +151,7 @@ namespace BlackMisc
                 else if (this->getRank() < 10) { score += (10 - this->getRank()); }
                 if (score > scoreOld)
                 {
-                    CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Added rank: %1").arg(score));
+                    CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Added rank: %1").arg(score));
                 }
             }
             else
@@ -159,12 +159,12 @@ namespace BlackMisc
                 if (this->hasFamily() && this->getFamily() == otherCode.getFamily())
                 {
                     score += 40;
-                    CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Added family: %1").arg(score));
+                    CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Added family: %1").arg(score));
                 }
                 else if (this->hasValidCombinedType() && otherCode.getCombinedType() == this->getCombinedType())
                 {
                     score += 30;
-                    CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Added combined code: %1").arg(score));
+                    CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Added combined code: %1").arg(score));
                 }
                 else if (this->hasValidCombinedType())
                 {
@@ -207,7 +207,7 @@ namespace BlackMisc
                     {
                         score += 4;
                     }
-                    CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Added combined code parts: %1").arg(score));
+                    CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Added combined code parts: %1").arg(score));
                 }
             }
 
@@ -217,11 +217,11 @@ namespace BlackMisc
                 if (this->matchesManufacturer(otherCode.getManufacturer()))
                 {
                     score += 10;
-                    CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Matches manufacturer '%1': %2").arg(this->getManufacturer()).arg(score));
+                    CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Matches manufacturer '%1': %2").arg(this->getManufacturer()).arg(score));
                 }
                 else if (this->getManufacturer().contains(otherCode.getManufacturer(), Qt::CaseInsensitive))
                 {
-                    CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Contains manufacturer '%1': %2").arg(this->getManufacturer()).arg(score));
+                    CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Contains manufacturer '%1': %2").arg(this->getManufacturer()).arg(score));
                     score += 5;
                 }
             }
@@ -230,12 +230,12 @@ namespace BlackMisc
             if (this->hasCategory() && otherCode.hasCategory() && this->getCategory() == otherCode.getCategory())
             {
                 score += 8;
-                CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Matches military flag '%1': %2").arg(boolToYesNo(this->isMilitary())).arg(score));
+                CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Matches military flag '%1': %2").arg(boolToYesNo(this->isMilitary())).arg(score));
             }
             else if (this->isMilitary() == otherCode.isMilitary())
             {
                 score += 8;
-                CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Matches military flag '%1': %2").arg(boolToYesNo(this->isMilitary())).arg(score));
+                CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Matches military flag '%1': %2").arg(boolToYesNo(this->isMilitary())).arg(score));
             }
             // 0..85
             return score;

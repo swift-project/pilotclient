@@ -32,58 +32,6 @@ namespace BlackMisc
                 const QString &message, const CLogCategoryList &extraCategories = {},
                 CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
-            //! Specialized log for matching / reverse lookup
-            //! \threadsafe
-            static void addLogDetailsToList(CStatusMessageList *log, const Aviation::CCallsign &callsign,
-                                            const QString &message, const CLogCategoryList &extraCategories = {},
-                                            CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
-
-            //! Specialized log for matching / reverse lookup
-            //! \threadsafe
-            static void addLogDetailsToList(CStatusMessageList *log, const Aviation::CAircraftIcaoCode &icao,
-                                            const QString &message, const CLogCategoryList &extraCategories = {},
-                                            CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
-
-            //! Specialized log for matching / reverse lookup
-            //! \threadsafe
-            static void addLogDetailsToList(CStatusMessageList *log, const Aviation::CAirlineIcaoCode &icao,
-                                            const QString &message, const CLogCategoryList &extraCategories = {},
-                                            CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
-
-            //! Specialized log for matching / reverse lookup
-            //! \threadsafe
-            static void addLogDetailsToList(CStatusMessageList *log, const Aviation::CLivery &livery,
-                                            const QString &message, const CLogCategoryList &extraCategories = {},
-                                            CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
-
-            //! Specialized log message for matching / reverse lookup
-            //! \threadsafe
-            static CStatusMessage logMessage(
-                const Aviation::CCallsign &callsign,
-                const QString &message, const CLogCategoryList &extraCategories = {},
-                CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
-
-            //! Specialized log message for matching / reverse lookup
-            //! \threadsafe
-            static CStatusMessage logMessage(
-                const Aviation::CAircraftIcaoCode &icaoCode,
-                const QString &message, const CLogCategoryList &extraCategories = {},
-                CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
-
-            //! Specialized log message for matching / reverse lookup
-            //! \threadsafe
-            static CStatusMessage logMessage(
-                const Aviation::CAirlineIcaoCode &icaoCode,
-                const QString &message, const CLogCategoryList &extraCategories = {},
-                CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
-
-            //! Specialized log message for matching / reverse lookup
-            //! \threadsafe
-            static CStatusMessage logMessage(
-                const Aviation::CLivery &livery,
-                const QString &message, const CLogCategoryList &extraCategories = {},
-                CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
-
         private:
             //! Default categories
             static const CLogCategoryList &defaultCategories();

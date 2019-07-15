@@ -7,16 +7,25 @@
  */
 
 #include "blackmisc/aviation/airlineicaocodelist.h"
+#include "blackmisc/aviation/logutils.h"
+#include "blackmisc/logcategory.h"
 #include "blackmisc/country.h"
 #include "blackmisc/range.h"
 
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QStringBuilder>
 
 namespace BlackMisc
 {
     namespace Aviation
     {
+        const CLogCategoryList &CAirlineIcaoCodeList::getLogCategories()
+        {
+            static const CLogCategoryList cats(CLogCategory::aviation());
+            return cats;
+        }
+
         CAirlineIcaoCodeList::CAirlineIcaoCodeList()
         { }
 

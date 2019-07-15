@@ -6,6 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
+#include "contextsimulatorimpl.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextnetworkimpl.h"
@@ -17,23 +18,23 @@
 #include "blackcore/application.h"
 #include "blackcore/pluginmanagersimulator.h"
 #include "blackcore/simulator.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/matchingutils.h"
+#include "blackmisc/aviation/logutils.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/pq/units.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/simplecommandparser.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/pq/units.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/verify.h"
 #include "blackconfig/buildconfig.h"
-#include "contextsimulatorimpl.h"
 
 #include <QMetaObject>
 #include <QStringBuilder>
@@ -656,12 +657,12 @@ namespace BlackCore
                 CSimulatedAircraft brokenAircraft(aircraftAfterModelApplied);
                 brokenAircraft.setEnabled(false);
                 brokenAircraft.setRendered(false);
-                CMatchingUtils::addLogDetailsToList(pMatchingMessages, callsign, QStringLiteral("Cannot add remote aircraft, no model string: '%1'").arg(brokenAircraft.toQString()));
+                CLogUtilities::addLogDetailsToList(pMatchingMessages, callsign, QStringLiteral("Cannot add remote aircraft, no model string: '%1'").arg(brokenAircraft.toQString()));
                 emit this->aircraftRenderingChanged(brokenAircraft);
                 return;
             }
             m_simulatorPlugin.second->logicallyAddRemoteAircraft(aircraftAfterModelApplied);
-            CMatchingUtils::addLogDetailsToList(pMatchingMessages, callsign, QStringLiteral("Logically added remote aircraft: %1").arg(aircraftAfterModelApplied.toQString()));
+            CLogUtilities::addLogDetailsToList(pMatchingMessages, callsign, QStringLiteral("Logically added remote aircraft: %1").arg(aircraftAfterModelApplied.toQString()));
 
             this->clearMatchingMessages(callsign);
             this->addMatchingMessages(callsign, matchingMessages);
