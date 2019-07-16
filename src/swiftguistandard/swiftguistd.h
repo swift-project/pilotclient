@@ -54,6 +54,7 @@ namespace BlackGui
     {
         class CDbLoadDataDialog;
         class CAutoPublishDialog;
+        class CLoginDialog;
     }
 }
 namespace Ui { class SwiftGuiStd; }
@@ -114,18 +115,18 @@ private:
     QScopedPointer<BlackGui::Components::CNavigatorDialog>   m_navigator{ new BlackGui::Components::CNavigatorDialog() }; //!< navigator dialog bar, if I pass the parent, the dialog is always centered over the parent
     QScopedPointer<BlackGui::Components::CDbLoadDataDialog>  m_dbLoadDialog;      //!< load DB data, lazy init UI component
     QScopedPointer<BlackGui::Components::CAutoPublishDialog> m_autoPublishDialog; //!< auto publish dialog
+    QScopedPointer<BlackGui::Components::CLoginDialog>       m_loginDialog;       //!< login dialog
     QScopedPointer<BlackGui::Components::CAircraftModelSetValidationDialog> m_validationDialog; //!< aircraft model validation dialog
     BlackMisc::CData<BlackMisc::Simulation::Data::TLastAutoPublish> m_lastAutoPublish { this };
     BlackCore::CActionBind m_actionPtt { BlackMisc::Input::pttHotkeyAction(), BlackMisc::CIcons::radio16(), this, &SwiftGuiStd::onPttChanged };
     BlackCore::CActionBindings  m_menuHotkeyHandlers;
     BlackGui::CManagedStatusBar m_statusBar;
     BlackMisc::CLogSubscriber   m_logSubscriber { this, &SwiftGuiStd::displayStatusMessageInGui };
-    bool                        m_init = false;
-
 
     // contexts
     static constexpr int MaxCoreFailures = 5;  //!< Failures counted before reconnecting
     int  m_coreFailures            = 0;        //!< failed access to core
+    bool m_init                    = false;
     bool m_coreAvailable           = false;    //!< core already available?
     bool m_contextNetworkAvailable = false;    //!< network context available?
     bool m_contextAudioAvailable   = false;    //!< audio context available?

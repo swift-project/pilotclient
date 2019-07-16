@@ -10,6 +10,7 @@
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/dbloaddatadialog.h"
 #include "blackgui/components/autopublishdialog.h"
+#include "blackgui/components/logindialog.h"
 #include "blackgui/components/settingscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
@@ -239,6 +240,7 @@ bool SwiftGuiStd::isMainPageSelected(SwiftGuiStd::MainPageIndex mainPage) const
 
 void SwiftGuiStd::loginRequested()
 {
+    if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork()) { return; }
     if (ui->sw_MainMiddle->currentIndex() == static_cast<int>(MainPageLogin))
     {
         // already main page, we fake a re-trigger here
@@ -247,7 +249,17 @@ void SwiftGuiStd::loginRequested()
     }
     else
     {
-        this->setMainPage(MainPageLogin);
+        const bool shift = QApplication::keyboardModifiers() & Qt::ShiftModifier;
+        const bool connected = sGui->getIContextNetwork()->isConnected();
+        if (!connected && shift)
+        {
+            if (!m_loginDialog) { m_loginDialog.reset(new CLoginDialog(this)); }
+            m_loginDialog->show();
+        }
+        else
+        {
+            this->setMainPage(MainPageLogin);
+        }
     }
 }
 
