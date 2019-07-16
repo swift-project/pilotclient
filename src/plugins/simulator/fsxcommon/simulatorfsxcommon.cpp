@@ -814,7 +814,7 @@ namespace BlackSimPlugin
             if (remoteAircraftData.aboveGroundFt() < 250)
             {
                 const CLength cg(remoteAircraftData.cgToGroundFt, CLengthUnit::ft());
-                this->rememberElevationAndSimulatorCG(cs, simObject.getAircraftModelString(), elevation, cg);
+                this->rememberElevationAndSimulatorCG(cs, simObject.getAircraftModel(), elevation, cg);
             }
 
             const bool log = this->isLogCallsign(cs);
@@ -864,7 +864,7 @@ namespace BlackSimPlugin
             so.setAircraftModelString(modelString);
 
             // update in 2 providers
-            this->rememberElevationAndSimulatorCG(cs, modelString, CElevationPlane::null(), cg); // env. provider
+            this->rememberElevationAndSimulatorCG(cs, simObject.getAircraftModel(), CElevationPlane::null(), cg); // env. provider
             this->updateCGAndModelString(cs, cg, modelString); // remote aircraft provider
         }
 
