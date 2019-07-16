@@ -42,6 +42,22 @@ namespace BlackMisc
             };
         }
 
+        //! Which data have changed
+        struct ChangedAutoPublishData
+        {
+            bool modelKnown = false; //!< model known in DB
+            bool changedCG  = false; //!< CG changed
+            bool changedSim = false; //!< simulator changed
+
+            //! Set all to true;
+            void setAllTrue()
+            {
+                modelKnown = true;
+                changedCG  = true;
+                changedSim = true;
+            }
+        };
+
         //! Objects that can be use for auto-publishing.
         //! Auto publishing means we sent those data to the DB.
         class BLACKMISC_EXPORT CAutoPublishData
