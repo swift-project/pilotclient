@@ -51,6 +51,9 @@ namespace BlackSimPlugin
             //! Simulated aircraft model string
             const QString &getAircraftModelString() const { return m_aircraft.getModelString(); }
 
+            //! Simulated aircraft model
+            const BlackMisc::Simulation::CAircraftModel &getAircraftModel() const { return m_aircraft.getModel(); }
+
             //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolatorInfo
             QString getInterpolatorInfo(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 

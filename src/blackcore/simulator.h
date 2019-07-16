@@ -435,7 +435,7 @@ namespace BlackCore
 
         //! Set elevation and CG in the providers and for auto publishing
         //! \sa ISimulator::updateOwnSituationAndGroundElevation
-        void rememberElevationAndSimulatorCG(const BlackMisc::Aviation::CCallsign &callsign, const QString &modelString, const BlackMisc::Geo::CElevationPlane &elevation, const BlackMisc::PhysicalQuantities::CLength &simulatorCG);
+        void rememberElevationAndSimulatorCG(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::Geo::CElevationPlane &elevation, const BlackMisc::PhysicalQuantities::CLength &simulatorCG);
 
         //! Emit the combined status
         //! \param oldStatus optionally one can capture and provide the old status for comparison. In case of equal status values no signal will be sent

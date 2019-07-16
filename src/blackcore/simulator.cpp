@@ -845,7 +845,7 @@ namespace BlackCore
         m_simulatorInternals.setSimulatorInstallationDirectory(s.getSimulatorDirectoryOrDefault());
     }
 
-    void ISimulator::rememberElevationAndSimulatorCG(const CCallsign &callsign, const QString &modelString, const CElevationPlane &elevation, const CLength &simulatorCG)
+    void ISimulator::rememberElevationAndSimulatorCG(const CCallsign &callsign, const CAircraftModel &model, const CElevationPlane &elevation, const CLength &simulatorCG)
     {
         if (callsign.isEmpty()) { return; }
         if (!elevation.isNull())
@@ -855,14 +855,22 @@ namespace BlackCore
             this->rememberGroundElevation(callsign, elevation);
         }
 
+        const QString modelString = model.getModelString();
+        if (modelString.isEmpty()) { return; }
         const CLength cgOvr = this->overriddenCGorDefault(simulatorCG, modelString);
         if (!cgOvr.isNull() && !this->hasSameSimulatorCG(cgOvr, callsign))
         {
             this->insertCG(cgOvr, modelString, callsign); // per model string and CG
 
-            // here we know we have a valid model and CG
-            m_autoPublishing.insert(modelString, simulatorCG); // still using CG here, not the overridden value
-            m_autoPublishing.insert(modelString, this->getSimulatorInfo());
+            // here we know we have a valid model and CG did change
+            const CSimulatorInfo sim = this->getSimulatorInfo();
+            m_autoPublishing.insert(modelString, simulatorCG); // still using simulator CG here, not the overridden value
+
+            // if simulator did change, add as well
+            if (!model.getSimulator().matchesAll(sim))
+            {
+                m_autoPublishing.insert(modelString, this->getSimulatorInfo());
+            }
         }
     }
 
@@ -997,7 +1005,7 @@ namespace BlackCore
     void ISimulator::unload()
     {
         this->disconnectFrom(); // disconnect from simulator
-        const bool saved = m_autoPublishing.writeJsonToFile();
+        const bool saved = m_autoPublishing.writeJsonToFile(); // empty data are ignored
         if (saved) { emit this->autoPublishDataWritten(this->getSimulatorInfo()); }
         m_autoPublishing.clear();
         m_remoteAircraftProviderConnections.disconnectAll(); // disconnect signals from provider

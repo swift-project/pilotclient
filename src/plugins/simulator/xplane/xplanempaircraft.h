@@ -48,6 +48,9 @@ namespace BlackSimPlugin
             //! Simulated aircraft (as added)
             const BlackMisc::Simulation::CSimulatedAircraft &getAircraft() const { return m_aircraft; }
 
+            //! Simulated aircraft model
+            const BlackMisc::Simulation::CAircraftModel &getAircraftModel() const { return m_aircraft.getModel(); }
+
             //! Simulated aircraft model string
             const QString &getAircraftModelString() const { return m_aircraft.getModelString(); }
 
