@@ -189,12 +189,12 @@ void SwiftGuiStd::copyXSwiftBusDialog(bool checkFileTimestamp)
     if (c > 0) { CLogMessage(this).info(u"Copied %1 files from build directory") << c; }
 }
 
-void SwiftGuiStd::autoPublishDialog()
+int SwiftGuiStd::autoPublishDialog()
 {
     if (!m_autoPublishDialog)
     {
         m_autoPublishDialog.reset(new CAutoPublishDialog(this));
     }
     m_lastAutoPublish.set(QDateTime::currentMSecsSinceEpoch());
-    m_autoPublishDialog->show();
+    return m_autoPublishDialog->readAndShow();
 }

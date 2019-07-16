@@ -70,9 +70,11 @@ private:
     //! Check auto-publishing
     void checkAutoPublishing();
 
+    //! Show auto publishing
+    void showAutoPublishing();
+
     void performGracefulShutdown();
     void consolidationSettingChanged();
-
     void displayConsole();
     void displayLog();
     void checkMinimumVersion();

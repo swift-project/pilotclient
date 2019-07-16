@@ -217,8 +217,13 @@ void CSwiftData::checkMinimumVersion()
 
 void CSwiftData::checkAutoPublishing()
 {
-    if (!sApp || sApp->isShuttingDown()) { return; }
     if (!CAutoPublishData::existAutoPublishFiles()) { return; }
+    this->showAutoPublishing();
+}
+
+void CSwiftData::showAutoPublishing()
+{
+    if (!sApp || sApp->isShuttingDown()) { return; }
     if (!m_autoPublishDialog) { m_autoPublishDialog = new CAutoPublishDialog(this); }
     m_autoPublishDialog->readAndShow();
 }
