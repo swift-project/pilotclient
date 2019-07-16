@@ -11,9 +11,11 @@
 #ifndef BLACKCORE_DB_DATABASEUTILS_H
 #define BLACKCORE_DB_DATABASEUTILS_H
 
-#include "blackcore/blackcoreexport.h"
 #include "blackcore/progress.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/autopublishdata.h"
+
 #include <QHttpPart>
 #include <QUrlQuery>
 #include <QByteArray>
@@ -108,6 +110,14 @@ namespace BlackCore
 
             //! Multipart with DEBUG FLAG for server
             static QHttpPart getMultipartWithDebugFlag();
+
+            //! Which auto-publish data did change?
+            //! \sa CAutoPublishData::analyzeAgainstDBData
+            static BlackMisc::Simulation::ChangedAutoPublishData autoPublishDataChanged(const QString &modelString, const BlackMisc::PhysicalQuantities::CLength &cg, const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! Which auto-publish data did change?
+            //! \sa CAutoPublishData::analyzeAgainstDBData
+            static BlackMisc::Simulation::ChangedAutoPublishData autoPublishDataChanged(const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::PhysicalQuantities::CLength &cg, const BlackMisc::Simulation::CSimulatorInfo &simulator);
         };
     } // ns
 } // ns

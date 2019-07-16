@@ -513,5 +513,23 @@ namespace BlackCore
             textPartDebug.setBody(QString("ECLIPSE_DBGP").toUtf8());
             return textPartDebug;
         }
+
+        ChangedAutoPublishData CDatabaseUtils::autoPublishDataChanged(const QString &modelString, const PhysicalQuantities::CLength &cg, const CSimulatorInfo &simulator)
+        {
+            ChangedAutoPublishData changed;
+            if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return changed; }
+            const CAircraftModel model = sApp->getWebDataServices()->getModelForModelString(modelString);
+            return CDatabaseUtils::autoPublishDataChanged(model, cg, simulator);
+        }
+
+        ChangedAutoPublishData CDatabaseUtils::autoPublishDataChanged(const CAircraftModel &model, const PhysicalQuantities::CLength &cg, const CSimulatorInfo &simulator)
+        {
+            ChangedAutoPublishData changed;
+            changed.modelKnown = model.hasValidDbKey();
+            if (!changed.modelKnown) { return changed; }
+            changed.changedCG  = !(cg == model.getCG());
+            changed.changedSim = !(model.getSimulator().matchesAll(simulator));
+            return changed;
+        }
     } // ns
 } // ns
