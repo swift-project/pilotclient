@@ -55,7 +55,7 @@ void CSwiftData::initDynamicMenus()
     ui->menu_InfoAreas->addActions(ui->comp_MainInfoArea->getInfoAreaSelectActions(true, ui->menu_InfoAreas));
 
     //  menu entry for auto publish data
-    ui->menu_Mapping->addAction(CIcons::database16(), "Auto publish data", this, &CSwiftData::checkAutoPublishing);
+    ui->menu_Mapping->addAction(CIcons::database16(), "Auto publish data", this, &CSwiftData::showAutoPublishing);
 
     QString resourceDir(CDirectoryUtils::shareDirectory());
     if (!resourceDir.isEmpty() && QDir(resourceDir).exists())

@@ -296,7 +296,7 @@ private:
     void copyXSwiftBusDialog(bool checkFileTimestamp);
 
     //! Auto publish diloag
-    void autoPublishDialog();
+    int autoPublishDialog();
 
     //! Show auto publish dialog if appropriate
     bool triggerAutoPublishDialog();

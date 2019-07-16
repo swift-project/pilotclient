@@ -37,6 +37,9 @@ namespace BlackGui
             //! Read the files
             int readFiles();
 
+            //! Data empty
+            bool isEmpty() const;
+
         private:
             QScopedPointer<Ui::CAutoPublishComponent> ui;
             BlackMisc::Simulation::CAutoPublishData m_data;

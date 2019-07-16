@@ -55,6 +55,11 @@ namespace BlackGui
             return r;
         }
 
+        bool CAutoPublishComponent::isEmpty() const
+        {
+            return m_data.isEmpty();
+        }
+
         void CAutoPublishComponent::analyzeAgainstDBData()
         {
             if (!sGui || sGui->isShuttingDown()) { return; }
