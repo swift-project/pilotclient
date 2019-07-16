@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>CLoginComponent</class>
  <widget class="QFrame" name="CLoginComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>329</width>
+    <height>745</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Login component</string>
   </property>
@@ -297,7 +305,7 @@
                  <property name="bottomMargin">
                   <number>2</number>
                  </property>
-                 <item>
+                 <item alignment="Qt::AlignLeft">
                   <widget class="BlackGui::Editors::CFsdSetupForm" name="form_FsdDetails"/>
                  </item>
                 </layout>
@@ -323,8 +331,15 @@
              <property name="bottomMargin">
               <number>3</number>
              </property>
-             <item alignment="Qt::AlignTop">
-              <widget class="BlackGui::Editors::CVoiceSetupForm" name="form_Voice"/>
+             <item alignment="Qt::AlignLeft|Qt::AlignTop">
+              <widget class="BlackGui::Editors::CVoiceSetupForm" name="form_Voice">
+               <property name="minimumSize">
+                <size>
+                 <width>150</width>
+                 <height>50</height>
+                </size>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>
