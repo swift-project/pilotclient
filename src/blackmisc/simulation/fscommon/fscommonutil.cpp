@@ -47,23 +47,26 @@ namespace BlackMisc
             QString fsxDirFromRegistryImpl()
             {
                 QString fsxPath;
-                if (CBuildConfig::isCompiledWithFsxSupport())
+                const FsRegistryPathPair fsxRegistryPathPairs =
                 {
-                    const FsRegistryPathPair fsxRegistryPathPairs =
-                    {
-                        { QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0"), QStringLiteral("AppPath") },
-                        { QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Microsoft Games\\Flight Simulator - Steam Edition\\10.0"), QStringLiteral("AppPath") },
-                        { QStringLiteral("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0"), QStringLiteral("SetupPath") },
-                        { QStringLiteral("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Microsoft Games\\Flight simulator\\10.0"), QStringLiteral("SetupPath") }
-                    };
+                    { QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0"), QStringLiteral("AppPath") },
+                    { QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Microsoft Games\\Flight Simulator - Steam Edition\\10.0"), QStringLiteral("AppPath") },
+                    { QStringLiteral("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0"), QStringLiteral("SetupPath") },
+                    { QStringLiteral("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0"), QStringLiteral("SetupPath") }
+                };
 
-                    for (const auto &registryPair : fsxRegistryPathPairs)
-                    {
-                        const QSettings fsxRegistry(registryPair.first, QSettings::NativeFormat);
-                        fsxPath = fsxRegistry.value(registryPair.second).toString().trimmed();
+                for (const auto &registryPair : fsxRegistryPathPairs)
+                {
+                    const QSettings fsxRegistry(registryPair.first, QSettings::NativeFormat);
+                    fsxPath = fsxRegistry.value(registryPair.second).toString().trimmed();
 
-                        if (!fsxPath.isEmpty()) break;
-                    }
+                    if (fsxPath.isEmpty()) { continue; }
+                    fsxPath = CFileUtils::normalizeFilePathToQtStandard(fsxPath);
+
+                    // if path does NOT exists we continue to search, maybe another one does
+                    const QDir dir(fsxPath);
+                    if (dir.exists()) { break; }
+                    fsxPath.clear();
                 }
                 return CFileUtils::normalizeFilePathToQtStandard(fsxPath);
             }
@@ -144,22 +147,25 @@ namespace BlackMisc
             QString p3dDirFromRegistryImpl()
             {
                 QString p3dPath;
-                if (CBuildConfig::isCompiledWithP3DSupport())
+                FsRegistryPathPair p3dRegistryPathPairs =
                 {
-                    FsRegistryPathPair p3dRegistryPathPairs =
-                    {
-                        { QStringLiteral("HKEY_CURRENT_USER\\Software\\Lockheed Martin\\Prepar3d v4"), QStringLiteral("AppPath") },
-                        { QStringLiteral("HKEY_CURRENT_USER\\Software\\Lockheed Martin\\Prepar3d v3"), QStringLiteral("AppPath") },
-                        { QStringLiteral("HKEY_CURRENT_USER\\Software\\Lockheed Martin\\Prepar3d v2"), QStringLiteral("AppPath") },
-                        { QStringLiteral("HKEY_CURRENT_USER\\Software\\LockheedMartin\\Prepar3d"), QStringLiteral("AppPath") }
-                    };
-                    for (const auto &registryPair : p3dRegistryPathPairs)
-                    {
-                        const QSettings p3dRegistry(registryPair.first, QSettings::NativeFormat);
-                        p3dPath = p3dRegistry.value(registryPair.second).toString().trimmed();
+                    { QStringLiteral("HKEY_CURRENT_USER\\Software\\Lockheed Martin\\Prepar3d v4"), QStringLiteral("AppPath") },
+                    { QStringLiteral("HKEY_CURRENT_USER\\Software\\Lockheed Martin\\Prepar3d v3"), QStringLiteral("AppPath") },
+                    { QStringLiteral("HKEY_CURRENT_USER\\Software\\Lockheed Martin\\Prepar3d v2"), QStringLiteral("AppPath") },
+                    { QStringLiteral("HKEY_CURRENT_USER\\Software\\LockheedMartin\\Prepar3d"), QStringLiteral("AppPath") }
+                };
+                for (const auto &registryPair : p3dRegistryPathPairs)
+                {
+                    const QSettings p3dRegistry(registryPair.first, QSettings::NativeFormat);
+                    p3dPath = p3dRegistry.value(registryPair.second).toString().trimmed();
 
-                        if (!p3dPath.isEmpty()) break;
-                    }
+                    if (p3dPath.isEmpty()) { continue; }
+                    p3dPath = CFileUtils::normalizeFilePathToQtStandard(p3dPath);
+
+                    // if path does NOT exists we continue to search, maybe another one does
+                    const QDir dir(p3dPath);
+                    if (dir.exists()) { break; }
+                    p3dPath.clear();
                 }
                 return p3dPath;
             }
@@ -278,21 +284,24 @@ namespace BlackMisc
             QString fs9DirFromRegistryImpl()
             {
                 QString fs9Path;
-                if (CBuildConfig::isCompiledWithFs9Support())
+                FsRegistryPathPair fs9RegistryPathPairs =
                 {
-                    FsRegistryPathPair fs9RegistryPathPairs =
-                    {
-                        { QStringLiteral("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\DirectPlay\\Applications\\Microsoft Flight Simulator 2004"), QStringLiteral("AppPath") },
-                        { QStringLiteral("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\DirectPlay\\Applications\\Microsoft Flight Simulator 2004"), QStringLiteral("AppPath") }
-                    };
+                    { QStringLiteral("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\DirectPlay\\Applications\\Microsoft Flight Simulator 2004"), QStringLiteral("AppPath") },
+                    { QStringLiteral("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\DirectPlay\\Applications\\Microsoft Flight Simulator 2004"), QStringLiteral("AppPath") }
+                };
 
-                    for (const auto &registryPair : fs9RegistryPathPairs)
-                    {
-                        QSettings fs9Registry(registryPair.first, QSettings::NativeFormat);
-                        fs9Path = fs9Registry.value(registryPair.second).toString().trimmed();
+                for (const auto &registryPair : fs9RegistryPathPairs)
+                {
+                    QSettings fs9Registry(registryPair.first, QSettings::NativeFormat);
+                    fs9Path = fs9Registry.value(registryPair.second).toString().trimmed();
 
-                        if (!fs9Path.isEmpty()) break;
-                    }
+                    if (fs9Path.isEmpty()) { continue; }
+                    fs9Path = CFileUtils::normalizeFilePathToQtStandard(fs9Path);
+
+                    // if path does NOT exists we continue to search, maybe another one does
+                    const QDir dir(fs9Path);
+                    if (dir.exists()) { break; }
+                    fs9Path.clear();
                 }
                 return fs9Path;
             }
