@@ -637,12 +637,31 @@ namespace BlackCore
             // in the first step we already tried to find accurate ICAO codes etc.
             // coming from CAirspaceMonitor::sendReadyForModelMatching
             MatchingLog whatToLog = m_logMatchingMessages;
+            const CSimulatorSettings simSettings = this->getSimulatorSettings();
             CStatusMessageList matchingMessages;
             CStatusMessageList *pMatchingMessages = m_logMatchingMessages > 0 ? &matchingMessages : nullptr;
             CAircraftModel aircraftModel = m_aircraftMatcher.getClosestMatch(remoteAircraft, whatToLog, pMatchingMessages, true);
             Q_ASSERT_X(remoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "Mismatching callsigns");
-            const CLength cg = m_simulatorPlugin.second->getSimulatorCGPerModelString(aircraftModel.getModelString());
-            if (!cg.isNull()) { aircraftModel.setCG(cg); }
+
+            // decide CG
+            CLength cgModel = aircraftModel.getCG();
+            CLength cgSim   = m_simulatorPlugin.second->getSimulatorCGPerModelString(aircraftModel.getModelString());
+            switch (simSettings.getCGSource())
+            {
+            case CSimulatorSettings::CGFromSimulatorOnly:
+                aircraftModel.setCG(cgSim);
+                break;
+            case CSimulatorSettings::CGFromSimulatorFirst:
+                if (!cgSim.isNull()) { aircraftModel.setCG(cgSim); }
+                break;
+            case CSimulatorSettings::CGFromDBFirst:
+                if (cgModel.isNull()) { aircraftModel.setCG(cgSim); }
+                break;
+            case CSimulatorSettings::CGFromDBOnly:
+            default: break;
+            }
+
+            // model in provider
             this->updateAircraftModel(callsign, aircraftModel, this->identifier());
 
             const CSimulatedAircraft aircraftAfterModelApplied = this->getAircraftInRangeForCallsign(remoteAircraft.getCallsign());
