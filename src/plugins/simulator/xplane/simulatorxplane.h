@@ -209,7 +209,7 @@ namespace BlackSimPlugin
             //! Timestamps of aircraft currently adding
             QPair<qint64, qint64> minMaxTimestampsAddInProgress() const;
 
-            //! Can the next aircraft be added?
+            //! Can the next aircraft be added? No other aircraft adding in progress?
             bool canAddAircraft() const;
 
             //! Callbacks from simulator @{

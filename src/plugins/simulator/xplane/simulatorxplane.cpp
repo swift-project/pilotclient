@@ -629,6 +629,8 @@ namespace BlackSimPlugin
                 m_addingInProgressAircraft.insert(newRemoteAircraft.getCallsign(), now);
                 const QString callsign = newRemoteAircraft.getCallsign().asString();
                 CAircraftModel aircraftModel = newRemoteAircraft.getModel();
+
+                // some more validation
                 if (aircraftModel.getCallsign() != newRemoteAircraft.getCallsign())
                 {
                     CLogMessage(this).warning(u"Model for '%1' has no callsign, maybe using a default model") << callsign;
@@ -1045,8 +1047,8 @@ namespace BlackSimPlugin
             {
                 wasPending = true;
                 const qint64 wasStartedMs = m_addingInProgressAircraft.value(cs);
-                const qint64 deltaTimeMs = QDateTime::currentMSecsSinceEpoch() - wasStartedMs;
-                m_statsAddCurrentTimeMs = deltaTimeMs;
+                const qint64 deltaTimeMs  = QDateTime::currentMSecsSinceEpoch() - wasStartedMs;
+                m_statsAddCurrentTimeMs   = deltaTimeMs;
                 if (deltaTimeMs > m_statsAddMaxTimeMs) { m_statsAddMaxTimeMs = deltaTimeMs; }
                 m_addingInProgressAircraft.remove(cs);
             }
