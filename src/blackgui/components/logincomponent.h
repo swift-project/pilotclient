@@ -13,6 +13,7 @@
 
 #include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/data/networksetup.h"
+#include "blackcore/network.h"
 #include "blackgui/settings/guisettings.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
@@ -61,8 +62,7 @@ namespace BlackGui
             enum Tab
             {
                 LoginVATSIM,
-                LoginOthers,
-                LoginFSD
+                LoginOthers
             };
 
             //! Log categories
@@ -168,10 +168,10 @@ namespace BlackGui
             bool validateAircraftValues();
 
             //! Aircraft ICAO code has been changed
-            void changedAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+            void onChangedAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
 
             //! Airline ICAO code has been changed
-            void changedAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
+            void onChangedAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
 
             //! Settings have been changed
             void reloadOtherServersSetup();
@@ -223,6 +223,9 @@ namespace BlackGui
 
             //! Simulator status changed
             void onSimulatorStatusChanged(int status);
+
+            //! Network status has changed
+            void onNetworkStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
             //! Tab widget (server) changed
             void onServerTabWidgetChanged(int index);
