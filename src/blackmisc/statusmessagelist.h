@@ -84,6 +84,9 @@ namespace BlackMisc
         //! Add some categories to all messages in the list
         void addCategories(const CLogCategoryList &categories);
 
+        //! Convenience function to push back a validation message
+        void addValidationMessage(const QString &validationText, CStatusMessage::StatusSeverity severity);
+
         //! Reset the category of all messages in the list
         void setCategory(const CLogCategory &category);
 
