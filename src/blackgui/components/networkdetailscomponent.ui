@@ -2,10 +2,18 @@
 <ui version="4.0">
  <class>CNetworkDetailsComponent</class>
  <widget class="QFrame" name="CNetworkDetailsComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>394</width>
+    <height>134</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Network details</string>
   </property>
-  <layout class="QVBoxLayout" name="vl_FsdDetailsComponent">
+  <layout class="QVBoxLayout" name="vl_CNetworkDetailsComponent">
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -19,126 +27,360 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QTabWidget" name="tw_Details">
+    <widget class="QStackedWidget" name="sw_NetworkServerDetails">
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="tb_LoginMode">
-      <attribute name="title">
-       <string>Mode</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="vl_LoginMode">
+     <widget class="QWidget" name="tb_NetworkServer">
+      <layout class="QVBoxLayout" name="vl_NetworkServerPage">
        <property name="leftMargin">
-        <number>3</number>
+        <number>2</number>
        </property>
        <property name="topMargin">
-        <number>3</number>
+        <number>2</number>
        </property>
        <property name="rightMargin">
-        <number>3</number>
+        <number>2</number>
        </property>
        <property name="bottomMargin">
-        <number>3</number>
-       </property>
-       <item alignment="Qt::AlignTop">
-        <widget class="BlackGui::CLoginModeButtons" name="frp_LoginMode"/>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tb_FsdDetails">
-      <attribute name="title">
-       <string>FSD details</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="vl_FsdDetails">
-       <property name="leftMargin">
-        <number>3</number>
-       </property>
-       <property name="topMargin">
-        <number>3</number>
-       </property>
-       <property name="rightMargin">
-        <number>3</number>
-       </property>
-       <property name="bottomMargin">
-        <number>3</number>
+        <number>2</number>
        </property>
        <item>
-        <widget class="QScrollArea" name="sa_FsdDetails">
-         <property name="widgetResizable">
-          <bool>true</bool>
+        <widget class="QTabWidget" name="tw_Network">
+         <property name="tabPosition">
+          <enum>QTabWidget::North</enum>
          </property>
-         <widget class="QWidget" name="qw_FsdDetails">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>192</width>
-            <height>55</height>
-           </rect>
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="tb_NetworkVatsim">
+          <property name="toolTip">
+           <string>Login at VATSIM</string>
           </property>
-          <layout class="QVBoxLayout" name="vl_ScrollAreaFsdDetails">
+          <attribute name="title">
+           <string>VATSIM</string>
+          </attribute>
+          <layout class="QGridLayout" name="gl_NetworkVATSIM">
            <property name="leftMargin">
-            <number>2</number>
+            <number>3</number>
            </property>
            <property name="topMargin">
-            <number>2</number>
+            <number>3</number>
            </property>
            <property name="rightMargin">
-            <number>2</number>
+            <number>3</number>
            </property>
            <property name="bottomMargin">
-            <number>2</number>
+            <number>3</number>
            </property>
-           <item>
-            <widget class="BlackGui::Editors::CFsdSetupForm" name="form_FsdDetails"/>
+           <property name="horizontalSpacing">
+            <number>3</number>
+           </property>
+           <item row="1" column="0">
+            <widget class="QWidget" name="wi_VatsimButtons" native="true">
+             <layout class="QHBoxLayout" name="hl_VatsimButtons">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <spacer name="hs_VatsimButtons">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pb_DetailsVatsim">
+                <property name="text">
+                 <string>details</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pb_OverrideCredentialsVatsim">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="toolTip">
+                 <string>copy credentials to pilot section</string>
+                </property>
+                <property name="text">
+                 <string> override pilot </string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="BlackGui::Components::CServerListSelector" name="comp_VatsimServers"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="tb_OtherServers">
+          <attribute name="title">
+           <string>Other servers</string>
+          </attribute>
+          <layout class="QGridLayout" name="gl_OtherServers">
+           <property name="leftMargin">
+            <number>3</number>
+           </property>
+           <property name="topMargin">
+            <number>3</number>
+           </property>
+           <property name="rightMargin">
+            <number>3</number>
+           </property>
+           <property name="bottomMargin">
+            <number>3</number>
+           </property>
+           <property name="horizontalSpacing">
+            <number>3</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="BlackGui::Components::CServerListSelector" name="comp_OtherServers"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QWidget" name="wi_OtherServersButtons" native="true">
+             <layout class="QHBoxLayout" name="hl_OtherServersButtons">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <spacer name="hs_OtherServersButtons">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pb_RefreshOtherServers">
+                <property name="text">
+                 <string>reload</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="../../blackmisc/blackmisc.qrc">
+                  <normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pb_OtherServersGotoSettings">
+                <property name="text">
+                 <string>settings </string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pb_DetailsOtherServers">
+                <property name="text">
+                 <string>details</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pb_OverrideCredentialsOtherServers">
+                <property name="toolTip">
+                 <string>copy credentials to pilot section</string>
+                </property>
+                <property name="text">
+                 <string> override pilot </string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </item>
           </layout>
          </widget>
         </widget>
        </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tb_Voice">
-      <attribute name="title">
-       <string>Voice</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="vl_Voice">
-       <property name="leftMargin">
-        <number>3</number>
-       </property>
-       <property name="topMargin">
-        <number>3</number>
-       </property>
-       <property name="rightMargin">
-        <number>3</number>
-       </property>
-       <property name="bottomMargin">
-        <number>3</number>
-       </property>
-       <item alignment="Qt::AlignTop">
-        <widget class="BlackGui::Editors::CVoiceSetupForm" name="form_Voice"/>
+       <item>
+        <widget class="QWidget" name="wi_FurtherLoginDetails" native="true">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <layout class="QFormLayout" name="fl_FurtherLoginDetails">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="le_Copilot">
+            <property name="placeholderText">
+             <string>partner callsign</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl_Mode">
+            <property name="text">
+             <string>Login</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="BlackGui::CLoginModeButtons" name="frp_LoginMode">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="lbl_Copilot">
+            <property name="text">
+             <string>Co/Pilot callsign</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tb_MatchingLog">
-      <attribute name="title">
-       <string>Matching log</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="vl_MatchingLog">
+     <widget class="QWidget" name="tb_NetworkDetails">
+      <layout class="QVBoxLayout" name="vl_NetworkDetailsPage">
        <property name="leftMargin">
-        <number>3</number>
+        <number>2</number>
        </property>
        <property name="topMargin">
-        <number>3</number>
+        <number>2</number>
        </property>
        <property name="rightMargin">
-        <number>3</number>
+        <number>2</number>
        </property>
        <property name="bottomMargin">
-        <number>3</number>
+        <number>2</number>
        </property>
-       <item alignment="Qt::AlignTop">
-        <widget class="BlackGui::Components::CModelMatcherLogEnable" name="comp_MatchingLogEnabled"/>
+       <item>
+        <widget class="QTabWidget" name="tw_Details">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="tb_FsdDetails">
+          <attribute name="title">
+           <string>FSD details</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="vl_FsdDetails">
+           <property name="leftMargin">
+            <number>3</number>
+           </property>
+           <property name="topMargin">
+            <number>3</number>
+           </property>
+           <property name="rightMargin">
+            <number>3</number>
+           </property>
+           <property name="bottomMargin">
+            <number>3</number>
+           </property>
+           <item alignment="Qt::AlignLeft|Qt::AlignTop">
+            <widget class="BlackGui::Editors::CFsdSetupForm" name="form_FsdDetails">
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>75</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="tb_Voice">
+          <attribute name="title">
+           <string>Voice</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="vl_Voice">
+           <property name="leftMargin">
+            <number>3</number>
+           </property>
+           <property name="topMargin">
+            <number>3</number>
+           </property>
+           <property name="rightMargin">
+            <number>3</number>
+           </property>
+           <property name="bottomMargin">
+            <number>3</number>
+           </property>
+           <item alignment="Qt::AlignLeft|Qt::AlignTop">
+            <widget class="BlackGui::Editors::CVoiceSetupForm" name="form_Voice">
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>50</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="tb_BackTServer">
+          <attribute name="icon">
+           <iconset resource="../../blackmisc/blackmisc.qrc">
+            <normaloff>:/pastel/icons/pastel/16/close.png</normaloff>:/pastel/icons/pastel/16/close.png</iconset>
+          </attribute>
+          <attribute name="title">
+           <string>Back to server</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item alignment="Qt::AlignRight">
+            <widget class="QPushButton" name="pb_BackToServer">
+             <property name="text">
+              <string>back to server</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -160,10 +402,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CModelMatcherLogEnable</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/modelmatcherlogenable.h</header>
-   <container>1</container>
+   <class>BlackGui::Components::CServerListSelector</class>
+   <extends>QComboBox</extends>
+   <header>blackgui/components/serverlistselector.h</header>
   </customwidget>
   <customwidget>
    <class>BlackGui::CLoginModeButtons</class>
@@ -172,6 +413,22 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <tabstops>
+  <tabstop>tw_Network</tabstop>
+  <tabstop>comp_VatsimServers</tabstop>
+  <tabstop>pb_DetailsVatsim</tabstop>
+  <tabstop>pb_OverrideCredentialsVatsim</tabstop>
+  <tabstop>le_Copilot</tabstop>
+  <tabstop>comp_OtherServers</tabstop>
+  <tabstop>pb_RefreshOtherServers</tabstop>
+  <tabstop>pb_OtherServersGotoSettings</tabstop>
+  <tabstop>pb_DetailsOtherServers</tabstop>
+  <tabstop>pb_OverrideCredentialsOtherServers</tabstop>
+  <tabstop>tw_Details</tabstop>
+  <tabstop>pb_BackToServer</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../../blackmisc/blackmisc.qrc"/>
+ </resources>
  <connections/>
 </ui>
