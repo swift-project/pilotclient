@@ -134,8 +134,8 @@ namespace BlackGui
             ui->le_AircraftCombinedType->setMaxLength(3);
             ui->le_AircraftCombinedType->setValidator(new CUpperCaseValidator(this));
             connect(ui->le_AircraftCombinedType, &QLineEdit::editingFinished, this, &CLoginComponent::validateAircraftValues);
-            connect(ui->selector_AircraftIcao,   &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CLoginComponent::changedAircraftIcao, Qt::QueuedConnection);
-            connect(ui->selector_AirlineIcao,    &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CLoginComponent::changedAirlineIcao, Qt::QueuedConnection);
+            connect(ui->selector_AircraftIcao,   &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CLoginComponent::onChangedAircraftIcao, Qt::QueuedConnection);
+            connect(ui->selector_AirlineIcao,    &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CLoginComponent::onChangedAirlineIcao, Qt::QueuedConnection);
             connect(ui->pb_SimulatorLookup,      &QToolButton::clicked, this, &CLoginComponent::lookupOwnAircraftModel);
             connect(ui->tw_Details,              &QTabWidget::currentChanged, this, &CLoginComponent::onDetailsTabChanged);
 
@@ -144,6 +144,11 @@ namespace BlackGui
                 connect(sGui->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this, &CLoginComponent::onSimulatorModelChanged, Qt::QueuedConnection);
                 connect(sGui->getIContextSimulator(), &IContextSimulator::vitalityLost, this, &CLoginComponent::autoLogoffDetection, Qt::QueuedConnection);
                 connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CLoginComponent::onSimulatorStatusChanged, Qt::QueuedConnection);
+            }
+
+            if (sGui && sGui->getIContextNetwork())
+            {
+                connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CLoginComponent::onNetworkStatusChanged, Qt::QueuedConnection);
             }
 
             // server and UI elements when in disconnect state
@@ -438,6 +443,15 @@ namespace BlackGui
             }
         }
 
+        void CLoginComponent::onNetworkStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+        {
+            Q_UNUSED(from);
+            if (to != INetwork::Connected) { return; }
+
+            this->setUiLoginState(true);
+            this->updateGui();
+        }
+
         void CLoginComponent::onServerTabWidgetChanged(int index)
         {
             Q_UNUSED(index);
@@ -655,7 +669,7 @@ namespace BlackGui
             return validCombinedType && validAirlineDesignator && validAircraftDesignator && validCallsign;
         }
 
-        void CLoginComponent::changedAircraftIcao(const CAircraftIcaoCode &icao)
+        void CLoginComponent::onChangedAircraftIcao(const CAircraftIcaoCode &icao)
         {
             if (icao.isLoadedFromDb())
             {
@@ -664,7 +678,7 @@ namespace BlackGui
             this->validateAircraftValues();
         }
 
-        void CLoginComponent::changedAirlineIcao(const CAirlineIcaoCode &icao)
+        void CLoginComponent::onChangedAirlineIcao(const CAirlineIcaoCode &icao)
         {
             Q_UNUSED(icao);
             this->validateAircraftValues();
@@ -876,7 +890,7 @@ namespace BlackGui
         {
             if (!this->hasValidContexts())   { return; }
             if (!sGui->getIContextNetwork()) { return; }
-            IContextNetwork *nwc = sGui->getIContextNetwork();
+            const IContextNetwork *nwc = sGui->getIContextNetwork();
             const bool connected = nwc->isConnected();
             if (!connected) { return; }
             this->setUiLoginState(connected);
