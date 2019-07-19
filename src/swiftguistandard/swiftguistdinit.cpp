@@ -237,12 +237,7 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->comp_Login, &CLoginComponent::loginOrLogoffSuccessful, this, &SwiftGuiStd::setMainPageToInfoArea);
     connect(ui->comp_Login, &CLoginComponent::loginOrLogoffSuccessful, ui->comp_MainInfoArea->getFlightPlanComponent(), &CFlightPlanComponent::loginDataSet);
     connect(ui->comp_Login, &CLoginComponent::loginDataChangedDigest,  ui->comp_MainInfoArea->getFlightPlanComponent(), &CFlightPlanComponent::loginDataSet);
-    connect(ui->comp_Login, &CLoginComponent::requestNetworkSettings, [ this ]()
-    {
-        if (!sApp || sApp->isShuttingDown()) { return; }
-        this->setMainPageInfoArea(CMainInfoAreaComponent::InfoAreaSettings);
-        ui->comp_MainInfoArea->getSettingsComponent()->setTab(CSettingsComponent::SettingTabServers);
-    });
+    connect(ui->comp_Login, &CLoginComponent::requestNetworkSettings,  this, &SwiftGuiStd::displayNetworkSettings);
     connect(ui->comp_Login, &CLoginComponent::requestLoginPage, [ this ]()
     {
         if (!sApp || sApp->isShuttingDown()) { return; }

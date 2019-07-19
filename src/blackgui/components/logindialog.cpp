@@ -19,10 +19,29 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
+            connect(ui->comp_LoginComponent, &CLoginAdvComponent::loginOrLogoffSuccessful, this, &CLoginDialog::onLoginOrLogoffSuccessful);
+            connect(ui->comp_LoginComponent, &CLoginAdvComponent::loginOrLogoffCancelled,  this, &CLoginDialog::onLoginOrLogoffCancelled);
+            connect(ui->comp_LoginComponent, &CLoginAdvComponent::requestNetworkSettings,  this, &CLoginDialog::onRequestNetworkSettings);
         }
 
         CLoginDialog::~CLoginDialog()
         { }
 
+        void CLoginDialog::onLoginOrLogoffCancelled()
+        {
+            this->reject();
+        }
+
+        void CLoginDialog::onLoginOrLogoffSuccessful()
+        {
+            this->accept();
+        }
+
+        void CLoginDialog::onRequestNetworkSettings()
+        {
+            emit this->requestNetworkSettings();
+            this->close();
+        }
     } // ns
 }// ns
