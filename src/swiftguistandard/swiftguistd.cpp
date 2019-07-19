@@ -254,6 +254,7 @@ void SwiftGuiStd::loginRequested()
         if (!connected && shift)
         {
             if (!m_loginDialog) { m_loginDialog.reset(new CLoginDialog(this)); }
+            connect(m_loginDialog.data(), &CLoginDialog::requestNetworkSettings, this, &SwiftGuiStd::displayNetworkSettings);
             m_loginDialog->show();
         }
         else
@@ -518,6 +519,13 @@ void SwiftGuiStd::displayConsole()
 void SwiftGuiStd::displayLog()
 {
     ui->comp_MainInfoArea->displayLog();
+}
+
+void SwiftGuiStd::displayNetworkSettings()
+{
+    if (!sApp || sApp->isShuttingDown()) { return; }
+    this->setMainPageInfoArea(CMainInfoAreaComponent::InfoAreaSettings);
+    ui->comp_MainInfoArea->getSettingsComponent()->setTab(CSettingsComponent::SettingTabServers);
 }
 
 void SwiftGuiStd::onPttChanged(bool enabled)

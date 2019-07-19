@@ -33,7 +33,15 @@ namespace BlackGui
             //! Destructor
             virtual ~CLoginDialog() override;
 
+        signals:
+            //! Request server settings
+            void requestNetworkSettings();
+
         private:
+            void onLoginOrLogoffCancelled();
+            void onLoginOrLogoffSuccessful();
+            void onRequestNetworkSettings();
+
             QScopedPointer<Ui::CLoginDialog> ui;
         };
 

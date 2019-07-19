@@ -185,6 +185,9 @@ private:
     //! Display log
     void displayLog();
 
+    //! Display network settings
+    void displayNetworkSettings();
+
     //! Display a reconnect dialog
     void displayDBusReconnectDialog();
 
