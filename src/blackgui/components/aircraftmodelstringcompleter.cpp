@@ -39,7 +39,7 @@ namespace BlackGui
             connect(ui->le_modelString, &QLineEdit::editingFinished, this, &CAircraftModelStringCompleter::onTextChanged);
             connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbModelsRead, this, &CAircraftModelStringCompleter::onSwiftModelDataRead);
             connect(ui->rb_Db, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::initGui);
-            connect(ui->rb_ModelSet, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::initGui);
+            connect(ui->rb_ModelSet, &QRadioButton::clicked,  this, &CAircraftModelStringCompleter::initGui);
             connect(ui->rb_OwnModels, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::initGui);
             connect(&m_modelCaches, &CModelCaches::cacheChanged, this, &CAircraftModelStringCompleter::setSimulator, Qt::QueuedConnection);
 
@@ -58,6 +58,7 @@ namespace BlackGui
                 }
             }
             this->setSimulator(simulator);
+            this->initGui();
         }
 
         CAircraftModelStringCompleter::~CAircraftModelStringCompleter()
@@ -95,8 +96,8 @@ namespace BlackGui
         {
             switch (source)
             {
-            case DB: ui->rb_Db->setChecked(true); break;
-            case ModelSet: ui->rb_ModelSet->setChecked(true); break;
+            case DB:        ui->rb_Db->setChecked(true); break;
+            case ModelSet:  ui->rb_ModelSet->setChecked(true); break;
             case OwnModels: ui->rb_OwnModels->setChecked(true); break;
             default: ui->rb_ModelSet->setChecked(true); break;
             }
@@ -104,7 +105,7 @@ namespace BlackGui
 
         bool CAircraftModelStringCompleter::setSimulator(const CSimulatorInfo &simulator)
         {
-            if (simulator.isSingleSimulator()) { return false; }
+            if (simulator.isSingleSimulator())     { return false; }
             if (this->getSimulator() == simulator) { return false; }
             m_currentSimulator = simulator;
             QPointer<CAircraftModelStringCompleter> myself(this);

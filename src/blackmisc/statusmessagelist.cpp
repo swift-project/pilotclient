@@ -100,6 +100,13 @@ namespace BlackMisc
         }
     }
 
+    void CStatusMessageList::addValidationMessage(const QString &validationText, CStatusMessage::StatusSeverity severity)
+    {
+        static const CLogCategoryList cats({ CLogCategory::validation() });
+        const CStatusMessage msg(cats, severity, validationText);
+        this->push_back(msg);
+    }
+
     void CStatusMessageList::setCategory(const CLogCategory &category)
     {
         for (auto &msg : *this)

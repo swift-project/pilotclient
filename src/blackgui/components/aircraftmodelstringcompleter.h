@@ -48,7 +48,7 @@ namespace BlackGui
             explicit CAircraftModelStringCompleter(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAircraftModelStringCompleter();
+            virtual ~CAircraftModelStringCompleter() override;
 
             //! The model string
             QString getModelString() const;

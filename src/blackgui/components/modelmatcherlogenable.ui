@@ -35,7 +35,7 @@
       <string>Enables / disables future message logging</string>
      </property>
      <property name="text">
-      <string>Enable:</string>
+      <string>Enable</string>
      </property>
     </widget>
    </item>
