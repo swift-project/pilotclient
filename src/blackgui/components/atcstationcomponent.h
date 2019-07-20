@@ -99,11 +99,14 @@ namespace BlackGui
             //! Request new ATIS
             void requestAtisUpdates();
 
-            //! A tree view station has been selected
+            //! A station has been selected
             void onOnlineAtcStationSelected(const BlackMisc::Aviation::CAtcStation &station);
 
             //! Online ATC station selected
             void onOnlineAtcStationVariantSelected(const BlackMisc::CVariant &object);
+
+            //! Trigger a selection of an onlie station (async)
+            void triggerOnlineAtcStationSelected(const BlackMisc::Aviation::CAtcStation &station);
 
             //! Tab changed
             void atcStationsTabChanged();
@@ -168,6 +171,7 @@ namespace BlackGui
             QScopedPointer<Ui::CAtcStationComponent> ui;
             QTimer m_updateTimer;
             QList<int> m_stretch;
+            BlackMisc::Aviation::CCallsign m_selectedCallsign;
             QDateTime m_timestampLastReadOnlineStations; //!< stations read
             QDateTime m_timestampOnlineStationsChanged;  //!< stations marked as changed
             QDateTime m_timestampLastReadBookedStations; //!< stations read
