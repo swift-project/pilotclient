@@ -241,10 +241,21 @@ namespace BlackGui
                         ui->tvp_AtcStationsOnline->showOverlayHTMLMessage(msg, 5000);
                         ui->tvp_AtcStationsOnlineTree->showOverlayHTMLMessage(msg, 5000);
                     }
+
+                    if (stationsCount < 1)
+                    {
+                        m_selectedCallsign.clear();
+                    }
+                    else if (!m_selectedCallsign.isEmpty() && onlineStations.containsCallsign(m_selectedCallsign))
+                    {
+                        const CAtcStation lastSelected = onlineStations.findFirstByCallsign(m_selectedCallsign);
+                        this->triggerOnlineAtcStationSelected(lastSelected);
+                    }
                 }
             }
             else
             {
+                m_selectedCallsign.clear();
                 ui->tvp_AtcStationsOnline->clear();
                 this->updateTreeView();
             }
@@ -444,6 +455,16 @@ namespace BlackGui
             this->onOnlineAtcStationSelected(station);
         }
 
+        void CAtcStationComponent::triggerOnlineAtcStationSelected(const CAtcStation &station)
+        {
+            // pass copy, not reference -> can crash
+            QPointer<CAtcStationComponent> myself(this);
+            QTimer::singleShot(500, this, [ = ]
+            {
+                if (myself) { myself->onOnlineAtcStationSelected(station); }
+            });
+        }
+
         void CAtcStationComponent::onOnlineAtcStationSelected(const CAtcStation &station)
         {
             if (!station.hasCallsign()) { return; }
@@ -452,6 +473,7 @@ namespace BlackGui
                 (station.hasAtis()  ? u"\n\n" % station.getAtis().getMessage()  : QStringLiteral("")) %
                 (station.hasMetar() ? u"\n\n" % station.getMetar().getMessage() : QStringLiteral(""));
             ui->te_AtcStationsOnlineInfo->setText(infoMessage);
+            m_selectedCallsign = station.getCallsign();
         }
 
         void CAtcStationComponent::atcStationsTabChanged()
@@ -491,6 +513,7 @@ namespace BlackGui
         {
             ui->tvp_AtcStationsOnline->clear();
             ui->tvp_AtcStationsOnlineTree->clear();
+            m_selectedCallsign.clear();
         }
 
         void CAtcStationComponent::showOverlayInlineTextMessage()

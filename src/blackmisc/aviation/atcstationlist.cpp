@@ -58,7 +58,7 @@ namespace BlackMisc
 
         bool CAtcStationList::updateIfMessageChanged(const CInformationMessage &im, const CCallsign &callsign, bool overrideWithNewer)
         {
-            const CInformationMessage::InformationType t = im.getType();
+            const CInformationMessage::InformationType type = im.getType();
 
             // for loop just to get reference
             bool unequal = false;
@@ -66,7 +66,7 @@ namespace BlackMisc
             {
                 if (station.getCallsign() != callsign) { continue; }
 
-                const CInformationMessage m = station.getInformationMessage(t);
+                const CInformationMessage m = station.getInformationMessage(type);
                 if (m.getType() == CInformationMessage::Unspecified) { break; }
 
                 if (m.getMessage() == im.getMessage())
