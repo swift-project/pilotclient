@@ -263,6 +263,17 @@ namespace BlackMisc
             //! All models NOT of the FS (FSX, P3D, FS9) family
             CAircraftModelList findNonFsFamilyModels() const;
 
+            //! With/without DB key @{
+            CAircraftModelList findWithValidDbKey() const;
+            CAircraftModelList findWithoutValidDbKey() const;
+            //! @}
+
+            //! Some finders for NON DB models, mostly for matching script results @{
+            CAircraftModelList findNonDbModelsForAirline(const QString &airline) const;
+            CAircraftModelList findNonDbModelsForAircraft(const QString &airline) const;
+            CAircraftModelList findNonDbModelsForModelString(const QString &modelString) const;
+            //! @}
+
             //! All included models
             CAircraftModelList getAllIncludedModels() const;
 
