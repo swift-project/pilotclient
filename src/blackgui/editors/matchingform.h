@@ -13,6 +13,8 @@
 
 #include "form.h"
 #include "blackmisc/simulation/aircraftmatchersetup.h"
+#include "blackmisc/directories.h"
+
 #include <QScopedPointer>
 
 namespace Ui { class CMatchingForm; }
@@ -77,6 +79,7 @@ namespace BlackGui
             //! Directory browser
             void fileDialog();
 
+            BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_directories  { this }; //!< the swift directories
             QScopedPointer<Ui::CMatchingForm> ui;
         };
     } // ns

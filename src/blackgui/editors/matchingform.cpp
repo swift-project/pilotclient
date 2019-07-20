@@ -170,7 +170,9 @@ namespace BlackGui
         {
             const bool nw = (QObject::sender() == ui->pb_MsReverseLookup);
             QString fn = nw ? ui->le_MsReverseLookup->text() : ui->le_MsMatching->text();
-            fn = QFileDialog::getOpenFileName(nullptr, tr("Matching script"), fn, "Matching script (*.js)");
+            CDirectories swiftDirs  = m_directories.get();
+
+            fn = QFileDialog::getOpenFileName(nullptr, tr("Matching script"), fn.isEmpty() ? swiftDirs.getMatchingScriptDirectoryOrDefault() : fn, "Matching script (*.js)");
             const QFileInfo fi(fn);
             if (!fi.exists()) { return; }
             if (nw)
@@ -181,6 +183,9 @@ namespace BlackGui
             {
                 ui->le_MsMatching->setText(fi.absoluteFilePath());
             }
+
+            swiftDirs.setMatchingScriptDirectory(fi.absolutePath());
+            m_directories.setAndSave(swiftDirs);
         }
 
         CAircraftMatcherSetup::MatchingAlgorithm CMatchingForm::algorithm() const

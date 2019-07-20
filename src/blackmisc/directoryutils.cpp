@@ -241,6 +241,12 @@ namespace BlackMisc
         return tpd;
     }
 
+    const QString &CDirectoryUtils::shareMatchingScriptDirectory()
+    {
+        static const QString ms(CFileUtils::appendFilePaths(CDirectoryUtils::shareDirectory(), "matchingscript"));
+        return ms;
+    }
+
     const QString &CDirectoryUtils::bootstrapFileName()
     {
         static const QString n("bootstrap.json");
