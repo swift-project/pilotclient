@@ -47,6 +47,15 @@ namespace BlackMisc
         this->setLastModelDirectory(dir);
     }
 
+    QString CDirectories::getMatchingScriptDirectoryOrDefault() const
+    {
+        if (m_dirMatchingScript.isEmpty())
+        {
+            return CDirectoryUtils::shareMatchingScriptDirectory();
+        }
+        return m_dirMatchingScript;
+    }
+
     QString CDirectories::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
@@ -59,13 +68,14 @@ namespace BlackMisc
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexDirFlightPlan: return CVariant::fromValue(m_dirFlightPlan);
-        case IndexDirFlightPlanOrDefault: return CVariant::fromValue(this->getFlightPlanDirectoryOrDefault());
-        case IndexDirLastViewJson: return CVariant::fromValue(m_dirLastViewJson);
-        case IndexDirLastViewJsonOrDefault: return CVariant::fromValue(this->getLastViewJsonDirectoryOrDefault());
-        case IndexDirLastModelJson: return CVariant::fromValue(m_dirLastModelStashJson);
+        case IndexDirFlightPlan:             return CVariant::fromValue(m_dirFlightPlan);
+        case IndexDirFlightPlanOrDefault:    return CVariant::fromValue(this->getFlightPlanDirectoryOrDefault());
+        case IndexDirLastViewJson:           return CVariant::fromValue(m_dirLastViewJson);
+        case IndexDirLastViewJsonOrDefault:  return CVariant::fromValue(this->getLastViewJsonDirectoryOrDefault());
+        case IndexDirLastModelJson:          return CVariant::fromValue(m_dirLastModelStashJson);
         case IndexDirLastModelJsonOrDefault: return CVariant::fromValue(this->getLastModelDirectoryOrDefault());
-        case IndexDirLastModelStashJson: return CVariant::fromValue(m_dirLastModelStashJson);
+        case IndexDirLastModelStashJson:     return CVariant::fromValue(m_dirLastModelStashJson);
+        case IndexDirMatchingScript:         return CVariant::fromValue(this->getMatchingScriptDirectoryOrDefault());
         case IndexDirLastModelStashJsonOrDefault: return CVariant::fromValue(this->getLastModelStashDirectoryOrDefault());
         default: return CValueObject::propertyByIndex(index);
         }
@@ -84,6 +94,7 @@ namespace BlackMisc
         case IndexDirLastModelJson: this->setLastModelDirectory(variant.toQString()); break;
         case IndexDirLastModelStashJsonOrDefault:
         case IndexDirLastModelStashJson: this->setLastModelStashDirectory(variant.toQString()); break;
+        case IndexDirMatchingScript: this->setMatchingScriptDirectory(variant.toQString()); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }

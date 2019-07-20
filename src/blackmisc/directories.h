@@ -37,7 +37,8 @@ namespace BlackMisc
             IndexDirLastModelJson,
             IndexDirLastModelJsonOrDefault,
             IndexDirLastModelStashJson,
-            IndexDirLastModelStashJsonOrDefault
+            IndexDirLastModelStashJsonOrDefault,
+            IndexDirMatchingScript
         };
 
         //! Constructor
@@ -85,6 +86,12 @@ namespace BlackMisc
         //! Last view JSON model stash directory
         void setLastModelStashDirectory(const QString &dir);
 
+        //! Matching script directory
+        QString getMatchingScriptDirectoryOrDefault() const;
+
+        //! Matching script directory
+        void setMatchingScriptDirectory(const QString &dir) { m_dirMatchingScript = dir; }
+
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
@@ -102,6 +109,7 @@ namespace BlackMisc
         QString m_dirLastViewJson;       //!< last JSON save directory
         QString m_dirLastModelJson;      //!< last JSON model directory
         QString m_dirLastModelStashJson; //!< last JSON model stash save directory
+        QString m_dirMatchingScript;     //!< matching script dir
 
         //! Return checkDir if existing, defaultDir otherwise
         QString existingOrDefaultDir(const QString &checkDir, const QString &defaultDir) const;
@@ -111,7 +119,8 @@ namespace BlackMisc
             BLACK_METAMEMBER(dirFlightPlan),
             BLACK_METAMEMBER(dirLastViewJson),
             BLACK_METAMEMBER(dirLastModelJson),
-            BLACK_METAMEMBER(dirLastModelStashJson)
+            BLACK_METAMEMBER(dirLastModelStashJson),
+            BLACK_METAMEMBER(dirMatchingScript)
         );
     };
 
