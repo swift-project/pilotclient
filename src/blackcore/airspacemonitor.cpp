@@ -847,13 +847,14 @@ namespace BlackCore
         if (hasAnyId) { this->markAsSwiftClient(callsign); }
 
         CAircraftModel lookupModel; // result
+        const CAircraftModelList modelSet = this->getModelSet();
         const CAircraftMatcherSetup setup = m_matchingSettings.get();
         do
         {
             // directly check model string
             if (!modelString.isEmpty())
             {
-                lookupModel = CAircraftMatcher::reverseLookupModelString(modelString, callsign, setup.isReverseLookupModelString(), log);
+                lookupModel = CAircraftMatcher::reverseLookupModelStringInDB(modelString, callsign, setup.isReverseLookupModelString(), log);
                 if (lookupModel.hasValidDbKey()) { break; } // found by model string
             }
 
@@ -930,7 +931,7 @@ namespace BlackCore
                 // INFO: CModelMatcherComponent::reverseLookup() contains the simulated lookup
                 // changed with T701: resolve first against model set, then all DB data
                 // if an airline is ambiguous most likely the one in the set is the best choice
-                airlineIcao = CAircraftMatcher::failoverValidAirlineIcaoDesignatorModelsFirst(callsign, airlineIcaoString, airlineIcaoFromFp, true, airlineNameFromFp, telephonyFromFp, this->getModelSet(), log);
+                airlineIcao = CAircraftMatcher::failoverValidAirlineIcaoDesignatorModelsFirst(callsign, airlineIcaoString, airlineIcaoFromFp, true, airlineNameFromFp, telephonyFromFp, modelSet, log);
 
                 // not found, create a seatch patterm
                 if (!airlineIcao.isLoadedFromDb())
@@ -948,7 +949,7 @@ namespace BlackCore
             CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Used airline ICAO: '%1'").arg(airlineIcao.toQString(true)), CAirspaceMonitor::getLogCategories());
 
             // matching script is used below
-            lookupModel = CAircraftMatcher::reverseLookupModel(callsign, aircraftIcao, airlineIcao, liveryString, modelString, setup, type, log);
+            lookupModel = CAircraftMatcher::reverseLookupModel(callsign, aircraftIcao, airlineIcao, liveryString, modelString, setup, modelSet, type, log);
         }
         while (false);
 
@@ -958,7 +959,7 @@ namespace BlackCore
         // script
         if (runMatchinScript && setup.doRunMsReverseLookupScript())
         {
-            const MatchingScriptReturnValues rv = CAircraftMatcher::reverseLookupScript(lookupModel, setup, log);
+            const MatchingScriptReturnValues rv = CAircraftMatcher::reverseLookupScript(lookupModel, setup, modelSet, log);
             if (rv.runScriptAndModified())
             {
                 if (rv.runScriptAndRerun())

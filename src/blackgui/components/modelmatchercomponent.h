@@ -11,8 +11,8 @@
 #ifndef BLACKGUI_COMPONENT_MODELMATCHERCOMPONENT_H
 #define BLACKGUI_COMPONENT_MODELMATCHERCOMPONENT_H
 
-#include "blackcore/aircraftmatcher.h"
 #include "blackgui/blackguiexport.h"
+#include "blackcore/aircraftmatcher.h"
 #include "blackmisc/simulation/settings/modelmatchersettings.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
@@ -95,7 +95,7 @@ namespace BlackGui
             BlackMisc::Simulation::CAircraftModel defaultModel() const;
 
             //! Run matching script
-            static BlackMisc::Simulation::MatchingScriptReturnValues matchingScript(const BlackMisc::Simulation::CAircraftModel &inModel, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, BlackMisc::CStatusMessageList &msgs);
+            static BlackMisc::Simulation::MatchingScriptReturnValues matchingScript(const BlackMisc::Simulation::CAircraftModel &inModel, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, const BlackMisc::Simulation::CAircraftModelList &modelSet, BlackMisc::CStatusMessageList &msgs);
 
             QScopedPointer<Ui::CModelMatcherComponent> ui;
             QPointer<Views::CAircraftModelView> m_workbenchView; //!< an external workbenc

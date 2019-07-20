@@ -165,7 +165,9 @@ namespace BlackGui
             if (ui->cb_withReverseLookup->isChecked())
             {
                 const QString liveryString(ui->comp_LiverySelector->getRawCombinedCode());
-                const CAircraftModel reverseModel = CAircraftMatcher::reverseLookupModelMs(remoteAircraft.getModel(), liveryString, m_matcher.getSetup(), &msgs);
+                const CAircraftModelList modelSet = m_matcher.getModelSet();
+                const CAircraftMatcherSetup setup = m_matcher.getSetup();
+                const CAircraftModel reverseModel = CAircraftMatcher::reverseLookupModelMs(remoteAircraft.getModel(), liveryString, setup, modelSet, &msgs);
                 remoteAircraft.setModel(reverseModel); // current model
             }
 
@@ -187,10 +189,11 @@ namespace BlackGui
             CStatusMessageList msgs;
             m_matcher.setDefaultModel(CModelMatcherComponent::defaultModel());
 
+            const CAircraftModelList modelSet = m_matcher.getModelSet();
             const CAircraftMatcherSetup setup = m_matcher.getSetup();
             const CSimulatedAircraft remoteAircraft(createAircraft());
             const QString livery(ui->comp_LiverySelector->getRawCombinedCode());
-            const CAircraftModel matched = CAircraftMatcher::reverseLookupModelMs(remoteAircraft.getModel(), livery, setup, &msgs);
+            const CAircraftModel matched = CAircraftMatcher::reverseLookupModelMs(remoteAircraft.getModel(), livery, setup, modelSet, &msgs);
             ui->te_Results->setText(matched.toQString(true));
             ui->tvp_ResultMessages->updateContainer(msgs);
         }
@@ -275,12 +278,12 @@ namespace BlackGui
             return model;
         }
 
-        MatchingScriptReturnValues CModelMatcherComponent::matchingScript(const CAircraftModel &inModel, const CAircraftMatcherSetup &setup, CStatusMessageList &msgs)
+        MatchingScriptReturnValues CModelMatcherComponent::matchingScript(const CAircraftModel &inModel, const CAircraftMatcherSetup &setup, const CAircraftModelList &modelSet, CStatusMessageList &msgs)
         {
             // Script
             if (setup.doRunMsReverseLookupScript())
             {
-                const MatchingScriptReturnValues rv = CAircraftMatcher::reverseLookupScript(inModel, setup, &msgs);
+                const MatchingScriptReturnValues rv = CAircraftMatcher::reverseLookupScript(inModel, setup, modelSet, &msgs);
                 if (rv.runScriptAndModified())
                 {
                     return rv;
