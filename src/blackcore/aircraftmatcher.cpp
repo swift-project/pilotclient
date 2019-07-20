@@ -405,18 +405,35 @@ namespace BlackCore
         {
             CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Matching script: Matching stage script used"));
             const MatchingScriptReturnValues rv = CAircraftMatcher::matchingStageScript(remoteAircraft.getModel(), matchedModel, setup, modelSet, log);
+            CAircraftModel matchedModelMs = matchedModel;
+
             if (rv.runScriptAndModified())
             {
-                matchedModel = rv.model;
+                matchedModelMs = rv.model;
                 didRunAndModifyMatchingScript = true;
             }
 
             if (rv.runScriptModifiedAndRerun())
             {
                 CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Matching script: Modified values and re-run requested"));
+                CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Matching script: Now using model: '%1'").arg(matchedModel.toQString(true)));
+
                 CSimulatedAircraft rerunAircraft(remoteAircraft);
-                rerunAircraft.setModel(matchedModel);
-                matchedModel = CAircraftMatcher::getClosestMatch(rerunAircraft, whatToLog, log, false);
+                rerunAircraft.setModel(matchedModelMs);
+                CStatusMessageList log2ndRun;
+                matchedModelMs = CAircraftMatcher::getClosestMatch(rerunAircraft, whatToLog, log ? &log2ndRun : nullptr, false);
+                if (log) { log->push_back(log2ndRun); }
+
+                // the script can fuckup the model, leading to an empty model string or such
+                matchedModelMs.setCallsign(remoteAircraft.getCallsign());
+                if (matchedModelMs.hasModelString())
+                {
+                    matchedModel = matchedModelMs;
+                }
+                else
+                {
+                    CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Matching script: Ignoring model without model string after running the script"));
+                }
             }
         }
         else
@@ -453,7 +470,10 @@ namespace BlackCore
         return matchedModel;
     }
 
-    CAircraftModel CAircraftMatcher::reverseLookupModel(const CCallsign &callsign, const CAircraftIcaoCode &networkAircraftIcao, const CAirlineIcaoCode &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString, const CAircraftMatcherSetup &setup, CAircraftModel::ModelType type, CStatusMessageList *log)
+    CAircraftModel CAircraftMatcher::reverseLookupModel(
+        const CCallsign &callsign, const CAircraftIcaoCode &networkAircraftIcao,
+        const CAirlineIcaoCode &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString,
+        const CAircraftMatcherSetup &setup, const CAircraftModelList &modelSet, CAircraftModel::ModelType type, CStatusMessageList *log)
     {
         Q_UNUSED(setup);
 
@@ -462,19 +482,18 @@ namespace BlackCore
 
         CAircraftModel model(networkModelString, type, {}, networkAircraftIcao, livery);
         model.setCallsign(callsign);
-        model = CAircraftMatcher::reverseLookupModel(model, networkLiveryInfo, setup, log);
+        model = CAircraftMatcher::reverseLookupModel(model, networkLiveryInfo, setup, modelSet, log);
         model.setModelType(CAircraftModel::TypeReverseLookup);
 
         return model;
     }
 
-    MatchingScriptReturnValues CAircraftMatcher::reverseLookupScript(const CAircraftModel &inModel, const CAircraftMatcherSetup &setup, CStatusMessageList *log)
+    MatchingScriptReturnValues CAircraftMatcher::reverseLookupScript(const CAircraftModel &inModel, const CAircraftMatcherSetup &setup, const CAircraftModelList &modelSet, CStatusMessageList *log)
     {
         if (!setup.doRunMsReverseLookupScript()) { return MatchingScriptReturnValues(inModel); }
         if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return inModel; }
         const QString js = CFileUtils::readFileToString(setup.getMsReverseLookupFile());
-        static const CAircraftModelList noModelSet;
-        const MatchingScriptReturnValues rv = CAircraftMatcher::matchingScript(js, inModel, inModel, setup, noModelSet, ReverseLookup, log);
+        const MatchingScriptReturnValues rv = CAircraftMatcher::matchingScript(js, inModel, inModel, setup, modelSet, ReverseLookup, log);
         return rv;
     }
 
@@ -508,6 +527,7 @@ namespace BlackCore
             {
                 CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Matching script (%1): '%2'").arg(msToString(ms), lf));
                 CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Matching script input model (%1): '%2'").arg(inModel.toQString(true)));
+                CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Matching script models: %1").arg(modelSet.coverageSummary()));
             }
 
             QJSEngine engine;
@@ -526,7 +546,7 @@ namespace BlackCore
             MSInOutValues matchedObject(matchedModel); // same as inModel for reverse lookup
             matchedObject.evaluateChanges(inModel.getAircraftIcaoCode(), inModel.getAirlineIcaoCode());
             MSInOutValues outObject(matchedModel);     // set default values for out object
-            MSModelSet modelSetObject(modelSet);       // empty in reverse lookup
+            MSModelSet modelSetObject(modelSet);       // as passed
             modelSetObject.initByAircraftAndAirline(inModel.getAircraftIcaoCode(), inModel.getAirlineIcaoCode());
             MSWebServices webServices; // web services encapsulated
 
@@ -569,19 +589,6 @@ namespace BlackCore
                     // rerun
                     rv.rerun = reverseModelProcessed->isRerun();
 
-                    // changed model by model string?
-                    if (reverseModelProcessed->hasChangedModelString(inModel.getModelString()))
-                    {
-                        const CAircraftModel model = sApp->getWebDataServices()->getModelForModelString(reverseModelProcessed->getModelString());
-                        if (model.hasValidDbKey())
-                        {
-                            // found full model from DB
-                            rv.model    = model;
-                            rv.modified = true;
-                            break;
-                        }
-                    }
-
                     // changed model by model id?
                     if (reverseModelProcessed->hasChangedModelId(inModel))
                     {
@@ -590,6 +597,32 @@ namespace BlackCore
                         {
                             // found full model from DB
                             rv.model = model;
+                            rv.modified = true;
+                            break;
+                        }
+                    }
+
+                    // changed model by model string?
+                    if (reverseModelProcessed->hasChangedModelString(inModel.getModelString()))
+                    {
+                        const QString modelString = reverseModelProcessed->getModelString();
+                        const CAircraftModel model = sApp->getWebDataServices()->getModelForModelString(modelString);
+                        if (model.hasValidDbKey())
+                        {
+                            // found full model from DB
+                            rv.model    = model;
+                            rv.modified = true;
+                            break;
+                        }
+
+                        // search for model string in set, even if it is not in the DB
+                        const CAircraftModel modeSetModel = CAircraftMatcher::reverseLookupModelStringInSet(modelString, callsign, modelSet, true, log);
+                        if (modeSetModel.hasModelString())
+                        {
+                            CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Matching script using model from set: '%1'").arg(modelString));
+
+                            // NON DB model from model set
+                            rv.model    = modeSetModel;
                             rv.modified = true;
                             break;
                         }
@@ -648,7 +681,7 @@ namespace BlackCore
         return rv;
     }
 
-    CAircraftModel CAircraftMatcher::reverseLookupModel(const CAircraftModel &modelToLookup, const QString &networkLiveryInfo, const CAircraftMatcherSetup &setup, CStatusMessageList *log)
+    CAircraftModel CAircraftMatcher::reverseLookupModel(const CAircraftModel &modelToLookup, const QString &networkLiveryInfo, const CAircraftMatcherSetup &setup, const CAircraftModelList &modelSet, CStatusMessageList *log)
     {
         if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return CAircraftModel(); }
 
@@ -676,11 +709,22 @@ namespace BlackCore
                 }
                 else
                 {
+                    const QString modelString = modelToLookup.getModelString();
+
                     // if we find the model here we have a fully defined DB model
-                    const CAircraftModel modelFromDb = CAircraftMatcher::reverseLookupModelString(modelToLookup.getModelString(), callsign, setup.isReverseLookupModelString(), log);
+                    const CAircraftModel modelFromDb = CAircraftMatcher::reverseLookupModelStringInDB(modelString, callsign, setup.isReverseLookupModelString(), log);
                     if (modelFromDb.hasValidDbKey())
                     {
                         model = modelFromDb;
+                        break; // done here
+                    }
+
+                    // const bool useNonDbEntries = setup.isDbDataOnly();
+                    const bool useNonDbEntries = true;
+                    const CAircraftModel modelFromSet = CAircraftMatcher::reverseLookupModelStringInSet(modelString, callsign, modelSet, useNonDbEntries, log);
+                    if (modelFromSet.hasModelString())
+                    {
+                        model = modelFromSet;
                         break; // done here
                     }
                 }
@@ -821,24 +865,26 @@ namespace BlackCore
         return model;
     }
 
-    CAircraftModel CAircraftMatcher::reverseLookupModelMs(const CAircraftModel &modelToLookup, const QString &networkLiveryInfo, const CAircraftMatcherSetup &setup, CStatusMessageList *log)
+    CAircraftModel CAircraftMatcher::reverseLookupModelMs(const CAircraftModel &modelToLookup, const QString &networkLiveryInfo, const CAircraftMatcherSetup &setup, const CAircraftModelList &modelSet, CStatusMessageList *log)
     {
-        CAircraftModel reverseModel = reverseLookupModel(modelToLookup, networkLiveryInfo, setup, log);
+        CAircraftModel reverseModel = reverseLookupModel(modelToLookup, networkLiveryInfo, setup, modelSet, log);
         if (!setup.doRunMsReverseLookupScript()) { return reverseModel; }
         const CCallsign cs = modelToLookup.getCallsign();
-        const MatchingScriptReturnValues rv = CAircraftMatcher::reverseLookupScript(reverseModel, setup, log);
+        const MatchingScriptReturnValues rv = CAircraftMatcher::reverseLookupScript(reverseModel, setup, modelSet, log);
         if (rv.runScriptModifiedAndRerun())
         {
             CLogUtilities::addLogDetailsToList(log, cs, QStringLiteral("Matching script: Modified value and requested rerun"));
+
+            // no script the 2nd time
             CAircraftMatcherSetup setupRerun(setup);
             setupRerun.resetReverseLookup();
-            reverseModel = CAircraftMatcher::reverseLookupModel(rv.model, networkLiveryInfo, setupRerun, log);
+            reverseModel = CAircraftMatcher::reverseLookupModel(rv.model, networkLiveryInfo, setupRerun, modelSet, log);
             return reverseModel;
         }
         return (rv.runScriptAndModified() ? rv.model : reverseModel);
     }
 
-    CAircraftModel CAircraftMatcher::reverseLookupModelString(const QString &modelString, const CCallsign &callsign, bool doLookupString, CStatusMessageList *log)
+    CAircraftModel CAircraftMatcher::reverseLookupModelStringInDB(const QString &modelString, const CCallsign &callsign, bool doLookupString, CStatusMessageList *log)
     {
         if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return CAircraftModel(); }
         if (!doLookupString)
@@ -865,6 +911,48 @@ namespace BlackCore
         // found
         model.setCallsign(callsign);
         model.setModelType(CAircraftModel::TypeReverseLookup);
+        return model;
+    }
+
+    CAircraftModel CAircraftMatcher::reverseLookupModelStringInSet(const QString &modelString, const CCallsign &callsign, const CAircraftModelList &modelSet, bool useNonDbEntries, CStatusMessageList *log)
+    {
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return CAircraftModel(); }
+        if (modelString.isEmpty())
+        {
+            if (log) { CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Empty model string for lookup in %1 models").arg(modelSet.size())); }
+            return CAircraftModel();
+        }
+        if (modelSet.isEmpty())
+        {
+            if (log) { CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Empty models, ignoring '%1'").arg(modelString)); }
+            return CAircraftModel();
+        }
+
+        CAircraftModel model = modelSet.findFirstByModelStringOrDefault(modelString, Qt::CaseInsensitive);
+        if (!model.hasModelString())
+        {
+            if (log) { CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Model '%1' not found in %2 models").arg(modelString).arg(modelSet.size())); }
+            return CAircraftModel();
+        }
+
+        const bool isDBModel = model.hasValidDbKey();
+        if (log)
+        {
+            if (isDBModel)
+            {
+                CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Found DB model in %1 models for model string '%2'").arg(modelSet.size()).arg(model.getModelStringAndDbKey()));
+            }
+            else
+            {
+                CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Found NON DB model in %1 models for model string '%2'").arg(modelSet.size()).arg(model.getModelString()));
+            }
+        }
+
+        if (!isDBModel && !useNonDbEntries) { return CAircraftModel(); } // ignore DB entries
+
+        // found
+        model.setCallsign(callsign);
+        model.setModelType(isDBModel ? CAircraftModel::TypeReverseLookup : CAircraftModel::TypeOwnSimulatorModel);
         return model;
     }
 

@@ -117,7 +117,7 @@ namespace BlackCore
         //! Run the network reverse lookup script
         //! \threadsafe
         //! \ingroup reverselookup
-        static BlackMisc::Simulation::MatchingScriptReturnValues reverseLookupScript(const BlackMisc::Simulation::CAircraftModel &inModel, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, BlackMisc::CStatusMessageList *log);
+        static BlackMisc::Simulation::MatchingScriptReturnValues reverseLookupScript(const BlackMisc::Simulation::CAircraftModel &inModel, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, const BlackMisc::Simulation::CAircraftModelList &modelSet, BlackMisc::CStatusMessageList *log);
 
         //! Run the matching stage lookup script
         //! \threadsafe
@@ -138,6 +138,7 @@ namespace BlackCore
                 const BlackMisc::Aviation::CAircraftIcaoCode &networkAircraftIcao,
                 const BlackMisc::Aviation::CAirlineIcaoCode &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString,
                 const BlackMisc::Simulation::CAircraftMatcherSetup &setup,
+                const BlackMisc::Simulation::CAircraftModelList &modelSet,
                 BlackMisc::Simulation::CAircraftModel::ModelType type,
                 BlackMisc::CStatusMessageList *log);
 
@@ -149,6 +150,7 @@ namespace BlackCore
             const BlackMisc::Simulation::CAircraftModel &modelToLookup,
             const QString &networkLiveryInfo,
             const BlackMisc::Simulation::CAircraftMatcherSetup &setup,
+            const BlackMisc::Simulation::CAircraftModelList &modelSet,
             BlackMisc::CStatusMessageList *log);
 
         //! Try to find the corresponding data in DB and get best information for following matching
@@ -159,15 +161,25 @@ namespace BlackCore
             const BlackMisc::Simulation::CAircraftModel &modelToLookup,
             const QString &networkLiveryInfo,
             const BlackMisc::Simulation::CAircraftMatcherSetup &setup,
+            const BlackMisc::Simulation::CAircraftModelList &modelSet,
             BlackMisc::CStatusMessageList *log);
 
         //! Try to find model by model string
         //! \threadsafe
         //! \ingroup reverselookup
-        static BlackMisc::Simulation::CAircraftModel reverseLookupModelString(
+        static BlackMisc::Simulation::CAircraftModel reverseLookupModelStringInDB(
             const QString &modelString,
             const BlackMisc::Aviation::CCallsign &callsign,
             bool doLookupString, BlackMisc::CStatusMessageList *log);
+
+        //! Try to find model by model string in set
+        //! \threadsafe
+        //! \remark mostly needed to work witn NON-DB values in matching script
+        //! \ingroup reverselookup
+        static BlackMisc::Simulation::CAircraftModel reverseLookupModelStringInSet(
+            const QString &modelString,
+            const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModelList &modelSet,
+            bool useNonDbEntries, BlackMisc::CStatusMessageList *log);
 
         //! Try to find model by id
         //! \threadsafe

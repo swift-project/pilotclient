@@ -134,6 +134,9 @@ namespace BlackMisc
             void resetReverseLookup();
             //! @}
 
+            //! DB data?
+            bool isDbDataOnly() const { return this->getMatchingMode().testFlag(ExcludeNoDbData); }
+
             //! Get matching files @{
             const QString &getMsReverseLookupFile() const { return m_msReverseLookupFile; }
             const QString &getMsMatchingStageFile() const { return m_msMatchingStageFile; }
@@ -230,7 +233,7 @@ namespace BlackMisc
 
             //! Mode by flags
             static MatchingMode matchingMode(bool revModelString, bool revLiveryIds,
-                                             bool byModelString, bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st,
+                                             bool byModelString,  bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st,
                                              bool byFamily, bool byLivery, bool byCombinedType,
                                              bool byForceMilitary, bool byForceCivilian,
                                              bool byVtol, bool byGliderCategory, bool byMilitaryCategory, bool bySmallAircraftCategory,
