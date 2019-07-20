@@ -480,6 +480,49 @@ namespace BlackMisc
             });
         }
 
+        CAircraftModelList CAircraftModelList::findWithValidDbKey() const
+        {
+            return this->findBy([](const CAircraftModel & model)
+            {
+                return model.hasValidDbKey();
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::findWithoutValidDbKey() const
+        {
+            return this->findBy([](const CAircraftModel & model)
+            {
+                return !model.hasValidDbKey();
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::findNonDbModelsForAirline(const QString &airline) const
+        {
+            const CAircraftModelList noDb = this->findWithoutValidDbKey();
+            return noDb.findBy([&](const CAircraftModel & model)
+            {
+                return model.getAirlineIcaoCode().matchesDesignator(airline);
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::findNonDbModelsForAircraft(const QString &airline) const
+        {
+            const CAircraftModelList noDb = this->findWithoutValidDbKey();
+            return noDb.findBy([&](const CAircraftModel & model)
+            {
+                return model.getAircraftIcaoCode().matchesDesignator(airline);
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::findNonDbModelsForModelString(const QString &modelString) const
+        {
+            const CAircraftModelList noDb = this->findWithoutValidDbKey();
+            return noDb.findBy([&](const CAircraftModel & model)
+            {
+                return model.matchesModelString(modelString, Qt::CaseInsensitive);
+            });
+        }
+
         CAircraftModelList CAircraftModelList::getAllIncludedModels() const
         {
             return this->findBy([](const CAircraftModel & model)
