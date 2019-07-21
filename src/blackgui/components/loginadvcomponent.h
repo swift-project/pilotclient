@@ -67,8 +67,11 @@ namespace BlackGui
             //! Automatically popup
             void setAutoPopupWizad(bool autoPopup);
 
+            //! Set auto logoff
+            void setAutoLogoff(bool autoLogoff);
+
             //! Main info area changed
-            void mainInfoAreaChanged(const QWidget *currentWidget);
+            // void mainInfoAreaChanged(const QWidget *currentWidget);
 
             //! Login requested
             void toggleNetworkConnection();
@@ -150,7 +153,6 @@ namespace BlackGui
 
             QScopedPointer<Ui::CLoginAdvComponent> ui;
             BlackMisc::CDigestSignal m_changedLoginDataDigestSignal { this, &CLoginAdvComponent::loginDataChangedDigest, 1500, 10 };
-            bool m_visible         = false; //!< is this component selected?
             BlackCore::Data::CNetworkSetup m_networkSetup; //!< servers last used
         };
     } // namespace

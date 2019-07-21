@@ -51,6 +51,7 @@
 #include <QStringBuilder>
 #include <QtGlobal>
 #include <QPointer>
+#include <QPair>
 
 using namespace BlackConfig;
 using namespace BlackMisc;
@@ -90,6 +91,13 @@ namespace BlackGui
             this->setForceSmall(true);
             this->showKillButton(false);
 
+            // auto logoff
+            // we decided to make it difficult for users to disable it
+            if (!CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                ui->cb_AutoLogoff->setChecked(true);
+            }
+
             // Stored data
             this->loadRememberedUserData();
 
@@ -109,42 +117,9 @@ namespace BlackGui
         CLoginAdvComponent::~CLoginAdvComponent()
         { }
 
-        void CLoginAdvComponent::mainInfoAreaChanged(const QWidget *currentWidget)
+        void CLoginAdvComponent::setAutoLogoff(bool autoLogoff)
         {
-            if (!sGui || sGui->isShuttingDown()) { return; }
-            if (currentWidget != this && currentWidget != this->parentWidget())
-            {
-                // const bool wasVisible = m_visible;
-                m_visible = false;
-
-                /** T639
-                if (!wasVisible)
-                {
-                    // set own values, and send signals
-                    this->setOwnModelAndIcaoValues();
-                }
-                **/
-            }
-            else
-            {
-                if (m_visible)
-                {
-                    // already visible:
-                    // re-trigger! treat as same as OK
-                    this->toggleNetworkConnection();
-                }
-                else
-                {
-                    m_visible = true;
-                    ui->comp_OwnAircraft->setOwnModelAndIcaoValues();
-                }
-            }
-
-            // we decided to make it difficult for users to disable it
-            if (!CBuildConfig::isLocalDeveloperDebugBuild())
-            {
-                ui->cb_AutoLogoff->setChecked(true);
-            }
+            ui->cb_AutoLogoff->setChecked(autoLogoff);
         }
 
         void CLoginAdvComponent::loginCancelled()
@@ -184,6 +159,7 @@ namespace BlackGui
                 }
 
                 // sync values with GUI values
+                const COwnAircraftComponent::CGuiAircraftValues values = ui->comp_OwnAircraft->getAircraftValuesFromGui();
                 this->updateOwnAircraftCallsignAndPilotFromGuiValues();
                 ui->comp_OwnAircraft->updateOwnAircaftIcaoValuesFromGuiValues();
 
@@ -225,7 +201,7 @@ namespace BlackGui
                     sGui->getIContextAudio()->setVoiceSetup(currentServer.getVoiceSetup());
                 }
 
-                msg = sGui->getIContextNetwork()->connectToNetwork(currentServer, mode);
+                msg = sGui->getIContextNetwork()->connectToNetwork(currentServer, values.ownLiverySend, values.useLivery, values.ownAircraftModelStringSend, values.useModelString, mode);
                 if (msg.isSuccess())
                 {
                     Q_ASSERT_X(currentServer.isValidForLogin(), Q_FUNC_INFO, "invalid server");
@@ -350,44 +326,6 @@ namespace BlackGui
 
             emit this->requestLoginPage();
         }
-
-        /**
-        void CLoginAdvComponent::onSimulatorModelChanged(const CAircraftModel &model)
-        {
-            if (!sGui || !sGui->getIContextNetwork() || sApp->isShuttingDown()) { return; }
-            const bool isNetworkConnected = sGui && sGui->getIContextNetwork()->isConnected();
-            if (isNetworkConnected) { return; }
-
-            // update with latest DB data
-            CAircraftModel reverseModel(model);
-            if (sGui->hasWebDataServices())
-            {
-                reverseModel = sGui->getWebDataServices()->getModelForModelString(model.getModelString());
-                if (!reverseModel.isLoadedFromDb()) { reverseModel = model; } // reset if not found
-            }
-
-            const QString modelStr(reverseModel.hasModelString() ? reverseModel.getModelString() : "<unknown>");
-            if (!reverseModel.hasModelString())
-            {
-                CLogMessage(this).validationInfo(u"Invalid lookup for '%1' successful: %2") << modelStr << reverseModel.toQString();
-                CLogMessage(this).validationInfo(u"Hint: Are you using the emulated driver? Set a model if so!");
-                return;
-            }
-            this->setOwnModelAndIcaoValues(reverseModel);
-
-            // open dialog for model mapping
-            if (m_autoPopupWizard && !reverseModel.isLoadedFromDb())
-            {
-                this->mappingWizard();
-            }
-
-            // check state of own aircraft
-            this->updateOwnAircraftCallsignAndPilotFromGuiValues();
-
-            // let others know data changed
-            m_changedLoginDataDigestSignal.inputSignal();
-        }
-        **/
 
         bool CLoginAdvComponent::updateOwnAircraftCallsignAndPilotFromGuiValues()
         {
