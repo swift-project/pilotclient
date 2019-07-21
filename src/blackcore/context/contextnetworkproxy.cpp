@@ -348,9 +348,9 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<bool>(QLatin1String("testAddAltitudeOffset"), callsign, offset);
         }
 
-        CStatusMessage CContextNetworkProxy::connectToNetwork(const CServer &server, INetwork::LoginMode loginMode)
+        CStatusMessage CContextNetworkProxy::connectToNetwork(const CServer &server, const QString &extraLiveryString, bool sendLiveryString, const QString &extraModelString, bool sendModelString, INetwork::LoginMode loginMode)
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1String("connectToNetwork"), server, loginMode);
+            return m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1String("connectToNetwork"), server, extraLiveryString, sendLiveryString, extraModelString, sendModelString, loginMode);
         }
 
         CStatusMessage CContextNetworkProxy::disconnectFromNetwork()
