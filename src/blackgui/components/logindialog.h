@@ -33,6 +33,9 @@ namespace BlackGui
             //! Destructor
             virtual ~CLoginDialog() override;
 
+            //! Set auto logoff
+            void setAutoLogoff(bool logoff);
+
         signals:
             //! Request server settings
             void requestNetworkSettings();

@@ -6,6 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
+#include "ui_swiftguistd.h"
+
 #include "blackgui/components/infobarstatuscomponent.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/dbloaddatadialog.h"
@@ -28,7 +30,7 @@
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/threadutils.h"
-#include "ui_swiftguistd.h"
+#include "blackconfig/buildconfig.h"
 
 #include "swiftguistd.h"
 #include <QAction>
@@ -57,9 +59,9 @@ namespace BlackMisc { class CIdentifiable; }
 
 using namespace BlackCore;
 using namespace BlackCore::Context;
-using namespace BlackMisc;
 using namespace BlackGui;
 using namespace BlackGui::Components;
+using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
@@ -67,6 +69,7 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Input;
 using namespace BlackMisc::Simulation;
+using namespace BlackConfig;
 
 // Constructor
 SwiftGuiStd::SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowMode, QWidget *parent) :
@@ -255,6 +258,10 @@ void SwiftGuiStd::loginRequested()
         {
             if (!m_loginDialog) { m_loginDialog.reset(new CLoginDialog(this)); }
             connect(m_loginDialog.data(), &CLoginDialog::requestNetworkSettings, this, &SwiftGuiStd::displayNetworkSettings);
+            if (!CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                m_loginDialog->setAutoLogoff(true);
+            }
             m_loginDialog->show();
         }
         else
