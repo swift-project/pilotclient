@@ -208,6 +208,12 @@ namespace BlackCore
         virtual void presetLoginMode(BlackCore::INetwork::LoginMode mode) = 0;
 
         /*!
+         * Set the model string and livery string before connecting.
+         * \pre Network must be disconnected when calling this function.
+         */
+        virtual void presetLiveryAndModelString(const QString &livery, bool sendLiveryString, const QString &modelString, bool sendModelString) = 0;
+
+        /*!
          * Set simulator info before connecting.
          * \pre Network must be disconnected when calling this function.
          */

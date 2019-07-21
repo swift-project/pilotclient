@@ -487,8 +487,20 @@ namespace BlackCore
             Q_ASSERT_X(isDisconnected(), Q_FUNC_INFO, "Can't change ICAO codes while still connected");
             m_ownAircraftIcaoCode  = ownAircraft.getAircraftIcaoCode();
             m_ownAirlineIcaoCode   = ownAircraft.getAirlineIcaoCode();
-            m_ownLiveryDescription = removeColon(ownAircraft.getModel().getSwiftLiveryString());
+            m_ownLivery = removeColon(ownAircraft.getModel().getSwiftLiveryString());
+            m_ownModelString = removeColon(ownAircraft.getModelString());
+            m_sendLiveryString = true;
+            m_sendMModelString = true;
+
             updateOwnIcaoCodes(m_ownAircraftIcaoCode, m_ownAirlineIcaoCode);
+        }
+
+        void CNetworkVatlib::presetLiveryAndModelString(const QString &livery, bool sendLiveryString, const QString &modelString, bool sendModelString)
+        {
+            m_ownLivery = removeColon(livery);
+            m_ownModelString = removeColon(modelString);
+            m_sendLiveryString = sendLiveryString;
+            m_sendMModelString = sendModelString;
         }
 
         void CNetworkVatlib::presetLoginMode(LoginMode mode)
@@ -825,10 +837,10 @@ namespace BlackCore
         {
             const QString airlineIcao = m_server.getFsdSetup().force3LetterAirlineCodes() ? m_ownAirlineIcaoCode.getDesignator() : m_ownAirlineIcaoCode.getVDesignator();
             const QByteArray acTypeICAObytes  = toFSDnoColon(m_ownAircraftIcaoCode.getDesignator());
-            const QByteArray liverybytes      = toFSDnoColon(m_ownLiveryDescription);
+            const QByteArray liverybytes      = toFSDnoColon(m_ownLivery);
             const QByteArray airlineICAObytes = toFSDnoColon(airlineIcao);
 
-            VatAircraftInfo aircraftInfo {acTypeICAObytes, airlineICAObytes, liverybytes};
+            VatAircraftInfo aircraftInfo { acTypeICAObytes, airlineICAObytes, m_sendLiveryString ? liverybytes : QByteArray() };
             Vat_SendAircraftInfo(m_net.data(), toFSD(callsign), &aircraftInfo);
 
             // statistics
@@ -915,15 +927,16 @@ namespace BlackCore
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
             const CSimulatedAircraft myAircraft(getOwnAircraft());
-            const QString modelString = myAircraft.hasModelString() ? myAircraft.getModelString() : noModelString();
+            QString modelString = m_ownModelString.isEmpty() ? myAircraft.getModelString() : m_ownModelString;
+            if (modelString.isEmpty()) { modelString = noModelString(); }
             const QStringList data { { "0" },
                 myAircraft.getAirlineIcaoCodeDesignator(),
                 myAircraft.getAircraftIcaoCodeDesignator(),
-                { "" }, { "" }, { "" }, { "" },
+                { QString() }, { QString() }, { QString() }, { QString() },
                 myAircraft.getAircraftIcaoCombinedType(),
-                removeColon(modelString)
+                m_sendMModelString ? removeColon(modelString) : QString()
             };
-            sendCustomPacket(callsign, "FSIPIR", data);
+            sendCustomPacket(callsign, QStringLiteral("FSIPIR"), data);
         }
 
         void CNetworkVatlib::sendCustomFsinnReponse(const CCallsign &callsign)
