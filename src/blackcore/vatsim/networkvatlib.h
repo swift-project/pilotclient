@@ -84,6 +84,7 @@ namespace BlackCore
             virtual void presetServer(const BlackMisc::Network::CServer &server) override;
             virtual void presetCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual void presetIcaoCodes(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft) override;
+            virtual void presetLiveryAndModelString(const QString &livery, bool sendLiveryString, const QString &modelString, bool sendModelString) override;
             virtual void presetSimulatorInfo(const BlackMisc::Simulation::CSimulatorPluginInfo &simInfo) override;
             virtual void initiateConnection() override;
             virtual void terminateConnection() override;
@@ -289,7 +290,10 @@ namespace BlackCore
             BlackMisc::Aviation::CCallsign              m_ownCallsign;               //!< "buffered callsign", as this must not change when connected
             BlackMisc::Aviation::CAircraftIcaoCode      m_ownAircraftIcaoCode;       //!< "buffered icao", as this must not change when connected
             BlackMisc::Aviation::CAirlineIcaoCode       m_ownAirlineIcaoCode;        //!< "buffered icao", as this must not change when connected
-            QString                                     m_ownLiveryDescription;      //!< "buffered livery", as this must not change when connected
+            QString                                     m_ownLivery;                 //!< "buffered livery", as this must not change when connected
+            QString                                     m_ownModelString;            //!< "buffered model string", as this must not change when connected
+            bool                                        m_sendLiveryString = true;
+            bool                                        m_sendMModelString = true;
             BlackMisc::Aviation::CCallsignSet           m_interimPositionReceivers;  //!< all aircraft receiving interim positions
             BlackMisc::Aviation::CAircraftParts         m_sentAircraftConfig;        //!< aircraft parts sent
             BlackMisc::CTokenBucket                     m_tokenBucket;               //!< used with aircraft parts messages
