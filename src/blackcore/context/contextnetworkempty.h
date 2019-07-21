@@ -124,10 +124,14 @@ namespace BlackCore
             }
 
             //! \copydoc IContextNetwork::connectToNetwork
-            virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, BlackCore::INetwork::LoginMode mode) override
+            virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, const QString &extraLiveryString, bool sendLivery, const QString &extraModelString, bool sendModelString, BlackCore::INetwork::LoginMode mode) override
             {
                 Q_UNUSED(mode);
                 Q_UNUSED(server);
+                Q_UNUSED(extraModelString);
+                Q_UNUSED(extraLiveryString);
+                Q_UNUSED(sendLivery);
+                Q_UNUSED(sendModelString);
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return statusMessageEmptyContext();
             }

@@ -242,7 +242,11 @@ namespace BlackCore
 
             //! Connect to Network
             //! \return messages generated during connecting
-            virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, BlackCore::INetwork::LoginMode loginMode) = 0;
+            virtual BlackMisc::CStatusMessage connectToNetwork(
+                const BlackMisc::Network::CServer &server,
+                const QString &extraLiveryString, bool sendLivery,
+                const QString &extraModelString, bool sendModelString,
+                BlackCore::INetwork::LoginMode loginMode) = 0;
 
             //! Server which is connected, if not connected empty default object.
             virtual BlackMisc::Network::CServer getConnectedServer() const = 0;

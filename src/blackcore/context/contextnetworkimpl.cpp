@@ -211,7 +211,7 @@ namespace BlackCore
             if (m_airspace) { m_airspace->gracefulShutdown(); }
         }
 
-        CStatusMessage CContextNetwork::connectToNetwork(const CServer &server, INetwork::LoginMode mode)
+        CStatusMessage CContextNetwork::connectToNetwork(const CServer &server, const QString &extraLiveryString, bool sendLivery, const QString &extraModelString, bool sendModelString, INetwork::LoginMode mode)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             QString msg;
@@ -233,10 +233,14 @@ namespace BlackCore
                 mode = INetwork::LoginAsObserver;
             }
 
+            const QString l = extraLiveryString.isEmpty() ?  ownAircraft.getModel().getSwiftLiveryString() : extraLiveryString;
+            const QString m = extraModelString.isEmpty()  ?  ownAircraft.getModelString() : extraModelString;
+
             m_currentMode = mode;
             m_network->presetLoginMode(mode);
             m_network->presetCallsign(ownAircraft.getCallsign());
             m_network->presetIcaoCodes(ownAircraft);
+            m_network->presetLiveryAndModelString(l, sendLivery, m, sendModelString);
 
             const CSimulatorPluginInfo sim = this->getIContextSimulator() ? this->getIContextSimulator()->getSimulatorPluginInfo() : CSimulatorPluginInfo();
             m_network->presetSimulatorInfo(sim);
