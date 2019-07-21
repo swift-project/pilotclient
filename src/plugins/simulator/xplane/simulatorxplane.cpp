@@ -369,14 +369,14 @@ namespace BlackSimPlugin
             }
 
             emitOwnAircraftModelChanged(m_serviceProxy->getAircraftModelPath(), m_serviceProxy->getAircraftModelFilename(), m_serviceProxy->getAircraftLivery(),
-                                        m_serviceProxy->getAircraftIcaoCode(), m_serviceProxy->getAircraftModelString(), m_serviceProxy->getAircraftName(), m_serviceProxy->getAircraftDescription());
+                                        m_serviceProxy->getAircraftIcaoCode(),  m_serviceProxy->getAircraftModelString(),   m_serviceProxy->getAircraftName(), m_serviceProxy->getAircraftDescription());
             QString xplaneVersion = QStringLiteral("%1.%2").arg(m_serviceProxy->getXPlaneVersionMajor()).arg(m_serviceProxy->getXPlaneVersionMinor());
             setSimulatorDetails("X-Plane", {}, xplaneVersion);
-            connect(m_serviceProxy, &CXSwiftBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::emitOwnAircraftModelChanged);
+            connect(m_serviceProxy, &CXSwiftBusServiceProxy::aircraftModelChanged,   this, &CSimulatorXPlane::emitOwnAircraftModelChanged);
             connect(m_serviceProxy, &CXSwiftBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::setAirportsInRange);
             m_serviceProxy->updateAirportsInRange();
-            connect(m_trafficProxy, &CXSwiftBusTrafficProxy::simFrame, this, &CSimulatorXPlane::updateRemoteAircraft);
-            connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAdded, this, &CSimulatorXPlane::onRemoteAircraftAdded);
+            connect(m_trafficProxy, &CXSwiftBusTrafficProxy::simFrame,                   this, &CSimulatorXPlane::updateRemoteAircraft);
+            connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAdded,        this, &CSimulatorXPlane::onRemoteAircraftAdded);
             connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAddingFailed, this, &CSimulatorXPlane::onRemoteAircraftAddingFailed);
             if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
             m_trafficProxy->removeAllPlanes();
