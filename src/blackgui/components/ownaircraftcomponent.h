@@ -34,6 +34,20 @@ namespace BlackGui
             Q_OBJECT
 
         public:
+            //! GUI aircraft values, formatted
+            struct CGuiAircraftValues
+            {
+                BlackMisc::Aviation::CCallsign         ownCallsign;     //!< own aircraft callsign
+                BlackMisc::Aviation::CAircraftIcaoCode ownAircraftIcao; //!< ICAO aircraft
+                BlackMisc::Aviation::CAirlineIcaoCode  ownAirlineIcao;  //!< ICAO airline
+                QString ownAircraftCombinedType;          //!< own aircraft combined type
+                QString ownAircraftSimulatorModelString;  //!< own aircraft model string
+                QString ownAircraftModelStringSend;       //!< send model string
+                QString ownLiverySend;                    //!< send livery
+                bool useModelString = true;               //!< use model string
+                bool useLivery = true;                    //!< use livery
+            };
+
             //! Constructor
             explicit COwnAircraftComponent(QWidget *parent = nullptr);
 
@@ -46,32 +60,24 @@ namespace BlackGui
             //! Set a user
             void setUser(const BlackMisc::Network::CUser &user);
 
-            //! Own model and ICAO data for GUI and own aircraft
-            void setOwnModelAndIcaoValues(const BlackMisc::Simulation::CAircraftModel &ownModel = {});
-
             //! Values from GUI
             BlackMisc::Aviation::CCallsign getCallsignFromGui() const;
+
+            //! Own model and ICAO data for GUI and own aircraft
+            void setOwnModelAndIcaoValues(const BlackMisc::Simulation::CAircraftModel &ownModel = {});
 
             //! Update own ICAO values (own aircraft from what is set in the GUI)
             //! \return changed?
             bool updateOwnAircaftIcaoValuesFromGuiValues();
+
+            //! Values from GUI
+            CGuiAircraftValues getAircraftValuesFromGui() const;
 
         signals:
             //! Changed values
             void aircraftDataChanged();
 
         private:
-            //! GUI aircraft values, formatted
-            struct CGuiAircraftValues
-            {
-                BlackMisc::Aviation::CCallsign         ownCallsign;
-                BlackMisc::Aviation::CAircraftIcaoCode ownAircraftIcao;
-                BlackMisc::Aviation::CAirlineIcaoCode  ownAirlineIcao;
-                QString ownAircraftCombinedType;
-                QString ownAircraftSimulatorModelString;
-                QString ownAircraftModelStringSend;
-                QString ownLivery;
-            };
 
             //! Launch mapping wizard
             void mappingWizard();
@@ -88,9 +94,6 @@ namespace BlackGui
             //! Status has changed
             void onSimulatorStatusChanged(int status);
 
-            //! Values from GUI
-            CGuiAircraftValues getAircraftValuesFromGui() const;
-
             //! Set ICAO values
             //! \return changed values?
             bool setGuiIcaoValues(const BlackMisc::Simulation::CAircraftModel &model, bool onlyIfEmpty);
@@ -106,6 +109,9 @@ namespace BlackGui
 
             //! Has contexts?
             bool hasValidContexts() const;
+
+            //! Clear livery
+            void clearLivery();
 
             //! Get a prefill model
             BlackMisc::Simulation::CAircraftModel getPrefillModel() const;

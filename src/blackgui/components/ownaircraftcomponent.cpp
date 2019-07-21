@@ -22,7 +22,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackconfig/buildconfig.h"
 
-#include <QToolButton>
+#include <QPushButton>
 
 using namespace BlackConfig;
 using namespace BlackMisc;
@@ -46,6 +46,9 @@ namespace BlackGui
             ui->selector_AircraftIcao->displayMode(CDbAircraftIcaoSelectorComponent::DisplayIcaoAndId);
             ui->selector_AirlineIcao->displayMode(CDbAirlineIcaoSelectorComponent::DisplayVDesignatorAndId);
 
+            ui->cb_Model->setChecked(true);
+            ui->cb_Livery->setChecked(true);
+
             // own aircraft
             ui->lblp_AircraftCombinedType->setToolTips("ok", "wrong");
             ui->lblp_AirlineIcao->setToolTips("ok", "wrong");
@@ -62,18 +65,20 @@ namespace BlackGui
             ui->le_AircraftCombinedType->setMaxLength(3);
             ui->le_AircraftCombinedType->setValidator(new CUpperCaseValidator(this));
             ui->comp_ModelStringCompleter->setSourceVisible(CAircraftModelStringCompleter::OwnModels, false);
+            ui->comp_ModelStringCompleter->selectSource(CAircraftModelStringCompleter::ModelSet);
 
             connect(ui->le_Callsign, &QLineEdit::editingFinished, this, &COwnAircraftComponent::validate);
             connect(ui->comp_ModelStringCompleter, &CAircraftModelStringCompleter::modelStringChanged, this, &COwnAircraftComponent::onModelStringSendChanged);
             connect(ui->le_AircraftCombinedType,   &QLineEdit::editingFinished, this, &COwnAircraftComponent::validate);
             connect(ui->selector_AircraftIcao,     &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &COwnAircraftComponent::changedAircraftIcao, Qt::QueuedConnection);
-            connect(ui->selector_AirlineIcao,      &CDbAirlineIcaoSelectorComponent::changedAirlineIcao,   this, &COwnAircraftComponent::changedAirlineIcao, Qt::QueuedConnection);
-            connect(ui->pb_SimulatorLookup,        &QToolButton::clicked, this, &COwnAircraftComponent::lookupOwnAircraftModel);
-            connect(ui->pb_MappingWizard, &QToolButton::clicked,          this, &COwnAircraftComponent::mappingWizard,           Qt::QueuedConnection);
+            connect(ui->selector_AirlineIcao,      &CDbAirlineIcaoSelectorComponent::changedAirlineIcao,   this, &COwnAircraftComponent::changedAirlineIcao,  Qt::QueuedConnection);
+            connect(ui->pb_SimulatorLookup,        &QPushButton::clicked, this, &COwnAircraftComponent::lookupOwnAircraftModel);
+            connect(ui->pb_MappingWizard,          &QPushButton::clicked, this, &COwnAircraftComponent::mappingWizard, Qt::QueuedConnection);
+            connect(ui->pb_Clear,                  &QPushButton::clicked, this, &COwnAircraftComponent::clearLivery,   Qt::QueuedConnection);
 
             if (sGui && sGui->getIContextSimulator())
             {
-                connect(sGui->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this, &COwnAircraftComponent::onSimulatorModelChanged, Qt::QueuedConnection);
+                connect(sGui->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this, &COwnAircraftComponent::onSimulatorModelChanged,  Qt::QueuedConnection);
                 connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged,  this, &COwnAircraftComponent::onSimulatorStatusChanged, Qt::QueuedConnection);
             }
 
@@ -143,6 +148,7 @@ namespace BlackGui
             if (!this->hasValidContexts()) { return; }
             if (!sGui->hasWebDataServices()) { return; }
             const QString modelString = ui->comp_ModelStringCompleter->getModelString();
+            if (modelString.isEmpty()) { return; } // keep last values
             const CAircraftModel model = sGui->getWebDataServices()->getModelForModelString(modelString);
             this->setGuiIcaoValues(model, false);
         }
@@ -208,10 +214,12 @@ namespace BlackGui
             values.ownCallsign = CCallsign(ui->le_Callsign->text().trimmed().toUpper());
             values.ownAircraftIcao = ui->selector_AircraftIcao->getAircraftIcao();
             values.ownAirlineIcao  = ui->selector_AirlineIcao->getAirlineIcao();
-            values.ownAircraftCombinedType = ui->le_AircraftCombinedType->text().trimmed().toUpper();
+            values.ownAircraftCombinedType         = ui->le_AircraftCombinedType->text().trimmed().toUpper();
             values.ownAircraftSimulatorModelString = ui->le_SimulatorModel->text().trimmed().toUpper();
-            values.ownAircraftModelStringSend = ui->comp_ModelStringCompleter->getModelString().toUpper();
-            values.ownLivery = ui->le_SendLivery->text().trimmed().toUpper();
+            values.ownAircraftModelStringSend      = ui->comp_ModelStringCompleter->getModelString().toUpper();
+            values.ownLiverySend  = ui->le_SendLivery->text().trimmed().toUpper();
+            values.useLivery      = ui->cb_Livery->isChecked();
+            values.useModelString = ui->cb_Model->isChecked();
             return values;
         }
 
@@ -248,6 +256,16 @@ namespace BlackGui
                     changed = true;
                 }
             }
+            if (!onlyIfEmpty || ui->le_SendLivery->text().trimmed().isEmpty())
+            {
+                const QString ls(model.getSwiftLiveryString());
+                if (ui->le_SendLivery->text() != ls)
+                {
+                    ui->le_SendLivery->setText(ls);
+                    changed = true;
+                }
+            }
+
             const bool valid = this->validate().isSuccess();
             return valid ? changed : false;
         }
@@ -268,6 +286,11 @@ namespace BlackGui
             if (!sGui->getIContextNetwork())     { return false; }
             if (!sGui->getIContextOwnAircraft()) { return false; }
             return true;
+        }
+
+        void COwnAircraftComponent::clearLivery()
+        {
+            ui->le_SendLivery->clear();
         }
 
         CAircraftModel COwnAircraftComponent::getPrefillModel() const
