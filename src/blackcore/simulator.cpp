@@ -77,7 +77,7 @@ namespace BlackCore
             return true;
         }
 
-        // will be added with next snapshot onRecalculatedRenderedAircraft
+        // will be removed with next snapshot onRecalculatedRenderedAircraft
         return false;
     }
 
@@ -98,7 +98,11 @@ namespace BlackCore
         if (!remoteAircraft.isEnabled()) { return false; }
 
         // if not restriced, directly change
-        if (!renderingRestricted) { this->callPhysicallyAddRemoteAircraft(remoteAircraft); return true; }
+        if (!renderingRestricted)
+        {
+            this->callPhysicallyAddRemoteAircraft(remoteAircraft);
+            return true;
+        }
 
         // restricted -> will be added with next snapshot onRecalculatedRenderedAircraft
         return false;
