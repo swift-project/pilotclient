@@ -141,7 +141,8 @@ namespace BlackMisc
         {
             double intpart;
             const double fractpart = modf(value, &intpart);
-            const QString f = QString::number(fractpart);
+            const int prec = width >= 0 ? width + 1 : 10;
+            const QString f = QString::number(fractpart, 'f', prec); // avoid scientific notation
             const QString fInt = f.length() < 3 ? QString("0") : f.mid(2);
             if (width < 0) { return fInt; }
             if (fInt.length() >= width) { return fInt.left(width); }
