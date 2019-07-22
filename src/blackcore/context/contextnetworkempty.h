@@ -255,8 +255,8 @@ namespace BlackCore
                 return false;
             }
 
-            //! \copydoc IContextNetwork::requestDataUpdates
-            virtual void requestDataUpdates()override
+            //! \copydoc IContextNetwork::requestAircraftDataUpdates
+            virtual void requestAircraftDataUpdates()override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
             }

@@ -213,9 +213,9 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1String("getSelectedAtcStations"));
         }
 
-        void CContextNetworkProxy::requestDataUpdates()
+        void CContextNetworkProxy::requestAircraftDataUpdates()
         {
-            m_dBusInterface->callDBus(QLatin1String("requestDataUpdates"));
+            m_dBusInterface->callDBus(QLatin1String("requestAircraftDataUpdates"));
         }
 
         void CContextNetworkProxy::requestAtisUpdates()

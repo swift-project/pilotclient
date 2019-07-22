@@ -1606,15 +1606,17 @@ namespace BlackCore
             self->increaseStatisticsValue(__func__);
 
             const CCallsign cs(self->fromFSD(callsign), CCallsign::Atc);
-            emit self->atisVoiceRoomReplyReceived(cs, self->fromFSD(atis->voiceRoom));
-            emit self->atisLogoffTimeReplyReceived(cs, self->fromFSD(atis->zuluLogoff));
+            const QString voiceRoom(self->fromFSD(atis->voiceRoom));
+            const QString zuluLogoff = self->fromFSD(atis->zuluLogoff);
+            emit self->atisVoiceRoomReplyReceived(cs, voiceRoom);
+            emit self->atisLogoffTimeReplyReceived(cs, zuluLogoff);
 
             CInformationMessage atisMessage;
             atisMessage.setType(CInformationMessage::ATIS);
             for (unsigned int i = 0; i < atis->textLineCount; ++i)
             {
                 const QString fixed = cbvar_cast(cbvar)->fromFSD(atis->textLines[i]).trimmed();
-                if (! fixed.isEmpty())
+                if (!fixed.isEmpty())
                 {
                     //  detect the stupid z1, z2, z3 placeholders
                     //! \fixme: Anything better as this stupid code here?

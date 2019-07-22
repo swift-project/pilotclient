@@ -119,7 +119,7 @@ namespace BlackCore
         void clear();
 
         //! Request to update other clients' data from the network
-        void requestDataUpdates();
+        void requestAircraftDataUpdates();
 
         //! Request to update ATC stations' ATIS data from the network
         void requestAtisUpdates();
