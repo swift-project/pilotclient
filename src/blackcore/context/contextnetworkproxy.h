@@ -108,7 +108,7 @@ namespace BlackCore
             virtual BlackMisc::Network::CServerList getVatsimFsdServers() const override;
             virtual BlackMisc::Network::CClientList getClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override;
             virtual bool setOtherClient(const BlackMisc::Network::CClient &client) override;
-            virtual void requestDataUpdates()override;
+            virtual void requestAircraftDataUpdates()override;
             virtual void requestAtisUpdates() override;
             virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;
             virtual bool setAircraftEnabledFlag(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;

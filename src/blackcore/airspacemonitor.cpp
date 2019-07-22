@@ -298,7 +298,7 @@ namespace BlackCore
         return stations.front();
     }
 
-    void CAirspaceMonitor::requestDataUpdates()
+    void CAirspaceMonitor::requestAircraftDataUpdates()
     {
         if (!this->isConnectedAndNotShuttingDown()) { return; }
         const CSimulatedAircraftList aircraftInRange(this->getAircraftInRange());
@@ -323,7 +323,8 @@ namespace BlackCore
         const CAtcStationList stations(this->getAtcStationsOnline());
         for (const CAtcStation &station : stations)
         {
-            m_network->sendAtisQuery(station.getCallsign()); // for each online station
+            const CCallsign cs = station.getCallsign();
+            m_network->sendAtisQuery(cs); // for each online station
         }
     }
 
@@ -722,8 +723,11 @@ namespace BlackCore
         this->updateBookedStation(callsign, vm);
 
         // receiving voice room means ATC has voice
-        vm = CPropertyIndexVariantMap(CClient::IndexVoiceCapabilities, CVariant::from(CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::Voice)));
-        this->updateOrAddClient(callsign, vm, false);
+        if (!trimmedUrl.isEmpty())
+        {
+            vm = CPropertyIndexVariantMap(CClient::IndexVoiceCapabilities, CVariant::from(CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::Voice)));
+            this->updateOrAddClient(callsign, vm, false);
+        }
     }
 
     void CAirspaceMonitor::onAtisLogoffTimeReceived(const CCallsign &callsign, const QString &zuluTime)

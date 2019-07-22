@@ -80,9 +80,16 @@ namespace BlackCore
             connect(m_network, &INetwork::textMessageSent, this, &CContextNetwork::textMessageSent);
 
             // 2. Update timer for data (network data such as frequency)
-            m_networkDataUpdateTimer = new QTimer(this);
-            connect(m_networkDataUpdateTimer, &QTimer::timeout, this, &CContextNetwork::requestDataUpdates);
-            m_networkDataUpdateTimer->start(30 * 1000);
+            // we use 2 timers so we can query at different times (not too many queirs at once)
+            m_requestAircraftDataTimer = new QTimer(this);
+            connect(m_requestAircraftDataTimer, &QTimer::timeout, this,  &CContextNetwork::requestAircraftDataUpdates);
+            m_requestAircraftDataTimer->start(30 * 1000);
+            m_requestAircraftDataTimer->setObjectName("CContextNetwork::m_requestAircraftDataTimer");
+
+            m_requestAtisTimer = new QTimer(this);
+            connect(m_requestAtisTimer, &QTimer::timeout, this,  &CContextNetwork::requestAtisUpdates);
+            m_requestAtisTimer->start(13 * 1000); // should not be called at the same time as above
+            m_requestAtisTimer->setObjectName("CContextNetwork::m_requestAtisTimer");
 
             // 3. Airspace contents
             Q_ASSERT_X(this->getRuntime()->getCContextOwnAircraft(), Q_FUNC_INFO, "this and own aircraft context must be local");
@@ -858,14 +865,14 @@ namespace BlackCore
             return m_airspace->getAtcStationsOnline().containsCallsign(callsign);
         }
 
-        void CContextNetwork::requestDataUpdates()
+        void CContextNetwork::requestAircraftDataUpdates()
         {
             Q_ASSERT(m_airspace);
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             if (!this->isConnected()) { return; }
 
-            this->requestAtisUpdates();
-            m_airspace->requestDataUpdates();
+            m_airspace->requestAircraftDataUpdates();
+            if (m_requestAircraftDataTimer) { m_requestAircraftDataTimer->start(); } // restart
         }
 
         void CContextNetwork::requestAtisUpdates()
@@ -875,6 +882,7 @@ namespace BlackCore
             if (!this->isConnected()) { return; }
 
             m_airspace->requestAtisUpdates();
+            if (m_requestAtisTimer) { m_requestAtisTimer->start(); } // restart
         }
 
         bool CContextNetwork::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering)
@@ -884,7 +892,7 @@ namespace BlackCore
             const bool c = m_airspace->updateAircraftEnabled(callsign, enabledForRendering);
             if (c)
             {
-                CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
+                const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
                 Q_ASSERT_X(!aircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "missing callsign");
                 emit this->changedRemoteAircraftEnabled(aircraft);
             }

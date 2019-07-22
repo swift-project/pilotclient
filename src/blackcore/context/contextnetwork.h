@@ -277,7 +277,7 @@ namespace BlackCore
             virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const = 0;
 
             //! Request data updates (pilot's frequencies, ATIS, ..)
-            virtual void requestDataUpdates() = 0;
+            virtual void requestAircraftDataUpdates() = 0;
 
             //! Request ATIS updates (for all stations)
             virtual void requestAtisUpdates() = 0;

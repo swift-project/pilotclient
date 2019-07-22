@@ -267,7 +267,7 @@ namespace BlackCore
             virtual BlackMisc::Network::CUser getUserForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Network::CServerList getVatsimFsdServers() const override;
             virtual BlackMisc::Network::CServerList getVatsimVoiceServers() const override;
-            virtual void requestDataUpdates()override;
+            virtual void requestAircraftDataUpdates()override;
             virtual void requestAtisUpdates() override;
             virtual void setFastPositionEnabledCallsigns(BlackMisc::Aviation::CCallsignSet &callsigns) override;
             virtual BlackMisc::Aviation::CCallsignSet getFastPositionEnabledCallsigns() const override;
@@ -295,7 +295,8 @@ namespace BlackCore
             INetwork                   *m_network  = nullptr;
             INetwork::ConnectionStatus  m_currentStatus = INetwork::Disconnected; //!< used to detect pending connections
             INetwork::LoginMode         m_currentMode = INetwork::LoginNormal;    //!< current modeM
-            QTimer                     *m_networkDataUpdateTimer = nullptr;       //!< general updates such as ATIS, frequencies, see requestDataUpdates()
+            QTimer                     *m_requestAircraftDataTimer = nullptr;     //!< general updates such as frequencies, see requestAircraftDataUpdates()
+            QTimer                     *m_requestAtisTimer         = nullptr;     //!< general updates such as ATIS
 
             // Digest signals, only sending after some time
             BlackMisc::CDigestSignal m_dsAtcStationsBookedChanged { this, &IContextNetwork::changedAtcStationsBooked, &IContextNetwork::changedAtcStationsBookedDigest, 1000, 2 };
@@ -308,11 +309,11 @@ namespace BlackCore
             //! Update METAR collection
             void updateMetars(const BlackMisc::Weather::CMetarList &metars);
 
-            //! An ATIS has been received
-            void onChangedAtisReceived(const BlackMisc::Aviation::CCallsign &callsign);
-
             //! Check if a supervisor message was received
             void checkForSupervisiorTextMessage(const BlackMisc::Network::CTextMessageList &messages);
+
+            //! An ATIS has been received
+            void onChangedAtisReceived(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Connection status changed
             void onFsdConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
