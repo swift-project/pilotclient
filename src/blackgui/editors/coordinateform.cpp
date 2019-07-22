@@ -110,13 +110,13 @@ namespace BlackGui
             ui->le_LatDeg->setText(latParts.degAsString());
             ui->le_LatMin->setText(latParts.minAsString());
             ui->le_LatSec->setText(latParts.secAsString());
-            ui->le_LatSecFrag->setText(latParts.fractionalSecAsString());
+            ui->le_LatSecFrag->setText(latParts.fractionalSecAsString(6));
 
             const CLongitude::DegMinSecFractionalSec lngParts = lng.asSexagesimalDegMinSec(true);
             ui->le_LngDeg->setText(lngParts.degAsString());
             ui->le_LngMin->setText(lngParts.minAsString());
             ui->le_LngSec->setText(lngParts.secAsString());
-            ui->le_LngSecFrag->setText(lngParts.fractionalSecAsString());
+            ui->le_LngSecFrag->setText(lngParts.fractionalSecAsString(6));
 
             const QString elvString = coordinate.geodeticHeightAsString();
             ui->le_Elevation->setText(elvString);
