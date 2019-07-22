@@ -258,6 +258,7 @@ namespace BlackGui
                 m_selectedCallsign.clear();
                 ui->tvp_AtcStationsOnline->clear();
                 this->updateTreeView();
+                this->setOnlineTabs(0, 0);
             }
         }
 
