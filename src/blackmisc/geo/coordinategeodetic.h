@@ -277,11 +277,20 @@ namespace BlackMisc
             //! Set latitude
             void setLatitude(const CLatitude &latitude);
 
+            //! Set latitude
+            void setLatitudeFromWgs84(const QString &wgs);
+
             //! Set longitude
             void setLongitude(const CLongitude &longitude);
 
+            //! Set longitude
+            void setLongitudeFromWgs84(const QString &wgs);
+
             //! Set latitude and longitude
             void setLatLong(const CLatitude &latitude, const CLongitude &longitude);
+
+            //! Set latitude and longitude
+            void setLatLongFromWgs84(const QString &latitude, const QString &longitude);
 
             //! Set height (ellipsoidal or geodetic height)
             void setGeodeticHeight(const Aviation::CAltitude &height) { m_geodeticHeight = height; }

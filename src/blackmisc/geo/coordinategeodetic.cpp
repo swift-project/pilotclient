@@ -330,9 +330,19 @@ namespace BlackMisc
             this->setLatLong(latitude, this->longitude());
         }
 
+        void CCoordinateGeodetic::setLatitudeFromWgs84(const QString &wgs)
+        {
+            this->setLatitude(CLatitude::fromWgs84(wgs));
+        }
+
         void CCoordinateGeodetic::setLongitude(const CLongitude &longitude)
         {
             this->setLatLong(this->latitude(), longitude);
+        }
+
+        void CCoordinateGeodetic::setLongitudeFromWgs84(const QString &wgs)
+        {
+            this->setLongitude(CLongitude::fromWgs84(wgs));
         }
 
         void CCoordinateGeodetic::setLatLong(const CLatitude &latitude, const CLongitude &longitude)
@@ -340,6 +350,12 @@ namespace BlackMisc
             m_x = latitude.cos() * longitude.cos();
             m_y = latitude.cos() * longitude.sin();
             m_z = latitude.sin();
+        }
+
+        void CCoordinateGeodetic::setLatLongFromWgs84(const QString &latitude, const QString &longitude)
+        {
+            this->setLatitudeFromWgs84(latitude);
+            this->setLongitudeFromWgs84(longitude);
         }
 
         void CCoordinateGeodetic::setGeodeticHeightToNull()
