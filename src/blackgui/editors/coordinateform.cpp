@@ -178,7 +178,7 @@ namespace BlackGui
 
         void CCoordinateForm::locationEntered()
         {
-            const QString l = ui->le_Location->text().trimmed().toUpper();
+            const QString l = ui->le_Location->text().trimmed().simplified().toUpper();
 
             // location based on swift data
             if (sApp && sApp->hasWebDataServices())
@@ -201,6 +201,29 @@ namespace BlackGui
                 {
                     this->setCoordinate(airport);
                     return;
+                }
+            }
+            // 33°59′42″S 150°57′06″E
+            if (l.contains(' '))
+            {
+                QString lat, lng;
+                const QStringList parts = l.split(' ');
+                for (const QString &p : parts)
+                {
+                    if (p.contains('S') || p.contains('N'))
+                    {
+                        lat = p;
+                    }
+                    else if (p.contains('E') || p.contains('W'))
+                    {
+                        lng = p;
+                    }
+                }
+                if (!lat.isEmpty() && !lng.isEmpty())
+                {
+                    CCoordinateGeodetic c = m_coordinate;
+                    c.setLatLongFromWgs84(lat, lng);
+                    this->setCoordinate(c);
                 }
             }
         }
