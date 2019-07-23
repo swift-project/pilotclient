@@ -45,6 +45,7 @@
 #include <QString>
 #include <QTimer>
 #include <QtGlobal>
+#include <QQueue>
 #include <functional>
 
 namespace BlackCore
@@ -253,10 +254,16 @@ namespace BlackCore
         QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache; //!< flight plan information retrieved from network and cached
         QHash<BlackMisc::Aviation::CCallsign, Readiness> m_readiness; //!< readiness
         BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< settings
-
+        QQueue<BlackMisc::Aviation::CCallsign> m_queryAtis;  //!< query the ATIS
+        QQueue<BlackMisc::Aviation::CCallsign> m_queryPilot; //!< query the pilot data
         INetwork          *m_network  = nullptr;  //!< corresponding network interface
         CAirspaceAnalyzer *m_analyzer = nullptr;  //!< owned analyzer
         bool m_bookingsRequested      = false;    //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
+        QTimer m_processTimer;
+        static constexpr int ProcessInterval = 50; // in ms
+
+        //! Processing by timer
+        void process();
 
         //! Remove ATC online stations
         void removeAllOnlineAtcStations();
@@ -272,8 +279,14 @@ namespace BlackCore
         //! Network queries for ATC
         void sendInitialAtcQueries(const BlackMisc::Aviation::CCallsign &callsign);
 
+        //! Network queries for ATIS
+        bool sendNextStaggeredAtisQuery();
+
         //! Network queries for pilots
         void sendInitialPilotQueries(const BlackMisc::Aviation::CCallsign &callsign, bool withIcaoQuery, bool withFsInn);
+
+        //! Network queries for pilot
+        bool sendNextStaggeredPilotDataQuery();
 
         //! Connected with network?
         bool isConnected() const;

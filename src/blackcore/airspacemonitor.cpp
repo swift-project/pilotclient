@@ -114,6 +114,10 @@ namespace BlackCore
         // Analyzer
         connect(m_analyzer, &CAirspaceAnalyzer::timeoutAircraft, this, &CAirspaceMonitor::onPilotDisconnected,         Qt::QueuedConnection);
         connect(m_analyzer, &CAirspaceAnalyzer::timeoutAtc,      this, &CAirspaceMonitor::onAtcControllerDisconnected, Qt::QueuedConnection);
+
+        // timer
+        connect(&m_processTimer, &QTimer::timeout, this, &CAirspaceMonitor::process);
+        m_processTimer.start(ProcessInterval);
     }
 
     bool CAirspaceMonitor::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositonUpdates)
@@ -304,16 +308,20 @@ namespace BlackCore
         const CSimulatedAircraftList aircraftInRange(this->getAircraftInRange());
         for (const CSimulatedAircraft &aircraft : aircraftInRange)
         {
+            // staggered version
             const CCallsign cs(aircraft.getCallsign());
-            m_network->sendFrequencyQuery(cs);
+            if (!m_queryPilot.contains(cs))
+            {
+                m_queryPilot.enqueue(aircraft.getCallsign());
+            }
 
-            // we only query ICAO if we have none yet
-            // it happens sometimes with some FSD servers (e.g our testserver) a first query is skipped
-            // Important: this is only a workaround and must not replace a sendInitialPilotQueries
+            /**
+            m_network->sendFrequencyQuery(cs);
             if (!aircraft.hasAircraftDesignator())
             {
                 m_network->sendIcaoCodesQuery(cs);
             }
+            **/
         }
     }
 
@@ -324,7 +332,13 @@ namespace BlackCore
         for (const CAtcStation &station : stations)
         {
             const CCallsign cs = station.getCallsign();
-            m_network->sendAtisQuery(cs); // for each online station
+
+            // changed to staggered version
+            // m_network->sendAtisQuery(cs); // for each online station
+            if (!m_queryAtis.contains(cs))
+            {
+                m_queryAtis.enqueue(cs);
+            }
         }
     }
 
@@ -385,6 +399,16 @@ namespace BlackCore
         if (r.testFlag(ReadyForMatchingSent)) { s << enumFlagToString(ReadyForMatchingSent); }
         if (r.testFlag(RecursiveCall))        { s << enumFlagToString(RecursiveCall); }
         return s.join(", ");
+    }
+
+    void CAirspaceMonitor::process()
+    {
+        if (this->isConnectedAndNotShuttingDown())
+        {
+            // only send one
+            const bool send = this->sendNextStaggeredAtisQuery();
+            if (!send) { this->sendNextStaggeredPilotDataQuery(); }
+        }
     }
 
     void CAirspaceMonitor::clear()
@@ -470,6 +494,7 @@ namespace BlackCore
     void CAirspaceMonitor::removeAllOnlineAtcStations()
     {
         m_atcStationsOnline.clear();
+        m_queryAtis.clear();
     }
 
     void CAirspaceMonitor::removeAllAircraft()
@@ -479,6 +504,7 @@ namespace BlackCore
         // non thread safe parts
         m_flightPlanCache.clear();
         m_readiness.clear();
+        m_queryPilot.clear();
     }
 
     void CAirspaceMonitor::removeFromAircraftCachesAndLogs(const CCallsign &callsign)
@@ -1348,6 +1374,16 @@ namespace BlackCore
         m_network->sendServerQuery(callsign);
     }
 
+    bool CAirspaceMonitor::sendNextStaggeredAtisQuery()
+    {
+        if (m_queryAtis.isEmpty()) { return false; }
+        if (!this->isConnectedAndNotShuttingDown()) { return false; }
+        const CCallsign cs = m_queryAtis.dequeue();
+        if (!m_atcStationsOnline.containsCallsign(cs)) { return false; }
+        m_network->sendAtisQuery(cs);
+        return true;
+    }
+
     void CAirspaceMonitor::sendInitialPilotQueries(const CCallsign &callsign, bool withIcaoQuery, bool withFsInn)
     {
         if (!this->isConnectedAndNotShuttingDown()) { return; }
@@ -1359,6 +1395,24 @@ namespace BlackCore
         m_network->sendRealNameQuery(callsign);
         m_network->sendCapabilitiesQuery(callsign);
         m_network->sendServerQuery(callsign);
+    }
+
+    bool CAirspaceMonitor::sendNextStaggeredPilotDataQuery()
+    {
+        if (m_queryPilot.isEmpty()) { return false; }
+        if (!this->isConnectedAndNotShuttingDown()) { return false; }
+        const CCallsign cs = m_queryPilot.dequeue();
+        if (!this->isAircraftInRange(cs)) { return false; }
+        m_network->sendFrequencyQuery(cs);
+
+        // we only query ICAO if we have none yet
+        // it happens sometimes with some FSD servers (e.g our testserver) a first query is skipped
+        // Important: this is only a workaround and must not replace a sendInitialPilotQueries
+        if (!this->getAircraftInRangeForCallsign(cs).hasAircraftDesignator())
+        {
+            m_network->sendIcaoCodesQuery(cs);
+        }
+        return true;
     }
 
     bool CAirspaceMonitor::isConnected() const
@@ -1411,7 +1465,7 @@ namespace BlackCore
         // It is only relevant if we are logged in as observer
         if (sApp->getIContextNetwork()->getLoginMode() != INetwork::LoginAsObserver) { return false; }
 
-        const CCallsign ownCallsign = getOwnAircraft().getCallsign();
+        const CCallsign ownCallsign = this->getOwnAircraft().getCallsign();
         return ownCallsign.isMaybeCopilotCallsign(callsign);
     }
 
