@@ -53,11 +53,11 @@ namespace XSwiftBus
     {
         if (text.empty()) { return; }
         static const std::string ellipsis = u8"\u2026";
-        const int lineLength = static_cast<int>(m_messages.maxLineLength() - ellipsis.size());
+        const int lineLength = m_messages.maxLineLength() - static_cast<int>(ellipsis.size());
         std::vector<std::string> wrappedLines;
-        for (size_t i = 0; i < text.size(); i += lineLength)
+        for (size_t i = 0; i < text.size(); i += static_cast<size_t>(lineLength))
         {
-            wrappedLines.push_back(text.substr(i, lineLength) + ellipsis);
+            wrappedLines.push_back(text.substr(i, static_cast<size_t>(lineLength)) + ellipsis);
         }
         wrappedLines.back().erase(wrappedLines.back().size() - 3);
         if (wrappedLines.back().empty()) { wrappedLines.pop_back(); }
@@ -199,7 +199,7 @@ namespace XSwiftBus
 
     static const char *introspection_service =
         DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
-        #include "org.swift_project.xswiftbus.service.xml"
+#include "org.swift_project.xswiftbus.service.xml"
         ;
 
     DBusHandlerResult CService::dbusMessageHandler(const CDBusMessage &message_)
@@ -715,10 +715,9 @@ namespace XSwiftBus
 
         number = std::min(static_cast<int>(m_airports.size()), number);
 
-        auto closestAirports = m_airports;
+        std::vector<CNavDataReference> closestAirports = m_airports;
         std::partial_sort(closestAirports.begin(), closestAirports.begin() + number, closestAirports.end(), compareFunction);
-        closestAirports.resize(number);
+        closestAirports.resize(static_cast<std::vector<CNavDataReference>::size_type>(number));
         return closestAirports;
     }
-
 }
