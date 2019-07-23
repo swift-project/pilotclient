@@ -30,7 +30,6 @@
 
 namespace XSwiftBus
 {
-
     /*!
      * XSwiftBus service object which is accessible through DBus
      */
@@ -214,9 +213,9 @@ namespace XSwiftBus
         std::vector<double> getEngineN1Percentage() const
         {
             std::vector<double> list;
-            const auto number = static_cast<unsigned int>(getNumberOfEngines());
-            list.reserve(number);
-            for (unsigned int engineNumber = 0; engineNumber < number; ++engineNumber)
+            const int number = getNumberOfEngines();
+            list.reserve(static_cast<std::vector<double>::size_type>(number));
+            for (int engineNumber = 0; engineNumber < number; ++engineNumber)
             {
                 list.push_back(m_enginesN1Percentage.getAt(engineNumber));
             }

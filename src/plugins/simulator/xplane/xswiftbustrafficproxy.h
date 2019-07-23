@@ -47,21 +47,21 @@ namespace BlackSimPlugin
                 const int s = callsigns.size();
                 if (s != latitudesDeg.size())  { return false; }
                 if (s != longitudesDeg.size()) { return false; }
-                if (s != altitudesFt.size())  { return false; }
+                if (s != altitudesFt.size())   { return false; }
                 if (s != pitchesDeg.size())    { return false; }
                 if (s != rollsDeg.size())      { return false; }
                 if (s != headingsDeg.size())   { return false; }
                 return true;
             }
 
-            QStringList callsigns;      //!< List of callsigns
+            QStringList callsigns;         //!< List of callsigns
             QList<double> latitudesDeg;    //!< List of latitudes
             QList<double> longitudesDeg;   //!< List of longitudes
-            QList<double> altitudesFt;    //!< List of altitudes
+            QList<double> altitudesFt;     //!< List of altitudes
             QList<double> pitchesDeg;      //!< List of pitches
             QList<double> rollsDeg;        //!< List of rolls
             QList<double> headingsDeg;     //!< List of headings
-            QList<bool> onGrounds;      //!< List of onGrounds
+            QList<bool> onGrounds;         //!< List of onGrounds
         };
 
         //! Planes surfaces
