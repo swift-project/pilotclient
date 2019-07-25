@@ -11,7 +11,6 @@
 #ifndef BLACKMISC_DICTIONARY_H
 #define BLACKMISC_DICTIONARY_H
 
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/containerbase.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/datastream.h"
@@ -23,6 +22,7 @@
 #include "blackmisc/range.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/typetraits.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QDBusArgument>
 #include <QHash>
@@ -84,7 +84,6 @@ namespace BlackMisc
         //! \endcond
     } // namespace Private
 
-
     /*!
      * Trait to select the appropriate default associative container type depending on what the key type supports.
      */
@@ -94,12 +93,14 @@ namespace BlackMisc
     /*!
      * Associative container with value semantics, chooses a sensible default implementation container type.
      */
+    // *INDENT-OFF*
     template<class Key, class Value, template <class...> class Impl = TDefaultAssociativeType>
     class CDictionary :
         public Mixin::DBusOperators<CDictionary<Key, Value, Impl>>,
         public Mixin::DataStreamOperators<CDictionary<Key, Value, Impl>>,
         public Mixin::JsonOperators<CDictionary<Key, Value, Impl>>,
         public Mixin::String<CDictionary<Key, Value, Impl>>
+    // *INDENT-ON*
     {
         //! \copydoc BlackMisc::CValueObject::compare
         friend int compare(const CDictionary &a, const CDictionary &b)
@@ -111,7 +112,7 @@ namespace BlackMisc
 
     public:
         //! The implementation container
-        using impl_type = Impl<Key,Value>;
+        using impl_type = Impl<Key, Value>;
 
         //! STL compatibility
         //! @{
@@ -119,10 +120,10 @@ namespace BlackMisc
         typedef Value value_type;
         typedef Value &reference;
         typedef const Value &const_reference;
-        typedef typename Impl<Key,Value>::size_type size_type;
+        typedef typename Impl<Key, Value>::size_type size_type;
 
-        typedef typename Impl<Key,Value>::iterator iterator;
-        typedef typename Impl<Key,Value>::const_iterator const_iterator;
+        typedef typename Impl<Key, Value>::iterator iterator;
+        typedef typename Impl<Key, Value>::const_iterator const_iterator;
         //! @}
 
         //! Return a copy containing only those elements for which the dictionary keys return true for a given predicate.
@@ -350,18 +351,18 @@ namespace BlackMisc
 
         //! Returns an const iterator pointing to the item with the key.
         //! \return If key is not found, the function returns constEnd()
-        const_iterator constFind (const Key &key) const { return m_impl.constFind(key); }
+        const_iterator constFind(const Key &key) const { return m_impl.constFind(key); }
 
         //! Returns an const iterator pointing to the item with the key.
         //! \return If key is not found, the function returns end()
-        const_iterator find(const Key & key) const { return m_impl.find(key); }
+        const_iterator find(const Key &key) const { return m_impl.find(key); }
 
         //! Returns an iterator pointing to the item with the key.
         //! \return If key is not found, the function returns end()
         iterator find(const Key &key) { return m_impl.find(key); }
 
         //! Returns true if dictionary contains an item with key, otherwise false
-        bool contains (const Key &key) const {return m_impl.contains(key); }
+        bool contains(const Key &key) const {return m_impl.contains(key); }
 
         //! Returns the number of items with key
         int count(const Key &key) const { return m_impl.count(key); }
@@ -388,25 +389,25 @@ namespace BlackMisc
         const Key key(const Value &value) const { return m_impl.key(value); }
 
         //! Return key assigned to value or if key is not found defaultKey
-        const Key key(const Value &value, const Key & defaultKey) const { return m_impl.key(value, defaultKey); }
+        const Key key(const Value &value, const Key &defaultKey) const { return m_impl.key(value, defaultKey); }
 
         //! Return a range of all keys (does not allocate a temporary container)
         auto keys() const { return makeRange(keyBegin(), keyEnd()); }
 
         //! Remove all items with key from the dictionary
-        int	remove(const Key &key) { return m_impl.remove(key); }
+        int remove(const Key &key) { return m_impl.remove(key); }
 
         //! Returns the number of items in the hash.
-        int	size() const { return m_impl.size(); }
+        int size() const { return m_impl.size(); }
 
         //! Swaps hash other with this hash. This operation is very fast and never fails.
         void swap(CDictionary &other) noexcept { m_impl.swap(other.m_impl); }
 
         //! Returns the value associated with the key.
-        const Value	value(const Key &key) const { return m_impl.value(key); }
+        const Value value(const Key &key) const { return m_impl.value(key); }
 
         //! Returns the value associated with the key or if key is not found defaultValue
-        const Value	value(const Key &key, const Value &defaultValue) const { return m_impl.value(key, defaultValue); }
+        const Value value(const Key &key, const Value &defaultValue) const { return m_impl.value(key, defaultValue); }
 
         //! Return a range of all values (does not allocate a temporary container)
         CRange<const_iterator> values() const { return makeRange(begin(), end()); }
@@ -415,7 +416,7 @@ namespace BlackMisc
         CDictionary &operator =(const CDictionary &other) { m_impl = other.m_impl; return *this; }
 
         //! Move assignment
-        CDictionary &operator =(CDictionary && other) noexcept { m_impl = std::move(other.m_impl); return *this; }
+        CDictionary &operator =(CDictionary &&other) noexcept { m_impl = std::move(other.m_impl); return *this; }
 
         //! Return reference to the internal implementation object.
         friend impl_type &implementationOf(CDictionary &dict) { return dict.m_impl; }
@@ -428,7 +429,7 @@ namespace BlackMisc
         Value &operator [](const Key &key) { return m_impl[key]; }
 
         //! Access an element by its key.
-        const Value	operator [](const Key &key) const { return m_impl[key]; }
+        const Value operator [](const Key &key) const { return m_impl[key]; }
 
         //! Test for equality.
         friend bool operator ==(const CDictionary &a, const CDictionary &b) { return a.m_impl == b.m_impl; }
@@ -453,7 +454,7 @@ namespace BlackMisc
         //! \copydoc BlackMisc::CValueObject::marshallToDbus
         void marshallToDbus(QDBusArgument &argument) const
         {
-           argument << m_impl;
+            argument << m_impl;
         }
 
         //! \copydoc BlackMisc::CValueObject::unmarshallFromDbus
@@ -469,7 +470,7 @@ namespace BlackMisc
         void unmarshalFromDataStream(QDataStream &stream) { stream >> m_impl; }
 
     private:
-        Impl<Key,Value> m_impl;
+        Impl<Key, Value> m_impl;
     };
 
     /*!
