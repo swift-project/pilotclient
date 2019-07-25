@@ -36,5 +36,6 @@
 #include "blackmisc/simulation/settings/modelsettings.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/settings/swiftpluginsettings.h"
+#include "blackmisc/simulation/settings/xswiftbussettings.h"
 
 #endif // guard

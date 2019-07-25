@@ -49,6 +49,7 @@ namespace BlackMisc
             CVPilotModelRule::registerMetadata();
             CVPilotModelRuleSet::registerMetadata();
             CAircraftMatcherSetup::registerMetadata();
+            CXSwiftBusSettings::registerMetadata();
 
             qRegisterMetaType<CSimulatorSettings::CGSource>();
             qRegisterMetaType<CAircraftMatcherSetup::MatchingAlgorithm>();
