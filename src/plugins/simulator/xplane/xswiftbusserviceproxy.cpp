@@ -40,7 +40,7 @@ namespace BlackSimPlugin
 
         QString CXSwiftBusServiceProxy::getVersionNumber()
         {
-             return m_dbusInterface->callDBusRet<QString>(QLatin1String("getVersionNumber"));
+            return m_dbusInterface->callDBusRet<QString>(QLatin1String("getVersionNumber"));
         }
 
         void CXSwiftBusServiceProxy::getOwnAircraftSituationData(XPlaneData *o_xplaneData)
@@ -504,6 +504,21 @@ namespace BlackSimPlugin
         void CXSwiftBusServiceProxy::getSpeedBrakeRatioAsync(double *o_speedBrakeRatio)
         {
             m_dbusInterface->callDBusAsync(QLatin1String("getSpeedBrakeRatio"), setterCallback(o_speedBrakeRatio));
+        }
+
+        QString CXSwiftBusServiceProxy::getSettings() const
+        {
+            return m_dbusInterface->callDBusRet<QString>(QLatin1String("getSettings"));
+        }
+
+        void CXSwiftBusServiceProxy::getSettingsAsync(QString *o_jsonSettings)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getSettings"), setterCallback(o_jsonSettings));
+        }
+
+        void CXSwiftBusServiceProxy::setSettings(const QString &json)
+        {
+            m_dbusInterface->callDBus(QLatin1String("setSettings"), json);
         }
     } // ns
 } // ns

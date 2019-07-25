@@ -24,9 +24,11 @@
 #include "dbusdispatcher.h"
 #include "dbusserver.h"
 #include "datarefs.h"
-#include "XPLM/XPLMCamera.h"
 #include "menus.h"
 #include "config.h"
+#include "settings.h"
+
+#include "XPLM/XPLMCamera.h"
 #include <memory>
 #include <thread>
 
@@ -55,9 +57,10 @@ namespace XSwiftBus
         void onAircraftRepositioned();
 
     private:
-        CConfig m_pluginConfig;
+        CConfig         m_pluginConfig;
         CDBusDispatcher m_dbusDispatcher;
-        std::unique_ptr<CDBusServer> m_dbusP2PServer;
+        CSettings       m_pluginSettings;
+        std::unique_ptr<CDBusServer>     m_dbusP2PServer;
         std::shared_ptr<CDBusConnection> m_dbusConnection;
         std::unique_ptr<CService> m_service;
         std::unique_ptr<CTraffic> m_traffic;
@@ -65,12 +68,12 @@ namespace XSwiftBus
         CMenu m_menu;
         CMenuItem m_startServerMenuItem;
         CMenuItem m_showHideLabelsMenuItem;
-        CMenu m_messageWindowSubMenu;
+        CMenu     m_messageWindowSubMenu;
         CMenuItem m_toggleMessageWindowMenuItem;
         CMenuItem m_popupMessageWindowMenuItem;
         CMenuItem m_disappearMessageWindowMenuItem;
-        CMenu m_planeViewSubMenu;
-        CMenuItem planeViewOwnAircraftMenuItem;
+        CMenu     m_planeViewSubMenu;
+        CMenuItem m_planeViewOwnAircraftMenuItem;
 
         DataRef<xplane::data::sim::atc::atis_enabled> m_atisEnabled;
         decltype(m_atisEnabled.get()) m_atisSaved = 0;

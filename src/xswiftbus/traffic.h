@@ -16,6 +16,7 @@
 #include "datarefs.h"
 #include "terrainprobe.h"
 #include "menus.h"
+#include "settings.h"
 #include "XPMPMultiplayer.h"
 #include "XPLMCamera.h"
 #include <XPLM/XPLMDisplay.h>
@@ -36,7 +37,7 @@ namespace XSwiftBus
     {
     public:
         //! Constructor
-        CTraffic();
+        CTraffic(CSettings &settings);
 
         //! Destructor
         ~CTraffic() override;
@@ -146,6 +147,7 @@ namespace XSwiftBus
         bool m_initialized = false;
         bool m_enabledMultiplayer = false;
         CTerrainProbe m_terrainProbe;
+        CSettings    &m_pluginSettings;
 
         void emitSimFrame();
         void emitPlaneAdded(const std::string &callsign);
@@ -181,7 +183,6 @@ namespace XSwiftBus
             Plane(void *id_, const std::string &callsign_, const std::string &aircraftIcao_, const std::string &airlineIcao_,
                   const std::string &livery_, const std::string &modelName_);
         };
-
 
         std::unordered_map<std::string, Plane *> m_planesByCallsign;
         std::unordered_map<void *, Plane *> m_planesById;

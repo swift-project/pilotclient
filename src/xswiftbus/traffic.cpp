@@ -45,14 +45,17 @@ namespace XSwiftBus
         surfaces.lights.timeOffset = static_cast<uint16_t>(std::rand() % 0xffff);
     }
 
-    CTraffic::CTraffic() :
+    // *INDENT-OFF*
+    CTraffic::CTraffic(CSettings &settings) :
         CDBusObject(),
+        m_pluginSettings(settings),
         m_followPlaneViewNextCommand("org/swift-project/xswiftbus/follow_next_plane", "Changes plane view to follow next plane in sequence", [this] { followNextPlane(); }),
         m_followPlaneViewPreviousCommand("org/swift-project/xswiftbus/follow_previous_plane", "Changes plane view to follow previous plane in sequence", [this] { followPreviousPlane(); })
     {
         XPLMRegisterDrawCallback(drawCallback, xplm_Phase_Airplanes, 1, this);
         XPLMRegisterKeySniffer(spaceKeySniffer, 1, this);
     }
+    // *INDENT-ON*
 
     CTraffic::~CTraffic()
     {
@@ -394,7 +397,7 @@ namespace XSwiftBus
             plane->surfaces.lights.bcnLights = beaconLights.at(i);
             plane->surfaces.lights.strbLights = strobeLights.at(i);
             plane->surfaces.lights.navLights = navLights.at(i);
-            plane->surfaces.lights.flashPattern = lightPatterns.at(i);
+            plane->surfaces.lights.flashPattern = static_cast<unsigned int>(lightPatterns.at(i));
         }
     }
 

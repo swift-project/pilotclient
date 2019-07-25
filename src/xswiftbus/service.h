@@ -19,6 +19,7 @@
 #include "datarefs.h"
 #include "messages.h"
 #include "navdatareference.h"
+#include "settings.h"
 #include <XPLM/XPLMNavigation.h>
 #include <string>
 #include <chrono>
@@ -37,7 +38,7 @@ namespace XSwiftBus
     {
     public:
         //! Constructor
-        CService();
+        CService(CSettings &settings);
 
         //! Destructor
         ~CService() override = default;
@@ -234,6 +235,12 @@ namespace XSwiftBus
         //! Enable/disable message window disappearing again after 5 seconds
         void setDisappearMessageWindow(bool enabled) { m_disappearMessageWindow = enabled; }
 
+        //! Get settings in JSON format
+        std::string getSettings() const;
+
+        //! Set settings
+        void setSettings(const std::string &jsonString);
+
         //! Perform generic processing
         int process();
 
@@ -249,12 +256,13 @@ namespace XSwiftBus
                                         const std::vector<double> &lats, const std::vector<double> &lons, const std::vector<double> &alts);
 
         CMessageBoxControl m_messages { 16, 16, 16 };
-        bool m_popupMessageWindow = true;
+        bool m_popupMessageWindow     = true;
         bool m_disappearMessageWindow = true;
         std::chrono::system_clock::time_point m_disappearMessageWindowTime;
         std::vector<CNavDataReference> m_airports;
-        void readAirportsDatabase();
+        CSettings &m_pluginSettings;
 
+        void readAirportsDatabase();
         std::vector<CNavDataReference> findClosestAirports(int number, double latitude, double longitude);
 
         StringDataRef<xplane::data::sim::aircraft::view::acf_livery_path> m_liveryPath;

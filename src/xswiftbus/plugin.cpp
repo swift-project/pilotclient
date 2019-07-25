@@ -16,15 +16,16 @@
 #include <functional>
 #include <thread>
 
-namespace {
-    inline std::string xswiftbusServiceName() {
+namespace
+{
+    inline std::string xswiftbusServiceName()
+    {
         return std::string("org.swift-project.xswiftbus");
     }
 }
 
 namespace XSwiftBus
 {
-
     CPlugin::CPlugin()
         : m_dbusConnection(std::make_shared<CDBusConnection>()), m_menu(CMenu::mainMenu().subMenu("XSwiftBus"))
     {
@@ -39,18 +40,18 @@ namespace XSwiftBus
         {
             m_service->toggleMessageBoxVisibility();
         });
-        m_popupMessageWindowMenuItem = m_messageWindowSubMenu.checkableItem("Pop up Window on new Message", true, [this] (bool checked)
+        m_popupMessageWindowMenuItem = m_messageWindowSubMenu.checkableItem("Pop up Window on new Message", true, [this](bool checked)
         {
             m_popupMessageWindowMenuItem.setChecked(!checked);
             m_service->setPopupMessageWindow(!checked);
         });
-        m_disappearMessageWindowMenuItem = m_messageWindowSubMenu.checkableItem("Hide Message Window after 5s", true, [this] (bool checked)
+        m_disappearMessageWindowMenuItem = m_messageWindowSubMenu.checkableItem("Hide Message Window after 5s", true, [this](bool checked)
         {
             m_disappearMessageWindowMenuItem.setChecked(!checked);
             m_service->setDisappearMessageWindow(!checked);
         });
         m_planeViewSubMenu = m_menu.subMenu("Follow Plane View");
-        planeViewOwnAircraftMenuItem = m_planeViewSubMenu.item("Own Aircraft", [this]
+        m_planeViewOwnAircraftMenuItem = m_planeViewSubMenu.item("Own Aircraft", [this]
         {
             m_traffic->setFollowedAircraft(m_traffic->ownAircraftString());
         });
@@ -96,9 +97,9 @@ namespace XSwiftBus
 
         readConfig();
 
-        m_service = std::make_unique<CService>();
-        m_traffic = std::make_unique<CTraffic>();
-        m_weather = std::make_unique<CWeather>();
+        m_service = std::make_unique<CService>(m_pluginSettings);
+        m_traffic = std::make_unique<CTraffic>(m_pluginSettings);
+        m_weather = std::make_unique<CWeather>(m_pluginSettings);
 
         m_traffic->setPlaneViewMenu(m_planeViewSubMenu);
 
