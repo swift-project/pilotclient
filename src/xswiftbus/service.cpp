@@ -6,11 +6,14 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
+
 #include "service.h"
 #include "utils.h"
+#include "blackmisc/simulation/xplane/qtfreeutils.h"
+
 #include <XPLM/XPLMPlanes.h>
 #include <XPLM/XPLMUtilities.h>
-#include "blackmisc/simulation/xplane/qtfreeutils.h"
+
 #include <algorithm>
 
 // clazy:excludeall=reserve-candidates
@@ -19,8 +22,7 @@ using namespace BlackMisc::Simulation::XPlane::QtFreeUtils;
 
 namespace XSwiftBus
 {
-
-    CService::CService() : CDBusObject()
+    CService::CService(CSettings &settings) : CDBusObject(), m_pluginSettings(settings)
     {
         updateAirportsInRange();
     }
@@ -155,10 +157,20 @@ namespace XSwiftBus
         return path;
     }
 
+    std::string CService::getSettings() const
+    {
+        return m_pluginSettings.toXSwiftBusJsonString();
+    }
+
+    void CService::setSettings(const std::string &jsonString)
+    {
+        m_pluginSettings.parseXSwiftBusString(jsonString);
+    }
+
     void CService::readAirportsDatabase()
     {
         auto first = XPLMFindFirstNavAidOfType(xplm_Nav_Airport);
-        auto last = XPLMFindLastNavAidOfType(xplm_Nav_Airport);
+        auto last  = XPLMFindLastNavAidOfType(xplm_Nav_Airport);
         if (first != XPLM_NAV_NOT_FOUND)
         {
             for (auto i = first; i <= last; ++i)
@@ -650,6 +662,24 @@ namespace XSwiftBus
                 queueDBusCall([ = ]()
                 {
                     toggleMessageBoxVisibility();
+                });
+            }
+            else if (message.getMethodName() == "getSettings")
+            {
+                queueDBusCall([ = ]()
+                {
+                    sendDBusReply(sender, serial, getSettings());
+                });
+            }
+            else if (message.getMethodName() == "setSettings")
+            {
+                maybeSendEmptyDBusReply(wantsReply, sender, serial);
+                std::string json;
+                message.beginArgumentRead();
+                message.getArgument(json);
+                queueDBusCall([ = ]()
+                {
+                    setSettings(json);
                 });
             }
             else

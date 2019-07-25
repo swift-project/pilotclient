@@ -13,8 +13,9 @@
 
 namespace XSwiftBus
 {
-    CWeather::CWeather()
+    CWeather::CWeather(CSettings &settings) : m_pluginSettings(settings)
     {
+        // void
     }
 
     //! Set cloud layer
@@ -63,7 +64,7 @@ namespace XSwiftBus
 
     const char *introspection_weather =
         DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
-    #include "org.swift_project.xswiftbus.weather.xml"
+#include "org.swift_project.xswiftbus.weather.xml"
         ;
 
     DBusHandlerResult CWeather::dbusMessageHandler(const CDBusMessage &message_)
@@ -84,7 +85,7 @@ namespace XSwiftBus
         {
             if (message.getMethodName() == "isUsingRealWeather")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, isUsingRealWeather());
                 });
@@ -95,7 +96,7 @@ namespace XSwiftBus
                 bool enable = false;
                 message.beginArgumentRead();
                 message.getArgument(enable);
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     setUseRealWeather(enable);
                 });
@@ -106,7 +107,7 @@ namespace XSwiftBus
                 double visibilityM = 10.0;
                 message.beginArgumentRead();
                 message.getArgument(visibilityM);
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     setVisibility(visibilityM);
                 });
@@ -117,7 +118,7 @@ namespace XSwiftBus
                 int degreesC = 10;
                 message.beginArgumentRead();
                 message.getArgument(degreesC);
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     setTemperature(degreesC);
                 });
@@ -128,7 +129,7 @@ namespace XSwiftBus
                 int degreesC = 10;
                 message.beginArgumentRead();
                 message.getArgument(degreesC);
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     setDewPoint(degreesC);
                 });
@@ -139,7 +140,7 @@ namespace XSwiftBus
                 double inHg = 29.92;
                 message.beginArgumentRead();
                 message.getArgument(inHg);
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     setQNH(inHg);
                 });
@@ -150,7 +151,7 @@ namespace XSwiftBus
                 double precipRatio = 0.0;
                 message.beginArgumentRead();
                 message.getArgument(precipRatio);
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     setPrecipitationRatio(precipRatio);
                 });
@@ -161,7 +162,7 @@ namespace XSwiftBus
                 double cbRatio = 0.0;
                 message.beginArgumentRead();
                 message.getArgument(cbRatio);
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     setThunderstormRatio(cbRatio);
                 });
@@ -173,7 +174,7 @@ namespace XSwiftBus
                 double turbulenceRatio = 0.0;
                 message.beginArgumentRead();
                 message.getArgument(turbulenceRatio);
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     setTurbulenceRatio(turbulenceRatio);
                 });
@@ -184,7 +185,7 @@ namespace XSwiftBus
                 int friction = 10;
                 message.beginArgumentRead();
                 message.getArgument(friction);
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     setRunwayFriction(friction);
                 });
@@ -203,7 +204,7 @@ namespace XSwiftBus
                 message.getArgument(tops);
                 message.getArgument(type);
                 message.getArgument(coverage);
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     setCloudLayer(layer, base, tops, type, coverage);
                 });
@@ -226,7 +227,7 @@ namespace XSwiftBus
                 message.getArgument(shearDirectionDeg);
                 message.getArgument(shearSpeedKt);
                 message.getArgument(turbulence);
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     setWindLayer(layer, altitudeM, directionDeg, speedKt, shearDirectionDeg, shearSpeedKt, turbulence);
                 });
