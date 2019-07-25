@@ -110,18 +110,19 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexCapabilities: return CVariant::fromValue(m_capabilities);
+            case IndexCapabilities:       return CVariant::fromValue(m_capabilities);
             case IndexCapabilitiesString: return CVariant(this->getCapabilitiesAsString());
-            case IndexCallsign: return this->getCallsign().propertyByIndex(index.copyFrontRemoved());
-            case IndexUser: return this->getUser().propertyByIndex(index.copyFrontRemoved());
-            case IndexModelString: return CVariant(m_modelString);
-            case IndexServer: return CVariant(m_server);
-            case IndexVoiceCapabilities: return m_voiceCapabilities.propertyByIndex(index.copyFrontRemoved());
+            case IndexCallsign:           return this->getCallsign().propertyByIndex(index.copyFrontRemoved());
+            case IndexUser:               return this->getUser().propertyByIndex(index.copyFrontRemoved());
+            case IndexModelString:        return CVariant(m_modelString);
+            case IndexServer:             return CVariant(m_server);
+            case IndexVoiceCapabilities:  return m_voiceCapabilities.propertyByIndex(index.copyFrontRemoved());
             case IndexVoiceCapabilitiesPixmap: return CVariant::from(m_voiceCapabilities.toPixmap());
-            case IndexVoiceCapabilitiesIcon: return CVariant::fromValue(m_voiceCapabilities.toIcon());
+            case IndexVoiceCapabilitiesIcon:   return CVariant::fromValue(m_voiceCapabilities.toIcon());
             case IndexVoiceCapabilitiesString: return CVariant(m_voiceCapabilities.toQString(true));
-            default: return CValueObject::propertyByIndex(index);
+            default: break;
             }
+            return CValueObject::propertyByIndex(index);
         }
 
         void CClient::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
@@ -131,9 +132,9 @@ namespace BlackMisc
             switch (i)
             {
             case IndexCapabilities: m_capabilities = variant.toInt(); break;
-            case IndexModelString: m_modelString = variant.toQString(); break;
-            case IndexServer: m_server = variant.toQString(); break;
-            case IndexUser: m_user.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexModelString:  m_modelString = variant.toQString(); break;
+            case IndexServer:   m_server = variant.toQString(); break;
+            case IndexUser:     m_user.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexCallsign: m_user.setCallsign(variant.value<BlackMisc::Aviation::CCallsign>()); break;
             case IndexVoiceCapabilities: m_voiceCapabilities.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;

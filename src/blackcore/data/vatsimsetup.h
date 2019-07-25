@@ -48,9 +48,6 @@ namespace BlackCore
             //! Default constructor
             CVatsimSetup();
 
-            //! Destructor.
-            ~CVatsimSetup() {}
-
             //! VATSIM data file URLs
             const BlackMisc::Network::CUrlList &getDataFileUrls() const { return m_dataFileUrls; }
 
