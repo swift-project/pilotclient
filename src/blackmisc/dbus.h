@@ -11,10 +11,10 @@
 #ifndef BLACKMISC_DBUS_H
 #define BLACKMISC_DBUS_H
 
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/inheritancetraits.h"
 #include "blackmisc/typetraits.h"
+#include "blackmisc/blackmiscexport.h"
 #include <QDBusArgument>
 #include <type_traits>
 
@@ -27,6 +27,7 @@ namespace BlackMisc
      */
     class LosslessTag {};
 
+    // *INDENT-OFF*
     namespace Private
     {
         //! \cond PRIVATE
@@ -45,6 +46,7 @@ namespace BlackMisc
         void unmarshallMember(const QDBusArgument &arg, T &value, std::false_type) { arg >> value; }
         //! \endcond
     }
+    // *INDENT-ON*
 
     namespace Mixin
     {
@@ -123,6 +125,7 @@ namespace BlackMisc
             static void baseUnmarshall(CEmpty *, const QDBusArgument &) {}
         };
 
+        // *INDENT-OFF*
         /*!
          * When a derived class and a base class both inherit from Mixin::DBusByTuple,
          * the derived class uses this macro to disambiguate the inherited members.
@@ -130,10 +133,22 @@ namespace BlackMisc
 #       define BLACKMISC_DECLARE_USING_MIXIN_DBUS(DERIVED, ...)                                                         \
             using ::BlackMisc::Mixin::DBusByMetaClass<DERIVED BLACK_TRAILING_VA_ARGS(__VA_ARGS__)>::marshallToDbus;     \
             using ::BlackMisc::Mixin::DBusByMetaClass<DERIVED BLACK_TRAILING_VA_ARGS(__VA_ARGS__)>::unmarshallFromDbus;
+        // *INDENT-ON*
 
     } // Mixin
 } // BlackMisc
 
+/*!
+ * Non member non-friend streaming for std::string
+ */
+QDBusArgument &operator <<(QDBusArgument &arg, const std::string &s);
+
+/*!
+ * Operator for std::string from QDBusArgument.
+ */
+const QDBusArgument &operator >>(const QDBusArgument &arg, std::string &s);
+
+// *INDENT-OFF*
 /*!
  * Operator for streaming enums to QDBusArgument.
  */
@@ -209,16 +224,13 @@ const QDBusArgument &operator >>(const QDBusArgument &arg, std::pair<A, B> &pair
     arg.endStructure();
     return arg;
 }
+// *INDENT-ON*
 
 /*!
  * Non member non-friend streaming for QPixmap
  */
-const QDBusArgument &operator>>(const QDBusArgument &argument, QPixmap &pixmap);
-
-/*!
- * Non member non-friend streaming for QPixmap
- */
-QDBusArgument &operator<<(QDBusArgument &argument, const QPixmap &pixmap);
+// const QDBusArgument &operator>>(const QDBusArgument &argument, QPixmap &pixmap);
+// QDBusArgument &operator<<(QDBusArgument &argument, const QPixmap &pixmap);
 
 //! Windows: prevents unloading of QtDBus shared library until the process is terminated.
 //! QtDBus must have been loaded already by the calling process.

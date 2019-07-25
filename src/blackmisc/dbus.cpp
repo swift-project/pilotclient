@@ -31,3 +31,21 @@ void preventQtDBusDllUnload()
 void preventQtDBusDllUnload()
 { }
 #endif
+
+QDBusArgument &operator <<(QDBusArgument &arg, const std::string &s)
+{
+    arg.beginStructure();
+    arg << QString::fromStdString(s);
+    arg.endStructure();
+    return arg;
+}
+
+const QDBusArgument &operator >>(const QDBusArgument &arg, std::string &s)
+{
+    QString qs;
+    arg.beginStructure();
+    arg >> qs;
+    arg.endStructure();
+    s = qs.toStdString();
+    return arg;
+}

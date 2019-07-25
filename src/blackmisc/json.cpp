@@ -55,6 +55,12 @@ const QJsonValue &operator >>(const QJsonValue &json, QString &value)
     return json;
 }
 
+const QJsonValue &operator >>(const QJsonValue &json, std::string &value)
+{
+    value = json.toString().toStdString();
+    return json;
+}
+
 const QJsonValue &operator >>(const QJsonValue &json, QStringList &value)
 {
     for (auto &&element : json.toArray()) { value << element.toString(); }
@@ -126,6 +132,12 @@ QJsonValueRef operator >>(QJsonValueRef json, qint16 &value)
 QJsonValueRef operator >>(QJsonValueRef json, QString &value)
 {
     value = json.toString();
+    return json;
+}
+
+QJsonValueRef operator >>(QJsonValueRef json, std::string &value)
+{
+    value = json.toString().toStdString();
     return json;
 }
 
@@ -203,6 +215,12 @@ QJsonArray &operator<<(QJsonArray &json, const QString &value)
     return json;
 }
 
+QJsonArray &operator<<(QJsonArray &json, const std::string &value)
+{
+    json.append(QJsonValue(QString::fromStdString(value)));
+    return json;
+}
+
 QJsonArray &operator<<(QJsonArray &json, const double value)
 {
     json.append(QJsonValue(value));
@@ -268,6 +286,12 @@ QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const uint &
 QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QString &> &value)
 {
     json.insert(value.first, QJsonValue(value.second));
+    return json;
+}
+
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const std::string &> &value)
+{
+    json[value.first] = QJsonValue(QString::fromStdString(value.second));
     return json;
 }
 
@@ -342,6 +366,12 @@ QJsonObject &operator<<(QJsonObject &json, const std::pair<CExplicitLatin1String
 QJsonObject &operator<<(QJsonObject &json, const std::pair<CExplicitLatin1String, const QString &> &value)
 {
     json[value.first] = QJsonValue(value.second);
+    return json;
+}
+
+QJsonObject &operator<<(QJsonObject &json, const std::pair<CExplicitLatin1String, const std::string &> &value)
+{
+    json[value.first] = QJsonValue(QString::fromStdString(value.second));
     return json;
 }
 
@@ -635,3 +665,6 @@ namespace BlackMisc
         }
     } // ns
 } // ns
+
+QDataStream &operator<<(QDataStream &s, const std::string &v) { s << QString::fromStdString(v); return s; }
+QDataStream &operator>>(QDataStream &s, std::string &v) {  QString vs; s >> vs; v = vs.toStdString(); return s;  }
