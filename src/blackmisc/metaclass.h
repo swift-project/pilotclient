@@ -13,9 +13,10 @@
 
 #include "blackmisc/invoke.h"
 #include "blackmisc/integersequence.h"
+#include <QHash>
+#include <QString>
 #include <type_traits>
 #include <functional>
-#include <QString>
 
 /*!
  * \defgroup MetaClass Metaclass system
@@ -42,6 +43,7 @@
 
 //! \endcond
 
+// *INDENT-OFF*
 /*!
  * Macro to define a nested metaclass that describes the attributes of its
  * enclosing class. Use in the private section of the class.
@@ -88,12 +90,19 @@
     makeMetaMember(                                                         \
         &Class::m_##MEMBER, NAME BLACK_TRAILING_VA_ARGS(__VA_ARGS__)        \
     )
+// *INDENT-ON*
+
+//! std::string qHash
+//! @{
+inline uint qHash(const std::string &key, uint seed) { return qHash(QString::fromStdString(key), seed); }
+inline uint qHash(const std::string &key) { return qHash(QString::fromStdString(key)); }
+//! @}
 
 namespace BlackMisc
 {
-
     class CVariant;
 
+    // *INDENT-OFF*
     /*!
      * Type wrapper for passing MetaFlag to CMetaClassIntrospector::with and CMetaClassIntrospector::without.
      * \ingroup MetaClass
@@ -174,6 +183,7 @@ namespace BlackMisc
             return std::get<I>(m_members);
         }
     };
+    // *INDENT-ON*
 
     /*!
      * Metadata flags attached to members of a meta class.
@@ -181,13 +191,13 @@ namespace BlackMisc
      */
     enum MetaFlag
     {
-        DisabledForComparison = 1 << 0,     //!< Element will be ignored by compare() and comparison operators
-        DisabledForMarshalling = 1 << 1,    //!< Element will be ignored during DBus and QDataStream marshalling
-        DisabledForDebugging = 1 << 2,      //!< Element will be ignored when streaming to QDebug
-        DisabledForHashing = 1 << 3,        //!< Element will be ignored by qHash()
-        DisabledForJson = 1 << 4,           //!< Element will be ignored during JSON serialization
+        DisabledForComparison     = 1 << 0, //!< Element will be ignored by compare() and comparison operators
+        DisabledForMarshalling    = 1 << 1, //!< Element will be ignored during DBus and QDataStream marshalling
+        DisabledForDebugging      = 1 << 2, //!< Element will be ignored when streaming to QDebug
+        DisabledForHashing        = 1 << 3, //!< Element will be ignored by qHash()
+        DisabledForJson           = 1 << 4, //!< Element will be ignored during JSON serialization
         CaseInsensitiveComparison = 1 << 5, //!< Element will be compared case insensitively (must be a QString)
-        LosslessMarshalling = 1 << 6        //!< Element marshalling will preserve data at the expense of size
+        LosslessMarshalling       = 1 << 6  //!< Element marshalling will preserve data at the expense of size
     };
 
     /*!
@@ -227,6 +237,7 @@ namespace BlackMisc
         }
     };
 
+    // *INDENT-OFF*
     /*!
      * Implementation of an introspector for the metaclass of T.
      * Obtain an instance of this class via BlackMisc::introspect.
@@ -271,6 +282,7 @@ namespace BlackMisc
         // Trailing return type needed to work around MSVC "function returning auto can not be used before it has been defined" with /permissive-
         constexpr static auto members() -> decltype(MetaClass::getMemberList()) { return MetaClass::getMemberList(); }
     };
+    // *INDENT-ON*
 
     namespace Private
     {
