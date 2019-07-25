@@ -8,23 +8,17 @@
 
 #include "config.h"
 #include "utils.h"
+#include "blackmisc/simulation/xplane/qtfreeutils.h"
+
 #include <fstream>
 #include <string>
 #include <cctype>
 #include <algorithm>
 
+using namespace BlackMisc::Simulation::XPlane::QtFreeUtils;
+
 namespace XSwiftBus
 {
-    //! Case insensitive string compare
-    bool stringCompare(const std::string & str1, const std::string &str2)
-    {
-        if (str1.size() != str2.size()) { return false; }
-        return std::equal(str1.begin(), str1.end(), str2.begin(), [](const char & c1, const char & c2)
-        {
-            return (c1 == c2 || std::toupper(c1) == std::toupper(c2));
-        });
-    }
-
     CConfig::CConfig()
     {}
 
@@ -62,9 +56,9 @@ namespace XSwiftBus
             }
 
             bool valid = true;
-            if (stringCompare(key, "dbusMode")) { valid = parseDBusMode(value); }
-            else if (stringCompare(key, "dbusAddress")) { valid = parseDBusAddress(value); }
-            else if (stringCompare(key, "dbusPort")) { valid = parseDBusPort(value); }
+            if (stringCompareCaseInsensitive(key, "dbusMode")) { valid = parseDBusMode(value); }
+            else if (stringCompareCaseInsensitive(key, "dbusAddress")) { valid = parseDBusAddress(value); }
+            else if (stringCompareCaseInsensitive(key, "dbusPort")) { valid = parseDBusPort(value); }
             else
             {
                 WARNING_LOG("xswiftbus.conf line " + std::to_string(lineNo) + ": Unknown variable " + value + "!");
@@ -93,8 +87,8 @@ namespace XSwiftBus
 
     bool CConfig::parseDBusMode(const std::string &value)
     {
-        if (stringCompare(value, "session")) { m_dbusMode = CConfig::DBusSession; return true; }
-        else if (stringCompare(value, "P2P")) { m_dbusMode = CConfig::DBusP2P; return true; }
+        if (stringCompareCaseInsensitive(value, "session")) { m_dbusMode = CConfig::DBusSession; return true; }
+        else if (stringCompareCaseInsensitive(value, "P2P")) { m_dbusMode = CConfig::DBusP2P; return true; }
         else { return false; }
     }
 
