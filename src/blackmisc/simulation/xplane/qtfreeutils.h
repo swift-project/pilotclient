@@ -129,6 +129,16 @@ namespace BlackMisc
                     return s;
                 }
 
+                //! Compare case insensitive
+                inline bool stringCompareCaseInsensitive(const std::string &str1, const std::string &str2)
+                {
+                    if (str1.size() != str2.size()) { return false; }
+                    return std::equal(str1.begin(), str1.end(), str2.begin(), [](const char &c1, const char &c2)
+                    {
+                        return (c1 == c2 || std::toupper(c1) == std::toupper(c2));
+                    });
+                }
+
                 //! Trim whitespace from the beginning and end, and replace sequences of whitespace with single space characters
                 inline std::string simplifyWhitespace(const std::string &s)
                 {
