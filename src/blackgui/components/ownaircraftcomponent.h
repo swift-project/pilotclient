@@ -44,8 +44,8 @@ namespace BlackGui
                 QString ownAircraftSimulatorModelString;  //!< own aircraft model string
                 QString ownAircraftModelStringSend;       //!< send model string
                 QString ownLiverySend;                    //!< send livery
-                bool useModelString = true;  //! use model string
-                bool useLivery = true;       //! use livery
+                bool useModelString = true;               //!< use model string
+                bool useLivery = true;                    //!< use livery
             };
 
             //! Constructor
