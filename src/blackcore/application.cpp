@@ -1649,6 +1649,11 @@ namespace BlackCore
         CCrashHandler::instance()->simulateCrash();
     }
 
+    void CApplication::simulateAssert()
+    {
+        CCrashHandler::instance()->simulateAssert();
+    }
+
     void CApplication::enableCrashDumpUpload(bool enable)
     {
         CCrashHandler::instance()->setUploadsEnabled(enable);

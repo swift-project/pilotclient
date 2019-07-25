@@ -320,6 +320,13 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QPushButton" name="pb_SimulateAssert">
+            <property name="text">
+             <string>assert!</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -751,6 +758,7 @@
   <tabstop>cb_DebugContextApplication</tabstop>
   <tabstop>cb_CrashDumpUpload</tabstop>
   <tabstop>pb_SimulateCrash</tabstop>
+  <tabstop>pb_SimulateAssert</tabstop>
   <tabstop>pb_LatestInterpolationLog</tabstop>
   <tabstop>pb_LatestPartsLog</tabstop>
   <tabstop>pte_NetworkCalls</tabstop>
@@ -760,10 +768,10 @@
   <tabstop>pb_DisplayLog</tabstop>
   <tabstop>pb_RequestFromNetwork</tabstop>
   <tabstop>tb_History</tabstop>
-  <tabstop>pb_SendAircraftPartsGui</tabstop>
   <tabstop>pb_CurrentParts</tabstop>
   <tabstop>cb_AircraftPartsIncremental</tabstop>
   <tabstop>pb_SendAircraftPartsJson</tabstop>
+  <tabstop>pb_SendAircraftPartsGui</tabstop>
  </tabstops>
  <resources>
   <include location="../../blackmisc/blackmisc.qrc"/>
