@@ -73,6 +73,9 @@ namespace BlackMisc
         //! Simulate a crash
         void simulateCrash();
 
+        //! Simulate an ASSERT
+        void simulateAssert();
+
     private:
         CCrashHandler(QObject *parent = nullptr);
 

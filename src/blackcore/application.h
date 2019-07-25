@@ -309,6 +309,10 @@ namespace BlackCore
         //! \private only for testing purposes
         void simulateCrash();
 
+        //! Simulate an ASSERT
+        //! \private only for testing purposes
+        void simulateAssert();
+
         //! Enable crash upload
         //! \remark only change for testing
         void enableCrashDumpUpload(bool enable);

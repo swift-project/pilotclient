@@ -78,6 +78,9 @@ namespace BlackGui
             //! Simulate a crash
             void simulateCrash();
 
+            //! Simulate ASSERT
+            void simulateAssert();
+
             //! Checkbox toggled
             void onCrashDumpUploadToggled(bool checked);
 

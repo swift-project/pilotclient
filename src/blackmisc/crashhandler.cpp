@@ -107,29 +107,29 @@ namespace BlackMisc
                                        false, true);
 
         this->crashAndLogAppendInfo(u"Init crash info at " % QDateTime::currentDateTimeUtc().toString());
-    #endif
+#endif
     }
 
     void CCrashHandler::setUploadsEnabled(bool enable)
     {
-    #ifdef BLACK_USE_CRASHPAD
+#ifdef BLACK_USE_CRASHPAD
         if (!m_crashReportDatabase) { return; }
         crashpad::Settings *settings = m_crashReportDatabase->GetSettings();
         settings->SetUploadsEnabled(enable);
-    #else
+#else
         Q_UNUSED(enable);
-    #endif
+#endif
     }
 
     bool CCrashHandler::isCrashDumpUploadEnabled() const
     {
-    #ifdef BLACK_USE_CRASHPAD
+#ifdef BLACK_USE_CRASHPAD
         if (!m_crashReportDatabase) { return false; }
         crashpad::Settings *settings = m_crashReportDatabase->GetSettings();
         bool enabled = false;
         bool ok = settings->GetUploadsEnabled(&enabled);
         return ok && enabled;
-    #else
+#else
         return false;
 #endif
     }
@@ -171,16 +171,28 @@ namespace BlackMisc
 
     void CCrashHandler::simulateCrash()
     {
-    #ifdef BLACK_USE_CRASHPAD
+#   ifdef BLACK_USE_CRASHPAD
         CLogMessage(this).info(u"Simulated crash dump!");
         m_crashAndLogInfo.appendInfo("Simulated crash dump!");
         m_crashAndLogInfo.writeToFile();
         CRASHPAD_SIMULATE_CRASH();
         // real crash
         // raise(SIGSEGV); #include <signal.h>
-    #else
+#   else
         CLogMessage(this).warning(u"This compiler or platform does not support crashpad. Cannot simulate crash dump!");
-#endif
+#   endif
+    }
+
+    void CCrashHandler::simulateAssert()
+    {
+#   ifdef BLACK_USE_CRASHPAD
+        CLogMessage(this).info(u"Simulated ASSERT!");
+        m_crashAndLogInfo.appendInfo("Simulated ASSERT!");
+        m_crashAndLogInfo.writeToFile();
+        Q_ASSERT_X(false, Q_FUNC_INFO, "Test server to test Crash handler");
+#   else
+        CLogMessage(this).warning(u"This compiler or platform does not support crashpad. Cannot simulate crash dump!");
+#   endif
     }
 
     CCrashHandler::CCrashHandler(QObject *parent) :

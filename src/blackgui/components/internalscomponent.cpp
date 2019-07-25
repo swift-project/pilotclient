@@ -99,8 +99,9 @@ namespace BlackGui
             if (sGui && sGui->isSupportingCrashpad())
             {
                 ui->cb_CrashDumpUpload->setChecked(CCrashHandler::instance()->isCrashDumpUploadEnabled());
-                connect(ui->pb_SimulateCrash, &QPushButton::released, this, &CInternalsComponent::simulateCrash);
-                connect(ui->cb_CrashDumpUpload, &QCheckBox::toggled, this, &CInternalsComponent::onCrashDumpUploadToggled);
+                connect(ui->pb_SimulateCrash,   &QPushButton::released, this, &CInternalsComponent::simulateCrash,  Qt::QueuedConnection);
+                connect(ui->pb_SimulateAssert,  &QPushButton::released, this, &CInternalsComponent::simulateAssert, Qt::QueuedConnection);
+                connect(ui->cb_CrashDumpUpload, &QCheckBox::toggled,    this, &CInternalsComponent::onCrashDumpUploadToggled);
             }
             else
             {
@@ -345,8 +346,21 @@ namespace BlackGui
             }
 
             const QMessageBox::StandardButton reply = QMessageBox::question(this, "crash simulation", "Really simulate crash?", QMessageBox::Yes | QMessageBox::No);
-            if (reply != QMessageBox::Yes) { return; }
+            if (!sGui || reply != QMessageBox::Yes) { return; }
             sGui->simulateCrash();
+        }
+
+        void CInternalsComponent::simulateAssert()
+        {
+            if (CBuildConfig::isReleaseBuild())
+            {
+                QMessageBox::information(this, "ASSERT simulation", "Not possible in release builds!");
+                return;
+            }
+
+            const QMessageBox::StandardButton reply = QMessageBox::question(this, "ASSERT simulation", "Really create an ASSERT?", QMessageBox::Yes | QMessageBox::No);
+            if (!sGui || reply != QMessageBox::Yes) { return; }
+            sGui->simulateAssert();
         }
 
         void CInternalsComponent::onCrashDumpUploadToggled(bool checked)
