@@ -919,7 +919,7 @@ namespace XSwiftBus
             cameraPosition->x = static_cast<float>(lx + traffic->m_deltaCameraPosition.dx);
             cameraPosition->y = static_cast<float>(ly + traffic->m_deltaCameraPosition.dy);
             cameraPosition->z = static_cast<float>(lz + traffic->m_deltaCameraPosition.dz);
-            cameraPosition->pitch = static_cast<float>(traffic->m_deltaCameraPosition.pitch);
+            cameraPosition->pitch   = static_cast<float>(traffic->m_deltaCameraPosition.pitch);
             cameraPosition->heading = static_cast<float>(traffic->m_deltaCameraPosition.heading);
             cameraPosition->roll = 0.0;
         }

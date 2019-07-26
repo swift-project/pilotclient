@@ -18,7 +18,6 @@
 
 namespace XSwiftBus
 {
-
     CDBusServer::CDBusServer()
     {
         dbus_threads_init_default();
@@ -78,6 +77,7 @@ namespace XSwiftBus
 
     void CDBusServer::onNewConnection(DBusServer *, DBusConnection *conn)
     {
+        // called by listener and the DBus connection for xSwiftBus afterwards
         INFO_LOG("onNewConnection");
         auto dbusConnection = std::make_shared<CDBusConnection>(conn);
         m_newConnectionFunc(dbusConnection);
@@ -88,5 +88,4 @@ namespace XSwiftBus
         auto *obj = static_cast<CDBusServer *>(data);
         obj->onNewConnection(server, conn);
     }
-
 }

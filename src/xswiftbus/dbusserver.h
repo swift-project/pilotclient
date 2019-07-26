@@ -24,7 +24,6 @@
 
 namespace XSwiftBus
 {
-
     class CDBusObject;
 
     //! DBus connection
@@ -38,7 +37,7 @@ namespace XSwiftBus
         CDBusServer();
 
         //! Destructor
-        ~CDBusServer() override;
+        virtual ~CDBusServer() override;
 
         //! Set the dispatcher
         void setDispatcher(CDBusDispatcher *dispatcher);
@@ -77,7 +76,6 @@ namespace XSwiftBus
         CDBusError m_lastError;
         NewConnectionFunc m_newConnectionFunc;
     };
-
-}
+} // ns
 
 #endif // guard
