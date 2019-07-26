@@ -63,7 +63,7 @@ namespace XSwiftBus
         cleanup();
     }
 
-    bool s_legacyDataOK = true;
+    static bool s_legacyDataOK = true;
 
     void CTraffic::setPlaneViewMenu(const CMenu &planeViewSubMenu)
     {
@@ -204,8 +204,8 @@ namespace XSwiftBus
         m_followPlaneViewCallsign = *callsignIt;
     }
 
-    int g_maxPlanes = 100;
-    float g_drawDistance = 50.0f;
+    static int g_maxPlanes = 100;
+    static float g_drawDistance = 50.0f;
 
     int CTraffic::preferences(const char *section, const char *name, int def)
     {
@@ -483,7 +483,7 @@ namespace XSwiftBus
         removeAllPlanes();
     }
 
-    const char *introspection_traffic =
+    static const char *introspection_traffic =
         DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
 #include "org.swift_project.xswiftbus.traffic.xml"
         ;
