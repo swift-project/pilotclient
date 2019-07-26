@@ -165,6 +165,10 @@ namespace XSwiftBus
     void CService::setSettings(const std::string &jsonString)
     {
         m_pluginSettings.parseXSwiftBusString(jsonString);
+
+        XPLMDebugString("Received settings ");
+        XPLMDebugString(m_pluginSettings.convertToString().c_str());
+        XPLMDebugString("\n");
     }
 
     void CService::readAirportsDatabase()

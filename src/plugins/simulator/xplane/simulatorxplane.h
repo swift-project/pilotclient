@@ -225,11 +225,14 @@ namespace BlackSimPlugin
 
             //! Send/receive settings @{
             bool sendXSwiftBusSettings();
-            bool receiveXSwiftBusSettings();
+            BlackMisc::Simulation::Settings::CXSwiftBusSettings receiveXSwiftBusSettings(bool &ok);
             //! @}
 
+            //! Settings have changed
+            void onXSwiftBusSettingsChanged();
+
             DBusMode m_dbusMode;
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusSettings> m_xSwiftBusServerSettings { this };
+            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusSettings> m_xSwiftBusServerSettings { this, &CSimulatorXPlane::onXSwiftBusSettingsChanged };
             static constexpr qint64 TimeoutAdding = 10000;
             QDBusConnection m_dBusConnection     { "default" };
             QDBusServiceWatcher *m_watcher         { nullptr };
