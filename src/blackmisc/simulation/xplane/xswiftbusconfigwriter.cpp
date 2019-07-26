@@ -79,6 +79,6 @@ namespace BlackMisc
                     ts << "dbusPort = " << m_dbusPort << endl;
                 }
             }
-        }
-    }
-}
+        } // ns
+    } // ns
+} // ns
