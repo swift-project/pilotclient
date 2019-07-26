@@ -57,6 +57,9 @@ namespace BlackMisc
                 //! As JSON string
                 std::string toXSwiftBusJsonString() const;
 
+                //! Convert to string
+                std::string convertToString() const;
+
             protected:
                 //! The JSON members @{
                 static constexpr char JsonDBusServerAddress[] = "dbusserveradress";
