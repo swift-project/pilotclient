@@ -380,10 +380,17 @@ namespace BlackSimPlugin
             connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAddingFailed, this, &CSimulatorXPlane::onRemoteAircraftAddingFailed);
             if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
             m_trafficProxy->removeAllPlanes();
+
+            // send the settings
+            this->sendXSwiftBusSettings();
+
+            // load CSL
             this->loadCslPackages();
+
+            // finish
+            this->initSimulatorInternals();
             this->emitSimulatorCombinedStatus();
 
-            this->initSimulatorInternals();
             return true;
         }
 
@@ -1056,18 +1063,38 @@ namespace BlackSimPlugin
             if (!m_serviceProxy) { return false; }
             const CXSwiftBusSettings s = m_xSwiftBusServerSettings.get();
             m_serviceProxy->setSettings(s.toXSwiftBusJsonStringQt());
+            CLogMessage(this).info(u"Send settings: %1") << s.toQString(true);
             return true;
         }
 
-        bool CSimulatorXPlane::receiveXSwiftBusSettings()
+        CXSwiftBusSettings CSimulatorXPlane::receiveXSwiftBusSettings(bool &ok)
         {
-            if (!this->isConnected()) { return false; }
-            if (!m_serviceProxy) { return false; }
+            ok = false;
+            CXSwiftBusSettings s;
+
+            if (!this->isConnected()) { return s; }
+            if (!m_serviceProxy)      { return s; }
 
             const QString json = m_serviceProxy->getSettings();
-            const CXSwiftBusSettings s(json);
-            Q_UNUSED(s); // DO SOMETHING WITH THE SETTINGS
-            return true;
+            s.parseXSwiftBusStringQt(json);
+            ok = true;
+            return s;
+        }
+
+        void CSimulatorXPlane::onXSwiftBusSettingsChanged()
+        {
+            bool ok;
+            const CXSwiftBusSettings xPlaneSide = this->receiveXSwiftBusSettings(ok);
+            if (ok)
+            {
+                // we only send if DBus did not change
+                // DBus changes would require a restart
+                const CXSwiftBusSettings swiftSide = m_xSwiftBusServerSettings.get();
+                if (xPlaneSide.getDBusServerAddressQt() == swiftSide.getDBusServerAddressQt())
+                {
+                    this->sendXSwiftBusSettings();
+                }
+            }
         }
 
         void CSimulatorXPlane::updateAirportsInRange()
