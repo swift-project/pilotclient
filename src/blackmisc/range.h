@@ -179,17 +179,16 @@ namespace BlackMisc
     public:
         //! STL compatibility
         //! @{
-        typedef typename std::iterator_traits<I>::value_type key_type;
         typedef typename std::iterator_traits<I>::value_type value_type;
-        typedef value_type &reference;
-        typedef const value_type &const_reference;
-        typedef value_type *pointer;
-        typedef const value_type *const_pointer;
-        typedef I const_iterator;
-        typedef I iterator;
-        typedef std::reverse_iterator<I> const_reverse_iterator;
-        typedef std::reverse_iterator<I> reverse_iterator;
+        typedef typename std::iterator_traits<I>::reference reference;
         typedef typename std::iterator_traits<I>::difference_type difference_type;
+        typedef const value_type &const_reference;
+        typedef value_type key_type;
+        typedef difference_type size_type;
+        typedef I iterator;
+        typedef I const_iterator;
+        typedef std::reverse_iterator<I> reverse_iterator;
+        typedef std::reverse_iterator<I> const_reverse_iterator;
         //! @}
 
         //! Constructor.
@@ -212,7 +211,11 @@ namespace BlackMisc
         //! @}
 
         //! Create a range from reverse iterators.
-        CRange<const_reverse_iterator> reverse() const { return { rbegin(), rend() }; }
+        CRange<const_reverse_iterator> reverse() const
+        {
+            static_assert(std::is_same<decltype(*rbegin()), decltype(*begin())>::value, "see https://dev.swift-project.org/T700");
+            return { rbegin(), rend() };
+        }
 
         //! Implicit conversion to any container of value_type which supports push_back. This will copy elements.
         template <class T, class = std::enable_if_t<std::is_convertible<value_type, typename T::value_type>::value>>
@@ -237,7 +240,7 @@ namespace BlackMisc
         //! @}
 
         //! Returns the number of elements in the range.
-        difference_type size() const { return std::distance(begin(), end()); }
+        size_type size() const { return std::distance(begin(), end()); }
 
         //! Returns the element at the beginning of the range. Undefined if the range is empty.
         const_reference front() const { Q_ASSERT(!empty()); return *begin(); }
