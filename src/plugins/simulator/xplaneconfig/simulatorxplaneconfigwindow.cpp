@@ -16,6 +16,7 @@
 
 using namespace BlackGui;
 using namespace BlackMisc;
+using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::Simulation::XPlane;
 
 namespace BlackSimPlugin
@@ -27,8 +28,15 @@ namespace BlackSimPlugin
             ui(new Ui::CSimulatorXPlaneConfigWindow)
         {
             ui->setupUi(this);
-            ui->comp_SettingsXSwiftBus->setDefaultP2PAddress(m_xswiftbusServerSetting.getDefault());
-            ui->comp_SettingsXSwiftBus->set(m_xswiftbusServerSetting.getThreadLocal());
+            ui->comp_SettingsXSwiftBus->setDefaultP2PAddress(m_xSwiftBusServerSettings.getDefault().getDBusServerAddressQt());
+
+            const CXSwiftBusSettings defaultSettings = TXSwiftBusSettings::defaultValue();
+            ui->sb_MaxAircraft->setMaximum(defaultSettings.getMaxPlanes() * 2);
+            ui->sb_FollowAircraftDistanceM->setMaximum(defaultSettings.getFollowAircraftDistanceM() * 5);
+            ui->ds_MaxDrawDistanceNM->setMaximum(qRound(defaultSettings.getMaxDrawDistanceNM() * 3));
+
+            const CXSwiftBusSettings s = m_xSwiftBusServerSettings.getThreadLocal();
+            this->setUiValues(s);
 
             connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CSimulatorXPlaneConfigWindow::onSettingsAccepted);
             connect(ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &CSimulatorXPlaneConfigWindow::close);
@@ -39,16 +47,39 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlaneConfigWindow::onSettingsAccepted()
         {
-            const QString currentAddress = m_xswiftbusServerSetting.getThreadLocal();
-            const QString updatedAddress = ui->comp_SettingsXSwiftBus->getDBusAddress();
-            if (currentAddress != ui->comp_SettingsXSwiftBus->getDBusAddress())
+            const CXSwiftBusSettings s = m_xSwiftBusServerSettings.getThreadLocal();
+            const CXSwiftBusSettings changed = this->getSettingsFromUI();
+            if (s != changed)
             {
-                m_xswiftbusServerSetting.set(updatedAddress);
+                m_xSwiftBusServerSettings.set(changed);
                 CXSwiftBusConfigWriter xswiftbusConfigWriter;
-                xswiftbusConfigWriter.setDBusAddress(updatedAddress);
+                xswiftbusConfigWriter.setDBusAddress(changed.getDBusServerAddressQt());
                 xswiftbusConfigWriter.updateInAllXPlaneVersions();
             }
-            close();
+            this->close();
+        }
+
+        CXSwiftBusSettings CSimulatorXPlaneConfigWindow::getSettingsFromUI() const
+        {
+            CXSwiftBusSettings s = m_xSwiftBusServerSettings.getThreadLocal();
+            s.setDBusServerAddressQt(ui->comp_SettingsXSwiftBus->getDBusAddress());
+            s.setMaxDrawDistanceNM(ui->ds_MaxDrawDistanceNM->value());
+            s.setMaxPlanes(ui->sb_MaxAircraft->value());
+            s.setDrawingLabels(ui->cb_DrawLabels->isChecked());
+            return s;
+        }
+
+        void CSimulatorXPlaneConfigWindow::setUiValues(const CXSwiftBusSettings &settings)
+        {
+            ui->comp_SettingsXSwiftBus->set(settings.getDBusServerAddressQt());
+            ui->sb_MaxAircraft->setValue(settings.getMaxPlanes());
+            ui->cb_DrawLabels->setChecked(settings.isDrawingLabels());
+            ui->ds_MaxDrawDistanceNM->setValue(settings.getMaxDrawDistanceNM());
+        }
+
+        void CSimulatorXPlaneConfigWindow::onSettingsChanged()
+        {
+            this->setUiValues(m_xSwiftBusServerSettings.get());
         }
     } // ns
 } // ns
