@@ -139,6 +139,22 @@ namespace BlackMisc
                     });
                 }
 
+                //! Yes/no from bool
+                inline const std::string &boolToYesNo(bool t)
+                {
+                    static const std::string y("yes");
+                    static const std::string n("no");
+                    return t ? y : n;
+                }
+
+                //! True/false from bool
+                inline const std::string &boolTotrueFalse(bool t)
+                {
+                    static const std::string tr("true");
+                    static const std::string fa("false");
+                    return t ? tr : fa;
+                }
+
                 //! Trim whitespace from the beginning and end, and replace sequences of whitespace with single space characters
                 inline std::string simplifyWhitespace(const std::string &s)
                 {

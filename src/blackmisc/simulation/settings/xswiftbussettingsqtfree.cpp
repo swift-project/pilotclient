@@ -7,12 +7,16 @@
  */
 
 #include "xswiftbussettingsqtfree.h"
+#include "blackmisc/simulation/xplane/qtfreeutils.h"
+
 #include "rapidjson/document.h"     // rapidjson's DOM-style API
 #include "rapidjson/prettywriter.h" // for stringify JSON
 #include <string>
 
-using namespace rapidjson;
 using namespace BlackMisc::Simulation::Settings;
+using namespace BlackMisc::Simulation::XPlane;
+
+using namespace rapidjson;
 
 //! @cond SWIFT_INTERNAL
 constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonDBusServerAddress[];
@@ -84,6 +88,14 @@ namespace BlackMisc
                 document.Accept(writer);    // Accept() traverses the DOM and generates Handler events.
                 const std::string json = sb.GetString();
                 return json;
+            }
+
+            std::string CXSwiftBusSettingsQtFree::convertToString() const
+            {
+                return "DBusServer: " + m_dBusServerAddress +
+                       ", drawLabels: " + QtFreeUtils::boolToYesNo(m_drawingLabels) +
+                       ", max planes: " + std::to_string(m_maxPlanes) +
+                       ", max distance NM: " + std::to_string(m_maxDrawDistanceNM);
             }
         } // ns
     } // ns

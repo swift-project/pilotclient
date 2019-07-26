@@ -55,7 +55,7 @@ namespace BlackMisc
             QString CXSwiftBusSettings::convertToQString(bool i18n) const
             {
                 Q_UNUSED(i18n);
-                return "";
+                return QString::fromStdString(CXSwiftBusSettingsQtFree::convertToString());
             }
 
             CStatusMessageList CXSwiftBusSettings::validate() const
