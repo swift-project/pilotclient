@@ -36,6 +36,7 @@ namespace BlackMiscTest
         void testSplit();
         void testTimestampParsing();
         void testCodecs();
+        void testSimplify();
     };
 
     void CTestStringUtils::testRemove()
@@ -156,6 +157,14 @@ namespace BlackMiscTest
         QVERIFY2(okEn2, "English \"test\" equal after round-trip with utf8");
         QVERIFY2(okRu1, "Russian \"test\" equal after round-trip with cp1251");
         QVERIFY2(okRu2, "Russian \"test\" equal after round-trip with utf8");
+    }
+
+    void CTestStringUtils::testSimplify()
+    {
+        const QString input = QString::fromUtf8(u8"ŠŽšžŸÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöùúûüýÿ");
+        const QString output = QLatin1String("SZszYAAAAAACEEEEIIIINOOOOOUUUUYaaaaaaceeeeiiiinooooouuuuyy");
+        QCOMPARE(simplifyAccents(input), output);
+        QCOMPARE(simplifyByDecomposition(input), output);
     }
 }
 

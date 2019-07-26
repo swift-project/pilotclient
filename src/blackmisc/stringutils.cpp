@@ -243,6 +243,26 @@ namespace BlackMisc
         return output;
     }
 
+    QString simplifyByDecomposition(const QString &s)
+    {
+        QString result;
+        for (const QChar c : s)
+        {
+            if (c.decompositionTag() == QChar::NoDecomposition)
+            {
+                result.push_back(c);
+            }
+            else
+            {
+                for (const QChar dc : c.decomposition())
+                {
+                    if (!dc.isMark()) { result.push_back(dc); }
+                }
+            }
+        }
+        return result;
+    }
+
     bool caseInsensitiveStringCompare(const QString &c1, const QString &c2)
     {
         return c1.length() == c2.length() && c1.startsWith(c2, Qt::CaseInsensitive);

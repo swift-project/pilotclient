@@ -256,6 +256,9 @@ namespace BlackMisc
     //! Remove accents / diacritic marks from a string
     BLACKMISC_EXPORT QString simplifyAccents(const QString &candidate);
 
+    //! Remove accents / diacritic marks from a string by doing a Unicode decomposition and removing mark characters
+    BLACKMISC_EXPORT QString simplifyByDecomposition(const QString &candidate);
+
     //! Case insensitive string compare
     BLACKMISC_EXPORT bool caseInsensitiveStringCompare(const QString &c1, const QString &c2);
 
