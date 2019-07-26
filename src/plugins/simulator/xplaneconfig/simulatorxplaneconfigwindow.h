@@ -34,14 +34,23 @@ namespace BlackSimPlugin
             CSimulatorXPlaneConfigWindow(QWidget *parent);
 
             //! Dtor.
-            virtual ~CSimulatorXPlaneConfigWindow();
+            virtual ~CSimulatorXPlaneConfigWindow() override;
 
         private:
             //! Settings have been accepted
             void onSettingsAccepted();
 
+            //! Settings from UI
+            BlackMisc::Simulation::Settings::CXSwiftBusSettings getSettingsFromUI() const;
+
+            //! Set settings
+            void setUiValues(const BlackMisc::Simulation::Settings::CXSwiftBusSettings &settings);
+
+            //! Settings changed
+            void onSettingsChanged();
+
             QScopedPointer<Ui::CSimulatorXPlaneConfigWindow> ui;
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusServer> m_xswiftbusServerSetting { this };
+            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusSettings> m_xSwiftBusServerSettings { this, &CSimulatorXPlaneConfigWindow::onSettingsChanged };
         };
     } // ns
 } // ns

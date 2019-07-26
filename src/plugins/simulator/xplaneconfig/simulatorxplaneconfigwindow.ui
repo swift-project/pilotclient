@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>275</width>
-    <height>175</height>
+    <width>250</width>
+    <height>272</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -35,7 +35,38 @@
    <property name="horizontalSpacing">
     <number>2</number>
    </property>
-   <item row="1" column="0">
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="gb_DBus">
+     <property name="title">
+      <string>XSwiftBus DBus</string>
+     </property>
+     <layout class="QVBoxLayout" name="vl_DBus">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
+       <number>3</number>
+      </property>
+      <item>
+       <widget class="BlackGui::Components::CDBusServerAddressSelector" name="comp_SettingsXSwiftBus">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>100</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0">
     <widget class="QDialogButtonBox" name="bb_OkCancel">
      <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
@@ -45,14 +76,58 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0" alignment="Qt::AlignTop">
-    <widget class="BlackGui::Components::CDBusServerAddressSelector" name="comp_SettingsXSwiftBus">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>100</height>
-      </size>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="gb_XPSettings">
+     <property name="title">
+      <string>Settings</string>
      </property>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_MaxAircraft">
+        <property name="text">
+         <string>Max.aircraft</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="sb_MaxAircraft">
+        <property name="maximum">
+         <number>250</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_MaxDistance">
+        <property name="text">
+         <string>Max.distance</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QDoubleSpinBox" name="ds_MaxDrawDistanceNM">
+        <property name="suffix">
+         <string>NM</string>
+        </property>
+        <property name="maximum">
+         <double>250.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lbl_Labels">
+        <property name="text">
+         <string>Labels</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="cb_DrawLabels">
+        <property name="text">
+         <string>draw labels</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>
@@ -65,6 +140,11 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>sb_MaxAircraft</tabstop>
+  <tabstop>ds_MaxDrawDistanceNM</tabstop>
+  <tabstop>cb_DrawLabels</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
