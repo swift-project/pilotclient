@@ -161,8 +161,8 @@ namespace BlackMiscTest
 
     void CTestStringUtils::testSimplify()
     {
-        const QString input = QString::fromUtf8(u8"ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ");
-        const QString output = QLatin1String("SOEZsoezYYuAAAAAAAECEEEEIIIIDNOOOOOOUUUUYsaaaaaaaeceeeeiiiionoooooouuuuyy");
+        const QString input = QString::fromUtf8(u8"ŠŽšžŸÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöùúûüýÿ");
+        const QString output = QLatin1String("SZszYAAAAAACEEEEIIIINOOOOOUUUUYaaaaaaceeeeiiiinooooouuuuyy");
         QCOMPARE(simplifyAccents(input), output);
         QCOMPARE(simplifyByDecomposition(input), output);
     }
