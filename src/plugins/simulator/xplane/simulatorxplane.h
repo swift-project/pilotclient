@@ -235,7 +235,7 @@ namespace BlackSimPlugin
             BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusSettings> m_xSwiftBusServerSettings { this, &CSimulatorXPlane::onXSwiftBusSettingsChanged };
             static constexpr qint64 TimeoutAdding = 10000;
             QDBusConnection m_dBusConnection     { "default" };
-            QDBusServiceWatcher *m_watcher         { nullptr };
+            QDBusServiceWatcher    *m_watcher      { nullptr };
             CXSwiftBusServiceProxy *m_serviceProxy { nullptr };
             CXSwiftBusTrafficProxy *m_trafficProxy { nullptr };
             CXSwiftBusWeatherProxy *m_weatherProxy { nullptr };
@@ -310,8 +310,8 @@ namespace BlackSimPlugin
             virtual BlackCore::ISimulator *create(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                                                   BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
                                                   BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                                                  BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
-                                                  BlackMisc::Network::IClientProvider *clientProvider) override;
+                                                  BlackMisc::Weather::IWeatherGridProvider       *weatherGridProvider,
+                                                  BlackMisc::Network::IClientProvider            *clientProvider) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::createListener
             virtual BlackCore::ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) override { return new CSimulatorXPlaneListener(info); }
