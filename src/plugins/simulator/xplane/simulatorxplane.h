@@ -165,6 +165,7 @@ namespace BlackSimPlugin
             void serviceUnregistered();
 
         private:
+            //! Mode
             enum DBusMode
             {
                 Session,
@@ -219,14 +220,19 @@ namespace BlackSimPlugin
                                                    const QDoubleList &elevationsMeters, const QDoubleList &verticalOffsetsMeters);
             //! @}
 
-            //! Dsiconnect from DBus
+            //! Disconnect from DBus
             void disconnectFromDBus();
 
+            //! Send/receive settings @{
+            bool sendXSwiftBusSettings();
+            bool receiveXSwiftBusSettings();
+            //! @}
+
             DBusMode m_dbusMode;
-            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TXSwiftBusServer> m_xswiftbusServerSetting { this };
+            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusSettings> m_xSwiftBusServerSettings { this };
             static constexpr qint64 TimeoutAdding = 10000;
-            QDBusConnection m_dBusConnection { "default" };
-            QDBusServiceWatcher *m_watcher { nullptr };
+            QDBusConnection m_dBusConnection     { "default" };
+            QDBusServiceWatcher *m_watcher         { nullptr };
             CXSwiftBusServiceProxy *m_serviceProxy { nullptr };
             CXSwiftBusTrafficProxy *m_trafficProxy { nullptr };
             CXSwiftBusWeatherProxy *m_weatherProxy { nullptr };
@@ -242,7 +248,7 @@ namespace BlackSimPlugin
             XPlaneData m_xplaneData; //!< XPlane data
 
             // statistics
-            qint64 m_statsAddMaxTimeMs = -1;
+            qint64 m_statsAddMaxTimeMs     = -1;
             qint64 m_statsAddCurrentTimeMs = -1;
 
             //! Reset the XPlane data
@@ -281,11 +287,12 @@ namespace BlackSimPlugin
             void checkConnectionCommon();
 
             void serviceRegistered(const QString &serviceName);
-            void xSwiftBusServerSettingChanged();
+            void onXSwiftBusServerSettingChanged();
 
             QTimer m_timer { this };
-            QDBusConnection m_conn { "default" };
-            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TXSwiftBusServer> m_xswiftbusServerSetting { this, &CSimulatorXPlaneListener::xSwiftBusServerSettingChanged };
+            QDBusConnection m_DBusConnection { "default" };
+            QString m_dBusServerAddress;
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TXSwiftBusSettings> m_xSwiftBusServerSettings { this, &CSimulatorXPlaneListener::onXSwiftBusServerSettingChanged };
         };
 
         //! Factory for creating CSimulatorXPlane instance

@@ -68,9 +68,9 @@ using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::Weather;
 using namespace BlackCore;
 
@@ -341,16 +341,16 @@ namespace BlackSimPlugin
         bool CSimulatorXPlane::connectTo()
         {
             if (isConnected()) { return true; }
-            QString dbusAddress = m_xswiftbusServerSetting.getThreadLocal();
+            const QString dBusServerAddress = m_xSwiftBusServerSettings.getThreadLocal().getDBusServerAddressQt();
 
-            if (CDBusServer::isSessionOrSystemAddress(dbusAddress))
+            if (CDBusServer::isSessionOrSystemAddress(dBusServerAddress))
             {
-                m_dBusConnection = connectionFromString(dbusAddress);
+                m_dBusConnection = connectionFromString(dBusServerAddress);
                 m_dbusMode = Session;
             }
-            else if (CDBusServer::isQtDBusAddress(dbusAddress))
+            else if (CDBusServer::isQtDBusAddress(dBusServerAddress))
             {
-                m_dBusConnection = QDBusConnection::connectToPeer(dbusAddress, "xswiftbus");
+                m_dBusConnection = QDBusConnection::connectToPeer(dBusServerAddress, "xswiftbus");
                 if (! m_dBusConnection.isConnected()) { return false; }
                 m_dbusMode = P2P;
             }
@@ -1050,6 +1050,26 @@ namespace BlackSimPlugin
             m_dBusConnection = QDBusConnection { "default" };
         }
 
+        bool CSimulatorXPlane::sendXSwiftBusSettings()
+        {
+            if (!this->isConnected()) { return false; }
+            if (!m_serviceProxy) { return false; }
+            const CXSwiftBusSettings s = m_xSwiftBusServerSettings.get();
+            m_serviceProxy->setSettings(s.toXSwiftBusJsonStringQt());
+            return true;
+        }
+
+        bool CSimulatorXPlane::receiveXSwiftBusSettings()
+        {
+            if (!this->isConnected()) { return false; }
+            if (!m_serviceProxy) { return false; }
+
+            const QString json = m_serviceProxy->getSettings();
+            const CXSwiftBusSettings s(json);
+            Q_UNUSED(s); // DO SOMETHING WITH THE SETTINGS
+            return true;
+        }
+
         void CSimulatorXPlane::updateAirportsInRange()
         {
             if (this->isConnected()) { m_serviceProxy->updateAirportsInRange(); }
@@ -1254,7 +1274,7 @@ namespace BlackSimPlugin
             if (this->isShuttingDown()) { return; }
             Q_ASSERT_X(!CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background");
 
-            QString dbusAddress = m_xswiftbusServerSetting.getThreadLocal();
+            const QString dbusAddress = m_xSwiftBusServerSettings.getThreadLocal().getDBusServerAddressQt();
             if (CDBusServer::isSessionOrSystemAddress(dbusAddress))
             {
                 checkConnectionViaBus(dbusAddress);
@@ -1267,34 +1287,34 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlaneListener::checkConnectionViaBus(const QString &address)
         {
-            m_conn = CSimulatorXPlane::connectionFromString(address);
-            if (!m_conn.isConnected())
+            m_DBusConnection = CSimulatorXPlane::connectionFromString(address);
+            if (!m_DBusConnection.isConnected())
             {
-                m_conn.disconnectFromBus(m_conn.name());
+                m_DBusConnection.disconnectFromBus(m_DBusConnection.name());
                 return;
             }
             checkConnectionCommon();
-            m_conn.disconnectFromBus(m_conn.name());
+            m_DBusConnection.disconnectFromBus(m_DBusConnection.name());
         }
 
         void CSimulatorXPlaneListener::checkConnectionViaPeer(const QString &address)
         {
-            m_conn = QDBusConnection::connectToPeer(address, "xswiftbus");
-            if (!m_conn.isConnected())
+            m_DBusConnection = QDBusConnection::connectToPeer(address, "xswiftbus");
+            if (!m_DBusConnection.isConnected())
             {
                 // This is required to cleanup the connection in QtDBus
-                m_conn.disconnectFromPeer(m_conn.name());
+                m_DBusConnection.disconnectFromPeer(m_DBusConnection.name());
                 return;
             }
             checkConnectionCommon();
-            m_conn.disconnectFromPeer(m_conn.name());
+            m_DBusConnection.disconnectFromPeer(m_DBusConnection.name());
         }
 
         void CSimulatorXPlaneListener::checkConnectionCommon()
         {
-            CXSwiftBusServiceProxy service(m_conn);
-            CXSwiftBusTrafficProxy traffic(m_conn);
-            CXSwiftBusWeatherProxy weather(m_conn);
+            CXSwiftBusServiceProxy service(m_DBusConnection);
+            CXSwiftBusTrafficProxy traffic(m_DBusConnection);
+            CXSwiftBusWeatherProxy weather(m_DBusConnection);
 
             bool result = service.isValid() && traffic.isValid() && weather.isValid();
             if (! result) { return; }
@@ -1332,13 +1352,18 @@ namespace BlackSimPlugin
             {
                 emit simulatorStarted(getPluginInfo());
             }
-            m_conn.disconnectFromBus(m_conn.name());
+            m_DBusConnection.disconnectFromBus(m_DBusConnection.name());
         }
 
-        void CSimulatorXPlaneListener::xSwiftBusServerSettingChanged()
+        void CSimulatorXPlaneListener::onXSwiftBusServerSettingChanged()
         {
-            this->stop();
-            this->start();
+            const CXSwiftBusSettings s = m_xSwiftBusServerSettings.get();
+            if (m_dBusServerAddress != s.getDBusServerAddressQt())
+            {
+                this->stop();
+                this->start();
+                m_dBusServerAddress = s.getDBusServerAddressQt();
+            }
         }
     } // namespace
 } // namespace
