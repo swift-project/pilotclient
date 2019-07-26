@@ -11,6 +11,7 @@
 //! \ingroup testblackmisc
 
 #include "blackmisc/simulation/xplane/qtfreeutils.h"
+#include "blackmisc/simulation/settings/xswiftbussettings.h"
 #include "blackmisc/directoryutils.h"
 #include "test.h"
 
@@ -18,6 +19,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation::XPlane::QtFreeUtils;
+using namespace BlackMisc::Simulation::Settings;
 
 namespace BlackMiscTest
 {
@@ -32,6 +34,7 @@ namespace BlackMiscTest
         void getBaseNameTest();
         void splitTest();
         void acfPropertiesTest();
+        void xSwiftBusSettingsTest();
     };
 
     void CTestXPlane::getFileNameTest()
@@ -96,6 +99,39 @@ namespace BlackMiscTest
         QCOMPARE(QString::fromStdString(acfProperties.author), QString("swift project"));
         QCOMPARE(QString::fromStdString(acfProperties.modelName), QString("Beechcraft Baron 58"));
         QCOMPARE(QString::fromStdString(acfProperties.modelString), QString("swift project Beechcraft Baron 58"));
+    }
+
+    void CTestXPlane::xSwiftBusSettingsTest()
+    {
+        CXSwiftBusSettings s = CXSwiftBusSettings::defaultValue();
+        s.setMaxPlanes(33);
+        s.setMaxDrawDistanceNM(11.11);
+        s.setDrawingLabels(false);
+        QString json = s.toXSwiftBusJsonStringQt();
+
+        qDebug() << json;
+        qDebug() << s.toQString();
+
+        CXSwiftBusSettings s2(json);
+        QCOMPARE(s.getMaxDrawDistanceNM(), s2.getMaxDrawDistanceNM());
+        QCOMPARE(s.getMaxPlanes(), s2.getMaxPlanes());
+        QCOMPARE(s.isDrawingLabels(), s2.isDrawingLabels());
+        QCOMPARE(s.getDBusServerAddressQt(), s2.getDBusServerAddressQt());
+
+        s.setDBusServerAddressQt(CDBusServer::sessionBusAddress());
+        json = s.toXSwiftBusJsonStringQt();
+        s2 = CXSwiftBusSettings(json);
+        QCOMPARE(CDBusServer::sessionBusAddress(), s2.getDBusServerAddressQt());
+
+        // standard value object test
+        json = s.toJsonString(); // standard swift/Qt
+        qDebug() << json;
+
+        s2.fromJson(json);
+        QCOMPARE(s.getMaxDrawDistanceNM(), s2.getMaxDrawDistanceNM());
+        QCOMPARE(s.getMaxPlanes(), s2.getMaxPlanes());
+        QCOMPARE(s.isDrawingLabels(), s2.isDrawingLabels());
+        QCOMPARE(s.getDBusServerAddressQt(), s2.getDBusServerAddressQt());
     }
 }
 
