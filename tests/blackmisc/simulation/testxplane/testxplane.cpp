@@ -107,6 +107,8 @@ namespace BlackMiscTest
         s.setMaxPlanes(33);
         s.setMaxDrawDistanceNM(11.11);
         s.setDrawingLabels(false);
+        s.setFollowAircraftDistanceM(123);
+        s.setCurrentUtcTime();
         QString json = s.toXSwiftBusJsonStringQt();
 
         qDebug() << json;
@@ -117,6 +119,8 @@ namespace BlackMiscTest
         QCOMPARE(s.getMaxPlanes(), s2.getMaxPlanes());
         QCOMPARE(s.isDrawingLabels(), s2.isDrawingLabels());
         QCOMPARE(s.getDBusServerAddressQt(), s2.getDBusServerAddressQt());
+        QCOMPARE(s.getFollowAircraftDistanceM(), s2.getFollowAircraftDistanceM());
+        QCOMPARE(s.getMSecsSinceEpoch(), s2.getMSecsSinceEpoch());
 
         s.setDBusServerAddressQt(CDBusServer::sessionBusAddress());
         json = s.toXSwiftBusJsonStringQt();

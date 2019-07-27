@@ -85,6 +85,11 @@ namespace BlackMisc
                 static const CXSwiftBusSettings s;
                 return s;
             }
+
+            void CXSwiftBusSettings::jsonParsed()
+            {
+                m_timestampMSecsSinceEpoch = m_msSinceEpochQtFree;
+            }
         } // ns
     } // ns
 } // ns
