@@ -32,7 +32,7 @@ namespace XSwiftBus
     {
     public:
         //! Constructor
-        CWeather(CSettings &settings);
+        CWeather(CSettings *staticSettings);
 
         //! DBus interface name
         static const std::string &InterfaceName()
@@ -103,7 +103,7 @@ namespace XSwiftBus
         virtual DBusHandlerResult dbusMessageHandler(const CDBusMessage &message) override;
 
     private:
-        CSettings &m_pluginSettings;
+        static CSettings *s_pluginSettings; //!< needs to be static for static functions;
 
         DataRef<xplane::data::sim::weather::use_real_weather_bool> m_useRealWeather;
         DataRef<xplane::data::sim::weather::visibility_reported_m> m_visibilityM;

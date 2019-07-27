@@ -37,7 +37,7 @@ namespace XSwiftBus
     {
     public:
         //! Constructor
-        CTraffic(CSettings &settings);
+        CTraffic(CSettings *staticSettings);
 
         //! Destructor
         ~CTraffic() override;
@@ -144,10 +144,11 @@ namespace XSwiftBus
             bool isInitialized = false;
         };
 
+        static CSettings *s_pluginSettings; //!< needs to be static for static functions
+
         bool m_initialized = false;
         bool m_enabledMultiplayer = false;
         CTerrainProbe m_terrainProbe;
-        CSettings    &m_pluginSettings;
 
         void emitSimFrame();
         void emitPlaneAdded(const std::string &callsign);

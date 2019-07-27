@@ -26,6 +26,8 @@ namespace
 
 namespace XSwiftBus
 {
+    CSettings CPlugin::s_pluginSettings = CSettings();
+
     CPlugin::CPlugin()
         : m_dbusConnection(std::make_shared<CDBusConnection>()), m_menu(CMenu::mainMenu().subMenu("XSwiftBus"))
     {
@@ -97,9 +99,9 @@ namespace XSwiftBus
 
         readConfig();
 
-        m_service = std::make_unique<CService>(m_pluginSettings);
-        m_traffic = std::make_unique<CTraffic>(m_pluginSettings);
-        m_weather = std::make_unique<CWeather>(m_pluginSettings);
+        m_service = std::make_unique<CService>(&CPlugin::s_pluginSettings);
+        m_traffic = std::make_unique<CTraffic>(&CPlugin::s_pluginSettings);
+        m_weather = std::make_unique<CWeather>(&CPlugin::s_pluginSettings);
 
         m_traffic->setPlaneViewMenu(m_planeViewSubMenu);
 

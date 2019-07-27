@@ -13,9 +13,11 @@
 
 namespace XSwiftBus
 {
-    CWeather::CWeather(CSettings &settings) : m_pluginSettings(settings)
+    CSettings *CWeather::s_pluginSettings = nullptr;
+
+    CWeather::CWeather(CSettings *staticSettings)
     {
-        // void
+        CWeather::s_pluginSettings = staticSettings;
     }
 
     //! Set cloud layer
