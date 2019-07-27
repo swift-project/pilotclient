@@ -17,7 +17,7 @@ namespace BlackSimPlugin
     {
         CSimulatorXPlaneConfig::CSimulatorXPlaneConfig(QObject *parent) : QObject(parent)
         {
-
+            // void
         }
 
         BlackGui::CPluginConfigWindow *CSimulatorXPlaneConfig::createConfigWindow(QWidget *parent)
@@ -25,5 +25,5 @@ namespace BlackSimPlugin
             CSimulatorXPlaneConfigWindow* w = new CSimulatorXPlaneConfigWindow(parent);
             return w;
         }
-    }
-}
+    } // ns
+} // ns
