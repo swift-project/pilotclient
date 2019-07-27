@@ -23,6 +23,8 @@ constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonDB
 constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonDrawingLabels[];
 constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonMaxPlanes[];
 constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonMaxDrawDistance[];
+constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonFollowAircraftDistanceM[];
+constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonTimestamp[];
 //! @endcond
 
 namespace BlackMisc
@@ -60,7 +62,15 @@ namespace BlackMisc
                 {
                     m_maxDrawDistanceNM = settingsDoc[CXSwiftBusSettingsQtFree::JsonMaxDrawDistance].GetDouble();  c++;
                 }
-                return c == 4;
+                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonFollowAircraftDistanceM) && settingsDoc[CXSwiftBusSettingsQtFree::JsonFollowAircraftDistanceM].IsInt())
+                {
+                    m_followAircraftDistanceM = settingsDoc[CXSwiftBusSettingsQtFree::JsonFollowAircraftDistanceM].GetInt();  c++;
+                }
+                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonTimestamp) && settingsDoc[CXSwiftBusSettingsQtFree::JsonTimestamp].IsInt64())
+                {
+                    m_msSinceEpochQtFree = settingsDoc[CXSwiftBusSettingsQtFree::JsonTimestamp].GetInt64();  c++;
+                }
+                return c == 6;
             }
 
             std::string CXSwiftBusSettingsQtFree::toXSwiftBusJsonString() const
@@ -77,6 +87,8 @@ namespace BlackMisc
                 document.AddMember(JsonDrawingLabels,     m_drawingLabels, a);
                 document.AddMember(JsonMaxPlanes,         m_maxPlanes, a);
                 document.AddMember(JsonMaxDrawDistance,   m_maxDrawDistanceNM, a);
+                document.AddMember(JsonTimestamp,         m_msSinceEpochQtFree, a);
+                document.AddMember(JsonFollowAircraftDistanceM, m_followAircraftDistanceM, a);
 
                 // document[CXSwiftBusSettingsQtFree::JsonDBusServerAddress].SetString(StringRef(m_dBusServerAddress.c_str(), m_dBusServerAddress.size()));
                 // document[CXSwiftBusSettingsQtFree::JsonDrawingLabels].SetBool(m_drawingLabels);
@@ -95,7 +107,9 @@ namespace BlackMisc
                 return "DBusServer: " + m_dBusServerAddress +
                        ", drawLabels: " + QtFreeUtils::boolToYesNo(m_drawingLabels) +
                        ", max planes: " + std::to_string(m_maxPlanes) +
-                       ", max distance NM: " + std::to_string(m_maxDrawDistanceNM);
+                       ", max distance NM: " + std::to_string(m_maxDrawDistanceNM) +
+                       ", follow dist m: "   + std::to_string(m_followAircraftDistanceM) +
+                       ", ts: " + std::to_string(m_msSinceEpochQtFree);
             }
         } // ns
     } // ns

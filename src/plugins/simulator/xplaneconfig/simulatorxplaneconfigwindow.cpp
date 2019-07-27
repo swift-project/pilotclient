@@ -65,6 +65,7 @@ namespace BlackSimPlugin
             s.setDBusServerAddressQt(ui->comp_SettingsXSwiftBus->getDBusAddress());
             s.setMaxDrawDistanceNM(ui->ds_MaxDrawDistanceNM->value());
             s.setMaxPlanes(ui->sb_MaxAircraft->value());
+            s.setFollowAircraftDistanceM(ui->sb_FollowAircraftDistanceM->value());
             s.setDrawingLabels(ui->cb_DrawLabels->isChecked());
             return s;
         }
@@ -73,6 +74,7 @@ namespace BlackSimPlugin
         {
             ui->comp_SettingsXSwiftBus->set(settings.getDBusServerAddressQt());
             ui->sb_MaxAircraft->setValue(settings.getMaxPlanes());
+            ui->sb_FollowAircraftDistanceM->setValue(settings.getFollowAircraftDistanceM());
             ui->cb_DrawLabels->setChecked(settings.isDrawingLabels());
             ui->ds_MaxDrawDistanceNM->setValue(settings.getMaxDrawDistanceNM());
         }

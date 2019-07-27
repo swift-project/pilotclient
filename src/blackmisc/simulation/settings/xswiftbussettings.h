@@ -39,7 +39,8 @@ namespace BlackMisc
                     IndexDBusServerAddress = CPropertyIndex::GlobalIndexCXSwiftBusSettings,
                     IndexMaxPlanes,
                     IndexDrawingLabels,
-                    IndexMaxDrawingDistance
+                    IndexMaxDrawingDistance,
+                    IndexFollowAircraftDistance
                 };
 
                 //! Default constructor
@@ -69,6 +70,9 @@ namespace BlackMisc
                 //! \copydoc CXSwiftBusSettingsQtFree::parseXSwiftBusString
                 void parseXSwiftBusStringQt(const QString &json) { this->parseXSwiftBusString(json.toStdString()); }
 
+                //! Sets both timestamps
+                virtual void setCurrentUtcTime() override;
+
                 //! Valid settings?
                 CStatusMessageList validate() const;
 
@@ -82,27 +86,9 @@ namespace BlackMisc
                     BLACK_METAMEMBER(maxPlanes),
                     BLACK_METAMEMBER(drawingLabels),
                     BLACK_METAMEMBER(maxDrawDistanceNM),
+                    BLACK_METAMEMBER(followAircraftDistanceM),
                     BLACK_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForComparison | DisabledForHashing)
                 );
-            };
-
-            /*!
-             * Setting for XSwiftBus.
-             * @deprecated will be changed to JSON Settings
-             */
-            struct TXSwiftBusServer : public TSettingTrait<QString>
-            {
-                //! \copydoc BlackMisc::TSettingTrait::key
-                static const char *key() { return "xswiftbus/server"; }
-
-                //! \copydoc BlackMisc::TSettingTrait::humanReadable
-                static const QString &humanReadable() { static const QString name("XSwiftBus"); return name; }
-
-                //! \copydoc BlackMisc::TSettingTrait::defaultValue
-                static QString defaultValue() { return "tcp:host=127.0.0.1,port=45001"; }
-
-                //! \copydoc BlackMisc::TSettingTrait::isValid
-                static bool isValid(const QString &dBusAddress, QString &) { return BlackMisc::CDBusServer::isSessionOrSystemAddress(dBusAddress) || BlackMisc::CDBusServer::isQtDBusAddress(dBusAddress); }
             };
 
             /*!

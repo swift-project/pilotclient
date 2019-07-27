@@ -45,6 +45,12 @@ namespace BlackMisc
                 //! Get the maximum number of aircraft.
                 int getMaxPlanes() const { return m_maxPlanes; }
 
+                //! Set follow aircraft distance
+                void setFollowAircraftDistanceM(int meters) { m_followAircraftDistanceM = meters; }
+
+                //! Get follow aircraft distance
+                int getFollowAircraftDistanceM() const { return m_followAircraftDistanceM; }
+
                 //! Set the maximum distance at which to draw aircraft (nautical miles).
                 double getMaxDrawDistanceNM() const { return m_maxDrawDistanceNM; }
 
@@ -66,12 +72,16 @@ namespace BlackMisc
                 static constexpr char JsonDrawingLabels[]     = "drawinglabels";
                 static constexpr char JsonMaxPlanes[]         = "maxplanes";
                 static constexpr char JsonMaxDrawDistance[]   = "maxDrawDistance";
+                static constexpr char JsonTimestamp[]         = "timestamp";
+                static constexpr char JsonFollowAircraftDistanceM[] = "followAircraftDistance";
                 //! @}
 
                 std::string m_dBusServerAddress { "tcp:host=127.0.0.1,port=45001" }; //!< DBus server
-                int    m_maxPlanes = 100;          //!< max. planes in XPlane
-                bool   m_drawingLabels = true;     //!< labels in XPlane
-                double m_maxDrawDistanceNM = 50.0; //!< distance in XPlane
+                int    m_maxPlanes = 100;               //!< max. planes in XPlane
+                int    m_followAircraftDistanceM = 200; //!< follow aircraft in distance
+                bool   m_drawingLabels       = true;    //!< labels in XPlane
+                double m_maxDrawDistanceNM   = 50.0;    //!< distance in XPlane
+                int64_t m_msSinceEpochQtFree = 0;       //!< timestamp
             };
         } // ns
     } // ns

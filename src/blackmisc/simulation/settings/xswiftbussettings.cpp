@@ -24,13 +24,15 @@ namespace BlackMisc
             CVariant CXSwiftBusSettings::propertyByIndex(const CPropertyIndex &index) const
             {
                 if (index.isMyself()) { return CVariant::from(*this); }
+                if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexMaxPlanes:          return CVariant::fromValue(m_maxPlanes);
-                case IndexDBusServerAddress:  return CVariant::fromValue(QString::fromStdString(m_dBusServerAddress));
-                case IndexDrawingLabels:      return CVariant::fromValue(m_drawingLabels);
-                case IndexMaxDrawingDistance: return CVariant::fromValue(m_maxDrawDistanceNM);
+                case IndexMaxPlanes:              return CVariant::fromValue(m_maxPlanes);
+                case IndexDBusServerAddress:      return CVariant::fromValue(QString::fromStdString(m_dBusServerAddress));
+                case IndexDrawingLabels:          return CVariant::fromValue(m_drawingLabels);
+                case IndexMaxDrawingDistance:     return CVariant::fromValue(m_maxDrawDistanceNM);
+                case IndexFollowAircraftDistance: return CVariant::fromValue(m_followAircraftDistanceM);
                 default: break;
                 }
                 return CValueObject::propertyByIndex(index);
@@ -39,13 +41,16 @@ namespace BlackMisc
             void CXSwiftBusSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
             {
                 if (index.isMyself()) { (*this) = variant.to<CXSwiftBusSettings>(); return; }
+                if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); }
+
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexMaxPlanes:          m_maxPlanes  = variant.toInt(); break;
-                case IndexDBusServerAddress:  m_dBusServerAddress = variant.toStdString(); break;
-                case IndexDrawingLabels:      m_drawingLabels = variant.toBool(); break;
-                case IndexMaxDrawingDistance: m_maxDrawDistanceNM = variant.toDouble(); break;
+                case IndexMaxPlanes:              m_maxPlanes  = variant.toInt(); break;
+                case IndexDBusServerAddress:      m_dBusServerAddress = variant.toStdString(); break;
+                case IndexDrawingLabels:          m_drawingLabels = variant.toBool(); break;
+                case IndexMaxDrawingDistance:     m_maxDrawDistanceNM = variant.toDouble(); break;
+                case IndexFollowAircraftDistance: m_followAircraftDistanceM = variant.toInt(); break;
                 default:
                     CValueObject::setPropertyByIndex(index, variant);
                     break;
@@ -56,6 +61,12 @@ namespace BlackMisc
             {
                 Q_UNUSED(i18n);
                 return QString::fromStdString(CXSwiftBusSettingsQtFree::convertToString());
+            }
+
+            void CXSwiftBusSettings::setCurrentUtcTime()
+            {
+                ITimestampBased::setCurrentUtcTime();
+                m_msSinceEpochQtFree = m_timestampMSecsSinceEpoch;
             }
 
             CStatusMessageList CXSwiftBusSettings::validate() const
