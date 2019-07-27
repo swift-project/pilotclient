@@ -38,11 +38,11 @@ namespace BlackGui
             explicit CSettingsXSwiftBusComponent(QWidget *parent = nullptr);
 
             //! Dtor
-            virtual ~CSettingsXSwiftBusComponent();
+            virtual ~CSettingsXSwiftBusComponent() override;
 
         private:
             QScopedPointer<Ui::CSettingsXSwiftBusComponent> ui;
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusServer> m_xSwiftBusServerSetting { this };
+            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusSettings> m_xSwiftBusSettings { this };
 
             void resetServer();
             void saveServer();
