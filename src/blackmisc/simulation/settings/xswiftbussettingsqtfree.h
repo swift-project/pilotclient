@@ -82,6 +82,9 @@ namespace BlackMisc
                 static constexpr char JsonFollowAircraftDistanceM[] = "followAircraftDistance";
                 //! @}
 
+                //! Pasing completed
+                virtual void jsonParsed();
+
                 std::string m_dBusServerAddress { "tcp:host=127.0.0.1,port=45001" }; //!< DBus server
                 int    m_maxPlanes = 100;               //!< max. planes in XPlane
                 int    m_followAircraftDistanceM = 200; //!< follow aircraft in distance

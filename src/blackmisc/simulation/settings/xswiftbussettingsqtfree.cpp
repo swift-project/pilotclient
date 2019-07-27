@@ -72,6 +72,7 @@ namespace BlackMisc
                 {
                     m_msSinceEpochQtFree = settingsDoc[CXSwiftBusSettingsQtFree::JsonTimestamp].GetInt64();  c++;
                 }
+                this->jsonParsed(); // post processing
                 return c == 6;
             }
 
@@ -119,6 +120,11 @@ namespace BlackMisc
                 using namespace std::chrono;
                 const milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
                 m_msSinceEpochQtFree = static_cast<int64_t>(ms.count());
+            }
+
+            void CXSwiftBusSettingsQtFree::jsonParsed()
+            {
+                // void
             }
         } // ns
     } // ns
