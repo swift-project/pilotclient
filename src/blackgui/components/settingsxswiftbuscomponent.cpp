@@ -34,10 +34,10 @@ namespace BlackGui
         {
             ui->setupUi(this);
 
-            connect(ui->pb_Save, &QPushButton::released, this, &CSettingsXSwiftBusComponent::saveServer);
+            connect(ui->pb_Save,  &QPushButton::released, this, &CSettingsXSwiftBusComponent::saveServer);
             connect(ui->pb_Reset, &QPushButton::released, this, &CSettingsXSwiftBusComponent::resetServer);
 
-            const QString dBusAddress = m_xSwiftBusServerSetting.get();
+            const QString dBusAddress = m_xSwiftBusSettings.get().getDBusServerAddressQt();
             ui->comp_DBusServer->setForXSwiftBus();
             ui->comp_DBusServer->set(dBusAddress);
         }
@@ -47,7 +47,7 @@ namespace BlackGui
 
         void CSettingsXSwiftBusComponent::resetServer()
         {
-            const QString s = TXSwiftBusServer::defaultValue();
+            const QString s = TXSwiftBusSettings::defaultValue().getDBusServerAddressQt();
             ui->comp_DBusServer->set(s);
         }
 
@@ -55,9 +55,12 @@ namespace BlackGui
         {
             const QString dBusAddress = ui->comp_DBusServer->getDBusAddress();
             if (dBusAddress.isEmpty()) { return; }
-            if (dBusAddress != m_xSwiftBusServerSetting.getThreadLocal())
+            CXSwiftBusSettings s = m_xSwiftBusSettings.getThreadLocal();
+
+            if (dBusAddress != s.getDBusServerAddressQt())
             {
-                const CStatusMessage msg = m_xSwiftBusServerSetting.setAndSave(dBusAddress);
+                s.setDBusServerAddressQt(dBusAddress);
+                const CStatusMessage msg = m_xSwiftBusSettings.setAndSave(dBusAddress);
                 CXSwiftBusConfigWriter xswiftbusConfigWriter;
                 xswiftbusConfigWriter.setDBusAddress(dBusAddress);
                 xswiftbusConfigWriter.updateInAllXPlaneVersions();
