@@ -38,7 +38,7 @@ namespace XSwiftBus
     {
     public:
         //! Constructor
-        CService(CSettings &settings);
+        CService(CSettings *staticSettings);
 
         //! Destructor
         ~CService() override = default;
@@ -260,7 +260,7 @@ namespace XSwiftBus
         bool m_disappearMessageWindow = true;
         std::chrono::system_clock::time_point m_disappearMessageWindowTime;
         std::vector<CNavDataReference> m_airports;
-        CSettings &m_pluginSettings;
+        static CSettings *s_pluginSettings;
 
         void readAirportsDatabase();
         std::vector<CNavDataReference> findClosestAirports(int number, double latitude, double longitude);

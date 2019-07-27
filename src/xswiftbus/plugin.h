@@ -57,9 +57,10 @@ namespace XSwiftBus
         void onAircraftRepositioned();
 
     private:
+        static CSettings s_pluginSettings; //!< needs to used in static in static functions
+
         CConfig         m_pluginConfig;
         CDBusDispatcher m_dbusDispatcher;
-        CSettings       m_pluginSettings;
         std::unique_ptr<CDBusServer>     m_dbusP2PServer;
         std::shared_ptr<CDBusConnection> m_dbusConnection;
         std::unique_ptr<CService> m_service;

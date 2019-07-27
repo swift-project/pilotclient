@@ -31,6 +31,8 @@
 
 namespace XSwiftBus
 {
+    CSettings *CTraffic::s_pluginSettings = nullptr;
+
     CTraffic::Plane::Plane(void *id_, const std::string &callsign_, const std::string &aircraftIcao_, const std::string &airlineIcao_, const std::string &livery_, const std::string &modelName_)
         : id(id_), callsign(callsign_), aircraftIcao(aircraftIcao_), airlineIcao(airlineIcao_), livery(livery_), modelName(modelName_)
     {
@@ -46,14 +48,17 @@ namespace XSwiftBus
     }
 
     // *INDENT-OFF*
-    CTraffic::CTraffic(CSettings &settings) :
+    CTraffic::CTraffic(CSettings *staticSettings) :
         CDBusObject(),
-        m_pluginSettings(settings),
         m_followPlaneViewNextCommand("org/swift-project/xswiftbus/follow_next_plane", "Changes plane view to follow next plane in sequence", [this] { followNextPlane(); }),
         m_followPlaneViewPreviousCommand("org/swift-project/xswiftbus/follow_previous_plane", "Changes plane view to follow previous plane in sequence", [this] { followPreviousPlane(); })
     {
+        CTraffic::s_pluginSettings = staticSettings;
         XPLMRegisterDrawCallback(drawCallback, xplm_Phase_Airplanes, 1, this);
         XPLMRegisterKeySniffer(spaceKeySniffer, 1, this);
+
+        // init labels
+        this->setDrawingLabels(CTraffic::s_pluginSettings->isDrawingLabels());
     }
     // *INDENT-ON*
 
@@ -78,7 +83,7 @@ namespace XSwiftBus
         std::string csl = dir + "CSL";
         std::string related = dir + "related.txt";
         std::string doc8643 = dir + "Doc8643.txt";
-        std::string lights = dir + "lights.png";
+        std::string lights  = dir + "lights.png";
         auto err = XPMPMultiplayerInitLegacyData(csl.c_str(), related.c_str(), lights.c_str(), doc8643.c_str(),
                    "C172", preferences, preferences);
         if (*err) { s_legacyDataOK = false; }
@@ -204,18 +209,21 @@ namespace XSwiftBus
         m_followPlaneViewCallsign = *callsignIt;
     }
 
-    static int g_maxPlanes = 100;
-    static float g_drawDistance = 50.0f;
+    // changed T709
+    // static int g_maxPlanes = 100;
+    // static float g_drawDistance = 50.0f;
 
     int CTraffic::preferences(const char *section, const char *name, int def)
     {
         if (strcmp(section, "planes") == 0 && strcmp(name, "max_full_count") == 0)
         {
-            return g_maxPlanes;
+            return CTraffic::s_pluginSettings->getMaxPlanes();
         }
         else if (strcmp(section, "debug") == 0 && strcmp(name, "allow_obj8_async_load") == 0)
         {
-            return true;
+            // the setting allow_obj8_async_load (in the debug section) controls
+            // whether or not async loading is enabled: 1 means enabled, 0 means disabled
+            return 1;
         }
         return def;
     }
@@ -224,7 +232,7 @@ namespace XSwiftBus
     {
         if (strcmp(section, "planes") == 0 && strcmp(name, "full_distance") == 0)
         {
-            return g_drawDistance;
+            return static_cast<float>(CTraffic::s_pluginSettings->getMaxDrawDistanceNM());
         }
         return def;
     }
@@ -248,6 +256,7 @@ namespace XSwiftBus
 
     void CTraffic::setDrawingLabels(bool drawing)
     {
+        CTraffic::s_pluginSettings->setDrawingLabels(drawing);
         if (drawing)
         {
             XPMPEnableAircraftLabels();
@@ -265,12 +274,12 @@ namespace XSwiftBus
 
     void CTraffic::setMaxPlanes(int planes)
     {
-        g_maxPlanes = planes;
+        CTraffic::s_pluginSettings->setMaxPlanes(planes);
     }
 
     void CTraffic::setMaxDrawDistance(double nauticalMiles)
     {
-        g_drawDistance = static_cast<float>(nauticalMiles);
+        CTraffic::s_pluginSettings->setMaxDrawDistanceNM(nauticalMiles);
     }
 
     void CTraffic::addPlane(const std::string &callsign, const std::string &modelName, const std::string &aircraftIcao, const std::string &airlineIcao, const std::string &livery)
@@ -884,15 +893,16 @@ namespace XSwiftBus
                 XPLMGetScreenSize(&w, &h);
                 XPLMGetMouseLocation(&x, &y);
                 traffic->m_deltaCameraPosition.heading = 360.0 * static_cast<double>(x) / static_cast<double>(w);
-                traffic->m_deltaCameraPosition.pitch = 20.0 * ((static_cast<double>(y) / static_cast<double>(h)) * 2.0 - 1.0);
+                traffic->m_deltaCameraPosition.pitch   = 20.0 * ((static_cast<double>(y) / static_cast<double>(h)) * 2.0 - 1.0);
 
-                // Now calculate where the camera should be positioned to be 200
+                // Now calculate where the camera should be positioned to be x
                 // meters from the plane and pointing at the plane at the pitch and
                 // heading we wanted above.
+                const double distanceMeterM = static_cast<double>(std::max(10, CTraffic::s_pluginSettings->getFollowAircraftDistanceM()));
                 static const double PI = std::acos(-1);
-                traffic->m_deltaCameraPosition.dx = -50.0 * sin(traffic->m_deltaCameraPosition.heading * PI / 180.0);
-                traffic->m_deltaCameraPosition.dz = 50.0 * cos(traffic->m_deltaCameraPosition.heading * PI / 180.0);
-                traffic->m_deltaCameraPosition.dy = -50.0 * tan(traffic->m_deltaCameraPosition.pitch * PI / 180.0);
+                traffic->m_deltaCameraPosition.dx = -distanceMeterM * sin(traffic->m_deltaCameraPosition.heading * PI / 180.0);
+                traffic->m_deltaCameraPosition.dz =  distanceMeterM * cos(traffic->m_deltaCameraPosition.heading * PI / 180.0);
+                traffic->m_deltaCameraPosition.dy = -distanceMeterM * tan(traffic->m_deltaCameraPosition.pitch * PI / 180.0);
 
                 traffic->m_deltaCameraPosition.isInitialized = true;
             }

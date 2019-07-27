@@ -6,7 +6,6 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-
 #include "service.h"
 #include "utils.h"
 #include "blackmisc/simulation/xplane/qtfreeutils.h"
@@ -22,8 +21,11 @@ using namespace BlackMisc::Simulation::XPlane::QtFreeUtils;
 
 namespace XSwiftBus
 {
-    CService::CService(CSettings &settings) : CDBusObject(), m_pluginSettings(settings)
+    CSettings *CService::s_pluginSettings = nullptr;
+
+    CService::CService(CSettings *staticSettings) : CDBusObject()
     {
+        CService::s_pluginSettings = staticSettings;
         updateAirportsInRange();
     }
 
@@ -159,15 +161,15 @@ namespace XSwiftBus
 
     std::string CService::getSettings() const
     {
-        return m_pluginSettings.toXSwiftBusJsonString();
+        return CService::s_pluginSettings->toXSwiftBusJsonString();
     }
 
     void CService::setSettings(const std::string &jsonString)
     {
-        m_pluginSettings.parseXSwiftBusString(jsonString);
+        CService::s_pluginSettings->parseXSwiftBusString(jsonString);
 
         XPLMDebugString("Received settings ");
-        XPLMDebugString(m_pluginSettings.convertToString().c_str());
+        XPLMDebugString(CService::s_pluginSettings->convertToString().c_str());
         XPLMDebugString("\n");
     }
 
