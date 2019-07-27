@@ -11,7 +11,9 @@
 
 #include "rapidjson/document.h"     // rapidjson's DOM-style API
 #include "rapidjson/prettywriter.h" // for stringify JSON
+
 #include <string>
+#include <chrono>
 
 using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::Simulation::XPlane;
@@ -110,6 +112,13 @@ namespace BlackMisc
                        ", max distance NM: " + std::to_string(m_maxDrawDistanceNM) +
                        ", follow dist m: "   + std::to_string(m_followAircraftDistanceM) +
                        ", ts: " + std::to_string(m_msSinceEpochQtFree);
+            }
+
+            void CXSwiftBusSettingsQtFree::setCurrentUtcTime()
+            {
+                using namespace std::chrono;
+                const milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
+                m_msSinceEpochQtFree = static_cast<int64_t>(ms.count());
             }
         } // ns
     } // ns

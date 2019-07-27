@@ -27,6 +27,9 @@ namespace BlackMisc
                 //! Constructor.
                 CXSwiftBusSettingsQtFree();
 
+                //! Dtor
+                virtual ~CXSwiftBusSettingsQtFree() {}
+
                 //! DBus server
                 const std::string &getDBusServerAddress() const { return m_dBusServerAddress; }
 
@@ -65,6 +68,9 @@ namespace BlackMisc
 
                 //! Convert to string
                 std::string convertToString() const;
+
+                //! Sets timestamp to now
+                virtual void setCurrentUtcTime();
 
             protected:
                 //! The JSON members @{
