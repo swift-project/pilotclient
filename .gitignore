@@ -12,6 +12,9 @@ pch.h.cpp
 /.vs/
 /.vscode/
 
+# MS tools
+/config.log
+
 # Qt Creator
 *.autosave
 
@@ -27,6 +30,7 @@ desktop.ini
 
 # qmake
 /.qmake.stash
+/.qmake.cache
 
 # Generated installers
 /swiftinstaller-*.run
@@ -41,3 +45,6 @@ desktop.ini
 
 # VATSIM key
 /vatsim.json
+
+# other
+/swift_config.cookie
