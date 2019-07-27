@@ -286,8 +286,8 @@ namespace BlackCore
 
                             bool ok;
                             bool validPos = true;
-                            const double lat = clientPartsMap["latitude"].toDouble(&ok);
                             QStringList posMsg;
+                            const double lat = clientPartsMap["latitude"].toDouble(&ok);
                             if (!ok) { validPos = false; posMsg << QStringLiteral("latitude: '%1'").arg(clientPartsMap["latitude"]); }
 
                             const double lng = clientPartsMap["longitude"].toDouble(&ok);
@@ -297,7 +297,7 @@ namespace BlackCore
                             if (!ok) { validPos = false; posMsg << QStringLiteral("altitude: '%1'").arg(clientPartsMap["altitude"]); }
                             CCoordinateGeodetic position = validPos ? CCoordinateGeodetic(lat, lng, alt) : CCoordinateGeodetic::null();
 
-                            Q_ASSERT_X((validPos && posMsg.isEmpty()) || (!validPos && !posMsg.isEmpty()), Q_FUNC_INFO, "Inconsisten data");
+                            Q_ASSERT_X((validPos && posMsg.isEmpty()) || (!validPos && !posMsg.isEmpty()), Q_FUNC_INFO, "Inconsistent data");
                             if (!posMsg.isEmpty())
                             {
                                 // Only info not to flood lof with warning
@@ -360,7 +360,7 @@ namespace BlackCore
                             if (currentLine.contains("UPDATE"))
                             {
                                 const QStringList updateParts = currentLine.replace(" ", "").split('=');
-                                if (updateParts.length() < 2) break;
+                                if (updateParts.length() < 2) { break; }
                                 const QString dts = updateParts.at(1).trimmed();
                                 updateTimestampFromFile = fromStringUtc(dts, "yyyyMMddHHmmss");
                                 const bool alreadyRead = (updateTimestampFromFile == this->getUpdateTimestamp());
@@ -376,8 +376,8 @@ namespace BlackCore
                         {
                             // ident:hostname_or_IP:location:name:clients_connection_allowed:
                             const QStringList fsdServerParts = currentLine.split(':');
-                            if (fsdServerParts.size() < 5) break;
-                            if (!fsdServerParts.at(4).trimmed().contains('1')) break; // allowed?
+                            if (fsdServerParts.size() < 5) { break; }
+                            if (!fsdServerParts.at(4).trimmed().contains('1')) { break; } // allowed?
                             const QString description(fsdServerParts.at(2)); // part(3) could be added
                             const CServer fsdServer(fsdServerParts.at(0), description, fsdServerParts.at(1), 6809,
                                                     CUser("id", "real name", "email", "password"),
@@ -390,8 +390,8 @@ namespace BlackCore
                         {
                             // hostname_or_IP:location:name:clients_connection_allowed:type_of_voice_server:
                             const QStringList voiceServerParts = currentLine.split(':');
-                            if (voiceServerParts.size() < 3) break;
-                            if (!voiceServerParts.at(3).trimmed().contains('1')) break; // allowed?
+                            if (voiceServerParts.size() < 4) { break; }
+                            if (!voiceServerParts.at(3).trimmed().contains('1')) { break; } // allowed?
                             const CServer voiceServer(voiceServerParts.at(1), voiceServerParts.at(2), voiceServerParts.at(0), -1,
                                                       CUser(),
                                                       CFsdSetup(), CVoiceSetup::vatsimStandard(),
