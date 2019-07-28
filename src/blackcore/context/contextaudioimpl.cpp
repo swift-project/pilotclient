@@ -105,12 +105,14 @@ namespace BlackCore
             if (status == CMacOSMicrophoneAccess::Authorized)
             {
                 m_voiceInputDevice = m_voice->createInputDevice();
+                CLogMessage(this).info(u"MacOS specific input device init");
             }
             else if (status == CMacOSMicrophoneAccess::NotDetermined)
             {
                 m_voiceInputDevice.reset(new CAudioInputDeviceDummy(this));
                 connect(&m_micAccess, &CMacOSMicrophoneAccess::permissionRequestAnswered, this, &CContextAudio::delayedInitMicrophone);
                 m_micAccess.requestAccess();
+                CLogMessage(this).info(u"MacOS requested input device");
             }
             else
             {
@@ -734,6 +736,7 @@ namespace BlackCore
         {
             m_voiceInputDevice = m_voice->createInputDevice();
             m_voice->connectVoice(m_voiceInputDevice.get(), m_audioMixer.get(), IAudioMixer::InputMicrophone);
+            CLogMessage(this).info(u"MacOS delayed input device init");
         }
 #endif
     } // namespace
