@@ -249,7 +249,7 @@
           <item>
            <widget class="QCheckBox" name="cb_RecordOwnGndPositions">
             <property name="text">
-             <string>record pos.radius</string>
+             <string>pos.radius</string>
             </property>
            </widget>
           </item>
