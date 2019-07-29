@@ -11,6 +11,7 @@
 #include "blackgui/infoarea.h"
 #include "blackgui/components/radarcomponent.h"
 #include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextownaircraft.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 
 #include <QtMath>
@@ -50,6 +51,7 @@ namespace BlackGui
             connect(ui->gv_RadarView, &CRadarView::radarViewResized, this, &CRadarComponent::fitInView);
             connect(ui->gv_RadarView, &CRadarView::zoomEvent, this, &CRadarComponent::changeRangeInSteps);
             connect(&m_updateTimer, &QTimer::timeout, this, &CRadarComponent::refreshTargets);
+            connect(&m_headingTimer, &QTimer::timeout, this, &CRadarComponent::rotateView);
 
             connect(ui->cb_RadarRange, qOverload<int>(&QComboBox::currentIndexChanged), this, &CRadarComponent::changeRangeFromUserSelection);
             connect(ui->cb_Callsign, &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
@@ -61,6 +63,7 @@ namespace BlackGui
             prepareScene();
 
             m_updateTimer.start(5000);
+            m_headingTimer.start(50);
         }
 
         CRadarComponent::~CRadarComponent()
@@ -192,6 +195,30 @@ namespace BlackGui
                             li->setFlags(QGraphicsItem::ItemIgnoresTransformations);
                             li->setPen(pen);
                         }
+                    }
+                }
+            }
+        }
+
+        void CRadarComponent::rotateView()
+        {
+            if (sGui->getIContextOwnAircraft())
+            {
+                if (isVisibleWidget())
+                {
+                    int headingDegree = 0;
+                    if (! ui->cb_LockNorth->isChecked())
+                    {
+                        headingDegree = sGui->getIContextOwnAircraft()->getOwnAircraftSituation().getHeading().valueInteger(CAngleUnit::deg());
+                    }
+
+                    if (m_rotatenAngle != headingDegree)
+                    {
+                        // Rotations are summed up, hence rotate back before applying the new rotation.
+                        // Doing a global transformation reset will not work as it resets also zooming.
+                        ui->gv_RadarView->rotate(-m_rotatenAngle);
+                        ui->gv_RadarView->rotate(headingDegree);
+                        m_rotatenAngle = headingDegree;
                     }
                 }
             }
