@@ -92,7 +92,6 @@ namespace XSwiftBus
 
         const DBusObjectPathVTable m_dbusObjectPathVTable = { dbusObjectPathUnregisterFunction, dbusObjectPathMessageFunction, nullptr, nullptr, nullptr, nullptr };
     };
-
-}
+} // ns
 
 #endif // guard

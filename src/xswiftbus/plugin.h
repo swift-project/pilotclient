@@ -89,6 +89,6 @@ namespace XSwiftBus
         static float startServerDeferred(float, float, int, void *refcon);
         static float flightLoopCallback(float, float, int, void *refcon);
     };
-}
+} // ns
 
 #endif // guard
