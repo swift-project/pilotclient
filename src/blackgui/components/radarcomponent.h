@@ -49,6 +49,7 @@ namespace BlackGui
             void addRadials();
 
             void refreshTargets();
+            void rotateView();
 
             void toggleGrid(bool checked);
 
@@ -70,8 +71,10 @@ namespace BlackGui
             QPen m_radarTargetPen = { Qt::green, 1 };
 
             qreal m_rangeNM = 10.0;
+            int m_rotatenAngle = 0;
 
             QTimer m_updateTimer;
+            QTimer m_headingTimer;
         };
     } // ns
 } // ns
