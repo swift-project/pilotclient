@@ -22,9 +22,10 @@ namespace XSwiftBus
         // void
     }
 
-    CSettings::~CSettings()
+    CSettings::CSettings(const std::string &json) : CXSwiftBusSettingsQtFree(json)
     {
         // void
     }
+
 } // ns
 
