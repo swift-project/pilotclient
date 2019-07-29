@@ -41,7 +41,7 @@ namespace XSwiftBus
     /*!
      * Main plugin class
      */
-    class CPlugin
+    class CPlugin : public ISettingsProvider
     {
     public:
         //! Constructor
@@ -57,8 +57,6 @@ namespace XSwiftBus
         void onAircraftRepositioned();
 
     private:
-        static CSettings s_pluginSettings; //!< needs to used in static in static functions
-
         CConfig         m_pluginConfig;
         CDBusDispatcher m_dbusDispatcher;
         std::unique_ptr<CDBusServer>     m_dbusP2PServer;

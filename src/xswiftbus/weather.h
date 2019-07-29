@@ -16,7 +16,6 @@
 #endif
 #include "dbusobject.h"
 #include "datarefs.h"
-#include "settings.h"
 
 //! \cond PRIVATE
 #define XSWIFTBUS_WEATHER_INTERFACENAME "org.swift_project.xswiftbus.weather"
@@ -32,7 +31,7 @@ namespace XSwiftBus
     {
     public:
         //! Constructor
-        CWeather(CSettings *staticSettings);
+        CWeather(ISettingsProvider *settingsProvider);
 
         //! DBus interface name
         static const std::string &InterfaceName()
@@ -103,8 +102,6 @@ namespace XSwiftBus
         virtual DBusHandlerResult dbusMessageHandler(const CDBusMessage &message) override;
 
     private:
-        static CSettings *s_pluginSettings; //!< needs to be static for static functions;
-
         DataRef<xplane::data::sim::weather::use_real_weather_bool> m_useRealWeather;
         DataRef<xplane::data::sim::weather::visibility_reported_m> m_visibilityM;
         DataRef<xplane::data::sim::weather::rain_percent> m_precipRatio;

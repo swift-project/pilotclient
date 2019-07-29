@@ -19,7 +19,6 @@
 #include "datarefs.h"
 #include "messages.h"
 #include "navdatareference.h"
-#include "settings.h"
 #include <XPLM/XPLMNavigation.h>
 #include <string>
 #include <chrono>
@@ -38,7 +37,7 @@ namespace XSwiftBus
     {
     public:
         //! Constructor
-        CService(CSettings *staticSettings);
+        CService(ISettingsProvider *settingsProvider);
 
         //! Destructor
         virtual ~CService() override = default;
@@ -260,7 +259,6 @@ namespace XSwiftBus
         bool m_disappearMessageWindow = true;
         std::chrono::system_clock::time_point m_disappearMessageWindowTime;
         std::vector<CNavDataReference> m_airports;
-        static CSettings *s_pluginSettings;
 
         void readAirportsDatabase();
         std::vector<CNavDataReference> findClosestAirports(int number, double latitude, double longitude);
