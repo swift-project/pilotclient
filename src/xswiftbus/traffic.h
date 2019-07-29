@@ -187,6 +187,9 @@ namespace XSwiftBus
                   const std::string &livery_, const std::string &modelName_);
         };
 
+        //! Check the position if values are valid
+        static bool isValidPosition(const XPMPPlanePosition_t &position);
+
         std::unordered_map<std::string, Plane *> m_planesByCallsign;
         std::unordered_map<void *, Plane *> m_planesById;
         std::vector<std::string> m_followPlaneViewSequence;
