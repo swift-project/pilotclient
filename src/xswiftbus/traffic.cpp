@@ -917,11 +917,16 @@ namespace XSwiftBus
             }
             else
             {
-                auto planeIt = traffic->m_planesByCallsign.find(traffic->m_followPlaneViewCallsign);
+                const auto planeIt = traffic->m_planesByCallsign.find(traffic->m_followPlaneViewCallsign);
                 if (planeIt == traffic->m_planesByCallsign.end()) { return 0; }
-                Plane *plane = planeIt->second;
+                const Plane *plane = planeIt->second;
 
                 XPLMWorldToLocal(plane->position.lat, plane->position.lon, plane->position.elevation * kFtToMeters, &lx, &ly, &lz);
+                if (!isValidPosition(plane->position))
+                {
+                    INFO_LOG("Invalid follow aircraft position for " + plane->callsign);
+                    return 0;
+                }
             }
 
             // Fill out the camera position info.
@@ -968,6 +973,17 @@ namespace XSwiftBus
         /* Return 1 to pass the keystroke to plugin windows and X-Plane.
          * Returning 0 would consume the keystroke. */
         return 1;
+    }
+
+    bool CTraffic::isValidPosition(const XPMPPlanePosition_t &position)
+    {
+        if (position.lat > 180.001 || position.lat < -180.001) { return false; }
+        if (position.lon > 180.001 || position.lon < -180.001) { return false; }
+        if (position.pitch   > 180.001f || position.pitch   < -180.001f) { return false; }
+        if (position.heading > 180.001f || position.heading < -180.001f) { return false; }
+        if (position.elevation < -2000.0 || position.elevation > 100000.0) { return false; }
+
+        return true;
     }
 }
 
