@@ -5,6 +5,7 @@ regexStableBranch = /stable\/\d+\.\d+/
 regexTestingBranch = /testing\/.+/
 regexNocacheBranch = /nocache\/.+/
 regexRecacheBranches = [regexDevBranch]
+regexSubmodBranches = [regexDevBranch, regexStableBranch]
 
 if (env.BRANCH_NAME && regexRecacheBranches.any{ env.BRANCH_NAME ==~ it }) {
     env.CCACHE_RECACHE = 1
@@ -21,6 +22,24 @@ properties([buildDiscarder(logRotator(numToKeepStr: '4'))])
 
 def builders = [:]
 def buildResults = [:]
+
+node('master') {
+    try {
+        stage('SCM Sanity Check') {
+            if (env.BRANCH_NAME && regexSubmodBranches.any{ env.BRANCH_NAME ==~ it }) {
+                checkout scm
+                def mods = sh(returnStdout: true,
+                    script: "git submodule foreach -q 'git branch -r --points-at HEAD origin/${env.BRANCH_NAME} | read unused || basename \$name'")
+                if (!mods.isEmpty()) { error "${env.BRANCH_NAME} branch in submodules missing or not pointing to HEAD: \n${mods}" }
+            }
+        }
+    } catch(error) {
+        echo error.getMessage()
+        throw error
+    } finally {
+        cleanWs deleteDirs: true, notFailBuild: true
+    }
+}
 
 // Create a map to pass in to the 'parallel' step so we can fire all the builds at once
 builders['Build swift Linux'] = {
