@@ -64,9 +64,9 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBus(QLatin1String("cleanup"));
         }
 
-        bool CXSwiftBusTrafficProxy::loadPlanesPackage(const QString &path)
+        QString CXSwiftBusTrafficProxy::loadPlanesPackage(const QString &path)
         {
-            return m_dbusInterface->callDBusRet<bool>(QLatin1String("loadPlanesPackage"), path);
+            return m_dbusInterface->callDBusRet<QString>(QLatin1String("loadPlanesPackage"), path);
         }
 
         void CXSwiftBusTrafficProxy::setDefaultIcao(const QString &defaultIcao)

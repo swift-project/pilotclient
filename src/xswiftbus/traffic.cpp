@@ -226,7 +226,7 @@ namespace XSwiftBus
         return def;
     }
 
-    bool CTraffic::loadPlanesPackage(const std::string &path)
+    std::string CTraffic::loadPlanesPackage(const std::string &path)
     {
         initXPlanePath();
         auto dir = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xswiftbus" + g_sep + "LegacyData" + g_sep;
@@ -234,8 +234,8 @@ namespace XSwiftBus
         std::string related = dir + "related.txt";
         std::string doc8643 = dir + "Doc8643.txt";
         auto err = XPMPLoadCSLPackage(path.c_str(), related.c_str(), doc8643.c_str());
-        if (*err) { return false; }
-        return true;
+        if (*err) { return err; }
+        return {};
     }
 
     void CTraffic::setDefaultIcao(const std::string &defaultIcao)

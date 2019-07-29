@@ -163,7 +163,7 @@ namespace BlackSimPlugin
             void cleanup();
 
             //! \copydoc XSwiftBus::CTraffic::loadPlanesPackage
-            bool loadPlanesPackage(const QString &path);
+            QString loadPlanesPackage(const QString &path);
 
             //! \copydoc XSwiftBus::CTraffic::setDefaultIcao
             void setDefaultIcao(const QString &defaultIcao);

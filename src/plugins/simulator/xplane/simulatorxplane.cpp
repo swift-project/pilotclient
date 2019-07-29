@@ -595,7 +595,11 @@ namespace BlackSimPlugin
             {
                 if (CDirectoryUtils::isSameOrSubDirectoryOf(package, simDir))
                 {
-                    m_trafficProxy->loadPlanesPackage(package);
+                    const QString message = m_trafficProxy->loadPlanesPackage(package);
+                    if (!message.isEmpty())
+                    {
+                        CLogMessage(this).validationError(u"CSL package '%1' xpmp error: %2") << package << message;
+                    }
                 }
                 else
                 {
