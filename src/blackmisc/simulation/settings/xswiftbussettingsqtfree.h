@@ -69,6 +69,9 @@ namespace BlackMisc
                 //! Convert to string
                 std::string convertToString() const;
 
+                //! Update only changed values
+                int update(const CXSwiftBusSettingsQtFree &newValues);
+
                 //! Sets timestamp to now
                 virtual void setCurrentUtcTime();
 
@@ -82,8 +85,8 @@ namespace BlackMisc
                 static constexpr char JsonFollowAircraftDistanceM[] = "followAircraftDistance";
                 //! @}
 
-                //! Pasing completed
-                virtual void jsonParsed();
+                //! Object has been updated
+                virtual void objectUpdated();
 
                 std::string m_dBusServerAddress { "tcp:host=127.0.0.1,port=45001" }; //!< DBus server
                 int    m_maxPlanes = 100;               //!< max. planes in XPlane
