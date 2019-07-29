@@ -12,11 +12,11 @@
 //! \file
 
 #include "dbusobject.h"
+#include "settings.h"
 #include "command.h"
 #include "datarefs.h"
 #include "terrainprobe.h"
 #include "menus.h"
-#include "settings.h"
 #include "XPMPMultiplayer.h"
 #include "XPLMCamera.h"
 #include <XPLM/XPLMDisplay.h>
@@ -37,7 +37,7 @@ namespace XSwiftBus
     {
     public:
         //! Constructor
-        CTraffic(CSettings *staticSettings);
+        CTraffic(ISettingsProvider *settingsProvider);
 
         //! Destructor
         ~CTraffic() override;
@@ -129,11 +129,14 @@ namespace XSwiftBus
         std::string ownAircraftString() const { return "ownAircraft"; }
 
     protected:
+        //! Handler
         virtual void dbusDisconnectedHandler() override;
 
+        //! Handler
         DBusHandlerResult dbusMessageHandler(const CDBusMessage &message) override;
 
     private:
+        //! Camera
         struct DeltaCameraPosition
         {
             double dx       = 0.0;
@@ -143,8 +146,6 @@ namespace XSwiftBus
             double pitch    = 0.0;
             bool isInitialized = false;
         };
-
-        static CSettings *s_pluginSettings; //!< needs to be static for static functions
 
         bool m_initialized        = false;
         bool m_enabledMultiplayer = false;

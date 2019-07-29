@@ -10,6 +10,7 @@
 #define BLACKSIM_XSWIFTBUS_DBUSOBJECT_H
 
 #include "dbusconnection.h"
+#include "settings.h"
 #include <XPLM/XPLMDisplay.h>
 #include <mutex>
 #include <deque>
@@ -21,7 +22,7 @@ namespace XSwiftBus
     {
     public:
         //! Constructor
-        CDBusObject();
+        CDBusObject(ISettingsProvider *settingsProvider);
 
         //! Destructor
         virtual ~CDBusObject();
@@ -79,6 +80,14 @@ namespace XSwiftBus
         //! Invoke all pending DBus calls. They will be executed in the calling thread.
         void invokeQueuedDBusCalls();
 
+        //! Get the settings
+        CSettings getSettings() const;
+
+        //! Set the settings
+        bool setSettings(const CSettings &s);
+
+        static ISettingsProvider *s_settingsProvider; //!< get the settings from here, still protected for the static functions
+
     private:
         static void dbusObjectPathUnregisterFunction(DBusConnection *connection, void *data);
         static DBusHandlerResult dbusObjectPathMessageFunction(DBusConnection *connection, DBusMessage *message, void *data);
@@ -87,7 +96,7 @@ namespace XSwiftBus
         std::string m_interfaceName;
         std::string m_objectPath;
 
-        std::mutex m_mutex;
+        std::mutex m_mutex; //!< DBus calls
         std::deque<std::function<void()>> m_qeuedDBusCalls;
 
         const DBusObjectPathVTable m_dbusObjectPathVTable = { dbusObjectPathUnregisterFunction, dbusObjectPathMessageFunction, nullptr, nullptr, nullptr, nullptr };

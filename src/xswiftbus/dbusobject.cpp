@@ -9,10 +9,18 @@
 #include "dbusobject.h"
 #include <cassert>
 
+XSwiftBus::ISettingsProvider *XSwiftBus::CDBusObject::s_settingsProvider = nullptr;
+
 namespace XSwiftBus
 {
-    CDBusObject::CDBusObject()
-    { }
+    CDBusObject::CDBusObject(ISettingsProvider *settingsProvider)
+    {
+        if (!CDBusObject::s_settingsProvider)
+        {
+            // we expect a single pointer
+            CDBusObject::s_settingsProvider = settingsProvider;
+        }
+    }
 
     CDBusObject::~CDBusObject()
     {
@@ -71,6 +79,18 @@ namespace XSwiftBus
             m_qeuedDBusCalls.front()();
             m_qeuedDBusCalls.pop_front();
         }
+    }
+
+    CSettings CDBusObject::getSettings() const
+    {
+        if (s_settingsProvider) { return s_settingsProvider->getSettings(); }
+        return CSettings();
+    }
+
+    bool CDBusObject::setSettings(const CSettings &s)
+    {
+        if (s_settingsProvider) { s_settingsProvider->setSettings(s); }
+        return false;
     }
 
     void CDBusObject::dbusObjectPathUnregisterFunction(DBusConnection *connection, void *data)
