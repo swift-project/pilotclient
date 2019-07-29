@@ -599,7 +599,7 @@ namespace BlackSimPlugin
                 }
                 else
                 {
-                    CLogMessage(this).validationError(u"CSL package '%1' can not be loaded as it is outside the X-Plane installation directory") << package.s;
+                    CLogMessage(this).validationError(u"CSL package '%1' can not be loaded as it is outside the X-Plane installation directory") << package;
                 }
             }
         }
