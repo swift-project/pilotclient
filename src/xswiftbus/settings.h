@@ -23,8 +23,13 @@ namespace XSwiftBus
         //! Constructor.
         CSettings();
 
+        //! JSON constructor
+        CSettings(const std::string &json);
+
         //! Destructor;
-        ~CSettings();
+        virtual ~CSettings() {}
+    };
+
     };
 } // ns
 
