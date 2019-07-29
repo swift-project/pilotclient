@@ -11,6 +11,7 @@
 
 #include "blackmisc/simulation/settings/xswiftbussettingsqtfree.h"
 #include <string>
+#include <mutex>
 
 namespace XSwiftBus
 {
@@ -30,6 +31,21 @@ namespace XSwiftBus
         virtual ~CSettings() {}
     };
 
+    //! Something owning the settings
+    class ISettingsProvider
+    {
+    public:
+        //! By value
+        //! \threadsafe
+        CSettings getSettings() const;
+
+        //! Set settings
+        //! \threadsafe
+        void setSettings(const CSettings &settings);
+
+    private:
+        mutable std::mutex m_settingsMutex;
+        CSettings          m_pluginSettings; //!< owner of the settings
     };
 } // ns
 

@@ -27,5 +27,17 @@ namespace XSwiftBus
         // void
     }
 
+    CSettings ISettingsProvider::getSettings() const
+    {
+        std::lock_guard<std::mutex> l(m_settingsMutex);
+        return m_pluginSettings;
+    }
+
+    void ISettingsProvider::setSettings(const CSettings &settings)
+    {
+        std::lock_guard<std::mutex> l(m_settingsMutex);
+        m_pluginSettings = settings;
+    }
+
 } // ns
 
