@@ -80,8 +80,8 @@ namespace BlackMisc
                 static const CXSwiftBusSettings &defaultValue();
 
             protected:
-                //! \copydoc CXSwiftBusSettingsQtFree::jsonParsed
-                virtual void jsonParsed() override;
+                //! \copydoc CXSwiftBusSettingsQtFree::objectUpdated
+                virtual void objectUpdated() override;
 
             private:
                 BLACK_METACLASS(

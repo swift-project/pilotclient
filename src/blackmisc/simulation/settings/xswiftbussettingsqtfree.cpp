@@ -12,7 +12,9 @@
 #include "rapidjson/document.h"     // rapidjson's DOM-style API
 #include "rapidjson/prettywriter.h" // for stringify JSON
 
+#include <climits>
 #include <string>
+#include <cmath>
 #include <chrono>
 
 using namespace BlackMisc::Simulation::Settings;
@@ -35,6 +37,14 @@ namespace BlackMisc
     {
         namespace Settings
         {
+            // Qt free version
+            bool isFuzzyEqual(double v1, double v2)
+            {
+                // we can be a little fuzzy here
+                static const double Epsilon = 5 * std::numeric_limits<double>::min();
+                return (fabs(v1 - v2) < Epsilon);
+            }
+
             CXSwiftBusSettingsQtFree::CXSwiftBusSettingsQtFree()
             {}
 
@@ -72,7 +82,7 @@ namespace BlackMisc
                 {
                     m_msSinceEpochQtFree = settingsDoc[CXSwiftBusSettingsQtFree::JsonTimestamp].GetInt64();  c++;
                 }
-                this->jsonParsed(); // post processing
+                this->objectUpdated(); // post processing
                 return c == 6;
             }
 
@@ -115,6 +125,20 @@ namespace BlackMisc
                        ", ts: " + std::to_string(m_msSinceEpochQtFree);
             }
 
+            int CXSwiftBusSettingsQtFree::update(const CXSwiftBusSettingsQtFree &newValues)
+            {
+                int changed = 0;
+                if (m_dBusServerAddress  != newValues.m_dBusServerAddress)  { m_dBusServerAddress  = newValues.m_dBusServerAddress;  changed++; }
+                if (m_drawingLabels      != newValues.m_drawingLabels)      { m_drawingLabels      = newValues.m_drawingLabels;      changed++; }
+                if (m_maxPlanes          != newValues.m_maxPlanes)          { m_maxPlanes          = newValues.m_maxPlanes;          changed++; }
+                if (m_msSinceEpochQtFree != newValues.m_msSinceEpochQtFree) { m_msSinceEpochQtFree = newValues.m_msSinceEpochQtFree; changed++; }
+                if (m_followAircraftDistanceM != newValues.m_followAircraftDistanceM)  { m_followAircraftDistanceM = newValues.m_followAircraftDistanceM; changed++; }
+                if (!isFuzzyEqual(m_maxDrawDistanceNM, newValues.m_maxDrawDistanceNM)) { m_maxDrawDistanceNM = newValues.m_maxDrawDistanceNM; changed++; }
+
+                if (changed > 0) { this->objectUpdated(); } // post processing
+                return changed;
+            }
+
             void CXSwiftBusSettingsQtFree::setCurrentUtcTime()
             {
                 using namespace std::chrono;
@@ -122,7 +146,7 @@ namespace BlackMisc
                 m_msSinceEpochQtFree = static_cast<int64_t>(ms.count());
             }
 
-            void CXSwiftBusSettingsQtFree::jsonParsed()
+            void CXSwiftBusSettingsQtFree::objectUpdated()
             {
                 // void
             }

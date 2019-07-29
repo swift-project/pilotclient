@@ -86,7 +86,7 @@ namespace BlackMisc
                 return s;
             }
 
-            void CXSwiftBusSettings::jsonParsed()
+            void CXSwiftBusSettings::objectUpdated()
             {
                 m_timestampMSecsSinceEpoch = m_msSinceEpochQtFree;
             }
