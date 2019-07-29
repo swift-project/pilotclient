@@ -70,8 +70,8 @@ namespace XSwiftBus
         //! Reverse the actions of initialize().
         void cleanup();
 
-        //! Load a collection of planes from the given directory and return true if successful
-        bool loadPlanesPackage(const std::string &path);
+        //! Load a collection of planes from the given directory and return error message if unsuccessful
+        std::string loadPlanesPackage(const std::string &path);
 
         //! Set the ICAO code to use for aircraft without a model match
         void setDefaultIcao(const std::string &defaultIcao);
