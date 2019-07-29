@@ -64,7 +64,7 @@ namespace XSwiftBus
         }
     }
 
-    const char *introspection_weather =
+    static const char *introspection_weather =
         DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
 #include "org.swift_project.xswiftbus.weather.xml"
         ;

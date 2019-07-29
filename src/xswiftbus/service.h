@@ -41,7 +41,7 @@ namespace XSwiftBus
         CService(CSettings *staticSettings);
 
         //! Destructor
-        ~CService() override = default;
+        virtual ~CService() override = default;
 
         //! DBus interface name
         static const std::string &InterfaceName()

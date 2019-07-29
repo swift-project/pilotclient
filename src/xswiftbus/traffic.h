@@ -146,7 +146,7 @@ namespace XSwiftBus
 
         static CSettings *s_pluginSettings; //!< needs to be static for static functions
 
-        bool m_initialized = false;
+        bool m_initialized        = false;
         bool m_enabledMultiplayer = false;
         CTerrainProbe m_terrainProbe;
 
@@ -164,6 +164,7 @@ namespace XSwiftBus
         static int drawCallback(XPLMDrawingPhase phase, int isBefore, void *refcon);
         static int spaceKeySniffer(char character, XPLMKeyFlags flags, char virtualKey, void *refcon);
 
+        //! Remote aircraft
         struct Plane
         {
             void *id = nullptr;
