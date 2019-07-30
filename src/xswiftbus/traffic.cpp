@@ -842,7 +842,7 @@ namespace XSwiftBus
                     constexpr float gearMoveTimeMs = 5000;
                     const auto gearPositionDiffRemaining = plane->targetGearPosition - plane->surfaces.gearPosition;
 
-                    auto diffMs = std::chrono::duration_cast<std::chrono::milliseconds>(now - plane->prevSurfacesLerpTime);
+                    const auto diffMs = std::chrono::duration_cast<std::chrono::milliseconds>(now - plane->prevSurfacesLerpTime);
                     const auto gearPositionDiffThisFrame = (diffMs.count()) / gearMoveTimeMs;
                     plane->surfaces.gearPosition += std::copysign(gearPositionDiffThisFrame, gearPositionDiffRemaining);
                     plane->surfaces.gearPosition = std::max(0.0f, std::min(plane->surfaces.gearPosition, 1.0f));
@@ -879,6 +879,7 @@ namespace XSwiftBus
     {
         auto *traffic = static_cast<CTraffic *>(refcon);
 
+        if (!traffic) { return 0; } // just in case
         if (isLosingControl == 1)
         {
             // traffic->m_planeViewCallsign.clear();
@@ -931,6 +932,7 @@ namespace XSwiftBus
                 if (!isValidPosition(plane->position))
                 {
                     INFO_LOG("Invalid follow aircraft position for " + plane->callsign);
+                    INFO_LOG("Pos: " + pos2String(plane->position));
                     return 0;
                 }
             }
@@ -942,6 +944,14 @@ namespace XSwiftBus
             cameraPosition->pitch   = static_cast<float>(traffic->m_deltaCameraPosition.pitch);
             cameraPosition->heading = static_cast<float>(traffic->m_deltaCameraPosition.heading);
             cameraPosition->roll = 0.0;
+            cameraPosition->zoom = 1.0;
+
+            if (!isValidPosition(cameraPosition))
+            {
+                INFO_LOG("Invalid camera aircraft position");
+                INFO_LOG("Pos: " + pos2String(cameraPosition));
+                return 0;
+            }
         }
 
         // Return 1 to indicate we want to keep controlling the camera.
@@ -961,6 +971,8 @@ namespace XSwiftBus
         }
 
         traffic->m_countFrame++;
+
+        // slow updates by modulo
         if (traffic->m_countFrame % 250 == 0)
         {
             // update labels
@@ -992,16 +1004,65 @@ namespace XSwiftBus
         return 1;
     }
 
+    bool CTraffic::isPlusMinusOne(float v)
+    {
+        if (v > 1.00001f || v < -1.00001f) { return false; }
+        return true;
+    }
+
+    bool CTraffic::isPlusMinus180(float v)
+    {
+        if (v > 180.00001f || v < -180.00001f) { return false; }
+        return true;
+    }
+
+    bool CTraffic::isPlusMinus180(double v)
+    {
+        if (v > 180.00001 || v < -180.00001) { return false; }
+        return true;
+    }
+
     bool CTraffic::isValidPosition(const XPMPPlanePosition_t &position)
     {
-        if (position.lat > 180.001 || position.lat < -180.001) { return false; }
-        if (position.lon > 180.001 || position.lon < -180.001) { return false; }
-        if (position.pitch   > 180.001f || position.pitch   < -180.001f) { return false; }
-        if (position.heading > 180.001f || position.heading < -180.001f) { return false; }
+        if (!isPlusMinus180(position.lat)) { return false; }
+        if (!isPlusMinus180(position.lon)) { return false; }
+        if (!isPlusMinus180(position.pitch))   { return false; }
+        if (!isPlusMinus180(position.roll))    { return false; }
+        if (!isPlusMinus180(position.heading)) { return false; }
         if (position.elevation < -2000.0 || position.elevation > 100000.0) { return false; }
 
         return true;
     }
-}
+
+    bool CTraffic::isValidPosition(const XPLMCameraPosition_t *camPos)
+    {
+        if (!isPlusMinus180(camPos->roll))    { return false; }
+        if (!isPlusMinus180(camPos->pitch))   { return false; }
+        if (!isPlusMinus180(camPos->heading)) { return false; }
+
+        // x, y, z not in -1..1 range
+        if (std::isnan(camPos->x)) { return false; }
+        if (std::isnan(camPos->y)) { return false; }
+        if (std::isnan(camPos->z)) { return false; }
+
+        return true;
+    }
+
+    std::string CTraffic::pos2String(const XPMPPlanePosition_t &position)
+    {
+        return "lat, lon, el: " +
+               std::to_string(position.lat) + "/" + std::to_string(position.lon) + "/" + std::to_string(position.elevation) +
+               " prh: " +
+               std::to_string(position.pitch) + "/" + std::to_string(position.roll) + "/" + std::to_string(position.heading);
+    }
+
+    std::string CTraffic::pos2String(const XPLMCameraPosition_t *camPos)
+    {
+        return "x, y, z: " +
+               std::to_string(camPos->x) + "/" + std::to_string(camPos->y) + "/" + std::to_string(camPos->z) +
+               " prh: " +
+               std::to_string(camPos->pitch) + "/" + std::to_string(camPos->roll) + "/" + std::to_string(camPos->heading);
+    }
+} // ns
 
 //! \endcond
