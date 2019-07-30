@@ -187,13 +187,26 @@ namespace XSwiftBus
                   const std::string &livery_, const std::string &modelName_);
         };
 
-        //! Check the position if values are valid
+        //! Check functions @{
+        static bool isPlusMinusOne(float v);
+        static bool isPlusMinus180(float v);
+        static bool isPlusMinus180(double v);
+        //! @}
+
+        //! Check the position if values are valid @{
         static bool isValidPosition(const XPMPPlanePosition_t &position);
+        static bool isValidPosition(const XPLMCameraPosition_t *camPos);
+        //! @}
+
+        //! Pos as string @{
+        static std::string pos2String(const XPMPPlanePosition_t &position);
+        static std::string pos2String(const XPLMCameraPosition_t *camPos);
+        //! @}
 
         std::unordered_map<std::string, Plane *> m_planesByCallsign;
         std::unordered_map<void *, Plane *> m_planesById;
         std::vector<std::string> m_followPlaneViewSequence;
-        std::chrono::system_clock::time_point m_timestampLastSimFrame = std::chrono::system_clock::now();
+        // std::chrono::system_clock::time_point m_timestampLastSimFrame = std::chrono::system_clock::now();
 
         CMenu m_followPlaneViewSubMenu;
         std::unordered_map<std::string, CMenuItem> m_followPlaneViewMenuItems;
