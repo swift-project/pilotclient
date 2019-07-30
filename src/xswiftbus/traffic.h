@@ -210,6 +210,7 @@ namespace XSwiftBus
         DeltaCameraPosition m_deltaCameraPosition;
 
         bool m_emitSimFrame = true;
+        int m_countFrame    = 0; //!< allows to do something every n-th frame
 
         int getPlaneData(void *id, int dataType, void *io_data);
         static int getPlaneData(void *id, int dataType, void *io_data, void *self)

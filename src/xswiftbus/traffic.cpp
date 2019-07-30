@@ -255,7 +255,13 @@ namespace XSwiftBus
 
     void CTraffic::setDrawingLabels(bool drawing)
     {
-        s_settingsProvider->getSettings().setDrawingLabels(drawing);
+        CSettings s = this->getSettings();
+        if (s.isDrawingLabels() != drawing)
+        {
+            s.setDrawingLabels(drawing);
+            this->setSettings(s);
+        }
+
         if (drawing)
         {
             XPMPEnableAircraftLabels();
@@ -952,6 +958,17 @@ namespace XSwiftBus
         if (traffic->m_worldRenderType.get() == 0)
         {
             traffic->emitSimFrame();
+        }
+
+        traffic->m_countFrame++;
+        if (traffic->m_countFrame % 250 == 0)
+        {
+            // update labels
+            const CSettings s = traffic->getSettings();
+            if (traffic->isDrawingLabels() != s.isDrawingLabels())
+            {
+                traffic->setDrawingLabels(s.isDrawingLabels());
+            }
         }
 
         return 1;
