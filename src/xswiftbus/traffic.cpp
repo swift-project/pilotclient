@@ -952,8 +952,10 @@ namespace XSwiftBus
         cameraPosition->x = static_cast<float>(lx + traffic->m_deltaCameraPosition.dx);
         cameraPosition->y = static_cast<float>(ly + traffic->m_deltaCameraPosition.dy);
         cameraPosition->z = static_cast<float>(lz + traffic->m_deltaCameraPosition.dz);
-        cameraPosition->pitch   = static_cast<float>(traffic->m_deltaCameraPosition.pitch);
-        cameraPosition->heading = static_cast<float>(traffic->m_deltaCameraPosition.heading);
+        // cameraPosition->pitch   = static_cast<float>(traffic->m_deltaCameraPosition.pitch);
+        // cameraPosition->heading = static_cast<float>(traffic->m_deltaCameraPosition.heading);
+        cameraPosition->pitch   = CTraffic::normalizeToPlusMinus180DegF(static_cast<float>(traffic->m_deltaCameraPosition.pitch));
+        cameraPosition->heading = CTraffic::normalizeToPlusMinus180DegF(static_cast<float>(traffic->m_deltaCameraPosition.heading));
         cameraPosition->roll = 0.0;
         cameraPosition->zoom = 1.0;
 
@@ -1030,6 +1032,20 @@ namespace XSwiftBus
     {
         if (v > 180.00001 || v < -180.00001) { return false; }
         return true;
+    }
+
+    float CTraffic::normalizeToPlusMinus180DegF(float v)
+    {
+        if (v >   180.0f)  { return v - 360.0f;}
+        if (v <= -180.0f)  { return v + 360.0f;}
+        return v;
+    }
+
+    double CTraffic::normalizeToPlusMinus180DegD(double v)
+    {
+        if (v >   180.0)  { return v - 360.0;}
+        if (v <= -180.0)  { return v + 360.0;}
+        return v;
     }
 
     bool CTraffic::isValidPosition(const XPMPPlanePosition_t &position)

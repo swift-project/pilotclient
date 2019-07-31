@@ -193,6 +193,11 @@ namespace XSwiftBus
         static bool isPlusMinus180(double v);
         //! @}
 
+        //! Normalize to (-180, 180] degress @{
+        static float normalizeToPlusMinus180DegF(float v);
+        static double normalizeToPlusMinus180DegD(double v);
+        //! @}
+
         //! Check the position if values are valid @{
         static bool isValidPosition(const XPMPPlanePosition_t &position);
         static bool isValidPosition(const XPLMCameraPosition_t *camPos);
