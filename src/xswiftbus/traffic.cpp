@@ -216,7 +216,7 @@ namespace XSwiftBus
     {
         if (strcmp(section, "planes") == 0 && strcmp(name, "max_full_count") == 0)
         {
-            return s_settingsProvider->getSettings().getMaxPlanes();
+            return CTraffic::s_settingsProvider->getSettings().getMaxPlanes(); // preferences
         }
         else if (strcmp(section, "debug") == 0 && strcmp(name, "allow_obj8_async_load") == 0)
         {
@@ -231,7 +231,7 @@ namespace XSwiftBus
     {
         if (strcmp(section, "planes") == 0 && strcmp(name, "full_distance") == 0)
         {
-            return static_cast<float>(s_settingsProvider->getSettings().getMaxDrawDistanceNM());
+            return static_cast<float>(CTraffic::s_settingsProvider->getSettings().getMaxDrawDistanceNM()); // preferences
         }
         return def;
     }
@@ -906,7 +906,7 @@ namespace XSwiftBus
                 // Now calculate where the camera should be positioned to be x
                 // meters from the plane and pointing at the plane at the pitch and
                 // heading we wanted above.
-                const double distanceMeterM = static_cast<double>(std::max(10, s_settingsProvider->getSettings().getFollowAircraftDistanceM()));
+                const double distanceMeterM = static_cast<double>(std::max(10, traffic->getSettings().getFollowAircraftDistanceM()));
                 static const double PI = std::acos(-1);
                 traffic->m_deltaCameraPosition.dx = -distanceMeterM * sin(traffic->m_deltaCameraPosition.heading * PI / 180.0);
                 traffic->m_deltaCameraPosition.dz =  distanceMeterM * cos(traffic->m_deltaCameraPosition.heading * PI / 180.0);
