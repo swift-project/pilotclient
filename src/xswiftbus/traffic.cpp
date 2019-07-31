@@ -879,13 +879,17 @@ namespace XSwiftBus
 
     int CTraffic::orbitPlaneFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon)
     {
-        auto *traffic = static_cast<CTraffic *>(refcon);
-
-        if (!traffic) { return 0; } // just in case
         if (isLosingControl == 1)
         {
-            // traffic->m_planeViewCallsign.clear();
-            traffic->m_followPlaneViewCallsign.clear();
+            // do NOT use refcon here, might be invalid
+            INFO_LOG("Loosing camera control");
+            return 0;
+        }
+
+        auto *traffic = static_cast<CTraffic *>(refcon);
+        if (!traffic)
+        {
+            ERROR_LOG("Cannot convert CTraffic object");
             return 0;
         }
 
@@ -907,6 +911,14 @@ namespace XSwiftBus
             // fixme: In a future update, change the orbit only while right mouse button is pressed.
             XPLMGetScreenSize(&w, &h);
             XPLMGetMouseLocation(&x, &y);
+
+            // avoid follow aircraft in too small windows
+            if (w < 100 || h < 100)
+            {
+                WARNING_LOG("Screen w/h too small " + std::to_string(w) + "/" + std::to_string(h));
+                return 0;
+            }
+
             traffic->m_deltaCameraPosition.heading = 360.0 * static_cast<double>(x) / static_cast<double>(w);
             traffic->m_deltaCameraPosition.pitch   = 20.0 * ((static_cast<double>(y) / static_cast<double>(h)) * 2.0 - 1.0);
 
@@ -942,8 +954,8 @@ namespace XSwiftBus
             XPLMWorldToLocal(plane->position.lat, plane->position.lon, plane->position.elevation * kFtToMeters, &lx, &ly, &lz);
             if (!isValidPosition(plane->position))
             {
-                INFO_LOG("Invalid follow aircraft position for " + plane->callsign);
-                INFO_LOG("Pos: " + pos2String(plane->position));
+                WARNING_LOG("Invalid follow aircraft position for " + plane->callsign);
+                WARNING_LOG("Pos: " + pos2String(plane->position));
                 return 0;
             }
         }
@@ -961,8 +973,8 @@ namespace XSwiftBus
 
         if (!isValidPosition(cameraPosition))
         {
-            INFO_LOG("Invalid camera aircraft position");
-            INFO_LOG("Pos: " + pos2String(cameraPosition));
+            WARNING_LOG("Invalid camera aircraft position");
+            WARNING_LOG("Pos: " + pos2String(cameraPosition));
             return 0;
         }
 
