@@ -9,6 +9,7 @@
 #ifndef BLACKMISC_SIMULATION_SETTINGS_CXSWIFTBUSSETTINGSQTFREE_H
 #define BLACKMISC_SIMULATION_SETTINGS_CXSWIFTBUSSETTINGSQTFREE_H
 
+#include "blackmisc/simulation/xplane/qtfreeutils.h"
 #include <string>
 
 namespace BlackMisc
@@ -46,13 +47,23 @@ namespace BlackMisc
                 bool isDrawingLabels() const { return m_drawingLabels; }
 
                 //! Set the maximum number of aircraft.
-                bool setMaxPlanes(int planes);
+                bool setMaxPlanes(int planes)
+                {
+                    if (planes == m_maxPlanes) { return false; }
+                    m_maxPlanes = planes;
+                    return true;
+                }
 
                 //! Get the maximum number of aircraft.
                 int getMaxPlanes() const { return m_maxPlanes; }
 
                 //! Set follow aircraft distance
-                bool setFollowAircraftDistanceM(int meters);
+                bool setFollowAircraftDistanceM(int meters)
+                {
+                    if (meters == m_followAircraftDistanceM) { return false; }
+                    m_followAircraftDistanceM = meters;
+                    return true;
+                }
 
                 //! Get follow aircraft distance
                 int getFollowAircraftDistanceM() const { return m_followAircraftDistanceM; }
@@ -61,7 +72,12 @@ namespace BlackMisc
                 double getMaxDrawDistanceNM() const { return m_maxDrawDistanceNM; }
 
                 //! Set the maximum distance at which to draw aircraft (nautical miles).
-                bool setMaxDrawDistanceNM(double nauticalMiles);
+                bool setMaxDrawDistanceNM(double nauticalMiles)
+                {
+                    if (BlackMisc::Simulation::XPlane::QtFreeUtils::isFuzzyEqual(nauticalMiles, m_maxDrawDistanceNM)) { return false; }
+                    m_maxDrawDistanceNM = nauticalMiles;
+                    return true;
+                }
 
                 //! Load and parse config file
                 bool parseXSwiftBusString(const std::string &json);

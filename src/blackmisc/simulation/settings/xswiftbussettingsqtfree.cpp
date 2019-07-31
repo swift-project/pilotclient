@@ -7,14 +7,11 @@
  */
 
 #include "xswiftbussettingsqtfree.h"
-#include "blackmisc/simulation/xplane/qtfreeutils.h"
 
 #include "rapidjson/document.h"     // rapidjson's DOM-style API
 #include "rapidjson/prettywriter.h" // for stringify JSON
 
-#include <climits>
 #include <string>
-#include <cmath>
 #include <chrono>
 
 using namespace BlackMisc::Simulation::Settings;
@@ -37,41 +34,12 @@ namespace BlackMisc
     {
         namespace Settings
         {
-            // Qt free version
-            bool isFuzzyEqual(double v1, double v2)
-            {
-                // we can be a little fuzzy here
-                static const double Epsilon = 5 * std::numeric_limits<double>::min();
-                return (fabs(v1 - v2) < Epsilon);
-            }
-
             CXSwiftBusSettingsQtFree::CXSwiftBusSettingsQtFree()
             {}
 
             CXSwiftBusSettingsQtFree::CXSwiftBusSettingsQtFree(const std::string &json)
             {
                 this->parseXSwiftBusString(json);
-            }
-
-            bool CXSwiftBusSettingsQtFree::setMaxPlanes(int planes)
-            {
-                if (planes == m_maxPlanes) { return false; }
-                m_maxPlanes = planes;
-                return true;
-            }
-
-            bool CXSwiftBusSettingsQtFree::setFollowAircraftDistanceM(int meters)
-            {
-                if (meters == m_followAircraftDistanceM) { return false; }
-                m_followAircraftDistanceM = meters;
-                return true;
-            }
-
-            bool CXSwiftBusSettingsQtFree::setMaxDrawDistanceNM(double nauticalMiles)
-            {
-                if (isFuzzyEqual(nauticalMiles, m_maxDrawDistanceNM)) { return false; }
-                m_maxDrawDistanceNM = nauticalMiles;
-                return true;
             }
 
             bool CXSwiftBusSettingsQtFree::parseXSwiftBusString(const std::string &json)
@@ -159,7 +127,7 @@ namespace BlackMisc
                 if (m_maxPlanes          != newValues.m_maxPlanes)          { m_maxPlanes          = newValues.m_maxPlanes;          changed++; }
                 if (m_msSinceEpochQtFree != newValues.m_msSinceEpochQtFree) { m_msSinceEpochQtFree = newValues.m_msSinceEpochQtFree; changed++; }
                 if (m_followAircraftDistanceM != newValues.m_followAircraftDistanceM)  { m_followAircraftDistanceM = newValues.m_followAircraftDistanceM; changed++; }
-                if (!isFuzzyEqual(m_maxDrawDistanceNM, newValues.m_maxDrawDistanceNM)) { m_maxDrawDistanceNM = newValues.m_maxDrawDistanceNM; changed++; }
+                if (!QtFreeUtils::isFuzzyEqual(m_maxDrawDistanceNM, newValues.m_maxDrawDistanceNM)) { m_maxDrawDistanceNM = newValues.m_maxDrawDistanceNM; changed++; }
 
                 if (changed > 0) { this->objectUpdated(); } // post processing
                 return changed;
