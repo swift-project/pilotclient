@@ -51,9 +51,7 @@ namespace XSwiftBus
 
         assert(!filePath.empty());
         std::ostringstream ss;
-
-        ss << "xswiftbus";
-        ss << ' ';
+        ss << "xswiftbus: ";
 
 #if defined(XSWIFTBUS_ENABLE_TRACE_LOG)
         switch (type)
@@ -95,7 +93,6 @@ namespace XSwiftBus
         std::string buffer = ss.str();
         XPLMDebugString(buffer.c_str());
     }
-
 }
 
 //! \endcond
