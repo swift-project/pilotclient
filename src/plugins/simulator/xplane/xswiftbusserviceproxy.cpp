@@ -506,19 +506,19 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBusAsync(QLatin1String("getSpeedBrakeRatio"), setterCallback(o_speedBrakeRatio));
         }
 
-        QString CXSwiftBusServiceProxy::getSettings() const
+        QString CXSwiftBusServiceProxy::getSettingsJson() const
         {
-            return m_dbusInterface->callDBusRet<QString>(QLatin1String("getSettings"));
+            return m_dbusInterface->callDBusRet<QString>(QLatin1String("getSettingsJson"));
         }
 
-        void CXSwiftBusServiceProxy::getSettingsAsync(QString *o_jsonSettings)
+        void CXSwiftBusServiceProxy::getSettingsJsonAsync(QString *o_jsonSettings)
         {
-            m_dbusInterface->callDBusAsync(QLatin1String("getSettings"), setterCallback(o_jsonSettings));
+            m_dbusInterface->callDBusAsync(QLatin1String("getSettingsJson"), setterCallback(o_jsonSettings));
         }
 
-        void CXSwiftBusServiceProxy::setSettings(const QString &json)
+        void CXSwiftBusServiceProxy::setSettingsJson(const QString &json)
         {
-            m_dbusInterface->callDBus(QLatin1String("setSettings"), json);
+            m_dbusInterface->callDBus(QLatin1String("setSettingsJson"), json);
         }
     } // ns
 } // ns

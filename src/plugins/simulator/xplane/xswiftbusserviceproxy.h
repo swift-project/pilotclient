@@ -389,12 +389,12 @@ namespace BlackSimPlugin
 
             //! \copydoc XSwiftBus::CService::getSettings
             //! @{
-            QString getSettings() const;
-            void getSettingsAsync(QString *o_jsonSettings);
+            QString getSettingsJson() const;
+            void getSettingsJsonAsync(QString *o_jsonSettings);
             //! @}
 
             //! \copydoc XSwiftBus::CService::setSettings
-            void setSettings(const QString &json);
+            void setSettingsJson(const QString &json);
         };
     } // ns
 } // ns
