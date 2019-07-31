@@ -53,6 +53,27 @@ namespace BlackMisc
                 this->parseXSwiftBusString(json);
             }
 
+            bool CXSwiftBusSettingsQtFree::setMaxPlanes(int planes)
+            {
+                if (planes == m_maxPlanes) { return false; }
+                m_maxPlanes = planes;
+                return true;
+            }
+
+            bool CXSwiftBusSettingsQtFree::setFollowAircraftDistanceM(int meters)
+            {
+                if (meters == m_followAircraftDistanceM) { return false; }
+                m_followAircraftDistanceM = meters;
+                return true;
+            }
+
+            bool CXSwiftBusSettingsQtFree::setMaxDrawDistanceNM(double nauticalMiles)
+            {
+                if (isFuzzyEqual(nauticalMiles, m_maxDrawDistanceNM)) { return false; }
+                m_maxDrawDistanceNM = nauticalMiles;
+                return true;
+            }
+
             bool CXSwiftBusSettingsQtFree::parseXSwiftBusString(const std::string &json)
             {
                 if (json.empty()) { return false; }
