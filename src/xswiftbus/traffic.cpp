@@ -279,12 +279,14 @@ namespace XSwiftBus
 
     void CTraffic::setMaxPlanes(int planes)
     {
-        s_settingsProvider->getSettings().setMaxPlanes(planes);
+        CSettings s = this->getSettings();
+        if (s.setMaxPlanes(planes)) { this->setSettings(s); }
     }
 
     void CTraffic::setMaxDrawDistance(double nauticalMiles)
     {
-        s_settingsProvider->getSettings().setMaxDrawDistanceNM(nauticalMiles);
+        CSettings s = this->getSettings();
+        if (s.setMaxDrawDistanceNM(nauticalMiles)) { this->setSettings(s); }
     }
 
     void CTraffic::addPlane(const std::string &callsign, const std::string &modelName, const std::string &aircraftIcao, const std::string &airlineIcao, const std::string &livery)

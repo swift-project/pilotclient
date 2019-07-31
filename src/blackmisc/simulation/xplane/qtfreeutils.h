@@ -15,6 +15,7 @@
 #include <fstream>
 #include <vector>
 #include <cctype>
+#include <cmath>
 #include <algorithm>
 
 // Strict header only X-Plane model parser utils shared between BlackMisc and XSwiftBus.
@@ -153,6 +154,15 @@ namespace BlackMisc
                     static const std::string tr("true");
                     static const std::string fa("false");
                     return t ? tr : fa;
+                }
+
+                //! Qt free version of fuzzy compare
+                inline bool isFuzzyEqual(double v1, double v2)
+                {
+                    // we allow some epsilon here
+                    // static const double Epsilon = 5 * std::numeric_limits<double>::min();
+                    static const double Epsilon = 1E-08;
+                    return (fabs(v1 - v2) < Epsilon);
                 }
 
                 //! Trim whitespace from the beginning and end, and replace sequences of whitespace with single space characters
