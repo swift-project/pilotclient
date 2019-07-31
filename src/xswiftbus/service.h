@@ -235,10 +235,10 @@ namespace XSwiftBus
         void setDisappearMessageWindow(bool enabled) { m_disappearMessageWindow = enabled; }
 
         //! Get settings in JSON format
-        std::string getSettings() const;
+        std::string getSettingsJson() const;
 
         //! Set settings
-        void setSettings(const std::string &jsonString);
+        void setSettingsJson(const std::string &jsonString);
 
         //! Perform generic processing
         int process();

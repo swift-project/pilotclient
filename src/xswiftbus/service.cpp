@@ -157,15 +157,15 @@ namespace XSwiftBus
         return path;
     }
 
-    std::string CService::getSettings() const
+    std::string CService::getSettingsJson() const
     {
-        return s_settingsProvider->getSettings().toXSwiftBusJsonString();
+        return this->getSettings().toXSwiftBusJsonString();
     }
 
-    void CService::setSettings(const std::string &jsonString)
+    void CService::setSettingsJson(const std::string &jsonString)
     {
         const  CSettings s(jsonString);
-        s_settingsProvider->setSettings(s);
+        this->setSettings(s);
         INFO_LOG("Received settings " + s.convertToString());
     }
 
@@ -666,14 +666,14 @@ namespace XSwiftBus
                     toggleMessageBoxVisibility();
                 });
             }
-            else if (message.getMethodName() == "getSettings")
+            else if (message.getMethodName() == "getSettingsJson")
             {
                 queueDBusCall([ = ]()
                 {
-                    sendDBusReply(sender, serial, getSettings());
+                    sendDBusReply(sender, serial, getSettingsJson());
                 });
             }
-            else if (message.getMethodName() == "setSettings")
+            else if (message.getMethodName() == "setSettingsJson")
             {
                 maybeSendEmptyDBusReply(wantsReply, sender, serial);
                 std::string json;
@@ -681,7 +681,7 @@ namespace XSwiftBus
                 message.getArgument(json);
                 queueDBusCall([ = ]()
                 {
-                    setSettings(json);
+                    setSettingsJson(json);
                 });
             }
             else

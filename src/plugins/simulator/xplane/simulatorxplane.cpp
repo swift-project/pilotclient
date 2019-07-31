@@ -1063,7 +1063,7 @@ namespace BlackSimPlugin
             if (!m_serviceProxy) { return false; }
             CXSwiftBusSettings s = m_xSwiftBusServerSettings.get();
             s.setCurrentUtcTime();
-            m_serviceProxy->setSettings(s.toXSwiftBusJsonStringQt());
+            m_serviceProxy->setSettingsJson(s.toXSwiftBusJsonStringQt());
             CLogMessage(this).info(u"Send settings: %1") << s.toQString(true);
             return true;
         }
@@ -1076,7 +1076,7 @@ namespace BlackSimPlugin
             if (!this->isConnected()) { return s; }
             if (!m_serviceProxy)      { return s; }
 
-            const QString json = m_serviceProxy->getSettings();
+            const QString json = m_serviceProxy->getSettingsJson();
             s.parseXSwiftBusStringQt(json);
             ok = true;
             return s;
