@@ -885,75 +885,83 @@ namespace XSwiftBus
         if (isLosingControl == 1)
         {
             // traffic->m_planeViewCallsign.clear();
+            traffic->m_followPlaneViewCallsign.clear();
             return 0;
         }
 
-        if (cameraPosition)
+        // nothing we can do
+        if (!cameraPosition)
         {
-            // Ideally we would like to test against right mouse button, but X-Plane SDK does not
-            // allow that.
-            if (!traffic->m_deltaCameraPosition.isInitialized || traffic->m_isSpacePressed)
+            ERROR_LOG("No camera object");
+            traffic->m_followPlaneViewCallsign.clear();
+            return 0;
+        }
+
+        // Ideally we would like to test against right mouse button, but X-Plane SDK does not
+        // allow that.
+        if (!traffic->m_deltaCameraPosition.isInitialized || traffic->m_isSpacePressed)
+        {
+            int w, h, x, y;
+            // First get the screen size and mouse location. We will use this to decide
+            // what part of the orbit we are in. The mouse will move us up-down and around.
+            // fixme: In a future update, change the orbit only while right mouse button is pressed.
+            XPLMGetScreenSize(&w, &h);
+            XPLMGetMouseLocation(&x, &y);
+            traffic->m_deltaCameraPosition.heading = 360.0 * static_cast<double>(x) / static_cast<double>(w);
+            traffic->m_deltaCameraPosition.pitch   = 20.0 * ((static_cast<double>(y) / static_cast<double>(h)) * 2.0 - 1.0);
+
+            // Now calculate where the camera should be positioned to be x
+            // meters from the plane and pointing at the plane at the pitch and
+            // heading we wanted above.
+            const double distanceMeterM = static_cast<double>(std::max(10, traffic->getSettings().getFollowAircraftDistanceM()));
+            static const double PI = std::acos(-1);
+            traffic->m_deltaCameraPosition.dx = -distanceMeterM * sin(traffic->m_deltaCameraPosition.heading * PI / 180.0);
+            traffic->m_deltaCameraPosition.dz =  distanceMeterM * cos(traffic->m_deltaCameraPosition.heading * PI / 180.0);
+            traffic->m_deltaCameraPosition.dy = -distanceMeterM * tan(traffic->m_deltaCameraPosition.pitch * PI / 180.0);
+
+            traffic->m_deltaCameraPosition.isInitialized = true;
+        }
+
+        double lx, ly, lz;
+        static const double kFtToMeters = 0.3048;
+
+        if (traffic->m_followPlaneViewCallsign == traffic->ownAircraftString())
+        {
+            lx = traffic->m_ownAircraftPositionX.get();
+            ly = traffic->m_ownAircraftPositionY.get();
+            lz = traffic->m_ownAircraftPositionZ.get();
+        }
+        else
+        {
+            if (traffic->m_planesByCallsign.empty()) { return 0; } // paranoia
+            const auto planeIt = traffic->m_planesByCallsign.find(traffic->m_followPlaneViewCallsign);
+            if (planeIt == traffic->m_planesByCallsign.end()) { return 0; }
+            const Plane *plane = planeIt->second;
+            if (!plane) { return 0; }
+
+            XPLMWorldToLocal(plane->position.lat, plane->position.lon, plane->position.elevation * kFtToMeters, &lx, &ly, &lz);
+            if (!isValidPosition(plane->position))
             {
-                int w, h, x, y;
-                // First get the screen size and mouse location. We will use this to decide
-                // what part of the orbit we are in. The mouse will move us up-down and around.
-                // fixme: In a future update, change the orbit only while right mouse button is pressed.
-                XPLMGetScreenSize(&w, &h);
-                XPLMGetMouseLocation(&x, &y);
-                traffic->m_deltaCameraPosition.heading = 360.0 * static_cast<double>(x) / static_cast<double>(w);
-                traffic->m_deltaCameraPosition.pitch   = 20.0 * ((static_cast<double>(y) / static_cast<double>(h)) * 2.0 - 1.0);
-
-                // Now calculate where the camera should be positioned to be x
-                // meters from the plane and pointing at the plane at the pitch and
-                // heading we wanted above.
-                const double distanceMeterM = static_cast<double>(std::max(10, traffic->getSettings().getFollowAircraftDistanceM()));
-                static const double PI = std::acos(-1);
-                traffic->m_deltaCameraPosition.dx = -distanceMeterM * sin(traffic->m_deltaCameraPosition.heading * PI / 180.0);
-                traffic->m_deltaCameraPosition.dz =  distanceMeterM * cos(traffic->m_deltaCameraPosition.heading * PI / 180.0);
-                traffic->m_deltaCameraPosition.dy = -distanceMeterM * tan(traffic->m_deltaCameraPosition.pitch * PI / 180.0);
-
-                traffic->m_deltaCameraPosition.isInitialized = true;
-            }
-
-            double lx, ly, lz;
-            static const double kFtToMeters = 0.3048;
-
-            if (traffic->m_followPlaneViewCallsign == traffic->ownAircraftString())
-            {
-                lx = traffic->m_ownAircraftPositionX.get();
-                ly = traffic->m_ownAircraftPositionY.get();
-                lz = traffic->m_ownAircraftPositionZ.get();
-            }
-            else
-            {
-                const auto planeIt = traffic->m_planesByCallsign.find(traffic->m_followPlaneViewCallsign);
-                if (planeIt == traffic->m_planesByCallsign.end()) { return 0; }
-                const Plane *plane = planeIt->second;
-
-                XPLMWorldToLocal(plane->position.lat, plane->position.lon, plane->position.elevation * kFtToMeters, &lx, &ly, &lz);
-                if (!isValidPosition(plane->position))
-                {
-                    INFO_LOG("Invalid follow aircraft position for " + plane->callsign);
-                    INFO_LOG("Pos: " + pos2String(plane->position));
-                    return 0;
-                }
-            }
-
-            // Fill out the camera position info.
-            cameraPosition->x = static_cast<float>(lx + traffic->m_deltaCameraPosition.dx);
-            cameraPosition->y = static_cast<float>(ly + traffic->m_deltaCameraPosition.dy);
-            cameraPosition->z = static_cast<float>(lz + traffic->m_deltaCameraPosition.dz);
-            cameraPosition->pitch   = static_cast<float>(traffic->m_deltaCameraPosition.pitch);
-            cameraPosition->heading = static_cast<float>(traffic->m_deltaCameraPosition.heading);
-            cameraPosition->roll = 0.0;
-            cameraPosition->zoom = 1.0;
-
-            if (!isValidPosition(cameraPosition))
-            {
-                INFO_LOG("Invalid camera aircraft position");
-                INFO_LOG("Pos: " + pos2String(cameraPosition));
+                INFO_LOG("Invalid follow aircraft position for " + plane->callsign);
+                INFO_LOG("Pos: " + pos2String(plane->position));
                 return 0;
             }
+        }
+
+        // Fill out the camera position info.
+        cameraPosition->x = static_cast<float>(lx + traffic->m_deltaCameraPosition.dx);
+        cameraPosition->y = static_cast<float>(ly + traffic->m_deltaCameraPosition.dy);
+        cameraPosition->z = static_cast<float>(lz + traffic->m_deltaCameraPosition.dz);
+        cameraPosition->pitch   = static_cast<float>(traffic->m_deltaCameraPosition.pitch);
+        cameraPosition->heading = static_cast<float>(traffic->m_deltaCameraPosition.heading);
+        cameraPosition->roll = 0.0;
+        cameraPosition->zoom = 1.0;
+
+        if (!isValidPosition(cameraPosition))
+        {
+            INFO_LOG("Invalid camera aircraft position");
+            INFO_LOG("Pos: " + pos2String(cameraPosition));
+            return 0;
         }
 
         // Return 1 to indicate we want to keep controlling the camera.
