@@ -46,13 +46,13 @@ namespace BlackMisc
                 bool isDrawingLabels() const { return m_drawingLabels; }
 
                 //! Set the maximum number of aircraft.
-                void setMaxPlanes(int planes) { m_maxPlanes = planes; }
+                bool setMaxPlanes(int planes);
 
                 //! Get the maximum number of aircraft.
                 int getMaxPlanes() const { return m_maxPlanes; }
 
                 //! Set follow aircraft distance
-                void setFollowAircraftDistanceM(int meters) { m_followAircraftDistanceM = meters; }
+                bool setFollowAircraftDistanceM(int meters);
 
                 //! Get follow aircraft distance
                 int getFollowAircraftDistanceM() const { return m_followAircraftDistanceM; }
@@ -61,7 +61,7 @@ namespace BlackMisc
                 double getMaxDrawDistanceNM() const { return m_maxDrawDistanceNM; }
 
                 //! Set the maximum distance at which to draw aircraft (nautical miles).
-                void setMaxDrawDistanceNM(double nauticalMiles) { m_maxDrawDistanceNM = nauticalMiles; }
+                bool setMaxDrawDistanceNM(double nauticalMiles);
 
                 //! Load and parse config file
                 bool parseXSwiftBusString(const std::string &json);
