@@ -167,6 +167,12 @@ namespace BlackCore
             void audioDecreaseVolume(bool enabled);
             //! @}
 
+            //! Get current COM unit from cockpit
+            //! \remark cross context
+            //! @{
+            BlackMisc::Aviation::CComSystem getOwnComSystem(BlackMisc::Aviation::CComSystem::ComUnit unit) const;
+            //! @}
+
             //! Voice channel by room
             QSharedPointer<IVoiceChannel> getVoiceChannelBy(const BlackMisc::Audio::CVoiceRoom &voiceRoom);
 

@@ -713,6 +713,22 @@ namespace BlackCore
             this->setVoiceOutputVolume(v);
         }
 
+        CComSystem CContextAudio::getOwnComSystem(CComSystem::ComUnit unit) const
+        {
+            if (!this->getIContextOwnAircraft())
+            {
+                // context not available
+                switch (unit)
+                {
+                case CComSystem::Com1: return CComSystem::getCom1System(122.800, 122.800);
+                case CComSystem::Com2: return CComSystem::getCom2System(122.800, 122.800);
+                default: break;
+                }
+                return CComSystem::getCom1System(122.800, 122.800);
+            }
+            return this->getIContextOwnAircraft()->getOwnComSystem(unit);
+        }
+
         QSharedPointer<IVoiceChannel> CContextAudio::getVoiceChannelBy(const CVoiceRoom &voiceRoom)
         {
             QSharedPointer<IVoiceChannel> voiceChannel;
