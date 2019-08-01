@@ -11,13 +11,13 @@
 #ifndef BLACKCORE_CONTEXT_CONTEXTAUDIO_IMPL_H
 #define BLACKCORE_CONTEXT_CONTEXTAUDIO_IMPL_H
 
-#include "blackcore/actionbind.h"
-#include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextaudio.h"
-#include "blackcore/corefacadeconfig.h"
 #include "blackcore/audio/audiosettings.h"
+#include "blackcore/actionbind.h"
+#include "blackcore/corefacadeconfig.h"
 #include "blackcore/voicechannel.h"
 #include "blackcore/audiomixer.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/audio/notificationsounds.h"
@@ -26,11 +26,11 @@
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/selcal.h"
+#include "blackmisc/macos/microphoneaccess.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/icons.h"
-#include "blackmisc/macos/microphoneaccess.h"
 #include "blacksound/selcalplayer.h"
 #include "blacksound/notificationplayer.h"
 
@@ -121,7 +121,7 @@ namespace BlackCore
             CContextAudio *registerWithDBus(BlackMisc::CDBusServer *server);
 
         private:
-            // Voice COM channel
+            //! Voice COM channel
             enum COM
             {
                 COM1,
@@ -140,7 +140,7 @@ namespace BlackCore
             //! \sa IContextAudio::changedVoiceRooms
             void onConnectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus);
 
-            //! Enable/disable voice transmission @{
+            //! Enable/disable voice transmission, nornally used with hotkey @{
             void setVoiceTransmission(bool enable, COM com);
             void setVoiceTransmissionCom1(bool enabled);
             void setVoiceTransmissionCom2(bool enabled);
@@ -162,7 +162,7 @@ namespace BlackCore
             //! Changed audio settings
             void onChangedAudioSettings();
 
-            //! Audio increase/decrease @{
+            //! Audio increase/decrease volume @{
             void audioIncreaseVolume(bool enabled);
             void audioDecreaseVolume(bool enabled);
             //! @}
@@ -193,9 +193,9 @@ namespace BlackCore
             std::unique_ptr<IAudioInputDevice>  m_voiceInputDevice;
 
             QList<QSharedPointer<IVoiceChannel>> m_unusedVoiceChannels;
-            QHash<BlackMisc::Aviation::CComSystem::ComUnit, QSharedPointer<IVoiceChannel>> m_voiceChannelMapping;
-            QHash<QSharedPointer<IVoiceChannel>, IAudioMixer::OutputPort> m_voiceChannelOutputPortMapping;
-            BlackSound::CSelcalPlayer *m_selcalPlayer = nullptr;
+            QHash<BlackMisc::Aviation::CComSystem::ComUnit, QSharedPointer<IVoiceChannel>> m_voiceChannelMapping; //!< COM unit to voice channel
+            QHash<QSharedPointer<IVoiceChannel>, IAudioMixer::OutputPort> m_voiceChannelOutputPortMapping;        //!< channel to output port
+            BlackSound::CSelcalPlayer      *m_selcalPlayer = nullptr;
             BlackSound::CNotificationPlayer m_notificationPlayer;
 
             // settings
