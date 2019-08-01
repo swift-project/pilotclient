@@ -109,7 +109,7 @@ namespace BlackGui
             void alignUiElementsHeight();
 
             //! Update UI for COM unit
-            void updateActiveCOMUnitLEDs(bool integratedWithSim, bool com1S, bool com1R, bool com2S, bool com2R);
+            void updateActiveCOMUnitLEDs(bool integratedWithSim, bool com1T, bool com1R, bool com2T, bool com2R);
 
             //! Update from simulator context
             void updateIntegratedFlagFromSimulatorContext();
