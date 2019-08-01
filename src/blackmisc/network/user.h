@@ -103,6 +103,9 @@ namespace BlackMisc
             //! Has valid home base?
             bool hasValidHomeBase() const;
 
+            //! Has valid or empty home base?
+            bool hasValidOrEmptyHomeBase() const;
+
             //! Real name + homebase
             QString getRealNameAndHomeBase(const QString &separator = QString(" ")) const;
 

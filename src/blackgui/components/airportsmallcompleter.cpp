@@ -76,6 +76,11 @@ namespace BlackGui
             return ui->le_Icao->text().trimmed().toUpper();
         }
 
+        bool CAirportSmallCompleter::isEmpty() const
+        {
+            return ui->le_Icao->text().isEmpty();
+        }
+
         void CAirportSmallCompleter::setReadOnly(bool readOnly)
         {
             ui->le_Icao->setReadOnly(readOnly);
@@ -86,6 +91,15 @@ namespace BlackGui
         {
             ui->le_Icao->clear();
             m_current = CAirport();
+        }
+
+        void CAirportSmallCompleter::clearIfInvalidCode(bool strictValidation)
+        {
+            const CAirportIcaoCode icao = this->getAirportIcaoCode();
+            if (!icao.hasValidIcaoCode(strictValidation))
+            {
+                this->clear();
+            }
         }
 
         void CAirportSmallCompleter::onIcaoChanged()
