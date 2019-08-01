@@ -68,7 +68,7 @@
    <item>
     <widget class="QTabWidget" name="tw_SwiftMonitorDialog">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tb_AircraftSituation">
       <attribute name="title">
@@ -104,6 +104,19 @@
        <string>COM and Parts</string>
       </attribute>
       <layout class="QGridLayout" name="gl_ComParts">
+       <item row="2" column="0">
+        <spacer name="vs_Com">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
        <item row="0" column="0">
         <widget class="QGroupBox" name="gb_Com">
          <property name="title">
@@ -123,20 +136,7 @@
          </layout>
         </widget>
        </item>
-       <item row="1" column="0">
-        <spacer name="vs_Com">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="0" column="1" rowspan="2">
+       <item row="0" column="1" rowspan="3">
         <widget class="QGroupBox" name="gb_Parts">
          <property name="title">
           <string>Parts</string>
@@ -153,6 +153,16 @@
            </widget>
           </item>
          </layout>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="BlackGui::Components::CCockpitComTransmissionComponent" name="comp_ComTransmissions">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>50</height>
+          </size>
+         </property>
         </widget>
        </item>
       </layout>
@@ -590,8 +600,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>619</width>
-               <height>343</height>
+               <width>646</width>
+               <height>344</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="vl_LogMessagesScrollArea">
@@ -688,6 +698,12 @@
    <class>BlackGui::Components::CCallsignCompleter</class>
    <extends>QFrame</extends>
    <header>blackgui/components/callsigncompleter.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CCockpitComTransmissionComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/cockpitcomtransmissioncomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
