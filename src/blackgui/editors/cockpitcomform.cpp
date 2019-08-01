@@ -231,7 +231,7 @@ namespace BlackGui
             }
 
             this->updateIntegratedFlagFromSimulatorContext();
-            this->updateActiveCOMUnitLEDs(m_integratedWithSim, com1.isSendEnabled(), com1.isReceiveEnabled(), com2.isSendEnabled(), com2.isReceiveEnabled());
+            this->updateActiveCOMUnitLEDs(m_integratedWithSim, com1.isTransmitEnabled(), com1.isReceiveEnabled(), com2.isTransmitEnabled(), com2.isReceiveEnabled());
         }
 
         void CCockpitComForm::setTransponder(const CTransponder &transponder)
@@ -296,7 +296,7 @@ namespace BlackGui
             }
         }
 
-        void CCockpitComForm::updateActiveCOMUnitLEDs(bool integratedWithSim, bool com1S, bool com1R, bool com2S, bool com2R)
+        void CCockpitComForm::updateActiveCOMUnitLEDs(bool integratedWithSim, bool com1T, bool com1R, bool com2T, bool com2R)
         {
             if (!integratedWithSim)
             {
@@ -310,7 +310,7 @@ namespace BlackGui
                 ui->led_ComPanelCom1R->setOn(com1R);
                 ui->led_ComPanelCom1S->setOn(com1S);
                 ui->led_ComPanelCom2R->setOn(com2R);
-                ui->led_ComPanelCom2S->setOn(com2S);
+                ui->led_ComPanelCom2T->setOn(com2T);
             }
         }
 

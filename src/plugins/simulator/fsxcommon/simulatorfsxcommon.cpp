@@ -700,7 +700,7 @@ namespace BlackSimPlugin
                 const bool com1Test      = dtb(simulatorOwnAircraft.comTest1);
                 const bool com1Transmit  = dtb(simulatorOwnAircraft.comTransmit1);
                 const int  com1Status    = qRound(simulatorOwnAircraft.comStatus1); // Radio status flag : -1 =Invalid 0 = OK 1 = Does not exist 2 = No electricity 3 = Failed
-                com1.setSendEnabled(com1Status == 0 && com1Transmit);
+                com1.setTransmitEnabled(com1Status == 0 && com1Transmit);
                 com1.setReceiveEnabled(com1Status == 0 && (comReceiveAll || com1Transmit));
                 const bool changedCom1 = myAircraft.getCom1System() != com1;
                 m_simCom1 = com1;
@@ -711,7 +711,7 @@ namespace BlackSimPlugin
                 const bool com2Test     = dtb(simulatorOwnAircraft.comTest2);
                 const bool com2Transmit = dtb(simulatorOwnAircraft.comTransmit2);
                 const int  com2Status   = qRound(simulatorOwnAircraft.comStatus2); // Radio status flag : -1 =Invalid 0 = OK 1 = Does not exist 2 = No electricity 3 = Failed
-                com2.setSendEnabled(com2Status == 0 && com2Transmit);
+                com2.setTransmitEnabled(com2Status == 0 && com2Transmit);
                 com2.setReceiveEnabled(com2Status == 0 && (comReceiveAll || com2Transmit));
                 const bool changedCom2 = myAircraft.getCom2System() != com2;
                 m_simCom2 = com2;

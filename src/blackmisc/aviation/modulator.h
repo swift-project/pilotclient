@@ -25,11 +25,11 @@ namespace BlackMisc
             //! Column indexes
             enum ColumnIndex
             {
-                IndexActiveFrequency = BlackMisc::CPropertyIndex::GlobalIndexCModulator,
+                IndexActiveFrequency = CPropertyIndex::GlobalIndexCModulator,
                 IndexStandbyFrequency,
-                IndexOutputVolume,
-                IndexInputVolume,
-                IndexEnabledSend,
+                IndexReceiveVolume,
+                IndexTransmitVolume,
+                IndexEnabledTransmit,
                 IndexEnabledReceive
             };
 
@@ -43,28 +43,28 @@ namespace BlackMisc
             BlackMisc::PhysicalQuantities::CFrequency getFrequencyStandby() const;
 
             //! Output volume 0..100
-            int getVolumeOutput() const;
+            int getVolumeReceive() const;
 
             //! Input volume 0..100
-            int getVolumeInput() const;
+            int getVolumeTransmit() const;
 
             //! Output volume 0.100
-            void setVolumeOutput(int volume);
+            void setVolumeReceive(int volume);
 
             //! Input volume 0..100
-            void setVolumeInput(int volume);
+            void setVolumeTransmit(int volume);
 
             //! Name
             QString getName() const;
 
             //! Enabled?
-            bool isSendEnabled() const;
+            bool isTransmitEnabled() const;
 
             //! Enabled?
             bool isReceiveEnabled() const;
 
             //! Enabled?
-            void setSendEnabled(bool enable);
+            void setTransmitEnabled(bool enable);
 
             //! Enabled?
             void setReceiveEnabled(bool enable);
@@ -126,12 +126,12 @@ namespace BlackMisc
 
         private:
             QString m_name; //!< name of the unit
-            BlackMisc::PhysicalQuantities::CFrequency m_frequencyActive;  //!< active frequency
-            BlackMisc::PhysicalQuantities::CFrequency m_frequencyStandby; //!< standby frequency
-            int m_volumeInput     = 0;     //!< volume input
-            int m_volumeOutput    = 0;     //!< volume output
-            bool m_sendEnabled    = true;  //!< is enabled, used e.g. for mute etc.
-            bool m_receiveEnabled = true;  //!< is enabled, used e.g. for mute etc.
+            PhysicalQuantities::CFrequency m_frequencyActive;  //!< active frequency
+            PhysicalQuantities::CFrequency m_frequencyStandby; //!< standby frequency
+            int m_volumeTransmit   = 100;   //!< volume transmit/input 0..100
+            int m_volumeReceive    = 100;   //!< volume receive/output 0..100
+            bool m_transmitEnabled = true;  //!< is enabled, used e.g. for mute etc.
+            bool m_receiveEnabled  = true;  //!< is enabled, used e.g. for mute etc.
 
             //! Easy access to derived class (CRTP template parameter)
             AVIO const *derived() const
@@ -150,9 +150,9 @@ namespace BlackMisc
                 BLACK_METAMEMBER(name),
                 BLACK_METAMEMBER(frequencyActive),
                 BLACK_METAMEMBER(frequencyStandby),
-                BLACK_METAMEMBER(volumeInput),
-                BLACK_METAMEMBER(volumeOutput),
-                BLACK_METAMEMBER(sendEnabled),
+                BLACK_METAMEMBER(volumeTransmit),
+                BLACK_METAMEMBER(volumeReceive),
+                BLACK_METAMEMBER(transmitEnabled),
                 BLACK_METAMEMBER(receiveEnabled)
             );
         };

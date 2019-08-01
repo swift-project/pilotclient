@@ -58,33 +58,33 @@ namespace BlackMisc
         }
 
         template <class AVIO>
-        int CModulator<AVIO>::getVolumeOutput() const
+        int CModulator<AVIO>::getVolumeReceive() const
         {
-            return m_volumeOutput;
+            return m_volumeReceive;
         }
 
         template <class AVIO>
-        int CModulator<AVIO>::getVolumeInput() const
+        int CModulator<AVIO>::getVolumeTransmit() const
         {
-            return m_volumeInput;
+            return m_volumeTransmit;
         }
 
         template <class AVIO>
-        void CModulator<AVIO>::setVolumeOutput(int volume)
+        void CModulator<AVIO>::setVolumeReceive(int volume)
         {
-            m_volumeOutput = volume;
+            m_volumeReceive = volume;
         }
 
         template <class AVIO>
-        void CModulator<AVIO>::setVolumeInput(int volume)
+        void CModulator<AVIO>::setVolumeTransmit(int volume)
         {
-            m_volumeInput = volume;
+            m_volumeTransmit = volume;
         }
 
         template <class AVIO>
-        bool CModulator<AVIO>::isSendEnabled() const
+        bool CModulator<AVIO>::isTransmitEnabled() const
         {
-            return m_sendEnabled;
+            return m_transmitEnabled;
         }
 
         template<class AVIO>
@@ -94,9 +94,9 @@ namespace BlackMisc
         }
 
         template <class AVIO>
-        void CModulator<AVIO>::setSendEnabled(bool enable)
+        void CModulator<AVIO>::setTransmitEnabled(bool enable)
         {
-            m_sendEnabled = enable;
+            m_transmitEnabled = enable;
         }
 
         template<class AVIO>
@@ -120,10 +120,10 @@ namespace BlackMisc
             {
             case IndexActiveFrequency:  return this->getFrequencyActive().propertyByIndex(index.copyFrontRemoved());
             case IndexStandbyFrequency: return this->getFrequencyStandby().propertyByIndex(index.copyFrontRemoved());
-            case IndexEnabledSend:      return CVariant::from(this->isSendEnabled());
+            case IndexEnabledTransmit:  return CVariant::from(this->isTransmitEnabled());
             case IndexEnabledReceive:   return CVariant::from(this->isReceiveEnabled());
-            case IndexInputVolume:      return CVariant::from(this->getVolumeInput());
-            case IndexOutputVolume:     return CVariant::from(this->getVolumeOutput());
+            case IndexTransmitVolume:   return CVariant::from(this->getVolumeTransmit());
+            case IndexReceiveVolume:    return CVariant::from(this->getVolumeReceive());
             default:
                 return CValueObject<CModulator<AVIO>>::propertyByIndex(index);
             }
@@ -138,10 +138,10 @@ namespace BlackMisc
             {
             case IndexActiveFrequency:  m_frequencyActive.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexStandbyFrequency: m_frequencyStandby.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexEnabledSend:      this->setSendEnabled(variant.toBool()); break;
+            case IndexEnabledTransmit:  this->setTransmitEnabled(variant.toBool()); break;
             case IndexEnabledReceive:   this->setReceiveEnabled(variant.toBool()); break;
-            case IndexInputVolume:      this->setVolumeInput(variant.toInt());  break;
-            case IndexOutputVolume:     this->setVolumeOutput(variant.toInt()); break;
+            case IndexTransmitVolume:   this->setVolumeTransmit(variant.toInt());  break;
+            case IndexReceiveVolume:    this->setVolumeReceive(variant.toInt()); break;
             default:
                 CValueObject<CModulator<AVIO>>::setPropertyByIndex(index, variant);
                 break;
@@ -157,10 +157,10 @@ namespace BlackMisc
             {
             case IndexActiveFrequency:  return m_frequencyActive.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyActive);
             case IndexStandbyFrequency: return m_frequencyStandby.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyStandby);
-            case IndexEnabledSend:      return Compare::compare(this->isSendEnabled(), compareValue.isSendEnabled());
+            case IndexEnabledTransmit:  return Compare::compare(this->isTransmitEnabled(), compareValue.isTransmitEnabled());
             case IndexEnabledReceive:   return Compare::compare(this->isReceiveEnabled(), compareValue.isReceiveEnabled());
-            case IndexInputVolume:      return Compare::compare(this->getVolumeInput(), compareValue.getVolumeInput());
-            case IndexOutputVolume:     return Compare::compare(this->getVolumeOutput(), compareValue.getVolumeOutput());
+            case IndexTransmitVolume:   return Compare::compare(this->getVolumeTransmit(), compareValue.getVolumeTransmit());
+            case IndexReceiveVolume:    return Compare::compare(this->getVolumeReceive(), compareValue.getVolumeReceive());
             default: break;
             }
             Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
