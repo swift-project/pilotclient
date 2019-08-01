@@ -156,10 +156,10 @@ namespace BlackCore
         {
             Q_ASSERT(m_voice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return getComVoiceRooms();
+            return this->getComVoiceRooms();
         }
 
-        CVoiceRoom CContextAudio::getVoiceRoom(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue, bool withAudioStatus) const
+        CVoiceRoom CContextAudio::getVoiceRoom(CComSystem::ComUnit comUnitValue, bool withAudioStatus) const
         {
             Q_ASSERT(m_voice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << withAudioStatus; }
@@ -291,7 +291,7 @@ namespace BlackCore
             Q_ASSERT(m_voiceOutputDevice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << volume; }
 
-            bool wasMuted = isMuted();
+            const bool wasMuted = isMuted();
             volume = qMin(CSettings::MaxAudioVolume, volume);
 
             bool changedVoiceOutput = m_voiceOutputDevice->getOutputVolume() != volume;
@@ -345,11 +345,11 @@ namespace BlackCore
             if (newVolume != m_voiceOutputDevice->getOutputVolume())
             {
                 m_voiceOutputDevice->setOutputVolume(newVolume);
-                emit changedAudioVolume(newVolume);
+                emit this->changedAudioVolume(newVolume);
             }
 
             // signal
-            emit changedMute(muted);
+            emit this->changedMute(muted);
         }
 
         bool CContextAudio::isMuted() const
@@ -400,8 +400,8 @@ namespace BlackCore
                     QSharedPointer<IVoiceChannel> newVoiceChannel = this->getVoiceChannelBy(newRoomCom1);
                     newVoiceChannel->setOwnAircraftCallsign(ownCallsign);
                     newVoiceChannel->setUserId(id);
-                    bool inUse = m_voiceChannelMapping.values().contains(newVoiceChannel);
-                    m_voiceChannelMapping.insert(BlackMisc::Aviation::CComSystem::Com1, newVoiceChannel);
+                    const bool inUse = m_voiceChannelMapping.values().contains(newVoiceChannel);
+                    m_voiceChannelMapping.insert(CComSystem::Com1, newVoiceChannel);
 
                     // If the voice channel is not used by anybody else
                     if (!inUse)
@@ -627,8 +627,9 @@ namespace BlackCore
             this->setVoiceTransmission(enabled, COMActive);
         }
 
-        void CContextAudio::onConnectionStatusChanged(BlackCore::IVoiceChannel::ConnectionStatus oldStatus,
-                BlackCore::IVoiceChannel::ConnectionStatus newStatus)
+        void CContextAudio::onConnectionStatusChanged(
+            IVoiceChannel::ConnectionStatus oldStatus,
+            IVoiceChannel::ConnectionStatus newStatus)
         {
             Q_UNUSED(oldStatus);
 
@@ -717,7 +718,11 @@ namespace BlackCore
             QSharedPointer<IVoiceChannel> voiceChannel;
             for (const auto &channel : as_const(m_voiceChannelMapping))
             {
-                if (channel->getVoiceRoom().getVoiceRoomUrl() == voiceRoom.getVoiceRoomUrl()) voiceChannel = channel;
+                if (channel->getVoiceRoom().getVoiceRoomUrl() == voiceRoom.getVoiceRoomUrl())
+                {
+                    voiceChannel = channel;
+                    break;
+                }
             }
 
             // If we haven't found a valid voice channel pointer, get an unused one
