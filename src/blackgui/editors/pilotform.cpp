@@ -122,7 +122,8 @@ namespace BlackGui
             ui->lblp_Id->setTicked(validId);
             if (!validId) { msgs.push_back(CStatusMessage(this).validationError(u"Invalid id")); }
 
-            const bool validHomeAirport = user.hasValidHomeBase();
+            // check against user and if the data entry contains a valid code (or is empty)
+            const bool validHomeAirport = user.hasValidOrEmptyHomeBase() && (ui->comp_HomeAirport->isEmpty() || ui->comp_HomeAirport->getAirportIcaoCode().hasValidIcaoCode(false));
             ui->lblp_HomeAirport->setTicked(validHomeAirport);
             if (!validHomeAirport) { msgs.push_back(CStatusMessage(this).validationError(u"Wromg home airport")); }
 
@@ -144,6 +145,7 @@ namespace BlackGui
 
         void CPilotForm::doValidation()
         {
+            // ui->comp_HomeAirport->clearIfInvalidCode(false);
             this->validate();
         }
     } // ns

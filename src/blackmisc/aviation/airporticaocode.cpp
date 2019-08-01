@@ -9,7 +9,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         QString CAirportIcaoCode::convertToQString(bool /** i18n **/) const
         {
             return m_icaoCode;

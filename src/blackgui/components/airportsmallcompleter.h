@@ -49,11 +49,17 @@ namespace BlackGui
             //! The raw ICAO code text
             QString getIcaoText() const;
 
+            //! Empty field
+            bool isEmpty() const;
+
             //! Read only
             void setReadOnly(bool readOnly);
 
             //! Clear
             void clear();
+
+            //! Clear if code not valid
+            void clearIfInvalidCode(bool strictValidation);
 
         signals:
             //! Airport has been changed

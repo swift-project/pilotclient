@@ -141,6 +141,11 @@ namespace BlackMisc
             return m_homebase.hasValidIcaoCode(false);
         }
 
+        bool CUser::hasValidOrEmptyHomeBase() const
+        {
+            return m_homebase.isEmpty() || this->hasValidHomeBase();
+        }
+
         CStatusMessageList CUser::validate() const
         {
             CStatusMessageList msgs;
