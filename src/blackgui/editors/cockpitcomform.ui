@@ -136,10 +136,10 @@
        <widget class="BlackGui::CLedWidget" name="led_ComPanelCom2" native="true"/>
       </item>
       <item>
-       <widget class="BlackGui::CLedWidget" name="led_ComPanelCom2R" native="true"/>
+       <widget class="BlackGui::CLedWidget" name="led_ComPanelCom2T" native="true"/>
       </item>
       <item>
-       <widget class="BlackGui::CLedWidget" name="led_ComPanelCom2S" native="true"/>
+       <widget class="BlackGui::CLedWidget" name="led_ComPanelCom2R" native="true"/>
       </item>
      </layout>
     </widget>
@@ -263,7 +263,7 @@
        <widget class="BlackGui::CLedWidget" name="led_ComPanelCom1" native="true"/>
       </item>
       <item>
-       <widget class="BlackGui::CLedWidget" name="led_ComPanelCom1S" native="true"/>
+       <widget class="BlackGui::CLedWidget" name="led_ComPanelCom1T" native="true"/>
       </item>
       <item>
        <widget class="BlackGui::CLedWidget" name="led_ComPanelCom1R" native="true"/>
