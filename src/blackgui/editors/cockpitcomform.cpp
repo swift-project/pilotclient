@@ -102,16 +102,16 @@ namespace BlackGui
 
         void CCockpitComForm::setSelectedAtcStations(const CAtcStationList &selectedStations)
         {
-            const CAtcStation com1Station = selectedStations.size() > 0 ? selectedStations[0] : CAtcStation();
+            const CAtcStation com1Ttation = selectedStations.size() > 0 ? selectedStations[0] : CAtcStation();
             const CAtcStation com2Station = selectedStations.size() > 1 ? selectedStations[1] : CAtcStation();
-            if (com1Station.getCallsign().isEmpty())
+            if (com1Ttation.getCallsign().isEmpty())
             {
                 ui->lbl_ComPanelCom1Active->setToolTip("");
                 ui->led_ComPanelCom1->setOn(false);
             }
             else
             {
-                ui->lbl_ComPanelCom1Active->setToolTip(com1Station.getCallsign().getStringAsSet());
+                ui->lbl_ComPanelCom1Active->setToolTip(com1Ttation.getCallsign().getStringAsSet());
                 ui->led_ComPanelCom1->setOn(true);
 
             }
@@ -138,6 +138,7 @@ namespace BlackGui
             this->setSelcal(aircraft.getSelcal());
             this->setTransponder(aircraft.getTransponder());
             this->alignUiElementsHeight();
+            this->updateIntegratedFlagFromSimulatorContext();
         }
 
         CSelcal CCockpitComForm::getSelcal() const
@@ -157,14 +158,14 @@ namespace BlackGui
             ui->led_ComPanelCom2->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 connected to station", "COM2 disconnected", 14);
 
             ui->led_ComPanelCom1R->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 receive (sim)", "COM1 not receiving", 14);
-            ui->led_ComPanelCom1S->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 trasmit (sim)", "COM1 not transmitting", 14);
+            ui->led_ComPanelCom1T->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 trasmit (sim)", "COM1 not transmitting", 14);
             ui->led_ComPanelCom1R->setTriStateValues(CLedWidget::Blue, "receive not synced");
-            ui->led_ComPanelCom1S->setTriStateValues(CLedWidget::Blue, "transmit not synced");
+            ui->led_ComPanelCom1T->setTriStateValues(CLedWidget::Blue, "transmit not synced");
 
             ui->led_ComPanelCom2R->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 receive (sim)", "COM2 not receiving", 14);
-            ui->led_ComPanelCom2S->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 trasmit (sim)", "COM2 not transmitting", 14);
+            ui->led_ComPanelCom2T->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 trasmit (sim)", "COM2 not transmitting", 14);
             ui->led_ComPanelCom2R->setTriStateValues(CLedWidget::Blue, "receive not synced");
-            ui->led_ComPanelCom2S->setTriStateValues(CLedWidget::Blue, "transmit not synced");
+            ui->led_ComPanelCom2T->setTriStateValues(CLedWidget::Blue, "transmit not synced");
         }
 
         CSimulatedAircraft CCockpitComForm::cockpitValuesToAircraftObject()
@@ -301,14 +302,14 @@ namespace BlackGui
             if (!integratedWithSim)
             {
                 ui->led_ComPanelCom1R->setTriState();
-                ui->led_ComPanelCom1S->setTriState();
+                ui->led_ComPanelCom1T->setTriState();
                 ui->led_ComPanelCom2R->setTriState();
-                ui->led_ComPanelCom2S->setTriState();
+                ui->led_ComPanelCom2T->setTriState();
             }
             else
             {
                 ui->led_ComPanelCom1R->setOn(com1R);
-                ui->led_ComPanelCom1S->setOn(com1S);
+                ui->led_ComPanelCom1T->setOn(com1T);
                 ui->led_ComPanelCom2R->setOn(com2R);
                 ui->led_ComPanelCom2T->setOn(com2T);
             }
