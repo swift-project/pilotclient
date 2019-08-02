@@ -47,6 +47,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Data;
 using namespace BlackMisc::Network;
 using namespace BlackGui::Models;
+using namespace BlackGui::Views;
 using namespace BlackCore;
 
 namespace BlackGui
@@ -67,6 +68,7 @@ namespace BlackGui
             ui->comp_AircraftSelector->displayWithIcaoDescription(false);
             ui->comp_LiverySelector->withLiveryDescription(false);
             ui->tvp_ResultMessages->setMode(CStatusMessageListModel::Simplified);
+            ui->tvp_ResultMessages->menuAddItems(CViewBaseNonTemplate::MenuSave);
 
             const CUpperCaseValidator *validator = new CUpperCaseValidator(this);
             ui->le_ModelString->setValidator(validator);
