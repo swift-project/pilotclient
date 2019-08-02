@@ -12,6 +12,7 @@
 #define BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATED_H
 
 #include "../plugincommon/simulatorplugincommon.h"
+#include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/simulation/interpolatormulti.h"
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/simulation/interpolationlogger.h"
@@ -96,6 +97,10 @@ namespace BlackSimPlugin
             //! Simulator internal change of COM values
             //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
             bool changeInternalCom(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! Simulator internal change of COM values
+            //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
+            bool changeInternalCom(const BlackMisc::Aviation::CComSystem &comSystem, BlackMisc::Aviation::CComSystem::ComUnit unit);
 
             //! Simulator internal change of SELCAL
             //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
