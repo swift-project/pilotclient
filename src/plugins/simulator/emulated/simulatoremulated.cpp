@@ -224,6 +224,15 @@ namespace BlackSimPlugin
             return this->updateCockpit(aircraft, this->identifier());
         }
 
+        bool CSimulatorEmulated::changeInternalCom(const CComSystem &comSystem, CComSystem::ComUnit unit)
+        {
+            if (m_myAircraft.getComSystem(unit) == comSystem) { return false; }
+            m_myAircraft.setComSystem(comSystem, unit);
+            const bool c = this->updateCockpit(m_myAircraft, this->identifier());
+            if (c) { emit this->internalAircraftChanged(); }
+            return c;
+        }
+
         bool CSimulatorEmulated::changeInternalSelcal(const CSelcal &selcal)
         {
             if (m_myAircraft.getSelcal() == selcal) { return false; }

@@ -7,8 +7,9 @@
  */
 
 #include "simulatoremulatedmonitordialog.h"
-#include "simulatoremulated.h"
 #include "ui_simulatoremulatedmonitordialog.h"
+#include "simulatoremulated.h"
+#include "blackgui/components/cockpitcomtransmissioncomponent.h"
 #include "blackmisc/logmessage.h"
 
 #include <QIntValidator>
@@ -18,6 +19,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackGui;
+using namespace BlackGui::Components;
 using namespace BlackGui::Editors;
 
 namespace BlackSimPlugin
@@ -49,14 +51,15 @@ namespace BlackSimPlugin
             connect(m_simulator, &CSimulatorEmulated::internalAircraftChanged, this, &CSimulatorEmulatedMonitorDialog::setInternalAircraftUiValues, Qt::QueuedConnection);
             connect(&m_uiUpdateTimer, &QTimer::timeout, this, &CSimulatorEmulatedMonitorDialog::timerBasedUiUpdates);
 
-            connect(ui->cb_Connected, &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
-            connect(ui->cb_Paused, &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
+            connect(ui->cb_Connected, & QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
+            connect(ui->cb_Paused,     &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
             connect(ui->cb_Simulating, &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
 
             connect(ui->editor_Situation, &CSituationForm::changeAircraftSituation, this, &CSimulatorEmulatedMonitorDialog::changeSituationFromUi, Qt::QueuedConnection);
             connect(ui->editor_AircraftParts, &CAircraftPartsForm::changeAircraftParts, this, &CSimulatorEmulatedMonitorDialog::changePartsFromUi, Qt::QueuedConnection);
             connect(ui->editor_Com, &CCockpitComForm::changedCockpitValues, this, &CSimulatorEmulatedMonitorDialog::changeComFromUi, Qt::QueuedConnection);
             connect(ui->editor_Com, &CCockpitComForm::changedSelcal, this, &CSimulatorEmulatedMonitorDialog::changeSelcalFromUi, Qt::QueuedConnection);
+            connect(ui->comp_ComTransmissions, &CCockpitComTransmissionComponent::changedValues, this, &CSimulatorEmulatedMonitorDialog::onSavedComTransmissionValues, Qt::QueuedConnection);
 
             connect(ui->pb_ResetStatistics,      &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::resetStatistics);
             connect(ui->pb_InterpolatorStopLog,  &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
@@ -159,6 +162,15 @@ namespace BlackSimPlugin
             );
         }
 
+        void CSimulatorEmulatedMonitorDialog::onSavedComTransmissionValues(CComSystem::ComUnit unit)
+        {
+            if (!m_simulator) { return; }
+            const CSimulatedAircraft ownAircraft = m_simulator->getOwnAircraft();
+            CComSystem com = ownAircraft.getComSystem(unit);
+            ui->comp_ComTransmissions->updateComSystem(com, unit);
+            m_simulator->changeInternalCom(com, unit);
+        }
+
         void CSimulatorEmulatedMonitorDialog::changeComFromUi(const CSimulatedAircraft &aircraft)
         {
             if (!m_simulator) { return; }
@@ -201,6 +213,7 @@ namespace BlackSimPlugin
             ui->editor_Situation->setSituation(internal.getSituation());
             ui->editor_AircraftParts->setAircraftParts(internal.getParts());
             ui->editor_Com->setValue(internal);
+            ui->comp_ComTransmissions->setComSystems(internal);
         }
 
         void CSimulatorEmulatedMonitorDialog::timerBasedUiUpdates()

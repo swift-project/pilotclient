@@ -74,6 +74,9 @@ namespace BlackSimPlugin
             //! UI values changed
             void onSimulatorValuesChanged();
 
+            //! Transmission values (COM unit volume etc.)
+            void onSavedComTransmissionValues(BlackMisc::Aviation::CComSystem::ComUnit unit);
+
             //! Cockpit COM values changed
             void changeComFromUi(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
