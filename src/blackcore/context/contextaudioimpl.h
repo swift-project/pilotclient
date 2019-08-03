@@ -171,6 +171,7 @@ namespace BlackCore
             //! \remark cross context
             //! @{
             BlackMisc::Aviation::CComSystem getOwnComSystem(BlackMisc::Aviation::CComSystem::ComUnit unit) const;
+            bool isComIntegratedWithSimulator() const;
             //! @}
 
             //! Voice channel by room
