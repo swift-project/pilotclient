@@ -9,7 +9,8 @@
 
 #include "blackcore/context/contextaudioimpl.h"
 #include "blackcore/context/contextnetwork.h"
-#include "blackcore/context/contextownaircraft.h"
+#include "blackcore/context/contextownaircraft.h"  // for COM integration
+#include "blackcore/context/contextsimulator.h"    // for COM intergration
 #include "blackcore/application.h"
 #include "blackcore/audiodevice.h"
 #include "blackcore/corefacade.h"
@@ -144,7 +145,7 @@ namespace BlackCore
             m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputVoiceChannel2, m_channel2.data());
 
             m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel1, IAudioMixer::OutputOutputDevice1);
-            m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel2, IAudioMixer::OutputOutputDevice1);
+            m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel2, IAudioMixer::OutputOutputDevice2);
         }
 
         CContextAudio::~CContextAudio()
@@ -727,6 +728,12 @@ namespace BlackCore
                 return CComSystem::getCom1System(122.800, 122.800);
             }
             return this->getIContextOwnAircraft()->getOwnComSystem(unit);
+        }
+
+        bool CContextAudio::isComIntegratedWithSimulator() const
+        {
+            if (!this->getIContextSimulator()) { return false; }
+            return this->getIContextSimulator()->getSimulatorSettings().isComIntegrated();
         }
 
         QSharedPointer<IVoiceChannel> CContextAudio::getVoiceChannelBy(const CVoiceRoom &voiceRoom)
