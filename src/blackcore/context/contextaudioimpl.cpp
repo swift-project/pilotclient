@@ -44,6 +44,7 @@ using namespace BlackMisc::Audio;
 using namespace BlackMisc::Input;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Simulation;
 using namespace BlackSound;
 using namespace BlackCore::Vatsim;
 
@@ -53,6 +54,7 @@ namespace BlackCore
     {
         CContextAudio::CContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
             IContextAudio(mode, runtime),
+            CIdentifiable(this),
             m_voice(new CVoiceVatlib())
         {
             initVoiceChannels();
@@ -140,12 +142,12 @@ namespace BlackCore
             }
             m_voice->connectVoice(m_channel1.data(), m_audioMixer.get(), IAudioMixer::InputVoiceChannel1);
             m_voice->connectVoice(m_channel2.data(), m_audioMixer.get(), IAudioMixer::InputVoiceChannel2);
-            m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputOutputDevice1, m_voiceOutputDevice.get());
+            m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputDevice1, m_voiceOutputDevice.get());
             m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputVoiceChannel1, m_channel1.data());
             m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputVoiceChannel2, m_channel2.data());
 
-            m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel1, IAudioMixer::OutputOutputDevice1);
-            m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel2, IAudioMixer::OutputOutputDevice2);
+            m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel1, IAudioMixer::OutputDevice1);
+            m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel2, IAudioMixer::OutputDevice1);
         }
 
         CContextAudio::~CContextAudio()
@@ -531,11 +533,11 @@ namespace BlackCore
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             if (enable)
             {
-                m_audioMixer->makeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputOutputDevice1);
+                m_audioMixer->makeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputDevice1);
             }
             else
             {
-                m_audioMixer->removeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputOutputDevice1);
+                m_audioMixer->removeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputDevice1);
             }
         }
 
@@ -543,7 +545,7 @@ namespace BlackCore
         {
             Q_ASSERT(m_audioMixer);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return m_audioMixer->hasMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputOutputDevice1);
+            return m_audioMixer->hasMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputDevice1);
         }
 
         void CContextAudio::setVoiceSetup(const CVoiceSetup &setup)
@@ -595,9 +597,34 @@ namespace BlackCore
 
         void CContextAudio::setVoiceTransmission(bool enable, COM com)
         {
-            // FIXME: Use the 'active' channel instead of hardcoded COM1
-            // FIXME: Use com
-            Q_UNUSED(com);
+            // first apporach of T609 multiple COM
+            QSharedPointer<IVoiceChannel> voiceChannelCom = nullptr;
+            CComSystem::ComUnit usedUnit = CComSystem::Com1;
+
+            if (com == COM1           && m_voiceChannelMapping.contains(CComSystem::Com1)) { usedUnit = CComSystem::Com1; voiceChannelCom = m_voiceChannelMapping.value(usedUnit); }
+            else if (com == COM2      && m_voiceChannelMapping.contains(CComSystem::Com2)) { usedUnit = CComSystem::Com2; voiceChannelCom = m_voiceChannelMapping.value(usedUnit); }
+            else if (com == COMActive && m_voiceChannelMapping.contains(CComSystem::Com1)) { usedUnit = CComSystem::Com1; voiceChannelCom = m_voiceChannelMapping.value(usedUnit); }
+            else if (com == COMActive && m_voiceChannelMapping.contains(CComSystem::Com2)) { usedUnit = CComSystem::Com2; voiceChannelCom = m_voiceChannelMapping.value(usedUnit); }
+            if (!voiceChannelCom) { return; }
+            IAudioMixer::OutputPort mixerOutputPort = m_voiceChannelOutputPortMapping.value(voiceChannelCom);
+
+            // use values from simulator?
+            if (enable && this->isComIntegratedWithSimulator())
+            {
+                const CComSystem comSystem = this->getOwnComSystem(usedUnit);
+                enable = comSystem.isTransmitEnabled(); // consider muted
+            }
+
+            if (enable)
+            {
+                m_audioMixer->makeMixerConnection(IAudioMixer::InputMicrophone, mixerOutputPort);
+            }
+            else
+            {
+                m_audioMixer->removeMixerConnection(IAudioMixer::InputMicrophone, mixerOutputPort);
+            }
+
+            /** fixme KB 201908 to be removed if the above works
             if (!m_voiceChannelMapping.contains(CComSystem::Com1)) { return; }
             QSharedPointer<IVoiceChannel> voiceChannelCom1 = m_voiceChannelMapping.value(CComSystem::Com1);
             IAudioMixer::OutputPort mixerOutputPort = m_voiceChannelOutputPortMapping.value(voiceChannelCom1);
@@ -611,6 +638,7 @@ namespace BlackCore
                 m_audioMixer->removeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputVoiceChannel1);
                 m_audioMixer->removeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputVoiceChannel2);
             }
+            **/
         }
 
         void CContextAudio::setVoiceTransmissionCom1(bool enabled)
@@ -689,7 +717,7 @@ namespace BlackCore
                         break;
                     }
                 }
-            }
+            } // device name
         }
 
         void CContextAudio::onChangedAudioSettings()
@@ -719,13 +747,14 @@ namespace BlackCore
             if (!this->getIContextOwnAircraft())
             {
                 // context not available
+                const double defFreq = 122.8;
                 switch (unit)
                 {
-                case CComSystem::Com1: return CComSystem::getCom1System(122.800, 122.800);
-                case CComSystem::Com2: return CComSystem::getCom2System(122.800, 122.800);
+                case CComSystem::Com1: return CComSystem::getCom1System(defFreq, defFreq);
+                case CComSystem::Com2: return CComSystem::getCom2System(defFreq, defFreq);
                 default: break;
                 }
-                return CComSystem::getCom1System(122.800, 122.800);
+                return CComSystem::getCom1System(defFreq, defFreq);
             }
             return this->getIContextOwnAircraft()->getOwnComSystem(unit);
         }
@@ -734,6 +763,27 @@ namespace BlackCore
         {
             if (!this->getIContextSimulator()) { return false; }
             return this->getIContextSimulator()->getSimulatorSettings().isComIntegrated();
+        }
+
+        void CContextAudio::xCtxChangedAircraftCockpit(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
+        {
+            if (CIdentifiable::isMyIdentifier(originator)) { return; }
+            const bool integrated = this->isComIntegratedWithSimulator();
+
+            if (integrated)
+            {
+                // set as in cockpit
+                const bool com1Rec = aircraft.getCom1System().isReceiveEnabled();
+                const bool com2Rec = aircraft.getCom2System().isReceiveEnabled();
+                m_audioMixer->makeOrRemoveConnection(IAudioMixer::InputVoiceChannel1, IAudioMixer::OutputDevice1, com1Rec);
+                m_audioMixer->makeOrRemoveConnection(IAudioMixer::InputVoiceChannel2, IAudioMixer::OutputDevice1, com2Rec);
+            }
+            else
+            {
+                // reset
+                m_audioMixer->makeMixerConnectionIfNotExisting(IAudioMixer::InputVoiceChannel1, IAudioMixer::OutputDevice1);
+                m_audioMixer->makeMixerConnectionIfNotExisting(IAudioMixer::InputVoiceChannel2, IAudioMixer::OutputDevice1);
+            }
         }
 
         QSharedPointer<IVoiceChannel> CContextAudio::getVoiceChannelBy(const CVoiceRoom &voiceRoom)

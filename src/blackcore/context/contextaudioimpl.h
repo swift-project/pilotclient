@@ -27,6 +27,7 @@
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/selcal.h"
 #include "blackmisc/macos/microphoneaccess.h"
+#include "blackmisc/identifiable.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/settingscache.h"
@@ -62,7 +63,9 @@ namespace BlackCore
     namespace Context
     {
         //! Audio context implementation
-        class BLACKCORE_EXPORT CContextAudio : public IContextAudio
+        class BLACKCORE_EXPORT CContextAudio :
+            public IContextAudio,
+            public BlackMisc::CIdentifiable
         {
             Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAUDIO_INTERFACENAME)
             Q_OBJECT
@@ -91,7 +94,7 @@ namespace BlackCore
             virtual BlackMisc::Audio::CAudioDeviceInfoList getCurrentAudioDevices() const override;
             virtual void setCurrentAudioDevice(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice) override;
             virtual void setVoiceOutputVolume(int volume) override;
-            virtual int getVoiceOutputVolume() const override;
+            virtual int  getVoiceOutputVolume() const override;
             virtual void setMute(bool muted) override;
             virtual bool isMuted() const override;
             virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const override;
@@ -173,6 +176,10 @@ namespace BlackCore
             BlackMisc::Aviation::CComSystem getOwnComSystem(BlackMisc::Aviation::CComSystem::ComUnit unit) const;
             bool isComIntegratedWithSimulator() const;
             //! @}
+
+            //! Changed cockpit
+            //! \remark cross context
+            void xCtxChangedAircraftCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
             //! Voice channel by room
             QSharedPointer<IVoiceChannel> getVoiceChannelBy(const BlackMisc::Audio::CVoiceRoom &voiceRoom);
