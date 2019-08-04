@@ -259,6 +259,14 @@ namespace BlackCore
                 c = connect(this->getCContextOwnAircraft(), &CContextOwnAircraft::ps_changedModel,
                             this->getCContextSimulator(),   &CContextSimulator::xCtxChangedOwnAircraftModel);
                 Q_ASSERT(c);
+
+
+                // hook up with audio
+                if (this->getIContextAudio())
+                {
+                    c = connect(m_contextOwnAircraft, &IContextOwnAircraft::changedAircraftCockpit, this->getCContextAudio(), &CContextAudio::xCtxChangedAircraftCockpit, Qt::QueuedConnection);
+                    Q_ASSERT(c);
+                }
             }
 
             // times
@@ -279,8 +287,7 @@ namespace BlackCore
         if (m_contextAudio && m_contextAudio->isUsingImplementingObject())
         {
             Q_ASSERT(m_contextApplication);
-            Q_ASSERT(m_contextOwnAircraft);
-            c = connect(m_contextApplication, &IContextApplication::fakedSetComVoiceRoom, this->getCContextAudio(),  &CContextAudio::setComVoiceRooms);
+            c = connect(m_contextApplication, &IContextApplication::fakedSetComVoiceRoom, this->getCContextAudio(), &CContextAudio::setComVoiceRooms, Qt::QueuedConnection);
             Q_ASSERT(c);
             times.insert("Post setup, connects audio", time.restart());
         }
