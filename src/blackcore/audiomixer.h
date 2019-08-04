@@ -34,7 +34,7 @@ namespace BlackCore
         //! Audio mixer output ports
         enum OutputPort
         {
-            OutputOutputDevice1,
+            OutputDevice1,
             OutputVoiceChannel1,
             OutputVoiceChannel2,
         };
@@ -53,6 +53,14 @@ namespace BlackCore
 
         //! Returns true if input port and output port are connected
         virtual bool hasMixerConnection(InputPort inputPort, OutputPort outputPort) = 0;
+
+        //! Make or remove connection
+        bool makeOrRemoveConnection(InputPort inputPort, OutputPort outputPort, bool make);
+
+        //! Safe versions of make/remove @{
+        bool makeMixerConnectionIfNotExisting(InputPort inputPort, OutputPort outputPort);
+        bool removeMixerConnectionIfExisting(InputPort inputPort, OutputPort outputPort);
+        //! @}
     };
 
 } // ns
