@@ -12,4 +12,25 @@ namespace BlackCore
 {
     IAudioMixer::IAudioMixer(QObject *parent) : QObject(parent)
     { }
+
+    bool IAudioMixer::makeOrRemoveConnection(IAudioMixer::InputPort inputPort, IAudioMixer::OutputPort outputPort, bool make)
+    {
+        return make ?
+               this->makeMixerConnectionIfNotExisting(inputPort, outputPort) :
+               this->removeMixerConnectionIfExisting(inputPort, outputPort);
+    }
+
+    bool IAudioMixer::makeMixerConnectionIfNotExisting(IAudioMixer::InputPort inputPort, IAudioMixer::OutputPort outputPort)
+    {
+        if (this->hasMixerConnection(inputPort, outputPort)) { return false; }
+        this->makeMixerConnection(inputPort, outputPort);
+        return true;
+    }
+
+    bool IAudioMixer::removeMixerConnectionIfExisting(IAudioMixer::InputPort inputPort, IAudioMixer::OutputPort outputPort)
+    {
+        if (!this->hasMixerConnection(inputPort, outputPort)) { return false; }
+        this->removeMixerConnection(inputPort, outputPort);
+        return true;
+    }
 }
