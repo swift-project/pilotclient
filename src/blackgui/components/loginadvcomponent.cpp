@@ -101,8 +101,6 @@ namespace BlackGui
             // Stored data
             this->loadRememberedUserData();
 
-            // Remark: The validators affect the signals such as returnPressed, editingFinished
-            // So I use no ranges in the CUpperCaseValidators, as this disables the signals for invalid values
             if (sGui && sGui->getIContextSimulator())
             {
                 connect(sGui->getIContextSimulator(), &IContextSimulator::vitalityLost, this, &CLoginAdvComponent::autoLogoffDetection, Qt::QueuedConnection);
@@ -282,13 +280,6 @@ namespace BlackGui
             user.setCallsign(ui->comp_OwnAircraft->getCallsignFromGui());
             return user;
         }
-
-//        const bool changedOwnAircraftCallsignPilot = this->updateOwnAircraftCallsignAndPilotFromGuiValues();
-//        const bool changedOwnAircraftIcaoValues = this->updateOwnAircaftIcaoValuesFromGuiValues();
-//        if (changedOwnAircraftIcaoValues || changedOwnAircraftCallsignPilot)
-//        {
-//            m_changedLoginDataDigestSignal.inputSignal();
-//        }
 
         void CLoginAdvComponent::setGuiLoginAsValues(const CSimulatedAircraft &ownAircraft)
         {

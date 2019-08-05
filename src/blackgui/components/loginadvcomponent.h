@@ -8,8 +8,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_LOGINADVCOMPONENT_H
-#define BLACKGUI_LOGINADVCOMPONENT_H
+#ifndef BLACKGUI_COMPONENTS_LOGINADVCOMPONENT_H
+#define BLACKGUI_COMPONENTS_LOGINADVCOMPONENT_H
 
 #include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/data/networksetup.h"
@@ -70,9 +70,6 @@ namespace BlackGui
             //! Set auto logoff
             void setAutoLogoff(bool autoLogoff);
 
-            //! Main info area changed
-            // void mainInfoAreaChanged(const QWidget *currentWidget);
-
             //! Login requested
             void toggleNetworkConnection();
 
@@ -97,9 +94,6 @@ namespace BlackGui
 
             //! User from VATSIM data
             BlackMisc::Network::CUser getUserFromPilotGuiValues() const;
-
-            //! Callsign from GUI
-            // BlackMisc::Aviation::CCallsign getCallsignFromGui() const;
 
             //! Update own callsign (own aircraft from what is set in the GUI)
             //! \return changed?

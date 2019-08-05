@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>261</width>
+    <width>282</width>
     <height>132</height>
    </rect>
   </property>
@@ -195,7 +195,7 @@
    <item row="3" column="1">
     <widget class="QLabel" name="lbl_LiverySend">
      <property name="text">
-      <string>Livery send</string>
+      <string>Send livery</string>
      </property>
     </widget>
    </item>
@@ -240,7 +240,7 @@
    <item row="1" column="1">
     <widget class="QLabel" name="lbl_ModelSent">
      <property name="text">
-      <string>Model send</string>
+      <string>Send model</string>
      </property>
     </widget>
    </item>
