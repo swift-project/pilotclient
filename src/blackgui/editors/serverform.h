@@ -47,6 +47,9 @@ namespace BlackGui
             //! Get currently selected server type
             BlackMisc::Network::CServer::ServerType getServerType() const;
 
+            //! Reset to 1st tab
+            void resetToFirstTab();
+
             //! \name Form class implementations
             //! @{
             virtual void setReadOnly(bool readonly) override;

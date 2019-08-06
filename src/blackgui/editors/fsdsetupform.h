@@ -44,6 +44,9 @@ namespace BlackGui
             //! Set to GUI
             void setValue(const BlackMisc::Network::CFsdSetup &setup);
 
+            //! Allow override even in read only mode
+            void setAlwaysAllowOverride(bool allow);
+
             //! Enabled?
             bool isFsdSetupEnabled() const;
 
@@ -70,7 +73,8 @@ namespace BlackGui
             void visibleEnableInfo(bool visible);
 
             QScopedPointer<Ui::CFsdSetupForm> ui;
-            bool m_visibleEnableInfo = true;
+            bool m_visibleEnableInfo   = true;
+            bool m_alwaysAllowOverride = false;
         };
     } // ns
 } // ns

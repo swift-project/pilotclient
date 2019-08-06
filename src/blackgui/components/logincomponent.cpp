@@ -101,9 +101,11 @@ namespace BlackGui
 
             ui->form_FsdDetails->showEnableInfo(true);
             ui->form_FsdDetails->setFsdSetupEnabled(false);
+            ui->form_FsdDetails->setAlwaysAllowOverride(true);
 
             ui->form_Voice->showEnableInfo(true);
             ui->form_Voice->setVoiceSetupEnabled(false);
+            ui->form_Voice->setAlwaysAllowOverride(true);
 
             ui->lblp_AircraftCombinedType->setToolTips("ok", "wrong");
             ui->lblp_AirlineIcao->setToolTips("ok", "wrong");

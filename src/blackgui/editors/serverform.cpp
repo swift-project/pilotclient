@@ -84,6 +84,11 @@ namespace BlackGui
             return ui->cb_ServerType->currentData().value<CServer::ServerType>();
         }
 
+        void CServerForm::resetToFirstTab()
+        {
+            ui->tw_ServerForm->setCurrentIndex(0);
+        }
+
         void CServerForm::setReadOnly(bool readOnly)
         {
             ui->form_ServerFsd->setReadOnly(readOnly);

@@ -49,6 +49,9 @@ namespace BlackGui
             //! Set enabled / disabled
             void setVoiceSetupEnabled(bool enabled);
 
+            //! Allow override even in read only mode
+            void setAlwaysAllowOverride(bool allow);
+
             //! Show the enable info
             void showEnableInfo(bool visible);
 
@@ -69,7 +72,8 @@ namespace BlackGui
             void visibleEnableInfo(bool visible);
 
             QScopedPointer<Ui::CVoiceSetupForm> ui;
-            bool m_visibleEnableInfo = true;
+            bool m_alwaysAllowOverride = false;
+            bool m_visibleEnableInfo   = true;
         };
     } // ns
 } // ns
