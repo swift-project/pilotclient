@@ -84,7 +84,7 @@ namespace BlackGui
         void CAirportSmallCompleter::setReadOnly(bool readOnly)
         {
             ui->le_Icao->setReadOnly(readOnly);
-            ui->pb_Dialog->setEnabled(!readOnly);
+            ui->pb_Dialog->setVisible(!readOnly);
         }
 
         void CAirportSmallCompleter::clear()
