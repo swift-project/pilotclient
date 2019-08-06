@@ -291,10 +291,10 @@ namespace BlackCore
             //! Enable/disable support of gnd. flag
             virtual bool updateAircraftSupportingGndFLag(const BlackMisc::Aviation::CCallsign &callsign, bool supportGndFlag) = 0;
 
-            //! Change model
+            //! Change model (for remote aircraft)
             virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) = 0;
 
-            //! Change network model
+            //! Change network model (for remote aircraft)
             virtual bool updateAircraftNetworkModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) = 0;
 
             //! Change fast position updates
@@ -332,6 +332,9 @@ namespace BlackCore
 
             //! Statistics enable/disable
             virtual bool setNetworkStatisticsEnable(bool enabled) = 0;
+
+            //! Network preset values
+            virtual QStringList getNetworkPresetValues() const = 0;
 
             // ------------------------ testing ------------------------
 

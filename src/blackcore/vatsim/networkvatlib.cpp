@@ -182,6 +182,19 @@ namespace BlackCore
             return detailed ? vd : vs;
         }
 
+        QStringList CNetworkVatlib::getPresetValues() const
+        {
+            const QStringList v =
+            {
+                m_ownModelString,
+                m_ownLivery,
+                m_ownAircraftIcaoCode.getDesignator(),
+                m_ownAirlineIcaoCode.getVDesignator(),
+                m_ownCallsign.asString()
+            };
+            return v;
+        }
+
         void CNetworkVatlib::process()
         {
             if (!m_net) { return; }
@@ -1712,17 +1725,18 @@ namespace BlackCore
         void CNetworkVatlib::onErrorReceived(VatFsdClient *, VatServerError error, const char *msg, const char *data, void *cbvar)
         {
             auto *self = cbvar_cast(cbvar);
+            const QString sn = self->m_server.getName();
             switch (error)
             {
             case vatServerErrorCsInUs:          CLogMessage(self).error(u"The requested callsign is already taken"); emit self->terminate(); break;
             case vatServerErrorCallsignInvalid: CLogMessage(self).error(u"The requested callsign is not valid"); emit self->terminate(); break;
-            case vatServerErrorCidInvalid:      CLogMessage(self).error(u"Wrong user ID or password, inactive account"); emit self->terminate(); break;
-            case vatServerErrorRevision:        CLogMessage(self).error(u"This server does not support our protocol version"); emit self->terminate(); break;
+            case vatServerErrorCidInvalid:      CLogMessage(self).error(u"Wrong user ID or password, inactive account. Server: '%1'") << sn; emit self->terminate(); break;
+            case vatServerErrorRevision:        CLogMessage(self).error(u"This server '%1' does not support our protocol version") << sn; emit self->terminate(); break;
             case vatServerErrorLevel:           CLogMessage(self).error(u"You are not authorized to use the requested pilot rating"); emit self->terminate(); break;
-            case vatServerErrorServFull:        CLogMessage(self).error(u"The server is full"); emit self->terminate(); break;
+            case vatServerErrorServFull:        CLogMessage(self).error(u"The server '%1' is full") << sn; emit self->terminate(); break;
             case vatServerErrorCsSuspended:     CLogMessage(self).error(u"Your user account is suspended"); emit self->terminate(); break;
             case vatServerErrorInvPos:          CLogMessage(self).error(u"You are not authorized to use the requested rating"); emit self->terminate(); break;
-            case vatServerErrorUnAuth:          CLogMessage(self).error(u"This software is not authorized for use on this network %1") << self->m_server.getName(); emit self->terminate(); break;
+            case vatServerErrorUnAuth:          CLogMessage(self).error(u"This software is not authorized for use on this network '%1'") << sn; emit self->terminate(); break;
 
             case vatServerErrorNone:            CLogMessage(self).info(u"OK"); break;
             case vatServerErrorSyntax:          CLogMessage(self).info(u"Malformed packet: Syntax error: %1") << self->fromFSD(data); break;

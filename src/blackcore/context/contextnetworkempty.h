@@ -136,6 +136,13 @@ namespace BlackCore
                 return statusMessageEmptyContext();
             }
 
+            //! \copydoc IContextNetwork::getNetworkPresetValues
+            virtual QStringList getNetworkPresetValues() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return {};
+            }
+
             //! \copydoc IContextNetwork::disconnectFromNetwork()
             virtual BlackMisc::CStatusMessage disconnectFromNetwork() override
             {
