@@ -80,8 +80,8 @@ namespace BlackGui
         {
             ui->setupUi(this);
 
-            connect(ui->pb_Cancel, &QPushButton::clicked, this, &CLoginOverviewComponent::loginCancelled,          Qt::QueuedConnection);
-            connect(ui->pb_Ok,     &QPushButton::clicked, this, &CLoginOverviewComponent::toggleNetworkConnection, Qt::QueuedConnection);
+            connect(ui->pb_Cancel,     &QPushButton::clicked, this, &CLoginOverviewComponent::cancel,          Qt::QueuedConnection);
+            connect(ui->pb_Disconnect, &QPushButton::clicked, this, &CLoginOverviewComponent::toggleNetworkConnection, Qt::QueuedConnection);
 
             // overlay
             this->setOverlaySizeFactors(0.8, 0.5);
@@ -113,10 +113,10 @@ namespace BlackGui
             ui->cb_AutoLogoff->setChecked(autoLogoff);
         }
 
-        void CLoginOverviewComponent::loginCancelled()
+        void CLoginOverviewComponent::cancel()
         {
             this->closeOverlay();
-            emit this->loginOrLogoffCancelled();
+            emit this->closeOverview();
         }
 
         void CLoginOverviewComponent::toggleNetworkConnection()
@@ -149,7 +149,7 @@ namespace BlackGui
             }
             else
             {
-                emit this->loginOrLogoffCancelled();
+                emit this->cancel();
             }
         }
 
@@ -158,7 +158,9 @@ namespace BlackGui
             if (!this->hasValidContexts()) { return; }
             const CServer server = sGui->getIContextNetwork()->getConnectedServer();
             ui->form_Server->setServer(server);
+            ui->form_Server->resetToFirstTab();
             ui->form_Pilot->setUser(server.getUser());
+            ui->le_LoginMode->setText(sGui->getIContextNetwork()->getLoginModeAsString());
             ui->comp_NetworkAircraft->showValues();
         }
 

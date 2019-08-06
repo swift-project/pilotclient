@@ -76,16 +76,13 @@ namespace BlackGui
             void loginOrLogoffSuccessful();
 
             //! Cancelled
-            void loginOrLogoffCancelled();
-
-            //! Relevant login data changed (digest version)
-            void loginDataChangedDigest();
+            void closeOverview();
 
         private:
             // -------------- others -----------------
 
             //! Login cancelled
-            void loginCancelled();
+            void cancel();
 
             //! Auto-logoff detection
             void autoLogoffDetection();
@@ -106,7 +103,6 @@ namespace BlackGui
             static constexpr int LogoffIntervalSeconds = 20; //!< time before logoff
 
             QScopedPointer<Ui::CLoginOverviewComponent> ui;
-            BlackMisc::CDigestSignal m_changedLoginDataDigestSignal { this, &CLoginOverviewComponent::loginDataChangedDigest, 1500, 10 };
             BlackCore::Data::CNetworkSetup m_networkSetup; //!< servers last used
         };
     } // namespace

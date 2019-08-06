@@ -30,6 +30,9 @@ namespace BlackGui
             connect(ui->comp_LoginComponent, &CLoginAdvComponent::loginOrLogoffCancelled,  this, &CLoginDialog::onLoginOrLogoffCancelled);
             connect(ui->comp_LoginComponent, &CLoginAdvComponent::requestNetworkSettings,  this, &CLoginDialog::onRequestNetworkSettings);
 
+            connect(ui->comp_LoginOverviewComponent, &CLoginOverviewComponent::closeOverview,           this, &CLoginDialog::close);
+            connect(ui->comp_LoginOverviewComponent, &CLoginOverviewComponent::loginOrLogoffSuccessful, this, &CLoginDialog::onLoginOrLogoffCancelled);
+
             if (sGui && sGui->getIContextNetwork())
             {
                 connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CLoginDialog::onNetworkStatusChanged, Qt::QueuedConnection);
@@ -60,6 +63,10 @@ namespace BlackGui
                 if (connected)
                 {
                     ui->comp_LoginOverviewComponent->showCurrentValues();
+                }
+                else
+                {
+                    ui->comp_LoginComponent->resetState();
                 }
             }
 
