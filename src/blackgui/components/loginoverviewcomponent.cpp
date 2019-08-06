@@ -1,0 +1,201 @@
+/* Copyright (C) 2019
+ * swift project Community / Contributors
+ *
+ * This file is part of swift Project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
+ * or distributed except according to the terms contained in the LICENSE file.
+ */
+
+#include "ui_loginoverviewcomponent.h"
+#include "loginoverviewcomponent.h"
+#include "serverlistselector.h"
+#include "dbquickmappingwizard.h"
+#include "blackgui/editors/serverform.h"
+#include "blackgui/editors/pilotform.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/loginmodebuttons.h"
+#include "blackgui/ticklabel.h"
+#include "blackgui/uppercasevalidator.h"
+#include "blackcore/context/contextaudio.h"
+#include "blackcore/context/contextownaircraft.h"
+#include "blackcore/context/contextsimulator.h"
+#include "blackcore/context/contextnetwork.h"
+#include "blackcore/data/globalsetup.h"
+#include "blackcore/webdataservices.h"
+#include "blackcore/network.h"
+#include "blackcore/simulator.h"
+#include "blackmisc/simulation/simulatorinternals.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/airporticaocode.h"
+#include "blackmisc/network/entityflags.h"
+#include "blackmisc/network/serverlist.h"
+#include "blackmisc/icons.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/crashhandler.h"
+#include "blackconfig/buildconfig.h"
+
+#include <QDialogButtonBox>
+#include <QMessageBox>
+#include <QGroupBox>
+#include <QIntValidator>
+#include <QLineEdit>
+#include <QProgressBar>
+#include <QPushButton>
+#include <QTabWidget>
+#include <QTimer>
+#include <QToolButton>
+#include <QStringBuilder>
+#include <QtGlobal>
+#include <QPointer>
+#include <QPair>
+
+using namespace BlackConfig;
+using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Audio;
+using namespace BlackMisc::Network;
+using namespace BlackMisc::Simulation;
+using namespace BlackCore;
+using namespace BlackCore::Data;
+using namespace BlackCore::Context;
+using namespace BlackGui;
+
+namespace BlackGui
+{
+    namespace Components
+    {
+        const CLogCategoryList &CLoginOverviewComponent::getLogCategories()
+        {
+            static const BlackMisc::CLogCategoryList cats { CLogCategory::guiComponent() };
+            return cats;
+        }
+
+        CLoginOverviewComponent::CLoginOverviewComponent(QWidget *parent) :
+            COverlayMessagesFrame(parent),
+            ui(new Ui::CLoginOverviewComponent)
+        {
+            ui->setupUi(this);
+
+            connect(ui->pb_Cancel, &QPushButton::clicked, this, &CLoginOverviewComponent::loginCancelled,          Qt::QueuedConnection);
+            connect(ui->pb_Ok,     &QPushButton::clicked, this, &CLoginOverviewComponent::toggleNetworkConnection, Qt::QueuedConnection);
+
+            // overlay
+            this->setOverlaySizeFactors(0.8, 0.5);
+            this->setReducedInfo(true);
+            this->setForceSmall(true);
+            this->showKillButton(false);
+
+            // forms
+            ui->form_Pilot->setReadOnly(true);
+            ui->form_Server->setReadOnly(true);
+
+            // auto logoff
+            // we decided to make it difficult for users to disable it
+            if (!CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                ui->cb_AutoLogoff->setChecked(true);
+            }
+
+            // inital setup, if data already available
+            ui->form_Pilot->validate();
+            ui->cb_AutoLogoff->setChecked(m_networkSetup.useAutoLogoff());
+        }
+
+        CLoginOverviewComponent::~CLoginOverviewComponent()
+        { }
+
+        void CLoginOverviewComponent::setAutoLogoff(bool autoLogoff)
+        {
+            ui->cb_AutoLogoff->setChecked(autoLogoff);
+        }
+
+        void CLoginOverviewComponent::loginCancelled()
+        {
+            this->closeOverlay();
+            emit this->loginOrLogoffCancelled();
+        }
+
+        void CLoginOverviewComponent::toggleNetworkConnection()
+        {
+            if (!sGui || sGui->isShuttingDown()) { return; }
+            if (!sGui->getIContextNetwork() || !sGui->getIContextAudio()) { return; }
+
+            const bool isConnected = sGui && sGui->getIContextNetwork()->isConnected();
+            m_networkSetup.setAutoLogoff(ui->cb_AutoLogoff->isChecked());
+
+            CStatusMessage msg;
+            if (!isConnected)
+            {
+                // void
+            }
+            else
+            {
+                // disconnect from network
+                sGui->getIContextAudio()->leaveAllVoiceRooms();
+                sGui->setExtraWindowTitle("");
+                msg = sGui->getIContextNetwork()->disconnectFromNetwork();
+            }
+
+            // log message and trigger events
+            msg.addCategories(this);
+            CLogMessage::preformatted(msg);
+            if (msg.isSuccess())
+            {
+                emit this->loginOrLogoffSuccessful();
+            }
+            else
+            {
+                emit this->loginOrLogoffCancelled();
+            }
+        }
+
+        void CLoginOverviewComponent::showCurrentValues()
+        {
+            if (!this->hasValidContexts()) { return; }
+            const CServer server = sGui->getIContextNetwork()->getConnectedServer();
+            ui->form_Server->setServer(server);
+            ui->form_Pilot->setUser(server.getUser());
+            ui->comp_NetworkAircraft->showValues();
+        }
+
+        void CLoginOverviewComponent::onSimulatorStatusChanged(int status)
+        {
+            ISimulator::SimulatorStatus s = static_cast<ISimulator::SimulatorStatus>(status);
+            if (!this->hasValidContexts()) { return; }
+            if (sGui->getIContextNetwork()->isConnected())
+            {
+                if (!s.testFlag(ISimulator::Connected))
+                {
+                    // sim NOT connected but network connected
+                    this->autoLogoffDetection();
+                }
+            }
+        }
+
+        bool CLoginOverviewComponent::hasValidContexts() const
+        {
+            if (!sGui || !sGui->supportsContexts()) { return false; }
+            if (sGui->isShuttingDown())          { return false; }
+            if (!sGui->getIContextSimulator())   { return false; }
+            if (!sGui->getIContextNetwork())     { return false; }
+            if (!sGui->getIContextOwnAircraft()) { return false; }
+            return true;
+        }
+
+        void CLoginOverviewComponent::autoLogoffDetection()
+        {
+            if (!ui->cb_AutoLogoff->isChecked()) { return; }
+            if (!this->hasValidContexts()) { return; }
+            if (!sGui->getIContextNetwork()->isConnected()) { return; } // nothing to logoff
+
+            const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo, u"Auto logoff in progress (could be simulator shutdown, crash, closing simulator)");
+            const int delaySecs = 30;
+            this->showOverlayHTMLMessage(m, qRound(1000 * delaySecs * 0.8));
+        }
+
+    } // namespace
+} // namespace
