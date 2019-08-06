@@ -39,6 +39,23 @@ namespace BlackCore
     INetwork::~INetwork()
     { }
 
+    const QString &INetwork::modeAsString(INetwork::LoginMode mode)
+    {
+        static const QString n("normal");
+        static const QString o("observer");
+        static const QString s("stealth");
+
+        switch (mode)
+        {
+        case LoginNormal:     return n;
+        case LoginAsObserver: return o;
+        case LoginStealth:    return s;
+        default: break;
+        }
+        static const QString unknown("????");
+        return unknown;
+    }
+
     int INetwork::increaseStatisticsValue(const QString &identifier, const QString &appendix)
     {
         if (identifier.isEmpty() || !m_statistics) { return -1; }

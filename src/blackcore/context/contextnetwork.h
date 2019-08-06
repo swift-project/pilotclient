@@ -254,6 +254,9 @@ namespace BlackCore
             //! Login mode
             virtual INetwork::LoginMode getLoginMode() const = 0;
 
+            //! Mode as string
+            const QString &getLoginModeAsString() const { return INetwork::modeAsString(this->getLoginMode()); }
+
             //! Disconnect from network
             //! \return messages generated during disconnecting
             virtual BlackMisc::CStatusMessage disconnectFromNetwork() = 0;

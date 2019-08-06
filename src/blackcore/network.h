@@ -93,6 +93,9 @@ namespace BlackCore
             LoginStealth        //!< Login stealth mode
         };
 
+        //! Mode as string
+        static const QString &modeAsString(LoginMode mode);
+
         //! Status of the connection.
         enum ConnectionStatus
         {
