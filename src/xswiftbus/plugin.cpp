@@ -151,8 +151,9 @@ namespace XSwiftBus
         }
 
         //! todo RR: Send all logs to the the message window.
-        INFO_LOG("XSwiftBus started.");
-        m_service->addTextMessage("XSwiftBus started.", 0, 255, 255);
+        const std::string msg = "XSwiftBus " + m_service->getVersionNumber() + " started.";
+        INFO_LOG(msg);
+        m_service->addTextMessage(msg, 0, 255, 255);
     }
 
     void CPlugin::onAircraftModelChanged()
