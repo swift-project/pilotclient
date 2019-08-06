@@ -826,8 +826,10 @@ namespace BlackGui
         QPointer<QWidget> w = CGuiApplication::mainApplicationWidget();
         if (!w) { return; }
         const QSize iconSize = CIcons::empty16().size();
+        static QPixmap iconEmpty;
+
         QPixmap icon = w->style()->standardIcon(QStyle::SP_TitleBarMaxButton).pixmap(iconSize);
-        QAction *a = menu.addAction(icon.scaled(iconSize), "Fullscreen");
+        QAction *a = menu.addAction(icon.isNull() ? iconEmpty : icon.scaled(iconSize), "Fullscreen");
         bool c = connect(a, &QAction::triggered, this, [ = ]()
         {
             if (!w) { return; }
@@ -836,7 +838,7 @@ namespace BlackGui
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         icon = w->style()->standardIcon(QStyle::SP_TitleBarMinButton).pixmap(iconSize);
-        a = menu.addAction(icon.scaled(iconSize), "Minimize");
+        a = menu.addAction(icon.isNull() ? iconEmpty : icon.scaled(iconSize), "Minimize");
         c = connect(a, &QAction::triggered, this, [ = ]()
         {
             if (!w) { return; }
@@ -845,7 +847,7 @@ namespace BlackGui
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         icon = w->style()->standardIcon(QStyle::SP_TitleBarNormalButton).pixmap(iconSize);
-        a = menu.addAction(icon.scaled(iconSize), "Normal");
+        a = menu.addAction(icon.isNull() ? iconEmpty : icon.scaled(iconSize), "Normal");
         c = connect(a, &QAction::triggered, this, [ = ]()
         {
             if (!w) { return; }
