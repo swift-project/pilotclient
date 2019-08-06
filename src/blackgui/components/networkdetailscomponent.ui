@@ -362,7 +362,7 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="tb_BackTServer">
+         <widget class="QWidget" name="tb_BackToServer">
           <attribute name="icon">
            <iconset resource="../../blackmisc/blackmisc.qrc">
             <normaloff>:/pastel/icons/pastel/16/close.png</normaloff>:/pastel/icons/pastel/16/close.png</iconset>

@@ -65,6 +65,9 @@ namespace BlackGui
             //! FSD setup
             BlackMisc::Network::CFsdSetup getFsdSetup() const;
 
+            //! Allow override even in read only mode
+            void setAlwaysAllowOverride(bool allow);
+
             //! Specific setup enabled?
             bool isFsdSetupOverrideEnabled() const;
 
@@ -79,6 +82,9 @@ namespace BlackGui
 
             //! Login mode
             void setLoginMode(BlackCore::INetwork::LoginMode mode);
+
+            //! Reset state
+            void resetState();
 
             //! Selected server @{
             bool isVatsimServerSelected() const;
@@ -125,6 +131,9 @@ namespace BlackGui
 
             //! Change page
             void onChangePage();
+
+            //! Set the back tab
+            void setBackTabName();
 
             BlackCore::Data::CNetworkSetup m_networkSetup; //!< servers last used
             bool m_updatePilotOnServerChanges = true;

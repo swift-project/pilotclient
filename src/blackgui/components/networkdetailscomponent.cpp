@@ -52,8 +52,10 @@ namespace BlackGui
 
             ui->form_FsdDetails->showEnableInfo(true);
             ui->form_FsdDetails->setFsdSetupEnabled(false);
+            ui->form_FsdDetails->setReadOnly(false);
             ui->form_Voice->showEnableInfo(true);
             ui->form_Voice->setVoiceSetupEnabled(false);
+            ui->form_Voice->setReadOnly(false);
 
             constexpr int MaxLength = 10;
             constexpr int MinLength = 0;
@@ -82,6 +84,12 @@ namespace BlackGui
             ui->frp_LoginMode->setLoginMode(mode);
         }
 
+        void CNetworkDetailsComponent::resetState()
+        {
+            ui->sw_NetworkServerDetails->setCurrentIndex(PageServer);
+            this->setBackTabName();
+        }
+
         bool CNetworkDetailsComponent::isVatsimServerSelected() const
         {
             const bool vatsim = ui->tw_Network->currentWidget() == ui->tb_NetworkVatsim;
@@ -106,6 +114,12 @@ namespace BlackGui
         CFsdSetup CNetworkDetailsComponent::getFsdSetup() const
         {
             return ui->form_FsdDetails->getValue();
+        }
+
+        void CNetworkDetailsComponent::setAlwaysAllowOverride(bool allow)
+        {
+            ui->form_FsdDetails->setAlwaysAllowOverride(allow);
+            ui->form_Voice->setAlwaysAllowOverride(allow);
         }
 
         bool CNetworkDetailsComponent::isFsdSetupOverrideEnabled() const
@@ -197,6 +211,14 @@ namespace BlackGui
             {
                 ui->sw_NetworkServerDetails->setCurrentIndex(PageServer);
             }
+            this->setBackTabName();
+        }
+
+        void CNetworkDetailsComponent::setBackTabName()
+        {
+            const QString name = this->getCurrentServer().getName();
+            const int index = ui->tw_Details->indexOf(ui->tb_BackToServer);
+            ui->tw_Details->setTabText(index, QStringLiteral("Back to server '%1'").arg(name));
         }
 
         CServer CNetworkDetailsComponent::getCurrentVatsimServer() const
