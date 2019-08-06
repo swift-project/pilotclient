@@ -252,9 +252,9 @@ void SwiftGuiStd::loginRequested()
     }
     else
     {
+        // const bool connected = sGui->getIContextNetwork()->isConnected();
         const bool shift = QApplication::keyboardModifiers() & Qt::ShiftModifier;
-        const bool connected = sGui->getIContextNetwork()->isConnected();
-        if (!connected && shift)
+        if (shift)
         {
             if (!m_loginDialog) { m_loginDialog.reset(new CLoginDialog(this)); }
             connect(m_loginDialog.data(), &CLoginDialog::requestNetworkSettings, this, &SwiftGuiStd::displayNetworkSettings);

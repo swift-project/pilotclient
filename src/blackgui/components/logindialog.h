@@ -12,6 +12,7 @@
 #define BLACKGUI_COMPONENTS_LOGINDIALOG_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackcore/network.h"
 #include "blackmisc/aviation/airport.h"
 #include <QDialog>
 #include <QScopedPointer>
@@ -36,18 +37,22 @@ namespace BlackGui
             //! Set auto logoff
             void setAutoLogoff(bool logoff);
 
+            //! Init and show
+            void show();
+
         signals:
             //! Request server settings
             void requestNetworkSettings();
 
         private:
+            void init();
             void onLoginOrLogoffCancelled();
             void onLoginOrLogoffSuccessful();
             void onRequestNetworkSettings();
+            void onNetworkStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
             QScopedPointer<Ui::CLoginDialog> ui;
         };
-
     } // ns
 }// ns
 
