@@ -84,7 +84,8 @@ namespace BlackGui
 
         bool CNetworkDetailsComponent::isVatsimServerSelected() const
         {
-            return ui->tw_Details->currentWidget() == ui->tb_NetworkVatsim;
+            const bool vatsim = ui->tw_Network->currentWidget() == ui->tb_NetworkVatsim;
+            return vatsim;
         }
 
         bool CNetworkDetailsComponent::isOtherServerSelected() const
