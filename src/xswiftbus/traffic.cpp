@@ -170,6 +170,12 @@ namespace XSwiftBus
 
     void CTraffic::switchToFollowPlaneView(const std::string &callsign)
     {
+        if (this->ownAircraftString() != callsign && !this->containsCallsign(callsign))
+        {
+            INFO_LOG("Cannot switch to follow " + callsign);
+            return;
+        }
+
         m_followPlaneViewCallsign = callsign;
 
         /* This is the hotkey callback.  First we simulate a joystick press and
@@ -179,7 +185,8 @@ namespace XSwiftBus
         XPLMCommandButtonRelease(xplm_joy_v_fr1);
 
         /* Now we control the camera until the view changes. */
-        XPLMControlCamera(xplm_ControlCameraUntilViewChanges, orbitPlaneFunc, this);
+        INFO_LOG("Switch to follow " + callsign);
+        XPLMControlCamera(xplm_ControlCameraUntilViewChanges, CTraffic::orbitPlaneFunc, this);
     }
 
     void CTraffic::followNextPlane()
@@ -206,6 +213,15 @@ namespace XSwiftBus
         if (callsignIt == m_followPlaneViewSequence.rend()) { callsignIt = m_followPlaneViewSequence.rbegin(); }
 
         m_followPlaneViewCallsign = *callsignIt;
+    }
+
+    bool CTraffic::containsCallsign(const std::string &callsign) const
+    {
+        //! \fixme can be removed with C++20, as it then has a contains function
+        if (callsign.empty()) { return false; }
+        const auto planeIt = m_planesByCallsign.find(callsign);
+        if (planeIt == m_planesByCallsign.end()) { return false; }
+        return true;
     }
 
     // changed T709
@@ -905,7 +921,7 @@ namespace XSwiftBus
         // allow that.
         if (!traffic->m_deltaCameraPosition.isInitialized || traffic->m_isSpacePressed)
         {
-            int w, h, x, y;
+            int w = 0, h = 0, x = 0, y = 0;
             // First get the screen size and mouse location. We will use this to decide
             // what part of the orbit we are in. The mouse will move us up-down and around.
             // fixme: In a future update, change the orbit only while right mouse button is pressed.
@@ -913,28 +929,35 @@ namespace XSwiftBus
             XPLMGetMouseLocation(&x, &y);
 
             // avoid follow aircraft in too small windows
+            // int cannot be NaN
             if (w < 100 || h < 100)
             {
                 WARNING_LOG("Screen w/h too small " + std::to_string(w) + "/" + std::to_string(h));
                 return 0;
             }
 
-            traffic->m_deltaCameraPosition.heading = 360.0 * static_cast<double>(x) / static_cast<double>(w);
-            traffic->m_deltaCameraPosition.pitch   = 20.0 * ((static_cast<double>(y) / static_cast<double>(h)) * 2.0 - 1.0);
+            traffic->m_deltaCameraPosition.headingDeg = 360.0 * static_cast<double>(x) / static_cast<double>(w);
+            double usedCameraPitchDeg                 = 20.0 * ((static_cast<double>(y) / static_cast<double>(h)) * 2.0 - 1.0);
+
+            // make sure we can use it with tan in range +-90 degrees
+            // we limit to +-85deg
+            if (usedCameraPitchDeg >= 85.0) { usedCameraPitchDeg = 85.0; }
+            else if (usedCameraPitchDeg <= -85.0) { usedCameraPitchDeg = -85.0; }
+            traffic->m_deltaCameraPosition.pitchDeg = usedCameraPitchDeg;
 
             // Now calculate where the camera should be positioned to be x
             // meters from the plane and pointing at the plane at the pitch and
             // heading we wanted above.
             const double distanceMeterM = static_cast<double>(std::max(10, traffic->getSettings().getFollowAircraftDistanceM()));
             static const double PI = std::acos(-1);
-            traffic->m_deltaCameraPosition.dx = -distanceMeterM * sin(traffic->m_deltaCameraPosition.heading * PI / 180.0);
-            traffic->m_deltaCameraPosition.dz =  distanceMeterM * cos(traffic->m_deltaCameraPosition.heading * PI / 180.0);
-            traffic->m_deltaCameraPosition.dy = -distanceMeterM * tan(traffic->m_deltaCameraPosition.pitch * PI / 180.0);
+            traffic->m_deltaCameraPosition.dx = -distanceMeterM * sin(traffic->m_deltaCameraPosition.headingDeg * PI / 180.0);
+            traffic->m_deltaCameraPosition.dz =  distanceMeterM * cos(traffic->m_deltaCameraPosition.headingDeg * PI / 180.0);
+            traffic->m_deltaCameraPosition.dy = -distanceMeterM * tan(traffic->m_deltaCameraPosition.pitchDeg   * PI / 180.0);
 
             traffic->m_deltaCameraPosition.isInitialized = true;
         }
 
-        double lx, ly, lz;
+        double lx = 0, ly = 0, lz = 0; // normally init not needed, just to avoid any issues
         static const double kFtToMeters = 0.3048;
 
         if (traffic->m_followPlaneViewCallsign == traffic->ownAircraftString())
@@ -945,19 +968,43 @@ namespace XSwiftBus
         }
         else
         {
-            if (traffic->m_planesByCallsign.empty()) { return 0; } // paranoia
-            const auto planeIt = traffic->m_planesByCallsign.find(traffic->m_followPlaneViewCallsign);
-            if (planeIt == traffic->m_planesByCallsign.end()) { return 0; }
-            const Plane *plane = planeIt->second;
-            if (!plane) { return 0; }
+            if (traffic->m_planesByCallsign.empty())
+            {
+                INFO_LOG("Follow aircraft, no planes to follow");
+                traffic->m_followPlaneViewCallsign.clear();
+                return 0;
+            }
 
-            XPLMWorldToLocal(plane->position.lat, plane->position.lon, plane->position.elevation * kFtToMeters, &lx, &ly, &lz);
+            if (traffic->m_followPlaneViewCallsign.empty())
+            {
+                INFO_LOG("Follow aircraft, no callsign to follow");
+                traffic->m_followPlaneViewCallsign.clear();
+                return 0;
+            }
+
+            const auto planeIt = traffic->m_planesByCallsign.find(traffic->m_followPlaneViewCallsign);
+            if (planeIt == traffic->m_planesByCallsign.end())
+            {
+                INFO_LOG("Follow aircraft, no plane found for callsign " + traffic->m_followPlaneViewCallsign);
+                traffic->m_followPlaneViewCallsign.clear();
+                return 0;
+            }
+
+            const Plane *plane = planeIt->second;
+            if (!plane)
+            {
+                ERROR_LOG("Follow aircraft, no plane from iterator for callsign " + traffic->m_followPlaneViewCallsign);
+                traffic->m_followPlaneViewCallsign.clear();
+                return 0;
+            }
+
             if (!isValidPosition(plane->position))
             {
                 WARNING_LOG("Invalid follow aircraft position for " + plane->callsign);
                 WARNING_LOG("Pos: " + pos2String(plane->position));
                 return 0;
             }
+            XPLMWorldToLocal(plane->position.lat, plane->position.lon, plane->position.elevation * kFtToMeters, &lx, &ly, &lz);
         }
 
         // Fill out the camera position info.
@@ -966,8 +1013,8 @@ namespace XSwiftBus
         cameraPosition->z = static_cast<float>(lz + traffic->m_deltaCameraPosition.dz);
         // cameraPosition->pitch   = static_cast<float>(traffic->m_deltaCameraPosition.pitch);
         // cameraPosition->heading = static_cast<float>(traffic->m_deltaCameraPosition.heading);
-        cameraPosition->pitch   = CTraffic::normalizeToPlusMinus180DegF(static_cast<float>(traffic->m_deltaCameraPosition.pitch));
-        cameraPosition->heading = CTraffic::normalizeToPlusMinus180DegF(static_cast<float>(traffic->m_deltaCameraPosition.heading));
+        cameraPosition->pitch   = CTraffic::normalizeToPlusMinus180DegF(static_cast<float>(traffic->m_deltaCameraPosition.pitchDeg));
+        cameraPosition->heading = CTraffic::normalizeToPlusMinus180DegF(static_cast<float>(traffic->m_deltaCameraPosition.headingDeg));
         cameraPosition->roll = 0.0;
         cameraPosition->zoom = 1.0;
 
@@ -979,6 +1026,7 @@ namespace XSwiftBus
         }
 
         // Return 1 to indicate we want to keep controlling the camera.
+        // INFO_LOG("Follow aircraft " + traffic->m_followPlaneViewCallsign);
         return 1;
     }
 
@@ -1030,24 +1078,35 @@ namespace XSwiftBus
 
     bool CTraffic::isPlusMinusOne(float v)
     {
+        if (std::isnan(v)) { return false; }
         if (v > 1.00001f || v < -1.00001f) { return false; }
         return true;
     }
 
     bool CTraffic::isPlusMinus180(float v)
     {
+        if (std::isnan(v)) { return false; }
         if (v > 180.00001f || v < -180.00001f) { return false; }
         return true;
     }
 
     bool CTraffic::isPlusMinus180(double v)
     {
+        if (std::isnan(v)) { return false; }
         if (v > 180.00001 || v < -180.00001) { return false; }
+        return true;
+    }
+
+    bool CTraffic::isZeroTo360(double v)
+    {
+        if (std::isnan(v)) { return false; }
+        if (v < 0 || v >= 360.0) { return false; }
         return true;
     }
 
     float CTraffic::normalizeToPlusMinus180DegF(float v)
     {
+        if (std::isnan(v)) { return 0.0f; }
         if (v >   180.0f)  { return v - 360.0f;}
         if (v <= -180.0f)  { return v + 360.0f;}
         return v;
@@ -1055,8 +1114,9 @@ namespace XSwiftBus
 
     double CTraffic::normalizeToPlusMinus180DegD(double v)
     {
-        if (v >   180.0)  { return v - 360.0;}
-        if (v <= -180.0)  { return v + 360.0;}
+        if (std::isnan(v)) { return 0.0; }
+        if (v >   180.0)   { return v - 360.0;}
+        if (v <= -180.0)   { return v + 360.0;}
         return v;
     }
 
