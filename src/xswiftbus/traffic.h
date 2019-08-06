@@ -142,8 +142,8 @@ namespace XSwiftBus
             double dx       = 0.0;
             double dy       = 0.0;
             double dz       = 0.0;
-            double heading  = 0.0;
-            double pitch    = 0.0;
+            double headingDeg  = 0.0;
+            double pitchDeg    = 0.0;
             bool isInitialized = false;
         };
 
@@ -157,6 +157,7 @@ namespace XSwiftBus
         void switchToFollowPlaneView(const std::string &callsign);
         void followNextPlane();
         void followPreviousPlane();
+        bool containsCallsign(const std::string &callsign) const;
 
         static int preferences(const char *section, const char *name, int def);
         static float preferences(const char *section, const char *name, float def);
@@ -191,6 +192,7 @@ namespace XSwiftBus
         static bool isPlusMinusOne(float v);
         static bool isPlusMinus180(float v);
         static bool isPlusMinus180(double v);
+        static bool isZeroTo360(double v);
         //! @}
 
         //! Normalize to (-180, 180] degress @{
