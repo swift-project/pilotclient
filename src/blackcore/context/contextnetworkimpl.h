@@ -105,9 +105,9 @@ namespace BlackCore
             virtual BlackMisc::Aviation::CAircraftSituationChangeList remoteAircraftSituationChanges(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual int remoteAircraftSituationChangesCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered) override;
-            virtual int updateMultipleAircraftRendered(const BlackMisc::Aviation::CCallsignSet &callsigns, bool rendered) override;
-            virtual int updateMultipleAircraftEnabled(const BlackMisc::Aviation::CCallsignSet &callsigns, bool enabled) override;
-            virtual int updateAircraftGroundElevation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation, BlackMisc::Aviation::CAircraftSituation::GndElevationInfo info) override;
+            virtual int  updateMultipleAircraftRendered(const BlackMisc::Aviation::CCallsignSet &callsigns, bool rendered) override;
+            virtual int  updateMultipleAircraftEnabled(const BlackMisc::Aviation::CCallsignSet &callsigns, bool enabled) override;
+            virtual int  updateAircraftGroundElevation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation, BlackMisc::Aviation::CAircraftSituation::GndElevationInfo info) override;
             virtual void updateMarkAllAsNotRendered() override;
             virtual BlackMisc::PhysicalQuantities::CLength getCGFromDB(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::PhysicalQuantities::CLength getCGFromDB(const QString &modelString) const override;
@@ -171,12 +171,12 @@ namespace BlackCore
 
             // plain vanilla passing to airspace monitor
             virtual bool setAircraftEnabledFlag(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;
-            virtual int reInitializeAllAircraft() override;
+            virtual int  reInitializeAllAircraft() override;
             virtual bool updateCG(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &cg) override;
             virtual bool updateCGAndModelString(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &cg, const QString &modelString) override;
             virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
             virtual BlackMisc::Aviation::CCallsignSet getAircraftInRangeCallsigns() const override;
-            virtual int getAircraftInRangeCount() const override;
+            virtual int  getAircraftInRangeCount() const override;
             virtual bool isAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool isVtolAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
@@ -195,6 +195,7 @@ namespace BlackCore
             virtual QString getNetworkStatistics(bool reset, const QString &separator) override;
             virtual bool setNetworkStatisticsEnable(bool enabled) override;
             virtual bool testAddAltitudeOffset(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &offset = BlackMisc::PhysicalQuantities::CLength::null()) override;
+            virtual QStringList getNetworkPresetValues() const override;
             //! @}
 
             //! \ingroup clientprovider

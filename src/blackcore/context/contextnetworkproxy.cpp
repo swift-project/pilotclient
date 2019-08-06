@@ -318,6 +318,11 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<bool>(QLatin1String("setNetworkStatisticsEnable"), enabled);
         }
 
+        QStringList CContextNetworkProxy::getNetworkPresetValues() const
+        {
+            return m_dBusInterface->callDBusRet<QStringList>(QLatin1String("getNetworkPresetValues"));
+        }
+
         void CContextNetworkProxy::testCreateDummyOnlineAtcStations(int number)
         {
             m_dBusInterface->callDBus(QLatin1String("testCreateDummyOnlineAtcStations"), number);

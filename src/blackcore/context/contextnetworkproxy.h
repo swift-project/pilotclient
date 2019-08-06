@@ -129,6 +129,7 @@ namespace BlackCore
             virtual void enableAircraftPartsHistory(bool enabled) override;
             virtual QString getNetworkStatistics(bool reset, const QString &separator) override;
             virtual bool setNetworkStatisticsEnable(bool enabled) override;
+            virtual QStringList getNetworkPresetValues() const override;
             virtual void testCreateDummyOnlineAtcStations(int number) override;
             virtual void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) override;
             virtual void testReceivedTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;

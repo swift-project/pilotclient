@@ -78,8 +78,9 @@ namespace BlackCore
             //! \name Network functions
             //! @{
             virtual bool isConnected() const override { return m_status == vatStatusConnected; }
-            virtual const BlackMisc::Network::CServer &getPresetServer() const override { return m_server; }
             virtual bool isPendingConnection() const override { return m_status == vatStatusConnecting; }
+            virtual const BlackMisc::Network::CServer &getPresetServer() const override { return m_server; }
+            virtual QStringList getPresetValues() const override;
             virtual void presetLoginMode(LoginMode mode) override;
             virtual void presetServer(const BlackMisc::Network::CServer &server) override;
             virtual void presetCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;

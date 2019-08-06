@@ -847,6 +847,12 @@ namespace BlackCore
             return m_airspace->testAddAltitudeOffset(callsign, offset);
         }
 
+        QStringList CContextNetwork::getNetworkPresetValues() const
+        {
+            if (!m_network) { return {}; }
+            return m_network->getPresetValues();
+        }
+
         CAtcStation CContextNetwork::getOnlineStationForCallsign(const CCallsign &callsign) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }

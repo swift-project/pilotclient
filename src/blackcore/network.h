@@ -32,7 +32,7 @@
 #include "blackmisc/pq/time.h"
 
 #include <QObject>
-#include <QString>
+#include <QStringList>
 #include <QMap>
 #include <QVector>
 #include <QMetaEnum>
@@ -177,6 +177,11 @@ namespace BlackCore
          * Get preset server.
          */
         virtual const BlackMisc::Network::CServer &getPresetServer() const = 0;
+
+        /*!
+         * Get preset values.
+         */
+        virtual QStringList getPresetValues() const = 0;
 
         /*!
          * Returns true if the current ConnectionStatus is in transition, e.g. connecting.
