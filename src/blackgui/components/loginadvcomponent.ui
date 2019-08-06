@@ -217,9 +217,9 @@
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QPushButton" name="pb_Ok">
+       <widget class="QPushButton" name="pb_Connect">
         <property name="text">
-         <string>ok</string>
+         <string>connect</string>
         </property>
        </widget>
       </item>
@@ -267,7 +267,7 @@
  <tabstops>
   <tabstop>form_Pilot</tabstop>
   <tabstop>cb_AutoLogoff</tabstop>
-  <tabstop>pb_Ok</tabstop>
+  <tabstop>pb_Connect</tabstop>
   <tabstop>pb_Cancel</tabstop>
  </tabstops>
  <resources/>

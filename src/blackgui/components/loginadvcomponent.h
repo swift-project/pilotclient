@@ -73,6 +73,9 @@ namespace BlackGui
             //! Login requested
             void toggleNetworkConnection();
 
+            //! Reset state
+            void resetState();
+
         signals:
             //! Login
             void loginOrLogoffSuccessful();

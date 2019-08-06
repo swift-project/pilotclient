@@ -80,8 +80,8 @@ namespace BlackGui
         {
             ui->setupUi(this);
 
-            connect(ui->pb_Cancel, &QPushButton::clicked, this, &CLoginAdvComponent::loginCancelled,          Qt::QueuedConnection);
-            connect(ui->pb_Ok,     &QPushButton::clicked, this, &CLoginAdvComponent::toggleNetworkConnection, Qt::QueuedConnection);
+            connect(ui->pb_Cancel,  &QPushButton::clicked, this, &CLoginAdvComponent::loginCancelled,          Qt::QueuedConnection);
+            connect(ui->pb_Connect, &QPushButton::clicked, this, &CLoginAdvComponent::toggleNetworkConnection, Qt::QueuedConnection);
             connect(ui->comp_NetworkDetails, &CNetworkDetailsComponent::overridePilot, this, &CLoginAdvComponent::overrideCredentialsToPilot,      Qt::QueuedConnection);
             connect(ui->comp_NetworkDetails, &CNetworkDetailsComponent::requestNetworkSettings, this, &CLoginAdvComponent::requestNetworkSettings, Qt::QueuedConnection);
 
@@ -90,6 +90,9 @@ namespace BlackGui
             this->setReducedInfo(true);
             this->setForceSmall(true);
             this->showKillButton(false);
+
+            // override details/voice
+            ui->comp_NetworkDetails->setAlwaysAllowOverride(true);
 
             // auto logoff
             // we decided to make it difficult for users to disable it
@@ -235,6 +238,11 @@ namespace BlackGui
             {
                 emit this->loginOrLogoffCancelled();
             }
+        }
+
+        void CLoginAdvComponent::resetState()
+        {
+            ui->comp_NetworkDetails->resetState();
         }
 
         void CLoginAdvComponent::loadRememberedUserData()
