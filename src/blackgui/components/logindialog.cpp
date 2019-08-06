@@ -9,6 +9,12 @@
 #include "logindialog.h"
 #include "ui_logindialog.h"
 
+#include "blackgui/guiapplication.h"
+#include "blackcore/context/contextnetwork.h"
+
+using namespace BlackCore;
+using namespace BlackCore::Context;
+
 namespace BlackGui
 {
     namespace Components
@@ -23,6 +29,11 @@ namespace BlackGui
             connect(ui->comp_LoginComponent, &CLoginAdvComponent::loginOrLogoffSuccessful, this, &CLoginDialog::onLoginOrLogoffSuccessful);
             connect(ui->comp_LoginComponent, &CLoginAdvComponent::loginOrLogoffCancelled,  this, &CLoginDialog::onLoginOrLogoffCancelled);
             connect(ui->comp_LoginComponent, &CLoginAdvComponent::requestNetworkSettings,  this, &CLoginDialog::onRequestNetworkSettings);
+
+            if (sGui && sGui->getIContextNetwork())
+            {
+                connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CLoginDialog::onNetworkStatusChanged, Qt::QueuedConnection);
+            }
         }
 
         CLoginDialog::~CLoginDialog()
@@ -31,6 +42,29 @@ namespace BlackGui
         void CLoginDialog::setAutoLogoff(bool logoff)
         {
             ui->comp_LoginComponent->setAutoLogoff(logoff);
+            ui->comp_LoginOverviewComponent->setAutoLogoff(logoff);
+        }
+
+        void CLoginDialog::show()
+        {
+            this->init();
+            QDialog::show();
+        }
+
+        void CLoginDialog::init()
+        {
+            bool connected = false;
+            if (sGui && sGui->getIContextNetwork())
+            {
+                connected = sGui->getIContextNetwork()->isConnected();
+                if (connected)
+                {
+                    ui->comp_LoginOverviewComponent->showCurrentValues();
+                }
+            }
+
+            ui->comp_LoginComponent->setVisible(!connected);
+            ui->comp_LoginOverviewComponent->setVisible(connected);
         }
 
         void CLoginDialog::onLoginOrLogoffCancelled()
@@ -47,6 +81,15 @@ namespace BlackGui
         {
             emit this->requestNetworkSettings();
             this->close();
+        }
+
+        void CLoginDialog::onNetworkStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
+        {
+            Q_UNUSED(from);
+            if (to == INetwork::Disconnected || to == INetwork::Connected)
+            {
+                this->init();
+            }
         }
     } // ns
 }// ns

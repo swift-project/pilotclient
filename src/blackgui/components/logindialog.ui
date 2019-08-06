@@ -30,6 +30,16 @@
      </property>
     </widget>
    </item>
+   <item>
+    <widget class="BlackGui::Components::CLoginOverviewComponent" name="comp_LoginOverviewComponent">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -37,6 +47,12 @@
    <class>BlackGui::Components::CLoginAdvComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/loginadvcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CLoginOverviewComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/loginoverviewcomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
