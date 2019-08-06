@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>295</width>
-    <height>264</height>
+    <height>316</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -54,6 +54,41 @@
        <widget class="BlackGui::Editors::CServerForm" name="form_Server">
         <property name="frameShape">
          <enum>QFrame::Panel</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_LoginMode">
+     <property name="title">
+      <string>Login mode</string>
+     </property>
+     <layout class="QFormLayout" name="fl_LoginMode">
+      <property name="leftMargin">
+       <number>4</number>
+      </property>
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="rightMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_LoginMode">
+        <property name="text">
+         <string>Mode</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="le_LoginMode">
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -217,9 +252,9 @@
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QPushButton" name="pb_Ok">
+       <widget class="QPushButton" name="pb_Disconnect">
         <property name="text">
-         <string>ok</string>
+         <string>disconnect</string>
         </property>
        </widget>
       </item>
@@ -265,9 +300,10 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>form_Pilot</tabstop>
+  <tabstop>le_LoginMode</tabstop>
+  <tabstop>gb_OwnAircraft</tabstop>
   <tabstop>cb_AutoLogoff</tabstop>
-  <tabstop>pb_Ok</tabstop>
+  <tabstop>pb_Disconnect</tabstop>
   <tabstop>pb_Cancel</tabstop>
  </tabstops>
  <resources/>
