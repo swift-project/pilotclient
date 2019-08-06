@@ -61,6 +61,16 @@ namespace BlackGui
             ui->cb_Override->setChecked(enabled);
         }
 
+        void CVoiceSetupForm::setAlwaysAllowOverride(bool allow)
+        {
+            m_alwaysAllowOverride = allow;
+            if (allow)
+            {
+                ui->cb_Override->setEnabled(true);
+                CGuiUtility::checkBoxReadOnly(ui->cb_Override, false);
+            }
+        }
+
         void CVoiceSetupForm::showEnableInfo(bool visible)
         {
             m_visibleEnableInfo = visible;
@@ -71,10 +81,21 @@ namespace BlackGui
         {
             ui->pb_SetDefaults->setEnabled(!readonly);
             ui->le_VatsimUdpPort->setReadOnly(readonly);
+            CGuiUtility::checkBoxesReadOnly(this, readonly);
+            if (m_alwaysAllowOverride)
+            {
+                ui->cb_Override->setEnabled(true);
+                CGuiUtility::checkBoxReadOnly(ui->cb_Override, false);
+            }
+
+            /**
             if (readonly && ui->cb_Override->isChecked())
             {
+                // this is no value which will be stored
                 ui->cb_Override->setChecked(false);
             }
+            **/
+
             this->forceStyleSheetUpdate();
         }
 

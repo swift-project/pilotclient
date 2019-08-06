@@ -65,6 +65,16 @@ namespace BlackGui
             ui->cb_3LetterAirlineICAO->setChecked(setup.force3LetterAirlineCodes());
         }
 
+        void CFsdSetupForm::setAlwaysAllowOverride(bool allow)
+        {
+            m_alwaysAllowOverride = allow;
+            if (allow)
+            {
+                ui->cb_Override->setEnabled(true);
+                CGuiUtility::checkBoxReadOnly(ui->cb_Override, false);
+            }
+        }
+
         bool CFsdSetupForm::isFsdSetupEnabled() const
         {
             return ui->cb_Override->isChecked();
@@ -86,12 +96,20 @@ namespace BlackGui
             ui->le_TextCodec->setReadOnly(readonly);
             ui->pb_SetDefaults->setEnabled(!readonly);
             CGuiUtility::checkBoxesReadOnly(this, readonly);
-            CGuiUtility::checkBoxReadOnly(ui->cb_Override, false); // always editable
+            if (m_alwaysAllowOverride)
+            {
+                ui->cb_Override->setEnabled(true);
+                CGuiUtility::checkBoxReadOnly(ui->cb_Override, false);
+            }
 
+            /**
             if (readonly && ui->cb_Override->isChecked())
             {
+                // this is no value which will be stored
                 ui->cb_Override->setChecked(false);
             }
+            **/
+
             this->forceStyleSheetUpdate();
         }
 
