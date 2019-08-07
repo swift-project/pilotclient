@@ -185,7 +185,7 @@ namespace BlackMisc
             {
                 // nothing found so far
                 codesFound = this->findByNamesOrTelephonyDesignator(patternUsed.getName());
-                codesFound = this->ifPossibleReduceByTelephonyDesignator(patternUsed.getTelephonyDesignator());
+                codesFound = codesFound.ifPossibleReduceByTelephonyDesignator(patternUsed.getTelephonyDesignator());
                 codesFound = codesFound.ifPossibleReduceByCountry(patternUsed.getCountryIso());
             }
             else
