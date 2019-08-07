@@ -68,9 +68,9 @@ namespace BlackMisc
             const QString s =
                 (this->hasAnyModelString() ? inApostrophes(this->getAllModelStringsAliasesAndDbKey(), true) % QStringLiteral(" ") : QString()) %
                 u" type: '" % this->getModelTypeAsString() %
-                u"' ICAO: '" % this->getAircraftIcaoCode().toQString(i18n) %
-                u" CG: " % this->getCG().valueRoundedWithUnit(1) %
-                u"' {" % m_livery.toQString(i18n) %
+                u"' ICAO: {" % this->getAircraftIcaoCode().toQString(i18n) %
+                u"} CG: " % this->getCG().valueRoundedWithUnit(1) %
+                u"' livery: {" % m_livery.toQString(i18n) %
                 u"} file: '" % m_fileName % u'\'';
             return s;
         }
