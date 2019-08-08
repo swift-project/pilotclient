@@ -126,7 +126,7 @@ namespace XSwiftBus
         int process();
 
         //! Returns the own aircraft string to be used as callsign for setFollowedAircraft()
-        std::string ownAircraftString() const { return "ownAircraft"; }
+        static const std::string &ownAircraftString() { static const std::string o = "ownAircraft"; return o; }
 
     protected:
         //! Handler

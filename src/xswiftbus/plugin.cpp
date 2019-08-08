@@ -53,7 +53,7 @@ namespace XSwiftBus
         m_planeViewSubMenu = m_menu.subMenu("Follow Plane View");
         m_planeViewOwnAircraftMenuItem = m_planeViewSubMenu.item("Own Aircraft", [this]
         {
-            m_traffic->setFollowedAircraft(m_traffic->ownAircraftString());
+            m_traffic->setFollowedAircraft(CTraffic::ownAircraftString());
         });
 
         /*m_dbusThread = std::thread([this]()

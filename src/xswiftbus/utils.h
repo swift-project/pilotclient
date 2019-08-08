@@ -41,10 +41,13 @@ namespace XSwiftBus
 
     //! Logger convenience macros
     //! @{
+    // *INDENT-OFF*
     #define DEBUG_LOG(msg) Logger::print(__FILE__, __LINE__, Logger::DebugMsg, msg)
+    #define DEBUG_LOG_C(msg, doLog) if (doLog) { Logger::print(__FILE__, __LINE__, Logger::DebugMsg, msg); }
     #define INFO_LOG(msg) Logger::print(__FILE__, __LINE__, Logger::InfoMsg, msg)
     #define WARNING_LOG(msg) Logger::print(__FILE__, __LINE__, Logger::WarningMsg, msg)
     #define ERROR_LOG(msg) Logger::print(__FILE__, __LINE__, Logger::ErrorMsg, msg)
+    // *INDENT-ON*
     //! @}
 }
 

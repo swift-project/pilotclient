@@ -170,7 +170,7 @@ namespace XSwiftBus
 
     void CTraffic::switchToFollowPlaneView(const std::string &callsign)
     {
-        if (this->ownAircraftString() != callsign && !this->containsCallsign(callsign))
+        if (CTraffic::ownAircraftString() != callsign && !this->containsCallsign(callsign))
         {
             INFO_LOG("Cannot switch to follow " + callsign);
             return;
@@ -502,12 +502,7 @@ namespace XSwiftBus
 
     void CTraffic::setFollowedAircraft(const std::string &callsign)
     {
-        if (callsign != ownAircraftString())
-        {
-            auto planeIt = m_planesByCallsign.find(callsign);
-            if (planeIt == m_planesByCallsign.end()) { return; }
-        }
-        switchToFollowPlaneView(callsign);
+        this->switchToFollowPlaneView(callsign);
     }
 
     void CTraffic::dbusDisconnectedHandler()
@@ -895,6 +890,8 @@ namespace XSwiftBus
 
     int CTraffic::orbitPlaneFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon)
     {
+        constexpr bool DEBUG = true;
+        // DEBUG_LOG_C("Follow aircraft entry", DEBUG);
         if (isLosingControl == 1)
         {
             // do NOT use refcon here, might be invalid
@@ -927,6 +924,7 @@ namespace XSwiftBus
             // fixme: In a future update, change the orbit only while right mouse button is pressed.
             XPLMGetScreenSize(&w, &h);
             XPLMGetMouseLocation(&x, &y);
+            if (DEBUG) { DEBUG_LOG("Follow aircraft coordinates w,h,x,y: " + std::to_string(w) + " " + std::to_string(h) + " " + std::to_string(x) + " " + std::to_string(y)); }
 
             // avoid follow aircraft in too small windows
             // int cannot be NaN
@@ -960,7 +958,7 @@ namespace XSwiftBus
         double lx = 0, ly = 0, lz = 0; // normally init not needed, just to avoid any issues
         static const double kFtToMeters = 0.3048;
 
-        if (traffic->m_followPlaneViewCallsign == traffic->ownAircraftString())
+        if (traffic->m_followPlaneViewCallsign == CTraffic::ownAircraftString())
         {
             lx = traffic->m_ownAircraftPositionX.get();
             ly = traffic->m_ownAircraftPositionY.get();
@@ -1026,7 +1024,11 @@ namespace XSwiftBus
         }
 
         // Return 1 to indicate we want to keep controlling the camera.
-        // INFO_LOG("Follow aircraft " + traffic->m_followPlaneViewCallsign);
+        if (DEBUG)
+        {
+            DEBUG_LOG("Camera: " + pos2String(cameraPosition));
+            DEBUG_LOG("Follow aircraft " + traffic->m_followPlaneViewCallsign);
+        }
         return 1;
     }
 
@@ -1156,8 +1158,11 @@ namespace XSwiftBus
 
     std::string CTraffic::pos2String(const XPLMCameraPosition_t *camPos)
     {
+        if (!camPos) { return "camera position invalid"; }
         return "x, y, z: " +
                std::to_string(camPos->x) + "/" + std::to_string(camPos->y) + "/" + std::to_string(camPos->z) +
+               " zoom: " +
+               std::to_string(camPos->zoom) +
                " prh: " +
                std::to_string(camPos->pitch) + "/" + std::to_string(camPos->roll) + "/" + std::to_string(camPos->heading);
     }
