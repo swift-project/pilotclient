@@ -175,6 +175,7 @@ namespace XSwiftBus
             std::string airlineIcao;
             std::string livery;
             std::string modelName;
+            std::string nightTextureMode;
             bool hasSurfaces = false;
             bool hasXpdr = false;
             char label[32] {};
