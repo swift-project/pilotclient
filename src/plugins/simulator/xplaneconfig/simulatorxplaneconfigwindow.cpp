@@ -67,6 +67,7 @@ namespace BlackSimPlugin
             s.setMaxPlanes(ui->sb_MaxAircraft->value());
             s.setFollowAircraftDistanceM(ui->sb_FollowAircraftDistanceM->value());
             s.setDrawingLabels(ui->cb_DrawLabels->isChecked());
+            s.setNightTextureModeQt(ui->cb_NightTextureMode->currentText());
             return s;
         }
 
@@ -77,6 +78,19 @@ namespace BlackSimPlugin
             ui->sb_FollowAircraftDistanceM->setValue(settings.getFollowAircraftDistanceM());
             ui->cb_DrawLabels->setChecked(settings.isDrawingLabels());
             ui->ds_MaxDrawDistanceNM->setValue(settings.getMaxDrawDistanceNM());
+
+            const QString s = settings.getNightTextureModeQt().left(1);
+            if (!s.isEmpty())
+            {
+                for (int i = 0; i < ui->cb_NightTextureMode->count(); i++)
+                {
+                    if (ui->cb_NightTextureMode->itemText(i).startsWith(s, Qt::CaseInsensitive))
+                    {
+                        ui->cb_NightTextureMode->setCurrentIndex(i);
+                        break;
+                    }
+                }
+            }
         }
 
         void CSimulatorXPlaneConfigWindow::onSettingsChanged()
