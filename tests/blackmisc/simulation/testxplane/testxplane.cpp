@@ -108,9 +108,11 @@ namespace BlackMiscTest
         s.setMaxDrawDistanceNM(11.11);
         s.setDrawingLabels(false);
         s.setFollowAircraftDistanceM(123);
+        s.setNightTextureModeQt("FOO");
         s.setCurrentUtcTime();
-        QString json = s.toXSwiftBusJsonStringQt();
 
+        QVERIFY2(s.getNightTextureModeQt() == "foo", "Expect lower case");
+        QString json = s.toXSwiftBusJsonStringQt();
         qDebug() << json;
         qDebug() << s.toQString();
 
@@ -121,6 +123,7 @@ namespace BlackMiscTest
         QCOMPARE(s.getDBusServerAddressQt(), s2.getDBusServerAddressQt());
         QCOMPARE(s.getFollowAircraftDistanceM(), s2.getFollowAircraftDistanceM());
         QCOMPARE(s.getMSecsSinceEpoch(), s2.getMSecsSinceEpoch());
+        QVERIFY2(s2.getNightTextureModeQt() == "foo", "Expect lower case foo");
 
         s.setDBusServerAddressQt(CDBusServer::sessionBusAddress());
         json = s.toXSwiftBusJsonStringQt();
@@ -136,6 +139,7 @@ namespace BlackMiscTest
         QCOMPARE(s.getMaxPlanes(), s2.getMaxPlanes());
         QCOMPARE(s.isDrawingLabels(), s2.isDrawingLabels());
         QCOMPARE(s.getDBusServerAddressQt(), s2.getDBusServerAddressQt());
+        QVERIFY2(s2.getNightTextureModeQt() == "foo", "Expect lower case foo");
     }
 }
 

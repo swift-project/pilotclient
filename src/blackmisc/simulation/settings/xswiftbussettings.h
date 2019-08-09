@@ -40,7 +40,8 @@ namespace BlackMisc
                     IndexMaxPlanes,
                     IndexDrawingLabels,
                     IndexMaxDrawingDistance,
-                    IndexFollowAircraftDistance
+                    IndexFollowAircraftDistance,
+                    IndexNightTextureMode
                 };
 
                 //! Default constructor
@@ -63,6 +64,12 @@ namespace BlackMisc
 
                 //! \copydoc CXSwiftBusSettingsQtFree::setDBusServerAddress
                 void setDBusServerAddressQt(const QString &dBusAddress) { this->setDBusServerAddress(dBusAddress.toStdString()); }
+
+                //! \copydoc CXSwiftBusSettingsQtFree::getNightTextureMode
+                QString getNightTextureModeQt() const { return QString::fromStdString(this->getNightTextureMode()); }
+
+                //! \copydoc CXSwiftBusSettingsQtFree::setNightTextureMode
+                void setNightTextureModeQt(const QString &nightTexture) { this->setNightTextureMode(nightTexture.toStdString()); }
 
                 //! \copydoc CXSwiftBusSettingsQtFree::toXSwiftBusJsonString
                 QString toXSwiftBusJsonStringQt() const { return QString::fromStdString(this->toXSwiftBusJsonString()); }
@@ -87,6 +94,7 @@ namespace BlackMisc
                 BLACK_METACLASS(
                     CXSwiftBusSettings,
                     BLACK_METAMEMBER(dBusServerAddress),
+                    BLACK_METAMEMBER(nightTextureMode),
                     BLACK_METAMEMBER(maxPlanes),
                     BLACK_METAMEMBER(drawingLabels),
                     BLACK_METAMEMBER(maxDrawDistanceNM),

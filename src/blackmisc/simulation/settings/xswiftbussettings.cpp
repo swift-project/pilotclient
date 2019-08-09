@@ -30,6 +30,7 @@ namespace BlackMisc
                 {
                 case IndexMaxPlanes:              return CVariant::fromValue(m_maxPlanes);
                 case IndexDBusServerAddress:      return CVariant::fromValue(QString::fromStdString(m_dBusServerAddress));
+                case IndexNightTextureMode:       return CVariant::fromValue(QString::fromStdString(m_nightTextureMode));
                 case IndexDrawingLabels:          return CVariant::fromValue(m_drawingLabels);
                 case IndexMaxDrawingDistance:     return CVariant::fromValue(m_maxDrawDistanceNM);
                 case IndexFollowAircraftDistance: return CVariant::fromValue(m_followAircraftDistanceM);
@@ -48,6 +49,7 @@ namespace BlackMisc
                 {
                 case IndexMaxPlanes:              m_maxPlanes  = variant.toInt(); break;
                 case IndexDBusServerAddress:      m_dBusServerAddress = variant.toStdString(); break;
+                case IndexNightTextureMode:       m_nightTextureMode  = variant.toStdString(); break;
                 case IndexDrawingLabels:          m_drawingLabels = variant.toBool(); break;
                 case IndexMaxDrawingDistance:     m_maxDrawDistanceNM = variant.toDouble(); break;
                 case IndexFollowAircraftDistance: m_followAircraftDistanceM = variant.toInt(); break;

@@ -46,6 +46,12 @@ namespace BlackMisc
                 //! Get whether the plugin draws type and callsign labels above aircraft
                 bool isDrawingLabels() const { return m_drawingLabels; }
 
+                //! The the night texture mode
+                void setNightTextureMode(const std::string &mode) { m_nightTextureMode = XPlane::QtFreeUtils::toLower(mode); }
+
+                //! The the night texture mode
+                const std::string &getNightTextureMode() const { return m_nightTextureMode; }
+
                 //! Set the maximum number of aircraft.
                 bool setMaxPlanes(int planes)
                 {
@@ -100,6 +106,7 @@ namespace BlackMisc
                 static constexpr char JsonDrawingLabels[]     = "drawinglabels";
                 static constexpr char JsonMaxPlanes[]         = "maxplanes";
                 static constexpr char JsonMaxDrawDistance[]   = "maxDrawDistance";
+                static constexpr char JsonNightTextureMode[]  = "nighttexture";
                 static constexpr char JsonTimestamp[]         = "timestamp";
                 static constexpr char JsonFollowAircraftDistanceM[] = "followAircraftDistance";
                 //! @}
@@ -108,11 +115,12 @@ namespace BlackMisc
                 virtual void objectUpdated();
 
                 std::string m_dBusServerAddress { "tcp:host=127.0.0.1,port=45001" }; //!< DBus server
-                int    m_maxPlanes = 100;               //!< max. planes in XPlane
-                int    m_followAircraftDistanceM = 200; //!< follow aircraft in distance
-                bool   m_drawingLabels       = true;    //!< labels in XPlane
-                double m_maxDrawDistanceNM   = 50.0;    //!< distance in XPlane
-                int64_t m_msSinceEpochQtFree = 0;       //!< timestamp
+                std::string m_nightTextureMode  { "auto" }; //!< night texture mode
+                int    m_maxPlanes = 100;                   //!< max. planes in XPlane
+                int    m_followAircraftDistanceM = 200;     //!< follow aircraft in distance
+                bool   m_drawingLabels       = true;        //!< labels in XPlane
+                double m_maxDrawDistanceNM   = 50.0;        //!< distance in XPlane
+                int64_t m_msSinceEpochQtFree = 0;           //!< timestamp
             };
         } // ns
     } // ns
