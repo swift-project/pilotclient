@@ -21,6 +21,7 @@
 #include <XPLM/XPLMUtilities.h>
 #include <XPLM/XPLMPlanes.h>
 #include <XPLM/XPLMPlugin.h>
+#include "blackmisc/simulation/xplane/qtfreeutils.h"
 #include <cassert>
 #include <cstring>
 #include <cmath>
@@ -29,6 +30,8 @@
 #include <limits>
 
 // clazy:excludeall=reserve-candidates
+
+using namespace BlackMisc::Simulation::XPlane::QtFreeUtils;
 
 namespace XSwiftBus
 {
@@ -918,7 +921,7 @@ namespace XSwiftBus
 
         // Ideally we would like to test against right mouse button, but X-Plane SDK does not
         // allow that.
-        if (!traffic->m_deltaCameraPosition.isInitialized || traffic->m_isSpacePressed)
+        if (!traffic->m_deltaCameraPosition.isInitialized)
         {
             int w = 0, h = 0, x = 0, y = 0;
             // First get the screen size and mouse location. We will use this to decide
@@ -936,11 +939,17 @@ namespace XSwiftBus
                 return 0;
             }
 
-            traffic->m_deltaCameraPosition.headingDeg = 360.0 * static_cast<double>(x) / static_cast<double>(w);
-            double usedCameraPitchDeg                 = 20.0 * ((static_cast<double>(y) / static_cast<double>(h)) * 2.0 - 1.0);
+            if (x < 1 || y < 1 || x >= w || y >= h)
+            {
+                WARNING_LOG("Screen w/h, and x/y" + std::to_string(w) + "/" + std::to_string(h) + " | " + std::to_string(x) + "/" + std::to_string(y));
+                return 0;
+            }
 
-            // make sure we can use it with tan in range +-90 degrees
-            // we limit to +-85deg
+            traffic->m_deltaCameraPosition.headingDeg = normalizeToZero360DegD(360.0 * static_cast<double>(x) / static_cast<double>(w)); // range 0-360
+            double usedCameraPitchDeg                 = 60.0  - (60.0   * 2.0 *        static_cast<double>(y) / static_cast<double>(h)); // range +-
+
+            // make sure we can use it with tan in range +-90 degrees and the result of tan not getting too high
+            // we limit to +-85deg, tan 45deg: 1 | tan 60deg: 1.73 | tan 85deg: 11.4
             if (usedCameraPitchDeg >= 85.0) { usedCameraPitchDeg = 85.0; }
             else if (usedCameraPitchDeg <= -85.0) { usedCameraPitchDeg = -85.0; }
             traffic->m_deltaCameraPosition.pitchDeg = usedCameraPitchDeg;
@@ -1071,8 +1080,10 @@ namespace XSwiftBus
         // We are only interested in Space key
         if (virtualKey == XPLM_VK_SPACE)
         {
-            if (flags & xplm_DownFlag) { traffic->m_isSpacePressed = true; }
-            if (flags & xplm_UpFlag) { traffic->m_isSpacePressed = false; }
+            // if XPlane looses focus it can happen that key down is NOT reset
+            // for the camera we use the init flag instead, so it is only run once
+            if (flags & xplm_DownFlag) { traffic->m_isSpacePressed = true; traffic->m_deltaCameraPosition.isInitialized = false; }
+            if (flags & xplm_UpFlag)   { traffic->m_isSpacePressed = false; }
         }
 
         /* Return 1 to pass the keystroke to plugin windows and X-Plane.
@@ -1111,17 +1122,32 @@ namespace XSwiftBus
     float CTraffic::normalizeToPlusMinus180DegF(float v)
     {
         if (std::isnan(v)) { return 0.0f; }
-        if (v >   180.0f)  { return v - 360.0f;}
-        if (v <= -180.0f)  { return v + 360.0f;}
-        return v;
+        return static_cast<float>(normalizeToPlusMinus180DegD(static_cast<double>(v)));
     }
 
     double CTraffic::normalizeToPlusMinus180DegD(double v)
     {
         if (std::isnan(v)) { return 0.0; }
-        if (v >   180.0)   { return v - 360.0;}
-        if (v <= -180.0)   { return v + 360.0;}
-        return v;
+        const double n = normalizeValue(v, -180.0, 180.0);
+        if (n <= -180.0) { return 180.0; }
+        if (n >   180.0) { return 180.0; }
+        return n;
+    }
+
+    float CTraffic::normalizeToZero360DegF(float v)
+    {
+        if (std::isnan(v)) { return 0.0f; }
+        return static_cast<float>(normalizeToZero360DegD(static_cast<double>(v)));
+
+    }
+
+    double CTraffic::normalizeToZero360DegD(double v)
+    {
+        if (std::isnan(v)) { return 0.0; }
+        const double n = normalizeValue(v, 0, 360.0);
+        if (n >= 360.0) { return 0.0;}
+        if (n < 0.0)    { return 0.0;}
+        return n;
     }
 
     bool CTraffic::isValidPosition(const XPMPPlanePosition_t &position)
