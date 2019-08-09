@@ -317,7 +317,8 @@ namespace XSwiftBus
         }
         else
         {
-            id = XPMPCreatePlaneWithModelName(modelName.c_str(), aircraftIcao.c_str(), airlineIcao.c_str(), livery.c_str(), getPlaneData, planeLoaded, static_cast<void *>(this));
+            const std::string nt = this->getSettings().getNightTextureMode();
+            id = XPMPCreatePlaneWithModelName(modelName.c_str(), aircraftIcao.c_str(), airlineIcao.c_str(), livery.c_str(), nt.c_str(), getPlaneData, planeLoaded, static_cast<void *>(this));
         }
 
         if (!id)
