@@ -40,7 +40,7 @@ namespace XSwiftBus
         CTraffic(ISettingsProvider *settingsProvider);
 
         //! Destructor
-        ~CTraffic() override;
+        virtual ~CTraffic() override;
 
         //! DBus interface name
         static const std::string &InterfaceName()
@@ -139,9 +139,9 @@ namespace XSwiftBus
         //! Camera
         struct DeltaCameraPosition
         {
-            double dx       = 0.0;
-            double dy       = 0.0;
-            double dz       = 0.0;
+            double dx          = 0.0;
+            double dy          = 0.0;
+            double dz          = 0.0;
             double headingDeg  = 0.0;
             double pitchDeg    = 0.0;
             bool isInitialized = false;
@@ -241,7 +241,7 @@ namespace XSwiftBus
         static void planeLoaded(void *id, bool succeeded, void *self)
         {
             auto *traffic = static_cast<CTraffic *>(self);
-            auto planeIt = traffic->m_planesById.find(id);
+            auto  planeIt = traffic->m_planesById.find(id);
             if (planeIt == traffic->m_planesById.end()) { return; }
 
             if (succeeded) { traffic->emitPlaneAdded(planeIt->second->callsign); }

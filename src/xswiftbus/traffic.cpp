@@ -822,8 +822,9 @@ namespace XSwiftBus
 
     int CTraffic::getPlaneData(void *id, int dataType, void *io_data)
     {
-        auto planeIt = m_planesById.find(id);
-        assert(planeIt != m_planesById.end());
+        const auto planeIt = m_planesById.find(id);
+        // assert(planeIt != m_planesById.end());
+        if (planeIt == m_planesById.end()) { return xpmpData_Unavailable; } // less drastic version
         Plane *plane = planeIt->second;
         if (!plane) { return xpmpData_Unavailable; }
 
