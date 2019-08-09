@@ -196,9 +196,11 @@ namespace XSwiftBus
         static bool isZeroTo360(double v);
         //! @}
 
-        //! Normalize to (-180, 180] degress @{
-        static float normalizeToPlusMinus180DegF(float v);
+        //! Normalize to (-180, 180] or [0, 360) degrees @{
+        static float  normalizeToPlusMinus180DegF(float v);
         static double normalizeToPlusMinus180DegD(double v);
+        static float  normalizeToZero360DegF(float v);
+        static double normalizeToZero360DegD(double v);
         //! @}
 
         //! Check the position if values are valid @{

@@ -35,6 +35,7 @@ namespace BlackMiscTest
         void splitTest();
         void acfPropertiesTest();
         void xSwiftBusSettingsTest();
+        void qtFreeUtils();
     };
 
     void CTestXPlane::getFileNameTest()
@@ -140,6 +141,40 @@ namespace BlackMiscTest
         QCOMPARE(s.isDrawingLabels(), s2.isDrawingLabels());
         QCOMPARE(s.getDBusServerAddressQt(), s2.getDBusServerAddressQt());
         QVERIFY2(s2.getNightTextureModeQt() == "foo", "Expect lower case foo");
+    }
+
+    void CTestXPlane::qtFreeUtils()
+    {
+        double vOut;
+        vOut = normalizeValue(77.0, 0.0, 360.0);
+        QVERIFY2(qFuzzyCompare(77.0, vOut), "Wrong normalize 0-360");
+
+        vOut = normalizeValue(361.0, 0.0, 360.0);
+        QVERIFY2(qFuzzyCompare(1.0, vOut), "Wrong normalize 0-360");
+
+        vOut = normalizeValue(-10.0, 0.0, 360.0);
+        QVERIFY2(qFuzzyCompare(350.0, vOut), "Wrong normalize 0-360");
+
+        vOut = normalizeValue(-370.0, 0.0, 360.0);
+        QVERIFY2(qFuzzyCompare(350.0, vOut), "Wrong normalize 0-360");
+
+        vOut = normalizeValue(-180.0, 0.0, 360.0);
+        QVERIFY2(qFuzzyCompare(180.0, vOut), "Wrong normalize 0-360");
+
+        vOut = normalizeValue(-10.0, -180.0, 180.0);
+        QVERIFY2(qFuzzyCompare(-10.0, vOut), "Wrong normalize +-180");
+
+        vOut = normalizeValue(100.0, -180.0, 180.0);
+        QVERIFY2(qFuzzyCompare(100.0, vOut), "Wrong normalize +-180");
+
+        vOut = normalizeValue(190.0, -180.0, 180.0);
+        QVERIFY2(qFuzzyCompare(-170.0, vOut), "Wrong normalize +-180");
+
+        vOut = normalizeValue(360.0, -180.0, 180.0);
+        QVERIFY2(qFuzzyCompare(0, vOut), "Wrong normalize +-180");
+
+        vOut = normalizeValue(-190, -180.0, 180.0);
+        QVERIFY2(qFuzzyCompare(170, vOut), "Wrong normalize +-180");
     }
 }
 

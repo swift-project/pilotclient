@@ -92,6 +92,16 @@ namespace BlackMisc
                     return tokens;
                 }
 
+                //! Normalize value to range start -> end (like for +-180degrees)
+                inline double normalizeValue(const double value, const double start, const double end)
+                {
+                    // https://stackoverflow.com/questions/1628386/normalise-orientation-between-0-and-360
+                    if (value >= start && value <= end) { return value; }
+                    const double width       = end - start  ;
+                    const double offsetValue = value - start; // value relative to 0
+                    return (offsetValue - (floor(offsetValue / width) * width)) + start ;
+                }
+
                 //! ACF properties
                 struct AcfProperties
                 {
