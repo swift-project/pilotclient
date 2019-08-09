@@ -1321,7 +1321,7 @@ namespace BlackSimPlugin
                 m_DBusConnection.disconnectFromBus(m_DBusConnection.name());
                 return;
             }
-            checkConnectionCommon();
+            checkConnectionCommon(); // bus
             m_DBusConnection.disconnectFromBus(m_DBusConnection.name());
         }
 
@@ -1334,7 +1334,7 @@ namespace BlackSimPlugin
                 m_DBusConnection.disconnectFromPeer(m_DBusConnection.name());
                 return;
             }
-            checkConnectionCommon();
+            checkConnectionCommon(); // peer
             m_DBusConnection.disconnectFromPeer(m_DBusConnection.name());
         }
 
@@ -1344,11 +1344,11 @@ namespace BlackSimPlugin
             CXSwiftBusTrafficProxy traffic(m_DBusConnection);
             CXSwiftBusWeatherProxy weather(m_DBusConnection);
 
-            bool result = service.isValid() && traffic.isValid() && weather.isValid();
-            if (! result) { return; }
+            const bool result = service.isValid() && traffic.isValid() && weather.isValid();
+            if (!result) { return; }
 
-            QString swiftVersion = CBuildConfig::getVersionString();
-            QString xswiftbusVersion = service.getVersionNumber();
+            const QString swiftVersion = CBuildConfig::getVersionString();
+            const QString xswiftbusVersion = service.getVersionNumber();
             if (xswiftbusVersion.isEmpty())
             {
                 CLogMessage(this).warning(u"Could not determine which version of XSwiftBus is running. Mismatched versions might cause instability.");
@@ -1364,8 +1364,8 @@ namespace BlackSimPlugin
                 return;
             }
 
-            MultiplayerAcquireInfo info = traffic.acquireMultiplayerPlanes();
-            if (! info.hasAcquired)
+            const MultiplayerAcquireInfo info = traffic.acquireMultiplayerPlanes();
+            if (!info.hasAcquired)
             {
                 CLogMessage(this).error(u"Connection to XSwiftBus successful, but could not acquire multiplayer planes. %1 has acquired them already. Disable %2 or remove it if not required and reload XSwiftBus.") << info.owner << info.owner;
                 return;
