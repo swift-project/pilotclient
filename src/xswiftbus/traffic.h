@@ -139,9 +139,9 @@ namespace XSwiftBus
         //! Camera
         struct DeltaCameraPosition
         {
-            double dx          = 0.0;
-            double dy          = 0.0;
-            double dz          = 0.0;
+            double dxMeters    = 0.0;
+            double dyMeters    = 0.0;
+            double dzMeters    = 0.0;
             double headingDeg  = 0.0;
             double pitchDeg    = 0.0;
             bool isInitialized = false;
@@ -177,7 +177,8 @@ namespace XSwiftBus
             std::string modelName;
             std::string nightTextureMode;
             bool hasSurfaces = false;
-            bool hasXpdr = false;
+            bool hasXpdr     = false;
+            bool isOnGround  = false;
             char label[32] {};
             CTerrainProbe terrainProbe;
             XPMPPlaneSurfaces_t surfaces;
