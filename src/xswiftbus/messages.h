@@ -21,7 +21,6 @@
 
 namespace XSwiftBus
 {
-
     /*!
      * Class representing a single line of text to be drawn in a message box.
      */
@@ -44,9 +43,9 @@ namespace XSwiftBus
     {
     public:
         //! Constructor.
-        //! \param left Number of "virtual pixels" between screen left edge and box left edge.
+        //! \param left  Number of "virtual pixels" between screen left edge and box left edge.
         //! \param right Number of "virtual pixels" between screen right edge and box right edge.
-        //! \param top Number of "virtual pixels" between screen top edge and box top edge.
+        //! \param top   Number of "virtual pixels" between screen top edge and box top edge.
         CMessageBox(int left, int right, int top) : CDrawable(xplm_Phase_Window, true),
             m_boxLeft(left), m_boxRight(right), m_boxTop(top) {}
 
@@ -73,14 +72,17 @@ namespace XSwiftBus
 
     private:
         std::vector<CMessage> m_messages;
-        bool m_upArrow = false;
+        bool m_upArrow   = false;
         bool m_downArrow = false;
-        int m_boxLeft = 0;
-        int m_boxRight = 0;
-        int m_boxTop = 0;
+        int m_boxLeft    = 0;
+        int m_boxRight   = 0;
+        int m_boxTop     = 0;
+        int m_boxBottom  = 0;
+        int m_lines      = 10;
+        int m_durationMs = 2500;
 
         // Screen
-        DataRef<xplane::data::sim::graphics::view::window_width> m_screenWidth;
+        DataRef<xplane::data::sim::graphics::view::window_width>  m_screenWidth;
         DataRef<xplane::data::sim::graphics::view::window_height> m_screenHeight;
     };
 
@@ -131,7 +133,6 @@ namespace XSwiftBus
         CCommand m_scrollToBottomCommand;
         CCommand m_debugCommand;
     };
-
-}
+} //ns
 
 #endif

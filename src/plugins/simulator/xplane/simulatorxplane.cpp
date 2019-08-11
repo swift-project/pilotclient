@@ -461,9 +461,9 @@ namespace BlackSimPlugin
             Q_ASSERT(isConnected());
 
             QColor color;
-            if (message.isServerMessage()) { color = "orchid"; }
+            if (message.isServerMessage())          { color = "orchid"; }
             else if (message.isSupervisorMessage()) { color = "yellow"; }
-            else if (message.isPrivateMessage()) { color = "magenta"; }
+            else if (message.isPrivateMessage())    { color = "magenta"; }
             else { color = "lime"; }
 
             m_serviceProxy->addTextMessage(message.getSenderCallsign().toQString() + ": " + message.getMessage(), color.redF(), color.greenF(), color.blueF());
