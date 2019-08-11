@@ -22,7 +22,7 @@ using namespace BlackMisc::Simulation::XPlane::QtFreeUtils;
 
 namespace XSwiftBus
 {
-    CService::CService(ISettingsProvider *settingsProvider) : CDBusObject(settingsProvider)
+    CService::CService(CSettingsProvider *settingsProvider) : CDBusObject(settingsProvider)
     {
         updateAirportsInRange();
     }

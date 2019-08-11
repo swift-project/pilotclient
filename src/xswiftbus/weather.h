@@ -31,7 +31,7 @@ namespace XSwiftBus
     {
     public:
         //! Constructor
-        CWeather(ISettingsProvider *settingsProvider);
+        CWeather(CSettingsProvider *settingsProvider);
 
         //! DBus interface name
         static const std::string &InterfaceName()

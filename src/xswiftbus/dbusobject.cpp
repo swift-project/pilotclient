@@ -9,11 +9,11 @@
 #include "dbusobject.h"
 #include <cassert>
 
-XSwiftBus::ISettingsProvider *XSwiftBus::CDBusObject::s_settingsProvider = nullptr;
+XSwiftBus::CSettingsProvider *XSwiftBus::CDBusObject::s_settingsProvider = nullptr;
 
 namespace XSwiftBus
 {
-    CDBusObject::CDBusObject(ISettingsProvider *settingsProvider)
+    CDBusObject::CDBusObject(CSettingsProvider *settingsProvider)
     {
         if (!CDBusObject::s_settingsProvider)
         {

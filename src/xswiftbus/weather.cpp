@@ -13,7 +13,7 @@
 
 namespace XSwiftBus
 {
-    CWeather::CWeather(ISettingsProvider *settingsProvider) : CDBusObject(settingsProvider)
+    CWeather::CWeather(CSettingsProvider *settingsProvider) : CDBusObject(settingsProvider)
     {
         // void
     }
