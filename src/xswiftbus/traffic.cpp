@@ -387,8 +387,7 @@ namespace XSwiftBus
     void CTraffic::setPlanesPositions(const std::vector<std::string> &callsigns, std::vector<double> latitudesDeg, std::vector<double> longitudesDeg, std::vector<double> altitudesFt,
                                       std::vector<double> pitchesDeg, std::vector<double> rollsDeg, std::vector<double> headingsDeg, const std::vector<bool> &onGrounds)
     {
-        (void)onGrounds;
-
+        const bool setOnGround = onGrounds.size() == callsigns.size();
         for (size_t i = 0; i < callsigns.size(); i++)
         {
             auto planeIt = m_planesByCallsign.find(callsigns.at(i));
@@ -402,6 +401,8 @@ namespace XSwiftBus
             plane->position.pitch = static_cast<float>(pitchesDeg.at(i));
             plane->position.roll = static_cast<float>(rollsDeg.at(i));
             plane->position.heading = static_cast<float>(headingsDeg.at(i));
+
+            if (setOnGround) { plane->isOnGround = onGrounds.at(i); }
         }
     }
 
@@ -959,21 +960,21 @@ namespace XSwiftBus
             // heading we wanted above.
             const double distanceMeterM = static_cast<double>(std::max(10, traffic->getSettings().getFollowAircraftDistanceM()));
             static const double PI = std::acos(-1);
-            traffic->m_deltaCameraPosition.dx = -distanceMeterM * sin(traffic->m_deltaCameraPosition.headingDeg * PI / 180.0);
-            traffic->m_deltaCameraPosition.dz =  distanceMeterM * cos(traffic->m_deltaCameraPosition.headingDeg * PI / 180.0);
-            traffic->m_deltaCameraPosition.dy = -distanceMeterM * tan(traffic->m_deltaCameraPosition.pitchDeg   * PI / 180.0);
+            traffic->m_deltaCameraPosition.dxMeters = -distanceMeterM * sin(traffic->m_deltaCameraPosition.headingDeg * PI / 180.0);
+            traffic->m_deltaCameraPosition.dzMeters =  distanceMeterM * cos(traffic->m_deltaCameraPosition.headingDeg * PI / 180.0);
+            traffic->m_deltaCameraPosition.dyMeters = -distanceMeterM * tan(traffic->m_deltaCameraPosition.pitchDeg   * PI / 180.0);
 
             traffic->m_deltaCameraPosition.isInitialized = true;
         }
 
-        double lx = 0, ly = 0, lz = 0; // normally init not needed, just to avoid any issues
+        double lxMeters = 0, lyMeters = 0, lzMeters = 0; // normally init not needed, just to avoid any issues
         static const double kFtToMeters = 0.3048;
 
         if (traffic->m_followPlaneViewCallsign == CTraffic::ownAircraftString())
         {
-            lx = traffic->m_ownAircraftPositionX.get();
-            ly = traffic->m_ownAircraftPositionY.get();
-            lz = traffic->m_ownAircraftPositionZ.get();
+            lxMeters = traffic->m_ownAircraftPositionX.get();
+            lyMeters = traffic->m_ownAircraftPositionY.get();
+            lzMeters = traffic->m_ownAircraftPositionZ.get();
         }
         else
         {
@@ -1013,15 +1014,20 @@ namespace XSwiftBus
                 WARNING_LOG("Pos: " + pos2String(plane->position));
                 return 0;
             }
-            XPLMWorldToLocal(plane->position.lat, plane->position.lon, plane->position.elevation * kFtToMeters, &lx, &ly, &lz);
+
+            // avoid underflow of camera into ground
+            if (plane->isOnGround)
+            {
+                if (traffic->m_deltaCameraPosition.dyMeters < 5) { traffic->m_deltaCameraPosition.dyMeters = 5; }
+            }
+
+            XPLMWorldToLocal(plane->position.lat, plane->position.lon, plane->position.elevation * kFtToMeters, &lxMeters, &lyMeters, &lzMeters);
         }
 
         // Fill out the camera position info.
-        cameraPosition->x = static_cast<float>(lx + traffic->m_deltaCameraPosition.dx);
-        cameraPosition->y = static_cast<float>(ly + traffic->m_deltaCameraPosition.dy);
-        cameraPosition->z = static_cast<float>(lz + traffic->m_deltaCameraPosition.dz);
-        // cameraPosition->pitch   = static_cast<float>(traffic->m_deltaCameraPosition.pitch);
-        // cameraPosition->heading = static_cast<float>(traffic->m_deltaCameraPosition.heading);
+        cameraPosition->x = static_cast<float>(lxMeters + traffic->m_deltaCameraPosition.dxMeters);
+        cameraPosition->y = static_cast<float>(lyMeters + traffic->m_deltaCameraPosition.dyMeters);
+        cameraPosition->z = static_cast<float>(lzMeters + traffic->m_deltaCameraPosition.dzMeters);
         cameraPosition->pitch   = CTraffic::normalizeToPlusMinus180Deg(static_cast<float>(traffic->m_deltaCameraPosition.pitchDeg));
         cameraPosition->heading = CTraffic::normalizeToPlusMinus180Deg(static_cast<float>(traffic->m_deltaCameraPosition.headingDeg));
         cameraPosition->roll = 0.0;
