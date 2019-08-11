@@ -78,13 +78,13 @@
             <platforms>linux linux-x64</platforms>
             <distributionFileList>
                 <distributionFile>
-                    <origin>../../dist/lib/libicudata.so.56</origin>
+                    <origin>../../dist/lib/libicudata.so.55</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libicui18n.so.56</origin>
+                    <origin>../../dist/lib/libicui18n.so.55</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libicuuc.so.56</origin>
+                    <origin>../../dist/lib/libicuuc.so.55</origin>
                 </distributionFile>
                 <distributionFile>
                     <origin>../../dist/lib/libQt5Core.so.5</origin>
