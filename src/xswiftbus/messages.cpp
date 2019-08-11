@@ -17,7 +17,6 @@
 
 namespace XSwiftBus
 {
-
     void CMessageBox::draw()
     {
         const int messageCount = static_cast<int>(m_messages.size());
@@ -139,7 +138,6 @@ namespace XSwiftBus
         m_messageBox.setMessages(end - lines, end);
         m_messageBox.enableArrows(m_position > lines, m_position < m_messages.size());
     }
-
 }
 
 //! \endcond
