@@ -50,7 +50,7 @@ namespace XSwiftBus
     }
 
     // *INDENT-OFF*
-    CTraffic::CTraffic(ISettingsProvider *settingsProvider) :
+    CTraffic::CTraffic(CSettingsProvider *settingsProvider) :
         CDBusObject(settingsProvider),
         m_followPlaneViewNextCommand("org/swift-project/xswiftbus/follow_next_plane", "Changes plane view to follow next plane in sequence", [this] { followNextPlane(); }),
         m_followPlaneViewPreviousCommand("org/swift-project/xswiftbus/follow_previous_plane", "Changes plane view to follow previous plane in sequence", [this] { followPreviousPlane(); })
@@ -945,7 +945,7 @@ namespace XSwiftBus
                 return 0;
             }
 
-            traffic->m_deltaCameraPosition.headingDeg = normalizeToZero360DegD(360.0 * static_cast<double>(x) / static_cast<double>(w)); // range 0-360
+            traffic->m_deltaCameraPosition.headingDeg = normalizeToZero360Deg(360.0 * static_cast<double>(x) / static_cast<double>(w)); // range 0-360
             double usedCameraPitchDeg                 = 60.0  - (60.0   * 2.0 *        static_cast<double>(y) / static_cast<double>(h)); // range +-
 
             // make sure we can use it with tan in range +-90 degrees and the result of tan not getting too high
@@ -1022,8 +1022,8 @@ namespace XSwiftBus
         cameraPosition->z = static_cast<float>(lz + traffic->m_deltaCameraPosition.dz);
         // cameraPosition->pitch   = static_cast<float>(traffic->m_deltaCameraPosition.pitch);
         // cameraPosition->heading = static_cast<float>(traffic->m_deltaCameraPosition.heading);
-        cameraPosition->pitch   = CTraffic::normalizeToPlusMinus180DegF(static_cast<float>(traffic->m_deltaCameraPosition.pitchDeg));
-        cameraPosition->heading = CTraffic::normalizeToPlusMinus180DegF(static_cast<float>(traffic->m_deltaCameraPosition.headingDeg));
+        cameraPosition->pitch   = CTraffic::normalizeToPlusMinus180Deg(static_cast<float>(traffic->m_deltaCameraPosition.pitchDeg));
+        cameraPosition->heading = CTraffic::normalizeToPlusMinus180Deg(static_cast<float>(traffic->m_deltaCameraPosition.headingDeg));
         cameraPosition->roll = 0.0;
         cameraPosition->zoom = 1.0;
 
@@ -1119,13 +1119,13 @@ namespace XSwiftBus
         return true;
     }
 
-    float CTraffic::normalizeToPlusMinus180DegF(float v)
+    float CTraffic::normalizeToPlusMinus180Deg(float v)
     {
         if (std::isnan(v)) { return 0.0f; }
-        return static_cast<float>(normalizeToPlusMinus180DegD(static_cast<double>(v)));
+        return static_cast<float>(normalizeToPlusMinus180Deg(static_cast<double>(v)));
     }
 
-    double CTraffic::normalizeToPlusMinus180DegD(double v)
+    double CTraffic::normalizeToPlusMinus180Deg(double v)
     {
         if (std::isnan(v)) { return 0.0; }
         const double n = normalizeValue(v, -180.0, 180.0);
@@ -1134,14 +1134,14 @@ namespace XSwiftBus
         return n;
     }
 
-    float CTraffic::normalizeToZero360DegF(float v)
+    float CTraffic::normalizeToZero360Deg(float v)
     {
         if (std::isnan(v)) { return 0.0f; }
-        return static_cast<float>(normalizeToZero360DegD(static_cast<double>(v)));
+        return static_cast<float>(normalizeToZero360Deg(static_cast<double>(v)));
 
     }
 
-    double CTraffic::normalizeToZero360DegD(double v)
+    double CTraffic::normalizeToZero360Deg(double v)
     {
         if (std::isnan(v)) { return 0.0; }
         const double n = normalizeValue(v, 0, 360.0);

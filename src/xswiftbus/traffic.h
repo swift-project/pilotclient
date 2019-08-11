@@ -37,7 +37,7 @@ namespace XSwiftBus
     {
     public:
         //! Constructor
-        CTraffic(ISettingsProvider *settingsProvider);
+        CTraffic(CSettingsProvider *settingsProvider);
 
         //! Destructor
         virtual ~CTraffic() override;
@@ -197,10 +197,10 @@ namespace XSwiftBus
         //! @}
 
         //! Normalize to (-180, 180] or [0, 360) degrees @{
-        static float  normalizeToPlusMinus180DegF(float v);
-        static double normalizeToPlusMinus180DegD(double v);
-        static float  normalizeToZero360DegF(float v);
-        static double normalizeToZero360DegD(double v);
+        static float  normalizeToPlusMinus180Deg(float v);
+        static double normalizeToPlusMinus180Deg(double v);
+        static float  normalizeToZero360Deg(float v);
+        static double normalizeToZero360Deg(double v);
         //! @}
 
         //! Check the position if values are valid @{

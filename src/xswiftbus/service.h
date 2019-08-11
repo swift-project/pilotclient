@@ -37,7 +37,7 @@ namespace XSwiftBus
     {
     public:
         //! Constructor
-        CService(ISettingsProvider *settingsProvider);
+        CService(CSettingsProvider *settingsProvider);
 
         //! Destructor
         virtual ~CService() override = default;

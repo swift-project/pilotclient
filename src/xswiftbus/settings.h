@@ -32,7 +32,7 @@ namespace XSwiftBus
     };
 
     //! Something owning the settings
-    class ISettingsProvider
+    class CSettingsProvider
     {
     public:
         //! By value

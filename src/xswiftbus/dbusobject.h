@@ -22,7 +22,7 @@ namespace XSwiftBus
     {
     public:
         //! Constructor
-        CDBusObject(ISettingsProvider *settingsProvider);
+        CDBusObject(CSettingsProvider *settingsProvider);
 
         //! Destructor
         virtual ~CDBusObject();
@@ -86,7 +86,7 @@ namespace XSwiftBus
         //! Set the settings
         bool setSettings(const CSettings &s);
 
-        static ISettingsProvider *s_settingsProvider; //!< get the settings from here, still protected for the static functions
+        static CSettingsProvider *s_settingsProvider; //!< get the settings from here, still protected for the static functions
 
     private:
         static void dbusObjectPathUnregisterFunction(DBusConnection *connection, void *data);
