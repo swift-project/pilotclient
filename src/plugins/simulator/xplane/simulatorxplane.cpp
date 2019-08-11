@@ -1302,14 +1302,14 @@ namespace BlackSimPlugin
             if (this->isShuttingDown()) { return; }
             Q_ASSERT_X(!CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background");
 
-            const QString dbusAddress = m_xSwiftBusServerSettings.getThreadLocal().getDBusServerAddressQt();
-            if (CDBusServer::isSessionOrSystemAddress(dbusAddress))
+            m_dBusServerAddress = m_xSwiftBusServerSettings.getThreadLocal().getDBusServerAddressQt();
+            if (CDBusServer::isSessionOrSystemAddress(m_dBusServerAddress))
             {
-                checkConnectionViaBus(dbusAddress);
+                checkConnectionViaBus(m_dBusServerAddress);
             }
-            else if (CDBusServer::isQtDBusAddress(dbusAddress))
+            else if (CDBusServer::isQtDBusAddress(m_dBusServerAddress))
             {
-                checkConnectionViaPeer(dbusAddress);
+                checkConnectionViaPeer(m_dBusServerAddress);
             }
         }
 

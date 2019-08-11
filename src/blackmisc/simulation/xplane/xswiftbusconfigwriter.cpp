@@ -45,19 +45,19 @@ namespace BlackMisc
 
             void CXSwiftBusConfigWriter::updateInXPlane9()
             {
-                QString path = CXPlaneUtil::xswiftbusPluginDir(CXPlaneUtil::xplane9Dir());
+                const QString path = CXPlaneUtil::xswiftbusPluginDir(CXPlaneUtil::xplane9Dir());
                 if (!path.isEmpty()) { writeTo(path); }
             }
 
             void CXSwiftBusConfigWriter::updateInXPlane10()
             {
-                QString path = CXPlaneUtil::xswiftbusPluginDir(CXPlaneUtil::xplane10Dir());
+                const QString path = CXPlaneUtil::xswiftbusPluginDir(CXPlaneUtil::xplane10Dir());
                 if (!path.isEmpty()) { writeTo(path); }
             }
 
             void CXSwiftBusConfigWriter::updateInXPlane11()
             {
-                QString path = CXPlaneUtil::xswiftbusPluginDir(CXPlaneUtil::xplane11Dir());
+                const QString path = CXPlaneUtil::xswiftbusPluginDir(CXPlaneUtil::xplane11Dir());
                 if (!path.isEmpty()) { writeTo(path); }
             }
 
