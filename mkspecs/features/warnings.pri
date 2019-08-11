@@ -40,7 +40,7 @@ gcc {
 
 # clazy - Qt-aware linter
 equals(QMAKE_CXX, clazy)|equals(QMAKE_CXX, clazy-cl) {
-    CLAZY_WARNINGS *= level3 no-reserve-candidates
+    CLAZY_WARNINGS *= level3 no-reserve-candidates qrequiredresult-candidates
     CLAZY_WARNINGS *= isempty-vs-count raw-environment-function tr-non-literal
 
     # TODO: gradually fix issues so we can re-enable some of these warnings
