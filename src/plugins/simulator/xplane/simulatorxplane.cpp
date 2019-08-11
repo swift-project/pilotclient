@@ -652,7 +652,7 @@ namespace BlackSimPlugin
             if (this->canAddAircraft())
             {
                 // no aircraft pending, add
-                CLogMessage(this).info(u"Adding '%1' to XPlane") << newRemoteAircraft.getCallsign();
+                this->logAddingAircraftModel(newRemoteAircraft);
                 const qint64 now = QDateTime::currentMSecsSinceEpoch();
                 m_addingInProgressAircraft.insert(newRemoteAircraft.getCallsign(), now);
                 const QString callsign = newRemoteAircraft.getCallsign().asString();

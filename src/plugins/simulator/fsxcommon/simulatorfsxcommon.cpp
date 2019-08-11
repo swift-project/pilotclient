@@ -140,6 +140,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsxCommon::physicallyAddRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
         {
+            this->logAddingAircraftModel(newRemoteAircraft);
             return this->physicallyAddRemoteAircraftImpl(newRemoteAircraft, ExternalCall);
         }
 
