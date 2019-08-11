@@ -174,7 +174,7 @@ namespace BlackCore
             if (!enabled) { m_aircraftCallsignTimestamps[callsign] = timeoutAircraftEpochMs + 1000; } // fake value so it can be re-enabled
             const qint64 tsv = m_aircraftCallsignTimestamps.value(callsign);
             if (tsv > timeoutAircraftEpochMs) { continue; }
-            CLogMessage(this).debug() << "Aircraft " << callsign.toQString() << "timed out! " << (currentTimeMsEpoch - tsv) << "ms";
+            CLogMessage(this).debug() << QStringLiteral("Aircraft '%1' timed out after %2ms").arg(callsign.toQString()).arg(currentTimeMsEpoch - tsv);
             m_aircraftCallsignTimestamps.remove(callsign);
             emit this->timeoutAircraft(callsign);
         }
@@ -185,7 +185,7 @@ namespace BlackCore
             if (!enabled) { m_aircraftCallsignTimestamps[callsign] = timeoutAtcEpochMs + 1000; } // fake value so it can be re-enabled
             const qint64 tsv = m_aircraftCallsignTimestamps.value(callsign);
             if (m_atcCallsignTimestamps.value(callsign) > timeoutAtcEpochMs) { continue; }
-            CLogMessage(this).debug() << "ATC " << callsign.toQString() << "timed out! " << (currentTimeMsEpoch - tsv) << "ms";
+            CLogMessage(this).debug() << QStringLiteral("ATC '%1' timed out after %2ms").arg(callsign.toQString()).arg(currentTimeMsEpoch - tsv);
             m_atcCallsignTimestamps.remove(callsign);
             emit this->timeoutAtc(callsign);
         }

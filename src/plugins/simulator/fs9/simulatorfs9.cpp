@@ -167,6 +167,8 @@ namespace BlackSimPlugin
         bool CSimulatorFs9::physicallyAddRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
         {
             const CCallsign callsign = newRemoteAircraft.getCallsign();
+            this->logAddingAircraftModel(newRemoteAircraft);
+
             if (m_hashFs9Clients.contains(callsign))
             {
                 // already exists, remove first
@@ -188,7 +190,7 @@ namespace BlackSimPlugin
             {
                 emit aircraftRenderingChanged(remoteAircraftCopy);
             }
-            CLogMessage(this).info(u"FS9: Added aircraft %1") << callsign.toQString();
+            CLogMessage(this).info(u"FS9: Added aircraft '%1'") << callsign.toQString();
             return true;
         }
 

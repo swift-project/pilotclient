@@ -1186,6 +1186,11 @@ namespace BlackCore
         return true;
     }
 
+    void ISimulator::logAddingAircraftModel(const CSimulatedAircraft &aircraft) const
+    {
+        CLogMessage(this).info(u"Adding '%1' '%2' to '%3'") << aircraft.getCallsign() << aircraft.getModel().getModelStringAndDbKey() << this->getSimulatorInfo().toQString(true);
+    }
+
     QString ISimulator::latestLoggedDataFormatted(const CCallsign &cs) const
     {
         const SituationLog s = m_interpolationLogger.getLastSituationLog(cs);

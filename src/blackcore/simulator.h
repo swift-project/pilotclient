@@ -548,6 +548,9 @@ namespace BlackCore
         //! Validate if model has callsign and such
         bool validateModelOfAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) const;
 
+        //! Unified qeeing aircraft message
+        void logAddingAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) const;
+
         //! Lookup against DB data
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
 
