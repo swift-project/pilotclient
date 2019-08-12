@@ -9,18 +9,10 @@
 #include "dbusobject.h"
 #include <cassert>
 
-XSwiftBus::CSettingsProvider *XSwiftBus::CDBusObject::s_settingsProvider = nullptr;
-
 namespace XSwiftBus
 {
-    CDBusObject::CDBusObject(CSettingsProvider *settingsProvider)
-    {
-        if (!CDBusObject::s_settingsProvider)
-        {
-            // we expect a single pointer
-            CDBusObject::s_settingsProvider = settingsProvider;
-        }
-    }
+    CDBusObject::CDBusObject(CSettingsProvider *settingsProvider) : m_settingsProvider(settingsProvider)
+    {}
 
     CDBusObject::~CDBusObject()
     {
@@ -83,13 +75,13 @@ namespace XSwiftBus
 
     CSettings CDBusObject::getSettings() const
     {
-        if (s_settingsProvider) { return s_settingsProvider->getSettings(); }
+        if (m_settingsProvider) { return m_settingsProvider->getSettings(); }
         return CSettings();
     }
 
     bool CDBusObject::setSettings(const CSettings &s)
     {
-        if (s_settingsProvider) { s_settingsProvider->setSettings(s); }
+        if (m_settingsProvider) { m_settingsProvider->setSettings(s); }
         return false;
     }
 

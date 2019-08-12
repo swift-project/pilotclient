@@ -86,7 +86,7 @@ namespace XSwiftBus
         //! Set the settings
         bool setSettings(const CSettings &s);
 
-        static CSettingsProvider *s_settingsProvider; //!< get the settings from here, still protected for the static functions
+        CSettingsProvider *m_settingsProvider; //!< get the settings from here
 
     private:
         static void dbusObjectPathUnregisterFunction(DBusConnection *connection, void *data);

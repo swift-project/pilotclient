@@ -49,12 +49,16 @@ namespace XSwiftBus
         surfaces.lights.timeOffset = static_cast<uint16_t>(std::rand() % 0xffff);
     }
 
+    CTraffic *CTraffic::s_instance = nullptr;
+
     // *INDENT-OFF*
     CTraffic::CTraffic(CSettingsProvider *settingsProvider) :
         CDBusObject(settingsProvider),
         m_followPlaneViewNextCommand("org/swift-project/xswiftbus/follow_next_plane", "Changes plane view to follow next plane in sequence", [this] { followNextPlane(); }),
         m_followPlaneViewPreviousCommand("org/swift-project/xswiftbus/follow_previous_plane", "Changes plane view to follow previous plane in sequence", [this] { followPreviousPlane(); })
     {
+        assert(!s_instance);
+        s_instance = this;
         XPLMRegisterDrawCallback(drawCallback, xplm_Phase_Airplanes, 1, this);
         XPLMRegisterKeySniffer(spaceKeySniffer, 1, this);
 
@@ -67,6 +71,8 @@ namespace XSwiftBus
     {
         XPLMUnregisterDrawCallback(drawCallback, xplm_Phase_Airplanes, 1, this);
         cleanup();
+        assert(s_instance == this);
+        s_instance = nullptr;
     }
 
     static bool s_legacyDataOK = true;
@@ -233,9 +239,11 @@ namespace XSwiftBus
 
     int CTraffic::preferences(const char *section, const char *name, int def)
     {
+        if (!s_instance) { return def; }
+
         if (strcmp(section, "planes") == 0 && strcmp(name, "max_full_count") == 0)
         {
-            return CTraffic::s_settingsProvider->getSettings().getMaxPlanes(); // preferences
+            return s_instance->getSettings().getMaxPlanes(); // preferences
         }
         else if (strcmp(section, "debug") == 0 && strcmp(name, "allow_obj8_async_load") == 0)
         {
@@ -248,9 +256,11 @@ namespace XSwiftBus
 
     float CTraffic::preferences(const char *section, const char *name, float def)
     {
+        if (!s_instance) { return def; }
+
         if (strcmp(section, "planes") == 0 && strcmp(name, "full_distance") == 0)
         {
-            return static_cast<float>(CTraffic::s_settingsProvider->getSettings().getMaxDrawDistanceNM()); // preferences
+            return static_cast<float>(s_instance->getSettings().getMaxDrawDistanceNM()); // preferences
         }
         return def;
     }
