@@ -159,8 +159,10 @@ namespace XSwiftBus
         void followPreviousPlane();
         bool containsCallsign(const std::string &callsign) const;
 
+        static CTraffic *s_instance;
         static int preferences(const char *section, const char *name, int def);
         static float preferences(const char *section, const char *name, float def);
+
         static int orbitOwnAircraftFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon);
         static int orbitPlaneFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon);
         static int drawCallback(XPLMDrawingPhase phase, int isBefore, void *refcon);
