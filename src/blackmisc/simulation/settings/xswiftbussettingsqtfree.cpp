@@ -147,11 +147,6 @@ namespace BlackMisc
                 const milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
                 m_msSinceEpochQtFree = static_cast<int64_t>(ms.count());
             }
-
-            void CXSwiftBusSettingsQtFree::objectUpdated()
-            {
-                // void
-            }
         } // ns
     } // ns
 } // ns

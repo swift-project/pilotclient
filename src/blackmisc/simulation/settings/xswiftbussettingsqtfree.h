@@ -24,16 +24,17 @@ namespace BlackMisc
              */
             class CXSwiftBusSettingsQtFree
             {
-            public:
+            protected:
                 //! Constructor.
                 CXSwiftBusSettingsQtFree();
 
                 //! JSON Constructor.
                 CXSwiftBusSettingsQtFree(const std::string &json);
 
-                //! Dtor
-                virtual ~CXSwiftBusSettingsQtFree() {}
+                //! Destructor.
+                ~CXSwiftBusSettingsQtFree() = default;
 
+            public:
                 //! DBus server
                 const std::string &getDBusServerAddress() const { return m_dBusServerAddress; }
 
@@ -112,7 +113,7 @@ namespace BlackMisc
                 //! @}
 
                 //! Object has been updated
-                virtual void objectUpdated();
+                virtual void objectUpdated() = 0;
 
                 std::string m_dBusServerAddress { "tcp:host=127.0.0.1,port=45001" }; //!< DBus server
                 std::string m_nightTextureMode  { "auto" }; //!< night texture mode

@@ -27,7 +27,7 @@ namespace BlackMisc
         namespace Settings
         {
             //! XSwiftBus settings
-            class BLACKMISC_EXPORT CXSwiftBusSettings :
+            class BLACKMISC_EXPORT CXSwiftBusSettings final :
                 public CValueObject<CXSwiftBusSettings>,
                 public CXSwiftBusSettingsQtFree,
                 public ITimestampBased
@@ -88,7 +88,7 @@ namespace BlackMisc
 
             protected:
                 //! \copydoc CXSwiftBusSettingsQtFree::objectUpdated
-                virtual void objectUpdated() override;
+                virtual void objectUpdated() override final;
 
             private:
                 BLACK_METACLASS(

@@ -18,7 +18,7 @@ namespace XSwiftBus
     /*!
      * XSwiftBus/swift side settings class, JSON capable, shared among all services
      */
-    class CSettings : public BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree
+    class CSettings final : public BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree
     {
     public:
         //! Constructor.
@@ -27,8 +27,9 @@ namespace XSwiftBus
         //! JSON constructor
         CSettings(const std::string &json);
 
-        //! Destructor;
-        virtual ~CSettings() {}
+    protected:
+        //! \copydoc CXSwiftBusSettingsQtFree::objectUpdated
+        virtual void objectUpdated() override final {}
     };
 
     //! Something owning the settings
