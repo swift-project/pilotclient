@@ -18,7 +18,7 @@
 namespace XSwiftBus
 {
     //! DBus base object
-    class CDBusObject
+    class CDBusObject : public CSettingsAware
     {
     public:
         //! Constructor
@@ -79,14 +79,6 @@ namespace XSwiftBus
 
         //! Invoke all pending DBus calls. They will be executed in the calling thread.
         void invokeQueuedDBusCalls();
-
-        //! Get the settings
-        CSettings getSettings() const;
-
-        //! Set the settings
-        bool setSettings(const CSettings &s);
-
-        CSettingsProvider *m_settingsProvider; //!< get the settings from here
 
     private:
         static void dbusObjectPathUnregisterFunction(DBusConnection *connection, void *data);
