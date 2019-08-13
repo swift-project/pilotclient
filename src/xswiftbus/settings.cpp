@@ -39,5 +39,19 @@ namespace XSwiftBus
         m_pluginSettings = settings;
     }
 
+    CSettingsAware::CSettingsAware(CSettingsProvider *provider) : m_provider(provider)
+    {
+        // void
+    }
+
+    CSettings CSettingsAware::getSettings() const
+    {
+        return m_provider->getSettings();
+    }
+
+    void CSettingsAware::setSettings(const CSettings &settings)
+    {
+        m_provider->setSettings(settings);
+    }
 } // ns
 

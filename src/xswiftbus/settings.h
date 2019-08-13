@@ -48,6 +48,26 @@ namespace XSwiftBus
         mutable std::mutex m_settingsMutex;
         CSettings          m_pluginSettings; //!< owner of the settings
     };
+
+    //! Something having access to the settings
+    class CSettingsAware
+    {
+    protected:
+        //! Constructor
+        CSettingsAware(CSettingsProvider *provider);
+
+        //! Destructor
+        ~CSettingsAware() = default;
+
+        //! \copydoc CSettingsProvider::getSettings
+        CSettings getSettings() const;
+
+        //! \copydoc CSettingsProvider::setSettings
+        void setSettings(const CSettings &settings);
+
+    private:
+        CSettingsProvider *m_provider = nullptr;
+    };
 } // ns
 
 #endif

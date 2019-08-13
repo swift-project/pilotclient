@@ -11,7 +11,7 @@
 
 namespace XSwiftBus
 {
-    CDBusObject::CDBusObject(CSettingsProvider *settingsProvider) : m_settingsProvider(settingsProvider)
+    CDBusObject::CDBusObject(CSettingsProvider *settingsProvider) : CSettingsAware(settingsProvider)
     {}
 
     CDBusObject::~CDBusObject()
@@ -71,18 +71,6 @@ namespace XSwiftBus
             m_qeuedDBusCalls.front()();
             m_qeuedDBusCalls.pop_front();
         }
-    }
-
-    CSettings CDBusObject::getSettings() const
-    {
-        if (m_settingsProvider) { return m_settingsProvider->getSettings(); }
-        return CSettings();
-    }
-
-    bool CDBusObject::setSettings(const CSettings &s)
-    {
-        if (m_settingsProvider) { m_settingsProvider->setSettings(s); }
-        return false;
     }
 
     void CDBusObject::dbusObjectPathUnregisterFunction(DBusConnection *connection, void *data)
