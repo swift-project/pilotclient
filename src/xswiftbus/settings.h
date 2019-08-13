@@ -28,7 +28,7 @@ namespace XSwiftBus
         CSettings(const std::string &json);
 
     protected:
-        //! \copydoc CXSwiftBusSettingsQtFree::objectUpdated
+        //! \copydoc BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::objectUpdated
         virtual void objectUpdated() override final {}
     };
 
@@ -36,7 +36,7 @@ namespace XSwiftBus
     class CSettingsProvider
     {
     public:
-        //! By value
+        //! Get settings
         //! \threadsafe
         CSettings getSettings() const;
 

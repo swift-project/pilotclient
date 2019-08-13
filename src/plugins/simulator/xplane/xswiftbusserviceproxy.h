@@ -387,13 +387,13 @@ namespace BlackSimPlugin
             void getSpeedBrakeRatioAsync(double *o_speedBrakeRatio);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getSettings
+            //! \copydoc XSwiftBus::CSettingsProvider::getSettings
             //! @{
             QString getSettingsJson() const;
             void getSettingsJsonAsync(QString *o_jsonSettings);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::setSettings
+            //! \copydoc XSwiftBus::CSettingsProvider::setSettings
             void setSettingsJson(const QString &json);
         };
     } // ns
