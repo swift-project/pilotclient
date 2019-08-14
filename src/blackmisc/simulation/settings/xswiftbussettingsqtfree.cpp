@@ -26,6 +26,8 @@ constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonMa
 constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonMaxDrawDistance[];
 constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonFollowAircraftDistanceM[];
 constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonNightTextureMode[];
+constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonMessageBox[];
+constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonBundleTaxiLandingLights[];
 constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonTimestamp[];
 //! @endcond
 
@@ -52,6 +54,10 @@ namespace BlackMisc
                 {
                     m_dBusServerAddress = settingsDoc[CXSwiftBusSettingsQtFree::JsonDBusServerAddress].GetString();  c++;
                 }
+                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonMessageBox) && settingsDoc[CXSwiftBusSettingsQtFree::JsonMessageBox].IsString())
+                {
+                    m_msgBox = settingsDoc[CXSwiftBusSettingsQtFree::JsonMessageBox].GetString();  c++;
+                }
                 if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonNightTextureMode) && settingsDoc[CXSwiftBusSettingsQtFree::JsonNightTextureMode].IsString())
                 {
                     m_nightTextureMode = settingsDoc[CXSwiftBusSettingsQtFree::JsonNightTextureMode].GetString();  c++;
@@ -59,6 +65,10 @@ namespace BlackMisc
                 if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonDrawingLabels) && settingsDoc[CXSwiftBusSettingsQtFree::JsonDrawingLabels].IsBool())
                 {
                     m_drawingLabels = settingsDoc[CXSwiftBusSettingsQtFree::JsonDrawingLabels].GetBool();  c++;
+                }
+                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonBundleTaxiLandingLights) && settingsDoc[CXSwiftBusSettingsQtFree::JsonBundleTaxiLandingLights].IsBool())
+                {
+                    m_bundleTaxiLandingLights = settingsDoc[CXSwiftBusSettingsQtFree::JsonBundleTaxiLandingLights].GetBool();  c++;
                 }
                 if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonMaxPlanes) && settingsDoc[CXSwiftBusSettingsQtFree::JsonMaxPlanes].IsInt())
                 {
@@ -77,7 +87,7 @@ namespace BlackMisc
                     m_msSinceEpochQtFree = settingsDoc[CXSwiftBusSettingsQtFree::JsonTimestamp].GetInt64();  c++;
                 }
                 this->objectUpdated(); // post processing
-                return c == 7;
+                return c == 9;
             }
 
             std::string CXSwiftBusSettingsQtFree::toXSwiftBusJsonString() const
@@ -90,12 +100,14 @@ namespace BlackMisc
                 Document::AllocatorType &a = document.GetAllocator();
                 // Value k1(JsonDBusServerAddress, a);
                 // Value v1(m_dBusServerAddress, a);
-                document.AddMember(JsonDBusServerAddress, StringRef(m_dBusServerAddress.c_str()), a);
-                document.AddMember(JsonNightTextureMode,  StringRef(m_nightTextureMode.c_str()), a);
+                document.AddMember(JsonDBusServerAddress,   StringRef(m_dBusServerAddress.c_str()), a);
+                document.AddMember(JsonNightTextureMode,    StringRef(m_nightTextureMode.c_str()), a);
+                document.AddMember(JsonMessageBox,   StringRef(m_msgBox.c_str()), a);
                 document.AddMember(JsonMaxPlanes,         m_maxPlanes, a);
                 document.AddMember(JsonMaxDrawDistance,   m_maxDrawDistanceNM, a);
                 document.AddMember(JsonTimestamp,         m_msSinceEpochQtFree, a);
                 document.AddMember(JsonDrawingLabels,     m_drawingLabels, a);
+                document.AddMember(JsonBundleTaxiLandingLights, m_bundleTaxiLandingLights, a);
                 document.AddMember(JsonFollowAircraftDistanceM, m_followAircraftDistanceM, a);
 
                 // document[CXSwiftBusSettingsQtFree::JsonDBusServerAddress].SetString(StringRef(m_dBusServerAddress.c_str(), m_dBusServerAddress.size()));
@@ -113,11 +125,13 @@ namespace BlackMisc
             std::string CXSwiftBusSettingsQtFree::convertToString() const
             {
                 return "DBusServer: " + m_dBusServerAddress +
-                       ", drawLabels: " + QtFreeUtils::boolToYesNo(m_drawingLabels) +
+                       ", drawLabels: "    + QtFreeUtils::boolToYesNo(m_drawingLabels) +
+                       ", bundle lights: " + QtFreeUtils::boolToYesNo(m_bundleTaxiLandingLights) +
                        ", night t.: "   + m_nightTextureMode +
                        ", max planes: " + std::to_string(m_maxPlanes) +
                        ", max distance NM: " + std::to_string(m_maxDrawDistanceNM) +
                        ", follow dist m: "   + std::to_string(m_followAircraftDistanceM) +
+                       ", msg.box: "    + m_msgBox +
                        ", ts: " + std::to_string(m_msSinceEpochQtFree);
             }
 
@@ -125,7 +139,9 @@ namespace BlackMisc
             {
                 int changed = 0;
                 if (m_dBusServerAddress  != newValues.m_dBusServerAddress)  { m_dBusServerAddress  = newValues.m_dBusServerAddress;  changed++; }
+                if (m_msgBox      != newValues.m_msgBox)      { m_msgBox      = newValues.m_msgBox;    changed++; }
                 if (m_drawingLabels      != newValues.m_drawingLabels)      { m_drawingLabels      = newValues.m_drawingLabels;      changed++; }
+                if (m_bundleTaxiLandingLights != newValues.m_bundleTaxiLandingLights) { m_bundleTaxiLandingLights = newValues.m_bundleTaxiLandingLights; changed++; }
                 if (m_nightTextureMode   != newValues.m_nightTextureMode)   { m_nightTextureMode   = newValues.m_nightTextureMode;   changed++; }
                 if (m_maxPlanes          != newValues.m_maxPlanes)          { m_maxPlanes          = newValues.m_maxPlanes;          changed++; }
                 if (m_msSinceEpochQtFree != newValues.m_msSinceEpochQtFree) { m_msSinceEpochQtFree = newValues.m_msSinceEpochQtFree; changed++; }
