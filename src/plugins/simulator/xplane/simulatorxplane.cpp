@@ -932,6 +932,7 @@ namespace BlackSimPlugin
                         planesSurfaces.rudders.push_back(0.0);
                         planesSurfaces.ailerons.push_back(0.0);
                         planesSurfaces.landLights.push_back(parts.getLights().isLandingOn());
+                        planesSurfaces.taxiLights.push_back(parts.getLights().isTaxiOn());
                         planesSurfaces.beaconLights.push_back(parts.getLights().isBeaconOn());
                         planesSurfaces.strobeLights.push_back(parts.getLights().isStrobeOn());
                         planesSurfaces.navLights.push_back(parts.getLights().isNavOn());

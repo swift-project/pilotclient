@@ -418,9 +418,12 @@ namespace XSwiftBus
 
     void CTraffic::setPlanesSurfaces(const std::vector<std::string> &callsigns, const std::vector<double> &gears, const std::vector<double> &flaps, const std::vector<double> &spoilers,
                                      const std::vector<double> &speedBrakes, const std::vector<double> &slats, const std::vector<double> &wingSweeps, const std::vector<double> &thrusts,
-                                     const std::vector<double> &elevators, const std::vector<double> &rudders, const std::vector<double> &ailerons, const std::vector<bool> &landLights,
+                                     const std::vector<double> &elevators, const std::vector<double> &rudders, const std::vector<double> &ailerons,
+                                     const std::vector<bool> &landLights, const std::vector<bool> &taxiLights,
                                      const std::vector<bool> &beaconLights, const std::vector<bool> &strobeLights, const std::vector<bool> &navLights, const std::vector<int> &lightPatterns)
     {
+        const bool bundleTaxiLandingLights = this->getSettings().isBundlingTaxiAndLandingLights();
+
         for (size_t i = 0; i < callsigns.size(); i++)
         {
             auto planeIt = m_planesByCallsign.find(callsigns.at(i));
@@ -440,7 +443,17 @@ namespace XSwiftBus
             plane->surfaces.yokePitch = static_cast<float>(elevators.at(i));
             plane->surfaces.yokeHeading = static_cast<float>(rudders.at(i));
             plane->surfaces.yokeRoll = static_cast<float>(ailerons.at(i));
-            plane->surfaces.lights.landLights = landLights.at(i);
+            if (bundleTaxiLandingLights)
+            {
+                const bool on = landLights.at(i) || taxiLights.at(i);
+                plane->surfaces.lights.landLights = on;
+                plane->surfaces.lights.taxiLights = on;
+            }
+            else
+            {
+                plane->surfaces.lights.landLights = landLights.at(i);
+                plane->surfaces.lights.taxiLights = taxiLights.at(i);
+            }
             plane->surfaces.lights.bcnLights = beaconLights.at(i);
             plane->surfaces.lights.strbLights = strobeLights.at(i);
             plane->surfaces.lights.navLights = navLights.at(i);
@@ -712,6 +725,7 @@ namespace XSwiftBus
                 std::vector<double> rudders;
                 std::vector<double> ailerons;
                 std::vector<bool> landLights;
+                std::vector<bool> taxiLights;
                 std::vector<bool> beaconLights;
                 std::vector<bool> strobeLights;
                 std::vector<bool> navLights;
@@ -729,6 +743,7 @@ namespace XSwiftBus
                 message.getArgument(rudders);
                 message.getArgument(ailerons);
                 message.getArgument(landLights);
+                message.getArgument(taxiLights);
                 message.getArgument(beaconLights);
                 message.getArgument(strobeLights);
                 message.getArgument(navLights);
@@ -736,7 +751,7 @@ namespace XSwiftBus
                 queueDBusCall([ = ]()
                 {
                     setPlanesSurfaces(callsigns, gears, flaps, spoilers, speedBrakes, slats, wingSweeps, thrusts, elevators,
-                                      rudders, ailerons, landLights, beaconLights, strobeLights, navLights, lightPatterns);
+                                      rudders, ailerons, landLights, taxiLights, beaconLights, strobeLights, navLights, lightPatterns);
                 });
             }
             else if (message.getMethodName() == "setPlanesTransponders")

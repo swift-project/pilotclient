@@ -74,18 +74,19 @@ namespace BlackSimPlugin
             QList<double> gears;        //!< List of gears
             QList<double> flaps;        //!< List of flaps
             QList<double> spoilers;     //!< List of spoilers
-            QList<double> speedBrakes;  //!< List of speedBrakes
+            QList<double> speedBrakes;  //!< List of speed brakes
             QList<double> slats;        //!< List of slats
-            QList<double> wingSweeps;   //!< List of wingSweeps
+            QList<double> wingSweeps;   //!< List of wing sweeps
             QList<double> thrusts;      //!< List of thrusts
             QList<double> elevators;    //!< List of elevators
             QList<double> rudders;      //!< List of rudders
             QList<double> ailerons;     //!< List of ailerons
-            QList<bool> landLights;     //!< List of landLights
-            QList<bool> beaconLights;   //!< List of beaconLights
-            QList<bool> strobeLights;   //!< List of strobeLights
-            QList<bool> navLights;      //!< List of navLights
-            QList<int> lightPatterns;   //!< List of lightPatterns
+            QList<bool> landLights;     //!< List of landing lights
+            QList<bool> taxiLights;     //!< List of taxi lights
+            QList<bool> beaconLights;   //!< List of beacon lights
+            QList<bool> strobeLights;   //!< List of strobe lights
+            QList<bool> navLights;      //!< List of nav lights
+            QList<int> lightPatterns;   //!< List of light patterns
         };
 
         //! Plane Transponders
