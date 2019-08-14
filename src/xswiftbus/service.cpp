@@ -164,7 +164,8 @@ namespace XSwiftBus
 
     void CService::setSettingsJson(const std::string &jsonString)
     {
-        const  CSettings s(jsonString);
+        CSettings s;
+        s.parseXSwiftBusString(jsonString);
         this->setSettings(s);
         INFO_LOG("Received settings " + s.convertToString());
     }

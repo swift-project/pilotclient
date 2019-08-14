@@ -28,9 +28,6 @@ namespace BlackMisc
                 //! Constructor.
                 CXSwiftBusSettingsQtFree();
 
-                //! JSON Constructor.
-                CXSwiftBusSettingsQtFree(const std::string &json);
-
                 //! Destructor.
                 ~CXSwiftBusSettingsQtFree() = default;
 
