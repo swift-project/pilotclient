@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>300</width>
-    <height>325</height>
+    <height>450</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>300</width>
-    <height>200</height>
+    <height>425</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -66,7 +66,7 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="0">
+   <item row="3" column="0">
     <widget class="QDialogButtonBox" name="bb_OkCancel">
      <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
@@ -82,28 +82,28 @@
       <string>Settings</string>
      </property>
      <layout class="QFormLayout" name="formLayout">
-      <item row="1" column="0">
+      <item row="0" column="0">
        <widget class="QLabel" name="lbl_MaxAircraft">
         <property name="text">
          <string>Max.aircraft</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="0" column="1">
        <widget class="QSpinBox" name="sb_MaxAircraft">
         <property name="maximum">
          <number>250</number>
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="1" column="0">
        <widget class="QLabel" name="lbl_MaxDistance">
         <property name="text">
          <string>Max.distance</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="1" column="1">
        <widget class="QDoubleSpinBox" name="ds_MaxDrawDistanceNM">
         <property name="suffix">
          <string>NM</string>
@@ -113,28 +113,14 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="lbl_Labels">
-        <property name="text">
-         <string>Labels</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QCheckBox" name="cb_DrawLabels">
-        <property name="text">
-         <string>draw labels</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
+      <item row="2" column="0">
        <widget class="QLabel" name="lbl_FollowAircraftDistance">
         <property name="text">
-         <string>Follow aircraft distance</string>
+         <string>Follow acft. distance</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="2" column="1">
        <widget class="QSpinBox" name="sb_FollowAircraftDistanceM">
         <property name="suffix">
          <string>m</string>
@@ -144,7 +130,177 @@
         </property>
        </widget>
       </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lbl_Labels">
+        <property name="text">
+         <string>Labels</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="cb_DrawLabels">
+        <property name="text">
+         <string>draw labels</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="lbl_BundleLights">
+        <property name="text">
+         <string>Bundle lights</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QCheckBox" name="cb_BundleTaxiLandingLights">
+        <property name="text">
+         <string>bundle taxi and landing lights</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="lbl_MessageBox">
+        <property name="text">
+         <string>Message box </string>
+        </property>
+       </widget>
+      </item>
       <item row="5" column="1">
+       <widget class="QWidget" name="wi_MessageBox" native="true">
+        <layout class="QHBoxLayout" name="hl_MessageBox">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QSpinBox" name="sb_MessageBoxLines">
+           <property name="suffix">
+            <string> lines</string>
+           </property>
+           <property name="minimum">
+            <number>3</number>
+           </property>
+           <property name="maximum">
+            <number>100</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="sb_MessageBoxDuration">
+           <property name="suffix">
+            <string>ms</string>
+           </property>
+           <property name="minimum">
+            <number>1000</number>
+           </property>
+           <property name="maximum">
+            <number>25000</number>
+           </property>
+           <property name="singleStep">
+            <number>250</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="lbl_MessageBoxMargins">
+        <property name="text">
+         <string>Box margins px.</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QWidget" name="wi_Margins" native="true">
+        <layout class="QGridLayout" name="gl_MessageBoxMargins">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item row="0" column="2">
+          <widget class="QLabel" name="lbl_MarginsLeft">
+           <property name="text">
+            <string>left</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="le_MsgBoxMarginsBottom">
+           <property name="placeholderText">
+            <string>bottom</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="lbl_MarginsTop">
+           <property name="text">
+            <string>top</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="lbl_MarginsBottom">
+           <property name="text">
+            <string>bottom</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLineEdit" name="le_MsgBoxMarginsTop">
+           <property name="placeholderText">
+            <string>top</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QLineEdit" name="le_MsgBoxMarginsRight">
+           <property name="placeholderText">
+            <string>right</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QLineEdit" name="le_MsgBoxMarginsLeft">
+           <property name="placeholderText">
+            <string>left</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QLabel" name="lbl_MarginsRight">
+           <property name="text">
+            <string>right</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="lbl_NightTextureMode">
+        <property name="text">
+         <string>Night texture</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
        <widget class="QComboBox" name="cb_NightTextureMode">
         <item>
          <property name="text">
@@ -163,15 +319,21 @@
         </item>
        </widget>
       </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="lbl_NightTextureMode">
-        <property name="text">
-         <string>Night texture</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
+   </item>
+   <item row="2" column="0">
+    <spacer name="vs_Buutons">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>
@@ -188,6 +350,14 @@
   <tabstop>ds_MaxDrawDistanceNM</tabstop>
   <tabstop>sb_FollowAircraftDistanceM</tabstop>
   <tabstop>cb_DrawLabels</tabstop>
+  <tabstop>cb_BundleTaxiLandingLights</tabstop>
+  <tabstop>sb_MessageBoxLines</tabstop>
+  <tabstop>sb_MessageBoxDuration</tabstop>
+  <tabstop>le_MsgBoxMarginsTop</tabstop>
+  <tabstop>le_MsgBoxMarginsBottom</tabstop>
+  <tabstop>le_MsgBoxMarginsLeft</tabstop>
+  <tabstop>le_MsgBoxMarginsRight</tabstop>
+  <tabstop>cb_NightTextureMode</tabstop>
  </tabstops>
  <resources/>
  <connections/>

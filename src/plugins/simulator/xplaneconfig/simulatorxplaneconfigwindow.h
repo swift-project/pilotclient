@@ -37,17 +37,20 @@ namespace BlackSimPlugin
             virtual ~CSimulatorXPlaneConfigWindow() override;
 
         private:
-            //! Settings have been accepted
-            void onSettingsAccepted();
-
             //! Settings from UI
             BlackMisc::Simulation::Settings::CXSwiftBusSettings getSettingsFromUI() const;
 
             //! Set settings
             void setUiValues(const BlackMisc::Simulation::Settings::CXSwiftBusSettings &settings);
 
+            //! Settings have been accepted
+            void onSettingsAccepted();
+
             //! Settings changed
             void onSettingsChanged();
+
+            //! Margin value to int
+            static int marginToInt(const QString &text, int defaultValue);
 
             QScopedPointer<Ui::CSimulatorXPlaneConfigWindow> ui;
             BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusSettings> m_xSwiftBusServerSettings { this, &CSimulatorXPlaneConfigWindow::onSettingsChanged };

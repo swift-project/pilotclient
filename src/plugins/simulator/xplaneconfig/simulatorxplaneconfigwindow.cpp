@@ -13,6 +13,7 @@
 
 #include <QComboBox>
 #include <QDialogButtonBox>
+#include <vector>
 
 using namespace BlackGui;
 using namespace BlackMisc;
@@ -68,6 +69,17 @@ namespace BlackSimPlugin
             s.setFollowAircraftDistanceM(ui->sb_FollowAircraftDistanceM->value());
             s.setDrawingLabels(ui->cb_DrawLabels->isChecked());
             s.setNightTextureModeQt(ui->cb_NightTextureMode->currentText());
+            s.setBundlingTaxiAndLandingLights(ui->cb_BundleTaxiLandingLights->isChecked());
+
+            // left, top, right, bottom, height
+            s.setMessageBoxValues(
+                marginToInt(ui->le_MsgBoxMarginsLeft->text(),   20),
+                marginToInt(ui->le_MsgBoxMarginsTop->text(),    20),
+                marginToInt(ui->le_MsgBoxMarginsRight->text(),  20),
+                marginToInt(ui->le_MsgBoxMarginsBottom->text(), 20),
+                ui->sb_MessageBoxLines->value(),
+                ui->sb_MessageBoxDuration->value()
+            );
             return s;
         }
 
@@ -78,6 +90,7 @@ namespace BlackSimPlugin
             ui->sb_FollowAircraftDistanceM->setValue(settings.getFollowAircraftDistanceM());
             ui->cb_DrawLabels->setChecked(settings.isDrawingLabels());
             ui->ds_MaxDrawDistanceNM->setValue(settings.getMaxDrawDistanceNM());
+            ui->cb_BundleTaxiLandingLights->setChecked(settings.isBundlingTaxiAndLandingLights());
 
             const QString s = settings.getNightTextureModeQt().left(1);
             if (!s.isEmpty())
@@ -91,11 +104,31 @@ namespace BlackSimPlugin
                     }
                 }
             }
+
+            const std::vector<int> values = settings.getMessageBoxValuesVector();
+            if (values.size() >= 6)
+            {
+                // left, top, right, bottom, height
+                ui->le_MsgBoxMarginsLeft->setText(QString::number(values[0]));
+                ui->le_MsgBoxMarginsTop->setText(QString::number(values[1]));
+                ui->le_MsgBoxMarginsRight->setText(QString::number(values[2]));
+                ui->le_MsgBoxMarginsBottom->setText(QString::number(values[3]));
+                ui->sb_MessageBoxLines->setValue(values[4]);
+                ui->sb_MessageBoxDuration->setValue(values[5]);
+            }
         }
 
         void CSimulatorXPlaneConfigWindow::onSettingsChanged()
         {
             this->setUiValues(m_xSwiftBusServerSettings.get());
+        }
+
+        int CSimulatorXPlaneConfigWindow::marginToInt(const QString &text, int defaultValue)
+        {
+            if (text.isEmpty()) { return defaultValue; }
+            bool ok;
+            const int v = text.toInt(&ok);
+            return ok ? v : defaultValue;
         }
     } // ns
 } // ns
