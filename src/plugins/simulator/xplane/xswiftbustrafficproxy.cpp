@@ -124,7 +124,8 @@ namespace BlackSimPlugin
                                       planesSurfaces.spoilers, planesSurfaces.speedBrakes, planesSurfaces.slats,
                                       planesSurfaces.wingSweeps, planesSurfaces.thrusts, planesSurfaces.elevators,
                                       planesSurfaces.rudders, planesSurfaces.ailerons,
-                                      planesSurfaces.landLights, planesSurfaces.beaconLights, planesSurfaces.strobeLights,
+                                      planesSurfaces.landLights, planesSurfaces.taxiLights,
+                                      planesSurfaces.beaconLights, planesSurfaces.strobeLights,
                                       planesSurfaces.navLights, planesSurfaces.lightPatterns);
         }
 
