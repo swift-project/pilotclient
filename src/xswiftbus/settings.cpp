@@ -22,11 +22,6 @@ namespace XSwiftBus
         // void
     }
 
-    CSettings::CSettings(const std::string &json) : CXSwiftBusSettingsQtFree(json)
-    {
-        // void
-    }
-
     CSettings CSettingsProvider::getSettings() const
     {
         std::lock_guard<std::mutex> l(m_settingsMutex);

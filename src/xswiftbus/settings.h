@@ -24,9 +24,6 @@ namespace XSwiftBus
         //! Constructor.
         CSettings();
 
-        //! JSON constructor
-        CSettings(const std::string &json);
-
     protected:
         //! \copydoc BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::objectUpdated
         virtual void objectUpdated() override final {}

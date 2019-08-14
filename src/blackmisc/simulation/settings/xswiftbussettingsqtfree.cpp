@@ -38,11 +38,6 @@ namespace BlackMisc
             CXSwiftBusSettingsQtFree::CXSwiftBusSettingsQtFree()
             {}
 
-            CXSwiftBusSettingsQtFree::CXSwiftBusSettingsQtFree(const std::string &json)
-            {
-                this->parseXSwiftBusString(json);
-            }
-
             bool CXSwiftBusSettingsQtFree::parseXSwiftBusString(const std::string &json)
             {
                 if (json.empty()) { return false; }
