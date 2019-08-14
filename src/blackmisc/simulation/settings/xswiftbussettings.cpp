@@ -28,12 +28,14 @@ namespace BlackMisc
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexMaxPlanes:              return CVariant::fromValue(m_maxPlanes);
-                case IndexDBusServerAddress:      return CVariant::fromValue(QString::fromStdString(m_dBusServerAddress));
-                case IndexNightTextureMode:       return CVariant::fromValue(QString::fromStdString(m_nightTextureMode));
-                case IndexDrawingLabels:          return CVariant::fromValue(m_drawingLabels);
-                case IndexMaxDrawingDistance:     return CVariant::fromValue(m_maxDrawDistanceNM);
-                case IndexFollowAircraftDistance: return CVariant::fromValue(m_followAircraftDistanceM);
+                case IndexMaxPlanes:               return CVariant::fromValue(m_maxPlanes);
+                case IndexDBusServerAddress:       return CVariant::fromValue(QString::fromStdString(m_dBusServerAddress));
+                case IndexNightTextureMode:        return CVariant::fromValue(QString::fromStdString(m_nightTextureMode));
+                case IndexMessageBoxMargins:       return CVariant::fromValue(QString::fromStdString(m_msgBox));
+                case IndexDrawingLabels:           return CVariant::fromValue(m_drawingLabels);
+                case IndexBundleTaxiLandingLights: return CVariant::fromValue(m_bundleTaxiLandingLights);
+                case IndexMaxDrawingDistance:      return CVariant::fromValue(m_maxDrawDistanceNM);
+                case IndexFollowAircraftDistance:  return CVariant::fromValue(m_followAircraftDistanceM);
                 default: break;
                 }
                 return CValueObject::propertyByIndex(index);
@@ -47,12 +49,14 @@ namespace BlackMisc
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexMaxPlanes:              m_maxPlanes  = variant.toInt(); break;
-                case IndexDBusServerAddress:      m_dBusServerAddress = variant.toStdString(); break;
-                case IndexNightTextureMode:       m_nightTextureMode  = variant.toStdString(); break;
-                case IndexDrawingLabels:          m_drawingLabels = variant.toBool(); break;
-                case IndexMaxDrawingDistance:     m_maxDrawDistanceNM = variant.toDouble(); break;
-                case IndexFollowAircraftDistance: m_followAircraftDistanceM = variant.toInt(); break;
+                case IndexMaxPlanes:               m_maxPlanes  = variant.toInt(); break;
+                case IndexDBusServerAddress:       m_dBusServerAddress = variant.toStdString(); break;
+                case IndexMessageBoxMargins:       m_msgBox   = variant.toStdString(); break;
+                case IndexNightTextureMode:        m_nightTextureMode  = variant.toStdString(); break;
+                case IndexDrawingLabels:           m_drawingLabels = variant.toBool(); break;
+                case IndexBundleTaxiLandingLights: m_bundleTaxiLandingLights = variant.toBool(); break;
+                case IndexMaxDrawingDistance:      m_maxDrawDistanceNM = variant.toDouble(); break;
+                case IndexFollowAircraftDistance:  m_followAircraftDistanceM = variant.toInt(); break;
                 default:
                     CValueObject::setPropertyByIndex(index, variant);
                     break;

@@ -20,7 +20,7 @@ namespace BlackMisc
         {
             /*!
              * XSwiftBus/swift side settings class, JSON capable, shared among all services
-             * \details Used on swift and XSwiftBus side, MUST BE QT free
+             * \details Used on swift and XSwiftBus side, MUST BE Qt free
              */
             class CXSwiftBusSettingsQtFree
             {
@@ -44,11 +44,47 @@ namespace BlackMisc
                 //! Get whether the plugin draws type and callsign labels above aircraft
                 bool isDrawingLabels() const { return m_drawingLabels; }
 
+                //! Bundle taxi and landing lights
+                void setBundlingTaxiAndLandingLights(bool bundle) { m_bundleTaxiLandingLights = bundle; }
+
+                //! Bundle taxi and landing lights
+                bool isBundlingTaxiAndLandingLights() const { return m_bundleTaxiLandingLights; }
+
                 //! The the night texture mode
                 void setNightTextureMode(const std::string &mode) { m_nightTextureMode = XPlane::QtFreeUtils::toLower(mode); }
 
                 //! The the night texture mode
                 const std::string &getNightTextureMode() const { return m_nightTextureMode; }
+
+                //! Left, top, right, bottom, lines, duration
+                void setMessageBoxValues(const std::string &positions) { m_msgBox = positions; }
+
+                //! Left, top, right, bottom, lines, duration
+                void setMessageBoxValues(int leftPx, int topPx, int rightPx, int bottomPx, int lines, int durationMs)
+                {
+                    if (topPx >= 0) { bottomPx = -1; }
+                    if (lines < 3) { lines = 3; }
+                    this->setMessageBoxValues(std::to_string(leftPx) + ";" + std::to_string(topPx) + ";" + std::to_string(rightPx) + ";" + std::to_string(bottomPx) + ";" + std::to_string(lines) + ";" + std::to_string(durationMs));
+                }
+
+                //! Left, top, right, bottom, lines, duration
+                const std::string &getMessageBoxValues() const { return m_msgBox; }
+
+                //! Left, top, right, bottom, lines, duration
+                std::vector<int> getMessageBoxValuesVector() const
+                {
+                    constexpr int partCount = 6;
+                    std::vector<int> partsInt = {20, 20, 20, -1, 5, 5000};
+                    const std::vector<std::string> parts = XPlane::QtFreeUtils::split(m_msgBox, partCount, ";");
+
+                    size_t c = 0;
+                    for (const std::string &p : parts)
+                    {
+                        const int i = std::stoi(p);
+                        partsInt[c++] = i;
+                    }
+                    return partsInt;
+                }
 
                 //! Set the maximum number of aircraft.
                 bool setMaxPlanes(int planes)
@@ -106,6 +142,8 @@ namespace BlackMisc
                 static constexpr char JsonMaxDrawDistance[]   = "maxDrawDistance";
                 static constexpr char JsonNightTextureMode[]  = "nighttexture";
                 static constexpr char JsonTimestamp[]         = "timestamp";
+                static constexpr char JsonMessageBox[]        = "msgbox";
+                static constexpr char JsonBundleTaxiLandingLights[] = "bundleLights";
                 static constexpr char JsonFollowAircraftDistanceM[] = "followAircraftDistance";
                 //! @}
 
@@ -114,11 +152,13 @@ namespace BlackMisc
 
                 std::string m_dBusServerAddress { "tcp:host=127.0.0.1,port=45001" }; //!< DBus server
                 std::string m_nightTextureMode  { "auto" }; //!< night texture mode
+                std::string m_msgBox            { "20;20;20;-1;5;5000" }; //!< left, top, right, bottom, lines, duration
                 int    m_maxPlanes = 100;                   //!< max. planes in XPlane
                 int    m_followAircraftDistanceM = 200;     //!< follow aircraft in distance
-                bool   m_drawingLabels       = true;        //!< labels in XPlane
-                double m_maxDrawDistanceNM   = 50.0;        //!< distance in XPlane
-                int64_t m_msSinceEpochQtFree = 0;           //!< timestamp
+                bool   m_drawingLabels           = true;    //!< labels in XPlane
+                bool   m_bundleTaxiLandingLights = true;    //!< bundle taxi and landing lights
+                double m_maxDrawDistanceNM       = 50.0;    //!< distance in XPlane
+                int64_t m_msSinceEpochQtFree     = 0;       //!< timestamp
             };
         } // ns
     } // ns

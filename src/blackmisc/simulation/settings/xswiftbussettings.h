@@ -39,6 +39,8 @@ namespace BlackMisc
                     IndexDBusServerAddress = CPropertyIndex::GlobalIndexCXSwiftBusSettings,
                     IndexMaxPlanes,
                     IndexDrawingLabels,
+                    IndexBundleTaxiLandingLights,
+                    IndexMessageBoxMargins,
                     IndexMaxDrawingDistance,
                     IndexFollowAircraftDistance,
                     IndexNightTextureMode
@@ -94,9 +96,11 @@ namespace BlackMisc
                 BLACK_METACLASS(
                     CXSwiftBusSettings,
                     BLACK_METAMEMBER(dBusServerAddress),
+                    BLACK_METAMEMBER(msgBox),
                     BLACK_METAMEMBER(nightTextureMode),
                     BLACK_METAMEMBER(maxPlanes),
                     BLACK_METAMEMBER(drawingLabels),
+                    BLACK_METAMEMBER(bundleTaxiLandingLights),
                     BLACK_METAMEMBER(maxDrawDistanceNM),
                     BLACK_METAMEMBER(followAircraftDistanceM),
                     BLACK_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForComparison | DisabledForHashing)
