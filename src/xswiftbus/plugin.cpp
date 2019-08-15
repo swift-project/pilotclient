@@ -45,7 +45,7 @@ namespace XSwiftBus
             m_popupMessageWindowMenuItem.setChecked(!checked);
             m_service->setPopupMessageWindow(!checked);
         });
-        m_disappearMessageWindowMenuItem = m_messageWindowSubMenu.checkableItem("Hide Message Window after 5s", true, [this](bool checked)
+        m_disappearMessageWindowMenuItem = m_messageWindowSubMenu.checkableItem("Hide Message Window automatically", true, [this](bool checked)
         {
             m_disappearMessageWindowMenuItem.setChecked(!checked);
             m_service->setDisappearMessageWindow(!checked);

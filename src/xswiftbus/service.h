@@ -231,8 +231,11 @@ namespace XSwiftBus
         //! Enable/disable message window popping up for new messages
         void setPopupMessageWindow(bool enabled) { m_popupMessageWindow = enabled; }
 
-        //! Enable/disable message window disappearing again after 5 seconds
+        //! Enable/disable message window disappearing again after x ms
         void setDisappearMessageWindow(bool enabled) { m_disappearMessageWindow = enabled; }
+
+        //! Enable/disable message window disappearing after x ms
+        void setDisappearMessageWindowTimeMs(int durationMs);
 
         //! Get settings in JSON format
         std::string getSettingsJson() const;
@@ -257,11 +260,14 @@ namespace XSwiftBus
         CMessageBoxControl m_messages { 16, 16, 16 };
         bool m_popupMessageWindow     = true;
         bool m_disappearMessageWindow = true;
+        int  m_disapperMessageWindowTimeMs = 5000;
         std::chrono::system_clock::time_point m_disappearMessageWindowTime;
         std::vector<CNavDataReference> m_airports;
 
         void readAirportsDatabase();
         std::vector<CNavDataReference> findClosestAirports(int number, double latitude, double longitude);
+
+        void updateMessageBoxFromSettings();
 
         StringDataRef<xplane::data::sim::aircraft::view::acf_livery_path> m_liveryPath;
         StringDataRef<xplane::data::sim::aircraft::view::acf_ICAO> m_icao;
