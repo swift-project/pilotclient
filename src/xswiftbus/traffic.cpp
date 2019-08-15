@@ -995,11 +995,13 @@ namespace XSwiftBus
         double lxMeters = 0, lyMeters = 0, lzMeters = 0; // normally init not needed, just to avoid any issues
         static const double kFtToMeters = 0.3048;
 
+        std::string modelName = "unknown";
         if (traffic->m_followPlaneViewCallsign == CTraffic::ownAircraftString())
         {
             lxMeters = traffic->m_ownAircraftPositionX.get();
             lyMeters = traffic->m_ownAircraftPositionY.get();
             lzMeters = traffic->m_ownAircraftPositionZ.get();
+            modelName = CTraffic::ownAircraftString();
         }
         else
         {
@@ -1033,6 +1035,7 @@ namespace XSwiftBus
                 return 0;
             }
 
+            modelName = plane->modelName;
             if (!isValidPosition(plane->position))
             {
                 WARNING_LOG("Invalid follow aircraft position for " + plane->callsign);
@@ -1043,7 +1046,7 @@ namespace XSwiftBus
             // avoid underflow of camera into ground
             if (plane->isOnGround)
             {
-                if (traffic->m_deltaCameraPosition.dyMeters < 5) { traffic->m_deltaCameraPosition.dyMeters = 5; }
+                if (traffic->m_deltaCameraPosition.dyMeters < 10) { traffic->m_deltaCameraPosition.dyMeters = 10; }
             }
 
             XPLMWorldToLocal(plane->position.lat, plane->position.lon, plane->position.elevation * kFtToMeters, &lxMeters, &lyMeters, &lzMeters);
@@ -1069,7 +1072,7 @@ namespace XSwiftBus
         if (DEBUG)
         {
             DEBUG_LOG("Camera: " + pos2String(cameraPosition));
-            DEBUG_LOG("Follow aircraft " + traffic->m_followPlaneViewCallsign);
+            DEBUG_LOG("Follow aircraft " + traffic->m_followPlaneViewCallsign + " " + modelName);
         }
         return 1;
     }
