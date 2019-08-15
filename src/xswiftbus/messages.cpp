@@ -169,8 +169,14 @@ namespace XSwiftBus
     void CMessageBoxControl::updateVisibleLines()
     {
         const size_t lines = std::min(m_messages.size(), m_maxVisibleLines);
-        const auto end = m_messages.cbegin() +  m_position;
-        m_messageBox.setMessages(end - lines, end);
+        // const auto end = m_messages.cbegin() +  m_position;
+        // m_messageBox.setMessages(end - lines, end);
+        auto end   = m_messages.begin();
+        std::advance(end, m_position);
+        auto start = end;
+        std::advance(start, -1 * static_cast<int>(lines));
+
+        m_messageBox.setMessages(start, end);
         m_messageBox.enableArrows(m_position > lines, m_position < m_messages.size());
     }
 }
