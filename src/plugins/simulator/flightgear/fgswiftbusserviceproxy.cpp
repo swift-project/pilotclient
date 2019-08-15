@@ -309,7 +309,6 @@ namespace BlackSimPlugin
         }
 
         bool CFGSwiftBusServiceProxy::getStrobeLightsOn() const
-
         {
             return m_dbusInterface->callDBusRet<bool>(QLatin1String("getStrobeLightsOn"));
         }

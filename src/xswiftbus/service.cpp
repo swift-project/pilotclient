@@ -536,6 +536,13 @@ namespace XSwiftBus
                     sendDBusReply(sender, serial, getLandingLightsOn());
                 });
             }
+            else if (message.getMethodName() == "getTaxiLightsOn")
+            {
+                queueDBusCall([ = ]()
+                {
+                    sendDBusReply(sender, serial, getTaxiLightsOn());
+                });
+            }
             else if (message.getMethodName() == "getNavLightsOn")
             {
                 queueDBusCall([ = ]()
@@ -548,13 +555,6 @@ namespace XSwiftBus
                 queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getStrobeLightsOn());
-                });
-            }
-            else if (message.getMethodName() == "getTaxiLightsOn")
-            {
-                queueDBusCall([ = ]()
-                {
-                    sendDBusReply(sender, serial, getTaxiLightsOn());
                 });
             }
             else if (message.getMethodName() == "getQNHInHg")
