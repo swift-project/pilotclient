@@ -24,7 +24,8 @@ namespace XSwiftBus
 {
     CService::CService(CSettingsProvider *settingsProvider) : CDBusObject(settingsProvider)
     {
-        updateAirportsInRange();
+        this->updateAirportsInRange();
+        this->updateMessageBoxFromSettings();
     }
 
     void CService::onAircraftModelChanged()
@@ -79,7 +80,7 @@ namespace XSwiftBus
 
         if (m_disappearMessageWindow)
         {
-            m_disappearMessageWindowTime = std::chrono::system_clock::now() + std::chrono::seconds(5);
+            m_disappearMessageWindowTime = std::chrono::system_clock::now() + std::chrono::milliseconds(std::max(m_disapperMessageWindowTimeMs, 1500));
         }
     }
 
@@ -157,6 +158,11 @@ namespace XSwiftBus
         return path;
     }
 
+    void CService::setDisappearMessageWindowTimeMs(int durationMs)
+    {
+        m_disapperMessageWindowTimeMs = durationMs;
+    }
+
     std::string CService::getSettingsJson() const
     {
         return this->getSettings().toXSwiftBusJsonString();
@@ -167,6 +173,7 @@ namespace XSwiftBus
         CSettings s;
         s.parseXSwiftBusString(jsonString);
         this->setSettings(s);
+        this->updateMessageBoxFromSettings();
         INFO_LOG("Received settings " + s.convertToString());
     }
 
@@ -752,5 +759,16 @@ namespace XSwiftBus
         std::partial_sort(closestAirports.begin(), closestAirports.begin() + number, closestAirports.end(), compareFunction);
         closestAirports.resize(static_cast<std::vector<CNavDataReference>::size_type>(number));
         return closestAirports;
+    }
+
+    void CService::updateMessageBoxFromSettings()
+    {
+        // left, top, right, bottom, height size percentage
+        const std::vector<int> values = this->getSettings().getMessageBoxValuesVector();
+        if (values.size() >= 6)
+        {
+            m_messages.setValues(values[0], values[1], values[2], values[3], values[4], values[5]);
+            this->setDisappearMessageWindowTimeMs(values[5]);
+        }
     }
 }

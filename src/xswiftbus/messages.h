@@ -57,6 +57,9 @@ namespace XSwiftBus
             std::copy(begin, end, std::back_inserter(m_messages));
         }
 
+        //! Set margin values
+        void setValues(int leftPx, int topPx, int rightPx, int bottomPx, int lines, int durationMs);
+
         //! Set whether to draw a small arrow at the bottom of the box.
         void enableArrows(bool up, bool down)
         {
@@ -66,6 +69,9 @@ namespace XSwiftBus
 
         //! Returns the maximum number of characters per line.
         int maxLineLength() const;
+
+        //! Line height based on font
+        static int lineHeight();
 
     protected:
         virtual void draw() override;
@@ -101,6 +107,16 @@ namespace XSwiftBus
         //! \copydoc XSwiftBus::CMessageBox::maxLineLength
         int maxLineLength() const { return m_messageBox.maxLineLength(); }
 
+        //! \copydoc XSwiftBus::CMessageBox::setValues
+        void setValues(int leftPx, int topPx, int rightPx, int bottomPx, int lines, int durationMs)
+        {
+            m_messageBox.setValues(leftPx, topPx, rightPx, bottomPx, lines, durationMs);
+            this->setMaxVisibleLines(static_cast<size_t>(lines));
+        }
+
+        //! Set max. visible lines
+        void setMaxVisibleLines(size_t lines) { m_maxVisibleLines = lines; }
+
         //! Toggles the visibility of the message box
         void toggle() { if (m_visible) { hide(); } else { show(); } }
 
@@ -120,7 +136,7 @@ namespace XSwiftBus
         bool m_visible = false;
         std::vector<CMessage> m_messages;
         size_t m_position = 0;
-        const size_t c_maxVisibleLines = 5;
+        size_t m_maxVisibleLines = 5;
         const size_t c_maxTotalLines = 1024;
         CMessageBox m_messageBox;
 
