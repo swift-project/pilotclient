@@ -276,6 +276,7 @@ namespace BlackSimPlugin
         {
             if (isConnected())
             {
+                // own aircraft data
                 m_serviceProxy->getAircraftModelPathAsync(&m_xplaneData.aircraftModelPath); // this is NOT the model string
                 m_serviceProxy->getAircraftIcaoCodeAsync(&m_xplaneData.aircraftIcaoCode);
                 m_serviceProxy->getBeaconLightsOnAsync(&m_xplaneData.beaconLightsOn);
