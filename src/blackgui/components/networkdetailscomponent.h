@@ -100,6 +100,12 @@ namespace BlackGui
             //! Current server based on selected tab
             BlackMisc::Network::CServer getCurrentServer() const;
 
+            //! Pilot or Co-pilot callsign?
+            bool hasPartnerCallsign() const;
+
+            //! Pilot or Co-pilot callsign
+            BlackMisc::Aviation::CCallsign getPartnerCallsign() const;
+
         signals:
             //! Override the pilot
             void overridePilot(const BlackMisc::Network::CUser &user);
