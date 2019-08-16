@@ -104,6 +104,12 @@ namespace BlackGui
         //! Show multiple messages
         void showOverlayMessages(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1);
 
+        //! Show multiple messages or a single message
+        void showOverlayMessagesOrSingleMessage(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1);
+
+        //! Show multiple messages or a single message (HTML)
+        void showOverlayMessagesOrHTMLMessage(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1);
+
         //! Sort of overlay messages
         void sortOverlayMessages(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
 

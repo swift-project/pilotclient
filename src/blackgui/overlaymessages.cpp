@@ -185,6 +185,34 @@ namespace BlackGui
         this->display(timeOutMs);
     }
 
+    void COverlayMessages::showOverlayMessagesOrSingleMessage(const CStatusMessageList &messages, bool appendOldMessages, int timeOutMs)
+    {
+        if (messages.isEmpty()) { return; }
+        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (messages.size() > 1)
+        {
+            this->showOverlayMessages(messages, appendOldMessages, timeOutMs);
+        }
+        else
+        {
+            this->showOverlayMessage(messages.front(), timeOutMs);
+        }
+    }
+
+    void COverlayMessages::showOverlayMessagesOrHTMLMessage(const CStatusMessageList &messages, bool appendOldMessages, int timeOutMs)
+    {
+        if (messages.isEmpty()) { return; }
+        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (messages.size() > 1)
+        {
+            this->showOverlayMessages(messages, appendOldMessages, timeOutMs);
+        }
+        else
+        {
+            this->showHTMLMessage(messages.front(), timeOutMs);
+        }
+    }
+
     void COverlayMessages::sortOverlayMessages(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
     {
         ui->tvp_StatusMessages->sortByPropertyIndex(propertyIndex, order);
