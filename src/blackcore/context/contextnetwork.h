@@ -245,7 +245,8 @@ namespace BlackCore
             virtual BlackMisc::CStatusMessage connectToNetwork(
                 const BlackMisc::Network::CServer &server,
                 const QString &extraLiveryString, bool sendLivery,
-                const QString &extraModelString, bool sendModelString,
+                const QString &extraModelString,  bool sendModelString,
+                const BlackMisc::Aviation::CCallsign &partnerCallsign,
                 BlackCore::INetwork::LoginMode loginMode) = 0;
 
             //! Server which is connected, if not connected empty default object.
