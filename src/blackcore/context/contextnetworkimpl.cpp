@@ -76,8 +76,8 @@ namespace BlackCore
             connect(m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::onFsdConnectionStatusChanged);
             connect(m_network, &INetwork::kicked, this, &CContextNetwork::kicked);
             connect(m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::textMessagesReceived);
-            connect(m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::checkForSupervisiorTextMessage);
-            connect(m_network, &INetwork::textMessageSent, this, &CContextNetwork::textMessageSent);
+            connect(m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::onTextMessagesReceived, Qt::QueuedConnection);
+            connect(m_network, &INetwork::textMessageSent,      this, &CContextNetwork::textMessageSent);
 
             // 2. Update timer for data (network data such as frequency)
             // we use 2 timers so we can query at different times (not too many queirs at once)
@@ -218,20 +218,21 @@ namespace BlackCore
             if (m_airspace) { m_airspace->gracefulShutdown(); }
         }
 
-        CStatusMessage CContextNetwork::connectToNetwork(const CServer &server, const QString &extraLiveryString, bool sendLivery, const QString &extraModelString, bool sendModelString, INetwork::LoginMode mode)
+        CStatusMessage CContextNetwork::connectToNetwork(const CServer &server, const QString &extraLiveryString, bool sendLivery, const QString &extraModelString, bool sendModelString, const CCallsign &partnerCallsign, INetwork::LoginMode mode)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             QString msg;
             if (!server.getUser().hasCredentials()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, u"Invalid user credentials"); }
             if (!this->ownAircraft().getAircraftIcaoCode().hasDesignator()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, u"Invalid ICAO data for own aircraft"); }
             if (!CNetworkUtils::canConnect(server, msg, 5000)) { return CStatusMessage(CStatusMessage::SeverityError, msg); }
-            if (m_network->isConnected()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, u"Already connected"); }
+            if (m_network->isConnected())    { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, u"Already connected"); }
             if (this->isPendingConnection()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, u"Pending connection, please wait"); }
 
             m_currentStatus = INetwork::Connecting; // as semaphore we are going to connect
             this->getIContextOwnAircraft()->updateOwnAircraftPilot(server.getUser());
             const CSimulatedAircraft ownAircraft(this->ownAircraft());
             m_network->presetServer(server);
+            m_network->presetPartnerCallsign(partnerCallsign);
 
             // Fall back to observer mode, if no simulator is available or not simulating
             if (!CBuildConfig::isLocalDeveloperDebugBuild() && !this->getIContextSimulator()->isSimulatorSimulating())
@@ -664,7 +665,7 @@ namespace BlackCore
             m_dsAtcStationsOnlineChanged.inputSignal(); // the ATIS data are stored in the station object
         }
 
-        void CContextNetwork::checkForSupervisiorTextMessage(const CTextMessageList &messages)
+        void CContextNetwork::onTextMessagesReceived(const CTextMessageList &messages)
         {
             if (messages.containsPrivateMessages())
             {

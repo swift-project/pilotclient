@@ -190,7 +190,8 @@ namespace BlackCore
                 m_ownLivery,
                 m_ownAircraftIcaoCode.getDesignator(),
                 m_ownAirlineIcaoCode.getVDesignator(),
-                m_ownCallsign.asString()
+                m_ownCallsign.asString(),
+                m_partnerCallsign.asString()
             };
             return v;
         }
@@ -492,7 +493,12 @@ namespace BlackCore
         {
             Q_ASSERT_X(isDisconnected(), Q_FUNC_INFO, "Can't change callsign while still connected");
             m_ownCallsign = callsign;
-            updateOwnCallsign(callsign);
+            this->updateOwnCallsign(callsign);
+        }
+
+        void CNetworkVatlib::presetPartnerCallsign(const CCallsign &callsign)
+        {
+            m_partnerCallsign = callsign;
         }
 
         void CNetworkVatlib::presetIcaoCodes(const CSimulatedAircraft &ownAircraft)
@@ -1505,7 +1511,7 @@ namespace BlackCore
         {
             QList<qint64> &offsets = m_lastOffsetTimes[callsign];
             offsets.push_front(offsetMs);
-            if (offsets.size() > MaxOffseTimes) { offsets.removeLast(); }
+            if (offsets.size() > MaxOffsetTimes) { offsets.removeLast(); }
         }
 
         qint64 CNetworkVatlib::averageOffsetTimeMs(const CCallsign &callsign, int &count, int maxLastValues) const

@@ -81,9 +81,11 @@ namespace BlackCore
             virtual bool isPendingConnection() const override { return m_status == vatStatusConnecting; }
             virtual const BlackMisc::Network::CServer &getPresetServer() const override { return m_server; }
             virtual QStringList getPresetValues() const override;
+            virtual const BlackMisc::Aviation::CCallsign &getPresetPartnerCallsign() const override { return m_partnerCallsign; }
             virtual void presetLoginMode(LoginMode mode) override;
             virtual void presetServer(const BlackMisc::Network::CServer &server) override;
             virtual void presetCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual void presetPartnerCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual void presetIcaoCodes(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft) override;
             virtual void presetLiveryAndModelString(const QString &livery, bool sendLiveryString, const QString &modelString, bool sendModelString) override;
             virtual void presetSimulatorInfo(const BlackMisc::Simulation::CSimulatorPluginInfo &simInfo) override;
@@ -140,8 +142,8 @@ namespace BlackCore
             static const QList<QCommandLineOption> &getCmdLineOptions();
 
         private:
-            static int constexpr c_processingIntervalMsec = 100;            //!< interval for the processing timer
-            static int constexpr c_updatePostionIntervalMsec = 5000;        //!< interval for the position update timer (send our position to network)
+            static int constexpr c_processingIntervalMsec           =  100; //!< interval for the processing timer
+            static int constexpr c_updatePostionIntervalMsec        = 5000; //!< interval for the position update timer (send our position to network)
             static int constexpr c_updateInterimPostionIntervalMsec = 1000; //!< interval for iterim position updates (send our position as interim position)
             qint64 m_additionalOffsetTime = 0; //!< additional offset time
 
@@ -258,10 +260,10 @@ namespace BlackCore
             void insertLatestOffsetTime(const BlackMisc::Aviation::CCallsign &callsign, qint64 offsetMs);
 
             //! Average offset time in ms
-            qint64 averageOffsetTimeMs(const BlackMisc::Aviation::CCallsign &callsign, int &count, int maxLastValues = MaxOffseTimes) const;
+            qint64 averageOffsetTimeMs(const BlackMisc::Aviation::CCallsign &callsign, int &count, int maxLastValues = MaxOffsetTimes) const;
 
             //! Average offset time in ms
-            qint64 averageOffsetTimeMs(const BlackMisc::Aviation::CCallsign &callsign, int maxLastValues = MaxOffseTimes) const;
+            qint64 averageOffsetTimeMs(const BlackMisc::Aviation::CCallsign &callsign, int maxLastValues = MaxOffsetTimes) const;
 
             //! Remove colon
             static QString removeColon(const QString &candidate);
@@ -289,6 +291,7 @@ namespace BlackCore
             QTextCodec                  *m_fsdTextCodec = nullptr;
             BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorInfo;             //!< used simulator
             BlackMisc::Aviation::CCallsign              m_ownCallsign;               //!< "buffered callsign", as this must not change when connected
+            BlackMisc::Aviation::CCallsign              m_partnerCallsign;           //!< callsign of partner flying in shared cockpit
             BlackMisc::Aviation::CAircraftIcaoCode      m_ownAircraftIcaoCode;       //!< "buffered icao", as this must not change when connected
             BlackMisc::Aviation::CAirlineIcaoCode       m_ownAirlineIcaoCode;        //!< "buffered icao", as this must not change when connected
             QString                                     m_ownLivery;                 //!< "buffered livery", as this must not change when connected
@@ -318,7 +321,7 @@ namespace BlackCore
             QHash<BlackMisc::Aviation::CCallsign, qint64> m_lastPositionUpdate;
             QHash<BlackMisc::Aviation::CCallsign, QList<qint64>> m_lastOffsetTimes; //!< latest offset first
 
-            static const int MaxOffseTimes = 6; //!< Max offset times kept
+            static const int MaxOffsetTimes = 6; //!< Max offset times kept
 
             BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TRawFsdMessageSetting> m_fsdMessageSetting { this, &CNetworkVatlib::fsdMessageSettingsChanged };
             QFile m_rawFsdMessageLogFile;

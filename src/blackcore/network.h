@@ -204,6 +204,17 @@ namespace BlackCore
         virtual void presetCallsign(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
         /*!
+         * Set the partner callsign (co-pilot/pilot in shared cockpit) before connecting.
+         * \pre Network must be disconnected when calling this function.
+         */
+        virtual void presetPartnerCallsign(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
+        /*!
+         * Get the partner callsign (co-pilot/pilot in shared cockpit) before connecting.
+         */
+        virtual const BlackMisc::Aviation::CCallsign &getPresetPartnerCallsign() const = 0;
+
+        /*!
          * Set our own aircraft ICAO codes before connecting.
          * \pre Network must be disconnected when calling this function.
          */
