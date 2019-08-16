@@ -160,7 +160,7 @@ namespace BlackGui
             }
             else
             {
-                this->showOverlayHTMLMessageOrMessages(msgs);
+                this->showOverlayMessagesOrHTMLMessage(msgs);
             }
 
         }

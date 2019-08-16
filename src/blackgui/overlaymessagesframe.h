@@ -156,18 +156,23 @@ namespace BlackGui
             WIDGET::repaint();
         }
 
-        //! \copydoc BlackGui::COverlayMessages::showOverlayMessages
-        void showOverlayHTMLMessageOrMessages(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1)
+        //! \copydoc BlackGui::COverlayMessages::showOverlayMessagesOrSingleMessage
+        void showOverlayMessagesOrSingleMessage(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1)
         {
             if (messages.isEmpty()) { return; }
-            if (messages.size() == 1)
-            {
-                this->showOverlayHTMLMessage(messages.front(), timeOutMs);
-            }
-            else
-            {
-                this->showOverlayMessages(messages, appendOldMessages, timeOutMs);
-            }
+            this->initInnerFrame();
+            m_overlayMessages->showOverlayMessagesOrSingleMessage(messages, appendOldMessages, timeOutMs);
+            WIDGET::repaint();
+        }
+
+
+        //! \copydoc BlackGui::COverlayMessages::showOverlayMessagesOrHTMLMessage
+        void showOverlayMessagesOrHTMLMessage(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1)
+        {
+            if (messages.isEmpty()) { return; }
+            this->initInnerFrame();
+            m_overlayMessages->showOverlayMessagesOrHTMLMessage(messages, appendOldMessages, timeOutMs);
+            WIDGET::repaint();
         }
 
         //! \copydoc BlackGui::COverlayMessages::sortOverlayMessages
