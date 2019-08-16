@@ -17,6 +17,7 @@
 
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Audio;
+using namespace BlackMisc::Aviation;
 using namespace BlackCore;
 using namespace BlackCore::Data;
 
@@ -59,10 +60,10 @@ namespace BlackGui
 
             constexpr int MaxLength = 10;
             constexpr int MinLength = 0;
-            CUpperCaseValidator *ucv = new CUpperCaseValidator(MinLength, MaxLength, ui->le_Copilot);
+            CUpperCaseValidator *ucv = new CUpperCaseValidator(MinLength, MaxLength, ui->le_PartnerCallsign);
             ucv->setAllowedCharacters09AZ();
-            ui->le_Copilot->setMaxLength(MaxLength);
-            ui->le_Copilot->setValidator(ucv);
+            ui->le_PartnerCallsign->setMaxLength(MaxLength);
+            ui->le_PartnerCallsign->setValidator(ucv);
 
             const int tab = m_networkSetup.wasLastUsedWithOtherServer() ? LoginOthers : LoginVATSIM;
             ui->tw_Network->setCurrentIndex(tab);
@@ -241,6 +242,17 @@ namespace BlackGui
         CServer CNetworkDetailsComponent::getCurrentServer() const
         {
             return this->isVatsimServerSelected() ? this->getCurrentVatsimServer() : this->getCurrentOtherServer();
+        }
+
+        bool CNetworkDetailsComponent::hasPartnerCallsign() const
+        {
+            return !ui->le_PartnerCallsign->text().isEmpty();
+        }
+
+        CCallsign CNetworkDetailsComponent::getPartnerCallsign() const
+        {
+            if (ui->le_PartnerCallsign->text().isEmpty()) { return {}; }
+            return CCallsign(ui->le_PartnerCallsign->text(), CCallsign::Aircraft);
         }
 
         void CNetworkDetailsComponent::reloadOtherServersSetup()

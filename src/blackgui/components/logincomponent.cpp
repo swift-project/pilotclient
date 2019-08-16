@@ -327,7 +327,7 @@ namespace BlackGui
                     sGui->getIContextAudio()->setVoiceSetup(currentServer.getVoiceSetup());
                 }
 
-                msg = sGui->getIContextNetwork()->connectToNetwork(currentServer, {}, true, {}, true, mode);
+                msg = sGui->getIContextNetwork()->connectToNetwork(currentServer, {}, true, {}, true, {}, mode);
                 if (msg.isSuccess())
                 {
                     Q_ASSERT_X(currentServer.isValidForLogin(), Q_FUNC_INFO, "invalid server");

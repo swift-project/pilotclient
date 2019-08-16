@@ -82,7 +82,7 @@ namespace BlackGui
 
             connect(ui->pb_Cancel,  &QPushButton::clicked, this, &CLoginAdvComponent::loginCancelled,          Qt::QueuedConnection);
             connect(ui->pb_Connect, &QPushButton::clicked, this, &CLoginAdvComponent::toggleNetworkConnection, Qt::QueuedConnection);
-            connect(ui->comp_NetworkDetails, &CNetworkDetailsComponent::overridePilot, this, &CLoginAdvComponent::overrideCredentialsToPilot,      Qt::QueuedConnection);
+            connect(ui->comp_NetworkDetails, &CNetworkDetailsComponent::overridePilot,          this, &CLoginAdvComponent::overrideCredentialsToPilot,      Qt::QueuedConnection);
             connect(ui->comp_NetworkDetails, &CNetworkDetailsComponent::requestNetworkSettings, this, &CLoginAdvComponent::requestNetworkSettings, Qt::QueuedConnection);
 
             // overlay
@@ -104,6 +104,7 @@ namespace BlackGui
             // Stored data
             this->loadRememberedUserData();
 
+            // signals
             if (sGui && sGui->getIContextSimulator())
             {
                 connect(sGui->getIContextSimulator(), &IContextSimulator::vitalityLost, this, &CLoginAdvComponent::autoLogoffDetection, Qt::QueuedConnection);
@@ -155,7 +156,8 @@ namespace BlackGui
                 const CStatusMessageList pilotMsgs = ui->form_Pilot->validate();
                 if (pilotMsgs.isFailure())
                 {
-                    this->showOverlayHTMLMessage(CStatusMessage(this).validationWarning(u"Invalid pilot data, login not possible"), OverlayMessageMs);
+                    // this->showOverlayHTMLMessage(CStatusMessage(this).validationWarning(u"Invalid pilot data, login not possible"), OverlayMessageMs);
+                    this->showOverlayMessagesOrHTMLMessage(pilotMsgs, false, OverlayMessageMs);
                     return;
                 }
 
@@ -168,13 +170,13 @@ namespace BlackGui
                 const INetwork::LoginMode mode = ui->comp_NetworkDetails->getLoginMode();
                 switch (mode)
                 {
-                case INetwork::LoginStealth: CLogMessage(this).info(u"login in stealth mode"); break;
+                case INetwork::LoginStealth:    CLogMessage(this).info(u"login in stealth mode"); break;
                 case INetwork::LoginAsObserver: CLogMessage(this).info(u"login in observer mode"); break;
                 default: break; // INetwork::LoginNormal
                 }
 
                 // Server
-                currentServer = this->getCurrentServer();
+                currentServer    = this->getCurrentServer();
                 const CUser user = this->getUserFromPilotGuiValues();
                 currentServer.setUser(user);
 
@@ -191,18 +193,38 @@ namespace BlackGui
                     currentServer.setVoiceSetup(voice);
                 }
 
+                // update for own aircraft context
                 sGui->getIContextOwnAircraft()->updateOwnAircraftPilot(currentServer.getUser());
 
                 // set own aircraft from all values
                 ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
 
+                // check the copilot stuff
+                CCallsign partnerCs;
+                if (ui->comp_NetworkDetails->hasPartnerCallsign())
+                {
+                    partnerCs = ui->comp_NetworkDetails->getPartnerCallsign();
+                    if (partnerCs == ownAircraft.getCallsign())
+                    {
+                        this->showOverlayHTMLMessage("Your callsign and the pilot/copilot callsign must be NOT the same", OverlayMessageMs);
+                        return;
+                    }
+
+                    const bool ok = (partnerCs.asString().startsWith(ownAircraft.getCallsignAsString(), Qt::CaseInsensitive) || ownAircraft.getCallsignAsString().startsWith(partnerCs.asString(), Qt::CaseInsensitive));
+                    if (!ok)
+                    {
+                        this->showOverlayHTMLMessage("Callsign and the pilot/copilot callsign appear not to be synchronized", OverlayMessageMs);
+                        return;
+                    }
+                }
+
                 // Login
-                if (sGui->getIContextAudio())
+                if (sGui && sGui->getIContextAudio())
                 {
                     sGui->getIContextAudio()->setVoiceSetup(currentServer.getVoiceSetup());
                 }
 
-                msg = sGui->getIContextNetwork()->connectToNetwork(currentServer, values.ownLiverySend, values.useLivery, values.ownAircraftModelStringSend, values.useModelString, mode);
+                msg = sGui->getIContextNetwork()->connectToNetwork(currentServer, values.ownLiverySend, values.useLivery, values.ownAircraftModelStringSend, values.useModelString, partnerCs, mode);
                 if (msg.isSuccess())
                 {
                     Q_ASSERT_X(currentServer.isValidForLogin(), Q_FUNC_INFO, "invalid server");

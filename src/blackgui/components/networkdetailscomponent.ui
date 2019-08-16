@@ -250,9 +250,9 @@
            <number>0</number>
           </property>
           <item row="1" column="1">
-           <widget class="QLineEdit" name="le_Copilot">
+           <widget class="QLineEdit" name="le_PartnerCallsign">
             <property name="placeholderText">
-             <string>partner callsign</string>
+             <string>partner callsign (pilot/co-pilot)</string>
             </property>
            </widget>
           </item>
@@ -276,7 +276,7 @@
           <item row="1" column="0">
            <widget class="QLabel" name="lbl_Copilot">
             <property name="text">
-             <string>Co/Pilot callsign</string>
+             <string>Partner callsign</string>
             </property>
            </widget>
           </item>
@@ -418,7 +418,7 @@
   <tabstop>comp_VatsimServers</tabstop>
   <tabstop>pb_DetailsVatsim</tabstop>
   <tabstop>pb_OverrideCredentialsVatsim</tabstop>
-  <tabstop>le_Copilot</tabstop>
+  <tabstop>le_PartnerCallsign</tabstop>
   <tabstop>comp_OtherServers</tabstop>
   <tabstop>pb_RefreshOtherServers</tabstop>
   <tabstop>pb_OtherServersGotoSettings</tabstop>
