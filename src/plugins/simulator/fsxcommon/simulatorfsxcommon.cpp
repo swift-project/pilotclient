@@ -263,7 +263,16 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::displayTextMessage(const CTextMessage &message) const
         {
-            this->displayStatusMessage(message.asStatusMessage(true, true));
+            QByteArray m = message.asString(true, true).toLatin1().constData();
+            m.append('\0');
+
+            SIMCONNECT_TEXT_TYPE type = SIMCONNECT_TEXT_TYPE_PRINT_BLACK;
+            if (message.isSupervisorMessage())   { type = SIMCONNECT_TEXT_TYPE_PRINT_RED; }
+            else if (message.isPrivateMessage()) { type = SIMCONNECT_TEXT_TYPE_PRINT_YELLOW; }
+            else if (message.isRadioMessage())   { type = SIMCONNECT_TEXT_TYPE_PRINT_GREEN; }
+
+            const HRESULT hr = SimConnect_Text(m_hSimConnect, type, 7.5, EventTextMessage, static_cast<DWORD>(m.size()), m.data());
+            Q_UNUSED(hr);
         }
 
         bool CSimulatorFsxCommon::isPhysicallyRenderedAircraft(const CCallsign &callsign) const

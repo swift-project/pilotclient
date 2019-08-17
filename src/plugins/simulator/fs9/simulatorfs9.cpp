@@ -286,7 +286,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFs9::displayTextMessage(const CTextMessage &message) const
         {
-            this->displayStatusMessage(message.asStatusMessage(true, true));
+            QMetaObject::invokeMethod(m_fs9Host.data(), "sendTextMessage", Q_ARG(QString, message.asString(true, true)));
         }
 
         CStatusMessageList CSimulatorFs9::getInterpolationMessages(const CCallsign &callsign) const
