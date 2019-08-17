@@ -147,6 +147,18 @@ namespace BlackMisc
             //! \remark also sets current timestamp if there is no valid timestamp
             void markAsSent();
 
+            //! Is relayed message
+            bool isRelayedMessage() const;
+
+            //! Mark as relayed message
+            void markAsRelayedMessage() { m_relayedMessage = true; }
+
+            //! Mark as relayed and keep original sender
+            void makeRelayedMessage(const Aviation::CCallsign &partnerCallsign);
+
+            //! Turn relayed message into private message
+            bool relayedMessageToPrivateMessage();
+
             //! Can another message be appended
             bool canBeAppended(const CTextMessage &textMessage) const;
 
@@ -171,12 +183,16 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
+            //! swift relay message marker
+            static const QString &swiftRelayMessage();
+
         private:
             QString m_message;
             Aviation::CCallsign m_senderCallsign;
             Aviation::CCallsign m_recipientCallsign;
             PhysicalQuantities::CFrequency m_frequency { 0, nullptr };
-            bool m_wasSent = false;
+            bool m_wasSent        = false; //!< transient
+            bool m_relayedMessage = false; //!< transient
 
             BLACK_METACLASS(
                 CTextMessage,

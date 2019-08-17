@@ -82,8 +82,20 @@ namespace BlackMisc
             //! Find by frequency
             CTextMessageList findByFrequency(const PhysicalQuantities::CFrequency &frequency) const;
 
-            //! Toggle all sender receivers
+            //! Toggle all sender <-> recipients
             void toggleSenderRecipients();
+
+            //! Turn relayed into normal private messages
+            int relayedToPrivateMessages();
+
+            //! Remove private messages from callsign
+            int removePrivateMessagesFromCallsign(const Aviation::CCallsign &callsign);
+
+            //! List with relayed messages (if any) as private messages
+            CTextMessageList withRelayedToPrivateMessages() const;
+
+            //! With removed private messages from callsign
+            CTextMessageList withRemovedPrivateMessagesFromCallsign(const Aviation::CCallsign &callsign) const;
 
             //! Mark all messages as sent
             void markAsSent();

@@ -103,6 +103,48 @@ namespace BlackMisc
             std::for_each(this->begin(), this->end(), [](CTextMessage & tm) { tm.toggleSenderRecipient(); });
         }
 
+        int CTextMessageList::relayedToPrivateMessages()
+        {
+            if (this->isEmpty()) { return 0; }
+            int c = 0;
+            for (CTextMessage &m : *this)
+            {
+                if (m.relayedMessageToPrivateMessage()) { c++; }
+            }
+            return c;
+        }
+
+        int CTextMessageList::removePrivateMessagesFromCallsign(const CCallsign &callsign)
+        {
+            if (this->isEmpty()) { return 0; }
+            CTextMessageList r = this->withRemovedPrivateMessagesFromCallsign(callsign);
+            const int c = this->size() - r.size();
+            if (c < 1) { return 0; }
+            *this = r;
+            return c;
+        }
+
+        CTextMessageList CTextMessageList::withRelayedToPrivateMessages() const
+        {
+            if (this->isEmpty()) { return {}; }
+            CTextMessageList copy = *this;
+            copy.relayedToPrivateMessages();
+            return copy;
+        }
+
+        CTextMessageList CTextMessageList::withRemovedPrivateMessagesFromCallsign(const CCallsign &callsign) const
+        {
+            if (this->isEmpty())    { return {}; }
+            if (callsign.isEmpty()) { return *this; }
+            CTextMessageList r;
+            for (const CTextMessage &m : *this)
+            {
+                if (m.isPrivateMessage() && m.getSenderCallsign() == callsign) { continue; }
+                r.push_back(m);
+            }
+            return r;
+        }
+
         void CTextMessageList::markAsSent()
         {
             std::for_each(this->begin(), this->end(), [](CTextMessage & tm) { tm.markAsSent(); });
