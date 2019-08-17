@@ -49,6 +49,12 @@ namespace BlackMisc
             return m_message % u' ' % m_frequency.toQString(i18n);
         }
 
+        const QString &CTextMessage::swiftRelayMessage()
+        {
+            static const QString s("swift relayed: ");
+            return s;
+        }
+
         bool CTextMessage::isPrivateMessage() const
         {
             return !m_senderCallsign.isEmpty() && !m_recipientCallsign.isEmpty();
@@ -66,6 +72,34 @@ namespace BlackMisc
             {
                 this->setCurrentUtcTime();
             }
+        }
+
+        bool CTextMessage::isRelayedMessage() const
+        {
+            return m_relayedMessage || this->getMessage().startsWith(CTextMessage::swiftRelayMessage());
+        }
+
+        void CTextMessage::makeRelayedMessage(const CCallsign &partnerCallsign)
+        {
+            if (this->getMessage().startsWith(CTextMessage::swiftRelayMessage())) { return; }
+            this->markAsRelayedMessage();
+            this->setRecipientCallsign(partnerCallsign);
+            m_recipientCallsign.setTypeHint(CCallsign::Aircraft);
+            const QString sender = this->getSenderCallsign().asString();
+            const QString newMessage = CTextMessage::swiftRelayMessage() % sender % u";" % this->getMessage();
+            m_message = newMessage;
+        }
+
+        bool CTextMessage::relayedMessageToPrivateMessage()
+        {
+            if (!this->isRelayedMessage()) { return false; }
+            const int index = m_message.indexOf(';');
+            if (index < CTextMessage::swiftRelayMessage().length()) { return false; }
+            if (m_message.length() <= index + 1) { return false; } // no next line
+            const QString originalSender = m_message.left(index).remove(CTextMessage::swiftRelayMessage()).trimmed();
+            this->setSenderCallsign(CCallsign(originalSender, CCallsign::Aircraft));
+            m_message = m_message.mid(index + 1);
+            return true;
         }
 
         bool CTextMessage::canBeAppended(const CTextMessage &textMessage) const
