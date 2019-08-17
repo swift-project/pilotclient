@@ -34,7 +34,7 @@ namespace BlackSimPlugin
             CFs9Host(QObject *owner);
 
             //! Destructor
-            virtual ~CFs9Host();
+            virtual ~CFs9Host() override;
 
             //! Returns true if the users simulator is connected
             bool isConnected() const { return m_playerUser != 0; }
@@ -59,9 +59,9 @@ namespace BlackSimPlugin
 
             HostStatus m_hostStatus = Terminated;
         };
-    }
-}
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackSimPlugin::Fs9::CFs9Host::HostStatus)
 
-#endif // DIRECTPLAY_HOST_H
+#endif // guard
