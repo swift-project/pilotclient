@@ -38,7 +38,7 @@ namespace BlackSimPlugin
             CDirectPlayPeer(QObject *parent, const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Destructor
-            virtual ~CDirectPlayPeer();
+            virtual ~CDirectPlayPeer() override;
 
             //! Returns users DirectPlay ID
             DPNID getPlayerUserId() const { return m_playerUser; }
@@ -78,8 +78,8 @@ namespace BlackSimPlugin
 
             const BlackMisc::Aviation::CCallsign m_callsign; //!< Peer callsign
 
-            IDirectPlay8Peer *m_directPlayPeer = nullptr; //!< DirectPlay peer address
-            IDirectPlay8Address *m_deviceAddress = nullptr; //!< DirectPlay device address
+            IDirectPlay8Peer    *m_directPlayPeer = nullptr; //!< DirectPlay peer address
+            IDirectPlay8Address *m_deviceAddress  = nullptr; //!< DirectPlay device address
 
             QList<CHostNode> m_hostNodeList; //!< List of enumerated hosts
             quint32 m_packetIndex = 0; //!< Multiplayer packet index

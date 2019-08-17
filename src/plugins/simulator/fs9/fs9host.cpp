@@ -45,11 +45,11 @@ namespace BlackSimPlugin
                 DWORD dwNumAddresses = 0;
 
                 HRESULT hr;
-                QVector<LPDIRECTPLAY8ADDRESS> addresses(dwNumAddresses);
+                QVector<LPDIRECTPLAY8ADDRESS> addresses(static_cast<int>(dwNumAddresses));
                 m_directPlayPeer->GetLocalHostAddresses(addresses.data(), &dwNumAddresses, 0);
-                addresses.resize(dwNumAddresses);
-                ZeroMemory( addresses.data(), dwNumAddresses * sizeof(LPDIRECTPLAY8ADDRESS) );
-                if (FAILED (hr = m_directPlayPeer->GetLocalHostAddresses(addresses.data(), &dwNumAddresses, 0)))
+                addresses.resize(static_cast<int>(dwNumAddresses));
+                ZeroMemory(addresses.data(), dwNumAddresses * sizeof(LPDIRECTPLAY8ADDRESS));
+                if (FAILED(hr = m_directPlayPeer->GetLocalHostAddresses(addresses.data(), &dwNumAddresses, 0)))
                 {
                     logDirectPlayError(hr);
                     return address;
@@ -62,7 +62,7 @@ namespace BlackSimPlugin
 
                 for (uint ii = 0; ii < dwNumAddresses; ++ii)
                 {
-                    LPDIRECTPLAY8ADDRESS pAddress = addresses[ii];
+                    LPDIRECTPLAY8ADDRESS pAddress = addresses[static_cast<int>(ii)];
                     SafeRelease(pAddress);
                 }
             }
@@ -90,8 +90,8 @@ namespace BlackSimPlugin
 
             DPN_APPLICATION_DESC dpAppDesc;
 
-            QScopedArrayPointer<wchar_t> wszSession(new wchar_t[session.size() + 1]);
-            QScopedArrayPointer<wchar_t> wszPlayername(new wchar_t[callsign.size() + 1]);
+            QScopedArrayPointer<wchar_t> wszSession(new wchar_t[static_cast<unsigned>(session.size()) + 1]);
+            QScopedArrayPointer<wchar_t> wszPlayername(new wchar_t[static_cast<unsigned>(callsign.size()) + 1]);
 
             session.toWCharArray(wszSession.data());
             wszSession[session.size()] = 0;
@@ -125,12 +125,12 @@ namespace BlackSimPlugin
             dpAppDesc.pwszSessionName = wszSession.data();
 
             // We are now ready to host the app
-            if (FAILED(hr = m_directPlayPeer->Host(&dpAppDesc,              // AppDesc
-                                                   &m_deviceAddress, 1,       // Device Address
+            if (FAILED(hr = m_directPlayPeer->Host(&dpAppDesc,          // AppDesc
+                                                   &m_deviceAddress, 1, // Device Address
                                                    nullptr,
-                                                   nullptr,                          // Reserved
-                                                   nullptr,                          // Player Context
-                                                   0)))                              // dwFlags
+                                                   nullptr,             // Reserved
+                                                   nullptr,             // Player Context
+                                                   0)))                 // dwFlags
             {
                 logDirectPlayError(hr);
                 return hr;
@@ -143,17 +143,17 @@ namespace BlackSimPlugin
 
             // Enumerate the number of stalled DirectPlay peers
             DWORD dwNumPlayers = 0;
-            hr = m_directPlayPeer->EnumPlayersAndGroups( nullptr, &dwNumPlayers, DPNENUM_PLAYERS );
+            hr = m_directPlayPeer->EnumPlayersAndGroups(nullptr, &dwNumPlayers, DPNENUM_PLAYERS);
 
-            if(hr == DPNERR_BUFFERTOOSMALL)
+            if (hr == DPNERR_BUFFERTOOSMALL)
             {
                 QScopedArrayPointer<DPNID> stalledPeers(new DPNID[dwNumPlayers]);
-                hr = m_directPlayPeer->EnumPlayersAndGroups( stalledPeers.data(), &dwNumPlayers, DPNENUM_PLAYERS );
+                hr = m_directPlayPeer->EnumPlayersAndGroups(stalledPeers.data(), &dwNumPlayers, DPNENUM_PLAYERS);
 
                 // Destroy all stalled peers
                 for (DWORD i = 0; i < dwNumPlayers; ++i)
                 {
-                    m_directPlayPeer->DestroyPeer(stalledPeers[i], nullptr, 0, 0);
+                    m_directPlayPeer->DestroyPeer(stalledPeers[static_cast<int>(i)], nullptr, 0, 0);
                 }
             }
 
@@ -182,17 +182,17 @@ namespace BlackSimPlugin
 
             // Enumerate the number of stalled DirectPlay peers
             DWORD dwNumPlayers = 0;
-            hr = m_directPlayPeer->EnumPlayersAndGroups( nullptr, &dwNumPlayers, DPNENUM_PLAYERS );
+            hr = m_directPlayPeer->EnumPlayersAndGroups(nullptr, &dwNumPlayers, DPNENUM_PLAYERS);
 
-            if(hr == DPNERR_BUFFERTOOSMALL)
+            if (hr == DPNERR_BUFFERTOOSMALL)
             {
                 QScopedArrayPointer<DPNID> stalledPeers(new DPNID[dwNumPlayers]);
-                hr = m_directPlayPeer->EnumPlayersAndGroups( stalledPeers.data(), &dwNumPlayers, DPNENUM_PLAYERS );
+                hr = m_directPlayPeer->EnumPlayersAndGroups(stalledPeers.data(), &dwNumPlayers, DPNENUM_PLAYERS);
 
                 // Destroy all stalled peers
                 for (DWORD i = 0; i < dwNumPlayers; ++i)
                 {
-                    m_directPlayPeer->DestroyPeer(stalledPeers[i], nullptr, 0, 0);
+                    m_directPlayPeer->DestroyPeer(stalledPeers[static_cast<int>(i)], nullptr, 0, 0);
                 }
             }
 
