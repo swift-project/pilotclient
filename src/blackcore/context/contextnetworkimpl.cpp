@@ -75,7 +75,6 @@ namespace BlackCore
                 this);
             connect(m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::onFsdConnectionStatusChanged);
             connect(m_network, &INetwork::kicked, this, &CContextNetwork::kicked);
-            connect(m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::textMessagesReceived);
             connect(m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::onTextMessagesReceived, Qt::QueuedConnection);
             connect(m_network, &INetwork::textMessageSent,      this, &CContextNetwork::textMessageSent);
 
@@ -631,6 +630,17 @@ namespace BlackCore
             emit this->connectionStatusChanged(from, to);
         }
 
+        void CContextNetwork::createRelayMessageToPartnerCallsign(const CTextMessage &textMessage, const CCallsign &partnerCallsign, CTextMessageList &relayedMessages)
+        {
+            if (textMessage.isEmpty())     { return; }
+            if (partnerCallsign.isEmpty()) { return; }
+            if (textMessage.getSenderCallsign() == partnerCallsign) { return; } // no round trips
+
+            CTextMessage modified(textMessage);
+            modified.makeRelayedMessage(partnerCallsign);
+            relayedMessages.push_back(modified);
+        }
+
         void CContextNetwork::xCtxSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const CLength &maxRenderedDistance)
         {
             // mainly passing changed restrictions from simulator to network
@@ -667,13 +677,39 @@ namespace BlackCore
 
         void CContextNetwork::onTextMessagesReceived(const CTextMessageList &messages)
         {
-            if (messages.containsPrivateMessages())
+            const CTextMessageList textMessages = messages.withRelayedToPrivateMessages();
+            emit this->textMessagesReceived(textMessages);
+
+            if (textMessages.containsPrivateMessages())
             {
-                CTextMessageList supMessages(messages.getSupervisorMessages());
+                const CTextMessageList supMessages(messages.getSupervisorMessages());
                 for (const CTextMessage &m : supMessages)
                 {
                     emit this->supervisorTextMessageReceived(m);
                 }
+
+                // part to send to partner "forward"
+                if (m_network && !m_network->getPresetPartnerCallsign().isEmpty())
+                {
+                    const CCallsign partnerCallsign = m_network->getPresetPartnerCallsign();
+
+                    // IMPORTANT: use messages AND NOT textMessages here, exclude messages from partner to avoid infinite roundtrips
+                    CTextMessageList relayedMessages;
+                    const CTextMessageList privateMessages = messages.getPrivateMessages().withRemovedPrivateMessagesFromCallsign(partnerCallsign);
+                    for (const CTextMessage &m : privateMessages)
+                    {
+                        this->createRelayMessageToPartnerCallsign(m, partnerCallsign, relayedMessages);
+                    }
+
+                    if (!relayedMessages.isEmpty())
+                    {
+                        QPointer<CContextNetwork> myself(this);
+                        QTimer::singleShot(10, this, [ = ]
+                        {
+                            if (myself) { myself->sendTextMessages(relayedMessages); }
+                        });
+                    }
+                } // relay to partner
             }
         }
 

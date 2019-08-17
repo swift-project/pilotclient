@@ -600,11 +600,16 @@ namespace BlackCore
             if (messages.isEmpty()) { return; }
             CTextMessageList privateMessages = messages.getPrivateMessages();
             privateMessages.markAsSent();
-            for (const auto &message : as_const(privateMessages))
+            for (const CTextMessage &message : as_const(privateMessages))
             {
                 if (message.getRecipientCallsign().isEmpty()) { continue; }
                 Vat_SendTextMessage(m_net.data(), toFSD(message.getRecipientCallsign()), toFSD(message.getMessage()));
-                emit this->textMessageSent(message);
+
+                if (!message.isRelayedMessage())
+                {
+                    // this is the normal scenario, but relayed messages will NOT emit
+                    emit this->textMessageSent(message);
+                }
 
                 // statistics
                 this->increaseStatisticsValue(QStringLiteral("Vat_SendTextMessage"));
@@ -613,7 +618,7 @@ namespace BlackCore
             CTextMessageList radioMessages = messages.getRadioMessages();
             radioMessages.markAsSent();
             QVector<int> freqsVec;
-            for (const auto &message : radioMessages)
+            for (const CTextMessage &message : radioMessages)
             {
                 // I could send the same message to n frequencies in one step
                 // if this is really required, I need to group by message
