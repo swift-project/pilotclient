@@ -319,6 +319,9 @@ namespace BlackCore
             //! Connection status changed
             void onFsdConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
+            //! Relay to partner callsign
+            void createRelayMessageToPartnerCallsign(const BlackMisc::Network::CTextMessage &textMessage, const BlackMisc::Aviation::CCallsign &partnerCallsign, BlackMisc::Network::CTextMessageList &relayedMessages);
+
             //! Render restrictions have been changed, used with analyzer
             //! \sa CAirspaceAnalyzer
             //! \ingroup crosscontextfunction
