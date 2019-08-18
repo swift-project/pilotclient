@@ -922,7 +922,7 @@ namespace XSwiftBus
     int CTraffic::orbitPlaneFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon)
     {
         constexpr bool DEBUG = true;
-        DEBUG_LOG_C("Follow aircraft entry", DEBUG);
+        // DEBUG_LOG_C("Follow aircraft entry", DEBUG);
         if (isLosingControl == 1)
         {
             // do NOT use refcon here, might be invalid
