@@ -995,7 +995,7 @@ namespace XSwiftBus
         double lxMeters = 0, lyMeters = 0, lzMeters = 0; // normally init not needed, just to avoid any issues
         static const double kFtToMeters = 0.3048;
 
-        std::string modelName;
+        std::string modelName = "unknown";
         if (traffic->m_followPlaneViewCallsign == CTraffic::ownAircraftString())
         {
             lxMeters = traffic->m_ownAircraftPositionX.get();
