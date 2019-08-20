@@ -59,7 +59,7 @@ QAbstractScrollArea #pg_StatusPageConsole  { background-color: black; }
 /* close button with frameless windows */
 #pb_FramelessCloseButton {
   background: transparent;
-  padding: 0px 0px 0px 0px;
+  padding: 5px 5px 0px 0px;
   image-position: right;
   margin: 0px;
   border: 0px;
