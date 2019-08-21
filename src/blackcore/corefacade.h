@@ -57,7 +57,7 @@ namespace BlackCore
         CCoreFacade(const CCoreFacadeConfig &config, QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CCoreFacade() { this->gracefulShutdown(); }
+        virtual ~CCoreFacade() override { this->gracefulShutdown(); }
 
         //! DBus server (if applicable)
         const BlackMisc::CDBusServer *getDBusServer() const { return this->m_dbusServer; }
@@ -122,6 +122,9 @@ namespace BlackCore
         //! Context for audio
         //! \remarks only applicable for local object
         Context::CContextAudio *getCContextAudio();
+
+        //! Local audio context, means audio really runs here
+        bool hasLocalAudio() const;
 
         //! Context for audio
         //! \remarks only applicable for local object
