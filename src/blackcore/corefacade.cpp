@@ -259,14 +259,14 @@ namespace BlackCore
                 c = connect(this->getCContextOwnAircraft(), &CContextOwnAircraft::ps_changedModel,
                             this->getCContextSimulator(),   &CContextSimulator::xCtxChangedOwnAircraftModel);
                 Q_ASSERT(c);
+            }
 
-
-                // hook up with audio
-                if (this->getIContextAudio())
-                {
-                    c = connect(m_contextOwnAircraft, &IContextOwnAircraft::changedAircraftCockpit, this->getCContextAudio(), &CContextAudio::xCtxChangedAircraftCockpit, Qt::QueuedConnection);
-                    Q_ASSERT(c);
-                }
+            // special case for the audio related connection (which mutes audio for a changed cockpit)
+            // hook up with audio if audio context is local
+            if (this->hasLocalAudio() && m_contextOwnAircraft)
+            {
+                c = connect(m_contextOwnAircraft, &IContextOwnAircraft::changedAircraftCockpit, this->getCContextAudio(), &CContextAudio::xCtxChangedAircraftCockpit, Qt::QueuedConnection);
+                Q_ASSERT(c);
             }
 
             // times
@@ -450,6 +450,11 @@ namespace BlackCore
     {
         Q_ASSERT_X(m_contextAudio && m_contextAudio->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextAudio *>(m_contextAudio);
+    }
+
+    bool CCoreFacade::hasLocalAudio() const
+    {
+        return m_contextAudio && m_contextAudio->isUsingImplementingObject();
     }
 
     const CContextAudio *CCoreFacade::getCContextAudio() const
