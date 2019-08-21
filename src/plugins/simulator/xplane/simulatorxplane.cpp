@@ -635,7 +635,9 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::physicallyAddRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
         {
-            Q_ASSERT(isConnected());
+            // avoid issue in rapid shutdown
+            if (this->isShuttingDownOrDisconnected()) { return false; }
+
             // entry checks
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
             Q_ASSERT_X(!newRemoteAircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "empty callsign");
@@ -684,7 +686,8 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
-            Q_ASSERT(this->isConnected());
+            // avoid issue in rapid shutdown
+            if (this->isShuttingDownOrDisconnected()) { return false; }
 
             // only remove from sim
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thread");
