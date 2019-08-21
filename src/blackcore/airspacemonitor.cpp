@@ -634,7 +634,7 @@ namespace BlackCore
         {
             static const QString readyForMatching("Ready for matching callsign '%1' with model type '%2', '%3'");
 
-            readiness.setFlag(ReadyForMatchingSent); // stored as readiness is reference
+            readiness.setFlag(ReadyForMatchingSent); // stored as readiness as reference
 
             const QString readyMsg = readyForMatching.arg(callsign.toQString(), remoteAircraft.getModel().getModelTypeAsString(), readiness.toQString());
             const CStatusMessage m = CLogUtilities::logMessage(callsign, readyMsg, getLogCategories());
