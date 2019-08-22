@@ -60,7 +60,7 @@ namespace XSwiftBus
         assert(!s_instance);
         s_instance = this;
         XPLMRegisterDrawCallback(drawCallback, xplm_Phase_Airplanes, 1, this);
-        XPLMRegisterKeySniffer(spaceKeySniffer, 1, this);
+        XPLMRegisterKeySniffer(followAircraftKeySniffer, 1, this);
 
         // init labels
         this->setDrawingLabels(this->getSettings().isDrawingLabels());
@@ -921,7 +921,7 @@ namespace XSwiftBus
 
     int CTraffic::orbitPlaneFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon)
     {
-        constexpr bool DEBUG = true;
+        constexpr bool DEBUG = false;
         // DEBUG_LOG_C("Follow aircraft entry", DEBUG);
         if (isLosingControl == 1)
         {
@@ -979,7 +979,7 @@ namespace XSwiftBus
 
             // the 1.25 factor allows to turn around completely
             traffic->m_deltaCameraPosition.headingDeg = normalizeToZero360Deg(1.25 * 360.0 * static_cast<double>(x) / static_cast<double>(w)); // range 0-360
-            double usedCameraPitchDeg                 = 60.0-(60.0 * 2.0 * static_cast<double>(y) / static_cast<double>(h)); // range +-
+            double usedCameraPitchDeg                 = 60.0 - (60.0 * 2.0 * static_cast<double>(y) / static_cast<double>(h)); // range +-
 
             // make sure we can use it with tan in range +-90 degrees and the result of tan not getting too high
             // we limit to +-85deg, tan 45deg: 1 | tan 60deg: 1.73 | tan 85deg: 11.4
@@ -990,7 +990,7 @@ namespace XSwiftBus
             // Now calculate where the camera should be positioned to be x
             // meters from the plane and pointing at the plane at the pitch and
             // heading we wanted above.
-            const double distanceMeterM = static_cast<double>(std::max(10, traffic->getSettings().getFollowAircraftDistanceM()));
+            const double distanceMeterM = traffic->m_followAircraftDistanceMultiplier * static_cast<double>(std::max(10, traffic->getSettings().getFollowAircraftDistanceM()));
             static const double PI = std::acos(-1);
             traffic->m_deltaCameraPosition.dxMeters = -distanceMeterM * sin(traffic->m_deltaCameraPosition.headingDeg * PI / 180.0);
             traffic->m_deltaCameraPosition.dzMeters =  distanceMeterM * cos(traffic->m_deltaCameraPosition.headingDeg * PI / 180.0);
@@ -1023,6 +1023,7 @@ namespace XSwiftBus
             {
                 INFO_LOG("Follow aircraft, no callsign to follow");
                 traffic->m_followPlaneViewCallsign.clear();
+                traffic->m_followAircraftDistanceMultiplier = 1.0;
                 return 0;
             }
 
@@ -1031,6 +1032,7 @@ namespace XSwiftBus
             {
                 INFO_LOG("Follow aircraft, no plane found for callsign " + traffic->m_followPlaneViewCallsign);
                 traffic->m_followPlaneViewCallsign.clear();
+                traffic->m_followAircraftDistanceMultiplier = 1.0;
                 return 0;
             }
 
@@ -1039,6 +1041,7 @@ namespace XSwiftBus
             {
                 ERROR_LOG("Follow aircraft, no plane from iterator for callsign " + traffic->m_followPlaneViewCallsign);
                 traffic->m_followPlaneViewCallsign.clear();
+                traffic->m_followAircraftDistanceMultiplier = 1.0;
                 return 0;
             }
 
@@ -1072,6 +1075,7 @@ namespace XSwiftBus
         {
             WARNING_LOG("Invalid camera aircraft position");
             WARNING_LOG("Pos: " + pos2String(cameraPosition));
+            traffic->m_followAircraftDistanceMultiplier = 1.0;
             return 0;
         }
 
@@ -1112,11 +1116,11 @@ namespace XSwiftBus
         return 1;
     }
 
-    int CTraffic::spaceKeySniffer(char character, XPLMKeyFlags flags, char virtualKey, void *refcon)
+    int CTraffic::followAircraftKeySniffer(char character, XPLMKeyFlags flags, char virtualKey, void *refcon)
     {
         (void) character;
-        (void) flags;
         CTraffic *traffic = static_cast<CTraffic *>(refcon);
+        if (!traffic || traffic->m_followPlaneViewCallsign.empty()) { return 1; } // totally ignore if nothing is being followed
 
         // We are only interested in Space key
         if (virtualKey == XPLM_VK_SPACE)
@@ -1126,6 +1130,9 @@ namespace XSwiftBus
             if (flags & xplm_DownFlag) { traffic->m_isSpacePressed = true;  }
             if (flags & xplm_UpFlag)   { traffic->m_isSpacePressed = false; }
         }
+        else if (virtualKey == XPLM_VK_DOWN   && (flags & xplm_UpFlag)) { traffic->m_followAircraftDistanceMultiplier /= 1.2; }
+        else if (virtualKey == XPLM_VK_UP     && (flags & xplm_UpFlag)) { traffic->m_followAircraftDistanceMultiplier *= 1.2; }
+        else if (virtualKey == XPLM_VK_ESCAPE && (flags & xplm_UpFlag)) { traffic->m_followAircraftDistanceMultiplier = 1.0; }
 
         /* Return 1 to pass the keystroke to plugin windows and X-Plane.
          * Returning 0 would consume the keystroke. */

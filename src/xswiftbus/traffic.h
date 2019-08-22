@@ -167,7 +167,7 @@ namespace XSwiftBus
         static int orbitOwnAircraftFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon);
         static int orbitPlaneFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon);
         static int drawCallback(XPLMDrawingPhase phase, int isBefore, void *refcon);
-        static int spaceKeySniffer(char character, XPLMKeyFlags flags, char virtualKey, void *refcon);
+        static int followAircraftKeySniffer(char character, XPLMKeyFlags flags, char virtualKey, void *refcon);
 
         //! Remote aircraft
         struct Plane
@@ -236,6 +236,7 @@ namespace XSwiftBus
         bool m_isSpacePressed = false;
         int m_lastMouseX = -1;
         int m_lastMouseY = -1;
+        double m_followAircraftDistanceMultiplier = 1.0;
         DeltaCameraPosition m_deltaCameraPosition;
 
         bool m_emitSimFrame = true;
