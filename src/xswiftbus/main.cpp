@@ -24,9 +24,9 @@ static XSwiftBus::CPlugin *g_plugin = nullptr;
 
 PLUGIN_API int XPluginStart(char *o_name, char *o_sig, char *o_desc)
 {
-#if APL
+#ifdef APL
     // https://developer.x-plane.com/2014/12/mac-plugin-developers-you-should-be-using-native-paths/
-    XPLMEnableFeature("XPLM_USE_NATIVE_PATHS",1);
+    XPLMEnableFeature("XPLM_USE_NATIVE_PATHS", 1);
 #endif
 
     INFO_LOG("XSwiftBus plugin starting");
@@ -58,6 +58,12 @@ PLUGIN_API void XPluginReceiveMessage(XPLMPluginID from, long msg, void *param)
 {
     if (from == XPLM_PLUGIN_XPLANE)
     {
+        if (!g_plugin || !g_plugin->isRunning())
+        {
+            WARNING_LOG("Received message, but plugin NOT running");
+            return;
+        }
+
         switch (msg)
         {
         case XPLM_MSG_PLANE_LOADED:
