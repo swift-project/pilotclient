@@ -38,17 +38,17 @@ namespace XSwiftBus
         //! Print message to X-Plane log
         static void print(const std::string &filePath, int line, MsgType type, const std::string &message);
     };
-
-    //! Logger convenience macros
-    //! @{
-    // *INDENT-OFF*
-    #define DEBUG_LOG(msg) Logger::print(__FILE__, __LINE__, Logger::DebugMsg, msg)
-    #define DEBUG_LOG_C(msg, doLog) if (doLog) { Logger::print(__FILE__, __LINE__, Logger::DebugMsg, msg); }
-    #define INFO_LOG(msg) Logger::print(__FILE__, __LINE__, Logger::InfoMsg, msg)
-    #define WARNING_LOG(msg) Logger::print(__FILE__, __LINE__, Logger::WarningMsg, msg)
-    #define ERROR_LOG(msg) Logger::print(__FILE__, __LINE__, Logger::ErrorMsg, msg)
-    // *INDENT-ON*
-    //! @}
 }
+
+//! Logger convenience macros
+//! @{
+// *INDENT-OFF*
+#define DEBUG_LOG(msg) XSwiftBus::Logger::print(__FILE__, __LINE__, XSwiftBus::Logger::DebugMsg, msg)
+#define DEBUG_LOG_C(msg, doLog) if (doLog) { XSwiftBus::Logger::print(__FILE__, __LINE__, XSwiftBus::Logger::DebugMsg, msg); }
+#define INFO_LOG(msg) XSwiftBus::Logger::print(__FILE__, __LINE__, XSwiftBus::Logger::InfoMsg, msg)
+#define WARNING_LOG(msg) XSwiftBus::Logger::print(__FILE__, __LINE__, XSwiftBus::Logger::WarningMsg, msg)
+#define ERROR_LOG(msg) XSwiftBus::Logger::print(__FILE__, __LINE__, XSwiftBus::Logger::ErrorMsg, msg)
+// *INDENT-ON*
+//! @}
 
 #endif // guard

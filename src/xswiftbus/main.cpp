@@ -11,6 +11,7 @@
 #endif
 #include "plugin.h"
 #include "traffic.h"
+#include "utils.h"
 #include <XPLM/XPLMPlanes.h>
 #include <XPLM/XPLMPlugin.h>
 #include <cstring>
@@ -28,6 +29,7 @@ PLUGIN_API int XPluginStart(char *o_name, char *o_sig, char *o_desc)
     XPLMEnableFeature("XPLM_USE_NATIVE_PATHS",1);
 #endif
 
+    INFO_LOG("XSwiftBus plugin starting");
     std::strcpy(o_name, "XSwiftBus");
     std::strcpy(o_sig,  "org.swift-project.xswiftbus");
     std::strcpy(o_desc, "Allows swift to connect to X-Plane via D-Bus IPC");
