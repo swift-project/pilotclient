@@ -56,6 +56,12 @@ namespace XSwiftBus
         //! Called by XPluginReceiveMessage when the aircraft is positioned at an airport
         void onAircraftRepositioned();
 
+        //! Is running
+        bool isRunning() const { return m_isRunning; }
+
+        //! Should stop
+        bool shouldStop() const { return m_shouldStop; }
+
     private:
         CConfig         m_pluginConfig;
         CDBusDispatcher m_dbusDispatcher;
@@ -78,7 +84,7 @@ namespace XSwiftBus
         decltype(m_atisEnabled.get()) m_atisSaved = 0;
 
         std::thread m_dbusThread;
-        bool m_isRunning = false;
+        bool m_isRunning  = false;
         bool m_shouldStop = false;
 
         void readConfig();

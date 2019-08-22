@@ -14,6 +14,7 @@
 #include <XPLM/XPLMPlanes.h>
 #include <XPLM/XPLMUtilities.h>
 
+#include <cstring>
 #include <algorithm>
 
 // clazy:excludeall=reserve-candidates
@@ -33,7 +34,12 @@ namespace XSwiftBus
         char filename[256];
         char path[512];
         XPLMGetNthAircraftModel(XPLM_USER_AIRCRAFT, filename, path);
-        AcfProperties acfProperties = extractAcfProperties(path);
+        if (std::strlen(filename) < 1 || std::strlen(path) < 1)
+        {
+            WARNING_LOG("Aircraft changed, but NO path or file name");
+            return;
+        }
+        const AcfProperties acfProperties = extractAcfProperties(path);
         emitAircraftModelChanged(path, filename, getAircraftLivery(), getAircraftIcaoCode(), acfProperties.modelString, acfProperties.modelName, getAircraftDescription());
     }
 

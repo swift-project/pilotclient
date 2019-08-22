@@ -85,7 +85,7 @@ namespace XSwiftBus
     void CPlugin::readConfig()
     {
         initXPlanePath();
-        auto configFilePath = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xswiftbus" + g_sep + "xswiftbus.conf";
+        const std::string configFilePath = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xswiftbus" + g_sep + "xswiftbus.conf";
         m_pluginConfig.setFilePath(configFilePath);
         m_pluginConfig.parse();
         m_pluginConfig.print();
@@ -175,10 +175,11 @@ namespace XSwiftBus
     float CPlugin::startServerDeferred(float, float, int, void *refcon)
     {
         auto *plugin = static_cast<CPlugin *>(refcon);
-        if (! plugin->m_isRunning)
+        if (!plugin->m_isRunning)
         {
             plugin->startServer();
             plugin->m_isRunning = true;
+            INFO_LOG("XSwiftBus plugin started (deferred)");
         }
         return 0;
     }
