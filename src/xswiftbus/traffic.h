@@ -234,6 +234,8 @@ namespace XSwiftBus
         DataRef<xplane::data::sim::flightmodel::position::local_z> m_ownAircraftPositionZ;
 
         bool m_isSpacePressed = false;
+        int m_lastMouseX = -1;
+        int m_lastMouseY = -1;
         DeltaCameraPosition m_deltaCameraPosition;
 
         bool m_emitSimFrame = true;

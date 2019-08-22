@@ -947,7 +947,7 @@ namespace XSwiftBus
 
         // Ideally we would like to test against right mouse button, but X-Plane SDK does not
         // allow that.
-        if (!traffic->m_deltaCameraPosition.isInitialized)
+        if (!traffic->m_deltaCameraPosition.isInitialized || traffic->m_isSpacePressed)
         {
             int w = 0, h = 0, x = 0, y = 0;
             // First get the screen size and mouse location. We will use this to decide
@@ -956,6 +956,12 @@ namespace XSwiftBus
             XPLMGetScreenSize(&w, &h);
             XPLMGetMouseLocation(&x, &y);
             if (DEBUG) { DEBUG_LOG("Follow aircraft coordinates w,h,x,y: " + std::to_string(w) + " " + std::to_string(h) + " " + std::to_string(x) + " " + std::to_string(y)); }
+            if (traffic->m_lastMouseX == x && traffic->m_lastMouseY == y && traffic->m_lastMouseX >= 0 && traffic->m_lastMouseY >= 0)
+            {
+                // mouse NOT moving, we lost focus or we do NOT move anymore
+                // to avoid issues we reset the space key, see https://discordapp.com/channels/539048679160676382/539925070550794240/614162134644949002
+                traffic->m_isSpacePressed = false;
+            }
 
             // avoid follow aircraft in too small windows
             // int cannot be NaN
@@ -971,8 +977,9 @@ namespace XSwiftBus
                 return 0;
             }
 
-            traffic->m_deltaCameraPosition.headingDeg = normalizeToZero360Deg(360.0 * static_cast<double>(x) / static_cast<double>(w)); // range 0-360
-            double usedCameraPitchDeg                 = 60.0  - (60.0   * 2.0 *        static_cast<double>(y) / static_cast<double>(h)); // range +-
+            // the 1.25 factor allows to turn around completely
+            traffic->m_deltaCameraPosition.headingDeg = normalizeToZero360Deg(1.25 * 360.0 * static_cast<double>(x) / static_cast<double>(w)); // range 0-360
+            double usedCameraPitchDeg                 = 60.0-(60.0 * 2.0 * static_cast<double>(y) / static_cast<double>(h)); // range +-
 
             // make sure we can use it with tan in range +-90 degrees and the result of tan not getting too high
             // we limit to +-85deg, tan 45deg: 1 | tan 60deg: 1.73 | tan 85deg: 11.4
@@ -1116,7 +1123,7 @@ namespace XSwiftBus
         {
             // if XPlane looses focus it can happen that key down is NOT reset
             // for the camera we use the init flag instead, so it is only run once
-            if (flags & xplm_DownFlag) { traffic->m_isSpacePressed = true; traffic->m_deltaCameraPosition.isInitialized = false; }
+            if (flags & xplm_DownFlag) { traffic->m_isSpacePressed = true;  }
             if (flags & xplm_UpFlag)   { traffic->m_isSpacePressed = false; }
         }
 
