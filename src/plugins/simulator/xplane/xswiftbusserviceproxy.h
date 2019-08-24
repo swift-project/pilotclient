@@ -271,6 +271,24 @@ namespace BlackSimPlugin
             void getCom1StandbyKhzAsync(int *o_com1Standby);
             //! @}
 
+            //! \copydoc XSwiftBus::CService::isCom1Receiving
+            //! @{
+            bool isCom1Receiving() const;
+            void isCom1ReceivingAsync(bool *o_com1Rec);
+            //! @}
+
+            //! \copydoc XSwiftBus::CService::isCom1Transmitting
+            //! @{
+            bool isCom1Transmitting() const;
+            void isCom1TransmittingAsync(bool *o_com1Tx);
+            //! @}
+
+            //! \copydoc XSwiftBus::CService::getCom1Volume
+            //! @{
+            double getCom1Volume() const;
+            void getCom1VolumeAsync(double *o_com1Volume);
+            //! @}
+
             //! \copydoc XSwiftBus::CService::getCom2ActiveKhz
             //! @{
             int getCom2ActiveKhz() const;
@@ -281,6 +299,24 @@ namespace BlackSimPlugin
             //! @{
             int getCom2StandbyKhz() const;
             void getCom2StandbyKhzAsync(int *o_com2Standby);
+            //! @}
+
+            //! \copydoc XSwiftBus::CService::isCom2Receiving
+            //! @{
+            bool isCom2Receiving() const;
+            void isCom2ReceivingAsync(bool *o_com2Rec);
+            //! @}
+
+            //! \copydoc XSwiftBus::CService::isCom2Transmitting
+            //! @{
+            bool isCom2Transmitting() const;
+            void isCom2TransmittingAsync(bool *o_com2Tx);
+            //! @}
+
+            //! \copydoc XSwiftBus::CService::getCom2Volume
+            //! @{
+            double getCom2Volume() const;
+            void getCom2VolumeAsync(double *o_com2Volume);
             //! @}
 
             //! \copydoc XSwiftBus::CService::getTransponderCode

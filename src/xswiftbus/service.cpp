@@ -507,6 +507,48 @@ namespace XSwiftBus
                     sendDBusReply(sender, serial, getCom2StandbyKhz());
                 });
             }
+            else if (message.getMethodName() == "isCom1Receiving")
+            {
+                queueDBusCall([ = ]()
+                {
+                    sendDBusReply(sender, serial, isCom1Receiving());
+                });
+            }
+            else if (message.getMethodName() == "isCom1Transmitting")
+            {
+                queueDBusCall([ = ]()
+                {
+                    sendDBusReply(sender, serial, isCom1Transmitting());
+                });
+            }
+            else if (message.getMethodName() == "getCom1Volume")
+            {
+                queueDBusCall([ = ]()
+                {
+                    sendDBusReply(sender, serial, getCom1Volume());
+                });
+            }
+            else if (message.getMethodName() == "isCom2Receiving")
+            {
+                queueDBusCall([ = ]()
+                {
+                    sendDBusReply(sender, serial, isCom2Receiving());
+                });
+            }
+            else if (message.getMethodName() == "isCom2Transmitting")
+            {
+                queueDBusCall([ = ]()
+                {
+                    sendDBusReply(sender, serial, isCom2Transmitting());
+                });
+            }
+            else if (message.getMethodName() == "getCom2Volume")
+            {
+                queueDBusCall([ = ]()
+                {
+                    sendDBusReply(sender, serial, getCom2Volume());
+                });
+            }
             else if (message.getMethodName() == "getTransponderCode")
             {
                 queueDBusCall([ = ]()

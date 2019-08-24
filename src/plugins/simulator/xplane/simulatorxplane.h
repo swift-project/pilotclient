@@ -75,17 +75,23 @@ namespace BlackSimPlugin
             QString aircraftModelPath;          //!< Aircraft model path
             QString aircraftIcaoCode;           //!< Aircraft ICAO code
             double latitudeDeg;                 //!< Longitude [deg]
-            double longitudeDeg;                //!< Latitude [deg]
-            double altitudeM;                   //!< Altitude [m]
+            double longitudeDeg;                //!< Latitude  [deg]
+            double altitudeM;                   //!< Altitude  [m]
             double groundspeedMs;               //!< Ground speed [m/s]
             double pitchDeg;                    //!< Pitch [deg]
-            double rollDeg;                     //!< Roll [deg]
+            double rollDeg;                     //!< Roll  [deg]
             double trueHeadingDeg;              //!< True heading [deg]
             bool onGroundAll;                   //!< All wheels on ground?
-            int com1ActiveKhz;                  //!< COM1 active [kHz]
+            int com1ActiveKhz;                  //!< COM1 active  [kHz]
             int com1StandbyKhz;                 //!< COM1 standby [kHz]
-            int com2ActiveKhz;                  //!< COM2 active [kHz]
+            bool isCom1Receiving;               //!< COM1 receiving
+            bool isCom1Transmitting;            //!< COM1 transmittings
+            double com1Volume;                  //!< COM1 volume 0..1
+            int com2ActiveKhz;                  //!< COM2 active  [kHz]
             int com2StandbyKhz;                 //!< COM2 standby [kHz]
+            bool isCom2Receiving;               //!< COM2 receiving
+            bool isCom2Transmitting;            //!< COM2 transmittings
+            double com2Volume;                  //!< COM2 volume 0..1
             int xpdrCode;                       //!< Transpondder code
             int xpdrMode;                       //!< Transponder mode (off=0,stdby=1,on=2,test=3)
             bool xpdrIdent;                     //!< Is transponder in ident?
@@ -95,7 +101,7 @@ namespace BlackSimPlugin
             bool strobeLightsOn;                //!< Strobe lights on?
             bool taxiLightsOn;                  //!< Taxi lights on?
             double flapsReployRatio;            //!< Flaps deployment ratio [%]
-            double gearReployRatio;             //!< Gear deployment ratio [%]
+            double gearReployRatio;             //!< Gear deployment ratio  [%]
             QList<double> enginesN1Percentage;  //!< N1 per engine [%]
             double speedBrakeRatio;             //!< Speed break ratio [%]
             double seaLevelPressureInHg;        //!< Sea level pressure [inhg]
@@ -257,10 +263,11 @@ namespace BlackSimPlugin
             //! Reset the XPlane data
             void resetXPlaneData()
             {
-                m_xplaneData = { "", "", 0, 0, 0, 0, 0, 0, 0, false, 122800, 122800, 122800, 122800, 2000, 0, false, false, false, false,
+                m_xplaneData = { "", "", 0, 0, 0, 0, 0, 0, 0, false,
+                                 122800, 122800, true, true, 1.0, 122800, 122800, true, true, 1.0,
+                                 2000, 0, false, false, false, false,
                                  false, false, 0, 0, {}, 0.0, 0.0
                                };
-
             }
         };
 

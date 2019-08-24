@@ -72,13 +72,17 @@ namespace BlackMisc
         template <class AVIO>
         void CModulator<AVIO>::setVolumeReceive(int volume)
         {
-            m_volumeReceive = volume;
+            if (volume >= 100)    { m_volumeReceive = 100; }
+            else if (volume <= 0) { m_volumeReceive = 0; }
+            else { m_volumeReceive = volume; }
         }
 
         template <class AVIO>
         void CModulator<AVIO>::setVolumeTransmit(int volume)
         {
-            m_volumeTransmit = volume;
+            if (volume >= 100)    { m_volumeTransmit = 100; }
+            else if (volume <= 0) { m_volumeTransmit = 0; }
+            else { m_volumeTransmit = volume; }
         }
 
         template <class AVIO>
