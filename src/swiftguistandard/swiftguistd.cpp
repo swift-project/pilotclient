@@ -455,7 +455,8 @@ void SwiftGuiStd::showNormal()
 
 void SwiftGuiStd::onNavigatorClosed()
 {
-    // void
+    if (!sGui || sGui->isShuttingDown()) { return; }
+    this->show();
 }
 
 void SwiftGuiStd::verifyPrerequisites()
