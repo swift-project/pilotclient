@@ -205,22 +205,18 @@ namespace BlackSimPlugin
         {
             if (this->isConnected())
             {
-                m_serviceProxy->getOwnAircraftSituationData(&m_xplaneData);
-                m_serviceProxy->getCom1ActiveKhzAsync(&m_xplaneData.com1ActiveKhz);
-                m_serviceProxy->getCom1StandbyKhzAsync(&m_xplaneData.com1StandbyKhz);
-                m_serviceProxy->getCom2ActiveKhzAsync(&m_xplaneData.com2ActiveKhz);
-                m_serviceProxy->getCom2StandbyKhzAsync(&m_xplaneData.com2StandbyKhz);
-                m_serviceProxy->getTransponderCodeAsync(&m_xplaneData.xpdrCode);
-                m_serviceProxy->getTransponderModeAsync(&m_xplaneData.xpdrMode);
-                m_serviceProxy->getTransponderIdentAsync(&m_xplaneData.xpdrIdent);
+                m_serviceProxy->getOwnAircraftSituationDataAsync(&m_xplaneData);
+                m_serviceProxy->getOwnAircraftCom1DataAsync(&m_xplaneData);
+                m_serviceProxy->getOwnAircraftCom2DataAsync(&m_xplaneData);
+                m_serviceProxy->getOwnAircraftXpdrAsync(&m_xplaneData);
                 m_serviceProxy->getAllWheelsOnGroundAsync(&m_xplaneData.onGroundAll);
 
                 CAircraftSituation situation;
                 situation.setPosition({ m_xplaneData.latitudeDeg, m_xplaneData.longitudeDeg, 0 });
-                CAltitude altitude { m_xplaneData.altitudeM, CAltitude::MeanSeaLevel, CLengthUnit::m() };
-                situation.setAltitude({ m_xplaneData.altitudeM, CAltitude::MeanSeaLevel, CLengthUnit::m() });
-                CPressure seaLevelPressure({ m_xplaneData.seaLevelPressureInHg, CPressureUnit::inHg() });
-                CAltitude pressureAltitude(altitude.toPressureAltitude(seaLevelPressure));
+                const CAltitude altitude { m_xplaneData.altitudeM, CAltitude::MeanSeaLevel, CLengthUnit::m() };
+                situation.setAltitude(altitude);
+                const CPressure seaLevelPressure({ m_xplaneData.seaLevelPressureInHg, CPressureUnit::inHg() });
+                const CAltitude pressureAltitude(altitude.toPressureAltitude(seaLevelPressure));
                 situation.setPressureAltitude(pressureAltitude);
                 situation.setHeading({ m_xplaneData.trueHeadingDeg, CHeading::True, CAngleUnit::deg() });
                 situation.setPitch({ m_xplaneData.pitchDeg, CAngleUnit::deg() });
@@ -241,10 +237,20 @@ namespace BlackSimPlugin
                 // updates
                 com1.setFrequencyActive(CFrequency(m_xplaneData.com1ActiveKhz, CFrequencyUnit::kHz()));
                 com1.setFrequencyStandby(CFrequency(m_xplaneData.com1StandbyKhz, CFrequencyUnit::kHz()));
+                const int v1 = qRound(m_xplaneData.com1Volume);
+                com1.setVolumeReceive(v1);
+                com1.setVolumeTransmit(v1);
+                com1.setReceiveEnabled(m_xplaneData.isCom1Receiving);
+                com1.setTransmitEnabled(m_xplaneData.isCom1Transmitting);
                 const bool changedCom1 = myAircraft.getCom1System() != com1;
 
                 com2.setFrequencyActive(CFrequency(m_xplaneData.com2ActiveKhz, CFrequencyUnit::kHz()));
                 com2.setFrequencyStandby(CFrequency(m_xplaneData.com2StandbyKhz, CFrequencyUnit::kHz()));
+                const int v2 = qRound(m_xplaneData.com1Volume);
+                com2.setVolumeReceive(v2);
+                com2.setVolumeTransmit(v2);
+                com2.setReceiveEnabled(m_xplaneData.isCom2Receiving);
+                com2.setTransmitEnabled(m_xplaneData.isCom2Transmitting);
                 const bool changedCom2 = myAircraft.getCom2System() != com2;
 
                 transponder = CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent));
@@ -268,7 +274,7 @@ namespace BlackSimPlugin
                             requestWeatherGrid(weatherGrid, { this, &CSimulatorXPlane::injectWeatherGrid });
                         }
                     }
-                }
+                } // weather
             }
         }
 
@@ -277,17 +283,9 @@ namespace BlackSimPlugin
             if (isConnected())
             {
                 // own aircraft data
-                m_serviceProxy->getAircraftModelPathAsync(&m_xplaneData.aircraftModelPath); // this is NOT the model string
-                m_serviceProxy->getAircraftIcaoCodeAsync(&m_xplaneData.aircraftIcaoCode);
-                m_serviceProxy->getBeaconLightsOnAsync(&m_xplaneData.beaconLightsOn);
-                m_serviceProxy->getLandingLightsOnAsync(&m_xplaneData.landingLightsOn);
-                m_serviceProxy->getNavLightsOnAsync(&m_xplaneData.navLightsOn);
-                m_serviceProxy->getStrobeLightsOnAsync(&m_xplaneData.strobeLightsOn);
-                m_serviceProxy->getTaxiLightsOnAsync(&m_xplaneData.taxiLightsOn);
-                m_serviceProxy->getFlapsDeployRatioAsync(&m_xplaneData.flapsReployRatio);
-                m_serviceProxy->getGearDeployRatioAsync(&m_xplaneData.gearReployRatio);
-                m_serviceProxy->getEngineN1PercentageAsync(&m_xplaneData.enginesN1Percentage);
-                m_serviceProxy->getSpeedBrakeRatioAsync(&m_xplaneData.speedBrakeRatio);
+                m_serviceProxy->getOwnAircraftModelDataAsync(&m_xplaneData);
+                m_serviceProxy->getOwnAircraftLightsAsync(&m_xplaneData);
+                m_serviceProxy->getOwnAircraftPartsAsync(&m_xplaneData);
 
                 CAircraftEngineList engines;
                 for (int engineNumber = 0; engineNumber < m_xplaneData.enginesN1Percentage.size(); ++engineNumber)
@@ -298,7 +296,7 @@ namespace BlackSimPlugin
                     engines.push_back(engine);
                 }
 
-                CAircraftParts parts { {
+                const CAircraftParts parts { {
                         m_xplaneData.strobeLightsOn, m_xplaneData.landingLightsOn, m_xplaneData.taxiLightsOn,
                         m_xplaneData.beaconLightsOn, m_xplaneData.navLightsOn, false
                     },
@@ -324,9 +322,8 @@ namespace BlackSimPlugin
                     xplaneAircraft.setSimulatedAircraft(simulatedAircraft);
                 }
 
-                int i = 0;
-
                 // remove the invalid ones
+                int i = 0;
                 for (const CCallsign &cs : invalid)
                 {
                     this->triggerRemoveAircraft(cs, ++i * 100);
