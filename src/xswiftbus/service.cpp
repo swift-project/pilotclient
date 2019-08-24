@@ -275,14 +275,14 @@ namespace XSwiftBus
             {
                 queueDBusCall([ = ]()
                 {
-                    double lat = m_latitude.get();
-                    double lon = m_longitude.get();
-                    double alt = m_elevation.get();
-                    double gs = m_groundSpeed.get();
-                    double pitch = m_pitch.get();
-                    double roll = m_roll.get();
-                    double trueHeading = m_heading.get();
-                    double qnh = m_qnhInhg.get();
+                    const double lat = m_latitude.get();
+                    const double lon = m_longitude.get();
+                    const double alt = m_elevation.get();
+                    const double gs = m_groundSpeed.get();
+                    const double pitch = m_pitch.get();
+                    const double roll = m_roll.get();
+                    const double trueHeading = m_heading.get();
+                    const double qnh = m_qnhInhg.get();
                     CDBusMessage reply = CDBusMessage::createReply(sender, serial);
                     reply.beginArgumentWrite();
                     reply.appendArgument(lat);
@@ -293,6 +293,108 @@ namespace XSwiftBus
                     reply.appendArgument(roll);
                     reply.appendArgument(trueHeading);
                     reply.appendArgument(qnh);
+                    sendDBusMessage(reply);
+                });
+            }
+            else if (message.getMethodName() == "getOwnAircraftCom1Data")
+            {
+                queueDBusCall([ = ]()
+                {
+                    const int active  = m_com1Active.get();
+                    const int standby = m_com1Standby.get();
+                    const double volume = m_com1Volume.get();
+                    const bool rec = this->isCom1Receiving();
+                    const bool tx  = this->isCom1Transmitting();
+                    CDBusMessage reply = CDBusMessage::createReply(sender, serial);
+                    reply.beginArgumentWrite();
+                    reply.appendArgument(active);
+                    reply.appendArgument(standby);
+                    reply.appendArgument(volume);
+                    reply.appendArgument(rec);
+                    reply.appendArgument(tx);
+                    sendDBusMessage(reply);
+                });
+            }
+            else if (message.getMethodName() == "getOwnAircraftCom2Data")
+            {
+                queueDBusCall([ = ]()
+                {
+                    const int active  = m_com2Active.get();
+                    const int standby = m_com2Standby.get();
+                    const double volume = m_com2Volume.get();
+                    const bool rec = this->isCom2Receiving();
+                    const bool tx  = this->isCom2Transmitting();
+                    CDBusMessage reply = CDBusMessage::createReply(sender, serial);
+                    reply.beginArgumentWrite();
+                    reply.appendArgument(active);
+                    reply.appendArgument(standby);
+                    reply.appendArgument(volume);
+                    reply.appendArgument(rec);
+                    reply.appendArgument(tx);
+                    sendDBusMessage(reply);
+                });
+            }
+            else if (message.getMethodName() == "getOwnAircraftXpdr")
+            {
+                queueDBusCall([ = ]()
+                {
+                    const int code = m_xpdrCode.get();
+                    const int mode = m_xpdrMode.get();
+                    const bool id  = m_xpdrIdent.get();
+                    CDBusMessage reply = CDBusMessage::createReply(sender, serial);
+                    reply.beginArgumentWrite();
+                    reply.appendArgument(code);
+                    reply.appendArgument(mode);
+                    reply.appendArgument(id);
+                    sendDBusMessage(reply);
+                });
+            }
+            else if (message.getMethodName() == "getOwnAircraftLights")
+            {
+                queueDBusCall([ = ]()
+                {
+                    const bool beaconLightsOn  = m_beaconLightsOn.get();
+                    const bool landingLightsOn = m_landingLightsOn.get();
+                    const bool navLightsOn     = m_navLightsOn.get();
+                    const bool strobeLightsOn  = m_strobeLightsOn.get();
+                    const bool taxiLightsOn    = m_taxiLightsOn.get();
+                    CDBusMessage reply = CDBusMessage::createReply(sender, serial);
+                    reply.beginArgumentWrite();
+                    reply.appendArgument(beaconLightsOn);
+                    reply.appendArgument(landingLightsOn);
+                    reply.appendArgument(navLightsOn);
+                    reply.appendArgument(strobeLightsOn);
+                    reply.appendArgument(taxiLightsOn);
+                    sendDBusMessage(reply);
+                });
+            }
+            else if (message.getMethodName() == "getOwnAircraftParts")
+            {
+                queueDBusCall([ = ]()
+                {
+                    const double flapsReployRatio = m_flapsReployRatio.get();
+                    const double gearReployRatio  = m_gearReployRatio.getAt(0);
+                    const double speedBrakeRatio  = m_speedBrakeRatio.get();
+                    const std::vector<double> enginesN1Percentage = this->getEngineN1Percentage();
+                    CDBusMessage reply = CDBusMessage::createReply(sender, serial);
+                    reply.beginArgumentWrite();
+                    reply.appendArgument(flapsReployRatio);
+                    reply.appendArgument(gearReployRatio);
+                    reply.appendArgument(speedBrakeRatio);
+                    reply.appendArgument(enginesN1Percentage);
+                    sendDBusMessage(reply);
+                });
+            }
+            else if (message.getMethodName() == "getOwnAircraftModelData")
+            {
+                queueDBusCall([ = ]()
+                {
+                    const std::string aircraftModelPath = this->getAircraftModelPath();
+                    const std::string aircraftIcaoCode  = this->getAircraftIcaoCode();
+                    CDBusMessage reply = CDBusMessage::createReply(sender, serial);
+                    reply.beginArgumentWrite();
+                    reply.appendArgument(aircraftModelPath);
+                    reply.appendArgument(aircraftIcaoCode);
                     sendDBusMessage(reply);
                 });
             }
@@ -703,8 +805,8 @@ namespace XSwiftBus
             {
                 queueDBusCall([ = ]()
                 {
-                    std::vector<double> array = getEngineN1Percentage();
-                    sendDBusReply(sender, serial, array);
+                    const std::vector<double> enginesN1Percentage = getEngineN1Percentage();
+                    sendDBusReply(sender, serial, enginesN1Percentage);
                 });
             }
             else if (message.getMethodName() == "getSpeedBrakeRatio")

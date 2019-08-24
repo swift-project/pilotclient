@@ -43,8 +43,9 @@ namespace BlackSimPlugin
             return m_dbusInterface->callDBusRet<QString>(QLatin1String("getVersionNumber"));
         }
 
-        void CXSwiftBusServiceProxy::getOwnAircraftSituationData(XPlaneData *o_xplaneData)
+        void CXSwiftBusServiceProxy::getOwnAircraftSituationDataAsync(XPlaneData *o_xplaneData)
         {
+            if (!o_xplaneData) { return; }
             QPointer<CXSwiftBusServiceProxy> myself(this);
             std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
             {
@@ -64,6 +65,126 @@ namespace BlackSimPlugin
                 watcher->deleteLater();
             };
             m_dbusInterface->callDBusAsync(QLatin1String("getOwnAircraftSituationData"), callback);
+        }
+
+        void CXSwiftBusServiceProxy::getOwnAircraftCom1DataAsync(XPlaneData *o_xplaneData)
+        {
+            if (!o_xplaneData) { return; }
+            QPointer<CXSwiftBusServiceProxy> myself(this);
+            std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
+            {
+                if (!myself) { return; }
+                QDBusPendingReply<int, int, double, bool, bool> reply = *watcher;
+                if (!reply.isError())
+                {
+                    o_xplaneData->com1ActiveKhz = reply.argumentAt<0>();
+                    o_xplaneData->com1StandbyKhz = reply.argumentAt<1>();
+                    o_xplaneData->com1Volume = reply.argumentAt<2>();
+                    o_xplaneData->isCom1Receiving = reply.argumentAt<3>();
+                    o_xplaneData->isCom1Transmitting = reply.argumentAt<4>();
+                }
+                watcher->deleteLater();
+            };
+            m_dbusInterface->callDBusAsync(QLatin1String("getOwnAircraftCom1Data"), callback);
+        }
+
+        void CXSwiftBusServiceProxy::getOwnAircraftCom2DataAsync(XPlaneData *o_xplaneData)
+        {
+            if (!o_xplaneData) { return; }
+            QPointer<CXSwiftBusServiceProxy> myself(this);
+            std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
+            {
+                if (!myself) { return; }
+                QDBusPendingReply<int, int, double, bool, bool> reply = *watcher;
+                if (!reply.isError())
+                {
+                    o_xplaneData->com2ActiveKhz = reply.argumentAt<0>();
+                    o_xplaneData->com2StandbyKhz = reply.argumentAt<1>();
+                    o_xplaneData->com2Volume = reply.argumentAt<2>();
+                    o_xplaneData->isCom2Receiving = reply.argumentAt<3>();
+                    o_xplaneData->isCom2Transmitting = reply.argumentAt<4>();
+                }
+                watcher->deleteLater();
+            };
+            m_dbusInterface->callDBusAsync(QLatin1String("getOwnAircraftCom2Data"), callback);
+        }
+
+        void CXSwiftBusServiceProxy::getOwnAircraftXpdrAsync(XPlaneData *o_xplaneData)
+        {
+            if (!o_xplaneData) { return; }
+            QPointer<CXSwiftBusServiceProxy> myself(this);
+            std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
+            {
+                if (!myself) { return; }
+                QDBusPendingReply<int, int, bool> reply = *watcher;
+                if (!reply.isError())
+                {
+                    o_xplaneData->xpdrCode  = reply.argumentAt<0>();
+                    o_xplaneData->xpdrMode  = reply.argumentAt<1>();
+                    o_xplaneData->xpdrIdent = reply.argumentAt<2>();
+                }
+                watcher->deleteLater();
+            };
+            m_dbusInterface->callDBusAsync(QLatin1String("getOwnAircraftXpdr"), callback);
+        }
+
+        void CXSwiftBusServiceProxy::getOwnAircraftLightsAsync(XPlaneData *o_xplaneData)
+        {
+            if (!o_xplaneData) { return; }
+            QPointer<CXSwiftBusServiceProxy> myself(this);
+            std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
+            {
+                if (!myself) { return; }
+                QDBusPendingReply<bool, bool, bool, bool, bool> reply = *watcher;
+                if (!reply.isError())
+                {
+                    o_xplaneData->beaconLightsOn   = reply.argumentAt<0>();
+                    o_xplaneData->landingLightsOn  = reply.argumentAt<1>();
+                    o_xplaneData->navLightsOn      = reply.argumentAt<2>();
+                    o_xplaneData->strobeLightsOn   = reply.argumentAt<3>();
+                    o_xplaneData->taxiLightsOn     = reply.argumentAt<4>();
+                }
+                watcher->deleteLater();
+            };
+            m_dbusInterface->callDBusAsync(QLatin1String("getOwnAircraftLights"), callback);
+        }
+
+        void CXSwiftBusServiceProxy::getOwnAircraftPartsAsync(XPlaneData *o_xplaneData)
+        {
+            if (!o_xplaneData) { return; }
+            QPointer<CXSwiftBusServiceProxy> myself(this);
+            std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
+            {
+                if (!myself) { return; }
+                QDBusPendingReply<double, double, double, QList<double> > reply = *watcher;
+                if (!reply.isError())
+                {
+                    o_xplaneData->flapsReployRatio = reply.argumentAt<0>();
+                    o_xplaneData->gearReployRatio  = reply.argumentAt<1>();
+                    o_xplaneData->speedBrakeRatio  = reply.argumentAt<2>();
+                    o_xplaneData->enginesN1Percentage = reply.argumentAt<3>();
+                }
+                watcher->deleteLater();
+            };
+            m_dbusInterface->callDBusAsync(QLatin1String("getOwnAircraftParts"), callback);
+        }
+
+        void CXSwiftBusServiceProxy::getOwnAircraftModelDataAsync(XPlaneData *o_xplaneData)
+        {
+            if (!o_xplaneData) { return; }
+            QPointer<CXSwiftBusServiceProxy> myself(this);
+            std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
+            {
+                if (!myself) { return; }
+                QDBusPendingReply<QString, QString> reply = *watcher;
+                if (!reply.isError())
+                {
+                    o_xplaneData->aircraftModelPath = reply.argumentAt<0>(); // this is NOT the model string
+                    o_xplaneData->aircraftIcaoCode  = reply.argumentAt<1>();
+                }
+                watcher->deleteLater();
+            };
+            m_dbusInterface->callDBusAsync(QLatin1String("getOwnAircraftModelData"), callback);
         }
 
         void CXSwiftBusServiceProxy::addTextMessage(const QString &text, double red, double green, double blue)
