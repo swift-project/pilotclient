@@ -281,6 +281,7 @@
     <addaction name="menu_MovingMap"/>
     <addaction name="menu_AutoPublish"/>
     <addaction name="menu_ToggleIncognito"/>
+    <addaction name="menu_ModelBrowser"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Window"/>
@@ -514,6 +515,11 @@
   <action name="menu_ToggleIncognito">
    <property name="text">
     <string>Toggle incognito mode</string>
+   </property>
+  </action>
+  <action name="menu_ModelBrowser">
+   <property name="text">
+    <string>Model brower</string>
    </property>
   </action>
  </widget>

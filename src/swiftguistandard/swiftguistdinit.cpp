@@ -225,6 +225,7 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->menu_AutoPublish,       &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
     connect(ui->menu_MovingMap,         &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
     connect(ui->menu_ToggleIncognito,   &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
+    connect(ui->menu_ModelBrowser,      &QAction::triggered, this, &SwiftGuiStd::startModelBrowser, Qt::QueuedConnection);
 
     connect(m_navigator.data(), &CNavigatorDialog::navigatorClosed, this, &SwiftGuiStd::onNavigatorClosed, Qt::QueuedConnection);
 

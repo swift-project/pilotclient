@@ -13,6 +13,7 @@
 #include "blackgui/components/dbloaddatadialog.h"
 #include "blackgui/components/autopublishdialog.h"
 #include "blackgui/components/logindialog.h"
+#include "blackgui/components/modelbrowserdialog.h"
 #include "blackgui/components/settingscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
@@ -620,6 +621,16 @@ bool SwiftGuiStd::triggerAutoPublishDialog()
     }
 
     this->autoPublishDialog(); // updates m_lastAutoPublish
+    return true;
+}
+
+bool SwiftGuiStd::startModelBrowser()
+{
+    if (!m_modelBrower)
+    {
+        m_modelBrower.reset(new CModelBrowserDialog(this));
+    }
+    m_modelBrower->exec();
     return true;
 }
 
