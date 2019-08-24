@@ -158,12 +158,12 @@ namespace BlackGui
             ui->led_ComPanelCom2->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 connected to station", "COM2 disconnected", 14);
 
             ui->led_ComPanelCom1R->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 receive (sim)", "COM1 not receiving", 14);
-            ui->led_ComPanelCom1T->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 trasmit (sim)", "COM1 not transmitting", 14);
+            ui->led_ComPanelCom1T->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 transmit (sim)", "COM1 not transmitting", 14);
             ui->led_ComPanelCom1R->setTriStateValues(CLedWidget::Blue, "receive not synced");
             ui->led_ComPanelCom1T->setTriStateValues(CLedWidget::Blue, "transmit not synced");
 
             ui->led_ComPanelCom2R->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 receive (sim)", "COM2 not receiving", 14);
-            ui->led_ComPanelCom2T->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 trasmit (sim)", "COM2 not transmitting", 14);
+            ui->led_ComPanelCom2T->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 transmit (sim)", "COM2 not transmitting", 14);
             ui->led_ComPanelCom2R->setTriStateValues(CLedWidget::Blue, "receive not synced");
             ui->led_ComPanelCom2T->setTriStateValues(CLedWidget::Blue, "transmit not synced");
         }
