@@ -149,11 +149,41 @@ namespace XSwiftBus
         //! Get the current COM1 standby frequency in kHz
         int getCom1StandbyKhz() const { return m_com1Standby.get(); }
 
+        //! Get the COM1 power on/off
+        bool getCom1Power() const { return m_com1Power.get(); }
+
+        //! Get the COM1 listening yes/no
+        bool getCom1Listening() const { return m_com1Listening.get(); }
+
+        //! Get the COM1 volume 0..1
+        float getCom1Volume() const { return m_com1Volume.get(); }
+
+        //! Is COM1 receiving?
+        bool isCom1Receiving() const { return this->getCom1Power() && this->getCom1Listening(); }
+
+        //! Is COM1 transmitting?
+        bool isCom1Transmitting() const { return this->getCom1Power(); }
+
         //! Get the current COM2 active frequency in kHz
         int getCom2ActiveKhz() const { return m_com2Active.get(); }
 
         //! Get the current COM2 standby frequency in kHz
         int getCom2StandbyKhz() const { return m_com2Standby.get(); }
+
+        //! Get the COM2 power on/off
+        bool getCom2Power() const { return m_com2Power.get(); }
+
+        //! Get the COM2 listening yes/no
+        bool getCom2Listening() const { return m_com2Listening.get(); }
+
+        //! Get the COM2 volume 0..1
+        float getCom2Volume() const { return m_com2Volume.get(); }
+
+        //! Is COM2 receiving?
+        bool isCom2Receiving() const { return this->getCom2Power() && this->getCom2Listening(); }
+
+        //! Is COM2 transmitting?
+        bool isCom2Transmitting() const { return this->getCom2Power(); }
 
         //! Get the current transponder code in decimal
         int getTransponderCode() const { return m_xpdrCode.get(); }
@@ -267,6 +297,7 @@ namespace XSwiftBus
         void readAirportsDatabase();
         std::vector<CNavDataReference> findClosestAirports(int number, double latitude, double longitude);
 
+        //! Redraw message box after reading from the settings
         void updateMessageBoxFromSettings();
 
         StringDataRef<xplane::data::sim::aircraft::view::acf_livery_path> m_liveryPath;
@@ -288,8 +319,14 @@ namespace XSwiftBus
         DataRef<xplane::data::sim::flightmodel::failures::onground_all> m_onGroundAll;
         DataRef<xplane::data::sim::cockpit2::radios::actuators::com1_frequency_hz_833> m_com1Active;
         DataRef<xplane::data::sim::cockpit2::radios::actuators::com1_standby_frequency_hz_833> m_com1Standby;
+        DataRef<xplane::data::sim::cockpit2::radios::actuators::com1_power> m_com1Power;
+        DataRef<xplane::data::sim::cockpit2::radios::actuators::audio_volume_com1> m_com1Volume; // 0..1
+        DataRef<xplane::data::sim::cockpit2::radios::actuators::audio_selection_com1> m_com1Listening;
         DataRef<xplane::data::sim::cockpit2::radios::actuators::com2_frequency_hz_833> m_com2Active;
         DataRef<xplane::data::sim::cockpit2::radios::actuators::com2_standby_frequency_hz_833> m_com2Standby;
+        DataRef<xplane::data::sim::cockpit2::radios::actuators::com2_power> m_com2Power;
+        DataRef<xplane::data::sim::cockpit2::radios::actuators::audio_volume_com2> m_com2Volume; // 0..1
+        DataRef<xplane::data::sim::cockpit2::radios::actuators::audio_selection_com2> m_com2Listening;
         DataRef<xplane::data::sim::cockpit::radios::transponder_code> m_xpdrCode;
         DataRef<xplane::data::sim::cockpit::radios::transponder_mode> m_xpdrMode;
         DataRef<xplane::data::sim::cockpit::radios::transponder_id> m_xpdrIdent;

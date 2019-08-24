@@ -314,9 +314,40 @@ namespace BlackSimPlugin
         {
             return m_dbusInterface->callDBusRet<int>(QLatin1String("getCom1StandbyKhz"));
         }
+
         void CXSwiftBusServiceProxy::getCom1StandbyKhzAsync(int *o_com1Standby)
         {
             m_dbusInterface->callDBusAsync(QLatin1String("getCom1StandbyKhz"), setterCallback(o_com1Standby));
+        }
+
+        bool CXSwiftBusServiceProxy::isCom1Receiving() const
+        {
+            return m_dbusInterface->callDBusRet<bool>(QLatin1String("isCom1Receiving"));
+        }
+
+        void CXSwiftBusServiceProxy::isCom1ReceivingAsync(bool *o_com1Rec)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("isCom1Receiving"), setterCallback(o_com1Rec));
+        }
+
+        bool CXSwiftBusServiceProxy::isCom1Transmitting() const
+        {
+            return m_dbusInterface->callDBusRet<bool>(QLatin1String("isCom1Transmitting"));
+        }
+
+        void CXSwiftBusServiceProxy::isCom1TransmittingAsync(bool *o_com1Tx)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("isCom1Transmitting"), setterCallback(o_com1Tx));
+        }
+
+        double CXSwiftBusServiceProxy::getCom1Volume() const
+        {
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getCom1Volume"));
+        }
+
+        void CXSwiftBusServiceProxy::getCom1VolumeAsync(double *o_com1Volume)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getCom1Volume"), setterCallback(o_com1Volume));
         }
 
         int CXSwiftBusServiceProxy::getCom2ActiveKhz() const
@@ -335,6 +366,36 @@ namespace BlackSimPlugin
         void CXSwiftBusServiceProxy::getCom2StandbyKhzAsync(int *o_com2Standby)
         {
             m_dbusInterface->callDBusAsync(QLatin1String("getCom2StandbyKhz"), setterCallback(o_com2Standby));
+        }
+
+        bool CXSwiftBusServiceProxy::isCom2Receiving() const
+        {
+            return m_dbusInterface->callDBusRet<bool>(QLatin1String("isCom2Receiving"));
+        }
+
+        void CXSwiftBusServiceProxy::isCom2ReceivingAsync(bool *o_com2Rec)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("isCom2Receiving"), setterCallback(o_com2Rec));
+        }
+
+        bool CXSwiftBusServiceProxy::isCom2Transmitting() const
+        {
+            return m_dbusInterface->callDBusRet<bool>(QLatin1String("isCom2Transmitting"));
+        }
+
+        void CXSwiftBusServiceProxy::isCom2TransmittingAsync(bool *o_com2Tx)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("isCom2Transmitting"), setterCallback(o_com2Tx));
+        }
+
+        double CXSwiftBusServiceProxy::getCom2Volume() const
+        {
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getCom2Volume"));
+        }
+
+        void CXSwiftBusServiceProxy::getCom2VolumeAsync(double *o_com2Volume)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getCom2Volume"), setterCallback(o_com2Volume));
         }
 
         int CXSwiftBusServiceProxy::getTransponderCode() const
