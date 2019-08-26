@@ -8,7 +8,7 @@ gcc:QMAKE_CXXFLAGS_USE_PRECOMPILE = -Winvalid-pch $$QMAKE_CXXFLAGS_USE_PRECOMPIL
 
 # elevated warnings
 swiftConfig(allowNoisyWarnings) {
-    clang {
+    llvm {
         QMAKE_CXXFLAGS_WARN_ON -= -Wno-self-assign-overloaded
         QMAKE_CXXFLAGS_WARN_ON *= -Weverything --system-header-prefix=$$[QT_INSTALL_HEADERS]
         QMAKE_CXXFLAGS_WARN_ON += -Wno-system-headers -Wno-c++98-compat-pedantic -Wno-class-varargs -Wno-covered-switch-default
