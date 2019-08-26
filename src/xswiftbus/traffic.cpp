@@ -401,10 +401,10 @@ namespace XSwiftBus
         for (size_t i = 0; i < callsigns.size(); i++)
         {
             auto planeIt = m_planesByCallsign.find(callsigns.at(i));
-            if (planeIt == m_planesByCallsign.end()) { return; }
+            if (planeIt == m_planesByCallsign.end()) { continue; }
 
             Plane *plane = planeIt->second;
-            if (!plane) { return; }
+            if (!plane) { continue; }
             plane->position.lat = latitudesDeg.at(i);
             plane->position.lon = longitudesDeg.at(i);
             plane->position.elevation = altitudesFt.at(i);
@@ -427,10 +427,10 @@ namespace XSwiftBus
         for (size_t i = 0; i < callsigns.size(); i++)
         {
             auto planeIt = m_planesByCallsign.find(callsigns.at(i));
-            if (planeIt == m_planesByCallsign.end()) { return; }
+            if (planeIt == m_planesByCallsign.end()) { continue; }
 
             Plane *plane = planeIt->second;
-            if (!plane) { return; }
+            if (!plane) { continue; }
 
             plane->hasSurfaces = true;
             plane->targetGearPosition = static_cast<float>(gears.at(i));
@@ -466,10 +466,10 @@ namespace XSwiftBus
         for (size_t i = 0; i < callsigns.size(); i++)
         {
             auto planeIt = m_planesByCallsign.find(callsigns.at(i));
-            if (planeIt == m_planesByCallsign.end()) { return; }
+            if (planeIt == m_planesByCallsign.end()) { continue; }
 
             Plane *plane = planeIt->second;
-            if (!plane) { return; }
+            if (!plane) { continue; }
 
             plane->hasXpdr = true;
             plane->xpdr.code = codes.at(i);
