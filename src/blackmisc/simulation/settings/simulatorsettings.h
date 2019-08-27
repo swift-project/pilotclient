@@ -19,8 +19,8 @@
 #include "blackmisc/settingscache.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/directoryutils.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QStringList>
 #include <QObject>

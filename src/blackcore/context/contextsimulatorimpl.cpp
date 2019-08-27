@@ -156,7 +156,7 @@ namespace BlackCore
         bool CContextSimulator::setSimulatorSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator)
         {
             if (!simulator.isSingleSimulator()) { return false; }
-            CSimulatorSettings simSettings = m_multiSimulatorSettings.getSettings(simulator);
+            const CSimulatorSettings simSettings = m_multiSimulatorSettings.getSettings(simulator);
             if (simSettings == settings) { return false; }
             const CStatusMessage msg = m_multiSimulatorSettings.setSettings(settings, simulator);
             CLogMessage::preformatted(msg);
@@ -637,15 +637,15 @@ namespace BlackCore
             // in the first step we already tried to find accurate ICAO codes etc.
             // coming from CAirspaceMonitor::sendReadyForModelMatching
             MatchingLog whatToLog = m_logMatchingMessages;
-            const CSimulatorSettings simSettings = this->getSimulatorSettings();
             CStatusMessageList matchingMessages;
             CStatusMessageList *pMatchingMessages = m_logMatchingMessages > 0 ? &matchingMessages : nullptr;
             CAircraftModel aircraftModel = m_aircraftMatcher.getClosestMatch(remoteAircraft, whatToLog, pMatchingMessages, true);
             Q_ASSERT_X(remoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "Mismatching callsigns");
 
             // decide CG
-            CLength cgModel = aircraftModel.getCG();
-            CLength cgSim   = m_simulatorPlugin.second->getSimulatorCGPerModelString(aircraftModel.getModelString());
+            const CLength cgModel = aircraftModel.getCG();
+            const CLength cgSim   = m_simulatorPlugin.second->getSimulatorCGPerModelString(aircraftModel.getModelString());
+            const CSimulatorSettings simSettings = this->getSimulatorSettings();
             switch (simSettings.getCGSource())
             {
             case CSimulatorSettings::CGFromSimulatorOnly:
@@ -657,8 +657,9 @@ namespace BlackCore
             case CSimulatorSettings::CGFromDBFirst:
                 if (cgModel.isNull()) { aircraftModel.setCG(cgSim); }
                 break;
-            case CSimulatorSettings::CGFromDBOnly:
-            default: break;
+            // case CSimulatorSettings::CGFromDBOnly:
+            default:
+                break; // leave CG from model alone
             }
 
             // model in provider
