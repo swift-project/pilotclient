@@ -38,9 +38,9 @@ namespace BlackMisc
                 switch (source)
                 {
                 case CGFromSimulatorFirst: return sf;
-                case CGFromDBFirst: return dbf;
-                case CGFromSimulatorOnly: return so;
-                case CGFromDBOnly: return dbo;
+                case CGFromDBFirst:        return dbf;
+                case CGFromSimulatorOnly:  return so;
+                case CGFromDBOnly:         return dbo;
                 default: break;
                 }
                 static const QString u("unknown");
