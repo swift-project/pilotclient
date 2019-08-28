@@ -218,6 +218,7 @@ namespace BlackCore
 
             this->logNetworkReplyReceived(nwReplyPtr);
             QStringList illegalEquipmentCodes;
+            const QString urlString = nwReply->url().toString();
             if (nwReply->error() == QNetworkReply::NoError)
             {
                 const QString dataFileData = nwReply->readAll();
@@ -226,7 +227,7 @@ namespace BlackCore
                 if (dataFileData.isEmpty()) { return; }
                 if (!this->didContentChange(dataFileData)) // Quick check by hash
                 {
-                    CLogMessage(this).info(u"VATSIM file has same content, skipped");
+                    CLogMessage(this).info(u"VATSIM file '%1' has same content, skipped") << urlString;
                     return;
                 }
                 const QList<QStringRef> lines = splitLinesRefs(dataFileData);
@@ -443,7 +444,7 @@ namespace BlackCore
             else
             {
                 // network error
-                CLogMessage(this).warning(u"Reading VATSIM data file failed '%1' '%2'") << nwReply->errorString() << nwReply->url().toString();
+                CLogMessage(this).warning(u"Reading VATSIM data file failed '%1' '%2'") << nwReply->errorString() << urlString;
                 nwReply->abort();
                 emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFailed, 0);
             }
