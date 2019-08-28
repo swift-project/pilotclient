@@ -316,7 +316,7 @@ namespace BlackMisc
             Aviation::CAircraftSituationList remoteAircraftSituationsAndChange(const CInterpolationAndRenderingSetupPerCallsign &setup);
 
             //! Center of gravity, fetched from provider in case needed
-            PhysicalQuantities::CLength getAndFetchModelCG();
+            PhysicalQuantities::CLength getAndFetchModelCG(const PhysicalQuantities::CLength &dbCG);
 
             //! Deferred init
             void deferredInit();

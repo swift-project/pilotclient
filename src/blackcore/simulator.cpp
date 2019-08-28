@@ -864,7 +864,11 @@ namespace BlackCore
         const CLength cgOvr = this->overriddenCGorDefault(simulatorCG, modelString);
         if (!cgOvr.isNull() && !this->hasSameSimulatorCG(cgOvr, callsign))
         {
-            this->insertCG(cgOvr, modelString, callsign); // per model string and CG
+            const CSimulatorSettings::CGSource source = this->getSimulatorSettings().getSimulatorSettings().getCGSource();
+            if (source != CSimulatorSettings::CGFromDBOnly)
+            {
+                this->insertCG(cgOvr, modelString, callsign); // per model string and CG
+            }
 
             // here we know we have a valid model and CG did change
             const CSimulatorInfo sim = this->getSimulatorInfo();
