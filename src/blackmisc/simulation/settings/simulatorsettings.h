@@ -156,6 +156,7 @@ namespace BlackMisc
                     BLACK_METAMEMBER(modelDirectories),
                     BLACK_METAMEMBER(excludeDirectoryPatterns),
                     BLACK_METAMEMBER(comIntegration),
+                    BLACK_METAMEMBER(cgSource),
                     BLACK_METAMEMBER(recordGnd),
                     BLACK_METAMEMBER(recordedGndRadius)
                 );
