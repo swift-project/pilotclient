@@ -56,10 +56,22 @@ namespace BlackMisc
         }
 
         template<typename Derived>
-        CLength CInterpolator<Derived>::getAndFetchModelCG()
+        CLength CInterpolator<Derived>::getAndFetchModelCG(const CLength &dbCG)
         {
-            const CLength cgDB = this->getRemoteAircraftProvider() ? this->getRemoteAircraftProvider()->getCGFromDB(m_callsign) : CLength::null();
-            const CLength cg = this->getSimulatorOrDbCG(m_callsign, cgDB); // simulation environment
+            CLength cgDb = dbCG;
+            if (cgDb.isNull())
+            {
+                // no input DB value, try to find one
+                cgDb = this->getRemoteAircraftProvider() ? this->getRemoteAircraftProvider()->getCGFromDB(m_callsign) : CLength::null();
+            }
+            else if (this->getRemoteAircraftProvider())
+            {
+                // if a value has been passed, remember it
+                if (m_model.hasModelString()) { this->getRemoteAircraftProvider()->rememberCGFromDB(cgDb, m_model.getModelString()); }
+                if (!m_model.getCallsign().isEmpty()) { this->getRemoteAircraftProvider()->rememberCGFromDB(cgDb, m_model.getCallsign()); }
+            }
+
+            const CLength cg = this->getSimulatorOrDbCG(m_callsign, cgDb); // simulation environment
             m_model.setCG(cg);
             m_model.setCallsign(m_callsign);
             return cg;
@@ -511,7 +523,7 @@ namespace BlackMisc
 
             if (!m_model.hasCG() || slowUpdateStep)
             {
-                this->getAndFetchModelCG(); // update CG
+                this->getAndFetchModelCG(CLength::null()); // update CG
             }
 
             bool success = false;
@@ -584,7 +596,7 @@ namespace BlackMisc
                     m_model = model;
                 }
             }
-            this->getAndFetchModelCG();
+            this->getAndFetchModelCG(model.getCG());
         }
 
         template<typename Derived>
