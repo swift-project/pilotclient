@@ -29,17 +29,18 @@ namespace BlackMisc
         return IDatastoreObjectList::findByKey(isoCode);
     }
 
-    CCountry CCountryList::findBestMatchByCountryName(const QString &countryName) const
+    CCountry CCountryList::findBestMatchByCountryName(const QString &candidate) const
     {
-        if (countryName.isEmpty()) { return CCountry(); }
+        if (candidate.isEmpty()) { return CCountry(); }
 
         thread_local const QRegularExpression reg("^[a-z]+", QRegularExpression::CaseInsensitiveOption);
-        const QRegularExpressionMatch match = reg.match(countryName);
-        const QString cn(match.hasMatch() ? match.captured(0) : countryName);
+        const QRegularExpressionMatch match = reg.match(candidate);
+        const QString cn(match.hasMatch() ? match.captured(0) : candidate);
         const CCountryList countries = this->findBy([&](const CCountry & country)
         {
             return country.matchesCountryName(cn);
         });
+
         if (countries.isEmpty()) { return this->findFirstByAlias(cn); }
         if (countries.size() < 2) { return countries.frontOrDefault(); }
 
