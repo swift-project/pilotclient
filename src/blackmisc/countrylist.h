@@ -47,7 +47,7 @@ namespace BlackMisc
         CCountry findByIsoCode(const QString &isoCode) const;
 
         //! Find "best match" by country
-        CCountry findBestMatchByCountryName(const QString &countryName) const;
+        CCountry findBestMatchByCountryName(const QString &candidate) const;
 
         //! Find first by alias
         CCountry findFirstByAlias(const QString &alias) const;

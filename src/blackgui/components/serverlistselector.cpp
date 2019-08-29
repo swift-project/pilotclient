@@ -95,7 +95,7 @@ namespace BlackGui
                     const CCountry country(this->findCountry(server));
                     if (country.getName().isEmpty())
                     {
-                        this->addItem(d);
+                        this->addItem(CIcons::empty16(), d);
                     }
                     else
                     {
@@ -135,7 +135,21 @@ namespace BlackGui
         {
             if (!CServerListSelector::knowsAllCountries()) { return CCountry(); }
             static const CCountryList countries(sGui->getWebDataServices()->getCountries());
-            return countries.findBestMatchByCountryName(server.getName());
+            const CCountry ctryByName = countries.findBestMatchByCountryName(server.getName());
+            if (ctryByName.isValid()) { return ctryByName; }
+
+            // own approach, see if description contains a valid countr name
+            for (const CCountry &testCtry : countries)
+            {
+                if (testCtry.getName().isEmpty()) { continue; }
+                if (server.getDescription().contains(testCtry.getName(), Qt::CaseInsensitive))
+                {
+                    return testCtry;
+                }
+            }
+
+            const CCountry ctryByDescription = countries.findBestMatchByCountryName(server.getDescription());
+            return ctryByDescription;
         }
     } // ns
 } // ns
