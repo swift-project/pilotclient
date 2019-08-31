@@ -14,6 +14,7 @@
 #include "logmessage.h"
 #include "comparefunctions.h"
 #include "stringutils.h"
+#include "verify.h"
 
 #include <QMetaEnum>
 #include <QStringBuilder>
@@ -47,10 +48,10 @@ namespace BlackMisc
                 if (is09(*it))
                 {
                     int n = it->unicode() - u'0';
-                    Q_ASSERT(n >= 0 && n <= 9);
+                    BLACK_VERIFY(n >= 0 && n <= 9);
                     if (++it != format.end() && is09(*it)) { n = n * 10 + it->unicode() - u'0'; ++it; }
-                    Q_ASSERT(n >= 0 && n <= 99);
-                    if (n <= args.size()) { temp += args[n - 1]; unusedArgs &= ~(1ULL << (n - 1)); }
+                    BLACK_VERIFY(n >= 0 && n <= 99);
+                    if (n > 0 && n <= args.size()) { temp += args[n - 1]; unusedArgs &= ~(1ULL << (n - 1)); }
                     else { temp += u'%' % QString::number(n); }
                 }
                 else { temp += u'%'; }
