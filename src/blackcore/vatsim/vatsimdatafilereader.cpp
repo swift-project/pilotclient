@@ -433,7 +433,7 @@ namespace BlackCore
                 if (!illegalEquipmentCodes.isEmpty())
                 {
                     CVatsimDataFileReader::logInconsistentData(
-                        CStatusMessage(this, CStatusMessage::SeverityInfo, u"Illegal / ignored equipment code(s) in VATSIM data file: " % illegalEquipmentCodes.join(", "))
+                        CStatusMessage(this, CStatusMessage::SeverityInfo, u"Illegal / ignored equipment code(s) in VATSIM data file: %1") << illegalEquipmentCodes.join(", ")
                     );
                 }
 
