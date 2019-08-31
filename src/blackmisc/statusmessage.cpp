@@ -50,7 +50,7 @@ namespace BlackMisc
                     int n = it->unicode() - u'0';
                     BLACK_VERIFY(n >= 0 && n <= 9);
                     if (++it != format.end() && is09(*it)) { n = n * 10 + it->unicode() - u'0'; ++it; }
-                    BLACK_VERIFY(n >= 0 && n <= 99);
+                    BLACK_VERIFY(n > 0 && n <= 99);
                     if (n > 0 && n <= args.size()) { temp += args[n - 1]; unusedArgs &= ~(1ULL << (n - 1)); }
                     else { temp += u'%' % QString::number(n); }
                 }
