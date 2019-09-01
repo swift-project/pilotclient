@@ -17,10 +17,6 @@
 
 #include <memory>
 
-#if !defined(Q_CC_MINGW)
-#define BLACK_USE_CRASHPAD
-#endif
-
 namespace crashpad
 {
     class CrashpadClient;
