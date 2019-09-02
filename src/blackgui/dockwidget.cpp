@@ -267,6 +267,15 @@ namespace BlackGui
         }
 
         if (shift && floating) { this->resetPosition(); }
+        if (floating)
+        {
+            // check where we are, otherwise reset if NOT appropriate
+            const QPoint p = this->rect().topLeft();
+            if (p.x() < 1 || p.y() < 1)
+            {
+                this->resetPosition();
+            }
+        }
     }
 
     void CDockWidget::toggleVisibility()
@@ -685,7 +694,8 @@ namespace BlackGui
         if (!sGui) { return; }
 
         // pos can be null during init
-        QPoint pos = CGuiUtility::mainWidgetGlobalPosition();
+        QWidget *mw = CGuiUtility::mainApplicationWidget();
+        QPoint pos = mw && mw->isVisible() ? CGuiUtility::mainWidgetGlobalPosition() : QPoint();
         if (pos.isNull())
         {
             pos = CGuiApplication::currentScreen()->geometry().center() - this->rect().center();

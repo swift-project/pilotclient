@@ -575,7 +575,7 @@ namespace BlackGui
             if (init)
             {
                 // float
-                QPoint offset(i * 25, i * 20);
+                const QPoint offset(i * 10, i * 10);
                 // after->setVisible(false);
                 // after->setFloating(true);
                 after->setOffsetWhenFloating(offset);

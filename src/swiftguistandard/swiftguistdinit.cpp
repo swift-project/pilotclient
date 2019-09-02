@@ -111,7 +111,7 @@ void SwiftGuiStd::init()
 
     // navigator
     m_navigator->addAction(this->getToggleWindowVisibilityAction(m_navigator.data()));
-    m_navigator->addActions(ui->comp_MainInfoArea->getInfoAreaToggleFloatingActions(m_navigator.data()));
+    m_navigator->addActions(ui->comp_MainInfoArea->getInfoAreaToggleFloatingActions(m_navigator.data())); // here we add the actions for the main windows
     m_navigator->addAction(this->getWindowNormalAction(m_navigator.data()));
     m_navigator->addAction(this->getWindowMinimizeAction(m_navigator.data()));
     m_navigator->addAction(this->getToggleStayOnTopAction(m_navigator.data()));
