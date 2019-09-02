@@ -33,7 +33,7 @@ namespace BlackGui
             explicit CAirportListModel(QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CAirportListModel() {}
+            virtual ~CAirportListModel() override {}
         };
     }
 }

@@ -40,7 +40,7 @@ namespace BlackGui
             explicit CLiveryListModel(QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CLiveryListModel() {}
+            virtual ~CLiveryListModel() override {}
         };
     } // ns
 } // ns

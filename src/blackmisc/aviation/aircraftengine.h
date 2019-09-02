@@ -11,9 +11,9 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTENGINES_H
 #define BLACKMISC_AVIATION_AIRCRAFTENGINES_H
 
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/valueobject.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QMetaType>
 #include <QString>
