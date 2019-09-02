@@ -107,8 +107,8 @@ namespace BlackGui
 
             Q_UNUSED(sort);
             ModelClass *model = this->derivedModel();
-            auto sortColumn = model->getSortColumn();
-            auto sortOrder = model->getSortOrder();
+            const auto sortColumn = model->getSortColumn();
+            const auto sortOrder  = model->getSortOrder();
             this->showLoadIndicator(container.size());
             CWorker *worker = CWorker::fromTask(this, "ViewSort", [model, container, sortColumn, sortOrder]()
             {
@@ -300,7 +300,7 @@ namespace BlackGui
             if (!hasSelection()) { return 0; }
             int c = 0;
 
-            int lastUpdatedRow = -1;
+            int lastUpdatedRow  = -1;
             int firstUpdatedRow = -1;
             const CPropertyIndexList propertyIndexes(vm.indexes());
             const QModelIndexList indexes = this->selectedRows();
@@ -501,6 +501,18 @@ namespace BlackGui
         void CViewBase<T>::sortByPropertyIndex(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
         {
             m_model->sortByPropertyIndex(propertyIndex, order);
+        }
+
+        template<class T>
+        void CViewBase<T>::sort()
+        {
+            m_model->sort();
+        }
+
+        template<class T>
+        void CViewBase<T>::resort()
+        {
+            m_model->resort();
         }
 
         template <class T>

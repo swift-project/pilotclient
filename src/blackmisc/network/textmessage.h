@@ -180,6 +180,9 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
+            //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
+            int comparePropertyByIndex(const CPropertyIndex &index, const CTextMessage &compareValue) const;
+
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 

@@ -277,7 +277,7 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexSenderCallsign: return m_senderCallsign.propertyByIndex(index.copyFrontRemoved());
+            case IndexSenderCallsign:    return m_senderCallsign.propertyByIndex(index.copyFrontRemoved());
             case IndexRecipientCallsign: return m_recipientCallsign.propertyByIndex(index.copyFrontRemoved());
             case IndexRecipientCallsignOrFrequency: return CVariant::fromValue(this->getRecipientCallsignOrFrequency());
             case IndexMessage: return CVariant::fromValue(m_message);
@@ -293,11 +293,28 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexSenderCallsign: m_senderCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexSenderCallsign:    m_senderCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexRecipientCallsign: m_recipientCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexMessage: m_message = variant.value<QString>(); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
+        }
+
+        int CTextMessage::comparePropertyByIndex(const CPropertyIndex &index, const CTextMessage &compareValue) const
+        {
+            if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexSenderCallsign:    return m_senderCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getSenderCallsign());
+            case IndexRecipientCallsign: return m_recipientCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRecipientCallsign());
+            case IndexRecipientCallsignOrFrequency:
+                if (this->isRadioMessage()) { return this->getFrequency().compare(compareValue.getFrequency()); }
+                return m_recipientCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRecipientCallsign());
+            default: return CValueObject::comparePropertyByIndex(index, *this);
+            }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison");
+            return 0;
         }
     } // namespace
 } // namespace

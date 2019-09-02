@@ -11,8 +11,8 @@
 #ifndef BLACKGUI_MODELS_TEXTMESSAGELISTMODEL_H
 #define BLACKGUI_MODELS_TEXTMESSAGELISTMODEL_H
 
+#include "blackgui/models/listmodeltimestampobjects.h"
 #include "blackgui/blackguiexport.h"
-#include "blackgui/models/listmodelbase.h"
 #include "blackmisc/network/textmessagelist.h"
 
 class QObject;
@@ -23,7 +23,8 @@ namespace BlackGui
     namespace Models
     {
         //! Text message list model
-        class BLACKGUI_EXPORT CTextMessageListModel : public CListModelBase<BlackMisc::Network::CTextMessageList>
+        class BLACKGUI_EXPORT CTextMessageListModel :
+            public CListModelTimestampObjects<BlackMisc::Network::CTextMessageList, true>
         {
             Q_OBJECT
 
@@ -40,7 +41,7 @@ namespace BlackGui
             explicit CTextMessageListModel(TextMessageMode stationMode, QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CTextMessageListModel() {}
+            virtual ~CTextMessageListModel() override {}
 
             //! Set mode
             void setTextMessageMode(TextMessageMode mode);
@@ -56,4 +57,5 @@ namespace BlackGui
         };
     } // ns
 } // ns
+
 #endif // guard

@@ -107,6 +107,10 @@ namespace BlackGui
             //! Sort by given sort order \sa getSortColumn() \sa getSortOrder()
             void sort();
 
+            //! Sort by given sort order \sa getSortColumn() \sa getSortOrder()
+            //! \remark always sorts, even if columns did no change
+            void resort();
+
             //! Truncate to given number
             void truncate(int maxNumber, bool forceSort = false);
 

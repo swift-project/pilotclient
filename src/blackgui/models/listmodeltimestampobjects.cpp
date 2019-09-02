@@ -19,10 +19,17 @@ namespace BlackGui
 {
     namespace Models
     {
-        template <typename T, bool UseCompare>
+        template<typename T, bool UseCompare>
         CListModelTimestampObjects<T, UseCompare>::CListModelTimestampObjects(const QString &translationContext, QObject *parent) :
             CListModelBase<ContainerType, UseCompare>(translationContext, parent)
         { }
+
+        template<typename T, bool UseCompare>
+        bool CListModelTimestampObjects<T, UseCompare>::isSortedByTimestampProperty() const
+        {
+            const CPropertyIndex pi = this->getSortProperty();
+            return ITimestampBased::canHandleIndex(pi);
+        }
 
         template<typename T, bool UseCompare>
         void CListModelTimestampObjects<T, UseCompare>::addTimestampColumns()
@@ -32,6 +39,7 @@ namespace BlackGui
         }
 
         template class CListModelTimestampObjects<BlackMisc::CStatusMessageList, true>;
+        template class CListModelTimestampObjects<BlackMisc::Network::CTextMessageList, true>;
         template class CListModelTimestampObjects<BlackMisc::Aviation::CAircraftPartsList, true>;
         template class CListModelTimestampObjects<BlackMisc::Aviation::CAircraftSituationList, true>;
         template class CListModelTimestampObjects<BlackMisc::Aviation::CAircraftSituationChangeList, true>;
