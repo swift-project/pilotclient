@@ -32,7 +32,11 @@ namespace BlackGui
 
             //! Set display mode
             void setTextMessageMode(BlackGui::Models::CTextMessageListModel::TextMessageMode mode);
+
+            //! Sorted by a timestamp property
+            bool isSortedByTimestampProperty() const;
         };
-    }
-}
+    } // namespace
+} // namespace
+
 #endif // guard

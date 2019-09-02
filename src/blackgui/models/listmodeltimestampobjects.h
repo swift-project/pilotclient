@@ -35,6 +35,9 @@ namespace BlackGui
             //! Container element type
             using ObjectType = typename T::value_type;
 
+            //! Sorted by one of the timestamp columns?
+            bool isSortedByTimestampProperty() const;
+
         protected:
             //! Constructor
             CListModelTimestampObjects(const QString &translationContext, QObject *parent = nullptr);

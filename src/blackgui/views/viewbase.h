@@ -750,6 +750,12 @@ namespace BlackGui
             virtual Qt::SortOrder getSortOrder() const override { return m_model->getSortOrder(); }
             //! @}
 
+            //! Sort if columns or order changed
+            void sort();
+
+            //! Resort ("forced sorting")
+            void resort();
+
             //! Column count
             int columnCount() const;
 

@@ -502,6 +502,13 @@ namespace BlackGui
             this->sort(this->getSortColumn(), this->getSortOrder());
         }
 
+        template<typename T, bool UseCompare>
+        void CListModelBase<T, UseCompare>::resort()
+        {
+            // sort the values
+            this->updateContainerMaybeAsync(m_container, true);
+        }
+
         template <typename T, bool UseCompare>
         void CListModelBase<T, UseCompare>::sort(int column, Qt::SortOrder order)
         {

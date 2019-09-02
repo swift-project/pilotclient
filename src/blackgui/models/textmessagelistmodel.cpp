@@ -27,7 +27,7 @@ namespace BlackGui
     namespace Models
     {
         CTextMessageListModel::CTextMessageListModel(TextMessageMode mode, QObject *parent) :
-            CListModelBase("ModelTextMessageList", parent), m_textMessageMode(NotSet)
+            CListModelTimestampObjects("ModelTextMessageList", parent), m_textMessageMode(NotSet)
         {
             this->setTextMessageMode(mode);
 

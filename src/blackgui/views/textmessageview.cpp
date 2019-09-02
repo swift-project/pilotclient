@@ -21,15 +21,19 @@ namespace BlackGui
         CTextMessageView::CTextMessageView(QWidget *parent) : CViewBase(parent)
         {
             this->standardInit(new CTextMessageListModel(CTextMessageListModel::FromTo, this));
-            this->m_menus |= MenuClear;
+            m_menus |= MenuClear;
         }
 
         void CTextMessageView::setTextMessageMode(CTextMessageListModel::TextMessageMode mode)
         {
-            Q_ASSERT(this->m_model);
-            this->m_model->setTextMessageMode(mode);
+            Q_ASSERT(m_model);
+            m_model->setTextMessageMode(mode);
             this->setSortIndicator();
         }
 
-    }
+        bool CTextMessageView::isSortedByTimestampProperty() const
+        {
+            return m_model->isSortedByTimestampProperty();
+        }
+    } // namespace
 } // namespace

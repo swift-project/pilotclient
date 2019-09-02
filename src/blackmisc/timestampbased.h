@@ -138,10 +138,10 @@ namespace BlackMisc
         //! Any of the timestamp indexes
         static bool isAnyTimestampIndex(int index);
 
-    protected:
         //! Can given index be handled
         static bool canHandleIndex(const CPropertyIndex &index);
 
+    protected:
         //! Constructor
         ITimestampBased();
 

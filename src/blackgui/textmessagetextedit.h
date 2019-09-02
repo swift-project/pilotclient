@@ -35,7 +35,7 @@ namespace BlackGui
         CTextMessageTextEdit(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CTextMessageTextEdit();
+        virtual ~CTextMessageTextEdit() override;
 
         //! Insert a message
         void insertTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int maxMessages = -1);
@@ -54,6 +54,12 @@ namespace BlackGui
 
         //! Redraw HTML
         void redrawHtml();
+
+        //! Order latest first/latest last
+        void setLatestFirst(bool latestFirst) { m_latestFirst = latestFirst; }
+
+        //! Lastest first
+        bool isLatestFirst() const { return m_latestFirst; }
 
     private:
         //! Context menu
@@ -77,9 +83,10 @@ namespace BlackGui
         BlackMisc::Network::CTextMessageList m_messages;
         QTextDocument m_textDocument;
         int m_keepMaxMessages = -1; //!< max number of messages to keep, or -1 to keep all messages
-        bool m_withSender = true;
+        bool m_latestFirst   = false;
+        bool m_withSender    = true;
         bool m_withRecipient = false;
-        bool m_wordWrap = true;
+        bool m_wordWrap      = true;
 
         QAction *m_actionClearTextEdit = nullptr;
         QAction *m_actionLast10 = nullptr;
