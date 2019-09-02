@@ -74,12 +74,13 @@ namespace BlackGui
         QString CTextMessageSettings::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            return QStringLiteral("Private: %1 supervisor: %2 frequency: %3 all: %4 focus: %5").arg(
+            return QStringLiteral("Private: %1 supervisor: %2 frequency: %3 all: %4 focus: %5 latest 1st: %6").arg(
                        boolToOnOff(this->getPopupPrivateMessages()),
                        boolToOnOff(this->getPopupSupervisorMessages()),
                        boolToOnOff(this->getPopupFrequencyMessages()),
                        boolToOnOff(this->getPopupAllMessages()),
-                       boolToYesNo(this->focusOverlayWindow())
+                       boolToYesNo(this->focusOverlayWindow()),
+                       boolToYesNo(this->isLatestFirst())
                    );
         }
 
@@ -94,8 +95,9 @@ namespace BlackGui
             case IndexPopupPrivateMessages:    return CVariant::fromValue(this->popupPrivateMessages());
             case IndexPopupSupervisorMessages: return CVariant::fromValue(this->popupSupervisorMessages());
             case IndexPopupSelcalMessages:     return CVariant::fromValue(this->popupSelcalMessages());
-            case IndexStyle: return CVariant::fromValue(this->getStyleSheet());
-            case IndexFocus: return CVariant::fromValue(this->focusOverlayWindow());
+            case IndexStyle:       return CVariant::fromValue(this->getStyleSheet());
+            case IndexLatestFirst: return CVariant::fromValue(this->isLatestFirst());
+            case IndexFocus:       return CVariant::fromValue(this->focusOverlayWindow());
             default: return CValueObject::propertyByIndex(index);
             }
         }
@@ -111,8 +113,9 @@ namespace BlackGui
             case IndexPopupSupervisorMessages: this->setSupervisorMessages(variant.toBool());   break;
             case IndexPopupPrivateMessages:    this->setPopupPrivateMessages(variant.toBool()); break;
             case IndexPopupSelcalMessages:     this->setPopupSelcalMessages(variant.toBool());  break;
-            case IndexFocus: this->setFocusOverlayWindows(variant.toBool()); break;
-            case IndexStyle: this->setStyleSheet(variant.toQString()); break;
+            case IndexFocus:       this->setFocusOverlayWindows(variant.toBool()); break;
+            case IndexLatestFirst: this->setLatestFirst(variant.toBool()); break;
+            case IndexStyle:       this->setStyleSheet(variant.toQString()); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }

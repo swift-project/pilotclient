@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>CSettingsTextMessageStyle</class>
  <widget class="QFrame" name="CSettingsTextMessageStyle">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>440</width>
+    <height>26</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Text message style</string>
   </property>

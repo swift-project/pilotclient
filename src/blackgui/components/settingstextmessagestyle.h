@@ -33,7 +33,7 @@ namespace BlackGui
             explicit CSettingsTextMessageStyle(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CSettingsTextMessageStyle();
+            virtual ~CSettingsTextMessageStyle() override;
 
             //! Fmily, size and style
             QStringList getFamilySizeStyle() const;
@@ -59,7 +59,7 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CSettingsTextMessageStyle> ui;
             CSettingsFontDialog *m_fontSettingsDialog = nullptr;
-            CTextEditDialog *m_textEditDialog = nullptr;
+            CTextEditDialog     *m_textEditDialog     = nullptr;
             QString m_style;
 
             //! Change font

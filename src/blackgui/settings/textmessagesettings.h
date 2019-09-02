@@ -38,6 +38,7 @@ namespace BlackGui
                 IndexPopupAllMessages,
                 IndexPopupSelcalMessages,
                 IndexFocus,
+                IndexLatestFirst,
                 IndexStyle
             };
 
@@ -95,6 +96,12 @@ namespace BlackGui
             //! Popup the given message? Complete check including frequencies.
             bool popup(const BlackMisc::Network::CTextMessage &textMessage, const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft) const;
 
+            //! Latest messages 1st?
+            bool isLatestFirst() const { return m_latestFirst; }
+
+            //! Latest messages 1st?
+            void setLatestFirst(bool latestFirst) { m_latestFirst = latestFirst; }
+
             //! CSS style sheet
             const QString &getStyleSheet() const { return m_styleSheet; }
 
@@ -126,6 +133,7 @@ namespace BlackGui
             bool m_popupAllMessages        = false;
             bool m_popupSelcalMessages     = true;
             bool m_focus                   = true;
+            bool m_latestFirst             = false; //!< latest messages first
             QString m_styleSheet;
 
             BLACK_METACLASS(
@@ -135,6 +143,8 @@ namespace BlackGui
                 BLACK_METAMEMBER(popupFrequencyMessages),
                 BLACK_METAMEMBER(popupAllMessages),
                 BLACK_METAMEMBER(popupSelcalMessages),
+                BLACK_METAMEMBER(focus),
+                BLACK_METAMEMBER(latestFirst),
                 BLACK_METAMEMBER(styleSheet)
             );
         };

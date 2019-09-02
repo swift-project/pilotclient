@@ -81,6 +81,9 @@ namespace BlackGui
             c = connect(ui->comp_AtcStations, &CAtcButtonComponent::requestAtcStation, this, &CTextMessageComponent::onAtcButtonClicked, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
 
+            c = connect(ui->cb_LatestFirst, &QCheckBox::toggled, this, &CTextMessageComponent::onLatestFirstChanged, Qt::QueuedConnection);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
+
             // style sheet
             c = connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CTextMessageComponent::onStyleSheetChanged, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
@@ -106,10 +109,12 @@ namespace BlackGui
             {
                 // init decoupled when sub components are fully init
                 if (!myself || !sGui || sGui->isShuttingDown()) { return; }
-                this->onSettingsChanged();
+                this->onSettingsChanged(); // init
                 this->showCurrentFrequenciesFromCockpit();
+                const bool latestFirst = m_messageSettings.get().isLatestFirst();
+                ui->tvp_TextMessagesAll->setSorting(CTextMessage::IndexUtcTimestamp, latestFirst ? Qt::DescendingOrder : Qt::AscendingOrder);
 
-                // hde for the beginning
+                // hide for the beginning
                 ui->gb_Settings->setChecked(false);
                 ui->gb_MessageTo->setChecked(false);
             });
@@ -239,7 +244,8 @@ namespace BlackGui
                 // message for me? right frequency? otherwise quit
                 if (this->hasAllMessagesTab() && (relevantForMe || message.isServerMessage()))
                 {
-                    ui->tvp_TextMessagesAll->insert(message);
+                    ui->tvp_TextMessagesAll->push_back(message); // no sorting
+                    ui->tvp_TextMessagesAll->resort();
                 }
                 if (!relevantForMe) { continue; }
 
@@ -270,6 +276,7 @@ namespace BlackGui
         {
             ui->comp_SettingsOverlay->setVisible(checked);
             ui->comp_SettingsStyle->setVisible(checked);
+            ui->cb_LatestFirst->setVisible(checked);
             ui->gb_Settings->setFlat(!checked);
         }
 
@@ -284,17 +291,30 @@ namespace BlackGui
         {
             QList<CTextMessageTextEdit *> textEdits = this->findAllTextEdit();
             const QString style = this->getStyleSheet();
+            const bool latestFirst = m_messageSettings.get().isLatestFirst();
             for (CTextMessageTextEdit *textEdit : textEdits)
             {
+                textEdit->setLatestFirst(latestFirst);
                 textEdit->setStyleSheetForContent(style);
             }
             ui->comp_SettingsStyle->setStyle(this->getStyleSheet());
+            if (latestFirst != ui->cb_LatestFirst->isChecked()) { ui->cb_LatestFirst->setChecked(latestFirst); }
             this->update(); // refresh window
+        }
+
+        void CTextMessageComponent::onLatestFirstChanged(bool checked)
+        {
+            CTextMessageSettings s = m_messageSettings.get();
+            if (s.isLatestFirst() == checked) { return; }
+            s.setLatestFirst(checked);
+            const CStatusMessage m = m_messageSettings.setAndSave(s);
+            CLogMessage::preformatted(m);
+            this->onSettingsChanged(); // latest first
         }
 
         void CTextMessageComponent::onStyleSheetChanged()
         {
-            this->onSettingsChanged();
+            this->onSettingsChanged(); // style sheet
         }
 
         void CTextMessageComponent::onAtcButtonClicked(const CAtcStation &station)
@@ -308,6 +328,7 @@ namespace BlackGui
             const QString style = ui->comp_SettingsStyle->getStyle();
             CTextMessageSettings s = m_messageSettings.get();
             s.setStyleSheet(style);
+            s.setLatestFirst(ui->cb_LatestFirst->isChecked());
             const CStatusMessage m = m_messageSettings.setAndSave(s);
             CLogMessage::preformatted(m);
             this->onStyleSheetChanged();

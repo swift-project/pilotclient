@@ -199,6 +199,9 @@ namespace BlackGui
             //! Settings have been changed
             void onSettingsChanged();
 
+            //! Latest 1st checked
+            void onLatestFirstChanged(bool checked);
+
             //! Style sheet has been changed
             void onStyleSheetChanged();
 
