@@ -37,9 +37,6 @@ namespace BlackMisc
     {
         namespace Settings
         {
-            CXSwiftBusSettingsQtFree::CXSwiftBusSettingsQtFree()
-            {}
-
             bool CXSwiftBusSettingsQtFree::parseXSwiftBusString(const std::string &json)
             {
                 if (json.empty()) { return false; }
@@ -152,12 +149,6 @@ namespace BlackMisc
                 return changed;
             }
 
-            void CXSwiftBusSettingsQtFree::setCurrentUtcTime()
-            {
-                using namespace std::chrono;
-                const milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
-                m_msSinceEpochQtFree = static_cast<int64_t>(ms.count());
-            }
         } // ns
     } // ns
 } // ns
