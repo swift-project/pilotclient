@@ -10,6 +10,7 @@
 
 #include "blackmisc/algorithm.h"
 #include "blackmisc/compare.h"
+#include "blackmisc/crashhandler.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/worker.h"
 #include "blackconfig/buildconfig.h"
