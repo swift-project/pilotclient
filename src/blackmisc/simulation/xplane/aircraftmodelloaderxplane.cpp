@@ -289,9 +289,10 @@ namespace BlackMisc
                         const QFileInfo modelFileInfo(plane.filePath);
                         model.setFileDetailsAndTimestamp(modelFileInfo);
                         model.setAircraftIcaoCode(icao);
+
                         if (CBuildConfig::isLocalDeveloperDebugBuild())
                         {
-                            BLACK_VERIFY_X(modelFileInfo.exists(), Q_FUNC_INFO, "Model does NOT exist");
+                            BLACK_AUDIT_X(modelFileInfo.exists(), Q_FUNC_INFO, "Model does NOT exist");
                         }
 
                         CLivery livery;
