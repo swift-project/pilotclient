@@ -10,7 +10,9 @@
 #define BLACKMISC_SIMULATION_SETTINGS_CXSWIFTBUSSETTINGSQTFREE_H
 
 #include "blackmisc/simulation/xplane/qtfreeutils.h"
+
 #include <string>
+#include <chrono>
 
 namespace BlackMisc
 {
@@ -26,10 +28,10 @@ namespace BlackMisc
             {
             protected:
                 //! Constructor.
-                CXSwiftBusSettingsQtFree();
+                CXSwiftBusSettingsQtFree() {}
 
                 //! Destructor.
-                ~CXSwiftBusSettingsQtFree() = default;
+                virtual ~CXSwiftBusSettingsQtFree() {}
 
             public:
                 //! DBus server
@@ -132,7 +134,12 @@ namespace BlackMisc
                 int update(const CXSwiftBusSettingsQtFree &newValues);
 
                 //! Sets timestamp to now
-                virtual void setCurrentUtcTime();
+                virtual void setCurrentUtcTime()
+                {
+                    using namespace std::chrono;
+                    const milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
+                    m_msSinceEpochQtFree = static_cast<int64_t>(ms.count());
+                }
 
             protected:
                 //! The JSON members @{

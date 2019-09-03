@@ -6,10 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-// include whole code in this translation unit, as this code is used on swift/and XSWiftBus side
-// BLACKMISC_EXPORT cannot be used
-#include "blackmisc/simulation/settings/xswiftbussettingsqtfree.cpp"
-
+#include "blackmisc/simulation/settings/xswiftbussettingsqtfree.hpp"
 #include "settings.h"
 #include <string>
 
