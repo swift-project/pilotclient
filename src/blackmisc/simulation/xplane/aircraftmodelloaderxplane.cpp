@@ -548,6 +548,12 @@ namespace BlackMisc
                 dirNames.removeLast();
 
                 QFileInfo fileInfo(fullPath);
+                if (! fileInfo.exists())
+                {
+                    const CStatusMessage m = CStatusMessage(this).error(u"XPlane object '%1' does not exist.") << fullPath;
+                    m_loadingMessages.push_back(m);
+                    return false;
+                }
                 package.planes.back().dirNames = dirNames;
                 package.planes.back().objectName = fileInfo.completeBaseName();
                 package.planes.back().filePath = fullPath;
