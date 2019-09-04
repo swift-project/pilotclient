@@ -957,7 +957,7 @@ namespace BlackCore
             {
                 const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
                 Q_ASSERT_X(!aircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "missing callsign");
-                emit this->changedRemoteAircraftModel(aircraft, originator);
+                emit this->changedRemoteAircraftModel(aircraft, originator); // update aircraft model
             }
             return c;
         }
@@ -969,7 +969,7 @@ namespace BlackCore
             if (c)
             {
                 const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
-                emit this->changedRemoteAircraftModel(aircraft, originator);
+                emit this->changedRemoteAircraftModel(aircraft, originator); // updated network model
             }
             return c;
         }

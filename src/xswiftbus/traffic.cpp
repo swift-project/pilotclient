@@ -493,14 +493,14 @@ namespace XSwiftBus
 
         for (const auto &requestedCallsign : requestedCallsigns)
         {
-            auto planeIt = m_planesByCallsign.find(requestedCallsign);
+            const auto planeIt = m_planesByCallsign.find(requestedCallsign);
             if (planeIt == m_planesByCallsign.end()) { continue; }
 
-            Plane *plane = planeIt->second;
+            const Plane *plane = planeIt->second;
             assert(plane);
 
-            double latDeg = plane->position.lat;
-            double lonDeg = plane->position.lon;
+            const double latDeg = plane->position.lat;
+            const double lonDeg = plane->position.lon;
             double groundElevation = plane->terrainProbe.getElevation(latDeg, lonDeg, plane->position.elevation);
             if (std::isnan(groundElevation)) { groundElevation = 0.0; }
             double fudgeFactor = 3.0;
@@ -519,7 +519,7 @@ namespace XSwiftBus
         auto planeIt = m_planesByCallsign.find(callsign);
         if (planeIt != m_planesByCallsign.end())
         {
-            Plane *plane = planeIt->second;
+            const Plane *plane = planeIt->second;
             return plane->terrainProbe.getElevation(latitudeDeg, longitudeDeg, altitudeMeters);
         }
         else
@@ -614,7 +614,6 @@ namespace XSwiftBus
                 {
                     setDrawingLabels(drawing);
                 });
-
             }
             else if (message.getMethodName() == "isDrawingLabels")
             {
@@ -644,7 +643,6 @@ namespace XSwiftBus
                 {
                     setMaxDrawDistance(nauticalMiles);
                 });
-
             }
             else if (message.getMethodName() == "addPlane")
             {
