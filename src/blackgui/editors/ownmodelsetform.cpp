@@ -163,8 +163,8 @@ namespace BlackGui
 
         CDistributorList COwnModelSetForm::getDistributorsBasedOnOptions() const
         {
-            if (ui->rb_DistributorsAll->isChecked()) { return this->getAllDistributors(); }
-            if (ui->rb_DistributorsSelected->isChecked()) { return this->getSelectedDistributors(); }
+            if (ui->rb_DistributorsAll->isChecked())       { return this->getAllDistributors(); }
+            if (ui->rb_DistributorsSelected->isChecked())  { return this->getSelectedDistributors(); }
             if (ui->rb_DistributorsFromBelow->isChecked()) { return this->getShownDistributors(); }
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong option");
             return CDistributorList();

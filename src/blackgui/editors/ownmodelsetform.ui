@@ -158,8 +158,11 @@
       </item>
       <item row="3" column="2">
        <widget class="QRadioButton" name="rb_DistributorsFromBelow">
+        <property name="toolTip">
+         <string>all distributors shown below</string>
+        </property>
         <property name="text">
-         <string>all from below</string>
+         <string>all shown below</string>
         </property>
         <attribute name="buttonGroup">
          <string notr="true">bg_Distributors</string>
@@ -175,6 +178,9 @@
       </item>
       <item row="3" column="1">
        <widget class="QRadioButton" name="rb_DistributorsSelected">
+        <property name="toolTip">
+         <string>all selected distributors from below</string>
+        </property>
         <property name="text">
          <string>selected from below</string>
         </property>
@@ -186,7 +192,7 @@
       <item row="3" column="3">
        <widget class="QRadioButton" name="rb_DistributorsAll">
         <property name="text">
-         <string>all from below</string>
+         <string>all distributors</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -305,9 +311,9 @@
  <resources/>
  <connections/>
  <buttongroups>
+  <buttongroup name="bg_Mode"/>
   <buttongroup name="bg_Displayed"/>
   <buttongroup name="bg_SourceSet"/>
-  <buttongroup name="bg_Mode"/>
   <buttongroup name="bg_Distributors"/>
  </buttongroups>
 </ui>

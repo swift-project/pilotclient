@@ -342,6 +342,15 @@ namespace BlackGui
             this->setModelSet(models, simulator);
         }
 
+        void CDbOwnModelSetComponent::removeNonDBModels()
+        {
+            const CSimulatorInfo simulator = this->getModelSetSimulator();
+            CAircraftModelList models = ui->tvp_OwnModelSet->containerOrFilteredContainer();
+            const int r = models.removeObjectsWithoutDbKey();
+            if (r < 1) { return; }
+            this->setModelSet(models, simulator);
+        }
+
         void CDbOwnModelSetComponent::viewModelChanged()
         {
             const bool hasData = ui->tvp_OwnModelSet->rowCount() > 0;
@@ -595,6 +604,10 @@ namespace BlackGui
 
                     a = new QAction(CIcons::delete16(), "Remove excluded models", this);
                     connect(a, &QAction::triggered, ownModelSetComp, &CDbOwnModelSetComponent::removeExcludedModels, Qt::QueuedConnection);
+                    m_setActions.append(a);
+
+                    a = new QAction(CIcons::delete16(), "Remove non DB models", this);
+                    connect(a, &QAction::triggered, ownModelSetComp, &CDbOwnModelSetComponent::removeNonDBModels, Qt::QueuedConnection);
                     m_setActions.append(a);
                 }
                 menuActions.addMenuModelSet();
