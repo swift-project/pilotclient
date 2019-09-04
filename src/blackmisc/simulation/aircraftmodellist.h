@@ -266,6 +266,7 @@ namespace BlackMisc
             //! With/without DB key @{
             CAircraftModelList findWithValidDbKey() const;
             CAircraftModelList findWithoutValidDbKey() const;
+            CAircraftModelList findWithoutValidDbKey(int maxElements) const;
             //! @}
 
             //! Some finders for NON DB models, mostly for matching script results @{
@@ -274,8 +275,12 @@ namespace BlackMisc
             CAircraftModelList findNonDbModelsForModelString(const QString &modelString) const;
             //! @}
 
-            //! All included models
-            CAircraftModelList getAllIncludedModels() const;
+            //! All included/excluded models @{
+            CAircraftModelList findAllIncludedModels() const;
+            CAircraftModelList findAllIncludedModels(int maxElements) const;
+            CAircraftModelList findAllExcludedModels() const;
+            CAircraftModelList findAllExcludedModels(int maxElements) const;
+            //! @}
 
             //! Take a designator and find its family
             QString designatorToFamily(const Aviation::CAircraftIcaoCode &aircraftIcaoCode) const;

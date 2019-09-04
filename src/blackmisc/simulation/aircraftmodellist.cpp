@@ -496,6 +496,13 @@ namespace BlackMisc
             });
         }
 
+        CAircraftModelList CAircraftModelList::findWithoutValidDbKey(int maxElements) const
+        {
+            CAircraftModelList ml = this->findWithoutValidDbKey();
+            ml.truncate(maxElements);
+            return ml;
+        }
+
         CAircraftModelList CAircraftModelList::findNonDbModelsForAirline(const QString &airline) const
         {
             const CAircraftModelList noDb = this->findWithoutValidDbKey();
@@ -523,12 +530,34 @@ namespace BlackMisc
             });
         }
 
-        CAircraftModelList CAircraftModelList::getAllIncludedModels() const
+        CAircraftModelList CAircraftModelList::findAllIncludedModels() const
         {
             return this->findBy([](const CAircraftModel & model)
             {
                 return model.getModelMode() == CAircraftModel::Include;
             });
+        }
+
+        CAircraftModelList CAircraftModelList::findAllIncludedModels(int maxElements) const
+        {
+            CAircraftModelList ml = this->findAllIncludedModels();
+            ml.truncate(maxElements);
+            return ml;
+        }
+
+        CAircraftModelList CAircraftModelList::findAllExcludedModels() const
+        {
+            return this->findBy([](const CAircraftModel & model)
+            {
+                return model.getModelMode() == CAircraftModel::Exclude;
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::findAllExcludedModels(int maxElements) const
+        {
+            CAircraftModelList ml = this->findAllExcludedModels();
+            ml.truncate(maxElements);
+            return ml;
         }
 
         CAircraftModelList CAircraftModelList::findDuplicateModelStrings() const
