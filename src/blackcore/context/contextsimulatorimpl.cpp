@@ -1044,10 +1044,16 @@ namespace BlackCore
         {
             CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
             if (aircraft.getCallsign() != callsign) { return false; } // not found
-            this->setAircraftEnabledFlag(callsign, true);  // plain vanilla flag
-            this->updateAircraftRendered(callsign, false); // this is flag only anyway
+            if (!this->isSimulatorAvailable()) { return false; }
+
+            m_simulatorPlugin.second->logicallyRemoveRemoteAircraft(callsign);
             aircraft.setModel(aircraft.getNetworkModel()); // like originally from network
-            this->xCtxAddedRemoteAircraftReadyForModelMatching(aircraft);
+            QPointer<CContextSimulator> myself(this);
+            QTimer::singleShot(1000, this, [ = ]
+            {
+                if (!sApp || sApp->isShuttingDown() || !myself) { return; }
+                this->xCtxAddedRemoteAircraftReadyForModelMatching(aircraft);
+            });
             return true;
         }
 

@@ -550,6 +550,9 @@ namespace XSwiftBus
         const dbus_uint32_t serial = message.getSerial();
         const bool wantsReply = message.wantsReply();
 
+        // Debug message if needed
+        // { const std::string d = "dbusMessageHandler: " + message.getMethodName(); INFO_LOG(d.c_str()); }
+
         if (message.getInterfaceName() == DBUS_INTERFACE_INTROSPECTABLE)
         {
             if (message.getMethodName() == "Introspect")
