@@ -29,6 +29,7 @@
 #include <QtGlobal>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Weather;
 using namespace BlackCore::Data;
@@ -60,7 +61,7 @@ namespace BlackCore
             return m_metars;
         }
 
-        CMetar CVatsimMetarReader::getMetarForAirport(const Aviation::CAirportIcaoCode &icao) const
+        CMetar CVatsimMetarReader::getMetarForAirport(const CAirportIcaoCode &icao) const
         {
             QReadLocker l(&m_lock);
             return m_metars.getMetarForAirport(icao);
@@ -108,14 +109,20 @@ namespace BlackCore
             }
 
             this->logNetworkReplyReceived(nwReplyPtr);
+            const QString metarUrl = nwReply->url().toString();
             if (nwReply->error() == QNetworkReply::NoError)
             {
                 QString metarData = nwReply->readAll();
                 nwReply->close(); // close asap
 
+                if (metarData.isEmpty()) // Quick check by hash
+                {
+                    CLogMessage(this).warning(u"No METAR data from '%1', skipped") << metarUrl;
+                    return;
+                }
                 if (!this->didContentChange(metarData)) // Quick check by hash
                 {
-                    CLogMessage(this).info(u"METAR file has same content, skipped");
+                    CLogMessage(this).info(u"METAR file from '%1' has same content, skipped") << metarUrl;
                     return;
                 }
 
@@ -146,7 +153,7 @@ namespace BlackCore
             else
             {
                 // network error
-                CLogMessage(this).warning(u"Reading METARs failed '%1' for '%2'") << nwReply->errorString() << nwReply->url().toString();
+                CLogMessage(this).warning(u"Reading METARs failed '%1' for '%2'") << nwReply->errorString() << metarUrl;
                 nwReply->abort();
                 emit this->dataRead(CEntityFlags::MetarEntity, CEntityFlags::ReadFailed, 0);
             }
@@ -154,8 +161,8 @@ namespace BlackCore
 
         void CVatsimMetarReader::reloadSettings()
         {
-            CReaderSettings s = m_settings.get();
-            setInitialAndPeriodicTime(s.getInitialTime().toMs(), s.getPeriodicTime().toMs());
+            const CReaderSettings s = m_settings.get();
+            this->setInitialAndPeriodicTime(s.getInitialTime().toMs(), s.getPeriodicTime().toMs());
         }
     } // ns
 } // ns

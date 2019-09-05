@@ -1175,6 +1175,7 @@ namespace BlackCore
         CMetar CContextNetwork::getMetarForAirport(const CAirportIcaoCode &airportIcaoCode) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << airportIcaoCode; }
+            if (!sApp || !sApp->getWebDataServices()) { return {}; }
             return sApp->getWebDataServices()->getMetarForAirport(airportIcaoCode);
         }
 
