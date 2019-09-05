@@ -1082,7 +1082,18 @@ namespace BlackCore
         const CCallsign callsign = aircraft.getCallsign();
         if (!this->isPhysicallyRenderedAircraft(callsign)) { return false; }
         this->physicallyRemoveRemoteAircraft(callsign);
-        return this->changeRemoteAircraftEnabled(aircraft);
+        // return this->changeRemoteAircraftEnabled(aircraft);
+
+        const QPointer<ISimulator> myself(this);
+        QTimer::singleShot(1000, this, [ = ]
+        {
+            if (!myself) { return; }
+            if (this->isAircraftInRange(callsign))
+            {
+                this->changeRemoteAircraftEnabled(aircraft);
+            }
+        });
+        return true;
     }
 
     CStatusMessageList ISimulator::debugVerifyStateAfterAllAircraftRemoved() const

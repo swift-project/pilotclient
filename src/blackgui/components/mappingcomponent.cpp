@@ -331,7 +331,7 @@ namespace BlackGui
             const QString modelString = ui->completer_ModelStrings->getModelString();
             if (modelString.isEmpty())
             {
-                this->showOverlayMessage(CStatusMessage(this).validationError(u"Missing model for mapping"), OverlayMessageMs);
+                this->showOverlayHTMLMessage(CStatusMessage(this).validationError(u"Missing model for mapping"), OverlayMessageMs);
                 return;
             }
 
@@ -394,7 +394,7 @@ namespace BlackGui
 
             if (!changed)
             {
-                this->showOverlayMessage(CLogMessage(this).info(u"Model mapping, nothing to change"), OverlayMessageMs);
+                this->showOverlayHTMLMessage(CLogMessage(this).info(u"Model mapping, nothing to change"), OverlayMessageMs);
             }
         }
 
@@ -405,9 +405,9 @@ namespace BlackGui
             if (callsign.isEmpty()) { return; }
             const bool reset = sGui->getIContextSimulator()->resetToModelMatchingAircraft(callsign);
             const CStatusMessage msg = reset ?
-                                       CStatusMessage(this).info(u"Model reset for '%1'") << callsign.toQString() :
+                                       CStatusMessage(this).info(u"Model reset for '%1'")  << callsign.toQString() :
                                        CStatusMessage(this).info(u"Reset failed for '%1'") << callsign.toQString();
-            this->showOverlayMessage(msg, 3000);
+            this->showOverlayHTMLMessage(msg, 3000);
         }
 
         void CMappingComponent::onModelPreviewChanged(int state)
