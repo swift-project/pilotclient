@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "aircraftmodelvalidationcomponent.h"
 #include "ui_aircraftmodelvalidationcomponent.h"
+#include "aircraftmodelvalidationcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
 
@@ -38,10 +38,13 @@ namespace BlackGui
             connect(ui->cb_EnableStartupCheck,     &QCheckBox::toggled, this, &CAircraftModelValidationComponent::onCheckAtStartupChanged);
             connect(ui->cb_OnlyIfErrorsOrWarnings, &QCheckBox::toggled, this, &CAircraftModelValidationComponent::onOnlyErrorWarningChanged);
 
-            connect(ui->pb_TempDisableInvalid,  &QPushButton::released, this, &CAircraftModelValidationComponent::onButtonClicked);
-            connect(ui->pb_TempDisableSelected, &QPushButton::released, this, &CAircraftModelValidationComponent::onButtonClicked);
-            connect(ui->pb_TriggerValidation,   &QPushButton::released, this, &CAircraftModelValidationComponent::triggerValidation);
-            connect(ui->pb_help,                &QPushButton::released, this, &CAircraftModelValidationComponent::showHelp);
+            connect(ui->pb_TempDisableInvalid,  &QPushButton::released, this, &CAircraftModelValidationComponent::onTempDisabledButtonClicked, Qt::QueuedConnection);
+            connect(ui->pb_TempDisableSelected, &QPushButton::released, this, &CAircraftModelValidationComponent::onTempDisabledButtonClicked, Qt::QueuedConnection);
+            connect(ui->pb_RemoveInvalid,       &QPushButton::released, this, &CAircraftModelValidationComponent::onRemoveButtonClicked,       Qt::QueuedConnection);
+            connect(ui->pb_RemoveSelected,      &QPushButton::released, this, &CAircraftModelValidationComponent::onRemoveButtonClicked,       Qt::QueuedConnection);
+
+            connect(ui->pb_TriggerValidation,   &QPushButton::released, this, &CAircraftModelValidationComponent::triggerValidation, Qt::QueuedConnection);
+            connect(ui->pb_Help,                &QPushButton::released, this, &CAircraftModelValidationComponent::showHelp,          Qt::QueuedConnection);
 
             // 1st init when running in distributed environment
             QPointer<CAircraftModelValidationComponent> myself(this);
@@ -85,6 +88,8 @@ namespace BlackGui
             ui->cb_EnableStartupCheck->setChecked(setup.doVerificationAtStartup());
             ui->pb_TempDisableInvalid->setEnabled(!invalid.isEmpty());
             ui->pb_TempDisableSelected->setEnabled(!invalid.isEmpty());
+            ui->pb_RemoveInvalid->setEnabled(!invalid.isEmpty());
+            ui->pb_RemoveSelected->setEnabled(!invalid.isEmpty());
 
             const QString msg = stopped ?
                                 QStringLiteral("Validation for '%1' stopped, maybe your models are not accessible or too many issues").arg(simulator.toQString(true)) :
@@ -164,22 +169,50 @@ namespace BlackGui
             sGui->getIContextSimulator()->triggerModelSetValidation(CSimulatorInfo());
         }
 
-        void CAircraftModelValidationComponent::onButtonClicked()
+        void CAircraftModelValidationComponent::onTempDisabledButtonClicked()
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
+
+            CAircraftModelList disableModels;
             const QObject *sender = QObject::sender();
-            CAircraftModelList disabledModels;
-            if (sender == ui->pb_TempDisableInvalid)       { disabledModels = ui->tvp_InvalidModels->container(); }
-            else if (sender == ui->pb_TempDisableSelected) { disabledModels = ui->tvp_InvalidModels->selectedObjects(); }
+            if (sender == ui->pb_TempDisableInvalid)       { disableModels = ui->tvp_InvalidModels->container(); }
+            else if (sender == ui->pb_TempDisableSelected) { disableModels = ui->tvp_InvalidModels->selectedObjects(); }
 
-            this->tempDisableModels(disabledModels);
-
-            if (disabledModels.isEmpty())
+            if (disableModels.isEmpty())
             {
-                this->showOverlayHTMLMessage("No models disabled");
+                this->showOverlayHTMLMessage("No models disabled", 4000);
             }
             else
             {
-                this->showOverlayHTMLMessage(QStringLiteral("%1 models disabled").arg(disabledModels.size()));
+                this->tempDisableModels(disableModels);
+                this->showOverlayHTMLMessage(QStringLiteral("%1 models disabled").arg(disableModels.size()));
+            }
+        }
+
+        void CAircraftModelValidationComponent::onRemoveButtonClicked()
+        {
+            if (!sGui || sGui->isShuttingDown()) { return; }
+            if (!sGui->getIContextSimulator())   { return; }
+
+            CAircraftModelList removeModels;
+            const QObject *sender = QObject::sender();
+            if (sender == ui->pb_RemoveInvalid)       { removeModels = ui->tvp_InvalidModels->container(); }
+            else if (sender == ui->pb_RemoveSelected) { removeModels = ui->tvp_InvalidModels->selectedObjects(); }
+
+            if (removeModels.isEmpty())
+            {
+                this->showOverlayHTMLMessage("No models removed", 4000);
+            }
+            else
+            {
+                const QMessageBox::StandardButton ret = QMessageBox::question(this,
+                                                        tr("Model validation"),
+                                                        tr("Do you really want to delete %1 models from model set?").arg(removeModels.sizeInt()),
+                                                        QMessageBox::Ok | QMessageBox::Cancel);
+                if (ret != QMessageBox::Ok) { return; }
+
+                const int r = sGui->getIContextSimulator()->removeModelsFromSet(removeModels);
+                this->showOverlayHTMLMessage(QStringLiteral("%1 models removed").arg(r));
             }
         }
 

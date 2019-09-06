@@ -72,7 +72,10 @@ namespace BlackGui
             void requestLastResults();
 
             //! Button has been clicked
-            void onButtonClicked();
+            void onTempDisabledButtonClicked();
+
+            //! Remove from model set
+            void onRemoveButtonClicked();
 
             //! Show help
             void showHelp();
