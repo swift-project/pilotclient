@@ -55,7 +55,7 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CAircraftModelSetValidationDialog> ui;
         };
-    } // ms
+    } // ns
 } // ns
 
 #endif // guard

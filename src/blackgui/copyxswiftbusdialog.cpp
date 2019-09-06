@@ -38,8 +38,8 @@ namespace BlackGui
             }
         }
 
-        const QMessageBox::StandardButton reply =
-            QMessageBox::question(parent, "Copy XSwiftBus",
+        const QMessageBox::StandardButton reply = QMessageBox::question(parent,
+                "Copy XSwiftBus",
                 QStringLiteral("Copy XSwiftBus from build directory '%1' to plugin directory '%2'?").arg(CDirectoryUtils::getXSwiftBusBuildDirectory(), CXPlaneUtil::xswiftbusPluginDir(xplaneRootDir)),
                 QMessageBox::Yes | QMessageBox::No);
         if (reply != QMessageBox::Yes) { return 0; }
