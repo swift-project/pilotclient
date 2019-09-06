@@ -73,6 +73,7 @@ namespace BlackCore
             virtual void setModelSetLoaderSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
             virtual QStringList getModelSetStrings() const override;
             virtual QStringList getModelSetCompleterStrings(bool sorted) const override;
+            virtual int removeModelsFromSet(const BlackMisc::Simulation::CAircraftModelList &removeModels) override;
             virtual bool isKnownModelInSet(const QString &modelString) const override;
             virtual BlackMisc::Simulation::CAircraftModelList getModelSetModelsStartingWith(const QString &modelString) const override;
             virtual int getModelSetCount() const override;
