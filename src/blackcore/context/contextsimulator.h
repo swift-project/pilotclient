@@ -210,6 +210,9 @@ namespace BlackCore
             //! Model set completer string
             virtual QStringList getModelSetCompleterStrings(bool sorted) const = 0;
 
+            //! Remove models from set
+            virtual int removeModelsFromSet(const BlackMisc::Simulation::CAircraftModelList &removeModels) = 0;
+
             //! \copydoc CAircraftMatcher::disableModelsForMatching
             virtual void disableModelsForMatching(const BlackMisc::Simulation::CAircraftModelList &removedModels, bool incremental) = 0;
 

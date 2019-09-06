@@ -94,6 +94,7 @@ namespace BlackCore
             virtual QStringList getModelSetStrings() const override;
             virtual QStringList getModelSetCompleterStrings(bool sorted) const override;
             virtual bool isKnownModelInSet(const QString &modelString) const override;
+            virtual int removeModelsFromSet(const BlackMisc::Simulation::CAircraftModelList &removeModels) override;
             virtual void disableModelsForMatching(const BlackMisc::Simulation::CAircraftModelList &removedModels, bool incremental) override;
             virtual BlackMisc::Simulation::CAircraftModelList getDisabledModelsForMatching() const override;
             virtual void restoreDisabledModels() override;

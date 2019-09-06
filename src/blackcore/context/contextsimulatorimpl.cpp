@@ -279,6 +279,23 @@ namespace BlackCore
             return known;
         }
 
+        int CContextSimulator::removeModelsFromSet(const CAircraftModelList &removeModels)
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (removeModels.isEmpty()) { return 0; }
+            const CSimulatorInfo simulator = m_modelSetSimulator.get();
+            if (!simulator.isSingleSimulator()) { return 0; }
+
+            CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().synchronizeCache(simulator);
+            CAircraftModelList models = CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator);
+            const int removed = models.removeModelsWithString(removeModels, Qt::CaseInsensitive);
+            if (removed > 0)
+            {
+                CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().setCachedModels(models, simulator);
+            }
+            return removed;
+        }
+
         QStringList CContextSimulator::getModelSetCompleterStrings(bool sorted) const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << sorted; }
