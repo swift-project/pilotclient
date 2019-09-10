@@ -1002,6 +1002,23 @@ namespace BlackCore
             return msgs;
         }
 
+        bool CContextSimulator::testRemoteAircraft(const CSimulatedAircraft &aircraft, bool add)
+        {
+            if (!m_simulatorPlugin.second || !m_simulatorPlugin.second->isConnected()) { return false; }
+            bool added = add;
+            if (add)
+            {
+                m_simulatorPlugin.second->setTestMode(true);
+                added = m_simulatorPlugin.second->logicallyAddRemoteAircraft(aircraft);
+            }
+            else
+            {
+                m_simulatorPlugin.second->logicallyRemoveRemoteAircraft(aircraft.getCallsign());
+                m_simulatorPlugin.second->setTestMode(false); // AFTER we have removed it
+            }
+            return added;
+        }
+
         bool CContextSimulator::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
         {
             Q_UNUSED(originator);

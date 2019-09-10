@@ -410,6 +410,15 @@ namespace BlackCore
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
+            //! \copydoc IContextSimulator::testRemoteAircraft
+            virtual bool testRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool add) override
+            {
+                Q_UNUSED(aircraft);
+                Q_UNUSED(add);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
+            }
+
             //! \copydoc IContextSimulator::setMatchingSetup
             virtual BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const override
             {
