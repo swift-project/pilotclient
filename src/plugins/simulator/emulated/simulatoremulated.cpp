@@ -205,9 +205,9 @@ namespace BlackSimPlugin
 
         void CSimulatorEmulated::setCombinedStatus(bool connected, bool simulating, bool paused)
         {
-            m_connected = connected;
+            m_connected  = connected;
             m_simulating = simulating;
-            m_paused = paused;
+            m_paused     = paused;
             this->emitSimulatorCombinedStatus();
         }
 

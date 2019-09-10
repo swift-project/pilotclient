@@ -11,16 +11,14 @@
 #ifndef BLACKGUI_EDITORS_AIRCRAFTICAOFORM_H
 #define BLACKGUI_EDITORS_AIRCRAFTICAOFORM_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/editors/form.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/variant.h"
 
 #include <QObject>
 #include <QScopedPointer>
-
-class QWidget;
 
 namespace Ui { class CAircraftIcaoForm; }
 namespace BlackGui

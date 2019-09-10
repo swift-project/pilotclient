@@ -80,7 +80,7 @@ namespace BlackSimPlugin
                         {
                             if (trace.isValid())
                             {
-                                // it can happen the object is not yet
+                                // it can happen the object is not yet existing
                                 CSimConnectObject simObject = simulatorFsxP3D->getSimObjectForTrace(trace);
                                 if (simObject.isInvalid()) { simObject = trace.simObject; } // take the one in the trace
                                 if (simObject.isValid())

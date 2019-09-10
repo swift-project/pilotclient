@@ -126,7 +126,7 @@ namespace BlackGui
             if (sGui && sGui->supportsContexts() && sGui->getIContextSimulator())
             {
                 const CSimulatorPluginInfo pluginInfo = sGui->getIContextSimulator()->getSimulatorPluginInfo();
-                if (!this->isSingleSelection()) { this->setMode(RadioButtons); }
+                if (!this->isSingleSelection()) { this->setMode(RadioButtons); } // only one sim can be connected
 
                 if (pluginInfo.isValid())
                 {
@@ -319,12 +319,14 @@ namespace BlackGui
             if (this->isSingleSelection())
             {
                 // single
-                m_currentSimulator.set(this->getValue());
+                const CSimulatorInfo sim = this->getValue();
+                m_currentSimulator.set(sim);
             }
             else
             {
                 // multiple
-                m_currentSimulators.set(this->getValue());
+                const CSimulatorInfo sim = this->getValue();
+                m_currentSimulators.set(sim);
             }
         }
 

@@ -35,7 +35,7 @@ namespace BlackGui
             explicit CForm(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CForm();
+            virtual ~CForm() override;
 
             //! Set editable
             virtual void setReadOnly(bool readOnly) = 0;

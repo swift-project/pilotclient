@@ -161,19 +161,19 @@ namespace BlackSimPlugin
             //! \remarks basically does the same as a real driver, obtains data from the interpolator
             void updateRemoteAircraft();
 
-            bool m_log = false; //!< from settings
-            bool m_paused = false;
-            bool m_connected = true;
+            bool m_log        = false; //!< from settings
+            bool m_paused     = false;
+            bool m_connected  = true;
             bool m_simulating = true;
             bool m_timeSyncronized = false;
             int m_countInterpolatedSituations = 0;
-            int m_countInterpolatedParts = 0;
+            int m_countInterpolatedParts      = 0;
             QTimer m_interpolatorFetchTimer; //!< fetch data from interpolator
-            BlackMisc::PhysicalQuantities::CTime m_offsetTime;
-            BlackMisc::Simulation::CSimulatedAircraft m_myAircraft;           //!< represents own aircraft of simulator
-            BlackMisc::Simulation::CSimulatedAircraftList m_renderedAircraft; //!< represents remote aircraft in simulator
-            QScopedPointer<CSimulatorEmulatedMonitorDialog> m_monitorWidget;  //!< parent will be main window, so we need to destroy widget when destroyed
-            BlackMisc::CConnectionGuard m_connectionGuard;                    //!< connected with provider
+            BlackMisc::PhysicalQuantities::CTime            m_offsetTime;
+            BlackMisc::Simulation::CSimulatedAircraft       m_myAircraft;       //!< represents own aircraft of simulator
+            BlackMisc::Simulation::CSimulatedAircraftList   m_renderedAircraft; //!< represents remote aircraft in simulator
+            QScopedPointer<CSimulatorEmulatedMonitorDialog> m_monitorWidget;    //!< parent will be main window, so we need to destroy widget when destroyed
+            BlackMisc::CConnectionGuard                     m_connectionGuard;  //!< connected with provider
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSwiftPlugin> m_pluginSettings { this, &CSimulatorEmulated::onSettingsChanged };
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CInterpolatorMultiWrapper> m_interpolators; //!< interpolators per callsign
         };
