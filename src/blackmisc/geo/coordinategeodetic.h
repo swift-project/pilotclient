@@ -247,6 +247,9 @@ namespace BlackMisc
             //! Constructor by interface
             CCoordinateGeodetic(const ICoordinateGeodetic &coordinate);
 
+            //! Calculate a position in distance/bearing
+            CCoordinateGeodetic calculatePosition(const PhysicalQuantities::CLength &distance, const PhysicalQuantities::CAngle &relBearing) const;
+
             //! \copydoc ICoordinateGeodetic::latitude
             virtual CLatitude latitude() const override;
 
