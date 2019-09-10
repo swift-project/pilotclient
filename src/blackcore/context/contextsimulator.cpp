@@ -63,7 +63,7 @@ namespace BlackCore
 
         bool IContextSimulator::isSimulatorAvailable() const
         {
-            return CBuildConfig::isCompiledWithFlightSimulatorSupport() && !getSimulatorPluginInfo().isUnspecified();
+            return CBuildConfig::isCompiledWithFlightSimulatorSupport() && !this->getSimulatorPluginInfo().isUnspecified();
         }
 
         bool IContextSimulator::isSimulatorSimulating() const

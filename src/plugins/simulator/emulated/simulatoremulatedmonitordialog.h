@@ -42,7 +42,7 @@ namespace BlackSimPlugin
             explicit CSimulatorEmulatedMonitorDialog(CSimulatorEmulated *simulator, QWidget *parent = nullptr);
 
             //! Dtor
-            virtual ~CSimulatorEmulatedMonitorDialog();
+            virtual ~CSimulatorEmulatedMonitorDialog() override;
 
             //! \copydoc BlackGui::Components::CLogComponent::appendStatusMessageToList
             void appendStatusMessageToList(const BlackMisc::CStatusMessage &statusMessage);

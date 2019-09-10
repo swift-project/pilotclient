@@ -77,7 +77,6 @@ namespace BlackGui
             if (coordinate == m_coordinate) { return false; }
             m_coordinate = coordinate;
 
-
             const CLatitude lat = coordinate.latitude();
             const QString latWgs = lat.toWgs84();
             ui->le_Latitude->setText(latWgs);

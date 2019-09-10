@@ -154,8 +154,8 @@ namespace BlackGui
         CStatusMessageList CAircraftIcaoForm::validate(bool nested) const
         {
             Q_UNUSED(nested);
-            CAircraftIcaoCode code(getValue());
-            CStatusMessageList msgs(code.validate());
+            const CAircraftIcaoCode code(this->getValue());
+            const CStatusMessageList msgs(code.validate());
             ui->val_Indicator->setState(msgs);
             return msgs;
         }
