@@ -211,6 +211,11 @@ namespace BlackSimPlugin
             this->emitSimulatorCombinedStatus();
         }
 
+        CSimulatorInfo CSimulatorEmulated::getEmulatedSimulator() const
+        {
+            return m_pluginSettings.get().getEmulatedSimulator();
+        }
+
         bool CSimulatorEmulated::changeInternalCom(const CSimulatedAircraft &aircraft)
         {
             bool changed = false;
