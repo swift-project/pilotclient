@@ -1602,7 +1602,7 @@ namespace BlackSimPlugin
             const CSimConnectObject removedPendingObj = this->removeFromAddPendingAndAddAgainAircraft(callsign);
 
             // create AI after crosschecking it
-            if (!probe && !this->isAircraftInRange(callsign))
+            if (!probe && !this->isAircraftInRangeOrTestMode(callsign))
             {
                 CLogMessage(this).info(u"Skipping adding of '%1' since it is no longer in range") << callsign.asString();
                 return false;

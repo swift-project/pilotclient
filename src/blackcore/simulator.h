@@ -209,6 +209,12 @@ namespace BlackCore
         //! Simulator running?
         virtual bool isSimulating() const { return this->isConnected(); }
 
+        //! Set test mode
+        void setTestMode(bool test) { m_test = test; }
+
+        //! Test mode?
+        bool isTestMode() const { return m_test; }
+
         //! Debug function to check state after all aircraft have been removed
         //! \remarks only in local developer builds
         virtual BlackMisc::CStatusMessageList debugVerifyStateAfterAllAircraftRemoved() const;
@@ -551,6 +557,9 @@ namespace BlackCore
         //! Unified qeeing aircraft message
         void logAddingAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) const;
 
+        //! Test version aware version of isAircraftInRange
+        bool isAircraftInRangeOrTestMode(const BlackMisc::Aviation::CCallsign &callsign) const;
+
         //! Lookup against DB data
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
 
@@ -620,6 +629,7 @@ namespace BlackCore
 
         // misc.
         bool                              m_networkConnected = false;          //!< flight network connected
+        bool                              m_test = false;                      //!< test mode?
         BlackMisc::Aviation::CCallsignSet m_callsignsToBeRendered;             //!< callsigns which will be rendered
         BlackMisc::CConnectionGuard       m_remoteAircraftProviderConnections; //!< connected signal/slots
     };

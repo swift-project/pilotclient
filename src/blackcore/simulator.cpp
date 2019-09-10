@@ -1019,6 +1019,11 @@ namespace BlackCore
         m_remoteAircraftProviderConnections.disconnectAll(); // disconnect signals from provider
     }
 
+    bool ISimulator::isAircraftInRangeOrTestMode(const CCallsign &callsign) const
+    {
+        return this->isTestMode() || this->isAircraftInRange(callsign);
+    }
+
     bool ISimulator::disconnectFrom()
     {
         // supposed to be overridden
