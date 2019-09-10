@@ -14,6 +14,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/variant.h"
+
 namespace Ui { class CModelBrowserComponent; }
 namespace BlackGui
 {
@@ -31,8 +35,29 @@ namespace BlackGui
             //! Destructor
             virtual ~CModelBrowserComponent() override;
 
+            //! Browser has been closed
+            void close();
+
         private:
+            void onSetRelativePosition();
+            void onSetAbsolutePosition();
+            void onSetPBH();
+            void onSetParts();
+            void onModelDblClicked(const BlackMisc::CVariant &object);
+
+            BlackMisc::Aviation::CAircraftParts getParts() const;
+
+            void display();
+            void remove();
+            void loadModelSet();
+            bool hasContexts() const;
+            void selectTabParts();
+            void onCGChecked(bool checked);
+            void updatePartsAndPBH(bool setPbh, bool setParts);
+
             QScopedPointer <Ui::CModelBrowserComponent> ui;
+            BlackMisc::Aviation::CAircraftSituation   m_situation;
+            BlackMisc::Simulation::CSimulatedAircraft m_aircraft;
         };
     } // ns
 } // ns
