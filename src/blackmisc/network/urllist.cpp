@@ -61,6 +61,12 @@ namespace BlackMisc
             return CUrl();
         }
 
+        CUrl CUrlList::getRandomWithout(const CUrl &exclude) const
+        {
+            const CUrlList excludes({ exclude });
+            return this->getRandomWithout(excludes);
+        }
+
         CUrl CUrlList::getRandomWithout(const CUrlList &exclude) const
         {
             CUrlList copy(*this);

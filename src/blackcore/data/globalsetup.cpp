@@ -45,11 +45,11 @@ namespace BlackCore
         void CGlobalSetup::initDefaultValues()
         {
             m_mappingMinimumVersion = CBuildConfig::getVersionString();
-            m_dbRootDirectoryUrl = CUrl("https://datastore.swift-project.org/");
-            m_vatsimBookingsUrl = CUrl("http://vatbook.euroutepro.com/xml2.php");
-            m_vatsimMetarsUrls = CUrlList({"http://metar.vatsim.net/metar.php"});
-            m_vatsimStatusFileUrls = CUrlList({ "https://status.vatsim.net" });
-            m_vatsimDataFileUrls = CUrlList({ "http://info.vroute.net/vatsim-data.txt" });
+            m_dbRootDirectoryUrl    = CUrl("https://datastore.swift-project.org/");
+            m_vatsimBookingsUrl     = CUrl("http://vatbook.euroutepro.com/xml2.php");
+            m_vatsimMetarsUrls      = CUrlList({"http://metar.vatsim.net/metar.php"});
+            m_vatsimStatusFileUrls  = CUrlList({ "https://status.vatsim.net" });
+            m_vatsimDataFileUrls    = CUrlList({ "http://info.vroute.net/vatsim-data.txt" });
             m_sharedUrls = CUrlList(
             {
                 "https://datastore.swift-project.net/shared/",
