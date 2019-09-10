@@ -110,6 +110,7 @@ namespace BlackCore
             virtual void setMatchingSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup) override;
             virtual BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const override;
             virtual BlackMisc::CStatusMessageList copyFsxTerrainProbe(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+            virtual bool testRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool add) override;
             //! @}
 
         private:
