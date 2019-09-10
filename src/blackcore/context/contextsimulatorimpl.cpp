@@ -221,7 +221,7 @@ namespace BlackCore
         CAircraftModelList CContextSimulator::getModelSet() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            const CSimulatorInfo simulator = m_modelSetSimulator.get();
+            const CSimulatorInfo simulator = this->getModelSetLoaderSimulator();
             if (!simulator.isSingleSimulator()) { return CAircraftModelList(); }
 
             CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().synchronizeCache(simulator);
@@ -231,6 +231,18 @@ namespace BlackCore
         CSimulatorInfo CContextSimulator::getModelSetLoaderSimulator() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (m_simulatorPlugin.second)
+            {
+                if (m_simulatorPlugin.second->isConnected())
+                {
+                    if (m_simulatorPlugin.second->isEmulatedDriver())
+                    {
+                        // specialized version returning the "emulated info"
+                        return this->getSimulatorPluginInfo().getSimulatorInfo();
+                    }
+                    return m_simulatorPlugin.first.getSimulatorInfo();
+                }
+            }
             return m_modelSetSimulator.get();
         }
 
@@ -238,7 +250,7 @@ namespace BlackCore
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (this->isSimulatorAvailable()) { return; }
+            if (this->isSimulatorAvailable()) { return; } // if a plugin is loaded, do ignore this
             m_modelSetSimulator.set(simulator);
             const CAircraftModelList models = this->getModelSet(); // cache synced
             m_aircraftMatcher.setModelSet(models, simulator, false);

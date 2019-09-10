@@ -90,6 +90,9 @@ namespace BlackSimPlugin
             //! UI setter
             void setCombinedStatus(bool connected, bool simulating, bool paused);
 
+            //! The emulated simulated simulator
+            BlackMisc::Simulation::CSimulatorInfo getEmulatedSimulator() const;
+
             //! Internal own aircraft
             //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
             const BlackMisc::Simulation::CSimulatedAircraft &getInternalOwnAircraft() const { return m_myAircraft; }
