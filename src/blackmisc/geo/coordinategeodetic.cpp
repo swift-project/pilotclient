@@ -35,7 +35,7 @@ namespace BlackMisc
 
         CCoordinateGeodetic CCoordinateGeodetic::fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const CAltitude &geodeticHeight)
         {
-            const CLatitude lat = CLatitude::fromWgs84(latitudeWgs84);
+            const CLatitude  lat = CLatitude::fromWgs84(latitudeWgs84);
             const CLongitude lon = CLongitude::fromWgs84(longitudeWgs84);
             return CCoordinateGeodetic(lat, lon, geodeticHeight);
         }
@@ -50,7 +50,7 @@ namespace BlackMisc
         {
             if (coordinate1.isNull() || coordinate2.isNull()) { return CLength::null(); }
             // if (coordinate1.equalNormalVectorDouble(coordinate2)) { return CLength(0, CLengthUnit::defaultUnit()); }
-            static const float earthRadiusMeters = 6371000.8f;
+            constexpr float earthRadiusMeters = 6371000.8f;
 
             const QVector3D v1 = coordinate1.normalVector();
             const QVector3D v2 = coordinate2.normalVector();
@@ -140,11 +140,11 @@ namespace BlackMisc
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexLatitude: return this->latitude().propertyByIndex(index.copyFrontRemoved());
+                case IndexLatitude:  return this->latitude().propertyByIndex(index.copyFrontRemoved());
                 case IndexLongitude: return this->longitude().propertyByIndex(index.copyFrontRemoved());
-                case IndexLatitudeAsString: return CVariant(this->latitudeAsString());
+                case IndexLatitudeAsString:  return CVariant(this->latitudeAsString());
                 case IndexLongitudeAsString: return CVariant(this->longitudeAsString());
-                case IndexGeodeticHeight: return this->geodeticHeight().propertyByIndex(index.copyFrontRemoved());
+                case IndexGeodeticHeight:    return this->geodeticHeight().propertyByIndex(index.copyFrontRemoved());
                 case IndexGeodeticHeightAsString: return CVariant(this->geodeticHeightAsString());
                 case IndexNormalVector: return CVariant::fromValue(this->normalVector());
                 default: break;
@@ -163,11 +163,11 @@ namespace BlackMisc
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexLatitude: return this->latitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.latitude());
+                case IndexLatitude:  return this->latitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.latitude());
                 case IndexLongitude: return this->longitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.longitude());
-                case IndexLatitudeAsString: return this->latitudeAsString().compare(compareValue.latitudeAsString());
+                case IndexLatitudeAsString:  return this->latitudeAsString().compare(compareValue.latitudeAsString());
                 case IndexLongitudeAsString: return this->longitudeAsString().compare(compareValue.longitudeAsString());
-                case IndexGeodeticHeight: return this->geodeticHeight().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.geodeticHeight());
+                case IndexGeodeticHeight:    return this->geodeticHeight().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.geodeticHeight());
                 case IndexGeodeticHeightAsString: return this->geodeticHeightAsString().compare(compareValue.geodeticHeightAsString());
                 default: break;
                 }
@@ -253,9 +253,9 @@ namespace BlackMisc
             switch (i)
             {
             case IndexGeodeticHeight: m_geodeticHeight.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexLatitude: this->setLatitude(variant.value<CLatitude>()); break;
+            case IndexLatitude:  this->setLatitude(variant.value<CLatitude>());   break;
             case IndexLongitude: this->setLongitude(variant.value<CLongitude>()); break;
-            case IndexLatitudeAsString: this->setLatitude(CLatitude::fromWgs84(variant.toQString())); break;
+            case IndexLatitudeAsString:  this->setLatitude(CLatitude::fromWgs84(variant.toQString()));   break;
             case IndexLongitudeAsString: this->setLongitude(CLongitude::fromWgs84(variant.toQString())); break;
             case IndexGeodeticHeightAsString: m_geodeticHeight.parseFromString(variant.toQString()); break;
             case IndexNormalVector: this->setNormalVector(variant.value<QVector3D>()); break;
@@ -297,6 +297,41 @@ namespace BlackMisc
             m_geodeticHeight(coordinate.geodeticHeight())
         {
             this->setNormalVector(coordinate.normalVectorDouble());
+        }
+
+        CCoordinateGeodetic CCoordinateGeodetic::calculatePosition(const CLength &distance, const CAngle &relBearing) const
+        {
+            if (this->isNull()) { return CCoordinateGeodetic::null(); }
+            if (distance.isNull() || distance.isNegativeWithEpsilonConsidered() || relBearing.isNull()) { return CCoordinateGeodetic::null(); }
+            if (distance.isZeroEpsilonConsidered()) { return *this; }
+
+            // http://www.movable-type.co.uk/scripts/latlong.html#destPoint
+            // https://stackoverflow.com/a/879531/356726
+            // https://www.cosmocode.de/en/blog/gohr/2010-06/29-calculate-a-destination-coordinate-based-on-distance-and-bearing-in-php
+            constexpr double earthRadiusMeters = 6371000.8;
+            const double startLatRad = this->latitude().value(CAngleUnit::rad());
+            const double startLngRad = this->longitude().value(CAngleUnit::rad());
+            const double bearingRad  = relBearing.value(CAngleUnit::rad());
+            const double distRatio   = distance.value(CLengthUnit::m()) / earthRadiusMeters;
+
+            const double newLatRad = asin(sin(startLatRad) * cos(distRatio) + cos(startLatRad) * sin(distRatio) * cos(bearingRad));
+            double newLngRad = 0;
+
+            constexpr double epsilon = 1E-06;
+            if (cos(newLatRad) == 0 || qAbs(cos(newLatRad)) < epsilon)
+                newLngRad = startLngRad;
+            else
+            {
+                // λ1 + Math.atan2(Math.sin(brng)*Math.sin(d/R)*Math.cos(φ1), Math.cos(d/R)-Math.sin(φ1)*Math.sin(φ2));
+                newLngRad = startLngRad + atan2(sin(bearingRad) * sin(distRatio) * cos(startLatRad), cos(distRatio) - sin(startLatRad) * sin(newLatRad));
+                newLngRad = fmod(newLngRad + 3 * M_PI, 2 * M_PI) - M_PI; // normalize +-180deg
+            }
+
+            CCoordinateGeodetic copy = *this;
+            const CLatitude  lat(newLatRad, CAngleUnit::rad());
+            const CLongitude lng(newLngRad, CAngleUnit::rad());
+            copy.setLatLong(lat, lng);
+            return copy;
         }
 
         CLatitude CCoordinateGeodetic::latitude() const
