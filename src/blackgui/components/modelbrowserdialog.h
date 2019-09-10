@@ -32,6 +32,13 @@ namespace BlackGui
             //! Destructor
             virtual ~CModelBrowserDialog() override;
 
+        protected:
+            //! \copydoc QObject::event
+            virtual bool event(QEvent *event) override;
+
+            //! \copydoc QDialog::closeEvent
+            virtual void done(int r) override;
+
         private:
             QScopedPointer<Ui::CModelBrowserDialog> ui;
         };

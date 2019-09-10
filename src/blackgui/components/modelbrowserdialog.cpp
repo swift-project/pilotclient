@@ -8,6 +8,7 @@
 
 #include "modelbrowserdialog.h"
 #include "ui_modelbrowserdialog.h"
+#include "blackgui/guiapplication.h"
 
 namespace BlackGui
 {
@@ -24,5 +25,18 @@ namespace BlackGui
         {
             // void;
         }
+
+        bool CModelBrowserDialog::event(QEvent *event)
+        {
+            if (CGuiApplication::triggerShowHelp(this, event)) { return true; }
+            return QDialog::event(event);
+        }
+
+        void CModelBrowserDialog::done(int r)
+        {
+            ui->comp_ModelBrowser->close();
+            QDialog::done(r);
+        }
+
     } // ns
 } // ns
