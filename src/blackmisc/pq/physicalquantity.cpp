@@ -370,6 +370,7 @@ namespace BlackMisc
         template<class MU, class PQ>
         QString CPhysicalQuantity<MU, PQ>::valueRoundedAsString(MU unit, int digits) const
         {
+            if (this->isNull()) { return QStringLiteral("null"); }
             const double v = this->valueRounded(unit, digits);
             return QString::number(v, 'f', digits);
         }
