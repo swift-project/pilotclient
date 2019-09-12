@@ -18,6 +18,7 @@
 #include <QAction>
 #include <QEvent>
 #include <QFrame>
+#include <QMainWindow>
 #include <QGridLayout>
 #include <QIcon>
 #include <QList>
@@ -30,6 +31,7 @@
 #include <QVariant>
 #include <Qt>
 #include <QStringBuilder>
+#include <QGuiApplication>
 #include <QtGlobal>
 
 using namespace BlackGui;
@@ -56,6 +58,9 @@ namespace BlackGui
             m_input->setMaximumWidth(150);
             m_marginMenuAction = new QWidgetAction(this);
             m_marginMenuAction->setDefaultWidget(m_input);
+
+            // Quit on window hack
+            m_originalQuitOnLastWindow = QGuiApplication::quitOnLastWindowClosed();
 
             // timer
             m_watchdog.setObjectName(this->objectName() + ":m_timer");
@@ -118,6 +123,14 @@ namespace BlackGui
 
         void CNavigatorDialog::reject()
         {
+            // workaround to avoid "closing issue with navigator",
+            // https://discordapp.com/channels/539048679160676382/567139633964646411/620776182027386880
+            if (m_mainWindow)
+            {
+                QGuiApplication::setQuitOnLastWindowClosed(m_originalQuitOnLastWindow);
+                m_mainWindow->show();
+            }
+
             this->hide();
             m_watchdog.stop();
             emit this->navigatorClosed();
@@ -133,6 +146,7 @@ namespace BlackGui
             this->setVisible(visible);
             CGuiUtility::stayOnTop(visible, this);
             this->show();
+            QGuiApplication::setQuitOnLastWindowClosed(visible ? false : m_originalQuitOnLastWindow); // avoid issues with a dialog closing everything
 
             if (visible)
             {

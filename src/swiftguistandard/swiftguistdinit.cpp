@@ -228,6 +228,7 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->menu_ModelBrowser,      &QAction::triggered, this, &SwiftGuiStd::startModelBrowser, Qt::QueuedConnection);
 
     connect(m_navigator.data(), &CNavigatorDialog::navigatorClosed, this, &SwiftGuiStd::onNavigatorClosed, Qt::QueuedConnection);
+    m_navigator->setMainWindow(this);
 
     // settings (GUI component), styles
     connect(ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedWindowsOpacity, this, &SwiftGuiStd::onChangedWindowOpacity);
