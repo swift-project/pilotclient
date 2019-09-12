@@ -27,7 +27,7 @@
 class QEvent;
 class QMenu;
 class QMouseEvent;
-class QWidget;
+class QMainWindow;
 
 namespace Ui { class CNavigatorDialog; }
 namespace BlackGui
@@ -72,6 +72,9 @@ namespace BlackGui
 
             //! Save to settings
             void saveToSettings();
+
+            //! The main window
+            void setMainWindow(QMainWindow *window) { m_mainWindow = window; }
 
         signals:
             //! Navigator closed
@@ -126,12 +129,14 @@ namespace BlackGui
             //! On watchdog
             void onWatchdog();
 
-            QScopedPointer<Ui::CNavigatorDialog> ui;
             bool m_firstBuild = true;
+            bool m_originalQuitOnLastWindow = false;
             int  m_currentColumns = 1;
+            QScopedPointer<Ui::CNavigatorDialog> ui;
+            QMainWindow   *m_mainWindow       = nullptr;
             QWidgetAction *m_marginMenuAction = nullptr; //!< menu widget(!) action for margin widget
-            CMarginsInput *m_input = nullptr; //!< margins widget
-            QTimer         m_watchdog;        //!< navigator watchdog
+            CMarginsInput *m_input            = nullptr; //!< margins widget
+            QTimer         m_watchdog;                   //!< navigator watchdog
             BlackMisc::CSetting<BlackGui::Settings::TNavigator> m_settings { this, &CNavigatorDialog::onSettingsChanged };
         };
     } // ns
