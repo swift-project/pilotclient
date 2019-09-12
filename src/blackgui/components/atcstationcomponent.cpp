@@ -94,16 +94,16 @@ namespace BlackGui
 
             // Signal / Slots
             connect(ui->le_AtcStationsOnlineMetar, &QLineEdit::returnPressed, this, &CAtcStationComponent::getMetarAsEntered);
-            connect(ui->tb_AtcStationsLoadMetar, &QPushButton::clicked, this, &CAtcStationComponent::getMetarAsEntered);
-            connect(ui->tb_Audio, &QPushButton::clicked, this, &CAtcStationComponent::requestAudioWidget);
-            connect(ui->tb_TextMessageOverlay, &QPushButton::clicked, this, &CAtcStationComponent::showOverlayInlineTextMessage);
+            connect(ui->tb_AtcStationsLoadMetar,   &QPushButton::clicked,     this, &CAtcStationComponent::getMetarAsEntered);
+            connect(ui->tb_Audio,                  &QPushButton::clicked,     this, &CAtcStationComponent::requestAudioWidget);
+            connect(ui->tb_TextMessageOverlay,     &QPushButton::clicked,     this, &CAtcStationComponent::showOverlayInlineTextMessage);
             connect(ui->tw_Atc, &QTabWidget::currentChanged, this, &CAtcStationComponent::atcStationsTabChanged); // "local" tab changed (booked, online)
 
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::objectClicked,  this, &CAtcStationComponent::onOnlineAtcStationVariantSelected, Qt::QueuedConnection);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::objectSelected, this, &CAtcStationComponent::onOnlineAtcStationVariantSelected, Qt::QueuedConnection);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::testRequestDummyAtcOnlineStations, this, &CAtcStationComponent::testCreateDummyOnlineAtcStations);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::requestOnlineStationsUpdate);
-            connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestNewBackendData, this, &CAtcStationComponent::requestOnlineStationsUpdate);
+            connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestNewBackendData,  this, &CAtcStationComponent::requestOnlineStationsUpdate);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::modelDataChangedDigest, this, &CAtcStationComponent::onCountChanged);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestComFrequency, this, &CAtcStationComponent::setComFrequency);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestTextMessageWidget, this, &CAtcStationComponent::requestTextMessageWidget);
@@ -115,7 +115,7 @@ namespace BlackGui
             connect(ui->comp_AtcStationsSettings, &CSettingsAtcStationsInlineComponent::changed, this, &CAtcStationComponent::forceUpdate, Qt::QueuedConnection);
 
             connect(ui->tvp_AtcStationsBooked, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::reloadAtcStationsBooked);
-            connect(ui->tvp_AtcStationsBooked, &CAtcStationView::requestNewBackendData, this, &CAtcStationComponent::reloadAtcStationsBooked);
+            connect(ui->tvp_AtcStationsBooked, &CAtcStationView::requestNewBackendData,  this, &CAtcStationComponent::reloadAtcStationsBooked);
             connect(ui->tvp_AtcStationsBooked, &CAtcStationView::modelDataChangedDigest, this, &CAtcStationComponent::onCountChanged);
 
             connect(ui->tb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::requestAtisUpdates);
@@ -249,8 +249,16 @@ namespace BlackGui
                     else if (!m_selectedCallsign.isEmpty() && onlineStations.containsCallsign(m_selectedCallsign))
                     {
                         const CAtcStation lastSelected = onlineStations.findFirstByCallsign(m_selectedCallsign);
-                        this->triggerOnlineAtcStationSelected(lastSelected);
-                    }
+                        if (lastSelected.hasCallsign())
+                        {
+                            // avoid override of manually entered METAR callsigns
+                            const CCallsign currentCs(ui->le_AtcStationsOnlineMetar->text());
+                            if (currentCs.isEmpty() || currentCs == lastSelected.getCallsign())
+                            {
+                                this->triggerOnlineAtcStationSelected(lastSelected);
+                            }
+                        }
+                    } // stations
                 }
             }
             else
@@ -474,6 +482,7 @@ namespace BlackGui
                 (station.hasAtis()  ? u"\n\n" % station.getAtis().getMessage()  : QStringLiteral("")) %
                 (station.hasMetar() ? u"\n\n" % station.getMetar().getMessage() : QStringLiteral(""));
             ui->te_AtcStationsOnlineInfo->setText(infoMessage);
+            ui->le_AtcStationsOnlineMetar->setText(station.getCallsign().asString());
             m_selectedCallsign = station.getCallsign();
         }
 
