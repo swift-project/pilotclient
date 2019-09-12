@@ -229,7 +229,7 @@
             <string extracomment="METAR: Airport ICAO code">METAR: Airport ICAO code</string>
            </property>
            <property name="maxLength">
-            <number>5</number>
+            <number>10</number>
            </property>
            <property name="placeholderText">
             <string>e.g. KLAX</string>
