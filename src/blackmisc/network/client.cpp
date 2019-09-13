@@ -53,7 +53,7 @@ namespace BlackMisc
 
         void CClient::setCapabilities(const Capabilities &capabilities)
         {
-            m_capabilities = static_cast<int>(capabilities);
+            m_capabilities = capabilities;
         }
 
         QString CClient::getCapabilitiesAsString() const

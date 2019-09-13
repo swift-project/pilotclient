@@ -6,7 +6,6 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackcore/vatsim/networkvatlib.h"
 #include "blackcore/vatsim/vatsimbookingreader.h"
 #include "blackcore/vatsim/vatsimdatafilereader.h"
 #include "blackcore/airspaceanalyzer.h"
@@ -61,37 +60,39 @@ using namespace BlackMisc::Json;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Weather;
+using namespace BlackCore::Fsd;
 using namespace BlackCore::Vatsim;
 
 namespace BlackCore
 {
-    CAirspaceMonitor::CAirspaceMonitor(IOwnAircraftProvider *ownAircraftProvider, IAircraftModelSetProvider *modelSetProvider, INetwork *network, QObject *parent)
+    CAirspaceMonitor::CAirspaceMonitor(IOwnAircraftProvider *ownAircraftProvider, IAircraftModelSetProvider *modelSetProvider, FSDClient *fsdClient, QObject *parent)
         : CRemoteAircraftProvider(parent),
           COwnAircraftAware(ownAircraftProvider),
           CAircraftModelSetAware(modelSetProvider),
-          m_network(network),
-          m_analyzer(new CAirspaceAnalyzer(ownAircraftProvider, network, this))
+          m_fsdClient(fsdClient),
+          m_analyzer(new CAirspaceAnalyzer(ownAircraftProvider, m_fsdClient, this))
     {
         this->setObjectName("CAirspaceMonitor");
         this->enableReverseLookupMessages(sApp->isDeveloperFlagSet() || CBuildConfig::isLocalDeveloperDebugBuild() ? RevLogEnabled : RevLogEnabledSimplified);
 
-        connect(m_network, &INetwork::atcPositionUpdate,             this, &CAirspaceMonitor::onAtcPositionUpdate);
-        connect(m_network, &INetwork::atisReplyReceived,             this, &CAirspaceMonitor::onAtisReceived);
-        connect(m_network, &INetwork::atisVoiceRoomReplyReceived,    this, &CAirspaceMonitor::onAtisVoiceRoomReceived);
-        connect(m_network, &INetwork::atisLogoffTimeReplyReceived,   this, &CAirspaceMonitor::onAtisLogoffTimeReceived);
-        connect(m_network, &INetwork::flightPlanReplyReceived,       this, &CAirspaceMonitor::onFlightPlanReceived);
-        connect(m_network, &INetwork::realNameReplyReceived,         this, &CAirspaceMonitor::onRealNameReplyReceived);
-        connect(m_network, &INetwork::icaoCodesReplyReceived,        this, &CAirspaceMonitor::onIcaoCodesReceived);
-        connect(m_network, &INetwork::pilotDisconnected,             this, &CAirspaceMonitor::onPilotDisconnected);
-        connect(m_network, &INetwork::atcDisconnected,               this, &CAirspaceMonitor::onAtcControllerDisconnected);
-        connect(m_network, &INetwork::aircraftPositionUpdate,        this, &CAirspaceMonitor::onAircraftUpdateReceived);
-        connect(m_network, &INetwork::aircraftInterimPositionUpdate, this, &CAirspaceMonitor::onAircraftInterimUpdateReceived);
-        connect(m_network, &INetwork::frequencyReplyReceived,        this, &CAirspaceMonitor::onFrequencyReceived);
-        connect(m_network, &INetwork::capabilitiesReplyReceived,     this, &CAirspaceMonitor::onCapabilitiesReplyReceived);
-        connect(m_network, &INetwork::customFSInnPacketReceived,     this, &CAirspaceMonitor::onCustomFSInnPacketReceived);
-        connect(m_network, &INetwork::serverReplyReceived,           this, &CAirspaceMonitor::onServerReplyReceived);
-        connect(m_network, &INetwork::aircraftConfigPacketReceived,  this, &CAirspaceMonitor::onAircraftConfigReceived);
-        connect(m_network, &INetwork::connectionStatusChanged,       this, &CAirspaceMonitor::onConnectionStatusChanged);
+        connect(m_fsdClient, &FSDClient::atcDataUpdateReceived,             this, &CAirspaceMonitor::onAtcPositionUpdate);
+        // FSD TODO
+        connect(m_fsdClient, &FSDClient::atisReplyReceived,             this, &CAirspaceMonitor::onAtisReceived);
+        connect(m_fsdClient, &FSDClient::atisVoiceRoomReplyReceived,    this, &CAirspaceMonitor::onAtisVoiceRoomReceived);
+        connect(m_fsdClient, &FSDClient::atisLogoffTimeReplyReceived,   this, &CAirspaceMonitor::onAtisLogoffTimeReceived);
+        connect(m_fsdClient, &FSDClient::flightPlanReceived,       this, &CAirspaceMonitor::onFlightPlanReceived);
+        connect(m_fsdClient, &FSDClient::realNameResponseReceived,         this, &CAirspaceMonitor::onRealNameReplyReceived);
+        connect(m_fsdClient, &FSDClient::planeInformationReceived,        this, &CAirspaceMonitor::onIcaoCodesReceived);
+        connect(m_fsdClient, &FSDClient::deletePilotReceived,             this, &CAirspaceMonitor::onPilotDisconnected);
+        connect(m_fsdClient, &FSDClient::deleteAtcReceived,               this, &CAirspaceMonitor::onAtcControllerDisconnected);
+        connect(m_fsdClient, &FSDClient::pilotDataUpdateReceived,        this, &CAirspaceMonitor::onAircraftUpdateReceived);
+        connect(m_fsdClient, &FSDClient::interimPilotDataUpdatedReceived, this, &CAirspaceMonitor::onAircraftInterimUpdateReceived);
+        connect(m_fsdClient, &FSDClient::com1FrequencyResponseReceived,        this, &CAirspaceMonitor::onFrequencyReceived);
+        connect(m_fsdClient, &FSDClient::capabilityResponseReceived,     this, &CAirspaceMonitor::onCapabilitiesReplyReceived);
+        connect(m_fsdClient, &FSDClient::planeInformationFsinnReceived,     this, &CAirspaceMonitor::onCustomFSInnPacketReceived);
+        connect(m_fsdClient, &FSDClient::serverResponseReceived,           this, &CAirspaceMonitor::onServerReplyReceived);
+        connect(m_fsdClient, &FSDClient::aircraftConfigReceived,  this, &CAirspaceMonitor::onAircraftConfigReceived);
+        connect(m_fsdClient, &FSDClient::connectionStatusChanged,       this, &CAirspaceMonitor::onConnectionStatusChanged);
 
         // AutoConnection: this should also avoid race conditions by updating the bookings
         Q_ASSERT_X(sApp && sApp->getWebDataServices(), Q_FUNC_INFO, "Missing data reader");
@@ -123,22 +124,22 @@ namespace BlackCore
     bool CAirspaceMonitor::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositonUpdates)
     {
         const bool r = CRemoteAircraftProvider::updateFastPositionEnabled(callsign, enableFastPositonUpdates);
-        if (m_network && sApp && !sApp->isShuttingDown())
+        if (m_fsdClient && sApp && !sApp->isShuttingDown())
         {
             // thread safe update of m_network
             const QPointer<CAirspaceMonitor> myself(this);
-            QTimer::singleShot(0, m_network, [ = ]
+            QTimer::singleShot(0, m_fsdClient, [ = ]
             {
                 if (!myself) { return; }
-                if (m_network)
+                if (m_fsdClient)
                 {
                     if (enableFastPositonUpdates)
                     {
-                        m_network->addInterimPositionReceiver(callsign);
+                        m_fsdClient->addInterimPositionReceiver(callsign);
                     }
                     else
                     {
-                        m_network->removeInterimPositionReceiver(callsign);
+                        m_fsdClient->removeInterimPositionReceiver(callsign);
                     }
                 }
             });
@@ -171,7 +172,7 @@ namespace BlackCore
             // outdated, or not in cache at all, or NOT own aircraft
             plan = CFlightPlan(); // reset
             m_flightPlanCache.remove(callsign); // loading FP from network
-            m_network->sendFlightPlanQuery(callsign);
+            m_fsdClient->sendClientQueryFlightPlan(callsign);
 
             // with this little trick we try to make an asynchronous signal / slot based approach
             // a synchronous return value
@@ -463,17 +464,16 @@ namespace BlackCore
         this->updateOrAddClient(callsign, vm, false);
     }
 
-    void CAirspaceMonitor::onCapabilitiesReplyReceived(const CCallsign &callsign, int clientCaps)
+    void CAirspaceMonitor::onCapabilitiesReplyReceived(const CCallsign &callsign, CClient::Capabilities clientCaps)
     {
         if (!this->isConnectedAndNotShuttingDown() || callsign.isEmpty()) { return; }
-        const CClient::Capabilities caps = static_cast<CClient::Capabilities>(clientCaps);
         const CVoiceCapabilities voiceCaps = sApp->getWebDataServices()->getVoiceCapabilityForCallsign(callsign);
         CPropertyIndexVariantMap vm(CClient::IndexCapabilities, CVariant::from(clientCaps));
         vm.addValue({CClient::IndexVoiceCapabilities}, voiceCaps);
         this->updateOrAddClient(callsign, vm, false);
 
         // for aircraft parts
-        if (caps.testFlag(CClient::FsdWithAircraftConfig)) { m_network->sendAircraftConfigQuery(callsign); }
+        if (clientCaps.testFlag(CClient::FsdWithAircraftConfig)) { m_fsdClient->sendClientQueryAircraftConfig(callsign); }
     }
 
     void CAirspaceMonitor::onServerReplyReceived(const CCallsign &callsign, const QString &server)
@@ -1356,10 +1356,10 @@ namespace BlackCore
     void CAirspaceMonitor::sendInitialAtcQueries(const CCallsign &callsign)
     {
         if (!this->isConnectedAndNotShuttingDown()) { return; }
-        m_network->sendRealNameQuery(callsign);
-        m_network->sendAtisQuery(callsign); // request ATIS and voice rooms
-        m_network->sendCapabilitiesQuery(callsign);
-        m_network->sendServerQuery(callsign);
+        m_fsdClient->sendClientQueryRealName(callsign);
+        m_fsdClient->sendClientQueryAtis(callsign); // request ATIS and voice rooms
+        m_fsdClient->sendClientQueryCapabilities(callsign);
+        m_fsdClient->sendClientQueryServer(callsign);
     }
 
     bool CAirspaceMonitor::sendNextStaggeredAtisQuery()
@@ -1368,7 +1368,7 @@ namespace BlackCore
         if (!this->isConnectedAndNotShuttingDown()) { return false; }
         const CCallsign cs = m_queryAtis.dequeue();
         if (!m_atcStationsOnline.containsCallsign(cs)) { return false; }
-        m_network->sendAtisQuery(cs);
+        m_fsdClient->sendClientQueryAtis(cs);
         return true;
     }
 
@@ -1376,13 +1376,13 @@ namespace BlackCore
     {
         if (!this->isConnectedAndNotShuttingDown()) { return; }
 
-        if (withIcaoQuery) { m_network->sendIcaoCodesQuery(callsign); }
-        if (withFsInn) { m_network->sendCustomFsinnQuery(callsign); }
+        if (withIcaoQuery) { m_fsdClient->sendPlaneInfoRequest(callsign); }
+        if (withFsInn) { m_fsdClient->sendPlaneInfoRequestFsinn(callsign); }
 
-        m_network->sendFrequencyQuery(callsign);
-        m_network->sendRealNameQuery(callsign);
-        m_network->sendCapabilitiesQuery(callsign);
-        m_network->sendServerQuery(callsign);
+        m_fsdClient->sendClientQueryCom1Freq(callsign);
+        m_fsdClient->sendClientQueryRealName(callsign);
+        m_fsdClient->sendClientQueryCapabilities(callsign);
+        m_fsdClient->sendClientQueryServer(callsign);
     }
 
     bool CAirspaceMonitor::sendNextStaggeredPilotDataQuery()
@@ -1391,21 +1391,21 @@ namespace BlackCore
         if (!this->isConnectedAndNotShuttingDown()) { return false; }
         const CCallsign cs = m_queryPilot.dequeue();
         if (!this->isAircraftInRange(cs)) { return false; }
-        m_network->sendFrequencyQuery(cs);
+        m_fsdClient->sendClientQueryCom1Freq(cs);
 
         // we only query ICAO if we have none yet
         // it happens sometimes with some FSD servers (e.g our testserver) a first query is skipped
         // Important: this is only a workaround and must not replace a sendInitialPilotQueries
         if (!this->getAircraftInRangeForCallsign(cs).hasAircraftDesignator())
         {
-            m_network->sendIcaoCodesQuery(cs);
+            m_fsdClient->sendPlaneInfoRequest(cs);
         }
         return true;
     }
 
     bool CAirspaceMonitor::isConnected() const
     {
-        return m_network && m_network->isConnected();
+        return m_fsdClient && m_fsdClient->getConnectionStatus().isConnected();
     }
 
     bool CAirspaceMonitor::isConnectedAndNotShuttingDown() const
@@ -1418,7 +1418,7 @@ namespace BlackCore
     {
         static const CServer empty;
         if (!this->isConnected()) { return empty; }
-        return m_network->getPresetServer();
+        return m_fsdClient->getServer();
     }
 
     const CEcosystem &CAirspaceMonitor::getCurrentEcosystem() const

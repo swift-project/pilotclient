@@ -12,7 +12,7 @@
 #define BLACKCORE_AIRSPACE_ANALYZER_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackcore/network.h"
+#include "blackcore/fsd/fsdclient.h"
 #include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
@@ -65,7 +65,7 @@ namespace BlackCore
 
         //! Constructor
         CAirspaceAnalyzer(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                          INetwork *network,
+                          Fsd::FSDClient *fsdClient,
                           CAirspaceMonitor *airspaceMonitorParent);
 
         //! Destructor

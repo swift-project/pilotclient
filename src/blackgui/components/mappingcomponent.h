@@ -21,6 +21,7 @@
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/variant.h"
 
 #include <QFrame>

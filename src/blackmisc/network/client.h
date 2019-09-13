@@ -158,7 +158,7 @@ namespace BlackMisc
 
         private:
             CUser m_user;
-            int  m_capabilities = static_cast<int>(None);
+            int m_capabilities;
             bool m_swift = false; // another swift client
             QString m_modelString;
             QString m_server;
@@ -179,5 +179,6 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Network::CClient)
 Q_DECLARE_METATYPE(BlackMisc::Network::CClient::Capability)
+Q_DECLARE_METATYPE(BlackMisc::Network::CClient::Capabilities)
 
 #endif // guard

@@ -12,7 +12,7 @@
 #ifndef BLACKSAMPLE_CLICLIENT_CLIENT_H
 #define BLACKSAMPLE_CLICLIENT_CLIENT_H
 
-#include "blackcore/network.h"
+#include "blackcore/fsd/fsdclient.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/network/textmessagelist.h"

@@ -14,7 +14,6 @@
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/cookiemanager.h"
 #include "blackcore/corefacade.h"
-#include "blackcore/vatsim/networkvatlib.h"
 #include "blackcore/registermetadata.h"
 #include "blackcore/setupreader.h"
 #include "blackcore/webdataservices.h"
@@ -1302,7 +1301,7 @@ namespace BlackCore
 
     void CApplication::addVatlibOptions()
     {
-        this->addParserOptions(CNetworkVatlib::getCmdLineOptions());
+        this->addParserOptions(BlackCore::Context::IContextNetwork::getCmdLineOptions());
     }
 
     QString CApplication::getCmdDBusAddressValue() const

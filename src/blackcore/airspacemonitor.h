@@ -11,10 +11,12 @@
 #ifndef BLACKCORE_AIRSPACE_MONITOR_H
 #define BLACKCORE_AIRSPACE_MONITOR_H
 
-#include "blackcore/network.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/simulation/settings/modelmatchersettings.h"
 #include "blackmisc/simulation/aircraftmodelsetprovider.h"
+#include "blackcore/fsd/fsdclient.h"
+#include "blackmisc/network/server.h"
+#include "blackmisc/network/ecosystem.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/matchinglog.h"
@@ -51,7 +53,6 @@
 namespace BlackCore
 {
     class CAirspaceAnalyzer;
-    class INetwork;
 
     //! Keeps track of other entities in the airspace: aircraft, ATC stations, etc.
     //! Central instance of data for \sa IRemoteAircraftProvider.
@@ -74,7 +75,7 @@ namespace BlackCore
         //! Constructor
         CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider      *ownAircraft,
                          BlackMisc::Simulation::IAircraftModelSetProvider *modelSetProvider,
-                         INetwork *network,
+                         Fsd::FSDClient *fsdClient,
                          QObject  *parent);
 
         //! Members not implenented or fully implenented by CRemoteAircraftProvider
@@ -256,7 +257,7 @@ namespace BlackCore
         BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< settings
         QQueue<BlackMisc::Aviation::CCallsign> m_queryAtis;  //!< query the ATIS
         QQueue<BlackMisc::Aviation::CCallsign> m_queryPilot; //!< query the pilot data
-        INetwork          *m_network  = nullptr;  //!< corresponding network interface
+        Fsd::FSDClient *m_fsdClient  = nullptr;  //!< corresponding network interface
         CAirspaceAnalyzer *m_analyzer = nullptr;  //!< owned analyzer
         bool m_bookingsRequested      = false;    //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
         QTimer m_processTimer;
@@ -371,7 +372,7 @@ namespace BlackCore
         void onCustomFSInnPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &modelString);
 
         void onRealNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
-        void onCapabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, int clientCaps);
+        void onCapabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, BlackMisc::Network::CClient::Capabilities clientCaps);
         void onServerReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);
         void onFlightPlanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
         void onAtcControllerDisconnected(const BlackMisc::Aviation::CCallsign &callsign);

@@ -1,0 +1,68 @@
+/* Copyright (C) 2019
+ * swift project community / contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
+ * or distributed except according to the terms contained in the LICENSE file.
+ */
+
+//! \file
+
+#ifndef BLACKCORE_FSD_ATCPOSITION_H
+#define BLACKCORE_FSD_ATCPOSITION_H
+
+#include "messagebase.h"
+#include "enums.h"
+#include "blackmisc/network/facilitytype.h"
+
+#include <QtGlobal>
+
+namespace BlackCore
+{
+    namespace Fsd
+    {
+        class BLACKCORE_EXPORT AtcDataUpdate : public MessageBase
+        {
+        public:
+            AtcDataUpdate(const QString &sender, int frequencykHz, BlackMisc::Network::CFacilityType facility, int visibleRange, AtcRating rating,
+                        double latitude, double longitude, int elevation);
+
+            virtual ~AtcDataUpdate() {}
+
+            QStringList toTokens() const;
+            static AtcDataUpdate fromTokens(const QStringList &tokens);
+            static QString pdu() { return "%"; }
+
+            int m_frequencykHz = 0.0;
+            BlackMisc::Network::CFacilityType m_facility;
+            int m_visibleRange = 0.0;
+            AtcRating m_rating = AtcRating::Unknown;
+            double m_latitude = 0.0;
+            double m_longitude = 0.0;
+            int m_elevation = 0.0;
+
+        private:
+            AtcDataUpdate();
+        };
+
+        inline bool operator==(const AtcDataUpdate &lhs, const AtcDataUpdate &rhs)
+        {
+            return  lhs.sender() == rhs.sender() &&
+                    lhs.receiver() == rhs.receiver() &&
+                    lhs.m_frequencykHz == rhs.m_frequencykHz &&
+                    lhs.m_facility == rhs.m_facility &&
+                    lhs.m_visibleRange == rhs.m_visibleRange &&
+                    lhs.m_rating == rhs.m_rating &&
+                    qFuzzyCompare(1 + lhs.m_latitude, 1 + rhs.m_latitude) &&
+                    qFuzzyCompare(1 + lhs.m_longitude, 1 + rhs.m_longitude) &&
+                    lhs.m_elevation == rhs.m_elevation;
+        }
+
+        inline bool operator!=(const AtcDataUpdate &lhs, const AtcDataUpdate &rhs)
+        {
+            return !(lhs == rhs);
+        }
+    }
+}
+
+#endif // guard

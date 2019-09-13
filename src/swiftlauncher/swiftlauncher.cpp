@@ -13,9 +13,9 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/context/contextapplicationproxy.h"
-#include "blackcore/vatsim/networkvatlib.h"
 #include "blackcore/setupreader.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
+#include "blackcore/context/contextnetwork.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/directoryutils.h"
@@ -269,7 +269,18 @@ bool CSwiftLauncher::setSwiftCoreExecutable()
 bool CSwiftLauncher::setSwiftDataExecutable()
 {
     m_executable = CDirectoryUtils::executableFilePath(CBuildConfig::swiftDataExecutableName());
-    m_executableArgs = sGui->argumentsJoined({}, CNetworkVatlib::vatlibArguments());
+
+    QStringList fsdArgs;
+    int id = 0;
+    QString key;
+    if (IContextNetwork::getCmdLineClientIdAndKey(id, key))
+    {
+        // from cmd. line
+        fsdArgs << "--idAndKey";
+        fsdArgs << sApp->getParserValue("clientIdAndKey"); // as typed in
+    }
+
+    m_executableArgs = sGui->argumentsJoined({}, fsdArgs);
     return true;
 }
 

@@ -13,7 +13,7 @@
 #include "blackcore/data/vatsimsetup.h"
 #include "blackcore/db/databasereader.h"
 #include "blackcore/vatsim/vatsimsettings.h"
-#include "blackcore/network.h"
+#include "blackcore/fsd/fsdclient.h"
 #include "blackcore/voicechannel.h"
 #include "blackcore/webreaderflags.h"
 #include "blackcore/aircraftmatcher.h"
@@ -23,6 +23,8 @@
 
 #include <QDBusMetaType>
 #include <QMetaType>
+
+using namespace BlackCore::Fsd;
 
 namespace BlackCore
 {
@@ -37,7 +39,6 @@ namespace BlackCore
         qDBusRegisterMetaType<Context::CLogSubscriptionHash>();
         qDBusRegisterMetaType<Context::CLogSubscriptionPair>();
         qDBusRegisterMetaType<Context::CSettingsDictionary>();
-        qDBusRegisterMetaType<INetwork::ConnectionStatus>();
         qDBusRegisterMetaType<BlackMisc::Network::CLoginMode>();
         qDBusRegisterMetaType<IVoiceChannel::ConnectionStatus>();
 
@@ -45,7 +46,6 @@ namespace BlackCore
         qRegisterMetaTypeStreamOperators<Context::CLogSubscriptionPair>();
         qRegisterMetaTypeStreamOperators<Context::CSettingsDictionary>();
         qRegisterMetaTypeStreamOperators<BlackMisc::Network::CLoginMode>();
-        qRegisterMetaTypeStreamOperators<INetwork::ConnectionStatus>();
         qRegisterMetaTypeStreamOperators<IVoiceChannel::ConnectionStatus>();
 
         Db::CDatabaseReaderConfig::registerMetadata();
@@ -55,5 +55,16 @@ namespace BlackCore
         Data::CLauncherSetup::registerMetadata();
         Vatsim::CReaderSettings::registerMetadata();
         Vatsim::CRawFsdMessageSettings::registerMetadata();
+
+        // not really clear when a type here has to be registered with qRegisterMetaType
+        // however, does not harm if it is redundant
+        qRegisterMetaType<AtcRating>();
+        qRegisterMetaType<PilotRating>();
+        qRegisterMetaType<SimType>();
+        qRegisterMetaType<ClientQueryType>();
+        qRegisterMetaType<FlightType>();
+        qRegisterMetaType<ServerErrorCode>();
+        qRegisterMetaType<ServerType>();
+        qRegisterMetaType<Capabilities>();
     }
 } // namespace

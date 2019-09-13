@@ -1,8 +1,8 @@
 load(common_pre)
 
-QT += core dbus network testlib
+QT += core dbus testlib
 
-TARGET = testnetwork
+TARGET = testfsdmessages
 CONFIG   -= app_bundle
 CONFIG   += blackconfig
 CONFIG   += blackmisc
@@ -21,12 +21,7 @@ INCLUDEPATH += \
     $$SourceRoot/src \
     $$SourceRoot/tests \
 
-HEADERS += \
-    expect.h
-
-SOURCES += \
-    testnetwork.cpp \
-    expect.cpp
+SOURCES += testfsdmessages.cpp
 
 DESTDIR = $$DestRoot/bin
 

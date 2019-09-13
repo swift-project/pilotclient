@@ -14,7 +14,6 @@
 #include "blackcore/context/context.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackcore/network.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
@@ -41,6 +40,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QCommandLineOption>
 #include <functional>
 
 // clazy:excludeall=const-signal-or-slot
@@ -368,6 +368,9 @@ namespace BlackCore
 
             //! Connect to receive raw fsd messages
             virtual QMetaObject::Connection connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot) = 0;
+
+            static const QList<QCommandLineOption> &getCmdLineOptions();
+            static bool getCmdLineClientIdAndKey(int &id, QString &key);
 
         protected:
             //! Constructor

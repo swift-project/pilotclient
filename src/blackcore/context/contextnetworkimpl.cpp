@@ -6,7 +6,6 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackcore/vatsim/networkvatlib.h"
 #include "blackcore/context/contextnetworkimpl.h"
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/context/contextownaircraftimpl.h"
@@ -52,6 +51,7 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Weather;
+using namespace BlackCore::Fsd;
 using namespace BlackCore::Vatsim;
 
 namespace BlackCore
@@ -68,15 +68,12 @@ namespace BlackCore
             CContextNetwork::registerHelp();
 
             // 1. Init by "network driver"
-            m_network = new CNetworkVatlib(
-                this,
-                this->getRuntime()->getCContextOwnAircraft(),
-                this,
-                this);
-            connect(m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::onFsdConnectionStatusChanged);
-            connect(m_network, &INetwork::kicked, this, &CContextNetwork::kicked);
-            connect(m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::onTextMessagesReceived, Qt::QueuedConnection);
-            connect(m_network, &INetwork::textMessageSent,      this, &CContextNetwork::textMessageSent);
+            m_fsdClient = new FSDClient(this, this->getRuntime()->getCContextOwnAircraft(), this, this);
+            connect(m_fsdClient, &FSDClient::connectionStatusChanged, this, &CContextNetwork::onFsdConnectionStatusChanged);
+            connect(m_fsdClient, &FSDClient::killRequestReceived, this, &CContextNetwork::kicked);
+            connect(m_fsdClient, &FSDClient::textMessagesReceived, this, &CContextNetwork::textMessagesReceived);
+//            connect(m_fsdClient, &FSDClient::textMessagesReceived, this, &CContextNetwork::checkForSupervisiorTextMessage);
+            connect(m_fsdClient, &FSDClient::textMessageSent, this, &CContextNetwork::textMessageSent);
 
             // 2. Update timer for data (network data such as frequency)
             // we use 2 timers so we can query at different times (not too many queirs at once)
@@ -96,8 +93,8 @@ namespace BlackCore
             m_airspace = new CAirspaceMonitor(
                 this->getRuntime()->getCContextOwnAircraft(),
                 this->getRuntime()->getCContextSimulator(),
-                m_network, this);
-            m_network->setClientProvider(m_airspace);
+                m_fsdClient, this);
+            m_fsdClient->setClientProvider(m_airspace);
             connect(m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this, &CContextNetwork::changedAtcStationsOnline, Qt::QueuedConnection);
             connect(m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked, Qt::QueuedConnection);
             connect(m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus, Qt::QueuedConnection);
@@ -118,7 +115,7 @@ namespace BlackCore
         void CContextNetwork::setSimulationEnvironmentProvider(ISimulationEnvironmentProvider *provider)
         {
             if (m_airspace) { m_airspace->setSimulationEnvironmentProvider(provider); }
-            if (m_network) { m_network->setSimulationEnvironmentProvider(provider); }
+            if (m_fsdClient) { m_fsdClient->setSimulationEnvironmentProvider(provider); }
         }
 
         CContextNetwork::~CContextNetwork()
@@ -213,7 +210,7 @@ namespace BlackCore
         {
             this->disconnect(); // all signals
             if (this->isConnected()) { this->disconnectFromNetwork(); }
-            if (m_network)  { m_network->setClientProvider(nullptr); }
+            if (m_fsdClient)  { m_fsdClient->setClientProvider(nullptr); }
             if (m_airspace) { m_airspace->gracefulShutdown(); }
         }
 
@@ -224,56 +221,69 @@ namespace BlackCore
             if (!server.getUser().hasCredentials()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, u"Invalid user credentials"); }
             if (!this->ownAircraft().getAircraftIcaoCode().hasDesignator()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, u"Invalid ICAO data for own aircraft"); }
             if (!CNetworkUtils::canConnect(server, msg, 5000)) { return CStatusMessage(CStatusMessage::SeverityError, msg); }
-            if (m_network->isConnected())    { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, u"Already connected"); }
+            if (m_fsdClient->isConnected()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, u"Already connected"); }
             if (this->isPendingConnection()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, u"Pending connection, please wait"); }
 
-            m_currentStatus = INetwork::Connecting; // as semaphore we are going to connect
             this->getIContextOwnAircraft()->updateOwnAircraftPilot(server.getUser());
             const CSimulatedAircraft ownAircraft(this->ownAircraft());
-            m_network->presetServer(server);
-            m_network->presetPartnerCallsign(partnerCallsign);
+            m_fsdClient->setPartnerCallsign(partnerCallsign);
 
             // Fall back to observer mode, if no simulator is available or not simulating
             if (!CBuildConfig::isLocalDeveloperDebugBuild() && !this->getIContextSimulator()->isSimulatorSimulating())
             {
                 CLogMessage(this).info(u"No simulator connected or connected simulator not simulating. Falling back to observer mode");
-                mode = INetwork::LoginAsObserver;
+                mode.setLoginMode(CLoginMode::Observer);
             }
 
             const QString l = extraLiveryString.isEmpty() ?  ownAircraft.getModel().getSwiftLiveryString() : extraLiveryString;
             const QString m = extraModelString.isEmpty()  ?  ownAircraft.getModelString() : extraModelString;
 
             m_currentMode = mode;
-            m_network->presetLoginMode(mode);
-            m_network->presetCallsign(ownAircraft.getCallsign());
-            m_network->presetIcaoCodes(ownAircraft);
-            m_network->presetLiveryAndModelString(l, sendLivery, m, sendModelString);
+            m_fsdClient->setLoginMode(mode);
+            m_fsdClient->setCallsign(ownAircraft.getCallsign());
+            m_fsdClient->setIcaoCodes(ownAircraft);
+            m_fsdClient->setLiveryAndModelString(l, sendLivery, m, sendModelString);
+            m_fsdClient->setClientName(sApp->swiftVersionChar());
+            m_fsdClient->setVersion(CBuildConfig::getVersion().majorVersion(), CBuildConfig::getVersion().minorVersion());
+
+            int clientId = 0;
+            QString clientKey;
+            if (!getCmdLineClientIdAndKey(clientId, clientKey))
+            {
+                clientId = CBuildConfig::vatsimClientId();
+                clientKey = CBuildConfig::vatsimPrivateKey();
+            }
+
+            m_fsdClient->setClientIdAndKey(clientId, clientKey.toLocal8Bit());
+            m_fsdClient->setClientCapabilities(Capabilities::AircraftInfo | Capabilities::FastPos | Capabilities::AtcInfo | Capabilities::AircraftConfig);
+            m_fsdClient->setServer(server);
 
             const CSimulatorPluginInfo sim = this->getIContextSimulator() ? this->getIContextSimulator()->getSimulatorPluginInfo() : CSimulatorPluginInfo();
-            m_network->presetSimulatorInfo(sim);
-            m_network->initiateConnection();
+            m_fsdClient->setSimType(sim);
+            m_fsdClient->setPilotRating(PilotRating::Student);
+            m_fsdClient->setAtcRating(AtcRating::Observer);
+
+            m_fsdClient->connectToServer();
             return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, u"Connection pending " % server.getAddress() % u' ' % QString::number(server.getPort()));
         }
 
         CServer CContextNetwork::getConnectedServer() const
         {
-            return this->isConnected() ? m_network->getPresetServer() : CServer();
+            return this->isConnected() ? m_fsdClient->getServer() : CServer();
         }
 
-        INetwork::LoginMode CContextNetwork::getLoginMode() const
+        CLoginMode CContextNetwork::getLoginMode() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return m_currentMode;
+            return m_fsdClient->getLoginMode();
         }
 
         CStatusMessage CContextNetwork::disconnectFromNetwork()
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_network->isConnected() || m_network->isPendingConnection())
+            if (m_fsdClient->isConnected() || m_fsdClient->isPendingConnection())
             {
-                m_currentStatus = INetwork::Disconnecting; // as semaphore we are going to disconnect
-                m_currentMode = INetwork::LoginNormal;
-                m_network->terminateConnection();
+                m_fsdClient->disconnectFromServer();
                 return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, u"Connection terminating");
             }
             else
@@ -285,16 +295,12 @@ namespace BlackCore
         bool CContextNetwork::isConnected() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return m_network->isConnected();
+            return m_fsdClient->isConnected();
         }
 
         bool CContextNetwork::isPendingConnection() const
         {
-            // if underlying class says pending, we believe it. But not all states (e.g. disconnecting) are covered
-            if (m_network->isPendingConnection()) return true;
-
-            // now check out own extra states, e.g. disconnecting
-            return INetwork::isPendingStatus(m_currentStatus);
+            return m_fsdClient->isPendingConnection();
         }
 
         bool CContextNetwork::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
@@ -457,16 +463,16 @@ namespace BlackCore
             else if (parser.matchesCommand(".wallop"))
             {
                 if (parser.countParts() < 2) { return false; }
-                if (!m_network) { return false; }
+                if (!m_fsdClient) { return false; }
                 if (!this->isConnected()) { return false; }
                 const QString wallopMsg = parser.part(1).simplified().trimmed();
-                m_network->sendWallopMessage(wallopMsg);
+                m_fsdClient->sendTextMessage(TextMessageGroups::AllSups, wallopMsg);
                 return true;
             }
             else if (parser.matchesCommand(".enable", ".unignore"))
             {
                 if (parser.countParts() < 2) { return false; }
-                if (!m_network) { return false; }
+                if (!m_fsdClient) { return false; }
                 if (!this->isConnected()) { return false; }
                 const CCallsign cs(parser.part(1));
                 if (cs.isValid()) { this->updateAircraftEnabled(cs, true); }
@@ -474,7 +480,7 @@ namespace BlackCore
             else if (parser.matchesCommand(".disable", ".ignore"))
             {
                 if (parser.countParts() < 2) { return false; }
-                if (!m_network) { return false; }
+                if (!m_fsdClient) { return false; }
                 if (!this->isConnected()) { return false; }
                 const CCallsign cs(parser.part(1));
                 if (cs.isValid()) { this->updateAircraftEnabled(cs, false); }
@@ -486,14 +492,14 @@ namespace BlackCore
         void CContextNetwork::sendTextMessages(const CTextMessageList &textMessages)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << textMessages; }
-            m_network->sendTextMessages(textMessages);
+            m_fsdClient->sendTextMessages(textMessages);
         }
 
         void CContextNetwork::sendFlightPlan(const CFlightPlan &flightPlan)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << flightPlan; }
-            m_network->sendFlightPlan(flightPlan);
-            m_network->sendFlightPlanQuery(this->ownAircraft().getCallsign());
+            m_fsdClient->sendFlightPlan(flightPlan);
+            m_fsdClient->sendClientQueryFlightPlan(this->ownAircraft().getCallsign());
         }
 
         CFlightPlan CContextNetwork::loadFlightPlanFromNetwork(const CCallsign &callsign) const
@@ -599,9 +605,9 @@ namespace BlackCore
             {
                 CLogMessage(this).info(u"Connected, own aircraft %1") << this->ownAircraft().getCallsignAsString();
 
-                if (m_network)
+                if (m_fsdClient)
                 {
-                    const CServer server = m_network->getPresetServer();
+                    const CServer server = m_fsdClient->getServer();
                     emit this->connectedServerChanged(server);
                 }
             }
@@ -673,9 +679,9 @@ namespace BlackCore
                 }
 
                 // part to send to partner "forward"
-                if (m_network && !m_network->getPresetPartnerCallsign().isEmpty())
+                if (m_fsdClient && !m_fsdClient->getPresetPartnerCallsign().isEmpty())
                 {
-                    const CCallsign partnerCallsign = m_network->getPresetPartnerCallsign();
+                    const CCallsign partnerCallsign = m_fsdClient->getPresetPartnerCallsign();
 
                     // IMPORTANT: use messages AND NOT textMessages here, exclude messages from partner to avoid infinite roundtrips
                     CTextMessageList relayedMessages;
@@ -851,15 +857,15 @@ namespace BlackCore
         QString CContextNetwork::getNetworkStatistics(bool reset, const QString &separator)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (!m_network) { return QString(); }
-            return m_network->getNetworkStatisticsAsText(reset, separator);
+            if (!m_fsdClient) { return QString(); }
+            return m_fsdClient->getNetworkStatisticsAsText(reset, separator);
         }
 
         bool CContextNetwork::setNetworkStatisticsEnable(bool enabled)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (!m_network) { return false; }
-            return m_network->setStatisticsEnable(enabled);
+            if (!m_fsdClient) { return false; }
+            return m_fsdClient->setStatisticsEnable(enabled);
         }
 
         bool CContextNetwork::testAddAltitudeOffset(const CCallsign &callsign, const CLength &offset)
@@ -870,8 +876,9 @@ namespace BlackCore
 
         QStringList CContextNetwork::getNetworkPresetValues() const
         {
-            if (!m_network) { return {}; }
-            return m_network->getPresetValues();
+            if (!m_fsdClient) { return {}; }
+            return m_fsdClient->getPresetValues();
+            return {};
         }
 
         CAtcStation CContextNetwork::getOnlineStationForCallsign(const CCallsign &callsign) const
@@ -1101,29 +1108,29 @@ namespace BlackCore
         void CContextNetwork::setFastPositionEnabledCallsigns(CCallsignSet &callsigns)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsigns; }
-            Q_ASSERT(m_network);
-            m_network->setInterimPositionReceivers(callsigns);
+            Q_ASSERT(m_fsdClient);
+            m_fsdClient->setInterimPositionReceivers(callsigns);
         }
 
         CCallsignSet CContextNetwork::getFastPositionEnabledCallsigns() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            Q_ASSERT(m_network);
-            return m_network->getInterimPositionReceivers();
+            Q_ASSERT(m_fsdClient);
+            return m_fsdClient->getInterimPositionReceivers();
         }
 
         QString CContextNetwork::getLibraryInfo(bool detailed) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << detailed; }
-            Q_ASSERT(m_network);
-            return m_network->getLibraryInfo(detailed);
+            Q_ASSERT(m_fsdClient);
+            return "";
         }
 
         void CContextNetwork::testRequestAircraftConfig(const CCallsign &callsign)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
-            Q_ASSERT(m_network);
-            m_network->sendAircraftConfigQuery(callsign);
+            Q_ASSERT(m_fsdClient);
+            m_fsdClient->sendClientQueryAircraftConfig(callsign);
         }
 
         void CContextNetwork::testCreateDummyOnlineAtcStations(int number)
@@ -1141,18 +1148,18 @@ namespace BlackCore
         void CContextNetwork::testReceivedAtisMessage(const CCallsign &callsign, const CInformationMessage &msg)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign.asString(); }
-            if (this->network())
+            if (this->fsdClient())
             {
-                emit this->network()->atisReplyReceived(callsign, msg);
+                emit this->fsdClient()->atisReplyReceived(callsign, msg);
             }
         }
 
         void CContextNetwork::testReceivedTextMessages(const CTextMessageList &textMessages)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << textMessages.toQString(); }
-            if (this->network())
+            if (this->fsdClient())
             {
-                emit this->network()->textMessagesReceived(textMessages);
+                emit this->fsdClient()->textMessagesReceived(textMessages);
             }
         }
 
@@ -1194,7 +1201,7 @@ namespace BlackCore
 
             // bind does not allow to define connection type, so we use receiver as workaround
             const QMetaObject::Connection uc; // unconnected
-            const QMetaObject::Connection c = rawFsdMessageReceivedSlot ? connect(m_network, &INetwork::rawFsdMessageReceived, receiver, rawFsdMessageReceivedSlot) : uc;
+            const QMetaObject::Connection c = rawFsdMessageReceivedSlot ? connect(m_fsdClient, &FSDClient::rawFsdMessage, receiver, rawFsdMessageReceivedSlot) : uc;
             Q_ASSERT_X(c || !rawFsdMessageReceivedSlot, Q_FUNC_INFO, "connect failed");
             return c;
         }

@@ -21,7 +21,7 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackcore/network.h"
+#include "blackcore/fsd/fsdclient.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
@@ -150,7 +150,7 @@ namespace BlackCore
             //! \remarks public so values can be logged/monitored
             //! @{
             //! Network library
-            INetwork *network() const { return m_network; }
+            Fsd::FSDClient *fsdClient() const { return m_fsdClient; }
 
             //! Airspace
             CAirspaceMonitor *airspace() const { return m_airspace; }
@@ -293,8 +293,7 @@ namespace BlackCore
 
         private:
             CAirspaceMonitor           *m_airspace = nullptr;
-            INetwork                   *m_network  = nullptr;
-            INetwork::ConnectionStatus  m_currentStatus = INetwork::Disconnected; //!< used to detect pending connections
+            Fsd::FSDClient             *m_fsdClient = nullptr;
             BlackMisc::Network::CLoginMode m_currentMode = BlackMisc::Network::CLoginMode::Pilot;    //!< current modeM
             QTimer                     *m_requestAircraftDataTimer = nullptr;     //!< general updates such as frequencies, see requestAircraftDataUpdates()
             QTimer                     *m_requestAtisTimer         = nullptr;     //!< general updates such as ATIS
