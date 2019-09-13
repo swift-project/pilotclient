@@ -12,6 +12,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextnetwork.h"
 
+using namespace BlackMisc::Network;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 
@@ -90,10 +91,10 @@ namespace BlackGui
             this->close();
         }
 
-        void CLoginDialog::onNetworkStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
+        void CLoginDialog::onNetworkStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
             Q_UNUSED(from);
-            if (to == INetwork::Disconnected || to == INetwork::Connected)
+            if (to.isDisconnected() || to.isConnected())
             {
                 this->init();
             }

@@ -19,6 +19,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 
@@ -115,10 +116,10 @@ namespace BlackGui
             this->updateStations();
         }
 
-        void CAtcButtonComponent::onConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+        void CAtcButtonComponent::onConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
             Q_UNUSED(from);
-            if (INetwork::isDisconnectedStatus(to))
+            if (to.isDisconnected())
             {
                 this->setVisible(false);
             }

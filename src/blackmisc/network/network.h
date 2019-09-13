@@ -19,6 +19,7 @@
 #include "blackmisc/network/authenticateduser.h"
 #include "blackmisc/network/client.h"
 #include "blackmisc/network/clientlist.h"
+#include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/network/ecosystem.h"
 #include "blackmisc/network/ecosystemlist.h"
 #include "blackmisc/network/entityflags.h"

@@ -17,7 +17,7 @@
 #include "blackgui/views/viewbase.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackcore/network.h"
+#include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/aircraftmodel.h"
@@ -449,15 +449,15 @@ namespace BlackGui
             this->tokenBucketUpdateAircraft(aircraft);
         }
 
-        void CMappingComponent::onConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+        void CMappingComponent::onConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
             Q_UNUSED(from);
-            if (INetwork::isDisconnectedStatus(to))
+            if (to.isDisconnected())
             {
                 this->tokenBucketUpdate();
                 ui->tvp_RenderedAircraft->clear();
             }
-            else if (INetwork::isConnectedStatus(to))
+            else if (to.isConnected())
             {
                 if (sGui && sGui->getIContextNetwork())
                 {
@@ -564,15 +564,15 @@ namespace BlackGui
             m_updateTimer.setInterval(ms);
         }
 
-        void CMappingComponent::onNetworkConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+        void CMappingComponent::onNetworkConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
             Q_UNUSED(from);
-            if (INetwork::isDisconnectedStatus(to))
+            if (to.isDisconnected())
             {
                 ui->tvp_RenderedAircraft->clear();
                 m_updateTimer.stop();
             }
-            else if (INetwork::isConnectedStatus(to))
+            else if (to.isConnected())
             {
                 ui->comp_SimulatorSelector->setReadOnly(true);
                 m_updateTimer.start();

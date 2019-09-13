@@ -38,6 +38,7 @@ using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackGui;
 using namespace BlackMisc;
+using namespace BlackMisc::Network;
 
 namespace BlackGui
 {
@@ -186,22 +187,19 @@ namespace BlackGui
             this->onMapperReady();
         }
 
-        void CInfoBarStatusComponent::onNetworkConnectionChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+        void CInfoBarStatusComponent::onNetworkConnectionChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
             Q_UNUSED(from);
-            switch (to)
+            switch (to.getConnectionStatus())
             {
-            case INetwork::Disconnected:
-            case INetwork::DisconnectedError:
-            case INetwork::DisconnectedFailed:
-            case INetwork::DisconnectedLost:
+            case CConnectionStatus::Disconnected:
                 ui->led_Network->setOn(false);
                 break;
-            case INetwork::Connected:
+            case CConnectionStatus::Connected:
                 ui->led_Network->setOn(true);
                 ui->led_Network->setOnToolTip(u"Connected: " % sGui->getIContextNetwork()->getConnectedServer().getName());
                 break;
-            case INetwork::Connecting:
+            case CConnectionStatus::Connecting:
                 ui->led_Network->setTriStateColor(CLedWidget::Yellow);
                 break;
             default:

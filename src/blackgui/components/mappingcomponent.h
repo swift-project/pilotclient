@@ -15,11 +15,11 @@
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
-#include "blackcore/network.h"
 #include "blackmisc/tokenbucket.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/variant.h"
 
@@ -128,7 +128,7 @@ namespace BlackGui
             void onRemoteAircraftModelChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
             //! Connection status has been changed
-            void onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void onConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
             //! Widget changed
             void onTabWidgetChanged(int index);
@@ -158,7 +158,7 @@ namespace BlackGui
             void settingsChanged();
 
             //! Connection status has been changed
-            void onNetworkConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void onNetworkConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
             //! Update simulated aircraft view
             void updateRenderedAircraftView(bool forceUpdate = false);

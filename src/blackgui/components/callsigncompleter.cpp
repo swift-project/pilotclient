@@ -16,6 +16,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 
@@ -106,10 +107,10 @@ namespace BlackGui
             this->updateCallsignsFromContext();
         }
 
-        void CCallsignCompleter::onChangedConnectionStatus(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+        void CCallsignCompleter::onChangedConnectionStatus(const CConnectionStatus &from, const CConnectionStatus &to)
         {
             Q_UNUSED(from);
-            const bool connected = (INetwork::Connected == to);
+            const bool connected = to.isConnected();
             ui->led_Status->setOn(connected);
             ui->le_Callsign->clear();
             ui->le_Callsign->setEnabled(connected);

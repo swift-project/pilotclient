@@ -47,6 +47,7 @@ using namespace BlackGui::Views;
 using namespace BlackGui::Settings;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Weather;
 using namespace BlackCore;
@@ -338,16 +339,16 @@ namespace BlackGui
             this->update();
         }
 
-        void CAtcStationComponent::connectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+        void CAtcStationComponent::connectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
             Q_UNUSED(from);
-            if (INetwork::isConnectedStatus(to))
+            if (to.isConnected())
             {
                 ui->tvp_AtcStationsOnline->clear();
                 this->updateTreeView();
                 m_updateTimer.start();
             }
-            else if (INetwork::isDisconnectedStatus(to))
+            else if (to.isDisconnected())
             {
                 m_updateTimer.stop();
                 this->clearOnlineViews();

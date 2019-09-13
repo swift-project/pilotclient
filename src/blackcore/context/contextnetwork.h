@@ -25,6 +25,7 @@
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/flightplan.h"
+#include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/network/clientlist.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/serverlist.h"
@@ -152,7 +153,7 @@ namespace BlackCore
 
             //! Connection status changed
             //! \sa IContextNetwork::connectedServerChanged
-            void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void connectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
             //! The connected server has been changed
             //! \remark can also be used to determine if the ecosystem has been changed

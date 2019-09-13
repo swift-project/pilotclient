@@ -18,7 +18,7 @@
 #include "blackcore/aircraftmatcher.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/weathermanager.h"
-#include "blackcore/network.h"
+#include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/settings/modelmatchersettings.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
@@ -205,7 +205,7 @@ namespace BlackCore
             void xCtxChangedRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Network connection status
-            void xCtxNetworkConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to);
+            void xCtxNetworkConnectionStatusChanged(BlackMisc::Network::CConnectionStatus from, BlackMisc::Network::CConnectionStatus to);
 
             //! Update simulator cockpit from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
             void xCtxUpdateSimulatorCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);

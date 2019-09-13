@@ -22,7 +22,6 @@
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/webdataservices.h"
-#include "blackcore/network.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/simulation/simulatorinternals.h"
 #include "blackmisc/simulation/aircraftmodel.h"

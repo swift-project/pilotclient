@@ -24,6 +24,7 @@
 #include <QWriteLocker>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
@@ -105,15 +106,15 @@ namespace BlackCore
         m_atcCallsignTimestamps[callsign] = QDateTime::currentMSecsSinceEpoch();
     }
 
-    void CAirspaceAnalyzer::onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus)
+    void CAirspaceAnalyzer::onConnectionStatusChanged(CConnectionStatus oldStatus, CConnectionStatus newStatus)
     {
         Q_UNUSED(oldStatus);
-        if (newStatus == INetwork::Disconnected)
+        if (newStatus.isDisconnected())
         {
             this->clear();
             m_updateTimer.stop();
         }
-        else if (newStatus == INetwork::Connected)
+        else if (newStatus.isConnected())
         {
             m_updateTimer.start();
         }

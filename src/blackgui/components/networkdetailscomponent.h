@@ -22,6 +22,7 @@
 #include "blackmisc/audio/voicesetup.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/datacache.h"
+#include "blackmisc/network/connectionstatus.h"
 
 namespace Ui { class CNetworkDetailsComponent; }
 namespace BlackGui

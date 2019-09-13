@@ -11,11 +11,11 @@
 #ifndef BLACKGUI_COMPONENT_AIRCRAFTPARTSHISTORY_H
 #define BLACKGUI_COMPONENT_AIRCRAFTPARTSHISTORY_H
 
-#include "blackcore/network.h"
 #include <QFrame>
 #include <QTabWidget>
 #include <QTimer>
 #include <QTextDocument>
+#include "blackmisc/network/connectionstatus.h"
 
 namespace Ui { class CAircraftPartsHistory; }
 namespace BlackGui
@@ -65,7 +65,7 @@ namespace BlackGui
             void toggleHistoryEnabled(bool enabled);
 
             //! Connection status changed
-            void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void connectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
         };
     } // ns
 } // ns

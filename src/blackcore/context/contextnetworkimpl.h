@@ -317,7 +317,7 @@ namespace BlackCore
             void onChangedAtisReceived(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Connection status changed
-            void onFsdConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void onFsdConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
             //! Relay to partner callsign
             void createRelayMessageToPartnerCallsign(const BlackMisc::Network::CTextMessage &textMessage, const BlackMisc::Aviation::CCallsign &partnerCallsign, BlackMisc::Network::CTextMessageList &relayedMessages);

@@ -796,11 +796,11 @@ namespace BlackCore
             m_simulatorPlugin.second->changeRemoteAircraftEnabled(aircraft);
         }
 
-        void CContextSimulator::xCtxNetworkConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+        void CContextSimulator::xCtxNetworkConnectionStatusChanged(CConnectionStatus from, CConnectionStatus to)
         {
             Q_UNUSED(from);
             BLACK_VERIFY_X(this->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
-            if (to == INetwork::Connected && this->getIContextNetwork())
+            if (to.isConnected() && this->getIContextNetwork())
             {
                 m_networkSessionId = this->getIContextNetwork()->getConnectedServer().getServerSessionId(false);
                 if (m_simulatorPlugin.second) // check in case the plugin has been unloaded
@@ -808,7 +808,7 @@ namespace BlackCore
                     m_simulatorPlugin.second->setFlightNetworkConnected(true);
                 }
             }
-            else if (INetwork::isDisconnectedStatus(to))
+            else if (to.isDisconnected())
             {
                 m_networkSessionId.clear();
                 m_aircraftMatcher.clearMatchingStatistics();

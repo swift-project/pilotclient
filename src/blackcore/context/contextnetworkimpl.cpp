@@ -583,20 +583,11 @@ namespace BlackCore
             return sApp->getWebDataServices()->getVatsimVoiceServers();
         }
 
-        void CContextNetwork::onFsdConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
+        void CContextNetwork::onFsdConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
-            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << from << to; }
-            const INetwork::ConnectionStatus fromOld = m_currentStatus; // own status cached
-            m_currentStatus = to;
+            // if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << from << to; }
 
-            if (fromOld == INetwork::Disconnecting)
-            {
-                // remark: vatlib does not know disconnecting. In vatlib's terminating connection method
-                // state Disconnecting is sent manually. We fix the vatlib state here regarding disconnecting
-                from = INetwork::Disconnecting;
-            }
-
-            if (to == INetwork::Disconnected)
+            if (to.isDisconnected())
             {
                 // make sure airspace is really cleaned up
                 Q_ASSERT(m_airspace);
@@ -604,7 +595,7 @@ namespace BlackCore
             }
 
             // send 1st position
-            if (to == INetwork::Connected)
+            if (to.isConnected())
             {
                 CLogMessage(this).info(u"Connected, own aircraft %1") << this->ownAircraft().getCallsignAsString();
 
@@ -617,14 +608,7 @@ namespace BlackCore
 
             // send as message
             static const QString chgMsg("Connection status changed from '%1' to '%2'");
-            if (to == INetwork::DisconnectedError)
-            {
-                CLogMessage(this).error(chgMsg) << INetwork::connectionStatusToString(from) << INetwork::connectionStatusToString(to);
-            }
-            else
-            {
-                CLogMessage(this).info(chgMsg) << INetwork::connectionStatusToString(from) << INetwork::connectionStatusToString(to);
-            }
+            CLogMessage(this).info(chgMsg) << from.toQString() << to.toQString();
 
             // send as own signal
             emit this->connectionStatusChanged(from, to);

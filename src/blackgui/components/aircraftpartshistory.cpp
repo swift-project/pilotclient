@@ -23,6 +23,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 
@@ -163,10 +164,10 @@ namespace BlackGui
             }
         }
 
-        void CAircraftPartsHistory::connectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+        void CAircraftPartsHistory::connectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
             Q_UNUSED(from);
-            if (to == INetwork::Connected || to == INetwork::Disconnected)
+            if (to.isConnected() || to.isDisconnected())
             {
                 this->initGui();
             }

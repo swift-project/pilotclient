@@ -1220,22 +1220,10 @@ namespace BlackCore
         );
     }
 
-    void CAirspaceMonitor::onConnectionStatusChanged(INetwork::ConnectionStatus oldStatus, INetwork::ConnectionStatus newStatus)
+    void CAirspaceMonitor::onConnectionStatusChanged(CConnectionStatus oldStatus, CConnectionStatus newStatus)
     {
         Q_UNUSED(oldStatus);
-        switch (newStatus)
-        {
-        case INetwork::Connected:
-            break;
-        case INetwork::Disconnected:
-        case INetwork::DisconnectedError:
-        case INetwork::DisconnectedLost:
-        case INetwork::DisconnectedFailed:
-            this->clear();
-            break;
-        default:
-            break;
-        }
+        if (newStatus.isDisconnected()) { clear(); }
     }
 
     void CAirspaceMonitor::onPilotDisconnected(const CCallsign &callsign)

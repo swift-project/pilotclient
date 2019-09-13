@@ -12,7 +12,7 @@
 #include "blackgui/views/clientview.h"
 #include "blackgui/views/userview.h"
 #include "blackcore/context/contextnetwork.h"
-#include "blackcore/network.h"
+#include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/network/userlist.h"
 #include "ui_usercomponent.h"
 
@@ -98,16 +98,16 @@ namespace BlackGui
             this->tabBar()->setTabText(ic, c);
         }
 
-        void CUserComponent::onConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+        void CUserComponent::onConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
             Q_UNUSED(from);
-            if (INetwork::isDisconnectedStatus(to))
+            if (to.isDisconnected())
             {
                 ui->tvp_AllUsers->clear();
                 ui->tvp_Clients->clear();
                 m_updateTimer.stop();
             }
-            else if (INetwork::isConnectedStatus(to))
+            else if (to.isConnected())
             {
                 m_updateTimer.start();
             }

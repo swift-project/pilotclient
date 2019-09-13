@@ -24,6 +24,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore;
 using namespace BlackCore::Context;
@@ -154,12 +155,12 @@ namespace BlackGui
             }
         }
 
-        void CMainKeypadAreaComponent::connectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+        void CMainKeypadAreaComponent::connectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
             Q_UNUSED(from);
 
             // Connected button
-            if (to == INetwork::Connected)
+            if (to.isConnected())
             {
                 ui->pb_Connect->setText("Discon."); // full terms some too wide
                 ui->pb_Connect->setChecked(true);
@@ -274,7 +275,7 @@ namespace BlackGui
 
             if (sGui->getIContextNetwork() && sGui->getIContextNetwork()->isConnected())
             {
-                this->connectionStatusChanged(INetwork::Connected, INetwork::Connected);
+                this->connectionStatusChanged(CConnectionStatus::Connected, CConnectionStatus::Connected);
             }
         }
     } // namespace

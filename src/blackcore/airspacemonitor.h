@@ -386,7 +386,7 @@ namespace BlackCore
         void onReceivedVatsimDataFile();
         void onAircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, qint64 currentOffsetMs);
         void onAircraftInterimUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
-        void onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus);
+        void onConnectionStatusChanged(BlackMisc::Network::CConnectionStatus oldStatus, BlackMisc::Network::CConnectionStatus newStatus);
     };
 } // namespace
 

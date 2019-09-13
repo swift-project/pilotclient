@@ -22,7 +22,6 @@
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackcore/network.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackmisc/audio/notificationsounds.h"
@@ -304,17 +303,16 @@ void SwiftGuiStd::onKickedFromNetwork(const QString &kickMessage)
     // this->displayInOverlayWindow(CStatusMessage(this, CStatusMessage::SeverityError, msgText));
 }
 
-void SwiftGuiStd::onConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+void SwiftGuiStd::onConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
 {
     Q_UNUSED(from);
     this->updateGuiStatusInformation();
 
     // sounds
-    switch (to)
+    switch (to.getConnectionStatus())
     {
-    case INetwork::Connected: this->playNotifcationSound(CNotificationSounds::NotificationLogin); break;
-    case INetwork::Disconnected: this->playNotifcationSound(CNotificationSounds::NotificationLogoff); break;
-    case INetwork::DisconnectedError: this->playNotifcationSound(CNotificationSounds::NotificationError); break;
+    case CConnectionStatus::Connected: this->playNotifcationSound(CNotificationSounds::NotificationLogin); break;
+    case CConnectionStatus::Disconnected: this->playNotifcationSound(CNotificationSounds::NotificationLogoff); break;
     default: break;
     }
 }

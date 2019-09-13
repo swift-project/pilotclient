@@ -22,13 +22,13 @@
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/data/globalsetup.h"
-#include "blackcore/network.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/simulation/simulatorinternals.h"
@@ -445,10 +445,10 @@ namespace BlackGui
             }
         }
 
-        void CLoginComponent::onNetworkStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+        void CLoginComponent::onNetworkStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
             Q_UNUSED(from);
-            if (to != INetwork::Connected) { return; }
+            if (to != CConnectionStatus::Connected) { return; }
 
             this->setUiLoginState(true);
             this->updateGui();

@@ -17,6 +17,7 @@
 
 using namespace BlackCore;
 using namespace BlackCore::Context;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 
 namespace BlackGui
@@ -119,10 +120,10 @@ namespace BlackGui
             this->initGui();
         }
 
-        void CModelMatcherLogEnable::connectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+        void CModelMatcherLogEnable::connectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
             Q_UNUSED(from);
-            if (to == INetwork::Connected || to == INetwork::Disconnected)
+            if (to.isConnected() || to.isDisconnected())
             {
                 this->initGui();
             }

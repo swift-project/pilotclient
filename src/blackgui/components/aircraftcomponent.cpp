@@ -17,7 +17,6 @@
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/context/contextownaircraft.h"
-#include "blackcore/network.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/fsdsetup.h"
 #include "ui_aircraftcomponent.h"
@@ -163,14 +162,14 @@ namespace BlackGui
             this->tabBar()->setTabText(ap, aps);
         }
 
-        void CAircraftComponent::onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
+        void CAircraftComponent::onConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
             Q_UNUSED(from);
-            if (INetwork::isDisconnectedStatus(to))
+            if (to.isDisconnected())
             {
                 ui->tvp_AircraftInRange->clear();
             }
-            else if (INetwork::isConnectedStatus(to))
+            else if (to.isConnected())
             {
                 if (sGui && sGui->getIContextNetwork())
                 {

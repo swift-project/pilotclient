@@ -13,6 +13,7 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/network.h"
+#include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
@@ -109,7 +110,7 @@ namespace BlackCore
                                       const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range);
 
         //! Connection status of network changed
-        void onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus);
+        void onConnectionStatusChanged(BlackMisc::Network::CConnectionStatus oldStatus, BlackMisc::Network::CConnectionStatus newStatus);
 
         //! Network position update
         void onNetworkPositionUpdate(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);

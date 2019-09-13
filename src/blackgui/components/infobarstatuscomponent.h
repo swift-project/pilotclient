@@ -12,9 +12,9 @@
 #define BLACKGUI_INFOBARSTATUSCOMPONENT_H
 
 #include "blackcore/actionbind.h"
-#include "blackcore/network.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/input/actionhotkeydefs.h"
+#include "blackmisc/network/connectionstatus.h"
 
 #include <QFrame>
 #include <QObject>
@@ -72,7 +72,7 @@ namespace BlackGui
             void onSimulatorStatusChanged(int status);
 
             //! Network connection has been changed
-            void onNetworkConnectionChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void onNetworkConnectionChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
             //! Context menu requested
             void onCustomAudioContextMenuRequested(const QPoint &position);

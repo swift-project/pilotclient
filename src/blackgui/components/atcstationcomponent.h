@@ -15,11 +15,11 @@
 #include "blackgui/settings/atcstationssettings.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
-#include "blackcore/network.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/identifiable.h"
+#include "blackmisc/network/connectionstatus.h"
 
 #include <QDateTime>
 #include <QModelIndex>
@@ -121,7 +121,7 @@ namespace BlackGui
             void changedAtcStationsOnline();
 
             //! Connection status has been changed
-            void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void connectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
             //! Request dummy ATC online stations
             void testCreateDummyOnlineAtcStations(int number);

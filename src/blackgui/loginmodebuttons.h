@@ -13,6 +13,7 @@
 
 #include "blackcore/network.h"
 #include "blackgui/blackguiexport.h"
+#include "blackmisc/network/connectionstatus.h"
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>

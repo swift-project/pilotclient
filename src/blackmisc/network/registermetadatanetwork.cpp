@@ -16,6 +16,7 @@ namespace BlackMisc
         void registerMetadata()
         {
             CAuthenticatedUser::registerMetadata();
+            CConnectionStatus::registerMetadata();
             CClient::registerMetadata();
             qDBusRegisterMetaType<CClient::Capability>();
             qRegisterMetaTypeStreamOperators<CClient::Capability>();

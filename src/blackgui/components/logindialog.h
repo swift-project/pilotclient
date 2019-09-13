@@ -12,8 +12,8 @@
 #define BLACKGUI_COMPONENTS_LOGINDIALOG_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackcore/network.h"
 #include "blackmisc/aviation/airport.h"
+#include "blackmisc/network/connectionstatus.h"
 #include <QDialog>
 #include <QScopedPointer>
 
@@ -49,7 +49,7 @@ namespace BlackGui
             void onLoginOrLogoffCancelled();
             void onLoginOrLogoffSuccessful();
             void onRequestNetworkSettings();
-            void onNetworkStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void onNetworkStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
             QScopedPointer<Ui::CLoginDialog> ui;
         };

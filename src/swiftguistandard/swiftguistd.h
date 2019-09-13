@@ -25,7 +25,7 @@
 #include "blackgui/managedstatusbar.h"
 #include "blackgui/guiactionbind.h"
 #include "blackcore/actionbind.h"
-#include "blackcore/network.h"
+#include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/autopublishdata.h"
 #include "blackmisc/audio/notificationsounds.h"
@@ -209,7 +209,7 @@ private:
     //! Connection status changed
     //! \param from old status
     //! \param to   new status
-    void onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+    void onConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
     //
     // GUI related functions

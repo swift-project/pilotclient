@@ -20,6 +20,7 @@
 #include "blackmisc/simulation/data/lastmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/network/data/lastserver.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/server.h"
@@ -225,7 +226,7 @@ namespace BlackGui
             void onSimulatorStatusChanged(int status);
 
             //! Network status has changed
-            void onNetworkStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void onNetworkStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
             //! Tab widget (server) changed
             void onServerTabWidgetChanged(int index);

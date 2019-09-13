@@ -11,10 +11,10 @@
 #ifndef BLACKGUI_MAINKEYPADAREACOMPONENT_H
 #define BLACKGUI_MAINKEYPADAREACOMPONENT_H
 
-#include "blackcore/network.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/maininfoareacomponent.h"
 #include "blackmisc/identifier.h"
+#include "blackmisc/network/connectionstatus.h"
 
 #include <QFrame>
 #include <QList>
@@ -74,7 +74,7 @@ namespace BlackGui
             void buttonSelected();
 
             //! \copydoc BlackCore::Context::IContextNetwork::connectionStatusChanged
-            void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void connectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
             //! \copydoc BlackCore::Context::IContextOwnAircraft::changedAircraftCockpit
             void ownAircraftCockpitChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);

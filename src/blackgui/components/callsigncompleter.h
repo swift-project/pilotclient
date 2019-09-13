@@ -15,7 +15,7 @@
 #include "blackgui/sharedstringlistcompleter.h"
 #include "blackmisc/digestsignal.h"
 #include "blackmisc/aviation/callsignset.h"
-#include "blackcore/network.h"
+#include "blackmisc/network/connectionstatus.h"
 #include <QFrame>
 #include <QScopedPointer>
 #include <QTimer>
@@ -69,7 +69,7 @@ namespace BlackGui
             void updateCallsignsFromContext();
             void onEditingFinished();
             void onChangedAircraftInRange();
-            void onChangedConnectionStatus(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void onChangedConnectionStatus(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
             bool isValidKnownCallsign(const QString &callsignString) const;
 
             //! Shared completer data

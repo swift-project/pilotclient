@@ -14,7 +14,7 @@
 #include "blackgui/settings/viewupdatesettings.h"
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
-#include "blackcore/network.h"
+#include "blackmisc/network/connectionstatus.h"
 
 #include <QObject>
 #include <QScopedPointer>
@@ -86,7 +86,7 @@ namespace BlackGui
             void onRowCountChanged(int count, bool withFilter);
 
             //! Connection status has been changed
-            void onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void onConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
             //! Settings have been changed
             void onSettingsChanged();

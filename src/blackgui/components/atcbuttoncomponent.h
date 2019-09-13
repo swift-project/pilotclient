@@ -12,6 +12,7 @@
 #define BLACKGUI_COMPONENTS_ATCBUTTONCOMPONENT_H
 
 #include "blackcore/context/contextnetwork.h"
+#include "blackmisc/network/connectionstatus.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -62,7 +63,7 @@ namespace BlackGui
             void onChangedAtcStations();
 
             //! Connection status did change
-            void onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void onConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
             //! Button has been clicked
             void onButtonClicked();
