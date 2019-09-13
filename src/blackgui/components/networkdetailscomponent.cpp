@@ -75,12 +75,12 @@ namespace BlackGui
         CNetworkDetailsComponent::~CNetworkDetailsComponent()
         { }
 
-        INetwork::LoginMode CNetworkDetailsComponent::getLoginMode() const
+        CLoginMode CNetworkDetailsComponent::getLoginMode() const
         {
             return ui->frp_LoginMode->getLoginMode();
         }
 
-        void CNetworkDetailsComponent::setLoginMode(INetwork::LoginMode mode)
+        void CNetworkDetailsComponent::setLoginMode(CLoginMode mode)
         {
             ui->frp_LoginMode->setLoginMode(mode);
         }

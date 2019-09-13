@@ -22,7 +22,6 @@
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/webdataservices.h"
-#include "blackcore/network.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/simulation/simulatorinternals.h"
 #include "blackmisc/simulation/aircraftmodel.h"
@@ -167,11 +166,10 @@ namespace BlackGui
                 ui->comp_OwnAircraft->updateOwnAircaftIcaoValuesFromGuiValues();
 
                 // Login mode
-                const INetwork::LoginMode mode = ui->comp_NetworkDetails->getLoginMode();
-                switch (mode)
+                const CLoginMode mode = ui->comp_NetworkDetails->getLoginMode();
+                switch (mode.getLoginMode())
                 {
-                case INetwork::LoginStealth:    CLogMessage(this).info(u"login in stealth mode"); break;
-                case INetwork::LoginAsObserver: CLogMessage(this).info(u"login in observer mode"); break;
+                case CLoginMode::Observer: CLogMessage(this).info(u"login in observer mode"); break;
                 default: break; // INetwork::LoginNormal
                 }
 

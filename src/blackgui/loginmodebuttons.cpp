@@ -19,6 +19,7 @@
 using namespace BlackConfig;
 using namespace BlackCore;
 using namespace BlackCore::Context;
+using namespace BlackMisc::Network;
 
 namespace BlackGui
 {
@@ -35,32 +36,25 @@ namespace BlackGui
     CLoginModeButtons::~CLoginModeButtons()
     { }
 
-    INetwork::LoginMode BlackGui::CLoginModeButtons::getLoginMode() const
+    CLoginMode BlackGui::CLoginModeButtons::getLoginMode() const
     {
-        INetwork::LoginMode mode = INetwork::LoginNormal;
-        if (ui->rb_LoginStealth->isChecked())
+        CLoginMode mode = CLoginMode::Pilot;
+        if (ui->rb_LoginObserver->isChecked())
         {
-            mode = INetwork::LoginStealth;
-        }
-        else if (ui->rb_LoginObserver->isChecked())
-        {
-            mode = INetwork::LoginAsObserver;
+            mode.setLoginMode(CLoginMode::Observer);
         }
         return mode;
     }
 
-    void CLoginModeButtons::setLoginMode(INetwork::LoginMode mode)
+    void CLoginModeButtons::setLoginMode(CLoginMode mode)
     {
-        switch (mode)
+        switch (mode.getLoginMode())
         {
-        case INetwork::LoginAsObserver:
+        case CLoginMode::Observer:
             ui->rb_LoginObserver->setChecked(true);
             break;
-        case INetwork::LoginStealth:
-            ui->rb_LoginStealth->setChecked(true);
-            break;
         default:
-        case INetwork::LoginNormal:
+        case CLoginMode::Pilot:
             ui->rb_LoginNormal->setChecked(true);
             break;
         }

@@ -88,11 +88,11 @@ namespace BlackCore
             virtual BlackMisc::Aviation::CAtcStationList getOnlineStationsForFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ChannelSpacing channelSpacing) const override;
             virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool isOnlineStation(const BlackMisc::Aviation::CCallsign &callsign) const override;
-            virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, const QString &extraLiveryString, bool sendLivery, const QString &extraModelString, bool sendModelString, const BlackMisc::Aviation::CCallsign &partnerCallsign, BlackCore::INetwork::LoginMode mode) override;
+            virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, const QString &extraLiveryString, bool sendLivery, const QString &extraModelString, bool sendModelString, const BlackMisc::Aviation::CCallsign &partnerCallsign, BlackMisc::Network::CLoginMode mode) override;
             virtual BlackMisc::CStatusMessage disconnectFromNetwork() override;
             virtual bool isConnected() const override;
             virtual BlackMisc::Network::CServer getConnectedServer() const override;
-            virtual INetwork::LoginMode getLoginMode() const override;
+            virtual BlackMisc::Network::CLoginMode getLoginMode() const override;
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
             virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
             virtual void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) override;

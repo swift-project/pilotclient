@@ -1451,7 +1451,7 @@ namespace BlackCore
         if (!sApp || sApp->isShuttingDown() || !sApp->getIContextNetwork()) { return false; }
 
         // It is only relevant if we are logged in as observer
-        if (sApp->getIContextNetwork()->getLoginMode() != INetwork::LoginAsObserver) { return false; }
+        if (sApp->getIContextNetwork()->getLoginMode() != BlackMisc::Network::CLoginMode::Observer) { return false; }
 
         const CCallsign ownCallsign = this->getOwnAircraft().getCallsign();
         return ownCallsign.isMaybeCopilotCallsign(callsign);

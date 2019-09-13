@@ -252,9 +252,9 @@ namespace BlackCore
             virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Aviation::CAtcStationList getOnlineStationsForFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ChannelSpacing channelSpacing) const override;
             virtual bool isOnlineStation(const BlackMisc::Aviation::CCallsign &callsign) const override;
-            virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, const QString &extraLiveryString, bool sendLivery, const QString &extraModelString, bool sendModelString, const BlackMisc::Aviation::CCallsign &partnerCallsign, BlackCore::INetwork::LoginMode mode) override;
+            virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, const QString &extraLiveryString, bool sendLivery, const QString &extraModelString, bool sendModelString, const BlackMisc::Aviation::CCallsign &partnerCallsign, BlackMisc::Network::CLoginMode mode) override;
             virtual BlackMisc::Network::CServer getConnectedServer() const override;
-            virtual INetwork::LoginMode getLoginMode() const override;
+            virtual BlackMisc::Network::CLoginMode getLoginMode() const override;
             virtual BlackMisc::CStatusMessage disconnectFromNetwork() override;
             virtual bool isConnected() const override;
             virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
@@ -295,7 +295,7 @@ namespace BlackCore
             CAirspaceMonitor           *m_airspace = nullptr;
             INetwork                   *m_network  = nullptr;
             INetwork::ConnectionStatus  m_currentStatus = INetwork::Disconnected; //!< used to detect pending connections
-            INetwork::LoginMode         m_currentMode = INetwork::LoginNormal;    //!< current modeM
+            BlackMisc::Network::CLoginMode m_currentMode = BlackMisc::Network::CLoginMode::Pilot;    //!< current modeM
             QTimer                     *m_requestAircraftDataTimer = nullptr;     //!< general updates such as frequencies, see requestAircraftDataUpdates()
             QTimer                     *m_requestAtisTimer         = nullptr;     //!< general updates such as ATIS
 

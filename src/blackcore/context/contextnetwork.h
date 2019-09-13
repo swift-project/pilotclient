@@ -27,6 +27,7 @@
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/network/clientlist.h"
+#include "blackmisc/network/loginmode.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/textmessagelist.h"
@@ -248,16 +249,16 @@ namespace BlackCore
                 const QString &extraLiveryString, bool sendLivery,
                 const QString &extraModelString,  bool sendModelString,
                 const BlackMisc::Aviation::CCallsign &partnerCallsign,
-                BlackCore::INetwork::LoginMode loginMode) = 0;
+                BlackMisc::Network::CLoginMode loginMode) = 0;
 
             //! Server which is connected, if not connected empty default object.
             virtual BlackMisc::Network::CServer getConnectedServer() const = 0;
 
             //! Login mode
-            virtual INetwork::LoginMode getLoginMode() const = 0;
+            virtual BlackMisc::Network::CLoginMode getLoginMode() const = 0;
 
             //! Mode as string
-            const QString &getLoginModeAsString() const { return INetwork::modeAsString(this->getLoginMode()); }
+            QString getLoginModeAsString() const { return this->getLoginMode().toQString(); }
 
             //! Disconnect from network
             //! \return messages generated during disconnecting

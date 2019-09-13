@@ -24,7 +24,9 @@ namespace BlackMisc
             CEcosystem::registerMetadata();
             CEcosystemList::registerMetadata();
             CEntityFlags::registerMetadata();
+            CFacilityType::registerMetadata();
             CFsdSetup::registerMetadata();
+            CLoginMode::registerMetadata();
             CRawFsdMessage::registerMetadata();
             CRawFsdMessageList::registerMetadata();
             CRemoteFile::registerMetadata();
@@ -44,6 +46,7 @@ namespace BlackMisc
             CUserList::registerMetadata();
             CVoiceCapabilities::registerMetadata();
             Settings::CNetworkSettings::registerMetadata();
+
         }
     } // ns
 } // ns

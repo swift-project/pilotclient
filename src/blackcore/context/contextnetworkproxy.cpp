@@ -353,7 +353,7 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<bool>(QLatin1String("testAddAltitudeOffset"), callsign, offset);
         }
 
-        CStatusMessage CContextNetworkProxy::connectToNetwork(const CServer &server, const QString &extraLiveryString, bool sendLiveryString, const QString &extraModelString, bool sendModelString, const CCallsign &partnerCallsign, INetwork::LoginMode loginMode)
+        CStatusMessage CContextNetworkProxy::connectToNetwork(const CServer &server, const QString &extraLiveryString, bool sendLiveryString, const QString &extraModelString, bool sendModelString, const CCallsign &partnerCallsign, CLoginMode loginMode)
         {
             return m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1String("connectToNetwork"), server, extraLiveryString, sendLiveryString, extraModelString, sendModelString, partnerCallsign, loginMode);
         }
@@ -373,9 +373,9 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<BlackMisc::Network::CServer>(QLatin1String("getConnectedServer"));
         }
 
-        INetwork::LoginMode CContextNetworkProxy::getLoginMode() const
+        CLoginMode CContextNetworkProxy::getLoginMode() const
         {
-            return m_dBusInterface->callDBusRet<BlackCore::INetwork::LoginMode>(QLatin1String("getLoginMode"));
+            return m_dBusInterface->callDBusRet<CLoginMode>(QLatin1String("getLoginMode"));
         }
 
         bool CContextNetworkProxy::parseCommandLine(const QString &commandLine, const CIdentifier &originator)

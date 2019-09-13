@@ -289,13 +289,8 @@ namespace BlackGui
                 this->updateOwnAircaftIcaoValuesFromGuiValues();
 
                 // Login mode
-                const INetwork::LoginMode mode = ui->frp_LoginMode->getLoginMode();
-                switch (mode)
-                {
-                case INetwork::LoginStealth: CLogMessage(this).info(u"login in stealth mode"); break;
-                case INetwork::LoginAsObserver: CLogMessage(this).info(u"login in observer mode"); break;
-                default: break; // INetwork::LoginNormal
-                }
+                const CLoginMode mode = ui->frp_LoginMode->getLoginMode();
+                if(mode.isObserver()) { CLogMessage(this).info(u"login in observer mode"); }
 
                 // Server
                 currentServer = this->getCurrentServer();

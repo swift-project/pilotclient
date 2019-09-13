@@ -13,7 +13,6 @@
 
 #include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/data/networksetup.h"
-#include "blackcore/network.h"
 #include "blackgui/settings/guisettings.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"

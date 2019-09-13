@@ -124,7 +124,7 @@ namespace BlackCore
             }
 
             //! \copydoc IContextNetwork::connectToNetwork
-            virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, const QString &extraLiveryString, bool sendLivery, const QString &extraModelString, bool sendModelString, const BlackMisc::Aviation::CCallsign &partnerCallsign, BlackCore::INetwork::LoginMode mode) override
+            virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, const QString &extraLiveryString, bool sendLivery, const QString &extraModelString, bool sendModelString, const BlackMisc::Aviation::CCallsign &partnerCallsign, BlackMisc::Network::CLoginMode mode) override
             {
                 Q_UNUSED(mode);
                 Q_UNUSED(server);
@@ -166,10 +166,10 @@ namespace BlackCore
             }
 
             //! \copydoc IContextNetwork::getLoginMode
-            virtual INetwork::LoginMode getLoginMode() const override
+            virtual BlackMisc::Network::CLoginMode getLoginMode() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return BlackCore::INetwork::LoginNormal;
+                return BlackMisc::Network::CLoginMode::Pilot;
             }
 
             //! \copydoc IContextNetwork::sendTextMessages()

@@ -15,7 +15,6 @@
 #include <QScopedPointer>
 
 #include "blackcore/data/networksetup.h"
-#include "blackcore/network.h"
 #include "blackmisc/network/data/lastserver.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/fsdsetup.h"
@@ -23,6 +22,7 @@
 #include "blackmisc/settingscache.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/network/connectionstatus.h"
+#include "blackmisc/network/loginmode.h"
 
 namespace Ui { class CNetworkDetailsComponent; }
 namespace BlackGui
@@ -79,10 +79,10 @@ namespace BlackGui
             bool isVoiceSetupOverrideEnabled() const;
 
             //! Login mode
-            BlackCore::INetwork::LoginMode getLoginMode() const;
+            BlackMisc::Network::CLoginMode getLoginMode() const;
 
             //! Login mode
-            void setLoginMode(BlackCore::INetwork::LoginMode mode);
+            void setLoginMode(BlackMisc::Network::CLoginMode mode);
 
             //! Reset state
             void resetState();

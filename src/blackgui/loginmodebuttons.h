@@ -11,9 +11,10 @@
 #ifndef BLACKGUI_LOGINMODEBUTTONS_H
 #define BLACKGUI_LOGINMODEBUTTONS_H
 
-#include "blackcore/network.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/network/connectionstatus.h"
+#include "blackmisc/network/loginmode.h"
+
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
@@ -34,10 +35,10 @@ namespace BlackGui
         virtual ~CLoginModeButtons() override;
 
         //! Get login mode, \sa BlackCore::INetwork::LoginMode
-        BlackCore::INetwork::LoginMode getLoginMode() const;
+        BlackMisc::Network::CLoginMode getLoginMode() const;
 
         //! Set login mode
-        void setLoginMode(BlackCore::INetwork::LoginMode mode);
+        void setLoginMode(BlackMisc::Network::CLoginMode mode);
 
         //! Set to read only
         void setReadOnly(bool readonly);
