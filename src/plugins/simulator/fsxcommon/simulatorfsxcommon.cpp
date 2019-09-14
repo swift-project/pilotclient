@@ -376,12 +376,12 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::resetAircraftStatistics()
         {
-            m_dispatchProcCount = 0;
-            m_dispatchProcEmptyCount = 0;
-            m_dispatchMaxTimeMs = -1;
-            m_dispatchProcMaxTimeMs = -1;
-            m_dispatchTimeMs = -1;
-            m_dispatchProcTimeMs = -1;
+            m_dispatchProcCount      =  0;
+            m_dispatchProcEmptyCount =  0;
+            m_dispatchMaxTimeMs      = -1;
+            m_dispatchProcMaxTimeMs  = -1;
+            m_dispatchTimeMs         = -1;
+            m_dispatchProcTimeMs     = -1;
             m_requestSimObjectDataCount = 0;
             m_dispatchReceiveIdLast    = SIMCONNECT_RECV_ID_NULL;
             m_dispatchReceiveIdMaxTime = SIMCONNECT_RECV_ID_NULL;
@@ -1948,7 +1948,7 @@ namespace BlackSimPlugin
             const QList<CSimConnectObject> simObjects(m_simConnectObjects.values());
 
             int simObjectNumber = 0;
-            const bool traceSendId = this->isTracingSendId();
+            const bool traceSendId       = this->isTracingSendId();
             const bool updateAllAircraft = this->isUpdateAllRemoteAircraft(currentTimestamp);
             for (const CSimConnectObject &simObject : simObjects)
             {
@@ -2009,7 +2009,7 @@ namespace BlackSimPlugin
         bool CSimulatorFsxCommon::updateRemoteAircraftParts(const CSimConnectObject &simObject, const CInterpolationResult &result, bool forcedUpdate)
         {
             if (!simObject.hasValidRequestAndObjectId()) { return false; }
-            if (!simObject.isConfirmedAdded()) { return false; }
+            if (!simObject.isConfirmedAdded())           { return false; }
 
             const CAircraftParts parts = result;
             if (parts.isNull()) { return false; }

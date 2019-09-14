@@ -78,7 +78,7 @@ namespace BlackGui
             explicit CFormDbUser(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CFormDbUser();
+            virtual ~CFormDbUser() override;
 
             //! Authenticated DB user
             BlackMisc::Network::CAuthenticatedUser getSwiftDbUser() const;

@@ -408,8 +408,8 @@ namespace XSwiftBus
             plane->position.lat = latitudesDeg.at(i);
             plane->position.lon = longitudesDeg.at(i);
             plane->position.elevation = altitudesFt.at(i);
-            plane->position.pitch = static_cast<float>(pitchesDeg.at(i));
-            plane->position.roll = static_cast<float>(rollsDeg.at(i));
+            plane->position.pitch   = static_cast<float>(pitchesDeg.at(i));
+            plane->position.roll    = static_cast<float>(rollsDeg.at(i));
             plane->position.heading = static_cast<float>(headingsDeg.at(i));
 
             if (setOnGround) { plane->isOnGround = onGrounds.at(i); }
