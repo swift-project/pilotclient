@@ -653,6 +653,12 @@ namespace BlackCore
         return (status.testFlag(Connected) || status.testFlag(Simulating) || status.testFlag(Paused));
     }
 
+    const CCallsign &ISimulator::getTestCallsign()
+    {
+        static const CCallsign cs("SWIFT");
+        return cs;
+    }
+
     ISimulator::ISimulator(const CSimulatorPluginInfo &pluginInfo,
                            IOwnAircraftProvider       *ownAircraftProvider,
                            IRemoteAircraftProvider    *remoteAircraftProvider,
