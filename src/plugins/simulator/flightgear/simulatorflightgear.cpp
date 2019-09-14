@@ -480,7 +480,7 @@ namespace BlackSimPlugin
 
             // crosscheck if still a valid aircraft
             // it can happen that aircraft has been removed, timed out ...
-            if (!this->isAircraftInRange(newRemoteAircraft.getCallsign()))
+            if (!this->isAircraftInRangeOrTestMode(newRemoteAircraft.getCallsign()))
             {
                 // next cycle will be called by callbacks or timer
                 CLogMessage(this).warning(u"Aircraft '%1' no longer in range, will not add") << newRemoteAircraft.getCallsign();
