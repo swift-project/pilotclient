@@ -290,6 +290,9 @@ namespace BlackCore
             c = connect(m_contextApplication, &IContextApplication::fakedSetComVoiceRoom, this->getCContextAudio(), &CContextAudio::setComVoiceRooms, Qt::QueuedConnection);
             Q_ASSERT(c);
             times.insert("Post setup, connects audio", time.restart());
+            c = connect(m_contextNetwork, &IContextNetwork::connectionStatusChanged,
+                        this->getCContextAudio(), &CContextAudio::xCtxNetworkConnectionStatusChanged, Qt::QueuedConnection);
+            Q_ASSERT(c);
         }
     }
 

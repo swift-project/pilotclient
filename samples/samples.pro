@@ -11,6 +11,7 @@ SUBDIRS += sampleblackmiscsim
 SUBDIRS += samplehotkey
 SUBDIRS += sampleweatherdata
 SUBDIRS += samplefsd
+SUBDIRS += afvclient
 
 samplecliclient.file = cliclient/samplecliclient.pro
 sampleblackmiscquantities.file = blackmiscquantities/sampleblackmiscquantities.pro

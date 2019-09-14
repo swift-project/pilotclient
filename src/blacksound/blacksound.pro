@@ -15,8 +15,31 @@ DEPENDPATH += . ..
 
 DEFINES += LOG_IN_FILE BUILD_BLACKSOUND_LIB
 
-HEADERS += *.h
-SOURCES += *.cpp
+HEADERS += \
+    blacksoundexport.h \
+    notificationplayer.h \
+    audioutilities.h \
+    selcalplayer.h \
+    soundgenerator.h \
+    threadedtonepairplayer.h \
+    tonepair.h \
+    wav/wavfile.h \
+
+SOURCES += \
+    notificationplayer.cpp \
+    audioutilities.cpp \
+    selcalplayer.cpp \
+    soundgenerator.cpp \
+    threadedtonepairplayer.cpp \
+    tonepair.cpp \
+    wav/wavfile.cpp \
+
+include ($$PWD/codecs/codecs.pri)
+include ($$PWD/dsp/dsp.pri)
+include ($$PWD/sampleprovider/sampleprovider.pri)
+
+LIBS += \
+    -lopus \
 
 DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin

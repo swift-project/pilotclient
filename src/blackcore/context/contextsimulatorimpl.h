@@ -205,7 +205,7 @@ namespace BlackCore
             void xCtxChangedRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Network connection status
-            void xCtxNetworkConnectionStatusChanged(BlackMisc::Network::CConnectionStatus from, BlackMisc::Network::CConnectionStatus to);
+            void xCtxNetworkConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
             //! Update simulator cockpit from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
             void xCtxUpdateSimulatorCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);

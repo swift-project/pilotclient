@@ -187,6 +187,9 @@ namespace BlackCore
 
         void CContextOwnAircraft::resolveVoiceRooms()
         {
+            // If VVL supported is disabled, do nothing
+            if (true) { return; }
+
             if (!this->getIContextNetwork() || !this->getIContextAudio() || !this->getIContextApplication()) { return; } // no chance to resolve rooms
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
 

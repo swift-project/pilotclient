@@ -36,7 +36,13 @@ SOURCES += $$PWD/db/*.cpp
 SOURCES += $$PWD/vatsim/*.cpp
 SOURCES += $$PWD/fsd/*.cpp
 
-LIBS *= -lvatlib -lvatsimauth
+include($$PWD/afv/afv.pri)
+
+LIBS *= \
+    -lvatlib \
+    -lvatsimauth \
+    -lsodium \
+
 DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin
 

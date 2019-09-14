@@ -796,7 +796,7 @@ namespace BlackCore
             m_simulatorPlugin.second->changeRemoteAircraftEnabled(aircraft);
         }
 
-        void CContextSimulator::xCtxNetworkConnectionStatusChanged(CConnectionStatus from, CConnectionStatus to)
+        void CContextSimulator::xCtxNetworkConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
             Q_UNUSED(from);
             BLACK_VERIFY_X(this->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");

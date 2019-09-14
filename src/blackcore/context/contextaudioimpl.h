@@ -18,6 +18,7 @@
 #include "blackcore/voicechannel.h"
 #include "blackcore/audiomixer.h"
 #include "blackcore/blackcoreexport.h"
+#include "blackcore/afv/clients/afvclient.h"
 #include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/audio/notificationsounds.h"
@@ -32,6 +33,7 @@
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/network/connectionstatus.h"
 #include "blacksound/selcalplayer.h"
 #include "blacksound/notificationplayer.h"
 
@@ -181,6 +183,9 @@ namespace BlackCore
             //! \remark cross context
             void xCtxChangedAircraftCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
+            //! Network connection status
+            void xCtxNetworkConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+
             //! Voice channel by room
             QSharedPointer<IVoiceChannel> getVoiceChannelBy(const BlackMisc::Audio::CVoiceRoom &voiceRoom);
 
@@ -216,6 +221,9 @@ namespace BlackCore
             BlackMisc::CSetting<BlackMisc::Audio::TSettings>     m_audioSettings       { this, &CContextAudio::onChangedAudioSettings };
             BlackMisc::CSetting<BlackCore::Audio::TInputDevice>  m_inputDeviceSetting  { this, &CContextAudio::changeDeviceSettings };
             BlackMisc::CSetting<BlackCore::Audio::TOutputDevice> m_outputDeviceSetting { this, &CContextAudio::changeDeviceSettings };
+
+            // AFV
+            AFVClient m_voiceClient;
         };
     } // namespace
 } // namespace

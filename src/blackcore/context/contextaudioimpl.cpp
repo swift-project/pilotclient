@@ -29,6 +29,7 @@
 #include "blackmisc/sequence.h"
 #include "blackmisc/simplecommandparser.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/verify.h"
 #include "blacksound/soundgenerator.h"
 
 #include <QTimer>
@@ -43,6 +44,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Input;
 using namespace BlackMisc::Audio;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 using namespace BlackSound;
@@ -55,7 +57,8 @@ namespace BlackCore
         CContextAudio::CContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
             IContextAudio(mode, runtime),
             CIdentifiable(this),
-            m_voice(new CVoiceVatlib())
+            m_voice(new CVoiceVatlib()),
+            m_voiceClient(("https://voice1.vatsim.uk"))
         {
             initVoiceChannels();
             initInputDevice();
@@ -774,6 +777,24 @@ namespace BlackCore
                 // reset
                 m_audioMixer->makeMixerConnectionIfNotExisting(IAudioMixer::InputVoiceChannel1, IAudioMixer::OutputDevice1);
                 m_audioMixer->makeMixerConnectionIfNotExisting(IAudioMixer::InputVoiceChannel2, IAudioMixer::OutputDevice1);
+            }
+        }
+
+        void CContextAudio::xCtxNetworkConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
+        {
+            Q_UNUSED(from);
+            BLACK_VERIFY_X(this->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
+            if (to.isConnected() && this->getIContextNetwork())
+            {
+                CUser connectedUser = this->getIContextNetwork()->getConnectedServer().getUser();
+                m_voiceClient.setContextOwnAircraft(getIContextOwnAircraft());
+                m_voiceClient.connectTo(connectedUser.getId(), connectedUser.getPassword(), connectedUser.getCallsign().asString());
+                m_voiceClient.start(QAudioDeviceInfo::defaultInputDevice(), QAudioDeviceInfo::defaultOutputDevice(), {0, 1});
+            }
+            else if (to.isDisconnected())
+            {
+                m_voiceClient.stop();
+                m_voiceClient.disconnectFrom();
             }
         }
 
