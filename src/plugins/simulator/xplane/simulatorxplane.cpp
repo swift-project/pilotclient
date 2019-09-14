@@ -325,6 +325,7 @@ namespace BlackSimPlugin
 
                 // remove the invalid ones
                 int i = 0;
+                if (this->isTestMode()) { invalid.clear(); } // skip this in test mode
                 for (const CCallsign &cs : invalid)
                 {
                     this->triggerRemoveAircraft(cs, ++i * 100);

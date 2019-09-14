@@ -1175,7 +1175,7 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::timerBasedObjectAddOrRemove()
         {
             this->addPendingAircraft(AddByTimer);
-            this->physicallyRemoveAircraftNotInProvider();
+            if (!this->isTestMode()) { this->physicallyRemoveAircraftNotInProvider(); }
         }
 
         void CSimulatorFsxCommon::addPendingAircraftAfterAdded()
