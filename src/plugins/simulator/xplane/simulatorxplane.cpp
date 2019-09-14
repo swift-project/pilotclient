@@ -643,7 +643,7 @@ namespace BlackSimPlugin
 
             // crosscheck if still a valid aircraft
             // it can happen that aircraft has been removed, timed out ...
-            if (!this->isAircraftInRange(newRemoteAircraft.getCallsign()))
+            if (!this->isAircraftInRangeOrTestMode(newRemoteAircraft.getCallsign()))
             {
                 // next cycle will be called by callbacks or timer
                 CLogMessage(this).warning(u"Aircraft '%1' no longer in range, will not add") << newRemoteAircraft.getCallsign();
@@ -673,6 +673,13 @@ namespace BlackSimPlugin
                                          newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
                                          newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
                                          livery);
+                PlanesPositions pos;
+                pos.push_back(newRemoteAircraft.getSituation());
+                m_trafficProxy->setPlanesPositions(pos);
+
+                PlanesSurfaces surfaces;
+                surfaces.push_back(newRemoteAircraft.getCallsign(), newRemoteAircraft.getParts());
+                m_trafficProxy->setPlanesSurfaces(surfaces);
             }
             else
             {
@@ -692,7 +699,7 @@ namespace BlackSimPlugin
             if (callsign.isEmpty()) { return false; } // can happen if an object is not an aircraft
 
             // really remove from simulator
-            if (!m_xplaneAircraftObjects.contains(callsign) && !m_pendingToBeAddedAircraft.containsCallsign(callsign) && !m_addingInProgressAircraft.contains(callsign))
+            if (!this->isTestMode() && !m_xplaneAircraftObjects.contains(callsign) && !m_pendingToBeAddedAircraft.containsCallsign(callsign) && !m_addingInProgressAircraft.contains(callsign))
             {
                 // not existing aircraft
                 return false;
@@ -901,14 +908,7 @@ namespace BlackSimPlugin
                     if (updateAllAircraft || !this->isEqualLastSent(interpolatedSituation))
                     {
                         this->rememberLastSent(interpolatedSituation);
-                        planesPositions.callsigns.push_back(interpolatedSituation.getCallsign().asString());
-                        planesPositions.latitudesDeg.push_back(interpolatedSituation.latitude().value(CAngleUnit::deg()));
-                        planesPositions.longitudesDeg.push_back(interpolatedSituation.longitude().value(CAngleUnit::deg()));
-                        planesPositions.altitudesFt.push_back(interpolatedSituation.getAltitude().value(CLengthUnit::ft()));
-                        planesPositions.pitchesDeg.push_back(interpolatedSituation.getPitch().value(CAngleUnit::deg()));
-                        planesPositions.rollsDeg.push_back(interpolatedSituation.getBank().value(CAngleUnit::deg()));
-                        planesPositions.headingsDeg.push_back(interpolatedSituation.getHeading().value(CAngleUnit::deg()));
-                        planesPositions.onGrounds.push_back(interpolatedSituation.getOnGround() == CAircraftSituation::OnGround);
+                        planesPositions.push_back(interpolatedSituation);
                     }
                 }
                 else
@@ -922,23 +922,7 @@ namespace BlackSimPlugin
                     if (updateAllAircraft || !this->isEqualLastSent(parts, callsign))
                     {
                         this->rememberLastSent(parts, callsign);
-                        planesSurfaces.callsigns.push_back(xplaneAircraft.getCallsign().asString());
-                        planesSurfaces.gears.push_back(parts.isGearDown() ? 1 : 0);
-                        planesSurfaces.flaps.push_back(parts.getFlapsPercent() / 100.0);
-                        planesSurfaces.spoilers.push_back(parts.isSpoilersOut() ? 1 : 0);
-                        planesSurfaces.speedBrakes.push_back(parts.isSpoilersOut() ? 1 : 0);
-                        planesSurfaces.slats.push_back(parts.getFlapsPercent() / 100.0);
-                        planesSurfaces.wingSweeps.push_back(0.0);
-                        planesSurfaces.thrusts.push_back(parts.isAnyEngineOn() ? 0 : 0.75);
-                        planesSurfaces.elevators.push_back(0.0);
-                        planesSurfaces.rudders.push_back(0.0);
-                        planesSurfaces.ailerons.push_back(0.0);
-                        planesSurfaces.landLights.push_back(parts.getLights().isLandingOn());
-                        planesSurfaces.taxiLights.push_back(parts.getLights().isTaxiOn());
-                        planesSurfaces.beaconLights.push_back(parts.getLights().isBeaconOn());
-                        planesSurfaces.strobeLights.push_back(parts.getLights().isStrobeOn());
-                        planesSurfaces.navLights.push_back(parts.getLights().isNavOn());
-                        planesSurfaces.lightPatterns.push_back(0);
+                        planesSurfaces.push_back(xplaneAircraft.getCallsign(), parts);
                     }
                 }
 
