@@ -347,6 +347,9 @@ namespace BlackCore
         //! Any connected status?
         static bool isAnyConnectedStatus(SimulatorStatus status);
 
+        //! Get a test callsign
+        static const BlackMisc::Aviation::CCallsign &getTestCallsign();
+
     signals:
         //! Simulator combined status
         void simulatorStatusChanged(BlackCore::ISimulator::SimulatorStatus status); // use emitSimulatorCombinedStatus to emit
