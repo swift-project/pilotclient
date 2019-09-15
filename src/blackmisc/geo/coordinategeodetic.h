@@ -135,6 +135,9 @@ namespace BlackMisc
             //! \copydoc Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
+            //! \copydoc Mixin::String::toQString
+            // QString toQString(bool i18n = false) const { return this->convertToQString(i18n); }
+
             //! Check values @{
             bool isNaNVector() const;
             bool isNaNVectorDouble() const;
