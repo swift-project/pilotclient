@@ -364,6 +364,22 @@ namespace BlackCore
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
+            //! \copydoc IContextSimulator::requestWeatherGrid
+            virtual bool requestElevationBySituation(const BlackMisc::Aviation::CAircraftSituation &situation) override
+            {
+                Q_UNUSED(situation);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
+            }
+
+            virtual BlackMisc::Geo::CElevationPlane findClosestElevationWithinRange(const BlackMisc::Geo::CCoordinateGeodetic &reference, const BlackMisc::PhysicalQuantities::CLength &range) const override
+            {
+                Q_UNUSED(reference);
+                Q_UNUSED(range);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return BlackMisc::Geo::CElevationPlane::null();
+            }
+
             //! \copydoc IContextSimulator::getMatchingMessages
             virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const override
             {

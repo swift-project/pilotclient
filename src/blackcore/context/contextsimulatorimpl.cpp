@@ -1131,6 +1131,20 @@ namespace BlackCore
             m_weatherManager.requestWeatherGrid(weatherGrid, identifier);
         }
 
+        bool CContextSimulator::requestElevationBySituation(const CAircraftSituation &situation)
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << situation; }
+            if (!m_simulatorPlugin.second || !m_simulatorPlugin.second->isConnected()) { return false; }
+            return m_simulatorPlugin.second->requestElevationBySituation(situation);
+        }
+
+        CElevationPlane CContextSimulator::findClosestElevationWithinRange(const CCoordinateGeodetic &reference, const CLength &range) const
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << reference.convertToQString(true) << range; }
+            if (!m_simulatorPlugin.second || !m_simulatorPlugin.second->isConnected()) { return CElevationPlane::null(); }
+            return m_simulatorPlugin.second->findClosestElevationWithinRange(reference, range);
+        }
+
         int CContextSimulator::doMatchingsAgain()
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }

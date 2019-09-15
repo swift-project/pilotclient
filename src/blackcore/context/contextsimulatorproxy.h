@@ -14,13 +14,14 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/pixmap.h"
-#include "blackmisc/pq/length.h"
-#include "blackmisc/pq/time.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatorinternals.h"
+#include "blackmisc/geo/elevationplane.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/pixmap.h"
 
 #include <QObject>
 #include <QString>
@@ -100,6 +101,8 @@ namespace BlackCore
             virtual bool isWeatherActivated() const override;
             virtual void setWeatherActivated(bool activated) override;
             virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) override;
+            virtual bool requestElevationBySituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
+            virtual BlackMisc::Geo::CElevationPlane findClosestElevationWithinRange(const BlackMisc::Geo::CCoordinateGeodetic &reference, const BlackMisc::PhysicalQuantities::CLength &range) const override;
             virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Simulation::MatchingLog isMatchingMessagesEnabled() const override;
             virtual void enableMatchingMessages(BlackMisc::Simulation::MatchingLog enabled) override;
