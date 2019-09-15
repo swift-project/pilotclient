@@ -348,8 +348,12 @@ namespace BlackSimPlugin
 
             // Test only for successful position. FS9 requires constant positions
             if (!result.getInterpolationStatus().hasValidSituation()) { return; }
+            this->sendMultiplayerPosition(result.getInterpolatedSituation());
+        }
 
-            MPPositionSlewMode positionSlewMode = aircraftSituationToFS9(result.getInterpolatedSituation());
+        void CFs9Client::sendMultiplayerPosition(const CAircraftSituation &situation)
+        {
+            MPPositionSlewMode positionSlewMode = aircraftSituationToFS9(situation);
 
             QByteArray positionMessage;
             MultiPlayerPacketParser::writeType(positionMessage, CFs9Sdk::MULTIPLAYER_PACKET_ID_POSITION_SLEWMODE);

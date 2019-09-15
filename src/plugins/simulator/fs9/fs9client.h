@@ -61,7 +61,9 @@ namespace BlackSimPlugin
             //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolationMessages
             BlackMisc::CStatusMessageList getInterpolationMessages(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
-        public slots:
+            //! Send a situtaion (position)
+            void sendMultiplayerPosition(const BlackMisc::Aviation::CAircraftSituation &situation);
+
             //! Send new text message
             void sendTextMessage(const QString &textMessage);
 

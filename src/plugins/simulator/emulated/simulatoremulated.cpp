@@ -183,6 +183,14 @@ namespace BlackSimPlugin
             return m_interpolators[callsign]->getInterpolationMessages(setup.getInterpolatorMode());
         }
 
+        bool CSimulatorEmulated::testSendSituationAndParts(const CCallsign &callsign, const CAircraftSituation &situation, const CAircraftParts &parts)
+        {
+            if (!m_renderedAircraft.containsCallsign(callsign)) { return false; }
+            m_renderedAircraft.setAircraftSituation(callsign, situation);
+            m_renderedAircraft.setAircraftPartsSynchronized(callsign, parts);
+            return true;
+        }
+
         void CSimulatorEmulated::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)
         {
             if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraftToHighlight.toQString(), boolToTrueFalse(enableHighlight), displayTime.toQString()); }

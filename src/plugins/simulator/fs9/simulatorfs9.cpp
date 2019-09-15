@@ -298,6 +298,22 @@ namespace BlackSimPlugin
             return client->getInterpolationMessages(setup.getInterpolatorMode());
         }
 
+        bool CSimulatorFs9::testSendSituationAndParts(const CCallsign &callsign, const CAircraftSituation &situation, const CAircraftParts &parts)
+        {
+            if (!m_hashFs9Clients.contains(callsign)) { return false; }
+            CFs9Client *client = m_hashFs9Clients[callsign].data();
+            if (!client) { return false; }
+
+            Q_UNUSED(parts);
+            int u = 0;
+            if (situation.isNull())
+            {
+                u++;
+                client->sendMultiplayerPosition(situation);
+            }
+            return u > 0;
+        }
+
         bool CSimulatorFs9::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
         {
             return m_hashFs9Clients.contains(callsign);

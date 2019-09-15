@@ -12,6 +12,8 @@
 #define BLACKSIMPLUGIN_FLIGHTGEAR_TRAFFIC_PROXY_H
 
 #include "blackmisc/genericdbusinterface.h"
+#include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/geo/elevationplane.h"
 
@@ -47,21 +49,34 @@ namespace BlackSimPlugin
                 const int s = callsigns.size();
                 if (s != latitudesDeg.size())  { return false; }
                 if (s != longitudesDeg.size()) { return false; }
-                if (s != altitudesFt.size())  { return false; }
+                if (s != altitudesFt.size())   { return false; }
                 if (s != pitchesDeg.size())    { return false; }
                 if (s != rollsDeg.size())      { return false; }
                 if (s != headingsDeg.size())   { return false; }
                 return true;
             }
 
-            QStringList callsigns;      //!< List of callsigns
+            //! Push back the latest situation
+            void push_back(const BlackMisc::Aviation::CAircraftSituation &situation)
+            {
+                this->callsigns.push_back(situation.getCallsign().asString());
+                this->latitudesDeg.push_back(situation.latitude().value(BlackMisc::PhysicalQuantities::CAngleUnit::deg()));
+                this->longitudesDeg.push_back(situation.longitude().value(BlackMisc::PhysicalQuantities::CAngleUnit::deg()));
+                this->altitudesFt.push_back(situation.getAltitude().value(BlackMisc::PhysicalQuantities::CLengthUnit::ft()));
+                this->pitchesDeg.push_back(situation.getPitch().value(BlackMisc::PhysicalQuantities::CAngleUnit::deg()));
+                this->rollsDeg.push_back(situation.getBank().value(BlackMisc::PhysicalQuantities::CAngleUnit::deg()));
+                this->headingsDeg.push_back(situation.getHeading().value(BlackMisc::PhysicalQuantities::CAngleUnit::deg()));
+                this->onGrounds.push_back(situation.getOnGround() == BlackMisc::Aviation::CAircraftSituation::OnGround);
+            }
+
+            QStringList   callsigns;       //!< List of callsigns
             QList<double> latitudesDeg;    //!< List of latitudes
             QList<double> longitudesDeg;   //!< List of longitudes
-            QList<double> altitudesFt;    //!< List of altitudes
+            QList<double> altitudesFt;     //!< List of altitudes
             QList<double> pitchesDeg;      //!< List of pitches
             QList<double> rollsDeg;        //!< List of rolls
             QList<double> headingsDeg;     //!< List of headings
-            QList<bool> onGrounds;      //!< List of onGrounds
+            QList<bool>   onGrounds;       //!< List of onGrounds
         };
 
         //! Planes surfaces
@@ -69,6 +84,29 @@ namespace BlackSimPlugin
         {
             //! Is empty?
             bool isEmpty() const { return callsigns.isEmpty(); }
+
+            //! Push back the latest parts
+            void push_back(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts)
+            {
+                this->callsigns.push_back(callsign.asString());
+                this->gears.push_back(parts.isGearDown() ? 1 : 0);
+                this->flaps.push_back(parts.getFlapsPercent() / 100.0);
+                this->spoilers.push_back(parts.isSpoilersOut() ? 1 : 0);
+                this->speedBrakes.push_back(parts.isSpoilersOut() ? 1 : 0);
+                this->slats.push_back(parts.getFlapsPercent() / 100.0);
+                this->wingSweeps.push_back(0.0);
+                this->thrusts.push_back(parts.isAnyEngineOn() ? 0 : 0.75);
+                this->elevators.push_back(0.0);
+                this->rudders.push_back(0.0);
+                this->ailerons.push_back(0.0);
+                this->landLights.push_back(parts.getLights().isLandingOn());
+                //! \todo KB 2019-09 Missing taxi lights in FG
+                // this->taxiLights.push_back(parts.getLights().isTaxiOn());
+                this->beaconLights.push_back(parts.getLights().isBeaconOn());
+                this->strobeLights.push_back(parts.getLights().isStrobeOn());
+                this->navLights.push_back(parts.getLights().isNavOn());
+                this->lightPatterns.push_back(0);
+            }
 
             QStringList callsigns;      //!< List of callsigns
             QList<double> gears;        //!< List of gears
@@ -176,7 +214,6 @@ namespace BlackSimPlugin
 
             //! Get remote aircrafts data (lat, lon, elevation and CG)
             void getRemoteAircraftData(const QStringList &callsigns, const RemoteAircraftDataCallback &setter) const;
-
 
         private:
             BlackMisc::CGenericDBusInterface *m_dbusInterface = nullptr;

@@ -149,6 +149,32 @@ namespace BlackSimPlugin
             return m_flightgearAircraftObjects[callsign].getInterpolationMessages(setup.getInterpolatorMode());
         }
 
+        bool CSimulatorFlightgear::testSendSituationAndParts(const CCallsign &callsign, const CAircraftSituation &situation, const CAircraftParts &parts)
+        {
+            if (!this->isConnected()) { return false; }
+            if (!m_trafficProxy)      { return false; }
+            if (!m_flightgearAircraftObjects.contains(callsign)) { return false; }
+
+            int u = 0;
+            if (!situation.isNull())
+            {
+                PlanesPositions planesPositions;
+                planesPositions.push_back(situation);
+                m_trafficProxy->setPlanesPositions(planesPositions);
+                u++;
+            }
+
+            if (!parts.isNull())
+            {
+                PlanesSurfaces surfaces;
+                surfaces.push_back(callsign, parts);
+                //! \todo KB 2091-09 FG parts sending missing
+                // m_trafficProxy->setPlanesSurfaces(surfaces);
+                u++;
+            }
+            return u > 0;
+        }
+
         void CSimulatorFlightgear::clearAllRemoteAircraftData()
         {
             m_aircraftAddedFailed.clear();

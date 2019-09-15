@@ -419,6 +419,16 @@ namespace BlackCore
                 return false;
             }
 
+            //! \copydoc IContextSimulator::testUpdateRemoteAircraft
+            virtual bool testUpdateRemoteAircraft(const BlackMisc::Aviation::CCallsign cs, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) override
+            {
+                Q_UNUSED(cs);
+                Q_UNUSED(situation);
+                Q_UNUSED(parts);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
+            }
+
             //! \copydoc IContextSimulator::setMatchingSetup
             virtual BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const override
             {

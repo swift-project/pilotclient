@@ -1019,6 +1019,14 @@ namespace BlackCore
             return added;
         }
 
+        bool CContextSimulator::testUpdateRemoteAircraft(const CCallsign cs, const CAircraftSituation &situation, const CAircraftParts &parts)
+        {
+            if (!m_simulatorPlugin.second || !m_simulatorPlugin.second->isConnected()) { return false; }
+            CAircraftSituation s = situation; // make sure to have correct callsign
+            s.setCallsign(cs);
+            return m_simulatorPlugin.second->testSendSituationAndParts(cs, s, parts);
+        }
+
         bool CContextSimulator::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
         {
             Q_UNUSED(originator);
