@@ -96,7 +96,7 @@ namespace BlackMisc
             //! Set aircraft parts and mark as synchronized
             int setAircraftPartsSynchronized(const Aviation::CCallsign &callsign, const Aviation::CAircraftParts &parts, bool onlyFirst = true);
 
-            //! Set aircraft parts
+            //! Set aircraft situation
             int setAircraftSituation(const Aviation::CCallsign &callsign, const Aviation::CAircraftSituation &situation, bool onlyFirst = true);
 
             //! Set ground elevation
