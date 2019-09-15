@@ -1025,6 +1025,12 @@ namespace BlackMisc
             this->setHeading(zh);
         }
 
+        void CAircraftSituation::setZeroPBHandGs()
+        {
+            this->setZeroPBH();
+            this->setGroundSpeed(CSpeed(0, CSpeedUnit::defaultUnit()));
+        }
+
         QString CAircraftSituation::getPBHInfo() const
         {
             return QStringLiteral("P: %1 %2 B: %3 %4 H: %5 %6").arg(
