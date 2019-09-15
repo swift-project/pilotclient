@@ -141,9 +141,9 @@ namespace BlackSimPlugin
             //! Check connection to FS9
             bool checkConnection(bool canLobbyConnect);
 
-            QTimer *m_timer = nullptr;
+            QTimer *m_timer     = nullptr;
             bool m_isConnecting = false;
-            bool m_isStarted = false;
+            bool m_isStarted    = false;
             QSharedPointer<CFs9Host> m_fs9Host;
             QSharedPointer<CLobbyClient> m_lobbyClient;
         };
@@ -165,10 +165,10 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulatorFactory::create
             virtual BlackCore::ISimulator *create(
                 const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
                 BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
-                BlackMisc::Network::IClientProvider *clientProvider
+                BlackMisc::Weather::IWeatherGridProvider       *weatherGridProvider,
+                BlackMisc::Network::IClientProvider            *clientProvider
             ) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::createListener

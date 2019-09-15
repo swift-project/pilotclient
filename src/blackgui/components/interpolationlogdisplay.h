@@ -166,7 +166,7 @@ namespace BlackGui
             BlackMisc::Aviation::CAircraftSituationList m_lastInterpolations; //!< list of last interpolations
             BlackMisc::Aviation::CCallsign m_callsign; //!< current callsign
             int m_elvRequested = 0; //!< counted via signal
-            int m_elvReceived = 0;  //!< counted via signal
+            int m_elvReceived  = 0; //!< counted via signal
 
             static const QString &startText();
             static const QString &stopText();

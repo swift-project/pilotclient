@@ -22,7 +22,7 @@ namespace BlackSimPlugin
             CLobbyClient(QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CLobbyClient();
+            virtual ~CLobbyClient() override;
 
             //! Initialize DirectPlay
             HRESULT initDirectPlay();
@@ -45,9 +45,9 @@ namespace BlackSimPlugin
             //! DirectPlay message handler
             HRESULT directPlayLobbyMessageHandler(DWORD messageId, void *msgBuffer);
 
-            IDirectPlay8Peer *m_directPlayPeer = nullptr; //!< DirectPlay peer address
-            IDirectPlay8Address *m_deviceAddress = nullptr; //!< DirectPlay device address
-            IDirectPlay8Address *m_hostAddress = nullptr; //!< DirectPlay device address
+            IDirectPlay8Peer    *m_directPlayPeer = nullptr; //!< DirectPlay peer address
+            IDirectPlay8Address *m_deviceAddress  = nullptr; //!< DirectPlay device address
+            IDirectPlay8Address *m_hostAddress    = nullptr; //!< DirectPlay device address
             IDirectPlay8LobbyClient *m_dpLobbyClient = nullptr;
 
             QString m_hostname = "localhost";

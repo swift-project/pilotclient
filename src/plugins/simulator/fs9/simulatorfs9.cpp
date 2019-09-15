@@ -40,8 +40,6 @@ namespace BlackSimPlugin
     {
         CAircraftSituation aircraftSituationFromFS9(const MPPositionVelocity &positionVelocity)
         {
-            CAircraftSituation situation;
-
             double dHigh = positionVelocity.lat_i;
             double dLow = positionVelocity.lat_f;
 
@@ -78,6 +76,7 @@ namespace BlackSimPlugin
 
             dLow = dLow / 65536.0;
 
+            CAircraftSituation situation;
             situation.setPosition(position);
             situation.setAltitude(CAltitude(dHigh + dLow, CAltitude::MeanSeaLevel, CLengthUnit::m()));
             const double groundSpeed = positionVelocity.ground_velocity / 65536.0;
