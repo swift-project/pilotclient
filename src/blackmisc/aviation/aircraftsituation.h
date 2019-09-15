@@ -415,6 +415,9 @@ namespace BlackMisc
             //! Set PBH values to 0 (zero)
             void setZeroPBH();
 
+            //! Set PBH and GS values to 0 (zero)
+            void setZeroPBHandGs();
+
             //! Get PBH info (all together)
             QString getPBHInfo() const;
 
