@@ -54,6 +54,7 @@ namespace BlackGui
             void selectTabParts();
             void onCGChecked(bool checked);
             void updatePartsAndPBH(bool setPbh, bool setParts);
+            void fetchSimulatorValues();
 
             QScopedPointer <Ui::CModelBrowserComponent> ui;
             BlackMisc::Aviation::CAircraftSituation   m_situation;

@@ -372,6 +372,7 @@ namespace BlackCore
                 return false;
             }
 
+            //! \copydoc IContextSimulator::findClosestElevationWithinRange
             virtual BlackMisc::Geo::CElevationPlane findClosestElevationWithinRange(const BlackMisc::Geo::CCoordinateGeodetic &reference, const BlackMisc::PhysicalQuantities::CLength &range) const override
             {
                 Q_UNUSED(reference);
