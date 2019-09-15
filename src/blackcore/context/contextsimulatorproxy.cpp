@@ -320,6 +320,16 @@ namespace BlackCore
             m_dBusInterface->callDBus(QLatin1String("requestWeatherGrid"), weatherGrid, identifier);
         }
 
+        bool CContextSimulatorProxy::requestElevationBySituation(const CAircraftSituation &situation)
+        {
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("requestElevationBySituation"), situation);
+        }
+
+        CElevationPlane CContextSimulatorProxy::findClosestElevationWithinRange(const CCoordinateGeodetic &reference, const CLength &range) const
+        {
+            return m_dBusInterface->callDBusRet<BlackMisc::Geo::CElevationPlane>(QLatin1String("findClosestElevationWithinRange"), reference, range);
+        }
+
         CStatusMessageList CContextSimulatorProxy::getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const
         {
             return m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1String("getMatchingMessages"), callsign);

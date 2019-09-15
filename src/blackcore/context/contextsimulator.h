@@ -28,6 +28,7 @@
 #include "blackmisc/simulation/matchingstatistics.h"
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/identifier.h"
@@ -300,6 +301,12 @@ namespace BlackCore
 
             //! Request weather grid. Argument identifier is past in the signal to identify the requestor
             virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) = 0;
+
+            //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevationBySituation
+            virtual bool requestElevationBySituation(const BlackMisc::Aviation::CAircraftSituation &situation) = 0;
+
+            //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::findClosestElevationWithinRange
+            virtual BlackMisc::Geo::CElevationPlane findClosestElevationWithinRange(const BlackMisc::Geo::CCoordinateGeodetic &reference, const BlackMisc::PhysicalQuantities::CLength &range) const = 0;
 
             //! Repeat all matchings
             virtual int doMatchingsAgain() = 0;
