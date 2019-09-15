@@ -94,16 +94,16 @@ namespace BlackSimPlugin
                 QDBusPendingReply<QStringList, QList<double>, QList<double>, QList<double>, QList<double>> reply = *watcher;
                 if (!reply.isError())
                 {
-                    const QStringList callsigns = reply.argumentAt<0>();
-                    const QList<double> latitudesDeg = reply.argumentAt<1>();
-                    const QList<double> longitudesDeg = reply.argumentAt<2>();
-                    const QList<double> elevationsM = reply.argumentAt<3>();
+                    const QStringList   callsigns       = reply.argumentAt<0>();
+                    const QList<double> latitudesDeg    = reply.argumentAt<1>();
+                    const QList<double> longitudesDeg   = reply.argumentAt<2>();
+                    const QList<double> elevationsM     = reply.argumentAt<3>();
                     const QList<double> verticalOffsets = reply.argumentAt<4>();
-                    setter(callsigns, latitudesDeg, longitudesDeg, elevationsM, verticalOffsets);
+                    setter(callsigns,   latitudesDeg, longitudesDeg, elevationsM, verticalOffsets);
                 }
                 watcher->deleteLater();
             };
             m_dbusInterface->callDBusAsync(QLatin1String("getRemoteAircraftData"), callback, callsigns);
         }
-    }
-}
+    } // ns
+} // ns

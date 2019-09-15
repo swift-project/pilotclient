@@ -316,6 +316,9 @@ namespace BlackCore
             //! Test a remote aircraft
             virtual bool testRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool add) = 0;
 
+            //! Test update remote aircraft
+            virtual bool testUpdateRemoteAircraft(const BlackMisc::Aviation::CCallsign cs, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) = 0;
+
             //! Get matching setup
             virtual BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const = 0;
 

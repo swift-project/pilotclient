@@ -417,6 +417,26 @@ namespace BlackSimPlugin
             return (m_simConnectObjects[callsign]).getInterpolationMessages(setup.getInterpolatorMode());
         }
 
+        bool CSimulatorFsxCommon::testSendSituationAndParts(const CCallsign &callsign, const CAircraftSituation &situation, const CAircraftParts &parts)
+        {
+            if (!m_simConnectObjects.contains(callsign)) { return false; }
+            CSimConnectObject simObject = m_simConnectObjects.value(callsign);
+            int u = 0;
+            if (!parts.isNull()) { this->sendRemoteAircraftPartsToSimulator(simObject, parts); u++; }
+            if (!situation.isNull())
+            {
+                SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(situation, true);
+                const bool traceSendId = this->isTracingSendId();
+                const HRESULT hr = this->logAndTraceSendId(
+                                       SimConnect_SetDataOnSimObject(
+                                           m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition,
+                                           static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), 0, 0, sizeof(SIMCONNECT_DATA_INITPOSITION), &position),
+                                       traceSendId, simObject, "Failed to set position", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
+                if (hr == S_OK) { u++; }
+            }
+            return u > 0;
+        }
+
         CSimConnectDefinitions::SimObjectRequest CSimulatorFsxCommon::requestToSimObjectRequest(DWORD requestId)
         {
             DWORD v = static_cast<DWORD>(CSimConnectDefinitions::SimObjectEndMarker);

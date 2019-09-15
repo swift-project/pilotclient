@@ -215,6 +215,9 @@ namespace BlackCore
         //! Test mode?
         bool isTestMode() const { return m_test; }
 
+        //! Send situation/parts for testing
+        virtual bool testSendSituationAndParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) = 0;
+
         //! Debug function to check state after all aircraft have been removed
         //! \remarks only in local developer builds
         virtual BlackMisc::CStatusMessageList debugVerifyStateAfterAllAircraftRemoved() const;

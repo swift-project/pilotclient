@@ -155,6 +155,7 @@ namespace BlackSimPlugin
             virtual void resetAircraftStatistics() override;
             virtual void setFlightNetworkConnected(bool connected) override;
             virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual bool testSendSituationAndParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) override;
             //! @}
 
             //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation

@@ -135,6 +135,7 @@ namespace BlackSimPlugin
             virtual QString getStatisticsSimulatorSpecific() const override;
             virtual void resetAircraftStatistics() override;
             virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual bool testSendSituationAndParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) override;
             //! @}
 
             //! Creates an appropriate dbus connection from the string describing it
