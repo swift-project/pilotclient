@@ -106,9 +106,9 @@ namespace BlackGui
         {
             if (!this->hasContexts()) { return; }
             CAircraftParts parts = CAircraftParts::null();
-            if (setParts) { parts = this->getParts(); }
+            if (setParts || ui->cb_UseParts->isChecked()) { parts = this->getParts(); }
 
-            if (setPbh)
+            if (setPbh || ui->cb_UsePBH->isChecked())
             {
                 ui->editor_Pbh->updateSituation(m_situation);
             }
@@ -118,6 +118,11 @@ namespace BlackGui
             }
 
             sGui->getISimulator()->testSendSituationAndParts(ISimulator::getTestCallsign(), m_situation, parts);
+        }
+
+        void CModelBrowserComponent::fetchSimulatorValues()
+        {
+            if (!this->hasContexts()) { return; }
         }
 
         void CModelBrowserComponent::onModelDblClicked(const CVariant &object)
@@ -164,6 +169,7 @@ namespace BlackGui
             ui->le_ModelInfo->setText(model.getModelStringAndDbKey());
             ui->le_Info->setText(m_situation.toQString(true));
 
+            sGui->getIContextSimulator()->requestElevationBySituation(m_situation);
             sGui->getIContextSimulator()->testRemoteAircraft(m_aircraft, true);
         }
 
