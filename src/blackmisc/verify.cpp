@@ -21,8 +21,10 @@
 #endif
 
 #if defined(Q_CC_CLANG)
-#if __has_builtin(__builtin_debugger)
-#define BLACK_HAS_BUILTIN_DEBUGGER
+#if __has_builtin(__builtin_debugtrap)
+#define BLACK_BUILTIN_DEBUGTRAP __builtin_debugtrap
+#elif __has_builtin(__builtin_debugger)
+#define BLACK_BUILTIN_DEBUGTRAP __builtin_debugger
 #endif
 #endif
 
@@ -47,8 +49,8 @@ namespace BlackMisc
                 __debugbreak();
                 return;
             }
-#   elif defined(BLACK_HAS_BUILTIN_DEBUGGER)
-            __builtin_debugger();
+#   elif defined(BLACK_BUILTIN_DEBUGTRAP)
+            BLACK_BUILTIN_DEBUGTRAP();
 #   elif defined(Q_PROCESSOR_X86)
             __asm__ volatile("int $0x03");
 #   elif defined(Q_PROCESSOR_ARM)
