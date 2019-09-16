@@ -162,15 +162,6 @@ namespace BlackCore
             return this->getComVoiceRooms();
         }
 
-        CVoiceRoom CContextAudio::getVoiceRoom(CComSystem::ComUnit comUnitValue, bool withAudioStatus) const
-        {
-            Q_ASSERT(m_voice);
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << withAudioStatus; }
-
-            const auto voiceChannel = m_voiceChannelMapping.value(comUnitValue);
-            return voiceChannel ? voiceChannel->getVoiceRoom() : CVoiceRoom();
-        }
-
         CVoiceRoomList CContextAudio::getComVoiceRooms() const
         {
             Q_ASSERT(m_voice);

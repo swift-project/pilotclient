@@ -103,26 +103,11 @@ namespace BlackCore
             void changedSelectedAudioDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
 
         public slots:
-            //! Get voice rooms for COM1, COM2:
-            virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const = 0;
-
-            //! Can talk in any voice room
-            virtual bool canTalk() const = 0;
-
-            //! Get voice rooms for COM1, COM2, but without latest audio status
-            virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRooms() const = 0;
-
-            //! Get voice room per com unit
-            virtual BlackMisc::Audio::CVoiceRoom getVoiceRoom(BlackMisc::Aviation::CComSystem::ComUnit comUnit, bool withAudioStatus) const = 0;
-
             //! Set voice rooms
             virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms) = 0;
 
             //! Leave all voice rooms
             virtual void leaveAllVoiceRooms() = 0;
-
-            //! Room user callsigns
-            virtual BlackMisc::Aviation::CCallsignSet getRoomCallsigns(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const = 0;
 
             //! Room users
             virtual BlackMisc::Network::CUserList getRoomUsers(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const = 0;

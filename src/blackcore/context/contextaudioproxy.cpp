@@ -70,11 +70,6 @@ namespace BlackCore
             this->m_dBusInterface->callDBus(QLatin1String("leaveAllVoiceRooms"));
         }
 
-        BlackMisc::Aviation::CCallsignSet CContextAudioProxy::getRoomCallsigns(CComSystem::ComUnit comUnitValue) const
-        {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CCallsignSet>(QLatin1String("getRoomCallsigns"), comUnitValue);
-        }
-
         BlackMisc::Network::CUserList CContextAudioProxy::getRoomUsers(CComSystem::ComUnit comUnitValue) const
         {
             return this->m_dBusInterface->callDBusRet<CUserList>(QLatin1String("getRoomUsers"), comUnitValue);
@@ -98,26 +93,6 @@ namespace BlackCore
         void CContextAudioProxy::setCurrentAudioDevice(const CAudioDeviceInfo &audioDevice)
         {
             this->m_dBusInterface->callDBus(QLatin1String("setCurrentAudioDevice"), audioDevice);
-        }
-
-        CVoiceRoomList CContextAudioProxy::getComVoiceRoomsWithAudioStatus() const
-        {
-            return this->m_dBusInterface->callDBusRet<CVoiceRoomList>(QLatin1String("getComVoiceRoomsWithAudioStatus"));
-        }
-
-        bool CContextAudioProxy::canTalk() const
-        {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("canTalk"));
-        }
-
-        CVoiceRoomList CContextAudioProxy::getComVoiceRooms() const
-        {
-            return this->m_dBusInterface->callDBusRet<CVoiceRoomList>(QLatin1String("getComVoiceRooms"));
-        }
-
-        CVoiceRoom CContextAudioProxy::getVoiceRoom(CComSystem::ComUnit comUnitValue, bool withAudioStatus) const
-        {
-            return this->m_dBusInterface->callDBusRet<CVoiceRoom>(QLatin1String("getVoiceRoom"), comUnitValue, withAudioStatus);
         }
 
         void CContextAudioProxy::setComVoiceRooms(const CVoiceRoomList &voiceRooms)

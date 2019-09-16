@@ -81,12 +81,7 @@ namespace BlackCore
             // Interface implementations
             //! \publicsection
             //! @{
-            virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRooms() const override;
-            virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const override;
-            virtual bool canTalk() const override;
-            virtual BlackMisc::Audio::CVoiceRoom getVoiceRoom(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue, bool withAudioStatus) const override;
             virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &newRooms) override;
-            virtual BlackMisc::Aviation::CCallsignSet getRoomCallsigns(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const override;
             virtual BlackMisc::Network::CUserList getRoomUsers(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const override;
             virtual void leaveAllVoiceRooms() override;
             virtual BlackMisc::CIdentifier audioRunsWhere() const override;
@@ -132,6 +127,11 @@ namespace BlackCore
                 COMActive,
                 COMUnspecified
             };
+
+            BlackMisc::Audio::CVoiceRoomList getComVoiceRooms() const;
+            BlackMisc::Audio::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const;
+            bool canTalk() const;
+            BlackMisc::Aviation::CCallsignSet getRoomCallsigns(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const;
 
             void initVoiceChannels();
             void initInputDevice();
