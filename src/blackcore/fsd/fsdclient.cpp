@@ -328,7 +328,7 @@ namespace BlackCore
 
         void FSDClient::sendAtcDataUpdate(double latitude, double longitude)
         {
-            AtcDataUpdate atcDataUpdate(m_ownCallsign.asString(), 199998, CFacilityType::OBS, 10, AtcRating::Observer, latitude, longitude, 0);
+            AtcDataUpdate atcDataUpdate(m_ownCallsign.asString(), 199998, CFacilityType::OBS, 300, AtcRating::Observer, latitude, longitude, 0);
             sendMessage(atcDataUpdate);
         }
 
