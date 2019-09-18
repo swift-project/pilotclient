@@ -27,7 +27,6 @@
 #include <QTimer>
 #include <QDateTime>
 
-
 namespace BlackCore
 {
     namespace Afv
@@ -91,7 +90,7 @@ namespace BlackCore
                 BufferedWaveProvider *audioInput;
                 QTimer m_timer;
 
-                COpusDecoder m_decoder;
+                BlackSound::Codecs::COpusDecoder m_decoder;
                 bool m_lastPacketLatch = false;
                 QDateTime m_lastSamplesAddedUtc;
                 bool m_underflow = false;

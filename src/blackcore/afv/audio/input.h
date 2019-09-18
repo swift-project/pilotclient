@@ -90,7 +90,7 @@ namespace BlackCore
                 static constexpr qint64 c_frameSize = 960;
                 int m_sampleRate = 0;
 
-                COpusEncoder m_encoder;
+                BlackSound::Codecs::COpusEncoder m_encoder;
                 QScopedPointer<QAudioInput> m_audioInput;
 
                 bool m_started = false;

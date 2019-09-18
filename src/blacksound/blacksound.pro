@@ -16,16 +16,16 @@ DEPENDPATH += . ..
 DEFINES += LOG_IN_FILE BUILD_BLACKSOUND_LIB
 
 HEADERS += *.h
-HEADERS += wav/wavfile.h
-HEADERS += dsp/*.h
-HEADERS += codecs/*.h
-HEADERS += samplesprovider/*.h
+HEADERS += $$PWD/wav/wavfile.h
+HEADERS += $$PWD/dsp/*.h
+HEADERS += $$PWD/codecs/*.h
+HEADERS += $$PWD/sampleprovider/*.h
 
 SOURCES += *.cpp
-SOURCES += wav/wavfile.cpp
-SOURCES += dsp/*.cpp
-SOURCES += codecs/*.cpp
-SOURCES += samplesprovider/*.cpp
+SOURCES += $$PWD/wav/wavfile.cpp
+SOURCES += $$PWD/dsp/*.cpp
+SOURCES += $$PWD/codecs/*.cpp
+SOURCES += $$PWD/sampleprovider/*.cpp
 
 LIBS *= -lopus
 
