@@ -38,8 +38,7 @@ include ($$PWD/codecs/codecs.pri)
 include ($$PWD/dsp/dsp.pri)
 include ($$PWD/sampleprovider/sampleprovider.pri)
 
-LIBS += \
-    -lopus \
+LIBS *= -lopus \
 
 DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin
