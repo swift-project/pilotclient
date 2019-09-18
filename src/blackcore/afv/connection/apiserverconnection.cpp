@@ -3,6 +3,7 @@
 #include <QJsonArray>
 #include <QUrl>
 #include <QUrlQuery>
+#include <QScopedPointer>
 
 ApiServerConnection::ApiServerConnection(const QString &address, QObject *parent) :
     QObject(parent),
@@ -33,10 +34,10 @@ void ApiServerConnection::connectTo(const QString &username, const QString &pass
     connect(nam, &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-    QNetworkReply *reply = nam->post(request, QJsonDocument(obj).toJson());
+    QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nam->post(request, QJsonDocument(obj).toJson()));
     while(! reply->isFinished() ) { loop.exec(); }
-    qDebug() << "POST api/v1/auth (" << m_watch.elapsed() << "ms)";
 
+    qDebug() << "POST api/v1/auth (" << m_watch.elapsed() << "ms)";
     if (reply->error() != QNetworkReply::NoError)
     {
         qWarning() << reply->errorString();
@@ -79,6 +80,7 @@ void ApiServerConnection::forceDisconnect()
 
 void ApiServerConnection::postNoResponse(const QString &resource, const QJsonDocument &json)
 {
+    if (isShuttingDown()) { return; } // avoid crash
     if (! m_isAuthenticated)
     {
         qDebug() << "Not authenticated";
@@ -97,7 +99,7 @@ void ApiServerConnection::postNoResponse(const QString &resource, const QJsonDoc
     QNetworkRequest request(url);
     request.setRawHeader("Authorization", "Bearer " + m_jwt);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-    QNetworkReply *reply = nam->post(request, json.toJson());
+    QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nam->deleteResource(request));
     while(! reply->isFinished() ) { loop.exec(); }
     qDebug() << "POST" << resource << "(" << m_watch.elapsed() << "ms)";
 
@@ -106,8 +108,6 @@ void ApiServerConnection::postNoResponse(const QString &resource, const QJsonDoc
         qWarning() << "POST" << resource << "failed:" << reply->errorString();
         return;
     }
-
-    reply->deleteLater();
 }
 
 void ApiServerConnection::deleteResource(const QString &resource)
@@ -124,17 +124,14 @@ void ApiServerConnection::deleteResource(const QString &resource)
 
     QNetworkRequest request(url);
     request.setRawHeader("Authorization", "Bearer " + m_jwt);
-    QNetworkReply *reply = nam->deleteResource(request);
+    QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nam->deleteResource(request));
     while(! reply->isFinished() ) { loop.exec(); }
     qDebug() << "DELETE" << resource << "(" << m_watch.elapsed() << "ms)";
 
     if (reply->error() != QNetworkReply::NoError)
     {
         qWarning() << "DELETE" << resource << "failed:" << reply->errorString();
-        return;
     }
-
-    reply->deleteLater();
 }
 
 void ApiServerConnection::checkExpiry()
@@ -143,6 +140,11 @@ void ApiServerConnection::checkExpiry()
     {
         connectTo(m_username, m_password, m_networkVersion);
     }
+}
+
+bool ApiServerConnection::isShuttingDown()
+{
+    return !sApp || sApp->isShuttingDown();
 }
 
 

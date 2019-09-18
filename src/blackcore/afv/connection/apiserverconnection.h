@@ -82,6 +82,7 @@ private:
     void postNoResponse(const QString &resource, const QJsonDocument &json);
     void deleteResource(const QString &resource);
     void checkExpiry();
+    static bool isShuttingDown();
 
     const QString m_address;
     QByteArray m_jwt;
