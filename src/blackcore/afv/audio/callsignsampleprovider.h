@@ -1,3 +1,13 @@
+/* Copyright (C) 2019
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
+ * or distributed except according to the terms contained in the LICENSE file.
+ */
+
+//! \file
+
 #ifndef CALLSIGNSAMPLEPROVIDER_H
 #define CALLSIGNSAMPLEPROVIDER_H
 
@@ -17,64 +27,77 @@
 #include <QTimer>
 #include <QDateTime>
 
-class CallsignSampleProvider : public ISampleProvider
+
+namespace BlackCore
 {
-    Q_OBJECT
+    namespace Afv
+    {
+        namespace Audio
+        {
+            //! Callsign provide
+            class CallsignSampleProvider : public ISampleProvider
+            {
+                Q_OBJECT
 
-public:
-    CallsignSampleProvider(const QAudioFormat &audioFormat, QObject *parent = nullptr);
+            public:
+                CallsignSampleProvider(const QAudioFormat &audioFormat, QObject *parent = nullptr);
 
-    int readSamples(QVector<qint16> &samples, qint64 count) override;
+                int readSamples(QVector<qint16> &samples, qint64 count) override;
 
-    QString callsign() const;
-    QString type() const;
+                //! The callsign
+                const QString callsign() const { return m_callsign; }
 
-    void active(const QString &callsign, const QString &aircraftType);
-    void activeSilent(const QString &callsign, const QString &aircraftType);
+                QString type() const;
 
-    void clear();
+                void active(const QString &callsign, const QString &aircraftType);
+                void activeSilent(const QString &callsign, const QString &aircraftType);
 
-    void addOpusSamples(const IAudioDto &audioDto, float distanceRatio);
-    void addSilentSamples(const IAudioDto &audioDto);
+                void clear();
 
-    bool inUse() const;
+                void addOpusSamples(const IAudioDto &audioDto, float distanceRatio);
+                void addSilentSamples(const IAudioDto &audioDto);
 
-    void setBypassEffects(bool bypassEffects);
+                bool inUse() const;
 
-private:
-    void timerElapsed();
-    void idle();
-    QVector<qint16> decodeOpus(const QByteArray &opusData);
-    void setEffects(bool noEffects = false);
+                void setBypassEffects(bool bypassEffects);
 
-    QAudioFormat m_audioFormat;
+            private:
+                void timerElapsed();
+                void idle();
+                QVector<qint16> decodeOpus(const QByteArray &opusData);
+                void setEffects(bool noEffects = false);
 
-    const double whiteNoiseGainMin = 0.15;  //0.01;
-    const double acBusGainMin = 0.003;    //0.002;
-    const int frameCount = 960;
-    const int idleTimeoutMs = 500;
+                QAudioFormat m_audioFormat;
 
-    QString m_callsign;
-    QString m_type;
-    bool m_inUse = false;
+                const double whiteNoiseGainMin = 0.15;  //0.01;
+                const double acBusGainMin = 0.003;    //0.002;
+                const int frameCount = 960;
+                const int idleTimeoutMs = 500;
 
-    bool m_bypassEffects = false;
+                QString m_callsign;
+                QString m_type;
+                bool m_inUse = false;
 
-    float m_distanceRatio = 1.0;
+                bool m_bypassEffects = false;
 
-    MixingSampleProvider *mixer;
-    ResourceSoundSampleProvider *crackleSoundProvider;
-    ResourceSoundSampleProvider *whiteNoise;
-    SawToothGenerator *acBusNoise;
-    SimpleCompressorEffect *simpleCompressorEffect;
-    EqualizerSampleProvider *voiceEq;
-    BufferedWaveProvider *audioInput;
-    QTimer m_timer;
+                float m_distanceRatio = 1.0;
 
-    COpusDecoder m_decoder;
-    bool m_lastPacketLatch = false;
-    QDateTime m_lastSamplesAddedUtc;
-    bool m_underflow = false;
-};
+                MixingSampleProvider *mixer;
+                ResourceSoundSampleProvider *crackleSoundProvider;
+                ResourceSoundSampleProvider *whiteNoise;
+                SawToothGenerator *acBusNoise;
+                SimpleCompressorEffect *simpleCompressorEffect;
+                EqualizerSampleProvider *voiceEq;
+                BufferedWaveProvider *audioInput;
+                QTimer m_timer;
 
-#endif // CALLSIGNSAMPLEPROVIDER_H
+                COpusDecoder m_decoder;
+                bool m_lastPacketLatch = false;
+                QDateTime m_lastSamplesAddedUtc;
+                bool m_underflow = false;
+            };
+        } // ns
+    } // ns
+} // ns
+
+#endif // guard

@@ -1,5 +1,15 @@
-#ifndef CLIENTCONNECTION_H
-#define CLIENTCONNECTION_H
+/* Copyright (C) 2019
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
+ * or distributed except according to the terms contained in the LICENSE file.
+ */
+
+//! \file
+
+#ifndef BLACKCORE_AFV_CONNECTION_CLIENTCONNECTION_H
+#define BLACKCORE_AFV_CONNECTION_CLIENTCONNECTION_H
 
 #include "blackcore/afv/crypto/cryptodtoserializer.h"
 #include "blackcore/afv/connection/clientconnectiondata.h"
@@ -11,69 +21,79 @@
 #include <QTimer>
 #include <QUdpSocket>
 
-class ClientConnection : public QObject
+namespace BlackCore
 {
-    Q_OBJECT
-
-public:
-    //! Com status
-    enum ConnectionStatus
+    namespace Afv
     {
-        Disconnected,   //!< Not connected
-        Connected,      //!< Connection established
-    };
-    Q_ENUM(ConnectionStatus)
+        namespace Connection
+        {
+            //! Client connection
+            class ClientConnection : public QObject
+            {
+                Q_OBJECT
 
-    ClientConnection(const QString &apiServer, QObject *parent = nullptr);
+            public:
+                //! Com status
+                enum ConnectionStatus
+                {
+                    Disconnected,   //!< Not connected
+                    Connected,      //!< Connection established
+                };
+                Q_ENUM(ConnectionStatus)
 
-    void connectTo(const QString &userName, const QString &password, const QString &callsign);
-    void disconnectFrom(const QString &reason = {});
+                ClientConnection(const QString &apiServer, QObject *parent = nullptr);
 
-    bool isConnected() const { return m_connection.m_connected; }
+                void connectTo(const QString &userName, const QString &password, const QString &callsign);
+                void disconnectFrom(const QString &reason = {});
 
-    void setReceiveAudio(bool value) { m_connection.m_receiveAudio = value; }
-    bool receiveAudio() const { return m_connection.m_receiveAudio; }
+                bool isConnected() const { return m_connection.m_connected; }
 
-    template<typename T>
-    void sendToVoiceServer(T dto)
-    {
-        QUrl voiceServerUrl("udp://" + m_connection.m_tokens.VoiceServer.addressIpV4);
-        QByteArray dataBytes = CryptoDtoSerializer::Serialize(*m_connection.voiceCryptoChannel, CryptoDtoMode::AEAD_ChaCha20Poly1305, dto);
-        m_udpSocket.writeDatagram(dataBytes, QHostAddress(voiceServerUrl.host()), voiceServerUrl.port());
-    }
+                void setReceiveAudio(bool value) { m_connection.m_receiveAudio = value; }
+                bool receiveAudio() const { return m_connection.m_receiveAudio; }
 
-    bool receiveAudioDto() const;
-    void setReceiveAudioDto(bool receiveAudioDto);
+                template<typename T>
+                void sendToVoiceServer(T dto)
+                {
+                    QUrl voiceServerUrl("udp://" + m_connection.m_tokens.VoiceServer.addressIpV4);
+                    QByteArray dataBytes = Crypto::CryptoDtoSerializer::Serialize(*m_connection.voiceCryptoChannel, CryptoDtoMode::AEAD_ChaCha20Poly1305, dto);
+                    m_udpSocket.writeDatagram(dataBytes, QHostAddress(voiceServerUrl.host()), voiceServerUrl.port());
+                }
 
-    void updateTransceivers(const QString &callsign, const QVector<TransceiverDto> &transceivers);
+                bool receiveAudioDto() const;
+                void setReceiveAudioDto(bool receiveAudioDto);
 
-signals:
-    void audioReceived(const AudioRxOnTransceiversDto &dto);
+                void updateTransceivers(const QString &callsign, const QVector<TransceiverDto> &transceivers);
 
-private:
-    void connectToVoiceServer();
-    void disconnectFromVoiceServer();
+            signals:
+                void audioReceived(const AudioRxOnTransceiversDto &dto);
 
-    void readPendingDatagrams();
-    void processMessage(const QByteArray &messageDdata, bool loopback = false);
-    void handleSocketError(QAbstractSocket::SocketError error);
+            private:
+                void connectToVoiceServer();
+                void disconnectFromVoiceServer();
 
-    void voiceServerHeartbeat();
+                void readPendingDatagrams();
+                void processMessage(const QByteArray &messageDdata, bool loopback = false);
+                void handleSocketError(QAbstractSocket::SocketError error);
 
-    const QUuid m_networkVersion = QUuid("3a5ddc6d-cf5d-4319-bd0e-d184f772db80");
+                void voiceServerHeartbeat();
 
-    //Data
-    ClientConnectionData m_connection;
+                const QUuid m_networkVersion = QUuid("3a5ddc6d-cf5d-4319-bd0e-d184f772db80");
 
-    // Voice server
-    QUdpSocket m_udpSocket;
-    QTimer m_voiceServerTimer;
+                //Data
+                ClientConnectionData m_connection;
 
-    // API server
-    ApiServerConnection m_apiServerConnection;
+                // Voice server
+                QUdpSocket m_udpSocket;
+                QTimer m_voiceServerTimer;
 
-    // Properties
-    bool m_receiveAudioDto = true;
-};
+                // API server
+                ApiServerConnection m_apiServerConnection;
 
-#endif
+                // Properties
+                bool m_receiveAudioDto = true;
+            };
+        } // ns
+    } // ns
+} // ns
+
+#endif // guard

@@ -5,11 +5,13 @@
 #include "sampleprovider.h"
 #include "resourcesound.h"
 
+//! A sample provider
 class BLACKSOUND_EXPORT ResourceSoundSampleProvider : public ISampleProvider
 {
     Q_OBJECT
 
 public:
+    //! Ctor
     ResourceSoundSampleProvider(const ResourceSound &resourceSound, QObject *parent = nullptr);
 
     virtual int readSamples(QVector<qint16> &samples, qint64 count) override;

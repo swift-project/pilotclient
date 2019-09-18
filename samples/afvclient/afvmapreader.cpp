@@ -7,12 +7,14 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+using namespace BlackCore::Afv;
+
 AFVMapReader::AFVMapReader(QObject *parent) : QObject(parent)
 {
-    model = new AtcStationModel(this);
-    timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &AFVMapReader::updateFromMap);
-    timer->start(3000);
+    m_model = new CSampleAtcStationModel(this);
+    m_timer = new QTimer(this);
+    connect(m_timer, &QTimer::timeout, this, &AFVMapReader::updateFromMap);
+    m_timer->start(3000);
 }
 
 void AFVMapReader::updateFromMap()
@@ -32,7 +34,7 @@ void AFVMapReader::updateFromMap()
     if (jsonDoc.isObject())
     {
         QJsonObject rootObject = jsonDoc.object();
-        QVector<AtcStation> transceivers;
+        QVector<CSampleAtcStation> transceivers;
 
         if (rootObject.contains("controllers"))
         {
@@ -79,11 +81,11 @@ void AFVMapReader::updateFromMap()
         }
 
         if (transceivers.isEmpty()) { return; }
-        transceivers.erase(std::remove_if(transceivers.begin(), transceivers.end(), [this](const AtcStation &s)
+        transceivers.erase(std::remove_if(transceivers.begin(), transceivers.end(), [this](const CSampleAtcStation &s)
         {
             return s.callsign() == m_callsign;
         }),
         transceivers.end());
-        model->updateAtcStations(transceivers);
+        m_model->updateAtcStations(transceivers);
     }
 }

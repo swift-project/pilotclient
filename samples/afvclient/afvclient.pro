@@ -4,7 +4,7 @@ QT += dbus network multimedia gui quick
 
 CONFIG += c++14
 CONFIG -= app_bundle
-CONFIG   += blackmisc blackcore blackconfig
+CONFIG += blackmisc blackcore blackconfig
 
 DEPENDPATH += . $$SourceRoot/src/blackmisc
 INCLUDEPATH += . $$SourceRoot/src
@@ -23,19 +23,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-SOURCES += \
-    afvmapreader.cpp \
-    models/atcstationmodel.cpp \
-    main.cpp \
-
-HEADERS += \
-    models/atcstationmodel.h \
-    afvmapreader.h \
+HEADERS += *.h
+HEADERS += $$PWD/models/*.h
+SOURCES += *.cpp
+SOURCES += $$PWD/models/*.cpp
 
 DEFINES += _USE_MATH_DEFINES
-
-RESOURCES += \
-    qml/qml.qrc
+RESOURCES += qml/qml.qrc
 
 DESTDIR = $$DestRoot/bin
 

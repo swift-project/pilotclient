@@ -1,12 +1,22 @@
-#ifndef AFVCLIENT_H
-#define AFVCLIENT_H
+/* Copyright (C) 2019
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
+ * or distributed except according to the terms contained in the LICENSE file.
+ */
 
-#include "blackcore/blackcoreexport.h"
+//! \file
+
+#ifndef BLACKCORE_AFV_CLIENT_AFVCLIENT_H
+#define BLACKCORE_AFV_CLIENT_AFVCLIENT_H
+
 #include "blackcore/afv/connection/clientconnection.h"
-#include "blackcore/afv/dto.h"
 #include "blackcore/afv/audio/input.h"
 #include "blackcore/afv/audio/output.h"
 #include "blackcore/afv/audio/soundcardsampleprovider.h"
+#include "blackcore/afv/dto.h"
+#include "blackcore/blackcoreexport.h"
 
 #include "blackcore/context/contextownaircraft.h"
 
@@ -18,115 +28,128 @@
 #include <QString>
 #include <QVector>
 
-class BLACKCORE_EXPORT AFVClient final : public QObject
+namespace BlackCore
 {
-    Q_OBJECT
-    Q_PROPERTY(float inputVolumePeakVU READ getInputVolumePeakVU NOTIFY inputVolumePeakVU)
-    Q_PROPERTY(float outputVolumePeakVU READ getOutputVolumePeakVU NOTIFY outputVolumePeakVU)
-public:
-    AFVClient(const QString &apiServer, QObject *parent = nullptr);
-
-    virtual ~AFVClient()
+    namespace Afv
     {
-        stop();
-    }
+        namespace Clients
+        {
+            //! AFV client
+            class BLACKCORE_EXPORT AFVClient final : public QObject
+            {
+                Q_OBJECT
+                Q_PROPERTY(float inputVolumePeakVU READ getInputVolumePeakVU NOTIFY inputVolumePeakVU)
+                Q_PROPERTY(float outputVolumePeakVU READ getOutputVolumePeakVU NOTIFY outputVolumePeakVU)
 
-    void setContextOwnAircraft(const BlackCore::Context::IContextOwnAircraft *contextOwnAircraft);
+            public:
+                //! Ctor
+                AFVClient(const QString &apiServer, QObject *parent = nullptr);
 
-    QString callsign() const { return m_callsign; }
+                //! Dtor
+                virtual ~AFVClient()
+                {
+                    stop();
+                }
 
-    bool isConnected() const { return m_connection->isConnected(); }
+                void setContextOwnAircraft(const BlackCore::Context::IContextOwnAircraft *contextOwnAircraft);
 
-    Q_INVOKABLE void connectTo(const QString &cid, const QString &password, const QString &callsign);
-    Q_INVOKABLE void disconnectFrom();
+                QString callsign() const { return m_callsign; }
 
-    Q_INVOKABLE QStringList availableInputDevices() const;
-    Q_INVOKABLE QStringList availableOutputDevices() const;
+                bool isConnected() const { return m_connection->isConnected(); }
 
-    void setBypassEffects(bool value);
+                Q_INVOKABLE void connectTo(const QString &cid, const QString &password, const QString &callsign);
+                Q_INVOKABLE void disconnectFrom();
 
-    bool isStarted() const { return m_isStarted; }
-    QDateTime getStartDateTimeUt() const { return m_startDateTimeUtc; }
+                Q_INVOKABLE QStringList availableInputDevices() const;
+                Q_INVOKABLE QStringList availableOutputDevices() const;
 
-    void start(const QAudioDeviceInfo &inputDevice, const QAudioDeviceInfo &outputDevice, const QVector<quint16> &transceiverIDs);
-    Q_INVOKABLE void start(const QString &inputDeviceName, const QString &outputDeviceName);
-    void stop();
+                void setBypassEffects(bool value);
 
-    Q_INVOKABLE void updateComFrequency(quint16 id, quint32 frequency);
-    Q_INVOKABLE void updatePosition(double latitude, double longitude, double height);
+                bool isStarted() const { return m_isStarted; }
+                QDateTime getStartDateTimeUt() const { return m_startDateTimeUtc; }
 
-    void setTransmittingTransceivers(quint16 transceiverID);
-    void setTransmittingTransceivers(const QVector<TxTransceiverDto> &transceivers);
+                void start(const QAudioDeviceInfo &inputDevice, const QAudioDeviceInfo &outputDevice, const QVector<quint16> &transceiverIDs);
+                Q_INVOKABLE void start(const QString &inputDeviceName, const QString &outputDeviceName);
+                void stop();
 
-    void setPtt(bool active);
+                Q_INVOKABLE void updateComFrequency(quint16 id, quint32 frequency);
+                Q_INVOKABLE void updatePosition(double latitude, double longitude, double height);
 
-    void setLoopBack(bool on) { m_loopbackOn = on; }
+                void setTransmittingTransceivers(quint16 transceiverID);
+                void setTransmittingTransceivers(const QVector<TxTransceiverDto> &transceivers);
 
-    float inputVolumeDb() const
-    {
-        return m_inputVolumeDb;
-    }
+                void setPtt(bool active);
 
-    void setInputVolumeDb(float value);
+                void setLoopBack(bool on) { m_loopbackOn = on; }
 
-    float getOutputVolume() const;
-    void setOutputVolume(float outputVolume);
+                float inputVolumeDb() const
+                {
+                    return m_inputVolumeDb;
+                }
 
-    float getInputVolumePeakVU() const { return m_inputVolumeStream.PeakVU; }
-    float getOutputVolumePeakVU() const { return m_outputVolumeStream.PeakVU; }
+                void setInputVolumeDb(float value);
 
-signals:
-    void receivingCallsignsChanged(const TransceiverReceivingCallsignsChangedArgs &args);
-    void inputVolumePeakVU(float value);
-    void outputVolumePeakVU(float value);
+                float getOutputVolume() const;
+                void setOutputVolume(float outputVolume);
 
-private:
-    void opusDataAvailable(const OpusDataAvailableArgs &args);
-    void audioOutDataAvailable(const AudioRxOnTransceiversDto &dto);
-    void inputVolumeStream(const InputVolumeStreamArgs &args);
-    void outputVolumeStream(const OutputVolumeStreamArgs &args);
+                float getInputVolumePeakVU() const { return m_inputVolumeStream.PeakVU; }
+                float getOutputVolumePeakVU() const { return m_outputVolumeStream.PeakVU; }
 
-    void input_OpusDataAvailable();
+            signals:
+                void receivingCallsignsChanged(const Audio::TransceiverReceivingCallsignsChangedArgs &args);
+                void inputVolumePeakVU(float value);
+                void outputVolumePeakVU(float value);
 
-    void updateTransceivers();
-    void updateTransceiversFromContext(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+            private:
+                void opusDataAvailable(const Audio::OpusDataAvailableArgs &args);
+                void audioOutDataAvailable(const AudioRxOnTransceiversDto &dto);
+                void inputVolumeStream(const Audio::InputVolumeStreamArgs &args);
+                void outputVolumeStream(const Audio::OutputVolumeStreamArgs &args);
 
-    static constexpr int c_sampleRate = 48000;
-    static constexpr int frameSize = 960; //20ms
+                void input_OpusDataAvailable();
 
-    // Connection
-    ClientConnection *m_connection = nullptr;
+                void updateTransceivers();
+                void updateTransceiversFromContext(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
-    // Properties
-    QString m_callsign;
+                static constexpr int c_sampleRate = 48000;
+                static constexpr int frameSize = 960; //20ms
 
-    Input *m_input = nullptr;
-    Output *m_output = nullptr;
+                // Connection
+                Connection::ClientConnection *m_connection = nullptr;
 
-    SoundcardSampleProvider *soundcardSampleProvider = nullptr;
-    // TODO VolumeSampleProvider outputSampleProvider;
+                // Properties
+                QString m_callsign;
 
-    bool m_transmit = false;
-    bool m_transmitHistory = false;
-    QVector<TxTransceiverDto> m_transmittingTransceivers;
+                Audio::Input  *m_input = nullptr;
+                Audio::Output *m_output = nullptr;
 
-    bool m_isStarted = false;
-    QDateTime m_startDateTimeUtc;
+                Audio::SoundcardSampleProvider *soundcardSampleProvider = nullptr;
+                // TODO VolumeSampleProvider outputSampleProvider;
 
-    float m_inputVolumeDb;
-    float m_outputVolume = 1;
+                bool m_transmit = false;
+                bool m_transmitHistory = false;
+                QVector<TxTransceiverDto> m_transmittingTransceivers;
 
-    double m_maxDbReadingInPTTInterval = -100;
+                bool m_isStarted = false;
+                QDateTime m_startDateTimeUtc;
 
-    bool m_loopbackOn = false;
+                float m_inputVolumeDb;
+                float m_outputVolume = 1;
 
-    QTimer m_voiceServerPositionTimer;
-    QVector<TransceiverDto> m_transceivers;
+                double m_maxDbReadingInPTTInterval = -100;
 
-    InputVolumeStreamArgs m_inputVolumeStream;
-    OutputVolumeStreamArgs m_outputVolumeStream;
+                bool m_loopbackOn = false;
 
-    BlackCore::Context::IContextOwnAircraft const *m_contextOwnAircraft = nullptr;
-};
+                QTimer m_voiceServerPositionTimer;
+                QVector<TransceiverDto> m_transceivers;
+
+                Audio::InputVolumeStreamArgs m_inputVolumeStream;
+                Audio::OutputVolumeStreamArgs m_outputVolumeStream;
+
+                BlackCore::Context::IContextOwnAircraft const *m_contextOwnAircraft = nullptr;
+            };
+        } // ns
+    } // ns
+} // ns
 
 #endif

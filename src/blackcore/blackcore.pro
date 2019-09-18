@@ -28,6 +28,11 @@ HEADERS += $$PWD/data/*.h
 HEADERS += $$PWD/db/*.h
 HEADERS += $$PWD/vatsim/*.h
 HEADERS += $$PWD/fsd/*.h
+HEADERS += $$PWD/afv/*.h
+HEADERS += $$PWD/afv/audio/*.h
+HEADERS += $$PWD/afv/clients/*.h
+HEADERS += $$PWD/afv/crypto/*.h
+HEADERS += $$PWD/afv/connection/*.h
 
 SOURCES += *.cpp
 SOURCES += $$PWD/context/*.cpp
@@ -35,8 +40,10 @@ SOURCES += $$PWD/data/*.cpp
 SOURCES += $$PWD/db/*.cpp
 SOURCES += $$PWD/vatsim/*.cpp
 SOURCES += $$PWD/fsd/*.cpp
-
-include($$PWD/afv/afv.pri)
+SOURCES += $$PWD/afv/audio/*.cpp
+SOURCES += $$PWD/afv/clients/*.cpp
+SOURCES += $$PWD/afv/crypto/*.cpp
+SOURCES += $$PWD/afv/connection/*.cpp
 
 LIBS *= \
     -lvatlib \

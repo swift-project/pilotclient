@@ -1,3 +1,13 @@
+/* Copyright (C) 2019
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
+ * or distributed except according to the terms contained in the LICENSE file.
+ */
+
+//! \file
+
 #include "input.h"
 #include "blacksound/audioutilities.h"
 
@@ -5,148 +15,158 @@
 #include <QDebug>
 #include <cmath>
 
-void AudioInputBuffer::start()
+namespace BlackCore
 {
-    open(QIODevice::WriteOnly);
-}
-
-void AudioInputBuffer::stop()
-{
-    close();
-}
-
-qint64 AudioInputBuffer::readData(char *data, qint64 maxlen)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(maxlen)
-
-    return 0;
-}
-
-qint64 AudioInputBuffer::writeData(const char *data, qint64 len)
-{
-    QByteArray buffer(data, static_cast<int>(len));
-    m_buffer.append(buffer);
-    // 20 ms = 960 samples * 2 bytes = 1920 Bytes
-    if (m_buffer.size() >= 1920)
+    namespace Afv
     {
-        emit frameAvailable(m_buffer.left(1920));
-        m_buffer.remove(0, 1920);
-    }
+        namespace Audio
+        {
+            void AudioInputBuffer::start()
+            {
+                open(QIODevice::WriteOnly);
+            }
 
-    return len;
-}
+            void AudioInputBuffer::stop()
+            {
+                close();
+            }
 
-Input::Input(int sampleRate, QObject *parent) :
-    QObject(parent),
-    m_sampleRate(sampleRate),
-    m_encoder(sampleRate, 1, OPUS_APPLICATION_VOIP)
-{
-    m_encoder.setBitRate(16 * 1024);
-}
+            qint64 AudioInputBuffer::readData(char *data, qint64 maxlen)
+            {
+                Q_UNUSED(data)
+                Q_UNUSED(maxlen)
 
-bool Input::started() const
-{
-    return m_started;
-}
+                return 0;
+            }
 
-int Input::opusBytesEncoded() const
-{
-    return m_opusBytesEncoded;
-}
+            qint64 AudioInputBuffer::writeData(const char *data, qint64 len)
+            {
+                QByteArray buffer(data, static_cast<int>(len));
+                m_buffer.append(buffer);
+                // 20 ms = 960 samples * 2 bytes = 1920 Bytes
+                if (m_buffer.size() >= 1920)
+                {
+                    emit frameAvailable(m_buffer.left(1920));
+                    m_buffer.remove(0, 1920);
+                }
 
-void Input::setOpusBytesEncoded(int opusBytesEncoded)
-{
-    m_opusBytesEncoded = opusBytesEncoded;
-}
+                return len;
+            }
 
-float Input::volume() const
-{
-    return m_volume;
-}
+            Input::Input(int sampleRate, QObject *parent) :
+                QObject(parent),
+                m_sampleRate(sampleRate),
+                m_encoder(sampleRate, 1, OPUS_APPLICATION_VOIP)
+            {
+                m_encoder.setBitRate(16 * 1024);
+            }
 
-void Input::setVolume(float volume)
-{
-    m_volume = volume;
-}
+            bool Input::started() const
+            {
+                return m_started;
+            }
 
-void Input::start(const QAudioDeviceInfo &inputDevice)
-{
-    if (m_started) { return; }
+            int Input::opusBytesEncoded() const
+            {
+                return m_opusBytesEncoded;
+            }
 
-    QAudioFormat waveFormat;
+            void Input::setOpusBytesEncoded(int opusBytesEncoded)
+            {
+                m_opusBytesEncoded = opusBytesEncoded;
+            }
 
-    waveFormat.setSampleRate(m_sampleRate);
-    waveFormat.setChannelCount(1);
-    waveFormat.setSampleSize(16);
-    waveFormat.setSampleType(QAudioFormat::SignedInt);
-    waveFormat.setByteOrder(QAudioFormat::LittleEndian);
-    waveFormat.setCodec("audio/pcm");
+            float Input::volume() const
+            {
+                return m_volume;
+            }
 
-    QAudioFormat inputFormat = waveFormat;
-    if (!inputDevice.isFormatSupported(inputFormat))
-    {
-        qWarning() << "Default format not supported - trying to use nearest";
-        inputFormat = inputDevice.nearestFormat(inputFormat);
-    }
+            void Input::setVolume(float volume)
+            {
+                m_volume = volume;
+            }
 
-    m_audioInput.reset(new QAudioInput(inputDevice, inputFormat));
-    // We want 20 ms of buffer size
-    // 20 ms * nSamplesPerSec × nChannels × wBitsPerSample  / 8 x 1000
-    int bufferSize = 20 * inputFormat.sampleRate() * inputFormat.channelCount() * inputFormat.sampleSize() / ( 8 * 1000 );
-    m_audioInput->setBufferSize(bufferSize);
-    m_audioInputBuffer.start();
-    m_audioInput->start(&m_audioInputBuffer);
-    connect(&m_audioInputBuffer, &AudioInputBuffer::frameAvailable, this, &Input::audioInDataAvailable);
+            void Input::start(const QAudioDeviceInfo &inputDevice)
+            {
+                if (m_started) { return; }
 
-    m_started = true;
-}
+                QAudioFormat waveFormat;
 
-void Input::stop()
-{
-    if (! m_started) { return; }
+                waveFormat.setSampleRate(m_sampleRate);
+                waveFormat.setChannelCount(1);
+                waveFormat.setSampleSize(16);
+                waveFormat.setSampleType(QAudioFormat::SignedInt);
+                waveFormat.setByteOrder(QAudioFormat::LittleEndian);
+                waveFormat.setCodec("audio/pcm");
 
-    m_started = false;
+                QAudioFormat inputFormat = waveFormat;
+                if (!inputDevice.isFormatSupported(inputFormat))
+                {
+                    qWarning() << "Default format not supported - trying to use nearest";
+                    inputFormat = inputDevice.nearestFormat(inputFormat);
+                }
 
-    m_audioInput->stop();
-    m_audioInput.reset();
-}
+                m_audioInput.reset(new QAudioInput(inputDevice, inputFormat));
+                // We want 20 ms of buffer size
+                // 20 ms * nSamplesPerSec × nChannels × wBitsPerSample  / 8 x 1000
+                int bufferSize = 20 * inputFormat.sampleRate() * inputFormat.channelCount() * inputFormat.sampleSize() / (8 * 1000);
+                m_audioInput->setBufferSize(bufferSize);
+                m_audioInputBuffer.start();
+                m_audioInput->start(&m_audioInputBuffer);
+                connect(&m_audioInputBuffer, &AudioInputBuffer::frameAvailable, this, &Input::audioInDataAvailable);
 
-void Input::audioInDataAvailable(const QByteArray &frame)
-{
-    const QVector<qint16> samples = convertBytesTo16BitPCM(frame);
+                m_started = true;
+            }
 
-    int length;
-    QByteArray encodedBuffer = m_encoder.encode(samples, samples.size(), &length);
-    m_opusBytesEncoded += length;
+            void Input::stop()
+            {
+                if (! m_started) { return; }
 
-    for (const qint16 sample : samples)
-    {
-        qint16 sampleInput = sample;
-        sampleInput = qAbs(sampleInput);
-        if (sampleInput > m_maxSampleInput)
-            m_maxSampleInput = sampleInput;
-    }
+                m_started = false;
 
-    m_sampleCount += samples.size();
-    if (m_sampleCount >= c_sampleCountPerEvent)
-    {
-        InputVolumeStreamArgs inputVolumeStreamArgs;
-        qint16 maxInt = std::numeric_limits<qint16>::max();
-        inputVolumeStreamArgs.PeakRaw = m_maxSampleInput / maxInt;
-        inputVolumeStreamArgs.PeakDB = (float)(20 * std::log10(inputVolumeStreamArgs.PeakRaw));
-        float db = qBound(minDb, inputVolumeStreamArgs.PeakDB, maxDb);
-        float ratio = (db - minDb) / (maxDb - minDb);
-        if (ratio < 0.30)
-            ratio = 0;
-        if (ratio > 1.0)
-            ratio = 1;
-        inputVolumeStreamArgs.PeakVU = ratio;
-        emit inputVolumeStream(inputVolumeStreamArgs);
-        m_sampleCount = 0;
-        m_maxSampleInput = 0;
-    }
+                m_audioInput->stop();
+                m_audioInput.reset();
+            }
 
-    OpusDataAvailableArgs opusDataAvailableArgs = { m_audioSequenceCounter++, encodedBuffer };
-    emit opusDataAvailable(opusDataAvailableArgs);
-}
+            void Input::audioInDataAvailable(const QByteArray &frame)
+            {
+                const QVector<qint16> samples = convertBytesTo16BitPCM(frame);
+
+                int length;
+                QByteArray encodedBuffer = m_encoder.encode(samples, samples.size(), &length);
+                m_opusBytesEncoded += length;
+
+                for (const qint16 sample : samples)
+                {
+                    qint16 sampleInput = sample;
+                    sampleInput = qAbs(sampleInput);
+                    if (sampleInput > m_maxSampleInput)
+                        m_maxSampleInput = sampleInput;
+                }
+
+                m_sampleCount += samples.size();
+                if (m_sampleCount >= c_sampleCountPerEvent)
+                {
+                    InputVolumeStreamArgs inputVolumeStreamArgs;
+                    qint16 maxInt = std::numeric_limits<qint16>::max();
+                    inputVolumeStreamArgs.PeakRaw = m_maxSampleInput / maxInt;
+                    inputVolumeStreamArgs.PeakDB = (float)(20 * std::log10(inputVolumeStreamArgs.PeakRaw));
+                    float db = qBound(minDb, inputVolumeStreamArgs.PeakDB, maxDb);
+                    float ratio = (db - minDb) / (maxDb - minDb);
+                    if (ratio < 0.30)
+                        ratio = 0;
+                    if (ratio > 1.0)
+                        ratio = 1;
+                    inputVolumeStreamArgs.PeakVU = ratio;
+                    emit inputVolumeStream(inputVolumeStreamArgs);
+                    m_sampleCount = 0;
+                    m_maxSampleInput = 0;
+                }
+
+                OpusDataAvailableArgs opusDataAvailableArgs = { m_audioSequenceCounter++, encodedBuffer };
+                emit opusDataAvailable(opusDataAvailableArgs);
+            }
+
+        } // ns
+    } // ns
+} // ns

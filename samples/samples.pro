@@ -21,5 +21,6 @@ sampleblackmiscsim.file = blackmiscsim/sampleblackmiscsim.pro
 samplehotkey.file = hotkey/samplehotkey.pro
 sampleweatherdata.file = weatherdata/sampleweatherdata.pro
 samplefsd.file = fsd/samplefsd.pro
+afvclient.file = afvclient/afvclient.pro
 
 load(common_post)

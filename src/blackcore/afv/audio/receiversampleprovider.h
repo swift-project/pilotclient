@@ -1,5 +1,15 @@
-#ifndef RECEIVERSAMPLEPROVIDER_H
-#define RECEIVERSAMPLEPROVIDER_H
+/* Copyright (C) 2019
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
+ * or distributed except according to the terms contained in the LICENSE file.
+ */
+
+//! \file
+
+#ifndef BLACKCORE_AFV_AUDIO_RECEIVERSAMPLEPROVIDER_H
+#define BLACKCORE_AFV_AUDIO_RECEIVERSAMPLEPROVIDER_H
 
 #include "callsignsampleprovider.h"
 #include "blacksound/sampleprovider/sampleprovider.h"
@@ -7,53 +17,64 @@
 
 #include <QtGlobal>
 
-struct TransceiverReceivingCallsignsChangedArgs
+namespace BlackCore
 {
-    quint16 transceiverID;
-    QStringList receivingCallsigns;
-};
+    namespace Afv
+    {
+        namespace Audio
+        {
+            //! Arguments
+            struct TransceiverReceivingCallsignsChangedArgs
+            {
+                quint16 transceiverID;
+                QStringList receivingCallsigns;
+            };
 
-class ReceiverSampleProvider : public ISampleProvider
-{
-    Q_OBJECT
+            //! A sample provider
+            class ReceiverSampleProvider : public ISampleProvider
+            {
+                Q_OBJECT
 
-public:
-    ReceiverSampleProvider(const QAudioFormat &audioFormat, quint16 id, int voiceInputNumber, QObject *parent = nullptr);
+            public:
+                ReceiverSampleProvider(const QAudioFormat &audioFormat, quint16 id, int voiceInputNumber, QObject *parent = nullptr);
 
-    void setBypassEffects(bool value);
-    void setFrequency(const uint &frequency);
-    int activeCallsigns() const;
-    float volume() const;
+                void setBypassEffects(bool value);
+                void setFrequency(const uint &frequency);
+                int activeCallsigns() const;
+                float volume() const;
 
-    bool getMute() const;
-    void setMute(bool value);
+                bool getMute() const;
+                void setMute(bool value);
 
-    virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
+                virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
 
-    void addOpusSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio);
-    void addSilentSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio);
+                void addOpusSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio);
+                void addSilentSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio);
 
-    quint16 getId() const;
+                quint16 getId() const { return m_id; }
 
-signals:
-    void receivingCallsignsChanged(const TransceiverReceivingCallsignsChangedArgs &args);
+            signals:
+                void receivingCallsignsChanged(const TransceiverReceivingCallsignsChangedArgs &args);
 
-private:
-    uint m_frequency = 122800;
-    bool m_mute = false;
+            private:
+                uint m_frequency = 122800;
+                bool m_mute = false;
 
-    const float m_clickGain = 1.0f;
-    const double m_blockToneGain = 0.10f;
+                const float m_clickGain = 1.0f;
+                const double m_blockToneGain = 0.10f;
 
-    quint16 m_id;
+                quint16 m_id;
 
-    // TODO VolumeSampleProvider volume;
-    MixingSampleProvider *m_mixer;
-    // TODO SignalGenerator blockTone;
-    QVector<CallsignSampleProvider *> m_voiceInputs;
+                // TODO VolumeSampleProvider volume;
+                MixingSampleProvider *m_mixer;
+                // TODO SignalGenerator blockTone;
+                QVector<CallsignSampleProvider *> m_voiceInputs;
 
-    bool m_doClickWhenAppropriate = false;
-    int lastNumberOfInUseInputs = 0;
-};
+                bool m_doClickWhenAppropriate = false;
+                int lastNumberOfInUseInputs = 0;
+            };
+        } // ns
+    } // ns
+} // ns
 
-#endif // RECEIVERSAMPLEPROVIDER_H
+#endif // guard

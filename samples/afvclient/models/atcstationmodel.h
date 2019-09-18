@@ -1,5 +1,13 @@
-#ifndef ATCSTATIONMODEL_H
-#define ATCSTATIONMODEL_H
+/* Copyright (C) 2019
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
+ * or distributed except according to the terms contained in the LICENSE file.
+ */
+
+#ifndef BLACKSAMPLE_MODELS_ATCSTATIONMODEL_H
+#define BLACKSAMPLE_MODELS_ATCSTATIONMODEL_H
 
 #include "dto.h"
 #include <QtGlobal>
@@ -7,40 +15,48 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QObject>
 
-class AtcStation
+//! Sample ATC station
+class CSampleAtcStation
 {
 public:
-    AtcStation() {}
-    AtcStation(const QString &callsign, const TransceiverDto &transceiver);
+    //! Ctor
+    CSampleAtcStation() {}
 
-    QString callsign() const;
+    //! Ctor
+    CSampleAtcStation(const QString &callsign, const BlackCore::Afv::TransceiverDto &transceiver);
+
+    //! Getter @{
+    const QString &callsign() const { return m_callsign; }
+    QString formattedFrequency() const;
     double latitude() const;
     double longitude() const;
-    quint32 frequency() const;
-
-    QString formattedFrequency() const;
-
     double radioDistanceM() const;
+    quint32 frequency() const;
+    //! @}
 
 private:
     QString m_callsign;
-    TransceiverDto m_transceiver;
+    BlackCore::Afv::TransceiverDto m_transceiver;
 };
 
-inline bool operator==(const AtcStation& lhs, const AtcStation& rhs)
+inline bool operator==(const CSampleAtcStation &lhs, const CSampleAtcStation &rhs)
 {
     return lhs.callsign() == rhs.callsign() &&
-            qFuzzyCompare(lhs.latitude(), rhs.latitude()) &&
-            qFuzzyCompare(lhs.longitude(), rhs.longitude());
+           qFuzzyCompare(lhs.latitude(), rhs.latitude()) &&
+           qFuzzyCompare(lhs.longitude(), rhs.longitude());
 }
 
-
-class AtcStationModel : public QAbstractListModel
+//! Sample list model
+class CSampleAtcStationModel : public QAbstractListModel
 {
     Q_OBJECT
+
 public:
-    enum AtcStationRoles {
+    //! Roles for model
+    enum AtcStationRoles
+    {
         CallsignRole = Qt::UserRole + 1,
         LatitudeRole,
         LongitudeRole,
@@ -49,22 +65,30 @@ public:
         FrequencyKhzRole
     };
 
-    AtcStationModel(QObject *parent = nullptr);
-    virtual ~AtcStationModel();
+    //! Ctor
+    CSampleAtcStationModel(QObject *parent = nullptr);
 
-    void updateAtcStations(const QVector<AtcStation> &atcStations);
+    //! Dtor
+    virtual ~CSampleAtcStationModel() override;
 
-    int rowCount(const QModelIndex & parent = QModelIndex()) const override;
+    //! Update the stations
+    void updateAtcStations(const QVector<CSampleAtcStation> &atcStations);
 
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const override;
+    //! copydoc QAbstractListModel::rowCount
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+
+    //! copydoc QAbstractListModel::data
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
 protected:
+    //! copydoc QAbstractListModel::roleNames
     QHash<int, QByteArray> roleNames() const override;
+
 private:
-    void addStation(const AtcStation &atcStation);
+    void addStation(const CSampleAtcStation &atcStation);
     void removeStationAtPosition(int i);
 
-    QList<AtcStation> m_atcStations;
+    QList<CSampleAtcStation> m_atcStations;
 };
 
-#endif // ATCSTATIONMODEL_H
+#endif // guard

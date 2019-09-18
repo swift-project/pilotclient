@@ -223,7 +223,7 @@ namespace BlackCore
             BlackMisc::CSetting<BlackCore::Audio::TOutputDevice> m_outputDeviceSetting { this, &CContextAudio::changeDeviceSettings };
 
             // AFV
-            AFVClient m_voiceClient;
+            Afv::Clients::AFVClient m_voiceClient;
         };
     } // namespace
 } // namespace

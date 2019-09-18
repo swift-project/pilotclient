@@ -31,4 +31,4 @@ private:
     static constexpr int maxDataBytes = 4000;
 };
 
-#endif // OPUSENCODER_H
+#endif // guard

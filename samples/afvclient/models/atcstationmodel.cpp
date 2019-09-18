@@ -1,34 +1,43 @@
+/* Copyright (C) 2019
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
+ * or distributed except according to the terms contained in the LICENSE file.
+ */
+
 #include "atcstationmodel.h"
 #include "dto.h"
 #include <QtMath>
 
-AtcStation::AtcStation(const QString &callsign, const TransceiverDto &transceiver) :
+using namespace BlackCore::Afv;
+
+CSampleAtcStation::CSampleAtcStation(const QString &callsign, const TransceiverDto &transceiver) :
     m_callsign(callsign),
     m_transceiver(transceiver)
 { }
 
-double AtcStation::latitude() const
+double CSampleAtcStation::latitude() const
 {
     return m_transceiver.LatDeg;
 }
 
-double AtcStation::longitude() const
+double CSampleAtcStation::longitude() const
 {
     return m_transceiver.LonDeg;
 }
 
-quint32 AtcStation::frequency() const
+quint32 CSampleAtcStation::frequency() const
 {
     return m_transceiver.frequency;
 }
 
-
-QString AtcStation::formattedFrequency() const
+QString CSampleAtcStation::formattedFrequency() const
 {
     return QString::number(m_transceiver.frequency / 1000000.0, 'f', 3);
 }
 
-double AtcStation::radioDistanceM() const
+double CSampleAtcStation::radioDistanceM() const
 {
     double sqrtAltM = qSqrt(m_transceiver.HeightMslM);
     const double radioFactor = 4193.18014745372;
@@ -36,20 +45,13 @@ double AtcStation::radioDistanceM() const
     return radioFactor * sqrtAltM;
 }
 
-QString AtcStation::callsign() const
-{
-    return m_callsign;
-}
-
-AtcStationModel::AtcStationModel(QObject *parent) :
+CSampleAtcStationModel::CSampleAtcStationModel(QObject *parent) :
     QAbstractListModel(parent)
-{
+{ }
 
-}
+CSampleAtcStationModel::~CSampleAtcStationModel() {}
 
-AtcStationModel::~AtcStationModel() {}
-
-void AtcStationModel::updateAtcStations(const QVector<AtcStation> &atcStations)
+void CSampleAtcStationModel::updateAtcStations(const QVector<CSampleAtcStation> &atcStations)
 {
     // Add stations which didn't exist yet
     for (const auto &station : atcStations)
@@ -60,7 +62,7 @@ void AtcStationModel::updateAtcStations(const QVector<AtcStation> &atcStations)
     // Remove all stations which are no longer there
     for (int i = m_atcStations.size() - 1; i >= 0; i--)
     {
-        AtcStation &station = m_atcStations[i];
+        CSampleAtcStation &station = m_atcStations[i];
         if (! m_atcStations.contains(station))
         {
             removeStationAtPosition(i);
@@ -68,48 +70,42 @@ void AtcStationModel::updateAtcStations(const QVector<AtcStation> &atcStations)
     }
 }
 
-void AtcStationModel::addStation(const AtcStation &atcStation)
+void CSampleAtcStationModel::addStation(const CSampleAtcStation &atcStation)
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_atcStations << atcStation;
     endInsertRows();
 }
 
-void AtcStationModel::removeStationAtPosition(int i)
+void CSampleAtcStationModel::removeStationAtPosition(int i)
 {
     beginRemoveRows(QModelIndex(), i, i);
     m_atcStations.removeAt(i);
     endRemoveRows();
 }
 
-int AtcStationModel::rowCount(const QModelIndex &parent) const
+int CSampleAtcStationModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return m_atcStations.count();
 }
 
-QVariant AtcStationModel::data(const QModelIndex &index, int role) const
+QVariant CSampleAtcStationModel::data(const QModelIndex &index, int role) const
 {
     if (index.row() < 0 || index.row() >= m_atcStations.count())
         return QVariant();
 
-    const AtcStation &atcStation = m_atcStations[index.row()];
-    if (role == CallsignRole)
-        return atcStation.callsign();
-    else if (role == LatitudeRole)
-        return atcStation.latitude();
-    else if (role == LongitudeRole)
-        return atcStation.longitude();
-    else if (role == RadioDistanceRole)
-        return atcStation.radioDistanceM();
-    else if (role == FrequencyRole)
-        return atcStation.formattedFrequency();
-    else if (role == FrequencyKhzRole)
-        return atcStation.frequency() / 1000;
+    const CSampleAtcStation &atcStation = m_atcStations[index.row()];
+    if (role == CallsignRole)  return atcStation.callsign();
+    if (role == LatitudeRole)  return atcStation.latitude();
+    if (role == LongitudeRole) return atcStation.longitude();
+    if (role == RadioDistanceRole) return atcStation.radioDistanceM();
+    if (role == FrequencyRole) return atcStation.formattedFrequency();
+    if (role == FrequencyKhzRole) return atcStation.frequency() / 1000;
     return QVariant();
 }
 
-QHash<int, QByteArray> AtcStationModel::roleNames() const
+QHash<int, QByteArray> CSampleAtcStationModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles[CallsignRole] = "callsign";

@@ -1,28 +1,47 @@
+/* Copyright (C) 2019
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
+ * or distributed except according to the terms contained in the LICENSE file.
+ */
+
 #include "clientconnectiondata.h"
 #include <QDebug>
 
-qint64 ClientConnectionData::secondsSinceAuthentication() const
-{
-    return m_authenticatedDateTimeUtc.secsTo(QDateTime::currentDateTimeUtc());
-}
+using namespace BlackCore::Afv::Crypto;
 
-bool ClientConnectionData::isVoiceServerAlive() const
+namespace BlackCore
 {
-    return m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) > serverTimeout;
-}
-
-void ClientConnectionData::createCryptoChannels()
-{
-    if (! m_tokens.isValid)
+    namespace Afv
     {
-        qWarning() << "Tokens not set";
-    }
-    voiceCryptoChannel.reset(new CryptoDtoChannel(m_tokens.VoiceServer.channelConfig));
-    // dataCryptoChannel.reset(new CryptoDtoChannel(m_tokens.DataServer.channelConfig));
-}
+        namespace Connection
+        {
+            qint64 ClientConnectionData::secondsSinceAuthentication() const
+            {
+                return m_authenticatedDateTimeUtc.secsTo(QDateTime::currentDateTimeUtc());
+            }
 
-bool ClientConnectionData::voiceServerAlive() const
-{
-    return timeSinceAuthentication() < serverTimeout ||
-            m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) < serverTimeout;
-}
+            bool ClientConnectionData::isVoiceServerAlive() const
+            {
+                return m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) > serverTimeout;
+            }
+
+            void ClientConnectionData::createCryptoChannels()
+            {
+                if (! m_tokens.isValid)
+                {
+                    qWarning() << "Tokens not set";
+                }
+                voiceCryptoChannel.reset(new CryptoDtoChannel(m_tokens.VoiceServer.channelConfig));
+                // dataCryptoChannel.reset(new CryptoDtoChannel(m_tokens.DataServer.channelConfig));
+            }
+
+            bool ClientConnectionData::voiceServerAlive() const
+            {
+                return timeSinceAuthentication() < serverTimeout ||
+                       m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) < serverTimeout;
+            }
+        } // ns
+    } // ns
+} // ns

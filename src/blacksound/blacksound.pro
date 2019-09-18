@@ -15,37 +15,26 @@ DEPENDPATH += . ..
 
 DEFINES += LOG_IN_FILE BUILD_BLACKSOUND_LIB
 
-HEADERS += \
-    blacksoundexport.h \
-    notificationplayer.h \
-    audioutilities.h \
-    selcalplayer.h \
-    soundgenerator.h \
-    threadedtonepairplayer.h \
-    tonepair.h \
-    wav/wavfile.h \
+HEADERS += *.h
+HEADERS += wav/wavfile.h
+HEADERS += dsp/*.h
+HEADERS += codecs/*.h
+HEADERS += samplesprovider/*.h
 
-SOURCES += \
-    notificationplayer.cpp \
-    audioutilities.cpp \
-    selcalplayer.cpp \
-    soundgenerator.cpp \
-    threadedtonepairplayer.cpp \
-    tonepair.cpp \
-    wav/wavfile.cpp \
+SOURCES += *.cpp
+SOURCES += wav/wavfile.cpp
+SOURCES += dsp/*.cpp
+SOURCES += codecs/*.cpp
+SOURCES += samplesprovider/*.cpp
 
-include ($$PWD/codecs/codecs.pri)
-include ($$PWD/dsp/dsp.pri)
-include ($$PWD/sampleprovider/sampleprovider.pri)
-
-LIBS *= -lopus \
+LIBS *= -lopus
 
 DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin
 
 OTHER_FILES += ./share/sounds/*.wav ./share/sounds/readme.txt
 COPY_FILES += $$PWD/share/sounds/*
-RESOURCES +=
+# RESOURCES +=
 
 win32 {
     dlltarget.path = $$PREFIX/bin

@@ -1,4 +1,5 @@
 // #include "voiceclientui.h"
+
 #include "models/atcstationmodel.h"
 #include "clients/afvclient.h"
 #include "afvmapreader.h"
@@ -9,6 +10,8 @@
 #include <QQmlContext>
 #include <QPointer>
 #include <QThread>
+
+using namespace BlackCore::Afv::Clients;
 
 int main(int argc, char *argv[])
 {
