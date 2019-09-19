@@ -3,8 +3,11 @@ import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
 
 Row {
+    id: idTransceiver
     property int transceiverId: 0
     property alias frequency: sbFrequency.value
+    property alias rxOn: cbEnabled.checked
+    property alias txOn: cbTxOn.checked
 
     spacing: 10
     Label {
@@ -62,6 +65,7 @@ Row {
         text: qsTr("TX")
         checked: true
         anchors.verticalCenter: parent.verticalCenter
+        onClicked: idTransceiver.txOnChanged(checked)
     }
 
     CheckBox {
@@ -70,5 +74,6 @@ Row {
         text: qsTr("Enabled")
         checked: true
         anchors.verticalCenter: parent.verticalCenter
+        onClicked: idTransceiver.rxOnChanged(checked)
     }
 }

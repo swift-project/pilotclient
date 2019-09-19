@@ -7,13 +7,13 @@ import QtPositioning 5.12
 ApplicationWindow {
     id: window
     width: 1200
-    height: 520
+    height: 800
     visible: true
     title: "Audio For Vatsim"
 
     Plugin {
         id: mapPlugin
-        name: "osm" // "mapboxgl", "esri", ...
+        name: "osm"
     }
 
     Grid {
@@ -42,6 +42,7 @@ ApplicationWindow {
             height: 25
             text: qsTr("1234567")
             selectByMouse: true
+            enabled: voiceClient.connectionStatus == 0 // Disconnected
             horizontalAlignment: Text.AlignLeft
             renderType: Text.NativeRendering
         }
@@ -61,6 +62,7 @@ ApplicationWindow {
             height: 25
             text: qsTr("123456")
             selectByMouse: true
+            enabled: voiceClient.connectionStatus == 0 // Disconnected
             echoMode: TextInput.PasswordEchoOnEdit
             horizontalAlignment: Text.AlignLeft
             renderType: Text.NativeRendering
@@ -81,6 +83,7 @@ ApplicationWindow {
             height: 25
             text: qsTr("DECHK")
             selectByMouse: true
+            enabled: voiceClient.connectionStatus == 0 // Disconnected
             horizontalAlignment: Text.AlignLeft
             renderType: Text.NativeRendering
         }
@@ -129,23 +132,16 @@ ApplicationWindow {
 
             Button {
                 id: btConnect
-
-                property bool connected: false
                 width: 170
                 height: 25
-                text: qsTr("Connect")
+                text: voiceClient.connectionStatus == 0 ? "Connect" : "Disconnect"
                 onClicked: {
-                    if (btConnect.connected) {
-                        btConnect.connected = false;
-                        btConnect.text = qsTr("Connect")
-                        voiceClient.disconnectFrom()
-                    } else {
-                        btConnect.connected = true
-                        btConnect.text = qsTr("Disconnect")
+                    if (voiceClient.connectionStatus == 0) {
                         voiceClient.connectTo(tfUsername.text, tfPassword.text, tfCallsign.text)
                         afvMapReader.setOwnCallsign(tfCallsign.text)
+                    } else if (voiceClient.connectionStatus == 1) {
+                        voiceClient.disconnectFrom()
                     }
-
                 }
             }
 
@@ -173,10 +169,16 @@ ApplicationWindow {
         anchors.left: leftGrid.right
         anchors.right: parent.right
         spacing: 10
-        rows: 2
+        rows: 3
         columns: 3
 
-        Transceiver { id: transceiver1; transceiverId: 0 }
+        Transceiver {
+            id: transceiver1
+            transceiverId: 0
+            onRxOnChanged: {
+                voiceClient.enableTransceiver(transceiverId, enabled)
+            }
+        }
 
         SpinBox {
             id: sbAltitude
@@ -191,11 +193,18 @@ ApplicationWindow {
         Label {
             id: lblReceivingCom1
             height: 40
-            text: qsTr("Receiving:")
+            text: qsTr("Receiving: ") + voiceClient.receivingCallsignsCom1
             verticalAlignment: Text.AlignVCenter
         }
 
-        Transceiver { id: transceiver2; transceiverId: 1 }
+        Transceiver {
+            id: transceiver2
+            transceiverId: 1
+            txOn: false
+            onRxOnChanged: {
+                voiceClient.enableTransceiver(transceiverId, enabled)
+            }
+        }
 
         Button {
             id: btUpdateStack
@@ -206,14 +215,13 @@ ApplicationWindow {
                 voiceClient.updateComFrequency(0, transceiver1.frequency * 1000)
                 voiceClient.updateComFrequency(1, transceiver2.frequency * 1000)
                 voiceClient.updatePosition(map.center.latitude, map.center.longitude, sbAltitude.value)
-                voiceClient.updateTransceivers()
             }
         }
 
         Label {
             id: lblReceivingCom2
             height: 40
-            text: qsTr("Receiving:")
+            text: qsTr("Receiving: ") + voiceClient.receivingCallsignsCom2
             verticalAlignment: Text.AlignVCenter
             // anchors.verticalCenter: parent.verticalCenter
         }
@@ -221,7 +229,6 @@ ApplicationWindow {
 
     Column {
         id: column
-        padding: 10
         spacing: 10
         anchors.top: rightGrid.bottom
         anchors.left: leftGrid.right
@@ -246,17 +253,60 @@ ApplicationWindow {
         }
     }
 
-////    CheckBox {
-////        id: cbVhfEffects
-////        anchors.topMargin: 5
-////        anchors.leftMargin: 10
-////        anchors.left: sbAltitude.right
-////        anchors.top: parent.top
-////        anchors.verticalCenter: sbAltitude.verticalCenter
-////        height: 25
-////        text: qsTr("VHF Effects")
-////        checked: true
-////    }
+    Row {
+        padding: 0
+        spacing: 10
+        anchors.top: column.bottom
+        anchors.left: leftGrid.right
+        anchors.right: parent.right
+
+        CheckBox {
+            id: cbVhfEffects
+            text: qsTr("VHF Effects")
+            checked: true
+            anchors.verticalCenter: parent.verticalCenter
+            onClicked: voiceClient.setBypassEffects(!checked)
+        }
+
+        CheckBox {
+            id: cbLoopback
+            text: qsTr("Loopback")
+            checked: false
+            anchors.verticalCenter: parent.verticalCenter
+            onClicked: voiceClient.setLoopBack(checked)
+        }
+
+        Button {
+            id: btPtt
+            width: 150
+            height: 40
+            text: qsTr("PTT")
+            onPressed: voiceClient.setPtt(true)
+            onReleased: voiceClient.setPtt(false)
+            background: Rectangle {
+                      implicitWidth: btPtt.width
+                      implicitHeight: btPtt.height
+                      color: btPtt.down ? "lightgreen" : "lightgrey"
+                      border.width: 1
+                      radius: 2
+                  }
+        }
+
+        Label {
+            function translateStatus(status) {
+                switch(status) {
+                case 0: return "Disconnected"
+                case 1: return "Connected"
+                default: return "Unknown"
+                }
+            }
+
+            id: lblStatus
+            text: "Status: " + translateStatus(voiceClient.connectionStatus)
+            verticalAlignment: Text.AlignVCenter
+            anchors.verticalCenter: parent.verticalCenter
+        }
+    }
 
     Map {
         id: map
@@ -269,19 +319,8 @@ ApplicationWindow {
         center: QtPositioning.coordinate(48.50, 11.50) // Oslo
         zoomLevel: 3
 
-//        MapCircle {
-//            center {
-//                latitude: map.center.latitude
-//                longitude: map.center.longitude
-//            }
-//            radius: 500000.0
-//            color: 'blue'
-//            border.width: 3
-//            border.color: 'blue'
-//            opacity: 0.3
-//        }
-
         MapItemView {
+            id: mapItemView
             model: afvMapReader.atcStationModel
             delegate: atcDelegate
         }
@@ -322,6 +361,30 @@ ApplicationWindow {
             color: "blue"
             anchors.verticalCenter: map.verticalCenter
             anchors.horizontalCenter: map.horizontalCenter
+        }
+
+        Button {
+            id: btZoomIn
+            width: 30
+            height: 30
+            text: "+"
+            anchors.right: parent.right
+            anchors.rightMargin: 20
+            anchors.bottom: btZoomOut.top
+            anchors.bottomMargin: 5
+            onClicked: map.zoomLevel = map.zoomLevel + 1
+        }
+
+        Button {
+            id: btZoomOut
+            width: 30
+            height: 30
+            text: "-"
+            anchors.right: parent.right
+            anchors.rightMargin: 20
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 20
+            onClicked: map.zoomLevel = map.zoomLevel - 1
         }
     }
 

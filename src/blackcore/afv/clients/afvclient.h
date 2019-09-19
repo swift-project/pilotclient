@@ -40,10 +40,14 @@ namespace BlackCore
                 Q_OBJECT
                 Q_PROPERTY(float inputVolumePeakVU READ getInputVolumePeakVU NOTIFY inputVolumePeakVU)
                 Q_PROPERTY(float outputVolumePeakVU READ getOutputVolumePeakVU NOTIFY outputVolumePeakVU)
+                Q_PROPERTY(ConnectionStatus connectionStatus READ getConnectionStatus NOTIFY connectionStatusChanged)
                 Q_PROPERTY(QString receivingCallsignsCom1 READ getReceivingCallsignsCom1 NOTIFY receivingCallsignsChanged)
                 Q_PROPERTY(QString receivingCallsignsCom2 READ getReceivingCallsignsCom2 NOTIFY receivingCallsignsChanged)
 
             public:
+                enum ConnectionStatus { Disconnected, Connected };
+                Q_ENUM(ConnectionStatus)
+
                 //! Ctor
                 AFVClient(const QString &apiServer, QObject *parent = nullptr);
 
@@ -65,7 +69,7 @@ namespace BlackCore
                 Q_INVOKABLE QStringList availableInputDevices() const;
                 Q_INVOKABLE QStringList availableOutputDevices() const;
 
-                void setBypassEffects(bool value);
+                Q_INVOKABLE void setBypassEffects(bool value);
 
                 bool isStarted() const { return m_isStarted; }
                 QDateTime getStartDateTimeUt() const { return m_startDateTimeUtc; }
@@ -74,15 +78,16 @@ namespace BlackCore
                 Q_INVOKABLE void start(const QString &inputDeviceName, const QString &outputDeviceName);
                 void stop();
 
+                Q_INVOKABLE void enableTransceiver(quint16 id, bool enable);
                 Q_INVOKABLE void updateComFrequency(quint16 id, quint32 frequency);
                 Q_INVOKABLE void updatePosition(double latitude, double longitude, double height);
 
                 void setTransmittingTransceivers(quint16 transceiverID);
                 void setTransmittingTransceivers(const QVector<TxTransceiverDto> &transceivers);
 
-                void setPtt(bool active);
+                Q_INVOKABLE void setPtt(bool active);
 
-                void setLoopBack(bool on) { m_loopbackOn = on; }
+                Q_INVOKABLE void setLoopBack(bool on) { m_loopbackOn = on; }
 
                 float inputVolumeDb() const
                 {
@@ -97,10 +102,13 @@ namespace BlackCore
                 float getInputVolumePeakVU() const { return m_inputVolumeStream.PeakVU; }
                 float getOutputVolumePeakVU() const { return m_outputVolumeStream.PeakVU; }
 
+                ConnectionStatus getConnectionStatus() const;
+
             signals:
                 void receivingCallsignsChanged(const Audio::TransceiverReceivingCallsignsChangedArgs &args);
                 void inputVolumePeakVU(float value);
                 void outputVolumePeakVU(float value);
+                void connectionStatusChanged(ConnectionStatus status);
 
             private:
                 void opusDataAvailable(const Audio::OpusDataAvailableArgs &args);
@@ -146,6 +154,7 @@ namespace BlackCore
 
                 QTimer m_voiceServerPositionTimer;
                 QVector<TransceiverDto> m_transceivers;
+                QSet<quint16> m_enabledTransceivers;
 
                 Audio::InputVolumeStreamArgs m_inputVolumeStream;
                 Audio::OutputVolumeStreamArgs m_outputVolumeStream;

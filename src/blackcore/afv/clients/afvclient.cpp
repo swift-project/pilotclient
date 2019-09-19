@@ -44,6 +44,12 @@ namespace BlackCore
                     { 1, 122800000, 48.5, 11.5, 1000.0, 1000.0 }
                 };
 
+                m_enabledTransceivers =
+                {
+                    { 0 },
+                    { 1 }
+                };
+
                 qDebug() << "UserClient instantiated";
             }
 
@@ -61,11 +67,15 @@ namespace BlackCore
                 m_callsign = callsign;
                 m_connection->connectTo(cid, password, callsign);
                 updateTransceivers();
+
+                if (m_connection->isConnected()) { emit connectionStatusChanged(Connected); }
+                else { emit connectionStatusChanged(Disconnected); }
             }
 
             void AFVClient::disconnectFrom()
             {
                 m_connection->disconnectFrom();
+                emit connectionStatusChanged(Disconnected);
             }
 
             QStringList AFVClient::availableInputDevices() const
@@ -177,6 +187,14 @@ namespace BlackCore
                 m_output->stop();
             }
 
+            void AFVClient::enableTransceiver(quint16 id, bool enable)
+            {
+                if (enable) { m_enabledTransceivers.insert(id); }
+                else { m_enabledTransceivers.remove(id); }
+
+                updateTransceivers();
+            }
+
             void AFVClient::updateComFrequency(quint16 id, quint32 frequency)
             {
                 if (id != 0 && id != 1) { return; }
@@ -203,6 +221,7 @@ namespace BlackCore
                     transceiver.HeightAglM = height;
                     transceiver.HeightMslM = height;
                 }
+                updateTransceivers();
             }
 
             void AFVClient::updateTransceivers()
@@ -219,7 +238,15 @@ namespace BlackCore
                     updateComFrequency(1, ownAircraft.getCom2System().getFrequencyActive().value(CFrequencyUnit::Hz()));
                 }
 
-                m_connection->updateTransceivers(m_callsign, m_transceivers);
+                QVector<TransceiverDto> enabledTransceivers;
+                for (const TransceiverDto &transceiver : m_transceivers)
+                {
+                    if (m_enabledTransceivers.contains(transceiver.id))
+                    {
+                        enabledTransceivers.push_back(transceiver);
+                    }
+                }
+                m_connection->updateTransceivers(m_callsign, enabledTransceivers);
 
                 if (soundcardSampleProvider)
                 {
@@ -387,6 +414,11 @@ namespace BlackCore
                 if (outputVolume < -60) { m_outputVolume = -60; }
                 // m_outputVolume = (float)System.Math.Pow(10, value / 20);
                 // TODO outputSampleProvider.Volume = outputVolume;
+            }
+
+            AFVClient::ConnectionStatus AFVClient::getConnectionStatus() const
+            {
+                return m_connection->isConnected() ? Connected : Disconnected;
             }
         } // ns
     } // ns
