@@ -43,7 +43,8 @@ namespace BlackCore
 
                 m_connection.m_userName = userName;
                 m_connection.m_callsign = callsign;
-                m_apiServerConnection.connectTo(userName, password, m_networkVersion);
+                bool result = m_apiServerConnection.connectTo(userName, password, m_networkVersion);
+                if (!result) { return; }
                 m_connection.m_tokens = m_apiServerConnection.addCallsign(m_connection.m_callsign);
                 m_connection.m_authenticatedDateTimeUtc = QDateTime::currentDateTimeUtc();
                 m_connection.createCryptoChannels();
