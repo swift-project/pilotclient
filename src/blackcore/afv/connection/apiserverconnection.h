@@ -25,29 +25,29 @@
 #include <QNetworkReply>
 #include <QJsonDocument>
 
-// TODO:
-// - JWT refresh
-
 namespace BlackCore
 {
     namespace Afv
     {
         namespace Connection
         {
+            //! A server connection
             class ApiServerConnection : public QObject
             {
                 Q_OBJECT
 
             public:
+                //! Server errors
                 enum ServerError
                 {
                     NoError
                 };
 
+                //! Constructor
                 ApiServerConnection(const QString &address, QObject *parent = nullptr);
 
                 bool isAuthenticated() const { return m_isAuthenticated; }
-                void connectTo(const QString &username, const QString &password, const QUuid &networkVersion);
+                bool connectTo(const QString &username, const QString &password, const QUuid &networkVersion);
 
                 PostCallsignResponseDto addCallsign(const QString &callsign);
                 void removeCallsign(const QString &callsign);
@@ -106,7 +106,7 @@ namespace BlackCore
                 QString m_password;
                 QUuid m_networkVersion;
                 QDateTime m_expiryLocalUtc;
-                qint64 m_serverToUserOffset;
+                qint64 m_serverToUserOffsetMs;
 
                 bool m_isAuthenticated = false;
 

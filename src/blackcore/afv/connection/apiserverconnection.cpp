@@ -7,6 +7,8 @@
  */
 
 #include "apiserverconnection.h"
+#include "blackmisc/network/external/qjsonwebtoken.h"
+
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QUrl>
@@ -26,11 +28,12 @@ namespace BlackCore
                 qDebug() << "ApiServerConnection instantiated";
             }
 
-            void ApiServerConnection::connectTo(const QString &username, const QString &password, const QUuid &networkVersion)
+            bool ApiServerConnection::connectTo(const QString &username, const QString &password, const QUuid &networkVersion)
             {
                 m_username = username;
                 m_password = password;
                 m_networkVersion = networkVersion;
+                m_isAuthenticated = false;
                 m_watch.start();
 
                 QUrl url(m_address);
@@ -52,19 +55,47 @@ namespace BlackCore
                 while (! reply->isFinished()) { loop.exec(); }
 
                 qDebug() << "POST api/v1/auth (" << m_watch.elapsed() << "ms)";
-
-
                 if (reply->error() != QNetworkReply::NoError)
                 {
                     qWarning() << reply->errorString();
-                    return;
+                    return false;
                 }
 
+                // JWT authentication token
+                m_serverToUserOffsetMs = 0;
+                m_expiryLocalUtc = QDateTime(); // clean up
+
                 m_jwt = reply->readAll().trimmed();
-                // TODO JwtSecurityToken. Now we assume its 6 hours
-                m_serverToUserOffset = 0;
-                m_expiryLocalUtc = QDateTime::currentDateTimeUtc().addSecs(6 * 60 * 60);
-                m_isAuthenticated = true;
+                qint64 lifeTimeSecs = -1;
+                qint64 serverToUserOffsetSecs = -1;
+                do
+                {
+                    const QString jwtToken(m_jwt);
+                    QJsonWebToken token = QJsonWebToken::fromTokenAndSecret(jwtToken, "");
+
+                    // get decoded header and payload
+                    // QString strHeader  = token.getHeaderQStr();
+                    // QString strPayload = token.getPayloadQStr();
+                    const QJsonDocument doc = token.getPayloadJDoc();
+                    if (doc.isEmpty() || !doc.isObject()) { break; }
+                    const qint64 validFromSecs = doc.object().value("nbf").toInt(-1);
+                    if (validFromSecs < 0) { break; }
+                    const qint64 localSecsSinceEpoch = QDateTime::currentSecsSinceEpoch();
+                    serverToUserOffsetSecs = validFromSecs - localSecsSinceEpoch;
+                    const qint64 serverExpirySecs = doc.object().value("exp").toInt();
+                    const qint64 expiryLocalUtc = serverExpirySecs - serverToUserOffsetSecs;
+                    lifeTimeSecs = expiryLocalUtc - localSecsSinceEpoch;
+                }
+                while (false);
+
+                if (lifeTimeSecs > 0)
+                {
+                    m_serverToUserOffsetMs = serverToUserOffsetSecs * 1000;
+                    m_expiryLocalUtc = QDateTime::currentDateTimeUtc().addSecs(lifeTimeSecs);
+                    m_isAuthenticated = true;
+                }
+
+                return m_isAuthenticated;
             }
 
             PostCallsignResponseDto ApiServerConnection::addCallsign(const QString &callsign)
@@ -96,6 +127,7 @@ namespace BlackCore
 
             void ApiServerConnection::postNoResponse(const QString &resource, const QJsonDocument &json)
             {
+                Q_UNUSED(json);
                 if (isShuttingDown()) { return; } // avoid crash
                 if (! m_isAuthenticated)
                 {
