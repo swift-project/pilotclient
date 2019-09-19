@@ -75,7 +75,7 @@ namespace BlackCore
         //! Constructor
         CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider      *ownAircraft,
                          BlackMisc::Simulation::IAircraftModelSetProvider *modelSetProvider,
-                         Fsd::FSDClient *fsdClient,
+                         Fsd::CFSDClient *fsdClient,
                          QObject  *parent);
 
         //! Members not implenented or fully implenented by CRemoteAircraftProvider
@@ -257,7 +257,7 @@ namespace BlackCore
         BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< settings
         QQueue<BlackMisc::Aviation::CCallsign> m_queryAtis;  //!< query the ATIS
         QQueue<BlackMisc::Aviation::CCallsign> m_queryPilot; //!< query the pilot data
-        Fsd::FSDClient *m_fsdClient  = nullptr;  //!< corresponding network interface
+        Fsd::CFSDClient *m_fsdClient  = nullptr;  //!< corresponding network interface
         CAirspaceAnalyzer *m_analyzer = nullptr;  //!< owned analyzer
         bool m_bookingsRequested      = false;    //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
         QTimer m_processTimer;

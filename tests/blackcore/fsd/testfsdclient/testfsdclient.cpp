@@ -104,7 +104,7 @@ namespace BlackFsdTest
         void testConnection();
 
     private:
-        FSDClient *client = nullptr;
+        CFSDClient *client = nullptr;
     };
 
     void CTestFSDClient::initTestCase()
@@ -132,7 +132,7 @@ namespace BlackFsdTest
         CFrequency frequency(123.000, CFrequencyUnit::MHz());
         COwnAircraftProviderDummy::instance()->updateActiveComFrequency(frequency, CComSystem::Com1, {});
 
-        client = new FSDClient(CClientProviderDummy::instance(), COwnAircraftProviderDummy::instance(), CRemoteAircraftProviderDummy::instance(), this);
+        client = new CFSDClient(CClientProviderDummy::instance(), COwnAircraftProviderDummy::instance(), CRemoteAircraftProviderDummy::instance(), this);
         client->setUnitTestMode(true);
         client->setCallsign("ABCD");
         client->setClientName("Test Client");
@@ -159,7 +159,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testDeleteAtc()
     {
-        QSignalSpy spy(client, &FSDClient::deleteAtcReceived);
+        QSignalSpy spy(client, &CFSDClient::deleteAtcReceived);
         client->sendFsdMessage("#DAEDDM_OBS:1234567\r\n");
 
         QCOMPARE(spy.count(), 1);
@@ -170,7 +170,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testDeletePilot()
     {
-        QSignalSpy spy(client, &FSDClient::deletePilotReceived);
+        QSignalSpy spy(client, &CFSDClient::deletePilotReceived);
         client->sendFsdMessage("#DPOEHAB:1234567\r\n");
 
         QCOMPARE(spy.count(), 1);
@@ -181,7 +181,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testTextMessage()
     {
-        QSignalSpy spy(client, &FSDClient::textMessagesReceived);
+        QSignalSpy spy(client, &CFSDClient::textMessagesReceived);
         client->sendFsdMessage("#TMEDMM_CTR:BER721:Hey how are you doing?\r\n");
 
         QCOMPARE(spy.count(), 1);
@@ -202,7 +202,7 @@ namespace BlackFsdTest
 
         COwnAircraftProviderDummy::instance()->updateActiveComFrequency(CFrequency(124050, CFrequencyUnit::kHz()), CComSystem::Com1, CIdentifier::anonymous());
 
-        QSignalSpy spy(client, &FSDClient::textMessagesReceived);
+        QSignalSpy spy(client, &CFSDClient::textMessagesReceived);
         client->sendFsdMessage("#TMEDMM_CTR:@24050:BER721, Descend F140 when ready\r\n");
 
         QCOMPARE(spy.count(), 1);
@@ -214,7 +214,7 @@ namespace BlackFsdTest
         QCOMPARE(message.getFrequency(), frequency);
         QCOMPARE(message.getSenderCallsign(), "EDMM_CTR");
 
-        QSignalSpy spy2(client, &FSDClient::textMessagesReceived);
+        QSignalSpy spy2(client, &CFSDClient::textMessagesReceived);
         client->sendFsdMessage("#TMEDMM_CTR:@24050&@27000:BER721, Descend F140 when ready\r\n");
 
         QCOMPARE(spy2.count(), 1);
@@ -229,7 +229,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testPilotDataUpdate()
     {
-        QSignalSpy spy(client, &FSDClient::pilotDataUpdateReceived);
+        QSignalSpy spy(client, &CFSDClient::pilotDataUpdateReceived);
         client->sendFsdMessage("@N:ABCD:1200:1:48.353855:11.786155:110:0:4290769188:1\r\n");
 
         QCOMPARE(spy.count(), 1);
@@ -255,7 +255,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testAtcDataUpdate()
     {
-        QSignalSpy spy(client, &FSDClient::atcDataUpdateReceived);
+        QSignalSpy spy(client, &CFSDClient::atcDataUpdateReceived);
         client->sendFsdMessage("%ZZZZ_APP:28200:5:150:5:48.11028:16.56972:0\r\n");
         const CCallsign callsign("ZZZZ_APP");
         const CFrequency freq(128200, CFrequencyUnit::kHz());
@@ -273,7 +273,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testPong()
     {
-        QSignalSpy spy(client, &FSDClient::pongReceived);
+        QSignalSpy spy(client, &CFSDClient::pongReceived);
         client->sendFsdMessage("$POSERVER:BER368:90835991\r\n");
 
         QCOMPARE(spy.count(), 1);
@@ -292,7 +292,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testClientResponseRealName1()
     {
-        QSignalSpy spy(client, &FSDClient::realNameResponseReceived);
+        QSignalSpy spy(client, &CFSDClient::realNameResponseReceived);
         client->sendFsdMessage("$CRDLH123:BER721:RN:Jon Doe\r\n");
 
         QCOMPARE(spy.count(), 1);
@@ -304,7 +304,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testClientResponseRealName2()
     {
-        QSignalSpy spy(client, &FSDClient::realNameResponseReceived);
+        QSignalSpy spy(client, &CFSDClient::realNameResponseReceived);
         client->sendFsdMessage("$CRDLH123:BER721:RN:Jon Doe:\r\n");
 
         QCOMPARE(spy.count(), 1);
@@ -316,7 +316,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testClientResponseRealName3()
     {
-        QSignalSpy spy(client, &FSDClient::realNameResponseReceived);
+        QSignalSpy spy(client, &CFSDClient::realNameResponseReceived);
         client->sendFsdMessage("$CRDLH123:BER721:RN:Jon Doe::1\r\n");
 
         QCOMPARE(spy.count(), 1);
@@ -328,7 +328,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testClientResponseCapabilities()
     {
-        QSignalSpy spy(client, &FSDClient::capabilityResponseReceived);
+        QSignalSpy spy(client, &CFSDClient::capabilityResponseReceived);
         client->sendFsdMessage("$CRAUA64MN:DECHK:CAPS:VERSION=1:ATCINFO=1:MODELDESC=1:ACCONFIG=1\r\n");
 
         QCOMPARE(spy.count(), 1);
@@ -340,7 +340,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testPlaneInfoRequestFsinn()
     {
-        QSignalSpy spy(client, &FSDClient::planeInformationFsinnReceived);
+        QSignalSpy spy(client, &CFSDClient::planeInformationFsinnReceived);
         client->sendFsdMessage("#SBLHA449:DLH53M:FSIPIR:1::A320:10.05523:0.49785:1320.00000:2.AB13B127.5611C1A2::A320-200 Airbus Leipzig Air CFM\r\n");
 
         QCOMPARE(spy.count(), 1);
@@ -352,7 +352,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testPlaneInformationFsinn()
     {
-        QSignalSpy spy(client, &FSDClient::planeInformationFsinnReceived);
+        QSignalSpy spy(client, &CFSDClient::planeInformationFsinnReceived);
         client->sendFsdMessage("#SBLHA449:AUA89SY:FSIPI:1::A320:10.05523:0.49785:1320.00000:2.AB13B127.5611C1A2::A320-200 Airbus Leipzig Air CFM\r\n");
 
         QCOMPARE(spy.count(), 1);
@@ -364,7 +364,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendPilotLogin()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
 
         client->sendLogin();
 
@@ -377,7 +377,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendAtcLogin()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         client->setLoginMode(CLoginMode::Observer);
         client->setAtcRating(AtcRating::Controller1);
         client->sendLogin();
@@ -391,7 +391,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendDeletePilot()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
 
         client->sendDeletePilot();
 
@@ -404,7 +404,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendDeleteAtc()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
 
         client->sendDeleteAtc();
 
@@ -417,7 +417,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendPilotDataUpdate1()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
 
         const Geo::CCoordinateGeodetic ownPosition(48.353855, 11.786155);
         const CHeading heading(25.0, CAngleUnit::deg());
@@ -446,7 +446,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendPilotDataUpdate2()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
 
         const Geo::CCoordinateGeodetic ownPosition(48.353855, 11.786155);
         const CHeading heading(25.0, CAngleUnit::deg());
@@ -475,7 +475,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendAtcDataUpdate()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         client->sendAtcDataUpdate(48.11028, 8.56972);
 
         QCOMPARE(spy.count(), 1);
@@ -487,7 +487,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendPing()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         client->sendPing("SERVER");
 
         QCOMPARE(spy.count(), 1);
@@ -499,7 +499,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendPong()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         client->sendPong("SERVER", "123456789");
 
         QCOMPARE(spy.count(), 1);
@@ -511,7 +511,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendClientResponse1()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         client->sendClientResponse(ClientQueryType::RealName, "ZZZZ_TWR");
 
         QCOMPARE(spy.count(), 1);
@@ -523,7 +523,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendClientResponse2()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         client->sendClientResponse(ClientQueryType::Capabilities, "ZZZZ_TWR");
 
         QCOMPARE(spy.count(), 1);
@@ -535,7 +535,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendClientQuery1()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         client->sendClientQuery(ClientQueryType::RealName, "ZZZZ_TWR");
 
         QCOMPARE(spy.count(), 1);
@@ -547,7 +547,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendClientQuery2()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         client->sendClientQueryIsValidAtc("EDDM_TWR");
 
         QCOMPARE(spy.count(), 1);
@@ -559,7 +559,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendClientQuery3()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         client->sendClientQueryAircraftConfig("DLH123");
 
         QCOMPARE(spy.count(), 1);
@@ -571,7 +571,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendTextMessage1()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         client->sendTextMessage("ZZZZ_TWR", "hey dude!");
 
         QCOMPARE(spy.count(), 1);
@@ -583,7 +583,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendTextMessage2()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         client->sendTextMessage(TextMessageGroups::AllSups, "Please help!!!");
 
         QCOMPARE(spy.count(), 1);
@@ -595,7 +595,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendRadioMessage1()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         QVector<int> frequencies { 124050 };
         client->sendRadioMessage(frequencies, "hey dude!");
 
@@ -608,7 +608,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendRadioMessage2()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         QVector<int> frequencies { 124050, 135725 };
         client->sendRadioMessage(frequencies, "hey dude!");
 
@@ -621,7 +621,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendFlightPlan()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         QDateTime takeoffTimePlanned = QDateTime::fromString("1530", "hhmm");
         takeoffTimePlanned.setTimeSpec(Qt::UTC);
         QDateTime takeoffTimeActual = QDateTime::fromString("1535", "hhmm");
@@ -643,7 +643,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendPlaneInfoRequest()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         client->sendPlaneInfoRequest("XYZ");
 
         QCOMPARE(spy.count(), 1);
@@ -655,7 +655,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendPlaneInformation1()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         client->sendPlaneInformation("XYZ", "B744", "BAW");
 
         QCOMPARE(spy.count(), 1);
@@ -667,7 +667,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendPlaneInformation2()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         client->sendPlaneInformation("XYZ", "B744", "BAW", "UNION");
 
         QCOMPARE(spy.count(), 1);
@@ -679,7 +679,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendPlaneInformation3()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         client->sendPlaneInformation("XYZ", "B744");
 
         QCOMPARE(spy.count(), 1);
@@ -691,7 +691,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendPlaneInformation4()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         client->sendPlaneInformation("XYZ", "", "", "UNION");
 
         QCOMPARE(spy.count(), 1);
@@ -703,7 +703,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testSendAircraftConfiguration()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         client->sendAircraftConfiguration("XYZ", "{\"request\":\"full\"}");
 
         QCOMPARE(spy.count(), 1);
@@ -715,7 +715,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testCom1FreqQueryResponse()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         client->sendFsdMessage("$CQEDMM_CTR:ABCD:C?\r\n");
 
         QCOMPARE(spy.count(), 2);
@@ -727,7 +727,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testPlaneInfoRequestResponse()
     {
-        QSignalSpy spy(client, &FSDClient::rawFsdMessage);
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
         client->sendFsdMessage("#SBEDMM_CTR:ABCD:PIR\r\n");
 
         QCOMPARE(spy.count(), 2);
@@ -784,7 +784,7 @@ namespace BlackFsdTest
         const CServer fsdServer = CServer::swiftFsdTestServer(true);
         if (!pingServer(fsdServer)) { QSKIP("Server not reachable."); }
 
-        QSignalSpy spy(client, &FSDClient::connectionStatusChanged);
+        QSignalSpy spy(client, &CFSDClient::connectionStatusChanged);
         client->setUnitTestMode(false);
         client->connectToServer();
 
@@ -800,8 +800,8 @@ namespace BlackFsdTest
         QCOMPARE(CConnectionStatus::Connecting, arguments.at(0).value<CConnectionStatus>().getConnectionStatus());
         QCOMPARE(CConnectionStatus::Connected, arguments.at(1).value<CConnectionStatus>().getConnectionStatus());
 
-        QSignalSpy pongSpy(client, &FSDClient::pongReceived);
-        connect(client, &FSDClient::pongReceived, [](const QString &sender, double elapsedTimeM)
+        QSignalSpy pongSpy(client, &CFSDClient::pongReceived);
+        connect(client, &CFSDClient::pongReceived, [](const QString &sender, double elapsedTimeM)
         {
             qDebug() << "Received pong from" << sender << "in" << elapsedTimeM << "ms";
         });

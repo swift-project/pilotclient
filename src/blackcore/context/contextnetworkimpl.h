@@ -150,7 +150,7 @@ namespace BlackCore
             //! \remarks public so values can be logged/monitored
             //! @{
             //! Network library
-            Fsd::FSDClient *fsdClient() const { return m_fsdClient; }
+            Fsd::CFSDClient *fsdClient() const { return m_fsdClient; }
 
             //! Airspace
             CAirspaceMonitor *airspace() const { return m_airspace; }
@@ -293,7 +293,7 @@ namespace BlackCore
 
         private:
             CAirspaceMonitor           *m_airspace = nullptr;
-            Fsd::FSDClient             *m_fsdClient = nullptr;
+            Fsd::CFSDClient             *m_fsdClient = nullptr;
             BlackMisc::Network::CLoginMode m_currentMode = BlackMisc::Network::CLoginMode::Pilot;    //!< current modeM
             QTimer                     *m_requestAircraftDataTimer = nullptr;     //!< general updates such as frequencies, see requestAircraftDataUpdates()
             QTimer                     *m_requestAtisTimer         = nullptr;     //!< general updates such as ATIS

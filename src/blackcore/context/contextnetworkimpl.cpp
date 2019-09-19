@@ -68,12 +68,12 @@ namespace BlackCore
             CContextNetwork::registerHelp();
 
             // 1. Init by "network driver"
-            m_fsdClient = new FSDClient(this, this->getRuntime()->getCContextOwnAircraft(), this, this);
-            connect(m_fsdClient, &FSDClient::connectionStatusChanged, this, &CContextNetwork::onFsdConnectionStatusChanged);
-            connect(m_fsdClient, &FSDClient::killRequestReceived, this, &CContextNetwork::kicked);
-            connect(m_fsdClient, &FSDClient::textMessagesReceived, this, &CContextNetwork::textMessagesReceived);
+            m_fsdClient = new CFSDClient(this, this->getRuntime()->getCContextOwnAircraft(), this, this);
+            connect(m_fsdClient, &CFSDClient::connectionStatusChanged, this, &CContextNetwork::onFsdConnectionStatusChanged);
+            connect(m_fsdClient, &CFSDClient::killRequestReceived, this, &CContextNetwork::kicked);
+            connect(m_fsdClient, &CFSDClient::textMessagesReceived, this, &CContextNetwork::textMessagesReceived);
 //            connect(m_fsdClient, &FSDClient::textMessagesReceived, this, &CContextNetwork::checkForSupervisiorTextMessage);
-            connect(m_fsdClient, &FSDClient::textMessageSent, this, &CContextNetwork::textMessageSent);
+            connect(m_fsdClient, &CFSDClient::textMessageSent, this, &CContextNetwork::textMessageSent);
 
             // 2. Update timer for data (network data such as frequency)
             // we use 2 timers so we can query at different times (not too many queirs at once)
@@ -1201,7 +1201,7 @@ namespace BlackCore
 
             // bind does not allow to define connection type, so we use receiver as workaround
             const QMetaObject::Connection uc; // unconnected
-            const QMetaObject::Connection c = rawFsdMessageReceivedSlot ? connect(m_fsdClient, &FSDClient::rawFsdMessage, receiver, rawFsdMessageReceivedSlot) : uc;
+            const QMetaObject::Connection c = rawFsdMessageReceivedSlot ? connect(m_fsdClient, &CFSDClient::rawFsdMessage, receiver, rawFsdMessageReceivedSlot) : uc;
             Q_ASSERT_X(c || !rawFsdMessageReceivedSlot, Q_FUNC_INFO, "connect failed");
             return c;
         }

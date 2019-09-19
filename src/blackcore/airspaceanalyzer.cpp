@@ -32,7 +32,7 @@ using namespace BlackCore::Fsd;
 
 namespace BlackCore
 {
-    CAirspaceAnalyzer::CAirspaceAnalyzer(IOwnAircraftProvider *ownAircraftProvider, FSDClient *fsdClient, CAirspaceMonitor *airspaceMonitorParent) :
+    CAirspaceAnalyzer::CAirspaceAnalyzer(IOwnAircraftProvider *ownAircraftProvider, CFSDClient *fsdClient, CAirspaceMonitor *airspaceMonitorParent) :
         CContinuousWorker(airspaceMonitorParent, "CAirspaceAnalyzer"),
         COwnAircraftAware(ownAircraftProvider),
         CRemoteAircraftAware(airspaceMonitorParent)
@@ -47,17 +47,17 @@ namespace BlackCore
         Q_ASSERT(c);
 
         // network connected
-        c = connect(fsdClient, &FSDClient::deletePilotReceived, this, &CAirspaceAnalyzer::watchdogRemoveAircraftCallsign, Qt::QueuedConnection);
+        c = connect(fsdClient, &CFSDClient::deletePilotReceived, this, &CAirspaceAnalyzer::watchdogRemoveAircraftCallsign, Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(fsdClient, &FSDClient::deleteAtcReceived, this, &CAirspaceAnalyzer::watchdogRemoveAtcCallsign, Qt::QueuedConnection);
+        c = connect(fsdClient, &CFSDClient::deleteAtcReceived, this, &CAirspaceAnalyzer::watchdogRemoveAtcCallsign, Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(fsdClient, &FSDClient::connectionStatusChanged, this, &CAirspaceAnalyzer::onConnectionStatusChanged, Qt::QueuedConnection);
+        c = connect(fsdClient, &CFSDClient::connectionStatusChanged, this, &CAirspaceAnalyzer::onConnectionStatusChanged, Qt::QueuedConnection);
         Q_ASSERT(c);
 
         // network situations
-        c = connect(fsdClient, &FSDClient::pilotDataUpdateReceived, this, &CAirspaceAnalyzer::onNetworkPositionUpdate, Qt::QueuedConnection);
+        c = connect(fsdClient, &CFSDClient::pilotDataUpdateReceived, this, &CAirspaceAnalyzer::onNetworkPositionUpdate, Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(fsdClient, &FSDClient::atcDataUpdateReceived, this, &CAirspaceAnalyzer::watchdogTouchAtcCallsign, Qt::QueuedConnection);
+        c = connect(fsdClient, &CFSDClient::atcDataUpdateReceived, this, &CAirspaceAnalyzer::watchdogTouchAtcCallsign, Qt::QueuedConnection);
         Q_ASSERT(c);
 
         // Monitor

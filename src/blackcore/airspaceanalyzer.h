@@ -65,7 +65,7 @@ namespace BlackCore
 
         //! Constructor
         CAirspaceAnalyzer(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                          Fsd::FSDClient *fsdClient,
+                          Fsd::CFSDClient *fsdClient,
                           CAirspaceMonitor *airspaceMonitorParent);
 
         //! Destructor

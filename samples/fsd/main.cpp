@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 
     COwnAircraftProviderDummy::instance()->updateOwnCallsign("BER368");
 
-    FSDClient client(CClientProviderDummy::instance(), COwnAircraftProviderDummy::instance(), CRemoteAircraftProviderDummy::instance(), &qa);
+    CFSDClient client(CClientProviderDummy::instance(), COwnAircraftProviderDummy::instance(), CRemoteAircraftProviderDummy::instance(), &qa);
     client.setClientName("Test Client");
     client.setHostApplication("None");
     client.setVersion(0, 8);

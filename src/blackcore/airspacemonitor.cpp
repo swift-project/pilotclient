@@ -65,7 +65,7 @@ using namespace BlackCore::Vatsim;
 
 namespace BlackCore
 {
-    CAirspaceMonitor::CAirspaceMonitor(IOwnAircraftProvider *ownAircraftProvider, IAircraftModelSetProvider *modelSetProvider, FSDClient *fsdClient, QObject *parent)
+    CAirspaceMonitor::CAirspaceMonitor(IOwnAircraftProvider *ownAircraftProvider, IAircraftModelSetProvider *modelSetProvider, CFSDClient *fsdClient, QObject *parent)
         : CRemoteAircraftProvider(parent),
           COwnAircraftAware(ownAircraftProvider),
           CAircraftModelSetAware(modelSetProvider),
@@ -75,24 +75,24 @@ namespace BlackCore
         this->setObjectName("CAirspaceMonitor");
         this->enableReverseLookupMessages(sApp->isDeveloperFlagSet() || CBuildConfig::isLocalDeveloperDebugBuild() ? RevLogEnabled : RevLogEnabledSimplified);
 
-        connect(m_fsdClient, &FSDClient::atcDataUpdateReceived,             this, &CAirspaceMonitor::onAtcPositionUpdate);
+        connect(m_fsdClient, &CFSDClient::atcDataUpdateReceived,             this, &CAirspaceMonitor::onAtcPositionUpdate);
         // FSD TODO
-        connect(m_fsdClient, &FSDClient::atisReplyReceived,             this, &CAirspaceMonitor::onAtisReceived);
-        connect(m_fsdClient, &FSDClient::atisVoiceRoomReplyReceived,    this, &CAirspaceMonitor::onAtisVoiceRoomReceived);
-        connect(m_fsdClient, &FSDClient::atisLogoffTimeReplyReceived,   this, &CAirspaceMonitor::onAtisLogoffTimeReceived);
-        connect(m_fsdClient, &FSDClient::flightPlanReceived,       this, &CAirspaceMonitor::onFlightPlanReceived);
-        connect(m_fsdClient, &FSDClient::realNameResponseReceived,         this, &CAirspaceMonitor::onRealNameReplyReceived);
-        connect(m_fsdClient, &FSDClient::planeInformationReceived,        this, &CAirspaceMonitor::onIcaoCodesReceived);
-        connect(m_fsdClient, &FSDClient::deletePilotReceived,             this, &CAirspaceMonitor::onPilotDisconnected);
-        connect(m_fsdClient, &FSDClient::deleteAtcReceived,               this, &CAirspaceMonitor::onAtcControllerDisconnected);
-        connect(m_fsdClient, &FSDClient::pilotDataUpdateReceived,        this, &CAirspaceMonitor::onAircraftUpdateReceived);
-        connect(m_fsdClient, &FSDClient::interimPilotDataUpdatedReceived, this, &CAirspaceMonitor::onAircraftInterimUpdateReceived);
-        connect(m_fsdClient, &FSDClient::com1FrequencyResponseReceived,        this, &CAirspaceMonitor::onFrequencyReceived);
-        connect(m_fsdClient, &FSDClient::capabilityResponseReceived,     this, &CAirspaceMonitor::onCapabilitiesReplyReceived);
-        connect(m_fsdClient, &FSDClient::planeInformationFsinnReceived,     this, &CAirspaceMonitor::onCustomFSInnPacketReceived);
-        connect(m_fsdClient, &FSDClient::serverResponseReceived,           this, &CAirspaceMonitor::onServerReplyReceived);
-        connect(m_fsdClient, &FSDClient::aircraftConfigReceived,  this, &CAirspaceMonitor::onAircraftConfigReceived);
-        connect(m_fsdClient, &FSDClient::connectionStatusChanged,       this, &CAirspaceMonitor::onConnectionStatusChanged);
+        connect(m_fsdClient, &CFSDClient::atisReplyReceived,             this, &CAirspaceMonitor::onAtisReceived);
+        connect(m_fsdClient, &CFSDClient::atisVoiceRoomReplyReceived,    this, &CAirspaceMonitor::onAtisVoiceRoomReceived);
+        connect(m_fsdClient, &CFSDClient::atisLogoffTimeReplyReceived,   this, &CAirspaceMonitor::onAtisLogoffTimeReceived);
+        connect(m_fsdClient, &CFSDClient::flightPlanReceived,       this, &CAirspaceMonitor::onFlightPlanReceived);
+        connect(m_fsdClient, &CFSDClient::realNameResponseReceived,         this, &CAirspaceMonitor::onRealNameReplyReceived);
+        connect(m_fsdClient, &CFSDClient::planeInformationReceived,        this, &CAirspaceMonitor::onIcaoCodesReceived);
+        connect(m_fsdClient, &CFSDClient::deletePilotReceived,             this, &CAirspaceMonitor::onPilotDisconnected);
+        connect(m_fsdClient, &CFSDClient::deleteAtcReceived,               this, &CAirspaceMonitor::onAtcControllerDisconnected);
+        connect(m_fsdClient, &CFSDClient::pilotDataUpdateReceived,        this, &CAirspaceMonitor::onAircraftUpdateReceived);
+        connect(m_fsdClient, &CFSDClient::interimPilotDataUpdatedReceived, this, &CAirspaceMonitor::onAircraftInterimUpdateReceived);
+        connect(m_fsdClient, &CFSDClient::com1FrequencyResponseReceived,        this, &CAirspaceMonitor::onFrequencyReceived);
+        connect(m_fsdClient, &CFSDClient::capabilityResponseReceived,     this, &CAirspaceMonitor::onCapabilitiesReplyReceived);
+        connect(m_fsdClient, &CFSDClient::planeInformationFsinnReceived,     this, &CAirspaceMonitor::onCustomFSInnPacketReceived);
+        connect(m_fsdClient, &CFSDClient::serverResponseReceived,           this, &CAirspaceMonitor::onServerReplyReceived);
+        connect(m_fsdClient, &CFSDClient::aircraftConfigReceived,  this, &CAirspaceMonitor::onAircraftConfigReceived);
+        connect(m_fsdClient, &CFSDClient::connectionStatusChanged,       this, &CAirspaceMonitor::onConnectionStatusChanged);
 
         // AutoConnection: this should also avoid race conditions by updating the bookings
         Q_ASSERT_X(sApp && sApp->getWebDataServices(), Q_FUNC_INFO, "Missing data reader");
