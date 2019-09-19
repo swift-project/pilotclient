@@ -36,6 +36,7 @@ HEADERS +=  *.h \
             $$PWD/network/*.h \
             $$PWD/network/data/*.h \
             $$PWD/network/settings/*.h \
+            $$PWD/network/external/*.h \
             $$PWD/pq/*.h \
             $$PWD/simulation/*.h \
             $$PWD/simulation/data/*.h \
@@ -46,7 +47,7 @@ HEADERS +=  *.h \
             $$PWD/simulation/xplane/*.h \
             $$PWD/thirdparty/*.h \
             $$PWD/test/*.h \
-            $$PWD/weather/*.h
+            $$PWD/weather/*.h \
 
 SOURCES +=  *.cpp \
             $$PWD/audio/*.cpp \
@@ -58,6 +59,7 @@ SOURCES +=  *.cpp \
             $$PWD/math/*.cpp \
             $$PWD/network/*.cpp \
             $$PWD/network/settings/*.cpp \
+            $$PWD/network/external/*.cpp \
             $$PWD/pq/*.cpp \
             $$PWD/simulation/*.cpp \
             $$PWD/simulation/data/*.cpp \
@@ -68,7 +70,7 @@ SOURCES +=  *.cpp \
             $$PWD/simulation/xplane/*.cpp \
             $$PWD/thirdparty/*.cpp \
             $$PWD/test/*.cpp \
-            $$PWD/weather/*.cpp
+            $$PWD/weather/*.cpp \
 
 macx {
     HEADERS += $$PWD/macos/microphoneaccess.h
