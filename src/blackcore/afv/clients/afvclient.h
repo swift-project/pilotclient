@@ -98,7 +98,7 @@ namespace BlackCore
                 float getOutputVolumePeakVU() const { return m_outputVolumeStream.PeakVU; }
 
             signals:
-                void receivingCallsignsChanged(const TransceiverReceivingCallsignsChangedArgs &args);
+                void receivingCallsignsChanged(const Audio::TransceiverReceivingCallsignsChangedArgs &args);
                 void inputVolumePeakVU(float value);
                 void outputVolumePeakVU(float value);
 
