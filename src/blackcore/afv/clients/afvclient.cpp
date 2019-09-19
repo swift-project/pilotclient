@@ -221,7 +221,6 @@ namespace BlackCore
                     transceiver.HeightAglM = height;
                     transceiver.HeightMslM = height;
                 }
-                updateTransceivers();
             }
 
             void AFVClient::updateTransceivers()

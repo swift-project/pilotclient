@@ -176,7 +176,7 @@ ApplicationWindow {
             id: transceiver1
             transceiverId: 0
             onRxOnChanged: {
-                voiceClient.enableTransceiver(transceiverId, enabled)
+                voiceClient.enableTransceiver(transceiverId, rxOn)
             }
         }
 
@@ -202,7 +202,7 @@ ApplicationWindow {
             transceiverId: 1
             txOn: false
             onRxOnChanged: {
-                voiceClient.enableTransceiver(transceiverId, enabled)
+                voiceClient.enableTransceiver(transceiverId, rxOn)
             }
         }
 

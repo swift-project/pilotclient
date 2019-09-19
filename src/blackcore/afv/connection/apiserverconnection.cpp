@@ -127,7 +127,6 @@ namespace BlackCore
 
             void ApiServerConnection::postNoResponse(const QString &resource, const QJsonDocument &json)
             {
-                Q_UNUSED(json);
                 if (isShuttingDown()) { return; } // avoid crash
                 if (! m_isAuthenticated)
                 {
@@ -147,7 +146,7 @@ namespace BlackCore
                 QNetworkRequest request(url);
                 request.setRawHeader("Authorization", "Bearer " + m_jwt);
                 request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-                QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nam->deleteResource(request));
+                QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nam->post(request, json.toJson()));
                 while (! reply->isFinished()) { loop.exec(); }
                 qDebug() << "POST" << resource << "(" << m_watch.elapsed() << "ms)";
 
