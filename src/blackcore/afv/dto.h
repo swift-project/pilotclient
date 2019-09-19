@@ -119,7 +119,8 @@ namespace BlackCore
                 json["Frequency"] = static_cast<int>(frequency);
                 json["LatDeg"] = LatDeg;
                 json["LonDeg"] = LonDeg;
-                json["AltMslM"] = HeightMslM;
+                json["HeightMslM"] = HeightMslM;
+                json["HeightAglM"] = HeightAglM;
                 return json;
             }
 
