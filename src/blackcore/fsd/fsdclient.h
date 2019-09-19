@@ -11,7 +11,6 @@
 #ifndef BLACKCORE_FSD_CLIENT_H
 #define BLACKCORE_FSD_CLIENT_H
 
-
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/fsd/enums.h"
@@ -48,7 +47,6 @@
 #define PROTOCOL_REVISION_VATSIM_AUTH 100
 
 namespace BlackFsdTest { class CTestFSDClient; }
-
 namespace BlackCore
 {
     namespace Fsd
@@ -65,22 +63,22 @@ namespace BlackCore
         //! Send (interim) data updates automatically
         //! Check ':' in FSD messages. Disconnect if there is a wrong one
 
-        class BLACKCORE_EXPORT FSDClient :
-                public QObject,
-                public BlackMisc::Network::IEcosystemProvider,            // provide info about used ecosystem
-                public BlackMisc::Network::CClientAware,                  // network can set client information
-                public BlackMisc::Simulation::COwnAircraftAware,          // network vatlib consumes own aircraft data and sets ICAO/callsign data
-                public BlackMisc::Simulation::CRemoteAircraftAware,       // check if we really need to process network packets (e.g. parts)
-                public BlackMisc::Simulation::CSimulationEnvironmentAware // allows to consume ground elevations
+        class BLACKCORE_EXPORT CFSDClient :
+            public QObject,
+            public BlackMisc::Network::IEcosystemProvider,            // provide info about used ecosystem
+            public BlackMisc::Network::CClientAware,                  // network can set client information
+            public BlackMisc::Simulation::COwnAircraftAware,          // network vatlib consumes own aircraft data and sets ICAO/callsign data
+            public BlackMisc::Simulation::CRemoteAircraftAware,       // check if we really need to process network packets (e.g. parts)
+            public BlackMisc::Simulation::CSimulationEnvironmentAware // allows to consume ground elevations
         {
             Q_OBJECT
             Q_INTERFACES(BlackMisc::Network::IEcosystemProvider)
 
         public:
-            FSDClient(BlackMisc::Network::IClientProvider *clientProvider,
-                      BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                      BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                      QObject *parent = nullptr);
+            CFSDClient(BlackMisc::Network::IClientProvider *clientProvider,
+                       BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                       BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                       QObject *parent = nullptr);
 
             // Necessary functions to setup client. Set them all!
             void setClientName(const QString &clientName) { m_clientName = clientName; }
@@ -160,24 +158,27 @@ namespace BlackCore
             void setInterimPositionReceivers(const BlackMisc::Aviation::CCallsignSet &interimPositionReceivers);
 
             bool isConnected() const { return m_connectionStatus.isConnected(); }
-            bool isPendingConnection() const { return m_connectionStatus.isConnecting() ||
-                                                      m_connectionStatus.isDisconnecting(); }
+            bool isPendingConnection() const
+            {
+                return m_connectionStatus.isConnecting() ||
+                       m_connectionStatus.isDisconnecting();
+            }
 
             //! Statistics enable functions @{
-           bool setStatisticsEnable(bool enabled) { m_statistics = enabled; return enabled; }
-           bool isStatisticsEnabled() const { return m_statistics; }
-           //! @}
+            bool setStatisticsEnable(bool enabled) { m_statistics = enabled; return enabled; }
+            bool isStatisticsEnabled() const { return m_statistics; }
+            //! @}
 
-           //! Increase the statistics value for given identifier @{
-           int increaseStatisticsValue(const QString &identifier, const QString &appendix = {});
-           int increaseStatisticsValue(const QString &identifier, int value);
-           //! @}
+            //! Increase the statistics value for given identifier @{
+            int increaseStatisticsValue(const QString &identifier, const QString &appendix = {});
+            int increaseStatisticsValue(const QString &identifier, int value);
+            //! @}
 
-           //! Clear the statistics
-           void clearStatistics();
+            //! Clear the statistics
+            void clearStatistics();
 
-           //! Text statistics
-           QString getNetworkStatisticsAsText(bool reset, const QString &separator = "\n");
+            //! Text statistics
+            QString getNetworkStatisticsAsText(bool reset, const QString &separator = "\n");
 
         signals:
             void atcDataUpdateReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq,
@@ -380,7 +381,7 @@ namespace BlackCore
             BlackMisc::CTokenBucket m_tokenBucket;  //!< used with aircraft parts messages
             BlackMisc::Aviation::CCallsignSet m_interimPositionReceivers;  //!< all aircraft receiving interim positions
 
-            BlackMisc::CDigestSignal m_dsSendTextMessage  { this, &FSDClient::emitConsolidatedTextMessages, 500, 10 };
+            BlackMisc::CDigestSignal m_dsSendTextMessage  { this, &CFSDClient::emitConsolidatedTextMessages, 500, 10 };
             BlackMisc::Network::CTextMessageList m_textMessagesToConsolidate;
 
             struct AtisMessage
@@ -404,7 +405,7 @@ namespace BlackCore
             QHash<BlackMisc::Aviation::CCallsign, qint64> m_lastPositionUpdate;
             QHash<BlackMisc::Aviation::CCallsign, QList<qint64>> m_lastOffsetTimes; //!< latest offset first
 
-            BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TRawFsdMessageSetting> m_fsdMessageSetting { this, &FSDClient::fsdMessageSettingsChanged };
+            BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TRawFsdMessageSetting> m_fsdMessageSetting { this, &CFSDClient::fsdMessageSettingsChanged };
             QFile m_rawFsdMessageLogFile;
             bool m_rawFsdMessagesEnabled = false;
             bool m_filterPasswordFromLogin = false;

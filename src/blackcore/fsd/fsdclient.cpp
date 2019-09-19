@@ -77,7 +77,7 @@ namespace BlackCore
             return escaped;
         }
 
-        FSDClient::FSDClient(IClientProvider *clientProvider,
+        CFSDClient::CFSDClient(IClientProvider *clientProvider,
                              IOwnAircraftProvider *ownAircraftProvider,
                              IRemoteAircraftProvider *remoteAircraftProvider,
                              QObject *parent)
@@ -88,16 +88,16 @@ namespace BlackCore
                   m_tokenBucket(10, CTime(5, CTimeUnit::s()), 1)
         {
             initializeMessageTypes();
-            connect(&m_socket, &QTcpSocket::readyRead, this, &FSDClient::readDataFromSocket);
-            connect(&m_socket, qOverload<QAbstractSocket::SocketError>(&QTcpSocket::error), this, &FSDClient::printSocketError);
+            connect(&m_socket, &QTcpSocket::readyRead, this, &CFSDClient::readDataFromSocket);
+            connect(&m_socket, qOverload<QAbstractSocket::SocketError>(&QTcpSocket::error), this, &CFSDClient::printSocketError);
 
             m_positionUpdateTimer.setObjectName(this->objectName().append(":m_positionUpdateTimer"));
-            connect(&m_positionUpdateTimer, &QTimer::timeout, this, &FSDClient::sendPilotDataUpdate);
+            connect(&m_positionUpdateTimer, &QTimer::timeout, this, &CFSDClient::sendPilotDataUpdate);
 
             m_interimPositionUpdateTimer.setObjectName(this->objectName().append(":m_interimPositionUpdateTimer"));
-            connect(&m_interimPositionUpdateTimer, &QTimer::timeout, this, &FSDClient::sendInterimPilotDataUpdate);
+            connect(&m_interimPositionUpdateTimer, &QTimer::timeout, this, &CFSDClient::sendInterimPilotDataUpdate);
 
-            connect(&m_scheduledConfigUpdate, &QTimer::timeout, this, &FSDClient::sendIncrementalAircraftConfig);
+            connect(&m_scheduledConfigUpdate, &QTimer::timeout, this, &CFSDClient::sendIncrementalAircraftConfig);
             m_scheduledConfigUpdate.setSingleShot(true);
 
             fsdMessageSettingsChanged();
@@ -109,13 +109,13 @@ namespace BlackCore
             }
         }
 
-        void FSDClient::setClientIdAndKey(quint16 id, const QByteArray &key)
+        void CFSDClient::setClientIdAndKey(quint16 id, const QByteArray &key)
         {
             clientAuth = vatsim_auth_create(id, qPrintable(key));
             serverAuth = vatsim_auth_create(id, qPrintable(key));
         }
 
-        void FSDClient::setServer(const CServer &server)
+        void CFSDClient::setServer(const CServer &server)
         {
             Q_ASSERT_X(m_connectionStatus.isDisconnected(), Q_FUNC_INFO, "Can't change server details while still connected");
 
@@ -136,20 +136,20 @@ namespace BlackCore
             if (!m_fsdTextCodec) { m_fsdTextCodec = QTextCodec::codecForName("utf-8"); }
         }
 
-        void FSDClient::setSimulatorInfo(const CSimulatorPluginInfo &simInfo)
+        void CFSDClient::setSimulatorInfo(const CSimulatorPluginInfo &simInfo)
         {
             Q_ASSERT_X(m_connectionStatus.isDisconnected(), Q_FUNC_INFO, "Can't change server details while still connected");
             m_simulatorInfo = simInfo;
         }
 
-        void FSDClient::setCallsign(const CCallsign &callsign)
+        void CFSDClient::setCallsign(const CCallsign &callsign)
         {
             Q_ASSERT_X(m_connectionStatus.isDisconnected(), Q_FUNC_INFO, "Can't change callsign while still connected");
             m_ownCallsign = callsign;
             updateOwnCallsign(callsign);
         }
 
-        void FSDClient::setIcaoCodes(const CSimulatedAircraft &ownAircraft)
+        void CFSDClient::setIcaoCodes(const CSimulatedAircraft &ownAircraft)
         {
             Q_ASSERT_X(m_connectionStatus.isDisconnected(), Q_FUNC_INFO, "Can't change ICAO codes while still connected");
             m_ownAircraftIcaoCode  = ownAircraft.getAircraftIcaoCode();
@@ -161,7 +161,7 @@ namespace BlackCore
             updateOwnIcaoCodes(m_ownAircraftIcaoCode, m_ownAirlineIcaoCode);
         }
 
-        void FSDClient::setLiveryAndModelString(const QString &livery, bool sendLiveryString, const QString &modelString, bool sendModelString)
+        void CFSDClient::setLiveryAndModelString(const QString &livery, bool sendLiveryString, const QString &modelString, bool sendModelString)
         {
             m_ownLivery = livery;
             m_ownModelString = modelString;
@@ -169,7 +169,7 @@ namespace BlackCore
             m_sendMModelString = sendModelString;
         }
 
-        void FSDClient::setSimType(const CSimulatorPluginInfo &simInfo)
+        void CFSDClient::setSimType(const CSimulatorPluginInfo &simInfo)
         {
             //! \fixme Define recognized simulators somewhere */
             if (simInfo.getSimulator() == "fs9")
@@ -194,7 +194,7 @@ namespace BlackCore
             }
         }
 
-        QStringList FSDClient::getPresetValues() const
+        QStringList CFSDClient::getPresetValues() const
         {
             const QStringList v =
             {
@@ -208,7 +208,7 @@ namespace BlackCore
             return v;
         }
 
-        void FSDClient::connectToServer()
+        void CFSDClient::connectToServer()
         {
             if (m_socket.isOpen()) { return; }
             Q_ASSERT(! m_clientName.isEmpty());
@@ -228,7 +228,7 @@ namespace BlackCore
             startPositionTimers();
         }
 
-        void FSDClient::disconnectFromServer()
+        void CFSDClient::disconnectFromServer()
         {
             this->stopPositionTimers();
             if (! m_socket.isOpen()) { return; }
@@ -244,7 +244,7 @@ namespace BlackCore
             this->clearState();
         }
 
-        void FSDClient::sendLogin()
+        void CFSDClient::sendLogin()
         {
             QString cid = m_server.getUser().getId();
             QString password = m_server.getUser().getPassword();
@@ -262,21 +262,21 @@ namespace BlackCore
             }
         }
 
-        void FSDClient::sendDeletePilot()
+        void CFSDClient::sendDeletePilot()
         {
             QString cid = m_server.getUser().getId();
             DeletePilot deletePilot(m_ownCallsign.asString(), cid);
             sendMessage(deletePilot);
         }
 
-        void FSDClient::sendDeleteAtc()
+        void CFSDClient::sendDeleteAtc()
         {
             QString cid = m_server.getUser().getId();
             DeleteAtc deleteAtc(m_ownCallsign.asString(), cid);
             sendMessage(deleteAtc);
         }
 
-        void FSDClient::sendPilotDataUpdate()
+        void CFSDClient::sendPilotDataUpdate()
         {
             if (m_connectionStatus.isDisconnected() && ! m_unitTestMode) { return; }
             CSimulatedAircraft myAircraft(getOwnAircraft());
@@ -303,7 +303,7 @@ namespace BlackCore
             }
         }
 
-        void FSDClient::sendInterimPilotDataUpdate()
+        void CFSDClient::sendInterimPilotDataUpdate()
         {
             if (m_connectionStatus.isDisconnected()) { return; }
             CSimulatedAircraft myAircraft(getOwnAircraft());
@@ -326,13 +326,13 @@ namespace BlackCore
             }
         }
 
-        void FSDClient::sendAtcDataUpdate(double latitude, double longitude)
+        void CFSDClient::sendAtcDataUpdate(double latitude, double longitude)
         {
             AtcDataUpdate atcDataUpdate(m_ownCallsign.asString(), 199998, CFacilityType::OBS, 300, AtcRating::Observer, latitude, longitude, 0);
             sendMessage(atcDataUpdate);
         }
 
-        void FSDClient::sendPing(const QString &receiver)
+        void CFSDClient::sendPing(const QString &receiver)
         {
             qint64 msecSinceEpoch = QDateTime::currentMSecsSinceEpoch();
             QString timeString = QString::number(msecSinceEpoch);
@@ -344,49 +344,49 @@ namespace BlackCore
             this->increaseStatisticsValue(QStringLiteral("sendPing"));
         }
 
-        void FSDClient::sendClientQueryIsValidAtc(const CCallsign &callsign)
+        void CFSDClient::sendClientQueryIsValidAtc(const CCallsign &callsign)
         {
             sendClientQuery(ClientQueryType::IsValidATC, {}, { callsign.asString() });
         }
 
-        void FSDClient::sendClientQueryCapabilities(const CCallsign &callsign)
+        void CFSDClient::sendClientQueryCapabilities(const CCallsign &callsign)
         {
             sendClientQuery(ClientQueryType::Capabilities, callsign);
         }
 
-        void FSDClient::sendClientQueryCom1Freq(const CCallsign &callsign)
+        void CFSDClient::sendClientQueryCom1Freq(const CCallsign &callsign)
         {
             sendClientQuery(ClientQueryType::Com1Freq, callsign);
         }
 
-        void FSDClient::sendClientQueryRealName(const CCallsign &callsign)
+        void CFSDClient::sendClientQueryRealName(const CCallsign &callsign)
         {
             sendClientQuery(ClientQueryType::RealName, callsign);
         }
 
-        void FSDClient::sendClientQueryServer(const CCallsign &callsign)
+        void CFSDClient::sendClientQueryServer(const CCallsign &callsign)
         {
             sendClientQuery(ClientQueryType::Server, callsign);
         }
 
-        void FSDClient::sendClientQueryAtis(const CCallsign &callsign)
+        void CFSDClient::sendClientQueryAtis(const CCallsign &callsign)
         {
             sendClientQuery(ClientQueryType::ATIS, callsign);
         }
 
-        void FSDClient::sendClientQueryFlightPlan(const CCallsign callsign)
+        void CFSDClient::sendClientQueryFlightPlan(const CCallsign callsign)
         {
             sendClientQuery(ClientQueryType::FP, {}, { callsign.toQString() } );
         }
 
-        void FSDClient::sendClientQueryAircraftConfig(const CCallsign callsign)
+        void CFSDClient::sendClientQueryAircraftConfig(const CCallsign callsign)
         {
             QString data = QJsonDocument(JsonPackets::aircraftConfigRequest()).toJson(QJsonDocument::Compact);
             data = convertToUnicodeEscaped(data);
             sendClientQuery(ClientQueryType::AircraftConfig, callsign, { data });
         }
 
-        void FSDClient::sendClientQuery(ClientQueryType queryType, const CCallsign &receiver, const QStringList &queryData)
+        void CFSDClient::sendClientQuery(ClientQueryType queryType, const CCallsign &receiver, const QStringList &queryData)
         {
             if (queryType == ClientQueryType::Unknown)
             {
@@ -463,7 +463,7 @@ namespace BlackCore
             this->increaseStatisticsValue(QStringLiteral("sendClientQuery"), toQString(queryType));
         }
 
-        void FSDClient::sendTextMessages(const CTextMessageList &messages)
+        void CFSDClient::sendTextMessages(const CTextMessageList &messages)
         {
             if (messages.isEmpty()) { return; }
 
@@ -500,12 +500,12 @@ namespace BlackCore
             }
         }
 
-        void FSDClient::sendTextMessage(const CTextMessage &message)
+        void CFSDClient::sendTextMessage(const CTextMessage &message)
         {
             sendTextMessages({message});
         }
 
-        void FSDClient::sendTextMessage(TextMessageGroups receiverGroup, const QString &message)
+        void CFSDClient::sendTextMessage(TextMessageGroups receiverGroup, const QString &message)
         {
             QString receiver;
             if (receiverGroup == TextMessageGroups::AllClients) { receiver = '*'; }
@@ -518,13 +518,13 @@ namespace BlackCore
             this->increaseStatisticsValue(QStringLiteral("sendTextMessages"));
         }
 
-        void FSDClient::sendTextMessage(const QString &receiver, const QString &message)
+        void CFSDClient::sendTextMessage(const QString &receiver, const QString &message)
         {
             const CTextMessage msg (message, getOwnCallsign(), { receiver });
             sendTextMessage(msg);
         }
 
-        void FSDClient::sendRadioMessage(const QVector<int> &frequencies, const QString &message)
+        void CFSDClient::sendRadioMessage(const QVector<int> &frequencies, const QString &message)
         {
             QStringList receivers;
             for (const int &frequency : frequencies)
@@ -537,7 +537,7 @@ namespace BlackCore
             this->increaseStatisticsValue(QStringLiteral("sendTextMessages"));
         }
 
-        void FSDClient::sendFlightPlan(const CFlightPlan &flightPlan)
+        void CFSDClient::sendFlightPlan(const CFlightPlan &flightPlan)
         {
             // Removed with T353 although it is standard
             // const QString route = QString(flightPlan.getRoute()).replace(" ", ".");
@@ -583,14 +583,14 @@ namespace BlackCore
             this->increaseStatisticsValue(QStringLiteral("sendFlightPlan"));
         }
 
-        void FSDClient::sendPlaneInfoRequest(const BlackMisc::Aviation::CCallsign &receiver)
+        void CFSDClient::sendPlaneInfoRequest(const BlackMisc::Aviation::CCallsign &receiver)
         {
             PlaneInfoRequest planeInfoRequest(m_ownCallsign.asString(), receiver.toQString());
             sendMessage(planeInfoRequest);
             this->increaseStatisticsValue(QStringLiteral("sendPlaneInfoRequest"));
         }
 
-        void FSDClient::sendPlaneInfoRequestFsinn(const CCallsign &callsign)
+        void CFSDClient::sendPlaneInfoRequestFsinn(const CCallsign &callsign)
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
             const CSimulatedAircraft myAircraft(getOwnAircraft());
@@ -606,14 +606,14 @@ namespace BlackCore
             this->increaseStatisticsValue(QStringLiteral("sendPlaneInfoRequestFsinn"));
         }
 
-        void FSDClient::sendPlaneInformation(const QString &receiver, const QString &aircraft, const QString &airline, const QString &livery)
+        void CFSDClient::sendPlaneInformation(const QString &receiver, const QString &aircraft, const QString &airline, const QString &livery)
         {
             PlaneInformation planeInformation(m_ownCallsign.asString(), receiver, aircraft, airline, livery);
             sendMessage(planeInformation);
             this->increaseStatisticsValue(QStringLiteral("sendPlaneInformation"));
         }
 
-        void FSDClient::sendPlaneInformationFsinn(const CCallsign &callsign)
+        void CFSDClient::sendPlaneInformationFsinn(const CCallsign &callsign)
         {
             if (m_connectionStatus.isDisconnected() && ! m_unitTestMode) { return; }
             const CSimulatedAircraft myAircraft(getOwnAircraft());
@@ -629,38 +629,38 @@ namespace BlackCore
             this->increaseStatisticsValue(QStringLiteral("sendPlaneInformationFsinn"));
         }
 
-        void FSDClient::sendAircraftConfiguration(const QString &receiver, const QString &aircraftConfigJson)
+        void CFSDClient::sendAircraftConfiguration(const QString &receiver, const QString &aircraftConfigJson)
         {
             sendClientQuery(ClientQueryType::AircraftConfig, receiver, { aircraftConfigJson });
         }
 
-        void FSDClient::sendFsdMessage(const QString &message)
+        void CFSDClient::sendFsdMessage(const QString &message)
         {
             parseMessage(message);
         }
 
-        void FSDClient::sendAuthChallenge(const QString &challenge)
+        void CFSDClient::sendAuthChallenge(const QString &challenge)
         {
             AuthChallenge pduAuthChallenge(m_ownCallsign.asString(), "SERVER", challenge);
             sendMessage(pduAuthChallenge);
             this->increaseStatisticsValue(QStringLiteral("sendAuthChallenge"));
         }
 
-        void FSDClient::sendAuthResponse(const QString &response)
+        void CFSDClient::sendAuthResponse(const QString &response)
         {
             AuthResponse pduAuthResponse(m_ownCallsign.asString(), "SERVER", response);
             sendMessage(pduAuthResponse);
             this->increaseStatisticsValue(QStringLiteral("sendAuthResponse"));
         }
 
-        void FSDClient::sendPong(const QString &receiver, const QString &timestamp)
+        void CFSDClient::sendPong(const QString &receiver, const QString &timestamp)
         {
             Pong pong(m_ownCallsign.asString(), receiver, timestamp);
             sendMessage(pong);
             this->increaseStatisticsValue(QStringLiteral("sendPong"));
         }
 
-        void FSDClient::sendClientResponse(ClientQueryType queryType, const QString &receiver)
+        void CFSDClient::sendClientResponse(ClientQueryType queryType, const QString &receiver)
         {
             QStringList responseData;
             if(queryType == ClientQueryType::IsValidATC)
@@ -760,7 +760,7 @@ namespace BlackCore
             this->increaseStatisticsValue(QStringLiteral("sendClientResponse"), toQString(queryType));
         }
 
-        void FSDClient::sendClientIdentification(const QString &fsdChallenge)
+        void CFSDClient::sendClientIdentification(const QString &fsdChallenge)
         {
             char sysuid[50];
             vatsim_get_system_unique_id(sysuid);
@@ -773,7 +773,7 @@ namespace BlackCore
             this->increaseStatisticsValue(QStringLiteral("sendClientIdentification"));
         }
 
-        void FSDClient::sendIncrementalAircraftConfig()
+        void CFSDClient::sendIncrementalAircraftConfig()
         {
             if (!this->isConnected()) { return; }
             if (!this->getSetupForServer().sendAircraftParts()) { return; }
@@ -802,7 +802,7 @@ namespace BlackCore
             m_sentAircraftConfig = currentParts;
         }
 
-        void FSDClient::initializeMessageTypes()
+        void CFSDClient::initializeMessageTypes()
         {
             m_messageTypeMapping["#AA"] = MessageType::AddAtc;
             m_messageTypeMapping["#AP"] = MessageType::AddPilot;
@@ -825,7 +825,7 @@ namespace BlackCore
             m_messageTypeMapping["#SB"] = MessageType::PilotClientCom;
         }
 
-        void FSDClient::handleAtcDataUpdate(const QStringList &tokens)
+        void CFSDClient::handleAtcDataUpdate(const QStringList &tokens)
         {
             AtcDataUpdate atcDataUpdate = AtcDataUpdate::fromTokens(tokens);
 
@@ -843,7 +843,7 @@ namespace BlackCore
             emit atcDataUpdateReceived(cs, freq, position, range);
         }
 
-        void FSDClient::handleAuthChallenge(const QStringList &tokens)
+        void CFSDClient::handleAuthChallenge(const QStringList &tokens)
         {
             AuthChallenge authChallenge = AuthChallenge::fromTokens(tokens);
             char response[33];
@@ -856,7 +856,7 @@ namespace BlackCore
             sendAuthChallenge(m_lastServerAuthChallenge);
         }
 
-        void FSDClient::handleAuthResponse(const QStringList &tokens)
+        void CFSDClient::handleAuthResponse(const QStringList &tokens)
         {
             AuthResponse authResponse = AuthResponse::fromTokens(tokens);
 
@@ -869,13 +869,13 @@ namespace BlackCore
             }
         }
 
-        void FSDClient::handleDeleteATC(const QStringList &tokens)
+        void CFSDClient::handleDeleteATC(const QStringList &tokens)
         {
             DeleteAtc deleteAtc = DeleteAtc::fromTokens(tokens);
             emit deleteAtcReceived(deleteAtc.m_cid);
         }
 
-        void FSDClient::handleDeletePilot(const QStringList &tokens)
+        void CFSDClient::handleDeletePilot(const QStringList &tokens)
         {
             DeletePilot deletePilot = DeletePilot::fromTokens(tokens);
             const CCallsign cs(deletePilot.sender(), CCallsign::Aircraft);
@@ -883,7 +883,7 @@ namespace BlackCore
             emit deletePilotReceived(deletePilot.m_cid);
         }
 
-        void FSDClient::handleTextMessage(const QStringList &tokens)
+        void CFSDClient::handleTextMessage(const QStringList &tokens)
         {
             TextMessage textMessage = TextMessage::fromTokens(tokens);
 
@@ -932,7 +932,7 @@ namespace BlackCore
             }
         }
 
-        void FSDClient::handlePilotDataUpdate(const QStringList &tokens)
+        void CFSDClient::handlePilotDataUpdate(const QStringList &tokens)
         {
             PilotDataUpdate dataUpdate = PilotDataUpdate::fromTokens(tokens);
             const CCallsign callsign(dataUpdate.sender(), CCallsign::Aircraft);
@@ -972,13 +972,13 @@ namespace BlackCore
             emit pilotDataUpdateReceived(situation, transponder);
         }
 
-        void FSDClient::handlePing(const QStringList &tokens)
+        void CFSDClient::handlePing(const QStringList &tokens)
         {
             Ping ping = Ping::fromTokens(tokens);
             sendPong(ping.sender(), ping.m_timestamp);
         }
 
-        void FSDClient::handlePong(const QStringList &tokens)
+        void CFSDClient::handlePong(const QStringList &tokens)
         {
             Pong pong = Pong::fromTokens(tokens);
             qint64 msecSinceEpoch = QDateTime::currentMSecsSinceEpoch();
@@ -986,14 +986,14 @@ namespace BlackCore
             emit pongReceived(pong.sender(), elapsedTime);
         }
 
-        void FSDClient::handleKillRequest(const QStringList &tokens)
+        void CFSDClient::handleKillRequest(const QStringList &tokens)
         {
             KillRequest killRequest = KillRequest::fromTokens(tokens);
             emit killRequestReceived(killRequest.m_reason);
             disconnectFromServer();
         }
 
-        void FSDClient::handleFlightPlan(const QStringList &tokens)
+        void CFSDClient::handleFlightPlan(const QStringList &tokens)
         {
             FlightPlan fp = FlightPlan::fromTokens(tokens);
 
@@ -1064,7 +1064,7 @@ namespace BlackCore
             emit flightPlanReceived(callsign, flightPlan);
         }
 
-        void FSDClient::handleClientQuery(const QStringList &tokens)
+        void CFSDClient::handleClientQuery(const QStringList &tokens)
         {
             ClientQuery clientQuery = ClientQuery::fromTokens(tokens);
 
@@ -1158,7 +1158,7 @@ namespace BlackCore
             }
         }
 
-        void FSDClient::handleClientReponse(const QStringList &tokens)
+        void CFSDClient::handleClientReponse(const QStringList &tokens)
         {
             ClientResponse clientResponse = ClientResponse::fromTokens(tokens);
             if (clientResponse.isUnknownQuery()) { return; }
@@ -1256,7 +1256,7 @@ namespace BlackCore
             }
         }
 
-        void FSDClient::handleServerError(const QStringList &tokens)
+        void CFSDClient::handleServerError(const QStringList &tokens)
         {
             ServerError serverError = ServerError::fromTokens(tokens);
             switch (serverError.m_errorNumber)
@@ -1287,7 +1287,7 @@ namespace BlackCore
             if (serverError.isFatalError()) { disconnectFromServer(); }
         }
 
-        void FSDClient::handleCustomPilotPacket(const QStringList &tokens)
+        void CFSDClient::handleCustomPilotPacket(const QStringList &tokens)
         {
             const QString subType = tokens.at(2);
 
@@ -1371,7 +1371,7 @@ namespace BlackCore
             }
         }
 
-        void FSDClient::handleFsdIdentification(const QStringList &tokens)
+        void CFSDClient::handleFsdIdentification(const QStringList &tokens)
         {
             if (m_protocolRevision >= PROTOCOL_REVISION_VATSIM_AUTH)
             {
@@ -1390,17 +1390,17 @@ namespace BlackCore
             }
         }
 
-        void FSDClient::handleUnknownPacket(const QStringList &tokens)
+        void CFSDClient::handleUnknownPacket(const QStringList &tokens)
         {
             qDebug() << "handleUnknownPacket:" << tokens;
         }
 
-        void FSDClient::printSocketError(QAbstractSocket::SocketError)
+        void CFSDClient::printSocketError(QAbstractSocket::SocketError)
         {
             qDebug() << m_socket.errorString();
         }
 
-        void FSDClient::updateConnectionStatus(CConnectionStatus newStatus)
+        void CFSDClient::updateConnectionStatus(CConnectionStatus newStatus)
         {
             if (m_connectionStatus != newStatus)
             {
@@ -1429,7 +1429,7 @@ namespace BlackCore
             }
         }
 
-        void FSDClient::consolidateTextMessage(const CTextMessage &textMessage)
+        void CFSDClient::consolidateTextMessage(const CTextMessage &textMessage)
         {
             if (textMessage.isSupervisorMessage())
             {
@@ -1442,13 +1442,13 @@ namespace BlackCore
             }
         }
 
-        void FSDClient::emitConsolidatedTextMessages()
+        void CFSDClient::emitConsolidatedTextMessages()
         {
             emit this->textMessagesReceived(m_textMessagesToConsolidate);
             m_textMessagesToConsolidate.clear();
         }
 
-        qint64 FSDClient::receivedPositionFixTsAndGetOffsetTime(const CCallsign &callsign, qint64 markerTs)
+        qint64 CFSDClient::receivedPositionFixTsAndGetOffsetTime(const CCallsign &callsign, qint64 markerTs)
         {
             Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
 
@@ -1478,7 +1478,7 @@ namespace BlackCore
             return m_additionalOffsetTime + offsetTime;
         }
 
-        qint64 FSDClient::currentOffsetTime(const CCallsign &callsign) const
+        qint64 CFSDClient::currentOffsetTime(const CCallsign &callsign) const
         {
             Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
 
@@ -1486,7 +1486,7 @@ namespace BlackCore
             return m_lastOffsetTimes[callsign].front();
         }
 
-        void FSDClient::clearState()
+        void CFSDClient::clearState()
         {
             m_textMessagesToConsolidate.clear();
             m_pendingAtisQueries.clear();
@@ -1495,7 +1495,7 @@ namespace BlackCore
             m_sentAircraftConfig = CAircraftParts::null();
         }
 
-        void FSDClient::clearState(const CCallsign &callsign)
+        void CFSDClient::clearState(const CCallsign &callsign)
         {
             if (callsign.isEmpty()) { return; }
             m_pendingAtisQueries.remove(callsign);
@@ -1504,14 +1504,14 @@ namespace BlackCore
             m_lastOffsetTimes.remove(callsign);
         }
 
-        void FSDClient::insertLatestOffsetTime(const CCallsign &callsign, qint64 offsetMs)
+        void CFSDClient::insertLatestOffsetTime(const CCallsign &callsign, qint64 offsetMs)
         {
             QList<qint64> &offsets = m_lastOffsetTimes[callsign];
             offsets.push_front(offsetMs);
             if (offsets.size() > MaxOffseTimes) { offsets.removeLast(); }
         }
 
-        qint64 FSDClient::averageOffsetTimeMs(const CCallsign &callsign, int &count, int maxLastValues) const
+        qint64 CFSDClient::averageOffsetTimeMs(const CCallsign &callsign, int &count, int maxLastValues) const
         {
             const QList<qint64> &offsets = m_lastOffsetTimes[callsign];
             if (offsets.size() < 1) { return -1; }
@@ -1526,30 +1526,30 @@ namespace BlackCore
             return qRound(static_cast<double>(sum) / count);
         }
 
-        qint64 FSDClient::averageOffsetTimeMs(const CCallsign &callsign, int maxLastValues) const
+        qint64 CFSDClient::averageOffsetTimeMs(const CCallsign &callsign, int maxLastValues) const
         {
             int count = 0;
             return this->averageOffsetTimeMs(callsign, maxLastValues, count);
         }
 
-        bool FSDClient::isInterimPositionSendingEnabledForServer() const
+        bool CFSDClient::isInterimPositionSendingEnabledForServer() const
         {
             const CFsdSetup::SendReceiveDetails d = this->getSetupForServer().getSendReceiveDetails();
             return (d & CFsdSetup::SendInterimPositions);
         }
 
-        bool FSDClient::isInterimPositionReceivingEnabledForServer() const
+        bool CFSDClient::isInterimPositionReceivingEnabledForServer() const
         {
             const CFsdSetup::SendReceiveDetails d = this->getSetupForServer().getSendReceiveDetails();
             return (d & CFsdSetup::ReceiveInterimPositions);
         }
 
-        const CFsdSetup &FSDClient::getSetupForServer() const
+        const CFsdSetup &CFSDClient::getSetupForServer() const
         {
             return m_server.getFsdSetup();
         }
 
-        void FSDClient::maybeHandleAtisReply(const CCallsign &sender, const CCallsign &receiver, const QString &message)
+        void CFSDClient::maybeHandleAtisReply(const CCallsign &sender, const CCallsign &receiver, const QString &message)
         {
             Q_ASSERT(m_pendingAtisQueries.contains(sender));
             PendingAtisQuery &pendingQuery = m_pendingAtisQueries[sender];
@@ -1586,7 +1586,7 @@ namespace BlackCore
             }
         }
 
-        void FSDClient::fsdMessageSettingsChanged()
+        void CFSDClient::fsdMessageSettingsChanged()
         {
             if (m_rawFsdMessageLogFile.isOpen()) { m_rawFsdMessageLogFile.close(); }
             const CRawFsdMessageSettings setting = m_fsdMessageSetting.get();
@@ -1617,17 +1617,17 @@ namespace BlackCore
             }
         }
 
-        BlackMisc::Aviation::CCallsignSet FSDClient::getInterimPositionReceivers() const
+        BlackMisc::Aviation::CCallsignSet CFSDClient::getInterimPositionReceivers() const
         {
             return m_interimPositionReceivers;
         }
 
-        void FSDClient::setInterimPositionReceivers(const BlackMisc::Aviation::CCallsignSet &interimPositionReceivers)
+        void CFSDClient::setInterimPositionReceivers(const BlackMisc::Aviation::CCallsignSet &interimPositionReceivers)
         {
             m_interimPositionReceivers = interimPositionReceivers;
         }
 
-        int FSDClient::increaseStatisticsValue(const QString &identifier, const QString &appendix)
+        int CFSDClient::increaseStatisticsValue(const QString &identifier, const QString &appendix)
         {
             if (identifier.isEmpty() || !m_statistics) { return -1; }
             const QString i = appendix.isEmpty() ? identifier : identifier % u"." % appendix;
@@ -1640,18 +1640,18 @@ namespace BlackCore
             return v;
         }
 
-        int FSDClient::increaseStatisticsValue(const QString &identifier, int value)
+        int CFSDClient::increaseStatisticsValue(const QString &identifier, int value)
         {
             return this->increaseStatisticsValue(identifier, QString::number(value));
         }
 
-        void FSDClient::clearStatistics()
+        void CFSDClient::clearStatistics()
         {
             m_callStatistics.clear();
             m_callByTime.clear();
         }
 
-        QString FSDClient::getNetworkStatisticsAsText(bool reset, const QString &separator)
+        QString CFSDClient::getNetworkStatisticsAsText(bool reset, const QString &separator)
         {
             QVector<std::pair<int, QString>> transformed;
             if (m_callStatistics.isEmpty()) { return QString(); }
@@ -1693,12 +1693,12 @@ namespace BlackCore
             return stats;
         }
 
-        CLoginMode FSDClient::getLoginMode() const
+        CLoginMode CFSDClient::getLoginMode() const
         {
             return m_loginMode;
         }
 
-        void FSDClient::readDataFromSocket()
+        void CFSDClient::readDataFromSocket()
         {
             while (m_socket.canReadLine())
             {
@@ -1708,7 +1708,7 @@ namespace BlackCore
             }
         }
 
-        void FSDClient::parseMessage(const QString &line)
+        void CFSDClient::parseMessage(const QString &line)
         {
             MessageType messageType = MessageType::Unknown;
             QString cmd;
@@ -1762,7 +1762,7 @@ namespace BlackCore
             }
         }
 
-        void FSDClient::emitRawFsdMessage(const QString &fsdMessage, bool isSent)
+        void CFSDClient::emitRawFsdMessage(const QString &fsdMessage, bool isSent)
         {
             if (!m_unitTestMode && !m_rawFsdMessagesEnabled) { return; }
             QString fsdMessageFiltered(fsdMessage);
@@ -1787,7 +1787,7 @@ namespace BlackCore
             emit rawFsdMessage(rawMessage);
         }
 
-        bool FSDClient::saveNetworkStatistics(const QString &server)
+        bool CFSDClient::saveNetworkStatistics(const QString &server)
         {
             if (m_callStatistics.isEmpty()) { return false; }
 
@@ -1798,19 +1798,19 @@ namespace BlackCore
             return CFileUtils::writeStringToFile(s, fp);
         }
 
-        void FSDClient::startPositionTimers()
+        void CFSDClient::startPositionTimers()
         {
             m_positionUpdateTimer.start(c_updatePostionIntervalMsec);
             if (this->isInterimPositionSendingEnabledForServer()) { m_interimPositionUpdateTimer.start(c_updateInterimPostionIntervalMsec); }
         }
 
-        void FSDClient::stopPositionTimers()
+        void CFSDClient::stopPositionTimers()
         {
             m_positionUpdateTimer.stop();
             m_interimPositionUpdateTimer.stop();
         }
 
-        void FSDClient::updateAtisMap(const QString &callsign, AtisLineType type, const QString &line)
+        void CFSDClient::updateAtisMap(const QString &callsign, AtisLineType type, const QString &line)
         {
             if (type == AtisLineType::VoiceRoom)
             {
@@ -1870,7 +1870,7 @@ namespace BlackCore
             }
         }
 
-        const CLength &FSDClient::fixAtcRange(const CLength &networkRange, const CCallsign &cs)
+        const CLength &CFSDClient::fixAtcRange(const CLength &networkRange, const CCallsign &cs)
         {
             /** T702, https://discordapp.com/channels/539048679160676382/539846348275449887/597814208125730826
             DEL 5 NM
@@ -1894,14 +1894,14 @@ namespace BlackCore
             return networkRange;
         }
 
-        const CLength &FSDClient::maxOrNotNull(const CLength &l1, const CLength &l2)
+        const CLength &CFSDClient::maxOrNotNull(const CLength &l1, const CLength &l2)
         {
             if (l1.isNull()) { return l2; }
             if (l2.isNull()) { return l1; }
             return (l2 > l1) ? l2 : l1;
         }
 
-        const QJsonObject &FSDClient::JsonPackets::aircraftConfigRequest()
+        const QJsonObject &CFSDClient::JsonPackets::aircraftConfigRequest()
         {
             static const QJsonObject jsonObject{ { "request", "full" } };
             return jsonObject;
