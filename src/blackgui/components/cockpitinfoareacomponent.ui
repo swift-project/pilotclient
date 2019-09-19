@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>161</width>
+    <width>357</width>
     <height>55</height>
    </rect>
   </property>
@@ -42,13 +42,7 @@
     </size>
    </property>
   </widget>
-  <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_CockpitVoiceRooms">
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
+  <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_DeviceVolume">
    <property name="floating">
     <bool>false</bool>
    </property>
@@ -59,12 +53,12 @@
     <set>Qt::BottomDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>Voice rooms</string>
+    <string>Devices and volumes</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>8</number>
    </attribute>
-   <widget class="QWidget" name="qw_CockpitVoiceRoomsOuter">
+   <widget class="QWidget" name="qw_DeviceVolumeOuter">
     <layout class="QVBoxLayout" name="vl_CockpitVoiceRoomsOuter">
      <property name="spacing">
       <number>0</number>
@@ -82,7 +76,7 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QFrame" name="fr_CockpitVoiceRoomsInner">
+      <widget class="QFrame" name="fr_DeviceVolumeInner">
        <property name="frameShape">
         <enum>QFrame::NoFrame</enum>
        </property>
@@ -109,14 +103,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="BlackGui::Components::CVoiceRoomsComponent" name="comp_VoiceRooms">
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-         </widget>
+         <widget class="BlackGui::Components::CAudioDeviceVolumeSetupComponent" name="comp_DeviceVolume"/>
         </item>
        </layout>
       </widget>
@@ -124,13 +111,7 @@
     </layout>
    </widget>
   </widget>
-  <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Audio">
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
+  <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_AudioNotificaton">
    <property name="floating">
     <bool>false</bool>
    </property>
@@ -141,12 +122,12 @@
     <set>Qt::BottomDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>Audio</string>
+    <string>Notifications</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>8</number>
    </attribute>
-   <widget class="QWidget" name="qw_AudioOuter">
+   <widget class="QWidget" name="qw_AudioNotificatonOuter">
     <layout class="QVBoxLayout" name="vl_AudioOuter">
      <property name="spacing">
       <number>0</number>
@@ -164,7 +145,7 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QFrame" name="fr_AudioInner">
+      <widget class="QFrame" name="fr_AudioNotificatonInner">
        <property name="frameShape">
         <enum>QFrame::NoFrame</enum>
        </property>
@@ -191,12 +172,9 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="BlackGui::Components::CAudioComponent" name="comp_Audio">
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
+         <widget class="BlackGui::Components::CAudioNotificationComponent" name="comp_AudioNotificaton">
           <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
+           <enum>QFrame::Sunken</enum>
           </property>
          </widget>
         </item>
@@ -215,15 +193,15 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CVoiceRoomsComponent</class>
+   <class>BlackGui::Components::CAudioDeviceVolumeSetupComponent</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/voiceroomscomponent.h</header>
+   <header>blackgui/components/audiodevicevolumesetupcomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CAudioComponent</class>
+   <class>BlackGui::Components::CAudioNotificationComponent</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/audiocomponent.h</header>
+   <header>blackgui/components/audionotificationcomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
