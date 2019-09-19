@@ -56,7 +56,7 @@ namespace BlackCore
                 {
                     QUrl voiceServerUrl("udp://" + m_connection.m_tokens.VoiceServer.addressIpV4);
                     QByteArray dataBytes = Crypto::CryptoDtoSerializer::Serialize(*m_connection.voiceCryptoChannel, CryptoDtoMode::AEAD_ChaCha20Poly1305, dto);
-                    m_udpSocket.writeDatagram(dataBytes, QHostAddress(voiceServerUrl.host()), voiceServerUrl.port());
+                    m_udpSocket.writeDatagram(dataBytes, QHostAddress(voiceServerUrl.host()), static_cast<quint16>(voiceServerUrl.port()));
                 }
 
                 bool receiveAudioDto() const;

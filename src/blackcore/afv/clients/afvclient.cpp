@@ -328,7 +328,7 @@ namespace BlackCore
             void AFVClient::audioOutDataAvailable(const AudioRxOnTransceiversDto &dto)
             {
                 IAudioDto audioData;
-                audioData.audio = QByteArray(dto.audio.data(), dto.audio.size());
+                audioData.audio = QByteArray(dto.audio.data(), static_cast<int>(dto.audio.size()));
                 audioData.callsign = QString::fromStdString(dto.callsign);
                 audioData.lastPacket = dto.lastPacket;
                 audioData.sequenceCounter = dto.sequenceCounter;

@@ -158,7 +158,7 @@ namespace BlackCore
                 HeartbeatDto keepAlive;
                 keepAlive.callsign = m_connection.m_callsign.toStdString();
                 QByteArray dataBytes = CryptoDtoSerializer::Serialize(*m_connection.voiceCryptoChannel, CryptoDtoMode::AEAD_ChaCha20Poly1305, keepAlive);
-                m_udpSocket.writeDatagram(dataBytes, QHostAddress(voiceServerUrl.host()), voiceServerUrl.port());
+                m_udpSocket.writeDatagram(dataBytes, QHostAddress(voiceServerUrl.host()), static_cast<quint16>(voiceServerUrl.port()));
             }
         } // ns
     } // ns
