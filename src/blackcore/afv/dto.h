@@ -16,6 +16,7 @@
 #include <QByteArray>
 #include <QJsonObject>
 #include <QString>
+#include <QUuid>
 
 namespace BlackCore
 {
@@ -133,6 +134,24 @@ namespace BlackCore
                 dto.LonDeg = json.value("lonDeg").toDouble();
                 dto.HeightMslM = json.value("heightMslM").toDouble();
                 dto.HeightAglM = json.value("heightAglM").toDouble();
+                return dto;
+            }
+        };
+
+        struct StationDto
+        {
+            QUuid id;
+            QString name;
+            quint32 frequency;
+            quint32 frequencyAlias;
+
+            static StationDto fromJson(const QJsonObject &json)
+            {
+                StationDto dto;
+                dto.id = json.value("id").toString();
+                dto.name = json.value("name").toString();
+                dto.frequency = json.value("frequency").toInt();
+                dto.frequencyAlias = json.value("frequencyAlias").toInt();
                 return dto;
             }
         };

@@ -125,6 +125,12 @@ namespace BlackCore
                 m_jwt.clear();
             }
 
+            QVector<StationDto> ApiServerConnection::getAllAliasedStations()
+            {
+                getAsVector<StationDto>("/api/v1/stations/aliased");
+                return {};
+            }
+
             void ApiServerConnection::postNoResponse(const QString &resource, const QJsonDocument &json)
             {
                 if (isShuttingDown()) { return; } // avoid crash

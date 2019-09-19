@@ -64,6 +64,8 @@ namespace BlackCore
 
                 void updateTransceivers(const QString &callsign, const QVector<TransceiverDto> &transceivers);
 
+                QVector<StationDto> getAllAliasedStations();
+
             signals:
                 void audioReceived(const AudioRxOnTransceiversDto &dto);
 

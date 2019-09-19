@@ -97,6 +97,11 @@ namespace BlackCore
                 m_apiServerConnection.updateTransceivers(callsign, transceivers);
             }
 
+            QVector<StationDto> ClientConnection::getAllAliasedStations()
+            {
+                return m_apiServerConnection.getAllAliasedStations();
+            }
+
             void ClientConnection::connectToVoiceServer()
             {
                 QHostAddress localAddress(QHostAddress::AnyIPv4);

@@ -70,6 +70,8 @@ namespace BlackCore
 
                 if (m_connection->isConnected()) { emit connectionStatusChanged(Connected); }
                 else { emit connectionStatusChanged(Disconnected); }
+
+                m_connection->getAllAliasedStations();
             }
 
             void AFVClient::disconnectFrom()
