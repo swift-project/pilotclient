@@ -21,7 +21,7 @@ namespace BlackSound
         // lazy init at play
     }
 
-    void CNotificationPlayer::play(Audio::CNotificationSounds::NotificationFlag notification, int volume) const
+    void CNotificationPlayer::play(CNotificationSounds::NotificationFlag notification, int volume) const
     {
         QSoundEffect *effect = m_effects.value(notification, nullptr);
         if (effect)
