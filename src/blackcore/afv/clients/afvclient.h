@@ -40,6 +40,8 @@ namespace BlackCore
                 Q_OBJECT
                 Q_PROPERTY(float inputVolumePeakVU READ getInputVolumePeakVU NOTIFY inputVolumePeakVU)
                 Q_PROPERTY(float outputVolumePeakVU READ getOutputVolumePeakVU NOTIFY outputVolumePeakVU)
+                Q_PROPERTY(QString receivingCallsignsCom1 READ getReceivingCallsignsCom1 NOTIFY receivingCallsignsChanged)
+                Q_PROPERTY(QString receivingCallsignsCom2 READ getReceivingCallsignsCom2 NOTIFY receivingCallsignsChanged)
 
             public:
                 //! Ctor
@@ -96,7 +98,7 @@ namespace BlackCore
                 float getOutputVolumePeakVU() const { return m_outputVolumeStream.PeakVU; }
 
             signals:
-                void receivingCallsignsChanged(const Audio::TransceiverReceivingCallsignsChangedArgs &args);
+                void receivingCallsignsChanged(const TransceiverReceivingCallsignsChangedArgs &args);
                 void inputVolumePeakVU(float value);
                 void outputVolumePeakVU(float value);
 
@@ -105,6 +107,8 @@ namespace BlackCore
                 void audioOutDataAvailable(const AudioRxOnTransceiversDto &dto);
                 void inputVolumeStream(const Audio::InputVolumeStreamArgs &args);
                 void outputVolumeStream(const Audio::OutputVolumeStreamArgs &args);
+                QString getReceivingCallsignsCom1();
+                QString getReceivingCallsignsCom2();
 
                 void input_OpusDataAvailable();
 

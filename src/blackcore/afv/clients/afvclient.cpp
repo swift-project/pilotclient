@@ -347,6 +347,24 @@ namespace BlackCore
                 emit outputVolumePeakVU(m_outputVolumeStream.PeakVU);
             }
 
+            QString AFVClient::getReceivingCallsignsCom1()
+            {
+                if (soundcardSampleProvider)
+                {
+                    return soundcardSampleProvider->getReceivingCallsigns(0);
+                }
+                return {};
+            }
+
+            QString AFVClient::getReceivingCallsignsCom2()
+            {
+                if (soundcardSampleProvider)
+                {
+                    return soundcardSampleProvider->getReceivingCallsigns(1);
+                }
+                return {};
+            }
+
             void AFVClient::updateTransceiversFromContext(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator)
             {
                 Q_UNUSED(originator);

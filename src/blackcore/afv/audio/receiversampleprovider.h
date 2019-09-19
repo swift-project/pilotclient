@@ -52,6 +52,7 @@ namespace BlackCore
                 void addSilentSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio);
 
                 quint16 getId() const { return m_id; }
+                QString getReceivingCallsigns() const;
 
             signals:
                 void receivingCallsignsChanged(const TransceiverReceivingCallsignsChangedArgs &args);
@@ -69,6 +70,7 @@ namespace BlackCore
                 MixingSampleProvider *m_mixer;
                 // TODO SignalGenerator blockTone;
                 QVector<CallsignSampleProvider *> m_voiceInputs;
+                QString m_receivingCallsigns;
 
                 bool m_doClickWhenAppropriate = false;
                 int lastNumberOfInUseInputs = 0;

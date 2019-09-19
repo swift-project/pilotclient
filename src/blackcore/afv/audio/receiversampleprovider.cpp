@@ -123,12 +123,13 @@ namespace BlackCore
                         }
                     }
 
+                    m_receivingCallsigns = receivingCallsigns.join(',');
                     TransceiverReceivingCallsignsChangedArgs args = { m_id, receivingCallsigns };
                     emit receivingCallsignsChanged(args);
                 }
                 lastNumberOfInUseInputs = numberOfInUseInputs;
 
-//    return volume.Read(buffer, offset, count);
+//            return volume.Read(buffer, offset, count);
                 return m_mixer->readSamples(samples, count);
             }
 
@@ -197,6 +198,11 @@ namespace BlackCore
                 {
                     voiceInput->addSilentSamples(audioDto);
                 }
+            }
+
+            QString ReceiverSampleProvider::getReceivingCallsigns() const
+            {
+                return m_receivingCallsigns;
             }
 
 

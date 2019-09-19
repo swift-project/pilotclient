@@ -40,6 +40,7 @@ namespace BlackCore
                 virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
                 void addOpusSamples(const IAudioDto &audioDto, const QVector<RxTransceiverDto> &rxTransceivers);
                 void updateRadioTransceivers(const QVector<TransceiverDto> &radioTransceivers);
+                QString getReceivingCallsigns(quint16 transceiverID);
 
             signals:
                 void receivingCallsignsChanged(const TransceiverReceivingCallsignsChangedArgs &args);

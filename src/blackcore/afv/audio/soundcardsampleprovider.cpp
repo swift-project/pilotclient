@@ -173,6 +173,11 @@ namespace BlackCore
                 }
             }
 
+            QString SoundcardSampleProvider::getReceivingCallsigns(quint16 transceiverID)
+            {
+                return m_receiverInputs.at(transceiverID)->getReceivingCallsigns();
+            }
+
         } // ns
     } // ns
 } // ns
