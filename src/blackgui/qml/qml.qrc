@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/blackgui/qml">
+        <file>AFVMap.qml</file>
+        <file>AtcRing.qml</file>
+        <file>Transceiver.qml</file>
+    </qresource>
+</RCC>

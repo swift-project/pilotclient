@@ -1,6 +1,6 @@
 load(common_pre)
 
-QT += core dbus network widgets
+QT += core dbus network widgets quickwidgets
 
 TARGET = swiftguistd
 TEMPLATE = app

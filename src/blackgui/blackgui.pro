@@ -1,6 +1,6 @@
 load(common_pre)
 
-QT       += core dbus gui network svg widgets
+QT       += core dbus gui network svg widgets quickwidgets
 
 TARGET = blackgui
 TEMPLATE = lib
@@ -61,6 +61,7 @@ HEADERS += $$PWD/graphs/*.h
 SOURCES += $$PWD/graphs/*.cpp
 
 FORMS   += $$PWD/*.ui
+RESOURCES += qml/qml.qrc
 
 win32 {
     HEADERS += $$PWD/win/*.h

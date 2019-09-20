@@ -226,6 +226,7 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->menu_MovingMap,         &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
     connect(ui->menu_ToggleIncognito,   &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
     connect(ui->menu_ModelBrowser,      &QAction::triggered, this, &SwiftGuiStd::startModelBrowser, Qt::QueuedConnection);
+    connect(ui->menu_AfvMap,            &QAction::triggered, this, &SwiftGuiStd::startAFVMap, Qt::QueuedConnection);
 
     connect(m_navigator.data(), &CNavigatorDialog::navigatorClosed, this, &SwiftGuiStd::onNavigatorClosed, Qt::QueuedConnection);
     m_navigator->setMainWindow(this);

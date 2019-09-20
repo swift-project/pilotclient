@@ -12,6 +12,7 @@
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/dbloaddatadialog.h"
 #include "blackgui/components/autopublishdialog.h"
+#include "blackgui/components/afvmapdialog.h"
 #include "blackgui/components/logindialog.h"
 #include "blackgui/components/modelbrowserdialog.h"
 #include "blackgui/components/settingscomponent.h"
@@ -305,7 +306,7 @@ void SwiftGuiStd::onKickedFromNetwork(const QString &kickMessage)
 
 void SwiftGuiStd::onConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
 {
-    Q_UNUSED(from);
+    Q_UNUSED(from)
     this->updateGuiStatusInformation();
 
     // sounds
@@ -424,13 +425,13 @@ void SwiftGuiStd::onToggledWindowsOnTop(bool onTop)
 void SwiftGuiStd::onCurrentMainWidgetChanged(int currentIndex)
 {
     emit this->currentMainInfoAreaChanged(ui->sw_MainMiddle->currentWidget());
-    Q_UNUSED(currentIndex);
+    Q_UNUSED(currentIndex)
 }
 
 void SwiftGuiStd::onChangedMainInfoAreaFloating(bool floating)
 {
     // code for whole floating area goes here
-    Q_UNUSED(floating);
+    Q_UNUSED(floating)
 }
 
 void SwiftGuiStd::onRequestedConsoleMessage(const QString &logMsg, bool clear)
@@ -632,3 +633,12 @@ bool SwiftGuiStd::startModelBrowser()
     return true;
 }
 
+bool SwiftGuiStd::startAFVMap()
+{
+    if (!m_mapDialog)
+    {
+        m_mapDialog.reset(new CAfvMapDialog(this));
+    }
+    m_mapDialog->exec();
+    return true;
+}
