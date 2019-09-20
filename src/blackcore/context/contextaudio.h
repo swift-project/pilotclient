@@ -142,13 +142,13 @@ namespace BlackCore
             virtual bool isMuted() const = 0;
 
             //! Play SELCAL tone
-            virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const = 0;
+            virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) = 0;
 
             //! Play notification sound
             //! \param notification CSoundGenerator::Notification
             //! \param considerSettings consider settings (notification on/off), false means settings ignored
             //! \param volume 0..100
-            virtual void playNotification(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume = -1) const = 0;
+            virtual void playNotification(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume = -1) = 0;
 
             //! Enable audio loopback
             virtual void enableAudioLoopback(bool enable = true) = 0;

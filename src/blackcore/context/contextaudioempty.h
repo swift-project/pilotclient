@@ -111,14 +111,14 @@ namespace BlackCore
             }
 
             //! \copydoc IContextAudio::playSelcalTone()
-            virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const override
+            virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) override
             {
                 Q_UNUSED(selcal);
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextAudio::playNotification()
-            virtual void playNotification(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume = -1) const override
+            virtual void playNotification(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume = -1) override
             {
                 Q_UNUSED(volume);
                 Q_UNUSED(notification);

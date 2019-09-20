@@ -100,12 +100,12 @@ namespace BlackCore
             this->m_dBusInterface->callDBus(QLatin1String("setComVoiceRooms"), voiceRooms);
         }
 
-        void CContextAudioProxy::playSelcalTone(const CSelcal &selcal) const
+        void CContextAudioProxy::playSelcalTone(const CSelcal &selcal)
         {
             this->m_dBusInterface->callDBus(QLatin1String("playSelcalTone"), selcal);
         }
 
-        void CContextAudioProxy::playNotification(CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume) const
+        void CContextAudioProxy::playNotification(CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume)
         {
             this->m_dBusInterface->callDBus(QLatin1String("playNotification"), notification, considerSettings, volume);
         }

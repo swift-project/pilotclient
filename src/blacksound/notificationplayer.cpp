@@ -21,13 +21,27 @@ namespace BlackSound
         // lazy init at play
     }
 
-    void CNotificationPlayer::play(CNotificationSounds::NotificationFlag notification, int volume) const
+    void CNotificationPlayer::play(CNotificationSounds::NotificationFlag notification, int volume)
     {
         QSoundEffect *effect = m_effects.value(notification, nullptr);
         if (effect)
         {
-            effect->setVolume(volume / 100.0);
-            effect->play();
+            if (!m_playingEffect && effect->isLoaded() && !effect->isPlaying())
+            {
+                const qreal v = volume / 100.0f;
+                m_playingEffect = effect;
+                effect->setVolume(v);
+                effect->play();
+
+                /** could be used for too long or hanging sounds
+                QPointer<CNotificationPlayer> myself(this);
+                QTimer::singleShot(2000, effect, [ = ]
+                {
+                    if (!myself || !m_playingEffect) { return; }
+                    m_playingEffect->stop();
+                });
+                **/
+            }
         }
     }
 
@@ -35,6 +49,8 @@ namespace BlackSound
     {
         if (directory == m_directory && !m_effects.isEmpty()) { return; }
         m_directory = directory;
+
+        QStringList types = QSoundEffect::supportedMimeTypes();
 
         this->updateEffect(CNotificationSounds::NotificationError, directory, "error.wav");
         this->updateEffect(CNotificationSounds::NotificationLogin, directory, "login.wav");
@@ -49,6 +65,13 @@ namespace BlackSound
         this->updateEffect(CNotificationSounds::PTTClickKeyUp, directory, "pttclick.wav");
     }
 
+    void CNotificationPlayer::onPlayingChanged()
+    {
+        if (!m_playingEffect) { return; }
+        if (m_playingEffect->isPlaying()) { return; }
+        m_playingEffect.clear();
+    }
+
     void CNotificationPlayer::updateEffect(CNotificationSounds::NotificationFlag f, const QString &directory, const QString &name)
     {
         QSoundEffect *e = nullptr;
@@ -56,6 +79,8 @@ namespace BlackSound
         effect->setSource(CFileUtils::soundFileQUrl(directory, name));
         if (m_effects.contains(f)) { e = m_effects[f]; }
         m_effects[f] = effect;
+        effect->setLoopCount(0);
+        connect(effect, &QSoundEffect::playingChanged, this, &CNotificationPlayer::onPlayingChanged, Qt::QueuedConnection);
         if (e) { e->deleteLater(); }
     }
 } // ns

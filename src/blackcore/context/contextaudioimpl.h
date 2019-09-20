@@ -94,8 +94,8 @@ namespace BlackCore
             virtual int  getVoiceOutputVolume() const override;
             virtual void setMute(bool muted) override;
             virtual bool isMuted() const override;
-            virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const override;
-            virtual void playNotification(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume = -1) const override;
+            virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) override;
+            virtual void playNotification(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume = -1) override;
             virtual void enableAudioLoopback(bool enable = true) override;
             virtual bool isAudioLoopbackEnabled() const override;
             virtual BlackMisc::Audio::CVoiceSetup getVoiceSetup() const override;

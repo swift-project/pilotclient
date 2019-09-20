@@ -478,7 +478,7 @@ namespace BlackCore
             return this->getIContextNetwork()->getUsersForCallsigns(this->getRoomCallsigns(comUnit));
         }
 
-        void CContextAudio::playSelcalTone(const CSelcal &selcal) const
+        void CContextAudio::playSelcalTone(const CSelcal &selcal)
         {
             Q_ASSERT(m_voice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << selcal; }
@@ -496,7 +496,7 @@ namespace BlackCore
             }
         }
 
-        void CContextAudio::playNotification(CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume) const
+        void CContextAudio::playNotification(CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume)
         {
             Q_ASSERT(m_voice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << notification; }

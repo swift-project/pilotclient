@@ -17,6 +17,7 @@
 #include <QObject>
 #include <QHash>
 #include <QSoundEffect>
+#include <QPointer>
 
 namespace BlackSound
 {
@@ -33,7 +34,7 @@ namespace BlackSound
         virtual ~CNotificationPlayer() override {}
 
         //! Play notification sound
-        void play(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification, int volume = 100) const;
+        void play(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification, int volume = 100);
 
         //! Update the directory
         void updateDirectory(const QString &directory);
@@ -41,6 +42,10 @@ namespace BlackSound
     private:
         QHash<BlackMisc::Audio::CNotificationSounds::NotificationFlag, QSoundEffect *> m_effects;
         QString m_directory;
+        QPointer<QSoundEffect> m_playingEffect;
+
+        //! Playing of effect has been changed
+        void onPlayingChanged();
 
         //! Update an effect
         void updateEffect(BlackMisc::Audio::CNotificationSounds::NotificationFlag f, const QString &directory, const QString &name);
