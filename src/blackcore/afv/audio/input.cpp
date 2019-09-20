@@ -76,12 +76,12 @@ namespace BlackCore
                 m_opusBytesEncoded = opusBytesEncoded;
             }
 
-            float Input::volume() const
+            double Input::volume() const
             {
                 return m_volume;
             }
 
-            void Input::setVolume(float volume)
+            void Input::setVolume(double volume)
             {
                 m_volume = volume;
             }
@@ -132,17 +132,23 @@ namespace BlackCore
             {
                 const QVector<qint16> samples = convertBytesTo16BitPCM(frame);
 
+                int value = 0;
+                for (qint16 &sample : samples)
+                {
+                    value = sample * m_volume;
+                    if (value > std::numeric_limits<qint16>::max())
+                        value = std::numeric_limits<qint16>::max();
+                    if (value < std::numeric_limits<qint16>::min())
+                        value = std::numeric_limits<qint16>::min();
+                    samples = static_cast<qint16>(value);
+
+                    sampleInput = qAbs(sampleInput);
+                    m_maxSampleInput = qMax(qAbs(sampleInput), m_maxSampleInput);
+                }
+
                 int length;
                 QByteArray encodedBuffer = m_encoder.encode(samples, samples.size(), &length);
                 m_opusBytesEncoded += length;
-
-                for (const qint16 sample : samples)
-                {
-                    qint16 sampleInput = sample;
-                    sampleInput = qAbs(sampleInput);
-                    if (sampleInput > m_maxSampleInput)
-                        m_maxSampleInput = sampleInput;
-                }
 
                 m_sampleCount += samples.size();
                 if (m_sampleCount >= c_sampleCountPerEvent)

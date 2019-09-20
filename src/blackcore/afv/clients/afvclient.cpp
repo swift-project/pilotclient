@@ -122,9 +122,10 @@ namespace BlackCore
 
                 soundcardSampleProvider = new SoundcardSampleProvider(c_sampleRate, transceiverIDs, this);
                 connect(soundcardSampleProvider, &SoundcardSampleProvider::receivingCallsignsChanged, this, &AFVClient::receivingCallsignsChanged);
-                // TODO outputSampleProvider = new VolumeSampleProvider(soundcardSampleProvider);
+                outputSampleProvider = new VolumeSampleProvider(soundcardSampleProvider, this);
+                outputSampleProvider->setVolume(m_outputVolume);
 
-                m_output->start(outputDevice, soundcardSampleProvider);
+                m_output->start(outputDevice, outputSampleProvider);
                 m_input->start(inputDevice);
 
                 m_startDateTimeUtc = QDateTime::currentDateTimeUtc();
@@ -140,7 +141,8 @@ namespace BlackCore
 
                 soundcardSampleProvider = new SoundcardSampleProvider(c_sampleRate, { 0, 1 }, this);
                 connect(soundcardSampleProvider, &SoundcardSampleProvider::receivingCallsignsChanged, this, &AFVClient::receivingCallsignsChanged);
-                // TODO outputSampleProvider = new VolumeSampleProvider(soundcardSampleProvider);
+                outputSampleProvider = new VolumeSampleProvider(soundcardSampleProvider, this);
+                outputSampleProvider->setVolume(m_outputVolume);
 
                 QAudioDeviceInfo inputDevice = QAudioDeviceInfo::defaultInputDevice();
                 for (const auto &device : QAudioDeviceInfo::availableDevices(QAudio::AudioInput))
@@ -162,7 +164,7 @@ namespace BlackCore
                     }
                 }
 
-                m_output->start(outputDevice, soundcardSampleProvider);
+                m_output->start(outputDevice, outputSampleProvider);
                 m_input->start(inputDevice);
 
                 m_startDateTimeUtc = QDateTime::currentDateTimeUtc();
@@ -296,12 +298,12 @@ namespace BlackCore
                 qDebug() << "PTT:" << active;
             }
 
-            void AFVClient::setInputVolumeDb(float value)
+            void AFVClient::setInputVolumeDb(double value)
             {
                 if (value > 18) { value = 18; }
                 if (value < -18) { value = -18; }
                 m_inputVolumeDb = value;
-                // TODO input.Volume = (float)System.Math.Pow(10, value / 20);
+                m_input->setVolume(qPow(10, value / 20));
             }
 
             void AFVClient::opusDataAvailable(const OpusDataAvailableArgs &args)
@@ -404,17 +406,20 @@ namespace BlackCore
                 updateTransceivers();
             }
 
-            float AFVClient::getOutputVolume() const
+            float AFVClient::getOutputVolumeDb() const
             {
                 return m_outputVolume;
             }
 
-            void AFVClient::setOutputVolume(float outputVolume)
+            void AFVClient::setOutputVolumeDb(double outputVolume)
             {
                 if (outputVolume > 18) { m_outputVolume = 18; }
                 if (outputVolume < -60) { m_outputVolume = -60; }
-                // m_outputVolume = (float)System.Math.Pow(10, value / 20);
-                // TODO outputSampleProvider.Volume = outputVolume;
+                m_outputVolume = qPow(10, m_outputVolume / 20);
+                if (outputSampleProvider)
+                {
+                    outputSampleProvider->setVolume(outputVolume);
+                }
             }
 
             AFVClient::ConnectionStatus AFVClient::getConnectionStatus() const

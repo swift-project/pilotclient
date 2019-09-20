@@ -19,6 +19,7 @@
 #include "blackcore/blackcoreexport.h"
 
 #include "blackcore/context/contextownaircraft.h"
+#include "blacksound/sampleprovider/volumesampleprovider.h"
 
 #include <QAudioDeviceInfo>
 #include <QDateTime>
@@ -89,15 +90,15 @@ namespace BlackCore
 
                 Q_INVOKABLE void setLoopBack(bool on) { m_loopbackOn = on; }
 
-                float inputVolumeDb() const
+                double inputVolumeDb() const
                 {
                     return m_inputVolumeDb;
                 }
 
-                void setInputVolumeDb(float value);
+                void setInputVolumeDb(double value);
 
-                float getOutputVolume() const;
-                void setOutputVolume(float outputVolume);
+                float getOutputVolumeDb() const;
+                void setOutputVolumeDb(double outputVolume);
 
                 float getInputVolumePeakVU() const { return m_inputVolumeStream.PeakVU; }
                 float getOutputVolumePeakVU() const { return m_outputVolumeStream.PeakVU; }
@@ -136,7 +137,7 @@ namespace BlackCore
                 Audio::Output *m_output = nullptr;
 
                 Audio::SoundcardSampleProvider *soundcardSampleProvider = nullptr;
-                // TODO VolumeSampleProvider outputSampleProvider;
+                VolumeSampleProvider *outputSampleProvider = nullptr;
 
                 bool m_transmit = false;
                 bool m_transmitHistory = false;
@@ -145,8 +146,8 @@ namespace BlackCore
                 bool m_isStarted = false;
                 QDateTime m_startDateTimeUtc;
 
-                float m_inputVolumeDb;
-                float m_outputVolume = 1;
+                double m_inputVolumeDb;
+                double m_outputVolume = 1.0;
 
                 double m_maxDbReadingInPTTInterval = -100;
 
