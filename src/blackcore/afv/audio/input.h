@@ -32,7 +32,7 @@ namespace BlackCore
                 Q_OBJECT
 
             public:
-                AudioInputBuffer() {}
+                AudioInputBuffer(QObject *parent = nullptr);
 
                 void start();
                 void stop();
@@ -43,9 +43,13 @@ namespace BlackCore
             signals:
                 void frameAvailable(const QByteArray &frame);
 
+            protected:
+                void timerEvent(QTimerEvent *event) override;
+
             private:
                 static constexpr qint64 frameSize = 960;
                 QByteArray m_buffer;
+                int m_timerId = 0;
             };
 
             struct OpusDataAvailableArgs
@@ -97,7 +101,7 @@ namespace BlackCore
                 int m_opusBytesEncoded = 0;
                 double m_volume = 1.0;
                 int m_sampleCount = 0;
-                qint16 m_maxSampleInput = 0;
+                qint16 m_maxSampleInput = 0.0;
 
                 const int c_sampleCountPerEvent = 4800;
                 const float maxDb = 0;

@@ -21,13 +21,23 @@ namespace BlackCore
     {
         namespace Audio
         {
+            AudioInputBuffer::AudioInputBuffer(QObject *parent) :
+                QIODevice(parent)
+            {}
+
             void AudioInputBuffer::start()
             {
-                open(QIODevice::WriteOnly);
+                open(QIODevice::WriteOnly | QIODevice::Unbuffered);
+                m_timerId = startTimer(20, Qt::PreciseTimer);
             }
 
             void AudioInputBuffer::stop()
             {
+                if (m_timerId > 0)
+                {
+                    killTimer(m_timerId);
+                    m_timerId = 0;
+                }
                 close();
             }
 
@@ -43,14 +53,18 @@ namespace BlackCore
             {
                 QByteArray buffer(data, static_cast<int>(len));
                 m_buffer.append(buffer);
+                return len;
+            }
+
+            void AudioInputBuffer::timerEvent(QTimerEvent *event)
+            {
+                Q_UNUSED(event);
                 // 20 ms = 960 samples * 2 bytes = 1920 Bytes
                 if (m_buffer.size() >= 1920)
                 {
                     emit frameAvailable(m_buffer.left(1920));
                     m_buffer.remove(0, 1920);
                 }
-
-                return len;
             }
 
             Input::Input(int sampleRate, QObject *parent) :
@@ -107,11 +121,8 @@ namespace BlackCore
                 }
 
                 m_audioInput.reset(new QAudioInput(inputDevice, inputFormat));
-                // We want 20 ms of buffer size
-                // 20 ms * nSamplesPerSec × nChannels × wBitsPerSample  / 8 x 1000
-                int bufferSize = 20 * inputFormat.sampleRate() * inputFormat.channelCount() * inputFormat.sampleSize() / (8 * 1000);
-                m_audioInput->setBufferSize(bufferSize);
                 m_audioInputBuffer.start();
+
                 m_audioInput->start(&m_audioInputBuffer);
                 connect(&m_audioInputBuffer, &AudioInputBuffer::frameAvailable, this, &Input::audioInDataAvailable);
 
@@ -130,7 +141,7 @@ namespace BlackCore
 
             void Input::audioInDataAvailable(const QByteArray &frame)
             {
-                const QVector<qint16> samples = convertBytesTo16BitPCM(frame);
+                QVector<qint16> samples = convertBytesTo16BitPCM(frame);
 
                 int value = 0;
                 for (qint16 &sample : samples)
@@ -140,9 +151,9 @@ namespace BlackCore
                         value = std::numeric_limits<qint16>::max();
                     if (value < std::numeric_limits<qint16>::min())
                         value = std::numeric_limits<qint16>::min();
-                    samples = static_cast<qint16>(value);
+                    sample = static_cast<qint16>(value);
 
-                    sampleInput = qAbs(sampleInput);
+                    qint16 sampleInput = qAbs(sample);
                     m_maxSampleInput = qMax(qAbs(sampleInput), m_maxSampleInput);
                 }
 
@@ -155,7 +166,7 @@ namespace BlackCore
                 {
                     InputVolumeStreamArgs inputVolumeStreamArgs;
                     qint16 maxInt = std::numeric_limits<qint16>::max();
-                    inputVolumeStreamArgs.PeakRaw = m_maxSampleInput / maxInt;
+                    inputVolumeStreamArgs.PeakRaw = static_cast<float>(m_maxSampleInput) / maxInt;
                     inputVolumeStreamArgs.PeakDB = (float)(20 * std::log10(inputVolumeStreamArgs.PeakRaw));
                     float db = qBound(minDb, inputVolumeStreamArgs.PeakDB, maxDb);
                     float ratio = (db - minDb) / (maxDb - minDb);
