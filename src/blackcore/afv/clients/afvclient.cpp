@@ -50,6 +50,11 @@ namespace BlackCore
                     { 1 }
                 };
 
+                m_transmittingTransceivers =
+                {
+                    { 0 }
+                };
+
                 qDebug() << "UserClient instantiated";
             }
 
@@ -406,7 +411,7 @@ namespace BlackCore
                 updateTransceivers();
             }
 
-            float AFVClient::getOutputVolumeDb() const
+            double AFVClient::getOutputVolumeDb() const
             {
                 return m_outputVolume;
             }

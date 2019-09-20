@@ -18,6 +18,8 @@ ApplicationWindow {
 
     Grid {
         id: leftGrid
+        anchors.bottom: column.bottom
+        anchors.bottomMargin: 0
         columns: 2
         rows: 6
         spacing: 10
@@ -164,10 +166,11 @@ ApplicationWindow {
 
     Grid {
         id: rightGrid
-        padding: 10
+        padding: 0
         anchors.top: parent.top
         anchors.left: leftGrid.right
         anchors.right: parent.right
+        anchors.topMargin: 10
         spacing: 10
         rows: 3
         columns: 3
@@ -188,6 +191,7 @@ ApplicationWindow {
             to: 50000
             from: 0
             value: 1000
+            wheelEnabled: true
         }
 
         Label {
@@ -229,89 +233,119 @@ ApplicationWindow {
 
     Column {
         id: column
-        spacing: 10
+        spacing: 5
         anchors.top: rightGrid.bottom
         anchors.left: leftGrid.right
         anchors.right: parent.right
 
-        ProgressBar {
-            id: pbAudioInput
-            width: 500
-            height: 25
-            anchors.left: parent.left
-            anchors.leftMargin: 10
-            value: voiceClient.inputVolumePeakVU
-        }
+        Row {
+            id: row1
+            anchors.topMargin: 0
+            padding: 0
+            spacing: 10
 
-        ProgressBar {
-            id: pbAudioOutput
-            width: 500
-            height: 25
-            anchors.left: parent.left
-            anchors.leftMargin: 10
-            value: voiceClient.outputVolumePeakVU
-        }
-    }
-
-    Row {
-        padding: 0
-        spacing: 10
-        anchors.top: column.bottom
-        anchors.left: leftGrid.right
-        anchors.right: parent.right
-
-        CheckBox {
-            id: cbVhfEffects
-            text: qsTr("VHF Effects")
-            checked: true
-            anchors.verticalCenter: parent.verticalCenter
-            onClicked: voiceClient.setBypassEffects(!checked)
-        }
-
-        CheckBox {
-            id: cbLoopback
-            text: qsTr("Loopback")
-            checked: false
-            anchors.verticalCenter: parent.verticalCenter
-            onClicked: voiceClient.setLoopBack(checked)
-        }
-
-        Button {
-            id: btPtt
-            width: 150
-            height: 40
-            text: qsTr("PTT")
-            onPressed: voiceClient.setPtt(true)
-            onReleased: voiceClient.setPtt(false)
-            background: Rectangle {
-                      implicitWidth: btPtt.width
-                      implicitHeight: btPtt.height
-                      color: btPtt.down ? "lightgreen" : "lightgrey"
-                      border.width: 1
-                      radius: 2
-                  }
-        }
-
-        Label {
-            function translateStatus(status) {
-                switch(status) {
-                case 0: return "Disconnected"
-                case 1: return "Connected"
-                default: return "Unknown"
-                }
+            LevelMeter {
+                id: pbAudioInput
+                width: 400
+                height: 15
+                value: voiceClient.inputVolumePeakVU
+                anchors.verticalCenter: parent.verticalCenter
             }
 
-            id: lblStatus
-            text: "Status: " + translateStatus(voiceClient.connectionStatus)
-            verticalAlignment: Text.AlignVCenter
-            anchors.verticalCenter: parent.verticalCenter
+            Slider {
+                id: slInputVolume
+                from: -18
+                to: 18
+                value: 0
+                anchors.verticalCenter: parent.verticalCenter
+                wheelEnabled: true
+                onMoved: voiceClient.setInputVolumeDb(value)
+            }
+        }
+
+        Row {
+            id: row2
+            anchors.topMargin: 0
+            padding: 0
+            spacing: 10
+
+            LevelMeter {
+                id: pbAudioOutput
+                width: 400
+                height: 15
+                value: voiceClient.outputVolumePeakVU
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Slider {
+                id: slOutputVolume
+                from: -18
+                to: 18
+                value: 0
+                anchors.verticalCenter: parent.verticalCenter
+                wheelEnabled: true
+                onMoved: voiceClient.setOutputVolumeDb(value)
+            }
+        }
+
+        Row {
+            id: row3
+            padding: 0
+            spacing: 10
+
+            CheckBox {
+                id: cbVhfEffects
+                text: qsTr("VHF Effects")
+                checked: true
+                anchors.verticalCenter: parent.verticalCenter
+                onClicked: voiceClient.setBypassEffects(!checked)
+            }
+
+            CheckBox {
+                id: cbLoopback
+                text: qsTr("Loopback")
+                checked: false
+                anchors.verticalCenter: parent.verticalCenter
+                onClicked: voiceClient.setLoopBack(checked)
+            }
+
+            Button {
+                id: btPtt
+                width: 150
+                height: 40
+                text: qsTr("PTT")
+                onPressed: voiceClient.setPtt(true)
+                onReleased: voiceClient.setPtt(false)
+                background: Rectangle {
+                          implicitWidth: btPtt.width
+                          implicitHeight: btPtt.height
+                          color: btPtt.down ? "lightgreen" : "lightgrey"
+                          border.width: 1
+                          radius: 2
+                      }
+            }
+
+            Label {
+                function translateStatus(status) {
+                    switch(status) {
+                    case 0: return "Disconnected"
+                    case 1: return "Connected"
+                    default: return "Unknown"
+                    }
+                }
+
+                id: lblStatus
+                text: "Status: " + translateStatus(voiceClient.connectionStatus)
+                verticalAlignment: Text.AlignVCenter
+                anchors.verticalCenter: parent.verticalCenter
+            }
         }
     }
 
     Map {
         id: map
         anchors.topMargin: 5
-        anchors.top: leftGrid.bottom
+        anchors.top: column.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right

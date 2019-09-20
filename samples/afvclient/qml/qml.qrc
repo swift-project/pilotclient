@@ -3,5 +3,6 @@
         <file>main.qml</file>
         <file>AtcRing.qml</file>
         <file>Transceiver.qml</file>
+        <file>LevelMeter.qml</file>
     </qresource>
 </RCC>

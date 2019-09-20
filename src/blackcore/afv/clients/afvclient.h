@@ -95,10 +95,10 @@ namespace BlackCore
                     return m_inputVolumeDb;
                 }
 
-                void setInputVolumeDb(double value);
+                Q_INVOKABLE void setInputVolumeDb(double value);
 
-                float getOutputVolumeDb() const;
-                void setOutputVolumeDb(double outputVolume);
+                double getOutputVolumeDb() const;
+                Q_INVOKABLE void setOutputVolumeDb(double outputVolume);
 
                 float getInputVolumePeakVU() const { return m_inputVolumeStream.PeakVU; }
                 float getOutputVolumePeakVU() const { return m_outputVolumeStream.PeakVU; }

@@ -42,21 +42,7 @@ Row {
         valueFromText: function(text, locale) {
             return Number.fromLocaleString(locale, text) * 1000
         }
-
-        MouseArea {
-            anchors.fill: parent
-            onWheel: {
-                if (wheel.angleDelta.y > 0)
-                {
-                    sbFrequency.value += sbFrequency.stepSize
-                }
-                else
-                {
-                    sbFrequency.value -= sbFrequency.stepSize
-                }
-                wheel.accepted=true
-            }
-        }
+        wheelEnabled: true
     }
 
     CheckBox {
@@ -71,7 +57,7 @@ Row {
     CheckBox {
         id: cbEnabled
         height: 25
-        text: qsTr("Enabled")
+        text: qsTr("RX")
         checked: true
         anchors.verticalCenter: parent.verticalCenter
         onClicked: idTransceiver.rxOnChanged(checked)
