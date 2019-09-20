@@ -31,9 +31,9 @@ namespace BlackSound
         CSelcalPlayer(const QAudioDeviceInfo &device = QAudioDeviceInfo::defaultOutputDevice(), QObject *parent = nullptr);
 
         //! Destructor
-        ~CSelcalPlayer();
+        virtual ~CSelcalPlayer() override;
 
-        //! Play selcal
+        //! Play SELCAL
         //! \return Time of the played tone
         BlackMisc::PhysicalQuantities::CTime play(int volume, const BlackMisc::Aviation::CSelcal &selcal);
 

@@ -448,9 +448,9 @@ namespace BlackMisc
     {
         switch (lockFile.error())
         {
-        case QLockFile::NoError: return QStringLiteral("No error");
+        case QLockFile::NoError:         return QStringLiteral("No error");
         case QLockFile::PermissionError: return QStringLiteral("Insufficient permission");
-        case QLockFile::UnknownError: return QStringLiteral("Unknown error");
+        case QLockFile::UnknownError:    return QStringLiteral("Unknown error");
         case QLockFile::LockFailedError:
             {
                 QString hostname, appname;
