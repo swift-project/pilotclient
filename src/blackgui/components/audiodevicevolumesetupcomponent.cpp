@@ -38,6 +38,8 @@ namespace BlackGui
             ui(new Ui::CAudioDeviceVolumeSetupComponent)
         {
             ui->setupUi(this);
+            connect(ui->hs_VolumeIn,  &QSlider::valueChanged, this, &CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged);
+            connect(ui->hs_VolumeOut, &QSlider::valueChanged, this, &CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged);
 
             // deferred init, because in a distributed swift system
             // it takes a moment until the settings are sychronized
@@ -64,7 +66,7 @@ namespace BlackGui
 
             if (audio)
             {
-                ui->le_ExtraInfo->setText(audio ? sGui->getIContextAudio()->audioRunsWhereInfo() : "No audio, cannot change.");
+                ui->le_Info->setText(audio ? sGui->getIContextAudio()->audioRunsWhereInfo() : "No audio, cannot change.");
 
                 this->initAudioDeviceLists();
 
@@ -89,9 +91,76 @@ namespace BlackGui
         CAudioDeviceVolumeSetupComponent::~CAudioDeviceVolumeSetupComponent()
         { }
 
+        int CAudioDeviceVolumeSetupComponent::getInValue(int from, int to) const
+        {
+            const double r = ui->hs_VolumeIn->maximum() - ui->hs_VolumeIn->minimum();
+            const double tr = to - from;
+            return qRound(ui->hs_VolumeIn->value() / r * tr);
+        }
+
+        int CAudioDeviceVolumeSetupComponent::getOutValue(int from, int to) const
+        {
+            const double r = ui->hs_VolumeOut->maximum() - ui->hs_VolumeOut->minimum();
+            const double tr = to - from;
+            return qRound(ui->hs_VolumeOut->value() / r * tr);
+        }
+
+        void CAudioDeviceVolumeSetupComponent::setInValue(int value, int from, int to)
+        {
+            if (value > to)   { value = to; }
+            if (value < from) { value = from; }
+            const double r = ui->hs_VolumeIn->maximum() - ui->hs_VolumeIn->minimum();
+            const double tr = to - from;
+            ui->hs_VolumeIn->setValue(qRound(value / tr * r));
+        }
+
+        void CAudioDeviceVolumeSetupComponent::setOutValue(int value, int from, int to)
+        {
+            if (value > to)   { value = to; }
+            if (value < from) { value = from; }
+            const double r = ui->hs_VolumeOut->maximum() - ui->hs_VolumeOut->minimum();
+            const double tr = to - from;
+            ui->hs_VolumeOut->setValue(qRound(value / tr * r));
+        }
+
+        void CAudioDeviceVolumeSetupComponent::setInLevel(int value, int from, int to)
+        {
+            if (value > to)   { value = to; }
+            if (value < from) { value = from; }
+            const double r = ui->pb_LevelIn->maximum() - ui->pb_LevelIn->minimum();
+            const double tr = to - from;
+            ui->pb_LevelIn->setValue(qRound(value / tr * r));
+        }
+
+        void CAudioDeviceVolumeSetupComponent::setOutLevel(int value, int from, int to)
+        {
+            if (value > to)   { value = to; }
+            if (value < from) { value = from; }
+            const double r = ui->pb_LevelOut->maximum() - ui->pb_LevelOut->minimum();
+            const double tr = to - from;
+            ui->pb_LevelOut->setValue(qRound(value / tr * r));
+        }
+
+        void CAudioDeviceVolumeSetupComponent::setInfo(const QString &info)
+        {
+            ui->le_Info->setText(info);
+        }
+
+        void CAudioDeviceVolumeSetupComponent::setTransmitReceive(bool tx1, bool rec1, bool tx2, bool rec2)
+        {
+            ui->cb_1Tx->setChecked(tx1);
+            ui->cb_2Tx->setChecked(tx2);
+            ui->cb_1Rec->setChecked(rec1);
+            ui->cb_2Rec->setChecked(rec2);
+        }
+
         void CAudioDeviceVolumeSetupComponent::reloadSettings()
         {
             const CSettings as(m_audioSettings.getThreadLocal());
+            ui->cb_DisableAudioEffects->setChecked(as.isAudioEffectsEnabled());
+
+            this->setInValue(as.getInVolume());
+            this->setOutValue(as.getInVolume());
         }
 
         void CAudioDeviceVolumeSetupComponent::initAudioDeviceLists()
@@ -104,6 +173,23 @@ namespace BlackGui
         bool CAudioDeviceVolumeSetupComponent::hasAudio() const
         {
             return sGui && sGui->getIContextAudio() && !sGui->getIContextAudio()->isEmptyObject();
+        }
+
+        void CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged(int v)
+        {
+            Q_UNUSED(v);
+            m_volumeSliderChanged.inputSignal();
+        }
+
+        void CAudioDeviceVolumeSetupComponent::saveVolumes()
+        {
+            CSettings as(m_audioSettings.getThreadLocal());
+            const int i = this->getInValue();
+            const int o = this->getOutValue();
+            if (as.getInVolume() == i && as.getOutVolume() == o) { return; }
+            as.setInVolume(i);
+            as.setOutVolume(o);
+            m_audioSettings.setAndSave(as);
         }
 
         void CAudioDeviceVolumeSetupComponent::onAudioDeviceSelected(int index)

@@ -65,7 +65,7 @@ namespace BlackCore
             initOutputDevice();
             initAudioMixer();
 
-            this->setVoiceOutputVolume(m_audioSettings.getThreadLocal().getAudioVolume());
+            this->setVoiceOutputVolume(m_audioSettings.getThreadLocal().getOutVolume());
             m_selcalPlayer = new CSelcalPlayer(QAudioDeviceInfo::defaultOutputDevice(), this);
 
             this->changeDeviceSettings();
@@ -289,7 +289,7 @@ namespace BlackCore
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << volume; }
 
             const bool wasMuted = isMuted();
-            volume = qMin(CSettings::MaxAudioVolume, volume);
+            // volume = qMin(CSettings::MaxAudioVolume, volume);
 
             bool changedVoiceOutput = m_voiceOutputDevice->getOutputVolume() != volume;
             if (changedVoiceOutput)
@@ -306,9 +306,9 @@ namespace BlackCore
             }
 
             CSettings as(m_audioSettings.getThreadLocal());
-            if (as.getAudioVolume() != volume)
+            if (as.getOutVolume() != volume)
             {
-                as.setAudioVolume(volume);
+                as.setOutVolume(volume);
                 m_audioSettings.set(as);
             }
         }
@@ -580,11 +580,7 @@ namespace BlackCore
             else if (parser.commandStartsWith("vol") && parser.countParts() > 1)
             {
                 int v = parser.toInt(1);
-                if (v >= 0 && v <= CSettings::MaxAudioVolume)
-                {
-                    this->setVoiceOutputVolume(v);
-                    return true;
-                }
+                this->setVoiceOutputVolume(v);
             }
             return false;
         }
@@ -719,7 +715,7 @@ namespace BlackCore
             const CSettings s = m_audioSettings.get();
             const QString dir = s.getNotificationSoundDirectory();
             m_notificationPlayer.updateDirectory(dir);
-            this->setVoiceOutputVolume(s.getAudioVolume());
+            this->setVoiceOutputVolume(s.getOutVolume());
         }
 
         void CContextAudio::audioIncreaseVolume(bool enabled)

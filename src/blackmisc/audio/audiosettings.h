@@ -30,6 +30,13 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CSettings : public CValueObject<CSettings>
         {
         public:
+            //! Ranges for audio @{
+            static constexpr int InMax  =  100;
+            static constexpr int InMin  =  0;
+            static constexpr int OutMax =  100;
+            static constexpr int OutMin =  0;
+            //! @}
+
             //! Default constructor.
             CSettings();
 
@@ -69,11 +76,23 @@ namespace BlackMisc
             //! Get volume (notifications)
             int getNotificationVolume() const { return m_notificationVolume; }
 
-            //! Set volume (audio)
-            void setAudioVolume(int volume);
+            //! Set volume (audio) 0..100
+            void setOutVolume(int volume);
 
-            //! Get volume (audio)
-            int getAudioVolume() const { return m_audioVolume; }
+            //! Get volume (audio) 0..100
+            int getOutVolume() const { return m_outVolume; }
+
+            //! Set mic.volume 0..100
+            void setInVolume(int volume);
+
+            //! Get mic.volume (audio 0..100)
+            int getInVolume() const { return m_inVolume; }
+
+            //! Audio effects enabled?
+            bool isAudioEffectsEnabled() const { return m_audioEffects; }
+
+            //! Audio effects
+            void setAudioEffectsEnabled(bool enabled) { m_audioEffects = enabled; }
 
             //! Init with meaningful default values
             void initDefaultValues();
@@ -81,21 +100,22 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
-            static constexpr int MaxAudioVolume = 300; //!< Max.audio volume 0..300
-
         private:
             QString m_notificationSoundDir;
             int m_notification = static_cast<int>(CNotificationSounds::DefaultNotifications); //!< play notification for notification x, a little trick to use a string here (streamable, hashable, ..)
-            int m_notificationVolume = 90; //!< 0-100
-            int m_audioVolume = 100;       //!< 0-300
-            void initNotificationFlags();  //!< init flags
+            int m_notificationVolume = 90;   //!< 0-90
+            int m_outVolume          = 100;  //!< 0-300, AFV
+            int m_inVolume           = 0;    //!< AFV range
+            bool m_audioEffects      = true; //!< Audio effects en
+            void initNotificationFlags();    //!< init flags
 
             BLACK_METACLASS(
                 CSettings,
                 BLACK_METAMEMBER(notificationSoundDir),
                 BLACK_METAMEMBER(notification),
                 BLACK_METAMEMBER(notificationVolume),
-                BLACK_METAMEMBER(audioVolume)
+                BLACK_METAMEMBER(outVolume),
+                BLACK_METAMEMBER(inVolume)
             );
         };
 

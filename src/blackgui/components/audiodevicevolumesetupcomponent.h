@@ -15,6 +15,7 @@
 #include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/settingscache.h"
+#include "blackmisc/digestsignal.h"
 
 #include <QFrame>
 #include <QCheckBox>
@@ -38,6 +39,27 @@ namespace BlackGui
             //! Destructor
             virtual ~CAudioDeviceVolumeSetupComponent() override;
 
+            //! Get input and output volume values @{
+            int getInValue(int from = BlackMisc::Audio::CSettings::InMin,   int to = BlackMisc::Audio::CSettings::InMax) const;
+            int getOutValue(int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax) const;
+            //! @}
+
+            //! Set input and output volume values @{
+            void setInValue(int value,  int from = BlackMisc::Audio::CSettings::InMin,  int to = BlackMisc::Audio::CSettings::InMax);
+            void setOutValue(int value, int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax);
+            //! @}
+
+            //! Set input and output level values @{
+            void setInLevel(int value,  int from = BlackMisc::Audio::CSettings::InMin,  int to = BlackMisc::Audio::CSettings::InMax);
+            void setOutLevel(int value, int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax);
+            //! @}
+
+            //! Info string
+            void setInfo(const QString &info);
+
+            //! Transmit and receive state
+            void setTransmitReceive(bool tx1, bool rec1, bool tx2, bool rec2);
+
         private:
             //! Init
             void init();
@@ -58,16 +80,20 @@ namespace BlackGui
             //! Loopback toggled
             void onLoopbackToggled(bool loopback);
 
-            //! Notification flags toggled
-            void onNotificationsToggled(bool checked);
-
             //! Audio device lists from settings
             void initAudioDeviceLists();
 
             //! Audio is optional, check if available
             bool hasAudio() const;
 
+            //! Volume slider has been changed
+            void onVolumeSliderChanged(int v);
+
+            //! Save the audio volumes
+            void saveVolumes();
+
             QScopedPointer<Ui::CAudioDeviceVolumeSetupComponent> ui;
+            BlackMisc::CDigestSignal m_volumeSliderChanged { this, &CAudioDeviceVolumeSetupComponent::saveVolumes, 1000, 10 };
             BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &CAudioDeviceVolumeSetupComponent::reloadSettings };
         };
     } // namespace
