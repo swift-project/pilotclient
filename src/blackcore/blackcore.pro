@@ -33,6 +33,7 @@ HEADERS += $$PWD/afv/audio/*.h
 HEADERS += $$PWD/afv/clients/*.h
 HEADERS += $$PWD/afv/crypto/*.h
 HEADERS += $$PWD/afv/connection/*.h
+HEADERS += $$PWD/afv/model/*.h
 
 SOURCES += *.cpp
 SOURCES += $$PWD/context/*.cpp
@@ -44,6 +45,7 @@ SOURCES += $$PWD/afv/audio/*.cpp
 SOURCES += $$PWD/afv/clients/*.cpp
 SOURCES += $$PWD/afv/crypto/*.cpp
 SOURCES += $$PWD/afv/connection/*.cpp
+SOURCES += $$PWD/afv/model/*.cpp
 
 LIBS *= \
     -lvatlib \

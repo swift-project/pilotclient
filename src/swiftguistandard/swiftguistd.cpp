@@ -638,6 +638,7 @@ bool SwiftGuiStd::startAFVMap()
     if (!m_mapDialog)
     {
         m_mapDialog.reset(new CAfvMapDialog(this));
+        m_mapDialog->setWindowModality(Qt::NonModal);
     }
     m_mapDialog->exec();
     return true;

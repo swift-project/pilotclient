@@ -88,7 +88,6 @@ namespace BlackCore
                 void setTransmittingTransceivers(const QVector<TxTransceiverDto> &transceivers);
 
                 Q_INVOKABLE void setPtt(bool active);
-
                 Q_INVOKABLE void setLoopBack(bool on) { m_loopbackOn = on; }
 
                 //! Input volume in DB, +-18DB @{

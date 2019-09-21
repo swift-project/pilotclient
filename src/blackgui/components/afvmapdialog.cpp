@@ -8,8 +8,15 @@
 
 //! \file
 
+#include "blackcore/afv/clients/afvclient.h"
+#include "blackcore/afv/model/afvmapreader.h"
+
 #include "afvmapdialog.h"
 #include "ui_afvmapdialog.h"
+#include <QQmlContext>
+
+using namespace BlackCore::Afv::Model;
+using namespace BlackCore::Afv::Clients;
 
 namespace BlackGui
 {
@@ -20,6 +27,13 @@ namespace BlackGui
             ui(new Ui::CAfvMapDialog)
         {
             ui->setupUi(this);
+            m_afvMapReader = new CAfvMapReader(this);
+            m_afvMapReader->updateFromMap();
+            m_afvClient = new CAfvClient("https://voice1.vatsim.uk");
+
+            QQmlContext *ctxt = ui->qw_AfvMap->rootContext();
+            ctxt->setContextProperty("afvMapReader", m_afvMapReader);
+            ctxt->setContextProperty("voiceClient", m_afvClient);
         }
 
         CAfvMapDialog::~CAfvMapDialog() { }

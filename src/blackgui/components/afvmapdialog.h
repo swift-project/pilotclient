@@ -15,6 +15,14 @@
 #include <QDialog>
 #include <QScopedPointer>
 
+namespace BlackCore
+{
+    namespace Afv
+    {
+        namespace Model { class CAfvMapReader; }
+        namespace Clients { class CAfvClient;  }
+    }
+}
 namespace Ui { class CAfvMapDialog; }
 namespace BlackGui
 {
@@ -34,6 +42,8 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CAfvMapDialog> ui;
+            BlackCore::Afv::Model::CAfvMapReader *m_afvMapReader = nullptr;
+            BlackCore::Afv::Clients::CAfvClient  *m_afvClient = nullptr;
         };
     } // ns
 } // ns

@@ -1,8 +1,9 @@
 // #include "voiceclientui.h"
 
-#include "models/atcstationmodel.h"
-#include "clients/afvclient.h"
-#include "afvmapreader.h"
+#include "blackcore/afv/model/atcstationmodel.h"
+#include "blackcore/afv/model/afvmapreader.h"
+#include "blackcore/afv/clients/afvclient.h"
+
 #include "blackcore/application.h"
 
 #include <QGuiApplication>
@@ -12,6 +13,7 @@
 #include <QThread>
 
 using namespace BlackCore::Afv::Clients;
+using namespace BlackCore::Afv::Model;
 
 int main(int argc, char *argv[])
 {
@@ -20,7 +22,7 @@ int main(int argc, char *argv[])
 
     BlackCore::CApplication a("sampleafvclient", BlackMisc::CApplicationInfo::Sample);
 
-    AFVMapReader *afvMapReader = new AFVMapReader(&a);
+    CAfvMapReader *afvMapReader = new CAfvMapReader(&a);
     afvMapReader->updateFromMap();
 
     CAfvClient voiceClient("https://voice1.vatsim.uk");
