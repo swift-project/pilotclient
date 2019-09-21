@@ -19,23 +19,29 @@
 
 #include <array>
 
-//! Pink noise generator
-class BLACKSOUND_EXPORT PinkNoiseGenerator : public ISampleProvider
+namespace BlackSound
 {
-    Q_OBJECT
+    namespace SampleProvider
+    {
+        //! Pink noise generator
+        class BLACKSOUND_EXPORT CPinkNoiseGenerator : public ISampleProvider
+        {
+            Q_OBJECT
 
-public:
-    //! Noise generator
-    PinkNoiseGenerator(QObject *parent = nullptr) : ISampleProvider(parent) {}
+        public:
+            //! Noise generator
+            CPinkNoiseGenerator(QObject *parent = nullptr) : ISampleProvider(parent) {}
 
-    virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
+            virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
 
-    void setGain(double gain) { m_gain = gain; }
+            void setGain(double gain) { m_gain = gain; }
 
-private:
-    QRandomGenerator random;
-    std::array<double, 7> pinkNoiseBuffer = {0};
-    double m_gain = 0.0;
-};
+        private:
+            QRandomGenerator random;
+            std::array<double, 7> pinkNoiseBuffer = {0};
+            double m_gain = 0.0;
+        };
+    }
+}
 
 #endif // guard

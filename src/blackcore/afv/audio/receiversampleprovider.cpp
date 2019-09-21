@@ -14,31 +14,33 @@
 
 #include <QDebug>
 
+using namespace BlackSound::SampleProvider;
+
 namespace BlackCore
 {
     namespace Afv
     {
         namespace Audio
         {
-            ReceiverSampleProvider::ReceiverSampleProvider(const QAudioFormat &audioFormat, quint16 id, int voiceInputNumber, QObject *parent) :
+            CReceiverSampleProvider::CReceiverSampleProvider(const QAudioFormat &audioFormat, quint16 id, int voiceInputNumber, QObject *parent) :
                 ISampleProvider(parent),
                 m_id(id)
             {
-                m_mixer = new MixingSampleProvider(this);
+                m_mixer = new CMixingSampleProvider(this);
 
                 for (int i = 0; i < voiceInputNumber; i++)
                 {
                     auto voiceInput = new CallsignSampleProvider(audioFormat, m_mixer);
                     m_voiceInputs.push_back(voiceInput);
                     m_mixer->addMixerInput(voiceInput);
-                };
+                }
 
                 // TODO blockTone = new SignalGenerator(WaveFormat.SampleRate, 1) { Gain = 0, Type = SignalGeneratorType.Sin, Frequency = 180 };
                 // TODO mixer.AddMixerInput(blockTone.ToMono());
                 // TODO volume = new VolumeSampleProvider(mixer);
             }
 
-            void ReceiverSampleProvider::setBypassEffects(bool value)
+            void CReceiverSampleProvider::setBypassEffects(bool value)
             {
                 for (CallsignSampleProvider *voiceInput : m_voiceInputs)
                 {
@@ -46,7 +48,7 @@ namespace BlackCore
                 }
             }
 
-            void ReceiverSampleProvider::setFrequency(const uint &frequency)
+            void CReceiverSampleProvider::setFrequency(const uint &frequency)
             {
                 if (frequency != m_frequency)
                 {
@@ -58,26 +60,26 @@ namespace BlackCore
                 m_frequency = frequency;
             }
 
-            int ReceiverSampleProvider::activeCallsigns() const
+            int CReceiverSampleProvider::activeCallsigns() const
             {
-                int numberOfCallsigns = std::count_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CallsignSampleProvider * p)
+                const int numberOfCallsigns = std::count_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CallsignSampleProvider * p)
                 {
                     return p->inUse() == true;
                 });
                 return numberOfCallsigns;
             }
 
-            float ReceiverSampleProvider::volume() const
+            float CReceiverSampleProvider::volume() const
             {
                 return 1.0;
             }
 
-            bool ReceiverSampleProvider::getMute() const
+            bool CReceiverSampleProvider::getMute() const
             {
                 return m_mute;
             }
 
-            void ReceiverSampleProvider::setMute(bool value)
+            void CReceiverSampleProvider::setMute(bool value)
             {
                 m_mute = value;
                 if (value)
@@ -89,7 +91,7 @@ namespace BlackCore
                 }
             }
 
-            int ReceiverSampleProvider::readSamples(QVector<qint16> &samples, qint64 count)
+            int CReceiverSampleProvider::readSamples(QVector<qint16> &samples, qint64 count)
             {
                 int numberOfInUseInputs = activeCallsigns();
 
@@ -105,7 +107,7 @@ namespace BlackCore
 
                 if (m_doClickWhenAppropriate && numberOfInUseInputs == 0)
                 {
-                    ResourceSoundSampleProvider *resourceSound = new ResourceSoundSampleProvider(Samples::instance().click(), m_mixer);
+                    CResourceSoundSampleProvider *resourceSound = new CResourceSoundSampleProvider(Samples::instance().click(), m_mixer);
                     m_mixer->addMixerInput(resourceSound);
                     qDebug() << "Click...";
                     m_doClickWhenAppropriate = false;
@@ -133,7 +135,7 @@ namespace BlackCore
                 return m_mixer->readSamples(samples, count);
             }
 
-            void ReceiverSampleProvider::addOpusSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio)
+            void CReceiverSampleProvider::addOpusSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio)
             {
                 if (m_frequency != frequency)        //Lag in the backend means we get the tail end of a transmission
                     return;
@@ -167,7 +169,7 @@ namespace BlackCore
                 m_doClickWhenAppropriate = true;
             }
 
-            void ReceiverSampleProvider::addSilentSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio)
+            void CReceiverSampleProvider::addSilentSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio)
             {
                 Q_UNUSED(distanceRatio);
                 if (m_frequency != frequency)        //Lag in the backend means we get the tail end of a transmission
@@ -200,7 +202,7 @@ namespace BlackCore
                 }
             }
 
-            QString ReceiverSampleProvider::getReceivingCallsigns() const
+            QString CReceiverSampleProvider::getReceivingCallsigns() const
             {
                 return m_receivingCallsigns;
             }

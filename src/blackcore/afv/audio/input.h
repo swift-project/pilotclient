@@ -27,20 +27,25 @@ namespace BlackCore
         namespace Audio
         {
             //! Input buffer
-            class AudioInputBuffer : public QIODevice
+            class CAudioInputBuffer : public QIODevice
             {
                 Q_OBJECT
 
             public:
-                AudioInputBuffer(QObject *parent = nullptr);
+                //! Inout buffer
+                CAudioInputBuffer(QObject *parent = nullptr);
 
                 void start();
                 void stop();
 
-                qint64 readData(char *data, qint64 maxlen) override;
-                qint64 writeData(const char *data, qint64 len) override;
+                //! \copydoc QIODevice::readData
+                virtual qint64 readData(char *data, qint64 maxlen) override;
+
+                //! \copydoc QIODevice::writeData
+                virtual qint64 writeData(const char *data, qint64 len) override;
 
             signals:
+                //! Frame is available
                 void frameAvailable(const QByteArray &frame);
 
             protected:
@@ -66,12 +71,14 @@ namespace BlackCore
                 float PeakVU = 0.0;
             };
 
-            class Input : public QObject
+            //! Input
+            class CInput : public QObject
             {
                 Q_OBJECT
 
             public:
-                Input(int sampleRate, QObject *parent = nullptr);
+                //! Ctor
+                CInput(int sampleRate, QObject *parent = nullptr);
 
                 bool started() const;
 
@@ -109,7 +116,7 @@ namespace BlackCore
 
                 uint m_audioSequenceCounter = 0;
 
-                AudioInputBuffer m_audioInputBuffer;
+                CAudioInputBuffer m_audioInputBuffer;
             };
         } // ns
     } // ns

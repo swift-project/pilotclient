@@ -34,6 +34,7 @@ namespace BlackCore
             public:
                 CryptoDtoSerializer();
 
+                //! Serialize a DTO
                 template<typename T>
                 static QByteArray Serialize(const QString &channelTag, CryptoDtoMode mode, const QByteArray &transmitKey, uint sequenceToBeSent, T dto)
                 {
@@ -105,8 +106,9 @@ namespace BlackCore
                     return {};
                 }
 
+                //! Serialize a DTO
                 template<typename T>
-                static QByteArray Serialize(CryptoDtoChannel &channel, CryptoDtoMode mode, T dto)
+                static QByteArray Serialize(CCryptoDtoChannel &channel, CryptoDtoMode mode, T dto)
                 {
                     uint sequenceToSend = 0;
                     QByteArray transmitKey = channel.getTransmitKey(mode, sequenceToSend);
@@ -115,7 +117,7 @@ namespace BlackCore
 
                 struct Deserializer
                 {
-                    Deserializer(CryptoDtoChannel &channel, const QByteArray &bytes, bool loopback);
+                    Deserializer(CCryptoDtoChannel &channel, const QByteArray &bytes, bool loopback);
 
                     template<typename T>
                     T getDto()
@@ -143,7 +145,7 @@ namespace BlackCore
                     bool verified = false;
                 };
 
-                static Deserializer deserialize(CryptoDtoChannel &channel, const QByteArray &bytes, bool loopback);
+                static Deserializer deserialize(CCryptoDtoChannel &channel, const QByteArray &bytes, bool loopback);
             };
         } // ns
     } // ns

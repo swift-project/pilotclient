@@ -17,12 +17,12 @@ namespace BlackCore
         {
             CryptoDtoSerializer::CryptoDtoSerializer() { }
 
-            CryptoDtoSerializer::Deserializer CryptoDtoSerializer::deserialize(CryptoDtoChannel &channel, const QByteArray &bytes, bool loopback)
+            CryptoDtoSerializer::Deserializer CryptoDtoSerializer::deserialize(CCryptoDtoChannel &channel, const QByteArray &bytes, bool loopback)
             {
                 return Deserializer(channel, bytes, loopback);
             }
 
-            CryptoDtoSerializer::Deserializer::Deserializer(CryptoDtoChannel &channel, const QByteArray &bytes, bool loopback)
+            CryptoDtoSerializer::Deserializer::Deserializer(CCryptoDtoChannel &channel, const QByteArray &bytes, bool loopback)
             {
                 QByteArray data(bytes);
                 QBuffer buffer(&data);

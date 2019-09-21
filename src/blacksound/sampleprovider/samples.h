@@ -1,24 +1,40 @@
+/* Copyright (C) 2019
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
+ * or distributed except according to the terms contained in the LICENSE file.
+ */
+
+//! \file
+
 #ifndef SAMPLES_H
 #define SAMPLES_H
 
 #include "blacksound/blacksoundexport.h"
 #include "resourcesound.h"
 
-class BLACKSOUND_EXPORT Samples
+namespace BlackSound
 {
-public:
-    static Samples &instance();
+    namespace SampleProvider
+    {
+        class BLACKSOUND_EXPORT Samples
+        {
+        public:
+            static Samples &instance();
 
-    ResourceSound crackle() const;
-    ResourceSound click() const;
-    ResourceSound whiteNoise() const;
+            CResourceSound crackle() const;
+            CResourceSound click() const;
+            CResourceSound whiteNoise() const;
 
-private:
-    Samples();
+        private:
+            Samples();
 
-    ResourceSound m_crackle;
-    ResourceSound m_click;
-    ResourceSound m_whiteNoise;
-};
+            CResourceSound m_crackle;
+            CResourceSound m_click;
+            CResourceSound m_whiteNoise;
+        };
+    }
+}
 
 #endif // SAMPLES_H

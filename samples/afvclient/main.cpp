@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     AFVMapReader *afvMapReader = new AFVMapReader(&a);
     afvMapReader->updateFromMap();
 
-    AFVClient voiceClient("https://voice1.vatsim.uk");
+    CAfvClient voiceClient("https://voice1.vatsim.uk");
 
     QQmlApplicationEngine engine;
     QQmlContext *ctxt = engine.rootContext();

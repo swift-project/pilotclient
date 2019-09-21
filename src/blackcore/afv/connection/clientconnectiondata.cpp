@@ -17,27 +17,27 @@ namespace BlackCore
     {
         namespace Connection
         {
-            qint64 ClientConnectionData::secondsSinceAuthentication() const
+            qint64 CClientConnectionData::secondsSinceAuthentication() const
             {
                 return m_authenticatedDateTimeUtc.secsTo(QDateTime::currentDateTimeUtc());
             }
 
-            bool ClientConnectionData::isVoiceServerAlive() const
+            bool CClientConnectionData::isVoiceServerAlive() const
             {
                 return m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) > serverTimeout;
             }
 
-            void ClientConnectionData::createCryptoChannels()
+            void CClientConnectionData::createCryptoChannels()
             {
                 if (! m_tokens.isValid)
                 {
                     qWarning() << "Tokens not set";
                 }
-                voiceCryptoChannel.reset(new CryptoDtoChannel(m_tokens.VoiceServer.channelConfig));
+                voiceCryptoChannel.reset(new CCryptoDtoChannel(m_tokens.VoiceServer.channelConfig));
                 // dataCryptoChannel.reset(new CryptoDtoChannel(m_tokens.DataServer.channelConfig));
             }
 
-            bool ClientConnectionData::voiceServerAlive() const
+            bool CClientConnectionData::voiceServerAlive() const
             {
                 return timeSinceAuthentication() < serverTimeout ||
                        m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) < serverTimeout;

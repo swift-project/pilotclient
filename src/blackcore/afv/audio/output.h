@@ -32,14 +32,15 @@ namespace BlackCore
                 float PeakVU = 0.0;
             };
 
-            class AudioOutputBuffer : public QIODevice
+            class CAudioOutputBuffer : public QIODevice
             {
                 Q_OBJECT
 
             public:
-                AudioOutputBuffer(ISampleProvider *sampleProvider, QObject *parent = nullptr);
+                //! Ctor
+                CAudioOutputBuffer(BlackSound::SampleProvider::ISampleProvider *sampleProvider, QObject *parent = nullptr);
 
-                ISampleProvider *m_sampleProvider = nullptr;
+                BlackSound::SampleProvider::ISampleProvider *m_sampleProvider = nullptr;
 
                 void setAudioFormat(const QAudioFormat &format) { m_outputFormat = format; }
 
@@ -66,7 +67,7 @@ namespace BlackCore
             public:
                 Output(QObject *parent = nullptr);
 
-                void start(const QAudioDeviceInfo &device, ISampleProvider *sampleProvider);
+                void start(const QAudioDeviceInfo &device, BlackSound::SampleProvider::ISampleProvider *sampleProvider);
                 void stop();
 
             signals:
@@ -76,7 +77,7 @@ namespace BlackCore
                 bool m_started = false;
 
                 QScopedPointer<QAudioOutput> m_audioOutputCom1;
-                AudioOutputBuffer *m_audioOutputBuffer;
+                CAudioOutputBuffer *m_audioOutputBuffer;
             };
         } // ns
     } // ns

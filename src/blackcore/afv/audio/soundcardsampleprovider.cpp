@@ -10,15 +10,17 @@
 
 #include "soundcardsampleprovider.h"
 
+using namespace BlackSound::SampleProvider;
+
 namespace BlackCore
 {
     namespace Afv
     {
         namespace Audio
         {
-            SoundcardSampleProvider::SoundcardSampleProvider(int sampleRate, const QVector<quint16> &transceiverIDs, QObject *parent) :
+            CSoundcardSampleProvider::CSoundcardSampleProvider(int sampleRate, const QVector<quint16> &transceiverIDs, QObject *parent) :
                 ISampleProvider(parent),
-                m_mixer(new MixingSampleProvider())
+                m_mixer(new CMixingSampleProvider())
             {
                 m_waveFormat.setSampleRate(sampleRate);
                 m_waveFormat.setChannelCount(1);
@@ -27,34 +29,34 @@ namespace BlackCore
                 m_waveFormat.setByteOrder(QAudioFormat::LittleEndian);
                 m_waveFormat.setCodec("audio/pcm");
 
-                m_mixer = new MixingSampleProvider(this);
+                m_mixer = new CMixingSampleProvider(this);
 
                 m_receiverIDs = transceiverIDs;
 
                 for (quint16 transceiverID : transceiverIDs)
                 {
-                    ReceiverSampleProvider *transceiverInput = new ReceiverSampleProvider(m_waveFormat, transceiverID, 4, m_mixer);
-                    connect(transceiverInput, &ReceiverSampleProvider::receivingCallsignsChanged, this, &SoundcardSampleProvider::receivingCallsignsChanged);
+                    CReceiverSampleProvider *transceiverInput = new CReceiverSampleProvider(m_waveFormat, transceiverID, 4, m_mixer);
+                    connect(transceiverInput, &CReceiverSampleProvider::receivingCallsignsChanged, this, &CSoundcardSampleProvider::receivingCallsignsChanged);
                     m_receiverInputs.push_back(transceiverInput);
                     m_receiverIDs.push_back(transceiverID);
                     m_mixer->addMixerInput(transceiverInput);
                 }
             }
 
-            QAudioFormat SoundcardSampleProvider::waveFormat() const
+            QAudioFormat CSoundcardSampleProvider::waveFormat() const
             {
                 return m_waveFormat;
             }
 
-            void SoundcardSampleProvider::setBypassEffects(bool value)
+            void CSoundcardSampleProvider::setBypassEffects(bool value)
             {
-                for (ReceiverSampleProvider *receiverInput : m_receiverInputs)
+                for (CReceiverSampleProvider *receiverInput : m_receiverInputs)
                 {
                     receiverInput->setBypassEffects(value);
                 }
             }
 
-            void SoundcardSampleProvider::pttUpdate(bool active, const QVector<TxTransceiverDto> &txTransceivers)
+            void CSoundcardSampleProvider::pttUpdate(bool active, const QVector<TxTransceiverDto> &txTransceivers)
             {
                 if (active)
                 {
@@ -71,7 +73,7 @@ namespace BlackCore
 
                         for (const TxTransceiverDto &txTransceiver : txTransceiversFiltered)
                         {
-                            auto it = std::find_if(m_receiverInputs.begin(), m_receiverInputs.end(), [txTransceiver](const ReceiverSampleProvider * p)
+                            auto it = std::find_if(m_receiverInputs.begin(), m_receiverInputs.end(), [txTransceiver](const CReceiverSampleProvider * p)
                             {
                                 return p->getId() == txTransceiver.id;
                             });
@@ -82,19 +84,19 @@ namespace BlackCore
                 }
                 else
                 {
-                    for (ReceiverSampleProvider *receiverInput : m_receiverInputs)
+                    for (CReceiverSampleProvider *receiverInput : m_receiverInputs)
                     {
                         receiverInput->setMute(false);
                     }
                 }
             }
 
-            int SoundcardSampleProvider::readSamples(QVector<qint16> &samples, qint64 count)
+            int CSoundcardSampleProvider::readSamples(QVector<qint16> &samples, qint64 count)
             {
                 return m_mixer->readSamples(samples, count);
             }
 
-            void SoundcardSampleProvider::addOpusSamples(const IAudioDto &audioDto, const QVector<RxTransceiverDto> &rxTransceivers)
+            void CSoundcardSampleProvider::addOpusSamples(const IAudioDto &audioDto, const QVector<RxTransceiverDto> &rxTransceivers)
             {
                 QVector<RxTransceiverDto> rxTransceiversFilteredAndSorted = rxTransceivers;
 
@@ -120,8 +122,8 @@ namespace BlackCore
                         {
                             handledTransceiverIDs.push_back(rxTransceiver.id);
 
-                            ReceiverSampleProvider *receiverInput = nullptr;
-                            auto it = std::find_if(m_receiverInputs.begin(), m_receiverInputs.end(), [rxTransceiver](const ReceiverSampleProvider * p)
+                            CReceiverSampleProvider *receiverInput = nullptr;
+                            auto it = std::find_if(m_receiverInputs.begin(), m_receiverInputs.end(), [rxTransceiver](const CReceiverSampleProvider * p)
                             {
                                 return p->getId() == rxTransceiver.id;
                             });
@@ -147,11 +149,11 @@ namespace BlackCore
                 }
             }
 
-            void SoundcardSampleProvider::updateRadioTransceivers(const QVector<TransceiverDto> &radioTransceivers)
+            void CSoundcardSampleProvider::updateRadioTransceivers(const QVector<TransceiverDto> &radioTransceivers)
             {
                 for (const TransceiverDto &radioTransceiver : radioTransceivers)
                 {
-                    auto it = std::find_if(m_receiverInputs.begin(), m_receiverInputs.end(), [radioTransceiver](const ReceiverSampleProvider * p)
+                    auto it = std::find_if(m_receiverInputs.begin(), m_receiverInputs.end(), [radioTransceiver](const CReceiverSampleProvider * p)
                     {
                         return p->getId() == radioTransceiver.id;
                     });
@@ -162,7 +164,7 @@ namespace BlackCore
                     }
                 }
 
-                for (ReceiverSampleProvider *receiverInput : m_receiverInputs)
+                for (CReceiverSampleProvider *receiverInput : m_receiverInputs)
                 {
                     quint16 transceiverID = receiverInput->getId();
                     bool contains = std::any_of(radioTransceivers.begin(), radioTransceivers.end(), [&](const auto & tx) { return transceiverID == tx.id; });
@@ -173,7 +175,7 @@ namespace BlackCore
                 }
             }
 
-            QString SoundcardSampleProvider::getReceivingCallsigns(quint16 transceiverID)
+            QString CSoundcardSampleProvider::getReceivingCallsigns(quint16 transceiverID)
             {
                 return m_receiverInputs.at(transceiverID)->getReceivingCallsigns();
             }

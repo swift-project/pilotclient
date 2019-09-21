@@ -8,8 +8,8 @@
 
 //! \file
 
-#ifndef BLACKSOUND_OPUSDECODER_H
-#define BLACKSOUND_OPUSDECODER_H
+#ifndef BLACKSOUND_CODECS_OPUSDECODER_H
+#define BLACKSOUND_CODECS_OPUSDECODER_H
 
 #include "blacksound/blacksoundexport.h"
 #include "opus/opus.h"

@@ -14,6 +14,7 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackCore::Context;
 using namespace BlackCore::Afv::Audio;
 using namespace BlackCore::Afv::Connection;
+using namespace BlackSound::SampleProvider;
 
 namespace BlackCore
 {
@@ -21,22 +22,22 @@ namespace BlackCore
     {
         namespace Clients
         {
-            AFVClient::AFVClient(const QString &apiServer, QObject *parent) :
+            CAfvClient::CAfvClient(const QString &apiServer, QObject *parent) :
                 QObject(parent)
             {
-                m_connection = new ClientConnection(apiServer, this);
+                m_connection = new CClientConnection(apiServer, this);
                 m_connection->setReceiveAudio(false);
 
-                m_input = new Input(c_sampleRate, this);
-                connect(m_input, &Input::opusDataAvailable, this, &AFVClient::opusDataAvailable);
-                connect(m_input, &Input::inputVolumeStream, this, &AFVClient::inputVolumeStream);
+                m_input = new CInput(c_sampleRate, this);
+                connect(m_input, &CInput::opusDataAvailable, this, &CAfvClient::opusDataAvailable);
+                connect(m_input, &CInput::inputVolumeStream, this, &CAfvClient::inputVolumeStream);
 
                 m_output = new Output(this);
-                connect(m_output, &Output::outputVolumeStream, this, &AFVClient::outputVolumeStream);
+                connect(m_output, &Output::outputVolumeStream, this, &CAfvClient::outputVolumeStream);
 
-                connect(m_connection, &ClientConnection::audioReceived, this, &AFVClient::audioOutDataAvailable);
+                connect(m_connection, &CClientConnection::audioReceived, this, &CAfvClient::audioOutDataAvailable);
 
-                connect(&m_voiceServerPositionTimer, &QTimer::timeout, this, qOverload<>(&AFVClient::updateTransceivers));
+                connect(&m_voiceServerPositionTimer, &QTimer::timeout, this, qOverload<>(&CAfvClient::updateTransceivers));
 
                 m_transceivers =
                 {
@@ -58,16 +59,16 @@ namespace BlackCore
                 qDebug() << "UserClient instantiated";
             }
 
-            void AFVClient::setContextOwnAircraft(const IContextOwnAircraft *contextOwnAircraft)
+            void CAfvClient::setContextOwnAircraft(const IContextOwnAircraft *contextOwnAircraft)
             {
                 m_contextOwnAircraft = contextOwnAircraft;
                 if (m_contextOwnAircraft)
                 {
-                    connect(m_contextOwnAircraft, &IContextOwnAircraft::changedAircraftCockpit, this, &AFVClient::updateTransceiversFromContext);
+                    connect(m_contextOwnAircraft, &IContextOwnAircraft::changedAircraftCockpit, this, &CAfvClient::updateTransceiversFromContext);
                 }
             }
 
-            void AFVClient::connectTo(const QString &cid, const QString &password, const QString &callsign)
+            void CAfvClient::connectTo(const QString &cid, const QString &password, const QString &callsign)
             {
                 m_callsign = callsign;
                 m_connection->connectTo(cid, password, callsign);
@@ -79,13 +80,13 @@ namespace BlackCore
                 m_connection->getAllAliasedStations();
             }
 
-            void AFVClient::disconnectFrom()
+            void CAfvClient::disconnectFrom()
             {
                 m_connection->disconnectFrom();
                 emit connectionStatusChanged(Disconnected);
             }
 
-            QStringList AFVClient::availableInputDevices() const
+            QStringList CAfvClient::availableInputDevices() const
             {
                 const QList<QAudioDeviceInfo> inputDevices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
 
@@ -97,7 +98,7 @@ namespace BlackCore
                 return deviceNames;
             }
 
-            QStringList AFVClient::availableOutputDevices() const
+            QStringList CAfvClient::availableOutputDevices() const
             {
                 const QList<QAudioDeviceInfo> outputDevices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
 
@@ -109,7 +110,7 @@ namespace BlackCore
                 return deviceNames;
             }
 
-            void AFVClient::setBypassEffects(bool value)
+            void CAfvClient::setBypassEffects(bool value)
             {
                 if (soundcardSampleProvider)
                 {
@@ -117,7 +118,7 @@ namespace BlackCore
                 }
             }
 
-            void AFVClient::start(const QAudioDeviceInfo &inputDevice, const QAudioDeviceInfo &outputDevice, const QVector<quint16> &transceiverIDs)
+            void CAfvClient::start(const QAudioDeviceInfo &inputDevice, const QAudioDeviceInfo &outputDevice, const QVector<quint16> &transceiverIDs)
             {
                 if (m_isStarted)
                 {
@@ -125,9 +126,9 @@ namespace BlackCore
                     return;
                 }
 
-                soundcardSampleProvider = new SoundcardSampleProvider(c_sampleRate, transceiverIDs, this);
-                connect(soundcardSampleProvider, &SoundcardSampleProvider::receivingCallsignsChanged, this, &AFVClient::receivingCallsignsChanged);
-                outputSampleProvider = new VolumeSampleProvider(soundcardSampleProvider, this);
+                soundcardSampleProvider = new CSoundcardSampleProvider(c_sampleRate, transceiverIDs, this);
+                connect(soundcardSampleProvider, &CSoundcardSampleProvider::receivingCallsignsChanged, this, &CAfvClient::receivingCallsignsChanged);
+                outputSampleProvider = new CVolumeSampleProvider(soundcardSampleProvider, this);
                 outputSampleProvider->setVolume(m_outputVolume);
 
                 m_output->start(outputDevice, outputSampleProvider);
@@ -140,13 +141,13 @@ namespace BlackCore
                 qDebug() << ("Started [Input: " + inputDevice.deviceName() + "] [Output: " + outputDevice.deviceName() + "]");
             }
 
-            void AFVClient::start(const QString &inputDeviceName, const QString &outputDeviceName)
+            void CAfvClient::start(const QString &inputDeviceName, const QString &outputDeviceName)
             {
                 if (m_isStarted) { return; }
 
-                soundcardSampleProvider = new SoundcardSampleProvider(c_sampleRate, { 0, 1 }, this);
-                connect(soundcardSampleProvider, &SoundcardSampleProvider::receivingCallsignsChanged, this, &AFVClient::receivingCallsignsChanged);
-                outputSampleProvider = new VolumeSampleProvider(soundcardSampleProvider, this);
+                soundcardSampleProvider = new CSoundcardSampleProvider(c_sampleRate, { 0, 1 }, this);
+                connect(soundcardSampleProvider, &CSoundcardSampleProvider::receivingCallsignsChanged, this, &CAfvClient::receivingCallsignsChanged);
+                outputSampleProvider = new CVolumeSampleProvider(soundcardSampleProvider, this);
                 outputSampleProvider->setVolume(m_outputVolume);
 
                 QAudioDeviceInfo inputDevice = QAudioDeviceInfo::defaultInputDevice();
@@ -178,7 +179,7 @@ namespace BlackCore
                 m_isStarted = true;
             }
 
-            void AFVClient::stop()
+            void CAfvClient::stop()
             {
                 if (! m_isStarted)
                 {
@@ -196,7 +197,7 @@ namespace BlackCore
                 m_output->stop();
             }
 
-            void AFVClient::enableTransceiver(quint16 id, bool enable)
+            void CAfvClient::enableTransceiver(quint16 id, bool enable)
             {
                 if (enable) { m_enabledTransceivers.insert(id); }
                 else { m_enabledTransceivers.remove(id); }
@@ -204,7 +205,7 @@ namespace BlackCore
                 updateTransceivers();
             }
 
-            void AFVClient::updateComFrequency(quint16 id, quint32 frequency)
+            void CAfvClient::updateComFrequency(quint16 id, quint32 frequency)
             {
                 if (id != 0 && id != 1) { return; }
 
@@ -221,7 +222,7 @@ namespace BlackCore
                 }
             }
 
-            void AFVClient::updatePosition(double latitude, double longitude, double height)
+            void CAfvClient::updatePosition(double latitude, double longitude, double height)
             {
                 for (TransceiverDto &transceiver : m_transceivers)
                 {
@@ -232,7 +233,7 @@ namespace BlackCore
                 }
             }
 
-            void AFVClient::updateTransceivers()
+            void CAfvClient::updateTransceivers()
             {
                 if (! m_connection->isConnected()) { return; }
 
@@ -262,18 +263,18 @@ namespace BlackCore
                 }
             }
 
-            void AFVClient::setTransmittingTransceivers(quint16 transceiverID)
+            void CAfvClient::setTransmittingTransceivers(quint16 transceiverID)
             {
                 TxTransceiverDto tx = { transceiverID };
                 setTransmittingTransceivers({ tx });
             }
 
-            void AFVClient::setTransmittingTransceivers(const QVector<TxTransceiverDto> &transceivers)
+            void CAfvClient::setTransmittingTransceivers(const QVector<TxTransceiverDto> &transceivers)
             {
                 m_transmittingTransceivers = transceivers;
             }
 
-            void AFVClient::setPtt(bool active)
+            void CAfvClient::setPtt(bool active)
             {
                 if (! m_isStarted)
                 {
@@ -303,7 +304,7 @@ namespace BlackCore
                 qDebug() << "PTT:" << active;
             }
 
-            void AFVClient::setInputVolumeDb(double value)
+            void CAfvClient::setInputVolumeDb(double value)
             {
                 if (value > 18) { value = 18; }
                 if (value < -18) { value = -18; }
@@ -311,7 +312,7 @@ namespace BlackCore
                 m_input->setVolume(qPow(10, value / 20));
             }
 
-            void AFVClient::opusDataAvailable(const OpusDataAvailableArgs &args)
+            void CAfvClient::opusDataAvailable(const OpusDataAvailableArgs &args)
             {
                 if (m_loopbackOn && m_transmit)
                 {
@@ -360,7 +361,7 @@ namespace BlackCore
                 }
             }
 
-            void AFVClient::audioOutDataAvailable(const AudioRxOnTransceiversDto &dto)
+            void CAfvClient::audioOutDataAvailable(const AudioRxOnTransceiversDto &dto)
             {
                 IAudioDto audioData;
                 audioData.audio = QByteArray(dto.audio.data(), static_cast<int>(dto.audio.size()));
@@ -370,19 +371,19 @@ namespace BlackCore
                 soundcardSampleProvider->addOpusSamples(audioData, QVector<RxTransceiverDto>::fromStdVector(dto.transceivers));
             }
 
-            void AFVClient::inputVolumeStream(const InputVolumeStreamArgs &args)
+            void CAfvClient::inputVolumeStream(const InputVolumeStreamArgs &args)
             {
                 m_inputVolumeStream = args;
                 emit inputVolumePeakVU(m_inputVolumeStream.PeakVU);
             }
 
-            void AFVClient::outputVolumeStream(const OutputVolumeStreamArgs &args)
+            void CAfvClient::outputVolumeStream(const OutputVolumeStreamArgs &args)
             {
                 m_outputVolumeStream = args;
                 emit outputVolumePeakVU(m_outputVolumeStream.PeakVU);
             }
 
-            QString AFVClient::getReceivingCallsignsCom1()
+            QString CAfvClient::getReceivingCallsignsCom1()
             {
                 if (soundcardSampleProvider)
                 {
@@ -391,7 +392,7 @@ namespace BlackCore
                 return {};
             }
 
-            QString AFVClient::getReceivingCallsignsCom2()
+            QString CAfvClient::getReceivingCallsignsCom2()
             {
                 if (soundcardSampleProvider)
                 {
@@ -400,7 +401,7 @@ namespace BlackCore
                 return {};
             }
 
-            void AFVClient::updateTransceiversFromContext(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator)
+            void CAfvClient::updateTransceiversFromContext(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator)
             {
                 Q_UNUSED(originator);
                 updatePosition(aircraft.latitude().value(CAngleUnit::deg()),
@@ -411,12 +412,12 @@ namespace BlackCore
                 updateTransceivers();
             }
 
-            double AFVClient::getOutputVolumeDb() const
+            double CAfvClient::getOutputVolumeDb() const
             {
                 return m_outputVolume;
             }
 
-            void AFVClient::setOutputVolumeDb(double outputVolume)
+            void CAfvClient::setOutputVolumeDb(double outputVolume)
             {
                 if (outputVolume > 18) { m_outputVolume = 18; }
                 if (outputVolume < -60) { m_outputVolume = -60; }
@@ -427,7 +428,7 @@ namespace BlackCore
                 }
             }
 
-            AFVClient::ConnectionStatus AFVClient::getConnectionStatus() const
+            CAfvClient::ConnectionStatus CAfvClient::getConnectionStatus() const
             {
                 return m_connection->isConnected() ? Connected : Disconnected;
             }

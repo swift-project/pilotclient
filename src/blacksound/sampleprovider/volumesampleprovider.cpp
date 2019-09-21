@@ -9,32 +9,29 @@
 //! \file
 
 #include "volumesampleprovider.h"
+#include "volumesampleprovider.h"
 
-VolumeSampleProvider::VolumeSampleProvider(ISampleProvider *sourceProvider, QObject *parent) :
-    ISampleProvider(parent),
-    m_sourceProvider(sourceProvider)
-{ }
-
-int VolumeSampleProvider::readSamples(QVector<qint16> &samples, qint64 count)
+namespace BlackSound
 {
-    int samplesRead = m_sourceProvider->readSamples(samples, count);
-
-    if (! qFuzzyCompare(m_volume, 1.0))
+    namespace SampleProvider
     {
-        for (int n = 0; n < samplesRead; n++)
+        CVolumeSampleProvider::CVolumeSampleProvider(ISampleProvider *sourceProvider, QObject *parent) :
+            ISampleProvider(parent),
+            m_sourceProvider(sourceProvider)
+        { }
+
+        int CVolumeSampleProvider::readSamples(QVector<qint16> &samples, qint64 count)
         {
-            samples[n] *= m_volume;
+            int samplesRead = m_sourceProvider->readSamples(samples, count);
+
+            if (! qFuzzyCompare(m_volume, 1.0))
+            {
+                for (int n = 0; n < samplesRead; n++)
+                {
+                    samples[n] *= m_volume;
+                }
+            }
+            return samplesRead;
         }
     }
-    return samplesRead;
-}
-
-double VolumeSampleProvider::volume() const
-{
-    return m_volume;
-}
-
-void VolumeSampleProvider::setVolume(double volume)
-{
-    m_volume = volume;
 }

@@ -26,14 +26,14 @@ namespace BlackCore
         namespace Crypto
         {
             //! Crypto channel
-            class CryptoDtoChannel
+            class CCryptoDtoChannel
             {
             public:
                 //! Ctor
-                CryptoDtoChannel(QString channelTag, const QByteArray &aeadReceiveKey, const QByteArray &aeadTransmitKey, int receiveSequenceHistorySize = 10);
+                CCryptoDtoChannel(QString channelTag, const QByteArray &aeadReceiveKey, const QByteArray &aeadTransmitKey, int receiveSequenceHistorySize = 10);
 
                 //! Ctor
-                CryptoDtoChannel(CryptoDtoChannelConfigDto channelConfig, int receiveSequenceHistorySize = 10);
+                CCryptoDtoChannel(CryptoDtoChannelConfigDto channelConfig, int receiveSequenceHistorySize = 10);
 
                 QByteArray getTransmitKey(CryptoDtoMode mode);
                 QByteArray getTransmitKey(CryptoDtoMode mode, uint &sequenceToSend);

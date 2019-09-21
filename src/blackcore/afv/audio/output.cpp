@@ -13,22 +13,24 @@
 #include <QDebug>
 #include <cmath>
 
+using namespace BlackSound::SampleProvider;
+
 namespace BlackCore
 {
     namespace Afv
     {
         namespace Audio
         {
-            AudioOutputBuffer::AudioOutputBuffer(ISampleProvider *sampleProvider, QObject *parent) :
+            CAudioOutputBuffer::CAudioOutputBuffer(ISampleProvider *sampleProvider, QObject *parent) :
                 QIODevice(parent),
                 m_sampleProvider(sampleProvider)
             { }
 
-            qint64 AudioOutputBuffer::readData(char *data, qint64 maxlen)
+            qint64 CAudioOutputBuffer::readData(char *data, qint64 maxlen)
             {
-                int sampleBytes = m_outputFormat.sampleSize() / 8;
+                int sampleBytes  = m_outputFormat.sampleSize() / 8;
                 int channelCount = m_outputFormat.channelCount();
-                int count = maxlen / (sampleBytes * channelCount);
+                qint64 count = maxlen / (sampleBytes * channelCount);
                 QVector<qint16> buffer;
                 m_sampleProvider->readSamples(buffer, count);
 
@@ -63,10 +65,10 @@ namespace BlackCore
                 return maxlen;
             }
 
-            qint64 AudioOutputBuffer::writeData(const char *data, qint64 len)
+            qint64 CAudioOutputBuffer::writeData(const char *data, qint64 len)
             {
-                Q_UNUSED(data);
-                Q_UNUSED(len);
+                Q_UNUSED(data)
+                Q_UNUSED(len)
                 return -1;
             }
 
@@ -75,8 +77,8 @@ namespace BlackCore
 
             void Output::start(const QAudioDeviceInfo &device, ISampleProvider *sampleProvider)
             {
-                m_audioOutputBuffer = new AudioOutputBuffer(sampleProvider, this);
-                connect(m_audioOutputBuffer, &AudioOutputBuffer::outputVolumeStream, this, &Output::outputVolumeStream);
+                m_audioOutputBuffer = new CAudioOutputBuffer(sampleProvider, this);
+                connect(m_audioOutputBuffer, &CAudioOutputBuffer::outputVolumeStream, this, &Output::outputVolumeStream);
 
                 QAudioFormat outputFormat;
                 outputFormat.setSampleRate(48000);

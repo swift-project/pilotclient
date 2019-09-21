@@ -8,29 +8,35 @@
 
 //! \file
 
-#ifndef VOLUMESAMPLEPROVIDER_H
-#define VOLUMESAMPLEPROVIDER_H
+#ifndef BLACKSOUND_SAMPLEPROVIDER_VOLUMESAMPLEPROVIDER_H
+#define BLACKSOUND_SAMPLEPROVIDER_VOLUMESAMPLEPROVIDER_H
 
 #include "blacksound/blacksoundexport.h"
 #include "blacksound/sampleprovider/sampleprovider.h"
 
-//! Pink noise generator
-class BLACKSOUND_EXPORT VolumeSampleProvider : public ISampleProvider
+namespace BlackSound
 {
-    Q_OBJECT
+    namespace SampleProvider
+    {
+        //! Pink noise generator
+        class BLACKSOUND_EXPORT CVolumeSampleProvider : public ISampleProvider
+        {
+            Q_OBJECT
 
-public:
-    //! Noise generator
-    VolumeSampleProvider(ISampleProvider *sourceProvider, QObject *parent = nullptr);
+        public:
+            //! Noise generator
+            CVolumeSampleProvider(ISampleProvider *sourceProvider, QObject *parent = nullptr);
 
-    virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
+            virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
 
-    double volume() const;
-    void setVolume(double volume);
+            double volume() const { return m_volume; }
+            void setVolume(double volume) { m_volume = volume; }
 
-private:
-    ISampleProvider *m_sourceProvider;
-    double m_volume = 1.0;
-};
+        private:
+            ISampleProvider *m_sourceProvider = nullptr;
+            double m_volume = 1.0;
+        };
+    }
+}
 
 #endif // guard

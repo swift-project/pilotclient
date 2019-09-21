@@ -31,12 +31,13 @@ namespace BlackCore
             };
 
             //! A sample provider
-            class ReceiverSampleProvider : public ISampleProvider
+            class CReceiverSampleProvider : public BlackSound::SampleProvider::ISampleProvider
             {
                 Q_OBJECT
 
             public:
-                ReceiverSampleProvider(const QAudioFormat &audioFormat, quint16 id, int voiceInputNumber, QObject *parent = nullptr);
+                //! Ctor
+                CReceiverSampleProvider(const QAudioFormat &audioFormat, quint16 id, int voiceInputNumber, QObject *parent = nullptr);
 
                 void setBypassEffects(bool value);
                 void setFrequency(const uint &frequency);
@@ -67,7 +68,7 @@ namespace BlackCore
                 quint16 m_id;
 
                 // TODO VolumeSampleProvider volume;
-                MixingSampleProvider *m_mixer;
+                BlackSound::SampleProvider::CMixingSampleProvider *m_mixer = nullptr;
                 // TODO SignalGenerator blockTone;
                 QVector<CallsignSampleProvider *> m_voiceInputs;
                 QString m_receivingCallsigns;

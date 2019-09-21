@@ -8,8 +8,8 @@
 
 //! \file
 
-#ifndef CALLSIGNSAMPLEPROVIDER_H
-#define CALLSIGNSAMPLEPROVIDER_H
+#ifndef BLACKCORE_AFV_AUDIO_CALLSIGNSAMPLEPROVIDER_H
+#define BLACKCORE_AFV_AUDIO_CALLSIGNSAMPLEPROVIDER_H
 
 #include "blackcore/afv/dto.h"
 #include "blacksound/sampleprovider/pinknoisegenerator.h"
@@ -34,19 +34,20 @@ namespace BlackCore
         namespace Audio
         {
             //! Callsign provide
-            class CallsignSampleProvider : public ISampleProvider
+            class CallsignSampleProvider : public BlackSound::SampleProvider::ISampleProvider
             {
                 Q_OBJECT
 
             public:
+                //! Ctor
                 CallsignSampleProvider(const QAudioFormat &audioFormat, QObject *parent = nullptr);
 
                 int readSamples(QVector<qint16> &samples, qint64 count) override;
 
                 //! The callsign
-                const QString callsign() const { return m_callsign; }
+                const QString &callsign() const { return m_callsign; }
 
-                QString type() const;
+                const QString &type() const { return m_type; }
 
                 void active(const QString &callsign, const QString &aircraftType);
                 void activeSilent(const QString &callsign, const QString &aircraftType);
@@ -69,8 +70,8 @@ namespace BlackCore
                 QAudioFormat m_audioFormat;
 
                 const double whiteNoiseGainMin = 0.15;  //0.01;
-                const double acBusGainMin = 0.003;    //0.002;
-                const int frameCount = 960;
+                const double acBusGainMin      = 0.003; //0.002;
+                const int frameCount    = 960;
                 const int idleTimeoutMs = 500;
 
                 QString m_callsign;
@@ -81,13 +82,13 @@ namespace BlackCore
 
                 float m_distanceRatio = 1.0;
 
-                MixingSampleProvider *mixer;
-                ResourceSoundSampleProvider *crackleSoundProvider;
-                ResourceSoundSampleProvider *whiteNoise;
-                SawToothGenerator *acBusNoise;
-                SimpleCompressorEffect *simpleCompressorEffect;
-                EqualizerSampleProvider *voiceEq;
-                BufferedWaveProvider *audioInput;
+                BlackSound::SampleProvider::CMixingSampleProvider        *mixer = nullptr;
+                BlackSound::SampleProvider::CResourceSoundSampleProvider *crackleSoundProvider = nullptr;
+                BlackSound::SampleProvider::CResourceSoundSampleProvider *whiteNoise = nullptr;
+                BlackSound::SampleProvider::CSawToothGenerator           *acBusNoise = nullptr;
+                BlackSound::SampleProvider::CSimpleCompressorEffect      *simpleCompressorEffect = nullptr;
+                BlackSound::SampleProvider::CEqualizerSampleProvider     *voiceEq  = nullptr;
+                BlackSound::SampleProvider::CBufferedWaveProvider        *audioInput = nullptr;
                 QTimer m_timer;
 
                 BlackSound::Codecs::COpusDecoder m_decoder;

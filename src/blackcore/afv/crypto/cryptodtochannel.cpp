@@ -14,7 +14,7 @@ namespace BlackCore
     {
         namespace Crypto
         {
-            CryptoDtoChannel::CryptoDtoChannel(QString channelTag, const QByteArray &aeadReceiveKey, const QByteArray &aeadTransmitKey, int receiveSequenceHistorySize)
+            CCryptoDtoChannel::CCryptoDtoChannel(QString channelTag, const QByteArray &aeadReceiveKey, const QByteArray &aeadTransmitKey, int receiveSequenceHistorySize)
             {
                 ChannelTag = channelTag;
                 m_aeadReceiveKey = aeadReceiveKey;
@@ -27,7 +27,7 @@ namespace BlackCore
                 receiveSequenceHistoryDepth = 0;
             }
 
-            CryptoDtoChannel::CryptoDtoChannel(CryptoDtoChannelConfigDto channelConfig, int receiveSequenceHistorySize)
+            CCryptoDtoChannel::CCryptoDtoChannel(CryptoDtoChannelConfigDto channelConfig, int receiveSequenceHistorySize)
             {
                 ChannelTag = channelConfig.channelTag;
                 m_aeadReceiveKey = channelConfig.aeadReceiveKey;
@@ -41,7 +41,7 @@ namespace BlackCore
                 receiveSequenceHistoryDepth = 0;
             }
 
-            QByteArray CryptoDtoChannel::getTransmitKey(CryptoDtoMode mode)
+            QByteArray CCryptoDtoChannel::getTransmitKey(CryptoDtoMode mode)
             {
                 switch (mode)
                 {
@@ -54,7 +54,7 @@ namespace BlackCore
                 return {};
             }
 
-            QByteArray CryptoDtoChannel::getTransmitKey(CryptoDtoMode mode, uint &sequenceToSend)
+            QByteArray CCryptoDtoChannel::getTransmitKey(CryptoDtoMode mode, uint &sequenceToSend)
             {
                 sequenceToSend = transmitSequence;
                 transmitSequence++;
@@ -71,12 +71,12 @@ namespace BlackCore
                 return {};
             }
 
-            QString CryptoDtoChannel::getChannelTag() const
+            QString CCryptoDtoChannel::getChannelTag() const
             {
                 return ChannelTag;
             }
 
-            QByteArray CryptoDtoChannel::getReceiveKey(CryptoDtoMode mode)
+            QByteArray CCryptoDtoChannel::getReceiveKey(CryptoDtoMode mode)
             {
                 switch (mode)
                 {
@@ -89,7 +89,7 @@ namespace BlackCore
                 return {};
             }
 
-            bool CryptoDtoChannel::checkReceivedSequence(uint sequenceReceived)
+            bool CCryptoDtoChannel::checkReceivedSequence(uint sequenceReceived)
             {
                 if (contains(sequenceReceived))
                 {
@@ -113,7 +113,7 @@ namespace BlackCore
                 return true;
             }
 
-            bool CryptoDtoChannel::contains(uint sequence)
+            bool CCryptoDtoChannel::contains(uint sequence)
             {
                 for (int i = 0; i < receiveSequenceHistoryDepth; i++)
                 {
@@ -123,7 +123,7 @@ namespace BlackCore
                 return false;
             }
 
-            uint CryptoDtoChannel::getMin(int &minIndex)
+            uint CCryptoDtoChannel::getMin(int &minIndex)
             {
                 uint minValue = std::numeric_limits<uint>::max();
                 minIndex = -1;

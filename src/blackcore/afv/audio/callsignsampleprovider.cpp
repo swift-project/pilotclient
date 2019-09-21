@@ -14,6 +14,8 @@
 #include <QtMath>
 #include <QDebug>
 
+using namespace BlackSound::SampleProvider;
+
 namespace BlackCore
 {
     namespace Afv
@@ -27,22 +29,22 @@ namespace BlackCore
             {
                 Q_ASSERT(audioFormat.channelCount() == 1);
 
-                mixer = new MixingSampleProvider(this);
-                crackleSoundProvider = new ResourceSoundSampleProvider(Samples::instance().crackle(), mixer);
+                mixer = new CMixingSampleProvider(this);
+                crackleSoundProvider = new CResourceSoundSampleProvider(Samples::instance().crackle(), mixer);
                 crackleSoundProvider->setLooping(true);
                 crackleSoundProvider->setGain(0.0);
-                whiteNoise = new ResourceSoundSampleProvider(Samples::instance().whiteNoise(), mixer);
+                whiteNoise = new CResourceSoundSampleProvider(Samples::instance().whiteNoise(), mixer);
                 whiteNoise->setLooping(true);
                 whiteNoise->setGain(0.0);
-                acBusNoise = new SawToothGenerator(400, mixer);
-                audioInput = new BufferedWaveProvider(audioFormat, mixer);
+                acBusNoise = new CSawToothGenerator(400, mixer);
+                audioInput = new CBufferedWaveProvider(audioFormat, mixer);
 
                 // Create the compressor
-                simpleCompressorEffect = new SimpleCompressorEffect(audioInput, mixer);
+                simpleCompressorEffect = new CSimpleCompressorEffect(audioInput, mixer);
                 simpleCompressorEffect->setMakeUpGain(-5.5);
 
                 // Create the voice EQ
-                voiceEq = new EqualizerSampleProvider(simpleCompressorEffect, EqualizerPresets::VHFEmulation, mixer);
+                voiceEq = new CEqualizerSampleProvider(simpleCompressorEffect, EqualizerPresets::VHFEmulation, mixer);
 
                 mixer->addMixerInput(whiteNoise);
                 mixer->addMixerInput(acBusNoise);
@@ -80,10 +82,7 @@ namespace BlackCore
                 }
             }
 
-            QString CallsignSampleProvider::type() const
-            {
-                return m_type;
-            }
+
 
             void CallsignSampleProvider::active(const QString &callsign, const QString &aircraftType)
             {

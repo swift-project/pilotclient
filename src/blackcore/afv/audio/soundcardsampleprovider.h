@@ -25,13 +25,13 @@ namespace BlackCore
         namespace Audio
         {
             //! Soundcard sample
-            class SoundcardSampleProvider : public ISampleProvider
+            class CSoundcardSampleProvider : public BlackSound::SampleProvider::ISampleProvider
             {
                 Q_OBJECT
 
             public:
                 //! Ctor
-                SoundcardSampleProvider(int sampleRate, const QVector<quint16> &transceiverIDs, QObject *parent = nullptr);
+                CSoundcardSampleProvider(int sampleRate, const QVector<quint16> &transceiverIDs, QObject *parent = nullptr);
 
                 QAudioFormat waveFormat() const;
 
@@ -47,8 +47,8 @@ namespace BlackCore
 
             private:
                 QAudioFormat m_waveFormat;
-                MixingSampleProvider *m_mixer;
-                QVector<ReceiverSampleProvider *> m_receiverInputs;
+                BlackSound::SampleProvider::CMixingSampleProvider *m_mixer = nullptr;
+                QVector<CReceiverSampleProvider *> m_receiverInputs;
                 QVector<quint16> m_receiverIDs;
             };
 

@@ -27,9 +27,9 @@ namespace BlackCore
         namespace Connection
         {
             //! Client connection data
-            struct ClientConnectionData
+            struct CClientConnectionData
             {
-                ClientConnectionData() = default;
+                CClientConnectionData() = default;
 
                 qint64 secondsSinceAuthentication() const;
 
@@ -53,7 +53,7 @@ namespace BlackCore
 
                 PostCallsignResponseDto m_tokens;
 
-                QScopedPointer<Crypto::CryptoDtoChannel> voiceCryptoChannel;
+                QScopedPointer<Crypto::CCryptoDtoChannel> voiceCryptoChannel;
 
                 QDateTime m_authenticatedDateTimeUtc;
                 QDateTime m_lastVoiceServerHeartbeatAckUtc;

@@ -28,7 +28,7 @@ namespace BlackCore
         namespace Connection
         {
             //! Client connection
-            class ClientConnection : public QObject
+            class CClientConnection : public QObject
             {
                 Q_OBJECT
 
@@ -41,7 +41,7 @@ namespace BlackCore
                 };
                 Q_ENUM(ConnectionStatus)
 
-                ClientConnection(const QString &apiServer, QObject *parent = nullptr);
+                CClientConnection(const QString &apiServer, QObject *parent = nullptr);
 
                 void connectTo(const QString &userName, const QString &password, const QString &callsign);
                 void disconnectFrom(const QString &reason = {});
@@ -82,7 +82,7 @@ namespace BlackCore
                 const QUuid m_networkVersion = QUuid("3a5ddc6d-cf5d-4319-bd0e-d184f772db80");
 
                 //Data
-                ClientConnectionData m_connection;
+                CClientConnectionData m_connection;
 
                 // Voice server
                 QUdpSocket m_udpSocket;

@@ -36,7 +36,7 @@ namespace BlackCore
         namespace Clients
         {
             //! AFV client
-            class BLACKCORE_EXPORT AFVClient final : public QObject
+            class BLACKCORE_EXPORT CAfvClient final : public QObject
             {
                 Q_OBJECT
                 Q_PROPERTY(float inputVolumePeakVU READ getInputVolumePeakVU NOTIFY inputVolumePeakVU)
@@ -50,10 +50,10 @@ namespace BlackCore
                 Q_ENUM(ConnectionStatus)
 
                 //! Ctor
-                AFVClient(const QString &apiServer, QObject *parent = nullptr);
+                CAfvClient(const QString &apiServer, QObject *parent = nullptr);
 
                 //! Dtor
-                virtual ~AFVClient()
+                virtual ~CAfvClient() override
                 {
                     stop();
                 }
@@ -125,19 +125,19 @@ namespace BlackCore
                 void updateTransceiversFromContext(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
                 static constexpr int c_sampleRate = 48000;
-                static constexpr int frameSize = 960; //20ms
+                static constexpr int frameSize = 960; // 20ms
 
                 // Connection
-                Connection::ClientConnection *m_connection = nullptr;
+                Connection::CClientConnection *m_connection = nullptr;
 
                 // Properties
                 QString m_callsign;
 
-                Audio::Input  *m_input = nullptr;
+                Audio::CInput  *m_input = nullptr;
                 Audio::Output *m_output = nullptr;
 
-                Audio::SoundcardSampleProvider *soundcardSampleProvider = nullptr;
-                VolumeSampleProvider *outputSampleProvider = nullptr;
+                Audio::CSoundcardSampleProvider *soundcardSampleProvider = nullptr;
+                BlackSound::SampleProvider::CVolumeSampleProvider *outputSampleProvider = nullptr;
 
                 bool m_transmit = false;
                 bool m_transmitHistory = false;
