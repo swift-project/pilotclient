@@ -39,8 +39,8 @@ namespace BlackCore
             class BLACKCORE_EXPORT CAfvClient final : public QObject
             {
                 Q_OBJECT
-                Q_PROPERTY(float inputVolumePeakVU READ getInputVolumePeakVU NOTIFY inputVolumePeakVU)
-                Q_PROPERTY(float outputVolumePeakVU READ getOutputVolumePeakVU NOTIFY outputVolumePeakVU)
+                Q_PROPERTY(double inputVolumePeakVU READ getInputVolumePeakVU NOTIFY inputVolumePeakVU)
+                Q_PROPERTY(double outputVolumePeakVU READ getOutputVolumePeakVU NOTIFY outputVolumePeakVU)
                 Q_PROPERTY(ConnectionStatus connectionStatus READ getConnectionStatus NOTIFY connectionStatusChanged)
                 Q_PROPERTY(QString receivingCallsignsCom1 READ getReceivingCallsignsCom1 NOTIFY receivingCallsignsChanged)
                 Q_PROPERTY(QString receivingCallsignsCom2 READ getReceivingCallsignsCom2 NOTIFY receivingCallsignsChanged)
@@ -55,14 +55,15 @@ namespace BlackCore
                 //! Dtor
                 virtual ~CAfvClient() override
                 {
-                    stop();
+                    this->stop();
                 }
 
-                void setContextOwnAircraft(const BlackCore::Context::IContextOwnAircraft *contextOwnAircraft);
+                // void setContextOwnAircraft(const BlackCore::Context::IContextOwnAircraft *contextOwnAircraft);
 
                 QString callsign() const { return m_callsign; }
 
                 bool isConnected() const { return m_connection->isConnected(); }
+                ConnectionStatus getConnectionStatus() const;
 
                 Q_INVOKABLE void connectTo(const QString &cid, const QString &password, const QString &callsign);
                 Q_INVOKABLE void disconnectFrom();
@@ -80,8 +81,8 @@ namespace BlackCore
                 void stop();
 
                 Q_INVOKABLE void enableTransceiver(quint16 id, bool enable);
-                Q_INVOKABLE void updateComFrequency(quint16 id, quint32 frequency);
-                Q_INVOKABLE void updatePosition(double latitude, double longitude, double height);
+                Q_INVOKABLE void updateComFrequency(quint16 id, quint32 frequencyHz);
+                Q_INVOKABLE void updatePosition(double latitudeDeg, double longitudeDeg, double heightMeters);
 
                 void setTransmittingTransceivers(quint16 transceiverID);
                 void setTransmittingTransceivers(const QVector<TxTransceiverDto> &transceivers);
@@ -90,25 +91,25 @@ namespace BlackCore
 
                 Q_INVOKABLE void setLoopBack(bool on) { m_loopbackOn = on; }
 
-                double inputVolumeDb() const
-                {
-                    return m_inputVolumeDb;
-                }
-
+                //! Input volume in DB, +-18DB @{
+                double getInputVolumeDb() const { return m_inputVolumeDb; }
                 Q_INVOKABLE void setInputVolumeDb(double value);
+                //! @}
 
+                //! Output volume in DB, +-18DB @{
                 double getOutputVolumeDb() const;
                 Q_INVOKABLE void setOutputVolumeDb(double outputVolume);
+                //! @}
 
-                float getInputVolumePeakVU() const { return m_inputVolumeStream.PeakVU; }
-                float getOutputVolumePeakVU() const { return m_outputVolumeStream.PeakVU; }
-
-                ConnectionStatus getConnectionStatus() const;
+                //! VU values, 0..1 @{
+                double getInputVolumePeakVU() const { return m_inputVolumeStream.PeakVU; }
+                double getOutputVolumePeakVU() const { return m_outputVolumeStream.PeakVU; }
+                //! @}
 
             signals:
                 void receivingCallsignsChanged(const Audio::TransceiverReceivingCallsignsChangedArgs &args);
-                void inputVolumePeakVU(float value);
-                void outputVolumePeakVU(float value);
+                void inputVolumePeakVU(double value);
+                void outputVolumePeakVU(double value);
                 void connectionStatusChanged(ConnectionStatus status);
 
             private:
@@ -124,8 +125,8 @@ namespace BlackCore
                 void updateTransceivers();
                 void updateTransceiversFromContext(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
-                static constexpr int c_sampleRate = 48000;
-                static constexpr int frameSize = 960; // 20ms
+                static constexpr int SampleRate = 48000;
+                static constexpr int FrameSize  = 960; // 20ms
 
                 // Connection
                 Connection::CClientConnection *m_connection = nullptr;
@@ -133,7 +134,7 @@ namespace BlackCore
                 // Properties
                 QString m_callsign;
 
-                Audio::CInput  *m_input = nullptr;
+                Audio::CInput *m_input  = nullptr;
                 Audio::Output *m_output = nullptr;
 
                 Audio::CSoundcardSampleProvider *soundcardSampleProvider = nullptr;
@@ -160,7 +161,9 @@ namespace BlackCore
                 Audio::InputVolumeStreamArgs m_inputVolumeStream;
                 Audio::OutputVolumeStreamArgs m_outputVolumeStream;
 
-                BlackCore::Context::IContextOwnAircraft const *m_contextOwnAircraft = nullptr;
+                void initWithContext();
+                static bool hasContext();
+
             };
         } // ns
     } // ns

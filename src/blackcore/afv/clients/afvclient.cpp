@@ -7,13 +7,17 @@
  */
 
 #include "afvclient.h"
+#include "blackcore/context/contextownaircraft.h"
+#include "blackcore/application.h"
 #include "blacksound/audioutilities.h"
 #include <QDebug>
 
-using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackCore::Context;
 using namespace BlackCore::Afv::Audio;
 using namespace BlackCore::Afv::Connection;
+using namespace BlackMisc;
+using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Simulation;
 using namespace BlackSound::SampleProvider;
 
 namespace BlackCore
@@ -28,7 +32,7 @@ namespace BlackCore
                 m_connection = new CClientConnection(apiServer, this);
                 m_connection->setReceiveAudio(false);
 
-                m_input = new CInput(c_sampleRate, this);
+                m_input = new CInput(SampleRate, this);
                 connect(m_input, &CInput::opusDataAvailable, this, &CAfvClient::opusDataAvailable);
                 connect(m_input, &CInput::inputVolumeStream, this, &CAfvClient::inputVolumeStream);
 
@@ -45,34 +49,26 @@ namespace BlackCore
                     { 1, 122800000, 48.5, 11.5, 1000.0, 1000.0 }
                 };
 
-                m_enabledTransceivers =
-                {
-                    { 0 },
-                    { 1 }
-                };
-
-                m_transmittingTransceivers =
-                {
-                    { 0 }
-                };
+                m_enabledTransceivers = { 0, 1 };
+                m_transmittingTransceivers = { { 0 } }; // TxTransceiverDto
 
                 qDebug() << "UserClient instantiated";
             }
 
-            void CAfvClient::setContextOwnAircraft(const IContextOwnAircraft *contextOwnAircraft)
+            void CAfvClient::initWithContext()
             {
-                m_contextOwnAircraft = contextOwnAircraft;
-                if (m_contextOwnAircraft)
-                {
-                    connect(m_contextOwnAircraft, &IContextOwnAircraft::changedAircraftCockpit, this, &CAfvClient::updateTransceiversFromContext);
-                }
+                if (!hasContext()) { return; }
+                this->disconnect(sApp->getIContextOwnAircraft());
+                sApp->getIContextOwnAircraft()->disconnect(this);
+                connect(sApp->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CAfvClient::updateTransceiversFromContext);
             }
 
             void CAfvClient::connectTo(const QString &cid, const QString &password, const QString &callsign)
             {
+                this->initWithContext();
                 m_callsign = callsign;
                 m_connection->connectTo(cid, password, callsign);
-                updateTransceivers();
+                this->updateTransceivers();
 
                 if (m_connection->isConnected()) { emit connectionStatusChanged(Connected); }
                 else { emit connectionStatusChanged(Disconnected); }
@@ -126,7 +122,7 @@ namespace BlackCore
                     return;
                 }
 
-                soundcardSampleProvider = new CSoundcardSampleProvider(c_sampleRate, transceiverIDs, this);
+                soundcardSampleProvider = new CSoundcardSampleProvider(SampleRate, transceiverIDs, this);
                 connect(soundcardSampleProvider, &CSoundcardSampleProvider::receivingCallsignsChanged, this, &CAfvClient::receivingCallsignsChanged);
                 outputSampleProvider = new CVolumeSampleProvider(soundcardSampleProvider, this);
                 outputSampleProvider->setVolume(m_outputVolume);
@@ -145,7 +141,7 @@ namespace BlackCore
             {
                 if (m_isStarted) { return; }
 
-                soundcardSampleProvider = new CSoundcardSampleProvider(c_sampleRate, { 0, 1 }, this);
+                soundcardSampleProvider = new CSoundcardSampleProvider(SampleRate, { 0, 1 }, this);
                 connect(soundcardSampleProvider, &CSoundcardSampleProvider::receivingCallsignsChanged, this, &CAfvClient::receivingCallsignsChanged);
                 outputSampleProvider = new CVolumeSampleProvider(soundcardSampleProvider, this);
                 outputSampleProvider->setVolume(m_outputVolume);
@@ -205,46 +201,48 @@ namespace BlackCore
                 updateTransceivers();
             }
 
-            void CAfvClient::updateComFrequency(quint16 id, quint32 frequency)
+            void CAfvClient::updateComFrequency(quint16 id, quint32 frequencyHz)
             {
                 if (id != 0 && id != 1) { return; }
 
                 // Fix rounding issues like 128074999 Hz -> 128075000 Hz
-                quint32 roundedFrequency = qRound(frequency / 1000.0) * 1000;
+                quint32 roundedFrequencyHz = static_cast<quint32>(qRound(frequencyHz / 1000.0)) * 1000;
 
                 if (m_transceivers.size() >= id + 1)
                 {
-                    if (m_transceivers[id].frequency != roundedFrequency)
+                    if (m_transceivers[id].frequency != roundedFrequencyHz)
                     {
-                        m_transceivers[id].frequency = roundedFrequency;
+                        m_transceivers[id].frequency = roundedFrequencyHz;
                         updateTransceivers();
                     }
                 }
             }
 
-            void CAfvClient::updatePosition(double latitude, double longitude, double height)
+            void CAfvClient::updatePosition(double latitudeDeg, double longitudeDeg, double heightMeters)
             {
                 for (TransceiverDto &transceiver : m_transceivers)
                 {
-                    transceiver.LatDeg = latitude;
-                    transceiver.LonDeg = longitude;
-                    transceiver.HeightAglM = height;
-                    transceiver.HeightMslM = height;
+                    transceiver.LatDeg = latitudeDeg;
+                    transceiver.LonDeg = longitudeDeg;
+                    transceiver.HeightAglM = heightMeters;
+                    transceiver.HeightMslM = heightMeters;
                 }
             }
 
             void CAfvClient::updateTransceivers()
             {
-                if (! m_connection->isConnected()) { return; }
-
-                if (m_contextOwnAircraft)
+                if (!m_connection->isConnected()) { return; }
+                if (hasContext())
                 {
-                    BlackMisc::Simulation::CSimulatedAircraft ownAircraft = m_contextOwnAircraft->getOwnAircraft();
+                    const CSimulatedAircraft ownAircraft = sApp->getIContextOwnAircraft()->getOwnAircraft();
                     updatePosition(ownAircraft.latitude().value(CAngleUnit::deg()),
                                    ownAircraft.longitude().value(CAngleUnit::deg()),
                                    ownAircraft.getAltitude().value(CLengthUnit::ft()));
-                    updateComFrequency(0, ownAircraft.getCom1System().getFrequencyActive().value(CFrequencyUnit::Hz()));
-                    updateComFrequency(1, ownAircraft.getCom2System().getFrequencyActive().value(CFrequencyUnit::Hz()));
+
+                    const quint16 com1Hz = static_cast<quint16>(ownAircraft.getCom1System().getFrequencyActive().valueInteger(CFrequencyUnit::Hz()));
+                    const quint16 com2Hz = static_cast<quint16>(ownAircraft.getCom2System().getFrequencyActive().valueInteger(CFrequencyUnit::Hz()));
+                    updateComFrequency(0, com1Hz);
+                    updateComFrequency(1, com2Hz);
                 }
 
                 QVector<TransceiverDto> enabledTransceivers;
@@ -401,15 +399,24 @@ namespace BlackCore
                 return {};
             }
 
-            void CAfvClient::updateTransceiversFromContext(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator)
+            void CAfvClient::updateTransceiversFromContext(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
             {
-                Q_UNUSED(originator);
+                Q_UNUSED(originator)
                 updatePosition(aircraft.latitude().value(CAngleUnit::deg()),
                                aircraft.longitude().value(CAngleUnit::deg()),
                                aircraft.getAltitude().value(CLengthUnit::ft()));
-                updateComFrequency(0, aircraft.getCom1System().getFrequencyActive().value(CFrequencyUnit::Hz()));
-                updateComFrequency(1, aircraft.getCom2System().getFrequencyActive().value(CFrequencyUnit::Hz()));
+
+                const quint16 com1Hz = static_cast<quint16>(aircraft.getCom1System().getFrequencyActive().valueInteger(CFrequencyUnit::Hz()));
+                const quint16 com2Hz = static_cast<quint16>(aircraft.getCom2System().getFrequencyActive().valueInteger(CFrequencyUnit::Hz()));
+
+                updateComFrequency(0, com1Hz);
+                updateComFrequency(1, com2Hz);
                 updateTransceivers();
+            }
+
+            bool CAfvClient::hasContext()
+            {
+                return sApp && !sApp->isShuttingDown() && sApp->getIContextOwnAircraft();
             }
 
             double CAfvClient::getOutputVolumeDb() const

@@ -778,12 +778,11 @@ namespace BlackCore
 
         void CContextAudio::xCtxNetworkConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
-            Q_UNUSED(from);
+            Q_UNUSED(from)
             BLACK_VERIFY_X(this->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
             if (to.isConnected() && this->getIContextNetwork())
             {
-                CUser connectedUser = this->getIContextNetwork()->getConnectedServer().getUser();
-                m_voiceClient.setContextOwnAircraft(getIContextOwnAircraft());
+                const CUser connectedUser = this->getIContextNetwork()->getConnectedServer().getUser();
                 m_voiceClient.connectTo(connectedUser.getId(), connectedUser.getPassword(), connectedUser.getCallsign().asString());
                 m_voiceClient.start(QAudioDeviceInfo::defaultInputDevice(), QAudioDeviceInfo::defaultOutputDevice(), {0, 1});
             }
