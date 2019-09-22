@@ -27,23 +27,26 @@ namespace BlackSound
             CResourceSoundSampleProvider(const CResourceSound &resourceSound, QObject *parent = nullptr);
 
             virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
-            virtual bool isFinished() override;
+            virtual bool isFinished() const override { return m_isFinished; }
 
-            bool looping() const;
-            void setLooping(bool looping);
+            bool looping() const { return m_looping; }
+            void setLooping(bool looping) { m_looping = looping; }
 
-            float gain() const;
-            void setGain(float gain);
+            double gain() const { return m_gain; }
+            void setGain(double gain) { m_gain = gain; }
+
+            QVector<qint16> getTempBuffer() const { return m_tempBuffer; }
+            void setTempBuffer(const QVector<qint16> &value) { m_tempBuffer = value; }
 
         private:
-            float m_gain = 1.0f;
+            double m_gain = 1.0;
             bool m_looping = false;
 
-            CResourceSound m_resourceSound;
-            qint64 position = 0;
-            const int tempBufferSize = 9600; //9600 = 200ms
-            QVector<qint16> tempBuffer;
-            bool m_isFinished = false;
+            CResourceSound  m_resourceSound;
+            qint64          m_position = 0;
+            const int       m_tempBufferSize = 9600; //9600 = 200ms
+            QVector<qint16> m_tempBuffer;
+            bool            m_isFinished = false;
         };
     }
 }

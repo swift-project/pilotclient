@@ -1,4 +1,5 @@
 #include "resourcesoundsampleprovider.h"
+#include "resourcesoundsampleprovider.h"
 #include <QDebug>
 
 namespace BlackSound
@@ -9,74 +10,49 @@ namespace BlackSound
             ISampleProvider(parent),
             m_resourceSound(resourceSound)
         {
-            tempBuffer.resize(tempBufferSize);
+            m_tempBuffer.resize(m_tempBufferSize);
         }
 
         int CResourceSoundSampleProvider::readSamples(QVector<qint16> &samples, qint64 count)
         {
-            if (count > tempBufferSize)
+            if (count > m_tempBufferSize)
             {
                 qDebug() << "Count too large for temp buffer";
                 return 0;
             }
-            qint64 availableSamples = m_resourceSound.audioData().size() - position;
+            qint64 availableSamples = m_resourceSound.audioData().size() - m_position;
 
             qint64 samplesToCopy = qMin(availableSamples, count);
             samples.clear();
             samples.fill(0, samplesToCopy);
 
-            for (qint64 i = 0; i < samplesToCopy; i++)
+            for (int i = 0; i < samplesToCopy; i++)
             {
-                tempBuffer[i] = m_resourceSound.audioData().at(position + i);
+                m_tempBuffer[i] = m_resourceSound.audioData().at(m_position + i);
             }
 
-            if (m_gain != 1.0f)
+            if (!qFuzzyCompare(m_gain, 1.0))
             {
                 for (int i = 0; i < samplesToCopy; i++)
                 {
-                    tempBuffer[i] *= m_gain;
+                    m_tempBuffer[i] = static_cast<qint16>(qRound(m_gain * m_tempBuffer[i]));
                 }
             }
 
-            for (qint64 i = 0; i < samplesToCopy; i++)
+            for (int i = 0; i < samplesToCopy; i++)
             {
-                samples[i] = tempBuffer.at(i);
+                samples[i] = m_tempBuffer.at(i);
             }
 
-            position += samplesToCopy;
+            m_position += samplesToCopy;
 
-            if (position > availableSamples - 1)
+            if (m_position > availableSamples - 1)
             {
-                if (m_looping) { position = 0; }
+                if (m_looping) { m_position = 0; }
                 else { m_isFinished = true; }
             }
 
-            return (int)samplesToCopy;
-        }
-
-        bool CResourceSoundSampleProvider::isFinished()
-        {
-            return m_isFinished;
-        }
-
-        bool CResourceSoundSampleProvider::looping() const
-        {
-            return m_looping;
-        }
-
-        void CResourceSoundSampleProvider::setLooping(bool looping)
-        {
-            m_looping = looping;
-        }
-
-        float CResourceSoundSampleProvider::gain() const
-        {
-            return m_gain;
-        }
-
-        void CResourceSoundSampleProvider::setGain(float gain)
-        {
-            m_gain = gain;
+            return static_cast<int>(samplesToCopy);
         }
     }
 }

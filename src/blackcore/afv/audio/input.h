@@ -80,13 +80,12 @@ namespace BlackCore
                 //! Ctor
                 CInput(int sampleRate, QObject *parent = nullptr);
 
-                bool started() const;
+                bool started() const { return m_started; }
 
-                int opusBytesEncoded() const;
-                void setOpusBytesEncoded(int opusBytesEncoded);
-
-                double volume() const;
-                void setVolume(double volume);
+                int opusBytesEncoded() const { return m_opusBytesEncoded; }
+                void setOpusBytesEncoded(int opusBytesEncoded) { m_opusBytesEncoded = opusBytesEncoded; }
+                double volume() const { return m_volume; }
+                void setVolume(double volume) { m_volume = volume; }
 
                 void start(const QAudioDeviceInfo &inputDevice);
                 void stop();
@@ -106,8 +105,8 @@ namespace BlackCore
 
                 bool m_started = false;
                 int m_opusBytesEncoded = 0;
-                double m_volume = 1.0;
                 int m_sampleCount = 0;
+                double m_volume = 1.0;
                 qint16 m_maxSampleInput = 0.0;
 
                 const int c_sampleCountPerEvent = 4800;

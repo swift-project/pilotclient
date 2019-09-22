@@ -8,8 +8,8 @@
 
 //! \file
 
-#ifndef SAMPLEPROVIDER_H
-#define SAMPLEPROVIDER_H
+#ifndef BLACKSOUND_SAMPLEPROVIDER_H
+#define BLACKSOUND_SAMPLEPROVIDER_H
 
 #include "blacksound/blacksoundexport.h"
 #include <QObject>
@@ -25,14 +25,19 @@ namespace BlackSound
             Q_OBJECT
 
         public:
+            //! Ctor
             ISampleProvider(QObject *parent = nullptr) : QObject(parent) {}
+
+            //! Dtor
             virtual ~ISampleProvider() override {}
 
+            //! Read samples
             virtual int readSamples(QVector<qint16> &samples, qint64 count) = 0;
 
-            virtual bool isFinished() { return false; }
+            //! Finished?
+            virtual bool isFinished() const { return false; }
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard

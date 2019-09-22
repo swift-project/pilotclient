@@ -58,7 +58,7 @@ namespace BlackCore
 
             void CAudioInputBuffer::timerEvent(QTimerEvent *event)
             {
-                Q_UNUSED(event);
+                Q_UNUSED(event)
                 // 20 ms = 960 samples * 2 bytes = 1920 Bytes
                 if (m_buffer.size() >= 1920)
                 {
@@ -73,31 +73,6 @@ namespace BlackCore
                 m_encoder(sampleRate, 1, OPUS_APPLICATION_VOIP)
             {
                 m_encoder.setBitRate(16 * 1024);
-            }
-
-            bool CInput::started() const
-            {
-                return m_started;
-            }
-
-            int CInput::opusBytesEncoded() const
-            {
-                return m_opusBytesEncoded;
-            }
-
-            void CInput::setOpusBytesEncoded(int opusBytesEncoded)
-            {
-                m_opusBytesEncoded = opusBytesEncoded;
-            }
-
-            double CInput::volume() const
-            {
-                return m_volume;
-            }
-
-            void CInput::setVolume(double volume)
-            {
-                m_volume = volume;
             }
 
             void CInput::start(const QAudioDeviceInfo &inputDevice)

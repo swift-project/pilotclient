@@ -39,7 +39,7 @@ namespace BlackMisc
 
         QString CCallsign::convertToQString(bool i18n) const
         {
-            Q_UNUSED(i18n);
+            Q_UNUSED(i18n)
             return m_callsign;
         }
 
