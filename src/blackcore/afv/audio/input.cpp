@@ -28,7 +28,7 @@ namespace BlackCore
             void CAudioInputBuffer::start()
             {
                 open(QIODevice::WriteOnly | QIODevice::Unbuffered);
-                m_timerId = startTimer(20, Qt::PreciseTimer);
+                m_timerId = startTimer(5, Qt::PreciseTimer);
             }
 
             void CAudioInputBuffer::stop()
@@ -45,14 +45,16 @@ namespace BlackCore
             {
                 Q_UNUSED(data)
                 Q_UNUSED(maxlen)
-
                 return 0;
             }
 
             qint64 CAudioInputBuffer::writeData(const char *data, qint64 len)
             {
-                QByteArray buffer(data, static_cast<int>(len));
-                m_buffer.append(buffer);
+                // QByteArray buffer(data, static_cast<int>(len));
+                // m_buffer.append(buffer);
+                m_buffer.append(data, static_cast<int>(len));
+
+                qDebug() << QDateTime::currentMSecsSinceEpoch() << "[writeData] " << len << "buffer " << m_buffer.size();
                 return len;
             }
 
@@ -60,10 +62,17 @@ namespace BlackCore
             {
                 Q_UNUSED(event)
                 // 20 ms = 960 samples * 2 bytes = 1920 Bytes
-                if (m_buffer.size() >= 1920)
+                if (m_buffer.size() < 1920) { return; }
+
+                const qint64 now = QDateTime::currentMSecsSinceEpoch();
+                const qint64 delta = now - m_lastFrameSent;
+                if (delta >= 19)
                 {
-                    emit frameAvailable(m_buffer.left(1920));
+                    qDebug() << now << "[signal] frameAvailable - buffer size" << m_buffer.size();
+
                     m_buffer.remove(0, 1920);
+                    m_lastFrameSent = now;
+                    emit frameAvailable(m_buffer.left(1920));
                 }
             }
 
@@ -121,7 +130,7 @@ namespace BlackCore
                 int value = 0;
                 for (qint16 &sample : samples)
                 {
-                    value = sample * m_volume;
+                    value = qRound(sample * m_volume);
                     if (value > std::numeric_limits<qint16>::max())
                         value = std::numeric_limits<qint16>::max();
                     if (value < std::numeric_limits<qint16>::min())
@@ -142,7 +151,7 @@ namespace BlackCore
                     InputVolumeStreamArgs inputVolumeStreamArgs;
                     qint16 maxInt = std::numeric_limits<qint16>::max();
                     inputVolumeStreamArgs.PeakRaw = static_cast<float>(m_maxSampleInput) / maxInt;
-                    inputVolumeStreamArgs.PeakDB = (float)(20 * std::log10(inputVolumeStreamArgs.PeakRaw));
+                    inputVolumeStreamArgs.PeakDB  = static_cast<float>(20 * std::log10(inputVolumeStreamArgs.PeakRaw));
                     float db = qBound(minDb, inputVolumeStreamArgs.PeakDB, maxDb);
                     float ratio = (db - minDb) / (maxDb - minDb);
                     if (ratio < 0.30)

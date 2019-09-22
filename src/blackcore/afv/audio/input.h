@@ -53,6 +53,7 @@ namespace BlackCore
 
             private:
                 static constexpr qint64 frameSize = 960;
+                qint64 m_lastFrameSent = -1;
                 QByteArray m_buffer;
                 int m_timerId = 0;
             };
