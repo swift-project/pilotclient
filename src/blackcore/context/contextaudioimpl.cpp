@@ -456,7 +456,7 @@ namespace BlackCore
 
             // changed not yet used, but I keep it for debugging
             // changedVoiceRooms called by connectionStatusChanged;
-            Q_UNUSED(changed);
+            Q_UNUSED(changed)
         }
 
         CCallsignSet CContextAudio::getRoomCallsigns(CComSystem::ComUnit comUnitValue) const
@@ -556,7 +556,7 @@ namespace BlackCore
 
         bool CContextAudio::parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator)
         {
-            Q_UNUSED(originator);
+            Q_UNUSED(originator)
             if (commandLine.isEmpty()) { return false; }
             CSimpleCommandParser parser(
             {
@@ -585,8 +585,12 @@ namespace BlackCore
             return false;
         }
 
-        void CContextAudio::setVoiceTransmission(bool enable, COM com)
+        void CContextAudio::setVoiceTransmission(bool enable, PTTCOM com)
         {
+            m_voiceClient.setPttForCom(enable, com);
+
+            /**
+
             // first apporach of T609 multiple COM
             QSharedPointer<IVoiceChannel> voiceChannelCom = nullptr;
             CComSystem::ComUnit usedUnit = CComSystem::Com1;
@@ -613,6 +617,8 @@ namespace BlackCore
             {
                 m_audioMixer->removeMixerConnection(IAudioMixer::InputMicrophone, mixerOutputPort);
             }
+
+            **/
 
             /** fixme KB 201908 to be removed if the above works
             if (!m_voiceChannelMapping.contains(CComSystem::Com1)) { return; }
@@ -650,7 +656,7 @@ namespace BlackCore
             IVoiceChannel::ConnectionStatus oldStatus,
             IVoiceChannel::ConnectionStatus newStatus)
         {
-            Q_UNUSED(oldStatus);
+            Q_UNUSED(oldStatus)
 
             switch (newStatus)
             {

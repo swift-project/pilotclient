@@ -8,6 +8,7 @@
 
 #include "registermetadataaudio.h"
 #include "audio.h"
+#include "ptt.h"
 #include <QDBusMetaType>
 
 namespace BlackMisc
@@ -25,6 +26,7 @@ namespace BlackMisc
             CVoiceSetup::registerMetadata();
 
             // ENUMs
+            qDBusRegisterMetaType<PTTCOM>();
             qDBusRegisterMetaType<CNotificationSounds::PlayMode>();
             qDBusRegisterMetaType<CNotificationSounds::NotificationFlag>();
             qRegisterMetaTypeStreamOperators<CNotificationSounds::PlayMode>();

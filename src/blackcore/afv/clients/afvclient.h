@@ -16,9 +16,11 @@
 #include "blackcore/afv/audio/output.h"
 #include "blackcore/afv/audio/soundcardsampleprovider.h"
 #include "blackcore/afv/dto.h"
-#include "blackcore/blackcoreexport.h"
 
 #include "blackcore/context/contextownaircraft.h"
+#include "blackcore/blackcoreexport.h"
+
+#include "blackmisc/audio/ptt.h"
 #include "blacksound/sampleprovider/volumesampleprovider.h"
 
 #include <QAudioDeviceInfo>
@@ -87,7 +89,12 @@ namespace BlackCore
                 void setTransmittingTransceivers(quint16 transceiverID);
                 void setTransmittingTransceivers(const QVector<TxTransceiverDto> &transceivers);
 
+                //! Push to talk @{
                 Q_INVOKABLE void setPtt(bool active);
+                void setPttForCom(bool active, BlackMisc::Audio::PTTCOM com);
+                //! @}
+
+
                 Q_INVOKABLE void setLoopBack(bool on) { m_loopbackOn = on; }
 
                 //! Input volume in DB, +-18DB @{

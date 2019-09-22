@@ -23,6 +23,7 @@
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/audio/ptt.h"
 #include "blackmisc/input/actionhotkeydefs.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/comsystem.h"
@@ -121,15 +122,6 @@ namespace BlackCore
             CContextAudio *registerWithDBus(BlackMisc::CDBusServer *server);
 
         private:
-            //! Voice COM channel
-            enum COM
-            {
-                COM1,
-                COM2,
-                COMActive,
-                COMUnspecified
-            };
-
             BlackMisc::Audio::CVoiceRoomList getComVoiceRooms() const;
             BlackMisc::Audio::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const;
             bool canTalk() const;
@@ -146,7 +138,7 @@ namespace BlackCore
             void onConnectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus);
 
             //! Enable/disable voice transmission, nornally used with hotkey @{
-            void setVoiceTransmission(bool enable, COM com);
+            void setVoiceTransmission(bool enable, BlackMisc::Audio::PTTCOM com);
             void setVoiceTransmissionCom1(bool enabled);
             void setVoiceTransmissionCom2(bool enabled);
             void setVoiceTransmissionComActive(bool enabled);

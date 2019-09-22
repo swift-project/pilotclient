@@ -16,6 +16,7 @@ using namespace BlackCore::Context;
 using namespace BlackCore::Afv::Audio;
 using namespace BlackCore::Afv::Connection;
 using namespace BlackMisc;
+using namespace BlackMisc::Audio;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 using namespace BlackSound::SampleProvider;
@@ -302,9 +303,14 @@ namespace BlackCore
                 qDebug() << "PTT:" << active;
             }
 
+            void CAfvClient::setPttForCom(bool active, PTTCOM com)
+            {
+                this->setPtt(active);
+            }
+
             void CAfvClient::setInputVolumeDb(double value)
             {
-                if (value > 18) { value = 18; }
+                if (value > 18)  { value = 18; }
                 if (value < -18) { value = -18; }
                 m_inputVolumeDb = value;
                 m_input->setVolume(qPow(10, value / 20));
