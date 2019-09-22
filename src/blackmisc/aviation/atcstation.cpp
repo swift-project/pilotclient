@@ -381,6 +381,7 @@ namespace BlackMisc
             case IndexAtis:        return m_atis.propertyByIndex(index.copyFrontRemoved());
             case IndexMetar:       return m_metar.propertyByIndex(index.copyFrontRemoved());
             case IndexVoiceRoom:   return m_voiceRoom.propertyByIndex(index.copyFrontRemoved());
+            case IndexIsAfvCrossCoupled: return CVariant::from(m_isAfvCrossCoupled);
             default:
                 return (ICoordinateWithRelativePosition::canHandleIndex(index)) ?
                        ICoordinateWithRelativePosition::propertyByIndex(index) :
@@ -405,6 +406,7 @@ namespace BlackMisc
             case IndexAtis:        m_atis.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexMetar:       m_metar.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexVoiceRoom:   m_voiceRoom.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexIsAfvCrossCoupled: this->setAfvCrossCoupled(variant.value<bool>()); break;
             default:
                 if (ICoordinateWithRelativePosition::canHandleIndex(index))
                 {
@@ -438,6 +440,7 @@ namespace BlackMisc
             case IndexAtis:        return m_atis.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getAtis());
             case IndexMetar:       return m_metar.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getMetar());
             case IndexVoiceRoom:   return this->getVoiceRoom().getVoiceRoomUrl().compare(compareValue.getVoiceRoom().getVoiceRoomUrl());
+            case IndexIsAfvCrossCoupled:   return Compare::compare(this->isAfvCrossCoupled(), compareValue.isAfvCrossCoupled());
             default:
                 if (ICoordinateWithRelativePosition::canHandleIndex(index))
                 {

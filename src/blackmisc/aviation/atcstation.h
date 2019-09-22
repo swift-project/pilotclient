@@ -54,6 +54,7 @@ namespace BlackMisc
                 IndexRange,
                 IndexIsInRange,
                 IndexIsOnline,
+                IndexIsAfvCrossCoupled,
                 IndexBookedFrom,
                 IndexBookedUntil,
                 IndexLatitude,
@@ -169,6 +170,12 @@ namespace BlackMisc
             //! Set online
             bool setOnline(bool online);
 
+            //! Is AFV cross coupled?
+            bool isAfvCrossCoupled() const { return m_isAfvCrossCoupled; }
+
+            //! Set AFV cross coupled
+            void setAfvCrossCoupled(bool coupled) { m_isAfvCrossCoupled = coupled; }
+
             //! Get voice room
             const Audio::CVoiceRoom &getVoiceRoom() const { return m_voiceRoom; }
 
@@ -280,6 +287,7 @@ namespace BlackMisc
             Geo::CCoordinateGeodetic       m_position;
             PhysicalQuantities::CLength    m_range;
             bool                           m_isOnline = false;
+            bool                           m_isAfvCrossCoupled = false;
             QDateTime                      m_bookedFromUtc;
             QDateTime                      m_bookedUntilUtc;
             CInformationMessage m_atis  { CInformationMessage::ATIS };
@@ -294,6 +302,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(position),
                 BLACK_METAMEMBER(range),
                 BLACK_METAMEMBER(isOnline),
+                BLACK_METAMEMBER(isAfvCrossCoupled),
                 BLACK_METAMEMBER(bookedFromUtc),
                 BLACK_METAMEMBER(bookedUntilUtc),
                 BLACK_METAMEMBER(atis),
