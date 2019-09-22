@@ -22,6 +22,7 @@ namespace BlackMisc
         namespace Settings
         {
             //! Voice settings
+            //! \deprecated Voice VATLIB specifics
             struct TVoiceSetup : public TSettingTrait<CVoiceSetup>
             {
                 //! \copydoc BlackMisc::TSettingTrait::key

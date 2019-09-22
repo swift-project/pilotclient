@@ -11,17 +11,19 @@
 #ifndef BLACKCORE_AFV_CLIENT_AFVCLIENT_H
 #define BLACKCORE_AFV_CLIENT_AFVCLIENT_H
 
+#include "blackcore/context/contextownaircraft.h"
 #include "blackcore/afv/connection/clientconnection.h"
 #include "blackcore/afv/audio/input.h"
 #include "blackcore/afv/audio/output.h"
 #include "blackcore/afv/audio/soundcardsampleprovider.h"
 #include "blackcore/afv/dto.h"
-
-#include "blackcore/context/contextownaircraft.h"
 #include "blackcore/blackcoreexport.h"
 
-#include "blackmisc/audio/ptt.h"
 #include "blacksound/sampleprovider/volumesampleprovider.h"
+
+#include "blackmisc/settingscache.h"
+#include "blackmisc/audio/audiosettings.h"
+#include "blackmisc/audio/ptt.h"
 
 #include <QAudioDeviceInfo>
 #include <QDateTime>
@@ -127,6 +129,7 @@ namespace BlackCore
                 QString getReceivingCallsignsCom2();
 
                 void input_OpusDataAvailable();
+                void onSettingsChanged();
 
                 void updateTransceivers();
                 void updateTransceiversFromContext(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
@@ -164,8 +167,10 @@ namespace BlackCore
                 QVector<TransceiverDto> m_transceivers;
                 QSet<quint16> m_enabledTransceivers;
 
-                Audio::InputVolumeStreamArgs m_inputVolumeStream;
+                Audio::InputVolumeStreamArgs  m_inputVolumeStream;
                 Audio::OutputVolumeStreamArgs m_outputVolumeStream;
+
+                BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &CAfvClient::onSettingsChanged };
 
                 void initWithContext();
                 static bool hasContext();

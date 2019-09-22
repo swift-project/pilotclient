@@ -19,6 +19,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
+using namespace BlackSound;
 using namespace BlackSound::SampleProvider;
 
 namespace BlackCore
@@ -403,6 +404,12 @@ namespace BlackCore
                     return soundcardSampleProvider->getReceivingCallsigns(1);
                 }
                 return {};
+            }
+
+            void CAfvClient::onSettingsChanged()
+            {
+                CSettings audioSettings = m_audioSettings.get();
+
             }
 
             void CAfvClient::updateTransceiversFromContext(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
