@@ -80,6 +80,9 @@ namespace BlackCore
             //! Destructor
             virtual ~CContextAudio() override;
 
+            //! Reference to voice client
+            BlackCore::Afv::Clients::CAfvClient &voiceClient() { return m_voiceClient; }
+
         public slots:
             // Interface implementations
             //! \publicsection
@@ -127,11 +130,13 @@ namespace BlackCore
             bool canTalk() const;
             BlackMisc::Aviation::CCallsignSet getRoomCallsigns(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const;
 
+            //! @deprecated old voice @{
             void initVoiceChannels();
             void initInputDevice();
             void initOutputDevice();
             void initAudioMixer();
             void initVoiceVatlib(bool allocateInput = true);
+            //! @}
 
             //! \copydoc IVoice::connectionStatusChanged
             //! \sa IContextAudio::changedVoiceRooms

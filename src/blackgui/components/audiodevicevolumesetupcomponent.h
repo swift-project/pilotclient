@@ -50,8 +50,8 @@ namespace BlackGui
             //! @}
 
             //! Set input and output level values @{
-            void setInLevel(int value,  int from = BlackMisc::Audio::CSettings::InMin,  int to = BlackMisc::Audio::CSettings::InMax);
-            void setOutLevel(int value, int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax);
+            void setInLevel(int value,  int from, int to);
+            void setOutLevel(int value, int from, int to);
             //! @}
 
             //! Info string
@@ -91,6 +91,9 @@ namespace BlackGui
 
             //! Save the audio volumes
             void saveVolumes();
+
+            void onOutputVU(double vu);
+            void onInputVU(double vu);
 
             QScopedPointer<Ui::CAudioDeviceVolumeSetupComponent> ui;
             BlackMisc::CDigestSignal m_volumeSliderChanged { this, &CAudioDeviceVolumeSetupComponent::saveVolumes, 1000, 10 };

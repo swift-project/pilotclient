@@ -6,9 +6,12 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackcore/context/contextaudio.h"
 #include "blackgui/components/audiodevicevolumesetupcomponent.h"
 #include "blackgui/guiapplication.h"
+
+#include "blackcore/afv/clients/afvclient.h"
+#include "blackcore/context/contextaudioimpl.h"
+
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/audio/audiosettings.h"
@@ -23,6 +26,7 @@
 #include <QFileDialog>
 
 using namespace BlackCore;
+using namespace BlackCore::Afv::Clients;
 using namespace BlackCore::Context;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -84,8 +88,16 @@ namespace BlackGui
                 Q_ASSERT(c);
                 c = connect(sGui->getIContextAudio(), &IContextAudio::changedSelectedAudioDevices, this, &CAudioDeviceVolumeSetupComponent::onCurrentAudioDevicesChanged, Qt::QueuedConnection);
                 Q_ASSERT(c);
+
+                if (sGui->getIContextAudio()->isUsingImplementingObject())
+                {
+                    CAfvClient &afvClient = sGui->getCoreFacade()->getCContextAudio()->voiceClient();
+                    connect(&afvClient, &CAfvClient::outputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onOutputVU);
+                    connect(&afvClient, &CAfvClient::inputVolumePeakVU,  this, &CAudioDeviceVolumeSetupComponent::onInputVU);
+                }
+
             }
-            Q_UNUSED(c);
+            Q_UNUSED(c)
         }
 
         CAudioDeviceVolumeSetupComponent::~CAudioDeviceVolumeSetupComponent()
@@ -177,7 +189,7 @@ namespace BlackGui
 
         void CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged(int v)
         {
-            Q_UNUSED(v);
+            Q_UNUSED(v)
             m_volumeSliderChanged.inputSignal();
         }
 
@@ -190,6 +202,16 @@ namespace BlackGui
             as.setInVolume(i);
             as.setOutVolume(o);
             m_audioSettings.setAndSave(as);
+        }
+
+        void CAudioDeviceVolumeSetupComponent::onOutputVU(double vu)
+        {
+            this->setOutLevel(qRound(vu * 100.0), 0, 100);
+        }
+
+        void CAudioDeviceVolumeSetupComponent::onInputVU(double vu)
+        {
+            this->setInLevel(qRound(vu * 100.0), 0, 100);
         }
 
         void CAudioDeviceVolumeSetupComponent::onAudioDeviceSelected(int index)
