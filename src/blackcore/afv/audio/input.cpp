@@ -28,7 +28,7 @@ namespace BlackCore
             void CAudioInputBuffer::start()
             {
                 open(QIODevice::WriteOnly | QIODevice::Unbuffered);
-                m_timerId = startTimer(5, Qt::PreciseTimer);
+                // m_timerId = startTimer(5, Qt::PreciseTimer);
             }
 
             void CAudioInputBuffer::stop()
@@ -50,11 +50,13 @@ namespace BlackCore
 
             qint64 CAudioInputBuffer::writeData(const char *data, qint64 len)
             {
-                // QByteArray buffer(data, static_cast<int>(len));
-                // m_buffer.append(buffer);
                 m_buffer.append(data, static_cast<int>(len));
-
-                qDebug() << QDateTime::currentMSecsSinceEpoch() << "[writeData] " << len << "buffer " << m_buffer.size();
+                while (m_buffer.size() > 1920)
+                {
+                    qDebug() << QDateTime::currentMSecsSinceEpoch() << "CAudioInputBuffer::writeData " << m_buffer.size();
+                    emit frameAvailable(m_buffer.left(1920));
+                    m_buffer.remove(0, 1920);
+                }
                 return len;
             }
 
@@ -88,20 +90,24 @@ namespace BlackCore
             {
                 if (m_started) { return; }
 
-                QAudioFormat waveFormat;
+                QAudioFormat inputFormat;
 
-                waveFormat.setSampleRate(m_sampleRate);
-                waveFormat.setChannelCount(1);
-                waveFormat.setSampleSize(16);
-                waveFormat.setSampleType(QAudioFormat::SignedInt);
-                waveFormat.setByteOrder(QAudioFormat::LittleEndian);
-                waveFormat.setCodec("audio/pcm");
-
-                QAudioFormat inputFormat = waveFormat;
+                inputFormat.setSampleRate(m_sampleRate);
+                inputFormat.setChannelCount(1);
+                inputFormat.setSampleSize(16);
+                inputFormat.setSampleType(QAudioFormat::SignedInt);
+                inputFormat.setByteOrder(QAudioFormat::LittleEndian);
+                inputFormat.setCodec("audio/pcm");
                 if (!inputDevice.isFormatSupported(inputFormat))
                 {
-                    qWarning() << "Default format not supported - trying to use nearest";
-                    inputFormat = inputDevice.nearestFormat(inputFormat);
+                    qWarning() << "Default INPUT format not supported - trying to use nearest";
+                    qWarning() << "Default format not supported - trying to use nearest:";
+                    qWarning() << "Sample rate: " << inputFormat.sampleRate();
+                    qWarning() << "Sample size: " << inputFormat.sampleSize();
+                    qWarning() << "Sample type: " << inputFormat.sampleType();
+                    qWarning() << "Byte order: " << inputFormat.byteOrder();
+                    qWarning() << "Codec: " << inputFormat.codec();
+                    qWarning() << "Channel count: " << inputFormat.channelCount();
                 }
 
                 m_audioInput.reset(new QAudioInput(inputDevice, inputFormat));

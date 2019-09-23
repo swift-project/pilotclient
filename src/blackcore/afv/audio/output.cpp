@@ -61,7 +61,16 @@ namespace BlackCore
                     m_maxSampleOutput = 0;
                 }
 
-                memcpy(data, buffer.constData(), maxlen);
+                // if (maxlen > buffer.size()) { maxlen = buffer.size(); }
+                // memcpy(data, buffer.constData(), maxlen > buffer.size() ? buffer.size() : maxlen);
+                qint16 *p = reinterpret_cast<qint16 *>(data);
+                int index = 0;
+                for (int n = 0; n < count; n++)
+                {
+                    p[index++] = buffer[n];
+                    if (channelCount == 2) p[index++] = buffer[n];
+                }
+
                 return maxlen;
             }
 
@@ -90,8 +99,15 @@ namespace BlackCore
 
                 if (!device.isFormatSupported(outputFormat))
                 {
-                    qWarning() << "Default format not supported - trying to use nearest";
+                    qWarning() << "Default OUTPUT format not supported - trying to use nearest";
                     outputFormat = device.nearestFormat(outputFormat);
+                    qWarning() << "Default format not supported - trying to use nearest:";
+                    qWarning() << "Sample rate: " << outputFormat.sampleRate();
+                    qWarning() << "Sample size: " << outputFormat.sampleSize();
+                    qWarning() << "Sample type: " << outputFormat.sampleType();
+                    qWarning() << "Byte order: " << outputFormat.byteOrder();
+                    qWarning() << "Codec: " << outputFormat.codec();
+                    qWarning() << "Channel count: " << outputFormat.channelCount();
                 }
 
                 m_audioOutputCom1.reset(new QAudioOutput(device, outputFormat));
