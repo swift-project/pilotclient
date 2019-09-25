@@ -133,7 +133,7 @@ namespace BlackGui
 
             for (qreal angle = 0.0; angle < 359.0; angle += 30.0)
             {
-                const QLineF line(0.0, 0.0, 100.0 * qCos(qDegreesToRadians(angle)), -100.0 * qSin(qDegreesToRadians(angle)));
+                const QLineF line({ 0.0, 0.0 }, polarPoint(100.0, qDegreesToRadians(angle)));
                 QGraphicsLineItem *li = new QGraphicsLineItem(line, &m_radials);
                 li->setPen(pen);
             }
@@ -156,7 +156,7 @@ namespace BlackGui
                         const double bearingRad  = sa.getRelativeBearing().value(CAngleUnit::rad());
                         const int groundSpeedKts = sa.getGroundSpeed().valueInteger(CSpeedUnit::kts());
 
-                        QPointF position(distanceNM * qSin(bearingRad), -distanceNM * qCos(bearingRad));
+                        QPointF position(polarPoint(distanceNM, bearingRad));
 
                         QGraphicsEllipseItem *dot = new QGraphicsEllipseItem(-2.0, -2.0, 4.0, 4.0, &m_radarTargets);
                         dot->setPos(position);
@@ -191,7 +191,7 @@ namespace BlackGui
                             double headingRad = sa.getHeading().value(CAngleUnit::rad());
                             QPen pen(Qt::green, 1);
                             pen.setCosmetic(true);
-                            QGraphicsLineItem *li = new QGraphicsLineItem(QLineF(0.0, 0.0, 20.0 * qSin(headingRad), -20.0 * qCos(headingRad)), dot);
+                            QGraphicsLineItem *li = new QGraphicsLineItem(QLineF({ 0.0, 0.0 }, polarPoint(20.0, headingRad)), dot);
                             li->setFlags(QGraphicsItem::ItemIgnoresTransformations);
                             li->setPen(pen);
                         }
@@ -282,7 +282,11 @@ namespace BlackGui
                 if (!myself) { return; }
                 myself->refreshTargets();
             });
+        }
 
+        QPointF CRadarComponent::polarPoint(double distance, double angleRadians)
+        {
+            return { distance * qSin(angleRadians), -distance * qCos(angleRadians) };
         }
     } // namespace
 } // namespace

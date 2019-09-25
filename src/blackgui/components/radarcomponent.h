@@ -57,6 +57,8 @@ namespace BlackGui
             void changeRangeInSteps(bool zoomIn);
             void changeRangeFromUserSelection(int index);
 
+            static QPointF polarPoint(double distance, double angleRadians);
+
             //! Info area tab bar has changed
             void onInfoAreaTabBarChanged(int index);
 
