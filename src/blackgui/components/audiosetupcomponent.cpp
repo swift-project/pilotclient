@@ -109,7 +109,7 @@ namespace BlackGui
                 c = connect(ui->sb_NotificationValueVolume, qOverload<int>(&QSpinBox::valueChanged), this, &CAudioSetupComponent::onNotificationVolumeChanged);
                 Q_ASSERT(c);
             }
-            Q_UNUSED(c);
+            Q_UNUSED(c)
         }
 
         CAudioSetupComponent::~CAudioSetupComponent()
@@ -193,14 +193,14 @@ namespace BlackGui
                 const CAudioDeviceInfoList inputDevices = devices.getInputDevices();
                 if (index >= inputDevices.size()) { return; }
                 selectedDevice = inputDevices[index];
-                sGui->getIContextAudio()->setCurrentAudioDevice(selectedDevice);
+                // sGui->getIContextAudio()->setCurrentAudioDevices(selectedDevice);
             }
             else if (sender == ui->cb_SetupAudioOutputDevice)
             {
                 const CAudioDeviceInfoList outputDevices = devices.getOutputDevices();
                 if (index >= outputDevices.size()) { return; }
                 selectedDevice = outputDevices[index];
-                sGui->getIContextAudio()->setCurrentAudioDevice(selectedDevice);
+                // sGui->getIContextAudio()->setCurrentAudioDevices(selectedDevice);
             }
         }
 

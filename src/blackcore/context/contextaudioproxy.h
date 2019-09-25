@@ -63,13 +63,10 @@ namespace BlackCore
             // interface overrides
             //! \publicsection
             //! @{
-            virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms) override;
-            virtual BlackMisc::Network::CUserList getRoomUsers(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const override;
-            virtual void leaveAllVoiceRooms() override;
             virtual BlackMisc::CIdentifier audioRunsWhere() const override;
             virtual BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const override;
             virtual BlackMisc::Audio::CAudioDeviceInfoList getCurrentAudioDevices() const override;
-            virtual void setCurrentAudioDevice(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice) override;
+            virtual void setCurrentAudioDevices(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice) override;
             virtual void setVoiceOutputVolume(int volume) override;
             virtual int getVoiceOutputVolume() const override;
             virtual void setMute(bool muted) override;

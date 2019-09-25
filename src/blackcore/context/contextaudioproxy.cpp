@@ -7,6 +7,7 @@
  */
 
 #include "blackcore/context/contextaudioproxy.h"
+#include "blackmisc/audio/ptt.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/genericdbusinterface.h"
@@ -36,7 +37,7 @@ namespace BlackCore
             // connect signals, asserts when failures
             QDBusConnection con = QDBusConnection::sessionBus();
             CContextAudioProxy c(CDBusServer::coreServiceName(), con, CCoreFacadeConfig::Remote, nullptr);
-            Q_UNUSED(c);
+            Q_UNUSED(c)
         }
 
         void CContextAudioProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
@@ -59,20 +60,12 @@ namespace BlackCore
             s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
                                    "changedSelectedAudioDevices", this, SIGNAL(changedSelectedAudioDevices(BlackMisc::Audio::CAudioDeviceInfoList)));
             Q_ASSERT(s);
-
-            Q_UNUSED(s);
+            s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
+                                   "ptt", this, SIGNAL(ptt(bool, BlackMisc::Audio::PTTCOM, BlackMisc::CIdentifier)));
+            Q_ASSERT(s);
+            Q_UNUSED(s)
 
             this->relayBaseClassSignals(serviceName, connection, IContextAudio::ObjectPath(), IContextAudio::InterfaceName());
-        }
-
-        void CContextAudioProxy::leaveAllVoiceRooms()
-        {
-            this->m_dBusInterface->callDBus(QLatin1String("leaveAllVoiceRooms"));
-        }
-
-        BlackMisc::Network::CUserList CContextAudioProxy::getRoomUsers(CComSystem::ComUnit comUnitValue) const
-        {
-            return this->m_dBusInterface->callDBusRet<CUserList>(QLatin1String("getRoomUsers"), comUnitValue);
         }
 
         CAudioDeviceInfoList CContextAudioProxy::getAudioDevices() const
@@ -90,14 +83,9 @@ namespace BlackCore
             return this->m_dBusInterface->callDBusRet<CAudioDeviceInfoList>(QLatin1String("getCurrentAudioDevices"));
         }
 
-        void CContextAudioProxy::setCurrentAudioDevice(const CAudioDeviceInfo &audioDevice)
+        void CContextAudioProxy::setCurrentAudioDevices(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice)
         {
-            this->m_dBusInterface->callDBus(QLatin1String("setCurrentAudioDevice"), audioDevice);
-        }
-
-        void CContextAudioProxy::setComVoiceRooms(const CVoiceRoomList &voiceRooms)
-        {
-            this->m_dBusInterface->callDBus(QLatin1String("setComVoiceRooms"), voiceRooms);
+            this->m_dBusInterface->callDBus(QLatin1String("setCurrentAudioDevices"), inputDevice, outputDevice);
         }
 
         void CContextAudioProxy::playSelcalTone(const CSelcal &selcal)

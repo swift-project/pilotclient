@@ -21,6 +21,7 @@ namespace BlackCore
 {
     //! Audio Input Device
     //! \todo Settings classes to store hardware settings (hardware device)
+    //! \deprecated will be removed as we use Qt classes now
     class BLACKCORE_EXPORT IAudioInputDevice : public QObject
     {
         Q_OBJECT
@@ -50,6 +51,7 @@ namespace BlackCore
     class BLACKCORE_EXPORT CAudioInputDeviceDummy : public IAudioInputDevice
     {
         Q_OBJECT
+
     public:
         //! Constructor
         CAudioInputDeviceDummy(QObject *parent = nullptr) : IAudioInputDevice(parent) {}
@@ -102,6 +104,6 @@ namespace BlackCore
         //! Get output volume between 0 ... 300%
         virtual int getOutputVolume() const = 0;
     };
-}
+} // ns
 
 #endif // guard

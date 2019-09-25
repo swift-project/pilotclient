@@ -32,28 +32,7 @@ namespace BlackCore
             CContextAudioEmpty(CCoreFacade *runtime) : IContextAudio(CCoreFacadeConfig::NotUsed, runtime) {}
 
         public slots:
-            //! \copydoc IContextAudio::setComVoiceRooms
-            virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &newRooms) override
-            {
-                Q_UNUSED(newRooms);
-                logEmptyContextWarning(Q_FUNC_INFO);
-            }
-
-            //! \copydoc IContextAudio::getRoomUsers()
-            virtual BlackMisc::Network::CUserList getRoomUsers(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const override
-            {
-                Q_UNUSED(comUnitValue);
-                logEmptyContextWarning(Q_FUNC_INFO);
-                return BlackMisc::Network::CUserList();
-            }
-
-            //! \copydoc IContextAudio::leaveAllVoiceRooms
-            virtual void leaveAllVoiceRooms() override
-            {
-                logEmptyContextWarning(Q_FUNC_INFO);
-            }
-
-            //! \copydoc IContextAudio::audioRunsWhere()
+            //! \copydoc IContextAudio::audioRunsWhere
             virtual BlackMisc::CIdentifier audioRunsWhere() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
@@ -61,31 +40,32 @@ namespace BlackCore
                 return i;
             }
 
-            //! \copydoc IContextAudio::getAudioDevices()
+            //! \copydoc IContextAudio::getAudioDevices
             virtual BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Audio::CAudioDeviceInfoList();
             }
 
-            //! \copydoc IContextAudio::getCurrentAudioDevices()
+            //! \copydoc IContextAudio::getCurrentAudioDevices
             virtual BlackMisc::Audio::CAudioDeviceInfoList getCurrentAudioDevices() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Audio::CAudioDeviceInfoList();
             }
 
-            //! \copydoc IContextAudio::setCurrentAudioDevice()
-            virtual void setCurrentAudioDevice(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice) override
+            //! \copydoc IContextAudio::setCurrentAudioDevices
+            virtual void setCurrentAudioDevices(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice) override
             {
-                Q_UNUSED(audioDevice);
+                Q_UNUSED(inputDevice)
+                Q_UNUSED(outputDevice)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextAudio::setVoiceOutputVolume
             virtual void setVoiceOutputVolume(int volume) override
             {
-                Q_UNUSED(volume);
+                Q_UNUSED(volume)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
@@ -99,7 +79,7 @@ namespace BlackCore
             //! \copydoc IContextAudio::setMute
             virtual void setMute(bool muted) override
             {
-                Q_UNUSED(muted);
+                Q_UNUSED(muted)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
@@ -113,23 +93,23 @@ namespace BlackCore
             //! \copydoc IContextAudio::playSelcalTone()
             virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) override
             {
-                Q_UNUSED(selcal);
+                Q_UNUSED(selcal)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextAudio::playNotification()
             virtual void playNotification(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume = -1) override
             {
-                Q_UNUSED(volume);
-                Q_UNUSED(notification);
-                Q_UNUSED(considerSettings);
+                Q_UNUSED(volume)
+                Q_UNUSED(notification)
+                Q_UNUSED(considerSettings)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextAudio::enableAudioLoopback()
             virtual void enableAudioLoopback(bool enable = true) override
             {
-                Q_UNUSED(enable);
+                Q_UNUSED(enable)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
@@ -143,8 +123,8 @@ namespace BlackCore
             //! \copydoc IContextAudio::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override
             {
-                Q_UNUSED(commandLine);
-                Q_UNUSED(originator);
+                Q_UNUSED(commandLine)
+                Q_UNUSED(originator)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
@@ -159,7 +139,7 @@ namespace BlackCore
             //! \copydoc IContextAudio::setVoiceSetup
             virtual void setVoiceSetup(const BlackMisc::Audio::CVoiceSetup &setup) override
             {
-                Q_UNUSED(setup);
+                Q_UNUSED(setup)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
         };

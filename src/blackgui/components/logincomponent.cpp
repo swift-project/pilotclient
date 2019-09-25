@@ -344,7 +344,6 @@ namespace BlackGui
             else
             {
                 // disconnect from network
-                sGui->getIContextAudio()->leaveAllVoiceRooms();
                 sGui->setExtraWindowTitle("");
                 msg = sGui->getIContextNetwork()->disconnectFromNetwork();
             }

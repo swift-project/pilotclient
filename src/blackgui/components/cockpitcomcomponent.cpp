@@ -79,7 +79,7 @@ namespace BlackGui
                 connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedSelcal,          this, &CCockpitComComponent::updateSelcalFromContext,  Qt::QueuedConnection);
 
                 // hook up with audio context
-                connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CCockpitComComponent::updateVoiceRoomStatusFromContext, Qt::QueuedConnection);
+                // connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CCockpitComComponent::updateVoiceRoomStatusFromContext, Qt::QueuedConnection);
 
                 // network
                 connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this, &CCockpitComComponent::onAtcStationsChanged, Qt::QueuedConnection);

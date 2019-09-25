@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>307</width>
+    <width>227</width>
     <height>254</height>
    </rect>
   </property>
@@ -14,46 +14,15 @@
    <string>Audio setup</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="1">
-    <widget class="QLineEdit" name="le_Info">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>extra info goes here</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="1">
-    <widget class="QCheckBox" name="cb_DisableAudioEffects">
-     <property name="text">
-      <string>Disable realistic audio simulation</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="1">
-    <widget class="QCheckBox" name="cb_SetupAudioLoopback">
-     <property name="text">
-      <string>Loopback, test sound in- to output</string>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="1">
+   <item row="11" column="1">
     <widget class="QProgressBar" name="pb_LevelOut">
      <property name="value">
       <number>24</number>
      </property>
     </widget>
    </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="lbl_Info">
-     <property name="text">
-      <string>Info</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <widget class="QSlider" name="hs_VolumeIn">
+   <item row="10" column="1">
+    <widget class="QSlider" name="hs_VolumeOut">
      <property name="value">
       <number>50</number>
      </property>
@@ -69,10 +38,13 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
-    <widget class="QComboBox" name="cb_SetupAudioOutputDevice">
-     <property name="sizeAdjustPolicy">
-      <enum>QComboBox::AdjustToMinimumContentsLength</enum>
+   <item row="8" column="1">
+    <widget class="QSlider" name="hs_VolumeIn">
+     <property name="value">
+      <number>50</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
@@ -83,52 +55,79 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="0">
-    <widget class="QLabel" name="lbl_VolumeIn">
-     <property name="text">
-      <string>In</string>
-     </property>
+   <item row="7" column="1">
+    <widget class="QWidget" name="wi_TestAudio" native="true">
+     <layout class="QHBoxLayout" name="hl_TestAudio">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QCheckBox" name="cb_SetupAudioLoopback">
+        <property name="text">
+         <string>Loopback, test sound in- to output</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
-   <item row="2" column="1">
-    <widget class="QComboBox" name="cb_SetupAudioInputDevice">
-     <property name="sizeAdjustPolicy">
-      <enum>QComboBox::AdjustToMinimumContentsLength</enum>
-     </property>
-     <property name="frame">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0">
+   <item row="7" column="0">
     <widget class="QLabel" name="lbl_SetupAudioLoopback">
      <property name="text">
       <string>Test</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="1">
-    <widget class="QProgressBar" name="pb_LevelIn">
-     <property name="value">
-      <number>50</number>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="0">
-    <widget class="QLabel" name="lbl_VolumeOut">
+   <item row="0" column="0">
+    <widget class="QLabel" name="lbl_Info">
      <property name="text">
-      <string>Out</string>
+      <string>Info</string>
      </property>
     </widget>
    </item>
-   <item row="8" column="1">
-    <widget class="QSlider" name="hs_VolumeOut">
-     <property name="value">
-      <number>50</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
+   <item row="2" column="1">
+    <widget class="QWidget" name="wi_InDevice" native="true">
+     <layout class="QHBoxLayout" name="hl_InDevice">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QComboBox" name="cb_SetupAudioInputDevice">
+        <property name="frame">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="tb_RefreshInDevice">
+        <property name="text">
+         <string>...</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>:/diagona/icons/diagona/icons/arrow-circle-135.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-135.png</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
    <item row="1" column="1">
@@ -171,6 +170,90 @@
      </layout>
     </widget>
    </item>
+   <item row="9" column="1">
+    <widget class="QProgressBar" name="pb_LevelIn">
+     <property name="value">
+      <number>50</number>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QLabel" name="lbl_VolumeIn">
+     <property name="text">
+      <string>In</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QWidget" name="wi_OutDevice" native="true">
+     <layout class="QHBoxLayout" name="hl_OutDevice">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QComboBox" name="cb_SetupAudioOutputDevice"/>
+      </item>
+      <item>
+       <widget class="QToolButton" name="tb_RefreshOutDevice">
+        <property name="text">
+         <string>...</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>:/diagona/icons/diagona/icons/arrow-circle-135.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-135.png</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QCheckBox" name="cb_DisableAudioEffects">
+     <property name="text">
+      <string>Disable realistic audio simulation</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLineEdit" name="le_Info">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>extra info goes here</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="0">
+    <widget class="QLabel" name="lbl_VolumeOut">
+     <property name="text">
+      <string>Out</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QToolButton" name="tb_ResetInVolume">
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="0">
+    <widget class="QToolButton" name="tb_ResetOutVolume">
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>
@@ -180,7 +263,9 @@
   <tabstop>cb_2Tx</tabstop>
   <tabstop>cb_2Rec</tabstop>
   <tabstop>cb_SetupAudioInputDevice</tabstop>
+  <tabstop>tb_RefreshInDevice</tabstop>
   <tabstop>cb_SetupAudioOutputDevice</tabstop>
+  <tabstop>tb_RefreshOutDevice</tabstop>
   <tabstop>cb_DisableAudioEffects</tabstop>
   <tabstop>cb_SetupAudioLoopback</tabstop>
   <tabstop>hs_VolumeIn</tabstop>

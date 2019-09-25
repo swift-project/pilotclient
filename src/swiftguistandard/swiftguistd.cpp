@@ -123,7 +123,6 @@ void SwiftGuiStd::performGracefulShutdown()
         {
             if (m_contextAudioAvailable)
             {
-                sGui->getIContextAudio()->leaveAllVoiceRooms();
                 sGui->getIContextAudio()->disconnect(this); // break down signal / slots
             }
             sGui->getIContextNetwork()->disconnectFromNetwork();

@@ -44,8 +44,8 @@ namespace BlackGui
             connect(ui->cb_CockpitVoiceRoom2Override, &QCheckBox::toggled, this, &CVoiceRoomsComponent::onVoiceRoomOverrideChanged);
             connect(ui->le_CockpitVoiceRoomCom1, &QLineEdit::returnPressed, this, &CVoiceRoomsComponent::onVoiceRoomUrlsReturnPressed);
             connect(ui->le_CockpitVoiceRoomCom2, &QLineEdit::returnPressed, this, &CVoiceRoomsComponent::onVoiceRoomUrlsReturnPressed);
-            connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CVoiceRoomsComponent::updateAudioVoiceRoomsFromContext, Qt::QueuedConnection);
-            connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRoomMembers, this, &CVoiceRoomsComponent::updateVoiceRoomMembers, Qt::QueuedConnection);
+            // connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CVoiceRoomsComponent::updateAudioVoiceRoomsFromContext, Qt::QueuedConnection);
+            // connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRoomMembers, this, &CVoiceRoomsComponent::updateVoiceRoomMembers, Qt::QueuedConnection);
         }
 
         CVoiceRoomsComponent::~CVoiceRoomsComponent()
@@ -131,7 +131,7 @@ namespace BlackGui
             if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return; }
             if (!ui->le_CockpitVoiceRoomCom1->text().trimmed().isEmpty())
             {
-                ui->tvp_CockpitVoiceRoom1->updateContainer(sGui->getIContextAudio()->getRoomUsers(CComSystem::Com1));
+                // ui->tvp_CockpitVoiceRoom1->updateContainer(sGui->getIContextAudio()->getRoomUsers(CComSystem::Com1));
             }
             else
             {
@@ -140,7 +140,7 @@ namespace BlackGui
 
             if (!ui->le_CockpitVoiceRoomCom2->text().trimmed().isEmpty())
             {
-                ui->tvp_CockpitVoiceRoom2->updateContainer(sGui->getIContextAudio()->getRoomUsers(CComSystem::Com2));
+                // ui->tvp_CockpitVoiceRoom2->updateContainer(sGui->getIContextAudio()->getRoomUsers(CComSystem::Com2));
             }
             else
             {

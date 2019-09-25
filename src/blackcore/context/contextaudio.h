@@ -11,20 +11,22 @@
 #ifndef BLACKCORE_CONTEXT_CONTEXTAUDIO_H
 #define BLACKCORE_CONTEXT_CONTEXTAUDIO_H
 
-#include "blackcore/blackcoreexport.h"
 #include "blackcore/context/context.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/corefacadeconfig.h"
+#include "blackcore/blackcoreexport.h"
+
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/audio/voicesetup.h"
+#include "blackmisc/audio/ptt.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/selcal.h"
-#include "blackmisc/identifier.h"
 #include "blackmisc/network/userlist.h"
+#include "blackmisc/identifier.h"
 
 #include <QObject>
 #include <QString>
@@ -82,16 +84,12 @@ namespace BlackCore
             virtual ~IContextAudio() override {}
 
         signals:
-            //! Voice rooms changed
-            //! \details the flag indicates, whether a room got connected or disconnected
-            void changedVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms, bool connected);
-
-            //! Voice room members changed
-            void changedVoiceRoomMembers();
-
             //! Audio volume changed
             //! \sa setVoiceOutputVolume
             void changedAudioVolume(int volume);
+
+            //! PTT status in a particular voice client
+            void ptt(bool active, BlackMisc::Audio::PTTCOM pttcom, const BlackMisc::CIdentifier &identifier);
 
             //! Mute changed
             void changedMute(bool muted);
@@ -103,17 +101,11 @@ namespace BlackCore
             void changedSelectedAudioDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
 
         public slots:
-            //! Set voice rooms
-            virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms) = 0;
-
-            //! Leave all voice rooms
-            virtual void leaveAllVoiceRooms() = 0;
-
-            //! Room users
-            virtual BlackMisc::Network::CUserList getRoomUsers(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const = 0;
-
-            //! Audio devices
+            //! Audio devices @{
             virtual BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const = 0;
+            BlackMisc::Audio::CAudioDeviceInfoList getAudioInputDevices()  const { return this->getAudioDevices().getInputDevices(); }
+            BlackMisc::Audio::CAudioDeviceInfoList getAudioOutputDevices() const { return this->getAudioDevices().getOutputDevices(); }
+            //! @}
 
             //! Audio runs where
             virtual BlackMisc::CIdentifier audioRunsWhere() const = 0;
@@ -127,7 +119,7 @@ namespace BlackCore
 
             //! Set current audio device
             //! \param audioDevice can be input or audio device
-            virtual void setCurrentAudioDevice(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice) = 0;
+            virtual void setCurrentAudioDevices(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice) = 0;
 
             //! Set voice output volume (0..300)
             virtual void setVoiceOutputVolume(int volume) = 0;
