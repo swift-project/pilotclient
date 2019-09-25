@@ -286,7 +286,7 @@ namespace BlackGui
 
         QPointF CRadarComponent::polarPoint(double distance, double angleRadians)
         {
-            return { distance * qSin(angleRadians), -distance * qCos(angleRadians) };
+            return { -distance * qSin(angleRadians), -distance * qCos(angleRadians) };
         }
     } // namespace
 } // namespace
