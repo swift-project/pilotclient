@@ -26,11 +26,43 @@ namespace BlackMisc
             m_deviceName(name), m_hostName(QHostInfo::localHostName())
         { }
 
+        QAudioDeviceInfo CAudioDeviceInfo::toAudioDeviceInfo() const
+        {
+            QList<QAudioDeviceInfo> devices;
+            switch (this->getType())
+            {
+            case InputDevice:  devices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput); break;
+            case OutputDevice: devices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput); break;
+            default:
+                devices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
+                devices += QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
+                break;
+            }
+
+            for (const QAudioDeviceInfo &d : as_const(devices))
+            {
+                if (d.deviceName() == this->getName()) { return d; }
+            }
+
+            return QAudioDeviceInfo();
+        }
+
+        CAudioDeviceInfo::DeviceType CAudioDeviceInfo::fromQtMode(QAudio::Mode m)
+        {
+            switch (m)
+            {
+            case QAudio::AudioInput: return InputDevice;
+            case QAudio::AudioOutput: return OutputDevice;
+            default: break;
+            }
+            return Unknown;
+        }
+
         QString CAudioDeviceInfo::convertToQString(bool i18n) const
         {
-            Q_UNUSED(i18n);
+            Q_UNUSED(i18n)
             if (m_hostName.isEmpty()) { return m_deviceName; }
             return m_deviceName % u" [" % this->getHostName() % u']';
         }
-    } // Voice
-} // BlackMisc
+    } // ns
+} // ns

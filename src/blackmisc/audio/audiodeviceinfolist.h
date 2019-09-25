@@ -18,6 +18,7 @@
 #include "blackmisc/variant.h"
 
 #include <QMetaType>
+#include <QStringList>
 
 namespace BlackMisc
 {
@@ -26,7 +27,7 @@ namespace BlackMisc
         //! Value object encapsulating a list of audio devices.
         class BLACKMISC_EXPORT CAudioDeviceInfoList :
             public CSequence<CAudioDeviceInfo>,
-            public BlackMisc::Mixin::MetaType<CAudioDeviceInfoList>
+            public Mixin::MetaType<CAudioDeviceInfoList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAudioDeviceInfoList)
@@ -44,13 +45,28 @@ namespace BlackMisc
             //! Get output devices in that list
             CAudioDeviceInfoList getInputDevices() const;
 
+            //! Find by name
+            CAudioDeviceInfo findByName(const QString &name, bool strict = false) const;
+
             //! Find device by its index
             CAudioDeviceInfo findByDeviceIndex(int deviceIndex);
 
             //! Count (as of type)
             int count(CAudioDeviceInfo::DeviceType type) const;
-        };
 
+            //! All names
+            QStringList getDeviceNames() const;
+
+            //! List based on the Qt devices @{
+            static CAudioDeviceInfoList allQtInputDevices();
+            static CAudioDeviceInfoList allQtOutputDevices();
+            static CAudioDeviceInfoList allQtDevices();
+            static CAudioDeviceInfo fromQtInputDevice(const QAudioDeviceInfo &device);
+            static CAudioDeviceInfo fromQtOutputDevice(const QAudioDeviceInfo &device);
+            static CAudioDeviceInfo qtDefaultInputDevice();
+            static CAudioDeviceInfo qtDefaultOutputDevice();
+            //! @}
+        };
     } //namespace
 } // namespace
 

@@ -11,10 +11,11 @@
 #ifndef BLACKMISC_AUDIO_AUDIODEVICE_H
 #define BLACKMISC_AUDIO_AUDIODEVICE_H
 
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/valueobject.h"
+#include "blackmisc/blackmiscexport.h"
 
+#include <QAudioDeviceInfo>
 #include <QMetaType>
 #include <QString>
 
@@ -59,7 +60,13 @@ namespace BlackMisc
             DeviceType getType() const { return m_type; }
 
             //! Valid audio device object?
-            bool isValid() const { return m_deviceIndex >= -1 && !m_deviceName.isEmpty(); }
+            bool isValid() const { return m_deviceIndex != Unknown && !m_deviceName.isEmpty(); }
+
+            //! To QAudioDeviceInfo
+            QAudioDeviceInfo toAudioDeviceInfo() const;
+
+            //! Convert the Qt type
+            static DeviceType fromQtMode(QAudio::Mode m);
 
             //! Device index for default device
             static int defaultDeviceIndex() {return -1;}
@@ -83,10 +90,10 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            DeviceType m_type;    //!< Device type, @see CAudioDeviceInfo::DeviceType
-            int m_deviceIndex;    //!< deviceIndex is the number is the reference for the VVL. The device is selected by this index. The managing class needs to take care, that indexes are valid.
-            QString m_deviceName; //!< Device name
-            QString m_hostName;   //!< We use a DBus based system. Hence an audio device can reside on a differen computers, this here is its name
+            DeviceType m_type = Unknown; //!< Device type, @see CAudioDeviceInfo::DeviceType
+            int m_deviceIndex = -1;      //!< deviceIndex is the number is the reference for the VVL. The device is selected by this index. The managing class needs to take care, that indexes are valid.
+            QString m_deviceName;        //!< Device name
+            QString m_hostName;          //!< We use a DBus based system. Hence an audio device can reside on a differen computers, this here is its name
 
             BLACK_METACLASS(
                 CAudioDeviceInfo,
@@ -100,5 +107,6 @@ namespace BlackMisc
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Audio::CAudioDeviceInfo)
+Q_DECLARE_METATYPE(BlackMisc::Audio::CAudioDeviceInfo::DeviceType)
 
 #endif // guard
