@@ -27,9 +27,9 @@ namespace BlackCore
             struct OutputVolumeStreamArgs
             {
                 QAudioDeviceInfo DeviceNumber;
-                float PeakRaw = 0.0;
-                float PeakDB = -1 * std::numeric_limits<float>::infinity();
-                float PeakVU = 0.0;
+                double PeakRaw = 0.0;
+                double PeakDB = -1 * std::numeric_limits<double>::infinity();
+                double PeakVU = 0.0;
             };
 
             class CAudioOutputBuffer : public QIODevice
@@ -40,8 +40,10 @@ namespace BlackCore
                 //! Ctor
                 CAudioOutputBuffer(BlackSound::SampleProvider::ISampleProvider *sampleProvider, QObject *parent = nullptr);
 
+                //! Related provider
                 BlackSound::SampleProvider::ISampleProvider *m_sampleProvider = nullptr;
 
+                //! Set the format
                 void setAudioFormat(const QAudioFormat &format) { m_outputFormat = format; }
 
             signals:
@@ -54,30 +56,40 @@ namespace BlackCore
             private:
                 QAudioFormat m_outputFormat;
 
-                float m_maxSampleOutput = 0;
+                double m_maxSampleOutput = 0;
                 int m_sampleCount = 0;
-                const int c_sampleCountPerEvent = 4800;
-                const float maxDb = 0;
-                const float minDb = -40;
+                const int SampleCountPerEvent = 4800;
+                const double maxDb =   0;
+                const double minDb = -40;
             };
 
+            //! Output
             class Output : public QObject
             {
                 Q_OBJECT
             public:
+                //! Ctor
                 Output(QObject *parent = nullptr);
 
-                void start(const QAudioDeviceInfo &device, BlackSound::SampleProvider::ISampleProvider *sampleProvider);
+                //! Start output
+                void start(const QAudioDeviceInfo &outputDevice, BlackSound::SampleProvider::ISampleProvider *sampleProvider);
+
+                //! Stop output
                 void stop();
 
+                //! Corresponding device
+                const QAudioDeviceInfo &device() const { return m_device; }
+
             signals:
+                //! Streaming data
                 void outputVolumeStream(const OutputVolumeStreamArgs &args);
 
             private:
                 bool m_started = false;
 
+                QAudioDeviceInfo m_device;
                 QScopedPointer<QAudioOutput> m_audioOutputCom1;
-                CAudioOutputBuffer *m_audioOutputBuffer;
+                CAudioOutputBuffer *m_audioOutputBuffer = nullptr;
             };
         } // ns
     } // ns

@@ -9,11 +9,15 @@
 //! \file
 
 #include "input.h"
+#include "blackmisc/logmessage.h"
 #include "blacksound/audioutilities.h"
 
 #include <QtGlobal>
+#include <QStringBuilder>
 #include <QDebug>
 #include <cmath>
+
+using namespace BlackMisc;
 
 namespace BlackCore
 {
@@ -53,7 +57,7 @@ namespace BlackCore
                 m_buffer.append(data, static_cast<int>(len));
                 while (m_buffer.size() > 1920)
                 {
-                    qDebug() << QDateTime::currentMSecsSinceEpoch() << "CAudioInputBuffer::writeData " << m_buffer.size();
+                    // qDebug() << QDateTime::currentMSecsSinceEpoch() << "CAudioInputBuffer::writeData " << m_buffer.size();
                     emit frameAvailable(m_buffer.left(1920));
                     m_buffer.remove(0, 1920);
                 }
@@ -70,8 +74,7 @@ namespace BlackCore
                 const qint64 delta = now - m_lastFrameSent;
                 if (delta >= 19)
                 {
-                    qDebug() << now << "[signal] frameAvailable - buffer size" << m_buffer.size();
-
+                    // qDebug() << now << "[signal] frameAvailable - buffer size" << m_buffer.size();
                     m_buffer.remove(0, 1920);
                     m_lastFrameSent = now;
                     emit frameAvailable(m_buffer.left(1920));
@@ -91,7 +94,6 @@ namespace BlackCore
                 if (m_started) { return; }
 
                 QAudioFormat inputFormat;
-
                 inputFormat.setSampleRate(m_sampleRate);
                 inputFormat.setChannelCount(1);
                 inputFormat.setSampleSize(16);
@@ -100,14 +102,17 @@ namespace BlackCore
                 inputFormat.setCodec("audio/pcm");
                 if (!inputDevice.isFormatSupported(inputFormat))
                 {
-                    qWarning() << "Default INPUT format not supported - trying to use nearest";
-                    qWarning() << "Default format not supported - trying to use nearest:";
-                    qWarning() << "Sample rate: " << inputFormat.sampleRate();
-                    qWarning() << "Sample size: " << inputFormat.sampleSize();
-                    qWarning() << "Sample type: " << inputFormat.sampleType();
-                    qWarning() << "Byte order: " << inputFormat.byteOrder();
-                    qWarning() << "Codec: " << inputFormat.codec();
-                    qWarning() << "Channel count: " << inputFormat.channelCount();
+                    inputFormat = inputDevice.nearestFormat(inputFormat);
+                    const QString w =
+                        inputDevice.deviceName() %
+                        ": Default INPUT format not supported - trying to use nearest" %
+                        " Sample rate: " % QString::number(inputFormat.sampleRate()) %
+                        " Sample size: " % QString::number(inputFormat.sampleSize()) %
+                        " Sample type: " % QString::number(inputFormat.sampleType()) %
+                        " Byte order: "  % QString::number(inputFormat.byteOrder())  %
+                        " Codec: " % inputFormat.codec() %
+                        " Channel count: " % QString::number(inputFormat.channelCount());
+                    CLogMessage(this).warning(w);
                 }
 
                 m_audioInput.reset(new QAudioInput(inputDevice, inputFormat));
@@ -152,18 +157,16 @@ namespace BlackCore
                 m_opusBytesEncoded += length;
 
                 m_sampleCount += samples.size();
-                if (m_sampleCount >= c_sampleCountPerEvent)
+                if (m_sampleCount >= SampleCountPerEvent)
                 {
                     InputVolumeStreamArgs inputVolumeStreamArgs;
                     qint16 maxInt = std::numeric_limits<qint16>::max();
                     inputVolumeStreamArgs.PeakRaw = static_cast<float>(m_maxSampleInput) / maxInt;
                     inputVolumeStreamArgs.PeakDB  = static_cast<float>(20 * std::log10(inputVolumeStreamArgs.PeakRaw));
-                    float db = qBound(minDb, inputVolumeStreamArgs.PeakDB, maxDb);
-                    float ratio = (db - minDb) / (maxDb - minDb);
-                    if (ratio < 0.30)
-                        ratio = 0;
-                    if (ratio > 1.0)
-                        ratio = 1;
+                    double db = qBound(minDb, inputVolumeStreamArgs.PeakDB, maxDb);
+                    double ratio = (db - minDb) / (maxDb - minDb);
+                    if (ratio < 0.30) { ratio = 0.0; }
+                    if (ratio > 1.0)  { ratio = 1.0; }
                     inputVolumeStreamArgs.PeakVU = ratio;
                     emit inputVolumeStream(inputVolumeStreamArgs);
                     m_sampleCount = 0;

@@ -71,9 +71,9 @@ namespace BlackCore
             struct InputVolumeStreamArgs
             {
                 QAudioDeviceInfo DeviceNumber;
-                float PeakRaw = 0.0;
-                float PeakDB = -1 * std::numeric_limits<float>::infinity();
-                float PeakVU = 0.0;
+                double PeakRaw = 0.0;
+                double PeakDB  = -1.0 * std::numeric_limits<double>::infinity();
+                double PeakVU  = 0.0;
             };
 
             //! Input
@@ -85,15 +85,23 @@ namespace BlackCore
                 //! Ctor
                 CInput(int sampleRate, QObject *parent = nullptr);
 
-                bool started() const { return m_started; }
-
                 int opusBytesEncoded() const { return m_opusBytesEncoded; }
                 void setOpusBytesEncoded(int opusBytesEncoded) { m_opusBytesEncoded = opusBytesEncoded; }
+
                 double volume() const { return m_volume; }
                 void setVolume(double volume) { m_volume = volume; }
 
+                //! Started?
+                bool started() const { return m_started; }
+
+                //! Start
                 void start(const QAudioDeviceInfo &inputDevice);
+
+                //! Stop
                 void stop();
+
+                //! Corresponding device
+                const QAudioDeviceInfo &device() const { return m_device; }
 
             signals:
                 //! Volume stream data
@@ -110,6 +118,7 @@ namespace BlackCore
 
                 BlackSound::Codecs::COpusEncoder m_encoder;
                 QScopedPointer<QAudioInput> m_audioInput;
+                QAudioDeviceInfo m_device;
 
                 bool m_started = false;
                 int m_opusBytesEncoded = 0;
@@ -117,9 +126,9 @@ namespace BlackCore
                 double m_volume = 1.0;
                 qint16 m_maxSampleInput = 0.0;
 
-                const int c_sampleCountPerEvent = 4800;
-                const float maxDb = 0;
-                const float minDb = -40;
+                const int SampleCountPerEvent = 4800;
+                const double maxDb = 0;
+                const double minDb = -40;
 
                 uint m_audioSequenceCounter = 0;
 

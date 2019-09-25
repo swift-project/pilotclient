@@ -9,10 +9,13 @@
 //! \file
 
 #include "output.h"
+#include "blackmisc/logmessage.h"
 
 #include <QDebug>
+#include <QStringBuilder>
 #include <cmath>
 
+using namespace BlackMisc;
 using namespace BlackSound::SampleProvider;
 
 namespace BlackCore
@@ -38,23 +41,20 @@ namespace BlackCore
                 {
                     qint16 sampleInput = sample;
                     sampleInput = qAbs(sampleInput);
-                    if (sampleInput > m_maxSampleOutput)
-                        m_maxSampleOutput = sampleInput;
+                    if (sampleInput > m_maxSampleOutput) { m_maxSampleOutput = sampleInput; }
                 }
 
                 m_sampleCount += buffer.size();
-                if (m_sampleCount >= c_sampleCountPerEvent)
+                if (m_sampleCount >= SampleCountPerEvent)
                 {
                     OutputVolumeStreamArgs outputVolumeStreamArgs;
                     qint16 maxInt = std::numeric_limits<qint16>::max();
                     outputVolumeStreamArgs.PeakRaw = m_maxSampleOutput / maxInt;
-                    outputVolumeStreamArgs.PeakDB = (float)(20 * std::log10(outputVolumeStreamArgs.PeakRaw));
-                    float db = qBound(minDb, outputVolumeStreamArgs.PeakDB, maxDb);
-                    float ratio = (db - minDb) / (maxDb - minDb);
-                    if (ratio < 0.30)
-                        ratio = 0;
-                    if (ratio > 1.0)
-                        ratio = 1;
+                    outputVolumeStreamArgs.PeakDB = static_cast<float>(20 * std::log10(outputVolumeStreamArgs.PeakRaw));
+                    const double db = qBound(minDb, outputVolumeStreamArgs.PeakDB, maxDb);
+                    double ratio = (db - minDb) / (maxDb - minDb);
+                    if (ratio < 0.30) { ratio = 0.0; }
+                    if (ratio > 1.0)  { ratio = 1.0; }
                     outputVolumeStreamArgs.PeakVU = ratio;
                     emit outputVolumeStream(outputVolumeStreamArgs);
                     m_sampleCount = 0;
@@ -84,7 +84,7 @@ namespace BlackCore
             Output::Output(QObject *parent) : QObject(parent)
             { }
 
-            void Output::start(const QAudioDeviceInfo &device, ISampleProvider *sampleProvider)
+            void Output::start(const QAudioDeviceInfo &outputDevice, ISampleProvider *sampleProvider)
             {
                 m_audioOutputBuffer = new CAudioOutputBuffer(sampleProvider, this);
                 connect(m_audioOutputBuffer, &CAudioOutputBuffer::outputVolumeStream, this, &Output::outputVolumeStream);
@@ -97,20 +97,22 @@ namespace BlackCore
                 outputFormat.setByteOrder(QAudioFormat::LittleEndian);
                 outputFormat.setCodec("audio/pcm");
 
-                if (!device.isFormatSupported(outputFormat))
+                if (!outputDevice.isFormatSupported(outputFormat))
                 {
-                    qWarning() << "Default OUTPUT format not supported - trying to use nearest";
-                    outputFormat = device.nearestFormat(outputFormat);
-                    qWarning() << "Default format not supported - trying to use nearest:";
-                    qWarning() << "Sample rate: " << outputFormat.sampleRate();
-                    qWarning() << "Sample size: " << outputFormat.sampleSize();
-                    qWarning() << "Sample type: " << outputFormat.sampleType();
-                    qWarning() << "Byte order: " << outputFormat.byteOrder();
-                    qWarning() << "Codec: " << outputFormat.codec();
-                    qWarning() << "Channel count: " << outputFormat.channelCount();
+                    outputFormat = outputDevice.nearestFormat(outputFormat);
+                    const QString w =
+                        outputDevice.deviceName() %
+                        ": Default OUTPUT format not supported - trying to use nearest" %
+                        " Sample rate: " % QString::number(outputFormat.sampleRate()) %
+                        " Sample size: " % QString::number(outputFormat.sampleSize()) %
+                        " Sample type: " % QString::number(outputFormat.sampleType()) %
+                        " Byte order: "  % QString::number(outputFormat.byteOrder())  %
+                        " Codec: " % outputFormat.codec() %
+                        " Channel count: " % QString::number(outputFormat.channelCount());
+                    CLogMessage(this).warning(w);
                 }
 
-                m_audioOutputCom1.reset(new QAudioOutput(device, outputFormat));
+                m_audioOutputCom1.reset(new QAudioOutput(outputDevice, outputFormat));
                 // m_audioOutput->setBufferSize(bufferSize);
                 m_audioOutputBuffer->open(QIODevice::ReadWrite | QIODevice::Unbuffered);
                 m_audioOutputBuffer->setAudioFormat(outputFormat);
@@ -123,6 +125,8 @@ namespace BlackCore
             {
                 if (!m_started) { return; }
                 m_started = false;
+                m_audioOutputBuffer->deleteLater();
+                m_audioOutputBuffer = nullptr;
             }
         } // ns
     } // ns
