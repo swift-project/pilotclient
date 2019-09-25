@@ -93,29 +93,28 @@ namespace BlackCore
             {
                 if (m_started) { return; }
 
-                QAudioFormat inputFormat;
-                inputFormat.setSampleRate(m_sampleRate);
-                inputFormat.setChannelCount(1);
-                inputFormat.setSampleSize(16);
-                inputFormat.setSampleType(QAudioFormat::SignedInt);
-                inputFormat.setByteOrder(QAudioFormat::LittleEndian);
-                inputFormat.setCodec("audio/pcm");
-                if (!inputDevice.isFormatSupported(inputFormat))
+                m_inputFormat.setSampleRate(m_sampleRate);
+                m_inputFormat.setChannelCount(1);
+                m_inputFormat.setSampleSize(16);
+                m_inputFormat.setSampleType(QAudioFormat::SignedInt);
+                m_inputFormat.setByteOrder(QAudioFormat::LittleEndian);
+                m_inputFormat.setCodec("audio/pcm");
+                if (!inputDevice.isFormatSupported(m_inputFormat))
                 {
-                    inputFormat = inputDevice.nearestFormat(inputFormat);
+                    m_inputFormat = inputDevice.nearestFormat(m_inputFormat);
                     const QString w =
                         inputDevice.deviceName() %
                         ": Default INPUT format not supported - trying to use nearest" %
-                        " Sample rate: " % QString::number(inputFormat.sampleRate()) %
-                        " Sample size: " % QString::number(inputFormat.sampleSize()) %
-                        " Sample type: " % QString::number(inputFormat.sampleType()) %
-                        " Byte order: "  % QString::number(inputFormat.byteOrder())  %
-                        " Codec: " % inputFormat.codec() %
-                        " Channel count: " % QString::number(inputFormat.channelCount());
+                        " Sample rate: " % QString::number(m_inputFormat.sampleRate()) %
+                        " Sample size: " % QString::number(m_inputFormat.sampleSize()) %
+                        " Sample type: " % QString::number(m_inputFormat.sampleType()) %
+                        " Byte order: "  % QString::number(m_inputFormat.byteOrder())  %
+                        " Codec: " % m_inputFormat.codec() %
+                        " Channel count: " % QString::number(m_inputFormat.channelCount());
                     CLogMessage(this).warning(w);
                 }
 
-                m_audioInput.reset(new QAudioInput(inputDevice, inputFormat));
+                m_audioInput.reset(new QAudioInput(inputDevice, m_inputFormat));
                 m_audioInputBuffer.start();
 
                 m_audioInput->start(&m_audioInputBuffer);
@@ -137,6 +136,11 @@ namespace BlackCore
             void CInput::audioInDataAvailable(const QByteArray &frame)
             {
                 QVector<qint16> samples = convertBytesTo16BitPCM(frame);
+
+                if (m_inputFormat.channelCount() == 2)
+                {
+                    samples = convertFromStereoToMono(samples);
+                }
 
                 int value = 0;
                 for (qint16 &sample : samples)

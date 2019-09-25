@@ -119,6 +119,7 @@ namespace BlackCore
                 BlackSound::Codecs::COpusEncoder m_encoder;
                 QScopedPointer<QAudioInput> m_audioInput;
                 QAudioDeviceInfo m_device;
+                QAudioFormat m_inputFormat;
 
                 bool m_started = false;
                 int m_opusBytesEncoded = 0;

@@ -10,6 +10,7 @@
 
 #include "output.h"
 #include "blackmisc/logmessage.h"
+#include "blacksound/audioutilities.h"
 
 #include <QDebug>
 #include <QStringBuilder>
@@ -61,15 +62,12 @@ namespace BlackCore
                     m_maxSampleOutput = 0;
                 }
 
-                // if (maxlen > buffer.size()) { maxlen = buffer.size(); }
-                // memcpy(data, buffer.constData(), maxlen > buffer.size() ? buffer.size() : maxlen);
-                qint16 *p = reinterpret_cast<qint16 *>(data);
-                int index = 0;
-                for (int n = 0; n < count; n++)
+                if (channelCount == 2)
                 {
-                    p[index++] = buffer[n];
-                    if (channelCount == 2) p[index++] = buffer[n];
+                    buffer = convertFromMonoToStereo(buffer);
                 }
+
+                memcpy(data, buffer.constData(), maxlen);
 
                 return maxlen;
             }
