@@ -23,6 +23,7 @@
 #include <QScopedPointer>
 
 namespace Ui { class CAudioDeviceVolumeSetupComponent; }
+namespace BlackCore { namespace Afv { namespace Clients { class CAfvClient; }}}
 namespace BlackGui
 {
     namespace Components
@@ -40,7 +41,7 @@ namespace BlackGui
             virtual ~CAudioDeviceVolumeSetupComponent() override;
 
             //! Get input and output volume values @{
-            int getInValue(int from = BlackMisc::Audio::CSettings::InMin,   int to = BlackMisc::Audio::CSettings::InMax) const;
+            int getInValue(int from  = BlackMisc::Audio::CSettings::InMin,  int to = BlackMisc::Audio::CSettings::InMax) const;
             int getOutValue(int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax) const;
             //! @}
 
@@ -80,6 +81,9 @@ namespace BlackGui
             //! Loopback toggled
             void onLoopbackToggled(bool loopback);
 
+            //! Disable audio effects disable
+            void onDisableAudioEffectsToggled(bool disabled);
+
             //! Audio device lists from settings
             void initAudioDeviceLists();
 
@@ -94,6 +98,16 @@ namespace BlackGui
 
             void onOutputVU(double vu);
             void onInputVU(double vu);
+
+            void onReloadDevices();
+
+            void onResetVolumeIn();
+            void onResetVolumeOut();
+
+            BlackMisc::Audio::CAudioDeviceInfo getSelectedInputDevice() const;
+            BlackMisc::Audio::CAudioDeviceInfo getSelectedOutputDevice() const;
+
+            static BlackCore::Afv::Clients::CAfvClient *afvClient();
 
             QScopedPointer<Ui::CAudioDeviceVolumeSetupComponent> ui;
             BlackMisc::CDigestSignal m_volumeSliderChanged { this, &CAudioDeviceVolumeSetupComponent::saveVolumes, 1000, 10 };

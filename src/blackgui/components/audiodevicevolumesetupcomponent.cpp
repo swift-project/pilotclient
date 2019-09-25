@@ -42,18 +42,36 @@ namespace BlackGui
             ui(new Ui::CAudioDeviceVolumeSetupComponent)
         {
             ui->setupUi(this);
-            connect(ui->hs_VolumeIn,  &QSlider::valueChanged, this, &CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged);
-            connect(ui->hs_VolumeOut, &QSlider::valueChanged, this, &CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged);
+            connect(ui->hs_VolumeIn,         &QSlider::valueChanged, this, &CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged);
+            connect(ui->hs_VolumeOut,        &QSlider::valueChanged, this, &CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged);
+            connect(ui->tb_RefreshInDevice,  &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onReloadDevices, Qt::QueuedConnection);
+            connect(ui->tb_RefreshOutDevice, &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onReloadDevices, Qt::QueuedConnection);
+            connect(ui->tb_ResetInVolume,    &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onResetVolumeIn,  Qt::QueuedConnection);
+            connect(ui->tb_ResetOutVolume,   &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onResetVolumeOut, Qt::QueuedConnection);
+
+            ui->hs_VolumeIn->setMaximum(CSettings::InMax);
+            ui->hs_VolumeIn->setMinimum(CSettings::InMin);
+            ui->hs_VolumeOut->setMaximum(CSettings::OutMax);
+            ui->hs_VolumeOut->setMinimum(CSettings::OutMin);
+
+            const CSettings as(m_audioSettings.getThreadLocal());
+            const int i = this->getInValue();
+            const int o = this->getOutValue();
+            ui->hs_VolumeIn->setValue(i);
+            ui->hs_VolumeOut->setValue(o);
 
             // deferred init, because in a distributed swift system
             // it takes a moment until the settings are sychronized
             // this is leading to undesired "save settings" messages and played sounds
             QPointer<CAudioDeviceVolumeSetupComponent> myself(this);
-            QTimer::singleShot(2500, this, [ = ]
+            QTimer::singleShot(1000, this, [ = ]
             {
                 if (!myself || !sGui || sGui->isShuttingDown()) { return; }
                 this->init();
             });
+
+            ui->pb_LevelIn->setValue(ui->pb_LevelIn->minimum());
+            ui->pb_LevelOut->setValue(ui->pb_LevelOut->minimum());
         }
 
         void CAudioDeviceVolumeSetupComponent::init()
@@ -66,6 +84,8 @@ namespace BlackGui
             this->reloadSettings();
 
             bool c = connect(ui->cb_SetupAudioLoopback, &QCheckBox::toggled, this, &CAudioDeviceVolumeSetupComponent::onLoopbackToggled);
+            Q_ASSERT(c);
+            c = connect(ui->cb_DisableAudioEffects, &QCheckBox::toggled, this, &CAudioDeviceVolumeSetupComponent::onDisableAudioEffectsToggled);
             Q_ASSERT(c);
 
             if (audio)
@@ -89,11 +109,11 @@ namespace BlackGui
                 c = connect(sGui->getIContextAudio(), &IContextAudio::changedSelectedAudioDevices, this, &CAudioDeviceVolumeSetupComponent::onCurrentAudioDevicesChanged, Qt::QueuedConnection);
                 Q_ASSERT(c);
 
-                if (sGui->getIContextAudio()->isUsingImplementingObject())
+                CAfvClient *afvClient = CAudioDeviceVolumeSetupComponent::afvClient();
+                if (afvClient)
                 {
-                    CAfvClient &afvClient = sGui->getCoreFacade()->getCContextAudio()->voiceClient();
-                    connect(&afvClient, &CAfvClient::outputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onOutputVU);
-                    connect(&afvClient, &CAfvClient::inputVolumePeakVU,  this, &CAudioDeviceVolumeSetupComponent::onInputVU);
+                    connect(afvClient, &CAfvClient::outputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onOutputVU);
+                    connect(afvClient, &CAfvClient::inputVolumePeakVU,  this, &CAudioDeviceVolumeSetupComponent::onInputVU);
                 }
 
             }
@@ -214,29 +234,56 @@ namespace BlackGui
             this->setInLevel(qRound(vu * 100.0), 0, 100);
         }
 
+        void CAudioDeviceVolumeSetupComponent::onReloadDevices()
+        {
+            if (!hasAudio()) { return; }
+            this->initAudioDeviceLists();
+            const CAudioDeviceInfo i = this->getSelectedInputDevice();
+            const CAudioDeviceInfo o = this->getSelectedInputDevice();
+            sGui->getIContextAudio()->setCurrentAudioDevices(i, o);
+        }
+
+        void CAudioDeviceVolumeSetupComponent::onResetVolumeIn()
+        {
+            ui->hs_VolumeIn->setValue((ui->hs_VolumeIn->maximum() - ui->hs_VolumeIn->minimum()) / 2);
+        }
+
+        void CAudioDeviceVolumeSetupComponent::onResetVolumeOut()
+        {
+            ui->hs_VolumeOut->setValue((ui->hs_VolumeOut->maximum() - ui->hs_VolumeOut->minimum()) / 2);
+        }
+
+        CAudioDeviceInfo CAudioDeviceVolumeSetupComponent::getSelectedInputDevice() const
+        {
+            if (!hasAudio()) { return CAudioDeviceInfo(); }
+            const CAudioDeviceInfoList devices = sGui->getIContextAudio()->getAudioInputDevices();
+            return devices.findByName(ui->cb_SetupAudioInputDevice->currentText());
+        }
+
+        CAudioDeviceInfo CAudioDeviceVolumeSetupComponent::getSelectedOutputDevice() const
+        {
+            if (!hasAudio()) { return CAudioDeviceInfo(); }
+            const CAudioDeviceInfoList devices = sGui->getIContextAudio()->getAudioOutputDevices();
+            return devices.findByName(ui->cb_SetupAudioOutputDevice->currentText());
+        }
+
+        CAfvClient *CAudioDeviceVolumeSetupComponent::afvClient()
+        {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return nullptr; }
+            if (!sGui->getIContextAudio()->isUsingImplementingObject()) { return nullptr; }
+
+            CAfvClient &afvClient = sGui->getCoreFacade()->getCContextAudio()->voiceClient();
+            return &afvClient;
+        }
+
         void CAudioDeviceVolumeSetupComponent::onAudioDeviceSelected(int index)
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return; }
             if (index < 0) { return; }
 
-            CAudioDeviceInfoList devices = sGui->getIContextAudio()->getAudioDevices();
-            if (devices.isEmpty()) { return; }
-            CAudioDeviceInfo selectedDevice;
-            const QObject *sender = QObject::sender();
-            if (sender == ui->cb_SetupAudioInputDevice)
-            {
-                const CAudioDeviceInfoList inputDevices = devices.getInputDevices();
-                if (index >= inputDevices.size()) { return; }
-                selectedDevice = inputDevices[index];
-                sGui->getIContextAudio()->setCurrentAudioDevice(selectedDevice);
-            }
-            else if (sender == ui->cb_SetupAudioOutputDevice)
-            {
-                const CAudioDeviceInfoList outputDevices = devices.getOutputDevices();
-                if (index >= outputDevices.size()) { return; }
-                selectedDevice = outputDevices[index];
-                sGui->getIContextAudio()->setCurrentAudioDevice(selectedDevice);
-            }
+            const CAudioDeviceInfo in  = this->getSelectedInputDevice();
+            const CAudioDeviceInfo out = this->getSelectedOutputDevice();
+            sGui->getIContextAudio()->setCurrentAudioDevices(in, out);
         }
 
         void CAudioDeviceVolumeSetupComponent::onCurrentAudioDevicesChanged(const CAudioDeviceInfoList &devices)
@@ -259,6 +306,9 @@ namespace BlackGui
             ui->cb_SetupAudioOutputDevice->clear();
             ui->cb_SetupAudioInputDevice->clear();
 
+            const QString i = ui->cb_SetupAudioInputDevice->currentText();
+            const QString o = ui->cb_SetupAudioOutputDevice->currentText();
+
             for (const CAudioDeviceInfo &device : devices)
             {
                 if (device.getType() == CAudioDeviceInfo::InputDevice)
@@ -270,6 +320,9 @@ namespace BlackGui
                     ui->cb_SetupAudioOutputDevice->addItem(device.toQString(true));
                 }
             }
+
+            if (!i.isEmpty()) { ui->cb_SetupAudioInputDevice->setCurrentText(i); }
+            if (!o.isEmpty()) { ui->cb_SetupAudioOutputDevice->setCurrentText(o); }
         }
 
         void CAudioDeviceVolumeSetupComponent::onLoopbackToggled(bool loopback)
@@ -277,6 +330,16 @@ namespace BlackGui
             if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return; }
             if (sGui->getIContextAudio()->isAudioLoopbackEnabled() == loopback) { return; }
             sGui->getIContextAudio()->enableAudioLoopback(loopback);
+        }
+
+        void CAudioDeviceVolumeSetupComponent::onDisableAudioEffectsToggled(bool disabled)
+        {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return; }
+            CSettings as(m_audioSettings.getThreadLocal());
+            const bool enabled = !disabled;
+            if (as.isAudioEffectsEnabled() == enabled) { return; }
+            as.setAudioEffectsEnabled(enabled);
+            m_audioSettings.setAndSave(as);
         }
     } // namespace
 } // namespace
