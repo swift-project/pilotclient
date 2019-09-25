@@ -20,10 +20,11 @@
 #include "blackcore/blackcoreexport.h"
 
 #include "blacksound/sampleprovider/volumesampleprovider.h"
-
-#include "blackmisc/settingscache.h"
 #include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/audio/ptt.h"
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/identifiable.h"
+#include "blackmisc/settingscache.h"
 
 #include <QAudioDeviceInfo>
 #include <QDateTime>
@@ -40,16 +41,20 @@ namespace BlackCore
         namespace Clients
         {
             //! AFV client
-            class BLACKCORE_EXPORT CAfvClient final : public QObject
+            class BLACKCORE_EXPORT CAfvClient final : public QObject, public BlackMisc::CIdentifiable
             {
                 Q_OBJECT
-                Q_PROPERTY(double inputVolumePeakVU READ getInputVolumePeakVU NOTIFY inputVolumePeakVU)
+                Q_PROPERTY(double inputVolumePeakVU  READ getInputVolumePeakVU  NOTIFY inputVolumePeakVU)
                 Q_PROPERTY(double outputVolumePeakVU READ getOutputVolumePeakVU NOTIFY outputVolumePeakVU)
                 Q_PROPERTY(ConnectionStatus connectionStatus READ getConnectionStatus NOTIFY connectionStatusChanged)
                 Q_PROPERTY(QString receivingCallsignsCom1 READ getReceivingCallsignsCom1 NOTIFY receivingCallsignsChanged)
                 Q_PROPERTY(QString receivingCallsignsCom2 READ getReceivingCallsignsCom2 NOTIFY receivingCallsignsChanged)
 
             public:
+                //! Categories
+                static const BlackMisc::CLogCategoryList &getLogCategories();
+
+                //! Connection status
                 enum ConnectionStatus { Disconnected, Connected };
                 Q_ENUM(ConnectionStatus)
 
@@ -57,13 +62,9 @@ namespace BlackCore
                 CAfvClient(const QString &apiServer, QObject *parent = nullptr);
 
                 //! Dtor
-                virtual ~CAfvClient() override
-                {
-                    this->stop();
-                }
+                virtual ~CAfvClient() override { this->stop(); }
 
-                // void setContextOwnAircraft(const BlackCore::Context::IContextOwnAircraft *contextOwnAircraft);
-
+                //! Corresponding callsign
                 QString callsign() const { return m_callsign; }
 
                 bool isConnected() const { return m_connection->isConnected(); }
@@ -72,14 +73,23 @@ namespace BlackCore
                 Q_INVOKABLE void connectTo(const QString &cid, const QString &password, const QString &callsign);
                 Q_INVOKABLE void disconnectFrom();
 
+                //! Audio devices @{
                 Q_INVOKABLE QStringList availableInputDevices() const;
                 Q_INVOKABLE QStringList availableOutputDevices() const;
+                //! @}
 
+                //! Enable/disable VHF simulation, true means effects are NOT used
                 Q_INVOKABLE void setBypassEffects(bool value);
 
                 bool isStarted() const { return m_isStarted; }
                 QDateTime getStartDateTimeUt() const { return m_startDateTimeUtc; }
 
+                //! Muted @{
+                bool isMuted() const;
+                void setMuted(bool mute);
+                //! @}
+
+                bool restartWithNewDevices(const QAudioDeviceInfo &inputDevice, const QAudioDeviceInfo &outputDevice);
                 void start(const QAudioDeviceInfo &inputDevice, const QAudioDeviceInfo &outputDevice, const QVector<quint16> &transceiverIDs);
                 Q_INVOKABLE void start(const QString &inputDeviceName, const QString &outputDeviceName);
                 void stop();
@@ -96,17 +106,26 @@ namespace BlackCore
                 void setPttForCom(bool active, BlackMisc::Audio::PTTCOM com);
                 //! @}
 
-
+                //! Loopback @{
                 Q_INVOKABLE void setLoopBack(bool on) { m_loopbackOn = on; }
+                Q_INVOKABLE bool isLoopback() const { return m_loopbackOn; }
+                //! @}
 
-                //! Input volume in DB, +-18DB @{
+                //! Input volume in dB, +-18dB @{
                 double getInputVolumeDb() const { return m_inputVolumeDb; }
                 Q_INVOKABLE void setInputVolumeDb(double value);
                 //! @}
 
-                //! Output volume in DB, +-18DB @{
+                //! Output volume in dB, +-18dB @{
                 double getOutputVolumeDb() const;
                 Q_INVOKABLE void setOutputVolumeDb(double outputVolume);
+                //! @}
+
+                //! Normalized volumes 0..100 @{
+                int getNormalizedInputVolume() const;
+                int getNormalizedOutputVolume() const;
+                void setNormalizedInputVolume(int volume);
+                void setNormalizedOutputVolume(int volume);
                 //! @}
 
                 //! VU values, 0..1 @{
@@ -114,11 +133,25 @@ namespace BlackCore
                 double getOutputVolumePeakVU() const { return m_outputVolumeStream.PeakVU; }
                 //! @}
 
+                //! Recently used device @{
+                const QAudioDeviceInfo &getInputDevice() const;
+                const QAudioDeviceInfo &getOutputDevice() const;
+                //! @}
+
             signals:
+                //! Callsigns have been changed
                 void receivingCallsignsChanged(const Audio::TransceiverReceivingCallsignsChangedArgs &args);
+
+                //! Connection status has been changed
+                void connectionStatusChanged(ConnectionStatus status);
+
+                //! PTT status in this particular AFV client
+                void ptt(bool active, BlackMisc::Audio::PTTCOM pttcom, const BlackMisc::CIdentifier &identifier);
+
+                //! VU levels @{
                 void inputVolumePeakVU(double value);
                 void outputVolumePeakVU(double value);
-                void connectionStatusChanged(ConnectionStatus status);
+                //! @}
 
             private:
                 void opusDataAvailable(const Audio::OpusDataAvailableArgs &args);
@@ -135,12 +168,13 @@ namespace BlackCore
                 void updateTransceiversFromContext(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
                 static constexpr int SampleRate = 48000;
-                static constexpr int FrameSize  = 960; // 20ms
+                static constexpr int FrameSize  =   960; // 20ms
+                static constexpr double MinDb   = -18.0;
+                static constexpr double MaxDb   =  18.0;
+                static constexpr quint32 UniCom = 122800000;
 
-                // Connection
                 Connection::CClientConnection *m_connection = nullptr;
-
-                // Properties
+                BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &CAfvClient::onSettingsChanged };
                 QString m_callsign;
 
                 Audio::CInput *m_input  = nullptr;
@@ -152,16 +186,15 @@ namespace BlackCore
                 bool m_transmit = false;
                 bool m_transmitHistory = false;
                 QVector<TxTransceiverDto> m_transmittingTransceivers;
+                static const QVector<quint16> &allTransceiverIds() { static const QVector<quint16> transceiverIds{0, 1}; return transceiverIds; }
 
                 bool m_isStarted = false;
+                bool m_loopbackOn = false;
                 QDateTime m_startDateTimeUtc;
 
                 double m_inputVolumeDb;
                 double m_outputVolume = 1.0;
-
                 double m_maxDbReadingInPTTInterval = -100;
-
-                bool m_loopbackOn = false;
 
                 QTimer m_voiceServerPositionTimer;
                 QVector<TransceiverDto> m_transceivers;
@@ -170,11 +203,8 @@ namespace BlackCore
                 Audio::InputVolumeStreamArgs  m_inputVolumeStream;
                 Audio::OutputVolumeStreamArgs m_outputVolumeStream;
 
-                BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &CAfvClient::onSettingsChanged };
-
                 void initWithContext();
                 static bool hasContext();
-
             };
         } // ns
     } // ns
