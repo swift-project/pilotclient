@@ -1,6 +1,6 @@
 load(common_pre)
 
-QT       += network dbus xml
+QT       += network dbus xml multimedia
 
 TARGET = blackmisc
 TEMPLATE = lib

@@ -1,6 +1,6 @@
 load(common_pre)
 
-QT += core network dbus testlib
+QT += core network dbus testlib multimedia
 
 TARGET = testfsdclient
 CONFIG   -= app_bundle
