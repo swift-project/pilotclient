@@ -87,13 +87,10 @@ namespace BlackCore
             // Interface implementations
             //! \publicsection
             //! @{
-            virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &newRooms) override;
-            virtual BlackMisc::Network::CUserList getRoomUsers(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const override;
-            virtual void leaveAllVoiceRooms() override;
             virtual BlackMisc::CIdentifier audioRunsWhere() const override;
             virtual BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const override;
             virtual BlackMisc::Audio::CAudioDeviceInfoList getCurrentAudioDevices() const override;
-            virtual void setCurrentAudioDevice(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice) override;
+            virtual void setCurrentAudioDevices(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice) override;
             virtual void setVoiceOutputVolume(int volume) override;
             virtual int  getVoiceOutputVolume() const override;
             virtual void setMute(bool muted) override;
@@ -111,7 +108,7 @@ namespace BlackCore
             //! <pre>
             //! .mute                          mute             BlackCore::Context::CContextAudio
             //! .unmute                        unmute           BlackCore::Context::CContextAudio
-            //! .vol .volume   volume 0..300   set volume       BlackCore::Context::CContextAudio
+            //! .vol .volume   volume 0..100   set volume       BlackCore::Context::CContextAudio
             //! </pre>
             //! @}
             //! \copydoc IContextAudio::parseCommandLine
@@ -125,19 +122,6 @@ namespace BlackCore
             CContextAudio *registerWithDBus(BlackMisc::CDBusServer *server);
 
         private:
-            BlackMisc::Audio::CVoiceRoomList getComVoiceRooms() const;
-            BlackMisc::Audio::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const;
-            bool canTalk() const;
-            BlackMisc::Aviation::CCallsignSet getRoomCallsigns(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const;
-
-            //! @deprecated old voice @{
-            void initVoiceChannels();
-            void initInputDevice();
-            void initOutputDevice();
-            void initAudioMixer();
-            void initVoiceVatlib(bool allocateInput = true);
-            //! @}
-
             //! \copydoc IVoice::connectionStatusChanged
             //! \sa IContextAudio::changedVoiceRooms
             void onConnectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus);
@@ -148,12 +132,6 @@ namespace BlackCore
             void setVoiceTransmissionCom2(bool enabled);
             void setVoiceTransmissionComActive(bool enabled);
             //! @}
-
-            //! User joined the room
-            void onUserJoinedRoom(const BlackMisc::Aviation::CCallsign &callsign);
-
-            //! User left the room
-            void onUserLeftRoom(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Connection in transition
             bool inTransitionState() const;
@@ -183,34 +161,22 @@ namespace BlackCore
             //! Network connection status
             void xCtxNetworkConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
-            //! Voice channel by room
-            QSharedPointer<IVoiceChannel> getVoiceChannelBy(const BlackMisc::Audio::CVoiceRoom &voiceRoom);
-
             CActionBind m_actionPtt     { BlackMisc::Input::pttHotkeyAction(),     BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudio::setVoiceTransmissionComActive };
             CActionBind m_actionPttCom1 { BlackMisc::Input::pttCom1HotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudio::setVoiceTransmissionCom1 };
             CActionBind m_actionPttCom2 { BlackMisc::Input::pttCom2HotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudio::setVoiceTransmissionCom2 };
             CActionBind m_actionAudioVolumeIncrease { BlackMisc::Input::audioVolumeIncreaseHotkeyAction(), BlackMisc::Input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudio::audioIncreaseVolume };
             CActionBind m_actionAudioVolumeDecrease { BlackMisc::Input::audioVolumeDecreaseHotkeyAction(), BlackMisc::Input::audioVolumeDecreaseHotkeyIcon(), this, &CContextAudio::audioDecreaseVolume };
 
-            std::unique_ptr<IVoice> m_voice; //!< underlying voice lib
-            std::unique_ptr<IAudioMixer> m_audioMixer;
             int m_outVolumeBeforeMute = 90;
             static constexpr int MinUnmuteVolume = 20; //!< minimum volume when unmuted
 
-#ifdef Q_OS_MAC
-            BlackMisc::CMacOSMicrophoneAccess m_micAccess;
-            void delayedInitMicrophone();
-#endif
+            /**
+            #ifdef Q_OS_MAC
+                        BlackMisc::CMacOSMicrophoneAccess m_micAccess;
+                        void delayedInitMicrophone();
+            #endif
+            **/
 
-            // For easy access.
-            QSharedPointer<IVoiceChannel> m_channel1;
-            QSharedPointer<IVoiceChannel> m_channel2;
-            std::unique_ptr<IAudioOutputDevice> m_voiceOutputDevice;
-            std::unique_ptr<IAudioInputDevice>  m_voiceInputDevice;
-
-            QList<QSharedPointer<IVoiceChannel>> m_unusedVoiceChannels;
-            QHash<BlackMisc::Aviation::CComSystem::ComUnit, QSharedPointer<IVoiceChannel>> m_voiceChannelMapping; //!< COM unit to voice channel
-            QHash<QSharedPointer<IVoiceChannel>, IAudioMixer::OutputPort> m_voiceChannelOutputPortMapping;        //!< channel to output port
             BlackSound::CSelcalPlayer      *m_selcalPlayer = nullptr;
             BlackSound::CNotificationPlayer m_notificationPlayer;
 

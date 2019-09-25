@@ -49,6 +49,7 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 using namespace BlackSound;
 using namespace BlackCore::Vatsim;
+using namespace BlackCore::Afv::Clients;
 
 namespace BlackCore
 {
@@ -57,16 +58,20 @@ namespace BlackCore
         CContextAudio::CContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
             IContextAudio(mode, runtime),
             CIdentifiable(this),
-            m_voice(new CVoiceVatlib()),
             m_voiceClient(("https://voice1.vatsim.uk"))
         {
+
+            /**
             initVoiceChannels();
             initInputDevice();
             initOutputDevice();
             initAudioMixer();
+            **/
 
             this->setVoiceOutputVolume(m_audioSettings.getThreadLocal().getOutVolume());
             m_selcalPlayer = new CSelcalPlayer(QAudioDeviceInfo::defaultOutputDevice(), this);
+
+            connect(&m_voiceClient, &CAfvClient::ptt, this, &CContextAudio::ptt);
 
             this->changeDeviceSettings();
             QPointer<CContextAudio> myself(this);
@@ -85,143 +90,13 @@ namespace BlackCore
             return this;
         }
 
-        void CContextAudio::initVoiceChannels()
-        {
-            //! \todo KB 2018-11 those are supposed to be Qt::QueuedConnection, but not yet changed (risk to break something)
-            m_channel1 = m_voice->createVoiceChannel();
-            connect(m_channel1.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::onConnectionStatusChanged);
-            connect(m_channel1.data(), &IVoiceChannel::userJoinedRoom,          this, &CContextAudio::onUserJoinedRoom);
-            connect(m_channel1.data(), &IVoiceChannel::userLeftRoom,            this, &CContextAudio::onUserLeftRoom);
-            m_channel2 = m_voice->createVoiceChannel();
-            connect(m_channel2.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::onConnectionStatusChanged);
-            connect(m_channel2.data(), &IVoiceChannel::userJoinedRoom,          this, &CContextAudio::onUserJoinedRoom);
-            connect(m_channel2.data(), &IVoiceChannel::userLeftRoom,            this, &CContextAudio::onUserLeftRoom);
-
-            m_unusedVoiceChannels.push_back(m_channel1);
-            m_unusedVoiceChannels.push_back(m_channel2);
-
-            m_voiceChannelOutputPortMapping[m_channel1] = IAudioMixer::OutputVoiceChannel1;
-            m_voiceChannelOutputPortMapping[m_channel2] = IAudioMixer::OutputVoiceChannel2;
-        }
-
-        void CContextAudio::initInputDevice()
-        {
-#ifdef Q_OS_MAC
-            CMacOSMicrophoneAccess::AuthorizationStatus status = m_micAccess.getAuthorizationStatus();
-            if (status == CMacOSMicrophoneAccess::Authorized)
-            {
-                m_voiceInputDevice = m_voice->createInputDevice();
-                CLogMessage(this).info(u"MacOS specific input device init");
-            }
-            else if (status == CMacOSMicrophoneAccess::NotDetermined)
-            {
-                m_voiceInputDevice.reset(new CAudioInputDeviceDummy(this));
-                connect(&m_micAccess, &CMacOSMicrophoneAccess::permissionRequestAnswered, this, &CContextAudio::delayedInitMicrophone);
-                m_micAccess.requestAccess();
-                CLogMessage(this).info(u"MacOS requested input device");
-            }
-            else
-            {
-                m_voiceInputDevice.reset(new CAudioInputDeviceDummy(this));
-                CLogMessage(this).error(u"Microphone access not granted. Voice input will not work.");
-            }
-#else
-            m_voiceInputDevice = m_voice->createInputDevice();
-#endif
-        }
-
-        void CContextAudio::initOutputDevice()
-        {
-            m_voiceOutputDevice = m_voice->createOutputDevice();
-        }
-
-        void CContextAudio::initAudioMixer()
-        {
-            m_audioMixer = m_voice->createAudioMixer();
-
-            if (! m_voiceInputDevice->isDummyDevice())
-            {
-                m_voice->connectVoice(m_voiceInputDevice.get(), m_audioMixer.get(), IAudioMixer::InputMicrophone);
-            }
-            m_voice->connectVoice(m_channel1.data(), m_audioMixer.get(), IAudioMixer::InputVoiceChannel1);
-            m_voice->connectVoice(m_channel2.data(), m_audioMixer.get(), IAudioMixer::InputVoiceChannel2);
-            m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputDevice1, m_voiceOutputDevice.get());
-            m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputVoiceChannel1, m_channel1.data());
-            m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputVoiceChannel2, m_channel2.data());
-
-            m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel1, IAudioMixer::OutputDevice1);
-            m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel2, IAudioMixer::OutputDevice1);
-        }
-
         CContextAudio::~CContextAudio()
         {
-            this->leaveAllVoiceRooms();
-        }
-
-        CVoiceRoomList CContextAudio::getComVoiceRoomsWithAudioStatus() const
-        {
-            Q_ASSERT(m_voice);
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return this->getComVoiceRooms();
-        }
-
-        CVoiceRoomList CContextAudio::getComVoiceRooms() const
-        {
-            Q_ASSERT(m_voice);
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            CVoiceRoomList voiceRoomList;
-
-            QSharedPointer<IVoiceChannel> voiceChannelCom1 = m_voiceChannelMapping.value(CComSystem::Com1);
-            if (voiceChannelCom1)
-            {
-                CVoiceRoom room = voiceChannelCom1->getVoiceRoom();
-                voiceRoomList.push_back(room);
-            }
-            else
-            {
-                voiceRoomList.push_back(CVoiceRoom());
-            }
-
-            QSharedPointer<IVoiceChannel> voiceChannelCom2 = m_voiceChannelMapping.value(CComSystem::Com2);
-            if (voiceChannelCom2)
-            {
-                CVoiceRoom room = voiceChannelCom2->getVoiceRoom();
-                voiceRoomList.push_back(room);
-            }
-            else
-            {
-                voiceRoomList.push_back(CVoiceRoom());
-            }
-
-            return voiceRoomList;
-        }
-
-        bool CContextAudio::canTalk() const
-        {
-            const CVoiceRoomList rooms = this->getComVoiceRoomsWithAudioStatus();
-            return rooms.countCanTalkTo() > 0;
-        }
-
-        void CContextAudio::leaveAllVoiceRooms()
-        {
-            Q_ASSERT(m_voice);
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;}
-            m_voiceChannelMapping.clear();
-            if (m_channel1)
-            {
-                m_channel1->leaveVoiceRoom();
-                m_unusedVoiceChannels.push_back(m_channel1);
-            }
-            if (m_channel2)
-            {
-                m_channel2->leaveVoiceRoom();
-                m_unusedVoiceChannels.push_back(m_channel2);
-            }
+            m_voiceClient.stop();
         }
 
         CIdentifier CContextAudio::audioRunsWhere() const
         {
-            Q_ASSERT(m_voice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             static const CIdentifier i("CContextAudio");
             return i;
@@ -229,54 +104,35 @@ namespace BlackCore
 
         CAudioDeviceInfoList CContextAudio::getAudioDevices() const
         {
-            Q_ASSERT(m_voice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            CAudioDeviceInfoList devices = m_voiceOutputDevice->getOutputDevices();
-            devices.push_back(m_voiceInputDevice->getInputDevices());
-            return devices;
+            return CAudioDeviceInfoList::allQtDevices();
         }
 
         CAudioDeviceInfoList CContextAudio::getCurrentAudioDevices() const
         {
-            Q_ASSERT(m_voice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+
+            // either the devices really used, or settings
+            CAudioDeviceInfo inputDevice = CAudioDeviceInfoList::fromQtInputDevice(m_voiceClient.getInputDevice());
+            if (!inputDevice.isValid()) { inputDevice = CAudioDeviceInfoList::allQtInputDevices().findByName(m_inputDeviceSetting.get()); }
+            if (!inputDevice.isValid()) { inputDevice = CAudioDeviceInfoList::qtDefaultInputDevice(); }
+
+            CAudioDeviceInfo outputDevice = CAudioDeviceInfoList::fromQtOutputDevice(m_voiceClient.getOutputDevice());
+            if (!outputDevice.isValid()) { outputDevice = CAudioDeviceInfoList::allQtOutputDevices().findByName(m_outputDeviceSetting.get()); }
+            if (!outputDevice.isValid()) { outputDevice = CAudioDeviceInfoList::qtDefaultOutputDevice(); }
+
             CAudioDeviceInfoList devices;
-            devices.push_back(m_voiceInputDevice->getCurrentInputDevice());
-            devices.push_back(m_voiceOutputDevice->getCurrentOutputDevice());
+            devices.push_back(inputDevice);
+            devices.push_back(outputDevice);
             return devices;
         }
 
-        void CContextAudio::setCurrentAudioDevice(const CAudioDeviceInfo &audioDevice)
+        void CContextAudio::setCurrentAudioDevices(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice)
         {
-            Q_ASSERT(m_voice);
-            Q_ASSERT(audioDevice.getType() != CAudioDeviceInfo::Unknown);
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << audioDevice; }
-            bool changed = false;
-            if (audioDevice.getType() == CAudioDeviceInfo::InputDevice)
-            {
-                if (m_voiceInputDevice->getCurrentInputDevice() != audioDevice)
-                {
-                    m_voiceInputDevice->setInputDevice(audioDevice);
-                    changed = true;
-                }
-                if (m_inputDeviceSetting.get() != audioDevice.getName())
-                {
-                    m_inputDeviceSetting.set(audioDevice.getName());
-                }
-            }
-            else
-            {
-                if (m_voiceOutputDevice->getCurrentOutputDevice() != audioDevice)
-                {
-                    m_voiceOutputDevice->setOutputDevice(audioDevice);
-                    changed = true;
-                }
-                if (m_outputDeviceSetting.get() != audioDevice.getName())
-                {
-                    m_outputDeviceSetting.set(audioDevice.getName());
-                }
-            }
-
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << inputDevice << outputDevice; }
+            if (!inputDevice.getName().isEmpty())  { m_inputDeviceSetting.setAndSave(inputDevice.getName()); }
+            if (!outputDevice.getName().isEmpty()) { m_outputDeviceSetting.setAndSave(outputDevice.getName()); }
+            const bool changed = m_voiceClient.restartWithNewDevices(inputDevice.toAudioDeviceInfo(), outputDevice.toAudioDeviceInfo());
             if (changed)
             {
                 emit this->changedSelectedAudioDevices(this->getCurrentAudioDevices());
@@ -285,17 +141,18 @@ namespace BlackCore
 
         void CContextAudio::setVoiceOutputVolume(int volume)
         {
-            Q_ASSERT(m_voiceOutputDevice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << volume; }
 
-            const bool wasMuted = isMuted();
-            // volume = qMin(CSettings::MaxAudioVolume, volume);
+            const bool wasMuted = this->isMuted();
+            if (volume > CSettings::OutMax) { volume = CSettings::OutMax; }
+            else if (volume < CSettings::OutMax) { volume = CSettings::OutMax; }
 
-            bool changedVoiceOutput = m_voiceOutputDevice->getOutputVolume() != volume;
+            const int currentVolume = m_voiceClient.getNormalizedOutputVolume();
+            bool changedVoiceOutput = (currentVolume != volume);
             if (changedVoiceOutput)
             {
-                m_voiceOutputDevice->setOutputVolume(volume);
-                m_outVolumeBeforeMute = m_voiceOutputDevice->getOutputVolume();
+                m_voiceClient.setOutputVolumeDb(volume);
+                m_outVolumeBeforeMute = currentVolume;
 
                 emit this->changedAudioVolume(volume);
                 if ((volume > 0 && wasMuted) || (volume < 1 && !wasMuted))
@@ -315,9 +172,8 @@ namespace BlackCore
 
         int CContextAudio::getVoiceOutputVolume() const
         {
-            Q_ASSERT(m_voiceOutputDevice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return m_voiceOutputDevice->getOutputVolume();
+            return m_voiceClient.getNormalizedOutputVolume();
         }
 
         void CContextAudio::setMute(bool muted)
@@ -325,25 +181,8 @@ namespace BlackCore
             if (this->isMuted() == muted) { return; } // avoid roundtrips / unnecessary signals
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << muted; }
 
-            int newVolume;
-            if (muted)
-            {
-                Q_ASSERT(m_voiceOutputDevice);
-                m_outVolumeBeforeMute = m_voiceOutputDevice->getOutputVolume();
-                newVolume = 0;
-            }
-            else
-            {
-                newVolume = m_outVolumeBeforeMute < MinUnmuteVolume ? MinUnmuteVolume : m_outVolumeBeforeMute;
-                m_outVolumeBeforeMute = newVolume;
-            }
-
-            // do not call setVoiceOutputVolume -> infinite loop
-            if (newVolume != m_voiceOutputDevice->getOutputVolume())
-            {
-                m_voiceOutputDevice->setOutputVolume(newVolume);
-                emit this->changedAudioVolume(newVolume);
-            }
+            if (m_voiceClient.isMuted() == muted) { return; }
+            m_voiceClient.setMuted(muted);
 
             // signal
             emit this->changedMute(muted);
@@ -352,135 +191,11 @@ namespace BlackCore
         bool CContextAudio::isMuted() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return m_voiceOutputDevice->getOutputVolume() < 1;
-        }
-
-        void CContextAudio::setComVoiceRooms(const CVoiceRoomList &newRooms)
-        {
-            Q_ASSERT(m_voice);
-            Q_ASSERT(newRooms.size() == 2);
-            Q_ASSERT(getIContextOwnAircraft());
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << newRooms; }
-
-            const CVoiceRoomList currentRooms = this->getComVoiceRooms();
-            const CVoiceRoom currentRoomCom1  = currentRooms[0];
-            const CVoiceRoom currentRoomCom2  = currentRooms[1];
-            CVoiceRoom newRoomCom1 = newRooms[0];
-            CVoiceRoom newRoomCom2 = newRooms[1];
-            const CCallsign ownCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
-            const QString id = this->getIContextOwnAircraft()->getOwnAircraft().getPilotId();
-
-            bool changed = false;
-
-            // changed rooms?  But only compare on "URL", not status as connected etc.
-            if (currentRoomCom1.getVoiceRoomUrl() != newRoomCom1.getVoiceRoomUrl())
-            {
-                QSharedPointer<IVoiceChannel> oldVoiceChannel = m_voiceChannelMapping.value(CComSystem::Com1);
-                if (oldVoiceChannel)
-                {
-                    m_voiceChannelMapping.remove(CComSystem::Com1);
-
-                    // If the voice channel is not used by anybody else
-                    if (!m_voiceChannelMapping.values().contains(oldVoiceChannel))
-                    {
-                        oldVoiceChannel->leaveVoiceRoom();
-                        m_unusedVoiceChannels.push_back(oldVoiceChannel);
-                    }
-                    else
-                    {
-                        emit this->changedVoiceRooms(this->getComVoiceRooms(), false);
-                    }
-                }
-
-                if (newRoomCom1.isValid())
-                {
-                    QSharedPointer<IVoiceChannel> newVoiceChannel = this->getVoiceChannelBy(newRoomCom1);
-                    newVoiceChannel->setOwnAircraftCallsign(ownCallsign);
-                    newVoiceChannel->setUserId(id);
-                    const bool inUse = m_voiceChannelMapping.values().contains(newVoiceChannel);
-                    m_voiceChannelMapping.insert(CComSystem::Com1, newVoiceChannel);
-
-                    // If the voice channel is not used by anybody else
-                    if (!inUse)
-                    {
-                        newVoiceChannel->joinVoiceRoom(newRoomCom1);
-                    }
-                    else
-                    {
-                        emit this->changedVoiceRooms(getComVoiceRooms(), true);
-                    }
-                }
-                changed = true;
-            }
-
-            // changed rooms?  But only compare on "URL",  not status as connected etc.
-            if (currentRoomCom2.getVoiceRoomUrl() != newRoomCom2.getVoiceRoomUrl())
-            {
-                auto oldVoiceChannel = m_voiceChannelMapping.value(CComSystem::Com2);
-                if (oldVoiceChannel)
-                {
-                    m_voiceChannelMapping.remove(CComSystem::Com2);
-
-                    // If the voice channel is not used by anybody else
-                    if (!m_voiceChannelMapping.values().contains(oldVoiceChannel))
-                    {
-                        oldVoiceChannel->leaveVoiceRoom();
-                        m_unusedVoiceChannels.push_back(oldVoiceChannel);
-                    }
-                    else
-                    {
-                        emit this->changedVoiceRooms(this->getComVoiceRooms(), false);
-                    }
-                }
-
-                if (newRoomCom2.isValid())
-                {
-                    auto newVoiceChannel = getVoiceChannelBy(newRoomCom2);
-                    newVoiceChannel->setOwnAircraftCallsign(ownCallsign);
-                    newVoiceChannel->setUserId(id);
-                    bool inUse = m_voiceChannelMapping.values().contains(newVoiceChannel);
-                    m_voiceChannelMapping.insert(CComSystem::Com2, newVoiceChannel);
-
-                    // If the voice channel is not used by anybody else
-                    if (!inUse)
-                    {
-                        newVoiceChannel->joinVoiceRoom(newRoomCom2);
-                    }
-                    else
-                    {
-                        emit this->changedVoiceRooms(getComVoiceRooms(), true);
-                    }
-                }
-                changed = true;
-            }
-
-            // changed not yet used, but I keep it for debugging
-            // changedVoiceRooms called by connectionStatusChanged;
-            Q_UNUSED(changed)
-        }
-
-        CCallsignSet CContextAudio::getRoomCallsigns(CComSystem::ComUnit comUnitValue) const
-        {
-            Q_ASSERT(m_voice);
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-
-            const auto voiceChannel = m_voiceChannelMapping.value(comUnitValue);
-            return voiceChannel ? voiceChannel->getVoiceRoomCallsigns() : CCallsignSet();
-        }
-
-        Network::CUserList CContextAudio::getRoomUsers(CComSystem::ComUnit comUnit) const
-        {
-            Q_ASSERT(m_voice);
-            Q_ASSERT(this->getRuntime());
-            if (!this->getRuntime()->getIContextNetwork()) return Network::CUserList();
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-
-            return this->getIContextNetwork()->getUsersForCallsigns(this->getRoomCallsigns(comUnit));
+            return m_voiceClient.isMuted();
         }
 
         void CContextAudio::playSelcalTone(const CSelcal &selcal)
         {
-            Q_ASSERT(m_voice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << selcal; }
             const CTime t = m_selcalPlayer->play(90, selcal);
             const int ms = t.toMs();
@@ -498,7 +213,6 @@ namespace BlackCore
 
         void CContextAudio::playNotification(CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume)
         {
-            Q_ASSERT(m_voice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << notification; }
 
             const CSettings settings = m_audioSettings.getThreadLocal();
@@ -506,11 +220,13 @@ namespace BlackCore
             if (!play) { return; }
             if (notification == CNotificationSounds::PTTClickKeyDown && (considerSettings && settings.noAudioTransmission()))
             {
+                /**
                 if (!this->canTalk())
                 {
                     // warning sound
                     notification = CNotificationSounds::NotificationNoAudioTransmission;
                 }
+                **/
             }
 
             if (volume < 0 || volume > 100)
@@ -523,35 +239,26 @@ namespace BlackCore
 
         void CContextAudio::enableAudioLoopback(bool enable)
         {
-            Q_ASSERT(m_audioMixer);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (enable)
-            {
-                m_audioMixer->makeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputDevice1);
-            }
-            else
-            {
-                m_audioMixer->removeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputDevice1);
-            }
+            m_voiceClient.setLoopBack(enable);
         }
 
         bool CContextAudio::isAudioLoopbackEnabled() const
         {
-            Q_ASSERT(m_audioMixer);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return m_audioMixer->hasMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputDevice1);
+            return m_voiceClient.isLoopback();
         }
 
         void CContextAudio::setVoiceSetup(const CVoiceSetup &setup)
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_voice) { m_voice->setVoiceSetup(setup); }
+            // if (m_voice) { m_voice->setVoiceSetup(setup); }
         }
 
         CVoiceSetup CContextAudio::getVoiceSetup() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return m_voice ? m_voice->getVoiceSetup() : CVoiceSetup();
+            return CVoiceSetup();
         }
 
         bool CContextAudio::parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator)
@@ -661,7 +368,6 @@ namespace BlackCore
             switch (newStatus)
             {
             case IVoiceChannel::Connected:
-                emit this->changedVoiceRooms(getComVoiceRooms(), true);
                 break;
             case IVoiceChannel::Disconnecting: break;
             case IVoiceChannel::Connecting: break;
@@ -670,50 +376,31 @@ namespace BlackCore
                 CLogMessage(this).warning(u"Voice channel disconnecting error");
                 Q_FALLTHROUGH();
             case IVoiceChannel::Disconnected:
-                emit this->changedVoiceRooms(getComVoiceRooms(), false);
                 break;
             default:
                 break;
             }
         }
 
-        void CContextAudio::onUserJoinedRoom(const CCallsign & /**callsign**/)
-        {
-            emit this->changedVoiceRoomMembers();
-        }
-
-        void CContextAudio::onUserLeftRoom(const CCallsign & /**callsign**/)
-        {
-            emit this->changedVoiceRoomMembers();
-        }
-
         void CContextAudio::changeDeviceSettings()
         {
             const QString inputDeviceName = m_inputDeviceSetting.get();
+            CAudioDeviceInfo input;
             if (!inputDeviceName.isEmpty())
             {
-                for (auto device : m_voiceInputDevice->getInputDevices())
-                {
-                    if (device.getName() == inputDeviceName)
-                    {
-                        setCurrentAudioDevice(device);
-                        break;
-                    }
-                }
+                const CAudioDeviceInfoList inputDevs = this->getAudioInputDevices();
+                input = inputDevs.findByName(inputDeviceName);
             }
 
             const QString outputDeviceName = m_outputDeviceSetting.get();
+            CAudioDeviceInfo output;
             if (!outputDeviceName.isEmpty())
             {
-                for (auto device : m_voiceOutputDevice->getOutputDevices())
-                {
-                    if (device.getName() == outputDeviceName)
-                    {
-                        setCurrentAudioDevice(device);
-                        break;
-                    }
-                }
-            } // device name
+                const CAudioDeviceInfoList outputDevs = this->getAudioOutputDevices();
+                output = outputDevs.findByName(outputDeviceName);
+            }
+
+            this->setCurrentAudioDevices(input, output);
         }
 
         void CContextAudio::onChangedAudioSettings()
@@ -771,14 +458,14 @@ namespace BlackCore
                 // set as in cockpit
                 const bool com1Rec = aircraft.getCom1System().isReceiveEnabled();
                 const bool com2Rec = aircraft.getCom2System().isReceiveEnabled();
-                m_audioMixer->makeOrRemoveConnection(IAudioMixer::InputVoiceChannel1, IAudioMixer::OutputDevice1, com1Rec);
-                m_audioMixer->makeOrRemoveConnection(IAudioMixer::InputVoiceChannel2, IAudioMixer::OutputDevice1, com2Rec);
+                // m_audioMixer->makeOrRemoveConnection(IAudioMixer::InputVoiceChannel1, IAudioMixer::OutputDevice1, com1Rec);
+                // m_audioMixer->makeOrRemoveConnection(IAudioMixer::InputVoiceChannel2, IAudioMixer::OutputDevice1, com2Rec);
             }
             else
             {
                 // reset
-                m_audioMixer->makeMixerConnectionIfNotExisting(IAudioMixer::InputVoiceChannel1, IAudioMixer::OutputDevice1);
-                m_audioMixer->makeMixerConnectionIfNotExisting(IAudioMixer::InputVoiceChannel2, IAudioMixer::OutputDevice1);
+                // m_audioMixer->makeMixerConnectionIfNotExisting(IAudioMixer::InputVoiceChannel1, IAudioMixer::OutputDevice1);
+                // m_audioMixer->makeMixerConnectionIfNotExisting(IAudioMixer::InputVoiceChannel2, IAudioMixer::OutputDevice1);
             }
         }
 
@@ -799,36 +486,16 @@ namespace BlackCore
             }
         }
 
-        QSharedPointer<IVoiceChannel> CContextAudio::getVoiceChannelBy(const CVoiceRoom &voiceRoom)
-        {
-            QSharedPointer<IVoiceChannel> voiceChannel;
-            for (const auto &channel : as_const(m_voiceChannelMapping))
-            {
-                if (channel->getVoiceRoom().getVoiceRoomUrl() == voiceRoom.getVoiceRoomUrl())
+        /**
+        #ifdef Q_OS_MAC
+                void CContextAudio::delayedInitMicrophone()
                 {
-                    voiceChannel = channel;
-                    break;
+                    m_voiceInputDevice = m_voice->createInputDevice();
+                    m_voice->connectVoice(m_voiceInputDevice.get(), m_audioMixer.get(), IAudioMixer::InputMicrophone);
+                    CLogMessage(this).info(u"MacOS delayed input device init");
                 }
-            }
+        #endif
+        **/
 
-            // If we haven't found a valid voice channel pointer, get an unused one
-            if (!voiceChannel)
-            {
-                Q_ASSERT(!m_unusedVoiceChannels.isEmpty());
-                voiceChannel = m_unusedVoiceChannels.takeFirst();
-            }
-
-            return voiceChannel;
-        }
-
-
-#ifdef Q_OS_MAC
-        void CContextAudio::delayedInitMicrophone()
-        {
-            m_voiceInputDevice = m_voice->createInputDevice();
-            m_voice->connectVoice(m_voiceInputDevice.get(), m_audioMixer.get(), IAudioMixer::InputMicrophone);
-            CLogMessage(this).info(u"MacOS delayed input device init");
-        }
-#endif
     } // namespace
 } // namespace
