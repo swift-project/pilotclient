@@ -62,9 +62,23 @@ namespace BlackMisc
             else if (m_notificationVolume > 100) { m_notificationVolume = 100; }
         }
 
+        void CSettings::setOutVolume(int volume)
+        {
+            if (volume > OutMax) { volume = OutMax; }
+            else if (volume < OutMin) { volume = OutMin; }
+            m_outVolume = volume;
+        }
+
+        void CSettings::setInVolume(int volume)
+        {
+            if (volume > InMax) { volume = InMax; }
+            else if (volume < InMin) { volume = InMin; }
+            m_inVolume = volume;
+        }
+
         QString CSettings::convertToQString(bool i18n) const
         {
-            Q_UNUSED(i18n);
+            Q_UNUSED(i18n)
             return u"Notification flags: " % CNotificationSounds::toString(this->getNotification()) %
                    u" volume: " % QString::number(m_notificationVolume);
         }
