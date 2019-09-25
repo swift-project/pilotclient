@@ -20,6 +20,7 @@
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/blackmiscexport.h"
@@ -134,9 +135,6 @@ namespace BlackMisc
 
             //! \copydoc Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
-
-            //! \copydoc Mixin::String::toQString
-            // QString toQString(bool i18n = false) const { return this->convertToQString(i18n); }
 
             //! Check values @{
             bool isNaNVector() const;
@@ -353,6 +351,14 @@ namespace BlackMisc
             );
         };
     } // namespace
+
+    //! \cond
+    template <>
+    struct TString<Geo::ICoordinateGeodetic>
+    {
+        static QString toQString(const Geo::ICoordinateGeodetic &coord) { return coord.convertToQString(); }
+    };
+    //! \endcond
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Geo::CCoordinateGeodetic)

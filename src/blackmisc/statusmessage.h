@@ -16,6 +16,7 @@
 #include "orderable.h"
 #include "icon.h"
 #include "propertyindex.h"
+#include "stringutils.h"
 #include "typetraits.h"
 #include "blackmiscexport.h"
 
@@ -234,22 +235,10 @@ namespace BlackMisc
         //!          Otherwise, the streamed values will replace the place markers %1, %2, %3... in the format string.
         //! \see QString::arg
         //! @{
-        Derived &operator <<(const QString &v) { return arg(v); }
-        Derived &operator <<(const QStringRef &v) { return arg(v.toString()); }
-        Derived &operator <<(QStringView v) { return arg(v.toString()); }
-        Derived &operator <<(int v) { return arg(QString::number(v)); }
-        Derived &operator <<(uint v) { return arg(QString::number(v)); }
-        Derived &operator <<(long v) { return arg(QString::number(v)); }
-        Derived &operator <<(ulong v) { return arg(QString::number(v)); }
-        Derived &operator <<(qlonglong v) { return arg(QString::number(v)); }
-        Derived &operator <<(qulonglong v) { return arg(QString::number(v)); }
-        Derived &operator <<(short v) { return arg(QString::number(v)); }
-        Derived &operator <<(ushort v) { return arg(QString::number(v)); }
-        Derived &operator <<(QChar v) { return arg(v); }
-        Derived &operator <<(char v) { return arg(QChar(v)); }
-        Derived &operator <<(double v) { return arg(QString::number(v)); }
-        template <class T, class = std::enable_if_t<THasToQString<T>::value>>
-        Derived & operator <<(const T &v) { return arg(v.toQString()); }
+        template <class T, std::enable_if_t<TParameter<std::decay_t<T>>::passBy == ParameterPassBy::Value, int> = 0>
+        Derived &operator <<(T v) { return arg(TString<T>::toQString(v)); }
+        template <class T, std::enable_if_t<TParameter<std::decay_t<T>>::passBy == ParameterPassBy::ConstRef, int> = 0>
+        Derived &operator <<(const T &v) { return arg(TString<T>::toQString(v)); }
         //! @}
 
         //! Message empty

@@ -53,6 +53,25 @@ namespace BlackMisc
     }
 
     /*!
+     * Whether an input parameter type should be passed by value or by const reference.
+     */
+    enum class ParameterPassBy
+    {
+        Value,
+        ConstRef
+    };
+
+    /*!
+     * Trait to detect properties of function parameter types.
+     */
+    template <typename T>
+    struct TParameter
+    {
+        //! Whether the input parameter type T should be passed by value or by const reference.
+        static constexpr ParameterPassBy passBy = (sizeof(T) <= 16 && std::is_trivially_copy_constructible<T>::value && std::is_trivially_destructible<T>::value) ? ParameterPassBy::Value : ParameterPassBy::ConstRef;
+    };
+
+    /*!
      * Trait to detect whether T contains a member function toQString.
      */
     template <typename T, typename = void_t<>>

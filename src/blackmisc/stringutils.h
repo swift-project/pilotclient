@@ -13,19 +13,23 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/range.h"
+#include "blackmisc/typetraits.h"
 
 #include <QByteArray>
 #include <QDataStream>
 #include <QDateTime>
 #include <QDebug>
+#include <QFlags>
 #include <QList>
 #include <QMapIterator>
 #include <QString>
 #include <QStringRef>
+#include <QStringView>
 #include <QTextStream>
 #include <QtGlobal>
 #include <QSet>
 #include <QMap>
+#include <atomic>
 #include <iosfwd>
 #include <string>
 #include <algorithm>
@@ -372,6 +376,99 @@ namespace BlackMisc
             using ::BlackMisc::Mixin::String<DERIVED>::stringForStreaming;
         // *INDENT-ON*
     } // ns
+
+    /*!
+     * Stringification traits class.
+     */
+    template <typename T, typename = void> struct TString;
+
+    // Stringification traits specializations.
+    //! \cond
+    template <> struct TString<QString>
+    {
+        static QString toQString(const QString &s) { return s; }
+    };
+    template <> struct TString<QStringRef>
+    {
+        static QString toQString(const QStringRef &sr) { return sr.toString(); }
+    };
+    template <> struct TString<QStringView>
+    {
+        static QString toQString(QStringView sv) { return sv.toString(); }
+    };
+    template <> struct TString<QChar>
+    {
+        static QString toQString(QChar c) { return c; }
+    };
+    template <> struct TString<char>
+    {
+        static QString toQString(char c) { return QChar(c); }
+    };
+    template <> struct TString<bool>
+    {
+        static QString toQString(bool n) { return QString::number(n); }
+    };
+    template <> struct TString<int>
+    {
+        static QString toQString(int n) { return QString::number(n); }
+    };
+    template <> struct TString<uint>
+    {
+        static QString toQString(uint n) { return QString::number(n); }
+    };
+    template <> struct TString<long>
+    {
+        static QString toQString(long n) { return QString::number(n); }
+    };
+    template <> struct TString<ulong>
+    {
+        static QString toQString(ulong n) { return QString::number(n); }
+    };
+    template <> struct TString<qlonglong>
+    {
+        static QString toQString(qlonglong n) { return QString::number(n); }
+    };
+    template <> struct TString<qulonglong>
+    {
+        static QString toQString(qulonglong n) { return QString::number(n); }
+    };
+    template <> struct TString<short>
+    {
+        static QString toQString(short n) { return QString::number(n); }
+    };
+    template <> struct TString<ushort>
+    {
+        static QString toQString(ushort n) { return QString::number(n); }
+    };
+    template <> struct TString<float>
+    {
+        static QString toQString(float n) { return QString::number(n); }
+    };
+    template <> struct TString<double>
+    {
+        static QString toQString(double n) { return QString::number(n); }
+    };
+    template <typename T> struct TString<T, std::enable_if_t<std::is_enum<T>::value>>
+    {
+        static QString toQString(T e) { return QString::number(e); }
+    };
+    template <typename T> struct TString<T, std::enable_if_t<std::is_convertible<T, QString>::value>>
+    {
+        static QString toQString(const T &v) { return v; }
+    };
+    template <typename T> struct TString<T, std::enable_if_t<THasToQString<T>::value>>
+    {
+        static QString toQString(const T &v) { return v.toQString(); }
+    };
+    template <typename T> struct TString<QFlags<T>>
+    {
+        static QString toQString(QFlags<T> n) { return TString<typename QFlags<T>::Int>::toQString(n); }
+    };
+    template <typename T> struct TString<std::atomic<T>>
+    {
+        static QString toQString(const std::atomic<T> &n) { return TString<T>::toQString(n); }
+    };
+    //! \endcond
 } // ns
 
 #endif // guard
