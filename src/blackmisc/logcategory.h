@@ -60,6 +60,13 @@ namespace BlackMisc
             return cat;
         }
 
+        //! Audio related
+        static const CLogCategory &audio()
+        {
+            static const CLogCategory cat { "swift.audio" };
+            return cat;
+        }
+
         //! Contexts
         static const CLogCategory &context()
         {
@@ -278,6 +285,7 @@ namespace BlackMisc
             {
                 uncategorized(),
                 aviation(),
+                audio(),
                 cache(),
                 cmdLine(),
                 context(),
