@@ -160,7 +160,7 @@ namespace BlackCore
 
                     if (it)
                     {
-                        (*it)->setFrequency(radioTransceiver.frequency);
+                        (*it)->setFrequency(radioTransceiver.frequencyHz);
                     }
                 }
 

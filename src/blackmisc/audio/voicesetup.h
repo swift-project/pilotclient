@@ -25,6 +25,7 @@ namespace BlackMisc
     namespace Audio
     {
         //! Value object for a voice setup
+        //! \deprecated
         class BLACKMISC_EXPORT CVoiceSetup : public CValueObject<CVoiceSetup>
         {
         public:

@@ -34,12 +34,12 @@ namespace BlackCore
 
             quint32 CSampleAtcStation::frequency() const
             {
-                return m_transceiver.frequency;
+                return m_transceiver.frequencyHz;
             }
 
             QString CSampleAtcStation::formattedFrequency() const
             {
-                return QString::number(m_transceiver.frequency / 1000000.0, 'f', 3);
+                return QString::number(m_transceiver.frequencyHz / 1000000.0, 'f', 3);
             }
 
             double CSampleAtcStation::radioDistanceM() const

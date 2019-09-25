@@ -122,20 +122,20 @@ namespace BlackCore
         {
             //! Properties @{
             quint16 id;
-            quint32 frequency;
+            quint32 frequencyHz;
             double LatDeg = 0.0;
             double LonDeg = 0.0;
             double HeightMslM = 0.0;
             double HeightAglM = 0.0;
             //! @}
-            MSGPACK_DEFINE(id, frequency, LatDeg, LonDeg, HeightMslM, HeightAglM)
+            MSGPACK_DEFINE(id, frequencyHz, LatDeg, LonDeg, HeightMslM, HeightAglM)
 
             //! To JSON
             QJsonObject toJson() const
             {
                 QJsonObject json;
                 json["ID"] = id;
-                json["Frequency"] = static_cast<int>(frequency);
+                json["Frequency"] = static_cast<int>(frequencyHz);
                 json["LatDeg"] = LatDeg;
                 json["LonDeg"] = LonDeg;
                 json["HeightMslM"] = HeightMslM;
@@ -148,7 +148,7 @@ namespace BlackCore
             {
                 TransceiverDto dto;
                 dto.id = static_cast<quint16>(json.value("id").toInt());
-                dto.frequency = static_cast<quint32>(json.value("frequency").toInt());
+                dto.frequencyHz = static_cast<quint32>(json.value("frequency").toInt());
                 dto.LatDeg = json.value("latDeg").toDouble();
                 dto.LonDeg = json.value("lonDeg").toDouble();
                 dto.HeightMslM = json.value("heightMslM").toDouble();

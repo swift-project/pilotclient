@@ -35,7 +35,10 @@ namespace BlackCore
                 //! Inout buffer
                 CAudioInputBuffer(QObject *parent = nullptr);
 
+                //! Start
                 void start();
+
+                //! Stop
                 void stop();
 
                 //! \copydoc QIODevice::readData
@@ -49,6 +52,7 @@ namespace BlackCore
                 void frameAvailable(const QByteArray &frame);
 
             protected:
+                //! \copydoc QIODevice::timerEvent
                 void timerEvent(QTimerEvent *event) override;
 
             private:
@@ -92,7 +96,10 @@ namespace BlackCore
                 void stop();
 
             signals:
+                //! Volume stream data
                 void inputVolumeStream(const InputVolumeStreamArgs &args);
+
+                //! OPUS data
                 void opusDataAvailable(const OpusDataAvailableArgs &args);
 
             private:

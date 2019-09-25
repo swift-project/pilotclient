@@ -17,12 +17,12 @@ namespace BlackSound
         {
             if (count > m_tempBufferSize)
             {
-                qDebug() << "Count too large for temp buffer";
+                qDebug() << "Count too large for temp buffer" << count;
                 return 0;
             }
             qint64 availableSamples = m_resourceSound.audioData().size() - m_position;
 
-            qint64 samplesToCopy = qMin(availableSamples, count);
+            const qint64 samplesToCopy = qMin(availableSamples, count);
             samples.clear();
             samples.fill(0, samplesToCopy);
 

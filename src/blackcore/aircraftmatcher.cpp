@@ -475,7 +475,7 @@ namespace BlackCore
         const CAirlineIcaoCode &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString,
         const CAircraftMatcherSetup &setup, const CAircraftModelList &modelSet, CAircraftModel::ModelType type, CStatusMessageList *log)
     {
-        Q_UNUSED(setup);
+        Q_UNUSED(setup)
 
         CLivery livery;
         livery.setAirlineIcaoCode(networkAirlineIcao);
