@@ -21,6 +21,16 @@ namespace BlackMisc
     {
         CCallsignSet::CCallsignSet() { }
 
+        CCallsignSet::CCallsignSet(const QStringList &callsigns)
+        {
+            for (const QString &c : callsigns)
+            {
+                if (c.isEmpty()) { continue; }
+                const CCallsign cs(c);
+                this->push_back(cs);
+            }
+        }
+
         CCallsignSet::CCallsignSet(const CCallsign &callsign)
         {
             if (callsign.isEmpty()) { return; }

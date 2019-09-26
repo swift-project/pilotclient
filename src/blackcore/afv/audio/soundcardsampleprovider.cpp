@@ -177,7 +177,7 @@ namespace BlackCore
 
             QString CSoundcardSampleProvider::getReceivingCallsigns(quint16 transceiverID)
             {
-                return m_receiverInputs.at(transceiverID)->getReceivingCallsigns();
+                return m_receiverInputs.at(transceiverID)->getReceivingCallsignsString();
             }
 
         } // ns

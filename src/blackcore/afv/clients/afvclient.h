@@ -139,7 +139,8 @@ namespace BlackCore
                 //! @}
 
             signals:
-                //! Callsigns have been changed
+                //! Receiving callsigns have been changed
+                //! \remark callsigns I do receive
                 void receivingCallsignsChanged(const Audio::TransceiverReceivingCallsignsChangedArgs &args);
 
                 //! Connection status has been changed

@@ -18,6 +18,7 @@
 #include "blackmisc/sequence.h"
 
 #include <QMetaType>
+#include <QStringList>
 #include <tuple>
 
 namespace BlackMisc
@@ -30,8 +31,11 @@ namespace BlackMisc
             using CCollection::CCollection;
 
         public:
-            //! Default constructor.
+            //! Default constructor
             CCallsignSet();
+
+            //! By string list
+            CCallsignSet(const QStringList &callsigns);
 
             //! Construct from single callsign
             CCallsignSet(const CCallsign &callsign);

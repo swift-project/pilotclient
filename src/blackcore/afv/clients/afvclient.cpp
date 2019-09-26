@@ -479,8 +479,8 @@ namespace BlackCore
             const QAudioDeviceInfo &CAfvClient::getOutputDevice() const
             {
                 if (m_output) { return m_output->device(); }
-                static const QAudioDeviceInfo null = QAudioDeviceInfo();
-                return null;
+                static const QAudioDeviceInfo nullDevice = QAudioDeviceInfo();
+                return nullDevice;
             }
 
             CAfvClient::ConnectionStatus CAfvClient::getConnectionStatus() const

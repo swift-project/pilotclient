@@ -14,6 +14,7 @@
 
 #include <QDebug>
 
+using namespace BlackMisc::Aviation;
 using namespace BlackSound::SampleProvider;
 
 namespace BlackCore
@@ -48,35 +49,25 @@ namespace BlackCore
                 }
             }
 
-            void CReceiverSampleProvider::setFrequency(const uint &frequency)
+            void CReceiverSampleProvider::setFrequency(const uint &frequencyHz)
             {
-                if (frequency != m_frequency)
+                if (frequencyHz != m_frequencyHz)
                 {
                     for (CallsignSampleProvider *voiceInput : m_voiceInputs)
                     {
                         voiceInput->clear();
                     }
                 }
-                m_frequency = frequency;
+                m_frequencyHz = frequencyHz;
             }
 
             int CReceiverSampleProvider::activeCallsigns() const
             {
-                const int numberOfCallsigns = std::count_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CallsignSampleProvider * p)
+                const int numberOfCallsigns = static_cast<int>(std::count_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CallsignSampleProvider * p)
                 {
                     return p->inUse() == true;
-                });
+                }));
                 return numberOfCallsigns;
-            }
-
-            float CReceiverSampleProvider::volume() const
-            {
-                return 1.0;
-            }
-
-            bool CReceiverSampleProvider::getMute() const
-            {
-                return m_mute;
             }
 
             void CReceiverSampleProvider::setMute(bool value)
@@ -107,13 +98,17 @@ namespace BlackCore
 
                 if (m_doClickWhenAppropriate && numberOfInUseInputs == 0)
                 {
+                    const bool doClick = m_audioSettings.get().pttClickDown();
+                    Q_UNUSED(doClick)
+                    //! \todo consider the settings
+
                     CResourceSoundSampleProvider *resourceSound = new CResourceSoundSampleProvider(Samples::instance().click(), m_mixer);
                     m_mixer->addMixerInput(resourceSound);
                     qDebug() << "Click...";
                     m_doClickWhenAppropriate = false;
                 }
 
-                if (numberOfInUseInputs != lastNumberOfInUseInputs)
+                if (numberOfInUseInputs != m_lastNumberOfInUseInputs)
                 {
                     QStringList receivingCallsigns;
                     for (const CallsignSampleProvider *voiceInput : m_voiceInputs)
@@ -125,19 +120,20 @@ namespace BlackCore
                         }
                     }
 
-                    m_receivingCallsigns = receivingCallsigns.join(',');
+                    m_receivingCallsignsString = receivingCallsigns.join(',');
+                    m_receivingCallsigns = CCallsignSet(receivingCallsigns);
                     TransceiverReceivingCallsignsChangedArgs args = { m_id, receivingCallsigns };
                     emit receivingCallsignsChanged(args);
                 }
-                lastNumberOfInUseInputs = numberOfInUseInputs;
+                m_lastNumberOfInUseInputs = numberOfInUseInputs;
 
-//            return volume.Read(buffer, offset, count);
+// return volume.Read(buffer, offset, count);
                 return m_mixer->readSamples(samples, count);
             }
 
             void CReceiverSampleProvider::addOpusSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio)
             {
-                if (m_frequency != frequency)        //Lag in the backend means we get the tail end of a transmission
+                if (m_frequencyHz != frequency)        //Lag in the backend means we get the tail end of a transmission
                     return;
 
                 CallsignSampleProvider *voiceInput = nullptr;
@@ -172,7 +168,7 @@ namespace BlackCore
             void CReceiverSampleProvider::addSilentSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio)
             {
                 Q_UNUSED(distanceRatio);
-                if (m_frequency != frequency)        //Lag in the backend means we get the tail end of a transmission
+                if (m_frequencyHz != frequency)        //Lag in the backend means we get the tail end of a transmission
                     return;
 
                 CallsignSampleProvider *voiceInput = nullptr;
@@ -202,10 +198,7 @@ namespace BlackCore
                 }
             }
 
-            QString CReceiverSampleProvider::getReceivingCallsigns() const
-            {
-                return m_receivingCallsigns;
-            }
+
 
 
         } // ns
