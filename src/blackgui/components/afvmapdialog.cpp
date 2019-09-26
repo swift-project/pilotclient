@@ -6,14 +6,15 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-//! \file
-
+#include "blackgui/guiapplication.h"
+#include "blackcore/context/contextaudioimpl.h"
 #include "blackcore/afv/clients/afvclient.h"
 #include "blackcore/afv/model/afvmapreader.h"
 
 #include "afvmapdialog.h"
 #include "ui_afvmapdialog.h"
 #include <QQmlContext>
+#include <QQmlEngine>
 
 using namespace BlackCore::Afv::Model;
 using namespace BlackCore::Afv::Clients;
@@ -26,14 +27,28 @@ namespace BlackGui
             QDialog(parent),
             ui(new Ui::CAfvMapDialog)
         {
-            ui->setupUi(this);
             m_afvMapReader = new CAfvMapReader(this);
             m_afvMapReader->updateFromMap();
-            m_afvClient = new CAfvClient("https://voice1.vatsim.uk");
 
+            if (sGui && !sGui->isShuttingDown() && sGui->getIContextAudio())
+            {
+                if (sGui->getIContextAudio()->isUsingImplementingObject())
+                {
+                    m_afvClient = &sGui->getCoreFacade()->getCContextAudio()->voiceClient();
+                }
+            }
+
+            ui->setupUi(this);
             QQmlContext *ctxt = ui->qw_AfvMap->rootContext();
             ctxt->setContextProperty("afvMapReader", m_afvMapReader);
-            ctxt->setContextProperty("voiceClient", m_afvClient);
+
+            if (m_afvClient)
+            {
+                ctxt->setContextProperty("voiceClient", m_afvClient);
+            }
+
+            // ui->qw_AfvMap->engine()->setBaseUrl(":/blackgui/qml");
+            ui->qw_AfvMap->setSource(QUrl("qrc:/blackgui/qml/AFVMap.qml"));
         }
 
         CAfvMapDialog::~CAfvMapDialog() { }
