@@ -27,6 +27,7 @@
 
 using namespace BlackCore;
 using namespace BlackCore::Afv::Clients;
+using namespace BlackCore::Afv::Audio;
 using namespace BlackCore::Context;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -114,6 +115,7 @@ namespace BlackGui
                 {
                     connect(afvClient, &CAfvClient::outputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onOutputVU);
                     connect(afvClient, &CAfvClient::inputVolumePeakVU,  this, &CAudioDeviceVolumeSetupComponent::onInputVU);
+                    connect(afvClient, &CAfvClient::receivingCallsignsChanged, this, &CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged);
                 }
 
             }
@@ -251,6 +253,11 @@ namespace BlackGui
         void CAudioDeviceVolumeSetupComponent::onResetVolumeOut()
         {
             ui->hs_VolumeOut->setValue((ui->hs_VolumeOut->maximum() - ui->hs_VolumeOut->minimum()) / 2);
+        }
+
+        void CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged(const TransceiverReceivingCallsignsChangedArgs &args)
+        {
+            this->setInfo(args.receivingCallsigns.join(", "));
         }
 
         CAudioDeviceInfo CAudioDeviceVolumeSetupComponent::getSelectedInputDevice() const

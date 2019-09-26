@@ -12,6 +12,7 @@
 #define BLACKGUI_COMPONENTS_AUDIODEVICEVOLUMESETUPCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackcore/afv/audio/receiversampleprovider.h"
 #include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/settingscache.h"
@@ -100,9 +101,9 @@ namespace BlackGui
             void onInputVU(double vu);
 
             void onReloadDevices();
-
             void onResetVolumeIn();
             void onResetVolumeOut();
+            void onReceivingCallsignsChanged(const BlackCore::Afv::Audio::TransceiverReceivingCallsignsChangedArgs &args);
 
             BlackMisc::Audio::CAudioDeviceInfo getSelectedInputDevice() const;
             BlackMisc::Audio::CAudioDeviceInfo getSelectedOutputDevice() const;
