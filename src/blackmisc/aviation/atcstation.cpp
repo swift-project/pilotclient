@@ -64,6 +64,12 @@ namespace BlackMisc
             return m_metar.hasMessage();
         }
 
+        QString CAtcStation::getCallsignAsStringCrossCoupled() const
+        {
+            if (!this->isAfvCrossCoupled()) { return this->getCallsignAsString(); }
+            return QStringLiteral("*") % this->getCallsignAsString();
+        }
+
         QString CAtcStation::getCallsignSuffix() const
         {
             return m_callsign.getSuffix();
@@ -370,6 +376,8 @@ namespace BlackMisc
             case IndexBookedFrom:  return CVariant::from(m_bookedFromUtc);
             case IndexBookedUntil: return CVariant::from(m_bookedUntilUtc);
             case IndexCallsign:    return m_callsign.propertyByIndex(index.copyFrontRemoved());
+            case IndexCallsignString:             return this->getCallsignAsString();
+            case IndexCallsignStringCrossCopuled: return this->getCallsignAsStringCrossCoupled();
             case IndexController:  return m_controller.propertyByIndex(index.copyFrontRemoved());
             case IndexFrequency:   return m_frequency.propertyByIndex(index.copyFrontRemoved());
             case IndexIsOnline:    return CVariant::from(m_isOnline);
@@ -407,6 +415,14 @@ namespace BlackMisc
             case IndexMetar:       m_metar.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexVoiceRoom:   m_voiceRoom.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexIsAfvCrossCoupled: this->setAfvCrossCoupled(variant.value<bool>()); break;
+            case IndexCallsignString:
+            case IndexCallsignStringCrossCopuled:
+                {
+                    const QString cs = variant.toQString();
+                    *this = CAtcStation();
+                    this->setAfvCrossCoupled(cs.startsWith('*'));
+                }
+                break;
             default:
                 if (ICoordinateWithRelativePosition::canHandleIndex(index))
                 {
@@ -428,6 +444,9 @@ namespace BlackMisc
             {
             case IndexBookedFrom:  return Compare::compare(this->getBookedFromUtc(), compareValue.getBookedFromUtc());
             case IndexBookedUntil: return Compare::compare(this->getBookedUntilUtc(), compareValue.getBookedUntilUtc());
+            case IndexCallsignString:
+            case IndexCallsignStringCrossCopuled:
+                return m_callsign.comparePropertyByIndex(CPropertyIndex::empty(), compareValue.getCallsign());
             case IndexCallsign:    return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
             case IndexController:  return m_controller.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getController());
             case IndexFrequency:   return m_frequency.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getFrequency());

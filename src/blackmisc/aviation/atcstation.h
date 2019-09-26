@@ -48,6 +48,8 @@ namespace BlackMisc
             enum ColumnIndex
             {
                 IndexCallsign = CPropertyIndex::GlobalIndexCAtcStation,
+                IndexCallsignString,
+                IndexCallsignStringCrossCopuled,
                 IndexController,
                 IndexFrequency,
                 IndexPosition,
@@ -61,7 +63,7 @@ namespace BlackMisc
                 IndexLongitude,
                 IndexAtis,
                 IndexMetar,
-                IndexVoiceRoom,
+                IndexVoiceRoom, //!< @deprecated
             };
 
             //! Default constructor.
@@ -94,6 +96,9 @@ namespace BlackMisc
 
             //! Get callsign as string.
             QString getCallsignAsString() const { return m_callsign.asString(); }
+
+            //! Get callsign
+            QString getCallsignAsStringCrossCoupled() const;
 
             //! Callsign suffix (e.g. TWR)
             QString getCallsignSuffix() const;
@@ -177,15 +182,19 @@ namespace BlackMisc
             void setAfvCrossCoupled(bool coupled) { m_isAfvCrossCoupled = coupled; }
 
             //! Get voice room
+            //! \deprecated
             const Audio::CVoiceRoom &getVoiceRoom() const { return m_voiceRoom; }
 
             //! Set voice room
+            //! \deprecated
             void setVoiceRoom(const Audio::CVoiceRoom &voiceRoom) { m_voiceRoom = voiceRoom; }
 
             //! Set voice room URL
+            //! \deprecated
             void setVoiceRoomUrl(const QString &url) { m_voiceRoom.setVoiceRoomUrl(url); }
 
             //! Valid voice room?
+            //! \deprecated
             bool hasValidVoiceRoom() const { return m_voiceRoom.isValid(); }
 
             //! Booked date/time if any.
