@@ -20,6 +20,7 @@
 #include "blackcore/blackcoreexport.h"
 
 #include "blacksound/sampleprovider/volumesampleprovider.h"
+#include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/audio/ptt.h"
 #include "blackmisc/logcategorylist.h"
@@ -94,12 +95,32 @@ namespace BlackCore
                 Q_INVOKABLE void start(const QString &inputDeviceName, const QString &outputDeviceName);
                 void stop();
 
+                //! Enable COM unit/transceiver @{
                 Q_INVOKABLE void enableTransceiver(quint16 id, bool enable);
-                Q_INVOKABLE void updateComFrequency(quint16 id, quint32 frequencyHz);
-                Q_INVOKABLE void updatePosition(double latitudeDeg, double longitudeDeg, double heightMeters);
+                void enableComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit, bool enable);
+                bool isEnabledTransceiver(quint16 id) const;
+                bool isEnabledComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
+                //! @}
 
-                void setTransmittingTransceivers(quint16 transceiverID);
+                //! Set transmitting transceivers @{
+                void setTransmittingTransceiver(quint16 transceiverID);
+                void setTransmittingComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit);
                 void setTransmittingTransceivers(const QVector<TxTransceiverDto> &transceivers);
+                //! @}
+
+                //! Transmitting transceiver/COM unit
+                bool isTransmittingTransceiver(quint16 id) const;
+                bool isTransmittingdComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
+                //! @}
+
+                //! Update frequency @{
+                Q_INVOKABLE void updateComFrequency(quint16 id, quint32 frequencyHz);
+                void updateComFrequency(BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::PhysicalQuantities::CFrequency &comFrequency);
+                void updateComFrequency(BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::Aviation::CComSystem &comSystem);
+                //! @}
+
+                //! Update own aircraft position
+                Q_INVOKABLE void updatePosition(double latitudeDeg, double longitudeDeg, double heightMeters);
 
                 //! Push to talk @{
                 Q_INVOKABLE void setPtt(bool active);
@@ -146,6 +167,9 @@ namespace BlackCore
                 //! Connection status has been changed
                 void connectionStatusChanged(ConnectionStatus status);
 
+                //! Client updated from own aicraft data
+                void updatedFromOwnAircraftCockpit();
+
                 //! PTT status in this particular AFV client
                 void ptt(bool active, BlackMisc::Audio::PTTCOM pttcom, const BlackMisc::CIdentifier &identifier);
 
@@ -173,6 +197,9 @@ namespace BlackCore
                 static constexpr double MinDb   = -18.0;
                 static constexpr double MaxDb   =  18.0;
                 static constexpr quint32 UniCom = 122800000;
+
+                static quint16 comUnitToTransceiverId(BlackMisc::Aviation::CComSystem::ComUnit comUnit);
+                static BlackMisc::Aviation::CComSystem::ComUnit transceiverIdToComUnit(quint16 id);
 
                 Connection::CClientConnection *m_connection = nullptr;
                 BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &CAfvClient::onSettingsChanged };

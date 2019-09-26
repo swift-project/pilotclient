@@ -20,6 +20,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Aviation;
 using namespace BlackSound;
 using namespace BlackSound::SampleProvider;
 
@@ -52,8 +53,8 @@ namespace BlackCore
 
                 m_transceivers =
                 {
-                    { 0, 122800000, 48.5, 11.5, 1000.0, 1000.0 },
-                    { 1, 122800000, 48.5, 11.5, 1000.0, 1000.0 }
+                    { 0, UniCom, 48.5, 11.5, 1000.0, 1000.0 },
+                    { 1, UniCom, 48.5, 11.5, 1000.0, 1000.0 }
                 };
 
                 m_enabledTransceivers = { 0, 1 };
@@ -184,6 +185,27 @@ namespace BlackCore
                 updateTransceivers();
             }
 
+            void CAfvClient::enableComUnit(CComSystem::ComUnit comUnit, bool enable)
+            {
+                this->enableTransceiver(comUnitToTransceiverId(comUnit), enable);
+            }
+
+            bool CAfvClient::isEnabledTransceiver(quint16 id) const
+            {
+                // we double check, enabled and exist!
+                if (!m_enabledTransceivers.contains(id)) { return false; }
+                for (const TransceiverDto &dto : m_transceivers)
+                {
+                    if (dto.id == id) { return true; }
+                }
+                return false;
+            }
+
+            bool CAfvClient::isEnabledComUnit(CComSystem::ComUnit comUnit) const
+            {
+                return this->isEnabledTransceiver(comUnitToTransceiverId(comUnit));
+            }
+
             void CAfvClient::updateComFrequency(quint16 id, quint32 frequencyHz)
             {
                 if (id != 0 && id != 1) { return; }
@@ -199,6 +221,17 @@ namespace BlackCore
                         updateTransceivers();
                     }
                 }
+            }
+
+            void CAfvClient::updateComFrequency(CComSystem::ComUnit comUnit, const CFrequency &comFrequency)
+            {
+                const quint16 freqHz = static_cast<quint16>(comFrequency.valueInteger(CFrequencyUnit::Hz()));
+                this->updateComFrequency(comUnitToTransceiverId(comUnit), freqHz);
+            }
+
+            void CAfvClient::updateComFrequency(CComSystem::ComUnit comUnit, const CComSystem &comSystem)
+            {
+                this->updateComFrequency(comUnit, comSystem.getFrequencyActive());
             }
 
             void CAfvClient::updatePosition(double latitudeDeg, double longitudeDeg, double heightMeters)
@@ -221,11 +254,8 @@ namespace BlackCore
                     updatePosition(ownAircraft.latitude().value(CAngleUnit::deg()),
                                    ownAircraft.longitude().value(CAngleUnit::deg()),
                                    ownAircraft.getAltitude().value(CLengthUnit::ft()));
-
-                    const quint16 com1Hz = static_cast<quint16>(ownAircraft.getCom1System().getFrequencyActive().valueInteger(CFrequencyUnit::Hz()));
-                    const quint16 com2Hz = static_cast<quint16>(ownAircraft.getCom2System().getFrequencyActive().valueInteger(CFrequencyUnit::Hz()));
-                    updateComFrequency(0, com1Hz);
-                    updateComFrequency(1, com2Hz);
+                    this->updateComFrequency(CComSystem::Com1, ownAircraft.getCom1System());
+                    this->updateComFrequency(CComSystem::Com2, ownAircraft.getCom2System());
                 }
 
                 QVector<TransceiverDto> enabledTransceivers;
@@ -244,15 +274,34 @@ namespace BlackCore
                 }
             }
 
-            void CAfvClient::setTransmittingTransceivers(quint16 transceiverID)
+            void CAfvClient::setTransmittingTransceiver(quint16 transceiverID)
             {
                 TxTransceiverDto tx = { transceiverID };
                 setTransmittingTransceivers({ tx });
             }
 
+            void CAfvClient::setTransmittingComUnit(CComSystem::ComUnit comUnit)
+            {
+                this->setTransmittingTransceiver(comUnitToTransceiverId(comUnit));
+            }
+
             void CAfvClient::setTransmittingTransceivers(const QVector<TxTransceiverDto> &transceivers)
             {
                 m_transmittingTransceivers = transceivers;
+            }
+
+            bool CAfvClient::isTransmittingTransceiver(quint16 id) const
+            {
+                for (const TxTransceiverDto &dto : m_transmittingTransceivers)
+                {
+                    if (dto.id == id) { return true; }
+                }
+                return false;
+            }
+
+            bool CAfvClient::isTransmittingdComUnit(CComSystem::ComUnit comUnit) const
+            {
+                return this->isTransmittingTransceiver(comUnitToTransceiverId(comUnit));
             }
 
             void CAfvClient::setPtt(bool active)
@@ -266,12 +315,11 @@ namespace BlackCore
 
                 if (!m_isStarted)
                 {
-                    qDebug() << "Client not started";
+                    CLogMessage(this).info(u"Voice client not started");
                     return;
                 }
 
                 if (m_transmit == active) { return; }
-
                 m_transmit = active;
 
                 if (soundcardSampleProvider)
@@ -290,7 +338,7 @@ namespace BlackCore
                 }
 
                 emit this->ptt(active, com, this->identifier());
-                qDebug() << "PTT:" << active;
+                // qDebug() << "PTT:" << active;
             }
 
             void CAfvClient::setInputVolumeDb(double value)
@@ -436,16 +484,46 @@ namespace BlackCore
             void CAfvClient::updateTransceiversFromContext(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
             {
                 Q_UNUSED(originator)
-                updatePosition(aircraft.latitude().value(CAngleUnit::deg()),
-                               aircraft.longitude().value(CAngleUnit::deg()),
-                               aircraft.getAltitude().value(CLengthUnit::ft()));
+                this->updatePosition(aircraft.latitude().value(CAngleUnit::deg()),
+                                     aircraft.longitude().value(CAngleUnit::deg()),
+                                     aircraft.getAltitude().value(CLengthUnit::ft()));
 
-                const quint16 com1Hz = static_cast<quint16>(aircraft.getCom1System().getFrequencyActive().valueInteger(CFrequencyUnit::Hz()));
-                const quint16 com2Hz = static_cast<quint16>(aircraft.getCom2System().getFrequencyActive().valueInteger(CFrequencyUnit::Hz()));
+                const CComSystem com1 = aircraft.getCom1System();
+                const CComSystem com2 = aircraft.getCom2System();
+                this->updateComFrequency(CComSystem::Com1, com1);
+                this->updateComFrequency(CComSystem::Com2, com2);
 
-                updateComFrequency(0, com1Hz);
-                updateComFrequency(1, com2Hz);
-                updateTransceivers();
+                const bool tx1  = com1.isTransmitEnabled();
+                const bool rec1 = com1.isReceiveEnabled();
+                const bool tx2  = com2.isTransmitEnabled();
+                const bool rec2 = com2.isReceiveEnabled();
+
+                this->enableComUnit(CComSystem::Com1, tx1 || rec1);
+                this->enableComUnit(CComSystem::Com2, tx2 || rec2);
+                this->setTransmittingComUnit(CComSystem::Com1);
+                this->setTransmittingComUnit(CComSystem::Com2);
+
+                this->updateTransceivers();
+                emit this->updatedFromOwnAircraftCockpit();
+            }
+
+            quint16 CAfvClient::comUnitToTransceiverId(CComSystem::ComUnit comUnit)
+            {
+                switch (comUnit)
+                {
+                case CComSystem::Com1: return 0;
+                case CComSystem::Com2: return 1;
+                default:
+                    break;
+                }
+                return 0;
+            }
+
+            CComSystem::ComUnit CAfvClient::transceiverIdToComUnit(quint16 id)
+            {
+                if (comUnitToTransceiverId(CComSystem::Com1) == id) { return CComSystem::Com1; }
+                if (comUnitToTransceiverId(CComSystem::Com2) == id) { return CComSystem::Com2; }
+                return CComSystem::Com1;
             }
 
             bool CAfvClient::hasContext()
