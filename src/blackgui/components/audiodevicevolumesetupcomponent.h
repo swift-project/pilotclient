@@ -59,9 +59,6 @@ namespace BlackGui
             //! Info string
             void setInfo(const QString &info);
 
-            //! Transmit and receive state
-            void setTransmitReceive(bool tx1, bool rec1, bool tx2, bool rec2);
-
         private:
             //! Init
             void init();
@@ -104,9 +101,16 @@ namespace BlackGui
             void onResetVolumeIn();
             void onResetVolumeOut();
             void onReceivingCallsignsChanged(const BlackCore::Afv::Audio::TransceiverReceivingCallsignsChangedArgs &args);
+            void onUpdatedClientWithCockpitData();
 
             BlackMisc::Audio::CAudioDeviceInfo getSelectedInputDevice() const;
             BlackMisc::Audio::CAudioDeviceInfo getSelectedOutputDevice() const;
+
+
+            //! Transmit and receive state @{
+            void setTransmitReceiveInUi(bool tx1, bool rec1, bool tx2, bool rec2);
+            void setTransmitReceiveInUiFromVoiceClient();
+            //! @}
 
             static BlackCore::Afv::Clients::CAfvClient *afvClient();
 

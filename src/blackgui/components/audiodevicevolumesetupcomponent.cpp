@@ -8,6 +8,7 @@
 
 #include "blackgui/components/audiodevicevolumesetupcomponent.h"
 #include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
 
 #include "blackcore/afv/clients/afvclient.h"
 #include "blackcore/context/contextaudioimpl.h"
@@ -73,6 +74,9 @@ namespace BlackGui
 
             ui->pb_LevelIn->setValue(ui->pb_LevelIn->minimum());
             ui->pb_LevelOut->setValue(ui->pb_LevelOut->minimum());
+
+            // all tx/rec checkboxes
+            CGuiUtility::checkBoxesReadOnly(ui->fr_TxRec, true);
         }
 
         void CAudioDeviceVolumeSetupComponent::init()
@@ -115,9 +119,9 @@ namespace BlackGui
                 {
                     connect(afvClient, &CAfvClient::outputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onOutputVU);
                     connect(afvClient, &CAfvClient::inputVolumePeakVU,  this, &CAudioDeviceVolumeSetupComponent::onInputVU);
-                    connect(afvClient, &CAfvClient::receivingCallsignsChanged, this, &CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged);
+                    connect(afvClient, &CAfvClient::receivingCallsignsChanged,     this, &CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged,    Qt::QueuedConnection);
+                    connect(afvClient, &CAfvClient::updatedFromOwnAircraftCockpit, this, &CAudioDeviceVolumeSetupComponent::onUpdatedClientWithCockpitData, Qt::QueuedConnection);
                 }
-
             }
             Q_UNUSED(c)
         }
@@ -180,12 +184,29 @@ namespace BlackGui
             ui->le_Info->setText(info);
         }
 
-        void CAudioDeviceVolumeSetupComponent::setTransmitReceive(bool tx1, bool rec1, bool tx2, bool rec2)
+        void CAudioDeviceVolumeSetupComponent::setTransmitReceiveInUi(bool tx1, bool rec1, bool tx2, bool rec2)
         {
             ui->cb_1Tx->setChecked(tx1);
             ui->cb_2Tx->setChecked(tx2);
             ui->cb_1Rec->setChecked(rec1);
             ui->cb_2Rec->setChecked(rec2);
+        }
+
+        void CAudioDeviceVolumeSetupComponent::setTransmitReceiveInUiFromVoiceClient()
+        {
+            const CAfvClient *client = this->afvClient();
+            if (!client) { return; }
+            const bool com1Enabled = client->isEnabledComUnit(CComSystem::Com1);
+            const bool com2Enabled = client->isEnabledComUnit(CComSystem::Com2);
+
+            const bool com1Tx = com1Enabled && client->isTransmittingdComUnit(CComSystem::Com1);
+            const bool com2Tx = com2Enabled && client->isTransmittingdComUnit(CComSystem::Com2);
+
+            // we do not have receiving
+            const bool com1Rec = com1Enabled;
+            const bool com2Rec = com2Enabled;
+
+            this->setTransmitReceiveInUi(com1Tx, com1Rec, com2Tx, com2Rec);
         }
 
         void CAudioDeviceVolumeSetupComponent::reloadSettings()
@@ -258,6 +279,11 @@ namespace BlackGui
         void CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged(const TransceiverReceivingCallsignsChangedArgs &args)
         {
             this->setInfo(args.receivingCallsigns.join(", "));
+        }
+
+        void CAudioDeviceVolumeSetupComponent::onUpdatedClientWithCockpitData()
+        {
+            this->setTransmitReceiveInUiFromVoiceClient();
         }
 
         CAudioDeviceInfo CAudioDeviceVolumeSetupComponent::getSelectedInputDevice() const
