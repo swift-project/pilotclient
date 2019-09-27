@@ -51,9 +51,9 @@ namespace BlackGui
             void setOutValue(int value, int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax);
             //! @}
 
-            //! Set input and output level values @{
-            void setInLevel(int value,  int from, int to);
-            void setOutLevel(int value, int from, int to);
+            //! Set input and output level values 0..1 @{
+            void setInLevel(double value);
+            void setOutLevel(double value);
             //! @}
 
             //! Info string

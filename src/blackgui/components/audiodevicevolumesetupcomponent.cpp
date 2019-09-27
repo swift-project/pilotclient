@@ -72,9 +72,6 @@ namespace BlackGui
                 this->init();
             });
 
-            ui->pb_LevelIn->setValue(ui->pb_LevelIn->minimum());
-            ui->pb_LevelOut->setValue(ui->pb_LevelOut->minimum());
-
             // all tx/rec checkboxes
             CGuiUtility::checkBoxesReadOnly(ui->fr_TxRec, true);
         }
@@ -161,22 +158,18 @@ namespace BlackGui
             ui->hs_VolumeOut->setValue(qRound(value / tr * r));
         }
 
-        void CAudioDeviceVolumeSetupComponent::setInLevel(int value, int from, int to)
+        void CAudioDeviceVolumeSetupComponent::setInLevel(double value)
         {
-            if (value > to)   { value = to; }
-            if (value < from) { value = from; }
-            const double r = ui->pb_LevelIn->maximum() - ui->pb_LevelIn->minimum();
-            const double tr = to - from;
-            ui->pb_LevelIn->setValue(qRound(value / tr * r));
+            if (value > 1.0) { value = 1.0; }
+            if (value < 0.0) { value = 0.0; }
+            ui->wip_InLevelMeter->levelChanged(value);
         }
 
-        void CAudioDeviceVolumeSetupComponent::setOutLevel(int value, int from, int to)
+        void CAudioDeviceVolumeSetupComponent::setOutLevel(double value)
         {
-            if (value > to)   { value = to; }
-            if (value < from) { value = from; }
-            const double r = ui->pb_LevelOut->maximum() - ui->pb_LevelOut->minimum();
-            const double tr = to - from;
-            ui->pb_LevelOut->setValue(qRound(value / tr * r));
+            if (value > 1.0) { value = 1.0; }
+            if (value < 0.0) { value = 0.0; }
+            ui->wip_OutLevelMeter->levelChanged(value);
         }
 
         void CAudioDeviceVolumeSetupComponent::setInfo(const QString &info)
@@ -249,12 +242,12 @@ namespace BlackGui
 
         void CAudioDeviceVolumeSetupComponent::onOutputVU(double vu)
         {
-            this->setOutLevel(qRound(vu * 100.0), 0, 100);
+            this->setOutLevel(vu);
         }
 
         void CAudioDeviceVolumeSetupComponent::onInputVU(double vu)
         {
-            this->setInLevel(qRound(vu * 100.0), 0, 100);
+            this->setInLevel(vu);
         }
 
         void CAudioDeviceVolumeSetupComponent::onReloadDevices()
