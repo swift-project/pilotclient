@@ -32,6 +32,7 @@ namespace BlackCore
                 double PeakVU = 0.0;
             };
 
+            //! Output buffer
             class CAudioOutputBuffer : public QIODevice
             {
                 Q_OBJECT
@@ -70,6 +71,12 @@ namespace BlackCore
             public:
                 //! Ctor
                 Output(QObject *parent = nullptr);
+
+                //! Dtor
+                virtual ~Output() override
+                {
+                    this->stop();
+                }
 
                 //! Start output
                 void start(const QAudioDeviceInfo &outputDevice, BlackSound::SampleProvider::ISampleProvider *sampleProvider);

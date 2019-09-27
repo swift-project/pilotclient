@@ -85,6 +85,12 @@ namespace BlackCore
                 //! Ctor
                 CInput(int sampleRate, QObject *parent = nullptr);
 
+                //! Dtor
+                virtual ~CInput() override
+                {
+                    this->stop();
+                }
+
                 int opusBytesEncoded() const { return m_opusBytesEncoded; }
                 void setOpusBytesEncoded(int opusBytesEncoded) { m_opusBytesEncoded = opusBytesEncoded; }
 

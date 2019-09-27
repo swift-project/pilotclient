@@ -125,11 +125,9 @@ namespace BlackCore
 
             void CInput::stop()
             {
-                if (! m_started) { return; }
-
+                if (!m_started) { return; }
                 m_started = false;
-
-                m_audioInput->stop();
+                if (m_audioInput) { m_audioInput->stop(); }
                 m_audioInput.reset();
             }
 
