@@ -89,6 +89,9 @@ namespace BlackMisc
             //! Get callsign.
             const QString &getStringAsSet() const { return m_callsignAsSet; }
 
+            //! The callsign string used with FSD
+            QString getFsdCallsignString() const;
+
             //! Same as set callsign?
             bool isSameAsSet() const;
 

@@ -139,6 +139,13 @@ namespace BlackMisc
                     m_callsign.at(m_callsign.size() - 1) >= 'A' && m_callsign.at(m_callsign.size() - 1) <= 'Z';
         }
 
+        QString CCallsign::getFsdCallsignString() const
+        {
+            // mainly used to fix the cross coupled callsigns such as *EDDF_TWR
+            if (m_callsignAsSet.startsWith('*')) { return this->getStringAsSet(); }
+            return this->asString();
+        }
+
         bool CCallsign::isSameAsSet() const
         {
             return m_callsign == m_callsignAsSet;
