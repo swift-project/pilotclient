@@ -227,9 +227,9 @@ namespace BlackCore
             {
                 if (!message.isValid()) return;
 
-                QString payload = message.toTokens().join(':');
-                QString line = message.pdu() + payload;
-                QString buffer = line + "\r\n";
+                const QString payload = message.toTokens().join(':');
+                const QString line = message.pdu() + payload;
+                const QString buffer = line + "\r\n";
                 QByteArray bufferEncoded = m_fsdTextCodec->fromUnicode(buffer);
                 emitRawFsdMessage(buffer.trimmed(), true);
                 if (m_printToConsole) { qDebug() << "FSD Sent=>" << bufferEncoded; }
@@ -377,13 +377,14 @@ namespace BlackCore
 
             BlackMisc::Network::CConnectionStatus m_connectionStatus;
 
-            BlackMisc::Aviation::CAircraftParts m_sentAircraftConfig; //!< aircraft parts sent
-            BlackMisc::CTokenBucket m_tokenBucket;  //!< used with aircraft parts messages
-            BlackMisc::Aviation::CCallsignSet m_interimPositionReceivers;  //!< all aircraft receiving interim positions
+            BlackMisc::Aviation::CAircraftParts m_sentAircraftConfig;        //!< aircraft parts sent
+            BlackMisc::CTokenBucket             m_tokenBucket;               //!< used with aircraft parts messages
+            BlackMisc::Aviation::CCallsignSet   m_interimPositionReceivers;  //!< all aircraft receiving interim positions
 
             BlackMisc::CDigestSignal m_dsSendTextMessage  { this, &CFSDClient::emitConsolidatedTextMessages, 500, 10 };
             BlackMisc::Network::CTextMessageList m_textMessagesToConsolidate;
 
+            //! ATIS message
             struct AtisMessage
             {
                 QString voiceRoom;
@@ -432,12 +433,15 @@ namespace BlackCore
 
             QTextCodec *m_fsdTextCodec = nullptr;
 
+            //! An illegal FSD state has been detected
+            void handleIllegalFsdState(const QString &message);
+
             static const int MaxOffseTimes = 6; //!< Max offset times kept
             static int constexpr c_processingIntervalMsec = 100;            //!< interval for the processing timer
             static int constexpr c_updatePostionIntervalMsec = 5000;        //!< interval for the position update timer (send our position to network)
             static int constexpr c_updateInterimPostionIntervalMsec = 1000; //!< interval for iterim position updates (send our position as interim position)
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif
