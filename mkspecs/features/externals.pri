@@ -22,6 +22,7 @@ isEmpty(EXTERNALSROOT) {
 ################################
 
 win32-clang-msvc: EXTERNALS_SPEC = win32-msvc
+else:linux:       EXTERNALS_SPEC = linux-g++
 else:             EXTERNALS_SPEC = $$basename(QMAKESPEC)
 
 msvc {
