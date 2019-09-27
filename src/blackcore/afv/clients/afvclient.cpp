@@ -225,7 +225,7 @@ namespace BlackCore
 
             void CAfvClient::updateComFrequency(CComSystem::ComUnit comUnit, const CFrequency &comFrequency)
             {
-                const quint16 freqHz = static_cast<quint16>(comFrequency.valueInteger(CFrequencyUnit::Hz()));
+                const int freqHz = static_cast<int>(comFrequency.valueInteger(CFrequencyUnit::Hz()));
                 this->updateComFrequency(comUnitToTransceiverId(comUnit), freqHz);
             }
 
