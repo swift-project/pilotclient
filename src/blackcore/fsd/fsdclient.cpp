@@ -266,7 +266,7 @@ namespace BlackCore
         void CFSDClient::sendDeletePilot()
         {
             const QString cid = m_server.getUser().getId();
-            DeletePilot deletePilot(m_ownCallsign.asString(), cid);
+            DeletePilot deletePilot(m_ownCallsign.getFsdCallsignString(), cid);
             sendMessage(deletePilot);
         }
 
@@ -389,38 +389,37 @@ namespace BlackCore
 
         void CFSDClient::sendClientQuery(ClientQueryType queryType, const CCallsign &receiver, const QStringList &queryData)
         {
-            if (queryType == ClientQueryType::Unknown)
-            {
-                return;
-            }
-            else if (queryType == ClientQueryType::IsValidATC)
+            if (queryType == ClientQueryType::Unknown) { return; }
+
+            const QString reveiverCallsign = receiver.getFsdCallsignString();
+            if (queryType == ClientQueryType::IsValidATC)
             {
                 ClientQuery clientQuery(m_ownCallsign.asString(), "SERVER", ClientQueryType::IsValidATC, queryData);
                 sendMessage(clientQuery);
             }
             else if (queryType == ClientQueryType::Capabilities)
             {
-                ClientQuery clientQuery(m_ownCallsign.asString(), receiver.toQString(), ClientQueryType::Capabilities);
+                ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::Capabilities);
                 sendMessage(clientQuery);
             }
             else if (queryType == ClientQueryType::Com1Freq)
             {
-                ClientQuery clientQuery(m_ownCallsign.asString(), receiver.toQString(), ClientQueryType::Com1Freq);
+                ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::Com1Freq);
                 sendMessage(clientQuery);
             }
             else if (queryType == ClientQueryType::RealName)
             {
-                ClientQuery clientQuery(m_ownCallsign.asString(), receiver.toQString(), ClientQueryType::RealName);
+                ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::RealName);
                 sendMessage(clientQuery);
             }
             else if (queryType == ClientQueryType::Server)
             {
-                ClientQuery clientQuery(m_ownCallsign.asString(), receiver.toQString(), ClientQueryType::Server);
+                ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::Server);
                 sendMessage(clientQuery);
             }
             else if (queryType == ClientQueryType::ATIS)
             {
-                ClientQuery clientQuery(m_ownCallsign.asString(), receiver.toQString(), ClientQueryType::ATIS);
+                ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::ATIS);
                 sendMessage(clientQuery);
                 if (m_serverType != ServerType::Vatsim)
                 {
@@ -429,12 +428,12 @@ namespace BlackCore
             }
             else if (queryType == ClientQueryType::PublicIP)
             {
-                ClientQuery clientQuery(m_ownCallsign.asString(), receiver.toQString(), ClientQueryType::PublicIP);
+                ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::PublicIP);
                 sendMessage(clientQuery);
             }
             else if (queryType == ClientQueryType::INF)
             {
-                ClientQuery clientQuery(m_ownCallsign.asString(), receiver.toQString(), ClientQueryType::INF);
+                ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::INF);
                 sendMessage(clientQuery);
             }
             else if (queryType == ClientQueryType::FP)
@@ -446,7 +445,7 @@ namespace BlackCore
             if (queryType == ClientQueryType::AircraftConfig)
             {
                 if (queryData.size() == 0) { return; }
-                ClientQuery clientQuery(m_ownCallsign.asString(), receiver.toQString(), ClientQueryType::AircraftConfig, queryData);
+                ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::AircraftConfig, queryData);
                 sendMessage(clientQuery);
             }
 
@@ -462,7 +461,7 @@ namespace BlackCore
             for (const auto &message : as_const(privateMessages))
             {
                 if (message.getRecipientCallsign().isEmpty()) { continue; }
-                TextMessage textMessage(m_ownCallsign.asString(), message.getRecipientCallsign().toQString(), message.getMessage());
+                TextMessage textMessage(m_ownCallsign.asString(), message.getRecipientCallsign().getFsdCallsignString(), message.getMessage());
                 sendMessage(textMessage);
                 emit this->textMessageSent(message);
 
