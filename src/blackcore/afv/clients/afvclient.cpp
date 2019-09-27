@@ -147,6 +147,7 @@ namespace BlackCore
                 m_startDateTimeUtc = QDateTime::currentDateTimeUtc();
                 m_connection->setReceiveAudio(true);
                 m_voiceServerPositionTimer.start(5000);
+                this->onSettingsChanged(); // make sure all settings are applied
                 m_isStarted = true;
                 CLogMessage(this).info(u"Started [Input: %1] [Output: %2]") << inputDevice.deviceName() << outputDevice.deviceName();
             }
