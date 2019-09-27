@@ -9,8 +9,8 @@
 #include <qendian.h>
 #include <QVector>
 #include <QDebug>
-// #include "utils.h"
 #include "wavfile.h"
+// #include "utils.h"
 
 namespace BlackSound
 {
@@ -50,29 +50,29 @@ namespace BlackSound
             WAVEHeader  wave;
         };
 
-        WavFile::WavFile(QObject *parent) :
+        CWavFile::CWavFile(QObject *parent) :
             QFile(parent),
             m_headerLength(0)
         { }
 
-        bool WavFile::open(const QString &fileName)
+        bool CWavFile::open(const QString &fileName)
         {
             close();
             setFileName(fileName);
             return QFile::open(QIODevice::ReadOnly) && readHeader();
         }
 
-        const QAudioFormat &WavFile::fileFormat() const
+        const QAudioFormat &CWavFile::fileFormat() const
         {
             return m_fileFormat;
         }
 
-        qint64 WavFile::headerLength() const
+        qint64 CWavFile::headerLength() const
         {
             return m_headerLength;
         }
 
-        bool WavFile::readHeader()
+        bool CWavFile::readHeader()
         {
             seek(0);
             CombinedHeader header;
@@ -132,15 +132,14 @@ namespace BlackSound
 
             if (memcmp(&dataHeader.descriptor.id, "data", 4) == 0)
             {
-                qint32 dataLength = qFromLittleEndian<qint32>(dataHeader.descriptor.size);
+                const qint32 dataLength = qFromLittleEndian<qint32>(dataHeader.descriptor.size);
                 m_audioData = read(dataLength);
                 if (m_audioData.size() != dataLength)
                 {
-                    return false;
                     m_audioData.clear();
+                    return false;
                 }
             }
-
             return result;
         }
     } // ns

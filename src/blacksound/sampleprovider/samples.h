@@ -21,20 +21,24 @@ namespace BlackSound
         class BLACKSOUND_EXPORT Samples
         {
         public:
+            //! Singleton
             static Samples &instance();
 
+            //! Various samples (sounds) @{
             CResourceSound crackle() const;
             CResourceSound click() const;
             CResourceSound whiteNoise() const;
+            //! @}
 
         private:
+            //! Ctor
             Samples();
 
             CResourceSound m_crackle;
             CResourceSound m_click;
             CResourceSound m_whiteNoise;
         };
-    }
-}
+    } // ns
+} // ns
 
-#endif // SAMPLES_H
+#endif // guard

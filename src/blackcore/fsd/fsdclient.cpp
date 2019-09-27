@@ -78,14 +78,14 @@ namespace BlackCore
         }
 
         CFSDClient::CFSDClient(IClientProvider *clientProvider,
-                             IOwnAircraftProvider *ownAircraftProvider,
-                             IRemoteAircraftProvider *remoteAircraftProvider,
-                             QObject *parent)
-                : QObject(parent),
-                  CClientAware(clientProvider),
-                  COwnAircraftAware(ownAircraftProvider),
-                  CRemoteAircraftAware(remoteAircraftProvider),
-                  m_tokenBucket(10, CTime(5, CTimeUnit::s()), 1)
+                               IOwnAircraftProvider *ownAircraftProvider,
+                               IRemoteAircraftProvider *remoteAircraftProvider,
+                               QObject *parent)
+            : QObject(parent),
+              CClientAware(clientProvider),
+              COwnAircraftAware(ownAircraftProvider),
+              CRemoteAircraftAware(remoteAircraftProvider),
+              m_tokenBucket(10, CTime(5, CTimeUnit::s()), 1)
         {
             initializeMessageTypes();
             connect(&m_socket, &QTcpSocket::readyRead, this, &CFSDClient::readDataFromSocket);
@@ -308,15 +308,15 @@ namespace BlackCore
             if (m_connectionStatus.isDisconnected()) { return; }
             CSimulatedAircraft myAircraft(getOwnAircraft());
             InterimPilotDataUpdate interimPilotDataUpdate(m_ownCallsign.asString(),
-                                                          QString(),
-                                                          myAircraft.latitude().value(CAngleUnit::deg()),
-                                                          myAircraft.longitude().value(CAngleUnit::deg()),
-                                                          myAircraft.getAltitude().valueInteger(CLengthUnit::ft()),
-                                                          myAircraft.getGroundSpeed().valueInteger(CSpeedUnit::kts()),
-                                                          myAircraft.getPitch().value(CAngleUnit::deg()),
-                                                          myAircraft.getBank().value(CAngleUnit::deg()),
-                                                          myAircraft.getHeading().value(CAngleUnit::deg()),
-                                                          myAircraft.getParts().isOnGround());
+                    QString(),
+                    myAircraft.latitude().value(CAngleUnit::deg()),
+                    myAircraft.longitude().value(CAngleUnit::deg()),
+                    myAircraft.getAltitude().valueInteger(CLengthUnit::ft()),
+                    myAircraft.getGroundSpeed().valueInteger(CSpeedUnit::kts()),
+                    myAircraft.getPitch().value(CAngleUnit::deg()),
+                    myAircraft.getBank().value(CAngleUnit::deg()),
+                    myAircraft.getHeading().value(CAngleUnit::deg()),
+                    myAircraft.getParts().isOnGround());
 
             for (const auto &receiver : as_const(m_interimPositionReceivers))
             {
@@ -376,7 +376,7 @@ namespace BlackCore
 
         void CFSDClient::sendClientQueryFlightPlan(const CCallsign callsign)
         {
-            sendClientQuery(ClientQueryType::FP, {}, { callsign.toQString() } );
+            sendClientQuery(ClientQueryType::FP, {}, { callsign.toQString() });
         }
 
         void CFSDClient::sendClientQueryAircraftConfig(const CCallsign callsign)
@@ -520,7 +520,7 @@ namespace BlackCore
 
         void CFSDClient::sendTextMessage(const QString &receiver, const QString &message)
         {
-            const CTextMessage msg (message, getOwnCallsign(), { receiver });
+            const CTextMessage msg(message, getOwnCallsign(), { receiver });
             sendTextMessage(msg);
         }
 
@@ -598,10 +598,10 @@ namespace BlackCore
             if (modelString.isEmpty()) { modelString = noModelString(); }
 
             PlaneInfoRequestFsinn planeInfoRequestFsinn(m_ownCallsign.asString(), callsign.toQString(),
-                                                        myAircraft.getAirlineIcaoCodeDesignator(),
-                                                        myAircraft.getAircraftIcaoCodeDesignator(),
-                                                        myAircraft.getAircraftIcaoCombinedType(),
-                                                        m_sendMModelString ? modelString : QString());
+                    myAircraft.getAirlineIcaoCodeDesignator(),
+                    myAircraft.getAircraftIcaoCodeDesignator(),
+                    myAircraft.getAircraftIcaoCombinedType(),
+                    m_sendMModelString ? modelString : QString());
             sendMessage(planeInfoRequestFsinn);
             this->increaseStatisticsValue(QStringLiteral("sendPlaneInfoRequestFsinn"));
         }
@@ -621,10 +621,10 @@ namespace BlackCore
             if (modelString.isEmpty()) { modelString = noModelString(); }
 
             PlaneInformationFsinn planeInformationFsinn(m_ownCallsign.asString(), callsign.toQString(),
-                                                        myAircraft.getAirlineIcaoCodeDesignator(),
-                                                        myAircraft.getAircraftIcaoCodeDesignator(),
-                                                        myAircraft.getAircraftIcaoCombinedType(),
-                                                        m_sendMModelString ? modelString : QString());
+                    myAircraft.getAirlineIcaoCodeDesignator(),
+                    myAircraft.getAircraftIcaoCodeDesignator(),
+                    myAircraft.getAircraftIcaoCombinedType(),
+                    m_sendMModelString ? modelString : QString());
             sendMessage(planeInformationFsinn);
             this->increaseStatisticsValue(QStringLiteral("sendPlaneInformationFsinn"));
         }
@@ -740,9 +740,9 @@ namespace BlackCore
                 vatsim_get_system_unique_id(sysuid);
 
                 userInfo += QString("CID=") % cid % " " % m_clientName % " IP=" % m_socket.localAddress().toString() %
-                        " SYS_UID=" % sysuid % " FSVER=" % m_hostApplication % " LT=" % QString::number(latitude) %
-                        " LO=" % QString::number(longitude) % " AL=" % QString::number(altitude) %
-                        " " % realName;
+                            " SYS_UID=" % sysuid % " FSVER=" % m_hostApplication % " LT=" % QString::number(latitude) %
+                            " LO=" % QString::number(longitude) % " AL=" % QString::number(altitude) %
+                            " " % realName;
 
                 TextMessage textMessage(m_ownCallsign.asString(), receiver, userInfo);
                 sendMessage(textMessage);
@@ -806,7 +806,7 @@ namespace BlackCore
         {
             m_messageTypeMapping["#AA"] = MessageType::AddAtc;
             m_messageTypeMapping["#AP"] = MessageType::AddPilot;
-            m_messageTypeMapping["%"] = MessageType::AtcDataUpdate;
+            m_messageTypeMapping["%"]   = MessageType::AtcDataUpdate;
             m_messageTypeMapping["$ZC"] = MessageType::AuthChallenge;
             m_messageTypeMapping["$ZR"] = MessageType::AuthResponse;
             m_messageTypeMapping["$ID"] = MessageType::ClientIdentification;
@@ -817,7 +817,7 @@ namespace BlackCore
             m_messageTypeMapping["$FP"] = MessageType::FlightPlan;
             m_messageTypeMapping["$DI"] = MessageType::FsdIdentification;
             m_messageTypeMapping["$!!"] = MessageType::KillRequest;
-            m_messageTypeMapping["@"] = MessageType::PilotDataUpdate;
+            m_messageTypeMapping["@"]   = MessageType::PilotDataUpdate;
             m_messageTypeMapping["$PI"] = MessageType::Ping;
             m_messageTypeMapping["$PO"] = MessageType::Pong;
             m_messageTypeMapping["$ER"] = MessageType::ServerError;
@@ -938,12 +938,12 @@ namespace BlackCore
             const CCallsign callsign(dataUpdate.sender(), CCallsign::Aircraft);
 
             CAircraftSituation situation(
-                        callsign,
-                        CCoordinateGeodetic(dataUpdate.m_latitude, dataUpdate.m_longitude, dataUpdate.m_altitudeTrue),
-                        CHeading(dataUpdate.m_heading, CHeading::True, CAngleUnit::deg()),
-                        CAngle(dataUpdate.m_pitch, CAngleUnit::deg()),
-                        CAngle(dataUpdate.m_bank, CAngleUnit::deg()),
-                        CSpeed(dataUpdate.m_groundSpeed, CSpeedUnit::kts()));
+                callsign,
+                CCoordinateGeodetic(dataUpdate.m_latitude, dataUpdate.m_longitude, dataUpdate.m_altitudeTrue),
+                CHeading(dataUpdate.m_heading, CHeading::True, CAngleUnit::deg()),
+                CAngle(dataUpdate.m_pitch, CAngleUnit::deg()),
+                CAngle(dataUpdate.m_bank, CAngleUnit::deg()),
+                CSpeed(dataUpdate.m_groundSpeed, CSpeedUnit::kts()));
             situation.setPressureAltitude(CAltitude(dataUpdate.m_altitudePressure, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::ft()));
             situation.setOnGround(dataUpdate.m_onGround);
 
@@ -1328,12 +1328,12 @@ namespace BlackCore
                 const CCallsign callsign(interimPilotDataUpdate.sender(), CCallsign::Aircraft);
 
                 CAircraftSituation situation(
-                            callsign,
-                            CCoordinateGeodetic(interimPilotDataUpdate.m_latitude, interimPilotDataUpdate.m_longitude, interimPilotDataUpdate.m_altitudeTrue),
-                            CHeading(interimPilotDataUpdate.m_heading, CHeading::True, CAngleUnit::deg()),
-                            CAngle(interimPilotDataUpdate.m_pitch, CAngleUnit::deg()),
-                            CAngle(interimPilotDataUpdate.m_bank, CAngleUnit::deg()),
-                            CSpeed(interimPilotDataUpdate.m_groundSpeed, CSpeedUnit::kts()));
+                    callsign,
+                    CCoordinateGeodetic(interimPilotDataUpdate.m_latitude, interimPilotDataUpdate.m_longitude, interimPilotDataUpdate.m_altitudeTrue),
+                    CHeading(interimPilotDataUpdate.m_heading, CHeading::True, CAngleUnit::deg()),
+                    CAngle(interimPilotDataUpdate.m_pitch, CAngleUnit::deg()),
+                    CAngle(interimPilotDataUpdate.m_bank, CAngleUnit::deg()),
+                    CSpeed(interimPilotDataUpdate.m_groundSpeed, CSpeedUnit::kts()));
                 situation.setOnGround(interimPilotDataUpdate.m_onGround);
 
                 // Ref T297, default offset time

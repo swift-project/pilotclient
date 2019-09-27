@@ -35,32 +35,36 @@ namespace BlackCore
                 //! Ctor
                 CCryptoDtoChannel(CryptoDtoChannelConfigDto channelConfig, int receiveSequenceHistorySize = 10);
 
+                //! Transmit key @{
                 QByteArray getTransmitKey(CryptoDtoMode mode);
                 QByteArray getTransmitKey(CryptoDtoMode mode, uint &sequenceToSend);
+                //! @}
+
+                //! Channel tag
                 QString getChannelTag() const;
+
+                //! Receiver key
                 QByteArray getReceiveKey(CryptoDtoMode mode);
 
+                //! check the received sequence
                 bool checkReceivedSequence(uint sequenceReceived);
 
             private:
                 bool contains(uint sequence);
                 uint getMin(int &minIndex);
 
-
                 QByteArray m_aeadTransmitKey;
-                uint transmitSequence = 0;
-
                 QByteArray m_aeadReceiveKey;
 
-                uint *receiveSequenceHistory;
-                int receiveSequenceHistoryDepth;
-                int receiveSequenceSizeMaxSize;
+                uint m_transmitSequence = 0;
+                uint *m_receiveSequenceHistory;
+                int m_receiveSequenceHistoryDepth;
+                int m_receiveSequenceSizeMaxSize;
 
-                QByteArray hmacKey;
-
-                QString ChannelTag;
-                QDateTime LastTransmitUtc;
-                QDateTime LastReceiveUtc;
+                QByteArray m_hmacKey;
+                QString m_channelTag;
+                QDateTime m_LastTransmitUtc;
+                QDateTime m_lastReceiveUtc;
             };
         } // ns
     } // ns

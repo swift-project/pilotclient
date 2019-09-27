@@ -19,7 +19,7 @@ namespace BlackSound
     {
         CResourceSound::CResourceSound(const QString &audioFileName)
         {
-            m_wavFile = new WavFile;
+            m_wavFile = new CWavFile();
             m_wavFile->open(audioFileName);
             if (m_wavFile->fileFormat().sampleType() == QAudioFormat::Float)
             {
@@ -30,10 +30,5 @@ namespace BlackSound
                 m_samples = convertBytesTo16BitPCM(m_wavFile->audioData());
             }
         }
-
-        const QVector<qint16> &CResourceSound::audioData()
-        {
-            return m_samples;
-        }
-    }
-}
+    } // ns
+} // ns

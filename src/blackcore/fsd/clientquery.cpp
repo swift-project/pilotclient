@@ -40,7 +40,7 @@ namespace BlackCore
             {
                 BlackMisc::CLogMessage(static_cast<ClientQuery *>(nullptr)).debug(u"Wrong number of arguments.");
                 return {};
-            };
+            }
 
             QStringList payload;
             if (tokens.size() > 3) { payload = tokens.mid(3); }

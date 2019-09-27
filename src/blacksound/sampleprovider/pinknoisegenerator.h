@@ -32,8 +32,10 @@ namespace BlackSound
             //! Noise generator
             CPinkNoiseGenerator(QObject *parent = nullptr) : ISampleProvider(parent) {}
 
+            //! Read samples
             virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
 
+            //! Gain
             void setGain(double gain) { m_gain = gain; }
 
         private:

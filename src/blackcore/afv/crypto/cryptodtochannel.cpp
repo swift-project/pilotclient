@@ -16,29 +16,29 @@ namespace BlackCore
         {
             CCryptoDtoChannel::CCryptoDtoChannel(QString channelTag, const QByteArray &aeadReceiveKey, const QByteArray &aeadTransmitKey, int receiveSequenceHistorySize)
             {
-                ChannelTag = channelTag;
+                m_channelTag = channelTag;
                 m_aeadReceiveKey = aeadReceiveKey;
                 m_aeadTransmitKey = aeadTransmitKey;
 
-                receiveSequenceSizeMaxSize = receiveSequenceHistorySize;
-                if (receiveSequenceSizeMaxSize < 1)
-                    receiveSequenceSizeMaxSize = 1;
-                receiveSequenceHistory = new uint[receiveSequenceSizeMaxSize];
-                receiveSequenceHistoryDepth = 0;
+                m_receiveSequenceSizeMaxSize = receiveSequenceHistorySize;
+                if (m_receiveSequenceSizeMaxSize < 1)
+                    m_receiveSequenceSizeMaxSize = 1;
+                m_receiveSequenceHistory = new uint[m_receiveSequenceSizeMaxSize];
+                m_receiveSequenceHistoryDepth = 0;
             }
 
             CCryptoDtoChannel::CCryptoDtoChannel(CryptoDtoChannelConfigDto channelConfig, int receiveSequenceHistorySize)
             {
-                ChannelTag = channelConfig.channelTag;
+                m_channelTag = channelConfig.channelTag;
                 m_aeadReceiveKey = channelConfig.aeadReceiveKey;
                 m_aeadTransmitKey = channelConfig.aeadTransmitKey;
-                hmacKey = channelConfig.hmacKey;
+                m_hmacKey = channelConfig.hmacKey;
 
-                receiveSequenceSizeMaxSize = receiveSequenceHistorySize;
-                if (receiveSequenceSizeMaxSize < 1)
-                    receiveSequenceSizeMaxSize = 1;
-                receiveSequenceHistory = new uint[receiveSequenceSizeMaxSize];
-                receiveSequenceHistoryDepth = 0;
+                m_receiveSequenceSizeMaxSize = receiveSequenceHistorySize;
+                if (m_receiveSequenceSizeMaxSize < 1)
+                    m_receiveSequenceSizeMaxSize = 1;
+                m_receiveSequenceHistory = new uint[m_receiveSequenceSizeMaxSize];
+                m_receiveSequenceHistoryDepth = 0;
             }
 
             QByteArray CCryptoDtoChannel::getTransmitKey(CryptoDtoMode mode)
@@ -56,9 +56,9 @@ namespace BlackCore
 
             QByteArray CCryptoDtoChannel::getTransmitKey(CryptoDtoMode mode, uint &sequenceToSend)
             {
-                sequenceToSend = transmitSequence;
-                transmitSequence++;
-                LastTransmitUtc = QDateTime::currentDateTimeUtc();
+                sequenceToSend = m_transmitSequence;
+                m_transmitSequence++;
+                m_LastTransmitUtc = QDateTime::currentDateTimeUtc();
 
                 switch (mode)
                 {
@@ -73,7 +73,7 @@ namespace BlackCore
 
             QString CCryptoDtoChannel::getChannelTag() const
             {
-                return ChannelTag;
+                return m_channelTag;
             }
 
             QByteArray CCryptoDtoChannel::getReceiveKey(CryptoDtoMode mode)
@@ -97,27 +97,27 @@ namespace BlackCore
                     return false;
                 }
 
-                if (receiveSequenceHistoryDepth < receiveSequenceSizeMaxSize)                       //If the buffer has been filled...
+                if (m_receiveSequenceHistoryDepth < m_receiveSequenceSizeMaxSize)                       //If the buffer has been filled...
                 {
-                    receiveSequenceHistory[receiveSequenceHistoryDepth++] = sequenceReceived;
+                    m_receiveSequenceHistory[m_receiveSequenceHistoryDepth++] = sequenceReceived;
                 }
                 else
                 {
                     int minIndex;
                     uint minValue = getMin(minIndex);
                     if (sequenceReceived < minValue) { return false; }          // Possible replay attack
-                    receiveSequenceHistory[minIndex] = sequenceReceived;
+                    m_receiveSequenceHistory[minIndex] = sequenceReceived;
                 }
 
-                LastReceiveUtc = QDateTime::currentDateTimeUtc();
+                m_lastReceiveUtc = QDateTime::currentDateTimeUtc();
                 return true;
             }
 
             bool CCryptoDtoChannel::contains(uint sequence)
             {
-                for (int i = 0; i < receiveSequenceHistoryDepth; i++)
+                for (int i = 0; i < m_receiveSequenceHistoryDepth; i++)
                 {
-                    if (receiveSequenceHistory[i] == sequence)
+                    if (m_receiveSequenceHistory[i] == sequence)
                         return true;
                 }
                 return false;
@@ -129,12 +129,12 @@ namespace BlackCore
                 minIndex = -1;
                 int index = -1;
 
-                for (int i = 0; i < receiveSequenceHistoryDepth; i++)
+                for (int i = 0; i < m_receiveSequenceHistoryDepth; i++)
                 {
                     index++;
-                    if (receiveSequenceHistory[i] <= minValue)
+                    if (m_receiveSequenceHistory[i] <= minValue)
                     {
-                        minValue = receiveSequenceHistory[i];
+                        minValue = m_receiveSequenceHistory[i];
                         minIndex = index;
                     }
                 }

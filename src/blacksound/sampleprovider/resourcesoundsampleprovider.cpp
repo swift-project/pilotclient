@@ -24,11 +24,11 @@ namespace BlackSound
 
             const qint64 samplesToCopy = qMin(availableSamples, count);
             samples.clear();
-            samples.fill(0, samplesToCopy);
+            samples.fill(0, static_cast<int>(samplesToCopy));
 
             for (int i = 0; i < samplesToCopy; i++)
             {
-                m_tempBuffer[i] = m_resourceSound.audioData().at(m_position + i);
+                m_tempBuffer[i] = m_resourceSound.audioData().at(static_cast<int>(m_position) + i);
             }
 
             if (!qFuzzyCompare(m_gain, 1.0))
@@ -54,5 +54,5 @@ namespace BlackSound
 
             return static_cast<int>(samplesToCopy);
         }
-    }
-}
+    } // ns
+} // ns

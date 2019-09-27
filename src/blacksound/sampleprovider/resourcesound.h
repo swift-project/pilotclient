@@ -28,13 +28,14 @@ namespace BlackSound
             //! Sound of audio file
             CResourceSound(const QString &audioFileName);
 
-            const QVector<qint16> &audioData();
+            //! Audio data
+            const QVector<qint16> &audioData() const { return m_samples; }
 
         private:
-            Wav::WavFile *m_wavFile = nullptr;
+            Wav::WavFile   *m_wavFile = nullptr;
             QVector<qint16> m_samples;
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard

@@ -20,22 +20,30 @@ namespace BlackSound
     namespace Wav
     {
         //! * WAV file
-        class WavFile : public QFile
+        class CWavFile : public QFile
         {
         public:
             //! Ctor
-            WavFile(QObject *parent = nullptr);
+            CWavFile(QObject *parent = nullptr);
 
+            //! Standard open
             using QFile::open;
+
+            //! Open
             bool open(const QString &fileName);
+
+            //! Audio format
             const QAudioFormat &fileFormat() const;
+
+            //! Header length
             qint64 headerLength() const;
-            QByteArray audioData() { return m_audioData; }
+
+            //! The audio data
+            const QByteArray &audioData() const { return m_audioData; }
 
         private:
             bool readHeader();
 
-        private:
             QAudioFormat m_fileFormat;
             qint64 m_headerLength;
             QByteArray m_audioData;
