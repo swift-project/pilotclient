@@ -84,6 +84,7 @@ namespace BlackMisc
         {
             m_callsign = callsign;
             m_controller.setCallsign(callsign);
+            m_isAfvCrossCoupled = callsign.getStringAsSet().startsWith('*');
         }
 
         QString CAtcStation::getCallsignAndControllerRealName() const

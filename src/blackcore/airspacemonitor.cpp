@@ -75,10 +75,9 @@ namespace BlackCore
         this->setObjectName("CAirspaceMonitor");
         this->enableReverseLookupMessages(sApp->isDeveloperFlagSet() || CBuildConfig::isLocalDeveloperDebugBuild() ? RevLogEnabled : RevLogEnabledSimplified);
 
-        connect(m_fsdClient, &CFSDClient::atcDataUpdateReceived,           this, &CAirspaceMonitor::onAtcPositionUpdate);
         // FSD TODO
+        connect(m_fsdClient, &CFSDClient::atcDataUpdateReceived,           this, &CAirspaceMonitor::onAtcPositionUpdate);
         connect(m_fsdClient, &CFSDClient::atisReplyReceived,               this, &CAirspaceMonitor::onAtisReceived);
-        connect(m_fsdClient, &CFSDClient::atisVoiceRoomReplyReceived,      this, &CAirspaceMonitor::onAtisVoiceRoomReceived);
         connect(m_fsdClient, &CFSDClient::atisLogoffTimeReplyReceived,     this, &CAirspaceMonitor::onAtisLogoffTimeReceived);
         connect(m_fsdClient, &CFSDClient::flightPlanReceived,              this, &CAirspaceMonitor::onFlightPlanReceived);
         connect(m_fsdClient, &CFSDClient::realNameResponseReceived,        this, &CAirspaceMonitor::onRealNameReplyReceived);
@@ -94,11 +93,14 @@ namespace BlackCore
         connect(m_fsdClient, &CFSDClient::aircraftConfigReceived,          this, &CAirspaceMonitor::onAircraftConfigReceived);
         connect(m_fsdClient, &CFSDClient::connectionStatusChanged,         this, &CAirspaceMonitor::onConnectionStatusChanged);
 
+        // No longer existing with AFV
+        // connect(m_fsdClient, &CFSDClient::atisVoiceRoomReplyReceived,      this, &CAirspaceMonitor::onAtisVoiceRoomReceived);
+
         // AutoConnection: this should also avoid race conditions by updating the bookings
         Q_ASSERT_X(sApp && sApp->getWebDataServices(), Q_FUNC_INFO, "Missing data reader");
 
         // optional readers
-        if (sApp->getWebDataServices()->getBookingReader())
+        if (sApp && sApp->getWebDataServices()->getBookingReader())
         {
             connect(sApp->getWebDataServices()->getBookingReader(), &CVatsimBookingReader::atcBookingsRead,          this, &CAirspaceMonitor::onReceivedAtcBookings);
             connect(sApp->getWebDataServices()->getBookingReader(), &CVatsimBookingReader::atcBookingsReadUnchanged, this, &CAirspaceMonitor::onReadUnchangedAtcBookings);
@@ -734,7 +736,11 @@ namespace BlackCore
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
         if (!this->isConnectedAndNotShuttingDown()) { return; }
+        return;
+        Q_UNUSED(url)
+        Q_UNUSED(callsign)
 
+        /**
         // URL
         const QString trimmedUrl = url.trimmed();
         CPropertyIndexVariantMap vm({ CAtcStation::IndexVoiceRoom, CVoiceRoom::IndexUrl }, trimmedUrl);
@@ -754,6 +760,7 @@ namespace BlackCore
             vm = CPropertyIndexVariantMap(CClient::IndexVoiceCapabilities, CVariant::from(CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::Voice)));
             this->updateOrAddClient(callsign, vm, false);
         }
+        **/
     }
 
     void CAirspaceMonitor::onAtisLogoffTimeReceived(const CCallsign &callsign, const QString &zuluTime)

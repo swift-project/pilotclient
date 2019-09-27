@@ -257,9 +257,9 @@ namespace BlackCore
         BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< settings
         QQueue<BlackMisc::Aviation::CCallsign> m_queryAtis;  //!< query the ATIS
         QQueue<BlackMisc::Aviation::CCallsign> m_queryPilot; //!< query the pilot data
-        Fsd::CFSDClient *m_fsdClient  = nullptr;  //!< corresponding network interface
-        CAirspaceAnalyzer *m_analyzer = nullptr;  //!< owned analyzer
-        bool m_bookingsRequested      = false;    //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
+        Fsd::CFSDClient   *m_fsdClient = nullptr;  //!< corresponding network interface
+        CAirspaceAnalyzer *m_analyzer  = nullptr;  //!< owned analyzer
+        bool m_bookingsRequested       = false;    //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
         QTimer m_processTimer;
         static constexpr int ProcessInterval = 50; // in ms
 
@@ -377,7 +377,6 @@ namespace BlackCore
         void onFlightPlanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
         void onAtcControllerDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
         void onAtisReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
-        void onAtisVoiceRoomReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
         void onAtisLogoffTimeReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
         void onIcaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery);
         void onPilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
@@ -388,6 +387,9 @@ namespace BlackCore
         void onAircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, qint64 currentOffsetMs);
         void onAircraftInterimUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
         void onConnectionStatusChanged(BlackMisc::Network::CConnectionStatus oldStatus, BlackMisc::Network::CConnectionStatus newStatus);
+
+        //! \deprecated
+        void onAtisVoiceRoomReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
     };
 } // namespace
 

@@ -68,6 +68,7 @@ namespace BlackGui
                     CColumn col("type", CAtcStation::IndexIcon);
                     col.setSortPropertyIndex({ CAtcStation::IndexCallsign, CCallsign::IndexSuffix });
                     m_columns.addColumn(col);
+                    m_columns.addColumn(CColumn("xc.", "AFV cross coupled", CAtcStation::IndexIsAfvCrossCoupled, new CBoolIconFormatter("AFV cross coupled", "not coupled")));
                     m_columns.addColumn(CColumn("distance", CAtcStation::IndexRelativeDistance, new CAirspaceDistanceFormatter()));
                     m_columns.addColumn(CColumn("frequency", CAtcStation::IndexFrequency, new CComFrequencyFormatter()));
                     m_columns.addColumn(CColumn("r.", "in range", CAtcStation::IndexIsInRange, new CBoolIconFormatter("in range", "outside range")));
