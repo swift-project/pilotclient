@@ -21,16 +21,16 @@
 namespace BlackGui
 {
     CLevelMeter::CLevelMeter(QWidget *parent)
-        :   QWidget(parent)
-        ,   m_peakDecayRate(PeakDecayRate)
-        ,   m_redrawTimer(new QTimer(this))
-        ,   m_rmsColor(Qt::red)
-        ,   m_peakColor(255, 200, 200, 255)
+        :   QFrame(parent),
+            m_redrawTimer(new QTimer(this)),
+            m_lowColor(Qt::gray),
+            m_highColor(Qt::green),
+            m_peakColor(255, 200, 200, 255)
     {
-        setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-        setMinimumWidth(30);
+        this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+        this->setMinimumWidth(30);
 
-        connect(m_redrawTimer, &QTimer::timeout, this, &CLevelMeter::ps_redrawTimerExpired);
+        connect(m_redrawTimer, &QTimer::timeout, this, &CLevelMeter::redrawTimerExpired);
         m_redrawTimer->start(RedrawInterval);
         m_redrawTimer->setObjectName("CLevelMeter");
     }
@@ -40,52 +40,33 @@ namespace BlackGui
 
     void CLevelMeter::reset()
     {
-        m_rmsLevel = 0.0;
+        m_level = 0.0;
         m_peakLevel = 0.0;
-        update();
+        this->update();
     }
 
-    void CLevelMeter::levelChanged(double rmsLevel, double peakLevel, int numSamples)
+    void CLevelMeter::levelChanged(double level)
     {
-        // Smooth the RMS signal
-        const double smooth = pow(double(0.9), static_cast<double>(numSamples) / 256); // TODO: remove this magic number
-        m_rmsLevel = (m_rmsLevel * smooth) + (rmsLevel * (1.0 - smooth));
-
-        if (peakLevel > m_decayedPeakLevel)
+        m_level = level;
+        if (level > m_peakLevel)
         {
-            m_peakLevel = peakLevel;
-            m_decayedPeakLevel = peakLevel;
+            m_peakLevel = level;
             m_peakLevelChanged.start();
         }
-
-        if (peakLevel > m_peakHoldLevel)
-        {
-            m_peakHoldLevel = peakLevel;
-            m_peakHoldLevelChanged.start();
-        }
-
-        update();
     }
 
-    void CLevelMeter::ps_redrawTimerExpired()
+    void CLevelMeter::redrawTimerExpired()
     {
-        // Decay the peak signal
-        const int elapsedMs = m_peakLevelChanged.elapsed();
-        const double decayAmount = m_peakDecayRate * elapsedMs;
-        if (decayAmount < m_peakLevel)
+        // decay
+        if (m_peakLevelChanged.elapsed() > PeakHoldLevelDuration)
         {
-            m_decayedPeakLevel = m_peakLevel - decayAmount;
+            m_peakLevel -= DecayValue;
+            if (m_peakLevel < m_level || m_peakLevel < 0)
+            {
+                m_peakLevel = 0.0;
+            }
         }
-        else
-        {
-            m_decayedPeakLevel = 0.0;
-        }
-
-        // Check whether to clear the peak hold level
-        if (m_peakHoldLevelChanged.elapsed() > PeakHoldLevelDuration)
-            m_peakHoldLevel = 0.0;
-
-        update();
+        this->update();
     }
 
     void CLevelMeter::paintEvent(QPaintEvent *event)
@@ -93,20 +74,23 @@ namespace BlackGui
         Q_UNUSED(event)
 
         QPainter painter(this);
-        painter.fillRect(rect(), Qt::black);
+        QRect bar = this->contentsRect();
+        painter.fillRect(bar, Qt::transparent);
+        const int w = bar.width();
+        const int left  = rect().left();
+        const int level = qRound(m_level * w);
 
-        QRect bar = rect();
+        bar.setLeft(left);
+        bar.setRight(level);
+        painter.fillRect(bar, m_peakLevel >= High ? m_highColor : m_lowColor);
 
-        bar.setTop(rect().top() + (1.0 - m_peakHoldLevel) * rect().height());
-        bar.setBottom(bar.top() + 5);
-        painter.fillRect(bar, m_rmsColor);
-        bar.setBottom(rect().bottom());
-
-        bar.setTop(rect().top() + (1.0 - m_decayedPeakLevel) * rect().height());
-        painter.fillRect(bar, m_peakColor);
-
-        bar.setTop(rect().top() + (1.0 - m_rmsLevel) * rect().height());
-        painter.fillRect(bar, m_rmsColor);
+        if (m_peakLevel > m_level)
+        {
+            const int peak = qRound(m_peakLevel * w);
+            bar.setLeft(level);
+            bar.setRight(peak);
+            painter.fillRect(bar, m_peakColor);
+        }
     }
 
 } // namespace

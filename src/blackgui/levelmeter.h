@@ -18,70 +18,70 @@
 #include <QColor>
 #include <QObject>
 #include <QTime>
-#include <QWidget>
+#include <QFrame>
 
 class QPaintEvent;
 class QTimer;
 
 namespace BlackGui
 {
-    //! Widget which displays a vertical audio level meter, indicating the
-    //! RMS and peak levels of the window of audio samples most recently analyzed
-    //! by the Engine.
-    class BLACKGUI_EXPORT CLevelMeter : public QWidget
+    //! Widget which displays a audio level meter, indicating the
+    //! level and peak levels of the window of audio samples most recently analyzed
+    class BLACKGUI_EXPORT CLevelMeter : public QFrame
     {
         Q_OBJECT
+        Q_PROPERTY(QColor lowColor  READ getLowColor  WRITE setLowColor)
+        Q_PROPERTY(QColor highColor READ getHighColor WRITE setHighColor)
+        Q_PROPERTY(QColor peakColor READ getPeakColor WRITE setPeakColor)
+
     public:
         //! Constructor
         CLevelMeter(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CLevelMeter();
+        virtual ~CLevelMeter() override;
 
         //! \copydoc QWidget::paintEvent
         void paintEvent(QPaintEvent *event) override;
 
-    public slots:
         //! Clean up
         void reset();
 
         //! Values
-        void levelChanged(double rmsLevel, double peakLevel, int numSamples);
+        void levelChanged(double level);
 
-    private slots:
-        void ps_redrawTimerExpired();
+        //! Color properties @{
+        const QColor &getLowColor()  const { return m_lowColor; }
+        const QColor &getHighColor() const { return m_highColor; }
+        const QColor &getPeakColor() const { return m_peakColor; }
+        void setLowColor(const QColor &color)  { m_lowColor = color; }
+        void setHighColor(const QColor &color) { m_highColor = color; }
+        void setPeakColor(const QColor &color) { m_peakColor = color; }
+        //! @}
 
     private:
-        const int RedrawInterval        = 100; // ms
-        const double PeakDecayRate      = 0.001;
-        const int PeakHoldLevelDuration = 2000; // ms
+        //! Timer expired
+        void redrawTimerExpired();
 
-        //! Height of RMS level bar, range 0.0 - 1.0.
-        double m_rmsLevel = 0.0;
+        const int RedrawInterval        = 100;  // ms
+        const int PeakHoldLevelDuration = 1000; // ms
+
+        //! Range 0.0 - 1.0.
+        double m_level = 0.0;
 
         //! Most recent peak level, range 0.0 - 1.0.
         double m_peakLevel = 0.0;
 
-        //! Height of peak level bar.
-        //! This is calculated by decaying m_peakLevel depending on the elapsed time since m_peakLevelChanged, and the value of m_decayRate.
-        double m_decayedPeakLevel = 0.0;
-
         //! Time at which m_peakLevel was last changed.
         QTime m_peakLevelChanged;
 
-        //! Rate at which peak level bar decays.  Expressed in level units / millisecond.
-        double m_peakDecayRate;
-
-        //! High watermark of peak level. Range 0.0 - 1.0.
-        double m_peakHoldLevel = 0.0;
-
-        //! Time at which m_peakHoldLevel was last changed.
-        QTime m_peakHoldLevelChanged;
-
+        static constexpr double High       = 0.60;
+        static constexpr double DecayValue = 0.10;
         QTimer *m_redrawTimer = nullptr;
-        QColor m_rmsColor;
+        QColor m_lowColor;
+        QColor m_highColor;
         QColor m_peakColor;
     };
-}
+} // ns
 
 #endif // guard
