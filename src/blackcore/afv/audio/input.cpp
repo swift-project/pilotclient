@@ -18,6 +18,7 @@
 #include <cmath>
 
 using namespace BlackMisc;
+using namespace BlackSound;
 
 namespace BlackCore
 {
