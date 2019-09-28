@@ -16,28 +16,26 @@ namespace BlackCore
         {
             CCryptoDtoChannel::CCryptoDtoChannel(QString channelTag, const QByteArray &aeadReceiveKey, const QByteArray &aeadTransmitKey, int receiveSequenceHistorySize)
             {
-                m_channelTag = channelTag;
-                m_aeadReceiveKey = aeadReceiveKey;
+                m_channelTag      = channelTag;
+                m_aeadReceiveKey  = aeadReceiveKey;
                 m_aeadTransmitKey = aeadTransmitKey;
 
                 m_receiveSequenceSizeMaxSize = receiveSequenceHistorySize;
-                if (m_receiveSequenceSizeMaxSize < 1)
-                    m_receiveSequenceSizeMaxSize = 1;
-                m_receiveSequenceHistory = new uint[m_receiveSequenceSizeMaxSize];
+                if (m_receiveSequenceSizeMaxSize < 1) { m_receiveSequenceSizeMaxSize = 1; }
+                m_receiveSequenceHistory.fill(0, m_receiveSequenceSizeMaxSize);
                 m_receiveSequenceHistoryDepth = 0;
             }
 
             CCryptoDtoChannel::CCryptoDtoChannel(CryptoDtoChannelConfigDto channelConfig, int receiveSequenceHistorySize)
             {
-                m_channelTag = channelConfig.channelTag;
-                m_aeadReceiveKey = channelConfig.aeadReceiveKey;
+                m_channelTag      = channelConfig.channelTag;
+                m_aeadReceiveKey  = channelConfig.aeadReceiveKey;
                 m_aeadTransmitKey = channelConfig.aeadTransmitKey;
-                m_hmacKey = channelConfig.hmacKey;
+                m_hmacKey         = channelConfig.hmacKey;
 
                 m_receiveSequenceSizeMaxSize = receiveSequenceHistorySize;
-                if (m_receiveSequenceSizeMaxSize < 1)
-                    m_receiveSequenceSizeMaxSize = 1;
-                m_receiveSequenceHistory = new uint[m_receiveSequenceSizeMaxSize];
+                if (m_receiveSequenceSizeMaxSize < 1) { m_receiveSequenceSizeMaxSize = 1; }
+                m_receiveSequenceHistory.fill(0, m_receiveSequenceSizeMaxSize);
                 m_receiveSequenceHistoryDepth = 0;
             }
 
@@ -113,20 +111,19 @@ namespace BlackCore
                 return true;
             }
 
-            bool CCryptoDtoChannel::contains(uint sequence)
+            bool CCryptoDtoChannel::contains(uint sequence) const
             {
                 for (int i = 0; i < m_receiveSequenceHistoryDepth; i++)
                 {
-                    if (m_receiveSequenceHistory[i] == sequence)
-                        return true;
+                    if (m_receiveSequenceHistory[i] == sequence) { return true; }
                 }
                 return false;
             }
 
-            uint CCryptoDtoChannel::getMin(int &minIndex)
+            uint CCryptoDtoChannel::getMin(int &minIndex) const
             {
                 uint minValue = std::numeric_limits<uint>::max();
-                minIndex = -1;
+                minIndex  = -1;
                 int index = -1;
 
                 for (int i = 0; i < m_receiveSequenceHistoryDepth; i++)
@@ -140,7 +137,6 @@ namespace BlackCore
                 }
                 return minValue;
             }
-
         } // ns
     } // ns
 } // ns

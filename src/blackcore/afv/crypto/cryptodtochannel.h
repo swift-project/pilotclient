@@ -16,6 +16,7 @@
 
 #include <QDateTime>
 #include <QByteArray>
+#include <QVector>
 
 #include <limits>
 
@@ -50,21 +51,21 @@ namespace BlackCore
                 bool checkReceivedSequence(uint sequenceReceived);
 
             private:
-                bool contains(uint sequence);
-                uint getMin(int &minIndex);
+                bool contains(uint sequence) const;
+                uint getMin(int &minIndex) const;
 
                 QByteArray m_aeadTransmitKey;
                 QByteArray m_aeadReceiveKey;
 
                 uint m_transmitSequence = 0;
-                uint *m_receiveSequenceHistory;
+                QVector<uint> m_receiveSequenceHistory;
                 int m_receiveSequenceHistoryDepth;
                 int m_receiveSequenceSizeMaxSize;
 
                 QByteArray m_hmacKey;
-                QString m_channelTag;
-                QDateTime m_LastTransmitUtc;
-                QDateTime m_lastReceiveUtc;
+                QString    m_channelTag;
+                QDateTime  m_LastTransmitUtc;
+                QDateTime  m_lastReceiveUtc;
             };
         } // ns
     } // ns
