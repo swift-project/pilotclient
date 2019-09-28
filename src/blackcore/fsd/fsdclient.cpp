@@ -173,25 +173,15 @@ namespace BlackCore
         void CFSDClient::setSimType(const CSimulatorPluginInfo &simInfo)
         {
             //! \fixme Define recognized simulators somewhere */
-            if (simInfo.getSimulator() == "fs9")
+            const CSimulatorInfo::Simulator sim = simInfo.getSimulatorInfo().getSimulator();
+            switch (sim)
             {
-                m_simType = SimType::MSFS2004;
-            }
-            else if (simInfo.getSimulator() == "fsx")
-            {
-                m_simType = SimType::MSFSX;
-            }
-            else if (simInfo.getSimulator() == "p3d")
-            {
-                m_simType = SimType::P3Dv4;
-            }
-            else if (simInfo.getSimulator() == "xplane")
-            {
-                m_simType = SimType::XPLANE11;
-            }
-            else
-            {
-                m_simType = SimType::Unknown;
+            case CSimulatorInfo::FSX: m_simType = SimType::MSFSX; break;
+            case CSimulatorInfo::P3D: m_simType = SimType::P3Dv4; break;
+            case CSimulatorInfo::FS9: m_simType = SimType::MSFS2004;    break;
+            case CSimulatorInfo::FG:  m_simType = SimType::FlightGear;  break;
+            case CSimulatorInfo::XPLANE: m_simType = SimType::XPLANE11; break;
+            default: m_simType = SimType::Unknown; break;
             }
         }
 
