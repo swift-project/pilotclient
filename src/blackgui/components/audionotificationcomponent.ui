@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>CAudioNotificationComponent</class>
  <widget class="QFrame" name="CAudioNotificationComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>298</width>
+    <height>240</height>
+   </rect>
+  </property>
   <property name="minimumSize">
    <size>
     <width>200</width>
@@ -37,43 +45,15 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>241</width>
+        <width>296</width>
         <height>238</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="11" column="1">
+       <item row="10" column="1">
         <widget class="QCheckBox" name="cb_SetupAudioPTTClickUp">
          <property name="text">
           <string>PTT click (key up)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="lbl_SoundDirectory">
-         <property name="text">
-          <string>Dir.:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="1">
-        <widget class="QCheckBox" name="cb_SetupAudioNoTransmission">
-         <property name="text">
-          <string>No audio transmission warning</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="QCheckBox" name="cb_SetupAudioNotificationTextCallsignMentioned">
-         <property name="text">
-          <string>notfication for text msg. with my callsign</string>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="1">
-        <widget class="QCheckBox" name="cb_SetupAudioPTTClickDown">
-         <property name="text">
-          <string>PTT click (key down)</string>
          </property>
         </widget>
        </item>
@@ -84,26 +64,17 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
-        <widget class="QSpinBox" name="sb_NotificationValueVolume">
-         <property name="suffix">
-          <string> volume 25-100 (notifications)</string>
-         </property>
-         <property name="minimum">
-          <number>25</number>
-         </property>
-         <property name="maximum">
-          <number>100</number>
-         </property>
-         <property name="value">
-          <number>90</number>
+       <item row="8" column="1">
+        <widget class="QCheckBox" name="cb_SetupAudioNoTransmission">
+         <property name="text">
+          <string>No audio transmission warning</string>
          </property>
         </widget>
        </item>
-       <item row="8" column="1">
-        <widget class="QCheckBox" name="cb_SetupAudioNotificationVoiceRoomLeft">
+       <item row="9" column="1">
+        <widget class="QCheckBox" name="cb_SetupAudioPTTClickDown">
          <property name="text">
-          <string>notification leaving a voice room</string>
+          <string>PTT click (key down)</string>
          </property>
         </widget>
        </item>
@@ -114,20 +85,6 @@
          </property>
          <property name="text">
           <string>Volume:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <widget class="QCheckBox" name="cb_SetupAudioNotificationVoiceRoomJoined">
-         <property name="text">
-          <string>notification joining a voice room</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QCheckBox" name="cb_SetupAudioNotificationTextMessagePrivate">
-         <property name="text">
-          <string>notification for private text messages</string>
          </property>
         </widget>
        </item>
@@ -170,6 +127,50 @@
          </layout>
         </widget>
        </item>
+       <item row="11" column="1">
+        <widget class="QCheckBox" name="cb_SetupAudioPTTBlocked">
+         <property name="text">
+          <string>PTT blocking</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QSpinBox" name="sb_NotificationValueVolume">
+         <property name="suffix">
+          <string> volume 25-100 (notifications)</string>
+         </property>
+         <property name="minimum">
+          <number>25</number>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="value">
+          <number>90</number>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QCheckBox" name="cb_SetupAudioNotificationTextCallsignMentioned">
+         <property name="text">
+          <string>notfication for text msg. with my callsign</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QCheckBox" name="cb_SetupAudioNotificationTextMessagePrivate">
+         <property name="text">
+          <string>notification for private text messages</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="lbl_SoundDirectory">
+         <property name="text">
+          <string>Dir.:</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </widget>
@@ -185,11 +186,10 @@
   <tabstop>cb_SetupAudioNotificationTextMessagePrivate</tabstop>
   <tabstop>cb_SetupAudioNotificationTextMessageSupervisor</tabstop>
   <tabstop>cb_SetupAudioNotificationTextCallsignMentioned</tabstop>
-  <tabstop>cb_SetupAudioNotificationVoiceRoomJoined</tabstop>
-  <tabstop>cb_SetupAudioNotificationVoiceRoomLeft</tabstop>
   <tabstop>cb_SetupAudioNoTransmission</tabstop>
   <tabstop>cb_SetupAudioPTTClickDown</tabstop>
   <tabstop>cb_SetupAudioPTTClickUp</tabstop>
+  <tabstop>cb_SetupAudioPTTBlocked</tabstop>
  </tabstops>
  <resources/>
  <connections/>

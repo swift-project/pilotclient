@@ -56,13 +56,11 @@ namespace BlackGui
             this->reloadSettings();
 
             // checkboxes for notifications
-            bool c = connect(ui->cb_SetupAudioPTTClickDown,                      &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
+            bool c = connect(ui->cb_SetupAudioPTTClickDown,                 &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
             Q_ASSERT(c);
             c = connect(ui->cb_SetupAudioPTTClickUp,                        &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
             Q_ASSERT(c);
-            c = connect(ui->cb_SetupAudioNotificationVoiceRoomLeft,         &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
-            Q_ASSERT(c);
-            c = connect(ui->cb_SetupAudioNotificationVoiceRoomJoined,       &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
+            c = connect(ui->cb_SetupAudioPTTBlocked,                        &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
             Q_ASSERT(c);
             c = connect(ui->cb_SetupAudioNotificationTextMessagePrivate,    &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
             Q_ASSERT(c);
@@ -88,8 +86,8 @@ namespace BlackGui
         bool CAudioNotificationComponent::playNotificationSounds() const
         {
             return ui->cb_SetupAudioPTTClickDown->isChecked() || ui->cb_SetupAudioPTTClickUp->isChecked() ||
+                   ui->cb_SetupAudioPTTBlocked->isChecked() ||
                    ui->cb_SetupAudioNotificationTextMessagePrivate->isChecked() || ui->cb_SetupAudioNotificationTextMessageSupervisor->isChecked() ||
-                   ui->cb_SetupAudioNotificationVoiceRoomLeft->isChecked() || ui->cb_SetupAudioNotificationVoiceRoomJoined->isChecked() ||
                    ui->cb_SetupAudioNotificationTextCallsignMentioned->isChecked() || ui->cb_SetupAudioNoTransmission->isChecked();
         }
 
@@ -99,9 +97,8 @@ namespace BlackGui
 
             ui->cb_SetupAudioPTTClickDown->setChecked(as.isNotificationFlagSet(CNotificationSounds::PTTClickKeyDown));
             ui->cb_SetupAudioPTTClickUp->setChecked(as.isNotificationFlagSet(CNotificationSounds::PTTClickKeyUp));
+            ui->cb_SetupAudioPTTBlocked->setChecked(as.isNotificationFlagSet(CNotificationSounds::PTTBlocked));
 
-            ui->cb_SetupAudioNotificationVoiceRoomLeft->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationVoiceRoomLeft));
-            ui->cb_SetupAudioNotificationVoiceRoomJoined->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationVoiceRoomJoined));
             ui->cb_SetupAudioNotificationTextMessagePrivate->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationTextMessagePrivate));
             ui->cb_SetupAudioNotificationTextMessageSupervisor->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationTextMessageSupervisor));
             ui->cb_SetupAudioNotificationTextCallsignMentioned->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationTextCallsignMentioned));
@@ -126,9 +123,8 @@ namespace BlackGui
 
             if (cb == ui->cb_SetupAudioPTTClickDown) { return CNotificationSounds::PTTClickKeyDown; }
             if (cb == ui->cb_SetupAudioPTTClickUp)   { return CNotificationSounds::PTTClickKeyUp; }
+            if (cb == ui->cb_SetupAudioPTTBlocked)  { return CNotificationSounds::PTTBlocked; }
 
-            if (cb == ui->cb_SetupAudioNotificationVoiceRoomJoined)       { return CNotificationSounds::NotificationVoiceRoomJoined; }
-            if (cb == ui->cb_SetupAudioNotificationVoiceRoomLeft)         { return CNotificationSounds::NotificationVoiceRoomLeft; }
             if (cb == ui->cb_SetupAudioNotificationTextCallsignMentioned) { return CNotificationSounds::NotificationTextCallsignMentioned; }
             if (cb == ui->cb_SetupAudioNotificationTextMessagePrivate)    { return CNotificationSounds::NotificationTextMessagePrivate; }
             if (cb == ui->cb_SetupAudioNotificationTextMessageSupervisor) { return CNotificationSounds::NotificationTextMessageSupervisor; }
@@ -143,9 +139,8 @@ namespace BlackGui
 
             as.setNotificationFlag(CNotificationSounds::PTTClickKeyDown, ui->cb_SetupAudioPTTClickDown->isChecked());
             as.setNotificationFlag(CNotificationSounds::PTTClickKeyUp,   ui->cb_SetupAudioPTTClickUp->isChecked());
+            as.setNotificationFlag(CNotificationSounds::PTTBlocked,      ui->cb_SetupAudioPTTBlocked->isChecked());
 
-            as.setNotificationFlag(CNotificationSounds::NotificationVoiceRoomLeft,         ui->cb_SetupAudioNotificationVoiceRoomLeft->isChecked());
-            as.setNotificationFlag(CNotificationSounds::NotificationVoiceRoomJoined,       ui->cb_SetupAudioNotificationVoiceRoomJoined->isChecked());
             as.setNotificationFlag(CNotificationSounds::NotificationTextMessagePrivate,    ui->cb_SetupAudioNotificationTextMessagePrivate->isChecked());
             as.setNotificationFlag(CNotificationSounds::NotificationTextMessageSupervisor, ui->cb_SetupAudioNotificationTextMessageSupervisor->isChecked());
             as.setNotificationFlag(CNotificationSounds::NotificationTextCallsignMentioned, ui->cb_SetupAudioNotificationTextCallsignMentioned->isChecked());
