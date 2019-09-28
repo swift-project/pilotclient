@@ -10,7 +10,10 @@
 
 #include "resourcesound.h"
 #include "audioutilities.h"
+#include "blackmisc/fileutils.h"
+#include "blackmisc/stringutils.h"
 
+using namespace BlackMisc;
 using namespace BlackSound::Wav;
 
 namespace BlackSound
@@ -19,16 +22,27 @@ namespace BlackSound
     {
         CResourceSound::CResourceSound(const QString &audioFileName)
         {
-            m_wavFile = new CWavFile();
-            m_wavFile->open(audioFileName);
-            if (m_wavFile->fileFormat().sampleType() == QAudioFormat::Float)
+            CWavFile wavFile;
+            m_fn.clear();
+            m_samples.clear();
+            if (wavFile.open(audioFileName))
             {
-                m_samples = convertFloatBytesTo16BitPCM(m_wavFile->audioData());
+                if (wavFile.fileFormat().sampleType() == QAudioFormat::Float)
+                {
+                    m_samples = convertFloatBytesTo16BitPCM(wavFile.audioData());
+                }
+                else
+                {
+                    m_samples = convertBytesTo16BitPCM(wavFile.audioData());
+                }
+                m_fn = audioFileName;
             }
-            else
-            {
-                m_samples = convertBytesTo16BitPCM(m_wavFile->audioData());
-            }
+        }
+
+        bool CResourceSound::isSameFileName(const QString &fn) const
+        {
+            if (fn.isEmpty()) { return false; }
+            return stringCompare(fn, m_fn, CFileUtils::osFileNameCaseSensitivity());
         }
     } // ns
 } // ns

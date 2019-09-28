@@ -31,8 +31,14 @@ namespace BlackSound
             //! Audio data
             const QVector<qint16> &audioData() const { return m_samples; }
 
+            //! Corresponding file
+            const QString &getFileName() { return m_fn; }
+
+            //! Is same file?
+            bool isSameFileName(const QString &fn) const;
+
         private:
-            Wav::WavFile   *m_wavFile = nullptr;
+            QString m_fn; //!< file name
             QVector<qint16> m_samples;
         };
     } // ns
