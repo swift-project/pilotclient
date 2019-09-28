@@ -8,36 +8,45 @@
 
 #include "samples.h"
 #include "blackmisc/directoryutils.h"
+#include "blackmisc/fileutils.h"
+
+using namespace BlackMisc;
+using namespace BlackMisc::Audio;
 
 namespace BlackSound
 {
     namespace SampleProvider
     {
-        Samples &Samples::instance()
+        const Samples &Samples::instance()
         {
-            static Samples samples;
+            static const Samples samples;
             return samples;
         }
 
         Samples::Samples() :
-            m_crackle(BlackMisc::CDirectoryUtils::soundFilesDirectory() + "/Crackle_f32.wav"),
-            m_click(BlackMisc::CDirectoryUtils::soundFilesDirectory() + "/Click_f32.wav"),
-            m_whiteNoise(BlackMisc::CDirectoryUtils::soundFilesDirectory() + "/WhiteNoise_f32.wav")
-        { }
-
-        CResourceSound Samples::click() const
+            m_crackle(CFileUtils::soundFilePathAndFileName(fnCrackle())),
+            m_click(CFileUtils::soundFilePathAndFileName(fnClick())),
+            m_whiteNoise(CFileUtils::soundFilePathAndFileName(fnWhiteNoise()))
         {
-            return m_click;
+            this->initSounds();
         }
 
-        CResourceSound Samples::crackle() const
+        void Samples::initSounds()
         {
-            return m_crackle;
+            const CSettings settings = m_audioSettings.get();
+            QString f = settings.getNotificationFilePath(fnCrackle());
+            if (!m_crackle.isSameFileName(f)) { m_crackle = CResourceSound(f); }
+
+            f = settings.getNotificationFilePath(fnClick());
+            if (!m_click.isSameFileName(f)) { m_click = CResourceSound(f); }
+
+            f = settings.getNotificationFilePath(fnWhiteNoise());
+            if (!m_whiteNoise.isSameFileName(f)) { m_whiteNoise = CResourceSound(f); }
         }
 
-        CResourceSound Samples::whiteNoise() const
+        void Samples::onSettingsChanged()
         {
-            return m_whiteNoise;
+            this->initSounds();
         }
-    }
-}
+    } // ns
+} // ns

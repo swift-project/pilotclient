@@ -8,26 +8,43 @@
 
 //! \file
 
-#ifndef SAMPLES_H
-#define SAMPLES_H
+#ifndef BLACKSOUND_SAMPLEPROVIDER_SAMPLES_H
+#define BLACKSOUND_SAMPLEPROVIDER_SAMPLES_H
 
+#include "blackmisc/audio/audiosettings.h"
+#include "blackmisc/settingscache.h"
 #include "blacksound/blacksoundexport.h"
 #include "resourcesound.h"
+
+#include <QObject>
 
 namespace BlackSound
 {
     namespace SampleProvider
     {
-        class BLACKSOUND_EXPORT Samples
+        //! Sound samples from resources (wav files)
+        class BLACKSOUND_EXPORT Samples : public QObject
         {
         public:
             //! Singleton
-            static Samples &instance();
+            static const Samples &instance();
+
+            //! Avoid to copy
+            Samples(const Samples &) = delete;
 
             //! Various samples (sounds) @{
-            CResourceSound crackle() const;
-            CResourceSound click() const;
-            CResourceSound whiteNoise() const;
+            const CResourceSound &crackle()    const { return m_crackle; }
+            const CResourceSound &click()      const { return m_click; }
+            const CResourceSound &whiteNoise() const { return m_whiteNoise; }
+            //! @}
+
+            //! Play the click sound
+            bool playClick() const { return m_audioSettings.get().pttClickUp(); }
+
+            //! File names @{
+            static const QString &fnCrackle()    { static const QString f = "afv_crackle_f32.wav"; return f; }
+            static const QString &fnClick()      { static const QString f = "afv_click_f32.wav"; return f; }
+            static const QString &fnWhiteNoise() { static const QString f = "afv_whitenoise_f32.wav"; return f; }
             //! @}
 
         private:
@@ -37,7 +54,16 @@ namespace BlackSound
             CResourceSound m_crackle;
             CResourceSound m_click;
             CResourceSound m_whiteNoise;
+
+            BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &Samples::onSettingsChanged };
+
+            //! Init sounds
+            void initSounds();
+
+            //! Settings have been changed
+            void onSettingsChanged();
         };
+
     } // ns
 } // ns
 
