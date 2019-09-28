@@ -14,7 +14,7 @@
    <string>Settings</string>
   </property>
   <property name="currentIndex">
-   <number>7</number>
+   <number>0</number>
   </property>
   <widget class="QWidget" name="tb_SettingsOverview">
    <attribute name="title">
@@ -358,7 +358,7 @@
      <number>1</number>
     </property>
     <item alignment="Qt::AlignTop">
-     <widget class="BlackGui::Components::CSettingsHotkeyComponent" name="comp_SettingsHotkeysComponent">
+     <widget class="BlackGui::Components::CSettingsHotkeyComponent" name="comp_SettingsHotkeys">
       <property name="minimumSize">
        <size>
         <width>0</width>
@@ -389,13 +389,13 @@
     <property name="bottomMargin">
      <number>1</number>
     </property>
-    <item>
-     <widget class="BlackGui::Components::CAudioSetupComponent" name="comp_AudioSetup">
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+    <item alignment="Qt::AlignTop">
+     <widget class="BlackGui::Components::CAudioNotificationComponent" name="comp_AudioNotification">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>200</height>
+       </size>
       </property>
      </widget>
     </item>
@@ -632,7 +632,7 @@
      <number>1</number>
     </property>
     <item>
-     <widget class="BlackGui::Components::CSettingsAdvancedComponent" name="comp_SettingsAdvancedComponent">
+     <widget class="BlackGui::Components::CSettingsAdvancedComponent" name="comp_SettingsAdvanced">
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -661,12 +661,6 @@
    <class>BlackGui::Components::CSettingsGuiComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/settingsguicomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Components::CAudioSetupComponent</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/audiosetupcomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -715,6 +709,12 @@
    <class>BlackGui::Components::CSettingsMatchingComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/settingsmatchingcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CAudioNotificationComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/audionotificationcomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

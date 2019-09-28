@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackgui/components/audiosetupcomponent.h"
+#include "blackgui/components/audionotificationcomponent.h"
 #include "blackgui/components/settingscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
@@ -132,7 +132,7 @@ namespace BlackGui
 
         bool CSettingsComponent::playNotificationSounds() const
         {
-            return ui->comp_AudioSetup->playNotificationSounds();
+            return ui->comp_AudioNotification->playNotificationSounds();
         }
 
         CSpecializedSimulatorSettings CSettingsComponent::getSimulatorSettings(const CSimulatorInfo &simulator) const
