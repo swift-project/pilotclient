@@ -28,7 +28,9 @@ namespace BlackMisc
             static const QString mentioned("cs mentioned");
             static const QString joined("room joined");
             static const QString left("room left");
-            static const QString ptt("PTT click");
+            static const QString pttUp("PTT click up");
+            static const QString pttDown("PTT click down");
+            static const QString pttBlocked("PTT blocked");
             static const QString load("load sounds");
             static const QString noaudiotx("No audio tx");
 
@@ -40,10 +42,10 @@ namespace BlackMisc
             case NotificationTextMessagePrivate:    return privateMsg;
             case NotificationTextMessageSupervisor: return supMsg;
             case NotificationTextCallsignMentioned: return mentioned;
-            case NotificationVoiceRoomJoined: return joined;
-            case NotificationVoiceRoomLeft:   return left;
-            case NotificationNoAudioTransmission: return noaudiotx;
-            case PTTClickKeyDown:   return ptt;
+            case NotificationNoAudioTransmission:   return noaudiotx;
+            case PTTClickKeyDown:   return pttDown;
+            case PTTClickKeyUp:     return pttUp;
+            case PTTBlocked:        return pttBlocked;
             default: break;
             }
             return unknown;
@@ -59,8 +61,9 @@ namespace BlackMisc
             if (notification.testFlag(NotificationTextMessageSupervisor)) n << flagToString(NotificationTextMessageSupervisor);
             if (notification.testFlag(NotificationTextCallsignMentioned)) n << flagToString(NotificationTextCallsignMentioned);
             if (notification.testFlag(NotificationNoAudioTransmission))   n << flagToString(NotificationNoAudioTransmission);
-            if (notification.testFlag(NotificationVoiceRoomJoined)) n << flagToString(NotificationVoiceRoomJoined);
-            if (notification.testFlag(NotificationVoiceRoomLeft))   n << flagToString(NotificationVoiceRoomLeft);
+            if (notification.testFlag(PTTClickKeyUp))   n << flagToString(PTTClickKeyUp);
+            if (notification.testFlag(PTTClickKeyDown)) n << flagToString(PTTClickKeyDown);
+            if (notification.testFlag(PTTBlocked))      n << flagToString(PTTBlocked);
             return n.join(", ");
         }
     } // ns

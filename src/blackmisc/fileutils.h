@@ -202,8 +202,11 @@ namespace BlackMisc
         //! Returns the full path and file name for a sound file
         static QString soundFilePathAndFileName(const QString &name);
 
+        //! File path (with file name) of file name and
+        static QString soundFilePathOrDefaultPath(const QString &directory, const QString &fileName);
+
         //! QUrl of soundFilePathAndFileName
-        static QUrl soundFileQUrl(const QString &directory, const QString &name);
+        static QUrl soundFileQUrlOrDefault(const QString &directory, const QString &fileName);
     };
 } // ns
 

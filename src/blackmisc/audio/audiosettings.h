@@ -70,6 +70,14 @@ namespace BlackMisc
             //! Notification directory
             const QString &getNotificationSoundDirectory() const { return m_notificationSoundDir; }
 
+            //! get existing notifcation settings directory or default swift directory
+            const QString &getNotificationSoundDirectoryOrDefault() const;
+
+            //! Get existing file path for the given file path, either in the settings specific or default dir
+            //! \remark pass file only, like "foo.wav"
+            //! \return complete path like "/mydir/foo.wav" or empty if file not exists
+            QString getNotificationFilePath(const QString &fileName) const;
+
             //! Set volume (notifications)
             void setNotificationVolume(int volume);
 
@@ -129,7 +137,11 @@ namespace BlackMisc
             static const QString &humanReadable() { static const QString name("Audio"); return name; }
 
             //! \copydoc BlackMisc::TSettingTrait::isValid
-            static bool isValid(const BlackMisc::Audio::CSettings &value, QString &) { Q_UNUSED(value); return true; }
+            static bool isValid(const BlackMisc::Audio::CSettings &value, QString &)
+            {
+                Q_UNUSED(value)
+                return true;
+            }
         };
     } // namespace
 } // namespace

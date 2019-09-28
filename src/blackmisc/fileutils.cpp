@@ -590,15 +590,21 @@ namespace BlackMisc
         return CFileUtils::appendFilePaths(CDirectoryUtils::soundFilesDirectory(), name);
     }
 
-    QUrl CFileUtils::soundFileQUrl(const QString &directory, const QString &name)
+    QString CFileUtils::soundFilePathOrDefaultPath(const QString &directory, const QString &fileName)
     {
-        if (name.isEmpty()) { return {}; }
         if (!directory.isEmpty())
         {
-            const QString f = CFileUtils::appendFilePathsAndFixUnc(directory, name);
-            const QFileInfo fi(f);
-            if (fi.exists()) { return QUrl::fromLocalFile(f); }
+            const QString fp = CFileUtils::appendFilePathsAndFixUnc(directory, fileName);
+            const QFileInfo fi(fp);
+            if (fi.exists()) { return fi.absoluteFilePath(); }
         }
-        return QUrl::fromLocalFile(CFileUtils::soundFilePathAndFileName(name));
+        const QString fp = CFileUtils::appendFilePathsAndFixUnc(CDirectoryUtils::soundFilesDirectory(), fileName);
+        const QFileInfo fi(fp);
+        return (fi.exists()) ? fi.absoluteFilePath() : QString();
+    }
+
+    QUrl CFileUtils::soundFileQUrlOrDefault(const QString &directory, const QString &fileName)
+    {
+        return QUrl::fromLocalFile(soundFilePathOrDefaultPath(directory, fileName));
     }
 } // ns

@@ -43,11 +43,10 @@ namespace BlackMisc
                 NotificationTextMessagePrivate    = 1 << 3,
                 NotificationTextMessageSupervisor = 1 << 4,
                 NotificationTextCallsignMentioned = 1 << 5,
-                NotificationVoiceRoomJoined       = 1 << 6,
-                NotificationVoiceRoomLeft         = 1 << 7,
-                NotificationNoAudioTransmission   = 1 << 8,
-                PTTClickKeyDown                   = 1 << 9,
-                PTTClickKeyUp                     = 1 << 10,
+                NotificationNoAudioTransmission   = 1 << 6,
+                PTTClickKeyDown                   = 1 << 7,
+                PTTClickKeyUp                     = 1 << 8,
+                PTTBlocked                        = 1 << 9
             };
             Q_DECLARE_FLAGS(Notification, NotificationFlag)
 
@@ -57,11 +56,11 @@ namespace BlackMisc
             //! All login notification flags
             constexpr static Notification AllLoginNotifications = Notification(NotificationLogin | NotificationLogoff);
 
-            //! All voice room notification flags
-            constexpr static Notification AllVoiceRoomNotifications = Notification(NotificationVoiceRoomJoined | NotificationVoiceRoomLeft);
+            //! All PTT notification flags
+            constexpr static Notification AllPTTNotifications = Notification(PTTBlocked | PTTClickKeyUp | PTTClickKeyDown);
 
             //! All notification flags
-            constexpr static Notification AllNotifications = Notification(NotificationError | AllTextNotifications | AllLoginNotifications | AllVoiceRoomNotifications);
+            constexpr static Notification AllNotifications = Notification(NotificationError | AllTextNotifications | AllLoginNotifications | AllPTTNotifications);
 
             //! Default notification flags
             constexpr static Notification DefaultNotifications = Notification(AllNotifications);
