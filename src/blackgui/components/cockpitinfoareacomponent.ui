@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>357</width>
-    <height>55</height>
+    <width>99</width>
+    <height>123</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -171,8 +171,14 @@
         <property name="bottomMargin">
          <number>0</number>
         </property>
-        <item>
+        <item alignment="Qt::AlignTop">
          <widget class="BlackGui::Components::CAudioNotificationComponent" name="comp_AudioNotificaton">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>100</height>
+           </size>
+          </property>
           <property name="frameShadow">
            <enum>QFrame::Sunken</enum>
           </property>
@@ -187,6 +193,12 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>BlackGui::Components::CAudioNotificationComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/audionotificationcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>BlackGui::CDockWidgetInfoArea</class>
    <extends>QDockWidget</extends>
    <header>blackgui/dockwidgetinfoarea.h</header>
@@ -196,12 +208,6 @@
    <class>BlackGui::Components::CAudioDeviceVolumeSetupComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/audiodevicevolumesetupcomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Components::CAudioNotificationComponent</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/audionotificationcomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -135,7 +135,7 @@
       <item>
        <widget class="QCheckBox" name="cb_1Rec">
         <property name="text">
-         <string>Rec1</string>
+         <string>Rx1</string>
         </property>
        </widget>
       </item>
@@ -149,7 +149,7 @@
       <item>
        <widget class="QCheckBox" name="cb_2Rec">
         <property name="text">
-         <string>Rec2</string>
+         <string>Rx2</string>
         </property>
        </widget>
       </item>

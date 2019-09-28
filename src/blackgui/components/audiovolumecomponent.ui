@@ -121,7 +121,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../../blackmisc/blackmisc.qrc">
+         <iconset>
           <normaloff>:/diagona/icons/diagona/icons/speaker--pencil.png</normaloff>:/diagona/icons/diagona/icons/speaker--pencil.png</iconset>
         </property>
        </widget>
@@ -135,7 +135,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../../blackmisc/blackmisc.qrc">
+         <iconset>
           <normaloff>:/diagona/icons/diagona/icons/speaker-volume.png</normaloff>
           <normalon>:/diagona/icons/diagona/icons/speaker-volume-control-mute.png</normalon>:/diagona/icons/diagona/icons/speaker-volume.png</iconset>
         </property>
@@ -165,8 +165,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
