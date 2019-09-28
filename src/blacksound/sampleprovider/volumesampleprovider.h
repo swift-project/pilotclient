@@ -27,16 +27,19 @@ namespace BlackSound
             //! Noise generator
             CVolumeSampleProvider(ISampleProvider *sourceProvider, QObject *parent = nullptr);
 
+            //! \copydoc ISampleProvider::readSamples
             virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
 
+            //! Volume @{
             double volume() const { return m_volume; }
             void setVolume(double volume) { m_volume = volume; }
+            //! @}
 
         private:
             ISampleProvider *m_sourceProvider = nullptr;
             double m_volume = 1.0;
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard

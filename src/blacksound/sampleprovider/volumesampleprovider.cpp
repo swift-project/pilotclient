@@ -24,14 +24,14 @@ namespace BlackSound
         {
             int samplesRead = m_sourceProvider->readSamples(samples, count);
 
-            if (! qFuzzyCompare(m_volume, 1.0))
+            if (!qFuzzyCompare(m_volume, 1.0))
             {
                 for (int n = 0; n < samplesRead; n++)
                 {
-                    samples[n] *= m_volume;
+                    samples[n] = static_cast<qint16>(qRound(samples[n] * m_volume));
                 }
             }
             return samplesRead;
         }
-    }
-}
+    } // ns
+} // ns

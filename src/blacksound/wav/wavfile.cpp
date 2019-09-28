@@ -57,8 +57,8 @@ namespace BlackSound
 
         bool CWavFile::open(const QString &fileName)
         {
-            close();
-            setFileName(fileName);
+            this->close();
+            this->setFileName(fileName);
             return QFile::open(QIODevice::ReadOnly) && readHeader();
         }
 

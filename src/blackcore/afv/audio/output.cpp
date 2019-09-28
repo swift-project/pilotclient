@@ -17,6 +17,7 @@
 #include <cmath>
 
 using namespace BlackMisc;
+using namespace BlackSound;
 using namespace BlackSound::SampleProvider;
 
 namespace BlackCore
@@ -52,8 +53,8 @@ namespace BlackCore
                     qint16 maxInt = std::numeric_limits<qint16>::max();
                     outputVolumeStreamArgs.PeakRaw = m_maxSampleOutput / maxInt;
                     outputVolumeStreamArgs.PeakDB = static_cast<float>(20 * std::log10(outputVolumeStreamArgs.PeakRaw));
-                    const double db = qBound(minDb, outputVolumeStreamArgs.PeakDB, maxDb);
-                    double ratio = (db - minDb) / (maxDb - minDb);
+                    const double db = qBound(m_minDb, outputVolumeStreamArgs.PeakDB, m_maxDb);
+                    double ratio = (db - m_minDb) / (m_maxDb - m_minDb);
                     if (ratio < 0.30) { ratio = 0.0; }
                     if (ratio > 1.0)  { ratio = 1.0; }
                     outputVolumeStreamArgs.PeakVU = ratio;

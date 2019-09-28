@@ -6,7 +6,7 @@
  *  Version		: 1.12
  *  Implements	: void SimpleLimit::process( double &in1, double &in2 )
  *
- *	© 2006, ChunkWare Music Software, OPEN-SOURCE
+ *	2006, ChunkWare Music Software, OPEN-SOURCE
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a
  *	copy of this software and associated documentation files (the "Software"),

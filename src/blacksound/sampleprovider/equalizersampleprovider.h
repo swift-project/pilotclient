@@ -28,24 +28,30 @@ namespace BlackSound
             VHFEmulation = 1
         };
 
+        //! Equalizer
         class BLACKSOUND_EXPORT CEqualizerSampleProvider : public ISampleProvider
         {
             Q_OBJECT
 
         public:
+            //! Ctor
             CEqualizerSampleProvider(ISampleProvider *sourceProvider, EqualizerPresets preset, QObject *parent = nullptr);
 
+            //! \copydoc ISampleProvider::readSamples
             virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
 
+            //! Bypassing?
             void setBypassEffects(bool value) { m_bypass = value; }
 
+            //! Gain @{
             double outputGain() const;
             void setOutputGain(double outputGain);
+            //! @}
 
         private:
             void setupPreset(EqualizerPresets preset);
 
-            ISampleProvider *m_sourceProvider;
+            ISampleProvider *m_sourceProvider = nullptr;
 
             int    m_channels = 1;
             bool   m_bypass = false;

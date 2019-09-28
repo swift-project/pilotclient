@@ -28,8 +28,8 @@ namespace BlackCore
             {
                 QAudioDeviceInfo DeviceNumber;
                 double PeakRaw = 0.0;
-                double PeakDB = -1 * std::numeric_limits<double>::infinity();
-                double PeakVU = 0.0;
+                double PeakDB  = -1 * std::numeric_limits<double>::infinity();
+                double PeakVU  = 0.0;
             };
 
             //! Output buffer
@@ -41,27 +41,29 @@ namespace BlackCore
                 //! Ctor
                 CAudioOutputBuffer(BlackSound::SampleProvider::ISampleProvider *sampleProvider, QObject *parent = nullptr);
 
-                //! Related provider
-                BlackSound::SampleProvider::ISampleProvider *m_sampleProvider = nullptr;
-
                 //! Set the format
                 void setAudioFormat(const QAudioFormat &format) { m_outputFormat = format; }
 
             signals:
+                //! Volume stream
                 void outputVolumeStream(const OutputVolumeStreamArgs &args);
 
             protected:
+                //! \copydoc QIODevice::readData
                 virtual qint64 readData(char *data, qint64 maxlen) override;
+
+                //! \copydoc QIODevice::writeData
                 virtual qint64 writeData(const char *data, qint64 len) override;
 
             private:
-                QAudioFormat m_outputFormat;
+                BlackSound::SampleProvider::ISampleProvider *m_sampleProvider = nullptr; //!< related provider
 
+                static constexpr int SampleCountPerEvent = 4800;
+                QAudioFormat m_outputFormat;
                 double m_maxSampleOutput = 0;
                 int m_sampleCount = 0;
-                const int SampleCountPerEvent = 4800;
-                const double maxDb =   0;
-                const double minDb = -40;
+                const double m_maxDb =   0;
+                const double m_minDb = -40;
             };
 
             //! Output
