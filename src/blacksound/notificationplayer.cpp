@@ -7,7 +7,9 @@
  */
 
 #include "notificationplayer.h"
+#include "blackmisc/logmessage.h"
 #include "blackmisc/fileutils.h"
+#include "blacksound/sampleprovider/samples.h"
 #include <QTimer>
 
 using namespace BlackMisc;
@@ -50,7 +52,8 @@ namespace BlackSound
         if (directory == m_directory && !m_effects.isEmpty()) { return; }
         m_directory = directory;
 
-        QStringList types = QSoundEffect::supportedMimeTypes();
+        const QStringList types = QSoundEffect::supportedMimeTypes();
+        CLogMessage(this).info(u"Notification mime types: %1") << types.join(", ");
 
         this->updateEffect(CNotificationSounds::NotificationError, directory, "error.wav");
         this->updateEffect(CNotificationSounds::NotificationLogin, directory, "login.wav");
@@ -58,11 +61,10 @@ namespace BlackSound
         this->updateEffect(CNotificationSounds::NotificationTextMessagePrivate, directory, "privatemessage.wav");
         this->updateEffect(CNotificationSounds::NotificationTextMessageSupervisor, directory, "supervisormessage.wav");
         this->updateEffect(CNotificationSounds::NotificationTextCallsignMentioned, directory, "callsignmentioned.wav");
-        this->updateEffect(CNotificationSounds::NotificationVoiceRoomJoined, directory, "voiceroomjoined.wav");
-        this->updateEffect(CNotificationSounds::NotificationVoiceRoomLeft, directory, "voiceroomleft.wav");
         this->updateEffect(CNotificationSounds::NotificationNoAudioTransmission, directory, "noaudiotransmission.wav");
-        this->updateEffect(CNotificationSounds::PTTClickKeyDown, directory, "pttclick.wav");
-        this->updateEffect(CNotificationSounds::PTTClickKeyUp, directory, "pttclick.wav");
+        this->updateEffect(CNotificationSounds::PTTBlocked, directory, "pttblocked.wav");
+        this->updateEffect(CNotificationSounds::PTTClickKeyDown, directory, SampleProvider::Samples::fnClick());
+        this->updateEffect(CNotificationSounds::PTTClickKeyUp,   directory, "pttclick.wav");
     }
 
     void CNotificationPlayer::onPlayingChanged()
@@ -75,12 +77,22 @@ namespace BlackSound
     void CNotificationPlayer::updateEffect(CNotificationSounds::NotificationFlag f, const QString &directory, const QString &name)
     {
         QSoundEffect *e = nullptr;
-        QSoundEffect *effect = new QSoundEffect(this);
-        effect->setSource(CFileUtils::soundFileQUrl(directory, name));
         if (m_effects.contains(f)) { e = m_effects[f]; }
+        if (e) { e->deleteLater(); }
+
+        // file if existing
+        const QUrl url = CFileUtils::soundFileQUrlOrDefault(directory, name);
+        if (url.isEmpty()) {
+            // remove notification as not existing
+            m_effects.remove(f);
+            return;
+        }
+
+        // new effect
+        QSoundEffect *effect = new QSoundEffect(this);
+        effect->setSource(CFileUtils::soundFileQUrlOrDefault(directory, name));
         m_effects[f] = effect;
         effect->setLoopCount(0);
         connect(effect, &QSoundEffect::playingChanged, this, &CNotificationPlayer::onPlayingChanged, Qt::QueuedConnection);
-        if (e) { e->deleteLater(); }
     }
 } // ns

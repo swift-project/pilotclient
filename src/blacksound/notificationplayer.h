@@ -50,6 +50,6 @@ namespace BlackSound
         //! Update an effect
         void updateEffect(BlackMisc::Audio::CNotificationSounds::NotificationFlag f, const QString &directory, const QString &name);
     };
-}
+} // ns
 
 #endif // guard
