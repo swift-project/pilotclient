@@ -21,17 +21,17 @@ namespace BlackSound
         int CSawToothGenerator::readSamples(QVector<qint16> &samples, qint64 count)
         {
             samples.clear();
-            samples.fill(0, count);
+            samples.fill(0, static_cast<int>(count));
 
             for (int sampleCount = 0; sampleCount < count; sampleCount++)
             {
                 double multiple = 2 * m_frequency / m_sampleRate;
                 double sampleSaw = std::fmod((m_nSample * multiple), 2) - 1;
                 double sampleValue = m_gain * sampleSaw;
-                samples[sampleCount] = sampleValue * 32768;
+                samples[sampleCount] = static_cast<qint16>(qRound(sampleValue * 32768));
                 m_nSample++;
             }
             return static_cast<int>(count);
         }
-    }
-}
+    } // ns
+} // ns

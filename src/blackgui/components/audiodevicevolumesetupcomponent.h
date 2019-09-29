@@ -106,7 +106,6 @@ namespace BlackGui
             BlackMisc::Audio::CAudioDeviceInfo getSelectedInputDevice() const;
             BlackMisc::Audio::CAudioDeviceInfo getSelectedOutputDevice() const;
 
-
             //! Transmit and receive state @{
             void setTransmitReceiveInUi(bool tx1, bool rec1, bool tx2, bool rec2);
             void setTransmitReceiveInUiFromVoiceClient();

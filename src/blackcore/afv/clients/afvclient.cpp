@@ -142,7 +142,7 @@ namespace BlackCore
                 outputSampleProvider->setVolume(m_outputVolume);
 
                 m_output->start(outputDevice.isNull() ? QAudioDeviceInfo::defaultOutputDevice() : outputDevice, outputSampleProvider);
-                m_input->start(inputDevice.isNull() ? QAudioDeviceInfo::defaultInputDevice() : inputDevice);
+                m_input->start(inputDevice.isNull()   ? QAudioDeviceInfo::defaultInputDevice()  : inputDevice);
 
                 m_startDateTimeUtc = QDateTime::currentDateTimeUtc();
                 m_connection->setReceiveAudio(true);
@@ -226,7 +226,7 @@ namespace BlackCore
 
             void CAfvClient::updateComFrequency(CComSystem::ComUnit comUnit, const CFrequency &comFrequency)
             {
-                const int freqHz = static_cast<int>(comFrequency.valueInteger(CFrequencyUnit::Hz()));
+                const quint16 freqHz = static_cast<quint16>(comFrequency.valueInteger(CFrequencyUnit::Hz()));
                 this->updateComFrequency(comUnitToTransceiverId(comUnit), freqHz);
             }
 
@@ -494,13 +494,13 @@ namespace BlackCore
                 this->updateComFrequency(CComSystem::Com1, com1);
                 this->updateComFrequency(CComSystem::Com2, com2);
 
-                const bool tx1  = com1.isTransmitEnabled();
-                const bool rec1 = com1.isReceiveEnabled();
-                const bool tx2  = com2.isTransmitEnabled();
-                const bool rec2 = com2.isReceiveEnabled();
+                const bool tx1 = com1.isTransmitEnabled();
+                const bool rx1 = com1.isReceiveEnabled();
+                const bool tx2 = com2.isTransmitEnabled();
+                const bool rx2 = com2.isReceiveEnabled();
 
-                this->enableComUnit(CComSystem::Com1, tx1 || rec1);
-                this->enableComUnit(CComSystem::Com2, tx2 || rec2);
+                this->enableComUnit(CComSystem::Com1, tx1 || rx1);
+                this->enableComUnit(CComSystem::Com2, tx2 || rx2);
                 this->setTransmittingComUnit(CComSystem::Com1);
                 this->setTransmittingComUnit(CComSystem::Com2);
 

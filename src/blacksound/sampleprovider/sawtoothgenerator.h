@@ -27,10 +27,13 @@ namespace BlackSound
             Q_OBJECT
 
         public:
+            //! Ctor
             CSawToothGenerator(double frequency, QObject *parent = nullptr);
 
+            //! \copydoc ISampleProvider::readSamples
             virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
 
+            //! Set the gain
             void setGain(double gain) { m_gain = gain; }
 
         private:
@@ -39,7 +42,7 @@ namespace BlackSound
             double m_sampleRate = 48000;
             int m_nSample = 0;
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard

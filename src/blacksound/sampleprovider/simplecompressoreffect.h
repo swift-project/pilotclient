@@ -22,27 +22,32 @@ namespace BlackSound
 {
     namespace SampleProvider
     {
+        //! Compressor effect
         class BLACKSOUND_EXPORT CSimpleCompressorEffect : public ISampleProvider
         {
             Q_OBJECT
 
         public:
+            //! Ctor
             CSimpleCompressorEffect(ISampleProvider *source, QObject *parent = nullptr);
 
+            //! \copydoc ISampleProvider::readSamples
             virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
 
+            //! Enable
             void setEnabled(bool enabled);
+
+            //! Set gain
             void setMakeUpGain(double gain);
 
         private:
-
             QTimer m_timer;
-            ISampleProvider *m_sourceStream;
+            ISampleProvider *m_sourceStream = nullptr;
             bool m_enabled = true;
             chunkware_simple::SimpleComp m_simpleCompressor;
             const int channels = 1;
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard

@@ -20,18 +20,22 @@ namespace BlackSound
 {
     namespace SampleProvider
     {
+        //! Mixer
         class BLACKSOUND_EXPORT CMixingSampleProvider : public ISampleProvider
         {
         public:
             CMixingSampleProvider(QObject *parent = nullptr) : ISampleProvider(parent) {}
 
+            //! Add a provider
             void addMixerInput(ISampleProvider *provider) { m_sources.append(provider); }
+
+            //! \copydoc ISampleProvider::readSamples
             virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
 
         private:
             QVector<ISampleProvider *> m_sources;
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard

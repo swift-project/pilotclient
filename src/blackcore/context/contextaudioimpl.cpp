@@ -58,8 +58,8 @@ namespace BlackCore
             CIdentifiable(this),
             m_voiceClient(("https://voice1.vatsim.uk"))
         {
-
-            this->setVoiceOutputVolume(m_audioSettings.getThreadLocal().getOutVolume());
+            const CSettings as = m_audioSettings.getThreadLocal();
+            this->setVoiceOutputVolume(as.getOutVolume());
             m_selcalPlayer = new CSelcalPlayer(QAudioDeviceInfo::defaultOutputDevice(), this);
 
             connect(&m_voiceClient, &CAfvClient::ptt, this, &CContextAudio::ptt);

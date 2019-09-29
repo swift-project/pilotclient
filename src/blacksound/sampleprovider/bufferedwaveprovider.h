@@ -31,14 +31,16 @@ namespace BlackSound
             //! Ctor
             CBufferedWaveProvider(const QAudioFormat &format, QObject *parent = nullptr);
 
+            //! Add samples
             void addSamples(const QVector<qint16> &samples);
 
             //! ISampleProvider::readSamples
             virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
 
+            //! Bytes from buffer
             int getBufferedBytes() const { return m_audioBuffer.size(); }
 
-
+            //! Clear the buffer
             void clearBuffer();
 
         private:

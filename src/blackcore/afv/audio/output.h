@@ -61,15 +61,16 @@ namespace BlackCore
                 static constexpr int SampleCountPerEvent = 4800;
                 QAudioFormat m_outputFormat;
                 double m_maxSampleOutput = 0;
-                int m_sampleCount = 0;
-                const double m_maxDb =   0;
-                const double m_minDb = -40;
+                int m_sampleCount        = 0;
+                const double m_maxDb     = 0;
+                const double m_minDb     = -40;
             };
 
             //! Output
             class Output : public QObject
             {
                 Q_OBJECT
+
             public:
                 //! Ctor
                 Output(QObject *parent = nullptr);

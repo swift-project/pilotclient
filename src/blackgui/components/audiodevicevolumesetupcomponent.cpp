@@ -196,10 +196,10 @@ namespace BlackGui
             const bool com2Tx = com2Enabled && client->isTransmittingdComUnit(CComSystem::Com2);
 
             // we do not have receiving
-            const bool com1Rec = com1Enabled;
-            const bool com2Rec = com2Enabled;
+            const bool com1Rx = com1Enabled;
+            const bool com2Rx = com2Enabled;
 
-            this->setTransmitReceiveInUi(com1Tx, com1Rec, com2Tx, com2Rec);
+            this->setTransmitReceiveInUi(com1Tx, com1Rx, com2Tx, com2Rx);
         }
 
         void CAudioDeviceVolumeSetupComponent::reloadSettings()
