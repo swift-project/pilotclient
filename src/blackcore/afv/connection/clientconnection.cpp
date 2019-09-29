@@ -153,17 +153,17 @@ namespace BlackCore
 
             void CClientConnection::handleSocketError(QAbstractSocket::SocketError error)
             {
-                Q_UNUSED(error);
+                Q_UNUSED(error)
                 qDebug() << "UDP socket error" << m_udpSocket.errorString();
             }
 
             void CClientConnection::voiceServerHeartbeat()
             {
-                QUrl voiceServerUrl("udp://" + m_connection.m_tokens.VoiceServer.addressIpV4);
+                const QUrl voiceServerUrl("udp://" + m_connection.m_tokens.VoiceServer.addressIpV4);
                 qDebug() << "Sending voice server heartbeat to" << voiceServerUrl.host();
                 HeartbeatDto keepAlive;
                 keepAlive.callsign = m_connection.m_callsign.toStdString();
-                QByteArray dataBytes = CryptoDtoSerializer::Serialize(*m_connection.voiceCryptoChannel, CryptoDtoMode::AEAD_ChaCha20Poly1305, keepAlive);
+                const QByteArray dataBytes = CryptoDtoSerializer::serialize(*m_connection.voiceCryptoChannel, CryptoDtoMode::AEAD_ChaCha20Poly1305, keepAlive);
                 m_udpSocket.writeDatagram(dataBytes, QHostAddress(voiceServerUrl.host()), static_cast<quint16>(voiceServerUrl.port()));
             }
         } // ns

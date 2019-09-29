@@ -30,7 +30,6 @@ namespace BlackCore
                 m_waveFormat.setCodec("audio/pcm");
 
                 m_mixer = new CMixingSampleProvider(this);
-
                 m_receiverIDs = transceiverIDs;
 
                 for (quint16 transceiverID : transceiverIDs)
@@ -41,11 +40,6 @@ namespace BlackCore
                     m_receiverIDs.push_back(transceiverID);
                     m_mixer->addMixerInput(transceiverInput);
                 }
-            }
-
-            QAudioFormat CSoundcardSampleProvider::waveFormat() const
-            {
-                return m_waveFormat;
             }
 
             void CSoundcardSampleProvider::setBypassEffects(bool value)

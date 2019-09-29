@@ -36,7 +36,7 @@ namespace BlackCore
 
                 //! Serialize a DTO
                 template<typename T>
-                static QByteArray Serialize(const QString &channelTag, CryptoDtoMode mode, const QByteArray &transmitKey, uint sequenceToBeSent, T dto)
+                static QByteArray serialize(const QString &channelTag, CryptoDtoMode mode, const QByteArray &transmitKey, uint sequenceToBeSent, T dto)
                 {
                     const CryptoDtoHeaderDto header = { channelTag.toStdString(), sequenceToBeSent, mode };
 
@@ -108,17 +108,20 @@ namespace BlackCore
 
                 //! Serialize a DTO
                 template<typename T>
-                static QByteArray Serialize(CCryptoDtoChannel &channel, CryptoDtoMode mode, T dto)
+                static QByteArray serialize(CCryptoDtoChannel &channel, CryptoDtoMode mode, T dto)
                 {
                     uint sequenceToSend = 0;
                     QByteArray transmitKey = channel.getTransmitKey(mode, sequenceToSend);
-                    return Serialize(channel.getChannelTag(), mode, transmitKey, sequenceToSend++, dto);
+                    return serialize(channel.getChannelTag(), mode, transmitKey, sequenceToSend++, dto);
                 }
 
+                //! Deserializer
                 struct Deserializer
                 {
+                    //! Ctor
                     Deserializer(CCryptoDtoChannel &channel, const QByteArray &bytes, bool loopback);
 
+                    //! Get DTO
                     template<typename T>
                     T getDto()
                     {
@@ -133,18 +136,25 @@ namespace BlackCore
                         return {};
                     }
 
+                    //! Header data @{
                     quint16 headerLength;
                     CryptoDtoHeaderDto header;
+                    //! @}
 
+                    //! Name data @{
                     quint16 dtoNameLength;
                     QByteArray dtoNameBuffer;
+                    //! @}
 
+                    //! Data @{
                     quint16 dataLength;
                     QByteArray dataBuffer;
+                    //! @}
 
-                    bool verified = false;
+                    bool verified = false; //!< is verified
                 };
 
+                //! Deserialize
                 static Deserializer deserialize(CCryptoDtoChannel &channel, const QByteArray &bytes, bool loopback);
             };
         } // ns

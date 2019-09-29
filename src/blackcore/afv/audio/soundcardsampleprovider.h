@@ -33,16 +33,29 @@ namespace BlackCore
                 //! Ctor
                 CSoundcardSampleProvider(int sampleRate, const QVector<quint16> &transceiverIDs, QObject *parent = nullptr);
 
-                QAudioFormat waveFormat() const;
+                //! Wave format
+                const QAudioFormat &waveFormat() const { return m_waveFormat; }
 
+                //! Bypass effects
                 void setBypassEffects(bool value);
+
+                //! Update PTT
                 void pttUpdate(bool active, const QVector<TxTransceiverDto> &txTransceivers);
+
+                //! \copydoc ISampleProvider::readSamples
                 virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
+
+                //! Add OPUS samples
                 void addOpusSamples(const IAudioDto &audioDto, const QVector<RxTransceiverDto> &rxTransceivers);
+
+                //! Update all tranceivers
                 void updateRadioTransceivers(const QVector<TransceiverDto> &radioTransceivers);
+
+                //! Receiving callsign as single string
                 QString getReceivingCallsigns(quint16 transceiverID);
 
             signals:
+                //! Changed callsigns
                 void receivingCallsignsChanged(const TransceiverReceivingCallsignsChangedArgs &args);
 
             private:
