@@ -542,10 +542,14 @@ void SwiftGuiStd::displayNetworkSettings()
 
 void SwiftGuiStd::onPttChanged(bool enabled)
 {
+    Q_UNUSED(enabled)
     if (!sGui || !sGui->getIContextAudio()) { return; }
+
+    /** wit AFV no longer play
     sGui->getIContextAudio()->playNotification(
         enabled ? CNotificationSounds::PTTClickKeyDown : CNotificationSounds::PTTClickKeyUp,
         true);
+    **/
 }
 
 void SwiftGuiStd::displayDBusReconnectDialog()
