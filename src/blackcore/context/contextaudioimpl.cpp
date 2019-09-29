@@ -141,7 +141,7 @@ namespace BlackCore
             const bool changedVoiceOutput = (currentVolume != volume);
             if (changedVoiceOutput)
             {
-                m_voiceClient.setOutputVolumeDb(volume);
+                m_voiceClient.setNormalizedOutputVolume(volume);
                 m_outVolumeBeforeMute = currentVolume;
 
                 emit this->changedAudioVolume(volume);

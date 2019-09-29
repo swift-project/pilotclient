@@ -134,12 +134,12 @@ namespace BlackCore
 
                 //! Input volume in dB, +-18dB @{
                 double getInputVolumeDb() const { return m_inputVolumeDb; }
-                Q_INVOKABLE void setInputVolumeDb(double value);
+                Q_INVOKABLE void setInputVolumeDb(double valueDb);
                 //! @}
 
                 //! Output volume in dB, +-18dB @{
-                double getOutputVolumeDb() const;
-                Q_INVOKABLE void setOutputVolumeDb(double outputVolume);
+                double getOutputVolumeDb() const { return m_outputVolumeDb; }
+                Q_INVOKABLE void setOutputVolumeDb(double valueDb);
                 //! @}
 
                 //! Normalized volumes 0..100 @{
@@ -192,11 +192,13 @@ namespace BlackCore
                 void updateTransceivers();
                 void updateTransceiversFromContext(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
-                static constexpr int SampleRate = 48000;
-                static constexpr int FrameSize  =   960; // 20ms
-                static constexpr double MinDb   = -18.0;
-                static constexpr double MaxDb   =  18.0;
-                static constexpr quint32 UniCom = 122800000;
+                static constexpr int SampleRate  = 48000;
+                static constexpr int FrameSize   =   960; // 20ms
+                static constexpr double MinDbIn  = -18.0;
+                static constexpr double MaxDbIn  =  18.0;
+                static constexpr double MinDbOut = -60.0;
+                static constexpr double MaxDbOut =  18.0;
+                static constexpr quint32 UniCom  = 122800000;
 
                 static quint16 comUnitToTransceiverId(BlackMisc::Aviation::CComSystem::ComUnit comUnit);
                 static BlackMisc::Aviation::CComSystem::ComUnit transceiverIdToComUnit(quint16 id);
@@ -221,6 +223,7 @@ namespace BlackCore
                 QDateTime m_startDateTimeUtc;
 
                 double m_inputVolumeDb;
+                double m_outputVolumeDb;
                 double m_outputVolume = 1.0;
                 double m_maxDbReadingInPTTInterval = -100;
 

@@ -342,27 +342,30 @@ namespace BlackCore
                 // qDebug() << "PTT:" << active;
             }
 
-            void CAfvClient::setInputVolumeDb(double value)
+            void CAfvClient::setInputVolumeDb(double valueDb)
             {
-                if (value > MaxDb) { value = MaxDb; }
-                if (value < MinDb) { value = MinDb; }
-                m_inputVolumeDb = value;
-                m_input->setVolume(qPow(10, value / 20.0));
+                if (valueDb > MaxDbIn) { valueDb = MaxDbIn; }
+                if (valueDb < MinDbIn) { valueDb = MinDbIn; }
+                m_inputVolumeDb = valueDb;
+                if (m_input)
+                {
+                    m_input->setVolume(qPow(10, valueDb / 20.0));
+                }
             }
 
             int CAfvClient::getNormalizedInputVolume() const
             {
                 const double db = this->getInputVolumeDb();
-                const double range = MaxDb - MinDb;
-                const int i = qRound((db - MinDb) / range * 100);
+                const double range = MaxDbIn - MinDbIn;
+                const int i = qRound((db - MinDbIn) / range * 100);
                 return i;
             }
 
             int CAfvClient::getNormalizedOutputVolume() const
             {
                 const double db = this->getOutputVolumeDb();
-                const double range = MaxDb - MinDb;
-                const int i = qRound((db - MinDb) / range * 100);
+                const double range = MaxDbIn - MinDbIn;
+                const int i = qRound((db - MinDbIn) / range * 100);
                 return i;
             }
 
@@ -370,8 +373,8 @@ namespace BlackCore
             {
                 if (volume < 0) { volume = 0; }
                 else if (volume > 100) { volume = 100; }
-                const double range = MaxDb - MinDb;
-                const double dB = MinDb + (volume * range / 100.0);
+                const double range = MaxDbIn - MinDbIn;
+                const double dB = MinDbIn + (volume * range / 100.0);
                 this->setInputVolumeDb(dB);
             }
 
@@ -379,8 +382,8 @@ namespace BlackCore
             {
                 if (volume < 0) { volume = 0; }
                 else if (volume > 100) { volume = 100; }
-                const double range = MaxDb - MinDb;
-                const double dB = MinDb + (volume * range / 100.0);
+                const double range = MaxDbIn - MinDbIn;
+                const double dB = MinDbIn + (volume * range / 100.0);
                 this->setOutputVolumeDb(dB);
             }
 
@@ -532,19 +535,16 @@ namespace BlackCore
                 return sApp && !sApp->isShuttingDown() && sApp->getIContextOwnAircraft();
             }
 
-            double CAfvClient::getOutputVolumeDb() const
+            void CAfvClient::setOutputVolumeDb(double valueDb)
             {
-                return m_outputVolume;
-            }
+                if (valueDb > MaxDbOut) { valueDb = MaxDbOut; }
+                if (valueDb < MinDbOut) { valueDb = MinDbOut; }
+                m_outputVolumeDb = valueDb;
 
-            void CAfvClient::setOutputVolumeDb(double outputVolume)
-            {
-                if (outputVolume > 18) { m_outputVolume = 18; }
-                if (outputVolume < -60) { m_outputVolume = -60; }
-                m_outputVolume = qPow(10, m_outputVolume / 20);
+                m_outputVolume = qPow(10, m_outputVolumeDb / 20.0);
                 if (outputSampleProvider)
                 {
-                    outputSampleProvider->setVolume(outputVolume);
+                    outputSampleProvider->setVolume(m_outputVolume);
                 }
             }
 
