@@ -15,12 +15,10 @@
 #include "blackcore/audiodevice.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/voice.h"
-#include "blackcore/vatsim/voicevatlib.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/audio/audiosettings.h"
-#include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/dbusserver.h"
@@ -60,13 +58,6 @@ namespace BlackCore
             CIdentifiable(this),
             m_voiceClient(("https://voice1.vatsim.uk"))
         {
-
-            /**
-            initVoiceChannels();
-            initInputDevice();
-            initOutputDevice();
-            initAudioMixer();
-            **/
 
             this->setVoiceOutputVolume(m_audioSettings.getThreadLocal().getOutVolume());
             m_selcalPlayer = new CSelcalPlayer(QAudioDeviceInfo::defaultOutputDevice(), this);
@@ -251,8 +242,9 @@ namespace BlackCore
 
         void CContextAudio::setVoiceSetup(const CVoiceSetup &setup)
         {
+            // could be recycled for some AFV setup
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            // if (m_voice) { m_voice->setVoiceSetup(setup); }
+            Q_UNUSED(setup)
         }
 
         CVoiceSetup CContextAudio::getVoiceSetup() const
@@ -450,23 +442,19 @@ namespace BlackCore
 
         void CContextAudio::xCtxChangedAircraftCockpit(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
+            Q_UNUSED(aircraft)
+            Q_UNUSED(originator)
+
+            /**
             if (CIdentifiable::isMyIdentifier(originator)) { return; }
             const bool integrated = this->isComIntegratedWithSimulator();
-
             if (integrated)
             {
                 // set as in cockpit
                 const bool com1Rec = aircraft.getCom1System().isReceiveEnabled();
                 const bool com2Rec = aircraft.getCom2System().isReceiveEnabled();
-                // m_audioMixer->makeOrRemoveConnection(IAudioMixer::InputVoiceChannel1, IAudioMixer::OutputDevice1, com1Rec);
-                // m_audioMixer->makeOrRemoveConnection(IAudioMixer::InputVoiceChannel2, IAudioMixer::OutputDevice1, com2Rec);
             }
-            else
-            {
-                // reset
-                // m_audioMixer->makeMixerConnectionIfNotExisting(IAudioMixer::InputVoiceChannel1, IAudioMixer::OutputDevice1);
-                // m_audioMixer->makeMixerConnectionIfNotExisting(IAudioMixer::InputVoiceChannel2, IAudioMixer::OutputDevice1);
-            }
+            **/
         }
 
         void CContextAudio::xCtxNetworkConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
