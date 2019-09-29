@@ -111,11 +111,11 @@ namespace BlackCore
                     CLogMessage(this).warning(w);
                 }
 
-                m_audioOutputCom1.reset(new QAudioOutput(outputDevice, outputFormat));
+                m_audioOutputCom.reset(new QAudioOutput(outputDevice, outputFormat));
                 // m_audioOutput->setBufferSize(bufferSize);
                 m_audioOutputBuffer->open(QIODevice::ReadWrite | QIODevice::Unbuffered);
                 m_audioOutputBuffer->setAudioFormat(outputFormat);
-                m_audioOutputCom1->start(m_audioOutputBuffer);
+                m_audioOutputCom->start(m_audioOutputBuffer);
 
                 m_started = true;
             }
@@ -124,6 +124,7 @@ namespace BlackCore
             {
                 if (!m_started) { return; }
                 m_started = false;
+                m_audioOutputCom->stop();
                 m_audioOutputBuffer->deleteLater();
                 m_audioOutputBuffer = nullptr;
             }

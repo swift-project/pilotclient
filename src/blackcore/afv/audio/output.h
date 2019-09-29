@@ -98,7 +98,7 @@ namespace BlackCore
                 bool m_started = false;
 
                 QAudioDeviceInfo m_device;
-                QScopedPointer<QAudioOutput> m_audioOutputCom1;
+                QScopedPointer<QAudioOutput> m_audioOutputCom;
                 CAudioOutputBuffer *m_audioOutputBuffer = nullptr;
             };
         } // ns
