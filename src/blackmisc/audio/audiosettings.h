@@ -128,7 +128,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(notification),
                 BLACK_METAMEMBER(notificationVolume),
                 BLACK_METAMEMBER(outVolume),
-                BLACK_METAMEMBER(inVolume)
+                BLACK_METAMEMBER(inVolume),
+                BLACK_METAMEMBER(audioEffects)
             );
         };
 

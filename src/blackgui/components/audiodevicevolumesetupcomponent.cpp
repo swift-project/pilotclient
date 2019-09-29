@@ -61,6 +61,8 @@ namespace BlackGui
             const int o = this->getOutValue();
             ui->hs_VolumeIn->setValue(i);
             ui->hs_VolumeOut->setValue(o);
+            ui->cb_SetupAudioLoopback->setChecked(false);
+            ui->cb_DisableAudioEffects->setChecked(!as.isAudioEffectsEnabled());
 
             // deferred init, because in a distributed swift system
             // it takes a moment until the settings are sychronized
@@ -205,8 +207,7 @@ namespace BlackGui
         void CAudioDeviceVolumeSetupComponent::reloadSettings()
         {
             const CSettings as(m_audioSettings.getThreadLocal());
-            ui->cb_DisableAudioEffects->setChecked(as.isAudioEffectsEnabled());
-
+            ui->cb_DisableAudioEffects->setChecked(!as.isAudioEffectsEnabled());
             this->setInValue(as.getInVolume());
             this->setOutValue(as.getInVolume());
         }
