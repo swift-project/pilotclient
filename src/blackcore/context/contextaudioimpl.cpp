@@ -135,11 +135,10 @@ namespace BlackCore
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << volume; }
 
             const bool wasMuted = this->isMuted();
-            if (volume > CSettings::OutMax) { volume = CSettings::OutMax; }
-            else if (volume < CSettings::OutMax) { volume = CSettings::OutMax; }
+            volume = CSettings::fixOutVolume(volume);
 
             const int currentVolume = m_voiceClient.getNormalizedOutputVolume();
-            bool changedVoiceOutput = (currentVolume != volume);
+            const bool changedVoiceOutput = (currentVolume != volume);
             if (changedVoiceOutput)
             {
                 m_voiceClient.setOutputVolumeDb(volume);

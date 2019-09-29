@@ -37,6 +37,11 @@ namespace BlackMisc
             static constexpr int OutMin =  0;
             //! @}
 
+            //! Make sure the volume is within the range @{
+            static int fixOutVolume(int v);
+            static int fixInVolume(int v);
+            //! @}
+
             //! Default constructor.
             CSettings();
 
@@ -112,8 +117,8 @@ namespace BlackMisc
             QString m_notificationSoundDir;
             int m_notification = static_cast<int>(CNotificationSounds::DefaultNotifications); //!< play notification for notification x, a little trick to use a string here (streamable, hashable, ..)
             int m_notificationVolume = 90;   //!< 0-90
-            int m_outVolume          = 100;  //!< 0-300, AFV
-            int m_inVolume           = 0;    //!< AFV range
+            int m_outVolume          = 50;   //!< 0-100, AFV
+            int m_inVolume           = 50;   //!< AFV range
             bool m_audioEffects      = true; //!< Audio effects en
             void initNotificationFlags();    //!< init flags
 

@@ -22,6 +22,20 @@ namespace BlackMisc
 {
     namespace Audio
     {
+        int CSettings::fixOutVolume(int v)
+        {
+            if (v > OutMax) { return OutMax; }
+            if (v < OutMin) { return OutMin; }
+            return v;
+        }
+
+        int CSettings::fixInVolume(int v)
+        {
+            if (v > InMax) { return InMax; }
+            if (v < InMin) { return InMin; }
+            return v;
+        }
+
         CSettings::CSettings()
         {
             this->initDefaultValues();
@@ -82,16 +96,12 @@ namespace BlackMisc
 
         void CSettings::setOutVolume(int volume)
         {
-            if (volume > OutMax) { volume = OutMax; }
-            else if (volume < OutMin) { volume = OutMin; }
-            m_outVolume = volume;
+            m_outVolume = fixOutVolume(volume);
         }
 
         void CSettings::setInVolume(int volume)
         {
-            if (volume > InMax) { volume = InMax; }
-            else if (volume < InMin) { volume = InMin; }
-            m_inVolume = volume;
+            m_inVolume = fixInVolume(volume);
         }
 
         QString CSettings::convertToQString(bool i18n) const
