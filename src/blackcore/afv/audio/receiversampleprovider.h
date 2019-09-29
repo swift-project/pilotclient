@@ -17,6 +17,7 @@
 
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/audio/audiosettings.h"
+
 #include <QtGlobal>
 
 namespace BlackCore
@@ -99,5 +100,7 @@ namespace BlackCore
         } // ns
     } // ns
 } // ns
+
+Q_DECLARE_METATYPE(BlackCore::Afv::Audio::TransceiverReceivingCallsignsChangedArgs)
 
 #endif // guard
