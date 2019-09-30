@@ -806,20 +806,21 @@ namespace BlackCore
 
         void CFSDClient::handleAtcDataUpdate(const QStringList &tokens)
         {
-            AtcDataUpdate atcDataUpdate = AtcDataUpdate::fromTokens(tokens);
+            const AtcDataUpdate atcDataUpdate = AtcDataUpdate::fromTokens(tokens);
 
             CFrequency freq(atcDataUpdate.m_frequencykHz, CFrequencyUnit::kHz());
             freq.switchUnit(CFrequencyUnit::MHz()); // we would not need to bother, but this makes it easier to identify
-            CLength networkRange(atcDataUpdate.m_visibleRange, CLengthUnit::NM());
-            const CCallsign cs(atcDataUpdate.sender(), CCallsign::Atc);
+            const CLength networkRange(atcDataUpdate.m_visibleRange, CLengthUnit::NM());
+            const QString senderCs = atcDataUpdate.sender();
+            const CCallsign cs(senderCs, CCallsign::Atc);
 
             // Filter non-ATC like OBS stations, like pilots logging in as shared cockpit co-pilots.
             if (atcDataUpdate.m_facility == CFacilityType::Unknown && !cs.isObserverCallsign()) { return; }
 
             const CLength range = fixAtcRange(networkRange, cs);
-            CCoordinateGeodetic position(atcDataUpdate.m_latitude, atcDataUpdate.m_longitude, 0);
+            const CCoordinateGeodetic position(atcDataUpdate.m_latitude, atcDataUpdate.m_longitude, 0);
 
-            emit atcDataUpdateReceived(cs, freq, position, range);
+            emit this->atcDataUpdateReceived(cs, freq, position, range);
         }
 
         void CFSDClient::handleAuthChallenge(const QStringList &tokens)
