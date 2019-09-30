@@ -11,6 +11,7 @@
 #include "blackmisc/fileutils.h"
 #include "blacksound/sampleprovider/samples.h"
 #include <QTimer>
+#include <QSound>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;
@@ -32,17 +33,22 @@ namespace BlackSound
             {
                 const qreal v = volume / 100.0f;
                 m_playingEffect = effect;
-                effect->setVolume(v);
+                effect->setVolume(v); // 0..1
                 effect->play();
 
-                /** could be used for too long or hanging sounds
+                /** for testing
+                QString fn = effect->source().toLocalFile();
+                QSound s(fn);
+                s.play();
+                **/
+
+                // used for too long or hanging sounds
                 QPointer<CNotificationPlayer> myself(this);
                 QTimer::singleShot(2000, effect, [ = ]
                 {
                     if (!myself || !m_playingEffect) { return; }
                     m_playingEffect->stop();
                 });
-                **/
             }
         }
     }
@@ -82,17 +88,20 @@ namespace BlackSound
 
         // file if existing
         const QUrl url = CFileUtils::soundFileQUrlOrDefault(directory, name);
-        if (url.isEmpty()) {
+        if (url.isEmpty() || !url.isLocalFile())
+        {
             // remove notification as not existing
             m_effects.remove(f);
             return;
         }
 
         // new effect
+        // QString fn = url.toLocalFile();
         QSoundEffect *effect = new QSoundEffect(this);
-        effect->setSource(CFileUtils::soundFileQUrlOrDefault(directory, name));
+        effect->setSource(url);
+        effect->setLoopCount(1);
+        effect->setMuted(false);
         m_effects[f] = effect;
-        effect->setLoopCount(0);
         connect(effect, &QSoundEffect::playingChanged, this, &CNotificationPlayer::onPlayingChanged, Qt::QueuedConnection);
     }
 } // ns
