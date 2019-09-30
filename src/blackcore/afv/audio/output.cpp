@@ -125,6 +125,7 @@ namespace BlackCore
                 if (!m_started) { return; }
                 m_started = false;
                 m_audioOutputCom->stop();
+                m_audioOutputCom.reset();
                 m_audioOutputBuffer->deleteLater();
                 m_audioOutputBuffer = nullptr;
             }
