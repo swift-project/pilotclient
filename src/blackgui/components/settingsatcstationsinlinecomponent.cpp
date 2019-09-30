@@ -24,9 +24,10 @@ namespace BlackGui
             ui(new Ui::CSettingsAtcStationsInlineComponent)
         {
             ui->setupUi(this);
+            ui->rb_All->setChecked(true); // default for AFV
+
             connect(ui->rb_InRange,   &QRadioButton::toggled,  this, &CSettingsAtcStationsInlineComponent::changeSettings, Qt::QueuedConnection);
             connect(ui->cb_Frequency, &QRadioButton::released, this, &CSettingsAtcStationsInlineComponent::changeSettings, Qt::QueuedConnection);
-            connect(ui->cb_VoiceRoom, &QRadioButton::released, this, &CSettingsAtcStationsInlineComponent::changeSettings, Qt::QueuedConnection);
 
             QPointer<CSettingsAtcStationsInlineComponent> myself(this);
             QTimer::singleShot(2000, this, [ = ]
@@ -61,19 +62,16 @@ namespace BlackGui
             }
 
             ui->cb_Frequency->setChecked(s.showOnlyWithValidFrequency());
-            ui->cb_VoiceRoom->setChecked(s.showOnlyWithValidVoiceRoom());
         }
 
         void CSettingsAtcStationsInlineComponent::changeSettings()
         {
             const bool onlyInRange = ui->rb_InRange->isChecked();
             const bool freq = ui->cb_Frequency->isChecked();
-            const bool voice = ui->cb_VoiceRoom->isChecked();
             CAtcStationsSettings s = m_atcSettings.getThreadLocal();
             const CAtcStationsSettings oldSettings = s;
             s.setShowOnlyInRange(onlyInRange);
             s.setShowOnlyWithValidFrequency(freq);
-            s.setShowOnlyWithValidVoiceRoom(voice);
             if (oldSettings == s) { return; }
             m_atcSettings.setAndSave(s);
             emit this->changed();

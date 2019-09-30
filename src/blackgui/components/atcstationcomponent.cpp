@@ -221,7 +221,6 @@ namespace BlackGui
                     int inRangeCount = -1;
 
                     if (settings.showOnlyWithValidFrequency()) { onlineStations = onlineStations.stationsWithValidFrequency(); }
-                    if (settings.showOnlyWithValidVoiceRoom()) { onlineStations = onlineStations.stationsWithValidVoiceRoom(); }
                     if (settings.showOnlyInRange())
                     {
                         onlineStations.removeIfOutsideRange();
@@ -341,7 +340,7 @@ namespace BlackGui
 
         void CAtcStationComponent::connectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
-            Q_UNUSED(from);
+            Q_UNUSED(from)
             if (to.isConnected())
             {
                 ui->tvp_AtcStationsOnline->clear();
@@ -383,13 +382,13 @@ namespace BlackGui
                 if (!sApp || sApp->isShuttingDown() || !myself) { return; }
                 this->update();
             });
-            Q_UNUSED(index);
+            Q_UNUSED(index)
         }
 
         void CAtcStationComponent::onCountChanged(int count, bool withFilter)
         {
-            Q_UNUSED(count);
-            Q_UNUSED(withFilter);
+            Q_UNUSED(count)
+            Q_UNUSED(withFilter)
             const int ib = ui->tw_Atc->indexOf(ui->tb_AtcStationsBooked);
             QString b = ui->tw_Atc->tabBar()->tabText(ib);
             b = CGuiUtility::replaceTabCountValue(b, this->countBookedStations());

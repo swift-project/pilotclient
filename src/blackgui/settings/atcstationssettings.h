@@ -27,8 +27,7 @@ namespace BlackGui
             enum ColumnIndex
             {
                 IndexInRangeOnly = BlackMisc::CPropertyIndex::GlobalIndexCAtcStationsSettings,
-                IndexValidFrequencyOnly,
-                IndexValidVoiceRoomOnly
+                IndexValidFrequencyOnly
             };
 
             //! Default constructor
@@ -46,12 +45,6 @@ namespace BlackGui
             //! Show only with valid frequency
             void setShowOnlyWithValidFrequency(bool onlyValidFrequency) { m_onlyWithValidFrequency = onlyValidFrequency; }
 
-            //! Show only with valid voice room?
-            bool showOnlyWithValidVoiceRoom() const { return m_onlyWithValidVoiceRoom; }
-
-            //! Show only with valid voice room
-            void setShowOnlyWithValidVoiceRoom(bool onlyValidVoiceRoom) { m_onlyWithValidVoiceRoom = onlyValidVoiceRoom; }
-
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
@@ -64,13 +57,11 @@ namespace BlackGui
         private:
             bool m_showOnlyInRange = true;
             bool m_onlyWithValidFrequency = true;
-            bool m_onlyWithValidVoiceRoom = false;
 
             BLACK_METACLASS(
                 CAtcStationsSettings,
                 BLACK_METAMEMBER(showOnlyInRange),
-                BLACK_METAMEMBER(onlyWithValidFrequency),
-                BLACK_METAMEMBER(onlyWithValidVoiceRoom)
+                BLACK_METAMEMBER(onlyWithValidFrequency)
             );
         };
 
