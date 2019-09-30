@@ -33,6 +33,8 @@ namespace BlackCore
     {
         namespace Audio
         {
+            class CReceiverSampleProvider;
+
             //! Callsign provide
             class CallsignSampleProvider : public BlackSound::SampleProvider::ISampleProvider
             {
@@ -40,7 +42,7 @@ namespace BlackCore
 
             public:
                 //! Ctor
-                CallsignSampleProvider(const QAudioFormat &audioFormat, QObject *parent = nullptr);
+                CallsignSampleProvider(const QAudioFormat &audioFormat, const BlackCore::Afv::Audio::CReceiverSampleProvider *receiver, QObject *parent = nullptr);
 
                 int readSamples(QVector<qint16> &samples, qint64 count) override;
 
@@ -70,6 +72,7 @@ namespace BlackCore
                 QAudioFormat m_audioFormat;
 
                 const double m_whiteNoiseGainMin = 0.17;  //0.01;
+                const double m_hfWhiteNoiseGainMin = 0.6;  //0.01;
                 const double m_acBusGainMin      = 0.0028; //0.002;
                 const int m_frameCount    = 960;
                 const int m_idleTimeoutMs = 500;
@@ -82,9 +85,11 @@ namespace BlackCore
 
                 float m_distanceRatio = 1.0;
 
+                const CReceiverSampleProvider                            *m_receiver = nullptr;
                 BlackSound::SampleProvider::CMixingSampleProvider        *m_mixer = nullptr;
                 BlackSound::SampleProvider::CResourceSoundSampleProvider *m_crackleSoundProvider = nullptr;
                 BlackSound::SampleProvider::CResourceSoundSampleProvider *m_whiteNoise = nullptr;
+                BlackSound::SampleProvider::CResourceSoundSampleProvider *m_hfWhiteNoise = nullptr;
                 BlackSound::SampleProvider::CSawToothGenerator           *m_acBusNoise = nullptr;
                 BlackSound::SampleProvider::CSimpleCompressorEffect      *m_simpleCompressorEffect = nullptr;
                 BlackSound::SampleProvider::CEqualizerSampleProvider     *m_voiceEq  = nullptr;

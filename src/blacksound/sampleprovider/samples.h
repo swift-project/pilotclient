@@ -36,6 +36,7 @@ namespace BlackSound
             const CResourceSound &crackle()    const { return m_crackle; }
             const CResourceSound &click()      const { return m_click; }
             const CResourceSound &whiteNoise() const { return m_whiteNoise; }
+            const CResourceSound hfWhiteNoise() const { return m_hfWhiteNoise; }
             //! @}
 
             //! Play the click sound
@@ -45,6 +46,7 @@ namespace BlackSound
             static const QString &fnCrackle()    { static const QString f = "afv_crackle_f32.wav"; return f; }
             static const QString &fnClick()      { static const QString f = "afv_click_f32.wav"; return f; }
             static const QString &fnWhiteNoise() { static const QString f = "afv_whitenoise_f32.wav"; return f; }
+            static const QString &fnHfWhiteNoise() { static const QString f = "afv_hf_whiteNoise_f32.wav"; return f; }
             //! @}
 
         private:
@@ -54,6 +56,7 @@ namespace BlackSound
             CResourceSound m_crackle;
             CResourceSound m_click;
             CResourceSound m_whiteNoise;
+            CResourceSound m_hfWhiteNoise;
 
             BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &Samples::onSettingsChanged };
 

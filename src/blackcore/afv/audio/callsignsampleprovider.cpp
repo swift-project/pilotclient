@@ -11,6 +11,7 @@
 #include "callsignsampleprovider.h"
 #include "callsigndelaycache.h"
 #include "blacksound/sampleprovider/samples.h"
+#include "blackcore/afv/audio/receiversampleprovider.h"
 #include <QtMath>
 #include <QDebug>
 
@@ -22,9 +23,10 @@ namespace BlackCore
     {
         namespace Audio
         {
-            CallsignSampleProvider::CallsignSampleProvider(const QAudioFormat &audioFormat, QObject *parent) :
+            CallsignSampleProvider::CallsignSampleProvider(const QAudioFormat &audioFormat, const CReceiverSampleProvider *receiver, QObject *parent) :
                 ISampleProvider(parent),
                 m_audioFormat(audioFormat),
+                m_receiver(receiver),
                 m_decoder(audioFormat.sampleRate(), 1)
             {
                 Q_ASSERT(audioFormat.channelCount() == 1);
@@ -36,6 +38,9 @@ namespace BlackCore
                 m_whiteNoise = new CResourceSoundSampleProvider(Samples::instance().whiteNoise(), m_mixer);
                 m_whiteNoise->setLooping(true);
                 m_whiteNoise->setGain(0.0);
+                m_hfWhiteNoise = new CResourceSoundSampleProvider(Samples::instance().hfWhiteNoise(), m_mixer);
+                m_hfWhiteNoise->setLooping(true);
+                m_hfWhiteNoise->setGain(0.0);
                 m_acBusNoise = new CSawToothGenerator(400, m_mixer);
                 m_audioInput = new CBufferedWaveProvider(audioFormat, m_mixer);
 
@@ -48,6 +53,7 @@ namespace BlackCore
 
                 m_mixer->addMixerInput(m_whiteNoise);
                 m_mixer->addMixerInput(m_acBusNoise);
+                m_mixer->addMixerInput(m_hfWhiteNoise);
                 m_mixer->addMixerInput(m_voiceEq);
 
                 m_timer.setInterval(100);
@@ -165,23 +171,41 @@ namespace BlackCore
                 {
                     m_crackleSoundProvider->setGain(0.0);
                     m_whiteNoise->setGain(0.0);
+                    m_hfWhiteNoise->setGain(0.0);
                     m_acBusNoise->setGain(0.0);
                     m_simpleCompressorEffect->setEnabled(false);
                     m_voiceEq->setBypassEffects(true);
                 }
                 else
                 {
-                    double crackleFactor = static_cast<double>(((qExp(m_distanceRatio) * qPow(m_distanceRatio, -4.0)) / 350) - 0.00776652);
+                    if (m_receiver->getFrequencyHz() < 30000000)
+                    {
+                        float crackleFactor = (float)(((qExp(m_distanceRatio) * qPow(m_distanceRatio, -4.0)) / 350) - 0.00776652);
 
-                    if (crackleFactor < 0.00) { crackleFactor = 0.0f; }
-                    if (crackleFactor > 0.20) { crackleFactor = 0.20f; }
+                        if (crackleFactor < 0.0f) { crackleFactor = 0.0f; }
+                        if (crackleFactor > 0.20f) { crackleFactor = 0.20f; }
 
-                    m_crackleSoundProvider->setGain(crackleFactor * 2);
-                    m_whiteNoise->setGain(m_whiteNoiseGainMin);
-                    m_acBusNoise->setGain(m_acBusGainMin);
-                    m_simpleCompressorEffect->setEnabled(true);
-                    m_voiceEq->setBypassEffects(false);
-                    m_voiceEq->setOutputGain(1.0 - crackleFactor * 3.7);
+                        m_hfWhiteNoise->setGain(m_hfWhiteNoiseGainMin);
+                        m_acBusNoise->setGain(m_acBusGainMin + 0.001f);
+                        m_simpleCompressorEffect->setEnabled(true);
+                        m_voiceEq->setBypassEffects(false);
+                        m_voiceEq->setOutputGain(0.38f);
+                        m_whiteNoise->setGain(0.0);
+                    }
+                    else
+                    {
+                        float crackleFactor = (float)(((qExp(m_distanceRatio) * qPow(m_distanceRatio, -4.0)) / 350) - 0.00776652);
+
+                        if (crackleFactor < 0.0f) { crackleFactor = 0.0f; }
+                        if (crackleFactor > 0.20f) { crackleFactor = 0.20f; }
+
+                        m_crackleSoundProvider->setGain(crackleFactor * 2);
+                        m_whiteNoise->setGain(m_whiteNoiseGainMin);
+                        m_acBusNoise->setGain(m_acBusGainMin);
+                        m_simpleCompressorEffect->setEnabled(true);
+                        m_voiceEq->setBypassEffects(false);
+                        m_voiceEq->setOutputGain(1.0 - crackleFactor * 3.7);
+                    }
                 }
             }
 

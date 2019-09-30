@@ -26,7 +26,8 @@ namespace BlackSound
         Samples::Samples() :
             m_crackle(CFileUtils::soundFilePathAndFileName(fnCrackle())),
             m_click(CFileUtils::soundFilePathAndFileName(fnClick())),
-            m_whiteNoise(CFileUtils::soundFilePathAndFileName(fnWhiteNoise()))
+            m_whiteNoise(CFileUtils::soundFilePathAndFileName(fnWhiteNoise())),
+            m_hfWhiteNoise(CFileUtils::soundFilePathAndFileName(fnHfWhiteNoise()))
         {
             this->initSounds();
         }

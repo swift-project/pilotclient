@@ -31,7 +31,7 @@ namespace BlackCore
 
                 for (int i = 0; i < voiceInputNumber; i++)
                 {
-                    auto voiceInput = new CallsignSampleProvider(audioFormat, m_mixer);
+                    auto voiceInput = new CallsignSampleProvider(audioFormat, this, m_mixer);
                     m_voiceInputs.push_back(voiceInput);
                     m_mixer->addMixerInput(voiceInput);
                 }
@@ -198,8 +198,10 @@ namespace BlackCore
                 }
             }
 
-
-
+            uint CReceiverSampleProvider::getFrequencyHz() const
+            {
+                return m_frequencyHz;
+            }
 
         } // ns
     } // ns

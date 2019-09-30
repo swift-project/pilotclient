@@ -93,7 +93,7 @@ namespace BlackCore
                 if (m_connection->isConnected()) { emit this->connectionStatusChanged(Connected); }
                 else { emit this->connectionStatusChanged(Disconnected); }
 
-                m_connection->getAllAliasedStations();
+                m_aliasedStations = m_connection->getAllAliasedStations();
             }
 
             void CAfvClient::disconnectFrom()
@@ -224,6 +224,17 @@ namespace BlackCore
 
                 // Fix rounding issues like 128074999 Hz -> 128075000 Hz
                 quint32 roundedFrequencyHz = static_cast<quint32>(qRound(frequencyHz / 1000.0)) * 1000;
+
+                auto it = std::find_if(m_aliasedStations.begin(), m_aliasedStations.end(), [roundedFrequencyHz](const StationDto & d)
+                {
+                    return d.frequencyAlias == roundedFrequencyHz;
+                });
+
+                if (it != m_aliasedStations.end())
+                {
+                    qDebug() << "Aliasing" << frequencyHz << "Hz [VHF] to" << it->frequency << "Hz [HF]";
+                    roundedFrequencyHz = it->frequency;
+                }
 
                 if (m_transceivers.size() >= id + 1)
                 {

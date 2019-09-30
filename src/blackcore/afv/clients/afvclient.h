@@ -232,6 +232,7 @@ namespace BlackCore
                 QTimer m_voiceServerPositionTimer;
                 QVector<TransceiverDto> m_transceivers;
                 QSet<quint16> m_enabledTransceivers;
+                QVector<StationDto> m_aliasedStations;
 
                 Audio::InputVolumeStreamArgs  m_inputVolumeStream;
                 Audio::OutputVolumeStreamArgs m_outputVolumeStream;

@@ -72,6 +72,9 @@ namespace BlackCore
                 //! \remark those callsigns are transmitting and "I do receive them"
                 const BlackMisc::Aviation::CCallsignSet &getReceivingCallsigns() { return m_receivingCallsigns; }
 
+                //! Get frequency in Hz
+                uint getFrequencyHz() const;
+
             signals:
                 //! Receving callsigns have changed
                 void receivingCallsignsChanged(const TransceiverReceivingCallsignsChangedArgs &args);
