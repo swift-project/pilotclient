@@ -26,7 +26,7 @@ namespace BlackSound
     QVector<qint16> convertFloatBytesTo16BitPCM(const QByteArray input)
     {
         Q_UNUSED(input)
-        qFatal("Not implemented");
+        // qFatal("Not implemented");
         return {};
     }
 
@@ -52,4 +52,25 @@ namespace BlackSound
         }
         return mono;
     }
+
+    QVector<double> convertFromShortToDouble(const QVector<qint16> &input)
+    {
+        QVector<double> output;
+        for (auto sample : input)
+        {
+            output.push_back(sample / 32768.0);
+        }
+        return output;
+    }
+
+    QVector<qint16> convertFromDoubleToShort(const QVector<double> &input)
+    {
+        QVector<qint16> output;
+        for (auto sample : input)
+        {
+            output.push_back(sample * 32768);
+        }
+        return output;
+    }
+
 } // ns

@@ -1,4 +1,6 @@
 #include "equalizersampleprovider.h"
+#include "blacksound/audioutilities.h"
+#include <QDebug>
 
 namespace BlackSound
 {
@@ -16,19 +18,20 @@ namespace BlackSound
             int samplesRead = m_sourceProvider->readSamples(samples, count);
             if (m_bypass) return samplesRead;
 
+            QVector<double> doubleSamples = convertFromShortToDouble(samples);
+
             for (int n = 0; n < samplesRead; n++)
             {
                 // TODO stereo implementation
 
                 for (int band = 0; band < m_filters.size(); band++)
                 {
-                    float s = samples[n] / 32768.0f;
-                    s = m_filters[band].process(s);
-                    samples[n] = s * 32768;
+                    doubleSamples[n] = m_filters[band].process(doubleSamples[n]);
                 }
-
-                samples[n] *= m_outputGain;
+                doubleSamples[n] *= m_outputGain;
             }
+
+            samples = convertFromDoubleToShort(doubleSamples);
             return samplesRead;
         }
 
@@ -37,11 +40,11 @@ namespace BlackSound
             switch (preset)
             {
             case VHFEmulation:
-                m_filters.push_back(BiQuadFilter(BiQuadFilterType::HighPass, 44100, 310, 0.25f));
-                m_filters.push_back(BiQuadFilter(BiQuadFilterType::Peak, 44100, 450, 0.75f, 17.0f));
-                m_filters.push_back(BiQuadFilter(BiQuadFilterType::Peak, 44100, 1450, 1.0f, 25.0f));
-                m_filters.push_back(BiQuadFilter(BiQuadFilterType::Peak, 44100, 2000, 1.0f, 25.0f));
-                m_filters.push_back(BiQuadFilter(BiQuadFilterType::LowPass, 44100, 2500, 0.25f));
+                m_filters.push_back(BiQuadFilter(BiQuadFilterType::HighPass, 44100, 310, 0.25));
+                m_filters.push_back(BiQuadFilter(BiQuadFilterType::Peak, 44100, 450, 0.75, 17.0));
+                m_filters.push_back(BiQuadFilter(BiQuadFilterType::Peak, 44100, 1450, 1.0, 25.0));
+                m_filters.push_back(BiQuadFilter(BiQuadFilterType::Peak, 44100, 2000, 1.0, 25.0));
+                m_filters.push_back(BiQuadFilter(BiQuadFilterType::LowPass, 44100, 2500, 0.25));
                 break;
             }
         }

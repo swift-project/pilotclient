@@ -180,7 +180,7 @@ namespace BlackCore
                 {
                     if (m_receiver->getFrequencyHz() < 30000000)
                     {
-                        float crackleFactor = (float)(((qExp(m_distanceRatio) * qPow(m_distanceRatio, -4.0)) / 350) - 0.00776652);
+                        double crackleFactor = (((qExp(m_distanceRatio) * qPow(m_distanceRatio, -4.0)) / 350.0) - 0.00776652);
 
                         if (crackleFactor < 0.0f) { crackleFactor = 0.0f; }
                         if (crackleFactor > 0.20f) { crackleFactor = 0.20f; }
@@ -189,15 +189,15 @@ namespace BlackCore
                         m_acBusNoise->setGain(m_acBusGainMin + 0.001f);
                         m_simpleCompressorEffect->setEnabled(true);
                         m_voiceEq->setBypassEffects(false);
-                        m_voiceEq->setOutputGain(0.38f);
+                        m_voiceEq->setOutputGain(0.38);
                         m_whiteNoise->setGain(0.0);
                     }
                     else
                     {
-                        float crackleFactor = (float)(((qExp(m_distanceRatio) * qPow(m_distanceRatio, -4.0)) / 350) - 0.00776652);
+                        double crackleFactor = (((qExp(m_distanceRatio) * qPow(m_distanceRatio, -4.0)) / 350.0) - 0.00776652);
 
-                        if (crackleFactor < 0.0f) { crackleFactor = 0.0f; }
-                        if (crackleFactor > 0.20f) { crackleFactor = 0.20f; }
+                        if (crackleFactor < 0.0) { crackleFactor = 0.0; }
+                        if (crackleFactor > 0.20) { crackleFactor = 0.20; }
 
                         m_crackleSoundProvider->setGain(crackleFactor * 2);
                         m_whiteNoise->setGain(m_whiteNoiseGainMin);
