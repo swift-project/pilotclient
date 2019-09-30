@@ -49,8 +49,19 @@ namespace BlackCore
                 m_output = new Output(this);
                 connect(m_output, &Output::outputVolumeStream, this, &CAfvClient::outputVolumeStream);
                 connect(m_connection, &CClientConnection::audioReceived, this, &CAfvClient::audioOutDataAvailable);
-                connect(&m_voiceServerPositionTimer, &QTimer::timeout, this, qOverload<>(&CAfvClient::updateTransceivers));
+                connect(&m_voiceServerPositionTimer, &QTimer::timeout, this, &CAfvClient::onPositionUpdateTimer);
 
+                // transceivers
+                this->initTransceivers();
+
+                // init by settings
+                this->onSettingsChanged();
+
+                CLogMessage(this).info(u"UserClient instantiated");
+            }
+
+            void CAfvClient::initTransceivers()
+            {
                 m_transceivers =
                 {
                     { 0, UniCom, 48.5, 11.5, 1000.0, 1000.0 },
@@ -60,10 +71,8 @@ namespace BlackCore
                 m_enabledTransceivers = { 0, 1 };
                 m_transmittingTransceivers = { { 0 } }; // TxTransceiverDto
 
-                // init by settings
-                this->onSettingsChanged();
-
-                CLogMessage(this).info(u"UserClient instantiated");
+                // init with context values
+                this->initWithContext();
             }
 
             void CAfvClient::initWithContext()
@@ -79,7 +88,7 @@ namespace BlackCore
                 this->initWithContext();
                 m_callsign = callsign;
                 m_connection->connectTo(cid, password, callsign);
-                this->updateTransceivers();
+                this->updateTransceivers(); // uses context if available
 
                 if (m_connection->isConnected()) { emit this->connectionStatusChanged(Connected); }
                 else { emit this->connectionStatusChanged(Disconnected); }
@@ -136,6 +145,8 @@ namespace BlackCore
                     return;
                 }
 
+                this->initTransceivers();
+
                 soundcardSampleProvider = new CSoundcardSampleProvider(SampleRate, transceiverIDs, this);
                 connect(soundcardSampleProvider, &CSoundcardSampleProvider::receivingCallsignsChanged, this, &CAfvClient::receivingCallsignsChanged);
                 outputSampleProvider = new CVolumeSampleProvider(soundcardSampleProvider, this);
@@ -171,11 +182,11 @@ namespace BlackCore
                 m_connection->setReceiveAudio(false);
 
                 m_transceivers.clear();
-                updateTransceivers();
+                this->updateTransceivers(false);
 
                 m_input->stop();
                 m_output->stop();
-                CLogMessage(this).info(u"Client NOT stopped");
+                CLogMessage(this).info(u"Client stopped");
             }
 
             void CAfvClient::enableTransceiver(quint16 id, bool enable)
@@ -183,7 +194,7 @@ namespace BlackCore
                 if (enable) { m_enabledTransceivers.insert(id); }
                 else { m_enabledTransceivers.remove(id); }
 
-                updateTransceivers();
+                this->updateTransceivers();
             }
 
             void CAfvClient::enableComUnit(CComSystem::ComUnit comUnit, bool enable)
@@ -219,14 +230,14 @@ namespace BlackCore
                     if (m_transceivers[id].frequencyHz != roundedFrequencyHz)
                     {
                         m_transceivers[id].frequencyHz = roundedFrequencyHz;
-                        updateTransceivers();
+                        this->updateTransceivers(false); // no frequency update
                     }
                 }
             }
 
             void CAfvClient::updateComFrequency(CComSystem::ComUnit comUnit, const CFrequency &comFrequency)
             {
-                const quint16 freqHz = static_cast<quint16>(comFrequency.valueInteger(CFrequencyUnit::Hz()));
+                const quint32 freqHz = static_cast<quint32>(comFrequency.valueInteger(CFrequencyUnit::Hz()));
                 this->updateComFrequency(comUnitToTransceiverId(comUnit), freqHz);
             }
 
@@ -246,17 +257,21 @@ namespace BlackCore
                 }
             }
 
-            void CAfvClient::updateTransceivers()
+            void CAfvClient::updateTransceivers(bool updateFrequencies)
             {
                 if (!m_connection->isConnected()) { return; }
                 if (hasContext())
                 {
                     const CSimulatedAircraft ownAircraft = sApp->getIContextOwnAircraft()->getOwnAircraft();
-                    updatePosition(ownAircraft.latitude().value(CAngleUnit::deg()),
-                                   ownAircraft.longitude().value(CAngleUnit::deg()),
-                                   ownAircraft.getAltitude().value(CLengthUnit::ft()));
-                    this->updateComFrequency(CComSystem::Com1, ownAircraft.getCom1System());
-                    this->updateComFrequency(CComSystem::Com2, ownAircraft.getCom2System());
+                    this->updatePosition(ownAircraft.latitude().value(CAngleUnit::deg()),
+                                         ownAircraft.longitude().value(CAngleUnit::deg()),
+                                         ownAircraft.getAltitude().value(CLengthUnit::ft()));
+
+                    if (updateFrequencies)
+                    {
+                        this->updateComFrequency(CComSystem::Com1, ownAircraft.getCom1System());
+                        this->updateComFrequency(CComSystem::Com2, ownAircraft.getCom2System());
+                    }
                 }
 
                 QVector<TransceiverDto> enabledTransceivers;
@@ -475,6 +490,11 @@ namespace BlackCore
                     return soundcardSampleProvider->getReceivingCallsigns(1);
                 }
                 return {};
+            }
+
+            void CAfvClient::onPositionUpdateTimer()
+            {
+                this->updateTransceivers();
             }
 
             void CAfvClient::onSettingsChanged()

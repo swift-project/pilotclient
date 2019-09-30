@@ -186,10 +186,12 @@ namespace BlackCore
                 QString getReceivingCallsignsCom1();
                 QString getReceivingCallsignsCom2();
 
-                void input_OpusDataAvailable();
+                void inputOpusDataAvailable();
+
+                void onPositionUpdateTimer();
                 void onSettingsChanged();
 
-                void updateTransceivers();
+                void updateTransceivers(bool updateFrequencies = true);
                 void updateTransceiversFromContext(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
                 static constexpr int SampleRate  = 48000;
@@ -234,6 +236,7 @@ namespace BlackCore
                 Audio::InputVolumeStreamArgs  m_inputVolumeStream;
                 Audio::OutputVolumeStreamArgs m_outputVolumeStream;
 
+                void initTransceivers();
                 void initWithContext();
                 static bool hasContext();
             };
