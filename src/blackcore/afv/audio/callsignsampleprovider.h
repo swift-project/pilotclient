@@ -69,8 +69,8 @@ namespace BlackCore
 
                 QAudioFormat m_audioFormat;
 
-                const double m_whiteNoiseGainMin = 0.15;  //0.01;
-                const double m_acBusGainMin      = 0.003; //0.002;
+                const double m_whiteNoiseGainMin = 0.17;  //0.01;
+                const double m_acBusGainMin      = 0.0028; //0.002;
                 const int m_frameCount    = 960;
                 const int m_idleTimeoutMs = 500;
 

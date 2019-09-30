@@ -37,9 +37,11 @@ namespace BlackSound
             switch (preset)
             {
             case VHFEmulation:
-                m_filters.push_back(BiQuadFilter(BiQuadFilterType::HighPass, 44100, 450, 1.0f));
-                m_filters.push_back(BiQuadFilter(BiQuadFilterType::Peak, 44100, 2200, 0.25, 13.0f));
-                m_filters.push_back(BiQuadFilter(BiQuadFilterType::LowPass, 44100, 3000, 1.0f));
+                m_filters.push_back(BiQuadFilter(BiQuadFilterType::HighPass, 44100, 310, 0.25f));
+                m_filters.push_back(BiQuadFilter(BiQuadFilterType::Peak, 44100, 450, 0.75f, 17.0f));
+                m_filters.push_back(BiQuadFilter(BiQuadFilterType::Peak, 44100, 1450, 1.0f, 25.0f));
+                m_filters.push_back(BiQuadFilter(BiQuadFilterType::Peak, 44100, 2000, 1.0f, 25.0f));
+                m_filters.push_back(BiQuadFilter(BiQuadFilterType::LowPass, 44100, 2500, 0.25f));
                 break;
             }
         }
