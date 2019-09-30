@@ -11,7 +11,7 @@
 #ifndef BLACKCORE_AFV_AUDIO_RECEIVERSAMPLEPROVIDER_H
 #define BLACKCORE_AFV_AUDIO_RECEIVERSAMPLEPROVIDER_H
 
-#include "callsignsampleprovider.h"
+#include "blackcore/afv/audio/callsignsampleprovider.h"
 #include "blacksound/sampleprovider/sampleprovider.h"
 #include "blacksound/sampleprovider/mixingsampleprovider.h"
 

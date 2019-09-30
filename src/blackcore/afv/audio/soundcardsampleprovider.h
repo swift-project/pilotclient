@@ -13,7 +13,7 @@
 
 #include "blacksound/sampleprovider/sampleprovider.h"
 #include "blacksound/sampleprovider/mixingsampleprovider.h"
-#include "receiversampleprovider.h"
+#include "blackcore/afv/audio/receiversampleprovider.h"
 
 #include <QAudioFormat>
 #include <QObject>
