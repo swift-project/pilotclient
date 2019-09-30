@@ -7,12 +7,13 @@
  */
 
 #include "blackmisc/network/server.h"
-#include "blackmisc/stringutils.h"
-#include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/comparefunctions.h"
+#include "blackmisc/obfuscation.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
 
@@ -75,7 +76,7 @@ namespace BlackMisc
             return withPw ? dvp : dvnWithPw;
         }
 
-        const CServer &CServer::fscServer()
+        const CServer &CServer::fscFsdServer()
         {
             static const CServer fsc = []
             {
@@ -86,6 +87,14 @@ namespace BlackMisc
                 return s;
             }();
             return fsc;
+        }
+
+        const CServer &CServer::afvFsdTestServer()
+        {
+            static const CServer afv("AFV testserver", "VATSIM AFV testserver", "afv-beta-fsd.vatsim.net", 6809,
+                                     CUser("OBF:AwLZ7f9hUmpSZhm4=", "OBF:AwJGiYV4GHQSMizchFk2=", "", ""),
+                                     CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::vatsim()), CServer::FSDServerVatsim);
+            return afv;
         }
 
         const CServer &CServer::esTowerView()

@@ -220,7 +220,10 @@ namespace BlackMisc
             static const CServer &swiftFsdTestServer(bool withPw = false);
 
             //! FSC server
-            static const CServer &fscServer();
+            static const CServer &fscFsdServer();
+
+            //! The AFV test server
+            static const CServer &afvFsdTestServer();
 
             //! ES tower server
             static const CServer &esTowerView();

@@ -27,7 +27,7 @@ namespace BlackMisc
         //! Value object encapsulating a list of servers.
         class BLACKMISC_EXPORT CServerList :
             public CSequence<CServer>,
-            public BlackMisc::Mixin::MetaType<CServerList>
+            public Mixin::MetaType<CServerList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CServerList)
