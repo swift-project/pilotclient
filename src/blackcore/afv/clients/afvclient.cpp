@@ -423,8 +423,8 @@ namespace BlackCore
                     audioData.lastPacket = false;
                     audioData.sequenceCounter = 0;
 
-                    RxTransceiverDto com1 = { 0, m_transceivers.size() > 0 ?  m_transceivers[0].frequencyHz : UniCom, 0.0 };
-                    RxTransceiverDto com2 = { 1, m_transceivers.size() > 1 ?  m_transceivers[1].frequencyHz : UniCom, 0.0 };
+                    RxTransceiverDto com1 = { 0, m_transceivers.size() > 0 ?  m_transceivers[0].frequencyHz : UniCom, 1.0 };
+                    RxTransceiverDto com2 = { 1, m_transceivers.size() > 1 ?  m_transceivers[1].frequencyHz : UniCom, 1.0 };
 
                     soundcardSampleProvider->addOpusSamples(audioData, { com1, com2 });
                     return;
