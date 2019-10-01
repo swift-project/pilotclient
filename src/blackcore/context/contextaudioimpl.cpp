@@ -286,53 +286,6 @@ namespace BlackCore
         void CContextAudio::setVoiceTransmission(bool enable, PTTCOM com)
         {
             m_voiceClient.setPttForCom(enable, com);
-
-            /**
-
-            // first apporach of T609 multiple COM
-            QSharedPointer<IVoiceChannel> voiceChannelCom = nullptr;
-            CComSystem::ComUnit usedUnit = CComSystem::Com1;
-
-            if (com == COM1           && m_voiceChannelMapping.contains(CComSystem::Com1)) { usedUnit = CComSystem::Com1; voiceChannelCom = m_voiceChannelMapping.value(usedUnit); }
-            else if (com == COM2      && m_voiceChannelMapping.contains(CComSystem::Com2)) { usedUnit = CComSystem::Com2; voiceChannelCom = m_voiceChannelMapping.value(usedUnit); }
-            else if (com == COMActive && m_voiceChannelMapping.contains(CComSystem::Com1)) { usedUnit = CComSystem::Com1; voiceChannelCom = m_voiceChannelMapping.value(usedUnit); }
-            else if (com == COMActive && m_voiceChannelMapping.contains(CComSystem::Com2)) { usedUnit = CComSystem::Com2; voiceChannelCom = m_voiceChannelMapping.value(usedUnit); }
-            if (!voiceChannelCom) { return; }
-            IAudioMixer::OutputPort mixerOutputPort = m_voiceChannelOutputPortMapping.value(voiceChannelCom);
-
-            // use values from simulator?
-            if (enable && this->isComIntegratedWithSimulator())
-            {
-                const CComSystem comSystem = this->getOwnComSystem(usedUnit);
-                enable = comSystem.isTransmitEnabled(); // consider muted
-            }
-
-            if (enable)
-            {
-                m_audioMixer->makeMixerConnection(IAudioMixer::InputMicrophone, mixerOutputPort);
-            }
-            else
-            {
-                m_audioMixer->removeMixerConnection(IAudioMixer::InputMicrophone, mixerOutputPort);
-            }
-
-            **/
-
-            /** fixme KB 201908 to be removed if the above works
-            if (!m_voiceChannelMapping.contains(CComSystem::Com1)) { return; }
-            QSharedPointer<IVoiceChannel> voiceChannelCom1 = m_voiceChannelMapping.value(CComSystem::Com1);
-            IAudioMixer::OutputPort mixerOutputPort = m_voiceChannelOutputPortMapping.value(voiceChannelCom1);
-            if (enable)
-            {
-                m_audioMixer->makeMixerConnection(IAudioMixer::InputMicrophone, mixerOutputPort);
-            }
-            else
-            {
-                // Remove for both output ports, just in case.
-                m_audioMixer->removeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputVoiceChannel1);
-                m_audioMixer->removeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputVoiceChannel2);
-            }
-            **/
         }
 
         void CContextAudio::setVoiceTransmissionCom1(bool enabled)

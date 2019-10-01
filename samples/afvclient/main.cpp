@@ -12,6 +12,7 @@
 #include <QPointer>
 #include <QThread>
 
+using namespace BlackMisc;
 using namespace BlackCore::Afv::Clients;
 using namespace BlackCore::Afv::Model;
 
@@ -20,7 +21,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication qa(argc, argv);
 
-    BlackCore::CApplication a("sampleafvclient", BlackMisc::CApplicationInfo::Sample);
+    BlackCore::CApplication a("sampleafvclient", CApplicationInfo::Sample);
 
     CAfvMapReader *afvMapReader = new CAfvMapReader(&a);
     afvMapReader->updateFromMap();

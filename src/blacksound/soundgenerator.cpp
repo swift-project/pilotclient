@@ -73,7 +73,7 @@ namespace BlackSound
                 m_pushTimer = new QTimer(this);
                 bool ok = connect(m_pushTimer, &QTimer::timeout, this, &CSoundGenerator::pushTimerExpired);
                 Q_ASSERT(ok);
-                Q_UNUSED(ok); // suppress Clang warning in release build
+                Q_UNUSED(ok) // suppress Clang warning in release build
                 m_pushTimer->start(20);
             }
             m_pushModeIODevice = m_audioOutput->start(); // push, IO device not owned
@@ -345,8 +345,8 @@ namespace BlackSound
 
     qint64 CSoundGenerator::writeData(const char *data, qint64 len)
     {
-        Q_UNUSED(data);
-        Q_UNUSED(len);
+        Q_UNUSED(data)
+        Q_UNUSED(len)
         return 0;
     }
 
@@ -454,7 +454,7 @@ namespace BlackSound
     void CSoundGenerator::playFile(int volume, const QString &file, bool removeFileAfterPlaying)
     {
         if (!QFile::exists(file)) { return; }
-        Q_UNUSED(volume);
+        Q_UNUSED(volume)
         QSound::play(file);
         // I cannot delete the file here, only after it has been played
         if (removeFileAfterPlaying) { new CTimedFileDeleter(file, 1000 * 60, QCoreApplication::instance()); }
