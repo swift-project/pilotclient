@@ -13,25 +13,19 @@ namespace BlackSound
             setupPreset(preset);
         }
 
-        int CEqualizerSampleProvider::readSamples(QVector<qint16> &samples, qint64 count)
+        int CEqualizerSampleProvider::readSamples(QVector<float> &samples, qint64 count)
         {
             int samplesRead = m_sourceProvider->readSamples(samples, count);
             if (m_bypass) return samplesRead;
 
-            QVector<double> doubleSamples = convertFromShortToDouble(samples);
-
             for (int n = 0; n < samplesRead; n++)
             {
-                // TODO stereo implementation
-
                 for (int band = 0; band < m_filters.size(); band++)
                 {
-                    doubleSamples[n] = m_filters[band].transform(doubleSamples[n]);
+                    samples[n] = m_filters[band].transform(samples[n]);
                 }
-                doubleSamples[n] *= m_outputGain;
+                samples[n] *= m_outputGain;
             }
-
-            samples = convertFromDoubleToShort(doubleSamples);
             return samplesRead;
         }
 

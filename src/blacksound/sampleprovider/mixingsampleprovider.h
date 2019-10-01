@@ -30,7 +30,7 @@ namespace BlackSound
             void addMixerInput(ISampleProvider *provider) { m_sources.append(provider); }
 
             //! \copydoc ISampleProvider::readSamples
-            virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
+            virtual int readSamples(QVector<float> &samples, qint64 count) override;
 
         private:
             QVector<ISampleProvider *> m_sources;

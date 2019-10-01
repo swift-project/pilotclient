@@ -14,7 +14,7 @@ namespace BlackSound
 {
     namespace SampleProvider
     {
-        int CPinkNoiseGenerator::readSamples(QVector<qint16> &samples, qint64 count)
+        int CPinkNoiseGenerator::readSamples(QVector<float> &samples, qint64 count)
         {
             samples.clear();
             samples.fill(0, count);
@@ -32,7 +32,7 @@ namespace BlackSound
                 double pink = pinkNoiseBuffer[0] + pinkNoiseBuffer[1] + pinkNoiseBuffer[2] + pinkNoiseBuffer[3] + pinkNoiseBuffer[4] + pinkNoiseBuffer[5] + pinkNoiseBuffer[6] + white * 0.5362;
                 pinkNoiseBuffer[6] = white * 0.115926;
                 double sampleValue = (m_gain * (pink / 5));
-                samples[sampleCount] = sampleValue * 32768;
+                samples[sampleCount] = sampleValue;
             }
             return count;
         }

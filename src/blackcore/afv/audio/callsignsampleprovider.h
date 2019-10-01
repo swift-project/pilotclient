@@ -44,7 +44,7 @@ namespace BlackCore
                 //! Ctor
                 CallsignSampleProvider(const QAudioFormat &audioFormat, const BlackCore::Afv::Audio::CReceiverSampleProvider *receiver, QObject *parent = nullptr);
 
-                int readSamples(QVector<qint16> &samples, qint64 count) override;
+                int readSamples(QVector<float> &samples, qint64 count) override;
 
                 //! The callsign
                 const QString &callsign() const { return m_callsign; }

@@ -32,10 +32,10 @@ namespace BlackSound
             CBufferedWaveProvider(const QAudioFormat &format, QObject *parent = nullptr);
 
             //! Add samples
-            void addSamples(const QVector<qint16> &samples);
+            void addSamples(const QVector<float> &samples);
 
             //! ISampleProvider::readSamples
-            virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
+            virtual int readSamples(QVector<float> &samples, qint64 count) override;
 
             //! Bytes from buffer
             int getBufferedBytes() const { return m_audioBuffer.size(); }
@@ -44,7 +44,7 @@ namespace BlackSound
             void clearBuffer();
 
         private:
-            QVector<qint16> m_audioBuffer;
+            QVector<float> m_audioBuffer;
             qint32 m_maxBufferSize;
         };
     } // ns

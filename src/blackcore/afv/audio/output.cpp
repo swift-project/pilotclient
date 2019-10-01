@@ -36,22 +36,20 @@ namespace BlackCore
                 int sampleBytes  = m_outputFormat.sampleSize() / 8;
                 int channelCount = m_outputFormat.channelCount();
                 qint64 count = maxlen / (sampleBytes * channelCount);
-                QVector<qint16> buffer;
+                QVector<float> buffer;
                 m_sampleProvider->readSamples(buffer, count);
 
-                for (const qint16 sample : buffer)
+                for (float sample : buffer)
                 {
-                    qint16 sampleInput = sample;
-                    sampleInput = qAbs(sampleInput);
-                    if (sampleInput > m_maxSampleOutput) { m_maxSampleOutput = sampleInput; }
+                    float absSample = qAbs(sample);
+                    if (absSample > m_maxSampleOutput) { m_maxSampleOutput = absSample; }
                 }
 
                 m_sampleCount += buffer.size();
                 if (m_sampleCount >= SampleCountPerEvent)
                 {
                     OutputVolumeStreamArgs outputVolumeStreamArgs;
-                    qint16 maxInt = std::numeric_limits<qint16>::max();
-                    outputVolumeStreamArgs.PeakRaw = m_maxSampleOutput / maxInt;
+                    outputVolumeStreamArgs.PeakRaw = m_maxSampleOutput / 1.0;
                     outputVolumeStreamArgs.PeakDB = static_cast<float>(20 * std::log10(outputVolumeStreamArgs.PeakRaw));
                     const double db = qBound(m_minDb, outputVolumeStreamArgs.PeakDB, m_maxDb);
                     double ratio = (db - m_minDb) / (m_maxDb - m_minDb);
@@ -91,8 +89,8 @@ namespace BlackCore
                 QAudioFormat outputFormat;
                 outputFormat.setSampleRate(48000);
                 outputFormat.setChannelCount(1);
-                outputFormat.setSampleSize(16);
-                outputFormat.setSampleType(QAudioFormat::SignedInt);
+                outputFormat.setSampleSize(32);
+                outputFormat.setSampleType(QAudioFormat::Float);
                 outputFormat.setByteOrder(QAudioFormat::LittleEndian);
                 outputFormat.setCodec("audio/pcm");
 

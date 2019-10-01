@@ -43,7 +43,7 @@ namespace BlackCore
                 void pttUpdate(bool active, const QVector<TxTransceiverDto> &txTransceivers);
 
                 //! \copydoc ISampleProvider::readSamples
-                virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
+                virtual int readSamples(QVector<float> &samples, qint64 count) override;
 
                 //! Add OPUS samples
                 void addOpusSamples(const IAudioDto &audioDto, const QVector<RxTransceiverDto> &rxTransceivers);

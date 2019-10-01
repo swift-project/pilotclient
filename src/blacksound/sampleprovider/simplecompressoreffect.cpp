@@ -27,7 +27,7 @@ namespace BlackSound
             m_timer.start(3000);
         }
 
-        int CSimpleCompressorEffect::readSamples(QVector<qint16> &samples, qint64 count)
+        int CSimpleCompressorEffect::readSamples(QVector<float> &samples, qint64 count)
         {
             int samplesRead = m_sourceStream->readSamples(samples, count);
 
@@ -35,12 +35,12 @@ namespace BlackSound
             {
                 for (int sample = 0; sample < samplesRead; sample += channels)
                 {
-                    double in1 = samples.at(sample) / 32768.0;
+                    double in1 = samples.at(sample);
                     double in2 = (channels == 1) ? 0 : samples.at(sample + 1);
                     m_simpleCompressor.process(in1, in2);
-                    samples[sample] = in1 * 32768.0;
+                    samples[sample] = in1;
                     if (channels > 1)
-                        samples[sample + 1] = in2 * 32768.0f;
+                        samples[sample + 1] = in2;
                 }
             }
             return samplesRead;

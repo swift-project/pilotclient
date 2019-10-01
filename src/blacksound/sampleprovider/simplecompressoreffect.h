@@ -32,7 +32,7 @@ namespace BlackSound
             CSimpleCompressorEffect(ISampleProvider *source, QObject *parent = nullptr);
 
             //! \copydoc ISampleProvider::readSamples
-            virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
+            virtual int readSamples(QVector<float> &samples, qint64 count) override;
 
             //! Enable
             void setEnabled(bool enabled);

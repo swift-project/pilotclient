@@ -11,6 +11,7 @@
 #include "callsignsampleprovider.h"
 #include "callsigndelaycache.h"
 #include "blacksound/sampleprovider/samples.h"
+#include "blacksound/audioutilities.h"
 #include "blackcore/afv/audio/receiversampleprovider.h"
 #include <QtMath>
 #include <QDebug>
@@ -60,7 +61,7 @@ namespace BlackCore
                 connect(&m_timer, &QTimer::timeout, this, &CallsignSampleProvider::timerElapsed);
             }
 
-            int CallsignSampleProvider::readSamples(QVector<qint16> &samples, qint64 count)
+            int CallsignSampleProvider::readSamples(QVector<float> &samples, qint64 count)
             {
                 int noOfSamples = m_mixer->readSamples(samples, count);
 
@@ -103,7 +104,7 @@ namespace BlackCore
                 if (delayMs > 0)
                 {
                     int phaseDelayLength = (m_audioFormat.sampleRate() / 1000) * delayMs;
-                    QVector<qint16> phaseDelay(phaseDelayLength * 2, 0);
+                    QVector<float> phaseDelay(phaseDelayLength * 2, 0);
                     m_audioInput->addSamples(phaseDelay);
                 }
             }
@@ -131,7 +132,7 @@ namespace BlackCore
                 setEffects();
 
                 QVector<qint16> audio = decodeOpus(audioDto.audio);
-                m_audioInput->addSamples(audio);
+                m_audioInput->addSamples(BlackSound::convertFromShortToFloat(audio));
                 m_lastPacketLatch = audioDto.lastPacket;
                 if (audioDto.lastPacket && !m_underflow) { CallsignDelayCache::instance().success(m_callsign); }
                 m_lastSamplesAddedUtc = QDateTime::currentDateTimeUtc();

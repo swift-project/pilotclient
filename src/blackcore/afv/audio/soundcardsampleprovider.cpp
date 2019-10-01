@@ -85,7 +85,7 @@ namespace BlackCore
                 }
             }
 
-            int CSoundcardSampleProvider::readSamples(QVector<qint16> &samples, qint64 count)
+            int CSoundcardSampleProvider::readSamples(QVector<float> &samples, qint64 count)
             {
                 return m_mixer->readSamples(samples, count);
             }

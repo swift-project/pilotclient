@@ -10,12 +10,25 @@
 
 namespace BlackSound
 {
+    QVector<float> convertBytesTo32BitFloatPCM(const QByteArray input)
+    {
+        int inputSamples = input.size() / 2; // 16 bit input, so 2 bytes per sample
+        QVector<float> output;
+        output.fill(0, inputSamples);
+
+        for (int n = 0; n < inputSamples; n++)
+        {
+            output[n] = *reinterpret_cast<const qint16 *>(input.data() + n * 2);
+            output[n] /= 32767.0;
+        }
+        return output;
+    }
+
     QVector<qint16> convertBytesTo16BitPCM(const QByteArray input)
     {
         int inputSamples = input.size() / 2; // 16 bit input, so 2 bytes per sample
         QVector<qint16> output;
         output.fill(0, inputSamples);
-
         for (int n = 0; n < inputSamples; n++)
         {
             output[n] = *reinterpret_cast<const qint16 *>(input.data() + n * 2);
@@ -30,11 +43,11 @@ namespace BlackSound
         return {};
     }
 
-    QVector<qint16> convertFromMonoToStereo(const QVector<qint16> &mono)
+    QVector<float> convertFromMonoToStereo(const QVector<float> &mono)
     {
-        QVector<qint16> stereo;
+        QVector<float> stereo;
         stereo.reserve(mono.size() * 2);
-        for (qint16 sample : mono)
+        for (float sample : mono)
         {
             stereo << sample;
             stereo << sample;
@@ -53,22 +66,12 @@ namespace BlackSound
         return mono;
     }
 
-    QVector<double> convertFromShortToDouble(const QVector<qint16> &input)
+    QVector<float> convertFromShortToFloat(const QVector<qint16> &input)
     {
-        QVector<double> output;
+        QVector<float> output;
         for (auto sample : input)
         {
             output.push_back(sample / 32768.0);
-        }
-        return output;
-    }
-
-    QVector<qint16> convertFromDoubleToShort(const QVector<double> &input)
-    {
-        QVector<qint16> output;
-        for (auto sample : input)
-        {
-            output.push_back(sample * 32768);
         }
         return output;
     }

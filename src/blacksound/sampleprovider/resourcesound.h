@@ -29,7 +29,7 @@ namespace BlackSound
             CResourceSound(const QString &audioFileName);
 
             //! Audio data
-            const QVector<qint16> &audioData() const { return m_samples; }
+            const QVector<float> &audioData() const { return m_samples; }
 
             //! Corresponding file
             const QString &getFileName() { return m_fn; }
@@ -39,7 +39,7 @@ namespace BlackSound
 
         private:
             QString m_fn; //!< file name
-            QVector<qint16> m_samples;
+            QVector<float> m_samples;
         };
     } // ns
 } // ns

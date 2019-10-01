@@ -82,7 +82,7 @@ namespace BlackCore
                 }
             }
 
-            int CReceiverSampleProvider::readSamples(QVector<qint16> &samples, qint64 count)
+            int CReceiverSampleProvider::readSamples(QVector<float> &samples, qint64 count)
             {
                 int numberOfInUseInputs = activeCallsigns();
 

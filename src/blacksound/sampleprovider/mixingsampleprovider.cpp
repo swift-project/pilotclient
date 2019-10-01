@@ -12,7 +12,7 @@ namespace BlackSound
 {
     namespace SampleProvider
     {
-        int CMixingSampleProvider::readSamples(QVector<qint16> &samples, qint64 count)
+        int CMixingSampleProvider::readSamples(QVector<float> &samples, qint64 count)
         {
             samples.clear();
             samples.fill(0, count);
@@ -22,7 +22,7 @@ namespace BlackSound
             for (int i = 0; i < m_sources.size(); i++)
             {
                 ISampleProvider *sampleProvider = m_sources.at(i);
-                QVector<qint16> sourceBuffer;
+                QVector<float> sourceBuffer;
                 int len = sampleProvider->readSamples(sourceBuffer, count);
 
                 for (int n = 0; n < len; n++)

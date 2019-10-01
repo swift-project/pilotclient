@@ -13,7 +13,7 @@ namespace BlackSound
             m_tempBuffer.resize(m_tempBufferSize);
         }
 
-        int CResourceSoundSampleProvider::readSamples(QVector<qint16> &samples, qint64 count)
+        int CResourceSoundSampleProvider::readSamples(QVector<float> &samples, qint64 count)
         {
             if (count > m_tempBufferSize)
             {
@@ -35,7 +35,7 @@ namespace BlackSound
             {
                 for (int i = 0; i < samplesToCopy; i++)
                 {
-                    m_tempBuffer[i] = static_cast<qint16>(qRound(m_gain * m_tempBuffer[i]));
+                    m_tempBuffer[i] *= m_gain;
                 }
             }
 

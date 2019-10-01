@@ -29,11 +29,12 @@ namespace BlackSound
             {
                 if (wavFile.fileFormat().sampleType() == QAudioFormat::Float)
                 {
-                    m_samples = convertFloatBytesTo16BitPCM(wavFile.audioData());
+                    // Not implemented
+                    // m_samples = convertFloatBytesTo16BitPCM(wavFile.audioData());
                 }
                 else
                 {
-                    m_samples = convertBytesTo16BitPCM(wavFile.audioData());
+                    m_samples = convertBytesTo32BitFloatPCM(wavFile.audioData());
                 }
                 m_fn = audioFileName;
             }

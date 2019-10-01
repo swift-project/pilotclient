@@ -31,7 +31,7 @@ namespace BlackSound
             CSawToothGenerator(double frequency, QObject *parent = nullptr);
 
             //! \copydoc ISampleProvider::readSamples
-            virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
+            virtual int readSamples(QVector<float> &samples, qint64 count) override;
 
             //! Set the gain
             void setGain(double gain) { m_gain = gain; }

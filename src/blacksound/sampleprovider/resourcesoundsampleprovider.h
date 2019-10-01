@@ -27,7 +27,7 @@ namespace BlackSound
             CResourceSoundSampleProvider(const CResourceSound &resourceSound, QObject *parent = nullptr);
 
             //! copydoc ISampleProvider::readSamples
-            virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
+            virtual int readSamples(QVector<float> &samples, qint64 count) override;
 
             //! copydoc ISampleProvider::isFinished
             virtual bool isFinished() const override { return m_isFinished; }
@@ -43,8 +43,8 @@ namespace BlackSound
             //! @}
 
             //! Temp buffer @{
-            QVector<qint16> getTempBuffer() const { return m_tempBuffer; }
-            void setTempBuffer(const QVector<qint16> &value) { m_tempBuffer = value; }
+            QVector<float> getTempBuffer() const { return m_tempBuffer; }
+            void setTempBuffer(const QVector<float> &value) { m_tempBuffer = value; }
             //! @}
 
         private:
@@ -54,7 +54,7 @@ namespace BlackSound
             CResourceSound  m_resourceSound;
             qint64          m_position = 0;
             const int       m_tempBufferSize = 9600; //9600 = 200ms
-            QVector<qint16> m_tempBuffer;
+            QVector<float>  m_tempBuffer;
             bool            m_isFinished = false;
         };
     } // ns

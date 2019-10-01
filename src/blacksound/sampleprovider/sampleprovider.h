@@ -32,7 +32,7 @@ namespace BlackSound
             virtual ~ISampleProvider() override {}
 
             //! Read samples
-            virtual int readSamples(QVector<qint16> &samples, qint64 count) = 0;
+            virtual int readSamples(QVector<float> &samples, qint64 count) = 0;
 
             //! Finished?
             virtual bool isFinished() const { return false; }

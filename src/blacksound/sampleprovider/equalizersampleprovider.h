@@ -38,7 +38,7 @@ namespace BlackSound
             CEqualizerSampleProvider(ISampleProvider *sourceProvider, EqualizerPresets preset, QObject *parent = nullptr);
 
             //! \copydoc ISampleProvider::readSamples
-            virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
+            virtual int readSamples(QVector<float> &samples, qint64 count) override;
 
             //! Bypassing?
             void setBypassEffects(bool value) { m_bypass = value; }

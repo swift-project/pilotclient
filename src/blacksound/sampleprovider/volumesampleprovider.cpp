@@ -20,7 +20,7 @@ namespace BlackSound
             m_sourceProvider(sourceProvider)
         { }
 
-        int CVolumeSampleProvider::readSamples(QVector<qint16> &samples, qint64 count)
+        int CVolumeSampleProvider::readSamples(QVector<float> &samples, qint64 count)
         {
             int samplesRead = m_sourceProvider->readSamples(samples, count);
 
@@ -28,7 +28,7 @@ namespace BlackSound
             {
                 for (int n = 0; n < samplesRead; n++)
                 {
-                    samples[n] = static_cast<qint16>(qRound(samples[n] * m_volume));
+                    samples[n] *= static_cast<float>(m_volume);
                 }
             }
             return samplesRead;

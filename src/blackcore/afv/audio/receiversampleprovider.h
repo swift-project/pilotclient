@@ -57,7 +57,7 @@ namespace BlackCore
                 //! @}
 
                 //! \copydoc BlackSound::SampleProvider::ISampleProvider::readSamples
-                virtual int readSamples(QVector<qint16> &samples, qint64 count) override;
+                virtual int readSamples(QVector<float> &samples, qint64 count) override;
 
                 void addOpusSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio);
                 void addSilentSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio);
