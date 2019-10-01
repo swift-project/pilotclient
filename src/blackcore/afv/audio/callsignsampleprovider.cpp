@@ -128,6 +128,7 @@ namespace BlackCore
             void CallsignSampleProvider::addOpusSamples(const IAudioDto &audioDto, float distanceRatio)
             {
                 m_distanceRatio = distanceRatio;
+                setEffects();
 
                 QVector<qint16> audio = decodeOpus(audioDto.audio);
                 m_audioInput->addSamples(audio);
