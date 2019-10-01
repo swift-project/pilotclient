@@ -3,48 +3,33 @@
 
 #include "blacksound/blacksoundexport.h"
 
-// filter type enumeration
-enum class BiQuadFilterType {
-    None,
-    LowPass,
-    HighPass,
-    BandPass,
-    Notch,
-    Peak,
-    LowShelf,
-    HighShelf
-};
-
-#define BQN 3
-
 class BiQuadFilter
 {
 public:
     BiQuadFilter() = default;
 
-    BiQuadFilter(BiQuadFilterType type,
-                 int fs = 44100,
-                 double fc = 1000,
-                 double Q = 0.7071,
-                 double peakGain = 0);
+    float transform(float inSample);
+    void setCoefficients(double aa0, double aa1, double aa2, double b0, double b1, double b2);
+    void setLowPassFilter(float sampleRate, float cutoffFrequency, float q);
+    void setPeakingEq(float sampleRate, float centreFrequency, float q, float dbGain);
+    void setHighPassFilter(float sampleRate, float cutoffFrequency, float q);
 
-    float process(float input);
-
-    void clear();
+    static BiQuadFilter lowPassFilter(float sampleRate, float cutoffFrequency, float q);
+    static BiQuadFilter highPassFilter(float sampleRate, float cutoffFrequency, float q);
+    static BiQuadFilter peakingEQ(float sampleRate, float centreFrequency, float q, float dbGain);
 
 private:
-    void calculate();
+    double a0;
+    double a1;
+    double a2;
+    double a3;
+    double a4;
 
-    double m_A[BQN];
-    double m_B[BQN];
-    float m_X[BQN];
-    float m_Y[BQN];
-    unsigned int m_index = 0;
-    double m_fs = 44100.0;
-    BiQuadFilterType m_type = BiQuadFilterType::None;
-    double m_fc = 1000.0;
-    double m_Q = 0.7071;
-    double m_peakGain = 0.0;
+    // state
+    float x1 = 0.0;
+    float x2 = 0.0;
+    float y1 = 0.0;
+    float y2 = 0.0;
 };
 
 #endif // BIQUADFILTER_H

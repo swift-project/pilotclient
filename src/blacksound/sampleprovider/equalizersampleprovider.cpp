@@ -26,7 +26,7 @@ namespace BlackSound
 
                 for (int band = 0; band < m_filters.size(); band++)
                 {
-                    doubleSamples[n] = m_filters[band].process(doubleSamples[n]);
+                    doubleSamples[n] = m_filters[band].transform(doubleSamples[n]);
                 }
                 doubleSamples[n] *= m_outputGain;
             }
@@ -40,11 +40,11 @@ namespace BlackSound
             switch (preset)
             {
             case VHFEmulation:
-                m_filters.push_back(BiQuadFilter(BiQuadFilterType::HighPass, 44100, 310, 0.25));
-                m_filters.push_back(BiQuadFilter(BiQuadFilterType::Peak, 44100, 450, 0.75, 17.0));
-                m_filters.push_back(BiQuadFilter(BiQuadFilterType::Peak, 44100, 1450, 1.0, 25.0));
-                m_filters.push_back(BiQuadFilter(BiQuadFilterType::Peak, 44100, 2000, 1.0, 25.0));
-                m_filters.push_back(BiQuadFilter(BiQuadFilterType::LowPass, 44100, 2500, 0.25));
+                m_filters.push_back(BiQuadFilter::highPassFilter(44100, 310, 0.25));
+                m_filters.push_back(BiQuadFilter::peakingEQ(44100, 450, 0.75, 17.0));
+                m_filters.push_back(BiQuadFilter::peakingEQ(44100, 1450, 1.0, 25.0));
+                m_filters.push_back(BiQuadFilter::peakingEQ(44100, 2000, 1.0, 25.0));
+                m_filters.push_back(BiQuadFilter::lowPassFilter(44100, 2500, 0.25));
                 break;
             }
         }
