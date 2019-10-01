@@ -37,19 +37,21 @@ namespace BlackCore
             }
 
             CAfvClient::CAfvClient(const QString &apiServer, QObject *parent) :
-                QObject(parent), CIdentifiable(this)
+                QObject(parent), CIdentifiable(this),
+                m_connection(new CClientConnection(apiServer, this)),
+                m_input(new CInput(SampleRate, this)),
+                m_output(new Output(this)),
+                m_voiceServerPositionTimer(new QTimer(this))
             {
-                m_connection = new CClientConnection(apiServer, this);
+
                 m_connection->setReceiveAudio(false);
 
-                m_input = new CInput(SampleRate, this);
                 connect(m_input, &CInput::opusDataAvailable, this, &CAfvClient::opusDataAvailable);
                 connect(m_input, &CInput::inputVolumeStream, this, &CAfvClient::inputVolumeStream);
 
-                m_output = new Output(this);
                 connect(m_output, &Output::outputVolumeStream, this, &CAfvClient::outputVolumeStream);
                 connect(m_connection, &CClientConnection::audioReceived, this, &CAfvClient::audioOutDataAvailable);
-                connect(&m_voiceServerPositionTimer, &QTimer::timeout, this, &CAfvClient::onPositionUpdateTimer);
+                connect(m_voiceServerPositionTimer, &QTimer::timeout, this, &CAfvClient::onPositionUpdateTimer);
 
                 // transceivers
                 this->initTransceivers();
@@ -157,7 +159,7 @@ namespace BlackCore
 
                 m_startDateTimeUtc = QDateTime::currentDateTimeUtc();
                 m_connection->setReceiveAudio(true);
-                m_voiceServerPositionTimer.start(5000);
+                m_voiceServerPositionTimer->start(5000);
                 this->onSettingsChanged(); // make sure all settings are applied
                 m_isStarted = true;
                 CLogMessage(this).info(u"Started [Input: %1] [Output: %2]") << inputDevice.deviceName() << outputDevice.deviceName();

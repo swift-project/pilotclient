@@ -229,7 +229,7 @@ namespace BlackCore
                 double m_outputVolume = 1.0;
                 double m_maxDbReadingInPTTInterval = -100;
 
-                QTimer m_voiceServerPositionTimer;
+                QTimer *m_voiceServerPositionTimer = nullptr;
                 QVector<TransceiverDto> m_transceivers;
                 QSet<quint16> m_enabledTransceivers;
                 QVector<StationDto> m_aliasedStations;

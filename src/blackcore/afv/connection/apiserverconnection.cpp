@@ -23,7 +23,8 @@ namespace BlackCore
         {
             ApiServerConnection::ApiServerConnection(const QString &address, QObject *parent) :
                 QObject(parent),
-                m_address(address)
+                m_address(address),
+                m_watch(new QElapsedTimer)
             {
                 qDebug() << "ApiServerConnection instantiated";
             }
@@ -34,7 +35,7 @@ namespace BlackCore
                 m_password = password;
                 m_networkVersion = networkVersion;
                 m_isAuthenticated = false;
-                m_watch.start();
+                m_watch->start();
 
                 QUrl url(m_address);
                 url.setPath("/api/v1/auth");
@@ -54,7 +55,7 @@ namespace BlackCore
                 QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nam->post(request, QJsonDocument(obj).toJson()));
                 while (! reply->isFinished()) { loop.exec(); }
 
-                qDebug() << "POST api/v1/auth (" << m_watch.elapsed() << "ms)";
+                qDebug() << "POST api/v1/auth (" << m_watch->elapsed() << "ms)";
                 if (reply->error() != QNetworkReply::NoError)
                 {
                     qWarning() << reply->errorString();
@@ -142,7 +143,7 @@ namespace BlackCore
 
                 checkExpiry();
 
-                m_watch.start();
+                m_watch->start();
                 QUrl url(m_address);
                 url.setPath(resource);
                 QNetworkAccessManager *nam = sApp->getNetworkAccessManager();
@@ -154,7 +155,7 @@ namespace BlackCore
                 request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
                 QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nam->post(request, json.toJson()));
                 while (! reply->isFinished()) { loop.exec(); }
-                qDebug() << "POST" << resource << "(" << m_watch.elapsed() << "ms)";
+                qDebug() << "POST" << resource << "(" << m_watch->elapsed() << "ms)";
 
                 if (reply->error() != QNetworkReply::NoError)
                 {
@@ -167,7 +168,7 @@ namespace BlackCore
             {
                 if (! m_isAuthenticated) { return; }
 
-                m_watch.start();
+                m_watch->start();
                 QUrl url(m_address);
                 url.setPath(resource);
 
@@ -179,7 +180,7 @@ namespace BlackCore
                 request.setRawHeader("Authorization", "Bearer " + m_jwt);
                 QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nam->deleteResource(request));
                 while (! reply->isFinished()) { loop.exec(); }
-                qDebug() << "DELETE" << resource << "(" << m_watch.elapsed() << "ms)";
+                qDebug() << "DELETE" << resource << "(" << m_watch->elapsed() << "ms)";
 
                 if (reply->error() != QNetworkReply::NoError)
                 {

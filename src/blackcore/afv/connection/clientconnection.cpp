@@ -19,7 +19,9 @@ namespace BlackCore
         {
             CClientConnection::CClientConnection(const QString &apiServer, QObject *parent) :
                 QObject(parent),
-                m_apiServerConnection(apiServer, this)
+                m_udpSocket(new QUdpSocket(this)),
+                m_voiceServerTimer(new QTimer(this)),
+                m_apiServerConnection(new ApiServerConnection(apiServer, this))
             {
                 qDebug() << "ClientConnection instantiated";
 
@@ -27,10 +29,10 @@ namespace BlackCore
                 //    connect(&m_apiServerConnection, &ApiServerConnection::addCallsignFinished, this, &ClientConnection::addCallsignFinished);
                 //    connect(&m_apiServerConnection, &ApiServerConnection::removeCallsignFinished, this, &ClientConnection::removeCallsignFinished);
 
-                connect(&m_voiceServerTimer, &QTimer::timeout, this, &CClientConnection::voiceServerHeartbeat);
+                connect(m_voiceServerTimer, &QTimer::timeout, this, &CClientConnection::voiceServerHeartbeat);
 
-                connect(&m_udpSocket, &QUdpSocket::readyRead, this, &CClientConnection::readPendingDatagrams);
-                connect(&m_udpSocket, qOverload<QAbstractSocket::SocketError>(&QUdpSocket::error), this, &CClientConnection::handleSocketError);
+                connect(m_udpSocket, &QUdpSocket::readyRead, this, &CClientConnection::readPendingDatagrams);
+                connect(m_udpSocket, qOverload<QAbstractSocket::SocketError>(&QUdpSocket::error), this, &CClientConnection::handleSocketError);
             }
 
             void CClientConnection::connectTo(const QString &userName, const QString &password, const QString &callsign)
@@ -43,9 +45,9 @@ namespace BlackCore
 
                 m_connection.m_userName = userName;
                 m_connection.m_callsign = callsign;
-                bool result = m_apiServerConnection.connectTo(userName, password, m_networkVersion);
+                bool result = m_apiServerConnection->connectTo(userName, password, m_networkVersion);
                 if (!result) { return; }
-                m_connection.m_tokens = m_apiServerConnection.addCallsign(m_connection.m_callsign);
+                m_connection.m_tokens = m_apiServerConnection->addCallsign(m_connection.m_callsign);
                 m_connection.m_authenticatedDateTimeUtc = QDateTime::currentDateTimeUtc();
                 m_connection.createCryptoChannels();
 
@@ -71,12 +73,12 @@ namespace BlackCore
 
                 if (! m_connection.m_callsign.isEmpty())
                 {
-                    m_apiServerConnection.removeCallsign(m_connection.m_callsign);
+                    m_apiServerConnection->removeCallsign(m_connection.m_callsign);
                 }
 
                 // TODO connectionCheckCancelTokenSource.Cancel(); //Stops connection check loop
                 disconnectFromVoiceServer();
-                m_apiServerConnection.forceDisconnect();
+                m_apiServerConnection->forceDisconnect();
                 m_connection.m_tokens = {};
 
                 qDebug() << "Disconnection complete";
@@ -94,35 +96,35 @@ namespace BlackCore
 
             void CClientConnection::updateTransceivers(const QString &callsign, const QVector<TransceiverDto> &transceivers)
             {
-                m_apiServerConnection.updateTransceivers(callsign, transceivers);
+                m_apiServerConnection->updateTransceivers(callsign, transceivers);
             }
 
             QVector<StationDto> CClientConnection::getAllAliasedStations()
             {
-                return m_apiServerConnection.getAllAliasedStations();
+                return m_apiServerConnection->getAllAliasedStations();
             }
 
             void CClientConnection::connectToVoiceServer()
             {
                 QHostAddress localAddress(QHostAddress::AnyIPv4);
-                m_udpSocket.bind(localAddress);
-                m_voiceServerTimer.start(3000);
+                m_udpSocket->bind(localAddress);
+                m_voiceServerTimer->start(3000);
 
                 qDebug() << "Connected to voice server (" + m_connection.m_tokens.VoiceServer.addressIpV4 << ")";
             }
 
             void CClientConnection::disconnectFromVoiceServer()
             {
-                m_voiceServerTimer.stop();
-                m_udpSocket.disconnectFromHost();
+                m_voiceServerTimer->stop();
+                m_udpSocket->disconnectFromHost();
                 qDebug() << "All TaskVoiceServer tasks stopped";
             }
 
             void CClientConnection::readPendingDatagrams()
             {
-                while (m_udpSocket.hasPendingDatagrams())
+                while (m_udpSocket->hasPendingDatagrams())
                 {
-                    QNetworkDatagram datagram = m_udpSocket.receiveDatagram();
+                    QNetworkDatagram datagram = m_udpSocket->receiveDatagram();
                     processMessage(datagram.data());
                 }
             }
@@ -154,7 +156,7 @@ namespace BlackCore
             void CClientConnection::handleSocketError(QAbstractSocket::SocketError error)
             {
                 Q_UNUSED(error)
-                qDebug() << "UDP socket error" << m_udpSocket.errorString();
+                qDebug() << "UDP socket error" << m_udpSocket->errorString();
             }
 
             void CClientConnection::voiceServerHeartbeat()
@@ -164,7 +166,7 @@ namespace BlackCore
                 HeartbeatDto keepAlive;
                 keepAlive.callsign = m_connection.m_callsign.toStdString();
                 const QByteArray dataBytes = CryptoDtoSerializer::serialize(*m_connection.voiceCryptoChannel, CryptoDtoMode::AEAD_ChaCha20Poly1305, keepAlive);
-                m_udpSocket.writeDatagram(dataBytes, QHostAddress(voiceServerUrl.host()), static_cast<quint16>(voiceServerUrl.port()));
+                m_udpSocket->writeDatagram(dataBytes, QHostAddress(voiceServerUrl.host()), static_cast<quint16>(voiceServerUrl.port()));
             }
         } // ns
     } // ns

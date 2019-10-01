@@ -72,7 +72,7 @@ namespace BlackCore
 
                     QNetworkAccessManager *nam = sApp->getNetworkAccessManager();
 
-                    m_watch.start();
+                    m_watch->start();
                     QUrl url(m_address);
                     url.setPath(resource);
                     QEventLoop loop;
@@ -82,7 +82,7 @@ namespace BlackCore
                     request.setRawHeader("Authorization", "Bearer " + m_jwt);
                     QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nam->post(request, QByteArray()));
                     while (! reply->isFinished()) { loop.exec(); }
-                    qDebug() << "POST" << resource << "(" << m_watch.elapsed() << "ms)";
+                    qDebug() << "POST" << resource << "(" << m_watch->elapsed() << "ms)";
 
                     if (reply->error() != QNetworkReply::NoError)
                     {
@@ -108,7 +108,7 @@ namespace BlackCore
 
                     QNetworkAccessManager *nam = sApp->getNetworkAccessManager();
 
-                    m_watch.start();
+                    m_watch->start();
                     QUrl url(m_address);
                     url.setPath(resource);
                     QEventLoop loop;
@@ -118,7 +118,7 @@ namespace BlackCore
                     request.setRawHeader("Authorization", "Bearer " + m_jwt);
                     QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nam->get(request));
                     while (! reply->isFinished()) { loop.exec(); }
-                    qDebug() << "GET" << resource << "(" << m_watch.elapsed() << "ms)";
+                    qDebug() << "GET" << resource << "(" << m_watch->elapsed() << "ms)";
 
                     if (reply->error() != QNetworkReply::NoError)
                     {
@@ -156,7 +156,7 @@ namespace BlackCore
 
                 bool m_isAuthenticated = false;
 
-                QElapsedTimer m_watch;
+                QElapsedTimer *m_watch = nullptr;
             };
         } // ns
     } // ns
