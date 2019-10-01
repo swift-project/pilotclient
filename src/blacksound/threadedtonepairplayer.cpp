@@ -7,6 +7,8 @@
  */
 
 #include "threadedtonepairplayer.h"
+#include "blackmisc/logmessage.h"
+
 #include <QTimer>
 
 using namespace BlackMisc;
@@ -26,20 +28,26 @@ namespace BlackSound
         QMutexLocker ml(&m_mutex);
         if (m_audioOutput->state() != QAudio::StoppedState) { return; }
 
-        m_bufferData = getAudioByTonePairs(tonePairs);
+        m_bufferData = this->getAudioByTonePairs(tonePairs);
         m_audioOutput->setVolume(static_cast<qreal>(0.01 * volume));
         QTimer::singleShot(0, this, &CThreadedTonePairPlayer::playBuffer);
     }
 
     void CThreadedTonePairPlayer::initialize()
     {
-        m_audioFormat.setSampleRate(44100);
-        m_audioFormat.setChannelCount(1);
-        m_audioFormat.setSampleSize(16); // 8 or 16 works
-        m_audioFormat.setCodec("audio/pcm");
-        m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
-        m_audioFormat.setSampleType(QAudioFormat::SignedInt);
-
+        CLogMessage(this).info(u"CThreadedTonePairPlayer for device '%1'") << m_deviceInfo.deviceName();
+        QAudioFormat format;
+        format.setSampleRate(44100);
+        format.setChannelCount(1);
+        format.setSampleSize(16); // 8 or 16 works
+        format.setCodec("audio/pcm");
+        format.setByteOrder(QAudioFormat::LittleEndian);
+        format.setSampleType(QAudioFormat::SignedInt);
+        if (!m_deviceInfo.isFormatSupported(format))
+        {
+            format = m_deviceInfo.nearestFormat(format);
+        }
+        m_audioFormat = format;
         m_audioOutput = new QAudioOutput(m_deviceInfo, m_audioFormat, this);
         connect(m_audioOutput, &QAudioOutput::stateChanged, this, &CThreadedTonePairPlayer::handleStateChanged);
     }
@@ -95,7 +103,7 @@ namespace BlackSound
 
         QByteArray bufferData;
         qint64 bytesPerTonePair = m_audioFormat.sampleRate() * bytesForAllChannels * tonePair.getDurationMs() / 1000;
-        bufferData.resize(bytesPerTonePair);
+        bufferData.resize(static_cast<int>(bytesPerTonePair));
         unsigned char *bufferPointer = reinterpret_cast<unsigned char *>(bufferData.data());
 
         qint64 last0AmplitudeSample = bytesPerTonePair; // last sample when amplitude was 0
@@ -160,7 +168,7 @@ namespace BlackSound
     {
         Q_ASSERT(this->m_audioFormat.sampleSize() == 16);
         Q_ASSERT(this->m_audioFormat.sampleType() == QAudioFormat::SignedInt);
-        Q_ASSERT(this->m_audioFormat.byteOrder() == QAudioFormat::LittleEndian);
+        Q_ASSERT(this->m_audioFormat.byteOrder()  == QAudioFormat::LittleEndian);
 
         qint16 value = static_cast<qint16>(amplitude * 32767);
         qToLittleEndian<qint16>(value, bufferPointer);
