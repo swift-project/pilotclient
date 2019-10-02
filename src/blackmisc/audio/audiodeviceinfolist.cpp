@@ -53,11 +53,6 @@ namespace BlackMisc
             return CAudioDeviceInfo();
         }
 
-        CAudioDeviceInfo CAudioDeviceInfoList::findByDeviceIndex(int deviceIndex)
-        {
-            return this->findBy(&CAudioDeviceInfo::getIndex, deviceIndex).frontOrDefault();
-        }
-
         int CAudioDeviceInfoList::count(CAudioDeviceInfo::DeviceType type) const
         {
             return static_cast<int>(std::count_if(this->begin(), this->end(), [type](const CAudioDeviceInfo & device)
@@ -81,10 +76,9 @@ namespace BlackMisc
             const QList<QAudioDeviceInfo> inputDevices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
             CAudioDeviceInfoList devices;
 
-            int index = 100;
             for (const QAudioDeviceInfo &inputDevice : inputDevices)
             {
-                const CAudioDeviceInfo d(CAudioDeviceInfo::InputDevice, index++, inputDevice.deviceName());
+                const CAudioDeviceInfo d(CAudioDeviceInfo::InputDevice, inputDevice.deviceName());
                 devices.push_back(d);
             }
             return devices;
@@ -95,10 +89,9 @@ namespace BlackMisc
             const QList<QAudioDeviceInfo> outputDevices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
             CAudioDeviceInfoList devices;
 
-            int index = 200;
             for (const QAudioDeviceInfo &outputDevice : outputDevices)
             {
-                const CAudioDeviceInfo d(CAudioDeviceInfo::OutputDevice, index++, outputDevice.deviceName());
+                const CAudioDeviceInfo d(CAudioDeviceInfo::OutputDevice, outputDevice.deviceName());
                 devices.push_back(d);
             }
             return devices;

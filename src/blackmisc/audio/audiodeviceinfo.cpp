@@ -17,12 +17,12 @@ namespace BlackMisc
     namespace Audio
     {
         CAudioDeviceInfo::CAudioDeviceInfo() :
-            m_type(Unknown), m_deviceIndex(invalidDeviceIndex()),
+            m_type(Unknown),
             m_hostName(QHostInfo::localHostName())
         { }
 
-        CAudioDeviceInfo::CAudioDeviceInfo(DeviceType type, const int index, const QString &name) :
-            m_type(type), m_deviceIndex(index),
+        CAudioDeviceInfo::CAudioDeviceInfo(DeviceType type, const QString &name) :
+            m_type(type),
             m_deviceName(name), m_hostName(QHostInfo::localHostName())
         { }
 

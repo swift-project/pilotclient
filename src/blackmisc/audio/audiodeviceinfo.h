@@ -41,14 +41,10 @@ namespace BlackMisc
 
             //!
             //! Default constructor.
-            //! \note If m_deviceIndex is -1, default should be used. However on Windows this doesnt work. Needs to be checked in Vatlib.
             CAudioDeviceInfo();
 
             //! Constructor.
-            CAudioDeviceInfo(DeviceType type, const int index, const QString &getName);
-
-            //! Get the device index
-            int getIndex() const { return m_deviceIndex; }
+            CAudioDeviceInfo(DeviceType type, const QString &getName);
 
             //! Get the device name
             const QString &getName() const { return m_deviceName; }
@@ -60,7 +56,7 @@ namespace BlackMisc
             DeviceType getType() const { return m_type; }
 
             //! Valid audio device object?
-            bool isValid() const { return m_deviceIndex != Unknown && !m_deviceName.isEmpty(); }
+            bool isValid() const { return !m_deviceName.isEmpty(); }
 
             //! To QAudioDeviceInfo
             QAudioDeviceInfo toAudioDeviceInfo() const;
@@ -68,22 +64,16 @@ namespace BlackMisc
             //! Convert the Qt type
             static DeviceType fromQtMode(QAudio::Mode m);
 
-            //! Device index for default device
-            static int defaultDeviceIndex() {return -1;}
-
-            //! Invalid device index
-            static int invalidDeviceIndex() {return -2;}
-
             //! Default output device
             static CAudioDeviceInfo getDefaultOutputDevice()
             {
-                return CAudioDeviceInfo(OutputDevice, defaultDeviceIndex(), "default");
+                return CAudioDeviceInfo(OutputDevice, "default");
             }
 
             //! Default input device
             static CAudioDeviceInfo getDefaultInputDevice()
             {
-                return CAudioDeviceInfo(InputDevice, defaultDeviceIndex(), "default");
+                return CAudioDeviceInfo(InputDevice, "default");
             }
 
             //! \copydoc BlackMisc::Mixin::String::toQString
@@ -91,14 +81,12 @@ namespace BlackMisc
 
         private:
             DeviceType m_type = Unknown; //!< Device type, @see CAudioDeviceInfo::DeviceType
-            int m_deviceIndex = -1;      //!< deviceIndex is the number is the reference for the VVL. The device is selected by this index. The managing class needs to take care, that indexes are valid.
             QString m_deviceName;        //!< Device name
             QString m_hostName;          //!< We use a DBus based system. Hence an audio device can reside on a differen computers, this here is its name
 
             BLACK_METACLASS(
                 CAudioDeviceInfo,
                 BLACK_METAMEMBER(type),
-                BLACK_METAMEMBER(deviceIndex),
                 BLACK_METAMEMBER(deviceName),
                 BLACK_METAMEMBER(hostName)
             );
