@@ -79,7 +79,7 @@ namespace BlackMisc
             for (const QAudioDeviceInfo &inputDevice : inputDevices)
             {
                 const CAudioDeviceInfo d(CAudioDeviceInfo::InputDevice, inputDevice.deviceName());
-                devices.push_back(d);
+                if (! devices.contains(d)) { devices.push_back(d); }
             }
             return devices;
         }
@@ -92,7 +92,7 @@ namespace BlackMisc
             for (const QAudioDeviceInfo &outputDevice : outputDevices)
             {
                 const CAudioDeviceInfo d(CAudioDeviceInfo::OutputDevice, outputDevice.deviceName());
-                devices.push_back(d);
+                if (! devices.contains(d)) { devices.push_back(d); }
             }
             return devices;
         }
