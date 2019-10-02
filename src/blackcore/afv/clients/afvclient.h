@@ -8,8 +8,8 @@
 
 //! \file
 
-#ifndef BLACKCORE_AFV_CLIENT_AFVCLIENT_H
-#define BLACKCORE_AFV_CLIENT_AFVCLIENT_H
+#ifndef BLACKCORE_AFV_CLIENTS_AFVCLIENT_H
+#define BLACKCORE_AFV_CLIENTS_AFVCLIENT_H
 
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/afv/connection/clientconnection.h"
@@ -68,10 +68,16 @@ namespace BlackCore
                 //! Corresponding callsign
                 QString callsign() const { return m_callsign; }
 
+                //! Is connected to network?
                 bool isConnected() const { return m_connection->isConnected(); }
+
+                //! Connection status
                 ConnectionStatus getConnectionStatus() const;
 
+                //! Connect to network
                 Q_INVOKABLE void connectTo(const QString &cid, const QString &password, const QString &callsign);
+
+                //! Disconnect from network
                 Q_INVOKABLE void disconnectFrom();
 
                 //! Audio devices @{
@@ -82,8 +88,11 @@ namespace BlackCore
                 //! Enable/disable VHF simulation, true means effects are NOT used
                 Q_INVOKABLE void setBypassEffects(bool value);
 
+                //! Client started?
                 bool isStarted() const { return m_isStarted; }
-                QDateTime getStartDateTimeUt() const { return m_startDateTimeUtc; }
+
+                //! When started
+                const QDateTime &getStartDateTimeUtc() const { return m_startDateTimeUtc; }
 
                 //! Muted @{
                 bool isMuted() const;
@@ -159,8 +168,10 @@ namespace BlackCore
                 const BlackMisc::Audio::CAudioDeviceInfo &getOutputDevice() const;
                 //! @}
 
+                //! Callsigns currently received @{
                 QString getReceivingCallsignsCom1();
                 QString getReceivingCallsignsCom2();
+                //! @}
 
             signals:
                 //! Receiving callsigns have been changed

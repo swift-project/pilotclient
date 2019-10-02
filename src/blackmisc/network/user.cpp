@@ -73,7 +73,7 @@ namespace BlackMisc
 
         QString CUser::convertToQString(bool i18n) const
         {
-            Q_UNUSED(i18n);
+            Q_UNUSED(i18n)
             if (m_realname.isEmpty()) return QStringLiteral("<no realname>");
             QString s = m_realname;
             if (this->hasId())

@@ -46,23 +46,32 @@ namespace BlackCore
                 //! Constructor
                 ApiServerConnection(const QString &address, QObject *parent = nullptr);
 
+                //! User authenticated?
                 bool isAuthenticated() const { return m_isAuthenticated; }
+
+                //! Connect to network
                 bool connectTo(const QString &username, const QString &password, const QUuid &networkVersion);
 
+                //! Add callsign to network
                 PostCallsignResponseDto addCallsign(const QString &callsign);
+
+                //! Remove callsign from network
                 void removeCallsign(const QString &callsign);
 
+                //! Update transceivers
                 void updateTransceivers(const QString &callsign, const QVector<TransceiverDto> &transceivers);
 
+                //! Force disconnect from network
                 void forceDisconnect();
 
+                //! All aliased stations
                 QVector<StationDto> getAllAliasedStations();
 
             private:
                 template<typename TResponse>
                 TResponse postNoRequest(const QString &resource)
                 {
-                    if (! m_isAuthenticated)
+                    if (!m_isAuthenticated)
                     {
                         qDebug() << "Not authenticated";
                         return {};
@@ -147,15 +156,13 @@ namespace BlackCore
                 static bool isShuttingDown();
 
                 const QString m_address;
-                QByteArray m_jwt;
-                QString m_username;
-                QString m_password;
-                QUuid m_networkVersion;
-                QDateTime m_expiryLocalUtc;
-                qint64 m_serverToUserOffsetMs;
-
-                bool m_isAuthenticated = false;
-
+                QByteArray    m_jwt;
+                QString       m_username;
+                QString       m_password;
+                QUuid         m_networkVersion;
+                QDateTime     m_expiryLocalUtc;
+                qint64        m_serverToUserOffsetMs;
+                bool          m_isAuthenticated = false;
                 QElapsedTimer *m_watch = nullptr;
             };
         } // ns
