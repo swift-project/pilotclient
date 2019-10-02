@@ -12,6 +12,7 @@
 #include "audioutilities.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/stringutils.h"
+#include <QCoreApplication>
 
 using namespace BlackMisc;
 using namespace BlackSound::Wav;
@@ -20,30 +21,53 @@ namespace BlackSound
 {
     namespace SampleProvider
     {
+        CResourceSound::CResourceSound()
+        {
+            m_data = new CResourceSoundData;
+        }
+
         CResourceSound::CResourceSound(const QString &audioFileName)
         {
-            CWavFile wavFile;
-            m_fn.clear();
-            m_samples.clear();
-            if (wavFile.open(audioFileName))
+            m_data = new CResourceSoundData;
+            m_data->fileName = audioFileName;
+        }
+
+        bool CResourceSound::load()
+        {
+            if (m_data->fileName.isEmpty()) { return false; }
+
+            QObject *parent = QCoreApplication::instance();
+            Q_ASSERT(parent);
+            CWorker *worker = CWorker::fromTask(parent, "loadResourceSound", [this]()
             {
-                if (wavFile.fileFormat().sampleType() == QAudioFormat::Float)
+                CWavFile wavFile;
+
+                m_data->samples.clear();
+                if (wavFile.open(m_data->fileName))
                 {
-                    // Not implemented
-                    // m_samples = convertFloatBytesTo16BitPCM(wavFile.audioData());
+                    if (wavFile.fileFormat().sampleType() == QAudioFormat::Float)
+                    {
+                        // Not implemented
+                        // m_samples = convertFloatBytesTo16BitPCM(wavFile.audioData());
+                    }
+                    else
+                    {
+                        m_data->samples = convertBytesTo32BitFloatPCM(wavFile.audioData());
+                    }
                 }
-                else
-                {
-                    m_samples = convertBytesTo32BitFloatPCM(wavFile.audioData());
-                }
-                m_fn = audioFileName;
-            }
+            });
+            worker->then([this]()
+            {
+                m_data->isLoaded = true;
+            });
+
+            return worker ? true : false;
         }
 
         bool CResourceSound::isSameFileName(const QString &fn) const
         {
             if (fn.isEmpty()) { return false; }
-            return stringCompare(fn, m_fn, CFileUtils::osFileNameCaseSensitivity());
+            return stringCompare(fn, m_data->fileName, CFileUtils::osFileNameCaseSensitivity());
         }
     } // ns
 } // ns

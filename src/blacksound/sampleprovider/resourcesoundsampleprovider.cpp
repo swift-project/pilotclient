@@ -15,6 +15,8 @@ namespace BlackSound
 
         int CResourceSoundSampleProvider::readSamples(QVector<float> &samples, qint64 count)
         {
+            if (! m_resourceSound.isLoaded()) { return 0; }
+
             if (count > m_tempBufferSize)
             {
                 qDebug() << "Count too large for temp buffer" << count;

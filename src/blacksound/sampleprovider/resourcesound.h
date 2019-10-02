@@ -13,33 +13,53 @@
 
 #include "blacksound/blacksoundexport.h"
 #include "blacksound/wav/wavfile.h"
+#include "blackmisc/worker.h"
 
 #include <QString>
 #include <QVector>
+#include <QExplicitlySharedDataPointer>
+#include <atomic>
 
 namespace BlackSound
 {
     namespace SampleProvider
     {
+
+        //! CResourceSound shared data
+        struct CResourceSoundData : public QSharedData
+        {
+            QString fileName; //!< file name
+            bool isLoaded = false; //!< is audio loaded
+            QVector<float> samples; //!< audio samples
+        };
+
         //! File from resources
         class CResourceSound
         {
         public:
+            //! Constructor
+            CResourceSound();
+
             //! Sound of audio file
             CResourceSound(const QString &audioFileName);
 
+            //! Load the attached resource file
+            bool load();
+
+            //! Is resource already loaded?
+            bool isLoaded() { return m_data->isLoaded; }
+
             //! Audio data
-            const QVector<float> &audioData() const { return m_samples; }
+            const QVector<float> &audioData() const { return m_data->samples; }
 
             //! Corresponding file
-            const QString &getFileName() { return m_fn; }
+            const QString &getFileName() { return m_data->fileName; }
 
             //! Is same file?
             bool isSameFileName(const QString &fn) const;
 
         private:
-            QString m_fn; //!< file name
-            QVector<float> m_samples;
+            QExplicitlySharedDataPointer<CResourceSoundData> m_data;
         };
     } // ns
 } // ns

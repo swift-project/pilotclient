@@ -23,11 +23,7 @@ namespace BlackSound
             return samples;
         }
 
-        Samples::Samples() :
-            m_crackle(CFileUtils::soundFilePathAndFileName(fnCrackle())),
-            m_click(CFileUtils::soundFilePathAndFileName(fnClick())),
-            m_whiteNoise(CFileUtils::soundFilePathAndFileName(fnWhiteNoise())),
-            m_hfWhiteNoise(CFileUtils::soundFilePathAndFileName(fnHfWhiteNoise()))
+        Samples::Samples()
         {
             this->initSounds();
         }
@@ -36,13 +32,32 @@ namespace BlackSound
         {
             const CSettings settings = m_audioSettings.get();
             QString f = settings.getNotificationFilePath(fnCrackle());
-            if (!m_crackle.isSameFileName(f)) { m_crackle = CResourceSound(f); }
+            if (!m_crackle.isSameFileName(f))
+            {
+                m_crackle = CResourceSound(f);
+                m_crackle.load();
+            }
 
             f = settings.getNotificationFilePath(fnClick());
-            if (!m_click.isSameFileName(f)) { m_click = CResourceSound(f); }
+            if (!m_click.isSameFileName(f))
+            {
+                m_click = CResourceSound(f);
+                m_click.load();
+            }
 
             f = settings.getNotificationFilePath(fnWhiteNoise());
-            if (!m_whiteNoise.isSameFileName(f)) { m_whiteNoise = CResourceSound(f); }
+            if (!m_whiteNoise.isSameFileName(f))
+            {
+                m_whiteNoise = CResourceSound(f);
+                m_whiteNoise.load();
+            }
+
+            f = settings.getNotificationFilePath(fnHfWhiteNoise());
+            if (!m_hfWhiteNoise.isSameFileName(f))
+            {
+                m_hfWhiteNoise = CResourceSound(f);
+                m_hfWhiteNoise.load();
+            }
         }
 
         void Samples::onSettingsChanged()

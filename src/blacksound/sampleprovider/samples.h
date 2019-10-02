@@ -36,7 +36,7 @@ namespace BlackSound
             const CResourceSound &crackle()    const { return m_crackle; }
             const CResourceSound &click()      const { return m_click; }
             const CResourceSound &whiteNoise() const { return m_whiteNoise; }
-            const CResourceSound hfWhiteNoise() const { return m_hfWhiteNoise; }
+            const CResourceSound &hfWhiteNoise() const { return m_hfWhiteNoise; }
             //! @}
 
             //! Play the click sound
