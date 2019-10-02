@@ -36,18 +36,39 @@ namespace BlackSound
         QTimer::singleShot(0, this, &CThreadedTonePairPlayer::playBuffer);
     }
 
+    bool CThreadedTonePairPlayer::reinitializeAudio(const CAudioDeviceInfo &device)
+    {
+        if (this->getAudioDevice() == device) { return false; }
+        {
+            QMutexLocker ml(&m_mutex);
+            m_deviceInfo = device;
+        }
+        this->initialize();
+        return true;
+    }
+
+    CAudioDeviceInfo CThreadedTonePairPlayer::getAudioDevice() const
+    {
+        QMutexLocker ml(&m_mutex);
+        return m_deviceInfo;
+    }
+
     void CThreadedTonePairPlayer::initialize()
     {
+        QMutexLocker ml(&m_mutex);
         CLogMessage(this).info(u"CThreadedTonePairPlayer for device '%1'") << m_deviceInfo.getName();
 
-        m_audioFormat.setSampleRate(44100);
-        m_audioFormat.setChannelCount(1);
-        m_audioFormat.setSampleSize(16); // 8 or 16 works
-        m_audioFormat.setCodec("audio/pcm");
-        m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
-        m_audioFormat.setSampleType(QAudioFormat::SignedInt);
+        QAudioFormat format;
+        format.setSampleRate(44100);
+        format.setChannelCount(1);
+        format.setSampleSize(16); // 8 or 16 works
+        format.setCodec("audio/pcm");
+        format.setByteOrder(QAudioFormat::LittleEndian);
+        format.setSampleType(QAudioFormat::SignedInt);
 
-        QAudioDeviceInfo selectedDevice = getHighestCompatibleOutputDevice(m_deviceInfo, m_audioFormat);
+        // find best device
+        const QAudioDeviceInfo selectedDevice = getHighestCompatibleOutputDevice(m_deviceInfo, format);
+        m_audioFormat = format;
         m_audioOutput = new QAudioOutput(selectedDevice, m_audioFormat, this);
         connect(m_audioOutput, &QAudioOutput::stateChanged, this, &CThreadedTonePairPlayer::handleStateChanged);
     }

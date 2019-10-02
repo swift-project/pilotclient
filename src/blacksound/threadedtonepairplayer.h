@@ -39,12 +39,17 @@ namespace BlackSound
         //! Destructor
         virtual ~CThreadedTonePairPlayer() override;
 
-    public slots:
         //! Play the list of tones.
         //! If the player is currently active, this call will be ignored.
         void play(int volume, const QList<BlackSound::CTonePair> &tonePairs);
 
-    protected slots:
+        //! Reinitialize audio
+        bool reinitializeAudio(const BlackMisc::Audio::CAudioDeviceInfo &device);
+
+        //! Used audio device
+        BlackMisc::Audio::CAudioDeviceInfo getAudioDevice() const;
+
+    protected:
         //! \copydoc BlackMisc::CContinuousWorker::initialize
         virtual void initialize() override;
 
@@ -65,10 +70,10 @@ namespace BlackSound
         QAudioOutput *m_audioOutput = nullptr;
         QByteArray m_bufferData;
         QBuffer m_buffer;
-        QMutex m_mutex { QMutex::Recursive };
         QAudioFormat m_audioFormat;
         QMap<CTonePair, QByteArray> m_tonePairCache;
+        mutable QMutex m_mutex { QMutex::Recursive };
     };
-}
+} // ns
 
 #endif // guard
