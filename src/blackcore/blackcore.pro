@@ -48,7 +48,6 @@ SOURCES += $$PWD/afv/connection/*.cpp
 SOURCES += $$PWD/afv/model/*.cpp
 
 LIBS *= \
-    -lvatlib \
     -lvatsimauth \
     -lsodium \
 

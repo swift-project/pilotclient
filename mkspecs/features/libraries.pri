@@ -44,7 +44,7 @@ blackgui {
 
 blackcore {
     addLibraryDependency(blackcore)
-    LIBS *= -lblackcore -lvatlib
+    LIBS *= -lblackcore
 }
 
 blacksound {

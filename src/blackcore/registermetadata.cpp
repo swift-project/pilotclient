@@ -14,7 +14,6 @@
 #include "blackcore/db/databasereader.h"
 #include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/fsd/fsdclient.h"
-#include "blackcore/voicechannel.h"
 #include "blackcore/webreaderflags.h"
 #include "blackcore/aircraftmatcher.h"
 #include "blackmisc/dbus.h"
@@ -32,7 +31,6 @@ namespace BlackCore
     {
         // not really clear when a type here has to be registered with qRegisterMetaType
         // however, does not harm if it is redundant
-        qRegisterMetaType<IVoiceChannel::ConnectionStatus>();
         qRegisterMetaType<CWebReaderFlags::WebReader>();
         qRegisterMetaType<CWebReaderFlags::WebReaderFlag>();
 
@@ -40,13 +38,11 @@ namespace BlackCore
         qDBusRegisterMetaType<Context::CLogSubscriptionPair>();
         qDBusRegisterMetaType<Context::CSettingsDictionary>();
         qDBusRegisterMetaType<BlackMisc::Network::CLoginMode>();
-        qDBusRegisterMetaType<IVoiceChannel::ConnectionStatus>();
 
         qRegisterMetaTypeStreamOperators<Context::CLogSubscriptionHash>();
         qRegisterMetaTypeStreamOperators<Context::CLogSubscriptionPair>();
         qRegisterMetaTypeStreamOperators<Context::CSettingsDictionary>();
         qRegisterMetaTypeStreamOperators<BlackMisc::Network::CLoginMode>();
-        qRegisterMetaTypeStreamOperators<IVoiceChannel::ConnectionStatus>();
 
         Db::CDatabaseReaderConfig::registerMetadata();
         Db::CDatabaseReaderConfigList::registerMetadata();

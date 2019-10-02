@@ -13,7 +13,6 @@
 
 #include "blackcoreexport.h"
 #include "contextaudio.h"
-#include "voice.h"
 
 // clazy:excludeall=const-signal-or-slot
 

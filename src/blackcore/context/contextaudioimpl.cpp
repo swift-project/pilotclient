@@ -12,9 +12,7 @@
 #include "blackcore/context/contextownaircraft.h"  // for COM integration
 #include "blackcore/context/contextsimulator.h"    // for COM intergration
 #include "blackcore/application.h"
-#include "blackcore/audiodevice.h"
 #include "blackcore/corefacade.h"
-#include "blackcore/voice.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/audio/notificationsounds.h"
@@ -301,29 +299,6 @@ namespace BlackCore
         void CContextAudio::setVoiceTransmissionComActive(bool enabled)
         {
             this->setVoiceTransmission(enabled, COMActive);
-        }
-
-        void CContextAudio::onConnectionStatusChanged(
-            IVoiceChannel::ConnectionStatus oldStatus,
-            IVoiceChannel::ConnectionStatus newStatus)
-        {
-            Q_UNUSED(oldStatus)
-
-            switch (newStatus)
-            {
-            case IVoiceChannel::Connected:
-                break;
-            case IVoiceChannel::Disconnecting: break;
-            case IVoiceChannel::Connecting: break;
-            case IVoiceChannel::ConnectingFailed:
-            case IVoiceChannel::DisconnectedError:
-                CLogMessage(this).warning(u"Voice channel disconnecting error");
-                Q_FALLTHROUGH();
-            case IVoiceChannel::Disconnected:
-                break;
-            default:
-                break;
-            }
         }
 
         void CContextAudio::changeDeviceSettings()

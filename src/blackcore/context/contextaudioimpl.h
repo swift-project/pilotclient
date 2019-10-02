@@ -15,8 +15,6 @@
 #include "blackcore/audio/audiosettings.h"
 #include "blackcore/actionbind.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackcore/voicechannel.h"
-#include "blackcore/audiomixer.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/afv/clients/afvclient.h"
 #include "blackmisc/audio/audiosettings.h"
@@ -57,11 +55,6 @@ namespace BlackMisc
 namespace BlackCore
 {
     class CCoreFacade;
-    class IAudioInputDevice;
-    class IAudioMixer;
-    class IAudioOutputDevice;
-    class IVoice;
-    class IVoiceChannel;
 
     namespace Context
     {
@@ -122,10 +115,6 @@ namespace BlackCore
             CContextAudio *registerWithDBus(BlackMisc::CDBusServer *server);
 
         private:
-            //! \copydoc IVoice::connectionStatusChanged
-            //! \sa IContextAudio::changedVoiceRooms
-            void onConnectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus);
-
             //! Enable/disable voice transmission, nornally used with hotkey @{
             void setVoiceTransmission(bool enable, BlackMisc::Audio::PTTCOM com);
             void setVoiceTransmissionCom1(bool enabled);
