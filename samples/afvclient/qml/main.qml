@@ -38,15 +38,18 @@ ApplicationWindow {
             Layout.fillWidth: false
         }
 
+        property alias mapUsername: tfUsername.text
         TextField {
             id: tfUsername
+            objectName: "loginUsername"
             width: 350
             height: 25
-            text: qsTr("1234567")
+            text: userName
             selectByMouse: true
             enabled: voiceClient.connectionStatus == 0 // Disconnected
             horizontalAlignment: Text.AlignLeft
             renderType: Text.NativeRendering
+            // text: qsTr("1234567")
         }
 
         Label {
