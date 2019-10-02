@@ -7,6 +7,10 @@
  */
 
 #include "audioutilities.h"
+#include <QAudioInput>
+#include <QAudioOutput>
+
+using namespace BlackMisc::Audio;
 
 namespace BlackSound
 {
@@ -74,6 +78,100 @@ namespace BlackSound
             output.push_back(sample / 32768.0);
         }
         return output;
+    }
+
+    QAudioDeviceInfo getLowestLatencyDevice(const CAudioDeviceInfo &device, QAudioFormat &format)
+    {
+        if (device.isDefault())
+        {
+            if (device.getType() == CAudioDeviceInfo::InputDevice) { return QAudioDeviceInfo::defaultInputDevice(); }
+            else { return QAudioDeviceInfo::defaultOutputDevice(); }
+        }
+
+        QAudio::Mode mode = device.getType() == CAudioDeviceInfo::InputDevice ? QAudio::AudioInput : QAudio::AudioOutput;
+        const QList<QAudioDeviceInfo> allQtDevices = QAudioDeviceInfo::availableDevices(mode);
+
+        // Find the one with lowest latency.
+        QList<QAudioDeviceInfo> supportedDevices;
+        for (const QAudioDeviceInfo &d : allQtDevices)
+        {
+            if (d.deviceName() == device.getName())
+            {
+                if (! d.isFormatSupported(format))
+                {
+                    // Check whether the nearest format is acceptable for our needs
+                    QAudioFormat nearestFormat = d.nearestFormat(format);
+                    if (nearestFormat.sampleRate() != format.sampleRate() ||
+                            nearestFormat.sampleSize() != format.sampleSize() ||
+                            nearestFormat.sampleType() != format.sampleType() ||
+                            nearestFormat.byteOrder() != format.byteOrder() ||
+                            nearestFormat.codec() != format.codec())
+                    {
+                        continue;
+                    }
+                }
+                supportedDevices.push_back(d);
+            }
+        }
+
+        if (supportedDevices.empty()) { return {}; }
+
+        QAudioDeviceInfo deviceWithLowestLatency = supportedDevices.at(0);
+
+        if (supportedDevices.size() > 1)
+        {
+            QAudioFormat nearestFormat = format;
+            int lowestBufferSize = std::numeric_limits<int>::max();
+            for (const QAudioDeviceInfo &d : supportedDevices)
+            {
+                int bufferSize = 0;
+                if (device.getType() == CAudioDeviceInfo::InputDevice)
+                {
+                    QAudioInput input(d, d.nearestFormat(format));
+                    input.start();
+                    input.stop();
+                    bufferSize = input.bufferSize();
+                }
+                else
+                {
+                    QAudioOutput output(d, d.nearestFormat(format));
+                    output.start();
+                    output.stop();
+                    bufferSize = output.bufferSize();
+                }
+
+                if (bufferSize < lowestBufferSize)
+                {
+                    deviceWithLowestLatency = d;
+                    nearestFormat = d.nearestFormat(format);
+                    lowestBufferSize = bufferSize;
+                }
+            }
+            format = nearestFormat;
+        }
+        return deviceWithLowestLatency;
+    }
+
+    QAudioDeviceInfo getHighestCompatibleOutputDevice(const CAudioDeviceInfo &device, QAudioFormat &format)
+    {
+        if (device.isDefault()) { return QAudioDeviceInfo::defaultOutputDevice(); }
+
+        const QList<QAudioDeviceInfo> allQtDevices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
+
+        QList<QAudioDeviceInfo> supportedDevices;
+        for (const QAudioDeviceInfo &d : allQtDevices)
+        {
+            if (d.deviceName() == device.getName())
+            {
+                if (d.isFormatSupported(format))
+                {
+                    supportedDevices.push_back(d);
+                }
+            }
+
+            if (supportedDevices.size() > 0) { return supportedDevices.at(0); }
+        }
+        return {};
     }
 
 } // ns

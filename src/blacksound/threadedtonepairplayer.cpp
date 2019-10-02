@@ -8,11 +8,13 @@
 
 #include "threadedtonepairplayer.h"
 #include "blackmisc/logmessage.h"
+#include "blacksound/audioutilities.h"
 
 #include <QTimer>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;
+using namespace BlackSound;
 
 namespace BlackSound
 {
@@ -38,36 +40,14 @@ namespace BlackSound
     {
         CLogMessage(this).info(u"CThreadedTonePairPlayer for device '%1'") << m_deviceInfo.getName();
 
-        QAudioDeviceInfo selectedDevice;
-        if (m_deviceInfo.isDefault())
-        {
-            selectedDevice = QAudioDeviceInfo::defaultOutputDevice();
-        }
-        else
-        {
-            // TODO: Add smart algorithm to find the device with exactly supports the audio format below
-            const QList<QAudioDeviceInfo> outputDevices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
-            for (const QAudioDeviceInfo &d : outputDevices)
-            {
-                if (d.deviceName() == m_deviceInfo.getName())
-                {
-                    selectedDevice = d;
-                }
-            }
-        }
+        m_audioFormat.setSampleRate(44100);
+        m_audioFormat.setChannelCount(1);
+        m_audioFormat.setSampleSize(16); // 8 or 16 works
+        m_audioFormat.setCodec("audio/pcm");
+        m_audioFormat.setByteOrder(QAudioFormat::LittleEndian);
+        m_audioFormat.setSampleType(QAudioFormat::SignedInt);
 
-        QAudioFormat format;
-        format.setSampleRate(44100);
-        format.setChannelCount(1);
-        format.setSampleSize(16); // 8 or 16 works
-        format.setCodec("audio/pcm");
-        format.setByteOrder(QAudioFormat::LittleEndian);
-        format.setSampleType(QAudioFormat::SignedInt);
-        if (!selectedDevice.isFormatSupported(format))
-        {
-            format = selectedDevice.nearestFormat(format);
-        }
-        m_audioFormat = format;
+        QAudioDeviceInfo selectedDevice = getHighestCompatibleOutputDevice(m_deviceInfo, m_audioFormat);
         m_audioOutput = new QAudioOutput(selectedDevice, m_audioFormat, this);
         connect(m_audioOutput, &QAudioOutput::stateChanged, this, &CThreadedTonePairPlayer::handleStateChanged);
     }

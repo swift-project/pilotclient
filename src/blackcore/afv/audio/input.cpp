@@ -19,6 +19,7 @@
 #include <cmath>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Audio;
 using namespace BlackSound;
 
 namespace BlackCore
@@ -27,6 +28,7 @@ namespace BlackCore
     {
         namespace Audio
         {
+
             CAudioInputBuffer::CAudioInputBuffer(QObject *parent) :
                 QIODevice(parent)
             {}
@@ -34,7 +36,6 @@ namespace BlackCore
             void CAudioInputBuffer::start()
             {
                 open(QIODevice::WriteOnly | QIODevice::Unbuffered);
-                // m_timerId = startTimer(5, Qt::PreciseTimer);
             }
 
             void CAudioInputBuffer::stop()
@@ -91,28 +92,11 @@ namespace BlackCore
                 m_encoder.setBitRate(16 * 1024);
             }
 
-            void CInput::start(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice)
+            void CInput::start(const CAudioDeviceInfo &inputDevice)
             {
                 if (m_started) { return; }
 
                 m_device = inputDevice;
-                QAudioDeviceInfo selectedDevice;
-                if (inputDevice.isDefault())
-                {
-                    selectedDevice = QAudioDeviceInfo::defaultInputDevice();
-                }
-                else
-                {
-                    // TODO: Add smart algorithm to find the device with lowest latency
-                    const QList<QAudioDeviceInfo> inputDevices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
-                    for (const QAudioDeviceInfo &d : inputDevices)
-                    {
-                        if (d.deviceName() == inputDevice.getName())
-                        {
-                            selectedDevice = d;
-                        }
-                    }
-                }
 
                 m_inputFormat.setSampleRate(m_sampleRate);
                 m_inputFormat.setChannelCount(1);
@@ -120,21 +104,8 @@ namespace BlackCore
                 m_inputFormat.setSampleType(QAudioFormat::SignedInt);
                 m_inputFormat.setByteOrder(QAudioFormat::LittleEndian);
                 m_inputFormat.setCodec("audio/pcm");
-                if (!selectedDevice.isFormatSupported(m_inputFormat))
-                {
-                    m_inputFormat = selectedDevice.nearestFormat(m_inputFormat);
-                    const QString w =
-                        selectedDevice.deviceName() %
-                        ": Default INPUT format not supported - trying to use nearest" %
-                        " Sample rate: " % QString::number(m_inputFormat.sampleRate()) %
-                        " Sample size: " % QString::number(m_inputFormat.sampleSize()) %
-                        " Sample type: " % QString::number(m_inputFormat.sampleType()) %
-                        " Byte order: "  % QString::number(m_inputFormat.byteOrder())  %
-                        " Codec: " % m_inputFormat.codec() %
-                        " Channel count: " % QString::number(m_inputFormat.channelCount());
-                    CLogMessage(this).warning(w);
-                }
 
+                QAudioDeviceInfo selectedDevice = getLowestLatencyDevice(inputDevice, m_inputFormat);
                 m_audioInput.reset(new QAudioInput(selectedDevice, m_inputFormat));
                 m_audioInputBuffer.start();
 

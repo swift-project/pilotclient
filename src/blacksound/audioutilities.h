@@ -12,6 +12,9 @@
 #define BLACKSOUND_AUDIOUTILITIES_H
 
 #include "blacksound/blacksoundexport.h"
+#include "blackmisc/audio/audiodeviceinfo.h"
+
+#include <QAudioDeviceInfo>
 #include <QByteArray>
 #include <QVector>
 
@@ -24,6 +27,10 @@ namespace BlackSound
     BLACKSOUND_EXPORT QVector<float> convertFromMonoToStereo(const QVector<float> &mono);
     BLACKSOUND_EXPORT QVector<qint16> convertFromStereoToMono(const QVector<qint16> &stereo);
     BLACKSOUND_EXPORT QVector<float> convertFromShortToFloat(const QVector<qint16> &input);
+
+    BLACKSOUND_EXPORT QAudioDeviceInfo getLowestLatencyDevice(const BlackMisc::Audio::CAudioDeviceInfo &device, QAudioFormat &format);
+    BLACKSOUND_EXPORT QAudioDeviceInfo getHighestCompatibleOutputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device, QAudioFormat &format);
+
     //! @}
 } // ns
 

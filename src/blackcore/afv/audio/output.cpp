@@ -90,23 +90,6 @@ namespace BlackCore
                 connect(m_audioOutputBuffer, &CAudioOutputBuffer::outputVolumeStream, this, &Output::outputVolumeStream);
 
                 m_device = outputDevice;
-                QAudioDeviceInfo selectedDevice;
-                if (outputDevice.isDefault())
-                {
-                    selectedDevice = QAudioDeviceInfo::defaultOutputDevice();
-                }
-                else
-                {
-                    // TODO: Add smart algorithm to find the device with lowest latency
-                    const QList<QAudioDeviceInfo> outputDevices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
-                    for (const QAudioDeviceInfo &d : outputDevices)
-                    {
-                        if (d.deviceName() == outputDevice.getName())
-                        {
-                            selectedDevice = d;
-                        }
-                    }
-                }
 
                 QAudioFormat outputFormat;
                 outputFormat.setSampleRate(48000);
@@ -116,23 +99,8 @@ namespace BlackCore
                 outputFormat.setByteOrder(QAudioFormat::LittleEndian);
                 outputFormat.setCodec("audio/pcm");
 
-                if (!selectedDevice.isFormatSupported(outputFormat))
-                {
-                    outputFormat = selectedDevice.nearestFormat(outputFormat);
-                    const QString w =
-                        selectedDevice.deviceName() %
-                        ": Default OUTPUT format not supported - trying to use nearest" %
-                        " Sample rate: " % QString::number(outputFormat.sampleRate()) %
-                        " Sample size: " % QString::number(outputFormat.sampleSize()) %
-                        " Sample type: " % QString::number(outputFormat.sampleType()) %
-                        " Byte order: "  % QString::number(outputFormat.byteOrder())  %
-                        " Codec: " % outputFormat.codec() %
-                        " Channel count: " % QString::number(outputFormat.channelCount());
-                    CLogMessage(this).warning(w);
-                }
-
+                QAudioDeviceInfo selectedDevice = getLowestLatencyDevice(outputDevice, outputFormat);
                 m_audioOutputCom.reset(new QAudioOutput(selectedDevice, outputFormat));
-                // m_audioOutput->setBufferSize(bufferSize);
                 m_audioOutputBuffer->open(QIODevice::ReadWrite | QIODevice::Unbuffered);
                 m_audioOutputBuffer->setAudioFormat(outputFormat);
                 m_audioOutputCom->start(m_audioOutputBuffer);
