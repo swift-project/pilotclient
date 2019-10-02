@@ -42,11 +42,6 @@ namespace BlackSound
             void setGain(double gain) { m_gain = gain; }
             //! @}
 
-            //! Temp buffer @{
-            QVector<float> getTempBuffer() const { return m_tempBuffer; }
-            void setTempBuffer(const QVector<float> &value) { m_tempBuffer = value; }
-            //! @}
-
         private:
             double m_gain    = 1.0;
             bool   m_looping = false;
