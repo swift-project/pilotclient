@@ -15,6 +15,7 @@
 #include <QtGlobal>
 #include <QStringBuilder>
 #include <QDebug>
+#include <QAudioDeviceInfo>
 #include <cmath>
 
 using namespace BlackMisc;
@@ -90,9 +91,28 @@ namespace BlackCore
                 m_encoder.setBitRate(16 * 1024);
             }
 
-            void CInput::start(const QAudioDeviceInfo &inputDevice)
+            void CInput::start(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice)
             {
                 if (m_started) { return; }
+
+                m_device = inputDevice;
+                QAudioDeviceInfo selectedDevice;
+                if (inputDevice.isDefault())
+                {
+                    selectedDevice = QAudioDeviceInfo::defaultInputDevice();
+                }
+                else
+                {
+                    // TODO: Add smart algorithm to find the device with lowest latency
+                    const QList<QAudioDeviceInfo> inputDevices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
+                    for (const QAudioDeviceInfo &d : inputDevices)
+                    {
+                        if (d.deviceName() == inputDevice.getName())
+                        {
+                            selectedDevice = d;
+                        }
+                    }
+                }
 
                 m_inputFormat.setSampleRate(m_sampleRate);
                 m_inputFormat.setChannelCount(1);
@@ -100,11 +120,11 @@ namespace BlackCore
                 m_inputFormat.setSampleType(QAudioFormat::SignedInt);
                 m_inputFormat.setByteOrder(QAudioFormat::LittleEndian);
                 m_inputFormat.setCodec("audio/pcm");
-                if (!inputDevice.isFormatSupported(m_inputFormat))
+                if (!selectedDevice.isFormatSupported(m_inputFormat))
                 {
-                    m_inputFormat = inputDevice.nearestFormat(m_inputFormat);
+                    m_inputFormat = selectedDevice.nearestFormat(m_inputFormat);
                     const QString w =
-                        inputDevice.deviceName() %
+                        selectedDevice.deviceName() %
                         ": Default INPUT format not supported - trying to use nearest" %
                         " Sample rate: " % QString::number(m_inputFormat.sampleRate()) %
                         " Sample size: " % QString::number(m_inputFormat.sampleSize()) %
@@ -115,7 +135,7 @@ namespace BlackCore
                     CLogMessage(this).warning(w);
                 }
 
-                m_audioInput.reset(new QAudioInput(inputDevice, m_inputFormat));
+                m_audioInput.reset(new QAudioInput(selectedDevice, m_inputFormat));
                 m_audioInputBuffer.start();
 
                 m_audioInput->start(&m_audioInputBuffer);

@@ -10,12 +10,13 @@
 #include <QTimer>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Audio;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackSound
 {
-    CSelcalPlayer::CSelcalPlayer(const QAudioDeviceInfo &device, QObject *parent)
+    CSelcalPlayer::CSelcalPlayer(const CAudioDeviceInfo &device, QObject *parent)
         : QObject(parent),
           m_threadedPlayer(this, "CSelcalPlayer", device)
     {

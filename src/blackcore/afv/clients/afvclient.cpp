@@ -106,12 +106,12 @@ namespace BlackCore
 
             QStringList CAfvClient::availableInputDevices() const
             {
-                return CAudioDeviceInfoList::allQtInputDevices().getDeviceNames();
+                return CAudioDeviceInfoList::allInputDevices().getDeviceNames();
             }
 
             QStringList CAfvClient::availableOutputDevices() const
             {
-                return CAudioDeviceInfoList::allQtOutputDevices().getDeviceNames();
+                return CAudioDeviceInfoList::allOutputDevices().getDeviceNames();
             }
 
             void CAfvClient::setBypassEffects(bool value)
@@ -132,14 +132,14 @@ namespace BlackCore
                 Q_UNUSED(mute)
             }
 
-            bool CAfvClient::restartWithNewDevices(const QAudioDeviceInfo &inputDevice, const QAudioDeviceInfo &outputDevice)
+            bool CAfvClient::restartWithNewDevices(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice)
             {
                 this->stop();
                 this->start(inputDevice, outputDevice, allTransceiverIds());
                 return true;
             }
 
-            void CAfvClient::start(const QAudioDeviceInfo &inputDevice, const QAudioDeviceInfo &outputDevice, const QVector<quint16> &transceiverIDs)
+            void CAfvClient::start(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice, const QVector<quint16> &transceiverIDs)
             {
                 if (m_isStarted)
                 {
@@ -154,21 +154,27 @@ namespace BlackCore
                 outputSampleProvider = new CVolumeSampleProvider(soundcardSampleProvider, this);
                 outputSampleProvider->setVolume(m_outputVolume);
 
-                m_output->start(outputDevice.isNull() ? QAudioDeviceInfo::defaultOutputDevice() : outputDevice, outputSampleProvider);
-                m_input->start(inputDevice.isNull()   ? QAudioDeviceInfo::defaultInputDevice()  : inputDevice);
+                m_output->start(outputDevice, outputSampleProvider);
+                m_input->start(inputDevice);
 
                 m_startDateTimeUtc = QDateTime::currentDateTimeUtc();
                 m_connection->setReceiveAudio(true);
                 m_voiceServerPositionTimer->start(5000);
                 this->onSettingsChanged(); // make sure all settings are applied
                 m_isStarted = true;
-                CLogMessage(this).info(u"Started [Input: %1] [Output: %2]") << inputDevice.deviceName() << outputDevice.deviceName();
+                CLogMessage(this).info(u"Started [Input: %1] [Output: %2]") << inputDevice.getName() << outputDevice.getName();
             }
 
             void CAfvClient::start(const QString &inputDeviceName, const QString &outputDeviceName)
             {
-                const QAudioDeviceInfo i = CAudioDeviceInfoList::allQtInputDevices().findByName(inputDeviceName).toAudioDeviceInfo();
-                const QAudioDeviceInfo o = CAudioDeviceInfoList::allQtOutputDevices().findByName(outputDeviceName).toAudioDeviceInfo();
+                if (QThread::currentThread() != this->thread())
+                {
+                    QMetaObject::invokeMethod(this, "start", Q_ARG(QString, inputDeviceName), Q_ARG(QString, outputDeviceName));
+                    return;
+                }
+
+                const CAudioDeviceInfo i(CAudioDeviceInfo::InputDevice, inputDeviceName);
+                const CAudioDeviceInfo o(CAudioDeviceInfo::OutputDevice, outputDeviceName);
                 this->start(i, o, allTransceiverIds());
             }
 
@@ -581,17 +587,17 @@ namespace BlackCore
                 }
             }
 
-            const QAudioDeviceInfo &CAfvClient::getInputDevice() const
+            const CAudioDeviceInfo &CAfvClient::getInputDevice() const
             {
                 if (m_input) { return m_input->device(); }
-                static const QAudioDeviceInfo null = QAudioDeviceInfo();
-                return null;
+                static const CAudioDeviceInfo nullDevice;
+                return nullDevice;
             }
 
-            const QAudioDeviceInfo &CAfvClient::getOutputDevice() const
+            const CAudioDeviceInfo &CAfvClient::getOutputDevice() const
             {
                 if (m_output) { return m_output->device(); }
-                static const QAudioDeviceInfo nullDevice = QAudioDeviceInfo();
+                static const CAudioDeviceInfo nullDevice;
                 return nullDevice;
             }
 

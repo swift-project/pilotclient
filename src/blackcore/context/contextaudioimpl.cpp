@@ -26,7 +26,6 @@
 #include "blackmisc/simplecommandparser.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/verify.h"
-#include "blacksound/soundgenerator.h"
 
 #include <QTimer>
 #include <QtGlobal>
@@ -58,7 +57,7 @@ namespace BlackCore
         {
             const CSettings as = m_audioSettings.getThreadLocal();
             this->setVoiceOutputVolume(as.getOutVolume());
-            m_selcalPlayer = new CSelcalPlayer(QAudioDeviceInfo::defaultOutputDevice(), this);
+            m_selcalPlayer = new CSelcalPlayer(CAudioDeviceInfo::getDefaultOutputDevice(), this);
 
             connect(&m_voiceClient, &CAfvClient::ptt, this, &CContextAudio::ptt);
 
@@ -94,7 +93,7 @@ namespace BlackCore
         CAudioDeviceInfoList CContextAudio::getAudioDevices() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return CAudioDeviceInfoList::allQtDevices();
+            return CAudioDeviceInfoList::allDevices();
         }
 
         CAudioDeviceInfoList CContextAudio::getCurrentAudioDevices() const
@@ -102,13 +101,11 @@ namespace BlackCore
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
 
             // either the devices really used, or settings
-            CAudioDeviceInfo inputDevice = CAudioDeviceInfoList::fromQtInputDevice(m_voiceClient.getInputDevice());
-            if (!inputDevice.isValid()) { inputDevice = CAudioDeviceInfoList::allQtInputDevices().findByName(m_inputDeviceSetting.get()); }
-            if (!inputDevice.isValid()) { inputDevice = CAudioDeviceInfoList::qtDefaultInputDevice(); }
+            CAudioDeviceInfo inputDevice = m_voiceClient.getInputDevice();
+            if (!inputDevice.isValid()) { inputDevice = CAudioDeviceInfo::getDefaultInputDevice(); }
 
-            CAudioDeviceInfo outputDevice = CAudioDeviceInfoList::fromQtOutputDevice(m_voiceClient.getOutputDevice());
-            if (!outputDevice.isValid()) { outputDevice = CAudioDeviceInfoList::allQtOutputDevices().findByName(m_outputDeviceSetting.get()); }
-            if (!outputDevice.isValid()) { outputDevice = CAudioDeviceInfoList::qtDefaultOutputDevice(); }
+            CAudioDeviceInfo outputDevice = m_voiceClient.getOutputDevice();
+            if (!outputDevice.isValid()) { outputDevice = CAudioDeviceInfo::getDefaultOutputDevice(); }
 
             CAudioDeviceInfoList devices;
             devices.push_back(inputDevice);
@@ -121,7 +118,7 @@ namespace BlackCore
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << inputDevice << outputDevice; }
             if (!inputDevice.getName().isEmpty())  { m_inputDeviceSetting.setAndSave(inputDevice.getName()); }
             if (!outputDevice.getName().isEmpty()) { m_outputDeviceSetting.setAndSave(outputDevice.getName()); }
-            const bool changed = m_voiceClient.restartWithNewDevices(inputDevice.toAudioDeviceInfo(), outputDevice.toAudioDeviceInfo());
+            const bool changed = m_voiceClient.restartWithNewDevices(inputDevice, outputDevice);
             if (changed)
             {
                 emit this->changedSelectedAudioDevices(this->getCurrentAudioDevices());
@@ -392,7 +389,7 @@ namespace BlackCore
             {
                 const CUser connectedUser = this->getIContextNetwork()->getConnectedServer().getUser();
                 m_voiceClient.connectTo(connectedUser.getId(), connectedUser.getPassword(), connectedUser.getCallsign().asString());
-                m_voiceClient.start(QAudioDeviceInfo::defaultInputDevice(), QAudioDeviceInfo::defaultOutputDevice(), {0, 1});
+                m_voiceClient.start(CAudioDeviceInfo::getDefaultInputDevice(), CAudioDeviceInfo::getDefaultOutputDevice(), {0, 1});
             }
             else if (to.isDisconnected())
             {

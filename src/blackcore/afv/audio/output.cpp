@@ -17,6 +17,7 @@
 #include <cmath>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Audio;
 using namespace BlackSound;
 using namespace BlackSound::SampleProvider;
 
@@ -81,10 +82,31 @@ namespace BlackCore
             Output::Output(QObject *parent) : QObject(parent)
             { }
 
-            void Output::start(const QAudioDeviceInfo &outputDevice, ISampleProvider *sampleProvider)
+            void Output::start(const CAudioDeviceInfo &outputDevice, ISampleProvider *sampleProvider)
             {
+                if (m_started) { return; }
+
                 m_audioOutputBuffer = new CAudioOutputBuffer(sampleProvider, this);
                 connect(m_audioOutputBuffer, &CAudioOutputBuffer::outputVolumeStream, this, &Output::outputVolumeStream);
+
+                m_device = outputDevice;
+                QAudioDeviceInfo selectedDevice;
+                if (outputDevice.isDefault())
+                {
+                    selectedDevice = QAudioDeviceInfo::defaultOutputDevice();
+                }
+                else
+                {
+                    // TODO: Add smart algorithm to find the device with lowest latency
+                    const QList<QAudioDeviceInfo> outputDevices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
+                    for (const QAudioDeviceInfo &d : outputDevices)
+                    {
+                        if (d.deviceName() == outputDevice.getName())
+                        {
+                            selectedDevice = d;
+                        }
+                    }
+                }
 
                 QAudioFormat outputFormat;
                 outputFormat.setSampleRate(48000);
@@ -94,11 +116,11 @@ namespace BlackCore
                 outputFormat.setByteOrder(QAudioFormat::LittleEndian);
                 outputFormat.setCodec("audio/pcm");
 
-                if (!outputDevice.isFormatSupported(outputFormat))
+                if (!selectedDevice.isFormatSupported(outputFormat))
                 {
-                    outputFormat = outputDevice.nearestFormat(outputFormat);
+                    outputFormat = selectedDevice.nearestFormat(outputFormat);
                     const QString w =
-                        outputDevice.deviceName() %
+                        selectedDevice.deviceName() %
                         ": Default OUTPUT format not supported - trying to use nearest" %
                         " Sample rate: " % QString::number(outputFormat.sampleRate()) %
                         " Sample size: " % QString::number(outputFormat.sampleSize()) %
@@ -109,7 +131,7 @@ namespace BlackCore
                     CLogMessage(this).warning(w);
                 }
 
-                m_audioOutputCom.reset(new QAudioOutput(outputDevice, outputFormat));
+                m_audioOutputCom.reset(new QAudioOutput(selectedDevice, outputFormat));
                 // m_audioOutput->setBufferSize(bufferSize);
                 m_audioOutputBuffer->open(QIODevice::ReadWrite | QIODevice::Unbuffered);
                 m_audioOutputBuffer->setAudioFormat(outputFormat);

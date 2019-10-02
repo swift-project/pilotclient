@@ -71,7 +71,7 @@ namespace BlackMisc
             return names;
         }
 
-        CAudioDeviceInfoList CAudioDeviceInfoList::allQtInputDevices()
+        CAudioDeviceInfoList CAudioDeviceInfoList::allInputDevices()
         {
             const QList<QAudioDeviceInfo> inputDevices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
             CAudioDeviceInfoList devices;
@@ -84,7 +84,7 @@ namespace BlackMisc
             return devices;
         }
 
-        CAudioDeviceInfoList CAudioDeviceInfoList::allQtOutputDevices()
+        CAudioDeviceInfoList CAudioDeviceInfoList::allOutputDevices()
         {
             const QList<QAudioDeviceInfo> outputDevices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
             CAudioDeviceInfoList devices;
@@ -97,41 +97,11 @@ namespace BlackMisc
             return devices;
         }
 
-        CAudioDeviceInfoList CAudioDeviceInfoList::allQtDevices()
+        CAudioDeviceInfoList CAudioDeviceInfoList::allDevices()
         {
-            CAudioDeviceInfoList i = allQtInputDevices();
-            i.push_back(allQtOutputDevices());
+            CAudioDeviceInfoList i = allInputDevices();
+            i.push_back(allOutputDevices());
             return i;
-        }
-
-        CAudioDeviceInfo CAudioDeviceInfoList::fromQtInputDevice(const QAudioDeviceInfo &device)
-        {
-            const CAudioDeviceInfoList dl = CAudioDeviceInfoList::allQtInputDevices();
-            for (const CAudioDeviceInfo &d : dl)
-            {
-                if (d.getName() == device.deviceName()) { return d; }
-            }
-            return CAudioDeviceInfo();
-        }
-
-        CAudioDeviceInfo CAudioDeviceInfoList::fromQtOutputDevice(const QAudioDeviceInfo &device)
-        {
-            const CAudioDeviceInfoList dl = CAudioDeviceInfoList::allQtOutputDevices();
-            for (const CAudioDeviceInfo &d : dl)
-            {
-                if (d.getName() == device.deviceName()) { return d; }
-            }
-            return CAudioDeviceInfo();
-        }
-
-        CAudioDeviceInfo CAudioDeviceInfoList::qtDefaultInputDevice()
-        {
-            return fromQtInputDevice(QAudioDeviceInfo::defaultInputDevice());
-        }
-
-        CAudioDeviceInfo CAudioDeviceInfoList::qtDefaultOutputDevice()
-        {
-            return fromQtOutputDevice(QAudioDeviceInfo::defaultOutputDevice());
         }
 
     } // namespace

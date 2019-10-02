@@ -13,8 +13,8 @@
 
 #include "blacksound/sampleprovider/bufferedwaveprovider.h"
 #include "blacksound/codecs/opusencoder.h"
+#include "blackmisc/audio/audiodeviceinfo.h"
 
-#include <QAudioDeviceInfo>
 #include <QAudioInput>
 #include <QString>
 #include <QDateTime>
@@ -70,7 +70,6 @@ namespace BlackCore
 
             struct InputVolumeStreamArgs
             {
-                QAudioDeviceInfo DeviceNumber;
                 double PeakRaw = 0.0;
                 double PeakDB  = -1.0 * std::numeric_limits<double>::infinity();
                 double PeakVU  = 0.0;
@@ -101,13 +100,13 @@ namespace BlackCore
                 bool started() const { return m_started; }
 
                 //! Start
-                void start(const QAudioDeviceInfo &inputDevice);
+                void start(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice);
 
                 //! Stop
                 void stop();
 
                 //! Corresponding device
-                const QAudioDeviceInfo &device() const { return m_device; }
+                const BlackMisc::Audio::CAudioDeviceInfo &device() const { return m_device; }
 
             signals:
                 //! Volume stream data
@@ -124,7 +123,7 @@ namespace BlackCore
 
                 BlackSound::Codecs::COpusEncoder m_encoder;
                 QScopedPointer<QAudioInput> m_audioInput;
-                QAudioDeviceInfo m_device;
+                BlackMisc::Audio::CAudioDeviceInfo m_device;
                 QAudioFormat m_inputFormat;
 
                 bool m_started = false;

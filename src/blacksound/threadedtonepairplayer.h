@@ -13,9 +13,9 @@
 
 #include "blacksoundexport.h"
 #include "blacksound/tonepair.h"
+#include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/worker.h"
 
-#include <QAudioDeviceInfo>
 #include <QAudioOutput>
 #include <QBuffer>
 #include <QMap>
@@ -34,7 +34,7 @@ namespace BlackSound
 
     public:
         //! Constructor
-        CThreadedTonePairPlayer(QObject *owner, const QString &name, const QAudioDeviceInfo &device = QAudioDeviceInfo::defaultOutputDevice());
+        CThreadedTonePairPlayer(QObject *owner, const QString &name, const BlackMisc::Audio::CAudioDeviceInfo &device);
 
         //! Destructor
         virtual ~CThreadedTonePairPlayer() override;
@@ -61,7 +61,7 @@ namespace BlackSound
         //! \li sample type == signed int
         void writeAmplitudeToBuffer(double amplitude, unsigned char *bufferPointer);
 
-        QAudioDeviceInfo m_deviceInfo;
+        BlackMisc::Audio::CAudioDeviceInfo m_deviceInfo;
         QAudioOutput *m_audioOutput = nullptr;
         QByteArray m_bufferData;
         QBuffer m_buffer;

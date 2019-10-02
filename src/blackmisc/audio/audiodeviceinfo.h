@@ -44,7 +44,7 @@ namespace BlackMisc
             CAudioDeviceInfo();
 
             //! Constructor.
-            CAudioDeviceInfo(DeviceType type, const QString &getName);
+            CAudioDeviceInfo(DeviceType type, const QString &name);
 
             //! Get the device name
             const QString &getName() const { return m_deviceName; }
@@ -58,8 +58,8 @@ namespace BlackMisc
             //! Valid audio device object?
             bool isValid() const { return !m_deviceName.isEmpty(); }
 
-            //! To QAudioDeviceInfo
-            QAudioDeviceInfo toAudioDeviceInfo() const;
+            //! Is this a default device?
+            bool isDefault() const { return m_deviceName == "default"; }
 
             //! Convert the Qt type
             static DeviceType fromQtMode(QAudio::Mode m);

@@ -54,14 +54,10 @@ namespace BlackMisc
             //! All names
             QStringList getDeviceNames() const;
 
-            //! List based on the Qt devices @{
-            static CAudioDeviceInfoList allQtInputDevices();
-            static CAudioDeviceInfoList allQtOutputDevices();
-            static CAudioDeviceInfoList allQtDevices();
-            static CAudioDeviceInfo fromQtInputDevice(const QAudioDeviceInfo &device);
-            static CAudioDeviceInfo fromQtOutputDevice(const QAudioDeviceInfo &device);
-            static CAudioDeviceInfo qtDefaultInputDevice();
-            static CAudioDeviceInfo qtDefaultOutputDevice();
+            //! Lists of all available devices @{
+            static CAudioDeviceInfoList allInputDevices();
+            static CAudioDeviceInfoList allOutputDevices();
+            static CAudioDeviceInfoList allDevices();
             //! @}
         };
     } //namespace

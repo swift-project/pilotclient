@@ -14,10 +14,9 @@
 #include "blacksound/threadedtonepairplayer.h"
 #include "blacksound/tonepair.h"
 #include "blacksoundexport.h"
+#include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/aviation/selcal.h"
 #include "blackmisc/worker.h"
-
-#include <QAudioDeviceInfo>
 
 namespace BlackSound
 {
@@ -28,7 +27,7 @@ namespace BlackSound
 
     public:
         //! Constructor
-        CSelcalPlayer(const QAudioDeviceInfo &device = QAudioDeviceInfo::defaultOutputDevice(), QObject *parent = nullptr);
+        CSelcalPlayer(const BlackMisc::Audio::CAudioDeviceInfo &device, QObject *parent = nullptr);
 
         //! Destructor
         virtual ~CSelcalPlayer() override;

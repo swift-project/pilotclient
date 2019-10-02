@@ -23,11 +23,11 @@
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/audio/ptt.h"
+#include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/settingscache.h"
 
-#include <QAudioDeviceInfo>
 #include <QDateTime>
 #include <QAudioInput>
 #include <QAudioOutput>
@@ -90,8 +90,8 @@ namespace BlackCore
                 void setMuted(bool mute);
                 //! @}
 
-                bool restartWithNewDevices(const QAudioDeviceInfo &inputDevice, const QAudioDeviceInfo &outputDevice);
-                void start(const QAudioDeviceInfo &inputDevice, const QAudioDeviceInfo &outputDevice, const QVector<quint16> &transceiverIDs);
+                bool restartWithNewDevices(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
+                void start(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice, const QVector<quint16> &transceiverIDs);
                 Q_INVOKABLE void start(const QString &inputDeviceName, const QString &outputDeviceName);
                 void stop();
 
@@ -155,9 +155,12 @@ namespace BlackCore
                 //! @}
 
                 //! Recently used device @{
-                const QAudioDeviceInfo &getInputDevice() const;
-                const QAudioDeviceInfo &getOutputDevice() const;
+                const BlackMisc::Audio::CAudioDeviceInfo &getInputDevice() const;
+                const BlackMisc::Audio::CAudioDeviceInfo &getOutputDevice() const;
                 //! @}
+
+                QString getReceivingCallsignsCom1();
+                QString getReceivingCallsignsCom2();
 
             signals:
                 //! Receiving callsigns have been changed
@@ -183,8 +186,7 @@ namespace BlackCore
                 void audioOutDataAvailable(const AudioRxOnTransceiversDto &dto);
                 void inputVolumeStream(const Audio::InputVolumeStreamArgs &args);
                 void outputVolumeStream(const Audio::OutputVolumeStreamArgs &args);
-                QString getReceivingCallsignsCom1();
-                QString getReceivingCallsignsCom2();
+
 
                 void inputOpusDataAvailable();
 

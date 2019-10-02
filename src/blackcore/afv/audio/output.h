@@ -12,9 +12,9 @@
 #define BLACKCORE_AFV_AUDIO_OUTPUT_H
 
 #include "blacksound/sampleprovider/sampleprovider.h"
+#include "blackmisc/audio/audiodeviceinfo.h"
 
 #include <QObject>
-#include <QAudioDeviceInfo>
 #include <QAudioOutput>
 
 namespace BlackCore
@@ -26,7 +26,6 @@ namespace BlackCore
             //! Stream args
             struct OutputVolumeStreamArgs
             {
-                QAudioDeviceInfo DeviceNumber;
                 double PeakRaw = 0.0;
                 double PeakDB  = -1 * std::numeric_limits<double>::infinity();
                 double PeakVU  = 0.0;
@@ -82,13 +81,13 @@ namespace BlackCore
                 }
 
                 //! Start output
-                void start(const QAudioDeviceInfo &outputDevice, BlackSound::SampleProvider::ISampleProvider *sampleProvider);
+                void start(const BlackMisc::Audio::CAudioDeviceInfo &outputDevice, BlackSound::SampleProvider::ISampleProvider *sampleProvider);
 
                 //! Stop output
                 void stop();
 
                 //! Corresponding device
-                const QAudioDeviceInfo &device() const { return m_device; }
+                const BlackMisc::Audio::CAudioDeviceInfo &device() const { return m_device; }
 
             signals:
                 //! Streaming data
@@ -97,7 +96,7 @@ namespace BlackCore
             private:
                 bool m_started = false;
 
-                QAudioDeviceInfo m_device;
+                BlackMisc::Audio::CAudioDeviceInfo m_device;
                 QScopedPointer<QAudioOutput> m_audioOutputCom;
                 CAudioOutputBuffer *m_audioOutputBuffer = nullptr;
             };
