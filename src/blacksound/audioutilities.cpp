@@ -23,7 +23,7 @@ namespace BlackSound
         for (int n = 0; n < inputSamples; n++)
         {
             output[n] = *reinterpret_cast<const qint16 *>(input.data() + n * 2);
-            output[n] /= 32767.0;
+            output[n] /= 32767.0f;
         }
         return output;
     }
@@ -75,7 +75,7 @@ namespace BlackSound
         QVector<float> output;
         for (auto sample : input)
         {
-            output.push_back(sample / 32768.0);
+            output.push_back(sample / 32768.0f);
         }
         return output;
     }
@@ -88,7 +88,7 @@ namespace BlackSound
             else { return QAudioDeviceInfo::defaultOutputDevice(); }
         }
 
-        QAudio::Mode mode = device.getType() == CAudioDeviceInfo::InputDevice ? QAudio::AudioInput : QAudio::AudioOutput;
+        QAudio::Mode mode = (device.getType() == CAudioDeviceInfo::InputDevice) ? QAudio::AudioInput : QAudio::AudioOutput;
         const QList<QAudioDeviceInfo> allQtDevices = QAudioDeviceInfo::availableDevices(mode);
 
         // Find the one with lowest latency.
@@ -97,15 +97,15 @@ namespace BlackSound
         {
             if (d.deviceName() == device.getName())
             {
-                if (! d.isFormatSupported(format))
+                if (!d.isFormatSupported(format))
                 {
                     // Check whether the nearest format is acceptable for our needs
-                    QAudioFormat nearestFormat = d.nearestFormat(format);
-                    if (nearestFormat.sampleRate() != format.sampleRate() ||
+                    const QAudioFormat nearestFormat = d.nearestFormat(format);
+                    if (nearestFormat.sampleRate()     != format.sampleRate() ||
                             nearestFormat.sampleSize() != format.sampleSize() ||
                             nearestFormat.sampleType() != format.sampleType() ||
-                            nearestFormat.byteOrder() != format.byteOrder() ||
-                            nearestFormat.codec() != format.codec())
+                            nearestFormat.byteOrder()  != format.byteOrder()  ||
+                            nearestFormat.codec()      != format.codec())
                     {
                         continue;
                     }
@@ -155,7 +155,6 @@ namespace BlackSound
     QAudioDeviceInfo getHighestCompatibleOutputDevice(const CAudioDeviceInfo &device, QAudioFormat &format)
     {
         if (device.isDefault()) { return QAudioDeviceInfo::defaultOutputDevice(); }
-
         const QList<QAudioDeviceInfo> allQtDevices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
 
         QList<QAudioDeviceInfo> supportedDevices;
@@ -163,15 +162,26 @@ namespace BlackSound
         {
             if (d.deviceName() == device.getName())
             {
-                if (d.isFormatSupported(format))
-                {
-                    supportedDevices.push_back(d);
-                }
+                // exact match, format supported
+                if (d.isFormatSupported(format)) { return d; }
             }
-
-            if (supportedDevices.size() > 0) { return supportedDevices.at(0); }
+            supportedDevices.push_back(d);
         }
-        return {};
+
+        // no suitable device
+        if (supportedDevices.isEmpty())
+        {
+            format = QAudioFormat();
+            return QAudioDeviceInfo();
+        }
+
+        // here we could "search the best device", currently only first is taken
+        QAudioDeviceInfo usedDevice = supportedDevices.front();
+        if (!usedDevice.isFormatSupported(format))
+        {
+            format = usedDevice.nearestFormat(format);
+        }
+        return usedDevice;
     }
 
 } // ns
