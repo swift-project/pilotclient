@@ -32,17 +32,17 @@ namespace BlackCore
             };
         };
 
-        constexpr double pitchMultiplier ()
+        constexpr double pitchMultiplier()
         {
             return 256.0  / 90.0;
         }
 
-        constexpr double bankMultiplier ()
+        constexpr double bankMultiplier()
         {
             return 512.0  / 180.0;
         }
 
-        constexpr double headingMultiplier ()
+        constexpr double headingMultiplier()
         {
             return 1024.0 / 360.0;
         }
@@ -78,7 +78,7 @@ namespace BlackCore
             bank = iBank;
             heading = pbhstrct.hdg / headingMultiplier();
 
-            onGround = pbhstrct.onground == 1 ? true : false;
+            onGround = pbhstrct.onground == 1;
         }
     }
 }

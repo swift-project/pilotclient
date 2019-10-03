@@ -739,8 +739,10 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testAuth()
     {
-        quint16 m_clientId = 0xb9ba;
-        QString m_privateKey("727d1efd5cb9f8d2c28372469d922bb4");
+        quint16 clientId = 0xb9ba;
+        QString privateKey("727d1efd5cb9f8d2c28372469d922bb4");
+        Q_UNUSED(clientId)
+        Q_UNUSED(privateKey)
 
         // TODO fix with the test key
 //        QString initialChallenge("a054064f45cb6d6a6f1345");

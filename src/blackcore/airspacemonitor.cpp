@@ -6,10 +6,10 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
+#include "blackcore/airspacemonitor.h"
 #include "blackcore/vatsim/vatsimbookingreader.h"
 #include "blackcore/vatsim/vatsimdatafilereader.h"
 #include "blackcore/airspaceanalyzer.h"
-#include "blackcore/airspacemonitor.h"
 #include "blackcore/aircraftmatcher.h"
 #include "blackcore/application.h"
 #include "blackcore/webdataservices.h"

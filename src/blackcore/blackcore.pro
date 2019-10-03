@@ -47,9 +47,8 @@ SOURCES += $$PWD/afv/crypto/*.cpp
 SOURCES += $$PWD/afv/connection/*.cpp
 SOURCES += $$PWD/afv/model/*.cpp
 
-LIBS *= \
-    -lvatsimauth \
-    -lsodium \
+LIBS *= -lvatsimauth
+LIBS *= -lsodium
 
 DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin
