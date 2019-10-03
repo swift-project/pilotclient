@@ -14,6 +14,7 @@
 #include "blackcore/application.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/context/contextnetwork.h"
+#include "blackcore/fsd/fsdclient.h"
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/comsystem.h"

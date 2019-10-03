@@ -14,9 +14,9 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/simulation/settings/modelmatchersettings.h"
 #include "blackmisc/simulation/aircraftmodelsetprovider.h"
-#include "blackcore/fsd/fsdclient.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/ecosystem.h"
+#include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/matchinglog.h"
@@ -52,6 +52,10 @@
 
 namespace BlackCore
 {
+    namespace Fsd
+    {
+        class CFSDClient;
+    }
     class CAirspaceAnalyzer;
 
     //! Keeps track of other entities in the airspace: aircraft, ATC stations, etc.

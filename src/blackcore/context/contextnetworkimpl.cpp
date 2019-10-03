@@ -14,6 +14,7 @@
 #include "blackcore/airspacemonitor.h"
 #include "blackcore/application.h"
 #include "blackcore/corefacade.h"
+#include "blackcore/fsd/fsdclient.h"
 #include "blackcore/webdataservices.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/aviation/aircrafticaocode.h"

@@ -21,12 +21,12 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackcore/fsd/fsdclient.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/simulation/simulationenvironmentprovider.h"
 #include "blackmisc/weather/metar.h"
 #include "blackmisc/weather/metarlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
@@ -68,6 +68,11 @@ namespace BlackCore
 {
     class CAirspaceMonitor;
     class CCoreFacade;
+
+    namespace Fsd
+    {
+        class CFSDClient;
+    }
 
     namespace Context
     {
