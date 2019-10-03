@@ -35,14 +35,16 @@ namespace BlackMisc
             //! Constructor
             CLoginMode(LoginMode mode) : m_loginMode(mode) {}
 
+            //! Is login as pilot?
             bool isPilot() const { return m_loginMode == Pilot; }
 
+            //! Is login as observer?
             bool isObserver() const { return m_loginMode == Observer; }
 
-            //! Get status
+            //! Get login mode
             LoginMode getLoginMode() const { return m_loginMode; }
 
-            //! Set status
+            //! Set login mode
             void setLoginMode(LoginMode mode) { m_loginMode = mode; }
 
             //! \copydoc BlackMisc::Mixin::String::toQString

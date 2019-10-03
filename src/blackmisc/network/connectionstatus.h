@@ -37,13 +37,13 @@ namespace BlackMisc
             //! Constructor
             CConnectionStatus(ConnectionStatus status) : m_connectionStatus(status) {}
 
+            //! Query status
+            //! @{
             bool isConnected() const { return m_connectionStatus == Connected; }
-
             bool isConnecting() const { return m_connectionStatus == Connecting; }
-
             bool isDisconnecting() const { return m_connectionStatus == Disconnecting; }
-
             bool isDisconnected() const { return m_connectionStatus == Disconnected; }
+            //! @}
 
             //! Get status
             ConnectionStatus getConnectionStatus() const { return m_connectionStatus; }

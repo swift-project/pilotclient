@@ -91,7 +91,8 @@ namespace BlackCore
             //! Reference to voice client
             BlackCore::Afv::Clients::CAfvClient &voiceClient() { return m_voiceClient; }
 
-            //! Audio devices @{
+            //! Audio devices
+            //! @{
             BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const;
             BlackMisc::Audio::CAudioDeviceInfoList getAudioInputDevices()  const { return this->getAudioDevices().getInputDevices(); }
             BlackMisc::Audio::CAudioDeviceInfoList getAudioOutputDevices() const { return this->getAudioDevices().getOutputDevices(); }
@@ -105,7 +106,8 @@ namespace BlackCore
             //! \param audioDevice can be input or audio device
             void setCurrentAudioDevices(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
 
-            //! Volume @{
+            //! Volume
+            //! @{
             void setVoiceOutputVolume(int volume);
             int  getVoiceOutputVolume() const;
             void setMute(bool muted);
@@ -118,12 +120,14 @@ namespace BlackCore
             //! Notification sounds
             void playNotification(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume = -1);
 
-            //! Loopback @{
+            //! Loopback
+            //! @{
             void enableAudioLoopback(bool enable = true);
             bool isAudioLoopbackEnabled() const;
             //! @}
 
-            //! Voice setup @{
+            //! Voice setup
+            //! @{
             BlackMisc::Audio::CVoiceSetup getVoiceSetup() const;
             void setVoiceSetup(const BlackMisc::Audio::CVoiceSetup &setup);
             //! @}
@@ -161,20 +165,19 @@ namespace BlackCore
             // ------------- DBus ---------------
 
             //! \addtogroup swiftdotcommands
-            //! @{
             //! <pre>
             //! .mute                          mute             BlackCore::Context::CContextAudio
             //! .unmute                        unmute           BlackCore::Context::CContextAudio
             //! .vol .volume   volume 0..100   set volume       BlackCore::Context::CContextAudio
             //! </pre>
-            //! @}
             //! \copydoc IContextAudio::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
 
             // ------------- DBus ---------------
 
         private:
-            //! Enable/disable voice transmission, nornally used with hotkey @{
+            //! Enable/disable voice transmission, nornally used with hotkey
+            //! @{
             void setVoiceTransmission(bool enable, BlackMisc::Audio::PTTCOM com);
             void setVoiceTransmissionCom1(bool enabled);
             void setVoiceTransmissionCom2(bool enabled);
@@ -187,7 +190,8 @@ namespace BlackCore
             //! Changed audio settings
             void onChangedAudioSettings();
 
-            //! Audio increase/decrease volume @{
+            //! Audio increase/decrease volume
+            //! @{
             void audioIncreaseVolume(bool enabled);
             void audioDecreaseVolume(bool enabled);
             //! @}
