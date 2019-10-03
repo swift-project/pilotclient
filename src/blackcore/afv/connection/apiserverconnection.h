@@ -68,91 +68,84 @@ namespace BlackCore
                 QVector<StationDto> getAllAliasedStations();
 
             private:
+                //! Post to resource
                 template<typename TResponse>
                 TResponse postNoRequest(const QString &resource)
                 {
                     if (!m_isAuthenticated)
                     {
-                        qDebug() << "Not authenticated";
+                        CLogMessage(this).debug(u"AFV not authenticated");
                         return {};
                     }
 
-                    checkExpiry();
+                    this->checkExpiry();
 
-                    QNetworkAccessManager *nam = sApp->getNetworkAccessManager();
-
-                    m_watch->start();
                     QUrl url(m_address);
                     url.setPath(resource);
-                    QEventLoop loop;
-                    connect(nam, &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
-
                     QNetworkRequest request(url);
                     request.setRawHeader("Authorization", "Bearer " + m_jwt);
-                    QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nam->post(request, QByteArray()));
-                    while (! reply->isFinished()) { loop.exec(); }
-                    qDebug() << "POST" << resource << "(" << m_watch->elapsed() << "ms)";
 
-                    if (reply->error() != QNetworkReply::NoError)
-                    {
-                        qWarning() << "POST" << resource << "failed:" << reply->errorString();
-                        return {};
-                    }
-
-                    const QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
-                    TResponse response = TResponse::fromJson(doc.object());
+                    const QByteArray receivedData = this->postWithResponse(request);
+                    const QJsonDocument doc = QJsonDocument::fromJson(receivedData);
+                    const TResponse response = TResponse::fromJson(doc.object());
                     return response;
                 }
 
+                //! Get resource and return as vector
                 template<typename TResponse>
                 QVector<TResponse> getAsVector(const QString &resource)
                 {
                     if (! m_isAuthenticated)
                     {
-                        qDebug() << "Not authenticated";
+                        CLogMessage(this).debug(u"AFV not authenticated");
                         return {};
                     }
 
-                    checkExpiry();
+                    this->checkExpiry();
 
-                    QNetworkAccessManager *nam = sApp->getNetworkAccessManager();
-
-                    m_watch->start();
                     QUrl url(m_address);
                     url.setPath(resource);
-                    QEventLoop loop;
-                    connect(nam, &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
-
                     QNetworkRequest request(url);
                     request.setRawHeader("Authorization", "Bearer " + m_jwt);
-                    QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nam->get(request));
-                    while (! reply->isFinished()) { loop.exec(); }
-                    qDebug() << "GET" << resource << "(" << m_watch->elapsed() << "ms)";
 
-                    if (reply->error() != QNetworkReply::NoError)
-                    {
-                        qWarning() << "GET" << resource << "failed:" << reply->errorString();
-                        return {};
-                    }
-
-                    const QJsonDocument jsonDoc = QJsonDocument::fromJson(reply->readAll());
+                    const QByteArray receivedData = this->getWithResponse(request);
+                    const QJsonDocument jsonDoc = QJsonDocument::fromJson(receivedData);
                     QVector<TResponse> dtos;
                     if (jsonDoc.isArray())
                     {
                         QJsonArray rootArray = jsonDoc.array();
                         for (auto o : rootArray)
                         {
-                            QJsonObject d = o.toObject();
-                            TResponse dto = TResponse::fromJson(d);
+                            const QJsonObject d = o.toObject();
+                            const TResponse dto = TResponse::fromJson(d);
                             dtos.push_back(dto);
                         }
                     }
                     return dtos;
                 }
 
+                //! Pseudo synchronous post request returning data
+                QByteArray getWithResponse(const QNetworkRequest &request);
+
+                //! Pseudo synchronous post request returning data
+                QByteArray postWithResponse(const QNetworkRequest &request, const QByteArray &data = {});
+
+                //! Post but do NOT wait for response
                 void postNoResponse(const QString &resource, const QJsonDocument &json);
+
+                //! Delete and do NOT wait for response
                 void deleteResource(const QString &resource);
+
+                //! Session expired, then re-login
                 void checkExpiry();
+
+                //! Message if reply has error
+                void logReplyErrorMessage(const QNetworkReply *reply, const QString &addMsg = {});
+
+                //! Message if reply has error
+                void logRequestDuration(const QNetworkReply *reply, const QString &addMsg = {});
+
+                //! Application shutting down
                 static bool isShuttingDown();
 
                 const QString m_address;
@@ -163,7 +156,6 @@ namespace BlackCore
                 QDateTime     m_expiryLocalUtc;
                 qint64        m_serverToUserOffsetMs;
                 bool          m_isAuthenticated = false;
-                QElapsedTimer *m_watch = nullptr;
             };
         } // ns
     } // ns

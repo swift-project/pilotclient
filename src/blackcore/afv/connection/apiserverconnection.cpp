@@ -7,13 +7,20 @@
  */
 
 #include "apiserverconnection.h"
+
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/network/external/qjsonwebtoken.h"
+#include "blackmisc/logmessage.h"
 
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QUrl>
 #include <QUrlQuery>
 #include <QScopedPointer>
+#include <QMetaEnum>
+
+using namespace BlackMisc;
+using namespace BlackMisc::Network;
 
 namespace BlackCore
 {
@@ -23,19 +30,19 @@ namespace BlackCore
         {
             ApiServerConnection::ApiServerConnection(const QString &address, QObject *parent) :
                 QObject(parent),
-                m_address(address),
-                m_watch(new QElapsedTimer)
+                m_address(address)
             {
-                qDebug() << "ApiServerConnection instantiated";
+                CLogMessage(this).debug(u"ApiServerConnection instantiated");
             }
 
             bool ApiServerConnection::connectTo(const QString &username, const QString &password, const QUuid &networkVersion)
             {
+                if (isShuttingDown()) { return false; }
+
                 m_username = username;
                 m_password = password;
-                m_networkVersion = networkVersion;
+                m_networkVersion  = networkVersion;
                 m_isAuthenticated = false;
-                m_watch->start();
 
                 QUrl url(m_address);
                 url.setPath("/api/v1/auth");
@@ -47,66 +54,76 @@ namespace BlackCore
                     {"networkversion", networkVersion.toString()},
                 };
 
-                QNetworkAccessManager *nam = sApp->getNetworkAccessManager();
-                QEventLoop loop;
-                connect(nam, &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
                 QNetworkRequest request(url);
                 request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-                QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nam->post(request, QJsonDocument(obj).toJson()));
-                while (! reply->isFinished()) { loop.exec(); }
+                QEventLoop loop(sApp);
 
-                qDebug() << "POST api/v1/auth (" << m_watch->elapsed() << "ms)";
-                if (reply->error() != QNetworkReply::NoError)
+                // posted in QAM thread
+                QNetworkReply *reply = sApp->postToNetwork(request, CApplication::NoLogRequestId, QJsonDocument(obj).toJson(),
                 {
-                    qWarning() << reply->errorString();
-                    return false;
-                }
+                    this, [ & ](QNetworkReply * nwReply)
+                    {
+                        // called in "this" thread
+                        QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
+                        if (isShuttingDown()) { return; }
+                        this->logRequestDuration(reply.data(), "authentication");
+                        if (reply->error() != QNetworkReply::NoError)
+                        {
+                            this->logReplyErrorMessage(reply.data(), "authentication error");
+                            loop.exit();
+                            return;
+                        }
 
-                // JWT authentication token
-                m_serverToUserOffsetMs = 0;
-                m_expiryLocalUtc = QDateTime(); // clean up
+                        // JWT authentication token
+                        m_serverToUserOffsetMs = 0;
+                        m_expiryLocalUtc = QDateTime(); // clean up
 
-                m_jwt = reply->readAll().trimmed();
-                qint64 lifeTimeSecs = -1;
-                qint64 serverToUserOffsetSecs = -1;
-                do
-                {
-                    const QString jwtToken(m_jwt);
-                    QJsonWebToken token = QJsonWebToken::fromTokenAndSecret(jwtToken, "");
+                        m_jwt = reply->readAll().trimmed();
+                        qint64 lifeTimeSecs = -1;
+                        qint64 serverToUserOffsetSecs = -1;
+                        do
+                        {
+                            const QString jwtToken(m_jwt);
+                            QJsonWebToken token = QJsonWebToken::fromTokenAndSecret(jwtToken, "");
 
-                    // get decoded header and payload
-                    // QString strHeader  = token.getHeaderQStr();
-                    // QString strPayload = token.getPayloadQStr();
-                    const QJsonDocument doc = token.getPayloadJDoc();
-                    if (doc.isEmpty() || !doc.isObject()) { break; }
-                    const qint64 validFromSecs = doc.object().value("nbf").toInt(-1);
-                    if (validFromSecs < 0) { break; }
-                    const qint64 localSecsSinceEpoch = QDateTime::currentSecsSinceEpoch();
-                    serverToUserOffsetSecs = validFromSecs - localSecsSinceEpoch;
-                    const qint64 serverExpirySecs = doc.object().value("exp").toInt();
-                    const qint64 expiryLocalUtc = serverExpirySecs - serverToUserOffsetSecs;
-                    lifeTimeSecs = expiryLocalUtc - localSecsSinceEpoch;
-                }
-                while (false);
+                            // get decoded header and payload
+                            // QString strHeader  = token.getHeaderQStr();
+                            // QString strPayload = token.getPayloadQStr();
+                            const QJsonDocument doc = token.getPayloadJDoc();
+                            if (doc.isEmpty() || !doc.isObject()) { break; }
+                            const qint64 validFromSecs = doc.object().value("nbf").toInt(-1);
+                            if (validFromSecs < 0) { break; }
+                            const qint64 localSecsSinceEpoch = QDateTime::currentSecsSinceEpoch();
+                            serverToUserOffsetSecs = validFromSecs - localSecsSinceEpoch;
+                            const qint64 serverExpirySecs = doc.object().value("exp").toInt();
+                            const qint64 expiryLocalUtc = serverExpirySecs - serverToUserOffsetSecs;
+                            lifeTimeSecs = expiryLocalUtc - localSecsSinceEpoch;
+                        }
+                        while (false);
 
-                if (lifeTimeSecs > 0)
-                {
-                    m_serverToUserOffsetMs = serverToUserOffsetSecs * 1000;
-                    m_expiryLocalUtc = QDateTime::currentDateTimeUtc().addSecs(lifeTimeSecs);
-                    m_isAuthenticated = true;
-                }
+                        if (lifeTimeSecs > 0)
+                        {
+                            m_serverToUserOffsetMs = serverToUserOffsetSecs * 1000;
+                            m_expiryLocalUtc = QDateTime::currentDateTimeUtc().addSecs(lifeTimeSecs);
+                            m_isAuthenticated = true;
+                        }
 
+                        loop.exit();
+                    }
+                });
+
+                if (reply) { loop.exec(); }
                 return m_isAuthenticated;
             }
 
             PostCallsignResponseDto ApiServerConnection::addCallsign(const QString &callsign)
             {
-                return postNoRequest<PostCallsignResponseDto>("/api/v1/users/" + m_username + "/callsigns/" + callsign);
+                return this->postNoRequest<PostCallsignResponseDto>("/api/v1/users/" + m_username + "/callsigns/" + callsign);
             }
 
             void ApiServerConnection::removeCallsign(const QString &callsign)
             {
-                deleteResource("/api/v1/users/" + m_username + "/callsigns/" + callsign);
+                this->deleteResource("/api/v1/users/" + m_username + "/callsigns/" + callsign);
             }
 
             void ApiServerConnection::updateTransceivers(const QString &callsign, const QVector<TransceiverDto> &transceivers)
@@ -116,8 +133,7 @@ namespace BlackCore
                 {
                     array.append(tx.toJson());
                 }
-
-                postNoResponse("/api/v1/users/" + m_username + "/callsigns/" + callsign + "/transceivers", QJsonDocument(array));
+                this->postNoResponse("/api/v1/users/" + m_username + "/callsigns/" + callsign + "/transceivers", QJsonDocument(array));
             }
 
             void ApiServerConnection::forceDisconnect()
@@ -128,64 +144,142 @@ namespace BlackCore
 
             QVector<StationDto> ApiServerConnection::getAllAliasedStations()
             {
-                getAsVector<StationDto>("/api/v1/stations/aliased");
+                this->getAsVector<StationDto>("/api/v1/stations/aliased");
                 return {};
+            }
+
+            QByteArray ApiServerConnection::getWithResponse(const QNetworkRequest &request)
+            {
+                if (isShuttingDown()) { return {}; }
+
+                QEventLoop loop(sApp);
+                QByteArray receivedData;
+
+                // posted in QAM thread
+                QNetworkReply *reply = sApp->getFromNetwork(request,
+                {
+                    this, [ & ](QNetworkReply * nwReply)
+                    {
+                        // called in "this" thread
+                        if (!isShuttingDown())
+                        {
+                            QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
+                            if (isShuttingDown()) { return; }
+                            this->logRequestDuration(reply.data());
+                            if (reply->error() == QNetworkReply::NoError)
+                            {
+                                receivedData = reply->readAll();
+                            }
+                            else
+                            {
+                                this->logReplyErrorMessage(reply.data());
+                            }
+                        }
+                        loop.exit();
+                    }
+                });
+
+                if (!reply) { return {}; }
+                loop.exec();
+                return receivedData;
+            }
+
+            QByteArray ApiServerConnection::postWithResponse(const QNetworkRequest &request, const QByteArray &data)
+            {
+                if (isShuttingDown()) { return {}; }
+
+                QEventLoop loop(sApp);
+                QByteArray receivedData;
+
+                // posted in QAM thread
+                QNetworkReply *reply = sApp->postToNetwork(request, CApplication::NoLogRequestId, data,
+                {
+                    this, [ & ](QNetworkReply * nwReply)
+                    {
+                        // called in "this" thread
+                        if (!isShuttingDown())
+                        {
+                            QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
+                            if (isShuttingDown()) { return; }
+                            this->logRequestDuration(reply.data());
+                            if (reply->error() == QNetworkReply::NoError)
+                            {
+                                receivedData = reply->readAll();
+                            }
+                            else
+                            {
+                                this->logReplyErrorMessage(reply.data());
+                            }
+                        }
+                        loop.exit();
+                    }
+                });
+
+                if (!reply) { return {}; }
+                loop.exec();
+                return receivedData;
             }
 
             void ApiServerConnection::postNoResponse(const QString &resource, const QJsonDocument &json)
             {
                 if (isShuttingDown()) { return; } // avoid crash
-                if (! m_isAuthenticated)
+                if (!m_isAuthenticated)
                 {
-                    qDebug() << "Not authenticated";
+                    CLogMessage(this).debug(u"AFV not authenticated");
                     return;
                 }
 
-                checkExpiry();
+                this->checkExpiry();
 
-                m_watch->start();
                 QUrl url(m_address);
                 url.setPath(resource);
-                QNetworkAccessManager *nam = sApp->getNetworkAccessManager();
-                QEventLoop loop;
-                connect(nam, &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
-
                 QNetworkRequest request(url);
                 request.setRawHeader("Authorization", "Bearer " + m_jwt);
                 request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-                QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nam->post(request, json.toJson()));
-                while (! reply->isFinished()) { loop.exec(); }
-                qDebug() << "POST" << resource << "(" << m_watch->elapsed() << "ms)";
 
-                if (reply->error() != QNetworkReply::NoError)
+                // posted in QAM thread
+                sApp->postToNetwork(request, CApplication::NoLogRequestId, json.toJson(),
                 {
-                    qWarning() << "POST" << resource << "failed:" << reply->errorString();
-                    return;
-                }
+                    this, [ & ](QNetworkReply * nwReply)
+                    {
+                        // called in "this" thread
+                        QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
+                        if (isShuttingDown()) { return; }
+                        this->logRequestDuration(reply.data());
+                        if (reply->error() != QNetworkReply::NoError)
+                        {
+                            this->logReplyErrorMessage(reply.data());
+                        }
+                    }
+                });
             }
 
             void ApiServerConnection::deleteResource(const QString &resource)
             {
-                if (! m_isAuthenticated) { return; }
+                if (isShuttingDown())   { return; }
+                if (!m_isAuthenticated) { return; }
 
-                m_watch->start();
                 QUrl url(m_address);
                 url.setPath(resource);
 
-                QNetworkAccessManager *nam = sApp->getNetworkAccessManager();
-                QEventLoop loop;
-                connect(nam, &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
-
                 QNetworkRequest request(url);
                 request.setRawHeader("Authorization", "Bearer " + m_jwt);
-                QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nam->deleteResource(request));
-                while (! reply->isFinished()) { loop.exec(); }
-                qDebug() << "DELETE" << resource << "(" << m_watch->elapsed() << "ms)";
 
-                if (reply->error() != QNetworkReply::NoError)
+                // posted in QAM thread
+                sApp->deleteResourceFromNetwork(request, CApplication::NoLogRequestId,
                 {
-                    qWarning() << "DELETE" << resource << "failed:" << reply->errorString();
-                }
+                    this, [ & ](QNetworkReply * nwReply)
+                    {
+                        // called in "this" thread
+                        QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
+                        if (isShuttingDown()) { return; }
+                        this->logRequestDuration(reply.data());
+                        if (reply->error() != QNetworkReply::NoError)
+                        {
+                            this->logReplyErrorMessage(reply.data());
+                        }
+                    }
+                });
             }
 
             void ApiServerConnection::checkExpiry()
@@ -193,6 +287,34 @@ namespace BlackCore
                 if (QDateTime::currentDateTimeUtc() > m_expiryLocalUtc.addSecs(-5 * 60))
                 {
                     connectTo(m_username, m_password, m_networkVersion);
+                }
+            }
+
+            void ApiServerConnection::logReplyErrorMessage(const QNetworkReply *reply, const QString &addMsg)
+            {
+                if (!reply) { return; }
+                if (addMsg.isEmpty())
+                {
+                    CLogMessage(this).warning(u"AFV network error for '%1' '%2': '%3'") << reply->url().toString() << CNetworkUtils::networkOperationToString(reply->operation()) << reply->errorString();
+                }
+                else
+                {
+                    CLogMessage(this).warning(u"AFV network error (%1) for '%2' '%3': '%4'") << addMsg << reply->url().toString() << CNetworkUtils::networkOperationToString(reply->operation()) << reply->errorString();
+                }
+            }
+
+            void ApiServerConnection::logRequestDuration(const QNetworkReply *reply, const QString &addMsg)
+            {
+                if (!reply) { return; }
+                const qint64 d = CNetworkUtils::requestDuration(reply);
+                if (d < 0) { return; }
+                if (addMsg.isEmpty())
+                {
+                    CLogMessage(this).info(u"AFV network request for '%1': %2ms") << reply->url().toString() << d;
+                }
+                else
+                {
+                    CLogMessage(this).info(u"AFV network request (%1) for '%2': '%3'") << addMsg << reply->url().toString() << d;
                 }
             }
 
