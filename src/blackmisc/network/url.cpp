@@ -26,6 +26,10 @@ namespace BlackMisc
             }
         }
 
+        CUrl::CUrl(const char *url) :
+            CUrl(QString(url))
+        { }
+
         CUrl::CUrl(const QUrl &url)
         {
             this->setQUrl(url);

@@ -45,6 +45,9 @@ namespace BlackMisc
             //! Default constructor.
             CUrl(const QString &fullUrl = QString());
 
+            //! Construct from character array.
+            CUrl(const char *url);
+
             //! By QUrl.
             CUrl(const QUrl &url);
 
