@@ -95,19 +95,18 @@ namespace BlackMisc
             return !m_query.isEmpty();
         }
 
-        QString CUrl::appendQuery(const QString &queryToAppend)
+        void CUrl::appendQuery(const QString &queryToAppend)
         {
-            if (queryToAppend.isEmpty()) { return m_query; }
+            if (queryToAppend.isEmpty()) { return; }
             const QString q(stripQueryString(queryToAppend));
-            if (q.isEmpty()) { return m_query;  }
+            if (q.isEmpty()) { return;  }
             m_query += hasQuery() ? "&" + q : q;
-            return m_query;
         }
 
-        QString CUrl::appendQuery(const QString &key, const QString &value)
+        void CUrl::appendQuery(const QString &key, const QString &value)
         {
-            if (key.isEmpty()) { return m_query; }
-            return this->appendQuery(key + "=" + value);
+            if (key.isEmpty()) { return; }
+            this->appendQuery(key + "=" + value);
         }
 
         QString CUrl::getFullUrl(bool withQuery) const
