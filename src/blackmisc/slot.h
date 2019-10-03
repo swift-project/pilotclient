@@ -86,6 +86,13 @@ namespace BlackMisc
             m_function(function)
         {}
 
+        //! Construct a slot from the given object passing a function and a object
+        template <typename T>
+        CSlot(T *object, std::function<R(Args...)> function) :
+            m_object(object),
+            m_function(function)
+        {}
+
         //! Call the slot. The behaviour is undefined if the slot is empty.
         R operator()(Args... args) const
         {

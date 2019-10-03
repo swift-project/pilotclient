@@ -669,6 +669,16 @@ namespace BlackCore
         });
     }
 
+    QNetworkReply *CApplication::deleteResourceFromNetwork(const QNetworkRequest &request, int logId, const CApplication::CallbackSlot &callback, int maxRedirects)
+    {
+        const CApplication::ProgressSlot progress;
+        return this->httpRequestImpl(request, logId, callback, progress, maxRedirects, [](QNetworkAccessManager & qam, const QNetworkRequest & request)
+        {
+            QNetworkReply *nr = qam.deleteResource(request);
+            return nr;
+        });
+    }
+
     QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, int logId, const QByteArray &data, const CSlot<void(QNetworkReply *)> &callback)
     {
         return this->httpRequestImpl(request, logId, callback, NoRedirects, [ data ](QNetworkAccessManager & qam, const QNetworkRequest & request)
@@ -739,13 +749,13 @@ namespace BlackCore
                 callback(msg);
             });
         });
+        callbackSlot.setObject(this); // object for thread
 
         ProgressSlot progressSlot([ = ](int, qint64, qint64, const QUrl &)
         {
             // so far not implemented
         });
 
-        callbackSlot.setObject(this); // object for thread
         QNetworkReply *reply = this->getFromNetwork(url, callbackSlot, progressSlot, maxRedirects);
         return reply;
     }
@@ -1165,7 +1175,7 @@ namespace BlackCore
                 if (config.state() == QNetworkConfiguration::Active) { activeCount++; m_noNwAccessPoint = false; }
                 if (config.isValid()) { validCount++; }
             }
-            Q_UNUSED(validCount);
+            Q_UNUSED(validCount)
 
             const bool canStartIAP = (m_networkConfigManager->capabilities() & QNetworkConfigurationManager::CanStartAndStopInterfaces);
             const bool disable = activeCount < 1; // only inactive
@@ -1413,7 +1423,7 @@ namespace BlackCore
 
     bool CApplication::cmdLineErrorMessage(const QString &errorMessage, bool retry) const
     {
-        Q_UNUSED(retry); // only works with UI version
+        Q_UNUSED(retry) // only works with UI version
         fputs(qPrintable(errorMessage), stderr);
         fputs("\n\n", stderr);
         fputs(qPrintable(m_parser.helpText()), stderr);
@@ -1422,7 +1432,7 @@ namespace BlackCore
 
     bool CApplication::cmdLineErrorMessage(const CStatusMessageList &msgs, bool retry) const
     {
-        Q_UNUSED(retry); // only works with UI version
+        Q_UNUSED(retry) // only works with UI version
         if (msgs.isEmpty()) { return false; }
         if (!msgs.hasErrorMessages())  { return false; }
         CApplication::cmdLineErrorMessage(
@@ -1667,7 +1677,7 @@ namespace BlackCore
 #endif
     }
 
-    void CApplication::httpRequestImplInQAMThread(const QNetworkRequest &request, int logId, const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects, NetworkRequestOrPostFunction requestOrPostMethod)
+    void CApplication::httpRequestImplInQAMThread(const QNetworkRequest &request, int logId, const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects, NetworkRequestOrPostFunction getPostOrDeleteRequest)
     {
         // run in QAM thread
         if (this->isShuttingDown()) { return; }
@@ -1676,7 +1686,7 @@ namespace BlackCore
             // should be now in QAM thread
             if (!sApp || sApp->isShuttingDown()) { return; }
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(sApp->m_accessManager), Q_FUNC_INFO, "Wrong thread, must be QAM thread");
-            this->httpRequestImpl(request, logId, callback, progress, maxRedirects, requestOrPostMethod);
+            this->httpRequestImpl(request, logId, callback, progress, maxRedirects, getPostOrDeleteRequest);
         });
     }
 
@@ -1704,7 +1714,7 @@ namespace BlackCore
 
     QNetworkReply *CApplication::httpRequestImpl(
         const QNetworkRequest &request, int logId,
-        const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects, NetworkRequestOrPostFunction requestOrPostMethod)
+        const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects, NetworkRequestOrPostFunction getPostOrDeleteRequest)
     {
         if (this->isShuttingDown()) { return nullptr; }
         if (!this->isNetworkAccessible()) { return nullptr; }
@@ -1713,7 +1723,7 @@ namespace BlackCore
         Q_ASSERT_X(CThreadUtils::isApplicationThreadObjectThread(m_accessManager), Q_FUNC_INFO, "Network manager supposed to be in main thread");
         if (!CThreadUtils::isCurrentThreadObjectThread(m_accessManager))
         {
-            this->httpRequestImplInQAMThread(request, logId, callback, progress, maxRedirects, requestOrPostMethod);
+            this->httpRequestImplInQAMThread(request, logId, callback, progress, maxRedirects, getPostOrDeleteRequest);
             return nullptr; // not yet started, will be called again in QAM thread
         }
 
@@ -1723,7 +1733,7 @@ namespace BlackCore
         // If URL is one of the shared URLs, add swift client SSL certificate to request
         // CNetworkUtils::setSwiftClientSslCertificate(copiedRequest, this->getGlobalSetup().getSwiftSharedUrls());
 
-        QNetworkReply *reply = requestOrPostMethod(*m_accessManager, copiedRequest);
+        QNetworkReply *reply = getPostOrDeleteRequest(*m_accessManager, copiedRequest);
         reply->setProperty("started", QVariant(QDateTime::currentMSecsSinceEpoch()));
         reply->setProperty(CUrlLog::propertyNameId(), QVariant(logId));
         const QUrl url(reply->url());
@@ -1754,7 +1764,7 @@ namespace BlackCore
                         QNetworkRequest redirectRequest(redirectUrl);
                         const int redirectsLeft = maxRedirects - 1;
                         CLogMessage(sApp).info(u"Redirecting '%1' to '%2'") << urlStr << redirectUrl.toString();
-                        this->httpRequestImplInQAMThread(redirectRequest, logId, callback, progress, redirectsLeft, requestOrPostMethod);
+                        this->httpRequestImplInQAMThread(redirectRequest, logId, callback, progress, redirectsLeft, getPostOrDeleteRequest);
                         return;
                     }
                 }

@@ -509,6 +509,12 @@ namespace BlackCore
         QNetworkReply *getFromNetwork(const QNetworkRequest &request, int logId,
                                       const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects = DefaultMaxRedirects);
 
+        //! Request to delete a network ressource from network, supporting BlackMisc::Network::CUrlLog
+        //! \threadsafe
+        QNetworkReply *deleteResourceFromNetwork(const QNetworkRequest &request, int logId,
+                const CallbackSlot &callback,
+                int maxRedirects = DefaultMaxRedirects);
+
         //! Post to network
         //! \threadsafe
         QNetworkReply *postToNetwork(const QNetworkRequest &request, int logId, const QByteArray &data, const CallbackSlot &callback);
@@ -677,12 +683,12 @@ namespace BlackCore
         //! \return QNetworkReply reply will only be returned, if the QNetworkAccessManager is in the same thread
         QNetworkReply *httpRequestImpl(const QNetworkRequest &request,
                                        int logId, const CallbackSlot &callback, const ProgressSlot &progress,
-                                       int maxRedirects, NetworkRequestOrPostFunction requestOrPostMethod);
+                                       int maxRedirects, NetworkRequestOrPostFunction getPostOrDeleteRequest);
 
         //! Call httpRequestImpl in correct thread
         void httpRequestImplInQAMThread(const QNetworkRequest &request,
                                         int logId, const CallbackSlot &callback, const ProgressSlot &progress,
-                                        int maxRedirects, NetworkRequestOrPostFunction requestOrPostMethod);
+                                        int maxRedirects, NetworkRequestOrPostFunction getPostOrDeleteRequest);
 
         //! Triggers a check of the network accessibility
         //! \remark this is a check that will double check that the watchdog will receive the correct QNetworkAccessManager::NetworkAccessibility
