@@ -125,13 +125,16 @@ namespace BlackMisc
             static QNetworkRequest getSwiftNetworkRequest(const QNetworkRequest &request, const QString &userAgentDetails = {});
 
             //! Last modified from reply
-            static qint64 lastModifiedMsSinceEpoch(QNetworkReply *nwReply);
+            static qint64 lastModifiedMsSinceEpoch(const QNetworkReply *nwReply);
 
             //! Last modified from reply
-            static QDateTime lastModifiedDateTime(QNetworkReply *nwReply);
+            static QDateTime lastModifiedDateTime(const QNetworkReply *nwReply);
 
             //! Last modified from reply compared with now (in ms)
-            static qint64 lastModifiedSinceNow(QNetworkReply *nwReply);
+            static qint64 lastModifiedSinceNow(const QNetworkReply *nwReply);
+
+            //! Request duration (only works if requested by swift functions)
+            static qint64 requestDuration(const QNetworkReply *nwReply);
 
             //! Get the http status code
             static int getHttpStatusCode(QNetworkReply *nwReply);
@@ -177,6 +180,9 @@ namespace BlackMisc
 
             //! States to string
             static QString networkStatesToString(QNetworkConfiguration::StateFlags states);
+
+            //! Operation to string
+            static const QString &networkOperationToString(QNetworkAccessManager::Operation operation);
 
         private:
             //! Hidden constructor

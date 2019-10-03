@@ -314,14 +314,14 @@ namespace BlackMisc
             return req;
         }
 
-        qint64 CNetworkUtils::lastModifiedMsSinceEpoch(QNetworkReply *nwReply)
+        qint64 CNetworkUtils::lastModifiedMsSinceEpoch(const QNetworkReply *nwReply)
         {
             Q_ASSERT(nwReply);
             const QDateTime lm = CNetworkUtils::lastModifiedDateTime(nwReply);
             return lm.isValid() ? lm.toMSecsSinceEpoch() : -1;
         }
 
-        QDateTime CNetworkUtils::lastModifiedDateTime(QNetworkReply *nwReply)
+        QDateTime CNetworkUtils::lastModifiedDateTime(const QNetworkReply *nwReply)
         {
             Q_ASSERT(nwReply);
             const QVariant lastModifiedQv = nwReply->header(QNetworkRequest::LastModifiedHeader);
@@ -332,10 +332,23 @@ namespace BlackMisc
             return QDateTime();
         }
 
-        qint64 CNetworkUtils::lastModifiedSinceNow(QNetworkReply *nwReply)
+        qint64 CNetworkUtils::lastModifiedSinceNow(const QNetworkReply *nwReply)
         {
             const qint64 sinceEpoch = CNetworkUtils::lastModifiedMsSinceEpoch(nwReply);
             return sinceEpoch > 0 ? std::max(0LL, QDateTime::currentMSecsSinceEpoch() - sinceEpoch) : QDateTime::currentMSecsSinceEpoch();
+        }
+
+        qint64 CNetworkUtils::requestDuration(const QNetworkReply *nwReply)
+        {
+            if (!nwReply) { return -1; }
+            const QVariant started = nwReply->property("started");
+            if (started.isValid() && started.canConvert<qint64>())
+            {
+                const qint64 now = QDateTime::currentMSecsSinceEpoch();
+                const qint64 start = started.value<qint64>();
+                return (now - start);
+            }
+            return -1;
         }
 
         int CNetworkUtils::getHttpStatusCode(QNetworkReply *nwReply)
@@ -524,11 +537,36 @@ namespace BlackMisc
         QString CNetworkUtils::networkStatesToString(QNetworkConfiguration::StateFlags states)
         {
             QStringList statesSl;
-            if (states.testFlag(QNetworkConfiguration::Active)) { statesSl << networkStateToString(QNetworkConfiguration::Active); }
+            if (states.testFlag(QNetworkConfiguration::Active))     { statesSl << networkStateToString(QNetworkConfiguration::Active); }
             if (states.testFlag(QNetworkConfiguration::Discovered)) { statesSl << networkStateToString(QNetworkConfiguration::Discovered); }
-            if (states.testFlag(QNetworkConfiguration::Defined)) { statesSl << networkStateToString(QNetworkConfiguration::Defined); }
-            if (states.testFlag(QNetworkConfiguration::Undefined)) { statesSl << networkStateToString(QNetworkConfiguration::Undefined); }
+            if (states.testFlag(QNetworkConfiguration::Defined))    { statesSl << networkStateToString(QNetworkConfiguration::Defined); }
+            if (states.testFlag(QNetworkConfiguration::Undefined))  { statesSl << networkStateToString(QNetworkConfiguration::Undefined); }
             return statesSl.join(", ");
+        }
+
+        const QString &CNetworkUtils::networkOperationToString(QNetworkAccessManager::Operation operation)
+        {
+            static const QString h("HEAD");
+            static const QString g("GET");
+            static const QString put("PUT");
+            static const QString d("POST");
+            static const QString post("DELETE");
+            static const QString c("custom");
+            static const QString u("unknown");
+
+            switch (operation)
+            {
+            case QNetworkAccessManager::HeadOperation:    return h;
+            case QNetworkAccessManager::GetOperation:     return g;
+            case QNetworkAccessManager::PutOperation:     return put;
+            case QNetworkAccessManager::PostOperation:    return post;
+            case QNetworkAccessManager::DeleteOperation:  return d;
+            case QNetworkAccessManager::CustomOperation:  return c;
+            case QNetworkAccessManager::UnknownOperation:
+            default:
+                break;
+            }
+            return u;
         }
     } // namespace
 } // namespace
