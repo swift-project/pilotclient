@@ -28,14 +28,14 @@ namespace BlackCore
     {
         namespace Connection
         {
-            ApiServerConnection::ApiServerConnection(const QString &address, QObject *parent) :
+            CApiServerConnection::CApiServerConnection(const QString &address, QObject *parent) :
                 QObject(parent),
                 m_address(address)
             {
                 CLogMessage(this).debug(u"ApiServerConnection instantiated");
             }
 
-            bool ApiServerConnection::connectTo(const QString &username, const QString &password, const QUuid &networkVersion)
+            bool CApiServerConnection::connectTo(const QString &username, const QString &password, const QUuid &networkVersion)
             {
                 if (isShuttingDown()) { return false; }
 
@@ -116,17 +116,17 @@ namespace BlackCore
                 return m_isAuthenticated;
             }
 
-            PostCallsignResponseDto ApiServerConnection::addCallsign(const QString &callsign)
+            PostCallsignResponseDto CApiServerConnection::addCallsign(const QString &callsign)
             {
                 return this->postNoRequest<PostCallsignResponseDto>("/api/v1/users/" + m_username + "/callsigns/" + callsign);
             }
 
-            void ApiServerConnection::removeCallsign(const QString &callsign)
+            void CApiServerConnection::removeCallsign(const QString &callsign)
             {
                 this->deleteResource("/api/v1/users/" + m_username + "/callsigns/" + callsign);
             }
 
-            void ApiServerConnection::updateTransceivers(const QString &callsign, const QVector<TransceiverDto> &transceivers)
+            void CApiServerConnection::updateTransceivers(const QString &callsign, const QVector<TransceiverDto> &transceivers)
             {
                 QJsonArray array;
                 for (const TransceiverDto &tx : transceivers)
@@ -136,19 +136,19 @@ namespace BlackCore
                 this->postNoResponse("/api/v1/users/" + m_username + "/callsigns/" + callsign + "/transceivers", QJsonDocument(array));
             }
 
-            void ApiServerConnection::forceDisconnect()
+            void CApiServerConnection::forceDisconnect()
             {
                 m_isAuthenticated = false;
                 m_jwt.clear();
             }
 
-            QVector<StationDto> ApiServerConnection::getAllAliasedStations()
+            QVector<StationDto> CApiServerConnection::getAllAliasedStations()
             {
                 this->getAsVector<StationDto>("/api/v1/stations/aliased");
                 return {};
             }
 
-            QByteArray ApiServerConnection::getWithResponse(const QNetworkRequest &request)
+            QByteArray CApiServerConnection::getWithResponse(const QNetworkRequest &request)
             {
                 if (isShuttingDown()) { return {}; }
 
@@ -184,7 +184,7 @@ namespace BlackCore
                 return receivedData;
             }
 
-            QByteArray ApiServerConnection::postWithResponse(const QNetworkRequest &request, const QByteArray &data)
+            QByteArray CApiServerConnection::postWithResponse(const QNetworkRequest &request, const QByteArray &data)
             {
                 if (isShuttingDown()) { return {}; }
 
@@ -220,7 +220,7 @@ namespace BlackCore
                 return receivedData;
             }
 
-            void ApiServerConnection::postNoResponse(const QString &resource, const QJsonDocument &json)
+            void CApiServerConnection::postNoResponse(const QString &resource, const QJsonDocument &json)
             {
                 if (isShuttingDown()) { return; } // avoid crash
                 if (!m_isAuthenticated)
@@ -254,7 +254,7 @@ namespace BlackCore
                 });
             }
 
-            void ApiServerConnection::deleteResource(const QString &resource)
+            void CApiServerConnection::deleteResource(const QString &resource)
             {
                 if (isShuttingDown())   { return; }
                 if (!m_isAuthenticated) { return; }
@@ -282,7 +282,7 @@ namespace BlackCore
                 });
             }
 
-            void ApiServerConnection::checkExpiry()
+            void CApiServerConnection::checkExpiry()
             {
                 if (QDateTime::currentDateTimeUtc() > m_expiryLocalUtc.addSecs(-5 * 60))
                 {
@@ -290,7 +290,7 @@ namespace BlackCore
                 }
             }
 
-            void ApiServerConnection::logReplyErrorMessage(const QNetworkReply *reply, const QString &addMsg)
+            void CApiServerConnection::logReplyErrorMessage(const QNetworkReply *reply, const QString &addMsg)
             {
                 if (!reply) { return; }
                 if (addMsg.isEmpty())
@@ -303,7 +303,7 @@ namespace BlackCore
                 }
             }
 
-            void ApiServerConnection::logRequestDuration(const QNetworkReply *reply, const QString &addMsg)
+            void CApiServerConnection::logRequestDuration(const QNetworkReply *reply, const QString &addMsg)
             {
                 if (!reply) { return; }
                 const qint64 d = CNetworkUtils::requestDuration(reply);
@@ -318,7 +318,7 @@ namespace BlackCore
                 }
             }
 
-            bool ApiServerConnection::isShuttingDown()
+            bool CApiServerConnection::isShuttingDown()
             {
                 return !sApp || sApp->isShuttingDown();
             }

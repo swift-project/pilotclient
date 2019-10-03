@@ -32,7 +32,7 @@ namespace BlackCore
         namespace Connection
         {
             //! A server connection
-            class ApiServerConnection : public QObject
+            class CApiServerConnection : public QObject
             {
                 Q_OBJECT
 
@@ -44,7 +44,7 @@ namespace BlackCore
                 };
 
                 //! Constructor
-                ApiServerConnection(const QString &address, QObject *parent = nullptr);
+                CApiServerConnection(const QString &address, QObject *parent = nullptr);
 
                 //! User authenticated?
                 bool isAuthenticated() const { return m_isAuthenticated; }

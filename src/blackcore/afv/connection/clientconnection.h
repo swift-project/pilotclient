@@ -89,7 +89,7 @@ namespace BlackCore
                 QTimer *m_voiceServerTimer = nullptr;
 
                 // API server
-                ApiServerConnection *m_apiServerConnection = nullptr;
+                CApiServerConnection *m_apiServerConnection = nullptr;
 
                 // Properties
                 bool m_receiveAudioDto = true;

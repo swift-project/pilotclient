@@ -21,7 +21,7 @@ namespace BlackCore
                 QObject(parent),
                 m_udpSocket(new QUdpSocket(this)),
                 m_voiceServerTimer(new QTimer(this)),
-                m_apiServerConnection(new ApiServerConnection(apiServer, this))
+                m_apiServerConnection(new CApiServerConnection(apiServer, this))
             {
                 qDebug() << "ClientConnection instantiated";
 
