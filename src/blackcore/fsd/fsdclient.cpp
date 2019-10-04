@@ -103,7 +103,7 @@ namespace BlackCore
 
             fsdMessageSettingsChanged();
 
-            if (!m_statistics && (CBuildConfig::isLocalDeveloperDebugBuild() || sApp->getOwnDistribution().isRestricted()))
+            if (!m_statistics && (CBuildConfig::isLocalDeveloperDebugBuild() || (sApp && sApp->getOwnDistribution().isRestricted())))
             {
                 CLogMessage("Enabled network statistics");
                 m_statistics = true;

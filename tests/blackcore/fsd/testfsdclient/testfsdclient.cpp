@@ -482,7 +482,7 @@ namespace BlackFsdTest
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
         CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
-        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>%ABCD:99998:0:10:1:48.11028:8.56972:0");
+        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>%ABCD:99998:0:300:1:48.11028:8.56972:0");
     }
 
     void CTestFSDClient::testSendPing()
