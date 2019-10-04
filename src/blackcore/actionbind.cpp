@@ -18,6 +18,8 @@ namespace BlackCore
 
     QString CActionBind::registerAction(const QString &action, const QPixmap &icon)
     {
+        if (!sApp || sApp->isShuttingDown()) return {};
+
         const QString a = CActionBind::normalizeAction(action);
         Q_ASSERT_X(sApp && sApp->getInputManager(), Q_FUNC_INFO, "Missing input manager");
         sApp->getInputManager()->registerAction(a, icon);

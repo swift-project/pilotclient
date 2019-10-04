@@ -37,6 +37,9 @@ namespace BlackCore
                     QObject *parent = nullptr) :
             QObject(parent), m_deleteCallback(deleteCallback)
         {
+            // workaround if a binding is taking place in an empty context
+            if (!sApp || sApp->isShuttingDown()) { return; }
+
             const QString a = CActionBind::registerAction(action, icon);
             Q_ASSERT_X(sApp && sApp->getInputManager(), Q_FUNC_INFO, "Missing input manager");
             m_index = sApp->getInputManager()->bind(a, receiver, slot);
