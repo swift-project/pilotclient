@@ -14,7 +14,6 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/context.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/identifier.h"
@@ -121,9 +120,6 @@ namespace BlackCore
             //! Call a hotkey action on a remote process
             //! \note Used for hotkey action, do not use directly
             void remoteHotkeyAction(const QString &action, bool argument, const BlackMisc::CIdentifier &origin);
-
-            //! Work around for audio context, #382
-            void fakedSetComVoiceRoom(const BlackMisc::Audio::CVoiceRoomList &requestedRooms);
 
             //! Request a message to be displayed on console, whatever the console is
             //! \note no guarantee it is really written to console

@@ -14,7 +14,6 @@
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
 
-#include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/aviation/selcal.h"
 #include "blackmisc/aviation/transponder.h"
 #include "blackmisc/identifiable.h"
@@ -85,9 +84,6 @@ namespace BlackGui
 
             //! Update cockpit from context
             void updateCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
-
-            //! Update voice room related information
-            void updateVoiceRoomStatusFromContext(const BlackMisc::Audio::CVoiceRoomList &selectedVoiceRooms, bool connected);
 
             //! Update the cockpit from aircraft context
             void forceCockpitUpdateFromOwnAircraftContext();

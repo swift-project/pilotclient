@@ -17,10 +17,8 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/led.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackmisc/audio/voiceroom.h"
-#include "blackmisc/audio/voiceroomlist.h"
-#include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/logmessage.h"
@@ -165,13 +163,6 @@ namespace BlackGui
             // mostly when client runs with DBus, but DBus is down
             if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return false; }
             return sGui->getIContextOwnAircraft()->updateCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), ownAircraft.getTransponder(), identifier());
-        }
-
-        void CCockpitComComponent::updateVoiceRoomStatusFromContext(const CVoiceRoomList &selectedVoiceRooms, bool connected)
-        {
-            Q_ASSERT(selectedVoiceRooms.size() == 2);
-            Q_UNUSED(connected);
-            ui->editor_Com->setVoiceRoomStatus(selectedVoiceRooms);
         }
 
         void CCockpitComComponent::forceCockpitUpdateFromOwnAircraftContext()

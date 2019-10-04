@@ -30,6 +30,9 @@ namespace BlackGui
         {
             ui->setupUi(this);
 
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sApp");
+            Q_ASSERT_X(sGui->getIContextOwnAircraft(), Q_FUNC_INFO, "Need own aircraft");
+
             connect(ui->tb_TransponderMode, &QToolButton::released, this, &CTransponderModeComponent::onClicked, Qt::QueuedConnection);
             connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CTransponderModeComponent::onChangedAircraftCockpit, Qt::QueuedConnection);
 

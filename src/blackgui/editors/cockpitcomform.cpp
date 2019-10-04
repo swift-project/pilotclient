@@ -91,15 +91,6 @@ namespace BlackGui
             return msgs;
         }
 
-        void CCockpitComForm::setVoiceRoomStatus(const CVoiceRoomList &selectedVoiceRooms)
-        {
-            Q_ASSERT_X(selectedVoiceRooms.size() == 2, Q_FUNC_INFO, "Expect 2 voice rooms");
-            const CVoiceRoom room1 = selectedVoiceRooms[0];
-            const CVoiceRoom room2 = selectedVoiceRooms[1];
-            ui->led_ComPanelCom1->setOn(room1.isConnected());
-            ui->led_ComPanelCom2->setOn(room2.isConnected());
-        }
-
         void CCockpitComForm::setSelectedAtcStations(const CAtcStationList &selectedStations)
         {
             const CAtcStation com1Ttation = selectedStations.size() > 0 ? selectedStations[0] : CAtcStation();

@@ -159,14 +159,6 @@ namespace BlackCore
             //! Output volume 0..300
             virtual void setAudioOutputVolume(int outputVolume) = 0;
 
-            //! Set individual voice rooms (overrides voice rooms)
-            //! \note Empty string "" disables voice room override
-            //! \sa enableAutomaticVoiceRoomResolution
-            virtual void setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url) = 0;
-
-            //! Automatic voice room resolution for frequencies
-            virtual void enableAutomaticVoiceRoomResolution(bool enable) = 0;
-
             //! Default situation
             //! \remark normally used when no driver is attached
             static const BlackMisc::Aviation::CAircraftSituation &getDefaultSituation();

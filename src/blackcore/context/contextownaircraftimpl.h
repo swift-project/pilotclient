@@ -179,12 +179,6 @@ namespace BlackCore
             //! \copydoc IContextOwnAircraft::setAudioOutputVolume
             virtual void setAudioOutputVolume(int outputVolume) override;
 
-            //! \copydoc IContextOwnAircraft::setAudioVoiceRoomOverrideUrls
-            virtual void setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url) override;
-
-            //! \copydoc IContextOwnAircraft::enableAutomaticVoiceRoomResolution
-            virtual void enableAutomaticVoiceRoomResolution(bool enable) override;
-
             //! \addtogroup swiftdotcommands
             //! @{
             //! <pre>
@@ -218,9 +212,6 @@ namespace BlackCore
 
         private:
             BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< my aircraft
-            bool m_automaticVoiceRoomResolution = true;  //!< automatic voice room resolution, or disable for override
-            QString m_voiceRoom1UrlOverride;             //!< overridden voice room url
-            QString m_voiceRoom2UrlOverride;             //!< overridden voice room url
             mutable QReadWriteLock m_lockAircraft;       //!< lock aircraft
 
             CActionBind m_actionToggleXpdr { BlackMisc::Input::toggleXPDRStateHotkeyAction(), BlackMisc::Input::toggleXPDRStateHotkeyIcon(), this, &CContextOwnAircraft::actionToggleTransponder };
@@ -256,9 +247,6 @@ namespace BlackCore
 
             //! Init my very own aircraft with some defaults, before overridden by simulator
             void initOwnAircraft();
-
-            //! Resolve voice rooms
-            void resolveVoiceRooms();
 
             //! Update position history
             void evaluateUpdateHistory();

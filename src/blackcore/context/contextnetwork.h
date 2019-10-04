@@ -32,7 +32,6 @@
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/network/userlist.h"
-#include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/statusmessage.h"
@@ -275,9 +274,6 @@ namespace BlackCore
 
             //! Load flight plan (from network)
             virtual BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
-
-            //! Use the selected COM1/2 frequencies, and get the corresponding voice room for it
-            virtual BlackMisc::Audio::CVoiceRoomList getSelectedVoiceRooms() const = 0;
 
             //! Use the selected COM1/2 frequencies, and get the corresponding ATC stations for it
             virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const = 0;

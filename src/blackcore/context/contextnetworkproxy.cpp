@@ -7,7 +7,6 @@
  */
 
 #include "blackcore/context/contextnetworkproxy.h"
-#include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/genericdbusinterface.h"
@@ -201,11 +200,6 @@ namespace BlackCore
         bool CContextNetworkProxy::setOtherClient(const CClient &client)
         {
             return m_dBusInterface->callDBusRet<bool>(QLatin1String("setOtherClient"), client);
-        }
-
-        CVoiceRoomList CContextNetworkProxy::getSelectedVoiceRooms() const
-        {
-            return m_dBusInterface->callDBusRet<BlackMisc::Audio::CVoiceRoomList>(QLatin1String("getSelectedVoiceRooms"));
         }
 
         CAtcStationList CContextNetworkProxy::getSelectedAtcStations() const

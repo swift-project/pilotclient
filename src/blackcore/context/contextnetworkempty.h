@@ -202,13 +202,6 @@ namespace BlackCore
                 return {};
             }
 
-            //! \copydoc IContextNetwork::getSelectedVoiceRooms()
-            virtual BlackMisc::Audio::CVoiceRoomList getSelectedVoiceRooms() const override
-            {
-                logEmptyContextWarning(Q_FUNC_INFO);
-                return BlackMisc::Audio::CVoiceRoomList();
-            }
-
             //! \copydoc IContextNetwork::getSelectedAtcStations
             virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const override
             {

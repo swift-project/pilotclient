@@ -1182,19 +1182,6 @@ namespace BlackCore
             return selectedStations;
         }
 
-        CVoiceRoomList CContextNetwork::getSelectedVoiceRooms() const
-        {
-            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            const CAtcStationList stations = this->getSelectedAtcStations();
-            Q_ASSERT(stations.size() == 2);
-            CVoiceRoomList rooms;
-            const CAtcStation s1 = stations[0];
-            const CAtcStation s2 = stations[1];
-            rooms.push_back(s1.getVoiceRoom());
-            rooms.push_back(s2.getVoiceRoom());
-            return rooms;
-        }
-
         QMetaObject::Connection CContextNetwork::connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot)
         {
             Q_ASSERT_X(receiver, Q_FUNC_INFO, "Missing receiver");

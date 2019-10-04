@@ -20,7 +20,6 @@
 #include "blackmisc/aviation/modulator.h"
 #include "blackmisc/aviation/transponder.h"
 #include "blackmisc/aviation/logutils.h"
-#include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/network/voicecapabilities.h"
@@ -92,9 +91,6 @@ namespace BlackCore
         connect(m_fsdClient, &CFSDClient::serverResponseReceived,          this, &CAirspaceMonitor::onServerReplyReceived);
         connect(m_fsdClient, &CFSDClient::aircraftConfigReceived,          this, &CAirspaceMonitor::onAircraftConfigReceived);
         connect(m_fsdClient, &CFSDClient::connectionStatusChanged,         this, &CAirspaceMonitor::onConnectionStatusChanged);
-
-        // No longer existing with AFV
-        // connect(m_fsdClient, &CFSDClient::atisVoiceRoomReplyReceived,      this, &CAirspaceMonitor::onAtisVoiceRoomReceived);
 
         // AutoConnection: this should also avoid race conditions by updating the bookings
         Q_ASSERT_X(sApp && sApp->getWebDataServices(), Q_FUNC_INFO, "Missing data reader");

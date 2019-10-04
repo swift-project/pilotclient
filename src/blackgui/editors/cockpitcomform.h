@@ -15,7 +15,6 @@
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/audio/voiceroomlist.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -43,9 +42,6 @@ namespace BlackGui
 
             //! Set the XPDR values
             void setTransponder(const BlackMisc::Aviation::CTransponder &transponder);
-
-            //! Change the voice room status
-            void setVoiceRoomStatus(const BlackMisc::Audio::CVoiceRoomList &selectedVoiceRooms);
 
             //! Set selected stations
             void setSelectedAtcStations(const BlackMisc::Aviation::CAtcStationList &selectedStations);

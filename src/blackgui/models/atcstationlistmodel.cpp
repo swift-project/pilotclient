@@ -10,7 +10,6 @@
 #include "blackgui/models/atcstationtreemodel.h"
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/columns.h"
-#include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/icon.h"
@@ -51,7 +50,6 @@ namespace BlackGui
             (void)QT_TRANSLATE_NOOP("ModelAtcList", "online");
             (void)QT_TRANSLATE_NOOP("ModelAtcList", "bookedfrom");
             (void)QT_TRANSLATE_NOOP("ModelAtcList", "bookeduntil");
-            (void)QT_TRANSLATE_NOOP("ModelAtcList", "voiceroomurl");
         }
 
         void CAtcStationListModel::setStationMode(CAtcStationListModel::AtcStationMode stationMode)
@@ -76,7 +74,6 @@ namespace BlackGui
                     m_columns.addColumnIncognito(CColumn::standardString("controllername", { CAtcStation::IndexController, CUser::IndexRealName }));
                     m_columns.addColumn(CColumn("from", "booked from", CAtcStation::IndexBookedFrom, new CDateTimeFormatter(CDateTimeFormatter::formatHm())));
                     m_columns.addColumn(CColumn("until", "booked until", CAtcStation::IndexBookedUntil, new CDateTimeFormatter(CDateTimeFormatter::formatHm())));
-                    m_columns.addColumn(CColumn::standardString("voiceroomurl", { CAtcStation::IndexVoiceRoom, CVoiceRoom::IndexUrl }));
 
                     // default sort order
                     this->setSortColumnByPropertyIndex(CAtcStation::IndexRelativeDistance);

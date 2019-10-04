@@ -22,7 +22,6 @@
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/fsd/fsdclient.h"
-#include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
@@ -261,7 +260,6 @@ namespace BlackCore
             virtual void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) override;
             virtual BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const override;
             BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) const override;
-            virtual BlackMisc::Audio::CVoiceRoomList getSelectedVoiceRooms() const override;
             virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const override;
             virtual BlackMisc::Network::CUserList getUsers() const override;
             virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override;

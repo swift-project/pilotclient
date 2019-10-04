@@ -17,8 +17,6 @@
 
 #include "blackcore/application.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/audio/voiceroom.h"
-#include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircraftsituation.h"
@@ -177,35 +175,6 @@ namespace BlackCore
                 QWriteLocker l(&m_lockAircraft);
                 m_ownAircraft = ownAircraft;
             }
-
-            // voice rooms, if network is already available
-            if (this->getIContextNetwork())
-            {
-                this->resolveVoiceRooms(); // init own aircraft
-            }
-        }
-
-        void CContextOwnAircraft::resolveVoiceRooms()
-        {
-            // If VVL supported is disabled, do nothing
-            if (true) { return; }
-
-            if (!this->getIContextNetwork() || !this->getIContextAudio() || !this->getIContextApplication()) { return; } // no chance to resolve rooms
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-
-            if (m_voiceRoom1UrlOverride.isEmpty() && m_voiceRoom2UrlOverride.isEmpty() && !m_automaticVoiceRoomResolution) { return; }
-            if (!m_automaticVoiceRoomResolution) { return; } // not responsible
-
-            // requires correct frequencies set
-            // but local network uses exactly this object here, so if frequencies are set here,
-            // they are set for network context as well
-            CVoiceRoomList rooms = this->getIContextNetwork()->getSelectedVoiceRooms();
-
-            if (!m_voiceRoom1UrlOverride.isEmpty()) { rooms[0] = CVoiceRoom(m_voiceRoom1UrlOverride); }
-            if (!m_voiceRoom2UrlOverride.isEmpty()) { rooms[1] = CVoiceRoom(m_voiceRoom2UrlOverride); }
-
-            // set the rooms on the side where the audio is located
-            emit this->getIContextApplication()->fakedSetComVoiceRoom(rooms);
         }
 
         void CContextOwnAircraft::evaluateUpdateHistory()
@@ -341,7 +310,6 @@ namespace BlackCore
             if (changed)
             {
                 emit this->changedAircraftCockpit(m_ownAircraft, originator);
-                this->resolveVoiceRooms(); // cockpit COM changed
             }
             return changed;
         }
@@ -456,14 +424,8 @@ namespace BlackCore
         void CContextOwnAircraft::xCtxChangedAtcStationOnlineConnectionStatus(const CAtcStation &atcStation, bool connected)
         {
             // any of our active frequencies?
-            Q_UNUSED(connected);
-            const CSimulatedAircraft myAircraft(this->getOwnAircraft());
-
-            // relevant frequency
-            if (myAircraft.getCom1System().isActiveFrequencyWithinChannelSpacing(atcStation.getFrequency()) || myAircraft.getCom2System().isActiveFrequencyWithinChannelSpacing(atcStation.getFrequency()))
-            {
-                this->resolveVoiceRooms(); // online status changed
-            }
+            Q_UNUSED(connected)
+            Q_UNUSED(atcStation)
         }
 
         void CContextOwnAircraft::xCtxChangedSimulatorModel(const CAircraftModel &model, const CIdentifier &identifier)
@@ -505,23 +467,9 @@ namespace BlackCore
             // from the driver
         }
 
-        void CContextOwnAircraft::setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url)
-        {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << voiceRoom1Url << voiceRoom2Url; }
-            m_voiceRoom1UrlOverride = voiceRoom1Url.trimmed();
-            m_voiceRoom2UrlOverride = voiceRoom2Url.trimmed();
-            this->resolveVoiceRooms(); // override
-        }
-
-        void CContextOwnAircraft::enableAutomaticVoiceRoomResolution(bool enable)
-        {
-            if (m_debugEnabled) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << enable; }
-            m_automaticVoiceRoomResolution = enable;
-        }
-
         bool CContextOwnAircraft::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
         {
-            Q_UNUSED(originator);
+            Q_UNUSED(originator)
             if (commandLine.isEmpty()) { return false; }
             CSimpleCommandParser parser(
             {

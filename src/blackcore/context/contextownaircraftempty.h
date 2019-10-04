@@ -155,21 +155,6 @@ namespace BlackCore
                 return false;
             }
 
-            //! \copydoc IContextOwnAircraft::setAudioVoiceRoomOverrideUrls
-            virtual void setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url) override
-            {
-                Q_UNUSED(voiceRoom1Url);
-                Q_UNUSED(voiceRoom2Url);
-                logEmptyContextWarning(Q_FUNC_INFO);
-            }
-
-            //! \copydoc IContextOwnAircraft::enableAutomaticVoiceRoomResolution
-            virtual void enableAutomaticVoiceRoomResolution(bool enable) override
-            {
-                Q_UNUSED(enable);
-                logEmptyContextWarning(Q_FUNC_INFO);
-            }
-
             //! \copydoc IContextOwnAircraft::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override
             {

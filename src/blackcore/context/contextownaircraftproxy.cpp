@@ -137,16 +137,6 @@ namespace BlackCore
             m_dBusInterface->callDBus(QLatin1String("setAudioOutputVolume"), outputVolume);
         }
 
-        void CContextOwnAircraftProxy::setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url)
-        {
-            m_dBusInterface->callDBus(QLatin1String("setAudioVoiceRoomOverrideUrls"), voiceRoom1Url, voiceRoom2Url);
-        }
-
-        void CContextOwnAircraftProxy::enableAutomaticVoiceRoomResolution(bool enable)
-        {
-            m_dBusInterface->callDBus(QLatin1String("enableAutomaticVoiceRoomResolution"), enable);
-        }
-
         void CContextOwnAircraftProxy::toggleTransponderMode()
         {
             m_dBusInterface->callDBus(QLatin1String("toggleTransponderMode"));
