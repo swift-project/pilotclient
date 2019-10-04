@@ -11,6 +11,7 @@
 #ifndef BLACKCORE_AFV_CONNECTION_APISERVERCONNECTION_H
 #define BLACKCORE_AFV_CONNECTION_APISERVERCONNECTION_H
 
+#include "blackmisc/logcategorylist.h"
 #include "blackcore/afv/dto.h"
 #include "blackcore/application.h"
 
@@ -42,6 +43,9 @@ namespace BlackCore
                 {
                     NoError
                 };
+
+                //! Categories
+                static const BlackMisc::CLogCategoryList &getLogCategories();
 
                 //! Constructor
                 CApiServerConnection(const QString &address, QObject *parent = nullptr);

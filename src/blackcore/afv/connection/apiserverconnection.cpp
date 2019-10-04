@@ -11,6 +11,7 @@
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/network/external/qjsonwebtoken.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/logcategory.h"
 
 #include <QJsonObject>
 #include <QJsonArray>
@@ -28,6 +29,12 @@ namespace BlackCore
     {
         namespace Connection
         {
+            const CLogCategoryList &CApiServerConnection::getLogCategories()
+            {
+                static const CLogCategoryList cats { CLogCategory::audio(), CLogCategory::vatsimSpecific() };
+                return cats;
+            }
+
             CApiServerConnection::CApiServerConnection(const QString &address, QObject *parent) :
                 QObject(parent),
                 m_address(address)
