@@ -29,20 +29,17 @@ int main(int argc, char *argv[])
     //! [SwiftApplicationDemo]
     CGuiApplication::highDpiScreenSupport(CGuiApplication::parseScaleFactor(argc, argv));
     QApplication qa(argc, argv);
-    Q_UNUSED(qa); // init of qa is required, but qa not used
+    Q_UNUSED(qa) // init of qa is required, but qa not used
 
     CCrashHandler::instance()->init();
     CGuiApplication a(CApplicationInfo::swiftCore(), CApplicationInfo::PilotClientCore, CIcons::swiftCore24());
     a.addWindowStateOption();
     a.addDBusAddressOption();
     a.addVatlibOptions();
-    a.addParserOption({{"c", "coreaudio"}, QCoreApplication::translate("main", "Audio in core.")});
     if (!a.parseAndSynchronizeSetup()) { return EXIT_FAILURE; }
 
     const QString dBusAdress(a.getCmdDBusAddressValue());
-    a.useContexts(a.isParserOptionSet("coreaudio") ?
-                  CCoreFacadeConfig::forCoreAllLocalInDBus(dBusAdress) :
-                  CCoreFacadeConfig::forCoreAllLocalInDBusNoAudio(dBusAdress));
+    a.useContexts(CCoreFacadeConfig::forCoreAllLocalInDBus(dBusAdress));
     if (!a.start())
     {
         a.gracefulShutdown();

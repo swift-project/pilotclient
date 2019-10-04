@@ -50,13 +50,13 @@ CStatusMessageList CSwiftGuiStdApplication::startHookIn()
     CStatusMessageList msgs;
     if (!dBusAddress.isEmpty() && coreModeStr.isEmpty())
     {
-        coreMode = CoreModes::CoreExternalAudioGui; // default
+        coreMode = CoreModes::CoreExternal; // default
         const CStatusMessage m = CStatusMessage(this, CLogCategory::validation()).
                                  info(u"No DBus address, setting core mode: '%1'")
                                  << CoreModes::coreModeToString(coreMode);
         msgs.push_back(m);
     }
-    else if (dBusAddress.isEmpty() && (coreMode == CoreModes::CoreExternalCoreAudio || coreMode == CoreModes::CoreExternalAudioGui))
+    else if (dBusAddress.isEmpty() && coreMode == CoreModes::CoreExternal)
     {
         dBusAddress = CDBusServer::sessionBusAddress(); // a possible default
         const CStatusMessage m = CStatusMessage(this, CLogCategory::validation()).
@@ -68,11 +68,8 @@ CStatusMessageList CSwiftGuiStdApplication::startHookIn()
     CCoreFacadeConfig runtimeConfig;
     switch (coreMode)
     {
-    case CoreModes::CoreExternalCoreAudio:
+    case CoreModes::CoreExternal:
         runtimeConfig = CCoreFacadeConfig::remote(dBusAddress);
-        break;
-    case CoreModes::CoreExternalAudioGui:
-        runtimeConfig = CCoreFacadeConfig::remoteLocalAudio(dBusAddress);
         break;
     default:
     case CoreModes::CoreInGuiProcess:

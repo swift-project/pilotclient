@@ -125,8 +125,8 @@ CEnableForFramelessWindow::WindowMode CSwiftLauncher::getWindowMode() const
 CoreModes::CoreMode CSwiftLauncher::getCoreMode() const
 {
     if (ui->rb_SwiftStandalone->isChecked())      { return CoreModes::CoreInGuiProcess; }
-    if (ui->rb_SwiftCoreAudioOnCore->isChecked()) { return CoreModes::CoreExternalCoreAudio; }
-    if (ui->rb_SwiftCoreAudioOnGui->isChecked())  { return CoreModes::CoreExternalAudioGui; }
+    if (ui->rb_SwiftCoreAudioOnCore->isChecked()) { return CoreModes::CoreExternal; }
+    if (ui->rb_SwiftCoreAudioOnGui->isChecked())  { return CoreModes::CoreExternal; }
 
     Q_ASSERT_X(false, Q_FUNC_INFO, "wrong mode");
     return CoreModes::CoreInGuiProcess;
