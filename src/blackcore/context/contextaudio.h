@@ -11,21 +11,27 @@
 #ifndef BLACKCORE_CONTEXT_CONTEXTAUDIO_H
 #define BLACKCORE_CONTEXT_CONTEXTAUDIO_H
 
+#include "blackcore/afv/clients/afvclient.h"
+#include "blackcore/audio/audiosettings.h"
 #include "blackcore/context/context.h"
+#include "blackcore/actionbind.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/blackcoreexport.h"
-
+#include "blacksound/selcalplayer.h"
+#include "blacksound/notificationplayer.h"
+#include "blackmisc/macos/microphoneaccess.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/audio/notificationsounds.h"
-#include "blackmisc/audio/voiceroom.h"
-#include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/audio/voicesetup.h"
 #include "blackmisc/audio/ptt.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/selcal.h"
+#include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/network/userlist.h"
+#include "blackmisc/input/actionhotkeydefs.h"
 #include "blackmisc/identifier.h"
 
 #include <QObject>
@@ -35,12 +41,7 @@
 
 class QDBusConnection;
 
-namespace BlackMisc
-{
-    class CDBusServer;
-    namespace Audio { class CAudioDeviceInfo; }
-    namespace Aviation { class CCallsign; }
-}
+namespace BlackMisc { class CDBusServer; }
 
 //! \addtogroup dbus
 //! @{
@@ -63,9 +64,11 @@ namespace BlackCore
             Q_OBJECT
             Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAUDIO_INTERFACENAME)
 
+            friend class BlackCore::CCoreFacade;
+
         protected:
             //! Constructor
-            IContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContext(mode, runtime) {}
+            IContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 
         public:
             //! Interface name
@@ -81,9 +84,61 @@ namespace BlackCore
             static IContextAudio *create(CCoreFacade *runtime, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &connection);
 
             //! Destructor
-            virtual ~IContextAudio() override {}
+            virtual ~IContextAudio() override;
+
+            // -------- parts which can run in core and GUI, referring to local voice client ------------
+
+            //! Reference to voice client
+            BlackCore::Afv::Clients::CAfvClient &voiceClient() { return m_voiceClient; }
+
+            //! Audio devices @{
+            BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const;
+            BlackMisc::Audio::CAudioDeviceInfoList getAudioInputDevices()  const { return this->getAudioDevices().getInputDevices(); }
+            BlackMisc::Audio::CAudioDeviceInfoList getAudioOutputDevices() const { return this->getAudioDevices().getOutputDevices(); }
+            //! @}
+
+            //! Get current audio device
+            //! \return input and output devices
+            BlackMisc::Audio::CAudioDeviceInfoList getCurrentAudioDevices() const;
+
+            //! Set current audio device
+            //! \param audioDevice can be input or audio device
+            void setCurrentAudioDevices(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
+
+            //! Volume @{
+            void setVoiceOutputVolume(int volume);
+            int  getVoiceOutputVolume() const;
+            void setMute(bool muted);
+            bool isMuted() const;
+            //! @}
+
+            //! SELCAL
+            void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal);
+
+            //! Notification sounds
+            void playNotification(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume = -1);
+
+            //! Loopback @{
+            void enableAudioLoopback(bool enable = true);
+            bool isAudioLoopbackEnabled() const;
+            //! @}
+
+            //! Voice setup @{
+            BlackMisc::Audio::CVoiceSetup getVoiceSetup() const;
+            void setVoiceSetup(const BlackMisc::Audio::CVoiceSetup &setup);
+            //! @}
+
+            //! Info string about audio
+            QString audioRunsWhereInfo() const;
+
+            //! Audio runs where
+            const BlackMisc::CIdentifier &audioRunsWhere() const;
+
+            // -------- parts which can run in core and GUI, referring to local voice client ------------
 
         signals:
+            // -------- local settings, not DBus relayed -------
+
             //! Audio volume changed
             //! \sa setVoiceOutputVolume
             void changedAudioVolume(int volume);
@@ -100,58 +155,83 @@ namespace BlackCore
             //! Changed slection of audio devices
             void changedSelectedAudioDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
 
+            // -------- local settings, not DBus relayed -------
+
         public slots:
-            //! Audio devices @{
-            virtual BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const = 0;
-            BlackMisc::Audio::CAudioDeviceInfoList getAudioInputDevices()  const { return this->getAudioDevices().getInputDevices(); }
-            BlackMisc::Audio::CAudioDeviceInfoList getAudioOutputDevices() const { return this->getAudioDevices().getOutputDevices(); }
+            // ------------- DBus ---------------
+
+            //! \addtogroup swiftdotcommands
+            //! @{
+            //! <pre>
+            //! .mute                          mute             BlackCore::Context::CContextAudio
+            //! .unmute                        unmute           BlackCore::Context::CContextAudio
+            //! .vol .volume   volume 0..100   set volume       BlackCore::Context::CContextAudio
+            //! </pre>
+            //! @}
+            //! \copydoc IContextAudio::parseCommandLine
+            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+
+            // ------------- DBus ---------------
+
+        private:
+            //! Enable/disable voice transmission, nornally used with hotkey @{
+            void setVoiceTransmission(bool enable, BlackMisc::Audio::PTTCOM com);
+            void setVoiceTransmissionCom1(bool enabled);
+            void setVoiceTransmissionCom2(bool enabled);
+            void setVoiceTransmissionComActive(bool enabled);
             //! @}
 
-            //! Audio runs where
-            virtual BlackMisc::CIdentifier audioRunsWhere() const = 0;
+            //! Change the device settings
+            void changeDeviceSettings();
 
-            //! Info string about audio
-            QString audioRunsWhereInfo() const;
+            //! Changed audio settings
+            void onChangedAudioSettings();
 
-            //! Get current audio device
-            //! \return input and output devices
-            virtual BlackMisc::Audio::CAudioDeviceInfoList getCurrentAudioDevices() const = 0;
+            //! Audio increase/decrease volume @{
+            void audioIncreaseVolume(bool enabled);
+            void audioDecreaseVolume(bool enabled);
+            //! @}
 
-            //! Set current audio device
-            //! \param audioDevice can be input or audio device
-            virtual void setCurrentAudioDevices(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice) = 0;
+            //! Get current COM unit from cockpit
+            //! \remark cross context
+            //! @{
+            BlackMisc::Aviation::CComSystem getOwnComSystem(BlackMisc::Aviation::CComSystem::ComUnit unit) const;
+            bool isComIntegratedWithSimulator() const;
+            //! @}
 
-            //! Set voice output volume (0..300)
-            virtual void setVoiceOutputVolume(int volume) = 0;
+            //! Changed cockpit
+            //! \remark cross context
+            void xCtxChangedAircraftCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
-            //! Voice output volume (0..300)
-            virtual int getVoiceOutputVolume() const = 0;
+            //! Network connection status
+            void xCtxNetworkConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
-            //! Set mute state
-            virtual void setMute(bool mute) = 0;
+            CActionBind m_actionPtt     { BlackMisc::Input::pttHotkeyAction(),     BlackMisc::Input::pttHotkeyIcon(), this, &IContextAudio::setVoiceTransmissionComActive };
+            CActionBind m_actionPttCom1 { BlackMisc::Input::pttCom1HotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &IContextAudio::setVoiceTransmissionCom1 };
+            CActionBind m_actionPttCom2 { BlackMisc::Input::pttCom2HotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &IContextAudio::setVoiceTransmissionCom2 };
+            CActionBind m_actionAudioVolumeIncrease { BlackMisc::Input::audioVolumeIncreaseHotkeyAction(), BlackMisc::Input::audioVolumeIncreaseHotkeyIcon(), this, &IContextAudio::audioIncreaseVolume };
+            CActionBind m_actionAudioVolumeDecrease { BlackMisc::Input::audioVolumeDecreaseHotkeyAction(), BlackMisc::Input::audioVolumeDecreaseHotkeyIcon(), this, &IContextAudio::audioDecreaseVolume };
 
-            //! Is muted?
-            virtual bool isMuted() const = 0;
+            int m_outVolumeBeforeMute = 90;
+            static constexpr int MinUnmuteVolume = 20; //!< minimum volume when unmuted
 
-            //! Play SELCAL tone
-            virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) = 0;
+            // settings
+            BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings  { this, &IContextAudio::onChangedAudioSettings };
+            BlackMisc::CSetting<Audio::TInputDevice>    m_inputDeviceSetting  { this, &IContextAudio::changeDeviceSettings };
+            BlackMisc::CSetting<Audio::TOutputDevice>   m_outputDeviceSetting { this, &IContextAudio::changeDeviceSettings };
 
-            //! Play notification sound
-            //! \param considerSettings consider settings (notification on/off), false means settings ignored
-            //! \param volume 0..100
-            virtual void playNotification(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume = -1) = 0;
+            // AFV
+            Afv::Clients::CAfvClient m_voiceClient;
 
-            //! Enable audio loopback
-            virtual void enableAudioLoopback(bool enable = true) = 0;
+            // Players
+            BlackSound::CSelcalPlayer      *m_selcalPlayer = nullptr;
+            BlackSound::CNotificationPlayer m_notificationPlayer;
 
-            //! Is loobback enabled?
-            virtual bool isAudioLoopbackEnabled() const = 0;
-
-            //! Get voice setup
-            virtual BlackMisc::Audio::CVoiceSetup getVoiceSetup() const = 0;
-
-            //! Set voice setup
-            virtual void setVoiceSetup(const BlackMisc::Audio::CVoiceSetup &setup) = 0;
+#ifdef Q_OS_MAC
+            BlackMisc::CMacOSMicrophoneAccess m_micAccess;
+#endif
+            //! Init microphone
+            void delayedInitMicrophone();
         };
     } // ns
 } // ns

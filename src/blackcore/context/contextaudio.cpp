@@ -9,18 +9,58 @@
 #include "contextaudio.h"
 
 #include "blackcore/context/contextaudio.h"
-#include "blackcore/context/contextaudioempty.h"
+#include "blackcore/context/contextnetwork.h"      // for user login
+#include "blackcore/context/contextownaircraft.h"  // for COM integration
+#include "blackcore/context/contextsimulator.h"    // for COM intergration
 #include "blackcore/context/contextaudioimpl.h"
 #include "blackcore/context/contextaudioproxy.h"
+#include "blackmisc/simplecommandparser.h"
 #include "blackmisc/dbusserver.h"
+#include "blackmisc/verify.h"
 #include "blackmisc/icons.h"
 
 using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Audio;
+using namespace BlackMisc::Network;
+using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Simulation;
+using namespace BlackSound;
+using namespace BlackCore::Afv::Clients;
 
 namespace BlackCore
 {
     namespace Context
     {
+        IContextAudio::IContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
+            IContext(mode, runtime), m_voiceClient("https://voice1.vatsim.uk")
+        {
+            const CSettings as = m_audioSettings.getThreadLocal();
+            this->setVoiceOutputVolume(as.getOutVolume());
+            m_selcalPlayer = new CSelcalPlayer(CAudioDeviceInfo::getDefaultOutputDevice(), this);
+
+            connect(&m_voiceClient, &CAfvClient::ptt, this, &IContextAudio::ptt);
+
+            this->changeDeviceSettings();
+            QPointer<IContextAudio> myself(this);
+            QTimer::singleShot(5000, this, [ = ]
+            {
+                if (!myself) { return; }
+                if (!sApp || sApp->isShuttingDown()) { return; }
+                myself->onChangedAudioSettings();
+                myself->delayedInitMicrophone();
+            });
+        }
+
+        void IContextAudio::delayedInitMicrophone()
+        {
+#ifdef Q_OS_MAC
+            // m_voiceInputDevice = m_voice->createInputDevice();
+            // m_voice->connectVoice(m_voiceInputDevice.get(), m_audioMixer.get(), IAudioMixer::InputMicrophone);
+            CLogMessage(this).info(u"MacOS delayed input device init");
+#endif
+        }
+
         const QString &IContextAudio::InterfaceName()
         {
             static const QString s(BLACKCORE_CONTEXTAUDIO_INTERFACENAME);
@@ -35,25 +75,332 @@ namespace BlackCore
 
         IContextAudio *IContextAudio::create(CCoreFacade *runtime, CCoreFacadeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &connection)
         {
+            // for audio no empty context is available
+            // since IContextAudio provides audio on either side (core/GUI) we do not use ContextAudioEmpty
+            // ContextAudioEmpty would cause issue, as it is initializing "common parts" during shutdown
             switch (mode)
             {
             case CCoreFacadeConfig::Local:
             case CCoreFacadeConfig::LocalInDBusServer:
+            default:
                 return (new CContextAudio(mode, runtime))->registerWithDBus(server);
             case CCoreFacadeConfig::Remote:
                 return new CContextAudioProxy(CDBusServer::coreServiceName(connection), connection, mode, runtime);
-            default:
-                return new CContextAudioEmpty(runtime); // audio not mandatory
+            case CCoreFacadeConfig::NotUsed:
+                BLACK_VERIFY_X(false, Q_FUNC_INFO, "Empty context not supported for audio (since AFV)");
+                return nullptr;
             }
+        }
+
+        IContextAudio::~IContextAudio()
+        {
+            m_voiceClient.stop();
+        }
+
+        const CIdentifier &IContextAudio::audioRunsWhere() const
+        {
+            static const CIdentifier i("IContextAudio");
+            return i;
         }
 
         QString IContextAudio::audioRunsWhereInfo() const
         {
-            if (this->isEmptyObject()) { return "no audio"; }
-            const CIdentifier i = this->audioRunsWhere();
-            return this->isUsingImplementingObject() ?
-                QStringLiteral("Local audio on '%1', '%2'.").arg(i.getMachineName(), i.getProcessName()) :
-                QStringLiteral("Remote audio on '%1', '%2'.").arg(i.getMachineName(), i.getProcessName());
+            static const QString s = QStringLiteral("Local audio on '%1', '%2'.").arg(audioRunsWhere().getMachineName(), audioRunsWhere().getProcessName());
+            return s;
+        }
+
+        bool IContextAudio::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
+        {
+            Q_UNUSED(originator)
+            if (commandLine.isEmpty()) { return false; }
+            CSimpleCommandParser parser(
+            {
+                ".vol", ".volume",    // output volume
+                ".mute",              // mute
+                ".unmute"             // unmute
+            });
+            parser.parse(commandLine);
+            if (!parser.isKnownCommand()) { return false; }
+
+            if (parser.matchesCommand(".mute"))
+            {
+                this->setMute(true);
+                return true;
+            }
+            else if (parser.matchesCommand(".unmute"))
+            {
+                this->setMute(false);
+                return true;
+            }
+            else if (parser.commandStartsWith("vol") && parser.countParts() > 1)
+            {
+                int v = parser.toInt(1);
+                this->setVoiceOutputVolume(v);
+            }
+            return false;
+        }
+
+        CAudioDeviceInfoList IContextAudio::getAudioDevices() const
+        {
+            return CAudioDeviceInfoList::allDevices();
+        }
+
+        CAudioDeviceInfoList IContextAudio::getCurrentAudioDevices() const
+        {
+            // either the devices really used, or settings
+            CAudioDeviceInfo inputDevice = m_voiceClient.getInputDevice();
+            if (!inputDevice.isValid()) { inputDevice = CAudioDeviceInfo::getDefaultInputDevice(); }
+
+            CAudioDeviceInfo outputDevice = m_voiceClient.getOutputDevice();
+            if (!outputDevice.isValid()) { outputDevice = CAudioDeviceInfo::getDefaultOutputDevice(); }
+
+            CAudioDeviceInfoList devices;
+            devices.push_back(inputDevice);
+            devices.push_back(outputDevice);
+            return devices;
+        }
+
+        void IContextAudio::setCurrentAudioDevices(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice)
+        {
+            if (!inputDevice.getName().isEmpty())  { m_inputDeviceSetting.setAndSave(inputDevice.getName()); }
+            if (!outputDevice.getName().isEmpty()) { m_outputDeviceSetting.setAndSave(outputDevice.getName()); }
+            const bool changed = m_voiceClient.restartWithNewDevices(inputDevice, outputDevice);
+            if (changed)
+            {
+                emit this->changedSelectedAudioDevices(this->getCurrentAudioDevices());
+            }
+        }
+
+        void IContextAudio::setVoiceOutputVolume(int volume)
+        {
+            const bool wasMuted = this->isMuted();
+            volume = CSettings::fixOutVolume(volume);
+
+            const int currentVolume = m_voiceClient.getNormalizedOutputVolume();
+            const bool changedVoiceOutput = (currentVolume != volume);
+            if (changedVoiceOutput)
+            {
+                m_voiceClient.setNormalizedOutputVolume(volume);
+                m_outVolumeBeforeMute = currentVolume;
+
+                emit this->changedAudioVolume(volume);
+                if ((volume > 0 && wasMuted) || (volume < 1 && !wasMuted))
+                {
+                    // inform about muted
+                    emit this->changedMute(volume < 1);
+                }
+            }
+
+            CSettings as(m_audioSettings.getThreadLocal());
+            if (as.getOutVolume() != volume)
+            {
+                as.setOutVolume(volume);
+                m_audioSettings.set(as);
+            }
+        }
+
+        int IContextAudio::getVoiceOutputVolume() const
+        {
+            return m_voiceClient.getNormalizedOutputVolume();
+        }
+
+        void IContextAudio::setMute(bool muted)
+        {
+            if (this->isMuted() == muted) { return; } // avoid roundtrips / unnecessary signals
+
+            if (m_voiceClient.isMuted() == muted) { return; }
+            m_voiceClient.setMuted(muted);
+
+            // signal
+            emit this->changedMute(muted);
+        }
+
+        bool IContextAudio::isMuted() const
+        {
+            return m_voiceClient.isMuted();
+        }
+
+        void IContextAudio::playSelcalTone(const CSelcal &selcal)
+        {
+            const CTime t = m_selcalPlayer->play(90, selcal);
+            const int ms = t.toMs();
+            if (ms > 10)
+            {
+                // As of https://dev.swift-project.org/T558 play additional notification
+                const QPointer<const IContextAudio> myself(this);
+                QTimer::singleShot(ms, this, [ = ]
+                {
+                    if (!sApp || sApp->isShuttingDown() || !myself) { return; }
+                    this->playNotification(CNotificationSounds::NotificationTextMessageSupervisor, true);
+                });
+            }
+        }
+
+        void IContextAudio::playNotification(CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume)
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << notification; }
+
+            const CSettings settings = m_audioSettings.getThreadLocal();
+            const bool play = !considerSettings || settings.isNotificationFlagSet(notification);
+            if (!play) { return; }
+            if (notification == CNotificationSounds::PTTClickKeyDown && (considerSettings && settings.noAudioTransmission()))
+            {
+                /**
+                if (!this->canTalk())
+                {
+                    // warning sound
+                    notification = CNotificationSounds::NotificationNoAudioTransmission;
+                }
+                **/
+            }
+
+            if (volume < 0 || volume > 100)
+            {
+                volume = 90;
+                if (considerSettings) { volume = qMax(25, settings.getNotificationVolume()); }
+            }
+            m_notificationPlayer.play(notification, volume);
+        }
+
+        void IContextAudio::enableAudioLoopback(bool enable)
+        {
+            m_voiceClient.setLoopBack(enable);
+        }
+
+        bool IContextAudio::isAudioLoopbackEnabled() const
+        {
+            return m_voiceClient.isLoopback();
+        }
+
+        void IContextAudio::setVoiceSetup(const CVoiceSetup &setup)
+        {
+            // could be recycled for some AFV setup
+            Q_UNUSED(setup)
+        }
+
+        CVoiceSetup IContextAudio::getVoiceSetup() const
+        {
+            return CVoiceSetup();
+        }
+
+        void IContextAudio::setVoiceTransmission(bool enable, PTTCOM com)
+        {
+            m_voiceClient.setPttForCom(enable, com);
+        }
+
+        void IContextAudio::setVoiceTransmissionCom1(bool enabled)
+        {
+            this->setVoiceTransmission(enabled, COM1);
+        }
+
+        void IContextAudio::setVoiceTransmissionCom2(bool enabled)
+        {
+            this->setVoiceTransmission(enabled, COM2);
+        }
+
+        void IContextAudio::setVoiceTransmissionComActive(bool enabled)
+        {
+            this->setVoiceTransmission(enabled, COMActive);
+        }
+
+        void IContextAudio::changeDeviceSettings()
+        {
+            const QString inputDeviceName = m_inputDeviceSetting.get();
+            CAudioDeviceInfo input;
+            if (!inputDeviceName.isEmpty())
+            {
+                const CAudioDeviceInfoList inputDevs = this->getAudioInputDevices();
+                input = inputDevs.findByName(inputDeviceName);
+            }
+
+            const QString outputDeviceName = m_outputDeviceSetting.get();
+            CAudioDeviceInfo output;
+            if (!outputDeviceName.isEmpty())
+            {
+                const CAudioDeviceInfoList outputDevs = this->getAudioOutputDevices();
+                output = outputDevs.findByName(outputDeviceName);
+            }
+
+            this->setCurrentAudioDevices(input, output);
+        }
+
+        void IContextAudio::onChangedAudioSettings()
+        {
+            const CSettings s = m_audioSettings.get();
+            const QString dir = s.getNotificationSoundDirectory();
+            m_notificationPlayer.updateDirectory(dir);
+            this->setVoiceOutputVolume(s.getOutVolume());
+        }
+
+        void IContextAudio::audioIncreaseVolume(bool enabled)
+        {
+            if (!enabled) { return; }
+            const int v = qRound(this->getVoiceOutputVolume() * 1.2);
+            this->setVoiceOutputVolume(v);
+        }
+
+        void IContextAudio::audioDecreaseVolume(bool enabled)
+        {
+            if (!enabled) { return; }
+            const int v = qRound(this->getVoiceOutputVolume() / 1.2);
+            this->setVoiceOutputVolume(v);
+        }
+
+        CComSystem IContextAudio::getOwnComSystem(CComSystem::ComUnit unit) const
+        {
+            if (!this->getIContextOwnAircraft())
+            {
+                // context not available
+                const double defFreq = 122.8;
+                switch (unit)
+                {
+                case CComSystem::Com1: return CComSystem::getCom1System(defFreq, defFreq);
+                case CComSystem::Com2: return CComSystem::getCom2System(defFreq, defFreq);
+                default: break;
+                }
+                return CComSystem::getCom1System(defFreq, defFreq);
+            }
+            return this->getIContextOwnAircraft()->getOwnComSystem(unit);
+        }
+
+        bool IContextAudio::isComIntegratedWithSimulator() const
+        {
+            if (!this->getIContextSimulator()) { return false; }
+            return this->getIContextSimulator()->getSimulatorSettings().isComIntegrated();
+        }
+
+        void IContextAudio::xCtxChangedAircraftCockpit(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
+        {
+            Q_UNUSED(aircraft)
+            Q_UNUSED(originator)
+
+            /**
+            if (CIdentifiable::isMyIdentifier(originator)) { return; }
+            const bool integrated = this->isComIntegratedWithSimulator();
+            if (integrated)
+            {
+                // set as in cockpit
+                const bool com1Rec = aircraft.getCom1System().isReceiveEnabled();
+                const bool com2Rec = aircraft.getCom2System().isReceiveEnabled();
+            }
+            **/
+        }
+
+        void IContextAudio::xCtxNetworkConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
+        {
+            Q_UNUSED(from)
+            BLACK_VERIFY_X(this->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
+            if (to.isConnected() && this->getIContextNetwork())
+            {
+                const CUser connectedUser = this->getIContextNetwork()->getConnectedServer().getUser();
+                m_voiceClient.connectTo(connectedUser.getId(), connectedUser.getPassword(), connectedUser.getCallsign().asString());
+                m_voiceClient.start(CAudioDeviceInfo::getDefaultInputDevice(), CAudioDeviceInfo::getDefaultOutputDevice(), {0, 1});
+            }
+            else if (to.isDisconnected())
+            {
+                m_voiceClient.stop();
+                m_voiceClient.disconnectFrom();
+            }
         }
     } // ns
 } // ns

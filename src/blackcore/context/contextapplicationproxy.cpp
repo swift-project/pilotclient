@@ -64,9 +64,6 @@ namespace BlackCore
                                    "registrationChanged", this, SIGNAL(registrationChanged()));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                                   "fakedSetComVoiceRoom", this, SIGNAL(fakedSetComVoiceRoom(BlackMisc::Audio::CVoiceRoomList)));
-            Q_ASSERT(s);
-            s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
                                    "hotkeyActionsRegistered", this, SIGNAL(hotkeyActionsRegistered(QStringList, BlackMisc::CIdentifier)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
