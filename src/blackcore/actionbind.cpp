@@ -26,6 +26,7 @@ namespace BlackCore
 
     CActionBind::~CActionBind()
     {
+        // void
     }
 
     void CActionBind::unbind()

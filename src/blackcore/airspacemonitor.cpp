@@ -739,28 +739,6 @@ namespace BlackCore
         return;
         Q_UNUSED(url)
         Q_UNUSED(callsign)
-
-        /**
-        // URL
-        const QString trimmedUrl = url.trimmed();
-        CPropertyIndexVariantMap vm({ CAtcStation::IndexVoiceRoom, CVoiceRoom::IndexUrl }, trimmedUrl);
-        const int changedOnline = this->updateOnlineStation(callsign, vm, true, true);
-        if (changedOnline < 1) { return; }
-
-        Q_ASSERT(changedOnline == 1);
-        const CAtcStation station = m_atcStationsOnline.findFirstByCallsign(callsign);
-        emit this->changedAtcStationOnlineConnectionStatus(station, true); // send when voice room url is available
-
-        vm.addValue(CAtcStation::IndexIsOnline, true); // with voice room ATC is online
-        this->updateBookedStation(callsign, vm);
-
-        // receiving voice room means ATC has voice
-        if (!trimmedUrl.isEmpty())
-        {
-            vm = CPropertyIndexVariantMap(CClient::IndexVoiceCapabilities, CVariant::from(CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::Voice)));
-            this->updateOrAddClient(callsign, vm, false);
-        }
-        **/
     }
 
     void CAirspaceMonitor::onAtisLogoffTimeReceived(const CCallsign &callsign, const QString &zuluTime)

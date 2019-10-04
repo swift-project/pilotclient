@@ -37,7 +37,7 @@ namespace BlackCore
         ContextMode m_ownAircraft;
         ContextMode m_settings;
         ContextMode m_simulator;
-        QString m_dbusAddress; //!< for boot strapping
+        QString     m_dbusAddress; //!< for boot strapping
 
     public:
         //! Constructor
@@ -53,25 +53,25 @@ namespace BlackCore
         {}
 
         //! application mode
-        ContextMode getModeApplication() const { return this->m_application; }
+        ContextMode getModeApplication() const { return m_application; }
 
         //! audio mode
-        ContextMode getModeAudio() const { return this->m_audio; }
+        ContextMode getModeAudio() const { return m_audio; }
 
         //! network mode
-        ContextMode getModeNetwork() const { return this->m_network; }
+        ContextMode getModeNetwork() const { return m_network; }
 
         //! own aircraft
-        ContextMode getModeOwnAircraft() const { return this->m_ownAircraft; }
+        ContextMode getModeOwnAircraft() const { return m_ownAircraft; }
 
         //! settings mode
-        ContextMode getModeSettings() const { return this->m_settings; }
+        ContextMode getModeSettings() const { return m_settings; }
 
         //! simulator mode
-        ContextMode getModeSimulator() const { return this->m_simulator; }
+        ContextMode getModeSimulator() const { return m_simulator; }
 
         //! local settings?
-        bool hasLocalSettings() const { return this->m_settings == Local || this->m_settings == LocalInDBusServer; }
+        bool hasLocalSettings() const { return m_settings == Local || m_settings == LocalInDBusServer; }
 
         //! requires server (at least one in server)?
         bool requiresDBusSever() const;
@@ -80,10 +80,10 @@ namespace BlackCore
         bool requiresDBusConnection() const;
 
         //! DBus address
-        QString getDBusAddress() const { return this->m_dbusAddress; }
+        QString getDBusAddress() const { return m_dbusAddress; }
 
         //! DBus address?
-        bool hasDBusAddress() const { return !this->m_dbusAddress.isEmpty(); }
+        bool hasDBusAddress() const { return !m_dbusAddress.isEmpty(); }
 
         //! Any context in given mode
         bool any(ContextMode mode) const;

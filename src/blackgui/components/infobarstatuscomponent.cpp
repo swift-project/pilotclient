@@ -38,6 +38,7 @@ using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackGui;
 using namespace BlackMisc;
+using namespace BlackMisc::Audio;
 using namespace BlackMisc::Network;
 
 namespace BlackGui
@@ -117,12 +118,6 @@ namespace BlackGui
             CGuiUtility::setElidedText(ui->lbl_MapperReady, QStringLiteral("mapper ready"), Qt::ElideRight);
             CGuiUtility::setElidedText(ui->lbl_Ptt, QStringLiteral("PTT"), Qt::ElideRight);
             CGuiUtility::setElidedText(ui->lbl_Simulator, QStringLiteral("simulator"), Qt::ElideRight);
-
-//            CGuiUtility::setElidedText(ui->lbl_Audio, QStringLiteral("au"), QStringLiteral("audio"), Qt::ElideRight);
-//            CGuiUtility::setElidedText(ui->lbl_DBus, QStringLiteral("DBus"), {}, Qt::ElideRight);
-//            CGuiUtility::setElidedText(ui->lbl_MapperReady, QStringLiteral("map"), QStringLiteral("mapper ready"), Qt::ElideRight);
-//            CGuiUtility::setElidedText(ui->lbl_Ptt, QStringLiteral("PTT"), QStringLiteral("push to talk"), Qt::ElideRight);
-//            CGuiUtility::setElidedText(ui->lbl_Simulator, QStringLiteral("sim"), QStringLiteral("simulator"), Qt::ElideRight);
         }
 
         void CInfoBarStatusComponent::setDBusStatus(bool dbus)
@@ -189,7 +184,7 @@ namespace BlackGui
 
         void CInfoBarStatusComponent::onNetworkConnectionChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
-            Q_UNUSED(from);
+            Q_UNUSED(from)
             switch (to.getConnectionStatus())
             {
             case CConnectionStatus::Disconnected:
@@ -233,7 +228,7 @@ namespace BlackGui
                 }
                 else if (actions.size() > 1 && selectedItem == actions.at(1))
                 {
-                    Audio::startWindowsMixer();
+                    startWindowsMixer();
                 }
             }
         }

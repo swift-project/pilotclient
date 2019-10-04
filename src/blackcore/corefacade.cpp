@@ -177,7 +177,7 @@ namespace BlackCore
     void CCoreFacade::initPostSetup(QMap<QString, int> &times)
     {
         bool c = false;
-        Q_UNUSED(c); // for release version
+        Q_UNUSED(c) // for release version
         QTime time;
         time.start();
 

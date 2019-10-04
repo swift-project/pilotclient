@@ -21,6 +21,7 @@
 #include <QtGlobal>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Audio;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 
@@ -41,28 +42,28 @@ namespace BlackGui
 
             bool c = connect(ui->pb_ShowWinMixer, &QPushButton::pressed, this, &CAudioVolumeComponent::onWindowsMixerRequested);
             Q_ASSERT(c);
-            Q_UNUSED(c);
+            Q_UNUSED(c)
             c = connect(ui->hs_Volume, &QSlider::valueChanged, this, &CAudioVolumeComponent::changeOutputVolumeFromSlider);
             Q_ASSERT(c);
-            Q_UNUSED(c);
+            Q_UNUSED(c)
             c = connect(ui->sb_Volume, qOverload<int>(&QSpinBox::valueChanged), this, &CAudioVolumeComponent::changeOutputVolumeFromSpinBox);
             Q_ASSERT(c);
-            Q_UNUSED(c);
+            Q_UNUSED(c)
             c = connect(ui->pb_Volume100, &QPushButton::clicked, this, &CAudioVolumeComponent::setVolume100);
             Q_ASSERT(c);
-            Q_UNUSED(c);
+            Q_UNUSED(c)
 
             c = connect(sGui->getIContextAudio(), &IContextAudio::changedMute, this, &CAudioVolumeComponent::onMuteChanged);
             Q_ASSERT(c);
-            Q_UNUSED(c);
+            Q_UNUSED(c)
             connect(sGui->getIContextAudio(), &IContextAudio::changedAudioVolume, this, &CAudioVolumeComponent::onOutputVolumeChanged);
             Q_ASSERT(c);
-            Q_UNUSED(c);
+            Q_UNUSED(c)
 
             // to audio audio context
             c = connect(ui->pb_Mute, &QPushButton::toggled, sGui->getIContextAudio(), &IContextAudio::setMute);
             Q_ASSERT(c);
-            Q_UNUSED(c);
+            Q_UNUSED(c)
 
             if (sGui->getIContextAudio()->isUsingImplementingObject())
             {
@@ -147,7 +148,7 @@ namespace BlackGui
 
         void CAudioVolumeComponent::onWindowsMixerRequested()
         {
-            Audio::startWindowsMixer();
+            startWindowsMixer();
         }
 
     } // namespace

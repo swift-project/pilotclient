@@ -9,7 +9,6 @@
 #include "blackgui/models/atcstationtreemodel.h"
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/columns.h"
-#include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/icon.h"
@@ -107,8 +106,8 @@ namespace BlackGui
 
         void CAtcStationTreeModel::changedAtcStationConnectionStatus(const CAtcStation &station, bool added)
         {
-            Q_UNUSED(station);
-            Q_UNUSED(added);
+            Q_UNUSED(station)
+            Q_UNUSED(added)
         }
     }  // namespace
 } // namespace

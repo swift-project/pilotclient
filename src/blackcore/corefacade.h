@@ -164,15 +164,15 @@ namespace BlackCore
         static void registerMetadata();
 
     private:
-        bool m_initalized = false;   //!< flag if already initialized
-        bool m_shuttingDown = false; //!< flag if shutting down
+        bool m_initalized   = false;      //!< flag if already initialized
+        bool m_shuttingDown = false;      //!< flag if shutting down
         const CCoreFacadeConfig m_config; //!< used config
         BlackMisc::CData<Data::TLauncherSetup> m_launcherSetup { this }; //!< updating DBus
 
         // DBus
         BlackMisc::CDBusServer *m_dbusServer = nullptr;
-        bool m_initDBusConnection = false;
-        QDBusConnection m_dbusConnection { "default" };
+        bool                    m_initDBusConnection = false;
+        QDBusConnection         m_dbusConnection { "default" };
 
         // contexts:
         // There is a reason why we do not use smart pointers here. When the context is deleted
