@@ -20,6 +20,10 @@
 #include <QBuffer>
 #include <QtDebug>
 
+#ifndef crypto_aead_chacha20poly1305_IETF_ABYTES
+#define crypto_aead_chacha20poly1305_IETF_ABYTES 16U
+#endif
+
 namespace BlackCore
 {
     namespace Afv

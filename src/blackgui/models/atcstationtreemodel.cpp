@@ -32,7 +32,6 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Audio;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 
