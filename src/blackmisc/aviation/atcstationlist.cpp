@@ -95,11 +95,6 @@ namespace BlackMisc
             return c;
         }
 
-        CAtcStationList CAtcStationList::stationsWithValidVoiceRoom() const
-        {
-            return this->findBy(&CAtcStation::hasValidVoiceRoom, true);
-        }
-
         CAtcStationList CAtcStationList::stationsWithValidFrequency() const
         {
             return this->findBy(&CAtcStation::hasValidFrequency, true);

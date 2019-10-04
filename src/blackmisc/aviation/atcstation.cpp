@@ -7,7 +7,6 @@
  */
 
 #include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/pq/physicalquantity.h"
@@ -24,7 +23,6 @@ using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
-using namespace BlackMisc::Audio;
 
 namespace BlackMisc
 {
@@ -155,7 +153,6 @@ namespace BlackMisc
             (void)QT_TRANSLATE_NOOP("Aviation", "until(UTC)");
             (void)QT_TRANSLATE_NOOP("Aviation", "range");
             (void)QT_TRANSLATE_NOOP("Aviation", "distance");
-            (void)QT_TRANSLATE_NOOP("Network", "voiceroom");
         }
 
         void CAtcStation::setFrequency(const CFrequency &frequency)
@@ -389,7 +386,6 @@ namespace BlackMisc
             case IndexIsInRange:   return CVariant::fromValue(isInRange());
             case IndexAtis:        return m_atis.propertyByIndex(index.copyFrontRemoved());
             case IndexMetar:       return m_metar.propertyByIndex(index.copyFrontRemoved());
-            case IndexVoiceRoom:   return m_voiceRoom.propertyByIndex(index.copyFrontRemoved());
             case IndexIsAfvCrossCoupled: return CVariant::from(m_isAfvCrossCoupled);
             default:
                 return (ICoordinateWithRelativePosition::canHandleIndex(index)) ?
@@ -414,7 +410,6 @@ namespace BlackMisc
             case IndexRange:       m_range.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexAtis:        m_atis.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexMetar:       m_metar.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexVoiceRoom:   m_voiceRoom.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexIsAfvCrossCoupled: this->setAfvCrossCoupled(variant.value<bool>()); break;
             case IndexCallsignString:
             case IndexCallsignStringCrossCopuled:
@@ -459,7 +454,6 @@ namespace BlackMisc
             case IndexIsInRange:   return Compare::compare(this->isInRange(), compareValue.isInRange());
             case IndexAtis:        return m_atis.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getAtis());
             case IndexMetar:       return m_metar.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getMetar());
-            case IndexVoiceRoom:   return this->getVoiceRoom().getVoiceRoomUrl().compare(compareValue.getVoiceRoom().getVoiceRoomUrl());
             case IndexIsAfvCrossCoupled:   return Compare::compare(this->isAfvCrossCoupled(), compareValue.isAfvCrossCoupled());
             default:
                 if (ICoordinateWithRelativePosition::canHandleIndex(index))

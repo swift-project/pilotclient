@@ -11,7 +11,6 @@
 #ifndef BLACKMISC_AVIATION_ATCSTATION_H
 #define BLACKMISC_AVIATION_ATCSTATION_H
 
-#include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/informationmessage.h"
@@ -62,8 +61,7 @@ namespace BlackMisc
                 IndexLatitude,
                 IndexLongitude,
                 IndexAtis,
-                IndexMetar,
-                IndexVoiceRoom, //!< @deprecated
+                IndexMetar
             };
 
             //! Default constructor.
@@ -181,22 +179,6 @@ namespace BlackMisc
             //! Set AFV cross coupled
             void setAfvCrossCoupled(bool coupled) { m_isAfvCrossCoupled = coupled; }
 
-            //! Get voice room
-            //! \deprecated
-            const Audio::CVoiceRoom &getVoiceRoom() const { return m_voiceRoom; }
-
-            //! Set voice room
-            //! \deprecated
-            void setVoiceRoom(const Audio::CVoiceRoom &voiceRoom) { m_voiceRoom = voiceRoom; }
-
-            //! Set voice room URL
-            //! \deprecated
-            void setVoiceRoomUrl(const QString &url) { m_voiceRoom.setVoiceRoomUrl(url); }
-
-            //! Valid voice room?
-            //! \deprecated
-            bool hasValidVoiceRoom() const { return m_voiceRoom.isValid(); }
-
             //! Booked date/time if any.
             //! This represents the closest booking within a time frame as there can be multiple bookings.
             const QDateTime &getBookedFromUtc() const { return m_bookedFromUtc; }
@@ -301,7 +283,6 @@ namespace BlackMisc
             QDateTime                      m_bookedUntilUtc;
             CInformationMessage m_atis  { CInformationMessage::ATIS };
             CInformationMessage m_metar { CInformationMessage::METAR };
-            Audio::CVoiceRoom              m_voiceRoom;
 
             BLACK_METACLASS(
                 CAtcStation,
@@ -316,7 +297,6 @@ namespace BlackMisc
                 BLACK_METAMEMBER(bookedUntilUtc),
                 BLACK_METAMEMBER(atis),
                 BLACK_METAMEMBER(metar),
-                BLACK_METAMEMBER(voiceRoom),
                 BLACK_METAMEMBER(relativeDistance),
                 BLACK_METAMEMBER(relativeBearing)
             );

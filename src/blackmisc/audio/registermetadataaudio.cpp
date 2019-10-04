@@ -20,8 +20,6 @@ namespace BlackMisc
         {
             CAudioDeviceInfo::registerMetadata();
             CAudioDeviceInfoList::registerMetadata();
-            CVoiceRoom::registerMetadata();
-            CVoiceRoomList::registerMetadata();
             CSettings::registerMetadata();
             CVoiceSetup::registerMetadata();
 

@@ -61,10 +61,6 @@ namespace BlackMisc
             //! Set online status
             int setOnline(const CCallsign &callsign, bool online);
 
-            //! Find 0..n stations with valid voice room
-            //! \sa CAtcStation::hasValidVoiceRoom
-            CAtcStationList stationsWithValidVoiceRoom() const;
-
             //! Find 0..n stations with valid COM frequency
             //! \sa CAtcStation::hasValidFrequency
             CAtcStationList stationsWithValidFrequency() const;

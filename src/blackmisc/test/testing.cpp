@@ -85,8 +85,6 @@ namespace BlackMisc
                 station.setAtis(atis);
                 station.setMetar(metar);
             }
-
-            station.setVoiceRoomUrl("vvl://foo.bar.baz/room" + QString::number(index));
             return station;
         }
 
