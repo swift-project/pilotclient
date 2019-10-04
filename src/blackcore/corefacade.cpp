@@ -265,7 +265,7 @@ namespace BlackCore
             // hook up with audio if audio context is local
             if (this->hasLocalAudio() && m_contextOwnAircraft)
             {
-                c = connect(m_contextOwnAircraft, &IContextOwnAircraft::changedAircraftCockpit, this->getCContextAudio(), &CContextAudio::xCtxChangedAircraftCockpit, Qt::QueuedConnection);
+                c = connect(m_contextOwnAircraft, &IContextOwnAircraft::changedAircraftCockpit, this->getCContextAudio(), &IContextAudio::xCtxChangedAircraftCockpit, Qt::QueuedConnection);
                 Q_ASSERT(c);
             }
 
@@ -288,7 +288,7 @@ namespace BlackCore
         {
             Q_ASSERT(m_contextApplication);
             c = connect(m_contextNetwork, &IContextNetwork::connectionStatusChanged,
-                        this->getCContextAudio(), &CContextAudio::xCtxNetworkConnectionStatusChanged, Qt::QueuedConnection);
+                        this->getCContextAudio(), &IContextAudio::xCtxNetworkConnectionStatusChanged, Qt::QueuedConnection);
             Q_ASSERT(c);
             times.insert("Post setup, connects audio", time.restart());
         }
@@ -352,11 +352,10 @@ namespace BlackCore
 
         if (this->getIContextAudio())
         {
+            // there is no empty audio context since AFV
             disconnect(this->getIContextAudio());
             this->getIContextAudio()->deleteLater();
-            // replace by dummy object avoiding nullptr issues during shutdown phase
-            QDBusConnection defaultConnection("default");
-            m_contextAudio = IContextAudio::create(this, CCoreFacadeConfig::NotUsed, nullptr, defaultConnection);
+            m_contextAudio = nullptr;
         }
 
         if (this->getIContextOwnAircraft())

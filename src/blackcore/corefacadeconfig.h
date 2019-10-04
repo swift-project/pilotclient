@@ -97,17 +97,11 @@ namespace BlackCore
         //! Predefined for Core
         static CCoreFacadeConfig forCoreAllLocalInDBus(const QString &dbusBootstrapAddress = "");
 
-        //! Predefined for Core
-        static CCoreFacadeConfig forCoreAllLocalInDBusNoAudio(const QString &dbusBootstrapAddress = "");
-
         //! Predefined, completely local (e.g. for unit tests)
         static CCoreFacadeConfig local(const QString &dbusBootstrapAddress = "");
 
-        //! Predefined, completely remote (e.g. for GUI with core)
+        //! Predefined, completely remote
         static CCoreFacadeConfig remote(const QString &dbusBootstrapAddress = "");
-
-        //! Predefined, remote with local audio (e.g. Aduio in GUI)
-        static CCoreFacadeConfig remoteLocalAudio(const QString &dbusBootstrapAddress = "");
 
         //! Predefined, all empty configs (normally used when the real config can only be determined later)
         static CCoreFacadeConfig allEmpty();

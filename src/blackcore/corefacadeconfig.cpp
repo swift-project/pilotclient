@@ -53,13 +53,6 @@ namespace BlackCore
         return cfg;
     }
 
-    CCoreFacadeConfig CCoreFacadeConfig::forCoreAllLocalInDBusNoAudio(const QString &dbusBootstrapAddress)
-    {
-        CCoreFacadeConfig cfg(CCoreFacadeConfig::LocalInDBusServer, dbusBootstrapAddress);
-        cfg.m_audio = CCoreFacadeConfig::NotUsed;
-        return cfg;
-    }
-
     CCoreFacadeConfig CCoreFacadeConfig::local(const QString &dbusBootstrapAddress)
     {
         const CCoreFacadeConfig cfg = CCoreFacadeConfig(CCoreFacadeConfig(CCoreFacadeConfig::Local, dbusBootstrapAddress));
@@ -68,12 +61,6 @@ namespace BlackCore
 
     CCoreFacadeConfig CCoreFacadeConfig::remote(const QString &dbusBootstrapAddress)
     {
-        const CCoreFacadeConfig cfg = CCoreFacadeConfig(CCoreFacadeConfig(CCoreFacadeConfig::Remote, dbusBootstrapAddress));
-        return cfg;
-    }
-
-    CCoreFacadeConfig CCoreFacadeConfig::remoteLocalAudio(const QString &dbusBootstrapAddress)
-    {
         CCoreFacadeConfig cfg = CCoreFacadeConfig(CCoreFacadeConfig(CCoreFacadeConfig::Remote, dbusBootstrapAddress));
         cfg.m_audio = CCoreFacadeConfig::LocalInDBusServer;
         return cfg;
@@ -81,7 +68,8 @@ namespace BlackCore
 
     CCoreFacadeConfig CCoreFacadeConfig::allEmpty()
     {
-        const CCoreFacadeConfig cfg = CCoreFacadeConfig();
+        CCoreFacadeConfig cfg = CCoreFacadeConfig();
+        cfg.m_audio = CCoreFacadeConfig::Local;
         return cfg;
     }
 } // namespace

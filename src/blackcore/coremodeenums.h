@@ -23,8 +23,7 @@ namespace BlackCore
         enum CoreMode
         {
             CoreInGuiProcess,
-            CoreExternalCoreAudio,
-            CoreExternalAudioGui
+            CoreExternal
         };
 
         //! String to core mode
@@ -32,14 +31,11 @@ namespace BlackCore
         {
             QString cm(m.toLower().trimmed());
             if (cm.isEmpty()) { return CoreInGuiProcess; }
-            if (m == coreModeToString(CoreExternalCoreAudio)) { return CoreExternalCoreAudio; }
             if (m == coreModeToString(CoreInGuiProcess)) { return CoreInGuiProcess; }
-            if (m == coreModeToString(CoreExternalAudioGui)) { return CoreExternalAudioGui; }
+            if (m == coreModeToString(CoreExternal)) { return CoreExternal; }
 
             // some alternative names
-            if (cm.contains("audiolocal")) { return CoreExternalAudioGui; }
-            if (cm.contains("localaudio")) { return CoreExternalAudioGui; }
-            if (cm.contains("external")) { return CoreExternalCoreAudio; }
+            if (cm.contains("external")) { return CoreExternal; }
             if (cm.contains("gui")) { return CoreInGuiProcess; }
             return CoreInGuiProcess;
         }
@@ -50,8 +46,7 @@ namespace BlackCore
             switch (mode)
             {
             case CoreInGuiProcess: return QStringLiteral("coreinguiprocess");
-            case CoreExternalCoreAudio: return QStringLiteral("coreexternal");
-            case CoreExternalAudioGui: return QStringLiteral("coreexternalaudiogui");
+            case CoreExternal:     return QStringLiteral("coreexternal");
             }
             return {};
         }
