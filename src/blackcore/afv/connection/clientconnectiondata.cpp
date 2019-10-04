@@ -24,7 +24,7 @@ namespace BlackCore
 
             bool CClientConnectionData::isVoiceServerAlive() const
             {
-                return m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) > serverTimeout;
+                return m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) > ServerTimeoutSecs;
             }
 
             void CClientConnectionData::createCryptoChannels()
@@ -39,8 +39,8 @@ namespace BlackCore
 
             bool CClientConnectionData::voiceServerAlive() const
             {
-                return timeSinceAuthentication() < serverTimeout ||
-                       m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) < serverTimeout;
+                return timeSinceAuthentication() < ServerTimeoutSecs ||
+                       m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) < ServerTimeoutSecs;
             }
         } // ns
     } // ns

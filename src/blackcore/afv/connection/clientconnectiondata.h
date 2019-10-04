@@ -29,12 +29,16 @@ namespace BlackCore
             //! Client connection data
             struct CClientConnectionData
             {
+                //! Ctor
                 CClientConnectionData() = default;
 
+                //! Time since authentication
                 qint64 secondsSinceAuthentication() const;
 
+                //!  Servers alive @{
                 bool isVoiceServerAlive() const;
                 bool isDataServerAlive() const;
+                //! @}
 
                 /* TODO
                 public long VoiceServerBytesSent { get; set; }
@@ -43,25 +47,25 @@ namespace BlackCore
                 public long DataServerBytesReceived { get; set; }
                 */
 
+                //! Crypto channels for voice and data
                 void createCryptoChannels();
 
                 qint64 timeSinceAuthentication() const { return m_authenticatedDateTimeUtc.secsTo(QDateTime::currentDateTimeUtc()); }
                 bool voiceServerAlive() const;
 
-                QString m_userName;
-                QString m_callsign;
+                QString m_userName; //!< user name
+                QString m_callsign; //!< callsign
 
-                PostCallsignResponseDto m_tokens;
-
-                QScopedPointer<Crypto::CCryptoDtoChannel> voiceCryptoChannel;
+                PostCallsignResponseDto m_tokens; //!< tokens
+                QScopedPointer<Crypto::CCryptoDtoChannel> voiceCryptoChannel; //!< used crypto channel
 
                 QDateTime m_authenticatedDateTimeUtc;
                 QDateTime m_lastVoiceServerHeartbeatAckUtc;
 
-                bool m_receiveAudio = true;
-                bool m_connected = false;
+                bool m_receiveAudio = true;  //!< audio?
+                bool m_connected    = false; //!< connected?
 
-                static constexpr qint64 serverTimeout = 10;
+                static constexpr qint64 ServerTimeoutSecs = 10; //!< timeout
             };
         } // ns
     } // ns
