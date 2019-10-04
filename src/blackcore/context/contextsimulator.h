@@ -63,7 +63,7 @@ namespace BlackCore
     namespace Context
     {
         //! Network context
-        class BLACKCORE_EXPORT IContextSimulator : public CContext
+        class BLACKCORE_EXPORT IContextSimulator : public IContext
         {
             Q_OBJECT
             Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME)
@@ -334,7 +334,7 @@ namespace BlackCore
 
         protected:
             //! Constructor
-            IContextSimulator(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : CContext(mode, runtime) {}
+            IContextSimulator(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContext(mode, runtime) {}
         };
     } // namespace
 } // namespace

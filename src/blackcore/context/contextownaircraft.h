@@ -58,7 +58,7 @@ namespace BlackCore
     {
         //! Own context proxy
         //! \ingroup dbus
-        class BLACKCORE_EXPORT IContextOwnAircraft : public CContext
+        class BLACKCORE_EXPORT IContextOwnAircraft : public IContext
         {
             Q_OBJECT
             Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTOWNAIRCRAFT_INTERFACENAME)
@@ -177,7 +177,7 @@ namespace BlackCore
 
         protected:
             //! Constructor
-            IContextOwnAircraft(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : CContext(mode, runtime) {}
+            IContextOwnAircraft(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContext(mode, runtime) {}
         };
     } // ns
 } // ns

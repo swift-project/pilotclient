@@ -796,7 +796,7 @@ namespace BlackCore
             const ReverseLookupLogging revEnabled = m_airspace->isReverseLookupMessagesEnabled();
             if (revEnabled == enable) { return; }
             m_airspace->enableReverseLookupMessages(enable);
-            emit CContext::changedLogOrDebugSettings();
+            emit IContext::changedLogOrDebugSettings();
         }
 
         CStatusMessageList CContextNetwork::getAircraftPartsHistory(const CCallsign &callsign) const
@@ -827,7 +827,7 @@ namespace BlackCore
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << enabled; }
             m_airspace->enableAircraftPartsHistory(enabled);
-            emit CContext::changedLogOrDebugSettings();
+            emit IContext::changedLogOrDebugSettings();
         }
 
         int CContextNetwork::aircraftSituationsAdded() const

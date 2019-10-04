@@ -15,83 +15,83 @@ namespace BlackCore
 {
     namespace Context
     {
-        const CLogCategoryList &CContext::getLogCategories()
+        const CLogCategoryList &IContext::getLogCategories()
         {
             static const BlackMisc::CLogCategoryList cats { BlackMisc::CLogCategory::context() };
             return cats;
         }
 
-        IContextNetwork *CContext::getIContextNetwork()
+        IContextNetwork *IContext::getIContextNetwork()
         {
             return this->getRuntime()->getIContextNetwork();
         }
 
-        const IContextNetwork *CContext::getIContextNetwork() const
+        const IContextNetwork *IContext::getIContextNetwork() const
         {
             return this->getRuntime()->getIContextNetwork();
         }
 
-        IContextAudio *CContext::getIContextAudio()
+        IContextAudio *IContext::getIContextAudio()
         {
             return this->getRuntime()->getIContextAudio();
         }
 
-        const IContextAudio *CContext::getIContextAudio() const
+        const IContextAudio *IContext::getIContextAudio() const
         {
             return this->getRuntime()->getIContextAudio();
         }
 
-        IContextApplication *CContext::getIContextApplication()
+        IContextApplication *IContext::getIContextApplication()
         {
             return this->getRuntime()->getIContextApplication();
         }
 
-        const IContextApplication *CContext::getIContextApplication() const
+        const IContextApplication *IContext::getIContextApplication() const
         {
             return this->getRuntime()->getIContextApplication();
         }
 
-        IContextOwnAircraft *CContext::getIContextOwnAircraft()
+        IContextOwnAircraft *IContext::getIContextOwnAircraft()
         {
             return this->getRuntime()->getIContextOwnAircraft();
         }
 
-        const IContextOwnAircraft *CContext::getIContextOwnAircraft() const
+        const IContextOwnAircraft *IContext::getIContextOwnAircraft() const
         {
             return this->getRuntime()->getIContextOwnAircraft();
         }
 
-        IContextSimulator *CContext::getIContextSimulator()
+        IContextSimulator *IContext::getIContextSimulator()
         {
             return this->getRuntime()->getIContextSimulator();
         }
 
-        void CContext::setDebugEnabled(bool debug)
+        void IContext::setDebugEnabled(bool debug)
         {
             if (this->m_debugEnabled == debug) { return; }
             emit this->changedLogOrDebugSettings();
         }
 
-        bool CContext::isDebugEnabled() const
+        bool IContext::isDebugEnabled() const
         {
             return this->m_debugEnabled;
         }
 
-        void CContext::relayBaseClassSignals(const QString &serviceName, QDBusConnection &connection, const QString &objectPath, const QString &interfaceName)
+        void IContext::relayBaseClassSignals(const QString &serviceName, QDBusConnection &connection, const QString &objectPath, const QString &interfaceName)
         {
             bool s = connection.connect(serviceName, objectPath, interfaceName,
                                         "changedLogOrDebugSettings", this, SIGNAL(changedLogOrDebugSettings()));
             Q_ASSERT(s);
         }
 
-        const IContextSimulator *CContext::getIContextSimulator() const
+        const IContextSimulator *IContext::getIContextSimulator() const
         {
             return this->getRuntime()->getIContextSimulator();
         }
 
-        const CStatusMessage &CContext::statusMessageEmptyContext()
+        const CStatusMessage &IContext::statusMessageEmptyContext()
         {
-            static const CStatusMessage m(static_cast<CContext *>(nullptr), CStatusMessage::SeverityWarning, u"empty context");
+            static const CStatusMessage m(static_cast<IContext *>(nullptr), CStatusMessage::SeverityWarning, u"empty context");
             return m;
         }
     } // ns

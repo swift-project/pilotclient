@@ -65,7 +65,7 @@ namespace BlackCore
         using CSettingsDictionary = BlackMisc::CDictionary<QString, QString, QMap>;
 
         //! Application context interface
-        class BLACKCORE_EXPORT IContextApplication : public CContext
+        class BLACKCORE_EXPORT IContextApplication : public IContext
         {
             Q_OBJECT
             Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME)

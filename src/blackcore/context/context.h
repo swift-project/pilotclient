@@ -11,9 +11,9 @@
 #ifndef BLACKCORE_CONTEXT_CONTEXT_H
 #define BLACKCORE_CONTEXT_CONTEXT_H
 
-#include "blackcore/blackcoreexport.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/corefacadeconfig.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
@@ -36,13 +36,13 @@ namespace BlackCore
         class IContextSimulator;
 
         //! Base for all context classes
-        class BLACKCORE_EXPORT CContext : public QObject
+        class BLACKCORE_EXPORT IContext : public QObject
         {
             Q_OBJECT
 
         public:
             //! Destructor
-            virtual ~CContext() {}
+            virtual ~IContext() {}
 
             //! Log categories
             static const BlackMisc::CLogCategoryList &getLogCategories();
@@ -145,7 +145,7 @@ namespace BlackCore
             bool m_debugEnabled = false;           //!< debug messages enabled
 
             //! Constructor
-            CContext(CCoreFacadeConfig::ContextMode mode, QObject *parent) :
+            IContext(CCoreFacadeConfig::ContextMode mode, QObject *parent) :
                 QObject(parent), m_mode(mode), m_contextId(QDateTime::currentMSecsSinceEpoch())
             {}
 

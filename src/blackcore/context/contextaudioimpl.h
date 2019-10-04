@@ -12,11 +12,13 @@
 #define BLACKCORE_CONTEXT_CONTEXTAUDIO_IMPL_H
 
 #include "blackcore/context/contextaudio.h"
+#include "blackcore/afv/clients/afvclient.h"
 #include "blackcore/audio/audiosettings.h"
 #include "blackcore/actionbind.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/blackcoreexport.h"
-#include "blackcore/afv/clients/afvclient.h"
+#include "blacksound/selcalplayer.h"
+#include "blacksound/notificationplayer.h"
 #include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/audio/notificationsounds.h"
@@ -33,8 +35,6 @@
 #include "blackmisc/settingscache.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/network/connectionstatus.h"
-#include "blacksound/selcalplayer.h"
-#include "blacksound/notificationplayer.h"
 
 #include <QHash>
 #include <QList>

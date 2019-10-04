@@ -48,7 +48,7 @@ namespace BlackCore
         }
 
         IContextApplication::IContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
-            CContext(mode, runtime)
+            IContext(mode, runtime)
         {
             if (mode == CCoreFacadeConfig::NotUsed) { return; }
             QPointer<IContextApplication> myself(this);

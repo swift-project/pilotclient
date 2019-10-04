@@ -948,7 +948,7 @@ namespace BlackCore
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << matchingLogToString(enabled); }
             if (m_logMatchingMessages == enabled) { return; }
             m_logMatchingMessages = enabled;
-            emit CContext::changedLogOrDebugSettings();
+            emit IContext::changedLogOrDebugSettings();
         }
 
         CMatchingStatistics CContextSimulator::getCurrentMatchingStatistics(bool missingOnly) const

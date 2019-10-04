@@ -58,14 +58,14 @@ namespace BlackCore
     namespace Context
     {
         //! Audio context interface
-        class BLACKCORE_EXPORT IContextAudio : public CContext
+        class BLACKCORE_EXPORT IContextAudio : public IContext
         {
             Q_OBJECT
             Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAUDIO_INTERFACENAME)
 
         protected:
             //! Constructor
-            IContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : CContext(mode, runtime) {}
+            IContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContext(mode, runtime) {}
 
         public:
             //! Interface name
