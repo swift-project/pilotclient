@@ -65,7 +65,7 @@ namespace BlackCore
                 request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
                 QEventLoop loop(sApp);
 
-                // posted in QAM thread
+                // posted in QAM thread, reply is nullptr if called from another thread
                 QNetworkReply *reply = sApp->postToNetwork(request, CApplication::NoLogRequestId, QJsonDocument(obj).toJson(),
                 {
                     this, [ & ](QNetworkReply * nwReply)
@@ -118,8 +118,9 @@ namespace BlackCore
                         loop.exit();
                     }
                 });
+                Q_UNUSED(reply)
 
-                if (reply) { loop.exec(); }
+                loop.exec();
                 return m_isAuthenticated;
             }
 
@@ -162,7 +163,7 @@ namespace BlackCore
                 QEventLoop loop(sApp);
                 QByteArray receivedData;
 
-                // posted in QAM thread
+                // posted in QAM thread, reply is nullptr if called from another thread
                 QNetworkReply *reply = sApp->getFromNetwork(request,
                 {
                     this, [ & ](QNetworkReply * nwReply)
@@ -185,8 +186,8 @@ namespace BlackCore
                         loop.exit();
                     }
                 });
+                Q_UNUSED(reply)
 
-                if (!reply) { return {}; }
                 loop.exec();
                 return receivedData;
             }
@@ -198,7 +199,7 @@ namespace BlackCore
                 QEventLoop loop(sApp);
                 QByteArray receivedData;
 
-                // posted in QAM thread
+                // posted in QAM thread, reply is nullptr if called from another thread
                 QNetworkReply *reply = sApp->postToNetwork(request, CApplication::NoLogRequestId, data,
                 {
                     this, [ & ](QNetworkReply * nwReply)
@@ -221,8 +222,8 @@ namespace BlackCore
                         loop.exit();
                     }
                 });
+                Q_UNUSED(reply)
 
-                if (!reply) { return {}; }
                 loop.exec();
                 return receivedData;
             }
@@ -244,7 +245,7 @@ namespace BlackCore
                 request.setRawHeader("Authorization", "Bearer " + m_jwt);
                 request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-                // posted in QAM thread
+                // posted in QAM thread, reply is nullptr if called from another thread
                 sApp->postToNetwork(request, CApplication::NoLogRequestId, json.toJson(),
                 {
                     this, [ & ](QNetworkReply * nwReply)
