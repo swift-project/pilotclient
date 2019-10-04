@@ -19,8 +19,6 @@
 #include "blackcore/corefacadeconfig.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/audio/notificationsounds.h"
-#include "blackmisc/audio/voiceroom.h"
-#include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/selcal.h"
@@ -63,21 +61,7 @@ namespace BlackCore
             // interface overrides
             //! \publicsection
             //! @{
-            virtual BlackMisc::CIdentifier audioRunsWhere() const override;
-            virtual BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const override;
-            virtual BlackMisc::Audio::CAudioDeviceInfoList getCurrentAudioDevices() const override;
-            virtual void setCurrentAudioDevices(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice) override;
-            virtual void setVoiceOutputVolume(int volume) override;
-            virtual int getVoiceOutputVolume() const override;
-            virtual void setMute(bool muted) override;
-            virtual bool isMuted() const override;
-            virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) override;
-            virtual void playNotification(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume = -1) override;
-            virtual void enableAudioLoopback(bool enable = true) override;
-            virtual bool isAudioLoopbackEnabled() const override;
-            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
-            virtual BlackMisc::Audio::CVoiceSetup getVoiceSetup() const override;
-            virtual void setVoiceSetup(const BlackMisc::Audio::CVoiceSetup &setup) override;
+            //  ------ functions GO HERE -------
             //! @}
 
         private:
