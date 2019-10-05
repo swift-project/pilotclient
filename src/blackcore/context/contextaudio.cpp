@@ -105,7 +105,7 @@ namespace BlackCore
 
         QString IContextAudio::audioRunsWhereInfo() const
         {
-            static const QString s = QStringLiteral("Local audio on '%1', '%2'.").arg(audioRunsWhere().getMachineName(), audioRunsWhere().getProcessName());
+            static const QString s = QStringLiteral("Audio on '%1', '%2'.").arg(audioRunsWhere().getMachineName(), audioRunsWhere().getProcessName());
             return s;
         }
 

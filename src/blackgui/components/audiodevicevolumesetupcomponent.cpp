@@ -94,7 +94,9 @@ namespace BlackGui
 
             if (audio)
             {
-                ui->le_Info->setText(audio ? sGui->getIContextAudio()->audioRunsWhereInfo() : "No audio, cannot change.");
+                const QString ai = audio ? sGui->getIContextAudio()->audioRunsWhereInfo() : "No audio, cannot change.";
+                ui->le_Info->setText(ai);
+                ui->le_Info->setPlaceholderText(ai);
 
                 this->initAudioDeviceLists();
 
@@ -130,7 +132,7 @@ namespace BlackGui
 
         int CAudioDeviceVolumeSetupComponent::getInValue(int from, int to) const
         {
-            const double r = ui->hs_VolumeIn->maximum() - ui->hs_VolumeIn->minimum();
+            const double r  = ui->hs_VolumeIn->maximum() - ui->hs_VolumeIn->minimum();
             const double tr = to - from;
             return qRound(ui->hs_VolumeIn->value() / r * tr);
         }
