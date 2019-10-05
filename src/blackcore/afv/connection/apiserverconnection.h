@@ -11,10 +11,9 @@
 #ifndef BLACKCORE_AFV_CONNECTION_APISERVERCONNECTION_H
 #define BLACKCORE_AFV_CONNECTION_APISERVERCONNECTION_H
 
-#include "blackmisc/logcategorylist.h"
 #include "blackcore/afv/dto.h"
 #include "blackcore/application.h"
-#include "blackmisc/logmessage.h"
+#include "blackmisc/logcategorylist.h"
 
 #include <QString>
 #include <QNetworkAccessManager>

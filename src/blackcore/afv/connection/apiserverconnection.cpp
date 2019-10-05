@@ -11,7 +11,6 @@
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/network/external/qjsonwebtoken.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/logcategory.h"
 
 #include <QJsonObject>
 #include <QJsonArray>
@@ -19,6 +18,7 @@
 #include <QUrlQuery>
 #include <QScopedPointer>
 #include <QMetaEnum>
+#include <QPointer>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -61,23 +61,24 @@ namespace BlackCore
                     {"networkversion", networkVersion.toString()},
                 };
 
+                QPointer<QEventLoop> loop(new QEventLoop(sApp));
                 QNetworkRequest request(url);
                 request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-                QEventLoop loop;
 
                 // posted in QAM thread, reply is nullptr if called from another thread
                 QNetworkReply *reply = sApp->postToNetwork(request, CApplication::NoLogRequestId, QJsonDocument(obj).toJson(),
                 {
-                    this, [ & ](QNetworkReply * nwReply)
+                    this, [ = ](QNetworkReply * nwReply)
                     {
                         // called in "this" thread
-                        QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
-                        if (isShuttingDown()) { return; }
+                        const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
+                        if (!loop || isShuttingDown()) { return; }
+
                         this->logRequestDuration(reply.data(), "authentication");
                         if (reply->error() != QNetworkReply::NoError)
                         {
                             this->logReplyErrorMessage(reply.data(), "authentication error");
-                            loop.exit();
+                            if (loop) { loop->exit(); }
                             return;
                         }
 
@@ -91,7 +92,7 @@ namespace BlackCore
                         do
                         {
                             const QString jwtToken(m_jwt);
-                            QJsonWebToken token = QJsonWebToken::fromTokenAndSecret(jwtToken, "");
+                            const QJsonWebToken token = QJsonWebToken::fromTokenAndSecret(jwtToken, "");
 
                             // get decoded header and payload
                             // QString strHeader  = token.getHeaderQStr();
@@ -115,12 +116,12 @@ namespace BlackCore
                             m_isAuthenticated = true;
                         }
 
-                        loop.exit();
+                        if (loop) { loop->exit(); }
                     }
                 });
                 Q_UNUSED(reply)
 
-                loop.exec();
+                if (loop) { loop->exec(); }
                 return m_isAuthenticated;
             }
 
@@ -160,19 +161,19 @@ namespace BlackCore
             {
                 if (isShuttingDown()) { return {}; }
 
-                QEventLoop loop;
+                QPointer<QEventLoop> loop(new QEventLoop(sApp));
                 QByteArray receivedData;
 
                 // posted in QAM thread, reply is nullptr if called from another thread
                 QNetworkReply *reply = sApp->getFromNetwork(request,
                 {
-                    this, [ & ](QNetworkReply * nwReply)
+                    this, [ =, &receivedData ](QNetworkReply * nwReply)
                     {
+                        const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
+
                         // called in "this" thread
-                        if (!isShuttingDown())
+                        if (loop && !isShuttingDown())
                         {
-                            QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
-                            if (isShuttingDown()) { return; }
                             this->logRequestDuration(reply.data());
                             if (reply->error() == QNetworkReply::NoError)
                             {
@@ -183,12 +184,12 @@ namespace BlackCore
                                 this->logReplyErrorMessage(reply.data());
                             }
                         }
-                        loop.exit();
+                        if (loop) { loop->exit(); }
                     }
                 });
                 Q_UNUSED(reply)
 
-                loop.exec();
+                if (loop) { loop->exec(); }
                 return receivedData;
             }
 
@@ -196,19 +197,19 @@ namespace BlackCore
             {
                 if (isShuttingDown()) { return {}; }
 
-                QEventLoop loop;
+                QPointer<QEventLoop> loop(new QEventLoop(sApp));
                 QByteArray receivedData;
 
                 // posted in QAM thread, reply is nullptr if called from another thread
                 QNetworkReply *reply = sApp->postToNetwork(request, CApplication::NoLogRequestId, data,
                 {
-                    this, [ & ](QNetworkReply * nwReply)
+                    this, [ =, &receivedData ](QNetworkReply * nwReply)
                     {
+                        const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
+
                         // called in "this" thread
-                        if (!isShuttingDown())
+                        if (loop && !isShuttingDown())
                         {
-                            QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
-                            if (isShuttingDown()) { return; }
                             this->logRequestDuration(reply.data());
                             if (reply->error() == QNetworkReply::NoError)
                             {
@@ -219,12 +220,12 @@ namespace BlackCore
                                 this->logReplyErrorMessage(reply.data());
                             }
                         }
-                        loop.exit();
+                        if (loop) { loop->exit(); }
                     }
                 });
                 Q_UNUSED(reply)
 
-                loop.exec();
+                if (loop) { loop->exec(); }
                 return receivedData;
             }
 
@@ -248,10 +249,10 @@ namespace BlackCore
                 // posted in QAM thread, reply is nullptr if called from another thread
                 sApp->postToNetwork(request, CApplication::NoLogRequestId, json.toJson(),
                 {
-                    this, [ & ](QNetworkReply * nwReply)
+                    this, [ = ](QNetworkReply * nwReply)
                     {
                         // called in "this" thread
-                        QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
+                        const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
                         if (isShuttingDown()) { return; }
                         this->logRequestDuration(reply.data());
                         if (reply->error() != QNetworkReply::NoError)
@@ -276,10 +277,10 @@ namespace BlackCore
                 // posted in QAM thread
                 sApp->deleteResourceFromNetwork(request, CApplication::NoLogRequestId,
                 {
-                    this, [ & ](QNetworkReply * nwReply)
+                    this, [ = ](QNetworkReply * nwReply)
                     {
                         // called in "this" thread
-                        QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
+                        const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
                         if (isShuttingDown()) { return; }
                         this->logRequestDuration(reply.data());
                         if (reply->error() != QNetworkReply::NoError)
