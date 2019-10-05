@@ -37,7 +37,7 @@ namespace BlackCore
             }
 
             CAfvClient::CAfvClient(const QString &apiServer, QObject *parent) :
-                QObject(parent), CIdentifiable(this),
+                CContinuousWorker(parent, "CAfvClient"),
                 m_connection(new CClientConnection(apiServer, this)),
                 m_input(new CInput(SampleRate, this)),
                 m_output(new Output(this)),
@@ -64,6 +64,7 @@ namespace BlackCore
 
             void CAfvClient::initTransceivers()
             {
+                QMutexLocker lock(&m_mutex);
                 m_transceivers =
                 {
                     { 0, UniCom, 48.5, 11.5, 1000.0, 1000.0 },
@@ -87,6 +88,13 @@ namespace BlackCore
 
             void CAfvClient::connectTo(const QString &cid, const QString &password, const QString &callsign)
             {
+                if (QThread::currentThread() != thread())
+                {
+                    // Method needs to be executed in the object thread since it will create new QObject children
+                    QMetaObject::invokeMethod(this, [ = ]() { connectTo(cid, password, callsign); });
+                    return;
+                }
+
                 this->initWithContext();
                 m_callsign = callsign;
                 m_connection->connectTo(cid, password, callsign);
@@ -100,6 +108,13 @@ namespace BlackCore
 
             void CAfvClient::disconnectFrom()
             {
+                if (QThread::currentThread() != thread())
+                {
+                    // Method needs to be executed in the object thread since it will create new QObject children
+                    QMetaObject::invokeMethod(this, [ = ]() { disconnectFrom(); });
+                    return;
+                }
+
                 m_connection->disconnectFrom();
                 emit connectionStatusChanged(Disconnected);
             }
@@ -116,6 +131,7 @@ namespace BlackCore
 
             void CAfvClient::setBypassEffects(bool value)
             {
+                QMutexLocker lock(&m_mutex);
                 if (soundcardSampleProvider)
                 {
                     soundcardSampleProvider->setBypassEffects(value);
@@ -134,16 +150,23 @@ namespace BlackCore
 
             bool CAfvClient::restartWithNewDevices(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice)
             {
-                this->stop();
-                this->start(inputDevice, outputDevice, allTransceiverIds());
+                this->stopAudio();
+                this->startAudio(inputDevice, outputDevice, allTransceiverIds());
                 return true;
             }
 
-            void CAfvClient::start(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice, const QVector<quint16> &transceiverIDs)
+            void CAfvClient::startAudio(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice, const QVector<quint16> &transceiverIDs)
             {
                 if (m_isStarted)
                 {
                     CLogMessage(this).info(u"Client already started");
+                    return;
+                }
+
+                if (QThread::currentThread() != this->thread())
+                {
+                    // Method needs to be executed in the object thread since it will create new QObject children
+                    QMetaObject::invokeMethod(this, [ = ]() { startAudio(inputDevice, outputDevice, transceiverIDs); });
                     return;
                 }
 
@@ -165,21 +188,22 @@ namespace BlackCore
                 CLogMessage(this).info(u"Started [Input: %1] [Output: %2]") << inputDevice.getName() << outputDevice.getName();
             }
 
-            void CAfvClient::start(const QString &inputDeviceName, const QString &outputDeviceName)
+            void CAfvClient::startAudio(const QString &inputDeviceName, const QString &outputDeviceName)
+            {
+                const CAudioDeviceInfo i(CAudioDeviceInfo::InputDevice, inputDeviceName);
+                const CAudioDeviceInfo o(CAudioDeviceInfo::OutputDevice, outputDeviceName);
+                this->startAudio(i, o, allTransceiverIds());
+            }
+
+            void CAfvClient::stopAudio()
             {
                 if (QThread::currentThread() != this->thread())
                 {
-                    QMetaObject::invokeMethod(this, "start", Q_ARG(QString, inputDeviceName), Q_ARG(QString, outputDeviceName));
+                    // Method needs to be executed in the object thread since it will create new QObject children
+                    QMetaObject::invokeMethod(this, [ = ]() { stopAudio(); });
                     return;
                 }
 
-                const CAudioDeviceInfo i(CAudioDeviceInfo::InputDevice, inputDeviceName);
-                const CAudioDeviceInfo o(CAudioDeviceInfo::OutputDevice, outputDeviceName);
-                this->start(i, o, allTransceiverIds());
-            }
-
-            void CAfvClient::stop()
-            {
                 if (!m_isStarted)
                 {
                     CLogMessage(this).info(u"Client NOT started");
@@ -199,6 +223,8 @@ namespace BlackCore
 
             void CAfvClient::enableTransceiver(quint16 id, bool enable)
             {
+                QMutexLocker lock(&m_mutex);
+
                 if (enable) { m_enabledTransceivers.insert(id); }
                 else { m_enabledTransceivers.remove(id); }
 
@@ -233,6 +259,7 @@ namespace BlackCore
                 // Fix rounding issues like 128074999 Hz -> 128075000 Hz
                 quint32 roundedFrequencyHz = static_cast<quint32>(qRound(frequencyHz / 1000.0)) * 1000;
 
+                QMutexLocker lock(&m_mutex);
                 auto it = std::find_if(m_aliasedStations.begin(), m_aliasedStations.end(), [roundedFrequencyHz](const StationDto & d)
                 {
                     return d.frequencyAlias == roundedFrequencyHz;
@@ -267,6 +294,7 @@ namespace BlackCore
 
             void CAfvClient::updatePosition(double latitudeDeg, double longitudeDeg, double heightMeters)
             {
+                QMutexLocker lock(&m_mutex);
                 for (TransceiverDto &transceiver : m_transceivers)
                 {
                     transceiver.LatDeg = latitudeDeg;
@@ -322,11 +350,13 @@ namespace BlackCore
 
             void CAfvClient::setTransmittingTransceivers(const QVector<TxTransceiverDto> &transceivers)
             {
+                QMutexLocker lock(&m_mutex);
                 m_transmittingTransceivers = transceivers;
             }
 
             bool CAfvClient::isTransmittingTransceiver(quint16 id) const
             {
+                QMutexLocker lock(&m_mutex);
                 for (const TxTransceiverDto &dto : m_transmittingTransceivers)
                 {
                     if (dto.id == id) { return true; }
@@ -355,6 +385,8 @@ namespace BlackCore
                 }
 
                 if (m_transmit == active) { return; }
+
+                QMutexLocker lock(&m_mutex);
                 m_transmit = active;
 
                 if (soundcardSampleProvider)
@@ -380,6 +412,8 @@ namespace BlackCore
             {
                 if (valueDb > MaxDbIn) { valueDb = MaxDbIn; }
                 if (valueDb < MinDbIn) { valueDb = MinDbIn; }
+
+                QMutexLocker lock(&m_mutex);
                 m_inputVolumeDb = valueDb;
                 if (m_input)
                 {
@@ -421,8 +455,22 @@ namespace BlackCore
                 this->setOutputVolumeDb(dB);
             }
 
+            double CAfvClient::getInputVolumePeakVU() const
+            {
+                QMutexLocker lock(&m_mutex);
+                return m_inputVolumeStream.PeakVU;
+            }
+
+            double CAfvClient::getOutputVolumePeakVU() const
+            {
+                QMutexLocker lock(&m_mutex);
+                return m_outputVolumeStream.PeakVU;
+            }
+
             void CAfvClient::opusDataAvailable(const OpusDataAvailableArgs &args)
             {
+                QMutexLocker lock(&m_mutex);
+
                 if (m_loopbackOn && m_transmit)
                 {
                     IAudioDto audioData;
@@ -430,6 +478,7 @@ namespace BlackCore
                     audioData.callsign = "loopback";
                     audioData.lastPacket = false;
                     audioData.sequenceCounter = 0;
+
 
                     RxTransceiverDto com1 = { 0, m_transceivers.size() > 0 ?  m_transceivers[0].frequencyHz : UniCom, 1.0 };
                     RxTransceiverDto com2 = { 1, m_transceivers.size() > 1 ?  m_transceivers[1].frequencyHz : UniCom, 1.0 };
@@ -483,18 +532,21 @@ namespace BlackCore
 
             void CAfvClient::inputVolumeStream(const InputVolumeStreamArgs &args)
             {
+                QMutexLocker lock(&m_mutex);
                 m_inputVolumeStream = args;
                 emit inputVolumePeakVU(m_inputVolumeStream.PeakVU);
             }
 
             void CAfvClient::outputVolumeStream(const OutputVolumeStreamArgs &args)
             {
+                QMutexLocker lock(&m_mutex);
                 m_outputVolumeStream = args;
                 emit outputVolumePeakVU(m_outputVolumeStream.PeakVU);
             }
 
             QString CAfvClient::getReceivingCallsignsCom1()
             {
+                QMutexLocker lock(&m_mutex);
                 if (soundcardSampleProvider)
                 {
                     return soundcardSampleProvider->getReceivingCallsigns(0);
@@ -504,6 +556,7 @@ namespace BlackCore
 
             QString CAfvClient::getReceivingCallsignsCom2()
             {
+                QMutexLocker lock(&m_mutex);
                 if (soundcardSampleProvider)
                 {
                     return soundcardSampleProvider->getReceivingCallsigns(1);
@@ -578,6 +631,8 @@ namespace BlackCore
             {
                 if (valueDb > MaxDbOut) { valueDb = MaxDbOut; }
                 if (valueDb < MinDbOut) { valueDb = MinDbOut; }
+
+                QMutexLocker lock(&m_mutex);
                 m_outputVolumeDb = valueDb;
 
                 m_outputVolume = qPow(10, m_outputVolumeDb / 20.0);

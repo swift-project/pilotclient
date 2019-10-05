@@ -1,8 +1,9 @@
-// #include "voiceclientui.h"
-
+#include "afvclientbridge.h"
 #include "blackcore/afv/model/atcstationmodel.h"
 #include "blackcore/afv/model/afvmapreader.h"
 #include "blackcore/afv/clients/afvclient.h"
+#include "blackcore/registermetadata.h"
+
 #include "blackcore/application.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/obfuscation.h"
@@ -27,12 +28,21 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication qa(argc, argv);
 
-    CApplication a("sampleafvclient", CApplicationInfo::Sample);
+    BlackCore::registerMetadata();
+
+    BlackCore::CApplication a("sampleafvclient", CApplicationInfo::Sample);
 
     CAfvMapReader *afvMapReader = new CAfvMapReader(&a);
     afvMapReader->updateFromMap();
 
-    CAfvClient voiceClient("https://voice1.vatsim.uk");
+    CAfvClient *voiceClient = new  CAfvClient("https://voice1.vatsim.uk", &qa);
+    CAfvClientBridge *voiceClientBridge = new CAfvClientBridge(voiceClient, &qa);
+    voiceClient->start(QThread::TimeCriticalPriority);
+
+    QObject::connect(&qa, &QCoreApplication::aboutToQuit, [voiceClient]()
+    {
+        voiceClient->quitAndWait();
+    });
 
     // default user name
     QString defaultUserName("1234567");
@@ -45,7 +55,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     QQmlContext *ctxt = engine.rootContext();
     ctxt->setContextProperty("afvMapReader", afvMapReader);
-    ctxt->setContextProperty("voiceClient", &voiceClient);
+    ctxt->setContextProperty("voiceClient", voiceClientBridge);
     ctxt->setContextProperty("userName", defaultUserName);
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

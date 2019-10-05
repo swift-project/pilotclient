@@ -14,6 +14,7 @@
 #include "blackmisc/logcategorylist.h"
 #include "blackcore/afv/dto.h"
 #include "blackcore/application.h"
+#include "blackmisc/logmessage.h"
 
 #include <QString>
 #include <QNetworkAccessManager>
@@ -78,7 +79,7 @@ namespace BlackCore
                 {
                     if (!m_isAuthenticated)
                     {
-                        CLogMessage(this).debug(u"AFV not authenticated");
+                        BlackMisc::CLogMessage(this).debug(u"AFV not authenticated");
                         return {};
                     }
 
@@ -101,7 +102,7 @@ namespace BlackCore
                 {
                     if (! m_isAuthenticated)
                     {
-                        CLogMessage(this).debug(u"AFV not authenticated");
+                        BlackMisc::CLogMessage(this).debug(u"AFV not authenticated");
                         return {};
                     }
 

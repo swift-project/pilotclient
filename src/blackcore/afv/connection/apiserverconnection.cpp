@@ -63,7 +63,7 @@ namespace BlackCore
 
                 QNetworkRequest request(url);
                 request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-                QEventLoop loop(sApp);
+                QEventLoop loop;
 
                 // posted in QAM thread, reply is nullptr if called from another thread
                 QNetworkReply *reply = sApp->postToNetwork(request, CApplication::NoLogRequestId, QJsonDocument(obj).toJson(),
@@ -160,7 +160,7 @@ namespace BlackCore
             {
                 if (isShuttingDown()) { return {}; }
 
-                QEventLoop loop(sApp);
+                QEventLoop loop;
                 QByteArray receivedData;
 
                 // posted in QAM thread, reply is nullptr if called from another thread
@@ -196,7 +196,7 @@ namespace BlackCore
             {
                 if (isShuttingDown()) { return {}; }
 
-                QEventLoop loop(sApp);
+                QEventLoop loop;
                 QByteArray receivedData;
 
                 // posted in QAM thread, reply is nullptr if called from another thread

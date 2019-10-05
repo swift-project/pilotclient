@@ -27,6 +27,7 @@
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/settingscache.h"
+#include "blackmisc/worker.h"
 
 #include <QDateTime>
 #include <QAudioInput>
@@ -35,6 +36,8 @@
 #include <QString>
 #include <QVector>
 
+#include <atomic>
+
 namespace BlackCore
 {
     namespace Afv
@@ -42,12 +45,12 @@ namespace BlackCore
         namespace Clients
         {
             //! AFV client
-            class BLACKCORE_EXPORT CAfvClient final : public QObject, public BlackMisc::CIdentifiable
+            class BLACKCORE_EXPORT CAfvClient final : public BlackMisc::CContinuousWorker
             {
                 Q_OBJECT
                 Q_PROPERTY(double inputVolumePeakVU  READ getInputVolumePeakVU  NOTIFY inputVolumePeakVU)
                 Q_PROPERTY(double outputVolumePeakVU READ getOutputVolumePeakVU NOTIFY outputVolumePeakVU)
-                Q_PROPERTY(ConnectionStatus connectionStatus READ getConnectionStatus NOTIFY connectionStatusChanged)
+                Q_PROPERTY(BlackCore::Afv::Clients::CAfvClient::ConnectionStatus connectionStatus READ getConnectionStatus NOTIFY connectionStatusChanged)
                 Q_PROPERTY(QString receivingCallsignsCom1 READ getReceivingCallsignsCom1 NOTIFY receivingCallsignsChanged)
                 Q_PROPERTY(QString receivingCallsignsCom2 READ getReceivingCallsignsCom2 NOTIFY receivingCallsignsChanged)
 
@@ -63,7 +66,7 @@ namespace BlackCore
                 CAfvClient(const QString &apiServer, QObject *parent = nullptr);
 
                 //! Dtor
-                virtual ~CAfvClient() override { this->stop(); }
+                virtual ~CAfvClient() override { this->stopAudio(); }
 
                 //! Corresponding callsign
                 QString callsign() const { return m_callsign; }
@@ -100,9 +103,9 @@ namespace BlackCore
                 //! @}
 
                 bool restartWithNewDevices(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
-                void start(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice, const QVector<quint16> &transceiverIDs);
-                Q_INVOKABLE void start(const QString &inputDeviceName, const QString &outputDeviceName);
-                void stop();
+                void startAudio(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice, const QVector<quint16> &transceiverIDs);
+                Q_INVOKABLE void startAudio(const QString &inputDeviceName, const QString &outputDeviceName);
+                void stopAudio();
 
                 //! Enable COM unit/transceiver @{
                 Q_INVOKABLE void enableTransceiver(quint16 id, bool enable);
@@ -159,8 +162,8 @@ namespace BlackCore
                 //! @}
 
                 //! VU values, 0..1 @{
-                double getInputVolumePeakVU() const { return m_inputVolumeStream.PeakVU; }
-                double getOutputVolumePeakVU() const { return m_outputVolumeStream.PeakVU; }
+                double getInputVolumePeakVU() const;
+                double getOutputVolumePeakVU() const;
                 //! @}
 
                 //! Recently used device @{
@@ -176,7 +179,7 @@ namespace BlackCore
             signals:
                 //! Receiving callsigns have been changed
                 //! \remark callsigns I do receive
-                void receivingCallsignsChanged(const Audio::TransceiverReceivingCallsignsChangedArgs &args);
+                void receivingCallsignsChanged(const BlackCore::Afv::Audio::TransceiverReceivingCallsignsChangedArgs &args);
 
                 //! Connection status has been changed
                 void connectionStatusChanged(ConnectionStatus status);
@@ -228,13 +231,13 @@ namespace BlackCore
                 Audio::CSoundcardSampleProvider *soundcardSampleProvider = nullptr;
                 BlackSound::SampleProvider::CVolumeSampleProvider *outputSampleProvider = nullptr;
 
-                bool m_transmit = false;
+                std::atomic_bool m_transmit = { false };
                 bool m_transmitHistory = false;
                 QVector<TxTransceiverDto> m_transmittingTransceivers;
                 static const QVector<quint16> &allTransceiverIds() { static const QVector<quint16> transceiverIds{0, 1}; return transceiverIds; }
 
                 bool m_isStarted = false;
-                bool m_loopbackOn = false;
+                std::atomic_bool m_loopbackOn = { false };
                 QDateTime m_startDateTimeUtc;
 
                 double m_inputVolumeDb;
@@ -253,6 +256,8 @@ namespace BlackCore
                 void initTransceivers();
                 void initWithContext();
                 static bool hasContext();
+
+                mutable QMutex m_mutex;
             };
         } // ns
     } // ns

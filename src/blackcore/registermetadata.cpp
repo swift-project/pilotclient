@@ -16,6 +16,7 @@
 #include "blackcore/fsd/fsdclient.h"
 #include "blackcore/webreaderflags.h"
 #include "blackcore/aircraftmatcher.h"
+#include "blackcore/afv/clients/afvclient.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/network/network.h"
 #include "blackmisc/valueobject.h"
@@ -33,6 +34,10 @@ namespace BlackCore
         // however, does not harm if it is redundant
         qRegisterMetaType<CWebReaderFlags::WebReader>();
         qRegisterMetaType<CWebReaderFlags::WebReaderFlag>();
+        qRegisterMetaType<BlackCore::Afv::Clients::CAfvClient::ConnectionStatus>();
+        qRegisterMetaType<BlackCore::Afv::Clients::CAfvClient::ConnectionStatus>("ConnectionStatus");
+        qRegisterMetaType<BlackCore::Afv::Audio::TransceiverReceivingCallsignsChangedArgs>();
+        qRegisterMetaType<BlackCore::Afv::Audio::TransceiverReceivingCallsignsChangedArgs>("TransceiverReceivingCallsignsChangedArgs");
 
         qDBusRegisterMetaType<Context::CLogSubscriptionHash>();
         qDBusRegisterMetaType<Context::CLogSubscriptionPair>();

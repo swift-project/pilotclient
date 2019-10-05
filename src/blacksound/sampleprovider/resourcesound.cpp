@@ -36,32 +36,23 @@ namespace BlackSound
         {
             if (m_data->fileName.isEmpty()) { return false; }
 
-            QObject *parent = QCoreApplication::instance();
-            Q_ASSERT(parent);
-            CWorker *worker = CWorker::fromTask(parent, "loadResourceSound", [this]()
+            CWavFile wavFile;
+            m_data->samples.clear();
+            if (wavFile.open(m_data->fileName))
             {
-                CWavFile wavFile;
-
-                m_data->samples.clear();
-                if (wavFile.open(m_data->fileName))
+                if (wavFile.fileFormat().sampleType() == QAudioFormat::Float)
                 {
-                    if (wavFile.fileFormat().sampleType() == QAudioFormat::Float)
-                    {
-                        // Not implemented
-                        // m_samples = convertFloatBytesTo16BitPCM(wavFile.audioData());
-                    }
-                    else
-                    {
-                        m_data->samples = convertBytesTo32BitFloatPCM(wavFile.audioData());
-                    }
+                    // Not implemented
+                    // m_samples = convertFloatBytesTo16BitPCM(wavFile.audioData());
                 }
-            });
-            worker->then([this]()
-            {
-                m_data->isLoaded = true;
-            });
+                else
+                {
+                    m_data->samples = convertBytesTo32BitFloatPCM(wavFile.audioData());
+                }
+            }
 
-            return worker ? true : false;
+            m_data->isLoaded = true;
+            return true;
         }
 
         bool CResourceSound::isSameFileName(const QString &fn) const

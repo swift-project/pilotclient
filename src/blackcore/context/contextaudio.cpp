@@ -94,7 +94,7 @@ namespace BlackCore
 
         IContextAudio::~IContextAudio()
         {
-            m_voiceClient.stop();
+            m_voiceClient.stopAudio();
         }
 
         const CIdentifier &IContextAudio::audioRunsWhere() const
@@ -394,11 +394,11 @@ namespace BlackCore
             {
                 const CUser connectedUser = this->getIContextNetwork()->getConnectedServer().getUser();
                 m_voiceClient.connectTo(connectedUser.getId(), connectedUser.getPassword(), connectedUser.getCallsign().asString());
-                m_voiceClient.start(CAudioDeviceInfo::getDefaultInputDevice(), CAudioDeviceInfo::getDefaultOutputDevice(), {0, 1});
+                m_voiceClient.startAudio(CAudioDeviceInfo::getDefaultInputDevice(), CAudioDeviceInfo::getDefaultOutputDevice(), {0, 1});
             }
             else if (to.isDisconnected())
             {
-                m_voiceClient.stop();
+                m_voiceClient.stopAudio();
                 m_voiceClient.disconnectFrom();
             }
         }
