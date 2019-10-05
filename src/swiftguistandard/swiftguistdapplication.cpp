@@ -37,7 +37,7 @@ CStatusMessageList CSwiftGuiStdApplication::startHookIn()
     // Valid combination?
     if (!coreModeStr.isEmpty())
     {
-        if (coreMode == CoreModes::CoreInGuiProcess && !dBusAddress.isEmpty())
+        if (coreMode == CoreModes::Standalone && !dBusAddress.isEmpty())
         {
             const CStatusMessage m = CStatusMessage(this, CLogCategory::validation()).
                                      error(u"Inconsistent pair DBus: '%1' and core: '%2'")
@@ -50,13 +50,13 @@ CStatusMessageList CSwiftGuiStdApplication::startHookIn()
     CStatusMessageList msgs;
     if (!dBusAddress.isEmpty() && coreModeStr.isEmpty())
     {
-        coreMode = CoreModes::CoreExternal; // default
+        coreMode = CoreModes::Distributed; // default
         const CStatusMessage m = CStatusMessage(this, CLogCategory::validation()).
                                  info(u"No DBus address, setting core mode: '%1'")
                                  << CoreModes::coreModeToString(coreMode);
         msgs.push_back(m);
     }
-    else if (dBusAddress.isEmpty() && coreMode == CoreModes::CoreExternal)
+    else if (dBusAddress.isEmpty() && coreMode == CoreModes::Distributed)
     {
         dBusAddress = CDBusServer::sessionBusAddress(); // a possible default
         const CStatusMessage m = CStatusMessage(this, CLogCategory::validation()).
@@ -68,11 +68,11 @@ CStatusMessageList CSwiftGuiStdApplication::startHookIn()
     CCoreFacadeConfig runtimeConfig;
     switch (coreMode)
     {
-    case CoreModes::CoreExternal:
+    case CoreModes::Distributed:
         runtimeConfig = CCoreFacadeConfig::remote(dBusAddress);
         break;
     default:
-    case CoreModes::CoreInGuiProcess:
+    case CoreModes::Standalone:
         runtimeConfig = CCoreFacadeConfig::local(dBusAddress);
         break;
     }

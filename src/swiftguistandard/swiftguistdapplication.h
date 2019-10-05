@@ -44,7 +44,7 @@ private:
     QCommandLineOption m_cmdFacadeMode
     {
         { "c" , "core" },
-        QCoreApplication::translate("main", "Core mode: (e)xternal, (g)ui (in GUI process), (l)ocalaudio (external, but local audio)."),
+        QCoreApplication::translate("main", "Core mode: (d)istributed, (s)tandalone."),
         "coremode"
     };  //!< Facade startup mode
 };

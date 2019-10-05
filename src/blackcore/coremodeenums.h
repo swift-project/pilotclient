@@ -22,22 +22,24 @@ namespace BlackCore
         //! Core runs how and where?
         enum CoreMode
         {
-            CoreInGuiProcess,
-            CoreExternal
+            Standalone,
+            Distributed
         };
 
         //! String to core mode
         static CoreMode stringToCoreMode(const QString &m)
         {
             QString cm(m.toLower().trimmed());
-            if (cm.isEmpty()) { return CoreInGuiProcess; }
-            if (m == coreModeToString(CoreInGuiProcess)) { return CoreInGuiProcess; }
-            if (m == coreModeToString(CoreExternal)) { return CoreExternal; }
+            if (cm.isEmpty()) { return Standalone; }
+            if (m == coreModeToString(Standalone))  { return Standalone; }
+            if (m == coreModeToString(Distributed)) { return Distributed; }
 
             // some alternative names
-            if (cm.contains("external")) { return CoreExternal; }
-            if (cm.contains("gui")) { return CoreInGuiProcess; }
-            return CoreInGuiProcess;
+            if (cm.contains("distribute")) { return Distributed; }
+            if (cm.contains("standalone")) { return Standalone; }
+            if (cm.contains("external"))   { return Distributed; }
+            if (cm.contains("gui"))        { return Standalone; }
+            return Standalone;
         }
 
         //! Core mode as string
@@ -45,8 +47,8 @@ namespace BlackCore
         {
             switch (mode)
             {
-            case CoreInGuiProcess: return QStringLiteral("coreinguiprocess");
-            case CoreExternal:     return QStringLiteral("coreexternal");
+            case Standalone:   return QStringLiteral("standalone");
+            case Distributed:  return QStringLiteral("distributed");
             }
             return {};
         }

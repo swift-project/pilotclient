@@ -67,9 +67,8 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(ui->tb_ConfigurationWizard, &QToolButton::pressed, this, &CSwiftLauncher::startWizard);
     connect(ui->tb_Launcher,            &QToolBox::currentChanged, this, &CSwiftLauncher::tabChanged);
 
-    connect(ui->rb_SwiftCoreAudioOnCore, &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased, Qt::QueuedConnection);
-    connect(ui->rb_SwiftCoreAudioOnGui,  &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased, Qt::QueuedConnection);
-    connect(ui->rb_SwiftStandalone,      &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased, Qt::QueuedConnection);
+    connect(ui->rb_SwiftDistributed, &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased, Qt::QueuedConnection);
+    connect(ui->rb_SwiftStandalone,  &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased, Qt::QueuedConnection);
 
     connect(ui->comp_UpdateInfo,   &CUpdateInfoComponent::updateInfoAvailable,       this, &CSwiftLauncher::updateInfoAvailable,   Qt::QueuedConnection);
     connect(ui->comp_UpdateInfo,   &CUpdateInfoComponent::newerPilotClientAvailable, this, &CSwiftLauncher::setHeaderInfo,         Qt::QueuedConnection);
@@ -83,7 +82,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(ui->pb_P3DConfigDirs, &QPushButton::released, this, &CSwiftLauncher::showSimulatorConfigDirs, Qt::QueuedConnection);
 
     const QShortcut *logPageShortCut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(showLogPage()));
-    Q_UNUSED(logPageShortCut);
+    Q_UNUSED(logPageShortCut)
 
     // periodically check
     connect(&m_checkTimer, &QTimer::timeout, this, &CSwiftLauncher::checkRunningApplicationsAndCore);
@@ -124,12 +123,11 @@ CEnableForFramelessWindow::WindowMode CSwiftLauncher::getWindowMode() const
 
 CoreModes::CoreMode CSwiftLauncher::getCoreMode() const
 {
-    if (ui->rb_SwiftStandalone->isChecked())      { return CoreModes::CoreInGuiProcess; }
-    if (ui->rb_SwiftCoreAudioOnCore->isChecked()) { return CoreModes::CoreExternal; }
-    if (ui->rb_SwiftCoreAudioOnGui->isChecked())  { return CoreModes::CoreExternal; }
+    if (ui->rb_SwiftStandalone->isChecked())  { return CoreModes::Standalone; }
+    if (ui->rb_SwiftDistributed->isChecked()) { return CoreModes::Distributed; }
 
     Q_ASSERT_X(false, Q_FUNC_INFO, "wrong mode");
-    return CoreModes::CoreInGuiProcess;
+    return CoreModes::Standalone;
 }
 
 void CSwiftLauncher::mousePressEvent(QMouseEvent *event)
@@ -258,8 +256,7 @@ bool CSwiftLauncher::setSwiftCoreExecutable()
     if (!sGui || sGui->isShuttingDown()) { return false; }
     this->saveSetup();
     QStringList args = ui->comp_DBusSelector->getDBusCmdLineArgs();
-    if (ui->rb_SwiftCoreAudioOnCore->isChecked()) { args.append("--coreaudio"); }
-    if (ui->cb_resetWindow->isChecked())          { args.append("--resetsize"); }
+    if (ui->cb_resetWindow->isChecked()) { args.append("--resetsize"); }
 
     m_executableArgs = sGui->argumentsJoined(args);
     m_executable = CDirectoryUtils::executableFilePath(CBuildConfig::swiftCoreExecutableName());
@@ -338,9 +335,8 @@ void CSwiftLauncher::setDefaults()
     ui->rb_WindowNormal->setChecked(!setup.useFramelessWindow());
 
     const CLauncherSetup::CoreMode mode = setup.getCoreMode();
-    ui->rb_SwiftStandalone->setChecked(mode == CLauncherSetup::Standalone ? true : false);
-    ui->rb_SwiftCoreAudioOnCore->setChecked(mode == CLauncherSetup::CoreWithAudioOnCore ? true : false);
-    ui->rb_SwiftCoreAudioOnGui->setChecked(mode == CLauncherSetup::CoreWithAudioOnGui ? true : false);
+    ui->rb_SwiftStandalone->setChecked(mode == CLauncherSetup::Standalone   ? true : false);
+    ui->rb_SwiftDistributed->setChecked(mode == CLauncherSetup::Distributed ? true : false);
 }
 
 void CSwiftLauncher::saveSetup()
@@ -350,16 +346,12 @@ void CSwiftLauncher::saveSetup()
     if (!dBus.isEmpty()) { setup.setDBusAddress(dBus); }
     setup.setFramelessWindow(ui->rb_WindowFrameless->isChecked());
     setup.setCoreMode(CLauncherSetup::Standalone);
-    if (ui->rb_SwiftCoreAudioOnCore->isChecked())
+    if (ui->rb_SwiftDistributed->isChecked())
     {
-        setup.setCoreMode(CLauncherSetup::CoreWithAudioOnCore);
-    }
-    else if (ui->rb_SwiftCoreAudioOnGui->isChecked())
-    {
-        setup.setCoreMode(CLauncherSetup::CoreWithAudioOnGui);
+        setup.setCoreMode(CLauncherSetup::Distributed);
     }
     const CStatusMessage msg = m_setup.set(setup);
-    Q_UNUSED(msg);
+    Q_UNUSED(msg)
 }
 
 bool CSwiftLauncher::warnAboutOtherSwiftApplications()
@@ -425,7 +417,7 @@ void CSwiftLauncher::startButtonPressed()
     }
     else if (sender == ui->tb_SwiftCore)
     {
-        if (this->isStandaloneGuiSelected()) { ui->rb_SwiftCoreAudioOnGui->setChecked(true); }
+        if (this->isStandaloneGuiSelected()) { ui->rb_SwiftDistributed->setChecked(true); }
         ui->tb_SwiftCore->setEnabled(false);
         m_startCoreWaitCycles = 2;
         if (this->setSwiftCoreExecutable())
@@ -451,7 +443,7 @@ void CSwiftLauncher::dbusServerModeSelected(bool selected)
 {
     if (!selected) { return; }
     if (!this->isStandaloneGuiSelected()) { return; }
-    ui->rb_SwiftCoreAudioOnGui->setChecked(true);
+    ui->rb_SwiftDistributed->setChecked(true);
 }
 
 void CSwiftLauncher::showStatusMessage(const CStatusMessage &msg)
@@ -508,10 +500,10 @@ void CSwiftLauncher::checkRunningApplicationsAndCore()
     if (m_startGuiWaitCycles > 0) { m_startGuiWaitCycles--; }
 
     const CApplicationInfoList runningApps = sGui->getRunningApplications();
-    const bool foundLocalCore = runningApps.containsApplication(CApplicationInfo::PilotClientCore);
-    const bool foundLocalMappingTool = runningApps.containsApplication(CApplicationInfo::MappingTool);
+    const bool foundLocalCore           = runningApps.containsApplication(CApplicationInfo::PilotClientCore);
+    const bool foundLocalMappingTool    = runningApps.containsApplication(CApplicationInfo::MappingTool);
     const bool foundLocalPilotClientGui = runningApps.containsApplication(CApplicationInfo::PilotClientGui);
-    const bool standalone = ui->rb_SwiftStandalone->isChecked();
+    const bool standalone               = ui->rb_SwiftStandalone->isChecked();
 
     ui->tb_SwiftCore->setEnabled(!standalone && !foundLocalCore && m_startCoreWaitCycles < 1);
     ui->tb_SwiftMappingTool->setEnabled(!foundLocalMappingTool && m_startMappingToolWaitCycles < 1);
@@ -537,7 +529,7 @@ void CSwiftLauncher::onStyleSheetsChanged()
 
 void CSwiftLauncher::onDBusEditingFinished()
 {
-    ui->rb_SwiftCoreAudioOnGui->setChecked(true);
+    ui->rb_SwiftDistributed->setChecked(true);
 }
 
 void CSwiftLauncher::onCoreModeReleased()

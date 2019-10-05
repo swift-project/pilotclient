@@ -37,8 +37,7 @@ namespace BlackCore
             enum CoreMode
             {
                 Standalone,
-                CoreWithAudioOnGui,
-                CoreWithAudioOnCore,
+                Distributed
             };
 
             //! Default constructor
