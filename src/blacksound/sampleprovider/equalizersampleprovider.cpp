@@ -2,6 +2,8 @@
 #include "blacksound/audioutilities.h"
 #include <QDebug>
 
+using namespace BlackSound::Dsp;
+
 namespace BlackSound
 {
     namespace SampleProvider
@@ -52,5 +54,5 @@ namespace BlackSound
         {
             m_outputGain = outputGain;
         }
-    }
-}
+    } // ns
+} // ns
