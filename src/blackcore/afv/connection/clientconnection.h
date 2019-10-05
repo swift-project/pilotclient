@@ -33,7 +33,7 @@ namespace BlackCore
                 Q_OBJECT
 
             public:
-                //! Com status
+                //! Connection status
                 enum ConnectionStatus
                 {
                     Disconnected,   //!< Not connected
@@ -41,32 +41,42 @@ namespace BlackCore
                 };
                 Q_ENUM(ConnectionStatus)
 
+                //! Ctor
                 CClientConnection(const QString &apiServer, QObject *parent = nullptr);
 
+                //! Connect/disconnect @{
                 void connectTo(const QString &userName, const QString &password, const QString &callsign);
                 void disconnectFrom(const QString &reason = {});
+                bool isConnected() const { return m_connection.isConnected(); }
+                //! @}
 
-                bool isConnected() const { return m_connection.m_connected; }
-
-                void setReceiveAudio(bool value) { m_connection.m_receiveAudio = value; }
-                bool receiveAudio() const { return m_connection.m_receiveAudio; }
-
-                template<typename T>
-                void sendToVoiceServer(T dto)
+                //! Receiving audio? @{
+                void setReceiveAudio(bool value) { m_connection.setReceiveAudio(value); }
+                bool receiveAudio()    const { return m_connection.isReceivingAudio(); }
+                bool receiveAudioDto() const { return m_receiveAudioDto; }
+                void setReceiveAudioDto(bool receiveAudioDto)
                 {
-                    QUrl voiceServerUrl("udp://" + m_connection.m_tokens.VoiceServer.addressIpV4);
-                    QByteArray dataBytes = Crypto::CryptoDtoSerializer::serialize(*m_connection.voiceCryptoChannel, CryptoDtoMode::AEAD_ChaCha20Poly1305, dto);
+                    m_receiveAudioDto = receiveAudioDto;
+                }
+                //! @}
+
+                //! Send voiceDTO to server
+                template<typename T>
+                void sendToVoiceServer(const T &dto)
+                {
+                    const QUrl voiceServerUrl("udp://" + m_connection.getTokens().VoiceServer.addressIpV4);
+                    const QByteArray dataBytes = Crypto::CryptoDtoSerializer::serialize(*m_connection.m_voiceCryptoChannel, Crypto::CryptoDtoMode::AEAD_ChaCha20Poly1305, dto);
                     m_udpSocket->writeDatagram(dataBytes, QHostAddress(voiceServerUrl.host()), static_cast<quint16>(voiceServerUrl.port()));
                 }
 
-                bool receiveAudioDto() const;
-                void setReceiveAudioDto(bool receiveAudioDto);
-
+                //! Update transceivers
                 void updateTransceivers(const QString &callsign, const QVector<TransceiverDto> &transceivers);
 
+                //! All aliased stations
                 QVector<StationDto> getAllAliasedStations();
 
             signals:
+                //! Audio has been received
                 void audioReceived(const AudioRxOnTransceiversDto &dto);
 
             private:
@@ -85,8 +95,8 @@ namespace BlackCore
                 CClientConnectionData m_connection;
 
                 // Voice server
-                QUdpSocket *m_udpSocket = nullptr;
-                QTimer *m_voiceServerTimer = nullptr;
+                QUdpSocket *m_udpSocket        = nullptr;
+                QTimer     *m_voiceServerTimer = nullptr;
 
                 // API server
                 CApiServerConnection *m_apiServerConnection = nullptr;

@@ -8,11 +8,11 @@
 
 //! \file
 
-#ifndef BLACKSOUND_OPUSENCODER_H
-#define BLACKSOUND_OPUSENCODER_H
+#ifndef BLACKSOUND_CODECS_OPUSENCODER_H
+#define BLACKSOUND_CODECS_OPUSENCODER_H
 
-#include "blacksound/blacksoundexport.h"
 #include "opus/opus.h"
+#include "blacksound/blacksoundexport.h"
 
 #include <QByteArray>
 #include <QVector>
@@ -31,18 +31,20 @@ namespace BlackSound
             //! Dtor
             ~COpusEncoder();
 
+            //! Bit rate
             void setBitRate(int bitRate);
 
             //! \param frameCount Number of audio samples per frame
             //! \returns the size of an audio frame in bytes
             int frameByteCount(int frameCount);
 
+            //! Frame count
             int frameCount(const QVector<qint16> pcmSamples);
 
             QByteArray encode(const QVector<qint16> pcmSamples, int samplesLength, int *encodedLength);
 
         private:
-            OpusEncoder *opusEncoder;
+            OpusEncoder *opusEncoder = nullptr;
             int m_sampleRate;
             int m_channels;
 

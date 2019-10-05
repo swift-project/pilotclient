@@ -25,9 +25,9 @@ namespace BlackCore
             //! DTO header
             struct CryptoDtoHeaderDto
             {
-                std::string ChannelTag;
-                uint64_t Sequence;
-                CryptoDtoMode Mode;
+                std::string   ChannelTag; //!< channel
+                uint64_t      Sequence;   //!< sequence
+                CryptoDtoMode Mode;       //!< mode
                 MSGPACK_DEFINE(ChannelTag, Sequence, Mode)
             };
         } // ns

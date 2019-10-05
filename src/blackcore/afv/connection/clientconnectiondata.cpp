@@ -7,8 +7,10 @@
  */
 
 #include "clientconnectiondata.h"
+#include "blackmisc/logmessage.h"
 #include <QDebug>
 
+using namespace BlackMisc;
 using namespace BlackCore::Afv::Crypto;
 
 namespace BlackCore
@@ -17,6 +19,12 @@ namespace BlackCore
     {
         namespace Connection
         {
+            const CLogCategoryList &CClientConnectionData::getLogCategories()
+            {
+                static const CLogCategoryList cats { CLogCategory::audio(), CLogCategory::vatsimSpecific() };
+                return cats;
+            }
+
             qint64 CClientConnectionData::secondsSinceAuthentication() const
             {
                 return m_authenticatedDateTimeUtc.secsTo(QDateTime::currentDateTimeUtc());
@@ -29,17 +37,28 @@ namespace BlackCore
 
             void CClientConnectionData::createCryptoChannels()
             {
-                if (! m_tokens.isValid)
+                if (!m_tokens.isValid)
                 {
-                    qWarning() << "Tokens not set";
+                    CLogMessage(this).warning(u"Tokens not set");
+                    return;
                 }
-                voiceCryptoChannel.reset(new CCryptoDtoChannel(m_tokens.VoiceServer.channelConfig));
+                m_voiceCryptoChannel.reset(new CCryptoDtoChannel(m_tokens.VoiceServer.channelConfig));
                 // dataCryptoChannel.reset(new CryptoDtoChannel(m_tokens.DataServer.channelConfig));
+            }
+
+            void CClientConnectionData::setTsAuthenticatedToNow()
+            {
+                m_authenticatedDateTimeUtc = QDateTime::currentDateTimeUtc();
+            }
+
+            void CClientConnectionData::setTsHeartbeatToNow()
+            {
+                m_lastVoiceServerHeartbeatAckUtc = QDateTime::currentDateTimeUtc();
             }
 
             bool CClientConnectionData::voiceServerAlive() const
             {
-                return timeSinceAuthentication() < ServerTimeoutSecs ||
+                return timeSinceAuthenticationSecs() < ServerTimeoutSecs ||
                        m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) < ServerTimeoutSecs;
             }
         } // ns

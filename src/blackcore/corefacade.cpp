@@ -283,7 +283,7 @@ namespace BlackCore
             times.insert("Post setup, connects network", time.restart());
         }
 
-        // fake signals to work around setting values in audio context for local audio with remote core
+        // connection status of network changed
         if (m_contextAudio && m_contextAudio->isUsingImplementingObject())
         {
             Q_ASSERT(m_contextApplication);

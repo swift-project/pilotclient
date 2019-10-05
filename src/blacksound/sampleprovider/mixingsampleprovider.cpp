@@ -15,7 +15,7 @@ namespace BlackSound
         int CMixingSampleProvider::readSamples(QVector<float> &samples, qint64 count)
         {
             samples.clear();
-            samples.fill(0, count);
+            samples.fill(0, static_cast<int>(count));
             int outputLen = 0;
 
             QVector<ISampleProvider *> finishedProviders;
@@ -46,5 +46,5 @@ namespace BlackSound
 
             return outputLen;
         }
-    }
-}
+    } // ns
+} // ns

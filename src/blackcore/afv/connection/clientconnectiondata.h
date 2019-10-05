@@ -13,6 +13,7 @@
 
 #include "blackcore/afv/dto.h"
 #include "apiserverconnection.h"
+#include "blackmisc/logcategorylist.h"
 #include "blackcore/afv/crypto/cryptodtochannel.h"
 
 #include <QDateTime>
@@ -27,8 +28,12 @@ namespace BlackCore
         namespace Connection
         {
             //! Client connection data
-            struct CClientConnectionData
+            class CClientConnectionData
             {
+            public:
+                //! Categories
+                static const BlackMisc::CLogCategoryList &getLogCategories();
+
                 //! Ctor
                 CClientConnectionData() = default;
 
@@ -40,6 +45,39 @@ namespace BlackCore
                 bool isDataServerAlive() const;
                 //! @}
 
+                //! Is connected? @{
+                bool isConnected() const { return m_connected; }
+                void setConnected(bool connected) { m_connected = connected; }
+                //! @}
+
+                //! Receiving audio? @{
+                bool isReceivingAudio() const { return m_receiveAudio; }
+                void setReceiveAudio(bool receive) { m_receiveAudio = receive; }
+                //! @}
+
+                //! Crypto channels for voice and data
+                void createCryptoChannels();
+
+                //! Tokens @{
+                const PostCallsignResponseDto &getTokens() const { return m_tokens; }
+                void setTokens(const PostCallsignResponseDto &dto) { m_tokens = dto; }
+                //! @}
+
+                //! Callsign @{
+                const QString &getCallsign() const { return m_callsign; }
+                void setCallsign(const QString &callsign) { m_callsign = callsign; }
+                //! @}
+
+                //! Uername @{
+                const QString &getUserName() const { return m_userName; }
+                void setUserName(const QString &un) { m_userName = un; }
+                //! @}
+
+                //! Timestamps @{
+                void setTsAuthenticatedToNow();
+                void setTsHeartbeatToNow();
+                //! @}
+
                 /* TODO
                 public long VoiceServerBytesSent { get; set; }
                 public long VoiceServerBytesReceived { get; set; }
@@ -47,17 +85,19 @@ namespace BlackCore
                 public long DataServerBytesReceived { get; set; }
                 */
 
-                //! Crypto channels for voice and data
-                void createCryptoChannels();
+                QScopedPointer<Crypto::CCryptoDtoChannel> m_voiceCryptoChannel; //!< used crypto channel
 
-                qint64 timeSinceAuthentication() const { return m_authenticatedDateTimeUtc.secsTo(QDateTime::currentDateTimeUtc()); }
+            private:
+                //! Time since authentication
+                qint64 timeSinceAuthenticationSecs() const { return m_authenticatedDateTimeUtc.secsTo(QDateTime::currentDateTimeUtc()); }
+
+                //! Is the voice server alive?
                 bool voiceServerAlive() const;
 
                 QString m_userName; //!< user name
                 QString m_callsign; //!< callsign
 
                 PostCallsignResponseDto m_tokens; //!< tokens
-                QScopedPointer<Crypto::CCryptoDtoChannel> voiceCryptoChannel; //!< used crypto channel
 
                 QDateTime m_authenticatedDateTimeUtc;
                 QDateTime m_lastVoiceServerHeartbeatAckUtc;

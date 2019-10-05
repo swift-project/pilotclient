@@ -13,14 +13,24 @@
 
 #include "msgpack.hpp"
 
-//! DTO mode
-enum class CryptoDtoMode
+namespace BlackCore
 {
-    Undefined = 0,
-    None = 1,
-    AEAD_ChaCha20Poly1305 = 2
-};
+    namespace Afv
+    {
+        namespace Crypto
+        {
+            //! DTO mode
+            enum class CryptoDtoMode
+            {
+                Undefined = 0, //!< undefined
+                None      = 1, //!< none
+                AEAD_ChaCha20Poly1305 = 2 //!< AEAD
+            };
 
-MSGPACK_ADD_ENUM(CryptoDtoMode);
+        } // ns
+    } // ns
+} // ns
+
+MSGPACK_ADD_ENUM(BlackCore::Afv::Crypto::CryptoDtoMode);
 
 #endif // guard

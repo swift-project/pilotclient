@@ -37,6 +37,7 @@ int main(int argc, char *argv[])
 
     CAfvClient *voiceClient = new  CAfvClient("https://voice1.vatsim.uk", &qa);
     CAfvClientBridge *voiceClientBridge = new CAfvClientBridge(voiceClient, &qa);
+
     voiceClient->start(QThread::TimeCriticalPriority);
 
     QObject::connect(&qa, &QCoreApplication::aboutToQuit, [voiceClient]()
@@ -48,7 +49,7 @@ int main(int argc, char *argv[])
     QString defaultUserName("1234567");
     if (CBuildConfig::isLocalDeveloperDebugBuild())
     {
-        CUser user("OBF:AwLZ7f9hUmpSZhm4=", "Joe Doe");
+        const CUser user("OBF:AwLZ7f9hUmpSZhm4=", "Joe Doe");
         defaultUserName = user.getId();
     }
 
