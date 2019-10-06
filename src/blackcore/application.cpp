@@ -1369,7 +1369,7 @@ namespace BlackCore
         }
 
         const QStringList verifyErrors = CDirectoryUtils::verifyRuntimeDirectoriesAndFiles();
-        if (!verifyErrors.isEmpty())
+        if (!verifyErrors.isEmpty() && !m_applicationInfo.isUnitTest())
         {
             this->cmdLineErrorMessage("Missing runtime directories/files: " + verifyErrors.join(", "));
             return false;

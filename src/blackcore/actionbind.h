@@ -39,6 +39,7 @@ namespace BlackCore
         {
             // workaround if a binding is taking place in an empty context
             if (!sApp || sApp->isShuttingDown()) { return; }
+            if (sApp->getApplicationInfo().isUnitTest()) { return; }
 
             const QString a = CActionBind::registerAction(action, icon);
             Q_ASSERT_X(sApp && sApp->getInputManager(), Q_FUNC_INFO, "Missing input manager");
