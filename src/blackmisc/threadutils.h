@@ -48,7 +48,7 @@ namespace BlackMisc
         static const QString threadToString(const void *t);
 
         //! Info about current thread
-        static const QString threadInfo(QThread *thread);
+        static const QString threadInfo(const QThread *thread);
 
         //! Info about current thread
         static const QString currentThreadInfo();

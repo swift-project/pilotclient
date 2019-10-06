@@ -61,7 +61,7 @@ namespace BlackCore
                     {"networkversion", networkVersion.toString()},
                 };
 
-                QPointer<QEventLoop> loop(new QEventLoop(sApp));
+                QPointer<QEventLoop> loop(this->newEventLoop());
                 QNetworkRequest request(url);
                 request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
@@ -161,7 +161,7 @@ namespace BlackCore
             {
                 if (isShuttingDown()) { return {}; }
 
-                QPointer<QEventLoop> loop(new QEventLoop(sApp));
+                QPointer<QEventLoop> loop(this->newEventLoop());
                 QByteArray receivedData;
 
                 // posted in QAM thread, reply is nullptr if called from another thread
@@ -197,7 +197,7 @@ namespace BlackCore
             {
                 if (isShuttingDown()) { return {}; }
 
-                QPointer<QEventLoop> loop(new QEventLoop(sApp));
+                QPointer<QEventLoop> loop(this->newEventLoop());
                 QByteArray receivedData;
 
                 // posted in QAM thread, reply is nullptr if called from another thread
@@ -295,7 +295,7 @@ namespace BlackCore
             {
                 if (QDateTime::currentDateTimeUtc() > m_expiryLocalUtc.addSecs(-5 * 60))
                 {
-                    connectTo(m_username, m_password, m_networkVersion);
+                    this->connectTo(m_username, m_password, m_networkVersion);
                 }
             }
 
@@ -325,6 +325,16 @@ namespace BlackCore
                 {
                     CLogMessage(this).info(u"AFV network request (%1) for '%2': '%3'") << addMsg << reply->url().toString() << d;
                 }
+            }
+
+            QEventLoop *CApiServerConnection::newEventLoop()
+            {
+                QEventLoop *loop = new QEventLoop(this);
+                if (sApp)
+                {
+                    QObject::connect(sApp, &CApplication::aboutToShutdown, loop, &QEventLoop::quit, Qt::QueuedConnection);
+                }
+                return loop;
             }
 
             bool CApiServerConnection::isShuttingDown()

@@ -72,7 +72,7 @@ namespace BlackMisc
         return QStringLiteral("0x%1").arg(reinterpret_cast<long long>(t), 0, 16);
     }
 
-    const QString CThreadUtils::threadInfo(QThread *thread)
+    const QString CThreadUtils::threadInfo(const QThread *thread)
     {
         static const QString info("thread: %1 name: '%2' priority: '%3'");
         if (!thread) { return QString("no thread"); }

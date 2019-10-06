@@ -101,7 +101,7 @@ namespace BlackCore
                 {
                     if (! m_isAuthenticated)
                     {
-                        BlackMisc::CLogMessage(this).debug(u"AFV not authenticated");
+                        CLogMessage(this).debug(u"AFV not authenticated");
                         return {};
                     }
 
@@ -148,6 +148,9 @@ namespace BlackCore
 
                 //! Message if reply has error
                 void logRequestDuration(const QNetworkReply *reply, const QString &addMsg = {});
+
+                //! Get QLoop for network access, using class must delete the loop
+                QEventLoop *newEventLoop();
 
                 //! Application shutting down
                 static bool isShuttingDown();
