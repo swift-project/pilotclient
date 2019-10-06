@@ -69,7 +69,11 @@ namespace BlackCore
                 virtual ~CAfvClient() override { this->stopAudio(); }
 
                 //! Corresponding callsign
-                QString callsign() const { return m_callsign; }
+                //! \threadsafe
+                //! @{
+                QString getCallsign() const;
+                void setCallsign(const QString &getCallsign);
+                //! @}
 
                 //! Is connected to network?
                 bool isConnected() const { return m_connection->isConnected(); }
@@ -78,7 +82,7 @@ namespace BlackCore
                 ConnectionStatus getConnectionStatus() const;
 
                 //! Connect to network
-                Q_INVOKABLE void connectTo(const QString &cid, const QString &password, const QString &callsign);
+                Q_INVOKABLE void connectTo(const QString &cid, const QString &password, const QString &getCallsign);
 
                 //! Disconnect from network
                 Q_INVOKABLE void disconnectFrom();
@@ -107,31 +111,48 @@ namespace BlackCore
                 Q_INVOKABLE void startAudio(const QString &inputDeviceName, const QString &outputDeviceName);
                 void stopAudio();
 
-                //! Enable COM unit/transceiver @{
+                //! Enable COM unit/transceiver
+                //! \threadsafe
+                //! @{
                 Q_INVOKABLE void enableTransceiver(quint16 id, bool enable);
                 void enableComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit, bool enable);
                 bool isEnabledTransceiver(quint16 id) const;
                 bool isEnabledComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
                 //! @}
 
-                //! Set transmitting transceivers @{
+                //! Set transmitting transceivers
+                //! \threadsafe
+                //! @{
                 void setTransmittingTransceiver(quint16 transceiverID);
                 void setTransmittingComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit);
                 void setTransmittingTransceivers(const QVector<TxTransceiverDto> &transceivers);
                 //! @}
 
                 //! Transmitting transceiver/COM unit
+                //! \threadsafe
+                //! @{
                 bool isTransmittingTransceiver(quint16 id) const;
                 bool isTransmittingdComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
                 //! @}
 
-                //! Update frequency @{
+                //! Get transceivers
+                //! \threadsafe
+                //! @{
+                QVector<TransceiverDto> getTransceivers() const;
+                QVector<TxTransceiverDto> getTransmittingTransceivers() const;
+                QSet<quint16> getEnabledTransceivers() const;
+                //! @}
+
+                //! Update frequency
+                //! \threadsafe
+                //! @{
                 Q_INVOKABLE void updateComFrequency(quint16 id, quint32 frequencyHz);
                 void updateComFrequency(BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::PhysicalQuantities::CFrequency &comFrequency);
                 void updateComFrequency(BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::Aviation::CComSystem &comSystem);
                 //! @}
 
                 //! Update own aircraft position
+                //! \threadsafe
                 Q_INVOKABLE void updatePosition(double latitudeDeg, double longitudeDeg, double heightMeters);
 
                 //! Push to talk @{
@@ -139,7 +160,9 @@ namespace BlackCore
                 void setPttForCom(bool active, BlackMisc::Audio::PTTCOM com);
                 //! @}
 
-                //! Loopback @{
+                //! Loopback
+                //! \threadsafe
+                //! @{
                 Q_INVOKABLE void setLoopBack(bool on) { m_loopbackOn = on; }
                 Q_INVOKABLE bool isLoopback() const { return m_loopbackOn; }
                 //! @}
@@ -195,13 +218,15 @@ namespace BlackCore
                 void outputVolumePeakVU(double value);
                 //! @}
 
+            protected:
+                //! \copydoc BlackMisc::CContinuousWorker::initialize
+                virtual void initialize() override;
+
             private:
                 void opusDataAvailable(const Audio::OpusDataAvailableArgs &args);
                 void audioOutDataAvailable(const AudioRxOnTransceiversDto &dto);
                 void inputVolumeStream(const Audio::InputVolumeStreamArgs &args);
                 void outputVolumeStream(const Audio::OutputVolumeStreamArgs &args);
-
-
                 void inputOpusDataAvailable();
 
                 void onPositionUpdateTimer();
@@ -210,6 +235,7 @@ namespace BlackCore
                 void updateTransceivers(bool updateFrequencies = true);
                 void updateTransceiversFromContext(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
+                static constexpr int PositionUpdatesMs = 5000; //!< position timer
                 static constexpr int SampleRate  = 48000;
                 static constexpr int FrameSize   =   960; // 20ms
                 static constexpr double MinDbIn  = -18.0;
@@ -228,16 +254,18 @@ namespace BlackCore
                 Audio::CInput *m_input  = nullptr;
                 Audio::Output *m_output = nullptr;
 
-                Audio::CSoundcardSampleProvider *soundcardSampleProvider = nullptr;
-                BlackSound::SampleProvider::CVolumeSampleProvider *outputSampleProvider = nullptr;
+                Audio::CSoundcardSampleProvider *m_soundcardSampleProvider = nullptr;
+                BlackSound::SampleProvider::CVolumeSampleProvider *m_outputSampleProvider = nullptr;
 
-                std::atomic_bool m_transmit = { false };
-                bool m_transmitHistory = false;
+                std::atomic_bool m_transmit        { false };
+                std::atomic_bool m_transmitHistory { false };
                 QVector<TxTransceiverDto> m_transmittingTransceivers;
+                QVector<TransceiverDto>   m_transceivers;
+                QSet<quint16>             m_enabledTransceivers;
                 static const QVector<quint16> &allTransceiverIds() { static const QVector<quint16> transceiverIds{0, 1}; return transceiverIds; }
 
-                bool m_isStarted = false;
-                std::atomic_bool m_loopbackOn = { false };
+                std::atomic_bool m_isStarted  { false };
+                std::atomic_bool m_loopbackOn { false };
                 QDateTime m_startDateTimeUtc;
 
                 double m_inputVolumeDb;
@@ -245,10 +273,8 @@ namespace BlackCore
                 double m_outputVolume = 1.0;
                 double m_maxDbReadingInPTTInterval = -100;
 
-                QTimer *m_voiceServerPositionTimer = nullptr;
-                QVector<TransceiverDto> m_transceivers;
-                QSet<quint16> m_enabledTransceivers;
-                QVector<StationDto> m_aliasedStations;
+                QTimer                 *m_voiceServerPositionTimer = nullptr;
+                QVector<StationDto>     m_aliasedStations;
 
                 Audio::InputVolumeStreamArgs  m_inputVolumeStream;
                 Audio::OutputVolumeStreamArgs m_outputVolumeStream;
@@ -258,6 +284,10 @@ namespace BlackCore
                 static bool hasContext();
 
                 mutable QMutex m_mutex;
+                mutable QMutex m_mutexInputStream;
+                mutable QMutex m_mutexOutputStream;
+                mutable QMutex m_mutexTransceivers;
+                mutable QMutex m_mutexCallsign;
             };
         } // ns
     } // ns
