@@ -1,9 +1,20 @@
-#ifndef AFVCLIENTBRIDGE_H
-#define AFVCLIENTBRIDGE_H
+/* Copyright (C) 2019
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
+ * or distributed except according to the terms contained in the LICENSE file.
+ */
+
+//! \file
+
+#ifndef SAMPLES_AFVCLIENTBRIDGE_H
+#define SAMPLES_AFVCLIENTBRIDGE_H
 
 #include "blackcore/afv/clients/afvclient.h"
 #include <QObject>
 
+//! Bridge, running in main thread -> voice client in own thread
 class CAfvClientBridge : public QObject
 {
     Q_OBJECT
@@ -14,24 +25,32 @@ class CAfvClientBridge : public QObject
     Q_PROPERTY(QString receivingCallsignsCom2 READ getReceivingCallsignsCom2 NOTIFY receivingCallsignsChanged)
 
 public:
+    //! Ctor
     CAfvClientBridge(BlackCore::Afv::Clients::CAfvClient *afvClient, QObject *parent = nullptr);
 
-    double getInputVolumePeakVU() const { return m_afvClient->getInputVolumePeakVU(); }
+    //! VU values, 0..1 @{
+    double getInputVolumePeakVU()  const { return m_afvClient->getInputVolumePeakVU(); }
     double getOutputVolumePeakVU() const { return m_afvClient->getOutputVolumePeakVU(); }
+    //! @}
 
+    //! \copydoc CAfvClient::getConnectionStatus
     BlackCore::Afv::Clients::CAfvClient::ConnectionStatus getConnectionStatus() const
     {
         return m_afvClient->getConnectionStatus();
     }
 
+    //! Callsigns currently received @{
     QString getReceivingCallsignsCom1() { return m_afvClient->getReceivingCallsignsCom1(); }
     QString getReceivingCallsignsCom2() { return m_afvClient->getReceivingCallsignsCom2(); }
+    //! @}
 
+    //! \copydoc CAfvClient::connectTo
     Q_INVOKABLE void connectTo(const QString &cid, const QString &password, const QString &callsign)
     {
         m_afvClient->connectTo(cid, password, callsign);
     }
 
+    //! \copydoc CAfvClient::disconnectFrom
     Q_INVOKABLE void disconnectFrom() { m_afvClient->disconnectFrom(); }
 
     //! Audio devices @{
@@ -40,36 +59,36 @@ public:
     //! @}
 
     //! Enable/disable VHF simulation, true means effects are NOT used
-    Q_INVOKABLE void setBypassEffects(bool value) { /*m_afvClient->setBypassEffects(value);*/ }
+    Q_INVOKABLE void setBypassEffects(bool value) { m_afvClient->setBypassEffects(value); }
 
+    //! \copydoc CAfvClient::startAudio
     Q_INVOKABLE void startAudio(const QString &inputDeviceName, const QString &outputDeviceName) { m_afvClient->startAudio(inputDeviceName, outputDeviceName); }
 
-    Q_INVOKABLE void enableTransceiver(quint16 id, bool enable) { /*m_afvClient->enableTransceiver(id, enable);*/ }
+    //! \copydoc CAfvClient::enableTransceiver
+    Q_INVOKABLE void enableTransceiver(quint16 id, bool enable) { m_afvClient->enableTransceiver(id, enable); }
 
+    //! \copydoc CAfvClient::updateComFrequency
     Q_INVOKABLE void updateComFrequency(quint16 id, quint32 frequencyHz) { m_afvClient->updateComFrequency(id, frequencyHz); }
 
-    //! Update own aircraft position
+    //! \copydoc CAfvClient::updatePosition
     Q_INVOKABLE void updatePosition(double latitudeDeg, double longitudeDeg, double heightMeters)
     {
         m_afvClient->updatePosition(latitudeDeg, longitudeDeg, heightMeters);
     }
 
-    //! Push to talk @{
+    //! \copydoc CAfvClient::setPtt
     Q_INVOKABLE void setPtt(bool active) { m_afvClient->setPtt(active); }
-    //! @}
 
     //! Loopback @{
     Q_INVOKABLE void setLoopBack(bool on) { m_afvClient->setLoopBack(on); }
-    Q_INVOKABLE bool isLoopback() const { return false; m_afvClient->isLoopback(); }
+    Q_INVOKABLE bool isLoopback() const   { return m_afvClient->isLoopback(); }
     //! @}
 
-    //! Input volume in dB, +-18dB @{
-    Q_INVOKABLE void setInputVolumeDb(double valueDb) { /*m_afvClient->setInputVolumeDb(valueDb);*/ }
-    //! @}
+    //! \copydoc CAfvClient::setInputVolumeDb
+    Q_INVOKABLE void setInputVolumeDb(double valueDb) { m_afvClient->setInputVolumeDb(valueDb); }
 
-    //! Output volume in dB, +-18dB @{
-    Q_INVOKABLE void setOutputVolumeDb(double valueDb) { /*m_afvClient->setOutputVolumeDb(valueDb);*/ }
-    //! @}
+    //! \copydoc CAfvClient::setOutputVolumeDb
+    Q_INVOKABLE void setOutputVolumeDb(double valueDb) { m_afvClient->setOutputVolumeDb(valueDb); }
 
 signals:
     //! Receiving callsigns have been changed
@@ -94,4 +113,4 @@ private:
     BlackCore::Afv::Clients::CAfvClient *m_afvClient = nullptr;
 };
 
-#endif // CAFVCLIENTBRIDGE_H
+#endif // guard
