@@ -48,7 +48,7 @@ namespace BlackCore
         void CContextNetworkProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
         {
             bool s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                        "connectionStatusChanged", this, SIGNAL(connectionStatusChanged(BlackCore::INetwork::ConnectionStatus, BlackCore::INetwork::ConnectionStatus)));
+                                        "connectionStatusChanged", this, SIGNAL(connectionStatusChanged(BlackMisc::Network::CConnectionStatus, BlackMisc::Network::CConnectionStatus)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                    "changedAtcStationsBooked", this, SIGNAL(changedAtcStationsBooked()));
