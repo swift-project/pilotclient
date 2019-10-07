@@ -13,6 +13,7 @@
 #include "blacksound/sampleprovider/samples.h"
 #include "blacksound/audioutilities.h"
 #include "blackcore/afv/audio/receiversampleprovider.h"
+
 #include <QtMath>
 #include <QDebug>
 
@@ -32,6 +33,7 @@ namespace BlackCore
             {
                 Q_ASSERT(audioFormat.channelCount() == 1);
 
+                this->setObjectName("CallsignSampleProvider");
                 m_mixer = new CMixingSampleProvider(this);
                 m_crackleSoundProvider = new CResourceSoundSampleProvider(Samples::instance().crackle(), m_mixer);
                 m_crackleSoundProvider->setLooping(true);
@@ -57,8 +59,11 @@ namespace BlackCore
                 m_mixer->addMixerInput(m_hfWhiteNoise);
                 m_mixer->addMixerInput(m_voiceEq);
 
-                m_timer.setInterval(100);
-                connect(&m_timer, &QTimer::timeout, this, &CallsignSampleProvider::timerElapsed);
+                m_timer = new QTimer(this);
+                m_timer->setObjectName(this->objectName() +  "m_timer");
+
+                m_timer->setInterval(100);
+                connect(m_timer, &QTimer::timeout, this, &CallsignSampleProvider::timerElapsed);
             }
 
             int CallsignSampleProvider::readSamples(QVector<float> &samples, qint64 count)
@@ -136,7 +141,7 @@ namespace BlackCore
                 m_lastPacketLatch = audioDto.lastPacket;
                 if (audioDto.lastPacket && !m_underflow) { CallsignDelayCache::instance().success(m_callsign); }
                 m_lastSamplesAddedUtc = QDateTime::currentDateTimeUtc();
-                if (!m_timer.isActive()) { m_timer.start(); }
+                if (!m_timer->isActive()) { m_timer->start(); }
             }
 
             void CallsignSampleProvider::addSilentSamples(const IAudioDto &audioDto)
@@ -148,16 +153,16 @@ namespace BlackCore
                 m_lastPacketLatch = audioDto.lastPacket;
 
                 m_lastSamplesAddedUtc = QDateTime::currentDateTimeUtc();
-                if (!m_timer.isActive()) { m_timer.start(); }
+                if (!m_timer->isActive()) { m_timer->start(); }
             }
 
             void CallsignSampleProvider::idle()
             {
-                m_timer.stop();
+                m_timer->stop();
                 m_inUse = false;
                 setEffects();
-                m_callsign = QString();
-                m_type = QString();
+                m_callsign.clear();
+                m_type.clear();
             }
 
             QVector<qint16> CallsignSampleProvider::decodeOpus(const QByteArray &opusData)
@@ -184,7 +189,7 @@ namespace BlackCore
                     {
                         double crackleFactor = (((qExp(m_distanceRatio) * qPow(m_distanceRatio, -4.0)) / 350.0) - 0.00776652);
 
-                        if (crackleFactor < 0.0f) { crackleFactor = 0.0f; }
+                        if (crackleFactor < 0.0f)  { crackleFactor = 0.00f; }
                         if (crackleFactor > 0.20f) { crackleFactor = 0.20f; }
 
                         m_hfWhiteNoise->setGain(m_hfWhiteNoiseGainMin);
@@ -198,7 +203,7 @@ namespace BlackCore
                     {
                         double crackleFactor = (((qExp(m_distanceRatio) * qPow(m_distanceRatio, -4.0)) / 350.0) - 0.00776652);
 
-                        if (crackleFactor < 0.0) { crackleFactor = 0.0; }
+                        if (crackleFactor < 0.0)  { crackleFactor = 0.0;  }
                         if (crackleFactor > 0.20) { crackleFactor = 0.20; }
 
                         m_crackleSoundProvider->setGain(crackleFactor * 2);

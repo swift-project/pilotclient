@@ -81,10 +81,8 @@ namespace BlackCore
                 QString m_type;
                 bool m_inUse = false;
 
-                bool m_bypassEffects = false;
-
+                bool m_bypassEffects  = false;
                 float m_distanceRatio = 1.0;
-
                 const CReceiverSampleProvider                            *m_receiver = nullptr;
                 BlackSound::SampleProvider::CMixingSampleProvider        *m_mixer = nullptr;
                 BlackSound::SampleProvider::CResourceSoundSampleProvider *m_crackleSoundProvider = nullptr;
@@ -94,7 +92,7 @@ namespace BlackCore
                 BlackSound::SampleProvider::CSimpleCompressorEffect      *m_simpleCompressorEffect = nullptr;
                 BlackSound::SampleProvider::CEqualizerSampleProvider     *m_voiceEq  = nullptr;
                 BlackSound::SampleProvider::CBufferedWaveProvider        *m_audioInput = nullptr;
-                QTimer m_timer;
+                QTimer *m_timer = nullptr;
 
                 BlackSound::Codecs::COpusDecoder m_decoder;
                 bool m_lastPacketLatch = false;

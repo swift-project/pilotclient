@@ -41,11 +41,11 @@ namespace BlackSound
             void setMakeUpGain(double gain);
 
         private:
-            QTimer m_timer;
+            QTimer          *m_timer = nullptr;
             ISampleProvider *m_sourceStream = nullptr;
-            bool m_enabled = true;
+            bool             m_enabled = true;
+            const int        m_channels = 1;
             chunkware_simple::SimpleComp m_simpleCompressor;
-            const int channels = 1;
         };
     } // ns
 } // ns

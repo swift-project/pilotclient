@@ -17,14 +17,18 @@ namespace BlackSound
             ISampleProvider(parent),
             m_sourceStream(source)
         {
+
+            this->setObjectName("CSimpleCompressorEffect");
+            m_timer = new QTimer(this);
+            m_timer->setObjectName(this->objectName() + ":m_timer");
+
             m_simpleCompressor.setAttack(5.0);
             m_simpleCompressor.setRelease(10.0);
             m_simpleCompressor.setSampleRate(48000.0);
             m_simpleCompressor.setThresh(16.0);
             m_simpleCompressor.setRatio(6.0);
             m_simpleCompressor.setMakeUpGain(16.0);
-
-            m_timer.start(3000);
+            m_timer->start(3000);
         }
 
         int CSimpleCompressorEffect::readSamples(QVector<float> &samples, qint64 count)
@@ -33,14 +37,16 @@ namespace BlackSound
 
             if (m_enabled)
             {
-                for (int sample = 0; sample < samplesRead; sample += channels)
+                for (int sample = 0; sample < samplesRead; sample += m_channels)
                 {
                     double in1 = samples.at(sample);
-                    double in2 = (channels == 1) ? 0 : samples.at(sample + 1);
+                    double in2 = (m_channels == 1) ? 0 : samples.at(sample + 1);
                     m_simpleCompressor.process(in1, in2);
-                    samples[sample] = in1;
-                    if (channels > 1)
-                        samples[sample + 1] = in2;
+                    samples[sample] = static_cast<float>(in1);
+                    if (m_channels > 1)
+                    {
+                        samples[sample + 1] = static_cast<float>(in2);
+                    }
                 }
             }
             return samplesRead;
