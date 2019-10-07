@@ -51,7 +51,7 @@ namespace BlackCore
                 CryptoDtoChannelConfigDto dto;
 
                 dto.channelTag = json.value("channelTag").toString();
-                dto.aeadReceiveKey = QByteArray::fromBase64(json.value("aeadReceiveKey").toString().toLocal8Bit());
+                dto.aeadReceiveKey  = QByteArray::fromBase64(json.value("aeadReceiveKey").toString().toLocal8Bit());
                 dto.aeadTransmitKey = QByteArray::fromBase64(json.value("aeadTransmitKey").toString().toLocal8Bit());
                 dto.hmacKey = QByteArray::fromBase64(json.value("hmacKey").toString().toLocal8Bit());
                 return dto;
@@ -163,8 +163,8 @@ namespace BlackCore
             //! Properties @{
             QUuid id;
             QString name;
-            quint32 frequency;
-            quint32 frequencyAlias;
+            quint32 frequencyHz;
+            quint32 frequencyAliasHz;
             //! @}
 
             //! From JSON
@@ -173,8 +173,8 @@ namespace BlackCore
                 StationDto dto;
                 dto.id = json.value("id").toString();
                 dto.name = json.value("name").toString();
-                dto.frequency = static_cast<quint32>(json.value("frequency").toInt());
-                dto.frequencyAlias = static_cast<quint32>(json.value("frequencyAlias").toInt());
+                dto.frequencyHz      = static_cast<quint32>(json.value("frequency").toInt());
+                dto.frequencyAliasHz = static_cast<quint32>(json.value("frequencyAlias").toInt());
                 return dto;
             }
         };
