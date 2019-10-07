@@ -161,7 +161,7 @@ ApplicationWindow {
                     btStartAudio.enabled = false
                     cbInputDevices.enabled = false
                     cbOutputDevices.enabled = false
-                    voiceClient.start(cbInputDevices.currentText, cbOutputDevices.currentText)
+                    voiceClient.startAudio(cbInputDevices.currentText, cbOutputDevices.currentText)
                 }
             }
         }
