@@ -51,15 +51,9 @@ namespace BlackCore
                 //! Frame is available
                 void frameAvailable(const QByteArray &frame);
 
-            protected:
-                //! \copydoc QIODevice::timerEvent
-                void timerEvent(QTimerEvent *event) override;
-
             private:
                 static constexpr qint64 frameSize = 960;
-                qint64 m_lastFrameSent = -1;
                 QByteArray m_buffer;
-                int m_timerId = 0;
             };
 
             struct OpusDataAvailableArgs
@@ -133,7 +127,7 @@ namespace BlackCore
                 qint16 m_maxSampleInput = 0.0;
 
                 const int SampleCountPerEvent = 4800;
-                const double maxDb = 0;
+                const double maxDb =   0;
                 const double minDb = -40;
 
                 uint m_audioSequenceCounter = 0;

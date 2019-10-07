@@ -28,24 +28,23 @@ namespace BlackCore
     {
         namespace Audio
         {
-
             CAudioInputBuffer::CAudioInputBuffer(QObject *parent) :
                 QIODevice(parent)
-            {}
+            {
+                this->setObjectName("CAudioInputBuffer");
+            }
 
             void CAudioInputBuffer::start()
             {
-                open(QIODevice::WriteOnly | QIODevice::Unbuffered);
+                if (!this->isOpen())
+                {
+                    open(QIODevice::WriteOnly | QIODevice::Unbuffered);
+                }
             }
 
             void CAudioInputBuffer::stop()
             {
-                if (m_timerId > 0)
-                {
-                    killTimer(m_timerId);
-                    m_timerId = 0;
-                }
-                close();
+                this->close();
             }
 
             qint64 CAudioInputBuffer::readData(char *data, qint64 maxlen)
@@ -67,13 +66,14 @@ namespace BlackCore
                 return len;
             }
 
+            /**
             void CAudioInputBuffer::timerEvent(QTimerEvent *event)
             {
                 Q_UNUSED(event)
                 // 20 ms = 960 samples * 2 bytes = 1920 Bytes
                 if (m_buffer.size() < 1920) { return; }
 
-                const qint64 now = QDateTime::currentMSecsSinceEpoch();
+                const qint64 now   = QDateTime::currentMSecsSinceEpoch();
                 const qint64 delta = now - m_lastFrameSent;
                 if (delta >= 19)
                 {
@@ -83,12 +83,14 @@ namespace BlackCore
                     emit frameAvailable(m_buffer.left(1920));
                 }
             }
+            **/
 
             CInput::CInput(int sampleRate, QObject *parent) :
                 QObject(parent),
                 m_sampleRate(sampleRate),
                 m_encoder(sampleRate, 1, OPUS_APPLICATION_VOIP)
             {
+                this->setObjectName("CInput");
                 m_encoder.setBitRate(16 * 1024);
             }
 
@@ -121,6 +123,7 @@ namespace BlackCore
                 m_started = false;
                 if (m_audioInput) { m_audioInput->stop(); }
                 m_audioInput.reset();
+                m_audioInputBuffer.stop();
             }
 
             void CInput::audioInDataAvailable(const QByteArray &frame)
@@ -147,7 +150,7 @@ namespace BlackCore
                 }
 
                 int length;
-                QByteArray encodedBuffer = m_encoder.encode(samples, samples.size(), &length);
+                const QByteArray encodedBuffer = m_encoder.encode(samples, samples.size(), &length);
                 m_opusBytesEncoded += length;
 
                 m_sampleCount += samples.size();
