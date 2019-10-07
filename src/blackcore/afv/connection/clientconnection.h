@@ -91,7 +91,7 @@ namespace BlackCore
 
                 const QUuid m_networkVersion = QUuid("3a5ddc6d-cf5d-4319-bd0e-d184f772db80");
 
-                //Data
+                // Data
                 CClientConnectionData m_connection;
 
                 // Voice server

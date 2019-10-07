@@ -28,7 +28,9 @@ namespace BlackInput
         m_deviceName(QString::fromWCharArray(pdidInstance->tszInstanceName)),
         m_productName(QString::fromWCharArray(pdidInstance->tszProductName)),
         m_directInput(directInputPtr)
-    {}
+    {
+        this->setObjectName("CJoystickDevice");
+    }
 
     bool CJoystickDevice::init(HWND helperWindow)
     {
@@ -378,23 +380,24 @@ namespace BlackInput
     //
     LRESULT CALLBACK CJoystickWindows::windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
-        CJoystickWindows* joystickWindows = static_cast<CJoystickWindows*>(GetProp(hWnd, L"CJoystickWindows"));
+        CJoystickWindows *joystickWindows = static_cast<CJoystickWindows *>(GetProp(hWnd, L"CJoystickWindows"));
 
         if (joystickWindows)
         {
             switch (uMsg)
             {
             case WM_DEVICECHANGE:
-            {
-                if (wParam == DBT_DEVICEARRIVAL)
                 {
-                    DEV_BROADCAST_HDR* dbh = (DEV_BROADCAST_HDR*) lParam;
-                    if (dbh && dbh->dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE)
+                    if (wParam == DBT_DEVICEARRIVAL)
                     {
-                        joystickWindows->enumJoystickDevices();
+                        // DEV_BROADCAST_HDR *dbh = reinterpret_cast<DEV_BROADCAST_HDR *>(lParam); ???
+                        DEV_BROADCAST_HDR *dbh = (DEV_BROADCAST_HDR *) lParam;
+                        if (dbh && dbh->dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE)
+                        {
+                            joystickWindows->enumJoystickDevices();
+                        }
                     }
                 }
-            }
             }
         }
 
@@ -406,7 +409,7 @@ namespace BlackInput
         CJoystickWindows *obj = static_cast<CJoystickWindows *>(pContext);
 
         /* ignore XInput devices here, keep going. */
-        //if (isXInputDevice( &pdidInstance->guidProduct )) return DIENUM_CONTINUE;
+        // if (isXInputDevice(&pdidInstance->guidProduct)) return DIENUM_CONTINUE;
 
         if (! obj->isJoystickAlreadyAdded(pdidInstance))
         {
@@ -418,9 +421,9 @@ namespace BlackInput
 
     bool operator == (const CJoystickDevice &lhs, const CJoystickDevice &rhs)
     {
-        return lhs.m_guidDevice == rhs.m_guidDevice &&
+        return lhs.m_guidDevice  == rhs.m_guidDevice  &&
                lhs.m_guidProduct == rhs.m_guidProduct &&
-               lhs.m_deviceName == rhs.m_deviceName &&
+               lhs.m_deviceName  == rhs.m_deviceName  &&
                lhs.m_productName == rhs.m_productName;
     }
 

@@ -24,6 +24,7 @@ namespace BlackSound
         class BLACKSOUND_EXPORT CMixingSampleProvider : public ISampleProvider
         {
         public:
+            //! Ctor mixing provider
             CMixingSampleProvider(QObject *parent = nullptr) : ISampleProvider(parent) {}
 
             //! Add a provider

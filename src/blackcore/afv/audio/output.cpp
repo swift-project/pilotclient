@@ -30,7 +30,9 @@ namespace BlackCore
             CAudioOutputBuffer::CAudioOutputBuffer(ISampleProvider *sampleProvider, QObject *parent) :
                 QIODevice(parent),
                 m_sampleProvider(sampleProvider)
-            { }
+            {
+                this->setObjectName("CAudioOutputBuffer");
+            }
 
             qint64 CAudioOutputBuffer::readData(char *data, qint64 maxlen)
             {
@@ -42,7 +44,7 @@ namespace BlackCore
 
                 for (float sample : buffer)
                 {
-                    float absSample = qAbs(sample);
+                    const float absSample = qAbs(sample);
                     if (absSample > m_maxSampleOutput) { m_maxSampleOutput = absSample; }
                 }
 
@@ -80,7 +82,9 @@ namespace BlackCore
             }
 
             Output::Output(QObject *parent) : QObject(parent)
-            { }
+            {
+                this->setObjectName("COutput");
+            }
 
             void Output::start(const CAudioDeviceInfo &outputDevice, ISampleProvider *sampleProvider)
             {

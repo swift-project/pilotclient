@@ -30,7 +30,6 @@ namespace BlackSound
             void setPeakingEq(float sampleRate, float centreFrequency, float q, float dbGain);
             void setHighPassFilter(float sampleRate, float cutoffFrequency, float q);
 
-
             static BiQuadFilter lowPassFilter(float sampleRate, float cutoffFrequency, float q);
             static BiQuadFilter highPassFilter(float sampleRate, float cutoffFrequency, float q);
             static BiQuadFilter peakingEQ(float sampleRate, float centreFrequency, float q, float dbGain);

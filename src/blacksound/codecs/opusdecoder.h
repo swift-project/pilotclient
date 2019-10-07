@@ -30,14 +30,17 @@ namespace BlackSound
             //! Dtor
             ~COpusDecoder();
 
+            //! Frame count
             int frameCount(int bufferSize);
 
+            //! Decode
             QVector<qint16> decode(const QByteArray opusData, int dataLength, int *decodedLength);
 
+            //! Reset
             void resetState();
 
         private:
-            OpusDecoder *opusDecoder;
+            OpusDecoder *opusDecoder = nullptr;
             int m_sampleRate;
             int m_channels;
 

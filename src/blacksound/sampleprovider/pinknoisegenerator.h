@@ -39,8 +39,8 @@ namespace BlackSound
             void setGain(double gain) { m_gain = gain; }
 
         private:
-            QRandomGenerator random;
-            std::array<double, 7> pinkNoiseBuffer = {{0}};
+            QRandomGenerator m_random;
+            std::array<double, 7> m_pinkNoiseBuffer = {{0}};
             double m_gain = 0.0;
         };
     }

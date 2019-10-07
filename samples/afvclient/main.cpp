@@ -29,16 +29,14 @@ int main(int argc, char *argv[])
     QGuiApplication qa(argc, argv);
 
     BlackCore::registerMetadata();
-
     BlackCore::CApplication a("sampleafvclient", CApplicationInfo::Sample);
 
     CAfvMapReader *afvMapReader = new CAfvMapReader(&a);
     afvMapReader->updateFromMap();
 
-    CAfvClient *voiceClient = new  CAfvClient("https://voice1.vatsim.uk", &qa);
+    CAfvClient *voiceClient = new CAfvClient("https://voice1.vatsim.uk", &qa);
+    voiceClient->start(QThread::TimeCriticalPriority); // background thread
     CAfvClientBridge *voiceClientBridge = new CAfvClientBridge(voiceClient, &qa);
-
-    voiceClient->start(QThread::TimeCriticalPriority);
 
     QObject::connect(&qa, &QCoreApplication::aboutToQuit, [voiceClient]()
     {
@@ -56,8 +54,8 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     QQmlContext *ctxt = engine.rootContext();
     ctxt->setContextProperty("afvMapReader", afvMapReader);
-    ctxt->setContextProperty("voiceClient", voiceClientBridge);
-    ctxt->setContextProperty("userName", defaultUserName);
+    ctxt->setContextProperty("voiceClient",  voiceClientBridge);
+    ctxt->setContextProperty("userName",     defaultUserName);
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     return a.exec();

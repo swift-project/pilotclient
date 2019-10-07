@@ -31,7 +31,7 @@ namespace BlackCore
 
                 for (int i = 0; i < voiceInputNumber; i++)
                 {
-                    auto voiceInput = new CallsignSampleProvider(audioFormat, this, m_mixer);
+                    const auto voiceInput = new CallsignSampleProvider(audioFormat, this, m_mixer);
                     m_voiceInputs.push_back(voiceInput);
                     m_mixer->addMixerInput(voiceInput);
                 }

@@ -142,7 +142,7 @@ namespace BlackCore
         protected:
             CCoreFacadeConfig::ContextMode m_mode; //!< How context is used
             qint64 m_contextId;                    //!< unique identifer, avoid redirection rountrips
-            bool m_debugEnabled = false;           //!< debug messages enabled
+            bool   m_debugEnabled = false;         //!< debug messages enabled
 
             //! Constructor
             IContext(CCoreFacadeConfig::ContextMode mode, QObject *parent) :

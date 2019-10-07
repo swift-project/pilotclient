@@ -25,7 +25,7 @@ namespace BlackSound
 
         int CBufferedWaveProvider::readSamples(QVector<float> &samples, qint64 count)
         {
-            qint64 len = qMin(count, static_cast<qint64>(m_audioBuffer.size()));
+            const int len = static_cast<int>(qMin(count, static_cast<qint64>(m_audioBuffer.size())));
             samples = m_audioBuffer.mid(0, len);
             // if (len != 0) qDebug() << "Reading" << count << "samples." << m_audioBuffer.size() << "currently in the buffer.";
             m_audioBuffer.remove(0, len);

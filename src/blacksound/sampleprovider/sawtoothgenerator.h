@@ -37,10 +37,10 @@ namespace BlackSound
             void setGain(double gain) { m_gain = gain; }
 
         private:
-            double m_gain = 0.0;
-            double m_frequency = 0.0;
+            double m_gain       = 0.0;
+            double m_frequency  = 0.0;
             double m_sampleRate = 48000;
-            int m_nSample = 0;
+            int m_nSample       = 0;
         };
     } // ns
 } // ns

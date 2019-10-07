@@ -24,7 +24,6 @@ namespace BlackSound
 {
     namespace SampleProvider
     {
-
         //! CResourceSound shared data
         struct CResourceSoundData : public QSharedData
         {

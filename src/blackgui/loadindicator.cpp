@@ -23,6 +23,7 @@ namespace BlackGui
     CLoadIndicator::CLoadIndicator(int width, int height, QWidget *parent)
         : QWidget(parent)
     {
+        this->setObjectName("CLoadIndicator");
         this->resize(width, height);
         this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         this->setFocusPolicy(Qt::NoFocus);

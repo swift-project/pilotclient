@@ -16,7 +16,9 @@ namespace BlackSound
         CSawToothGenerator::CSawToothGenerator(double frequency, QObject *parent) :
             ISampleProvider(parent),
             m_frequency(frequency)
-        {}
+        {
+            this->setObjectName("CSawToothGenerator");
+        }
 
         int CSawToothGenerator::readSamples(QVector<float> &samples, qint64 count)
         {

@@ -83,9 +83,8 @@ namespace BlackCore
 
             private:
                 uint m_frequencyHz = 122800000;
-                bool m_mute = false;
-
-                const double m_clickGain = 1.0;
+                bool m_mute        = false;
+                const double m_clickGain     = 1.0;
                 const double m_blockToneGain = 0.10;
 
                 quint16 m_id;
