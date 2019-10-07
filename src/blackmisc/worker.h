@@ -317,18 +317,15 @@ namespace BlackMisc
         //! Name of the worker
         const QString &getName() { return m_name; }
 
+        //! Owner of the worker
+        const QObject *owner() const { return m_owner; }
+
     protected:
         //! Called when the thread is started.
         virtual void initialize() {}
 
         //! Called when the thread is finished.
         virtual void cleanup() {}
-
-        //! Owner of the worker
-        //! @{
-        const QObject *owner() const { return m_owner; }
-        QObject *owner() { return m_owner; }
-        //! @}
 
         QTimer m_updateTimer { this }; //!< timer which can be used by implementing classes
 
