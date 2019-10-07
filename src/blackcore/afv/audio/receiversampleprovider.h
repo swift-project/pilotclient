@@ -14,6 +14,8 @@
 #include "blackcore/afv/audio/callsignsampleprovider.h"
 #include "blacksound/sampleprovider/sampleprovider.h"
 #include "blacksound/sampleprovider/mixingsampleprovider.h"
+#include "blacksound/sampleprovider/sinusgenerator.h"
+#include "blacksound/sampleprovider/volumesampleprovider.h"
 
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/audio/audiosettings.h"
@@ -89,9 +91,9 @@ namespace BlackCore
                 quint16 m_id;
                 BlackMisc::CSettingReadOnly<BlackMisc::Audio::TSettings> m_audioSettings { this };
 
-                // TODO VolumeSampleProvider volume;
+                BlackSound::SampleProvider::CVolumeSampleProvider *m_volume = nullptr;
                 BlackSound::SampleProvider::CMixingSampleProvider *m_mixer = nullptr;
-                // TODO SignalGenerator blockTone;
+                BlackSound::SampleProvider::CSinusGenerator *m_blockTone = nullptr;
                 QVector<CallsignSampleProvider *> m_voiceInputs;
 
                 QString m_receivingCallsignsString;

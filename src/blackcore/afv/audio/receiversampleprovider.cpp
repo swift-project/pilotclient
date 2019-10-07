@@ -36,9 +36,9 @@ namespace BlackCore
                     m_mixer->addMixerInput(voiceInput);
                 }
 
-                // TODO blockTone = new SignalGenerator(WaveFormat.SampleRate, 1) { Gain = 0, Type = SignalGeneratorType.Sin, Frequency = 180 };
-                // TODO mixer.AddMixerInput(blockTone.ToMono());
-                // TODO volume = new VolumeSampleProvider(mixer);
+                m_blockTone = new CSinusGenerator(180, this);
+                m_mixer->addMixerInput(m_blockTone);
+                m_volume = new CVolumeSampleProvider(m_mixer);
             }
 
             void CReceiverSampleProvider::setBypassEffects(bool value)
@@ -88,12 +88,12 @@ namespace BlackCore
 
                 if (numberOfInUseInputs > 1)
                 {
-//        blockTone.Frequency = 180;
-//        blockTone.Gain = blockToneGain;
+                    m_blockTone->setFrequency(180.0);
+                    m_blockTone->setGain(m_blockToneGain);
                 }
                 else
                 {
-//        blockTone.Gain = 0;
+                    m_blockTone->setGain(0.0);
                 }
 
                 if (m_doClickWhenAppropriate && numberOfInUseInputs == 0)
@@ -127,8 +127,7 @@ namespace BlackCore
                 }
                 m_lastNumberOfInUseInputs = numberOfInUseInputs;
 
-// return volume.Read(buffer, offset, count);
-                return m_mixer->readSamples(samples, count);
+                return m_volume->readSamples(samples, count);
             }
 
             void CReceiverSampleProvider::addOpusSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio)
