@@ -51,15 +51,19 @@ namespace BlackMisc
         static const QString normal("normal");
         static const QString high("high");
         static const QString highest("highest");
+        static const QString time("time critical");
+        static const QString inherit("inherit");
 
         switch (priority)
         {
-        case QThread::IdlePriority: return idle;
-        case QThread::LowestPriority: return lowest;
-        case QThread::LowPriority: return low;
-        case QThread::NormalPriority: return normal;
-        case QThread::HighPriority: return high;
+        case QThread::IdlePriority:    return idle;
+        case QThread::LowestPriority:  return lowest;
+        case QThread::LowPriority:     return low;
+        case QThread::NormalPriority:  return normal;
+        case QThread::HighPriority:    return high;
         case QThread::HighestPriority: return highest;
+        case QThread::InheritPriority: return inherit;
+        case QThread::TimeCriticalPriority: return time;
         default: break;
         }
 

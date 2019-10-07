@@ -354,6 +354,7 @@ namespace BlackCore
         {
             // there is no empty audio context since AFV
             disconnect(this->getIContextAudio());
+            this->getIContextAudio()->gracefulShutdown();
             this->getIContextAudio()->deleteLater();
             m_contextAudio = nullptr;
         }

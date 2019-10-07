@@ -33,13 +33,18 @@ namespace BlackCore
     namespace Context
     {
         IContextAudio::IContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
-            IContext(mode, runtime), m_voiceClient("https://voice1.vatsim.uk")
+            IContext(mode, runtime), m_voiceClient("https://voice1.vatsim.uk", this)
         {
+            Q_ASSERT_X(CThreadUtils::isApplicationThread(m_voiceClient.thread()), Q_FUNC_INFO, "Should be in main thread");
+            m_voiceClient.start();
+            Q_ASSERT_X(m_voiceClient.owner() == this, Q_FUNC_INFO, "Wrong owner");
+            Q_ASSERT_X(!CThreadUtils::isApplicationThread(m_voiceClient.thread()), Q_FUNC_INFO, "Must NOT be in main thread");
+
             const CSettings as = m_audioSettings.getThreadLocal();
             this->setVoiceOutputVolume(as.getOutVolume());
             m_selcalPlayer = new CSelcalPlayer(CAudioDeviceInfo::getDefaultOutputDevice(), this);
 
-            connect(&m_voiceClient, &CAfvClient::ptt, this, &IContextAudio::ptt);
+            connect(&m_voiceClient, &CAfvClient::ptt, this, &IContextAudio::ptt, Qt::QueuedConnection);
 
             this->changeDeviceSettings();
             QPointer<IContextAudio> myself(this);
@@ -95,6 +100,14 @@ namespace BlackCore
         IContextAudio::~IContextAudio()
         {
             m_voiceClient.stopAudio();
+        }
+
+        void IContextAudio::gracefulShutdown()
+        {
+            m_voiceClient.stopAudio();
+            m_voiceClient.quitAndWait();
+            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(&m_voiceClient), Q_FUNC_INFO, "Needs to be back in current thread");
+            QObject::disconnect(this);
         }
 
         const CIdentifier &IContextAudio::audioRunsWhere() const

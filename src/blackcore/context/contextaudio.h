@@ -86,6 +86,9 @@ namespace BlackCore
             //! Destructor
             virtual ~IContextAudio() override;
 
+            //! Graceful shutdown
+            void gracefulShutdown();
+
             // -------- parts which can run in core and GUI, referring to local voice client ------------
 
             //! Reference to voice client

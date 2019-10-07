@@ -145,9 +145,7 @@ namespace BlackCore
             bool   m_debugEnabled = false;         //!< debug messages enabled
 
             //! Constructor
-            IContext(CCoreFacadeConfig::ContextMode mode, QObject *parent) :
-                QObject(parent), m_mode(mode), m_contextId(QDateTime::currentMSecsSinceEpoch())
-            {}
+            IContext(CCoreFacadeConfig::ContextMode mode, QObject *parent);
 
             //! Path and context id
             QString buildPathAndContextId(const QString &path) const
@@ -163,6 +161,9 @@ namespace BlackCore
             {
                 BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).warning(u"Empty context called, details: %1") << functionName;
             }
+
+            //! Called when shutdown is about to be called
+            virtual void onAboutToShutdown() {}
 
             //! Standard message when status message is returned in empty context
             static const BlackMisc::CStatusMessage &statusMessageEmptyContext();

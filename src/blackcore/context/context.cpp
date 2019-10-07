@@ -7,6 +7,7 @@
  */
 
 #include "blackcore/context/context.h"
+#include "blackcore/application.h"
 #include "blackmisc/logcategorylist.h"
 
 using namespace BlackMisc;
@@ -19,6 +20,15 @@ namespace BlackCore
         {
             static const BlackMisc::CLogCategoryList cats { BlackMisc::CLogCategory::context() };
             return cats;
+        }
+
+        IContext::IContext(CCoreFacadeConfig::ContextMode mode, QObject *parent) :
+            QObject(parent), m_mode(mode), m_contextId(QDateTime::currentMSecsSinceEpoch())
+        {
+            if (sApp && !sApp->isShuttingDown())
+            {
+                QObject::connect(sApp, &CApplication::aboutToShutdown, this, &IContext::onAboutToShutdown);
+            }
         }
 
         IContextNetwork *IContext::getIContextNetwork()
