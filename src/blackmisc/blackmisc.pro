@@ -129,7 +129,7 @@ win32 {
     dest_path = $$DestRoot/bin
 }
 else:macx {
-    copy_command = cp
+    copy_command = rsync -avzl
     source_path = $$EXTERNALS_BIN_DIR/*
     dest_path = $$DestRoot/bin
 }
@@ -147,7 +147,7 @@ win32 {
     dest_path = $$DestRoot/bin
 }
 else:macx {
-    copy_command = cp -a
+    copy_command = rsync -avzl
     source_path = $$EXTERNALS_LIB_DIR/*.{dylib,framework}
     dest_path = $$DestRoot/lib
 }
