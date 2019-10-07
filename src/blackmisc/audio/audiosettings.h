@@ -64,6 +64,7 @@ namespace BlackMisc
             bool noAudioTransmission()   const { return this->isNotificationFlagSet(CNotificationSounds::NotificationNoAudioTransmission); }
             bool pttClickDown() const { return this->isNotificationFlagSet(CNotificationSounds::PTTClickKeyDown); }
             bool pttClickUp()   const { return this->isNotificationFlagSet(CNotificationSounds::PTTClickKeyUp); }
+            bool pttBlocked()   const { return this->isNotificationFlagSet(CNotificationSounds::PTTBlocked); }
             //! @}
 
             //! Settings value

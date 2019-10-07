@@ -9,11 +9,14 @@
 //! \file
 
 #include "receiversampleprovider.h"
+#include "blackmisc/logmessage.h"
 #include "blacksound/sampleprovider/resourcesoundsampleprovider.h"
 #include "blacksound/sampleprovider/samples.h"
 
 #include <QDebug>
 
+using namespace BlackMisc;
+using namespace BlackMisc::Audio;
 using namespace BlackMisc::Aviation;
 using namespace BlackSound::SampleProvider;
 
@@ -23,6 +26,12 @@ namespace BlackCore
     {
         namespace Audio
         {
+            const CLogCategoryList &CReceiverSampleProvider::getLogCategories()
+            {
+                static const CLogCategoryList cats { CLogCategory::audio(), CLogCategory::vatsimSpecific() };
+                return cats;
+            }
+
             CReceiverSampleProvider::CReceiverSampleProvider(const QAudioFormat &audioFormat, quint16 id, int voiceInputNumber, QObject *parent) :
                 ISampleProvider(parent),
                 m_id(id)
@@ -85,8 +94,7 @@ namespace BlackCore
             int CReceiverSampleProvider::readSamples(QVector<float> &samples, qint64 count)
             {
                 int numberOfInUseInputs = activeCallsigns();
-
-                if (numberOfInUseInputs > 1)
+                if (numberOfInUseInputs > 1 && m_doBlockWhenAppropriate)
                 {
                     m_blockTone->setFrequency(180.0);
                     m_blockTone->setGain(m_blockToneGain);
@@ -98,13 +106,9 @@ namespace BlackCore
 
                 if (m_doClickWhenAppropriate && numberOfInUseInputs == 0)
                 {
-                    const bool doClick = m_audioSettings.get().pttClickDown();
-                    Q_UNUSED(doClick)
-                    //! \todo consider the settings
-
                     CResourceSoundSampleProvider *resourceSound = new CResourceSoundSampleProvider(Samples::instance().click(), m_mixer);
                     m_mixer->addMixerInput(resourceSound);
-                    qDebug() << "Click...";
+                    // CLogMessage(this).debug(u"AFV Click...");
                     m_doClickWhenAppropriate = false;
                 }
 
@@ -113,7 +117,7 @@ namespace BlackCore
                     QStringList receivingCallsigns;
                     for (const CallsignSampleProvider *voiceInput : m_voiceInputs)
                     {
-                        QString callsign = voiceInput->callsign();
+                        const QString callsign = voiceInput->callsign();
                         if (! callsign.isEmpty())
                         {
                             receivingCallsigns.push_back(callsign);
@@ -122,25 +126,23 @@ namespace BlackCore
 
                     m_receivingCallsignsString = receivingCallsigns.join(',');
                     m_receivingCallsigns = CCallsignSet(receivingCallsigns);
-                    TransceiverReceivingCallsignsChangedArgs args = { m_id, receivingCallsigns };
+                    const TransceiverReceivingCallsignsChangedArgs args = { m_id, receivingCallsigns };
                     emit receivingCallsignsChanged(args);
                 }
                 m_lastNumberOfInUseInputs = numberOfInUseInputs;
-
                 return m_volume->readSamples(samples, count);
             }
 
             void CReceiverSampleProvider::addOpusSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio)
             {
-                if (m_frequencyHz != frequency)        //Lag in the backend means we get the tail end of a transmission
-                    return;
-
+                if (m_frequencyHz != frequency) { return; } // Lag in the backend means we get the tail end of a transmission
                 CallsignSampleProvider *voiceInput = nullptr;
 
                 auto it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [audioDto](const CallsignSampleProvider * p)
                 {
                     return p->callsign() == audioDto.callsign;
                 });
+
                 if (it != m_voiceInputs.end())
                 {
                     voiceInput = *it;
@@ -161,27 +163,28 @@ namespace BlackCore
                     voiceInput->addOpusSamples(audioDto, distanceRatio);
                 }
 
-                m_doClickWhenAppropriate = true;
+                const CSettings s = m_audioSettings.get();
+                m_doClickWhenAppropriate = s.pttClickDown();
+                m_doBlockWhenAppropriate = s.pttBlocked();
             }
 
             void CReceiverSampleProvider::addSilentSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio)
             {
-                Q_UNUSED(distanceRatio);
-                if (m_frequencyHz != frequency)        //Lag in the backend means we get the tail end of a transmission
-                    return;
+                Q_UNUSED(distanceRatio)
+                if (m_frequencyHz != frequency) { return; } // Lag in the backend means we get the tail end of a transmission
 
                 CallsignSampleProvider *voiceInput = nullptr;
-
                 auto it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [audioDto](const CallsignSampleProvider * p)
                 {
                     return p->callsign() == audioDto.callsign;
                 });
+
                 if (it != m_voiceInputs.end())
                 {
                     voiceInput = *it;
                 }
 
-                if (! voiceInput)
+                if (!voiceInput)
                 {
                     it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CallsignSampleProvider * p) { return p->inUse() == false; });
                     if (it != m_voiceInputs.end())

@@ -17,6 +17,7 @@
 #include "blacksound/sampleprovider/sinusgenerator.h"
 #include "blacksound/sampleprovider/volumesampleprovider.h"
 
+#include "blackmisc/logcategorylist.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/audio/audiosettings.h"
 
@@ -41,10 +42,16 @@ namespace BlackCore
                 Q_OBJECT
 
             public:
+                //! Log.categories
+                static const BlackMisc::CLogCategoryList &getLogCategories();
+
                 //! Ctor
                 CReceiverSampleProvider(const QAudioFormat &audioFormat, quint16 id, int voiceInputNumber, QObject *parent = nullptr);
 
+                //! Bypass effects
                 void setBypassEffects(bool value);
+
+                //! Frequency
                 void setFrequency(const uint &frequencyHz);
 
                 //! Number of active callsign
@@ -61,9 +68,12 @@ namespace BlackCore
                 //! \copydoc BlackSound::SampleProvider::ISampleProvider::readSamples
                 virtual int readSamples(QVector<float> &samples, qint64 count) override;
 
+                //! Add samples @{
                 void addOpusSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio);
                 void addSilentSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio);
+                //! @}
 
+                //! ID
                 quint16 getId() const { return m_id; }
 
                 //! Receiving callsigns as string
@@ -92,14 +102,15 @@ namespace BlackCore
 
                 BlackSound::SampleProvider::CVolumeSampleProvider *m_volume = nullptr;
                 BlackSound::SampleProvider::CMixingSampleProvider *m_mixer = nullptr;
-                BlackSound::SampleProvider::CSinusGenerator *m_blockTone = nullptr;
+                BlackSound::SampleProvider::CSinusGenerator       *m_blockTone = nullptr;
                 QVector<CallsignSampleProvider *> m_voiceInputs;
 
                 QString m_receivingCallsignsString;
                 BlackMisc::Aviation::CCallsignSet m_receivingCallsigns;
 
-                bool m_doClickWhenAppropriate = false;
-                int m_lastNumberOfInUseInputs = 0;
+                bool m_doClickWhenAppropriate  = false;
+                bool m_doBlockWhenAppropriate  = false;
+                int  m_lastNumberOfInUseInputs = 0;
             };
         } // ns
     } // ns
