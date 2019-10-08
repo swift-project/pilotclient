@@ -105,7 +105,7 @@ namespace BlackCore
                 {
                     if (! m_isAuthenticated)
                     {
-                        CLogMessage(this).debug(u"AFV not authenticated");
+                        BlackMisc::CLogMessage(this).debug(u"AFV not authenticated");
                         return {};
                     }
 
