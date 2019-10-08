@@ -122,6 +122,8 @@ namespace BlackGui
                     connect(afvClient, &CAfvClient::inputVolumePeakVU,  this, &CAudioDeviceVolumeSetupComponent::onInputVU);
                     connect(afvClient, &CAfvClient::receivingCallsignsChanged,     this, &CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged,    Qt::QueuedConnection);
                     connect(afvClient, &CAfvClient::updatedFromOwnAircraftCockpit, this, &CAudioDeviceVolumeSetupComponent::onUpdatedClientWithCockpitData, Qt::QueuedConnection);
+
+                    this->onUpdatedClientWithCockpitData();
                 }
             }
             Q_UNUSED(c)
@@ -147,7 +149,7 @@ namespace BlackGui
         void CAudioDeviceVolumeSetupComponent::setInValue(int value, int from, int to)
         {
             if (value > to)   { value = to; }
-            if (value < from) { value = from; }
+            else if (value < from) { value = from; }
             const double r = ui->hs_VolumeIn->maximum() - ui->hs_VolumeIn->minimum();
             const double tr = to - from;
             ui->hs_VolumeIn->setValue(qRound(value / tr * r));
@@ -156,7 +158,7 @@ namespace BlackGui
         void CAudioDeviceVolumeSetupComponent::setOutValue(int value, int from, int to)
         {
             if (value > to)   { value = to; }
-            if (value < from) { value = from; }
+            else if (value < from) { value = from; }
             const double r = ui->hs_VolumeOut->maximum() - ui->hs_VolumeOut->minimum();
             const double tr = to - from;
             ui->hs_VolumeOut->setValue(qRound(value / tr * r));
@@ -165,14 +167,14 @@ namespace BlackGui
         void CAudioDeviceVolumeSetupComponent::setInLevel(double value)
         {
             if (value > 1.0) { value = 1.0; }
-            if (value < 0.0) { value = 0.0; }
+            else if (value < 0.0) { value = 0.0; }
             ui->wip_InLevelMeter->levelChanged(value);
         }
 
         void CAudioDeviceVolumeSetupComponent::setOutLevel(double value)
         {
             if (value > 1.0) { value = 1.0; }
-            if (value < 0.0) { value = 0.0; }
+            else if (value < 0.0) { value = 0.0; }
             ui->wip_OutLevelMeter->levelChanged(value);
         }
 
@@ -211,7 +213,7 @@ namespace BlackGui
             const CSettings as(m_audioSettings.getThreadLocal());
             ui->cb_DisableAudioEffects->setChecked(!as.isAudioEffectsEnabled());
             this->setInValue(as.getInVolume());
-            this->setOutValue(as.getInVolume());
+            this->setOutValue(as.getOutVolume());
         }
 
         void CAudioDeviceVolumeSetupComponent::initAudioDeviceLists()
@@ -300,9 +302,7 @@ namespace BlackGui
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return nullptr; }
             if (!sGui->getIContextAudio()->isUsingImplementingObject()) { return nullptr; }
-
-            CAfvClient &afvClient = sGui->getCoreFacade()->getCContextAudio()->voiceClient();
-            return &afvClient;
+            return sGui->getCoreFacade()->getCContextAudio()->voiceClient();
         }
 
         void CAudioDeviceVolumeSetupComponent::onAudioDeviceSelected(int index)
