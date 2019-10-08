@@ -549,8 +549,8 @@ namespace BlackMisc
             static const QString h("HEAD");
             static const QString g("GET");
             static const QString put("PUT");
-            static const QString d("POST");
-            static const QString post("DELETE");
+            static const QString d("DELETE");
+            static const QString post("POST");
             static const QString c("custom");
             static const QString u("unknown");
 
