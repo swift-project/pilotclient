@@ -21,6 +21,7 @@ namespace BlackMisc
     class BLACKMISC_EXPORT CMacOSMicrophoneAccess : public QObject
     {
         Q_OBJECT
+
     public:
         //! Authorization status
         enum AuthorizationStatus
