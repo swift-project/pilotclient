@@ -24,7 +24,7 @@
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/audio/audiosettings.h"
-#include "blackmisc/audio/voicesetup.h"
+#include "blackmisc/audio/settings/voicesettings.h"
 #include "blackmisc/audio/ptt.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/comsystem.h"
@@ -193,6 +193,9 @@ namespace BlackCore
             //! Changed audio settings
             void onChangedAudioSettings();
 
+            //! Changed voice settings
+            void onChangedVoiceSettings();
+
             //! Audio increase/decrease volume
             //! @{
             void audioIncreaseVolume(bool enabled);
@@ -223,7 +226,9 @@ namespace BlackCore
             static constexpr int MinUnmuteVolume = 20; //!< minimum volume when unmuted
 
             // settings
-            BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings  { this, &IContextAudio::onChangedAudioSettings };
+            BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings             { this, &IContextAudio::onChangedAudioSettings };
+            BlackMisc::CSetting<BlackMisc::Audio::Settings::TVoiceSetup> m_voiceSettings { this, &IContextAudio::onChangedVoiceSettings };
+
             BlackMisc::CSetting<Audio::TInputDevice>    m_inputDeviceSetting  { this, &IContextAudio::changeDeviceSettings };
             BlackMisc::CSetting<Audio::TOutputDevice>   m_outputDeviceSetting { this, &IContextAudio::changeDeviceSettings };
 

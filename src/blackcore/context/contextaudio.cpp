@@ -33,8 +33,11 @@ namespace BlackCore
     namespace Context
     {
         IContextAudio::IContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
-            IContext(mode, runtime), m_voiceClient("https://voice1.vatsim.uk", this)
+            IContext(mode, runtime), m_voiceClient(CVoiceSetup().getAfvVoiceServerUrl(), this)
         {
+            const CVoiceSetup vs = m_voiceSettings.getThreadLocal();
+            m_voiceClient.updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
+
             Q_ASSERT_X(CThreadUtils::isApplicationThread(m_voiceClient.thread()), Q_FUNC_INFO, "Should be in main thread");
             m_voiceClient.start();
             Q_ASSERT_X(m_voiceClient.owner() == this, Q_FUNC_INFO, "Wrong owner");
@@ -178,6 +181,10 @@ namespace BlackCore
             if (!inputDevice.getName().isEmpty())  { m_inputDeviceSetting.setAndSave(inputDevice.getName()); }
             if (!outputDevice.getName().isEmpty()) { m_outputDeviceSetting.setAndSave(outputDevice.getName()); }
             const bool changed = m_voiceClient.restartWithNewDevices(inputDevice, outputDevice);
+
+            const CVoiceSetup vs = m_voiceSettings.getThreadLocal();
+            m_voiceClient.updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
+
             if (changed)
             {
                 emit this->changedSelectedAudioDevices(this->getCurrentAudioDevices());
@@ -345,6 +352,11 @@ namespace BlackCore
             this->setVoiceOutputVolume(s.getOutVolume());
         }
 
+        void IContextAudio::onChangedVoiceSettings()
+        {
+            // void
+        }
+
         void IContextAudio::audioIncreaseVolume(bool enabled)
         {
             if (!enabled) { return; }
@@ -405,6 +417,9 @@ namespace BlackCore
             BLACK_VERIFY_X(this->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
             if (to.isConnected() && this->getIContextNetwork())
             {
+                const CVoiceSetup vs = m_voiceSettings.getThreadLocal();
+                m_voiceClient.updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
+
                 const CUser connectedUser = this->getIContextNetwork()->getConnectedServer().getUser();
                 m_voiceClient.connectTo(connectedUser.getId(), connectedUser.getPassword(), connectedUser.getCallsign().asString());
                 m_voiceClient.startAudio(CAudioDeviceInfo::getDefaultInputDevice(), CAudioDeviceInfo::getDefaultOutputDevice(), {0, 1});
