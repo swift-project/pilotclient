@@ -650,6 +650,12 @@ namespace BlackCore
                 return {};
             }
 
+            bool CAfvClient::updateVoiceServerUrl(const QString &url)
+            {
+                if (m_connection) { return false; }
+                return m_connection->updateVoiceServerUrl(url);
+            }
+
             void CAfvClient::initialize()
             {
                 CLogMessage(this).info(u"Initialize AFV client in thread: %1") << CThreadUtils::threadInfo(this->thread());

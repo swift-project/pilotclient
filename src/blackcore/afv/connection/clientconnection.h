@@ -60,7 +60,7 @@ namespace BlackCore
                 }
                 //! @}
 
-                //! Send voiceDTO to server
+                //! Send voice DTO to server
                 template<typename T>
                 void sendToVoiceServer(const T &dto)
                 {
@@ -74,6 +74,9 @@ namespace BlackCore
 
                 //! All aliased stations
                 QVector<StationDto> getAllAliasedStations();
+
+                //! Update the voice server URL
+                bool updateVoiceServerUrl(const QString &url);
 
             signals:
                 //! Audio has been received

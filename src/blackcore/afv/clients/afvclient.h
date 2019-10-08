@@ -199,6 +199,9 @@ namespace BlackCore
                 QString getReceivingCallsignsCom2();
                 //! @}
 
+                //! Update the voice server URL
+                bool updateVoiceServerUrl(const QString &url);
+
             signals:
                 //! Receiving callsigns have been changed
                 //! \remark callsigns I do receive

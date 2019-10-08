@@ -11,6 +11,7 @@
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/network/external/qjsonwebtoken.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/stringutils.h"
 
 #include <QJsonObject>
 #include <QJsonArray>
@@ -37,7 +38,7 @@ namespace BlackCore
 
             CApiServerConnection::CApiServerConnection(const QString &address, QObject *parent) :
                 QObject(parent),
-                m_address(address)
+                m_addressUrl(address)
             {
                 CLogMessage(this).debug(u"ApiServerConnection instantiated");
             }
@@ -51,7 +52,7 @@ namespace BlackCore
                 m_networkVersion  = networkVersion;
                 m_isAuthenticated = false;
 
-                QUrl url(m_address);
+                QUrl url(m_addressUrl);
                 url.setPath("/api/v1/auth");
 
                 QJsonObject obj
@@ -157,6 +158,13 @@ namespace BlackCore
                 return {};
             }
 
+            bool CApiServerConnection::setUrl(const QString &url)
+            {
+                if (stringCompare(m_addressUrl, url, Qt::CaseInsensitive)) { return false; }
+                m_addressUrl = url;
+                return true;
+            }
+
             QByteArray CApiServerConnection::getWithResponse(const QNetworkRequest &request)
             {
                 if (isShuttingDown()) { return {}; }
@@ -240,7 +248,7 @@ namespace BlackCore
 
                 this->checkExpiry();
 
-                QUrl url(m_address);
+                QUrl url(m_addressUrl);
                 url.setPath(resource);
                 QNetworkRequest request(url);
                 request.setRawHeader("Authorization", "Bearer " + m_jwt);
@@ -268,7 +276,7 @@ namespace BlackCore
                 if (isShuttingDown())   { return; }
                 if (!m_isAuthenticated) { return; }
 
-                QUrl url(m_address);
+                QUrl url(m_addressUrl);
                 url.setPath(resource);
 
                 QNetworkRequest request(url);

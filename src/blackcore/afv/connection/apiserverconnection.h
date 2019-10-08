@@ -13,6 +13,7 @@
 
 #include "blackcore/afv/dto.h"
 #include "blackcore/application.h"
+#include "blackmisc/logmessage.h"
 #include "blackmisc/logcategorylist.h"
 
 #include <QString>
@@ -71,6 +72,9 @@ namespace BlackCore
                 //! All aliased stations
                 QVector<StationDto> getAllAliasedStations();
 
+                //! Set the URL
+                bool setUrl(const QString &url);
+
             private:
                 //! Post to resource
                 template<typename TResponse>
@@ -84,7 +88,7 @@ namespace BlackCore
 
                     this->checkExpiry();
 
-                    QUrl url(m_address);
+                    QUrl url(m_addressUrl);
                     url.setPath(resource);
                     QNetworkRequest request(url);
                     request.setRawHeader("Authorization", "Bearer " + m_jwt);
@@ -107,7 +111,7 @@ namespace BlackCore
 
                     this->checkExpiry();
 
-                    QUrl url(m_address);
+                    QUrl url(m_addressUrl);
                     url.setPath(resource);
                     QNetworkRequest request(url);
                     request.setRawHeader("Authorization", "Bearer " + m_jwt);
@@ -155,7 +159,7 @@ namespace BlackCore
                 //! Application shutting down
                 static bool isShuttingDown();
 
-                const QString m_address;
+                QString       m_addressUrl;
                 QByteArray    m_jwt;
                 QString       m_username;
                 QString       m_password;

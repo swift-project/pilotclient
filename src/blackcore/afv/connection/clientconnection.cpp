@@ -96,6 +96,12 @@ namespace BlackCore
                 return m_apiServerConnection->getAllAliasedStations();
             }
 
+            bool CClientConnection::updateVoiceServerUrl(const QString &url)
+            {
+                if (!m_apiServerConnection) { return false; }
+                return m_apiServerConnection->setUrl(url);
+            }
+
             void CClientConnection::connectToVoiceServer()
             {
                 QHostAddress localAddress(QHostAddress::AnyIPv4);
