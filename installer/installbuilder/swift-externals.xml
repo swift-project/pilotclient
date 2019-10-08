@@ -18,11 +18,11 @@
             <distributionFileList>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/*vatlib*.dll</origin>
+                    <origin>../../dist/bin/*vatsimauth*.dll</origin>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/*portaudio*.dll</origin>
+                    <origin>../../dist/bin/libsodium*.dll</origin>
                 </distributionFile>
                 <distributionFile>
                     <origin>../../dist/bin/qwt.dll</origin>
@@ -33,7 +33,7 @@
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/*speexdsp*.dll</origin>
+                    <origin>../../dist/bin/*opus*.dll</origin>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
@@ -80,15 +80,7 @@
             <platforms>linux linux-x64</platforms>
             <distributionFileList>
                 <distributionFile>
-                    <origin>../../dist/lib/libvatlib.so</origin>
-                </distributionFile>
-                <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/lib/libportaudio.so.*</origin>
-                </distributionFile>
-                <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/lib/libspeexdsp.so.*</origin>
+                    <origin>../../dist/lib/libvatsimauth.so</origin>
                 </distributionFile>
                 <distributionFile>
                     <origin>../../dist/lib/libqwt.so</origin>
@@ -102,13 +94,13 @@
             <platforms>osx</platforms>
             <distributionFileList>
                 <distributionFile>
-                    <origin>../../dist/lib/libportaudio.dylib</origin>
+                    <origin>../../dist/lib/libsodium.23.dylib</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libspeexdsp.1.dylib</origin>
+                    <origin>../../dist/lib/libopus.0.dylib</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libvatlib.dylib</origin>
+                    <origin>../../dist/lib/libvatsimauth.dylib</origin>
                 </distributionFile>
                 <distributionDirectory>
                     <origin>../../dist/lib/qwt.framework</origin>
