@@ -13,8 +13,8 @@
 
 #include "afvmapdialog.h"
 #include "ui_afvmapdialog.h"
-#include <QQmlContext>
-#include <QQmlEngine>
+//#include <QQmlContext>
+//#include <QQmlEngine>
 
 using namespace BlackCore::Afv::Model;
 using namespace BlackCore::Afv::Clients;
@@ -30,25 +30,25 @@ namespace BlackGui
             m_afvMapReader = new CAfvMapReader(this);
             m_afvMapReader->updateFromMap();
 
-            if (sGui && !sGui->isShuttingDown() && sGui->getIContextAudio())
-            {
-                if (sGui->getIContextAudio()->isUsingImplementingObject())
-                {
-                    m_afvClient = &sGui->getCoreFacade()->getCContextAudio()->voiceClient();
-                }
-            }
+//            if (sGui && !sGui->isShuttingDown() && sGui->getIContextAudio())
+//            {
+//                if (sGui->getIContextAudio()->isUsingImplementingObject())
+//                {
+//                    m_afvClient = &sGui->getCoreFacade()->getCContextAudio()->voiceClient();
+//                }
+//            }
 
             ui->setupUi(this);
-            QQmlContext *ctxt = ui->qw_AfvMap->rootContext();
-            ctxt->setContextProperty("afvMapReader", m_afvMapReader);
+//            QQmlContext *ctxt = ui->qw_AfvMap->rootContext();
+//            ctxt->setContextProperty("afvMapReader", m_afvMapReader);
 
-            if (m_afvClient)
-            {
-                ctxt->setContextProperty("voiceClient", m_afvClient);
-            }
+//            if (m_afvClient)
+//            {
+//                ctxt->setContextProperty("voiceClient", m_afvClient);
+//            }
 
-            // ui->qw_AfvMap->engine()->setBaseUrl(":/blackgui/qml");
-            ui->qw_AfvMap->setSource(QUrl("qrc:/blackgui/qml/AFVMap.qml"));
+//            // ui->qw_AfvMap->engine()->setBaseUrl(":/blackgui/qml");
+//            ui->qw_AfvMap->setSource(QUrl("qrc:/blackgui/qml/AFVMap.qml"));
         }
 
         CAfvMapDialog::~CAfvMapDialog() { }

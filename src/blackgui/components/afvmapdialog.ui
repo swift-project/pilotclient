@@ -14,13 +14,13 @@
    <string>AFV map</string>
   </property>
   <layout class="QVBoxLayout" name="vl_AfvMap">
-   <item>
+   <!-- <item>
     <widget class="QQuickWidget" name="qw_AfvMap">
      <property name="resizeMode">
       <enum>QQuickWidget::SizeRootObjectToView</enum>
      </property>
     </widget>
-   </item>
+   </item> -->
    <item>
     <widget class="QDialogButtonBox" name="bb_AfvMap">
      <property name="orientation">
@@ -34,11 +34,11 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
+  <!-- <customwidget>
    <class>QQuickWidget</class>
    <extends>QWidget</extends>
    <header location="global">QtQuickWidgets/QQuickWidget</header>
-  </customwidget>
+  </customwidget> -->
  </customwidgets>
  <resources/>
  <connections>
