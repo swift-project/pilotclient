@@ -21,15 +21,16 @@ namespace BlackMisc
     {
         QString CVoiceSetup::convertToQString(bool i18n) const
         {
-            Q_UNUSED(i18n);
-            return QStringLiteral("Port: %1").arg(getVatsimUdpVoicePort());
+            Q_UNUSED(i18n)
+            return QStringLiteral("Port: %1").arg(getAfvVoiceServerUrl());
         }
 
         CStatusMessageList CVoiceSetup::validate() const
         {
             static const CLogCategoryList cats(CLogCategoryList(this).withValidation());
             CStatusMessageList msgs;
-            if (this->getVatsimUdpVoicePort() < 1 || this->getVatsimUdpVoicePort() > 65535) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, u"Invalid voice port")); }
+            if (this->getAfvVoiceServerUrl().isEmpty()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, u"Invalid voice server url")); }
+            if (this->getAfvMapUrl().isEmpty()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, u"Invalid voice server url")); }
             msgs.addCategories(cats);
             return msgs;
         }
@@ -40,7 +41,8 @@ namespace BlackMisc
             return s;
         }
 
-        CVoiceSetup::CVoiceSetup(int vatsimUdpPort) : m_vatismVoiceUdpPort(vatsimUdpPort)
+        CVoiceSetup::CVoiceSetup(const QString &afvVoiceServerUrl, const QString &afvMapUrl) :
+            m_afvVoiceServerUrl(afvVoiceServerUrl), m_afvMapUrl(afvMapUrl)
         { }
 
         CVariant CVoiceSetup::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -49,7 +51,8 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexVatsimVoiceUdpPort: return CVariant::fromValue(m_vatismVoiceUdpPort);
+            case IndexAfvVoiceServerUrl: return CVariant::fromValue(m_afvVoiceServerUrl);
+            case IndexAfvMapUrl:         return CVariant::fromValue(m_afvMapUrl);
             default: return CValueObject::propertyByIndex(index);
             }
         }
@@ -60,7 +63,8 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexVatsimVoiceUdpPort: m_vatismVoiceUdpPort = variant.toInt(); break;
+            case IndexAfvVoiceServerUrl: m_afvVoiceServerUrl = variant.toQString(); break;
+            case IndexAfvMapUrl:         m_afvMapUrl         = variant.toQString(); break;
             default:
                 CValueObject::setPropertyByIndex(index, variant);
                 break;
@@ -73,7 +77,8 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexVatsimVoiceUdpPort: return Compare::compare(m_vatismVoiceUdpPort, compareValue.m_vatismVoiceUdpPort);
+            case IndexAfvVoiceServerUrl: return m_afvVoiceServerUrl.compare(compareValue.m_afvVoiceServerUrl, Qt::CaseInsensitive);
+            case IndexAfvMapUrl:         return m_afvMapUrl.compare(compareValue.m_afvMapUrl, Qt::CaseInsensitive);
             default: break;
             }
             BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable("No comparison for index " + index.toQString()));

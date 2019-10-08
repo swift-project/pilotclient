@@ -24,8 +24,6 @@ namespace BlackGui
         {
             ui->setupUi(this);
             ui->cb_Override->setChecked(true);
-            QIntValidator *v = new QIntValidator(0, 65535, ui->le_VatsimUdpPort);
-            ui->le_VatsimUdpPort->setValidator(v);
             this->resetToDefaultValues();
             connect(ui->cb_Override, &QCheckBox::toggled, this, &CVoiceSetupForm::enabledToggled, Qt::QueuedConnection);
             connect(ui->pb_SetDefaults, &QPushButton::clicked, this, &CVoiceSetupForm::resetToDefaultValues);
@@ -36,7 +34,7 @@ namespace BlackGui
 
         CVoiceSetup CVoiceSetupForm::getValue() const
         {
-            const CVoiceSetup s = CVoiceSetup(ui->le_VatsimUdpPort->text().toInt());
+            const CVoiceSetup s(ui->le_AfvVoiceServerUrl->text(), ui->le_AfvMapUrl->text());
             return s;
         }
 
@@ -48,7 +46,8 @@ namespace BlackGui
 
         void CVoiceSetupForm::setValue(const CVoiceSetup &setup)
         {
-            ui->le_VatsimUdpPort->setText(QString::number(setup.getVatsimUdpVoicePort()));
+            ui->le_AfvVoiceServerUrl->setText(setup.getAfvVoiceServerUrl());
+            ui->le_AfvMapUrl->setText(setup.getAfvMapUrl());
         }
 
         bool CVoiceSetupForm::isVoiceSetupEnabled() const
@@ -80,7 +79,8 @@ namespace BlackGui
         void CVoiceSetupForm::setReadOnly(bool readonly)
         {
             ui->pb_SetDefaults->setEnabled(!readonly);
-            ui->le_VatsimUdpPort->setReadOnly(readonly);
+            ui->le_AfvVoiceServerUrl->setReadOnly(readonly);
+            ui->le_AfvMapUrl->setReadOnly(readonly);
             CGuiUtility::checkBoxesReadOnly(this, readonly);
             if (m_alwaysAllowOverride)
             {
@@ -101,7 +101,7 @@ namespace BlackGui
 
         CStatusMessageList CVoiceSetupForm::validate(bool nested) const
         {
-            Q_UNUSED(nested);
+            Q_UNUSED(nested)
             const CVoiceSetup val(this->getValue());
             CStatusMessageList msgs(val.validate());
             if (this->isReadOnly())
@@ -114,7 +114,7 @@ namespace BlackGui
 
         void CVoiceSetupForm::enabledToggled(bool enabled)
         {
-            Q_UNUSED(enabled);
+            Q_UNUSED(enabled)
             this->setReadOnly(!enabled);
         }
 

@@ -32,20 +32,27 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexVatsimVoiceUdpPort = CPropertyIndex::GlobalIndexCVoiceSetup,
+                IndexAfvVoiceServerUrl = CPropertyIndex::GlobalIndexCVoiceSetup,
+                IndexAfvMapUrl
             };
 
             //! Default constructor.
             CVoiceSetup() {}
 
             //! Setup with values
-            CVoiceSetup(int vatsimUdpPort);
+            CVoiceSetup(const QString &afvVoiceServerUrl, const QString &afvMapUrl);
 
-            //! The voice UDP port
-            void setVatsimUdpVoicePort(int port) { m_vatismVoiceUdpPort = port;}
+            //! AFV voice server URL
+            void setAfvVoiceServerUrl(const QString &serverUrl) { m_afvVoiceServerUrl = serverUrl;}
 
-            //! VATSIM UDP voice port
-            int getVatsimUdpVoicePort() const { return m_vatismVoiceUdpPort; }
+            //! AFV voice server URL
+            const QString &getAfvVoiceServerUrl() const { return m_afvVoiceServerUrl; }
+
+            //! AFV map URL
+            void setAfvMapUrl(const QString &mapUrl) { m_afvMapUrl = mapUrl;}
+
+            //! AFV map URL
+            const QString &getAfvMapUrl() const { return m_afvMapUrl; }
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const CPropertyIndex &index) const;
@@ -66,11 +73,13 @@ namespace BlackMisc
             static const CVoiceSetup &vatsimStandard();
 
         private:
-            int m_vatismVoiceUdpPort = 3292;
+            QString m_afvVoiceServerUrl = "https://voice1.vatsim.uk";
+            QString m_afvMapUrl         = "https://afv-map.vatsim.net/";
 
             BLACK_METACLASS(
                 CVoiceSetup,
-                BLACK_METAMEMBER(vatismVoiceUdpPort)
+                BLACK_METAMEMBER(afvVoiceServerUrl),
+                BLACK_METAMEMBER(afvMapUrl)
             );
         };
     } // namespace

@@ -267,7 +267,7 @@
                    <string/>
                   </property>
                   <property name="icon">
-                   <iconset resource="../../blackmisc/blackmisc.qrc">
+                   <iconset>
                     <normaloff>:/diagona/icons/diagona/icons/question-button.png</normaloff>:/diagona/icons/diagona/icons/question-button.png</iconset>
                   </property>
                  </widget>
@@ -322,7 +322,7 @@
       <attribute name="title">
        <string>Voice</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout">
+      <layout class="QVBoxLayout" name="vl_VoiceSetup">
        <item alignment="Qt::AlignTop">
         <widget class="BlackGui::Editors::CVoiceSetupForm" name="form_Voice">
          <property name="frameShape">
@@ -347,15 +347,15 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::CEcosystemComboBox</class>
-   <extends>QComboBox</extends>
-   <header>blackgui/ecosystemcombobox.h</header>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Editors::CVoiceSetupForm</class>
    <extends>QFrame</extends>
    <header>blackgui/editors/voicesetupform.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CEcosystemComboBox</class>
+   <extends>QComboBox</extends>
+   <header>blackgui/ecosystemcombobox.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
@@ -371,8 +371,6 @@
   <tabstop>le_Password</tabstop>
   <tabstop>tb_Unhide</tabstop>
  </tabstops>
- <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

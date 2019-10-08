@@ -205,7 +205,7 @@
                    <string>reload</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="../../blackmisc/blackmisc.qrc">
+                   <iconset>
                     <normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</iconset>
                   </property>
                  </widget>
@@ -331,7 +331,7 @@
              <property name="bottomMargin">
               <number>3</number>
              </property>
-             <item alignment="Qt::AlignLeft|Qt::AlignTop">
+             <item alignment="Qt::AlignTop">
               <widget class="BlackGui::Editors::CVoiceSetupForm" name="form_Voice">
                <property name="minimumSize">
                 <size>
@@ -494,7 +494,7 @@
                <string>refresh</string>
               </property>
               <property name="icon">
-               <iconset resource="../../blackmisc/blackmisc.qrc">
+               <iconset>
                 <normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</iconset>
               </property>
              </widget>
@@ -511,7 +511,7 @@
                <string>quick mapping wizard</string>
               </property>
               <property name="icon">
-               <iconset resource="../../blackmisc/blackmisc.qrc">
+               <iconset>
                 <normaloff>:/own/icons/own/swift3D/sw3DGreen-24.png</normaloff>:/own/icons/own/swift3D/sw3DGreen-24.png</iconset>
               </property>
              </widget>
@@ -897,6 +897,17 @@
    <container>1</container>
   </customwidget>
   <customwidget>
+   <class>BlackGui::Components::CServerListSelector</class>
+   <extends>QComboBox</extends>
+   <header>blackgui/components/serverlistselector.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CLoginModeButtons</class>
+   <extends>QFrame</extends>
+   <header>blackgui/loginmodebuttons.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>BlackGui::CTickLabel</class>
    <extends>QLabel</extends>
    <header>blackgui/ticklabel.h</header>
@@ -923,17 +934,6 @@
    <class>BlackGui::Components::CDbAirlineIcaoSelectorComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/dbairlineicaoselectorcomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Components::CServerListSelector</class>
-   <extends>QComboBox</extends>
-   <header>blackgui/components/serverlistselector.h</header>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::CLoginModeButtons</class>
-   <extends>QFrame</extends>
-   <header>blackgui/loginmodebuttons.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -971,8 +971,6 @@
   <tabstop>pb_OverrideCredentialsOtherServers</tabstop>
   <tabstop>sa_FsdDetails</tabstop>
  </tabstops>
- <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
