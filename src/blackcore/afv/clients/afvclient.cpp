@@ -55,13 +55,8 @@ namespace BlackCore
                 connect(m_connection, &CClientConnection::audioReceived, this, &CAfvClient::audioOutDataAvailable);
                 connect(m_voiceServerPositionTimer, &QTimer::timeout, this, &CAfvClient::onPositionUpdateTimer);
 
-                // transceivers
-                this->initTransceivers();
-
-                // init by settings
-                this->onSettingsChanged();
-
-                CLogMessage(this).info(u"UserClient instantiated");
+                // deferred init
+                QTimer::singleShot(1000, this, &CAfvClient::deferredInit);
             }
 
             QString CAfvClient::getCallsign() const
@@ -91,15 +86,22 @@ namespace BlackCore
                 }
 
                 // init with context values
-                this->initWithContext();
+                this->connectWithContexts();
+                if (m_connectedWithContext && hasContext())
+                {
+                    // update from context
+                    this->updateTransceivers();
+                }
             }
 
-            void CAfvClient::initWithContext()
+            void CAfvClient::connectWithContexts()
             {
+                if (m_connectedWithContext) { return; }
                 if (!hasContext()) { return; }
                 this->disconnect(sApp->getIContextOwnAircraft());
                 sApp->getIContextOwnAircraft()->disconnect(this);
-                connect(sApp->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CAfvClient::updateTransceiversFromContext, Qt::QueuedConnection);
+                connect(sApp->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CAfvClient::onUpdateTransceiversFromContext, Qt::QueuedConnection);
+                m_connectedWithContext = true;
             }
 
             void CAfvClient::connectTo(const QString &cid, const QString &password, const QString &callsign)
@@ -113,7 +115,7 @@ namespace BlackCore
                 }
 
                 // called in CAfvClient thread
-                this->initWithContext();
+                this->connectWithContexts();
                 this->setCallsign(callsign);
 
                 m_connection->connectTo(cid, password, callsign);
@@ -390,12 +392,10 @@ namespace BlackCore
                         newEnabledTransceivers.push_back(transceiver);
                     }
                 }
-                m_connection->updateTransceivers(callsign, newEnabledTransceivers);
 
-                if (m_soundcardSampleProvider)
-                {
-                    m_soundcardSampleProvider->updateRadioTransceivers(m_transceivers);
-                }
+                // in connection and soundcard only use the enabled tarnsceivers
+                if (m_connection) { m_connection->updateTransceivers(callsign, newEnabledTransceivers); }
+                if (m_soundcardSampleProvider) { m_soundcardSampleProvider->updateRadioTransceivers(newEnabledTransceivers); }
             }
 
             void CAfvClient::setTransmittingTransceiver(quint16 transceiverID)
@@ -676,7 +676,7 @@ namespace BlackCore
                 this->setBypassEffects(!audioSettings.isAudioEffectsEnabled());
             }
 
-            void CAfvClient::updateTransceiversFromContext(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
+            void CAfvClient::onUpdateTransceiversFromContext(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
             {
                 Q_UNUSED(originator)
                 this->updatePosition(aircraft.latitude().value(CAngleUnit::deg()),
@@ -695,8 +695,16 @@ namespace BlackCore
 
                 this->enableComUnit(CComSystem::Com1, tx1 || rx1);
                 this->enableComUnit(CComSystem::Com2, tx2 || rx2);
-                this->setTransmittingComUnit(CComSystem::Com1);
-                this->setTransmittingComUnit(CComSystem::Com2);
+
+                // currently only transmitting at one unit
+                if (tx1)
+                {
+                    this->setTransmittingComUnit(CComSystem::Com1);
+                }
+                else if (tx2)
+                {
+                    this->setTransmittingComUnit(CComSystem::Com2);
+                }
 
                 this->updateTransceivers();
                 emit this->updatedFromOwnAircraftCockpit();
@@ -719,6 +727,18 @@ namespace BlackCore
                 if (comUnitToTransceiverId(CComSystem::Com1) == id) { return CComSystem::Com1; }
                 if (comUnitToTransceiverId(CComSystem::Com2) == id) { return CComSystem::Com2; }
                 return CComSystem::Com1;
+            }
+
+            void CAfvClient::deferredInit()
+            {
+                // transceivers
+                this->initTransceivers();
+
+                // init by settings
+                this->onSettingsChanged();
+
+                // info
+                CLogMessage(this).info(u"UserClient instantiated (deferred init)");
             }
 
             bool CAfvClient::hasContext()

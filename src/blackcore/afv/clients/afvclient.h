@@ -236,7 +236,7 @@ namespace BlackCore
                 void onSettingsChanged();
 
                 void updateTransceivers(bool updateFrequencies = true);
-                void updateTransceiversFromContext(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+                void onUpdateTransceiversFromContext(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
                 static constexpr int PositionUpdatesMs = 5000; //!< position timer
                 static constexpr int SampleRate  = 48000;
@@ -282,9 +282,12 @@ namespace BlackCore
                 Audio::InputVolumeStreamArgs  m_inputVolumeStream;
                 Audio::OutputVolumeStreamArgs m_outputVolumeStream;
 
+                void deferredInit();
                 void initTransceivers();
-                void initWithContext();
+                void connectWithContexts();
                 static bool hasContext();
+
+                std::atomic_bool m_connectedWithContext { false };
 
                 mutable QMutex m_mutex;
                 mutable QMutex m_mutexInputStream;
