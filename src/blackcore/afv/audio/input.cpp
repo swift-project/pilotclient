@@ -111,10 +111,31 @@ namespace BlackCore
                 m_audioInput.reset(new QAudioInput(selectedDevice, m_inputFormat));
                 m_audioInputBuffer.start();
 
+#ifdef Q_OS_MAC
+                CMacOSMicrophoneAccess::AuthorizationStatus status = m_micAccess.getAuthorizationStatus();
+                if (status == CMacOSMicrophoneAccess::Authorized)
+                {
+                    m_audioInput->start(&m_audioInputBuffer);
+                    connect(&m_audioInputBuffer, &CAudioInputBuffer::frameAvailable, this, &CInput::audioInDataAvailable);
+                    m_started = true;
+                    return;
+                }
+                else if (status == CMacOSMicrophoneAccess::NotDetermined)
+                {
+                    connect(&m_micAccess, &CMacOSMicrophoneAccess::permissionRequestAnswered, this, &CInput::delayedInitMicrophone);
+                    m_micAccess.requestAccess();
+                    CLogMessage(this).info(u"MacOS requested input device");
+                }
+                else
+                {
+                    CLogMessage(this).error(u"Microphone access not granted. Voice input will not work.");
+                    return;
+                }
+#else
                 m_audioInput->start(&m_audioInputBuffer);
                 connect(&m_audioInputBuffer, &CAudioInputBuffer::frameAvailable, this, &CInput::audioInDataAvailable);
-
                 m_started = true;
+#endif
             }
 
             void CInput::stop()
@@ -173,6 +194,15 @@ namespace BlackCore
                 OpusDataAvailableArgs opusDataAvailableArgs = { m_audioSequenceCounter++, encodedBuffer };
                 emit opusDataAvailable(opusDataAvailableArgs);
             }
+
+#ifdef Q_OS_MAC
+            void CInput::delayedInitMicrophone()
+            {
+                m_audioInput->start(&m_audioInputBuffer);
+                connect(&m_audioInputBuffer, &CAudioInputBuffer::frameAvailable, this, &CInput::audioInDataAvailable);
+                m_started = true;
+            }
+#endif
 
         } // ns
     } // ns

@@ -15,6 +15,10 @@
 #include "blacksound/codecs/opusencoder.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 
+#ifdef Q_OS_MAC
+#include "blackmisc/macos/microphoneaccess.h"
+#endif
+
 #include <QAudioInput>
 #include <QString>
 #include <QDateTime>
@@ -133,6 +137,11 @@ namespace BlackCore
                 uint m_audioSequenceCounter = 0;
 
                 CAudioInputBuffer m_audioInputBuffer;
+
+#ifdef Q_OS_MAC
+                BlackMisc::CMacOSMicrophoneAccess m_micAccess;
+                void delayedInitMicrophone();
+#endif
             };
         } // ns
     } // ns
