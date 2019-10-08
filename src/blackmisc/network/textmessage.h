@@ -90,6 +90,9 @@ namespace BlackMisc
             //! Get ASCII only message
             QString getAsciiOnlyMessage() const;
 
+            //! Get HTML escaped message
+            QString getHtmlEncodedMessage() const;
+
             //! Empty message
             bool isEmpty() const { return m_message.isEmpty(); }
 

@@ -164,6 +164,12 @@ namespace BlackMisc
             return asciiOnlyString(simplifyAccents(m_message));
         }
 
+        QString CTextMessage::getHtmlEncodedMessage() const
+        {
+            if (m_message.isEmpty()) { return {}; }
+            return m_message.toHtmlEscaped();
+        }
+
         void CTextMessage::setMessage(const QString &message)
         {
             m_message = message.simplified().trimmed();

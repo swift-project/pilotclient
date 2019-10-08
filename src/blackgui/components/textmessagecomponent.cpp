@@ -101,7 +101,7 @@ namespace BlackGui
                 c = connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CTextMessageComponent::onChangedAircraftCockpit, Qt::QueuedConnection);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
             }
-            Q_UNUSED(c);
+            Q_UNUSED(c)
 
             // init by settings
             const QPointer<CTextMessageComponent> myself(this);
@@ -267,7 +267,7 @@ namespace BlackGui
         void CTextMessageComponent::onChangedAircraftCockpit(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
             // this is called for every overlay widget as well
-            Q_UNUSED(originator);
+            Q_UNUSED(originator)
             if (!this->isActivated()) { return; }
             this->showCurrentFrequenciesFromCockpit(aircraft);
         }

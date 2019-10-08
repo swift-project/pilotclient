@@ -131,7 +131,7 @@ namespace BlackGui
             html += u"<td class=\"recipient\">" % message.getRecipientCallsignOrFrequency() % u"</td>";
         }
 
-        html += u"<td class=\"message\">" % message.getMessage() % u"</td></tr>";
+        html += u"<td class=\"message\">" % message.getHtmlEncodedMessage() % u"</td></tr>";
         return html;
     }
 
