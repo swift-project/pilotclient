@@ -64,7 +64,7 @@ namespace BlackGui
             QScopedPointer<Ui::CSettingsHotkeyComponent> ui;
             Models::CActionHotkeyListModel m_model; //!< hotkeys model
             BlackMisc::CSetting<BlackCore::Application::TActionHotkeys> m_actionHotkeys { this, &CSettingsHotkeyComponent::reloadHotkeysFromSettings };
-            BlackCore::CActionBind m_action { "/Test/Message", BlackMisc::CIcons::wrench16(), this, &CSettingsHotkeyComponent::hotkeySlot };
+            BlackCore::CActionBind m_action { "/Test/Message", BlackMisc::CIcons::StandardIconWrench16, this, &CSettingsHotkeyComponent::hotkeySlot };
         };
 
         /**

@@ -42,7 +42,7 @@ namespace BlackCore
         CInputManager(QObject *parent = nullptr);
 
         //! Register new action
-        void registerAction(const QString &action, const QPixmap &icon = BlackMisc::CIcons::empty16());
+        void registerAction(const QString &action, BlackMisc::CIcons::IconIndex icon = BlackMisc::CIcons::StandardIconEmpty16);
 
         //! Register remote actions
         void registerRemoteActions(const QStringList &actions);
@@ -79,7 +79,7 @@ namespace BlackCore
         QStringList allAvailableActions() const { return m_availableActions.keys(); }
 
         //! All actions and their icons (if any)
-        QMap<QString, QPixmap> allAvailableActionsAndIcons() const { return m_availableActions; }
+        QMap<QString, BlackMisc::CIcons::IconIndex> allAvailableActionsAndIcons() const { return m_availableActions; }
 
         //! Enable event forwarding to core
         void setForwarding(bool enabled) { m_actionRelayingEnabled = enabled; }
@@ -138,7 +138,7 @@ namespace BlackCore
         std::unique_ptr<BlackInput::IKeyboard> m_keyboard; //!< keyboard
         std::unique_ptr<BlackInput::IJoystick> m_joystick; //!< joystick
 
-        QMap<QString, QPixmap> m_availableActions;
+        QMap<QString, BlackMisc::CIcons::IconIndex> m_availableActions;
         QHash<BlackMisc::Input::CHotkeyCombination, QString> m_configuredActions;
         QSet<QString> m_activeActions;
         QVector<BindInfo> m_boundActions;

@@ -18,9 +18,9 @@ namespace BlackMisc
             return s;
         }
 
-        const QPixmap &pttHotkeyIcon()
+        CIcons::IconIndex pttHotkeyIcon()
         {
-            return CIcons::radio16();
+            return CIcons::StandardIconRadio16;
         }
 
         const QString &pttCom1HotkeyAction()
@@ -35,14 +35,14 @@ namespace BlackMisc
             return s;
         }
 
-        const QPixmap &audioVolumeDecreaseHotkeyIcon()
+        CIcons::IconIndex audioVolumeDecreaseHotkeyIcon()
         {
-            return CIcons::volumeLow16();
+            return CIcons::StandardIconVolumeLow16;
         }
 
-        const QPixmap &audioVolumeIncreaseHotkeyIcon()
+        CIcons::IconIndex audioVolumeIncreaseHotkeyIcon()
         {
-            return CIcons::volumeHigh16();
+            return CIcons::StandardIconVolumeHigh16;
         }
 
         const QString &audioVolumeDecreaseHotkeyAction()
@@ -57,14 +57,14 @@ namespace BlackMisc
             return s;
         }
 
-        const QPixmap &toggleXPDRStateHotkeyIcon()
+        CIcons::IconIndex toggleXPDRStateHotkeyIcon()
         {
-            return CIcons::radio16();
+            return CIcons::StandardIconRadio16;
         }
 
-        const QPixmap &toggleXPDRIdentHotkeyIcon()
+        CIcons::IconIndex toggleXPDRIdentHotkeyIcon()
         {
-            return CIcons::radio16();
+            return CIcons::StandardIconRadio16;
         }
 
         const QString &toggleXPDRStateHotkeyAction()

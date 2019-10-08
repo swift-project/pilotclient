@@ -10,13 +10,13 @@
 
 namespace BlackCore
 {
-    CActionBind::CActionBind(const QString &action, const QPixmap &icon, QObject *parent)
+    CActionBind::CActionBind(const QString &action, BlackMisc::CIcons::IconIndex icon, QObject *parent)
         : QObject(parent)
     {
         CActionBind::registerAction(action, icon);
     }
 
-    QString CActionBind::registerAction(const QString &action, const QPixmap &icon)
+    QString CActionBind::registerAction(const QString &action, BlackMisc::CIcons::IconIndex icon)
     {
         if (!sApp || sApp->isShuttingDown()) { return {}; }
         if (sApp->getApplicationInfo().isUnitTest()) { return {}; }

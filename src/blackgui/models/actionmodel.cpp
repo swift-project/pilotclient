@@ -103,7 +103,7 @@ namespace BlackGui
             m_rootItem.reset(new CActionItem(QString(), QString()));
 
             Q_ASSERT_X(sApp && sApp->getInputManager(), Q_FUNC_INFO, "Missing input manager");
-            const QMap<QString, QPixmap> availableActionsAndIcons = sApp->getInputManager()->allAvailableActionsAndIcons();
+            const QMap<QString, BlackMisc::CIcons::IconIndex> availableActionsAndIcons = sApp->getInputManager()->allAvailableActionsAndIcons();
             QStringList keys = availableActionsAndIcons.keys();
             keys.sort();
             for (const QString &actionPath : as_const(keys))
@@ -118,7 +118,7 @@ namespace BlackGui
                     if (child == nullptr)
                     {
                         const bool isAction = currentPath == actionPath; // action istelf, or just a node?
-                        const QPixmap icon = isAction ? availableActionsAndIcons[actionPath] : CIcons::empty16();
+                        const BlackMisc::CIcons::IconIndex icon = isAction ? availableActionsAndIcons[actionPath] : CIcons::StandardIconEmpty16;
                         child = new CActionItem(isAction ? actionPath : "", token, icon, parentItem);
                         parentItem->appendChild(child);
                     }

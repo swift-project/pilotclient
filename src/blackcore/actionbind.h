@@ -31,7 +31,7 @@ namespace BlackCore
 
         //! Constructor
         template <typename Receiver>
-        CActionBind(const QString &action, const QPixmap &icon, Receiver *receiver,
+        CActionBind(const QString &action, BlackMisc::CIcons::IconIndex icon, Receiver *receiver,
                     MembFunc<Receiver> slot = nullptr,
                     const std::function<void()> &deleteCallback = {},
                     QObject *parent = nullptr) :
@@ -48,7 +48,7 @@ namespace BlackCore
         }
 
         //! Signature just to set an icon for an action
-        CActionBind(const QString &action, const QPixmap &icon, QObject *parent = nullptr);
+        CActionBind(const QString &action, BlackMisc::CIcons::IconIndex icon, QObject *parent = nullptr);
 
         //! Not copyable
         //! @{
@@ -75,7 +75,7 @@ namespace BlackCore
         static QString normalizeAction(const QString &action);
 
         //! Register action
-        static QString registerAction(const QString &action, const QPixmap &icon);
+        static QString registerAction(const QString &action, BlackMisc::CIcons::IconIndex icon);
 
         int m_index = -1; //!< action index (unique)
         std::function<void()> m_deleteCallback; //!< called when deleted

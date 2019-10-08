@@ -9,6 +9,8 @@
 #include "blackgui/models/actionitem.h"
 #include <QtAlgorithms>
 
+using namespace BlackMisc;
+
 namespace BlackGui
 {
     namespace Models
@@ -19,6 +21,10 @@ namespace BlackGui
 
         CActionItem::CActionItem(const QString &action, const QString &name, const QPixmap &icon, CActionItem *parentItem) :
             m_action(action), m_actionName(name), m_icon(icon), m_parentItem(parentItem)
+        { }
+
+        CActionItem::CActionItem(const QString &action, const QString &name, CIcons::IconIndex icon, CActionItem *parentItem) :
+            m_action(action), m_actionName(name), m_icon(CIcons::pixmapByIndex(icon)), m_parentItem(parentItem)
         { }
 
         CActionItem::~CActionItem()

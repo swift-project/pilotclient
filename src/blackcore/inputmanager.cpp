@@ -30,7 +30,7 @@ namespace BlackCore
         reloadHotkeySettings();
     }
 
-    void CInputManager::registerAction(const QString &action, const QPixmap &icon)
+    void CInputManager::registerAction(const QString &action, BlackMisc::CIcons::IconIndex icon)
     {
         if (!m_availableActions.contains(action))
         {

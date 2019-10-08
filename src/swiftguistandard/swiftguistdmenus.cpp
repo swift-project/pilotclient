@@ -167,7 +167,7 @@ void SwiftGuiStd::initMenus()
 
     // for hotkeys
     const QString swift(CGuiActionBindHandler::pathSwiftPilotClient());
-    static const CActionBind swiftRoot(swift, CIcons::swift16()); // inserts action for root folder
+    static const CActionBind swiftRoot(swift, CIcons::Swift16); // inserts action for root folder
     Q_UNUSED(swiftRoot)
     m_menuHotkeyHandlers.append(CGuiActionBindHandler::bindMenu(ui->menu_InfoAreas, swift + "Info areas"));
     m_menuHotkeyHandlers.append(CGuiActionBindHandler::bindMenu(ui->menu_File, swift + "File"));

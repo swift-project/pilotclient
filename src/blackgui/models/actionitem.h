@@ -11,6 +11,7 @@
 #ifndef BLACKGUI_MODELS_ACTIONITEM_H
 #define BLACKGUI_MODELS_ACTIONITEM_H
 
+#include "blackmisc/icons.h"
 #include <QList>
 #include <QString>
 #include <QPixmap>
@@ -28,6 +29,9 @@ namespace BlackGui
 
             //! Constructor
             CActionItem(const QString &action, const QString &name, const QPixmap &icon, CActionItem *parentItem = nullptr);
+
+            //! Constructor
+            CActionItem(const QString &action, const QString &name, BlackMisc::CIcons::IconIndex icon, CActionItem *parentItem = nullptr);
 
             //! Destructor
             ~CActionItem();

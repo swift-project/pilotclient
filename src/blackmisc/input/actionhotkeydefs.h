@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_INPUT_ACTIONHOTKEYDEFS_H
 #define BLACKMISC_INPUT_ACTIONHOTKEYDEFS_H
 
-#include "blackmisc/icon.h"
+#include "blackmisc/icons.h"
 #include "blackmisc/blackmiscexport.h"
 
 #include <QString>
@@ -30,7 +30,7 @@ namespace BlackMisc
         BLACKMISC_EXPORT const QString &pttCom2HotkeyAction();
 
         //! PTT key
-        BLACKMISC_EXPORT const QPixmap &pttHotkeyIcon();
+        BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex pttHotkeyIcon();
 
         //! Audio volume + key
         BLACKMISC_EXPORT const QString &audioVolumeIncreaseHotkeyAction();
@@ -39,22 +39,22 @@ namespace BlackMisc
         BLACKMISC_EXPORT const QString &audioVolumeDecreaseHotkeyAction();
 
         //! Audio icon volume +
-        BLACKMISC_EXPORT const QPixmap &audioVolumeIncreaseHotkeyIcon();
+        BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex audioVolumeIncreaseHotkeyIcon();
 
         //! Audio icon volume -
-        BLACKMISC_EXPORT const QPixmap &audioVolumeDecreaseHotkeyIcon();
+        BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex audioVolumeDecreaseHotkeyIcon();
 
         //! XPDR state
         BLACKMISC_EXPORT const QString &toggleXPDRStateHotkeyAction();
 
         //! XPDR state
-        BLACKMISC_EXPORT const QPixmap &toggleXPDRStateHotkeyIcon();
+        BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex toggleXPDRStateHotkeyIcon();
 
         //! XPDR state
         BLACKMISC_EXPORT const QString &toggleXPDRIdentHotkeyAction();
 
         //! XPDR ident
-        BLACKMISC_EXPORT const QPixmap &toggleXPDRIdentHotkeyIcon();
+        BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex toggleXPDRIdentHotkeyIcon();
 
     } // ns
 } // ns
