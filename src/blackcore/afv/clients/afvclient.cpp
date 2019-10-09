@@ -170,6 +170,8 @@ namespace BlackCore
 
             bool CAfvClient::restartWithNewDevices(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice)
             {
+                if (! m_isStarted) { return true; }
+
                 if (QThread::currentThread() != this->thread())
                 {
                     // Method needs to be executed in the object thread since it will create new QObject children
