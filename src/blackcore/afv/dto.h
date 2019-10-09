@@ -212,10 +212,26 @@ namespace BlackCore
         //! Transmit transceiver DTO
         struct TxTransceiverDto
         {
+            //! Ctor
+            TxTransceiverDto() {}
+
+            //! Ctor
+            TxTransceiverDto(const TransceiverDto &dto)
+            {
+                id = dto.id;
+            }
+
+            //! Ctor
+            TxTransceiverDto(uint16_t value)
+            {
+                id = value;
+            }
+
             uint16_t id; //!< id
             MSGPACK_DEFINE(id)
         };
 
+        //! AudioTxOnTransceiversDto
         struct AudioTxOnTransceiversDto
         {
             static QByteArray getDtoName() { return "AudioTxOnTransceiversDto"; }
@@ -231,6 +247,7 @@ namespace BlackCore
             MSGPACK_DEFINE(callsign, sequenceCounter, audio, lastPacket, transceivers)
         };
 
+        //! AudioRxOnTransceiversDto
         struct AudioRxOnTransceiversDto
         {
             static QByteArray getDtoName() { return "AudioRxOnTransceiversDto"; }
