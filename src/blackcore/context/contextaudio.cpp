@@ -421,8 +421,23 @@ namespace BlackCore
                 m_voiceClient.updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
 
                 const CUser connectedUser = this->getIContextNetwork()->getConnectedServer().getUser();
+                const QString inputDeviceName = m_inputDeviceSetting.get();
+                CAudioDeviceInfo input = CAudioDeviceInfo::getDefaultInputDevice();
+                if (!inputDeviceName.isEmpty())
+                {
+                    const CAudioDeviceInfoList inputDevs = this->getAudioInputDevices();
+                    input = inputDevs.findByName(inputDeviceName);
+                }
+
+                const QString outputDeviceName = m_outputDeviceSetting.get();
+                CAudioDeviceInfo output = CAudioDeviceInfo::getDefaultOutputDevice();
+                if (!outputDeviceName.isEmpty())
+                {
+                    const CAudioDeviceInfoList outputDevs = this->getAudioOutputDevices();
+                    output = outputDevs.findByName(outputDeviceName);
+                }
                 m_voiceClient.connectTo(connectedUser.getId(), connectedUser.getPassword(), connectedUser.getCallsign().asString());
-                m_voiceClient.startAudio(CAudioDeviceInfo::getDefaultInputDevice(), CAudioDeviceInfo::getDefaultOutputDevice(), {0, 1});
+                m_voiceClient.startAudio(input, output, {0, 1});
             }
             else if (to.isDisconnected())
             {
