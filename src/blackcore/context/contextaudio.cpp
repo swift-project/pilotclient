@@ -331,20 +331,10 @@ namespace BlackCore
         void IContextAudio::changeDeviceSettings()
         {
             const QString inputDeviceName = m_inputDeviceSetting.get();
-            CAudioDeviceInfo input;
-            if (!inputDeviceName.isEmpty())
-            {
-                const CAudioDeviceInfoList inputDevs = this->getAudioInputDevices();
-                input = inputDevs.findByName(inputDeviceName);
-            }
+            const CAudioDeviceInfo input = this->getAudioInputDevices().findByNameOrDefault(inputDeviceName, CAudioDeviceInfo::getDefaultInputDevice());
 
             const QString outputDeviceName = m_outputDeviceSetting.get();
-            CAudioDeviceInfo output;
-            if (!outputDeviceName.isEmpty())
-            {
-                const CAudioDeviceInfoList outputDevs = this->getAudioOutputDevices();
-                output = outputDevs.findByName(outputDeviceName);
-            }
+            const CAudioDeviceInfo output = this->getAudioOutputDevices().findByNameOrDefault(outputDeviceName, CAudioDeviceInfo::getDefaultOutputDevice());
 
             this->setCurrentAudioDevices(input, output);
         }
@@ -404,23 +394,15 @@ namespace BlackCore
             Q_UNUSED(aircraft)
             Q_UNUSED(originator)
 
-            /** NOT NEEDED as CAfvClient is directly "tracking changes"
-            if (CIdentifiable::isMyIdentifier(originator)) { return; }
-            const bool integrated = this->xCtxisComIntegratedWithSimulator();
-            if (integrated)
-            {
-                // set as in cockpit
-                const bool com1Rec = aircraft.getCom1System().isReceiveEnabled();
-                const bool com2Rec = aircraft.getCom2System().isReceiveEnabled();
-            }
-            **/
+            /** NOT NEEDED as CAfvClient is directly "tracking changes" **/
         }
 
         void IContextAudio::xCtxNetworkConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
+            if (!m_voiceClient) { return; }
+
             Q_UNUSED(from)
             BLACK_VERIFY_X(this->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
-            if (!m_voiceClient) { return; }
 
             if (to.isConnected() && this->getIContextNetwork())
             {
@@ -430,20 +412,11 @@ namespace BlackCore
                 const CUser connectedUser = this->getIContextNetwork()->getConnectedServer().getUser();
 
                 const QString inputDeviceName = m_inputDeviceSetting.get();
-                CAudioDeviceInfo input = CAudioDeviceInfo::getDefaultInputDevice();
-                if (!inputDeviceName.isEmpty())
-                {
-                    const CAudioDeviceInfoList inputDevs = this->getAudioInputDevices();
-                    input = inputDevs.findByName(inputDeviceName);
-                }
+                const CAudioDeviceInfo input = this->getAudioInputDevices().findByNameOrDefault(inputDeviceName, CAudioDeviceInfo::getDefaultInputDevice());
 
                 const QString outputDeviceName = m_outputDeviceSetting.get();
-                CAudioDeviceInfo output = CAudioDeviceInfo::getDefaultOutputDevice();
-                if (!outputDeviceName.isEmpty())
-                {
-                    const CAudioDeviceInfoList outputDevs = this->getAudioOutputDevices();
-                    output = outputDevs.findByName(outputDeviceName);
-                }
+                const CAudioDeviceInfo output = this->getAudioOutputDevices().findByNameOrDefault(outputDeviceName, CAudioDeviceInfo::getDefaultOutputDevice());
+
                 m_voiceClient->connectTo(connectedUser.getId(), connectedUser.getPassword(), connectedUser.getCallsign().asString());
                 m_voiceClient->startAudio(input, output, {0, 1});
             }
