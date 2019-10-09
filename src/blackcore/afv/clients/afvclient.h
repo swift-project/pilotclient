@@ -106,10 +106,12 @@ namespace BlackCore
                 void setMuted(bool mute);
                 //! @}
 
+                //! Start/stop client @{
                 bool restartWithNewDevices(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
                 void startAudio(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice, const QVector<quint16> &transceiverIDs);
                 Q_INVOKABLE void startAudio(const QString &inputDeviceName, const QString &outputDeviceName);
                 void stopAudio();
+                //! @}
 
                 //! Enable COM unit/transceiver
                 //! \threadsafe
@@ -155,6 +157,11 @@ namespace BlackCore
                 //! \threadsafe
                 Q_INVOKABLE void updatePosition(double latitudeDeg, double longitudeDeg, double heightMeters);
 
+                //! Update from own aircraft
+                //! \remark full update of frequency, position and enabled transceivers in one step
+                //! \threadsafe
+                void updateFromOwnAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool withSignals = true);
+
                 //! Push to talk @{
                 Q_INVOKABLE void setPtt(bool active);
                 void setPttForCom(bool active, BlackMisc::Audio::PTTCOM com);
@@ -167,34 +174,46 @@ namespace BlackCore
                 Q_INVOKABLE bool isLoopback() const { return m_loopbackOn; }
                 //! @}
 
-                //! Input volume in dB, +-18dB @{
-                double getInputVolumeDb() const { return m_inputVolumeDb; }
+                //! Input volume in dB, +-18dB
+                //! \threadsafe
+                //! @{
+                double getInputVolumeDb() const;
                 Q_INVOKABLE void setInputVolumeDb(double valueDb);
                 //! @}
 
-                //! Output volume in dB, +-18dB @{
-                double getOutputVolumeDb() const { return m_outputVolumeDb; }
+                //! Output volume in dB, +-18dB
+                //! \threadsafe
+                //! @{
+                double getOutputVolumeDb() const;
                 Q_INVOKABLE void setOutputVolumeDb(double valueDb);
                 //! @}
 
-                //! Normalized volumes 0..100 @{
+                //! Normalized volumes 0..100
+                //! \threadsafe
+                //! @{
                 int getNormalizedInputVolume() const;
                 int getNormalizedOutputVolume() const;
                 void setNormalizedInputVolume(int volume);
                 void setNormalizedOutputVolume(int volume);
                 //! @}
 
-                //! VU values, 0..1 @{
+                //! VU values, 0..1
+                //! \threadsafe
+                //! @{
                 double getInputVolumePeakVU() const;
                 double getOutputVolumePeakVU() const;
                 //! @}
 
-                //! Recently used device @{
+                //! Recently used device
+                //! \threadsafe
+                //! @{
                 const BlackMisc::Audio::CAudioDeviceInfo &getInputDevice() const;
                 const BlackMisc::Audio::CAudioDeviceInfo &getOutputDevice() const;
                 //! @}
 
-                //! Callsigns currently received @{
+                //! Callsigns currently received
+                //! \threadsafe
+                //! @{
                 QString getReceivingCallsignsCom1();
                 QString getReceivingCallsignsCom2();
                 //! @}
@@ -238,6 +257,10 @@ namespace BlackCore
                 void updateTransceivers(bool updateFrequencies = true);
                 void onUpdateTransceiversFromContext(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
+                //! Frequency from aliased stations
+                //! \threadsafe
+                quint32 getAliasFrequencyHz(quint32 frequencyHz) const;
+
                 static constexpr int PositionUpdatesMs = 5000; //!< position timer
                 static constexpr int SampleRate  = 48000;
                 static constexpr int FrameSize   =   960; // 20ms
@@ -276,8 +299,8 @@ namespace BlackCore
                 double m_outputVolume = 1.0;
                 double m_maxDbReadingInPTTInterval = -100;
 
-                QTimer                 *m_voiceServerPositionTimer = nullptr;
-                QVector<StationDto>     m_aliasedStations;
+                QTimer             *m_voiceServerPositionTimer = nullptr;
+                QVector<StationDto> m_aliasedStations;
 
                 Audio::InputVolumeStreamArgs  m_inputVolumeStream;
                 Audio::OutputVolumeStreamArgs m_outputVolumeStream;

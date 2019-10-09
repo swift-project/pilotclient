@@ -51,9 +51,9 @@ namespace BlackCore
                 connect(m_input, &CInput::opusDataAvailable, this, &CAfvClient::opusDataAvailable);
                 connect(m_input, &CInput::inputVolumeStream, this, &CAfvClient::inputVolumeStream);
 
-                connect(m_output, &Output::outputVolumeStream, this, &CAfvClient::outputVolumeStream);
+                connect(m_output,     &Output::outputVolumeStream,       this, &CAfvClient::outputVolumeStream);
                 connect(m_connection, &CClientConnection::audioReceived, this, &CAfvClient::audioOutDataAvailable);
-                connect(m_voiceServerPositionTimer, &QTimer::timeout, this, &CAfvClient::onPositionUpdateTimer);
+                connect(m_voiceServerPositionTimer, &QTimer::timeout,    this, &CAfvClient::onPositionUpdateTimer);
 
                 // deferred init
                 QTimer::singleShot(1000, this, &CAfvClient::deferredInit);
@@ -87,11 +87,9 @@ namespace BlackCore
 
                 // init with context values
                 this->connectWithContexts();
-                if (m_connectedWithContext && hasContext())
-                {
-                    // update from context
-                    this->updateTransceivers();
-                }
+
+                // update from context
+                this->onPositionUpdateTimer();
             }
 
             void CAfvClient::connectWithContexts()
@@ -119,12 +117,12 @@ namespace BlackCore
                 this->setCallsign(callsign);
 
                 m_connection->connectTo(cid, password, callsign);
-                this->updateTransceivers(); // uses context if available
+                m_aliasedStations = m_connection->getAllAliasedStations();
+
+                this->onPositionUpdateTimer();
 
                 if (m_connection->isConnected()) { emit this->connectionStatusChanged(Connected); }
                 else { emit this->connectionStatusChanged(Disconnected); }
-
-                m_aliasedStations = m_connection->getAllAliasedStations();
             }
 
             void CAfvClient::disconnectFrom()
@@ -221,6 +219,8 @@ namespace BlackCore
                 this->onSettingsChanged(); // make sure all settings are applied
                 m_isStarted = true;
                 CLogMessage(this).info(u"Started [Input: %1] [Output: %2]") << inputDevice.getName() << outputDevice.getName();
+
+                this->onPositionUpdateTimer(); // update values
             }
 
             void CAfvClient::startAudio(const QString &inputDeviceName, const QString &outputDeviceName)
@@ -248,13 +248,6 @@ namespace BlackCore
 
                 m_isStarted = false;
                 m_connection->setReceiveAudio(false);
-
-                // transceivers
-                {
-                    QMutexLocker lock(&m_mutexTransceivers);
-                    m_transceivers.clear();
-                }
-                this->updateTransceivers(false);
 
                 // stop input/output
                 m_updateTimer.stop();
@@ -304,19 +297,7 @@ namespace BlackCore
 
                 // Fix rounding issues like 128074999 Hz -> 128075000 Hz
                 quint32 roundedFrequencyHz = static_cast<quint32>(qRound(frequencyHz / 1000.0)) * 1000;
-                {
-                    QMutexLocker lock(&m_mutex);
-                    auto it = std::find_if(m_aliasedStations.begin(), m_aliasedStations.end(), [roundedFrequencyHz](const StationDto & d)
-                    {
-                        return d.frequencyAliasHz == roundedFrequencyHz;
-                    });
-
-                    if (it != m_aliasedStations.end())
-                    {
-                        CLogMessage(this).debug(u"Aliasing %1Hz [VHF] to %2Hz [HF]")  << frequencyHz << it->frequencyHz;
-                        roundedFrequencyHz = it->frequencyHz;
-                    }
-                }
+                roundedFrequencyHz = this->getAliasFrequencyHz(roundedFrequencyHz);
 
                 bool updateTransceivers = false;
                 {
@@ -363,7 +344,8 @@ namespace BlackCore
 
             void CAfvClient::updateTransceivers(bool updateFrequencies)
             {
-                if (!m_connection->isConnected()) { return; }
+                // also update if NOT connected, values will be preset
+
                 if (hasContext())
                 {
                     const CSimulatedAircraft ownAircraft = sApp->getIContextOwnAircraft()->getOwnAircraft();
@@ -400,7 +382,7 @@ namespace BlackCore
 
             void CAfvClient::setTransmittingTransceiver(quint16 transceiverID)
             {
-                TxTransceiverDto tx = { transceiverID };
+                const TxTransceiverDto tx = { transceiverID };
                 this->setTransmittingTransceivers({ tx });
             }
 
@@ -475,7 +457,7 @@ namespace BlackCore
 
                     if (!active)
                     {
-                        //AGC
+                        // AGC
                         // if (maxDbReadingInPTTInterval > -1) InputVolumeDb = InputVolumeDb - 1;
                         // if (maxDbReadingInPTTInterval < -4) InputVolumeDb = InputVolumeDb + 1;
                         m_maxDbReadingInPTTInterval = -100;
@@ -483,6 +465,12 @@ namespace BlackCore
                 }
 
                 emit this->ptt(active, com, this->identifier());
+            }
+
+            double CAfvClient::getInputVolumeDb() const
+            {
+                QMutexLocker lock(&m_mutex);
+                return m_inputVolumeDb;
             }
 
             void CAfvClient::setInputVolumeDb(double valueDb)
@@ -496,6 +484,12 @@ namespace BlackCore
                 {
                     m_input->setVolume(qPow(10, valueDb / 20.0));
                 }
+            }
+
+            double CAfvClient::getOutputVolumeDb() const
+            {
+                QMutexLocker lock(&m_mutex);
+                return m_outputVolumeDb;
             }
 
             int CAfvClient::getNormalizedInputVolume() const
@@ -635,26 +629,20 @@ namespace BlackCore
             QString CAfvClient::getReceivingCallsignsCom1()
             {
                 QMutexLocker lock(&m_mutex);
-                if (m_soundcardSampleProvider)
-                {
-                    return m_soundcardSampleProvider->getReceivingCallsigns(0);
-                }
-                return {};
+                if (!m_soundcardSampleProvider) return {};
+                return m_soundcardSampleProvider->getReceivingCallsigns(0);
             }
 
             QString CAfvClient::getReceivingCallsignsCom2()
             {
                 QMutexLocker lock(&m_mutex);
-                if (m_soundcardSampleProvider)
-                {
-                    return m_soundcardSampleProvider->getReceivingCallsigns(1);
-                }
-                return {};
+                if (!m_soundcardSampleProvider) return {};
+                return m_soundcardSampleProvider->getReceivingCallsigns(1);
             }
 
             bool CAfvClient::updateVoiceServerUrl(const QString &url)
             {
-                if (m_connection) { return false; }
+                if (!m_connection) { return false; }
                 return m_connection->updateVoiceServerUrl(url);
             }
 
@@ -665,7 +653,16 @@ namespace BlackCore
 
             void CAfvClient::onPositionUpdateTimer()
             {
-                this->updateTransceivers();
+                if (hasContext())
+                {
+                    // for pilot client
+                    this->updateFromOwnAircraft(sApp->getIContextOwnAircraft()->getOwnAircraft(), false);
+                }
+                else
+                {
+                    // for AFV sample client
+                    this->updateTransceivers();
+                }
             }
 
             void CAfvClient::onSettingsChanged()
@@ -676,38 +673,101 @@ namespace BlackCore
                 this->setBypassEffects(!audioSettings.isAudioEffectsEnabled());
             }
 
-            void CAfvClient::onUpdateTransceiversFromContext(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
+            void CAfvClient::updateFromOwnAircraft(const CSimulatedAircraft &aircraft, bool withSignals)
             {
-                Q_UNUSED(originator)
-                this->updatePosition(aircraft.latitude().value(CAngleUnit::deg()),
-                                     aircraft.longitude().value(CAngleUnit::deg()),
-                                     aircraft.getAltitude().value(CLengthUnit::ft()));
+                if (!sApp || sApp->isShuttingDown()) { return; }
 
+                TransceiverDto transceiverCom1;
+                TransceiverDto transceiverCom2;
+                transceiverCom1.id = comUnitToTransceiverId(CComSystem::Com1);
+                transceiverCom2.id = comUnitToTransceiverId(CComSystem::Com2);
+
+                // position
+                const double latDeg = aircraft.latitude().value(CAngleUnit::deg());
+                const double lngDeg = aircraft.longitude().value(CAngleUnit::deg());
+                const double altM   = aircraft.getAltitude().value(CLengthUnit::m());
+
+                transceiverCom1.LatDeg     = transceiverCom2.LatDeg     = latDeg;
+                transceiverCom1.LonDeg     = transceiverCom2.LonDeg     = lngDeg;
+                transceiverCom1.HeightAglM = transceiverCom2.HeightAglM = altM;
+                transceiverCom1.HeightMslM = transceiverCom2.HeightMslM = altM;
+
+                // enabled, rx/tx, frequency
                 const CComSystem com1 = aircraft.getCom1System();
                 const CComSystem com2 = aircraft.getCom2System();
-                this->updateComFrequency(CComSystem::Com1, com1);
-                this->updateComFrequency(CComSystem::Com2, com2);
+                const quint32 f1 = static_cast<quint32>(com1.getFrequencyActive().valueInteger(CFrequencyUnit::Hz()));
+                const quint32 f2 = static_cast<quint32>(com2.getFrequencyActive().valueInteger(CFrequencyUnit::Hz()));
+
+                transceiverCom1.frequencyHz = this->getAliasFrequencyHz(f1);
+                transceiverCom2.frequencyHz = this->getAliasFrequencyHz(f2);
 
                 const bool tx1 = com1.isTransmitEnabled();
                 const bool rx1 = com1.isReceiveEnabled();
-                const bool tx2 = com2.isTransmitEnabled();
+                const bool tx2 = com2.isTransmitEnabled(); // we only allow one (1) transmit
                 const bool rx2 = com2.isReceiveEnabled();
 
-                this->enableComUnit(CComSystem::Com1, tx1 || rx1);
-                this->enableComUnit(CComSystem::Com2, tx2 || rx2);
+                // enable, we currently treat receive as enable
+                // flight sim cockpits normally use rx and tx
+                // AFV uses tx and enable
+                const bool e1 = rx1;
+                const bool e2 = rx2;
 
-                // currently only transmitting at one unit
-                if (tx1)
+                // transceivers
+                QSet<quint16> newEnabledTransceiverIds;
+                QVector<TransceiverDto> newTransceivers { transceiverCom1, transceiverCom2 };
+                QVector<TransceiverDto> newEnabledTransceivers;
+                QVector<TxTransceiverDto> newTransmittingTransceivers;
+                if (e1)  { newEnabledTransceivers.push_back(transceiverCom1); newEnabledTransceiverIds.insert(transceiverCom1.id); }
+                if (e2)  { newEnabledTransceivers.push_back(transceiverCom2); newEnabledTransceiverIds.insert(transceiverCom2.id); }
+
+                // Transmitting transceivers, currently ALLOW ONLY ONE
+                if (tx1 && e1) { newTransmittingTransceivers.push_back(transceiverCom1); }
+                else if (tx2 && e2) { newTransmittingTransceivers.push_back(transceiverCom2); }
+
+                // lock and update
                 {
-                    this->setTransmittingComUnit(CComSystem::Com1);
+                    QMutexLocker lock(&m_mutexTransceivers);
+                    m_transceivers = newTransceivers;
+                    m_enabledTransceivers = newEnabledTransceiverIds;
+                    m_transmittingTransceivers = newTransmittingTransceivers;
                 }
-                else if (tx2)
+                // in connection and soundcard only use the enabled tarnsceivers
+                const QString callsign = this->getCallsign();
                 {
-                    this->setTransmittingComUnit(CComSystem::Com2);
+                    QMutexLocker lock(&m_mutex);
+                    if (m_connection) { m_connection->updateTransceivers(callsign, newEnabledTransceivers); }
+                    if (m_soundcardSampleProvider) { m_soundcardSampleProvider->updateRadioTransceivers(newEnabledTransceivers); }
                 }
 
-                this->updateTransceivers();
-                emit this->updatedFromOwnAircraftCockpit();
+                if (withSignals) { emit this->updatedFromOwnAircraftCockpit(); }
+            }
+
+            void CAfvClient::onUpdateTransceiversFromContext(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
+            {
+                if (originator == this->identifier()) { return; }
+                this->updateFromOwnAircraft(aircraft);
+            }
+
+            quint32 CAfvClient::getAliasFrequencyHz(quint32 frequencyHz) const
+            {
+                // void rounding issues from float/double
+                quint32 roundedFrequencyHz = static_cast<quint32>(qRound(frequencyHz / 1000.0)) * 1000;
+
+                // change to aliased frequency if needed
+                {
+                    QMutexLocker lock(&m_mutex);
+                    auto it = std::find_if(m_aliasedStations.begin(), m_aliasedStations.end(), [roundedFrequencyHz](const StationDto & d)
+                    {
+                        return d.frequencyAliasHz == roundedFrequencyHz;
+                    });
+
+                    if (it != m_aliasedStations.end())
+                    {
+                        CLogMessage(this).debug(u"Aliasing %1Hz [VHF] to %2Hz [HF]")  << frequencyHz << it->frequencyHz;
+                        roundedFrequencyHz = it->frequencyHz;
+                    }
+                }
+                return roundedFrequencyHz;
             }
 
             quint16 CAfvClient::comUnitToTransceiverId(CComSystem::ComUnit comUnit)
@@ -716,8 +776,7 @@ namespace BlackCore
                 {
                 case CComSystem::Com1: return 0;
                 case CComSystem::Com2: return 1;
-                default:
-                    break;
+                default:               break;
                 }
                 return 0;
             }

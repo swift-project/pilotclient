@@ -80,9 +80,9 @@ namespace BlackCore
                 template<typename TResponse>
                 TResponse postNoRequest(const QString &resource)
                 {
-                    if (!m_isAuthenticated)
+                    if (!this->sendToNetworkIfAuthenticated())
                     {
-                        BlackMisc::CLogMessage(this).debug(u"AFV not authenticated");
+                        // BlackMisc::CLogMessage(this).debug(u"AFV not authenticated");
                         return {};
                     }
 
@@ -103,9 +103,9 @@ namespace BlackCore
                 template<typename TResponse>
                 QVector<TResponse> getAsVector(const QString &resource)
                 {
-                    if (! m_isAuthenticated)
+                    if (!this->sendToNetworkIfAuthenticated())
                     {
-                        BlackMisc::CLogMessage(this).debug(u"AFV not authenticated");
+                        // BlackMisc::CLogMessage(this).debug(u"AFV not authenticated");
                         return {};
                     }
 
@@ -155,6 +155,9 @@ namespace BlackCore
 
                 //! Get QLoop for network access, using class must delete the loop
                 QEventLoop *newEventLoop();
+
+                //! Send to network
+                bool sendToNetworkIfAuthenticated() const;
 
                 //! Application shutting down
                 static bool isShuttingDown();

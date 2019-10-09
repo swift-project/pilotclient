@@ -138,6 +138,7 @@ namespace BlackCore
 
             void CApiServerConnection::updateTransceivers(const QString &callsign, const QVector<TransceiverDto> &transceivers)
             {
+                if (!this->sendToNetworkIfAuthenticated()) { return; }
                 QJsonArray array;
                 for (const TransceiverDto &tx : transceivers)
                 {
@@ -239,13 +240,7 @@ namespace BlackCore
 
             void CApiServerConnection::postNoResponse(const QString &resource, const QJsonDocument &json)
             {
-                if (isShuttingDown()) { return; } // avoid crash
-                if (!m_isAuthenticated)
-                {
-                    CLogMessage(this).debug(u"AFV not authenticated");
-                    return;
-                }
-
+                if (isShuttingDown()) { return; }
                 this->checkExpiry();
 
                 QUrl url(m_addressUrl);
@@ -273,8 +268,7 @@ namespace BlackCore
 
             void CApiServerConnection::deleteResource(const QString &resource)
             {
-                if (isShuttingDown())   { return; }
-                if (!m_isAuthenticated) { return; }
+                if (isShuttingDown()) { return; }
 
                 QUrl url(m_addressUrl);
                 url.setPath(resource);
@@ -343,6 +337,11 @@ namespace BlackCore
                     QObject::connect(sApp, &CApplication::aboutToShutdown, loop, &QEventLoop::quit, Qt::QueuedConnection);
                 }
                 return loop;
+            }
+
+            bool CApiServerConnection::sendToNetworkIfAuthenticated() const
+            {
+                return m_isAuthenticated && !isShuttingDown();
             }
 
             bool CApiServerConnection::isShuttingDown()
