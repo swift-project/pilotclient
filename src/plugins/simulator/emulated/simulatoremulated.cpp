@@ -120,7 +120,20 @@ namespace BlackSimPlugin
         {
             if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraft.toQString(), originator.toQString()); }
             if (originator == identifier()) { return false; } // myself
-            m_myAircraft.setCockpit(aircraft);
+
+            CSimulatedAircraft a = aircraft;
+
+            // only use the frequencies, not active transmit/receive
+            CComSystem com1 = m_myAircraft.getCom1System();
+            CComSystem com2 = m_myAircraft.getCom2System();
+            com1.setFrequencyActive(aircraft.getCom1System().getFrequencyActive());
+            com2.setFrequencyActive(aircraft.getCom2System().getFrequencyActive());
+            com1.setFrequencyStandby(aircraft.getCom1System().getFrequencyStandby());
+            com2.setFrequencyStandby(aircraft.getCom2System().getFrequencyStandby());
+            a.setCom1System(com1);
+            a.setCom2System(com2);
+
+            m_myAircraft.setCockpit(a);
             emit this->internalAircraftChanged();
             return true;
         }
