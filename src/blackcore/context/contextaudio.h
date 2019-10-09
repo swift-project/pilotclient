@@ -11,7 +11,6 @@
 #ifndef BLACKCORE_CONTEXT_CONTEXTAUDIO_H
 #define BLACKCORE_CONTEXT_CONTEXTAUDIO_H
 
-#include "blackcore/afv/clients/afvclient.h"
 #include "blackcore/audio/audiosettings.h"
 #include "blackcore/context/context.h"
 #include "blackcore/actionbind.h"
@@ -21,10 +20,10 @@
 #include "blacksound/selcalplayer.h"
 #include "blacksound/notificationplayer.h"
 #include "blackmisc/macos/microphoneaccess.h"
+#include "blackmisc/audio/settings/voicesettings.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/audio/audiosettings.h"
-#include "blackmisc/audio/settings/voicesettings.h"
 #include "blackmisc/audio/ptt.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/comsystem.h"
@@ -32,6 +31,7 @@
 #include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/input/actionhotkeydefs.h"
+#include "blackmisc/identifiable.h"
 #include "blackmisc/identifier.h"
 
 #include <QObject>
@@ -56,10 +56,13 @@ namespace BlackMisc { class CDBusServer; }
 
 namespace BlackCore
 {
+    namespace Afv { namespace Clients { class CAfvClient; }}
     namespace Context
     {
         //! Audio context interface
-        class BLACKCORE_EXPORT IContextAudio : public IContext
+        class BLACKCORE_EXPORT IContextAudio :
+            public IContext,
+            public BlackMisc::CIdentifiable
         {
             Q_OBJECT
             Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAUDIO_INTERFACENAME)
@@ -92,7 +95,7 @@ namespace BlackCore
             // -------- parts which can run in core and GUI, referring to local voice client ------------
 
             //! Reference to voice client
-            BlackCore::Afv::Clients::CAfvClient &voiceClient() { return m_voiceClient; }
+            BlackCore::Afv::Clients::CAfvClient *voiceClient() { return m_voiceClient.data(); }
 
             //! Audio devices
             //! @{
@@ -205,8 +208,8 @@ namespace BlackCore
             //! Get current COM unit from cockpit
             //! \remark cross context
             //! @{
-            BlackMisc::Aviation::CComSystem getOwnComSystem(BlackMisc::Aviation::CComSystem::ComUnit unit) const;
-            bool isComIntegratedWithSimulator() const;
+            BlackMisc::Aviation::CComSystem xCtxGetOwnComSystem(BlackMisc::Aviation::CComSystem::ComUnit unit) const;
+            bool xCtxIsComIntegratedWithSimulator() const;
             //! @}
 
             //! Changed cockpit
@@ -226,24 +229,18 @@ namespace BlackCore
             static constexpr int MinUnmuteVolume = 20; //!< minimum volume when unmuted
 
             // settings
-            BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings             { this, &IContextAudio::onChangedAudioSettings };
+            BlackMisc::CSetting<BlackMisc::Audio::TSettings>             m_audioSettings { this, &IContextAudio::onChangedAudioSettings };
             BlackMisc::CSetting<BlackMisc::Audio::Settings::TVoiceSetup> m_voiceSettings { this, &IContextAudio::onChangedVoiceSettings };
 
-            BlackMisc::CSetting<Audio::TInputDevice>    m_inputDeviceSetting  { this, &IContextAudio::changeDeviceSettings };
-            BlackMisc::CSetting<Audio::TOutputDevice>   m_outputDeviceSetting { this, &IContextAudio::changeDeviceSettings };
+            BlackMisc::CSetting<Audio::TInputDevice>  m_inputDeviceSetting  { this, &IContextAudio::changeDeviceSettings };
+            BlackMisc::CSetting<Audio::TOutputDevice> m_outputDeviceSetting { this, &IContextAudio::changeDeviceSettings };
 
             // AFV
-            Afv::Clients::CAfvClient m_voiceClient;
+            QScopedPointer<Afv::Clients::CAfvClient> m_voiceClient;
 
             // Players
             BlackSound::CSelcalPlayer      *m_selcalPlayer = nullptr;
             BlackSound::CNotificationPlayer m_notificationPlayer;
-
-#ifdef Q_OS_MAC
-            BlackMisc::CMacOSMicrophoneAccess m_micAccess;
-#endif
-            //! Init microphone
-            void delayedInitMicrophone();
         };
     } // ns
 } // ns

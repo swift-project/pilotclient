@@ -15,7 +15,6 @@
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/network/userlist.h"
-#include "blackmisc/identifiable.h"
 
 #include <QHash>
 #include <QList>
@@ -34,8 +33,7 @@ namespace BlackCore
     {
         //! Audio context implementation
         class BLACKCORE_EXPORT CContextAudio :
-            public IContextAudio,
-            public BlackMisc::CIdentifiable
+            public IContextAudio
         {
             Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAUDIO_INTERFACENAME)
             Q_OBJECT

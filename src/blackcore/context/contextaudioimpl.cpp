@@ -21,8 +21,7 @@ namespace BlackCore
     namespace Context
     {
         CContextAudio::CContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
-            IContextAudio(mode, runtime),
-            CIdentifiable(this)
+            IContextAudio(mode, runtime)
         { }
 
         CContextAudio *CContextAudio::registerWithDBus(CDBusServer *server)

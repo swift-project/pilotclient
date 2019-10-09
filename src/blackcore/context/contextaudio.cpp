@@ -8,6 +8,7 @@
 
 #include "contextaudio.h"
 
+#include "blackcore/afv/clients/afvclient.h"
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/context/contextnetwork.h"      // for user login
 #include "blackcore/context/contextownaircraft.h"  // for COM integration
@@ -33,40 +34,31 @@ namespace BlackCore
     namespace Context
     {
         IContextAudio::IContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
-            IContext(mode, runtime), m_voiceClient(CVoiceSetup().getAfvVoiceServerUrl(), this)
+            IContext(mode, runtime),
+            CIdentifiable(this),
+            m_voiceClient(new CAfvClient(CVoiceSetup().getAfvVoiceServerUrl(), this))
         {
             const CVoiceSetup vs = m_voiceSettings.getThreadLocal();
-            m_voiceClient.updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
+            m_voiceClient->updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
 
-            Q_ASSERT_X(CThreadUtils::isApplicationThread(m_voiceClient.thread()), Q_FUNC_INFO, "Should be in main thread");
-            m_voiceClient.start();
-            Q_ASSERT_X(m_voiceClient.owner() == this, Q_FUNC_INFO, "Wrong owner");
-            Q_ASSERT_X(!CThreadUtils::isApplicationThread(m_voiceClient.thread()), Q_FUNC_INFO, "Must NOT be in main thread");
+            Q_ASSERT_X(CThreadUtils::isApplicationThread(m_voiceClient->thread()), Q_FUNC_INFO, "Should be in main thread");
+            m_voiceClient->start();
+            Q_ASSERT_X(m_voiceClient->owner() == this, Q_FUNC_INFO, "Wrong owner");
+            Q_ASSERT_X(!CThreadUtils::isApplicationThread(m_voiceClient->thread()), Q_FUNC_INFO, "Must NOT be in main thread");
 
             const CSettings as = m_audioSettings.getThreadLocal();
             this->setVoiceOutputVolume(as.getOutVolume());
             m_selcalPlayer = new CSelcalPlayer(CAudioDeviceInfo::getDefaultOutputDevice(), this);
 
-            connect(&m_voiceClient, &CAfvClient::ptt, this, &IContextAudio::ptt, Qt::QueuedConnection);
+            connect(m_voiceClient.data(), &CAfvClient::ptt, this, &IContextAudio::ptt, Qt::QueuedConnection);
 
             this->changeDeviceSettings();
             QPointer<IContextAudio> myself(this);
             QTimer::singleShot(5000, this, [ = ]
             {
-                if (!myself) { return; }
-                if (!sApp || sApp->isShuttingDown()) { return; }
+                if (!myself || !sApp || sApp->isShuttingDown()) { return; }
                 myself->onChangedAudioSettings();
-                myself->delayedInitMicrophone();
             });
-        }
-
-        void IContextAudio::delayedInitMicrophone()
-        {
-#ifdef Q_OS_MAC
-            // m_voiceInputDevice = m_voice->createInputDevice();
-            // m_voice->connectVoice(m_voiceInputDevice.get(), m_audioMixer.get(), IAudioMixer::InputMicrophone);
-            CLogMessage(this).info(u"MacOS delayed input device init");
-#endif
         }
 
         const QString &IContextAudio::InterfaceName()
@@ -107,9 +99,12 @@ namespace BlackCore
 
         void IContextAudio::gracefulShutdown()
         {
-            m_voiceClient.stopAudio();
-            m_voiceClient.quitAndWait();
-            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(&m_voiceClient), Q_FUNC_INFO, "Needs to be back in current thread");
+            if (m_voiceClient)
+            {
+                m_voiceClient->stopAudio();
+                m_voiceClient->quitAndWait();
+                Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(m_voiceClient.data()), Q_FUNC_INFO, "Needs to be back in current thread");
+            }
             QObject::disconnect(this);
         }
 
@@ -163,11 +158,13 @@ namespace BlackCore
 
         CAudioDeviceInfoList IContextAudio::getCurrentAudioDevices() const
         {
+            if (!m_voiceClient) { return {}; }
+
             // either the devices really used, or settings
-            CAudioDeviceInfo inputDevice = m_voiceClient.getInputDevice();
+            CAudioDeviceInfo inputDevice = m_voiceClient->getInputDevice();
             if (!inputDevice.isValid()) { inputDevice = CAudioDeviceInfo::getDefaultInputDevice(); }
 
-            CAudioDeviceInfo outputDevice = m_voiceClient.getOutputDevice();
+            CAudioDeviceInfo outputDevice = m_voiceClient->getOutputDevice();
             if (!outputDevice.isValid()) { outputDevice = CAudioDeviceInfo::getDefaultOutputDevice(); }
 
             CAudioDeviceInfoList devices;
@@ -178,13 +175,13 @@ namespace BlackCore
 
         void IContextAudio::setCurrentAudioDevices(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice)
         {
+            if (!m_voiceClient) { return; }
             if (!inputDevice.getName().isEmpty())  { m_inputDeviceSetting.setAndSave(inputDevice.getName()); }
             if (!outputDevice.getName().isEmpty()) { m_outputDeviceSetting.setAndSave(outputDevice.getName()); }
-            const bool changed = m_voiceClient.restartWithNewDevices(inputDevice, outputDevice);
+            const bool changed = m_voiceClient->restartWithNewDevices(inputDevice, outputDevice);
 
             const CVoiceSetup vs = m_voiceSettings.getThreadLocal();
-            m_voiceClient.updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
-
+            m_voiceClient->updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
             if (changed)
             {
                 emit this->changedSelectedAudioDevices(this->getCurrentAudioDevices());
@@ -193,14 +190,16 @@ namespace BlackCore
 
         void IContextAudio::setVoiceOutputVolume(int volume)
         {
+            if (!m_voiceClient) { return; }
+
             const bool wasMuted = this->isMuted();
             volume = CSettings::fixOutVolume(volume);
 
-            const int currentVolume = m_voiceClient.getNormalizedOutputVolume();
+            const int  currentVolume = m_voiceClient->getNormalizedOutputVolume();
             const bool changedVoiceOutput = (currentVolume != volume);
             if (changedVoiceOutput)
             {
-                m_voiceClient.setNormalizedOutputVolume(volume);
+                m_voiceClient->setNormalizedOutputVolume(volume);
                 m_outVolumeBeforeMute = currentVolume;
 
                 emit this->changedAudioVolume(volume);
@@ -221,15 +220,17 @@ namespace BlackCore
 
         int IContextAudio::getVoiceOutputVolume() const
         {
-            return m_voiceClient.getNormalizedOutputVolume();
+            if (!m_voiceClient) { return 0; }
+            return m_voiceClient->getNormalizedOutputVolume();
         }
 
         void IContextAudio::setMute(bool muted)
         {
+            if (!m_voiceClient) { return; }
             if (this->isMuted() == muted) { return; } // avoid roundtrips / unnecessary signals
 
-            if (m_voiceClient.isMuted() == muted) { return; }
-            m_voiceClient.setMuted(muted);
+            if (m_voiceClient->isMuted() == muted) { return; }
+            m_voiceClient->setMuted(muted);
 
             // signal
             emit this->changedMute(muted);
@@ -237,7 +238,8 @@ namespace BlackCore
 
         bool IContextAudio::isMuted() const
         {
-            return m_voiceClient.isMuted();
+            if (!m_voiceClient) { return false; }
+            return m_voiceClient->isMuted();
         }
 
         void IContextAudio::playSelcalTone(const CSelcal &selcal)
@@ -284,12 +286,14 @@ namespace BlackCore
 
         void IContextAudio::enableAudioLoopback(bool enable)
         {
-            m_voiceClient.setLoopBack(enable);
+            if (!m_voiceClient) { return; }
+            m_voiceClient->setLoopBack(enable);
         }
 
         bool IContextAudio::isAudioLoopbackEnabled() const
         {
-            return m_voiceClient.isLoopback();
+            if (!m_voiceClient) { return false; }
+            return m_voiceClient->isLoopback();
         }
 
         void IContextAudio::setVoiceSetup(const CVoiceSetup &setup)
@@ -305,7 +309,8 @@ namespace BlackCore
 
         void IContextAudio::setVoiceTransmission(bool enable, PTTCOM com)
         {
-            m_voiceClient.setPttForCom(enable, com);
+            if (!m_voiceClient) { return; }
+            m_voiceClient->setPttForCom(enable, com);
         }
 
         void IContextAudio::setVoiceTransmissionCom1(bool enabled)
@@ -371,7 +376,7 @@ namespace BlackCore
             this->setVoiceOutputVolume(v);
         }
 
-        CComSystem IContextAudio::getOwnComSystem(CComSystem::ComUnit unit) const
+        CComSystem IContextAudio::xCtxGetOwnComSystem(CComSystem::ComUnit unit) const
         {
             if (!this->getIContextOwnAircraft())
             {
@@ -388,7 +393,7 @@ namespace BlackCore
             return this->getIContextOwnAircraft()->getOwnComSystem(unit);
         }
 
-        bool IContextAudio::isComIntegratedWithSimulator() const
+        bool IContextAudio::xCtxIsComIntegratedWithSimulator() const
         {
             if (!this->getIContextSimulator()) { return false; }
             return this->getIContextSimulator()->getSimulatorSettings().isComIntegrated();
@@ -399,9 +404,9 @@ namespace BlackCore
             Q_UNUSED(aircraft)
             Q_UNUSED(originator)
 
-            /**
+            /** NOT NEEDED as CAfvClient is directly "tracking changes"
             if (CIdentifiable::isMyIdentifier(originator)) { return; }
-            const bool integrated = this->isComIntegratedWithSimulator();
+            const bool integrated = this->xCtxisComIntegratedWithSimulator();
             if (integrated)
             {
                 // set as in cockpit
@@ -415,12 +420,15 @@ namespace BlackCore
         {
             Q_UNUSED(from)
             BLACK_VERIFY_X(this->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
+            if (!m_voiceClient) { return; }
+
             if (to.isConnected() && this->getIContextNetwork())
             {
                 const CVoiceSetup vs = m_voiceSettings.getThreadLocal();
-                m_voiceClient.updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
+                m_voiceClient->updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
 
                 const CUser connectedUser = this->getIContextNetwork()->getConnectedServer().getUser();
+
                 const QString inputDeviceName = m_inputDeviceSetting.get();
                 CAudioDeviceInfo input = CAudioDeviceInfo::getDefaultInputDevice();
                 if (!inputDeviceName.isEmpty())
@@ -436,13 +444,13 @@ namespace BlackCore
                     const CAudioDeviceInfoList outputDevs = this->getAudioOutputDevices();
                     output = outputDevs.findByName(outputDeviceName);
                 }
-                m_voiceClient.connectTo(connectedUser.getId(), connectedUser.getPassword(), connectedUser.getCallsign().asString());
-                m_voiceClient.startAudio(input, output, {0, 1});
+                m_voiceClient->connectTo(connectedUser.getId(), connectedUser.getPassword(), connectedUser.getCallsign().asString());
+                m_voiceClient->startAudio(input, output, {0, 1});
             }
             else if (to.isDisconnected())
             {
-                m_voiceClient.stopAudio();
-                m_voiceClient.disconnectFrom();
+                m_voiceClient->stopAudio();
+                m_voiceClient->disconnectFrom();
             }
         }
     } // ns

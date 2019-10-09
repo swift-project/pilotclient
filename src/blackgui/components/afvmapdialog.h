@@ -43,7 +43,7 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CAfvMapDialog> ui;
             BlackCore::Afv::Model::CAfvMapReader *m_afvMapReader = nullptr;
-            BlackCore::Afv::Clients::CAfvClient  *m_afvClient = nullptr;
+            BlackCore::Afv::Clients::CAfvClient  *m_afvClient    = nullptr;
         };
     } // ns
 } // ns
