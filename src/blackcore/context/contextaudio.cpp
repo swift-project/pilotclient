@@ -102,7 +102,7 @@ namespace BlackCore
 
         IContextAudio::~IContextAudio()
         {
-            m_voiceClient.stopAudio();
+            gracefulShutdown();
         }
 
         void IContextAudio::gracefulShutdown()
