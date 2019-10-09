@@ -81,6 +81,14 @@ namespace BlackGui
 
                 // network
                 connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this, &CCockpitComComponent::onAtcStationsChanged, Qt::QueuedConnection);
+
+                QPointer<CCockpitComComponent> myself(this);
+                QTimer::singleShot(10 * 1000, this, [ = ]
+                {
+                    if (!sGui || sGui->isShuttingDown() || !myself) { return; }
+                    const CSimulatedAircraft aircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
+                    this->updateCockpitFromContext(aircraft, CIdentifier::fake());
+                });
             }
         }
 
@@ -94,7 +102,7 @@ namespace BlackGui
 
         void CCockpitComComponent::paintEvent(QPaintEvent *event)
         {
-            Q_UNUSED(event);
+            Q_UNUSED(event)
             CStyleSheetUtility::useStyleSheetInDerivedWidget(this);
         }
 
