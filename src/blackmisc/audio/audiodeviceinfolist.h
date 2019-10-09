@@ -48,6 +48,9 @@ namespace BlackMisc
             //! Find by name
             CAudioDeviceInfo findByName(const QString &name, bool strict = false) const;
 
+            //! Find by name
+            CAudioDeviceInfo findByNameOrDefault(const QString &name, const CAudioDeviceInfo defaultDevice, bool strict = false) const;
+
             //! Count (as of type)
             int count(CAudioDeviceInfo::DeviceType type) const;
 

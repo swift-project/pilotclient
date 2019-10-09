@@ -38,6 +38,12 @@ namespace BlackMisc
 
         CAudioDeviceInfo CAudioDeviceInfoList::findByName(const QString &name, bool strict) const
         {
+            return this->findByNameOrDefault(name, CAudioDeviceInfo(), strict);
+        }
+
+        CAudioDeviceInfo CAudioDeviceInfoList::findByNameOrDefault(const QString &name, const CAudioDeviceInfo defaultDevice, bool strict) const
+        {
+            if (name.isEmpty()) { return defaultDevice; }
             for (const CAudioDeviceInfo &d : *this)
             {
                 if (strict)
@@ -50,7 +56,7 @@ namespace BlackMisc
                     if (name.startsWith(d.getName(), Qt::CaseInsensitive)) { return d; }
                 }
             }
-            return CAudioDeviceInfo();
+            return defaultDevice;
         }
 
         int CAudioDeviceInfoList::count(CAudioDeviceInfo::DeviceType type) const
