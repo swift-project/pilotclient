@@ -170,7 +170,11 @@ namespace BlackCore
 
             bool CAfvClient::restartWithNewDevices(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice)
             {
-                if (! m_isStarted) { return true; }
+                if (!m_isStarted)
+                {
+                    this->startAudio(inputDevice, outputDevice, allTransceiverIds());
+                    return true;
+                }
 
                 if (QThread::currentThread() != this->thread())
                 {
