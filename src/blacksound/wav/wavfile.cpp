@@ -16,38 +16,43 @@ namespace BlackSound
 {
     namespace Wav
     {
+        //! WAV chunk
         struct chunk
         {
-            char        id[4];
-            quint32     size;
+            char        id[4];  //!< chunk id
+            quint32     size;   //!< chunk size
         };
 
+        //! RIFF header
         struct RIFFHeader
         {
-            chunk       descriptor;     // "RIFF"
-            char        type[4];        // "WAVE"
+            chunk       descriptor;     //!< "RIFF"
+            char        type[4];        //!< "WAVE"
         };
 
+        //! WAVE header
         struct WAVEHeader
         {
-            chunk       descriptor;
-            quint16     audioFormat;
-            quint16     numChannels;
-            quint32     sampleRate;
-            quint32     byteRate;
-            quint16     blockAlign;
-            quint16     bitsPerSample;
+            chunk       descriptor;     //!< chunk descriptor
+            quint16     audioFormat;    //!< audio format, e.g. 0x0001 => PCM
+            quint16     numChannels;    //!< number of channels
+            quint32     sampleRate;     //!< sample rate
+            quint32     byteRate;       //!< byte rate
+            quint16     blockAlign;     //!< block align
+            quint16     bitsPerSample;  //!< bits per sample
         };
 
+        //! Data header
         struct DATAHeader
         {
-            chunk       descriptor;
+            chunk       descriptor;     //!< chunk descriptor
         };
 
+        //! Combined header
         struct CombinedHeader
         {
-            RIFFHeader  riff;
-            WAVEHeader  wave;
+            RIFFHeader  riff;           //!< RIFF header
+            WAVEHeader  wave;           //!< WAVE header
         };
 
         CWavFile::CWavFile(QObject *parent) :
