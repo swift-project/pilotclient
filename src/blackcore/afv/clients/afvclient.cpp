@@ -563,7 +563,10 @@ namespace BlackCore
                     return;
                 }
 
-                if (! m_connection->isConnected()) { return; }
+                {
+                    QMutexLocker lock(&m_mutex);
+                    if (!m_connection->isConnected()) { return; }
+                }
 
                 const QString callsign = this->getCallsign(); // threadsafe
                 const auto transmittingTransceivers = this->getTransmittingTransceivers(); // threadsafe
@@ -571,32 +574,26 @@ namespace BlackCore
                 {
                     if (transmit)
                     {
+                        AudioTxOnTransceiversDto dto;
+                        dto.callsign = callsign.toStdString();
+                        dto.sequenceCounter = args.sequenceCounter;
+                        dto.audio = std::vector<char>(args.audio.begin(), args.audio.end());
+                        dto.lastPacket = false;
+                        dto.transceivers = transmittingTransceivers.toStdVector();
                         QMutexLocker lock(&m_mutex);
-                        if (m_connection->isConnected())
-                        {
-                            AudioTxOnTransceiversDto dto;
-                            dto.callsign = callsign.toStdString();
-                            dto.sequenceCounter = args.sequenceCounter;
-                            dto.audio = std::vector<char>(args.audio.begin(), args.audio.end());
-                            dto.lastPacket = false;
-                            dto.transceivers = transmittingTransceivers.toStdVector();
-                            m_connection->sendToVoiceServer(dto);
-                        }
+                        m_connection->sendToVoiceServer(dto);
                     }
 
                     if (!transmit && transmitHistory)
                     {
+                        AudioTxOnTransceiversDto dto;
+                        dto.callsign = callsign.toStdString();
+                        dto.sequenceCounter = args.sequenceCounter;
+                        dto.audio = std::vector<char>(args.audio.begin(), args.audio.end());
+                        dto.lastPacket = true;
+                        dto.transceivers = transmittingTransceivers.toStdVector();
                         QMutexLocker lock(&m_mutex);
-                        if (m_connection->isConnected())
-                        {
-                            AudioTxOnTransceiversDto dto;
-                            dto.callsign = callsign.toStdString();
-                            dto.sequenceCounter = args.sequenceCounter;
-                            dto.audio = std::vector<char>(args.audio.begin(), args.audio.end());
-                            dto.lastPacket = true;
-                            dto.transceivers = transmittingTransceivers.toStdVector();
-                            m_connection->sendToVoiceServer(dto);
-                        }
+                        m_connection->sendToVoiceServer(dto);
                     }
                     m_transmitHistory = transmit; // threadsafe
                 }
