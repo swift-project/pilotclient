@@ -229,8 +229,14 @@ namespace BlackCore
             if (!m_voiceClient) { return; }
             if (this->isMuted() == muted) { return; } // avoid roundtrips / unnecessary signals
 
-            if (m_voiceClient->isMuted() == muted) { return; }
+            if (muted)
+            {
+                const int nv = m_voiceClient->getNormalizedOutputVolume();
+                m_outVolumeBeforeMute = nv;
+            }
+
             m_voiceClient->setMuted(muted);
+            if (!muted) { m_voiceClient->setNormalizedOutputVolume(m_outVolumeBeforeMute); }
 
             // signal
             emit this->changedMute(muted);

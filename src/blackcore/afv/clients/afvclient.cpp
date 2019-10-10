@@ -160,12 +160,12 @@ namespace BlackCore
 
             bool CAfvClient::isMuted() const
             {
-                return !this->isStarted();
+                return this->getNormalizedOutputVolume() < 1;
             }
 
             void CAfvClient::setMuted(bool mute)
             {
-                Q_UNUSED(mute)
+                this->setNormalizedOutputVolume(mute ? 0 : 50);
             }
 
             bool CAfvClient::restartWithNewDevices(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice)
@@ -480,7 +480,7 @@ namespace BlackCore
             void CAfvClient::setInputVolumeDb(double valueDb)
             {
                 if (valueDb > MaxDbIn) { valueDb = MaxDbIn; }
-                if (valueDb < MinDbIn) { valueDb = MinDbIn; }
+                else if (valueDb < MinDbIn) { valueDb = MinDbIn; }
 
                 QMutexLocker lock(&m_mutex);
                 m_inputVolumeDb = valueDb;
