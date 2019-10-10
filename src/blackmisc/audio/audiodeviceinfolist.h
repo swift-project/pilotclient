@@ -51,6 +51,27 @@ namespace BlackMisc
             //! Find by name
             CAudioDeviceInfo findByNameOrDefault(const QString &name, const CAudioDeviceInfo defaultDevice, bool strict = false) const;
 
+            //! Find by host name
+            CAudioDeviceInfoList findByHostName(const QString &hostName) const;
+
+            //! Find registered device
+            CAudioDeviceInfo findRegisteredDevice(const CAudioDeviceInfo &device) const;
+
+            //! Register device
+            void registerDevice(const CAudioDeviceInfo &device);
+
+            //! Register devices
+            void registerDevices(const CAudioDeviceInfoList &devices);
+
+            //! Un-register device
+            void unRegisterDevice(const CAudioDeviceInfo &device);
+
+            //! Un-register devices
+            void unRegisterDevices(const CAudioDeviceInfoList &devices);
+
+            //! Is that a registered device?
+            bool isRegisteredDevice(const CAudioDeviceInfo &device) const;
+
             //! Count (as of type)
             int count(CAudioDeviceInfo::DeviceType type) const;
 

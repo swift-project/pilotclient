@@ -55,6 +55,12 @@ namespace BlackMisc
             //! Type
             DeviceType getType() const { return m_type; }
 
+            //! Input device
+            bool isInputDevice()  const { return this->getType() == InputDevice; }
+
+            //! Output device
+            bool isOutputDevice() const { return this->getType() == OutputDevice; }
+
             //! Valid audio device object?
             bool isValid() const { return !m_deviceName.isEmpty(); }
 

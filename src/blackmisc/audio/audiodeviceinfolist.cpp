@@ -59,6 +59,70 @@ namespace BlackMisc
             return defaultDevice;
         }
 
+        CAudioDeviceInfoList CAudioDeviceInfoList::findByHostName(const QString &hostName) const
+        {
+            if (hostName.isEmpty()) { return {}; }
+
+            CAudioDeviceInfoList devices;
+            for (const CAudioDeviceInfo &d : *this)
+            {
+                if (stringCompare(hostName, d.getHostName(), Qt::CaseInsensitive))
+                {
+                    devices.push_back(d);
+                }
+            }
+            return devices;
+        }
+
+        CAudioDeviceInfo CAudioDeviceInfoList::findRegisteredDevice(const CAudioDeviceInfo &device) const
+        {
+            CAudioDeviceInfoList devices = device.isInputDevice() ? this->getInputDevices() : this->getOutputDevices();
+            if (devices.isEmpty()) { return {}; }
+
+            devices = devices.findByHostName(device.getHostName());
+            if (devices.isEmpty()) { return {}; }
+
+            return devices.findByName(device.getName());
+        }
+
+        void CAudioDeviceInfoList::registerDevice(const CAudioDeviceInfo &device)
+        {
+            if (!device.isValid()) { return; }
+            if (this->isRegisteredDevice(device)) { return; }
+            this->push_back(device);
+        }
+
+        void CAudioDeviceInfoList::registerDevices(const CAudioDeviceInfoList &devices)
+        {
+            for (const CAudioDeviceInfo &device : devices)
+            {
+                this->registerDevice(device);
+            }
+        }
+
+        void CAudioDeviceInfoList::unRegisterDevice(const CAudioDeviceInfo &device)
+        {
+            if (!device.isValid()) { return; }
+            const CAudioDeviceInfo registeredDevice = this->findRegisteredDevice(device);
+            if (registeredDevice.isValid())
+            {
+                this->remove(registeredDevice);
+            }
+        }
+
+        void CAudioDeviceInfoList::unRegisterDevices(const CAudioDeviceInfoList &devices)
+        {
+            for (const CAudioDeviceInfo &device : devices)
+            {
+                this->unRegisterDevice(device);
+            }
+        }
+
+        bool CAudioDeviceInfoList::isRegisteredDevice(const CAudioDeviceInfo &device) const
+        {
+            return this->findRegisteredDevice(device).isValid();
+        }
+
         int CAudioDeviceInfoList::count(CAudioDeviceInfo::DeviceType type) const
         {
             return static_cast<int>(std::count_if(this->begin(), this->end(), [type](const CAudioDeviceInfo & device)

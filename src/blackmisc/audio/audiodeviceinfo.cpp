@@ -30,7 +30,7 @@ namespace BlackMisc
         {
             switch (m)
             {
-            case QAudio::AudioInput: return InputDevice;
+            case QAudio::AudioInput:  return InputDevice;
             case QAudio::AudioOutput: return OutputDevice;
             default: break;
             }
