@@ -56,7 +56,12 @@ namespace BlackCore
                 connect(m_voiceServerPositionTimer, &QTimer::timeout,    this, &CAfvClient::onPositionUpdateTimer);
 
                 // deferred init
-                QTimer::singleShot(1000, this, &CAfvClient::deferredInit);
+                QPointer<CAfvClient> myself(this);
+                QTimer::singleShot(1000, this, [ = ]
+                {
+                    if (!myself) { return; }
+                    this->deferredInit();
+                });
             }
 
             QString CAfvClient::getCallsign() const
@@ -372,6 +377,7 @@ namespace BlackCore
                 }
 
                 // in connection and soundcard only use the enabled tarnsceivers
+                QMutexLocker lock(&m_mutex);
                 if (m_connection) { m_connection->updateTransceivers(callsign, newEnabledTransceivers); }
                 if (m_soundcardSampleProvider) { m_soundcardSampleProvider->updateRadioTransceivers(newEnabledTransceivers); }
             }
@@ -559,7 +565,7 @@ namespace BlackCore
 
                 if (! m_connection->isConnected()) { return; }
 
-                const QString callsign = this->getCallsign();
+                const QString callsign = this->getCallsign(); // threadsafe
                 const auto transmittingTransceivers = this->getTransmittingTransceivers(); // threadsafe
                 if (transmittingTransceivers.size() > 0)
                 {
@@ -592,7 +598,7 @@ namespace BlackCore
                             m_connection->sendToVoiceServer(dto);
                         }
                     }
-                    m_transmitHistory = transmit;
+                    m_transmitHistory = transmit; // threadsafe
                 }
             }
 
@@ -640,6 +646,7 @@ namespace BlackCore
 
             bool CAfvClient::updateVoiceServerUrl(const QString &url)
             {
+                QMutexLocker lock(&m_mutex);
                 if (!m_connection) { return false; }
                 return m_connection->updateVoiceServerUrl(url);
             }
@@ -810,7 +817,7 @@ namespace BlackCore
 
                 QMutexLocker lock(&m_mutex);
                 m_outputVolumeDb = valueDb;
-                m_outputVolume = qPow(10, m_outputVolumeDb / 20.0);
+                m_outputVolume   = qPow(10, m_outputVolumeDb / 20.0);
 
                 if (m_outputSampleProvider)
                 {
