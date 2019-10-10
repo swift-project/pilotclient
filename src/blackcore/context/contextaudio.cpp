@@ -46,11 +46,11 @@ namespace BlackCore
             Q_ASSERT_X(m_voiceClient->owner() == this, Q_FUNC_INFO, "Wrong owner");
             Q_ASSERT_X(!CThreadUtils::isApplicationThread(m_voiceClient->thread()), Q_FUNC_INFO, "Must NOT be in main thread");
 
-            connect(m_voiceClient.get(), &CAfvClient::outputVolumePeakVU,               this, &IContextAudio::outputVolumePeakVU);
-            connect(m_voiceClient.get(), &CAfvClient::inputVolumePeakVU,                this, &IContextAudio::inputVolumePeakVU);
-            connect(m_voiceClient.get(), &CAfvClient::receivingCallsignsChanged,        this, &IContextAudio::receivingCallsignsChanged);
-            connect(m_voiceClient.get(), &CAfvClient::updatedFromOwnAircraftCockpit,    this, &IContextAudio::updatedFromOwnAircraftCockpit);
-            connect(m_voiceClient.data(), &CAfvClient::ptt,                             this, &IContextAudio::ptt);
+            connect(m_voiceClient, &CAfvClient::outputVolumePeakVU,               this, &IContextAudio::outputVolumePeakVU);
+            connect(m_voiceClient, &CAfvClient::inputVolumePeakVU,                this, &IContextAudio::inputVolumePeakVU);
+            connect(m_voiceClient, &CAfvClient::receivingCallsignsChanged,        this, &IContextAudio::receivingCallsignsChanged);
+            connect(m_voiceClient, &CAfvClient::updatedFromOwnAircraftCockpit,    this, &IContextAudio::updatedFromOwnAircraftCockpit);
+            connect(m_voiceClient, &CAfvClient::ptt,                              this, &IContextAudio::ptt);
 
             const CSettings as = m_audioSettings.getThreadLocal();
             this->setVoiceOutputVolume(as.getOutVolume());
@@ -107,7 +107,8 @@ namespace BlackCore
             {
                 m_voiceClient->stopAudio();
                 m_voiceClient->quitAndWait();
-                Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(m_voiceClient.data()), Q_FUNC_INFO, "Needs to be back in current thread");
+                Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(m_voiceClient), Q_FUNC_INFO, "Needs to be back in current thread");
+                m_voiceClient = nullptr;
             }
             QObject::disconnect(this);
         }

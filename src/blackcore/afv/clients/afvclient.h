@@ -63,7 +63,7 @@ namespace BlackCore
                 Q_ENUM(ConnectionStatus)
 
                 //! Ctor
-                CAfvClient(const QString &apiServer, QObject *parent = nullptr);
+                CAfvClient(const QString &apiServer, QObject *owner);
 
                 //! Dtor
                 virtual ~CAfvClient() override { this->stopAudio(); }

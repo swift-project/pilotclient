@@ -260,7 +260,7 @@ namespace BlackCore
             BlackMisc::CSetting<Audio::TOutputDevice> m_outputDeviceSetting { this, &IContextAudio::changeDeviceSettings };
 
             // AFV
-            QScopedPointer<Afv::Clients::CAfvClient> m_voiceClient;
+            Afv::Clients::CAfvClient *m_voiceClient = nullptr;
 
             // Players
             BlackSound::CSelcalPlayer      *m_selcalPlayer = nullptr;

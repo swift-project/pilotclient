@@ -38,8 +38,8 @@ namespace BlackCore
                 return cats;
             }
 
-            CAfvClient::CAfvClient(const QString &apiServer, QObject *parent) :
-                CContinuousWorker(parent, "CAfvClient"),
+            CAfvClient::CAfvClient(const QString &apiServer, QObject *owner) :
+                CContinuousWorker(owner, "CAfvClient"),
                 m_connection(new CClientConnection(apiServer, this)),
                 m_input(new CInput(SampleRate, this)),
                 m_output(new Output(this)),
