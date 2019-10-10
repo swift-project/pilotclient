@@ -78,13 +78,13 @@ namespace BlackCore
 
         void IContext::setDebugEnabled(bool debug)
         {
-            if (this->m_debugEnabled == debug) { return; }
+            if (m_debugEnabled == debug) { return; }
             emit this->changedLogOrDebugSettings();
         }
 
         bool IContext::isDebugEnabled() const
         {
-            return this->m_debugEnabled;
+            return m_debugEnabled;
         }
 
         void IContext::relayBaseClassSignals(const QString &serviceName, QDBusConnection &connection, const QString &objectPath, const QString &interfaceName)
