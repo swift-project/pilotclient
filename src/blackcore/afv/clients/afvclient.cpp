@@ -507,8 +507,8 @@ namespace BlackCore
             int CAfvClient::getNormalizedOutputVolume() const
             {
                 const double db = this->getOutputVolumeDb();
-                const double range = MaxDbIn - MinDbIn;
-                const int i = qRound((db - MinDbIn) / range * 100);
+                const double range = MaxDbOut - MinDbOut;
+                const int i = qRound((db - MinDbOut) / range * 100);
                 return i;
             }
 
@@ -525,8 +525,8 @@ namespace BlackCore
             {
                 if (volume < 0) { volume = 0; }
                 else if (volume > 100) { volume = 100; }
-                const double range = MaxDbIn - MinDbIn;
-                const double dB = MinDbIn + (volume * range / 100.0);
+                const double range = MaxDbOut - MinDbOut;
+                const double dB = MinDbOut + (volume * range / 100.0);
                 this->setOutputVolumeDb(dB);
             }
 
