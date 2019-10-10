@@ -565,6 +565,8 @@ namespace BlackCore
                     return;
                 }
 
+                if (! m_connection->isConnected()) { return; }
+
                 const QString callsign = this->getCallsign();
                 const auto transmittingTransceivers = this->getTransmittingTransceivers(); // threadsafe
                 if (transmittingTransceivers.size() > 0)
