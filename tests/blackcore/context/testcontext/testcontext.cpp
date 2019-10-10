@@ -17,6 +17,10 @@
 #include "test.h"
 #include <QTest>
 
+#ifdef _WIN32
+#include "comdef.h"
+#endif
+
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
@@ -48,6 +52,9 @@ namespace BlackCoreTest
             return;
         }
 
+        // CContextAudioProxy::unitTestRelaySignals() crashes in QAudioDeviceInfo::availableDevices(QAudio::AudioInput)
+        // discussion https://discordapp.com/channels/539048679160676382/623947987822837779/631940817669455903
+        // solved if unit test initializes a QGuiApplication
         CContextAudioProxy::unitTestRelaySignals();
         CContextNetworkProxy::unitTestRelaySignals();
         CContextOwnAircraftProxy::unitTestRelaySignals();
@@ -79,7 +86,18 @@ namespace BlackCoreTest
 //! main
 int main(int argc, char *argv[])
 {
-    QCoreApplication app(argc, argv);
+    // QCoreApplication app(argc, argv);
+    // discussion https://discordapp.com/channels/539048679160676382/623947987822837779/631940817669455903
+    // QDeviceInfo crashes using QCoreApplication
+
+#ifdef _WIN32
+    QGuiApplication app(argc, argv);
+    const HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+    Q_UNUSED(hr)
+#else
+    QCoreApplication app(argc, argv); // using QGuiApplication fails on Jenkins Linux, no display
+#endif
+
     BLACKTEST_INIT(BlackCoreTest::CTestContext)
     CApplication a(CApplicationInfo::UnitTest);
     a.addVatlibOptions();

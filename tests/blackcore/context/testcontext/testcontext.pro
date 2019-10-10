@@ -1,6 +1,6 @@
 load(common_pre)
 
-QT += core dbus network testlib multimedia
+QT += core dbus network testlib multimedia gui
 
 TARGET = testcontext
 CONFIG   -= app_bundle
