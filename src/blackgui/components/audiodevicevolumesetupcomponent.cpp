@@ -9,8 +9,6 @@
 #include "blackgui/components/audiodevicevolumesetupcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-
-#include "blackcore/afv/clients/afvclient.h"
 #include "blackcore/context/contextaudioimpl.h"
 
 #include "blackmisc/audio/audiodeviceinfo.h"
@@ -27,7 +25,6 @@
 #include <QFileDialog>
 
 using namespace BlackCore;
-using namespace BlackCore::Afv::Clients;
 using namespace BlackCore::Afv::Audio;
 using namespace BlackCore::Context;
 using namespace BlackMisc;
@@ -115,16 +112,19 @@ namespace BlackGui
                 c = connect(sGui->getIContextAudio(), &IContextAudio::changedSelectedAudioDevices, this, &CAudioDeviceVolumeSetupComponent::onCurrentAudioDevicesChanged, Qt::QueuedConnection);
                 Q_ASSERT(c);
 
-                CAfvClient *afvClient = CAudioDeviceVolumeSetupComponent::afvClient();
-                if (afvClient)
-                {
-                    connect(afvClient, &CAfvClient::outputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onOutputVU);
-                    connect(afvClient, &CAfvClient::inputVolumePeakVU,  this, &CAudioDeviceVolumeSetupComponent::onInputVU);
-                    connect(afvClient, &CAfvClient::receivingCallsignsChanged,     this, &CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged,    Qt::QueuedConnection);
-                    connect(afvClient, &CAfvClient::updatedFromOwnAircraftCockpit, this, &CAudioDeviceVolumeSetupComponent::onUpdatedClientWithCockpitData, Qt::QueuedConnection);
+                c = connect(sGui->getIContextAudio(), &IContextAudio::outputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onOutputVU, Qt::QueuedConnection);
+                Q_ASSERT(c);
 
-                    this->onUpdatedClientWithCockpitData();
-                }
+                c = connect(sGui->getIContextAudio(), &IContextAudio::inputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onInputVU, Qt::QueuedConnection);
+                Q_ASSERT(c);
+
+                c = connect(sGui->getIContextAudio(), &IContextAudio::receivingCallsignsChanged, this, &CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged, Qt::QueuedConnection);
+                Q_ASSERT(c);
+
+                c = connect(sGui->getIContextAudio(), &IContextAudio::updatedFromOwnAircraftCockpit, this, &CAudioDeviceVolumeSetupComponent::onUpdatedClientWithCockpitData, Qt::QueuedConnection);
+                Q_ASSERT(c);
+
+                this->onUpdatedClientWithCockpitData();
             }
             Q_UNUSED(c)
         }
@@ -193,13 +193,11 @@ namespace BlackGui
 
         void CAudioDeviceVolumeSetupComponent::setTransmitReceiveInUiFromVoiceClient()
         {
-            const CAfvClient *client = this->afvClient();
-            if (!client) { return; }
-            const bool com1Enabled = client->isEnabledComUnit(CComSystem::Com1);
-            const bool com2Enabled = client->isEnabledComUnit(CComSystem::Com2);
+            const bool com1Enabled = sGui->getIContextAudio()->isEnabledComUnit(CComSystem::Com1);
+            const bool com2Enabled = sGui->getIContextAudio()->isEnabledComUnit(CComSystem::Com2);
 
-            const bool com1Tx = com1Enabled && client->isTransmittingdComUnit(CComSystem::Com1);
-            const bool com2Tx = com2Enabled && client->isTransmittingdComUnit(CComSystem::Com2);
+            const bool com1Tx = com1Enabled && sGui->getIContextAudio()->isTransmittingdComUnit(CComSystem::Com1);
+            const bool com2Tx = com2Enabled && sGui->getIContextAudio()->isTransmittingdComUnit(CComSystem::Com2);
 
             // we do not have receiving
             const bool com1Rx = com1Enabled;
@@ -296,13 +294,6 @@ namespace BlackGui
             if (!hasAudio()) { return CAudioDeviceInfo(); }
             const CAudioDeviceInfoList devices = sGui->getIContextAudio()->getAudioOutputDevices();
             return devices.findByName(ui->cb_SetupAudioOutputDevice->currentText());
-        }
-
-        CAfvClient *CAudioDeviceVolumeSetupComponent::afvClient()
-        {
-            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return nullptr; }
-            if (!sGui->getIContextAudio()->isUsingImplementingObject()) { return nullptr; }
-            return sGui->getCoreFacade()->getCContextAudio()->voiceClient();
         }
 
         void CAudioDeviceVolumeSetupComponent::onAudioDeviceSelected(int index)

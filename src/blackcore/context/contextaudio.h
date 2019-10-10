@@ -17,6 +17,7 @@
 #include "blackcore/corefacade.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/blackcoreexport.h"
+#include "blackcore/afv/audio/receiversampleprovider.h"
 #include "blacksound/selcalplayer.h"
 #include "blacksound/notificationplayer.h"
 #include "blackmisc/macos/microphoneaccess.h"
@@ -94,9 +95,6 @@ namespace BlackCore
 
             // -------- parts which can run in core and GUI, referring to local voice client ------------
 
-            //! Reference to voice client
-            BlackCore::Afv::Clients::CAfvClient *voiceClient() { return m_voiceClient.data(); }
-
             //! Audio devices
             //! @{
             BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const;
@@ -144,6 +142,9 @@ namespace BlackCore
             //! Audio runs where
             const BlackMisc::CIdentifier &audioRunsWhere() const;
 
+            bool isEnabledComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
+            bool isTransmittingdComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
+
             // -------- parts which can run in core and GUI, referring to local voice client ------------
 
         signals:
@@ -164,6 +165,16 @@ namespace BlackCore
 
             //! Changed slection of audio devices
             void changedSelectedAudioDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
+
+            //! VU levels @{
+            void inputVolumePeakVU(double value);
+            void outputVolumePeakVU(double value);
+            //! @}
+
+            void receivingCallsignsChanged(const BlackCore::Afv::Audio::TransceiverReceivingCallsignsChangedArgs &args);
+
+            //! Client updated from own aicraft data
+            void updatedFromOwnAircraftCockpit();
 
             // -------- local settings, not DBus relayed -------
 

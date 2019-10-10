@@ -168,25 +168,17 @@ namespace BlackCore
                 this->setNormalizedOutputVolume(mute ? 0 : 50);
             }
 
-            bool CAfvClient::restartWithNewDevices(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice)
+            void CAfvClient::restartWithNewDevices(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice)
             {
-                if (!m_isStarted)
-                {
-                    this->startAudio(inputDevice, outputDevice, allTransceiverIds());
-                    return true;
-                }
-
                 if (QThread::currentThread() != this->thread())
                 {
                     // Method needs to be executed in the object thread since it will create new QObject children
                     QPointer<CAfvClient> myself(this);
                     QMetaObject::invokeMethod(this, [ = ]() { if (myself) restartWithNewDevices(inputDevice, outputDevice); });
-                    return true;
                 }
 
-                this->stopAudio();
+                if (m_isStarted) { this->stopAudio(); }
                 this->startAudio(inputDevice, outputDevice, allTransceiverIds());
-                return true;
             }
 
             void CAfvClient::startAudio(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice, const QVector<quint16> &transceiverIDs)

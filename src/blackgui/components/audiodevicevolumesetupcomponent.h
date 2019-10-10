@@ -100,6 +100,7 @@ namespace BlackGui
             void onReloadDevices();
             void onResetVolumeIn();
             void onResetVolumeOut();
+            // TODO: Move TransceiverReceivingCallsignsChangedArgs to Blackmisc
             void onReceivingCallsignsChanged(const BlackCore::Afv::Audio::TransceiverReceivingCallsignsChangedArgs &args);
             void onUpdatedClientWithCockpitData();
 
@@ -110,8 +111,6 @@ namespace BlackGui
             void setTransmitReceiveInUi(bool tx1, bool rec1, bool tx2, bool rec2);
             void setTransmitReceiveInUiFromVoiceClient();
             //! @}
-
-            static BlackCore::Afv::Clients::CAfvClient *afvClient();
 
             QScopedPointer<Ui::CAudioDeviceVolumeSetupComponent> ui;
             BlackMisc::CDigestSignal m_volumeSliderChanged { this, &CAudioDeviceVolumeSetupComponent::saveVolumes, 1000, 10 };

@@ -26,6 +26,9 @@ namespace BlackCore
 
             //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("Input device"); return name; }
+
+            //! \copydoc BlackMisc::TSettingTrait::defaultValue
+            static const QString &defaultValue() { static const QString device("default"); return device; }
         };
 
         //! Audio input device settings
@@ -36,6 +39,9 @@ namespace BlackCore
 
             //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("Output device"); return name; }
+
+            //! \copydoc BlackMisc::TSettingTrait::defaultValue
+            static const QString &defaultValue() { static const QString device("default"); return device; }
         };
     } // ns
 } // ns
