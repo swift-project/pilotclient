@@ -39,9 +39,6 @@
 
 // clazy:excludeall=const-signal-or-slot
 
-class QDBusConnection;
-
-namespace BlackMisc { class CDBusServer; }
 
 //! \addtogroup dbus
 //! @{
@@ -54,6 +51,9 @@ namespace BlackMisc { class CDBusServer; }
 
 //! @}
 
+class QDBusConnection;
+
+namespace BlackMisc { class CDBusServer; }
 namespace BlackCore
 {
     namespace Afv { namespace Clients { class CAfvClient; }}
