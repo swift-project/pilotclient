@@ -27,7 +27,7 @@ namespace BlackCore
     {
         CContextAudioProxy::CContextAudioProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextAudio(mode, runtime), m_dBusInterface(nullptr)
         {
-            this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(
+            this->m_dBusInterface = new CGenericDBusInterface(
                 serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(), connection, this);
             this->relaySignals(serviceName, connection);
         }
@@ -38,6 +38,23 @@ namespace BlackCore
             QDBusConnection con = QDBusConnection::sessionBus();
             CContextAudioProxy c(CDBusServer::coreServiceName(), con, CCoreFacadeConfig::Remote, nullptr);
             Q_UNUSED(c)
+        }
+
+        void CContextAudioProxy::registerDevices(const CAudioDeviceInfoList &devices)
+        {
+            if (devices.isEmpty()) { return; }
+            m_dBusInterface->callDBus(QLatin1String("registerDevices"));
+        }
+
+        void CContextAudioProxy::unRegisterDevices(const CAudioDeviceInfoList &devices)
+        {
+            if (devices.isEmpty()) { return; }
+            m_dBusInterface->callDBus(QLatin1String("unRegisterDevices"));
+        }
+
+        CAudioDeviceInfoList CContextAudioProxy::getRegisteredDevices() const
+        {
+            return m_dBusInterface->callDBusRet<BlackMisc::Audio::CAudioDeviceInfoList>(QLatin1String("getRegisteredDevices"));
         }
 
         void CContextAudioProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
@@ -51,14 +68,6 @@ namespace BlackCore
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
                                    "changedAudioDevices", this, SIGNAL(changedAudioDevices(BlackMisc::Audio::CAudioDeviceInfoList)));
-            Q_ASSERT(s);
-            s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
-                                   "changedSelectedAudioDevices", this, SIGNAL(changedSelectedAudioDevices(BlackMisc::Audio::CAudioDeviceInfoList)));
-            Q_ASSERT(s);
-            s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
-                                   "ptt", this, SIGNAL(ptt(bool, BlackMisc::Audio::PTTCOM, BlackMisc::CIdentifier)));
-            Q_ASSERT(s);
-            Q_UNUSED(s)
             **/
 
             this->relayBaseClassSignals(serviceName, connection, IContextAudio::ObjectPath(), IContextAudio::InterfaceName());

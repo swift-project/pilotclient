@@ -58,10 +58,13 @@ namespace BlackCore
             static void unitTestRelaySignals();
 
         public slots:
-            // interface overrides
+            //! All Dbus xsinterface overrides
             //! \publicsection
             //! @{
-            //  ------ functions GO HERE -------
+            //! Register a device on a machine (for core/GUI it will return all known devices on all machines)
+            virtual void registerDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;
+            virtual void unRegisterDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;
+            virtual BlackMisc::Audio::CAudioDeviceInfoList getRegisteredDevices() const override;
             //! @}
 
         private:

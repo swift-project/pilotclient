@@ -45,7 +45,9 @@ namespace BlackCore
             // Interface implementations
             //! \publicsection
             //! @{
-            //  ---- FUNCTIONS GO HERE ----
+            virtual void registerDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;
+            virtual void unRegisterDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;
+            virtual BlackMisc::Audio::CAudioDeviceInfoList getRegisteredDevices() const override;
             //! @}
 
         protected:
@@ -54,6 +56,9 @@ namespace BlackCore
 
             //! Register myself in DBus
             CContextAudio *registerWithDBus(BlackMisc::CDBusServer *server);
+
+        private:
+            BlackMisc::Audio::CAudioDeviceInfoList m_registeredDevices;
         };
     } // namespace
 } // namespace

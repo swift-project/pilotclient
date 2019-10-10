@@ -15,6 +15,7 @@
 
 
 using namespace BlackMisc;
+using namespace BlackMisc::Audio;
 
 namespace BlackCore
 {
@@ -29,6 +30,22 @@ namespace BlackCore
             if (!server || m_mode != CCoreFacadeConfig::LocalInDBusServer) { return this; }
             server->addObject(IContextAudio::ObjectPath(), this);
             return this;
+        }
+
+        void CContextAudio::registerDevices(const CAudioDeviceInfoList &devices)
+        {
+            if (devices.isEmpty()) { return; }
+            m_registeredDevices.registerDevices(devices);
+        }
+
+        void CContextAudio::unRegisterDevices(const CAudioDeviceInfoList &devices)
+        {
+            m_registeredDevices.unRegisterDevices(devices);
+        }
+
+        CAudioDeviceInfoList CContextAudio::getRegisteredDevices() const
+        {
+            return m_registeredDevices;
         }
 
     } // namespace

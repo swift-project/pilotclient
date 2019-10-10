@@ -190,6 +190,15 @@ namespace BlackCore
             //! \copydoc IContextAudio::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
 
+            //! Register a device on a machine (for core/GUI it will return all known devices on all machines)
+            virtual void registerDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) = 0;
+
+            //! Unregister devices
+            virtual void unRegisterDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) = 0;
+
+            //! All registered devices
+            virtual BlackMisc::Audio::CAudioDeviceInfoList getRegisteredDevices() const = 0;
+
             // ------------- DBus ---------------
 
         private:
