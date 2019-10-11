@@ -75,7 +75,7 @@ namespace chunkware_simple
         // runtime variables
         double envdB_;          // over-threshold envelope (dB)
 
-        double makeUpGain_;
+        double makeUpGain_ = 1.0;
 
     };  // end SimpleComp class
 
@@ -86,7 +86,7 @@ namespace chunkware_simple
     {
     public:
         SimpleCompRms();
-        virtual ~SimpleCompRms() {}
+        virtual ~SimpleCompRms() override {}
 
         // sample rate
         virtual void setSampleRate(double sampleRate) override;
