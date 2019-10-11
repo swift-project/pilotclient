@@ -15,15 +15,10 @@ namespace BlackCore
 {
     namespace Afv
     {
-        constexpr double MilesToMeters = 1609.34;
-        constexpr double MetersToFeet = 3.28084;
-        constexpr double FeetToMeters = 0.3048;
-        constexpr double NauticalMilesToMeters = 1852;
-        constexpr double MetersToNauticalMiles = 0.000539957;
-        constexpr double RadToDeg = 57.295779513082320876798154814105;
-        constexpr double DegToRad = 0.01745329251994329576923690768489;
-
+        //! Audio channel count (mono)
         constexpr int c_channelCount = 1;
+
+        //! Sample rate [Hz]
         constexpr int c_sampleRate = 48000;
     } // ns
 } // ns
