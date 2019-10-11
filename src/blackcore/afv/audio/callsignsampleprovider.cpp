@@ -187,10 +187,11 @@ namespace BlackCore
                 {
                     if (m_receiver->getFrequencyHz() < 30000000)
                     {
+                        /**
                         double crackleFactor = (((qExp(m_distanceRatio) * qPow(m_distanceRatio, -4.0)) / 350.0) - 0.00776652);
-
                         if (crackleFactor < 0.0f)  { crackleFactor = 0.00f; }
                         if (crackleFactor > 0.20f) { crackleFactor = 0.20f; }
+                        **/
 
                         m_hfWhiteNoise->setGain(m_hfWhiteNoiseGainMin);
                         m_acBusNoise->setGain(m_acBusGainMin + 0.001f);

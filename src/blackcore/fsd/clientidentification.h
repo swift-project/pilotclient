@@ -12,6 +12,7 @@
 #define BLACKCORE_FSD_CLIENTIDENTIFICATION_H
 
 #include "messagebase.h"
+#include "blackconfig/buildconfig.h"
 
 namespace BlackCore
 {
@@ -34,8 +35,8 @@ namespace BlackCore
 
             std::uint16_t m_clientId;
             QString m_clientName;
-            int m_clientVersionMajor;
-            int m_clientVersionMinor;
+            int m_clientVersionMajor = BlackConfig::CBuildConfig::getVersion().majorVersion();
+            int m_clientVersionMinor = BlackConfig::CBuildConfig::getVersion().minorVersion();
             QString m_userCid;
             QString m_sysUid;
             QString m_initialChallenge;

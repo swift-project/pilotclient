@@ -156,14 +156,11 @@ namespace BlackCore
                     samples = convertFromStereoToMono(samples);
                 }
 
-                int value = 0;
                 for (qint16 &sample : samples)
                 {
-                    value = qRound(sample * m_volume);
-                    if (value > std::numeric_limits<qint16>::max())
-                        value = std::numeric_limits<qint16>::max();
-                    if (value < std::numeric_limits<qint16>::min())
-                        value = std::numeric_limits<qint16>::min();
+                    int value = qRound(sample * m_volume);
+                    if (value > std::numeric_limits<qint16>::max()) value = std::numeric_limits<qint16>::max();
+                    if (value < std::numeric_limits<qint16>::min()) value = std::numeric_limits<qint16>::min();
                     sample = static_cast<qint16>(value);
 
                     qint16 sampleInput = qAbs(sample);

@@ -21,20 +21,19 @@ namespace BlackSound
 {
     namespace SampleProvider
     {
-        CResourceSound::CResourceSound()
+        CResourceSound::CResourceSound() : m_data(new CResourceSoundData)
         {
-            m_data = new CResourceSoundData;
+            // void
         }
 
-        CResourceSound::CResourceSound(const QString &audioFileName)
+        CResourceSound::CResourceSound(const QString &audioFileName) : m_data(new CResourceSoundData)
         {
-            m_data = new CResourceSoundData;
             m_data->fileName = audioFileName;
         }
 
         bool CResourceSound::load()
         {
-            if (m_data->fileName.isEmpty()) { return false; }
+            if (!m_data || m_data->fileName.isEmpty()) { return false; }
 
             CWavFile wavFile;
             m_data->samples.clear();

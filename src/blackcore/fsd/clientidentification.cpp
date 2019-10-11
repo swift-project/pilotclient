@@ -18,7 +18,7 @@ namespace BlackCore
         { }
 
         ClientIdentification::ClientIdentification(const QString &sender, quint16 clientId, const QString &clientName, int clientVersionMajor,
-                                                   int clientVersionMinor, const QString &userCid, const QString &sysUid, const QString &initialChallenge)
+                int clientVersionMinor, const QString &userCid, const QString &sysUid, const QString &initialChallenge)
             : MessageBase(sender, "SERVER"),
               m_clientId(clientId), m_clientName(clientName),
               m_clientVersionMajor(clientVersionMajor), m_clientVersionMinor(clientVersionMinor),
@@ -47,9 +47,10 @@ namespace BlackCore
             {
                 BlackMisc::CLogMessage(static_cast<ClientIdentification *>(nullptr)).warning(u"Wrong number of arguments.");
                 return {};
-            };
+            }
+
             ClientIdentification packet(tokens[0], tokens[2].toUShort(nullptr, 16), tokens[3], tokens[4].toInt(), tokens[5].toInt(),
-                    tokens[6], tokens[7], tokens.size() > 8 ? tokens[8] : QString());
+                                        tokens[6], tokens[7], tokens.size() > 8 ? tokens[8] : QString());
             return packet;
         }
     }

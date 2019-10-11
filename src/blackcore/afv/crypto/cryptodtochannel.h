@@ -31,10 +31,10 @@ namespace BlackCore
             {
             public:
                 //! Ctor
-                CCryptoDtoChannel(QString channelTag, const QByteArray &aeadReceiveKey, const QByteArray &aeadTransmitKey, int receiveSequenceHistorySize = 10);
+                CCryptoDtoChannel(const QString &channelTag, const QByteArray &aeadReceiveKey, const QByteArray &aeadTransmitKey, int receiveSequenceHistorySize = 10);
 
                 //! Ctor
-                CCryptoDtoChannel(CryptoDtoChannelConfigDto channelConfig, int receiveSequenceHistorySize = 10);
+                CCryptoDtoChannel(const CryptoDtoChannelConfigDto &channelConfig, int receiveSequenceHistorySize = 10);
 
                 //! Transmit key @{
                 QByteArray getTransmitKey(CryptoDtoMode mode);

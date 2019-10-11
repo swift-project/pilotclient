@@ -7,6 +7,9 @@
  */
 
 #include "cryptodtochannel.h"
+#include "blackmisc/verify.h"
+
+using namespace BlackMisc;
 
 namespace BlackCore
 {
@@ -14,26 +17,18 @@ namespace BlackCore
     {
         namespace Crypto
         {
-            CCryptoDtoChannel::CCryptoDtoChannel(QString channelTag, const QByteArray &aeadReceiveKey, const QByteArray &aeadTransmitKey, int receiveSequenceHistorySize)
-            {
-                m_channelTag      = channelTag;
-                m_aeadReceiveKey  = aeadReceiveKey;
-                m_aeadTransmitKey = aeadTransmitKey;
+            CCryptoDtoChannel::CCryptoDtoChannel(const QString &channelTag, const QByteArray &aeadReceiveKey, const QByteArray &aeadTransmitKey, int receiveSequenceHistorySize):
+                m_aeadTransmitKey(aeadTransmitKey), m_aeadReceiveKey(aeadReceiveKey), m_receiveSequenceSizeMaxSize(receiveSequenceHistorySize), m_channelTag(channelTag)
 
-                m_receiveSequenceSizeMaxSize = receiveSequenceHistorySize;
+            {
                 if (m_receiveSequenceSizeMaxSize < 1) { m_receiveSequenceSizeMaxSize = 1; }
                 m_receiveSequenceHistory.fill(0, m_receiveSequenceSizeMaxSize);
                 m_receiveSequenceHistoryDepth = 0;
             }
 
-            CCryptoDtoChannel::CCryptoDtoChannel(CryptoDtoChannelConfigDto channelConfig, int receiveSequenceHistorySize)
+            CCryptoDtoChannel::CCryptoDtoChannel(const CryptoDtoChannelConfigDto &channelConfig, int receiveSequenceHistorySize) :
+                m_aeadTransmitKey(channelConfig.aeadTransmitKey), m_aeadReceiveKey(channelConfig.aeadReceiveKey), m_receiveSequenceSizeMaxSize(receiveSequenceHistorySize), m_hmacKey(channelConfig.hmacKey), m_channelTag(channelConfig.channelTag)
             {
-                m_channelTag      = channelConfig.channelTag;
-                m_aeadReceiveKey  = channelConfig.aeadReceiveKey;
-                m_aeadTransmitKey = channelConfig.aeadTransmitKey;
-                m_hmacKey         = channelConfig.hmacKey;
-
-                m_receiveSequenceSizeMaxSize = receiveSequenceHistorySize;
                 if (m_receiveSequenceSizeMaxSize < 1) { m_receiveSequenceSizeMaxSize = 1; }
                 m_receiveSequenceHistory.fill(0, m_receiveSequenceSizeMaxSize);
                 m_receiveSequenceHistoryDepth = 0;
@@ -46,7 +41,8 @@ namespace BlackCore
                 case CryptoDtoMode::AEAD_ChaCha20Poly1305: return m_aeadTransmitKey;
                 case CryptoDtoMode::Undefined:
                 case CryptoDtoMode::None:
-                    qFatal("GetTransmitKey called with wrong argument.");
+                    BLACK_VERIFY_X(false, Q_FUNC_INFO, "GetTransmitKey called with wrong argument.");
+                    break;
                 }
 
                 return {};
@@ -63,7 +59,8 @@ namespace BlackCore
                 case CryptoDtoMode::AEAD_ChaCha20Poly1305: return m_aeadTransmitKey;
                 case CryptoDtoMode::Undefined:
                 case CryptoDtoMode::None:
-                    qFatal("GetTransmitKey called with wrong argument.");
+                    BLACK_VERIFY_X(false, Q_FUNC_INFO, "GetTransmitKey called with wrong argument.");
+                    break;
                 }
 
                 return {};
@@ -81,7 +78,8 @@ namespace BlackCore
                 case CryptoDtoMode::AEAD_ChaCha20Poly1305: return m_aeadReceiveKey;
                 case CryptoDtoMode::Undefined:
                 case CryptoDtoMode::None:
-                    qFatal("getReceiveKey called with wrong argument.");
+                    BLACK_VERIFY_X(false, Q_FUNC_INFO, "GetReceiveKey called with wrong argument.");
+                    break;
                 }
 
                 return {};

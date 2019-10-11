@@ -27,8 +27,8 @@ namespace BlackSound
         //! CResourceSound shared data
         struct CResourceSoundData : public QSharedData
         {
-            QString fileName; //!< file name
-            bool isLoaded = false; //!< is audio loaded
+            QString fileName;       //!< file name
+            bool isLoaded = false;  //!< is audio loaded
             QVector<float> samples; //!< audio samples
         };
 

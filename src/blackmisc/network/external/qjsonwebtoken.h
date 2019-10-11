@@ -332,7 +332,7 @@ public:
     \sa QJsonWebToken::getRandLength()
 
     */
-    void          setRandLength(const int &intRandLength);
+    void          setRandLength(int intRandLength);
 
     /**
 
@@ -397,8 +397,8 @@ private:
     QString       m_strSecret;
     QString       m_strAlgorithm;
 
-    int           m_intRandLength  ;
-    QString       m_strRandAlphanum;
+    int           m_intRandLength = 10;
+    QString       m_strRandAlphanum = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     // helpers
     QByteArray    m_byteAllData;

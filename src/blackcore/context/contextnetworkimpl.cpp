@@ -879,7 +879,6 @@ namespace BlackCore
         {
             if (!m_fsdClient) { return {}; }
             return m_fsdClient->getPresetValues();
-            return {};
         }
 
         CAtcStation CContextNetwork::getOnlineStationForCallsign(const CCallsign &callsign) const
