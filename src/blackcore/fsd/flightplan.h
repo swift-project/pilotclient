@@ -18,18 +18,23 @@ namespace BlackCore
 {
     namespace Fsd
     {
+        //! FSD Message: flightplan
         class BLACKCORE_EXPORT FlightPlan : public MessageBase
         {
         public:
+            //! Constructor
             FlightPlan(const QString &sender, const QString &receiver, FlightType flightType, const QString &aircraftIcaoType,
                        int trueCruisingSpeed, const QString &depAirport, int estimatedDepTime, int actualDepTime, const QString &cruiseAlt,
                        const QString &destAirport, int hoursEnroute, int minutesEnroute, int fuelAvailHours, int fuelAvailMinutes,
                        const QString &altAirport, const QString &remarks, const QString &route);
 
-            virtual ~FlightPlan() {}
-
+            //! Message converted to tokens
             QStringList toTokens() const;
+
+            //! Construct from tokens
             static FlightPlan fromTokens(const QStringList &tokens);
+
+            //! PDU identifier
             static QString pdu() { return "$FP"; }
 
             FlightType m_flightType;
@@ -52,6 +57,7 @@ namespace BlackCore
             FlightPlan();
         };
 
+        //! Equal to operator
         inline bool operator==(const FlightPlan &lhs, const FlightPlan &rhs)
         {
             return  lhs.sender() == rhs.sender() &&
@@ -73,6 +79,7 @@ namespace BlackCore
                     lhs.m_route == rhs.m_route;
         }
 
+        //! Not equal to operator
         inline bool operator!=(const FlightPlan &lhs, const FlightPlan &rhs)
         {
             return !(lhs == rhs);

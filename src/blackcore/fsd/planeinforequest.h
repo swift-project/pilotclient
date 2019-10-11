@@ -17,6 +17,8 @@ namespace BlackCore
 {
     namespace Fsd
     {
+        //! Request to send plane information.
+        //! Shall be answered by a PlaneInformation message.
         class BLACKCORE_EXPORT PlaneInfoRequest : public MessageBase
         {
         public:
@@ -24,20 +26,27 @@ namespace BlackCore
 
             virtual ~PlaneInfoRequest() {}
 
+            //! Message converted to tokens
             QStringList toTokens() const;
+
+            //! Construct from tokens
             static PlaneInfoRequest fromTokens(const QStringList &tokens);
+
+            //! PDU identifier
             static QString pdu() { return QStringLiteral("#SB"); }
 
         private:
             PlaneInfoRequest();
         };
 
+        //! Equal to operator
         inline bool operator==(const PlaneInfoRequest &lhs, const PlaneInfoRequest &rhs)
         {
             return  lhs.sender() == rhs.sender() &&
                     lhs.receiver() == rhs.receiver();
         }
 
+        //! Not equal to operator
         inline bool operator!=(const PlaneInfoRequest &lhs, const PlaneInfoRequest &rhs)
         {
             return !(lhs == rhs);

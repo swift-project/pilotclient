@@ -18,17 +18,22 @@ namespace BlackCore
 {
     namespace Fsd
     {
+        //! FSD Message Server Error
         class BLACKCORE_EXPORT ServerError : public MessageBase
         {
         public:
+            //! Constructor
             ServerError(const QString &sender, const QString &receiver, ServerErrorCode errorCode, const QString &causingParameter, const QString &description);
 
-            virtual ~ServerError() {}
+            bool isFatalError() const;
 
-            bool isFatalError () const;
-
+            //! Message converted to tokens
             QStringList toTokens() const;
+
+            //! Construct from tokens
             static ServerError fromTokens(const QStringList &tokens);
+
+            //! PDU identifier
             static QString pdu() { return "$ER"; }
 
             ServerErrorCode m_errorNumber;
@@ -39,6 +44,7 @@ namespace BlackCore
             ServerError();
         };
 
+        //! Equal to operator
         inline bool operator==(const ServerError &lhs, const ServerError &rhs)
         {
             return  lhs.sender() == rhs.sender() &&
@@ -48,6 +54,7 @@ namespace BlackCore
                     lhs.m_description == rhs.m_description;
         }
 
+        //! Not equal to operator
         inline bool operator!=(const ServerError &lhs, const ServerError &rhs)
         {
             return !(lhs == rhs);

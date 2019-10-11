@@ -21,6 +21,7 @@ namespace BlackCore
         class BLACKCORE_EXPORT PlaneInformationFsinn : public MessageBase
         {
         public:
+            //! Constructor
             PlaneInformationFsinn(const QString &sender,
                                   const QString &receiver,
                                   const QString &airlineIcao,
@@ -28,10 +29,13 @@ namespace BlackCore
                                   const QString &aircraftIcaoCombinedType,
                                   const QString &sendMModelString);
 
-            virtual ~PlaneInformationFsinn() {}
-
+            //! Message converted to tokens
             QStringList toTokens() const;
+
+            //! Construct from tokens
             static PlaneInformationFsinn fromTokens(const QStringList &tokens);
+
+            //! PDU identifier
             static QString pdu() { return "#SB"; }
 
             QString m_airlineIcao;
@@ -43,6 +47,7 @@ namespace BlackCore
             PlaneInformationFsinn();
         };
 
+        //! Equal to operator
         inline bool operator==(const PlaneInformationFsinn &lhs, const PlaneInformationFsinn &rhs)
         {
             return  lhs.sender() == rhs.sender() &&
@@ -53,6 +58,7 @@ namespace BlackCore
                     lhs.m_sendMModelString == rhs.m_sendMModelString;
         }
 
+        //! Not equal to operator
         inline bool operator!=(const PlaneInformationFsinn &lhs, const PlaneInformationFsinn &rhs)
         {
             return !(lhs == rhs);

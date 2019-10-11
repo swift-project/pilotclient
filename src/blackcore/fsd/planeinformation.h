@@ -22,12 +22,16 @@ namespace BlackCore
         class BLACKCORE_EXPORT PlaneInformation : public MessageBase
         {
         public:
+            //! Constructor
             PlaneInformation(const QString &sender, const QString &receiver, const QString &aircraft, const QString &airline, const QString &livery);
 
-            virtual ~PlaneInformation() {}
-
+            //! Message converted to tokens
             QStringList toTokens() const;
+
+            //! Construct from tokens
             static PlaneInformation fromTokens(const QStringList &tokens);
+
+            //! PDU identifier
             static QString pdu() { return "#SB"; }
 
             QString m_aircraft;
@@ -39,6 +43,7 @@ namespace BlackCore
             PlaneInformation();
         };
 
+        //! Equal to operator
         inline bool operator==(const PlaneInformation &lhs, const PlaneInformation &rhs)
         {
             return  lhs.sender() == rhs.sender() &&
@@ -48,6 +53,7 @@ namespace BlackCore
                     lhs.m_livery == rhs.m_livery;
         }
 
+        //! Not equal to operator
         inline bool operator!=(const PlaneInformation &lhs, const PlaneInformation &rhs)
         {
             return !(lhs == rhs);

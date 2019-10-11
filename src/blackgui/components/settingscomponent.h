@@ -55,7 +55,7 @@ namespace BlackGui
             //! Destructor
             virtual ~CSettingsComponent();
 
-            //! \copydoc CAudioSetupComponent::playNotificationSounds
+            //! \copydoc CAudioNotificationComponent::playNotificationSounds
             bool playNotificationSounds() const;
 
             //! Settings for given simulator

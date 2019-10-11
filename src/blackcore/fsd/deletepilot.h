@@ -22,11 +22,16 @@ namespace BlackCore
         class BLACKCORE_EXPORT DeletePilot : public MessageBase
         {
         public:
+            //! Constructor
             DeletePilot(const QString &sender, const QString &cid);
-            virtual ~DeletePilot() {}
 
+            //! Message converted to tokens
             QStringList toTokens() const;
+
+            //! Construct from tokens
             static DeletePilot fromTokens(const QStringList &tokens);
+
+            //! PDU identifier
             static QString pdu() { return QStringLiteral("#DP"); }
 
             QString m_cid;
@@ -35,14 +40,16 @@ namespace BlackCore
             DeletePilot();
         };
 
-        inline bool operator==(const DeletePilot& lhs, const DeletePilot& rhs)
+        //! Equal to operator
+        inline bool operator==(const DeletePilot &lhs, const DeletePilot &rhs)
         {
             return  lhs.sender() == rhs.sender() &&
                     lhs.receiver() == rhs.receiver() &&
                     lhs.m_cid == rhs.m_cid;
         }
 
-        inline bool operator!=(const DeletePilot& lhs, const DeletePilot& rhs)
+        //! Not equal to operator
+        inline bool operator!=(const DeletePilot &lhs, const DeletePilot &rhs)
         {
             return !(lhs == rhs);
         }

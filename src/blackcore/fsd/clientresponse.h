@@ -22,14 +22,18 @@ namespace BlackCore
         class BLACKCORE_EXPORT ClientResponse : public MessageBase
         {
         public:
+            //! Constructor
             ClientResponse(const QString &sender, const QString &receiver, ClientQueryType queryType, const QStringList &responseData);
-
-            virtual ~ClientResponse() {}
 
             bool isUnknownQuery() const { return m_queryType == ClientQueryType::Unknown; }
 
+            //! Message converted to tokens
             QStringList toTokens() const;
+
+            //! Construct from tokens
             static ClientResponse fromTokens(const QStringList &tokens);
+
+            //! PDU identifier
             static QString pdu() { return "$CR"; }
 
             ClientQueryType m_queryType;
@@ -39,6 +43,7 @@ namespace BlackCore
             ClientResponse();
         };
 
+        //! Equal to operator
         inline bool operator==(const ClientResponse &lhs, const ClientResponse &rhs)
         {
             return  lhs.sender() == rhs.sender() &&
@@ -47,6 +52,7 @@ namespace BlackCore
                     lhs.m_responseData == rhs.m_responseData;
         }
 
+        //! Not equal to operator
         inline bool operator!=(const ClientResponse &lhs, const ClientResponse &rhs)
         {
             return !(lhs == rhs);

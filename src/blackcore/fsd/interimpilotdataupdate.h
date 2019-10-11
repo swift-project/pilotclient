@@ -17,18 +17,22 @@ namespace BlackCore
 {
     namespace Fsd
     {
+        //! Interim pilot data update sent to specific receivers faster than
+        //! the standard broadcast update.
         class BLACKCORE_EXPORT InterimPilotDataUpdate : public MessageBase
         {
         public:
-
+            //! Constructor
             InterimPilotDataUpdate(const QString &sender, const QString &receiver, double latitude, double longitude, int altitudeTrue,
                                    int groundSpeed, double pitch, double bank, double heading, bool onGround);
 
-            virtual ~InterimPilotDataUpdate() {}
-
+            //! Message converted to tokens
             QStringList toTokens() const;
 
+            //! Construct from tokens
             static InterimPilotDataUpdate fromTokens(const QStringList &tokens);
+
+            //! PDU identifier
             static QString pdu() { return "#SB"; }
 
             double m_latitude = 0.0;
@@ -44,6 +48,7 @@ namespace BlackCore
             InterimPilotDataUpdate();
         };
 
+        //! Equal to operator
         inline bool operator==(const InterimPilotDataUpdate &lhs, const InterimPilotDataUpdate &rhs)
         {
             return  lhs.sender() == rhs.sender() &&
@@ -57,6 +62,7 @@ namespace BlackCore
                     lhs.m_onGround == rhs.m_onGround;
         }
 
+        //! Not equal to operator
         inline bool operator!=(const InterimPilotDataUpdate &lhs, const InterimPilotDataUpdate &rhs)
         {
             return !(lhs == rhs);

@@ -22,12 +22,16 @@ namespace BlackCore
         class BLACKCORE_EXPORT AuthResponse : public MessageBase
         {
         public:
+            //! Constructor
             AuthResponse(const QString &sender, const QString &receiver, const QString &response);
 
-            virtual ~AuthResponse() {}
-
+            //! Message converted to tokens
             QStringList toTokens() const;
+
+            //! Construct from tokens
             static AuthResponse fromTokens(const QStringList &tokens);
+
+            //! PDU identifier
             static QString pdu() { return QStringLiteral("$ZR"); }
 
             QString m_response;
@@ -36,6 +40,7 @@ namespace BlackCore
             AuthResponse();
         };
 
+        //! Equal to operator
         inline bool operator==(const AuthResponse &lhs, const AuthResponse &rhs)
         {
             return  lhs.sender() == rhs.sender() &&
@@ -43,6 +48,7 @@ namespace BlackCore
                     lhs.m_response == rhs.m_response;
         }
 
+        //! Not equal to operator
         inline bool operator!=(const AuthResponse &lhs, const AuthResponse &rhs)
         {
             return !(lhs == rhs);

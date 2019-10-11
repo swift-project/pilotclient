@@ -17,15 +17,21 @@ namespace BlackCore
 {
     namespace Fsd
     {
+        //! Kill request initiated from the server or supervisor.
+        //! Client needs to disconnect immediatly upon receiving it.
         class BLACKCORE_EXPORT KillRequest : public MessageBase
         {
         public:
+            //! Constructor
             KillRequest(const QString &sender, const QString &receiver, const QString &reason);
 
-            virtual ~KillRequest() {}
-
+            //! Message converted to tokens
             QStringList toTokens() const;
+
+            //! Construct from tokens
             static KillRequest fromTokens(const QStringList &tokens);
+
+            //! PDU identifier
             static QString pdu() { return "$!!"; }
 
             QString m_reason;
@@ -34,6 +40,7 @@ namespace BlackCore
             KillRequest();
         };
 
+        //! Equal to operator
         inline bool operator==(const KillRequest &lhs, const KillRequest &rhs)
         {
             return  lhs.sender() == rhs.sender() &&
@@ -41,6 +48,7 @@ namespace BlackCore
                     lhs.m_reason == rhs.m_reason;
         }
 
+        //! Not equal to operator
         inline bool operator!=(const KillRequest &lhs, const KillRequest &rhs)
         {
             return !(lhs == rhs);

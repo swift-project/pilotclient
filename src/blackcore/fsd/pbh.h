@@ -18,7 +18,7 @@ namespace BlackCore
 {
     namespace Fsd
     {
-
+        //! Pitch bank heading union
         union PBH
         {
             unsigned int pbh = 0; //!< Pitch/Bank/Heading as integer value
@@ -32,21 +32,25 @@ namespace BlackCore
             };
         };
 
+        //! Pitch multiplier
         constexpr double pitchMultiplier()
         {
             return 256.0  / 90.0;
         }
 
+        //! Bank multiplier
         constexpr double bankMultiplier()
         {
             return 512.0  / 180.0;
         }
 
+        //! Heading multiplier
         constexpr double headingMultiplier()
         {
             return 1024.0 / 360.0;
         }
 
+        //! Pack pitch, bank, heading and onGround into 32 bit integer
         inline void packPBH(double pitch, double bank, double heading, bool onGround, quint32 &pbh)
         {
             PBH pbhstrct;
@@ -63,6 +67,7 @@ namespace BlackCore
             pbh = pbhstrct.pbh;
         }
 
+        //! Unpack pitch, bank, heading and onGround from 32 bit integer
         inline void unpackPBH(quint32 pbh, double &pitch, double &bank, double &heading, bool &onGround)
         {
             PBH pbhstrct;

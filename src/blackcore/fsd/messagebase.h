@@ -44,22 +44,36 @@ namespace BlackCore
 {
     namespace Fsd
     {
+        //! FSD message base class
         class BLACKCORE_EXPORT MessageBase
         {
         public:
+            //! Default Constructor
             MessageBase() {}
+
+            //! Constructor
             MessageBase(const QString &sender);
+
+            //! Constructor
             MessageBase(const QString &sender, const QString &receiver);
             virtual ~MessageBase() {}
 
+            //! Set callsign
             void setCallsign(const QString &sender) { m_sender = sender; }
+
+            //! get message sender
             QString sender() const { return m_sender; }
 
+            //! Set message receiver
             void setReceiver(const QString &receiver) { m_receiver = receiver; }
+
+            //! Get message receiver
             QString receiver() const { return m_receiver; }
 
+            //! Is message valid?
             bool isValid() const { return m_isValid; }
 
+            //! set message valid
             void setValid(bool isValid) { m_isValid = isValid; }
 
         protected:
@@ -67,10 +81,10 @@ namespace BlackCore
             // Meta data
             // MessageType messageType = MessageType::Unknown;
 
-            QString m_sender;
-            QString m_receiver;
+            QString m_sender;       //!< message sender
+            QString m_receiver;     //!< message receiver
 
-            bool m_isValid = true;
+            bool m_isValid = true;  //!< is valid?
         };
     }
 }

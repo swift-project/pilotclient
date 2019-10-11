@@ -19,17 +19,21 @@ namespace BlackCore
 {
     namespace Fsd
     {
+        //! Pilot data update broadcasted to all clients in range every 5 seconds.
         class BLACKCORE_EXPORT PilotDataUpdate : public MessageBase
         {
         public:
-
+            //! Constructor
             PilotDataUpdate(BlackMisc::Aviation::CTransponder::TransponderMode transponderMode, const QString &sender, int transponderCode, PilotRating rating,                        double latitude, double longitude, int altitudeTrue, int altitudePressure, int groundSpeed,
                             double pitch, double bank, double heading, bool onGround);
 
-            virtual ~PilotDataUpdate() {}
+            //! Message converted to tokens
             QStringList toTokens() const;
 
+            //! Construct from tokens
             static PilotDataUpdate fromTokens(const QStringList &tokens);
+
+            //! PDU identifier
             static QString pdu() { return "@"; }
 
             BlackMisc::Aviation::CTransponder::TransponderMode m_transponderMode = BlackMisc::Aviation::CTransponder::StateStandby;
@@ -49,6 +53,7 @@ namespace BlackCore
             PilotDataUpdate();
         };
 
+        //! Equal to operator
         inline bool operator==(const PilotDataUpdate &lhs, const PilotDataUpdate &rhs)
         {
             return  lhs.sender() == rhs.sender() &&
@@ -67,6 +72,7 @@ namespace BlackCore
                     lhs.m_onGround == rhs.m_onGround;
         }
 
+        //! Not equal to operator
         inline bool operator!=(const PilotDataUpdate &lhs, const PilotDataUpdate &rhs)
         {
             return !(lhs == rhs);

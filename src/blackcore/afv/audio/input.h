@@ -60,16 +60,23 @@ namespace BlackCore
                 QByteArray m_buffer;
             };
 
+            //! Opus data arguments
             struct OpusDataAvailableArgs
             {
-                uint sequenceCounter = 0;
-                QByteArray audio;
+                uint sequenceCounter = 0;   //!< sequence counter
+                QByteArray audio;           //!< audio data
             };
 
+            //! Input volume stream arguments
             struct InputVolumeStreamArgs
             {
+                //! Peak volume raw
                 double PeakRaw = 0.0;
+
+                //! Peak volume in dB
                 double PeakDB  = -1.0 * std::numeric_limits<double>::infinity();
+
+                //! Peak volume in VU
                 double PeakVU  = 0.0;
             };
 

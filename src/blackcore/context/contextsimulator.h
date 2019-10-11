@@ -78,7 +78,7 @@ namespace BlackCore
             //! Highlight time
             static const BlackMisc::PhysicalQuantities::CTime &HighlightTime();
 
-            //! \copydoc CContext::getPathAndContextId()
+            //! \copydoc IContext::getPathAndContextId()
             virtual QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
 
             //! Factory method

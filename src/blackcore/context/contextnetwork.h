@@ -92,7 +92,7 @@ namespace BlackCore
                 return s;
             }
 
-            //! \copydoc CContext::getPathAndContextId()
+            //! \copydoc IContext::getPathAndContextId()
             virtual QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
 
             //! Factory method

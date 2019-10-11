@@ -33,7 +33,7 @@ public:
     double getOutputVolumePeakVU() const { return m_afvClient->getOutputVolumePeakVU(); }
     //! @}
 
-    //! \copydoc CAfvClient::getConnectionStatus
+    //! \copydoc BlackCore::Afv::Clients::CAfvClient::getConnectionStatus
     BlackCore::Afv::Clients::CAfvClient::ConnectionStatus getConnectionStatus() const
     {
         return m_afvClient->getConnectionStatus();
@@ -44,13 +44,13 @@ public:
     QString getReceivingCallsignsCom2() { return m_afvClient->getReceivingCallsignsCom2(); }
     //! @}
 
-    //! \copydoc CAfvClient::connectTo
+    //! \copydoc BlackCore::Afv::Clients::CAfvClient::connectTo
     Q_INVOKABLE void connectTo(const QString &cid, const QString &password, const QString &callsign)
     {
         m_afvClient->connectTo(cid, password, callsign);
     }
 
-    //! \copydoc CAfvClient::disconnectFrom
+    //! \copydoc BlackCore::Afv::Clients::CAfvClient::disconnectFrom
     Q_INVOKABLE void disconnectFrom() { m_afvClient->disconnectFrom(); }
 
     //! Audio devices @{
@@ -61,22 +61,22 @@ public:
     //! Enable/disable VHF simulation, true means effects are NOT used
     Q_INVOKABLE void setBypassEffects(bool value) { m_afvClient->setBypassEffects(value); }
 
-    //! \copydoc CAfvClient::startAudio
+    //! \copydoc BlackCore::Afv::Clients::CAfvClient::startAudio
     Q_INVOKABLE void startAudio(const QString &inputDeviceName, const QString &outputDeviceName) { m_afvClient->startAudio(inputDeviceName, outputDeviceName); }
 
-    //! \copydoc CAfvClient::enableTransceiver
+    //! \copydoc BlackCore::Afv::Clients::CAfvClient::enableTransceiver
     Q_INVOKABLE void enableTransceiver(quint16 id, bool enable) { m_afvClient->enableTransceiver(id, enable); }
 
-    //! \copydoc CAfvClient::updateComFrequency
+    //! \copydoc BlackCore::Afv::Clients::CAfvClient::updateComFrequency
     Q_INVOKABLE void updateComFrequency(quint16 id, quint32 frequencyHz) { m_afvClient->updateComFrequency(id, frequencyHz); }
 
-    //! \copydoc CAfvClient::updatePosition
+    //! \copydoc BlackCore::Afv::Clients::CAfvClient::updatePosition
     Q_INVOKABLE void updatePosition(double latitudeDeg, double longitudeDeg, double heightMeters)
     {
         m_afvClient->updatePosition(latitudeDeg, longitudeDeg, heightMeters);
     }
 
-    //! \copydoc CAfvClient::setPtt
+    //! \copydoc BlackCore::Afv::Clients::CAfvClient::setPtt
     Q_INVOKABLE void setPtt(bool active) { m_afvClient->setPtt(active); }
 
     //! Loopback @{
@@ -84,10 +84,10 @@ public:
     Q_INVOKABLE bool isLoopback() const   { return m_afvClient->isLoopback(); }
     //! @}
 
-    //! \copydoc CAfvClient::setInputVolumeDb
+    //! \copydoc BlackCore::Afv::Clients::CAfvClient::setInputVolumeDb
     Q_INVOKABLE void setInputVolumeDb(double valueDb) { m_afvClient->setInputVolumeDb(valueDb); }
 
-    //! \copydoc CAfvClient::setOutputVolumeDb
+    //! \copydoc BlackCore::Afv::Clients::CAfvClient::setOutputVolumeDb
     Q_INVOKABLE void setOutputVolumeDb(double valueDb) { m_afvClient->setOutputVolumeDb(valueDb); }
 
 signals:

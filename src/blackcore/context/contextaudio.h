@@ -81,7 +81,7 @@ namespace BlackCore
             //! Object path
             static const QString &ObjectPath();
 
-            //! \copydoc CContext::getPathAndContextId()
+            //! \copydoc IContext::getPathAndContextId()
             virtual QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
 
             //! Factory method
@@ -187,7 +187,6 @@ namespace BlackCore
             //! .unmute                        unmute           BlackCore::Context::CContextAudio
             //! .vol .volume   volume 0..100   set volume       BlackCore::Context::CContextAudio
             //! </pre>
-            //! \copydoc IContextAudio::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
 
             //! Register a device on a machine (for core/GUI it will return all known devices on all machines)

@@ -24,13 +24,17 @@ namespace BlackCore
         class BLACKCORE_EXPORT ClientIdentification : public MessageBase
         {
         public:
+            //! Constructor
             ClientIdentification(const QString &sender, quint16 clientId, const QString &clientName, int clientVersionMajor, int clientVersionMinor,
                                  const QString &userCid, const QString &sysUid, const QString &initialChallenge);
 
-            virtual ~ClientIdentification() {}
-
+            //! Message converted to tokens
             QStringList toTokens() const;
+
+            //! Construct from tokens
             static ClientIdentification fromTokens(const QStringList &tokens);
+
+            //! PDU identifier
             static QString pdu() { return "$ID"; }
 
             std::uint16_t m_clientId;
@@ -45,6 +49,7 @@ namespace BlackCore
             ClientIdentification();
         };
 
+        //! Equal to operator
         inline bool operator==(const ClientIdentification &lhs, const ClientIdentification &rhs)
         {
             return  lhs.sender() == rhs.sender() &&
@@ -58,6 +63,7 @@ namespace BlackCore
                     lhs.m_initialChallenge == rhs.m_initialChallenge;
         }
 
+        //! Not equal to operator
         inline bool operator!=(const ClientIdentification &lhs, const ClientIdentification &rhs)
         {
             return !(lhs == rhs);

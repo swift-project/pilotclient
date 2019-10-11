@@ -21,12 +21,16 @@ namespace BlackCore
         class BLACKCORE_EXPORT FSDIdentification : public MessageBase
         {
         public:
+            //! Constructor
             FSDIdentification(const QString &callsign, const QString &receiver, const QString &serverVersion, const QString &initialChallenge);
 
-            virtual ~FSDIdentification() {}
-
+            //! Message converted to tokens
             QStringList toTokens() const;
+
+            //! Construct from tokens
             static FSDIdentification fromTokens(const QStringList &tokens);
+
+            //! PDU identifier
             static QString pdu() { return "$DI"; }
 
             QString m_serverVersion;

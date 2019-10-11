@@ -17,15 +17,20 @@ namespace BlackCore
 {
     namespace Fsd
     {
+        //! Sent or received as reply to a ping.
         class BLACKCORE_EXPORT Pong : public MessageBase
         {
         public:
+            //! Constructor
             Pong(const QString &sender, const QString &receiver, const QString &timestamp);
 
-            virtual ~Pong() {}
-
+            //! Message converted to tokens
             QStringList toTokens() const;
+
+            //! Construct from tokens
             static Pong fromTokens(const QStringList &tokens);
+
+            //! PDU identifier
             static QString pdu() { return "$PO"; }
 
             QString m_timestamp;
@@ -34,6 +39,7 @@ namespace BlackCore
             Pong();
         };
 
+        //! Equal to operator
         inline bool operator==(const Pong &lhs, const Pong &rhs)
         {
             return  lhs.sender() == rhs.sender() &&
@@ -41,6 +47,7 @@ namespace BlackCore
                     lhs.m_timestamp == rhs.m_timestamp;
         }
 
+        //! Not equal to operator
         inline bool operator!=(const Pong &lhs, const Pong &rhs)
         {
             return !(lhs == rhs);

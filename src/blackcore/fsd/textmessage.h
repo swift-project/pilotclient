@@ -21,25 +21,32 @@ namespace BlackCore
 {
     namespace Fsd
     {
+        //! Text, radio or private message
         class BLACKCORE_EXPORT TextMessage : public MessageBase
         {
         public:
+            //! Message type
             enum Type
             {
                 PrivateMessage,
                 RadioMessage,
             };
 
+            //! Constructor
             TextMessage(const QString &sender, const QString &receiver, const QString &message);
-            virtual ~TextMessage() {}
 
+            //! Message converted to tokens
             QStringList toTokens() const;
+
+            //! Construct from tokens
             static TextMessage fromTokens(const QStringList &tokens);
+
+            //! PDU identifier
             static QString pdu() { return "#TM"; }
 
-            QString m_message;
-            Type m_type = PrivateMessage;
-            QVector<int> m_frequencies;
+            QString m_message;              //!< message text
+            Type m_type = PrivateMessage;   //!< message type
+            QVector<int> m_frequencies;     //!< frequencies in case of radio message.
 
         private:
             TextMessage();

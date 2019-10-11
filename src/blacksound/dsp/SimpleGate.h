@@ -90,11 +90,11 @@ namespace chunkware_simple
         //! get RMS window
         virtual double getWindow(void) const { return ave_.getTc(); }
 
-        //! \copydoc SimpleGate::initRuntime
-        virtual void initRuntime(void);              // call before runtime (in resume())
+        //! call before runtime (in resume())
+        virtual void initRuntime(void);
 
-        //! \copydoc SimpleGate::process
-        void process(double &in1, double &in2);      // gate runtime process
+        //! gate runtime process
+        void process(double &in1, double &in2);
 
     private:
         EnvelopeDetector ave_;  //!< averager

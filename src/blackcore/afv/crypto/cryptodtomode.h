@@ -31,6 +31,7 @@ namespace BlackCore
     } // ns
 } // ns
 
+//! \private
 MSGPACK_ADD_ENUM(BlackCore::Afv::Crypto::CryptoDtoMode);
 
 #endif // guard

@@ -17,15 +17,20 @@ namespace BlackCore
 {
     namespace Fsd
     {
+        //! FSD Message: auth challenge
         class BLACKCORE_EXPORT AuthChallenge : public MessageBase
         {
         public:
+            //! Constructor
             AuthChallenge(const QString &sender, const QString &target, const QString &challengeKey);
 
-            virtual ~AuthChallenge() {}
-
+            //! Message converted to tokens
             QStringList toTokens() const;
+
+            //! Construct from tokens
             static AuthChallenge fromTokens(const QStringList &tokens);
+
+            //! PDU identifier
             static QString pdu() { return QStringLiteral("$ZC"); }
 
             QString m_challengeKey;
@@ -34,6 +39,7 @@ namespace BlackCore
             AuthChallenge();
         };
 
+        //! Equal to operator
         inline bool operator==(const AuthChallenge &lhs, const AuthChallenge &rhs)
         {
             return  lhs.sender() == rhs.sender() &&
@@ -41,6 +47,7 @@ namespace BlackCore
                     lhs.m_challengeKey == rhs.m_challengeKey;
         }
 
+        //! Not equal to operator
         inline bool operator!=(const AuthChallenge &lhs, const AuthChallenge &rhs)
         {
             return !(lhs == rhs);

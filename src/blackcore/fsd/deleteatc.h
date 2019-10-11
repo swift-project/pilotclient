@@ -17,14 +17,21 @@ namespace BlackCore
 {
     namespace Fsd
     {
+        //! FSD Message Delete ATC
         class BLACKCORE_EXPORT DeleteAtc : public MessageBase
         {
         public:
+            //! Constructor
             DeleteAtc(const QString &sender, const QString &cid);
             virtual ~DeleteAtc() {}
 
+            //! Message converted to tokens
             QStringList toTokens() const;
+
+            //! Construct from tokens
             static DeleteAtc fromTokens(const QStringList &tokens);
+
+            //! PDU identifier
             static QString pdu() { return "#DA"; }
 
             QString m_cid;
@@ -33,6 +40,7 @@ namespace BlackCore
             DeleteAtc();
         };
 
+        //! Equal to operator
         inline bool operator==(const DeleteAtc &lhs, const DeleteAtc &rhs)
         {
             return  lhs.sender() == rhs.sender() &&
@@ -40,6 +48,7 @@ namespace BlackCore
                     lhs.m_cid == rhs.m_cid;
         }
 
+        //! Not equal to operator
         inline bool operator!=(const DeleteAtc &lhs, const DeleteAtc &rhs)
         {
             return !(lhs == rhs);
