@@ -30,6 +30,11 @@ namespace BlackSound
             //! Dtor
             ~COpusDecoder();
 
+            //! Not copyable and assignable @{
+            COpusDecoder(const COpusDecoder &decoder) = delete;
+            COpusDecoder& operator=(COpusDecoder const&) = delete;
+            //! @}
+
             //! Frame count
             int frameCount(int bufferSize);
 
@@ -40,11 +45,10 @@ namespace BlackSound
             void resetState();
 
         private:
-            OpusDecoder *opusDecoder = nullptr;
-            int m_sampleRate;
+            OpusDecoder *m_opusDecoder = nullptr;
             int m_channels;
 
-            static constexpr int maxDataBytes = 4000;
+            static constexpr int MaxDataBytes = 4000;
         };
     } // ns
 } // ns

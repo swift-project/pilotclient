@@ -12,17 +12,15 @@ namespace BlackSound
 {
     namespace Codecs
     {
-        COpusDecoder::COpusDecoder(int sampleRate, int channels) :
-            m_sampleRate(sampleRate),
-            m_channels(channels)
+        COpusDecoder::COpusDecoder(int sampleRate, int channels) : m_channels(channels)
         {
             int error;
-            opusDecoder = opus_decoder_create(sampleRate, channels, &error);
+            m_opusDecoder = opus_decoder_create(sampleRate, channels, &error);
         }
 
         COpusDecoder::~COpusDecoder()
         {
-            opus_decoder_destroy(opusDecoder);
+            opus_decoder_destroy(m_opusDecoder);
         }
 
         int COpusDecoder::frameCount(int bufferSize)
@@ -35,12 +33,12 @@ namespace BlackSound
 
         QVector<qint16> COpusDecoder::decode(const QByteArray opusData, int dataLength, int *decodedLength)
         {
-            QVector<qint16> decoded(maxDataBytes, 0);
-            int count = frameCount(maxDataBytes);
+            QVector<qint16> decoded(MaxDataBytes, 0);
+            int count = frameCount(MaxDataBytes);
 
-            if (! opusData.isEmpty())
+            if (!opusData.isEmpty())
             {
-                *decodedLength = opus_decode(opusDecoder, reinterpret_cast<const unsigned char *>(opusData.data()), dataLength, decoded.data(), count, 0);
+                *decodedLength = opus_decode(m_opusDecoder, reinterpret_cast<const unsigned char *>(opusData.data()), dataLength, decoded.data(), count, 0);
             }
             decoded.resize(*decodedLength);
             return decoded;
@@ -48,7 +46,8 @@ namespace BlackSound
 
         void COpusDecoder::resetState()
         {
-            opus_decoder_ctl(opusDecoder, OPUS_RESET_STATE);
+            if (!m_opusDecoder) { return; }
+            opus_decoder_ctl(m_opusDecoder, OPUS_RESET_STATE);
         }
     } // ns
 } // ns
