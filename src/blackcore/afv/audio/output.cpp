@@ -53,8 +53,8 @@ namespace BlackCore
                 {
                     OutputVolumeStreamArgs outputVolumeStreamArgs;
                     outputVolumeStreamArgs.PeakRaw = m_maxSampleOutput / 1.0;
-                    outputVolumeStreamArgs.PeakDB = static_cast<float>(20 * std::log10(outputVolumeStreamArgs.PeakRaw));
-                    const double db = qBound(m_minDb, outputVolumeStreamArgs.PeakDB, m_maxDb);
+                    outputVolumeStreamArgs.PeakDb = static_cast<float>(20 * std::log10(outputVolumeStreamArgs.PeakRaw));
+                    const double db = qBound(m_minDb, outputVolumeStreamArgs.PeakDb, m_maxDb);
                     double ratio = (db - m_minDb) / (m_maxDb - m_minDb);
                     if (ratio < 0.30) { ratio = 0.0; }
                     if (ratio > 1.0)  { ratio = 1.0; }

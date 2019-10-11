@@ -26,9 +26,9 @@ namespace BlackCore
             //! Stream args
             struct OutputVolumeStreamArgs
             {
-                double PeakRaw = 0.0;
-                double PeakDB  = -1 * std::numeric_limits<double>::infinity();
-                double PeakVU  = 0.0;
+                double PeakRaw = 0.0; //!< raw peak
+                double PeakDb  = -1 * std::numeric_limits<double>::infinity(); //!< dB peak
+                double PeakVU  = 0.0; //!< VU peak
             };
 
             //! Output buffer
@@ -60,9 +60,9 @@ namespace BlackCore
                 static constexpr int SampleCountPerEvent = 4800;
                 QAudioFormat m_outputFormat;
                 float m_maxSampleOutput = 0.0;
-                int m_sampleCount        = 0;
-                const double m_maxDb     = 0;
-                const double m_minDb     = -40;
+                int m_sampleCount       =   0;
+                const double m_maxDb    =   0;
+                const double m_minDb    = -40;
             };
 
             //! Output
@@ -95,10 +95,9 @@ namespace BlackCore
 
             private:
                 bool m_started = false;
-
                 BlackMisc::Audio::CAudioDeviceInfo m_device;
-                QScopedPointer<QAudioOutput> m_audioOutputCom;
-                CAudioOutputBuffer *m_audioOutputBuffer = nullptr;
+                QScopedPointer<QAudioOutput>       m_audioOutputCom;
+                CAudioOutputBuffer                *m_audioOutputBuffer = nullptr;
             };
         } // ns
     } // ns

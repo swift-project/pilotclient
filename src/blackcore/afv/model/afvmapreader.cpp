@@ -38,24 +38,24 @@ namespace BlackCore
                 QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData);
                 if (jsonDoc.isObject())
                 {
-                    QJsonObject rootObject = jsonDoc.object();
+                    const QJsonObject rootObject = jsonDoc.object();
                     QVector<CSampleAtcStation> transceivers;
 
                     if (rootObject.contains("controllers"))
                     {
-                        QJsonObject otherObject = rootObject.value("controllers").toObject();
+                        const QJsonObject otherObject = rootObject.value("controllers").toObject();
                         for (auto it = otherObject.begin(); it != otherObject.end(); ++it)
                         {
-                            QString callsign = it.key();
+                            const  QString callsign = it.key();
                             if (it.value().isObject())
                             {
-                                QJsonObject stationObject = it.value().toObject();
+                                const QJsonObject stationObject = it.value().toObject();
                                 if (stationObject.contains("transceivers"))
                                 {
                                     QJsonArray txArray = stationObject.value("transceivers").toArray();
                                     for (auto jt = txArray.begin(); jt != txArray.end(); ++jt)
                                     {
-                                        TransceiverDto transceiver = TransceiverDto::fromJson(jt->toObject());
+                                        const TransceiverDto transceiver = TransceiverDto::fromJson(jt->toObject());
                                         transceivers.push_back({ callsign, transceiver});
                                     }
                                 }
@@ -65,19 +65,19 @@ namespace BlackCore
 
                     if (rootObject.contains("other") && rootObject.value("other").isObject())
                     {
-                        QJsonObject otherObject = rootObject.value("other").toObject();
+                        const QJsonObject otherObject = rootObject.value("other").toObject();
                         for (auto it = otherObject.begin(); it != otherObject.end(); ++it)
                         {
-                            QString callsign = it.key();
+                            const QString callsign = it.key();
                             if (it.value().isObject())
                             {
                                 QJsonObject stationObject = it.value().toObject();
                                 if (stationObject.contains("transceivers"))
                                 {
-                                    QJsonArray txArray = stationObject.value("transceivers").toArray();
+                                    const QJsonArray txArray = stationObject.value("transceivers").toArray();
                                     for (auto jt = txArray.begin(); jt != txArray.end(); ++jt)
                                     {
-                                        TransceiverDto transceiver = TransceiverDto::fromJson(jt->toObject());
+                                        const TransceiverDto transceiver = TransceiverDto::fromJson(jt->toObject());
                                         transceivers.push_back({ callsign, transceiver});
                                     }
                                 }

@@ -44,9 +44,8 @@ namespace BlackCore
 
             double CSampleAtcStation::radioDistanceM() const
             {
-                double sqrtAltM = qSqrt(m_transceiver.HeightMslM);
+                const double sqrtAltM = qSqrt(m_transceiver.HeightMslM);
                 const double radioFactor = 4193.18014745372;
-
                 return radioFactor * sqrtAltM;
             }
 
@@ -68,7 +67,7 @@ namespace BlackCore
                 for (int i = m_atcStations.size() - 1; i >= 0; i--)
                 {
                     CSampleAtcStation &station = m_atcStations[i];
-                    if (! m_atcStations.contains(station))
+                    if (!m_atcStations.contains(station))
                     {
                         removeStationAtPosition(i);
                     }
@@ -113,12 +112,12 @@ namespace BlackCore
             QHash<int, QByteArray> CSampleAtcStationModel::roleNames() const
             {
                 QHash<int, QByteArray> roles;
-                roles[CallsignRole] = "callsign";
-                roles[LatitudeRole] = "latitude";
-                roles[LongitudeRole] = "longitude";
+                roles[CallsignRole]      = "callsign";
+                roles[LatitudeRole]      = "latitude";
+                roles[LongitudeRole]     = "longitude";
                 roles[RadioDistanceRole] = "radioDistanceM";
-                roles[FrequencyRole] = "frequencyAsString";
-                roles[FrequencyKhzRole] = "frequencyKhz";
+                roles[FrequencyRole]     = "frequencyAsString";
+                roles[FrequencyKhzRole]  = "frequencyKhz";
                 return roles;
             }
         }

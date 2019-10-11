@@ -31,10 +31,13 @@ namespace BlackCore
                 //! Ctor
                 CAfvMapReader(QObject *parent = nullptr);
 
+                //! Own callsign
                 Q_INVOKABLE void setOwnCallsign(const QString &callsign) { m_callsign = callsign; }
 
+                //! Update ATC stations in model
                 void updateFromMap();
 
+                //! ATC model
                 CSampleAtcStationModel *getAtcStationModel() { return m_model; }
 
             private:
