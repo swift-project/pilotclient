@@ -58,7 +58,7 @@ namespace chunkware_simple
         //! @}
 
         //! get latency
-        virtual const unsigned int getLatency(void) const { return peakHold_; }
+        virtual unsigned int getLatency(void) const { return peakHold_; }
 
         //! @{ sample rate
         virtual void   setSampleRate(double sampleRate);
