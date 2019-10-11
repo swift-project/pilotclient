@@ -94,6 +94,13 @@ namespace BlackCore
                 m_encoder.setBitRate(16 * 1024);
             }
 
+            bool CInput::setVolume(double volume)
+            {
+                if (qFuzzyCompare(m_volume, volume)) { return false; }
+                m_volume = volume;
+                return true;
+            }
+
             void CInput::start(const CAudioDeviceInfo &inputDevice)
             {
                 if (m_started) { return; }

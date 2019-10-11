@@ -178,14 +178,14 @@ namespace BlackCore
                 //! \threadsafe
                 //! @{
                 double getInputVolumeDb() const;
-                Q_INVOKABLE void setInputVolumeDb(double valueDb);
+                Q_INVOKABLE bool setInputVolumeDb(double valueDb);
                 //! @}
 
                 //! Output volume in dB, +-18dB
                 //! \threadsafe
                 //! @{
                 double getOutputVolumeDb() const;
-                Q_INVOKABLE void setOutputVolumeDb(double valueDb);
+                Q_INVOKABLE bool setOutputVolumeDb(double valueDb);
                 //! @}
 
                 //! Normalized volumes 0..100
@@ -193,7 +193,7 @@ namespace BlackCore
                 //! @{
                 int getNormalizedInputVolume() const;
                 int getNormalizedOutputVolume() const;
-                void setNormalizedInputVolume(int volume);
+                bool setNormalizedInputVolume(int volume);
                 void setNormalizedOutputVolume(int volume);
                 //! @}
 
@@ -262,13 +262,13 @@ namespace BlackCore
                 quint32 getAliasFrequencyHz(quint32 frequencyHz) const;
 
                 static constexpr int PositionUpdatesMs = 5000; //!< position timer
-                static constexpr int SampleRate  = 48000;
-                static constexpr int FrameSize   =   960; // 20ms
-                static constexpr double MinDbIn  = -18.0;
-                static constexpr double MaxDbIn  =  18.0;
-                static constexpr double MinDbOut = -60.0;
-                static constexpr double MaxDbOut =  18.0;
-                static constexpr quint32 UniCom  = 122800000;
+                static constexpr int SampleRate   = 48000;
+                static constexpr int FrameSize    =   960;     //!< 20ms
+                static constexpr double MinDbIn   = -18.0;
+                static constexpr double MaxDbIn   =  18.0;
+                static constexpr double MinDbOut  = -60.0;
+                static constexpr double MaxDbOut  =  18.0;
+                static constexpr quint32 UniCom   = 122800000;
 
                 static quint16 comUnitToTransceiverId(BlackMisc::Aviation::CComSystem::ComUnit comUnit);
                 static BlackMisc::Aviation::CComSystem::ComUnit transceiverIdToComUnit(quint16 id);

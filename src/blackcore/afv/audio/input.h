@@ -95,11 +95,15 @@ namespace BlackCore
                     this->stop();
                 }
 
+                //! Number of encoded bytes @{
                 int opusBytesEncoded() const { return m_opusBytesEncoded; }
                 void setOpusBytesEncoded(int opusBytesEncoded) { m_opusBytesEncoded = opusBytesEncoded; }
+                //! @}
 
+                //! Volume @{
                 double volume() const { return m_volume; }
-                void setVolume(double volume) { m_volume = volume; }
+                bool setVolume(double volume);
+                //! @}
 
                 //! Started?
                 bool started() const { return m_started; }
@@ -132,9 +136,9 @@ namespace BlackCore
                 QAudioFormat m_inputFormat;
 
                 bool m_started = false;
-                int m_opusBytesEncoded = 0;
-                int m_sampleCount = 0;
-                double m_volume = 1.0;
+                int m_opusBytesEncoded  = 0;
+                int m_sampleCount       = 0;
+                double m_volume         = 1.0;
                 qint16 m_maxSampleInput = 0.0;
 
                 const int SampleCountPerEvent = 4800;
@@ -142,7 +146,6 @@ namespace BlackCore
                 const double minDb = -40;
 
                 uint m_audioSequenceCounter = 0;
-
                 CAudioInputBuffer m_audioInputBuffer;
 
 #ifdef Q_OS_MAC

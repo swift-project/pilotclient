@@ -165,7 +165,8 @@ namespace BlackCore
 
             bool CAfvClient::isMuted() const
             {
-                return this->getNormalizedOutputVolume() < 1;
+                const int v = this->getNormalizedOutputVolume();
+                return v < 1;
             }
 
             void CAfvClient::setMuted(bool mute)
@@ -475,17 +476,19 @@ namespace BlackCore
                 return m_inputVolumeDb;
             }
 
-            void CAfvClient::setInputVolumeDb(double valueDb)
+            bool CAfvClient::setInputVolumeDb(double valueDb)
             {
                 if (valueDb > MaxDbIn) { valueDb = MaxDbIn; }
                 else if (valueDb < MinDbIn) { valueDb = MinDbIn; }
 
                 QMutexLocker lock(&m_mutex);
+                bool changed = !qFuzzyCompare(m_inputVolumeDb, valueDb);
                 m_inputVolumeDb = valueDb;
                 if (m_input)
                 {
-                    m_input->setVolume(qPow(10, valueDb / 20.0));
+                    changed = m_input->setVolume(qPow(10, valueDb / 20.0));
                 }
+                return changed;
             }
 
             double CAfvClient::getOutputVolumeDb() const
@@ -504,27 +507,46 @@ namespace BlackCore
 
             int CAfvClient::getNormalizedOutputVolume() const
             {
-                const double db = this->getOutputVolumeDb();
-                const double range = MaxDbOut - MinDbOut;
-                const int i = qRound((db - MinDbOut) / range * 100);
-                return i;
+                double db = this->getOutputVolumeDb();
+                double range = MaxDbOut;
+                int v = 50;
+                if (db < 0)
+                {
+                    v = 0;
+                    db -= MinDbOut;
+                    range = qAbs(MinDbOut);
+                }
+                v += qRound(db * 50 / range);
+                return v;
             }
 
-            void CAfvClient::setNormalizedInputVolume(int volume)
+            bool CAfvClient::setNormalizedInputVolume(int volume)
             {
                 if (volume < 0) { volume = 0; }
                 else if (volume > 100) { volume = 100; }
                 const double range = MaxDbIn - MinDbIn;
                 const double dB = MinDbIn + (volume * range / 100.0);
-                this->setInputVolumeDb(dB);
+                return this->setInputVolumeDb(dB);
             }
 
             void CAfvClient::setNormalizedOutputVolume(int volume)
             {
                 if (volume < 0) { volume = 0; }
                 else if (volume > 100) { volume = 100; }
-                const double range = MaxDbOut - MinDbOut;
-                const double dB = MinDbOut + (volume * range / 100.0);
+
+                // Asymetric
+                double range = MaxDbOut;
+                double dB = 0;
+                if (volume >= 50)
+                {
+                    volume -= 50;
+                }
+                else
+                {
+                    dB = MinDbOut;
+                    range = qAbs(MinDbOut);
+                }
+                dB += (volume * range / 50.0);
                 this->setOutputVolumeDb(dB);
             }
 
@@ -555,8 +577,8 @@ namespace BlackCore
                     audioData.lastPacket = false;
                     audioData.sequenceCounter = 0;
 
-                    RxTransceiverDto com1 = { 0, transceivers.size() > 0 ?  transceivers[0].frequencyHz : UniCom, 1.0 };
-                    RxTransceiverDto com2 = { 1, transceivers.size() > 1 ?  transceivers[1].frequencyHz : UniCom, 1.0 };
+                    const RxTransceiverDto com1 = { 0, transceivers.size() > 0 ?  transceivers[0].frequencyHz : UniCom, 1.0 };
+                    const RxTransceiverDto com2 = { 1, transceivers.size() > 1 ?  transceivers[1].frequencyHz : UniCom, 1.0 };
 
                     QMutexLocker lock(&m_mutex);
                     m_soundcardSampleProvider->addOpusSamples(audioData, { com1, com2 });
@@ -719,8 +741,8 @@ namespace BlackCore
                 QVector<TransceiverDto> newTransceivers { transceiverCom1, transceiverCom2 };
                 QVector<TransceiverDto> newEnabledTransceivers;
                 QVector<TxTransceiverDto> newTransmittingTransceivers;
-                if (e1)  { newEnabledTransceivers.push_back(transceiverCom1); newEnabledTransceiverIds.insert(transceiverCom1.id); }
-                if (e2)  { newEnabledTransceivers.push_back(transceiverCom2); newEnabledTransceiverIds.insert(transceiverCom2.id); }
+                if (e1) { newEnabledTransceivers.push_back(transceiverCom1); newEnabledTransceiverIds.insert(transceiverCom1.id); }
+                if (e2) { newEnabledTransceivers.push_back(transceiverCom2); newEnabledTransceiverIds.insert(transceiverCom2.id); }
 
                 // Transmitting transceivers, currently ALLOW ONLY ONE
                 if (tx1 && e1) { newTransmittingTransceivers.push_back(transceiverCom1); }
@@ -807,19 +829,21 @@ namespace BlackCore
                 return sApp && !sApp->isShuttingDown() && sApp->getIContextOwnAircraft();
             }
 
-            void CAfvClient::setOutputVolumeDb(double valueDb)
+            bool CAfvClient::setOutputVolumeDb(double valueDb)
             {
                 if (valueDb > MaxDbOut) { valueDb = MaxDbOut; }
-                if (valueDb < MinDbOut) { valueDb = MinDbOut; }
+                else if (valueDb < MinDbOut) { valueDb = MinDbOut; }
 
                 QMutexLocker lock(&m_mutex);
+                bool changed = !qFuzzyCompare(m_outputVolumeDb, valueDb);
                 m_outputVolumeDb = valueDb;
                 m_outputVolume   = qPow(10, m_outputVolumeDb / 20.0);
 
                 if (m_outputSampleProvider)
                 {
-                    m_outputSampleProvider->setVolume(m_outputVolume);
+                    changed = m_outputSampleProvider->setVolume(m_outputVolume);
                 }
+                return changed;
             }
 
             const CAudioDeviceInfo &CAfvClient::getInputDevice() const

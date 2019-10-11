@@ -33,5 +33,12 @@ namespace BlackSound
             }
             return samplesRead;
         }
+
+        bool CVolumeSampleProvider::setVolume(double volume)
+        {
+            const bool changed = !qFuzzyCompare(m_volume, volume);
+            m_volume = volume;
+            return changed;
+        }
     } // ns
 } // ns

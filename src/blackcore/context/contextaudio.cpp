@@ -207,7 +207,7 @@ namespace BlackCore
             if (changedVoiceOutput)
             {
                 m_voiceClient->setNormalizedOutputVolume(volume);
-                m_outVolumeBeforeMute = currentVolume;
+                m_outVolumeBeforeMute = volume;
 
                 emit this->changedAudioVolume(volume);
                 if ((volume > 0 && wasMuted) || (volume < 1 && !wasMuted))

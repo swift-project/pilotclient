@@ -32,7 +32,7 @@ namespace BlackSound
 
             //! Volume @{
             double volume() const { return m_volume; }
-            void setVolume(double volume) { m_volume = volume; }
+            bool setVolume(double volume);
             //! @}
 
         private:
