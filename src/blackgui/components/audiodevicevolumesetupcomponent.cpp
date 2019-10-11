@@ -196,8 +196,8 @@ namespace BlackGui
             const bool com1Enabled = sGui->getIContextAudio()->isEnabledComUnit(CComSystem::Com1);
             const bool com2Enabled = sGui->getIContextAudio()->isEnabledComUnit(CComSystem::Com2);
 
-            const bool com1Tx = com1Enabled && sGui->getIContextAudio()->isTransmittingdComUnit(CComSystem::Com1);
-            const bool com2Tx = com2Enabled && sGui->getIContextAudio()->isTransmittingdComUnit(CComSystem::Com2);
+            const bool com1Tx = com1Enabled && sGui->getIContextAudio()->isTransmittingComUnit(CComSystem::Com1);
+            const bool com2Tx = com2Enabled && sGui->getIContextAudio()->isTransmittingComUnit(CComSystem::Com2);
 
             // we do not have receiving
             const bool com1Rx = com1Enabled;

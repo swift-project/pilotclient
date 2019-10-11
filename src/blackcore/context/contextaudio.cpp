@@ -123,7 +123,7 @@ namespace BlackCore
             return m_voiceClient->isEnabledComUnit(comUnit);
         }
 
-        bool IContextAudio::isTransmittingdComUnit(CComSystem::ComUnit comUnit) const
+        bool IContextAudio::isTransmittingComUnit(CComSystem::ComUnit comUnit) const
         {
             return m_voiceClient->isTransmittingdComUnit(comUnit);
         }

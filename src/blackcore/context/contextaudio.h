@@ -142,8 +142,11 @@ namespace BlackCore
             //! Audio runs where
             const BlackMisc::CIdentifier &audioRunsWhere() const;
 
+            //! Is COM unit enabled?
             bool isEnabledComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
-            bool isTransmittingdComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
+
+            //! Is COM unit transmitting?
+            bool isTransmittingComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
 
             // -------- parts which can run in core and GUI, referring to local voice client ------------
 
@@ -171,6 +174,7 @@ namespace BlackCore
             void outputVolumePeakVU(double value);
             //! @}
 
+            //! Callsigns I receive have changed
             void receivingCallsignsChanged(const BlackCore::Afv::Audio::TransceiverReceivingCallsignsChangedArgs &args);
 
             //! Client updated from own aicraft data
@@ -187,6 +191,7 @@ namespace BlackCore
             //! .unmute                        unmute           BlackCore::Context::CContextAudio
             //! .vol .volume   volume 0..100   set volume       BlackCore::Context::CContextAudio
             //! </pre>
+            //! \copydoc IContext::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
 
             //! Register a device on a machine (for core/GUI it will return all known devices on all machines)
