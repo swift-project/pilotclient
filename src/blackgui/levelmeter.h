@@ -78,9 +78,9 @@ namespace BlackGui
         static constexpr double High       = 0.60;
         static constexpr double DecayValue = 0.10;
         QTimer *m_redrawTimer = nullptr;
-        QColor m_lowColor;
-        QColor m_highColor;
-        QColor m_peakColor;
+        QColor m_lowColor;  //!< color for low values
+        QColor m_highColor; //!< color for high values
+        QColor m_peakColor; //!< color for peak values
     };
 } // ns
 
