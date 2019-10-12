@@ -71,7 +71,7 @@ namespace BlackGui
             void onAudioDeviceSelected(int index);
 
             //! Current audio devices changed
-            void onCurrentAudioDevicesChanged(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
+            void onAudioStarted(const BlackMisc::Audio::CAudioDeviceInfo &input, const BlackMisc::Audio::CAudioDeviceInfo &output);
 
             //! Audio devices changed
             void onAudioDevicesChanged(const BlackMisc::Audio::CAudioDeviceInfoList &devices);

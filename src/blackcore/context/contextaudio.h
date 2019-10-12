@@ -166,8 +166,8 @@ namespace BlackCore
             //! Changed audio devices (e.g. device enabled/disable)
             void changedAudioDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
 
-            //! Changed slection of audio devices
-            void changedSelectedAudioDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
+            //! Audio started with
+            void startedAudio(const BlackMisc::Audio::CAudioDeviceInfo &input, const BlackMisc::Audio::CAudioDeviceInfo &output);
 
             //! VU levels @{
             void inputVolumePeakVU(double value);

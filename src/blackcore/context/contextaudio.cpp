@@ -46,11 +46,12 @@ namespace BlackCore
             Q_ASSERT_X(m_voiceClient->owner() == this, Q_FUNC_INFO, "Wrong owner");
             Q_ASSERT_X(!CThreadUtils::isApplicationThread(m_voiceClient->thread()), Q_FUNC_INFO, "Must NOT be in main thread");
 
-            connect(m_voiceClient, &CAfvClient::outputVolumePeakVU,            this, &IContextAudio::outputVolumePeakVU);
-            connect(m_voiceClient, &CAfvClient::inputVolumePeakVU,             this, &IContextAudio::inputVolumePeakVU);
-            connect(m_voiceClient, &CAfvClient::receivingCallsignsChanged,     this, &IContextAudio::receivingCallsignsChanged);
-            connect(m_voiceClient, &CAfvClient::updatedFromOwnAircraftCockpit, this, &IContextAudio::updatedFromOwnAircraftCockpit);
-            connect(m_voiceClient, &CAfvClient::ptt,                           this, &IContextAudio::ptt);
+            connect(m_voiceClient, &CAfvClient::outputVolumePeakVU,            this, &IContextAudio::outputVolumePeakVU, Qt::QueuedConnection);
+            connect(m_voiceClient, &CAfvClient::inputVolumePeakVU,             this, &IContextAudio::inputVolumePeakVU,  Qt::QueuedConnection);
+            connect(m_voiceClient, &CAfvClient::receivingCallsignsChanged,     this, &IContextAudio::receivingCallsignsChanged,     Qt::QueuedConnection);
+            connect(m_voiceClient, &CAfvClient::updatedFromOwnAircraftCockpit, this, &IContextAudio::updatedFromOwnAircraftCockpit, Qt::QueuedConnection);
+            connect(m_voiceClient, &CAfvClient::startedAudio,                  this, &IContextAudio::startedAudio, Qt::QueuedConnection);
+            connect(m_voiceClient, &CAfvClient::ptt,                           this, &IContextAudio::ptt,          Qt::QueuedConnection);
 
             const CSettings as = m_audioSettings.getThreadLocal();
             this->setVoiceOutputVolume(as.getOutVolume());
@@ -190,8 +191,7 @@ namespace BlackCore
             if (!inputDevice.getName().isEmpty())  { m_inputDeviceSetting.setAndSave(inputDevice.getName()); }
             if (!outputDevice.getName().isEmpty()) { m_outputDeviceSetting.setAndSave(outputDevice.getName()); }
 
-            m_voiceClient->restartWithNewDevices(inputDevice, outputDevice);
-            emit this->changedSelectedAudioDevices(this->getCurrentAudioDevices());
+            m_voiceClient->startAudio(inputDevice, outputDevice);
         }
 
         void IContextAudio::setVoiceOutputVolume(int volume)

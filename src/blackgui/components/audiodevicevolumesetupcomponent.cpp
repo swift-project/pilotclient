@@ -109,7 +109,7 @@ namespace BlackGui
                 // context
                 c = connect(sGui->getIContextAudio(), &IContextAudio::changedAudioDevices, this, &CAudioDeviceVolumeSetupComponent::onAudioDevicesChanged, Qt::QueuedConnection);
                 Q_ASSERT(c);
-                c = connect(sGui->getIContextAudio(), &IContextAudio::changedSelectedAudioDevices, this, &CAudioDeviceVolumeSetupComponent::onCurrentAudioDevicesChanged, Qt::QueuedConnection);
+                c = connect(sGui->getIContextAudio(), &IContextAudio::startedAudio, this, &CAudioDeviceVolumeSetupComponent::onAudioStarted, Qt::QueuedConnection);
                 Q_ASSERT(c);
 
                 c = connect(sGui->getIContextAudio(), &IContextAudio::outputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onOutputVU, Qt::QueuedConnection);
@@ -193,6 +193,7 @@ namespace BlackGui
 
         void CAudioDeviceVolumeSetupComponent::setTransmitReceiveInUiFromVoiceClient()
         {
+            if (!this->hasAudio()) { return; }
             const bool com1Enabled = sGui->getIContextAudio()->isEnabledComUnit(CComSystem::Com1);
             const bool com2Enabled = sGui->getIContextAudio()->isEnabledComUnit(CComSystem::Com2);
 
@@ -218,7 +219,8 @@ namespace BlackGui
         {
             if (!this->hasAudio()) { return; }
             this->onAudioDevicesChanged(sGui->getIContextAudio()->getAudioDevices());
-            this->onCurrentAudioDevicesChanged(sGui->getIContextAudio()->getCurrentAudioDevices());
+            const CAudioDeviceInfoList currentDevices = sGui->getIContextAudio()->getCurrentAudioDevices();
+            this->onAudioStarted(currentDevices.getInputDevices().frontOrDefault(), currentDevices.getOutputDevices().frontOrDefault());
         }
 
         bool CAudioDeviceVolumeSetupComponent::hasAudio() const
@@ -306,19 +308,10 @@ namespace BlackGui
             sGui->getIContextAudio()->setCurrentAudioDevices(in, out);
         }
 
-        void CAudioDeviceVolumeSetupComponent::onCurrentAudioDevicesChanged(const CAudioDeviceInfoList &devices)
+        void CAudioDeviceVolumeSetupComponent::onAudioStarted(const CAudioDeviceInfo &input, const CAudioDeviceInfo &output)
         {
-            for (auto &device : devices)
-            {
-                if (device.getType() == CAudioDeviceInfo::InputDevice)
-                {
-                    ui->cb_SetupAudioInputDevice->setCurrentText(device.toQString(true));
-                }
-                else if (device.getType() == CAudioDeviceInfo::OutputDevice)
-                {
-                    ui->cb_SetupAudioOutputDevice->setCurrentText(device.toQString(true));
-                }
-            }
+            ui->cb_SetupAudioInputDevice->setCurrentText(input.toQString(true));
+            ui->cb_SetupAudioOutputDevice->setCurrentText(output.toQString(true));
         }
 
         void CAudioDeviceVolumeSetupComponent::onAudioDevicesChanged(const CAudioDeviceInfoList &devices)
