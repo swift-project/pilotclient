@@ -187,38 +187,33 @@ namespace BlackCore
                 this->setNormalizedOutputVolume(mute ? 0 : 50);
             }
 
-            void CAfvClient::restartWithNewDevices(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice)
+            void CAfvClient::startAudio(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice)
             {
                 if (QThread::currentThread() != this->thread())
                 {
                     // Method needs to be executed in the object thread since it will create new QObject children
-                    QPointer<CAfvClient> myself(this);
-                    QMetaObject::invokeMethod(this, [ = ]() { if (myself) restartWithNewDevices(inputDevice, outputDevice); });
-                }
-
-                this->stopAudio();
-                this->startAudio(inputDevice, outputDevice, allTransceiverIds());
-            }
-
-            void CAfvClient::startAudio(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice, const QVector<quint16> &transceiverIDs)
-            {
-                if (QThread::currentThread() != this->thread())
-                {
-                    // Method needs to be executed in the object thread since it will create new QObject children
-                    QMetaObject::invokeMethod(this, [ = ]() { startAudio(inputDevice, outputDevice, transceiverIDs); });
+                    QMetaObject::invokeMethod(this, [ = ]() { startAudio(inputDevice, outputDevice); });
                     return;
                 }
 
                 if (m_isStarted)
                 {
-                    CLogMessage(this).info(u"Client already started");
-                    return;
+                    if (this->usesSameDevices(inputDevice, outputDevice))
+                    {
+                        CLogMessage(this).info(u"Client already started for '%1'/'%2'") << inputDevice.getName() << outputDevice.getName();
+                        return;
+                    }
+                    this->stopAudio();
                 }
 
                 this->initTransceivers();
 
-                if (m_soundcardSampleProvider) { m_soundcardSampleProvider->deleteLater(); }
-                m_soundcardSampleProvider = new CSoundcardSampleProvider(SampleRate, transceiverIDs, this);
+                if (m_soundcardSampleProvider)
+                {
+                    m_soundcardSampleProvider->disconnect();
+                    m_soundcardSampleProvider->deleteLater();
+                }
+                m_soundcardSampleProvider = new CSoundcardSampleProvider(SampleRate, allTransceiverIds(), this);
                 connect(m_soundcardSampleProvider, &CSoundcardSampleProvider::receivingCallsignsChanged, this, &CAfvClient::receivingCallsignsChanged);
 
                 if (m_outputSampleProvider) { m_outputSampleProvider->deleteLater(); }
@@ -237,13 +232,15 @@ namespace BlackCore
                 CLogMessage(this).info(u"Started [Input: %1] [Output: %2]") << inputDevice.getName() << outputDevice.getName();
 
                 this->onPositionUpdateTimer(); // update values
+
+                emit this->startedAudio(inputDevice, outputDevice);
             }
 
             void CAfvClient::startAudio(const QString &inputDeviceName, const QString &outputDeviceName)
             {
-                const CAudioDeviceInfo i(CAudioDeviceInfo::InputDevice, inputDeviceName);
-                const CAudioDeviceInfo o(CAudioDeviceInfo::OutputDevice, outputDeviceName);
-                this->startAudio(i, o, allTransceiverIds());
+                const CAudioDeviceInfo i = CAudioDeviceInfoList::allInputDevices().findByName(inputDeviceName);
+                const CAudioDeviceInfo o = CAudioDeviceInfoList::allOutputDevices().findByName(outputDeviceName);
+                this->startAudio(i, o);
             }
 
             void CAfvClient::stopAudio()

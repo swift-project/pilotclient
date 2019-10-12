@@ -107,8 +107,7 @@ namespace BlackCore
                 //! @}
 
                 //! Start/stop client @{
-                void restartWithNewDevices(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
-                void startAudio(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice, const QVector<quint16> &transceiverIDs);
+                void startAudio(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
                 Q_INVOKABLE void startAudio(const QString &inputDeviceName, const QString &outputDeviceName);
                 void stopAudio();
                 //! @}
@@ -243,6 +242,9 @@ namespace BlackCore
                 void inputVolumePeakVU(double value);
                 void outputVolumePeakVU(double value);
                 //! @}
+
+                //! Started audio with devices
+                void startedAudio(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
 
             protected:
                 //! \copydoc BlackMisc::CContinuousWorker::initialize
