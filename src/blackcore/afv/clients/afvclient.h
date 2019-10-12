@@ -244,6 +244,9 @@ namespace BlackCore
                 //! \copydoc BlackMisc::CContinuousWorker::initialize
                 virtual void initialize() override;
 
+                //! \copydoc BlackMisc::CContinuousWorker::cleanup
+                virtual void cleanup() override;
+
             private:
                 void opusDataAvailable(const Audio::OpusDataAvailableArgs &args);
                 void audioOutDataAvailable(const AudioRxOnTransceiversDto &dto);
@@ -292,6 +295,7 @@ namespace BlackCore
 
                 std::atomic_bool m_isStarted  { false };
                 std::atomic_bool m_loopbackOn { false };
+                std::atomic_bool m_winCoInitialized { false }; //!< Windows only CoInitializeEx
                 QDateTime m_startDateTimeUtc;
 
                 double m_inputVolumeDb;
