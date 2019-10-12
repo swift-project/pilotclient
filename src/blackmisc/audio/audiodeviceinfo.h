@@ -62,7 +62,7 @@ namespace BlackMisc
             bool isOutputDevice() const { return this->getType() == OutputDevice; }
 
             //! Valid audio device object?
-            bool isValid() const { return !m_deviceName.isEmpty(); }
+            bool isValid() const { return !m_deviceName.isEmpty() && (m_deviceName != Unknown); }
 
             //! Is this a default device?
             bool isDefault() const { return m_deviceName == "default"; }

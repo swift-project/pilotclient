@@ -82,13 +82,13 @@ namespace BlackSound
 
     QAudioDeviceInfo getLowestLatencyDevice(const CAudioDeviceInfo &device, QAudioFormat &format)
     {
-        if (device.isDefault())
+        if (device.isDefault() || !device.isValid())
         {
             if (device.getType() == CAudioDeviceInfo::InputDevice) { return QAudioDeviceInfo::defaultInputDevice(); }
             else { return QAudioDeviceInfo::defaultOutputDevice(); }
         }
 
-        QAudio::Mode mode = (device.getType() == CAudioDeviceInfo::InputDevice) ? QAudio::AudioInput : QAudio::AudioOutput;
+        const QAudio::Mode mode = device.isInputDevice() ? QAudio::AudioInput : QAudio::AudioOutput;
         const QList<QAudioDeviceInfo> allQtDevices = QAudioDeviceInfo::availableDevices(mode);
 
         // Find the one with lowest latency.
