@@ -41,7 +41,7 @@ namespace BlackCore
             {
                 if (m_connection.isConnected())
                 {
-                    CLogMessage(this).debug(u"Client already connected");
+                    CLogMessage(this).debug(u"Client already connected to network");
                     return;
                 }
 
