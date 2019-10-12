@@ -417,6 +417,7 @@ namespace BlackCore
             Q_UNUSED(from)
             BLACK_VERIFY_X(this->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
 
+            // we only change network connection of AFC client here
             if (to.isConnected() && this->getIContextNetwork())
             {
                 const CVoiceSetup vs = m_voiceSettings.getThreadLocal();
@@ -427,7 +428,6 @@ namespace BlackCore
             }
             else if (to.isDisconnected())
             {
-                m_voiceClient->stopAudio();
                 m_voiceClient->disconnectFrom();
             }
         }

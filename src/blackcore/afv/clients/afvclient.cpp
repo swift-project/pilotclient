@@ -128,8 +128,16 @@ namespace BlackCore
 
                 this->onPositionUpdateTimer();
 
-                if (m_connection->isConnected()) { emit this->connectionStatusChanged(Connected); }
-                else { emit this->connectionStatusChanged(Disconnected); }
+                if (m_connection->isConnected())
+                {
+                    // restart timer, normally it should be started already, paranoia
+                    if (m_voiceServerPositionTimer) { m_voiceServerPositionTimer->start(PositionUpdatesMs); }
+                    emit this->connectionStatusChanged(Connected);
+                }
+                else
+                {
+                    emit this->connectionStatusChanged(Disconnected);
+                }
             }
 
             void CAfvClient::disconnectFrom()
@@ -142,6 +150,7 @@ namespace BlackCore
                     return;
                 }
 
+                // we intentionally DO NOT STOP the timer here, but keep it for preset (own aircraft pos.)
                 m_connection->disconnectFrom();
                 emit connectionStatusChanged(Disconnected);
             }
@@ -219,7 +228,7 @@ namespace BlackCore
 
                 m_startDateTimeUtc = QDateTime::currentDateTimeUtc();
                 m_connection->setReceiveAudio(true);
-                m_voiceServerPositionTimer->start(PositionUpdatesMs);
+                m_voiceServerPositionTimer->start(PositionUpdatesMs); // start for preset values
 
                 this->onSettingsChanged(); // make sure all settings are applied
                 m_isStarted = true;
