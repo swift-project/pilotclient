@@ -13,6 +13,10 @@
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/threadutils.h"
 
+#ifdef _WIN32
+#include "comdef.h"
+#endif
+
 #include <QDebug>
 
 using namespace BlackCore::Context;
@@ -55,11 +59,9 @@ namespace BlackCore
                 connect(m_connection, &CClientConnection::audioReceived, this, &CAfvClient::audioOutDataAvailable);
                 connect(m_voiceServerPositionTimer, &QTimer::timeout,    this, &CAfvClient::onPositionUpdateTimer);
 
-                // deferred init
-                QPointer<CAfvClient> myself(this);
-                QTimer::singleShot(1000, this, [ = ]
+                // deferred init - use BlackMisc:: singleShot to call in correct thread, "myself" NOT needed
+                BlackMisc::singleShot(1000, this, [ = ]
                 {
-                    if (!myself) { return; }
                     this->deferredInit();
                 });
             }
