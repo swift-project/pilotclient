@@ -221,6 +221,9 @@ namespace BlackCore
                 //! Update the voice server URL
                 bool updateVoiceServerUrl(const QString &url);
 
+                //! Gracefully shut down AFV client
+                void gracefulShutdown();
+
             signals:
                 //! Receiving callsigns have been changed
                 //! \remark callsigns I do receive

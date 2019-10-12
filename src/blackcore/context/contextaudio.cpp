@@ -105,8 +105,7 @@ namespace BlackCore
         {
             if (m_voiceClient)
             {
-                m_voiceClient->stopAudio();
-                m_voiceClient->quitAndWait();
+                m_voiceClient->gracefulShutdown();
                 Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(m_voiceClient), Q_FUNC_INFO, "Needs to be back in current thread");
                 m_voiceClient = nullptr;
             }

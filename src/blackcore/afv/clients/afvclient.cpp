@@ -220,6 +220,7 @@ namespace BlackCore
                 m_startDateTimeUtc = QDateTime::currentDateTimeUtc();
                 m_connection->setReceiveAudio(true);
                 m_voiceServerPositionTimer->start(PositionUpdatesMs);
+
                 this->onSettingsChanged(); // make sure all settings are applied
                 m_isStarted = true;
                 CLogMessage(this).info(u"Started [Input: %1] [Output: %2]") << inputDevice.getName() << outputDevice.getName();
@@ -670,6 +671,14 @@ namespace BlackCore
                 QMutexLocker lock(&m_mutex);
                 if (!m_connection) { return false; }
                 return m_connection->updateVoiceServerUrl(url);
+            }
+
+            void CAfvClient::gracefulShutdown()
+            {
+                this->stopAudio();
+                this->disconnectFrom();
+                this->quitAndWait();
+                Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Needs to be back in current thread");
             }
 
             void CAfvClient::initialize()
