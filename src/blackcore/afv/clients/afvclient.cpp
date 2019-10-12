@@ -182,22 +182,22 @@ namespace BlackCore
                     QMetaObject::invokeMethod(this, [ = ]() { if (myself) restartWithNewDevices(inputDevice, outputDevice); });
                 }
 
-                if (m_isStarted) { this->stopAudio(); }
+                this->stopAudio();
                 this->startAudio(inputDevice, outputDevice, allTransceiverIds());
             }
 
             void CAfvClient::startAudio(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice, const QVector<quint16> &transceiverIDs)
             {
-                if (m_isStarted)
-                {
-                    CLogMessage(this).info(u"Client already started");
-                    return;
-                }
-
                 if (QThread::currentThread() != this->thread())
                 {
                     // Method needs to be executed in the object thread since it will create new QObject children
                     QMetaObject::invokeMethod(this, [ = ]() { startAudio(inputDevice, outputDevice, transceiverIDs); });
+                    return;
+                }
+
+                if (m_isStarted)
+                {
+                    CLogMessage(this).info(u"Client already started");
                     return;
                 }
 
@@ -233,17 +233,17 @@ namespace BlackCore
 
             void CAfvClient::stopAudio()
             {
-                if (!m_isStarted)
-                {
-                    CLogMessage(this).info(u"Client NOT started");
-                    return;
-                }
-
                 if (QThread::currentThread() != this->thread())
                 {
                     // Method needs to be executed in the object thread since it will create new QObject children
                     QPointer<CAfvClient> myself(this);
                     QMetaObject::invokeMethod(this, [ = ]() { if (myself) stopAudio(); });
+                    return;
+                }
+
+                if (!m_isStarted)
+                {
+                    CLogMessage(this).info(u"Client NOT started");
                     return;
                 }
 
