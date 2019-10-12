@@ -67,6 +67,9 @@ namespace BlackMisc
             //! Is this a default device?
             bool isDefault() const { return m_deviceName == "default"; }
 
+            //! Mathcing name, type and machine
+            bool matchesNameTypeHostName(const CAudioDeviceInfo &device) const;
+
             //! Convert the Qt type
             static DeviceType fromQtMode(QAudio::Mode m);
 

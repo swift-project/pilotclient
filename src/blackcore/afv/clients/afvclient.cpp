@@ -59,6 +59,8 @@ namespace BlackCore
                 connect(m_connection, &CClientConnection::audioReceived, this, &CAfvClient::audioOutDataAvailable);
                 connect(m_voiceServerPositionTimer, &QTimer::timeout,    this, &CAfvClient::onPositionUpdateTimer);
 
+                m_updateTimer.stop(); // not used
+
                 // deferred init - use BlackMisc:: singleShot to call in correct thread, "myself" NOT needed
                 BlackMisc::singleShot(1000, this, [ = ]
                 {
@@ -264,7 +266,6 @@ namespace BlackCore
                 m_connection->setReceiveAudio(false);
 
                 // stop input/output
-                m_updateTimer.stop();
                 m_input->stop();
                 m_output->stop();
                 CLogMessage(this).info(u"Client stopped");
@@ -908,6 +909,18 @@ namespace BlackCore
                 if (m_output) { return m_output->device(); }
                 static const CAudioDeviceInfo nullDevice;
                 return nullDevice;
+            }
+
+            bool CAfvClient::usesSameDevices(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice)
+            {
+                QMutexLocker lock(&m_mutex);
+                if (!m_output || !m_input) { return false; }
+                const CAudioDeviceInfo i = m_input->device();
+                const CAudioDeviceInfo o = m_output->device();
+                lock.unlock();
+
+                return i.matchesNameTypeHostName(inputDevice) &&
+                       o.matchesNameTypeHostName(outputDevice);
             }
 
             CAfvClient::ConnectionStatus CAfvClient::getConnectionStatus() const

@@ -209,6 +209,7 @@ namespace BlackCore
                 //! @{
                 const BlackMisc::Audio::CAudioDeviceInfo &getInputDevice() const;
                 const BlackMisc::Audio::CAudioDeviceInfo &getOutputDevice() const;
+                bool usesSameDevices(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
                 //! @}
 
                 //! Callsigns currently received

@@ -76,13 +76,11 @@ namespace BlackMisc
 
         CAudioDeviceInfo CAudioDeviceInfoList::findRegisteredDevice(const CAudioDeviceInfo &device) const
         {
-            CAudioDeviceInfoList devices = device.isInputDevice() ? this->getInputDevices() : this->getOutputDevices();
-            if (devices.isEmpty()) { return {}; }
-
-            devices = devices.findByHostName(device.getHostName());
-            if (devices.isEmpty()) { return {}; }
-
-            return devices.findByName(device.getName());
+            for (const CAudioDeviceInfo &d : *this)
+            {
+                if (device.matchesNameTypeHostName(d)) { return d; }
+            }
+            return {};
         }
 
         void CAudioDeviceInfoList::registerDevice(const CAudioDeviceInfo &device)

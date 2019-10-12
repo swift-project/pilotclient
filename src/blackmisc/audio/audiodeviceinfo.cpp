@@ -7,6 +7,7 @@
  */
 
 #include "blackmisc/audio/audiodeviceinfo.h"
+#include "blackmisc/stringutils.h"
 
 #include <QStringBuilder>
 #include <QHostInfo>
@@ -25,6 +26,13 @@ namespace BlackMisc
             m_type(type),
             m_deviceName(name), m_hostName(QHostInfo::localHostName())
         { }
+
+        bool CAudioDeviceInfo::matchesNameTypeHostName(const CAudioDeviceInfo &device) const
+        {
+            return device.getType() == this->getType() &&
+                   stringCompare(device.getName(), this->getName(), Qt::CaseInsensitive) &&
+                   stringCompare(device.getHostName(), this->getHostName(), Qt::CaseInsensitive);
+        }
 
         CAudioDeviceInfo::DeviceType CAudioDeviceInfo::fromQtMode(QAudio::Mode m)
         {
