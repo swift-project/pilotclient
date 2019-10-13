@@ -272,7 +272,7 @@ namespace BlackCore
 
                 static constexpr int PositionUpdatesMs = 5000; //!< position timer
                 static constexpr int SampleRate   = 48000;
-                static constexpr int FrameSize    =   960;     //!< 20ms
+                static constexpr int FrameSize    = static_cast<int>(SampleRate * 0.02); //!< 20ms
                 static constexpr double MinDbIn   = -18.0;
                 static constexpr double MaxDbIn   =  18.0;
                 static constexpr double MinDbOut  = -60.0;

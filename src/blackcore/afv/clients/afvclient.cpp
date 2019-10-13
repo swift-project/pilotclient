@@ -13,7 +13,7 @@
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/threadutils.h"
 
-#ifdef _WIN32
+#ifdef Q_OS_WIN
 #include "comdef.h"
 #endif
 
@@ -493,10 +493,13 @@ namespace BlackCore
 
                 QMutexLocker lock(&m_mutex);
                 bool changed = !qFuzzyCompare(m_inputVolumeDb, valueDb);
-                m_inputVolumeDb = valueDb;
-                if (m_input)
+                if (changed)
                 {
-                    changed = m_input->setVolume(qPow(10, valueDb / 20.0));
+                    m_inputVolumeDb = valueDb;
+                    if (m_input)
+                    {
+                        changed = m_input->setVolume(qPow(10, valueDb / 20.0));
+                    }
                 }
                 return changed;
             }
@@ -690,7 +693,7 @@ namespace BlackCore
 
             void CAfvClient::initialize()
             {
-#ifdef _WIN32
+#ifdef Q_OS_WIN
                 if (!m_winCoInitialized)
                 {
                     HRESULT hr = CoInitializeEx(nullptr,  COINIT_MULTITHREADED);
@@ -712,7 +715,7 @@ namespace BlackCore
 
             void CAfvClient::cleanup()
             {
-#ifdef _WIN32
+#ifdef Q_OS_WIN
                 if (m_winCoInitialized)
                 {
                     CoUninitialize();
@@ -882,12 +885,15 @@ namespace BlackCore
 
                 QMutexLocker lock(&m_mutex);
                 bool changed = !qFuzzyCompare(m_outputVolumeDb, valueDb);
-                m_outputVolumeDb = valueDb;
-                m_outputVolume   = qPow(10, m_outputVolumeDb / 20.0);
-
-                if (m_outputSampleProvider)
+                if (changed)
                 {
-                    changed = m_outputSampleProvider->setVolume(m_outputVolume);
+                    m_outputVolumeDb = valueDb;
+                    m_outputVolume   = qPow(10, m_outputVolumeDb / 20.0);
+
+                    if (m_outputSampleProvider)
+                    {
+                        changed = m_outputSampleProvider->setVolume(m_outputVolume);
+                    }
                 }
                 return changed;
             }

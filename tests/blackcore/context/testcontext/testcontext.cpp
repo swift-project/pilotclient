@@ -17,7 +17,7 @@
 #include "test.h"
 #include <QTest>
 
-#ifdef _WIN32
+#ifdef Q_OS_WIN
 #include "comdef.h"
 #endif
 

@@ -37,7 +37,7 @@ namespace BlackSound
         bool CVolumeSampleProvider::setVolume(double volume)
         {
             const bool changed = !qFuzzyCompare(m_volume, volume);
-            m_volume = volume;
+            if (changed) { m_volume = volume; }
             return changed;
         }
     } // ns
