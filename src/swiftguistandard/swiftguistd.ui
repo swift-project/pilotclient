@@ -520,7 +520,7 @@
   </action>
   <action name="menu_ModelBrowser">
    <property name="text">
-    <string>Model brower</string>
+    <string>Model browser</string>
    </property>
   </action>
   <action name="menu_AfvMap">
