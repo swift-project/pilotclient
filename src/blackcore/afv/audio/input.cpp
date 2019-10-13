@@ -34,8 +34,10 @@ namespace BlackCore
                 this->setObjectName("CAudioInputBuffer");
             }
 
-            void CAudioInputBuffer::start()
+            void CAudioInputBuffer::start(int channelCount)
             {
+                m_channelCount = channelCount;
+                m_buffer.clear();
                 if (!this->isOpen())
                 {
                     open(QIODevice::WriteOnly | QIODevice::Unbuffered);
@@ -57,33 +59,15 @@ namespace BlackCore
             qint64 CAudioInputBuffer::writeData(const char *data, qint64 len)
             {
                 m_buffer.append(data, static_cast<int>(len));
-                while (m_buffer.size() > 1920)
+                const int byteCount = 1920 * m_channelCount;
+                while (m_buffer.size() > byteCount)
                 {
                     // qDebug() << QDateTime::currentMSecsSinceEpoch() << "CAudioInputBuffer::writeData " << m_buffer.size();
-                    emit frameAvailable(m_buffer.left(1920));
-                    m_buffer.remove(0, 1920);
+                    emit frameAvailable(m_buffer.left(byteCount));
+                    m_buffer.remove(0, byteCount);
                 }
                 return len;
             }
-
-            /**
-            void CAudioInputBuffer::timerEvent(QTimerEvent *event)
-            {
-                Q_UNUSED(event)
-                // 20 ms = 960 samples * 2 bytes = 1920 Bytes
-                if (m_buffer.size() < 1920) { return; }
-
-                const qint64 now   = QDateTime::currentMSecsSinceEpoch();
-                const qint64 delta = now - m_lastFrameSent;
-                if (delta >= 19)
-                {
-                    // qDebug() << now << "[signal] frameAvailable - buffer size" << m_buffer.size();
-                    m_buffer.remove(0, 1920);
-                    m_lastFrameSent = now;
-                    emit frameAvailable(m_buffer.left(1920));
-                }
-            }
-            **/
 
             CInput::CInput(int sampleRate, QObject *parent) :
                 QObject(parent),
@@ -116,7 +100,7 @@ namespace BlackCore
 
                 QAudioDeviceInfo selectedDevice = getLowestLatencyDevice(inputDevice, m_inputFormat);
                 m_audioInput.reset(new QAudioInput(selectedDevice, m_inputFormat));
-                m_audioInputBuffer.start();
+                m_audioInputBuffer.start(m_inputFormat.channelCount());
 
 #ifdef Q_OS_MAC
                 CMacOSMicrophoneAccess::AuthorizationStatus status = m_micAccess.getAuthorizationStatus();

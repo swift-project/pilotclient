@@ -40,7 +40,7 @@ namespace BlackCore
                 CAudioInputBuffer(QObject *parent = nullptr);
 
                 //! Start
-                void start();
+                void start(int channelCount);
 
                 //! Stop
                 void stop();
@@ -58,6 +58,7 @@ namespace BlackCore
             private:
                 static constexpr qint64 frameSize = 960;
                 QByteArray m_buffer;
+                int m_channelCount = 1;
             };
 
             //! Opus data arguments
