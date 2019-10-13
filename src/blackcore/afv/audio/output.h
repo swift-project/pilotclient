@@ -38,7 +38,7 @@ namespace BlackCore
 
             public:
                 //! Ctor
-                CAudioOutputBuffer(BlackSound::SampleProvider::ISampleProvider *sampleProvider, QObject *parent = nullptr);
+                CAudioOutputBuffer(BlackSound::SampleProvider::ISampleProvider *sampleProvider, QObject *parent);
 
                 //! Set the format
                 void setAudioFormat(const QAudioFormat &format) { m_outputFormat = format; }

@@ -103,7 +103,10 @@ namespace BlackCore
                 outputFormat.setByteOrder(QAudioFormat::LittleEndian);
                 outputFormat.setCodec("audio/pcm");
 
+                const QString format = toQString(outputFormat);
                 const QAudioDeviceInfo selectedDevice = getLowestLatencyDevice(outputDevice, outputFormat);
+                CLogMessage(this).info(u"Starting: '%1' with: %2") << selectedDevice.deviceName() << format;
+
                 m_audioOutputCom.reset(new QAudioOutput(selectedDevice, outputFormat));
                 m_audioOutputBuffer->open(QIODevice::ReadWrite | QIODevice::Unbuffered);
                 m_audioOutputBuffer->setAudioFormat(outputFormat);
@@ -118,8 +121,11 @@ namespace BlackCore
                 m_started = false;
                 m_audioOutputCom->stop();
                 m_audioOutputCom.reset();
-                m_audioOutputBuffer->deleteLater();
-                m_audioOutputBuffer = nullptr;
+                if (m_audioOutputBuffer)
+                {
+                    m_audioOutputBuffer->deleteLater();
+                    m_audioOutputBuffer = nullptr;
+                }
             }
         } // ns
     } // ns
