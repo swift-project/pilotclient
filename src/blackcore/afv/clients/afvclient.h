@@ -287,7 +287,7 @@ namespace BlackCore
                 QString m_callsign;
 
                 Audio::CInput *m_input  = nullptr;
-                Audio::Output *m_output = nullptr;
+                Audio::COutput *m_output = nullptr;
 
                 Audio::CSoundcardSampleProvider *m_soundcardSampleProvider = nullptr;
                 BlackSound::SampleProvider::CVolumeSampleProvider *m_outputSampleProvider = nullptr;

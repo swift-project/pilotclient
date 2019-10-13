@@ -66,16 +66,16 @@ namespace BlackCore
             };
 
             //! Output
-            class Output : public QObject
+            class COutput : public QObject
             {
                 Q_OBJECT
 
             public:
                 //! Ctor
-                Output(QObject *parent = nullptr);
+                COutput(QObject *parent = nullptr);
 
                 //! Dtor
-                virtual ~Output() override
+                virtual ~COutput() override
                 {
                     this->stop();
                 }

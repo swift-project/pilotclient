@@ -46,7 +46,7 @@ namespace BlackCore
                 CContinuousWorker(owner, "CAfvClient"),
                 m_connection(new CClientConnection(apiServer, this)),
                 m_input(new CInput(SampleRate, this)),
-                m_output(new Output(this)),
+                m_output(new COutput(this)),
                 m_voiceServerPositionTimer(new QTimer(this))
             {
                 this->setObjectName("AFV client");
@@ -55,7 +55,7 @@ namespace BlackCore
                 connect(m_input, &CInput::opusDataAvailable, this, &CAfvClient::opusDataAvailable);
                 connect(m_input, &CInput::inputVolumeStream, this, &CAfvClient::inputVolumeStream);
 
-                connect(m_output,     &Output::outputVolumeStream,       this, &CAfvClient::outputVolumeStream);
+                connect(m_output,     &COutput::outputVolumeStream,      this, &CAfvClient::outputVolumeStream);
                 connect(m_connection, &CClientConnection::audioReceived, this, &CAfvClient::audioOutDataAvailable);
                 connect(m_voiceServerPositionTimer, &QTimer::timeout,    this, &CAfvClient::onPositionUpdateTimer);
 
@@ -219,8 +219,8 @@ namespace BlackCore
                 if (m_outputSampleProvider) { m_outputSampleProvider->deleteLater(); }
                 m_outputSampleProvider = new CVolumeSampleProvider(m_soundcardSampleProvider, this);
                 m_outputSampleProvider->setVolume(m_outputVolume);
-
                 m_output->start(outputDevice, m_outputSampleProvider);
+
                 m_input->start(inputDevice);
 
                 m_startDateTimeUtc = QDateTime::currentDateTimeUtc();

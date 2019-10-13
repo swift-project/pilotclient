@@ -36,9 +36,9 @@ namespace BlackCore
 
             qint64 CAudioOutputBuffer::readData(char *data, qint64 maxlen)
             {
-                int sampleBytes  = m_outputFormat.sampleSize() / 8;
-                int channelCount = m_outputFormat.channelCount();
-                qint64 count = maxlen / (sampleBytes * channelCount);
+                const int sampleBytes  = m_outputFormat.sampleSize() / 8;
+                const int channelCount = m_outputFormat.channelCount();
+                const qint64 count = maxlen / (sampleBytes * channelCount);
                 QVector<float> buffer;
                 m_sampleProvider->readSamples(buffer, count);
 
@@ -81,17 +81,17 @@ namespace BlackCore
                 return -1;
             }
 
-            Output::Output(QObject *parent) : QObject(parent)
+            COutput::COutput(QObject *parent) : QObject(parent)
             {
                 this->setObjectName("COutput");
             }
 
-            void Output::start(const CAudioDeviceInfo &outputDevice, ISampleProvider *sampleProvider)
+            void COutput::start(const CAudioDeviceInfo &outputDevice, ISampleProvider *sampleProvider)
             {
                 if (m_started) { return; }
 
                 m_audioOutputBuffer = new CAudioOutputBuffer(sampleProvider, this);
-                connect(m_audioOutputBuffer, &CAudioOutputBuffer::outputVolumeStream, this, &Output::outputVolumeStream);
+                connect(m_audioOutputBuffer, &CAudioOutputBuffer::outputVolumeStream, this, &COutput::outputVolumeStream);
 
                 m_device = outputDevice;
 
@@ -103,7 +103,7 @@ namespace BlackCore
                 outputFormat.setByteOrder(QAudioFormat::LittleEndian);
                 outputFormat.setCodec("audio/pcm");
 
-                QAudioDeviceInfo selectedDevice = getLowestLatencyDevice(outputDevice, outputFormat);
+                const QAudioDeviceInfo selectedDevice = getLowestLatencyDevice(outputDevice, outputFormat);
                 m_audioOutputCom.reset(new QAudioOutput(selectedDevice, outputFormat));
                 m_audioOutputBuffer->open(QIODevice::ReadWrite | QIODevice::Unbuffered);
                 m_audioOutputBuffer->setAudioFormat(outputFormat);
@@ -112,7 +112,7 @@ namespace BlackCore
                 m_started = true;
             }
 
-            void Output::stop()
+            void COutput::stop()
             {
                 if (!m_started) { return; }
                 m_started = false;
