@@ -7,6 +7,7 @@
  */
 
 #include "audioutilities.h"
+#include <QStringBuilder>
 #include <QAudioInput>
 #include <QAudioOutput>
 
@@ -30,7 +31,7 @@ namespace BlackSound
 
     QVector<qint16> convertBytesTo16BitPCM(const QByteArray input)
     {
-        int inputSamples = input.size() / 2; // 16 bit input, so 2 bytes per sample
+        const int inputSamples = input.size() / 2; // 16 bit input, so 2 bytes per sample
         QVector<qint16> output;
         output.fill(0, inputSamples);
         for (int n = 0; n < inputSamples; n++)
@@ -184,4 +185,46 @@ namespace BlackSound
         return usedDevice;
     }
 
+    QString toQString(const QAudioFormat &format)
+    {
+        return QStringLiteral("Sample rate: %1 channels: %2 sample size: %3 codec: %4 order: %5 type: %6 bytes/frame: %7")
+               .arg(format.sampleRate())
+               .arg(format.channelCount())
+               .arg(format.sampleSize())
+               .arg(format.codec())
+               .arg(toQString(format.byteOrder()))
+               .arg(toQString(format.sampleType()))
+               .arg(format.bytesPerFrame());
+    }
+
+    const QString &toQString(QAudioFormat::Endian s)
+    {
+        static const QString l("little");
+        static const QString b("big");
+        switch (s)
+        {
+        case QAudioFormat::BigEndian: return b;
+        case QAudioFormat::LittleEndian: return l;
+        default: break;
+        }
+        static const QString u("??");
+        return u;
+    }
+
+    const QString &toQString(QAudioFormat::SampleType e)
+    {
+        static const QString s("signed int");
+        static const QString u("unsigned int");
+        static const QString f("float");
+        switch (e)
+        {
+        case QAudioFormat::SignedInt:   return s;
+        case QAudioFormat::UnSignedInt: return u;
+        case QAudioFormat::Float:       return f;
+        case QAudioFormat::Unknown:
+        default: break;
+        }
+        static const QString unknown("unknown");
+        return unknown;
+    }
 } // ns
