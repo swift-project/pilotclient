@@ -304,9 +304,9 @@ namespace BlackCore
                 std::atomic_bool m_winCoInitialized { false }; //!< Windows only CoInitializeEx
                 QDateTime m_startDateTimeUtc;
 
-                double m_inputVolumeDb;
-                double m_outputVolumeDb;
-                double m_outputVolume = 1.0;
+                double m_inputVolumeDb  = 0.0;
+                double m_outputVolumeDb = 0.0;
+                double m_outputVolume   = 1.0;
                 double m_maxDbReadingInPTTInterval = -100;
 
                 QTimer             *m_voiceServerPositionTimer = nullptr;
