@@ -86,7 +86,7 @@ namespace BlackGui
 
         CStatusMessageList CCockpitComForm::validate(bool nested) const
         {
-            Q_UNUSED(nested);
+            Q_UNUSED(nested)
             CStatusMessageList msgs;
             return msgs;
         }
