@@ -42,12 +42,15 @@ namespace chunkware_simple
     class SimpleLimit
     {
     public:
+        //! Ctor
         SimpleLimit();
+
+        //! Dtor
         virtual ~SimpleLimit() {}
 
         //! @{ set parameters
         virtual void setThresh(double dB);
-        virtual void setAttack(double ms);
+        virtual void setAttack(double ms) {  this->setAttackImpl(ms); } // used in ctor
         virtual void setRelease(double ms);
         //! @}
 
@@ -88,6 +91,8 @@ namespace chunkware_simple
         };
 
     private:
+        //! Impl. function as it is used in ctor, non virtual
+        void setAttackImpl(double ms);
 
         // transfer function
         double threshdB_;   // threshold (dB)

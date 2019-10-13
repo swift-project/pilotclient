@@ -61,5 +61,12 @@ namespace BlackSound
         {
             m_simpleCompressor.setMakeUpGain(gain);
         }
+
+        void CSimpleCompressorEffect::setChannels(int channels)
+        {
+            if (channels < 1) { channels = 1; }
+            else if (channels > 2) { channels = 2; }
+            m_channels = channels;
+        }
     }
 }

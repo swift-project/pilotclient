@@ -58,7 +58,7 @@ namespace chunkware_simple
     }
 
     //-------------------------------------------------------------
-    void SimpleLimit::setAttack(double ms)
+    void SimpleLimit::setAttackImpl(double ms)
     {
         unsigned int samp = static_cast<unsigned>(0.001 * ms * att_.getSampleRate());
 

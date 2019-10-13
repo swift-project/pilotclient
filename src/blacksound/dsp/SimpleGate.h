@@ -79,10 +79,10 @@ namespace chunkware_simple
         SimpleGateRms();
 
         //! Destructor
-        virtual ~SimpleGateRms() {}
+        virtual ~SimpleGateRms() override {}
 
         //! set sample rate
-        virtual void setSampleRate(double sampleRate);
+        virtual void setSampleRate(double sampleRate) override;
 
         //! set RMS window
         virtual void setWindow(double ms);
@@ -91,7 +91,7 @@ namespace chunkware_simple
         virtual double getWindow(void) const { return ave_.getTc(); }
 
         //! call before runtime (in resume())
-        virtual void initRuntime(void);
+        virtual void initRuntime(void) override;
 
         //! gate runtime process
         void process(double &in1, double &in2);
