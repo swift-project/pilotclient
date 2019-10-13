@@ -37,10 +37,10 @@ namespace BlackCore
 
             public:
                 //! Inout buffer
-                CAudioInputBuffer(QObject *parent = nullptr);
+                CAudioInputBuffer(QObject *parent);
 
                 //! Start
-                void start(int channelCount);
+                void start(const QAudioFormat &format);
 
                 //! Stop
                 void stop();
@@ -57,8 +57,8 @@ namespace BlackCore
 
             private:
                 static constexpr qint64 frameSize = 960;
-                QByteArray m_buffer;
-                int m_channelCount = 1;
+                QByteArray   m_buffer;
+                QAudioFormat m_format;
             };
 
             //! Opus data arguments
@@ -131,10 +131,10 @@ namespace BlackCore
                 static constexpr qint64 c_frameSize = 960;
                 int m_sampleRate = 0;
 
-                BlackSound::Codecs::COpusEncoder m_encoder;
-                QScopedPointer<QAudioInput> m_audioInput;
+                BlackSound::Codecs::COpusEncoder   m_encoder;
+                QScopedPointer<QAudioInput>        m_audioInput;
                 BlackMisc::Audio::CAudioDeviceInfo m_device;
-                QAudioFormat m_inputFormat;
+                QAudioFormat                       m_inputFormat;
 
                 bool m_started = false;
                 int m_opusBytesEncoded  = 0;
@@ -147,7 +147,7 @@ namespace BlackCore
                 const double minDb = -40;
 
                 uint m_audioSequenceCounter = 0;
-                CAudioInputBuffer m_audioInputBuffer;
+                CAudioInputBuffer *m_audioInputBuffer = nullptr;
 
 #ifdef Q_OS_MAC
                 BlackMisc::CMacOSMicrophoneAccess m_micAccess;

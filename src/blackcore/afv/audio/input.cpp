@@ -34,9 +34,9 @@ namespace BlackCore
                 this->setObjectName("CAudioInputBuffer");
             }
 
-            void CAudioInputBuffer::start(int channelCount)
+            void CAudioInputBuffer::start(const QAudioFormat &format)
             {
-                m_channelCount = channelCount;
+                m_format = format;
                 m_buffer.clear();
                 if (!this->isOpen())
                 {
@@ -59,7 +59,7 @@ namespace BlackCore
             qint64 CAudioInputBuffer::writeData(const char *data, qint64 len)
             {
                 m_buffer.append(data, static_cast<int>(len));
-                const int byteCount = 1920 * m_channelCount;
+                const int byteCount = 1920 * m_format.channelCount();
                 while (m_buffer.size() > byteCount)
                 {
                     // qDebug() << QDateTime::currentMSecsSinceEpoch() << "CAudioInputBuffer::writeData " << m_buffer.size();
@@ -91,23 +91,27 @@ namespace BlackCore
 
                 m_device = inputDevice;
 
-                m_inputFormat.setSampleRate(m_sampleRate);
-                m_inputFormat.setChannelCount(1);
-                m_inputFormat.setSampleSize(16);
-                m_inputFormat.setSampleType(QAudioFormat::SignedInt);
-                m_inputFormat.setByteOrder(QAudioFormat::LittleEndian);
-                m_inputFormat.setCodec("audio/pcm");
+                QAudioFormat inputFormat;
+                inputFormat.setSampleRate(m_sampleRate);
+                inputFormat.setChannelCount(1);
+                inputFormat.setSampleSize(16);
+                inputFormat.setSampleType(QAudioFormat::SignedInt);
+                inputFormat.setByteOrder(QAudioFormat::LittleEndian);
+                inputFormat.setCodec("audio/pcm");
 
-                QAudioDeviceInfo selectedDevice = getLowestLatencyDevice(inputDevice, m_inputFormat);
+                QAudioDeviceInfo selectedDevice = getLowestLatencyDevice(inputDevice, inputFormat);
+                m_inputFormat = inputFormat;
                 m_audioInput.reset(new QAudioInput(selectedDevice, m_inputFormat));
-                m_audioInputBuffer.start(m_inputFormat.channelCount());
+                if (!m_audioInputBuffer) { m_audioInputBuffer = new CAudioInputBuffer(this); }
+                else { m_audioInputBuffer->disconnect(); } // make sure disconnected in any case
+                m_audioInputBuffer->start(m_inputFormat);
 
 #ifdef Q_OS_MAC
                 CMacOSMicrophoneAccess::AuthorizationStatus status = m_micAccess.getAuthorizationStatus();
                 if (status == CMacOSMicrophoneAccess::Authorized)
                 {
-                    m_audioInput->start(&m_audioInputBuffer);
-                    connect(&m_audioInputBuffer, &CAudioInputBuffer::frameAvailable, this, &CInput::audioInDataAvailable);
+                    m_audioInput->start(m_audioInputBuffer);
+                    connect(m_audioInputBuffer, &CAudioInputBuffer::frameAvailable, this, &CInput::audioInDataAvailable);
                     m_started = true;
                     return;
                 }
@@ -123,10 +127,12 @@ namespace BlackCore
                     return;
                 }
 #else
-                m_audioInput->start(&m_audioInputBuffer);
-                connect(&m_audioInputBuffer, &CAudioInputBuffer::frameAvailable, this, &CInput::audioInDataAvailable);
+                m_audioInput->start(m_audioInputBuffer);
+                connect(m_audioInputBuffer, &CAudioInputBuffer::frameAvailable, this, &CInput::audioInDataAvailable);
                 m_started = true;
 #endif
+                const QString format = toQString(m_inputFormat);
+                CLogMessage(this).info(u"Starting: '%1' with: %2") << selectedDevice.deviceName() << format;
             }
 
             void CInput::stop()
@@ -135,7 +141,12 @@ namespace BlackCore
                 m_started = false;
                 if (m_audioInput) { m_audioInput->stop(); }
                 m_audioInput.reset();
-                m_audioInputBuffer.stop();
+                if (m_audioInputBuffer)
+                {
+                    m_audioInputBuffer->stop();
+                    m_audioInputBuffer->deleteLater();
+                    m_audioInputBuffer = nullptr;
+                }
             }
 
             void CInput::audioInDataAvailable(const QByteArray &frame)
@@ -155,7 +166,7 @@ namespace BlackCore
                     sample = static_cast<qint16>(value);
 
                     qint16 sampleInput = qAbs(sample);
-                    m_maxSampleInput = qMax(qAbs(sampleInput), m_maxSampleInput);
+                    m_maxSampleInput   = qMax(qAbs(sampleInput), m_maxSampleInput);
                 }
 
                 int length;
@@ -186,8 +197,8 @@ namespace BlackCore
 #ifdef Q_OS_MAC
             void CInput::delayedInitMicrophone()
             {
-                m_audioInput->start(&m_audioInputBuffer);
-                connect(&m_audioInputBuffer, &CAudioInputBuffer::frameAvailable, this, &CInput::audioInDataAvailable);
+                m_audioInput->start(m_audioInputBuffer);
+                connect(m_audioInputBuffer, &CAudioInputBuffer::frameAvailable, this, &CInput::audioInDataAvailable);
                 m_started = true;
             }
 #endif
