@@ -13,6 +13,7 @@
 
 #include "blackcore/afv/dto.h"
 #include "blackcore/application.h"
+#include "blackmisc/slot.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/logcategorylist.h"
 
@@ -33,6 +34,9 @@ namespace BlackCore
     {
         namespace Connection
         {
+            //! Callback for
+            using ConnectionCallback = BlackMisc::CSlot<void(bool)>;
+
             //! A server connection
             class CApiServerConnection : public QObject
             {
@@ -55,7 +59,8 @@ namespace BlackCore
                 bool isAuthenticated() const { return m_isAuthenticated; }
 
                 //! Connect to network
-                bool connectTo(const QString &username, const QString &password, const QUuid &networkVersion);
+                //! \remark ASYNC, calling callback when done
+                void connectTo(const QString &username, const QString &password, const QUuid &networkVersion, ConnectionCallback callback);
 
                 //! Add callsign to network
                 PostCallsignResponseDto addCallsign(const QString &callsign);
@@ -121,8 +126,8 @@ namespace BlackCore
                     QVector<TResponse> dtos;
                     if (jsonDoc.isArray())
                     {
-                        QJsonArray rootArray = jsonDoc.array();
-                        for (auto o : rootArray)
+                        const QJsonArray rootArray = jsonDoc.array();
+                        for (const auto &o : rootArray)
                         {
                             const QJsonObject d = o.toObject();
                             const TResponse dto = TResponse::fromJson(d);

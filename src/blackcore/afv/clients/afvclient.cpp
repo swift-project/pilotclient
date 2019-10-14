@@ -132,30 +132,36 @@ namespace BlackCore
                 this->connectWithContexts();
                 this->setCallsign(callsign);
 
-                QVector<StationDto> aliasedStations;
                 // thread safe connect
                 {
-                    // QMutexLocker lock(&m_mutexConnection);
-                    m_connection->connectTo(cid, password, callsign);
-                    aliasedStations = m_connection->getAllAliasedStations();
-                }
-                this->setAliasedStations(aliasedStations); // threadsafe
-                this->onTimerUpdate();
+                    QMutexLocker lock(&m_mutexConnection);
 
-                const bool isConnected = this->isConnected(); // threadsafe
-                if (isConnected)
-                {
-                    // restart timer, normally it should be started already, paranoia
-                    // as I run in "my thread" starting timer should be OK
+                    // async connection
+                    m_connection->connectTo(cid, password, callsign, { this, [ = ](bool authenticated)
                     {
-                        QMutexLocker lock(&m_mutex);
-                        if (m_voiceServerTimer) { m_voiceServerTimer->start(PositionUpdatesMs); }
+                        // this is the callback when the connection has been established
+
+                        const QVector<StationDto> aliasedStations = m_connection->getAllAliasedStations();
+                        this->setAliasedStations(aliasedStations); // threadsafe
+                        this->onTimerUpdate();
+
+                        // const bool isConnected = this->isConnected(); // threadsafe
+                        if (authenticated)
+                        {
+                            // restart timer, normally it should be started already, paranoia
+                            // as I run in "my thread" starting timer should be OK
+                            {
+                                QMutexLocker lock(&m_mutex);
+                                if (m_voiceServerTimer) { m_voiceServerTimer->start(PositionUpdatesMs); }
+                            }
+                            emit this->connectionStatusChanged(Connected);
+                        }
+                        else
+                        {
+                            emit this->connectionStatusChanged(Disconnected);
+                        }
                     }
-                    emit this->connectionStatusChanged(Connected);
-                }
-                else
-                {
-                    emit this->connectionStatusChanged(Disconnected);
+                                                                     });
                 }
             }
 

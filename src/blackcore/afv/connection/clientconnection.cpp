@@ -37,7 +37,7 @@ namespace BlackCore
                 connect(m_udpSocket, qOverload<QAbstractSocket::SocketError>(&QUdpSocket::error), this, &CClientConnection::handleSocketError);
             }
 
-            void CClientConnection::connectTo(const QString &userName, const QString &password, const QString &callsign)
+            void CClientConnection::connectTo(const QString &userName, const QString &password, const QString &callsign, ConnectionCallback callback)
             {
                 if (m_connection.isConnected())
                 {
@@ -47,18 +47,33 @@ namespace BlackCore
 
                 m_connection.setUserName(userName);
                 m_connection.setCallsign(callsign);
-                bool result = m_apiServerConnection->connectTo(userName, password, m_networkVersion);
-                if (!result) { return; }
-                m_connection.setTokens(m_apiServerConnection->addCallsign(m_connection.getCallsign()));
-                m_connection.setTsAuthenticatedToNow();
-                m_connection.createCryptoChannels();
 
-                connectToVoiceServer();
+                QPointer<CClientConnection> myself(this);
+                m_apiServerConnection->connectTo(userName, password, m_networkVersion,
+                {
+                    // callback called when connected
+                    this, [ = ](bool authenticated)
+                    {
+                        // callback when connection has been established
+                        if (!myself)  { return; }
+                        m_connection.setConnected(authenticated);
 
-                // taskServerConnectionCheck.Start();
+                        if (authenticated)
+                        {
+                            const QString callsign = m_connection.getCallsign();
+                            m_connection.setTokens(m_apiServerConnection->addCallsign(callsign));
+                            m_connection.setTsAuthenticatedToNow();
+                            m_connection.createCryptoChannels();
+                            this->connectToVoiceServer();
+                            // taskServerConnectionCheck.Start();
 
-                m_connection.setConnected(true);
-                CLogMessage(this).debug(u"Connected: '%1'") << callsign;
+                            CLogMessage(this).debug(u"Connected: '%1'") << callsign;
+                        }
+
+                        // callback of the calling parent
+                        if (callback) { callback(authenticated); }
+                    }
+                });
             }
 
             void CClientConnection::disconnectFrom(const QString &reason)

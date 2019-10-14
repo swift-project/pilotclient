@@ -44,9 +44,14 @@ namespace BlackCore
                 //! Ctor
                 CClientConnection(const QString &apiServer, QObject *parent = nullptr);
 
-                //! Connect/disconnect @{
-                void connectTo(const QString &userName, const QString &password, const QString &callsign);
+                //! Connect
+                //! \remark ASYNC, calling callback when done
+                void connectTo(const QString &userName, const QString &password, const QString &callsign, ConnectionCallback callback);
+
+                //! Disconnect
                 void disconnectFrom(const QString &reason = {});
+
+                //! Is connected
                 bool isConnected() const { return m_connection.isConnected(); }
                 //! @}
 

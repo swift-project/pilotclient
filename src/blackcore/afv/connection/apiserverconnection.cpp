@@ -43,9 +43,9 @@ namespace BlackCore
                 CLogMessage(this).debug(u"ApiServerConnection instantiated");
             }
 
-            bool CApiServerConnection::connectTo(const QString &username, const QString &password, const QUuid &networkVersion)
+            void CApiServerConnection::connectTo(const QString &username, const QString &password, const QUuid &networkVersion, ConnectionCallback callback)
             {
-                if (isShuttingDown()) { return false; }
+                if (isShuttingDown()) { return; }
 
                 m_username = username;
                 m_password = password;
@@ -62,8 +62,8 @@ namespace BlackCore
                     {"networkversion", networkVersion.toString()},
                 };
 
-                QPointer<QEventLoop> loop(this->newEventLoop());
                 QNetworkRequest request(url);
+                QPointer<CApiServerConnection> myself(this);
                 request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
                 // posted in QAM thread, reply is nullptr if called from another thread
@@ -73,13 +73,13 @@ namespace BlackCore
                     {
                         // called in "this" thread
                         const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
-                        if (!loop || isShuttingDown()) { return; }
+                        if (!myself || isShuttingDown()) { return; }
 
                         this->logRequestDuration(reply.data(), "authentication");
                         if (reply->error() != QNetworkReply::NoError)
                         {
                             this->logReplyErrorMessage(reply.data(), "authentication error");
-                            if (loop) { loop->exit(); }
+                            callback(false);
                             return;
                         }
 
@@ -117,13 +117,11 @@ namespace BlackCore
                             m_isAuthenticated = true;
                         }
 
-                        if (loop) { loop->exit(); }
+                        // connected, callback
+                        callback(m_isAuthenticated);
                     }
                 });
                 Q_UNUSED(reply)
-
-                if (loop) { loop->exec(); }
-                return m_isAuthenticated;
             }
 
             PostCallsignResponseDto CApiServerConnection::addCallsign(const QString &callsign)
@@ -297,7 +295,7 @@ namespace BlackCore
             {
                 if (QDateTime::currentDateTimeUtc() > m_expiryLocalUtc.addSecs(-5 * 60))
                 {
-                    this->connectTo(m_username, m_password, m_networkVersion);
+                    this->connectTo(m_username, m_password, m_networkVersion, { this, [ = ](bool) {}});
                 }
             }
 
