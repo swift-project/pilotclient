@@ -39,3 +39,6 @@ QMAKE_EXTRA_TARGETS += copy_files_cookie
 # relative paths were being treated as absolute, leading to qmake creating
 # empty directories in the root of the current drive.
 contains(TEMPLATE, "vc.*"):!build_pass:QMAKE_EXTRA_COMPILERS -= copy_files
+
+# Work around QTBUG-79178
+equals(TEMPLATE, vcsubdirs):QMAKE_EXTRA_COMPILERS -= copy_files
