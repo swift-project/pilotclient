@@ -85,6 +85,9 @@
                 <distributionFile>
                     <origin>../../dist/lib/libqwt.so</origin>
                 </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libsodium.so.18</origin>
+                </distributionFile>
             </distributionFileList>
         </folder>
         <folder>
