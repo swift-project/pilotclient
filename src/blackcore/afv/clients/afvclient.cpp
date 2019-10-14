@@ -8,6 +8,7 @@
 
 #include "afvclient.h"
 #include "blackcore/context/contextownaircraft.h"
+#include "blackcore/context/contextnetwork.h"
 #include "blackcore/application.h"
 #include "blacksound/audioutilities.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
@@ -47,7 +48,7 @@ namespace BlackCore
                 m_connection(new CClientConnection(apiServer, this)),
                 m_input(new CInput(SampleRate, this)),
                 m_output(new COutput(this)),
-                m_voiceServerPositionTimer(new QTimer(this))
+                m_voiceServerTimer(new QTimer(this))
             {
                 this->setObjectName("AFV client");
                 m_connection->setReceiveAudio(false);
@@ -57,7 +58,7 @@ namespace BlackCore
 
                 connect(m_output,     &COutput::outputVolumeStream,      this, &CAfvClient::outputVolumeStream);
                 connect(m_connection, &CClientConnection::audioReceived, this, &CAfvClient::audioOutDataAvailable);
-                connect(m_voiceServerPositionTimer, &QTimer::timeout,    this, &CAfvClient::onPositionUpdateTimer);
+                connect(m_voiceServerTimer, &QTimer::timeout,            this, &CAfvClient::onTimerUpdate);
 
                 m_updateTimer.stop(); // not used
 
@@ -80,6 +81,12 @@ namespace BlackCore
                 m_callsign = callsign;
             }
 
+            bool CAfvClient::isConnected() const
+            {
+                QMutexLocker lock(&m_mutexConnection);
+                return m_connection->isConnected();
+            }
+
             void CAfvClient::initTransceivers()
             {
                 {
@@ -98,7 +105,7 @@ namespace BlackCore
                 this->connectWithContexts();
 
                 // update from context
-                this->onPositionUpdateTimer();
+                this->onTimerUpdate();
             }
 
             void CAfvClient::connectWithContexts()
@@ -125,15 +132,25 @@ namespace BlackCore
                 this->connectWithContexts();
                 this->setCallsign(callsign);
 
-                m_connection->connectTo(cid, password, callsign);
-                m_aliasedStations = m_connection->getAllAliasedStations();
+                QVector<StationDto> aliasedStations;
+                // thread safe connect
+                {
+                    // QMutexLocker lock(&m_mutexConnection);
+                    m_connection->connectTo(cid, password, callsign);
+                    aliasedStations = m_connection->getAllAliasedStations();
+                }
+                this->setAliasedStations(aliasedStations); // threadsafe
+                this->onTimerUpdate();
 
-                this->onPositionUpdateTimer();
-
-                if (m_connection->isConnected())
+                const bool isConnected = this->isConnected(); // threadsafe
+                if (isConnected)
                 {
                     // restart timer, normally it should be started already, paranoia
-                    if (m_voiceServerPositionTimer) { m_voiceServerPositionTimer->start(PositionUpdatesMs); }
+                    // as I run in "my thread" starting timer should be OK
+                    {
+                        QMutexLocker lock(&m_mutex);
+                        if (m_voiceServerTimer) { m_voiceServerTimer->start(PositionUpdatesMs); }
+                    }
                     emit this->connectionStatusChanged(Connected);
                 }
                 else
@@ -153,7 +170,11 @@ namespace BlackCore
                 }
 
                 // we intentionally DO NOT STOP the timer here, but keep it for preset (own aircraft pos.)
-                m_connection->disconnectFrom();
+                // threadsafe
+                {
+                    QMutexLocker lock(&m_mutexConnection);
+                    m_connection->disconnectFrom();
+                }
                 emit connectionStatusChanged(Disconnected);
             }
 
@@ -208,30 +229,37 @@ namespace BlackCore
 
                 this->initTransceivers();
 
-                if (m_soundcardSampleProvider)
+                // threadsafe block
                 {
-                    m_soundcardSampleProvider->disconnect();
-                    m_soundcardSampleProvider->deleteLater();
+                    QMutexLocker lock{&m_mutex};
+                    if (m_soundcardSampleProvider)
+                    {
+                        m_soundcardSampleProvider->disconnect();
+                        m_soundcardSampleProvider->deleteLater();
+                    }
+                    m_soundcardSampleProvider = new CSoundcardSampleProvider(SampleRate, allTransceiverIds(), this);
+                    connect(m_soundcardSampleProvider, &CSoundcardSampleProvider::receivingCallsignsChanged, this, &CAfvClient::receivingCallsignsChanged);
+
+                    if (m_outputSampleProvider) { m_outputSampleProvider->deleteLater(); }
+                    m_outputSampleProvider = new CVolumeSampleProvider(m_soundcardSampleProvider, this);
+                    m_outputSampleProvider->setVolume(m_outputVolume);
+
+                    m_output->start(outputDevice, m_outputSampleProvider);
+                    m_input->start(inputDevice);
+
+                    m_startDateTimeUtc = QDateTime::currentDateTimeUtc();
+
+                    // runs in correct thread
+                    m_voiceServerTimer->start(PositionUpdatesMs); // start for preset values
                 }
-                m_soundcardSampleProvider = new CSoundcardSampleProvider(SampleRate, allTransceiverIds(), this);
-                connect(m_soundcardSampleProvider, &CSoundcardSampleProvider::receivingCallsignsChanged, this, &CAfvClient::receivingCallsignsChanged);
 
-                if (m_outputSampleProvider) { m_outputSampleProvider->deleteLater(); }
-                m_outputSampleProvider = new CVolumeSampleProvider(m_soundcardSampleProvider, this);
-                m_outputSampleProvider->setVolume(m_outputVolume);
-                m_output->start(outputDevice, m_outputSampleProvider);
-
-                m_input->start(inputDevice);
-
-                m_startDateTimeUtc = QDateTime::currentDateTimeUtc();
-                m_connection->setReceiveAudio(true);
-                m_voiceServerPositionTimer->start(PositionUpdatesMs); // start for preset values
+                this->setReceiveAudio(true); // threadsafe
 
                 this->onSettingsChanged(); // make sure all settings are applied
                 m_isStarted = true;
                 CLogMessage(this).info(u"Started [Input: %1] [Output: %2]") << inputDevice.getName() << outputDevice.getName();
 
-                this->onPositionUpdateTimer(); // update values
+                this->onTimerUpdate(); // update values
 
                 emit this->startedAudio(inputDevice, outputDevice);
             }
@@ -260,12 +288,23 @@ namespace BlackCore
                 }
 
                 m_isStarted = false;
-                m_connection->setReceiveAudio(false);
+                this->setReceiveAudio(false); // threadsafe
 
                 // stop input/output
-                m_input->stop();
-                m_output->stop();
+
+                {
+                    QMutexLocker lock{&m_mutex};
+                    m_input->stop();
+                    m_output->stop();
+                }
                 CLogMessage(this).info(u"Client stopped");
+            }
+
+            void CAfvClient::setReceiveAudio(bool receive)
+            {
+                QMutexLocker lock(&m_mutexConnection);
+                if (!m_connection) { return; }
+                m_connection->setReceiveAudio(receive);
             }
 
             void CAfvClient::enableTransceiver(quint16 id, bool enable)
@@ -387,10 +426,15 @@ namespace BlackCore
                     }
                 }
 
-                // in connection and soundcard only use the enabled tarnsceivers
-                QMutexLocker lock(&m_mutex);
-                if (m_connection) { m_connection->updateTransceivers(callsign, newEnabledTransceivers); }
-                if (m_soundcardSampleProvider) { m_soundcardSampleProvider->updateRadioTransceivers(newEnabledTransceivers); }
+                // in connection and soundcard only use the enabled transceivers
+                {
+                    QMutexLocker lock(&m_mutexConnection);
+                    if (m_connection) { m_connection->updateTransceivers(callsign, newEnabledTransceivers); }
+                }
+                {
+                    QMutexLocker lock(&m_mutex);
+                    if (m_soundcardSampleProvider) { m_soundcardSampleProvider->updateRadioTransceivers(newEnabledTransceivers); }
+                }
             }
 
             void CAfvClient::setTransmittingTransceiver(quint16 transceiverID)
@@ -461,6 +505,7 @@ namespace BlackCore
                 if (m_transmit == active) { return; }
                 m_transmit = active;
 
+                // thread safe block
                 {
                     QMutexLocker lock(&m_mutex);
                     if (m_soundcardSampleProvider)
@@ -468,6 +513,8 @@ namespace BlackCore
                         m_soundcardSampleProvider->pttUpdate(active, m_transmittingTransceivers);
                     }
 
+                    /** TODO: RR 2019-10 as discussed https://discordapp.com/channels/539048679160676382/623947987822837779/633320595978846208
+                     *  disabled for the moment as not needed
                     if (!active)
                     {
                         // AGC
@@ -475,6 +522,7 @@ namespace BlackCore
                         // if (maxDbReadingInPTTInterval < -4) InputVolumeDb = InputVolumeDb + 1;
                         m_maxDbReadingInPTTInterval = -100;
                     }
+                    **/
                 }
 
                 emit this->ptt(active, com, this->identifier());
@@ -579,14 +627,14 @@ namespace BlackCore
             {
                 const bool transmit = m_transmit;
                 const bool loopback = m_loopbackOn;
-                const bool transmitHistory = m_transmitHistory;
+                const bool transmitHistory = m_transmitHistory; // threadsafe
                 const auto transceivers = this->getTransceivers();
 
                 if (loopback && transmit)
                 {
                     IAudioDto audioData;
                     audioData.audio = QByteArray(args.audio.data(), args.audio.size());
-                    audioData.callsign = "loopback";
+                    audioData.callsign = QStringLiteral("loopback");
                     audioData.lastPacket = false;
                     audioData.sequenceCounter = 0;
 
@@ -598,10 +646,7 @@ namespace BlackCore
                     return;
                 }
 
-                {
-                    QMutexLocker lock(&m_mutex);
-                    if (!m_connection->isConnected()) { return; }
-                }
+                if (!this->isConnected()) { return; } // threadsafe
 
                 const QString callsign = this->getCallsign(); // threadsafe
                 const auto transmittingTransceivers = this->getTransmittingTransceivers(); // threadsafe
@@ -615,7 +660,7 @@ namespace BlackCore
                         dto.audio = std::vector<char>(args.audio.begin(), args.audio.end());
                         dto.lastPacket = false;
                         dto.transceivers = transmittingTransceivers.toStdVector();
-                        QMutexLocker lock(&m_mutex);
+                        QMutexLocker lock(&m_mutexConnection);
                         m_connection->sendToVoiceServer(dto);
                     }
 
@@ -627,7 +672,7 @@ namespace BlackCore
                         dto.audio = std::vector<char>(args.audio.begin(), args.audio.end());
                         dto.lastPacket = true;
                         dto.transceivers = transmittingTransceivers.toStdVector();
-                        QMutexLocker lock(&m_mutex);
+                        QMutexLocker lock(&m_mutexConnection);
                         m_connection->sendToVoiceServer(dto);
                     }
                     m_transmitHistory = transmit; // threadsafe
@@ -641,11 +686,14 @@ namespace BlackCore
                 audioData.callsign        = QString::fromStdString(dto.callsign);
                 audioData.lastPacket      = dto.lastPacket;
                 audioData.sequenceCounter = dto.sequenceCounter;
+
+                QMutexLocker lock(&m_mutex);
                 m_soundcardSampleProvider->addOpusSamples(audioData, QVector<RxTransceiverDto>::fromStdVector(dto.transceivers));
             }
 
             void CAfvClient::inputVolumeStream(const InputVolumeStreamArgs &args)
             {
+                // thread safe block
                 {
                     QMutexLocker lock(&m_mutexInputStream);
                     m_inputVolumeStream = args;
@@ -655,6 +703,7 @@ namespace BlackCore
 
             void CAfvClient::outputVolumeStream(const OutputVolumeStreamArgs &args)
             {
+                // thread safe block
                 {
                     QMutexLocker lock(&m_mutexOutputStream);
                     m_outputVolumeStream = args;
@@ -678,7 +727,7 @@ namespace BlackCore
 
             bool CAfvClient::updateVoiceServerUrl(const QString &url)
             {
-                QMutexLocker lock(&m_mutex);
+                QMutexLocker lock(&m_mutexConnection);
                 if (!m_connection) { return false; }
                 return m_connection->updateVoiceServerUrl(url);
             }
@@ -724,12 +773,15 @@ namespace BlackCore
 #endif
             }
 
-            void CAfvClient::onPositionUpdateTimer()
+            void CAfvClient::onTimerUpdate()
             {
                 if (hasContext())
                 {
                     // for pilot client
                     this->updateFromOwnAircraft(sApp->getIContextOwnAircraft()->getOwnAircraft(), false);
+
+                    // disconnect if NOT connected
+                    this->autoLogoffWithoutFsdNetwork();
                 }
                 else
                 {
@@ -744,6 +796,19 @@ namespace BlackCore
                 this->setNormalizedInputVolume(audioSettings.getInVolume());
                 this->setNormalizedOutputVolume(audioSettings.getOutVolume());
                 this->setBypassEffects(!audioSettings.isAudioEffectsEnabled());
+            }
+
+            void CAfvClient::autoLogoffWithoutFsdNetwork()
+            {
+                if (!hasContext())        { return; }
+                if (!this->isConnected()) { m_connectMismatches = 0; return; }
+
+                // AFV is connected
+                if (sApp->getIContextNetwork()->isConnected()) { m_connectMismatches = 0; return; }
+                if (++m_connectMismatches < 2) { return; } // avoid a single issue causing logoff
+
+                CLogMessage(this).warning(u"Auto logoff AFV client because FSD no longer connected");
+                this->disconnectFrom();
             }
 
             void CAfvClient::updateFromOwnAircraft(const CSimulatedAircraft &aircraft, bool withSignals)
@@ -804,12 +869,19 @@ namespace BlackCore
                     m_enabledTransceivers = newEnabledTransceiverIds;
                     m_transmittingTransceivers = newTransmittingTransceivers;
                 }
+
                 // in connection and soundcard only use the enabled tarnsceivers
                 const QString callsign = this->getCallsign();
                 {
-                    QMutexLocker lock(&m_mutex);
-                    if (m_connection) { m_connection->updateTransceivers(callsign, newEnabledTransceivers); }
-                    if (m_soundcardSampleProvider) { m_soundcardSampleProvider->updateRadioTransceivers(newEnabledTransceivers); }
+                    {
+                        QMutexLocker lock(&m_mutexConnection);
+                        if (m_connection) { m_connection->updateTransceivers(callsign, newEnabledTransceivers); }
+                    }
+
+                    {
+                        QMutexLocker lock(&m_mutex);
+                        if (m_soundcardSampleProvider) { m_soundcardSampleProvider->updateRadioTransceivers(newEnabledTransceivers); }
+                    }
                 }
 
                 if (withSignals) { emit this->updatedFromOwnAircraftCockpit(); }
@@ -819,6 +891,18 @@ namespace BlackCore
             {
                 if (originator == this->identifier()) { return; }
                 this->updateFromOwnAircraft(aircraft);
+            }
+
+            QVector<StationDto> CAfvClient::getAliasedStations() const
+            {
+                QMutexLocker lock(&m_mutex);
+                return m_aliasedStations;
+            }
+
+            void CAfvClient::setAliasedStations(const QVector<StationDto> &stations)
+            {
+                QMutexLocker lock(&m_mutex);
+                m_aliasedStations = stations;
             }
 
             quint32 CAfvClient::getAliasFrequencyHz(quint32 frequencyHz) const
@@ -875,7 +959,7 @@ namespace BlackCore
 
             bool CAfvClient::hasContext()
             {
-                return sApp && !sApp->isShuttingDown() && sApp->getIContextOwnAircraft();
+                return sApp && !sApp->isShuttingDown() && sApp->getIContextOwnAircraft() && sApp->getIContextNetwork();
             }
 
             bool CAfvClient::setOutputVolumeDb(double valueDb)
@@ -928,7 +1012,7 @@ namespace BlackCore
 
             CAfvClient::ConnectionStatus CAfvClient::getConnectionStatus() const
             {
-                return m_connection->isConnected() ? Connected : Disconnected;
+                return this->isConnected() ? Connected : Disconnected;
             }
         } // ns
     } // ns

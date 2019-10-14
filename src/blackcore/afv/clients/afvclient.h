@@ -76,15 +76,21 @@ namespace BlackCore
                 //! @}
 
                 //! Is connected to network?
-                bool isConnected() const { return m_connection->isConnected(); }
+                //! \threadsafe
+                bool isConnected() const;
 
                 //! Connection status
+                //! \threadsafe
                 ConnectionStatus getConnectionStatus() const;
 
                 //! Connect to network
+                //! \threadsafe
+                //! \remark runs in thread of CAfvClient object and is ASYNC when called from another thread
                 Q_INVOKABLE void connectTo(const QString &cid, const QString &password, const QString &getCallsign);
 
                 //! Disconnect from network
+                //! \threadsafe
+                //! \remark runs in thread of CAfvClient object and is ASYNC when called from another thread
                 Q_INVOKABLE void disconnectFrom();
 
                 //! Audio devices @{
@@ -101,7 +107,9 @@ namespace BlackCore
                 //! When started
                 const QDateTime &getStartDateTimeUtc() const { return m_startDateTimeUtc; }
 
-                //! Muted @{
+                //! Muted
+                //! \threadsafe
+                //! @{
                 bool isMuted() const;
                 void setMuted(bool mute);
                 //! @}
@@ -111,6 +119,10 @@ namespace BlackCore
                 Q_INVOKABLE void startAudio(const QString &inputDeviceName, const QString &outputDeviceName);
                 void stopAudio();
                 //! @}
+
+                //! Receive audio
+                //! \threadsafe
+                void setReceiveAudio(bool receive);
 
                 //! Enable COM unit/transceiver
                 //! \threadsafe
@@ -161,7 +173,9 @@ namespace BlackCore
                 //! \threadsafe
                 void updateFromOwnAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool withSignals = true);
 
-                //! Push to talk @{
+                //! Push to talk
+                //! \threadsafe
+                //! @{
                 Q_INVOKABLE void setPtt(bool active);
                 void setPttForCom(bool active, BlackMisc::Audio::PTTCOM com);
                 //! @}
@@ -254,17 +268,25 @@ namespace BlackCore
                 virtual void cleanup() override;
 
             private:
-                void opusDataAvailable(const Audio::OpusDataAvailableArgs &args);
-                void audioOutDataAvailable(const AudioRxOnTransceiversDto &dto);
+                void opusDataAvailable(const Audio::OpusDataAvailableArgs &args);  // threadsafe
+                void audioOutDataAvailable(const AudioRxOnTransceiversDto &dto);   // threadsafe
                 void inputVolumeStream(const Audio::InputVolumeStreamArgs &args);
                 void outputVolumeStream(const Audio::OutputVolumeStreamArgs &args);
                 void inputOpusDataAvailable();
 
-                void onPositionUpdateTimer();
+                void onTimerUpdate();
                 void onSettingsChanged();
+                void autoLogoffWithoutFsdNetwork();
 
                 void updateTransceivers(bool updateFrequencies = true);
                 void onUpdateTransceiversFromContext(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+
+                //! All aliased stations
+                //! \threadsafe
+                //! @{
+                QVector<StationDto> getAliasedStations() const;
+                void setAliasedStations(const QVector<StationDto> &stations);
+                //! @}
 
                 //! Frequency from aliased stations
                 //! \threadsafe
@@ -286,7 +308,7 @@ namespace BlackCore
                 BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &CAfvClient::onSettingsChanged };
                 QString m_callsign;
 
-                Audio::CInput *m_input  = nullptr;
+                Audio::CInput  *m_input  = nullptr;
                 Audio::COutput *m_output = nullptr;
 
                 Audio::CSoundcardSampleProvider *m_soundcardSampleProvider = nullptr;
@@ -299,6 +321,7 @@ namespace BlackCore
                 QSet<quint16>             m_enabledTransceivers;
                 static const QVector<quint16> &allTransceiverIds() { static const QVector<quint16> transceiverIds{0, 1}; return transceiverIds; }
 
+                std::atomic_int  m_connectMismatches { 0 };
                 std::atomic_bool m_isStarted  { false };
                 std::atomic_bool m_loopbackOn { false };
                 std::atomic_bool m_winCoInitialized { false }; //!< Windows only CoInitializeEx
@@ -309,7 +332,7 @@ namespace BlackCore
                 double m_outputVolume   = 1.0;
                 double m_maxDbReadingInPTTInterval = -100;
 
-                QTimer             *m_voiceServerPositionTimer = nullptr;
+                QTimer             *m_voiceServerTimer = nullptr;
                 QVector<StationDto> m_aliasedStations;
 
                 Audio::InputVolumeStreamArgs  m_inputVolumeStream;
@@ -327,6 +350,7 @@ namespace BlackCore
                 mutable QMutex m_mutexOutputStream;
                 mutable QMutex m_mutexTransceivers;
                 mutable QMutex m_mutexCallsign;
+                mutable QMutex m_mutexConnection;
             };
         } // ns
     } // ns

@@ -78,6 +78,9 @@ namespace BlackCore
                 //! Update the voice server URL
                 bool updateVoiceServerUrl(const QString &url);
 
+                //! Authenticated since when
+                qint64 secondsSinceAuthentication() const { return m_connection.secondsSinceAuthentication(); }
+
             signals:
                 //! Audio has been received
                 void audioReceived(const AudioRxOnTransceiversDto &dto);
