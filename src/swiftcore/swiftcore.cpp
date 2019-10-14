@@ -157,7 +157,9 @@ void CSwiftCore::restart()
     if (!sGui || sGui->isShuttingDown()) { return; }
     ui->pb_Restart->setEnabled(false);
     const QStringList args = this->getRestartCmdArgs();
-    sGui->restartApplication(args, { "--coreaudio" });
+    sGui->restartApplication(args);
+
+    // sGui->restartApplication(args, { "--coreaudio" });
 }
 
 void CSwiftCore::disconnectFromNetwork()
@@ -173,14 +175,14 @@ void CSwiftCore::disconnectFromNetwork()
 
 QString CSwiftCore::getAudioCmdFromRadioButtons() const
 {
-    if (ui->rb_AudioOnCore->isChecked()) { return QStringLiteral("--coreaudio"); }
+    // if (ui->rb_AudioOnCore->isChecked()) { return QStringLiteral("--coreaudio"); }
     return {};
 }
 
 QStringList CSwiftCore::getRestartCmdArgs() const
 {
-    const QString coreAudio = this->getAudioCmdFromRadioButtons();
+    // const QString coreAudio = this->getAudioCmdFromRadioButtons();
     QStringList cmds = ui->comp_DBusSelector->getDBusCmdLineArgs();
-    if (!coreAudio.isEmpty()) { cmds.append(coreAudio); }
+    // if (!coreAudio.isEmpty()) { cmds.append(coreAudio); }
     return cmds;
 }
