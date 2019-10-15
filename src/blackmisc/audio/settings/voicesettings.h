@@ -26,7 +26,7 @@ namespace BlackMisc
             struct TVoiceSetup : public TSettingTrait<CVoiceSetup>
             {
                 //! \copydoc BlackMisc::TSettingTrait::key
-                static const char *key() { return "audio/currentvoicesetup"; }
+                static const char *key() { return "audio/%Application%/currentvoicesetup"; }
 
                 //! \copydoc BlackMisc::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("Voice setup"); return name; }

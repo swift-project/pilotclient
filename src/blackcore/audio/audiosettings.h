@@ -22,7 +22,7 @@ namespace BlackCore
         struct TInputDevice : public BlackMisc::TSettingTrait<QString>
         {
             //! \copydoc BlackMisc::TSettingTrait::key
-            static const char *key() { return "audio/inputdevice"; }
+            static const char *key() { return "audio/%Application%/inputdevice"; }
 
             //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("Input device"); return name; }
@@ -35,7 +35,7 @@ namespace BlackCore
         struct TOutputDevice : public BlackMisc::TSettingTrait<QString>
         {
             //! \copydoc BlackMisc::TSettingTrait::key
-            static const char *key() { return "audio/outputdevice"; }
+            static const char *key() { return "audio/%Application%/outputdevice"; }
 
             //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("Output device"); return name; }

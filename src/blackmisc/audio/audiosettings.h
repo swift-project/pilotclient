@@ -138,7 +138,7 @@ namespace BlackMisc
         struct TSettings : public TSettingTrait<CSettings>
         {
             //! \copydoc BlackMisc::TSettingTrait::key
-            static const char *key() { return "audio/setup"; }
+            static const char *key() { return "audio/%Application%/setup"; }
 
             //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("Audio"); return name; }
