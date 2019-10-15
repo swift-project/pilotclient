@@ -12,6 +12,7 @@
 #define BLACKMISC_AUDIO_VOICESETUP_H
 
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/settingscache.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
@@ -81,6 +82,20 @@ namespace BlackMisc
                 BLACK_METAMEMBER(afvVoiceServerUrl),
                 BLACK_METAMEMBER(afvMapUrl)
             );
+        };
+
+        //! Voice settings
+        //! \deprecated Voice VATLIB specifics
+        struct TVoiceSetup : public TSettingTrait<CVoiceSetup>
+        {
+            //! \copydoc BlackMisc::TSettingTrait::key
+            static const char *key() { return "audio/%Application%/currentvoicesetup"; }
+
+            //! \copydoc BlackMisc::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("Voice setup"); return name; }
+
+            //! \copydoc BlackMisc::TSettingTrait::isValid
+            static bool isValid(const CVoiceSetup &setup, QString &) { return setup.validate().isSuccess(); }
         };
     } // namespace
 } // namespace
