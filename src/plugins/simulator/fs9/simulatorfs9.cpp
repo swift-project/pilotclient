@@ -537,10 +537,15 @@ namespace BlackSimPlugin
             delete host;
         }
 
+        static void cleanupLobbyClient(CLobbyClient *lobbyClient)
+        {
+            delete lobbyClient;
+        }
+
         CSimulatorFs9Factory::CSimulatorFs9Factory(QObject *parent) :
             QObject(parent),
             m_fs9Host(new CFs9Host(this), cleanupFs9Host),
-            m_lobbyClient(new CLobbyClient(this))
+            m_lobbyClient(new CLobbyClient, cleanupLobbyClient)
         {
             registerMetadata();
 
