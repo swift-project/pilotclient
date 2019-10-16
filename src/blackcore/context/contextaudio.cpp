@@ -21,6 +21,10 @@
 #include "blackmisc/icons.h"
 #include "blackconfig/buildconfig.h"
 
+#ifdef Q_OS_WIN
+#include "comdef.h"
+#endif
+
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;
@@ -110,6 +114,24 @@ namespace BlackCore
             const CVoiceSetup vs = m_voiceSettings.getThreadLocal();
             m_voiceClient->updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
 
+#ifdef Q_OS_WIN
+            if (!m_winCoInitialized)
+            {
+                HRESULT hr = CoInitializeEx(nullptr,  COINIT_MULTITHREADED);
+
+                // RPC_E_CHANGED_MODE: CoInitializeEx was already called by someone else in this thread with a different mode.
+                if (hr == RPC_E_CHANGED_MODE)
+                {
+                    CLogMessage(this).debug(u"CoInitializeEx was already called with a different mode. Trying again.");
+                    hr = CoInitializeEx(nullptr,  COINIT_APARTMENTTHREADED);
+                }
+
+                // S_OK: The COM library was initialized successfully on this thread.
+                // S_FALSE: The COM library is already initialized on this thread. Reference count was incremented. This is not an error.
+                if (hr == S_OK || hr == S_FALSE) { m_winCoInitialized = true; }
+            }
+#endif
+
             Q_ASSERT_X(CThreadUtils::isApplicationThread(m_voiceClient->thread()), Q_FUNC_INFO, "Should be in main thread");
             m_voiceClient->start();
             Q_ASSERT_X(m_voiceClient->owner() == this, Q_FUNC_INFO, "Wrong owner");
@@ -147,6 +169,14 @@ namespace BlackCore
                 m_voiceClient->gracefulShutdown();
                 Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(m_voiceClient), Q_FUNC_INFO, "Needs to be back in current thread");
                 m_voiceClient = nullptr;
+
+#ifdef Q_OS_WIN
+                if (m_winCoInitialized)
+                {
+                    CoUninitialize();
+                    m_winCoInitialized = false;
+                }
+#endif
             }
             QObject::disconnect(this);
         }

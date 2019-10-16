@@ -278,6 +278,7 @@ namespace BlackCore
 
             // AFV
             Afv::Clients::CAfvClient *m_voiceClient = nullptr;
+            bool m_winCoInitialized = false;
 
             // Players
             BlackSound::CSelcalPlayer      *m_selcalPlayer = nullptr;
