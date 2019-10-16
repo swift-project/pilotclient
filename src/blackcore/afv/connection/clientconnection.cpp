@@ -37,7 +37,7 @@ namespace BlackCore
                 connect(m_udpSocket, qOverload<QAbstractSocket::SocketError>(&QUdpSocket::error), this, &CClientConnection::handleSocketError);
             }
 
-            void CClientConnection::connectTo(const QString &userName, const QString &password, const QString &callsign, ConnectionCallback callback)
+            void CClientConnection::connectTo(const QString &userName, const QString &password, const QString &callsign, const QString &client, ConnectionCallback callback)
             {
                 if (m_connection.isConnected())
                 {
@@ -49,7 +49,7 @@ namespace BlackCore
                 m_connection.setCallsign(callsign);
 
                 QPointer<CClientConnection> myself(this);
-                m_apiServerConnection->connectTo(userName, password, m_networkVersion,
+                m_apiServerConnection->connectTo(userName, password, client, m_networkVersion,
                 {
                     // callback called when connected
                     this, [ = ](bool authenticated)

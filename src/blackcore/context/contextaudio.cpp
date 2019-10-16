@@ -19,6 +19,7 @@
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/icons.h"
+#include "blackconfig/buildconfig.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -399,7 +400,8 @@ namespace BlackCore
                 m_voiceClient->updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
 
                 const CUser connectedUser = this->getIContextNetwork()->getConnectedServer().getUser();
-                m_voiceClient->connectTo(connectedUser.getId(), connectedUser.getPassword(), connectedUser.getCallsign().asString());
+                const QString client = "swift " % BlackConfig::CBuildConfig::getShortVersionString();
+                m_voiceClient->connectTo(connectedUser.getId(), connectedUser.getPassword(), connectedUser.getCallsign().asString(), client);
             }
             else if (to.isDisconnected())
             {

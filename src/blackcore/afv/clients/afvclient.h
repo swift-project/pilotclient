@@ -86,7 +86,7 @@ namespace BlackCore
                 //! Connect to network
                 //! \threadsafe
                 //! \remark runs in thread of CAfvClient object and is ASYNC when called from another thread
-                Q_INVOKABLE void connectTo(const QString &cid, const QString &password, const QString &getCallsign);
+                Q_INVOKABLE void connectTo(const QString &cid, const QString &password, const QString &getCallsign, const QString &client);
 
                 //! Disconnect from network
                 //! \threadsafe

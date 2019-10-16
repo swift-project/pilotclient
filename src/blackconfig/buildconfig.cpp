@@ -167,6 +167,13 @@ namespace BlackConfig
         return s;
     }
 
+    const QString &CBuildConfig::getShortVersionString()
+    {
+        static const QVersionNumber v { versionMajor(), versionMinor(), versionMicro() };
+        static const QString s(v.toString());
+        return s;
+    }
+
     const QString &CBuildConfig::getVersionStringPlatform()
     {
         static const QString s = getPlatformString() % u' ' % getVersionString();

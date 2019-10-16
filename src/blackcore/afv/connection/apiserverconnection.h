@@ -60,7 +60,7 @@ namespace BlackCore
 
                 //! Connect to network
                 //! \remark ASYNC, calling callback when done
-                void connectTo(const QString &username, const QString &password, const QUuid &networkVersion, ConnectionCallback callback);
+                void connectTo(const QString &username, const QString &password, const QString &client, const QUuid &networkVersion, ConnectionCallback callback);
 
                 //! Add callsign to network
                 PostCallsignResponseDto addCallsign(const QString &callsign);
@@ -172,6 +172,7 @@ namespace BlackCore
                 QString       m_username;
                 QString       m_password;
                 QUuid         m_networkVersion;
+                QString       m_client;
                 QDateTime     m_expiryLocalUtc;
                 qint64        m_serverToUserOffsetMs;
                 bool          m_isAuthenticated = false;

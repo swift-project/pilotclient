@@ -119,13 +119,13 @@ namespace BlackCore
                 m_connectedWithContext = true;
             }
 
-            void CAfvClient::connectTo(const QString &cid, const QString &password, const QString &callsign)
+            void CAfvClient::connectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client)
             {
                 if (QThread::currentThread() != thread())
                 {
                     // Method needs to be executed in the object thread since it will create new QObject children
                     QPointer<CAfvClient> myself(this);
-                    QMetaObject::invokeMethod(this, [ = ]() { if (myself) { connectTo(cid, password, callsign); }});
+                    QMetaObject::invokeMethod(this, [ = ]() { if (myself) { connectTo(cid, password, callsign, client); }});
                     return;
                 }
 
@@ -138,7 +138,7 @@ namespace BlackCore
                     QMutexLocker lock(&m_mutexConnection);
 
                     // async connection
-                    m_connection->connectTo(cid, password, callsign, { this, [ = ](bool authenticated)
+                    m_connection->connectTo(cid, password, callsign, client, { this, [ = ](bool authenticated)
                     {
                         // this is the callback when the connection has been established
 

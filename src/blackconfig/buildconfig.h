@@ -133,6 +133,9 @@ namespace BlackConfig
         //! Version as QVersionNumber
         static const QString &getVersionString();
 
+        //! Version as QVersionNumber
+        static const QString &getShortVersionString();
+
         //! Version as QVersionNumber plus platform info
         static const QString &getVersionStringPlatform();
 

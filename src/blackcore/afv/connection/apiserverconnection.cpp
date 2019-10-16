@@ -43,13 +43,14 @@ namespace BlackCore
                 CLogMessage(this).debug(u"ApiServerConnection instantiated");
             }
 
-            void CApiServerConnection::connectTo(const QString &username, const QString &password, const QUuid &networkVersion, ConnectionCallback callback)
+            void CApiServerConnection::connectTo(const QString &username, const QString &password, const QString &client, const QUuid &networkVersion, ConnectionCallback callback)
             {
                 if (isShuttingDown()) { return; }
 
                 m_username = username;
                 m_password = password;
                 m_networkVersion  = networkVersion;
+                m_client = client;
                 m_isAuthenticated = false;
 
                 QUrl url(m_addressUrl);
@@ -60,6 +61,7 @@ namespace BlackCore
                     {"username", username},
                     {"password", password},
                     {"networkversion", networkVersion.toString()},
+                    {"client", client}
                 };
 
                 QNetworkRequest request(url);
@@ -295,7 +297,7 @@ namespace BlackCore
             {
                 if (QDateTime::currentDateTimeUtc() > m_expiryLocalUtc.addSecs(-5 * 60))
                 {
-                    this->connectTo(m_username, m_password, m_networkVersion, { this, [ = ](bool) {}});
+                    this->connectTo(m_username, m_password, m_client, m_networkVersion, { this, [ = ](bool) {}});
                 }
             }
 

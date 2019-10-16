@@ -46,7 +46,7 @@ namespace BlackCore
 
                 //! Connect
                 //! \remark ASYNC, calling callback when done
-                void connectTo(const QString &userName, const QString &password, const QString &callsign, ConnectionCallback callback);
+                void connectTo(const QString &userName, const QString &password, const QString &callsign, const QString &client, ConnectionCallback callback);
 
                 //! Disconnect
                 void disconnectFrom(const QString &reason = {});
