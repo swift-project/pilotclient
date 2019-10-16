@@ -178,6 +178,9 @@ namespace BlackCore
             //! Is COM unit transmitting?
             bool isTransmittingComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
 
+            //! \todo WORKAROUND to hide the "local signals"
+            Afv::Clients::CAfvClient *afvClient() const { return m_voiceClient; }
+
             // -------- parts which can run in core and GUI, referring to local voice client ------------
 
         public slots:
@@ -213,6 +216,8 @@ namespace BlackCore
             //! PTT in voice client received
             void ptt(bool active, BlackMisc::Audio::PTTCOM pttcom, const BlackMisc::CIdentifier &identifier);
 
+            /** Workaround those must be invisible for DBus
+
             //! VU levels @{
             void inputVolumePeakVU(double value);
             void outputVolumePeakVU(double value);
@@ -223,6 +228,8 @@ namespace BlackCore
 
             //! Client updated from own aicraft data
             void updatedFromOwnAircraftCockpit();
+
+            **/
 
             // ------------ local signals -------
 

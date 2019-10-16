@@ -9,6 +9,7 @@
 #include "blackgui/components/audiodevicevolumesetupcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
+#include "blackcore/afv/clients/afvclient.h"
 #include "blackcore/context/contextaudioimpl.h"
 
 #include "blackmisc/audio/audiodeviceinfo.h"
@@ -26,6 +27,7 @@
 
 using namespace BlackCore;
 using namespace BlackCore::Afv::Audio;
+using namespace BlackCore::Afv::Clients;
 using namespace BlackCore::Context;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -112,16 +114,18 @@ namespace BlackGui
                 c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::startedAudio, this, &CAudioDeviceVolumeSetupComponent::onAudioStarted, Qt::QueuedConnection);
                 Q_ASSERT(c);
 
-                c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::outputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onOutputVU, Qt::QueuedConnection);
+                //! \todo Workaround to avoid context signals
+
+                c = connect(sGui->getCContextAudioBase()->afvClient(), &CAfvClient::outputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onOutputVU, Qt::QueuedConnection);
                 Q_ASSERT(c);
 
-                c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::inputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onInputVU, Qt::QueuedConnection);
+                c = connect(sGui->getCContextAudioBase()->afvClient(), &CAfvClient::inputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onInputVU, Qt::QueuedConnection);
                 Q_ASSERT(c);
 
-                c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::receivingCallsignsChanged, this, &CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged, Qt::QueuedConnection);
+                c = connect(sGui->getCContextAudioBase()->afvClient(), &CAfvClient::receivingCallsignsChanged, this, &CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged, Qt::QueuedConnection);
                 Q_ASSERT(c);
 
-                c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::updatedFromOwnAircraftCockpit, this, &CAudioDeviceVolumeSetupComponent::onUpdatedClientWithCockpitData, Qt::QueuedConnection);
+                c = connect(sGui->getCContextAudioBase()->afvClient(), &CAfvClient::updatedFromOwnAircraftCockpit, this, &CAudioDeviceVolumeSetupComponent::onUpdatedClientWithCockpitData, Qt::QueuedConnection);
                 Q_ASSERT(c);
 
                 this->onUpdatedClientWithCockpitData();
