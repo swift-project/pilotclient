@@ -292,7 +292,7 @@ namespace BlackCore
                 //! \threadsafe
                 quint32 getAliasFrequencyHz(quint32 frequencyHz) const;
 
-                static constexpr int PositionUpdatesMs = 5000; //!< position timer
+                static constexpr int PositionUpdatesMs = 20000; //!< position timer
                 static constexpr int SampleRate   = 48000;
                 static constexpr int FrameSize    = static_cast<int>(SampleRate * 0.02); //!< 20ms
                 static constexpr double MinDbIn   = -18.0;
