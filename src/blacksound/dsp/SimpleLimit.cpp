@@ -45,7 +45,7 @@ namespace chunkware_simple
         , mask_(BUFFER_SIZE - 1)
         , cur_(0)
     {
-        setAttack(1.0);
+        setAttackImpl(1.0);
         outBuffer_[ 0 ].resize(BUFFER_SIZE, 0.0);
         outBuffer_[ 1 ].resize(BUFFER_SIZE, 0.0);
     }

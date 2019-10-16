@@ -7,7 +7,6 @@
  */
 
 #include "clientidentification.h"
-
 #include "blackmisc/logmessage.h"
 
 namespace BlackCore

@@ -37,7 +37,7 @@ namespace BlackCore
             //! PDU identifier
             static QString pdu() { return "$ID"; }
 
-            std::uint16_t m_clientId;
+            std::uint16_t m_clientId = 0;
             QString m_clientName;
             int m_clientVersionMajor = BlackConfig::CBuildConfig::getVersion().majorVersion();
             int m_clientVersionMinor = BlackConfig::CBuildConfig::getVersion().minorVersion();
