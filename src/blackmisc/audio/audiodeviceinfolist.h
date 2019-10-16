@@ -12,12 +12,13 @@
 #define BLACKMISC_AUDIO_AUDIODEVICELIST_H
 
 #include "blackmisc/audio/audiodeviceinfo.h"
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QMetaType>
+#include <QAudioDeviceInfo>
 #include <QStringList>
 
 namespace BlackMisc
@@ -82,6 +83,10 @@ namespace BlackMisc
             static CAudioDeviceInfoList allInputDevices();
             static CAudioDeviceInfoList allOutputDevices();
             static CAudioDeviceInfoList allDevices();
+            static QList<QAudioDeviceInfo> allQtInputDevices();
+            static QList<QAudioDeviceInfo> allQtOutputDevices();
+            static QAudioDeviceInfo defaultInputDevice();
+            static QAudioDeviceInfo defaultOutputDevice();
             //! @}
         };
     } //namespace

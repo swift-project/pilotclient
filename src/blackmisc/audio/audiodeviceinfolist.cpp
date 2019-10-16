@@ -141,10 +141,8 @@ namespace BlackMisc
 
         CAudioDeviceInfoList CAudioDeviceInfoList::allInputDevices()
         {
-            const QList<QAudioDeviceInfo> inputDevices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
             CAudioDeviceInfoList devices;
-
-            for (const QAudioDeviceInfo &inputDevice : inputDevices)
+            for (const QAudioDeviceInfo &inputDevice : allQtInputDevices())
             {
                 const CAudioDeviceInfo d(CAudioDeviceInfo::InputDevice, inputDevice.deviceName());
                 if (! devices.contains(d)) { devices.push_back(d); }
@@ -154,10 +152,8 @@ namespace BlackMisc
 
         CAudioDeviceInfoList CAudioDeviceInfoList::allOutputDevices()
         {
-            const QList<QAudioDeviceInfo> outputDevices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
             CAudioDeviceInfoList devices;
-
-            for (const QAudioDeviceInfo &outputDevice : outputDevices)
+            for (const QAudioDeviceInfo &outputDevice : allQtOutputDevices())
             {
                 const CAudioDeviceInfo d(CAudioDeviceInfo::OutputDevice, outputDevice.deviceName());
                 if (! devices.contains(d)) { devices.push_back(d); }
@@ -170,6 +166,40 @@ namespace BlackMisc
             CAudioDeviceInfoList i = allInputDevices();
             i.push_back(allOutputDevices());
             return i;
+        }
+
+        QList<QAudioDeviceInfo> CAudioDeviceInfoList::allQtInputDevices()
+        {
+            const QList<QAudioDeviceInfo> devices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
+            return devices;
+        }
+
+        QList<QAudioDeviceInfo> CAudioDeviceInfoList::allQtOutputDevices()
+        {
+            const QList<QAudioDeviceInfo> devices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
+            return devices;
+        }
+
+        QAudioDeviceInfo CAudioDeviceInfoList::defaultInputDevice()
+        {
+            return QAudioDeviceInfo::defaultInputDevice();
+
+            /**
+            const QList<QAudioDeviceInfo> devices = allQtInputDevices();
+            if (devices.isEmpty()) { return devices.front(); }
+            return QAudioDeviceInfo();
+            **/
+        }
+
+        QAudioDeviceInfo CAudioDeviceInfoList::defaultOutputDevice()
+        {
+            return QAudioDeviceInfo::defaultOutputDevice();
+
+            /**
+            const QList<QAudioDeviceInfo> devices = allQtOutputDevices();
+            if (devices.isEmpty()) { return devices.front(); }
+            return QAudioDeviceInfo();
+            **/
         }
 
     } // namespace

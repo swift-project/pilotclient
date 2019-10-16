@@ -7,6 +7,7 @@
  */
 
 #include "audioutilities.h"
+#include "blackmisc/audio/audiodeviceinfolist.h"
 #include <QStringBuilder>
 #include <QAudioInput>
 #include <QAudioOutput>
@@ -85,12 +86,13 @@ namespace BlackSound
     {
         if (device.isDefault() || !device.isValid())
         {
-            if (device.getType() == CAudioDeviceInfo::InputDevice) { return QAudioDeviceInfo::defaultInputDevice(); }
-            else { return QAudioDeviceInfo::defaultOutputDevice(); }
+            if (device.getType() == CAudioDeviceInfo::InputDevice) { return CAudioDeviceInfoList::defaultInputDevice(); }
+            else { return CAudioDeviceInfoList::defaultOutputDevice(); }
         }
 
-        const QAudio::Mode mode = device.isInputDevice() ? QAudio::AudioInput : QAudio::AudioOutput;
-        const QList<QAudioDeviceInfo> allQtDevices = QAudioDeviceInfo::availableDevices(mode);
+        const QList<QAudioDeviceInfo> allQtDevices =
+            device.isInputDevice() ?
+            CAudioDeviceInfoList::allQtInputDevices() : CAudioDeviceInfoList::allQtOutputDevices();
 
         // Find the one with lowest latency.
         QList<QAudioDeviceInfo> supportedDevices;
@@ -155,8 +157,8 @@ namespace BlackSound
 
     QAudioDeviceInfo getHighestCompatibleOutputDevice(const CAudioDeviceInfo &device, QAudioFormat &format)
     {
-        if (device.isDefault()) { return QAudioDeviceInfo::defaultOutputDevice(); }
-        const QList<QAudioDeviceInfo> allQtDevices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
+        if (device.isDefault()) { return CAudioDeviceInfoList::defaultOutputDevice(); }
+        const QList<QAudioDeviceInfo> allQtDevices = CAudioDeviceInfoList::allQtOutputDevices();
 
         QList<QAudioDeviceInfo> supportedDevices;
         for (const QAudioDeviceInfo &d : allQtDevices)
