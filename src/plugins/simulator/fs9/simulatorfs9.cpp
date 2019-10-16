@@ -400,6 +400,8 @@ namespace BlackSimPlugin
             const CAircraftSituation aircraftSituation = simDataOwnAircraft.getSituation();
             this->updateOwnSituationAndGroundElevation(aircraftSituation);
 
+            this->updateOwnParts(simDataOwnAircraft.getParts());
+
             if (m_isWeatherActivated)
             {
                 const auto currentPosition = CCoordinateGeodetic { aircraftSituation.latitude(), aircraftSituation.longitude() };
