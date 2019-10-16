@@ -21,20 +21,36 @@ namespace BlackCore
 {
     namespace Fsd
     {
+        //! Add ATC message
         class BLACKCORE_EXPORT AddAtc : public MessageBase
         {
         public:
+            //! Constructor
             AddAtc(const QString &callsign, const QString &realName, const QString &cid,
                    const QString &password, AtcRating rating, int protocolRevision);
 
+            //! Message converted to tokens
             QStringList toTokens() const;
+
+            //! Construct from tokens
             static AddAtc fromTokens(const QStringList &tokens);
+
+            //! PDU identifier
             static QString pdu() { return QStringLiteral("#AA"); }
 
+            //! Get user cid
             QString cid() const { return m_cid; }
+
+            //! Get user password
             QString password() const { return m_password; }
+
+            //! Get ATC rating
             AtcRating rating() const { return m_rating; }
+
+            //! Get protocol version
             int protocolRevision() const { return m_protocolRevision; }
+
+            //! Get real name
             QString realName() const { return m_realName; }
 
         private:
@@ -47,6 +63,7 @@ namespace BlackCore
             QString m_realName;
         };
 
+        //! Equal operator
         inline bool operator==(const AddAtc &lhs, const AddAtc &rhs)
         {
             return  lhs.sender() == rhs.sender() &&
@@ -58,6 +75,7 @@ namespace BlackCore
                     lhs.realName() == rhs.realName();
         }
 
+        //! Not equal operator
         inline bool operator!=(const AddAtc &lhs, const AddAtc &rhs)
         {
             return !(lhs == rhs);
