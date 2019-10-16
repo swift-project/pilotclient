@@ -184,7 +184,7 @@ namespace BlackCore
                 //! \threadsafe
                 //! @{
                 Q_INVOKABLE void setLoopBack(bool on) { m_loopbackOn = on; }
-                Q_INVOKABLE bool isLoopback() const { return m_loopbackOn; }
+                Q_INVOKABLE bool isLoopback() const   { return m_loopbackOn; }
                 //! @}
 
                 //! Input volume in dB, +-18dB
@@ -324,7 +324,9 @@ namespace BlackCore
                 std::atomic_int  m_connectMismatches { 0 };
                 std::atomic_bool m_isStarted  { false };
                 std::atomic_bool m_loopbackOn { false };
-                std::atomic_bool m_winCoInitialized { false }; //!< Windows only CoInitializeEx
+                std::atomic_bool m_winCoInitialized  { false }; //!< Windows only CoInitializeEx
+                std::atomic_bool m_integratedComUnit {false};   //!< is COM unit sychr
+
                 QDateTime m_startDateTimeUtc;
 
                 double m_inputVolumeDb  = 0.0;

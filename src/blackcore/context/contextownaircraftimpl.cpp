@@ -298,7 +298,7 @@ namespace BlackCore
             return changed;
         }
 
-        bool CContextOwnAircraft::updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const CTransponder &transponder, const CIdentifier &originator)
+        bool CContextOwnAircraft::updateCockpit(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder, const CIdentifier &originator)
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << com1 << com2 << transponder; }
             bool changed;

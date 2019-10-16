@@ -9,6 +9,7 @@
 #include "afvclient.h"
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextsimulator.h"
 #include "blackcore/application.h"
 #include "blacksound/audioutilities.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
@@ -784,7 +785,8 @@ namespace BlackCore
                 if (hasContext())
                 {
                     // for pilot client
-                    this->updateFromOwnAircraft(sApp->getIContextOwnAircraft()->getOwnAircraft(), false);
+                    const CSimulatedAircraft aircraft = sApp->getIContextOwnAircraft()->getOwnAircraft();
+                    this->updateFromOwnAircraft(aircraft, false);
 
                     // disconnect if NOT connected
                     this->autoLogoffWithoutFsdNetwork();
@@ -845,10 +847,25 @@ namespace BlackCore
                 transceiverCom1.frequencyHz = this->getAliasFrequencyHz(f1);
                 transceiverCom2.frequencyHz = this->getAliasFrequencyHz(f2);
 
-                const bool tx1 = com1.isTransmitEnabled();
-                const bool rx1 = com1.isReceiveEnabled();
-                const bool tx2 = com2.isTransmitEnabled(); // we only allow one (1) transmit
-                const bool rx2 = com2.isReceiveEnabled();
+                bool tx1 = true;
+                bool rx1 = true;
+                bool tx2 = false;
+                bool rx2 = true;
+
+                // make sure to use defaults with COM integration disabled
+                if (hasContext())
+                {
+                    const bool integrated = sApp->getIContextSimulator()->getSimulatorSettings().isComIntegrated();
+                    m_integratedComUnit = integrated;
+                }
+
+                if (m_integratedComUnit)
+                {
+                    tx1 = com1.isTransmitEnabled();
+                    rx1 = com1.isReceiveEnabled();
+                    tx2 = com2.isTransmitEnabled(); // we only allow one (1) transmit
+                    rx2 = com2.isReceiveEnabled();
+                }
 
                 // enable, we currently treat receive as enable
                 // flight sim cockpits normally use rx and tx
@@ -965,7 +982,7 @@ namespace BlackCore
 
             bool CAfvClient::hasContext()
             {
-                return sApp && !sApp->isShuttingDown() && sApp->getIContextOwnAircraft() && sApp->getIContextNetwork();
+                return sApp && !sApp->isShuttingDown() && sApp->getIContextOwnAircraft() && sApp->getIContextNetwork() && sApp->getIContextSimulator();
             }
 
             bool CAfvClient::setOutputVolumeDb(double valueDb)

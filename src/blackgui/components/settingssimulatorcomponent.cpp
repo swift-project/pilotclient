@@ -319,9 +319,9 @@ namespace BlackGui
         void CSettingsSimulatorComponent::onApplyComSync()
         {
             bool ok = false;
-            CSimulatorSettings settings = getSimulatorSettings(ok);
+            CSimulatorSettings settings = this->getSimulatorSettings(ok);
             if (!ok || !settings.setComIntegrated(ui->cb_ComSync->isChecked())) { return; }
-            setSimulatorSettings(settings);
+            this->setSimulatorSettings(settings);
         }
 
         void CSettingsSimulatorComponent::onApplyCGSource()
@@ -330,7 +330,7 @@ namespace BlackGui
             const CSimulatorSettings::CGSource source = ui->comp_CGSourceSelector->getValue();
             CSimulatorSettings settings = getSimulatorSettings(ok);
             if (!ok || !settings.setCGSource(source)) { return; }
-            setSimulatorSettings(settings);
+            this->setSimulatorSettings(settings);
         }
 
         void CSettingsSimulatorComponent::onApplyRecordGnd()
