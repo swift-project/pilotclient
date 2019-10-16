@@ -43,6 +43,10 @@ namespace BlackMisc
         //! Plugins directory
         static const QString &pluginsDirectory();
 
+        //! Audio plugins directory for Qt audio
+        //! \remark contains the audio plugins
+        static const QString &audioPluginDirectory();
+
         //! The build directory
         //! \remark if is a local build
         static const QString &getXSwiftBusBuildDirectory();

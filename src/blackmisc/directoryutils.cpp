@@ -51,6 +51,12 @@ namespace BlackMisc
         return pDir;
     }
 
+    const QString &CDirectoryUtils::audioPluginDirectory()
+    {
+        static const QString pDir(CFileUtils::appendFilePaths(binDirectory(), "audio"));
+        return pDir;
+    }
+
     const QString &CDirectoryUtils::getXSwiftBusBuildDirectory()
     {
         if (!CBuildConfig::isLocalDeveloperDebugBuild())

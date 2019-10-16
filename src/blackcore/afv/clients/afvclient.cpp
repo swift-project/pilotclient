@@ -138,31 +138,33 @@ namespace BlackCore
                     QMutexLocker lock(&m_mutexConnection);
 
                     // async connection
-                    m_connection->connectTo(cid, password, callsign, client, { this, [ = ](bool authenticated)
+                    m_connection->connectTo(cid, password, callsign, client,
                     {
-                        // this is the callback when the connection has been established
-
-                        const QVector<StationDto> aliasedStations = m_connection->getAllAliasedStations();
-                        this->setAliasedStations(aliasedStations); // threadsafe
-                        this->onTimerUpdate();
-
-                        // const bool isConnected = this->isConnected(); // threadsafe
-                        if (authenticated)
+                        this, [ = ](bool authenticated)
                         {
-                            // restart timer, normally it should be started already, paranoia
-                            // as I run in "my thread" starting timer should be OK
+                            // this is the callback when the connection has been established
+
+                            const QVector<StationDto> aliasedStations = m_connection->getAllAliasedStations();
+                            this->setAliasedStations(aliasedStations); // threadsafe
+                            this->onTimerUpdate();
+
+                            // const bool isConnected = this->isConnected(); // threadsafe
+                            if (authenticated)
                             {
-                                QMutexLocker lock(&m_mutex);
-                                if (m_voiceServerTimer) { m_voiceServerTimer->start(PositionUpdatesMs); }
+                                // restart timer, normally it should be started already, paranoia
+                                // as I run in "my thread" starting timer should be OK
+                                {
+                                    QMutexLocker lock(&m_mutex);
+                                    if (m_voiceServerTimer) { m_voiceServerTimer->start(PositionUpdatesMs); }
+                                }
+                                emit this->connectionStatusChanged(Connected);
                             }
-                            emit this->connectionStatusChanged(Connected);
+                            else
+                            {
+                                emit this->connectionStatusChanged(Disconnected);
+                            }
                         }
-                        else
-                        {
-                            emit this->connectionStatusChanged(Disconnected);
-                        }
-                    }
-                                                                     });
+                    });
                 }
             }
 
@@ -298,7 +300,6 @@ namespace BlackCore
                 this->setReceiveAudio(false); // threadsafe
 
                 // stop input/output
-
                 {
                     QMutexLocker lock{&m_mutex};
                     m_input->stop();
