@@ -12,6 +12,7 @@
 #include "blackmisc/network/external/qjsonwebtoken.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/stringutils.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QJsonObject>
 #include <QJsonArray>
@@ -23,6 +24,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
+using namespace BlackConfig;
 
 namespace BlackCore
 {
@@ -297,7 +299,15 @@ namespace BlackCore
             {
                 if (QDateTime::currentDateTimeUtc() > m_expiryLocalUtc.addSecs(-5 * 60))
                 {
-                    this->connectTo(m_username, m_password, m_client, m_networkVersion, { this, [ = ](bool) {}});
+                    QPointer<CApiServerConnection> myself(this);
+                    this->connectTo(m_username, m_password, m_client, m_networkVersion,
+                    {
+                        this, [ = ](bool authenticated)
+                        {
+                            if (!myself) { return; }
+                            CLogMessage(this).info(u"API server authenticated '%1': %2") << m_username << boolToYesNo(authenticated);
+                        }
+                    });
                 }
             }
 
@@ -316,7 +326,9 @@ namespace BlackCore
 
             void CApiServerConnection::logRequestDuration(const QNetworkReply *reply, const QString &addMsg)
             {
+                if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return; }
                 if (!reply) { return; }
+
                 const qint64 d = CNetworkUtils::requestDuration(reply);
                 if (d < 0) { return; }
                 if (addMsg.isEmpty())

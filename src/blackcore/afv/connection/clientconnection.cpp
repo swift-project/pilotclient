@@ -8,9 +8,11 @@
 
 #include "clientconnection.h"
 #include "blackmisc/logmessage.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QNetworkDatagram>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackCore::Afv::Crypto;
 
@@ -158,7 +160,7 @@ namespace BlackCore
                 else if (deserializer.dtoNameBuffer == HeartbeatAckDto::getShortDtoName())
                 {
                     m_connection.setTsHeartbeatToNow();
-                    CLogMessage(this).debug(u"Received voice server heartbeat");
+                    if (CBuildConfig::isLocalDeveloperDebugBuild()) { CLogMessage(this).debug(u"Received voice server heartbeat"); }
                 }
                 else
                 {
@@ -175,7 +177,7 @@ namespace BlackCore
             void CClientConnection::voiceServerHeartbeat()
             {
                 const QUrl voiceServerUrl("udp://" + m_connection.getTokens().VoiceServer.addressIpV4);
-                CLogMessage(this).debug(u"Sending voice server heartbeat to '%1'") << voiceServerUrl.host();
+                if (CBuildConfig::isLocalDeveloperDebugBuild()) { CLogMessage(this).debug(u"Sending voice server heartbeat to '%1'") << voiceServerUrl.host(); }
                 HeartbeatDto keepAlive;
                 keepAlive.callsign = m_connection.getCallsign().toStdString();
                 const QByteArray dataBytes = CryptoDtoSerializer::serialize(*m_connection.m_voiceCryptoChannel, CryptoDtoMode::AEAD_ChaCha20Poly1305, keepAlive);
