@@ -141,9 +141,9 @@ namespace BlackGui
             {
                 CLogMessage().validationWarning(u"Invalid SELCAL code");
             }
-            else if (sGui->getIContextAudio())
+            else if (sGui->getCContextAudioBase())
             {
-                sGui->getIContextAudio()->playSelcalTone(selcal);
+                sGui->getCContextAudioBase()->playSelcalTone(selcal);
             }
             else
             {

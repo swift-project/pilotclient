@@ -150,10 +150,10 @@ namespace BlackGui
             CLogMessage(this).preformatted(msg);
 
             const QCheckBox *sender = qobject_cast<const QCheckBox *>(QObject::sender());
-            if (checked && sGui && sGui->getIContextAudio() && sender)
+            if (checked && sGui && sGui->getCContextAudioBase() && sender)
             {
                 const CNotificationSounds::NotificationFlag f = this->checkBoxToFlag(sender);
-                sGui->getIContextAudio()->playNotification(f, false, as.getNotificationVolume());
+                sGui->getCContextAudioBase()->playNotification(f, false, as.getNotificationVolume());
             }
         }
 

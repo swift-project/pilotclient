@@ -35,7 +35,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             const int volume = sGui && sGui->getIContextAudio() ?
-                               sGui->getIContextAudio()->getVoiceOutputVolume() :
+                               sGui->getCContextAudioBase()->getVoiceOutputVolume() :
                                100;
             ui->hs_Volume->setValue(volumeToSliderValue(volume));
             ui->sb_Volume->setValue(volume);
@@ -53,15 +53,15 @@ namespace BlackGui
             Q_ASSERT(c);
             Q_UNUSED(c)
 
-            c = connect(sGui->getIContextAudio(), &IContextAudio::changedMute, this, &CAudioVolumeComponent::onMuteChanged);
+            c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::changedMute, this, &CAudioVolumeComponent::onMuteChanged);
             Q_ASSERT(c);
             Q_UNUSED(c)
-            connect(sGui->getIContextAudio(), &IContextAudio::changedAudioVolume, this, &CAudioVolumeComponent::onOutputVolumeChanged);
+            connect(sGui->getCContextAudioBase(), &CContextAudioBase::changedAudioVolume, this, &CAudioVolumeComponent::onOutputVolumeChanged);
             Q_ASSERT(c);
             Q_UNUSED(c)
 
             // to audio audio context
-            c = connect(ui->pb_Mute, &QPushButton::toggled, sGui->getIContextAudio(), &IContextAudio::setMute);
+            c = connect(ui->pb_Mute, &QPushButton::toggled, sGui->getCContextAudioBase(), &CContextAudioBase::setMute);
             Q_ASSERT(c);
             Q_UNUSED(c)
 
@@ -129,9 +129,9 @@ namespace BlackGui
             }
             ui->hs_Volume->setToolTip(QString::number(volume));
 
-            if (sGui->getIContextAudio()->getVoiceOutputVolume() != volume)
+            if (sGui->getCContextAudioBase()->getVoiceOutputVolume() != volume)
             {
-                sGui->getIContextAudio()->setVoiceOutputVolume(volume);
+                sGui->getCContextAudioBase()->setVoiceOutputVolume(volume);
             }
         }
 
@@ -140,9 +140,9 @@ namespace BlackGui
             if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return; }
             ui->sb_Volume->setToolTip(QString::number(volume));
             Q_ASSERT(sGui->getIContextAudio());
-            if (sGui->getIContextAudio()->getVoiceOutputVolume() != volume)
+            if (sGui->getCContextAudioBase()->getVoiceOutputVolume() != volume)
             {
-                sGui->getIContextAudio()->setVoiceOutputVolume(volume);
+                sGui->getCContextAudioBase()->setVoiceOutputVolume(volume);
             }
         }
 

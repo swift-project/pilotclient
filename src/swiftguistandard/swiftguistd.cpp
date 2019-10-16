@@ -520,7 +520,7 @@ void SwiftGuiStd::playNotifcationSound(CNotificationSounds::NotificationFlag not
     if (!m_contextAudioAvailable) { return; }
     if (!ui->comp_MainInfoArea->getSettingsComponent()->playNotificationSounds()) { return; }
     if (!sGui || sGui->isShuttingDown()) { return; }
-    sGui->getIContextAudio()->playNotification(notification, true);
+    sGui->getCContextAudioBase()->playNotification(notification, true);
 }
 
 void SwiftGuiStd::displayConsole()

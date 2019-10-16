@@ -317,9 +317,9 @@ namespace BlackGui
                 ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
 
                 // Login
-                if (sGui->getIContextAudio())
+                if (sGui->getCContextAudioBase())
                 {
-                    sGui->getIContextAudio()->setVoiceSetup(currentServer.getVoiceSetup());
+                    sGui->getCContextAudioBase()->setVoiceSetup(currentServer.getVoiceSetup());
                 }
 
                 msg = sGui->getIContextNetwork()->connectToNetwork(currentServer, {}, true, {}, true, {}, mode);

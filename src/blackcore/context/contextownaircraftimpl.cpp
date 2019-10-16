@@ -81,7 +81,7 @@ namespace BlackCore
 
         CContextOwnAircraft *CContextOwnAircraft::registerWithDBus(CDBusServer *server)
         {
-            if (!server || m_mode != CCoreFacadeConfig::LocalInDBusServer) return this;
+            if (!server || m_mode != CCoreFacadeConfig::LocalInDBusServer) { return this; }
             server->addObject(IContextOwnAircraft::ObjectPath(), this);
             return this;
         }
@@ -418,7 +418,8 @@ namespace BlackCore
         void CContextOwnAircraft::setAudioOutputVolume(int outputVolume)
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << outputVolume; }
-            if (this->getIContextAudio()) this->getIContextAudio()->setVoiceOutputVolume(outputVolume);
+            CContextAudioBase *audio = qobject_cast<CContextAudioBase *>(this->getIContextAudio());
+            if (audio) { audio->setVoiceOutputVolume(outputVolume); }
         }
 
         void CContextOwnAircraft::xCtxChangedAtcStationOnlineConnectionStatus(const CAtcStation &atcStation, bool connected)

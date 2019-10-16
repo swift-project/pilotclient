@@ -71,9 +71,9 @@ namespace BlackGui
             connect(ui->lep_CommandLineInput, &CCommandInput::commandEntered, this, &CMainKeypadAreaComponent::commandEntered);
             connect(ui->lep_CommandLineInput, &CCommandInput::textEntered,    this, &CMainKeypadAreaComponent::textEntered);
 
-            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMainKeypadAreaComponent::connectionStatusChanged);
+            connect(sGui->getIContextNetwork(),     &IContextNetwork::connectionStatusChanged, this, &CMainKeypadAreaComponent::connectionStatusChanged);
             connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CMainKeypadAreaComponent::ownAircraftCockpitChanged);
-            connect(sGui->getIContextAudio(), &IContextAudio::changedMute, this, &CMainKeypadAreaComponent::muteChanged);
+            connect(sGui->getCContextAudioBase(),   &CContextAudioBase::changedMute, this, &CMainKeypadAreaComponent::muteChanged);
             connect(this, &CMainKeypadAreaComponent::commandEntered, sGui->getCoreFacade(), &CCoreFacade::parseCommandLine);
 
             QPointer<CMainKeypadAreaComponent> myself(this);
@@ -138,12 +138,12 @@ namespace BlackGui
             }
             else if (senderButton == ui->pb_SoundMaxVolume && sGui->getIContextAudio())
             {
-                sGui->getIContextAudio()->setVoiceOutputVolume(100);
+                sGui->getCContextAudioBase()->setVoiceOutputVolume(100);
             }
             else if (senderButton == ui->pb_SoundMute && sGui->getIContextAudio())
             {
-                const bool mute = sGui->getIContextAudio()->isMuted();
-                sGui->getIContextAudio()->setMute(!mute);
+                const bool mute = sGui->getCContextAudioBase()->isMuted();
+                sGui->getCContextAudioBase()->setMute(!mute);
             }
             else if (senderButton == ui->pb_Connect)
             {
@@ -176,7 +176,7 @@ namespace BlackGui
 
         void CMainKeypadAreaComponent::ownAircraftCockpitChanged(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
-            Q_UNUSED(originator);
+            Q_UNUSED(originator)
             bool ident = aircraft.getTransponder().getTransponderMode() == CTransponder::StateIdent;
 
             //check state to avoid undelibarate signals
@@ -268,9 +268,9 @@ namespace BlackGui
         void CMainKeypadAreaComponent::update()
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->supportsContexts()) { return; }
-            if (sGui->getIContextAudio() && !sGui->getIContextAudio()->isEmptyObject())
+            if (sGui->getCContextAudioBase())
             {
-                this->muteChanged(sGui->getIContextAudio()->isMuted());
+                this->muteChanged(sGui->getCContextAudioBase()->isMuted());
             }
 
             if (sGui->getIContextNetwork() && sGui->getIContextNetwork()->isConnected())

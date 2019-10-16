@@ -77,7 +77,7 @@ namespace BlackGui
 
         void CAudioDeviceVolumeSetupComponent::init()
         {
-            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->getCContextAudioBase()) { return; }
 
             // audio is optional
             const bool audio = this->hasAudio();
@@ -91,14 +91,14 @@ namespace BlackGui
 
             if (audio)
             {
-                const QString ai = audio ? sGui->getIContextAudio()->audioRunsWhereInfo() : "No audio, cannot change.";
+                const QString ai = sGui->getCContextAudioBase()->audioRunsWhereInfo();
                 ui->le_Info->setText(ai);
                 ui->le_Info->setPlaceholderText(ai);
 
                 this->initAudioDeviceLists();
 
                 // default
-                ui->cb_SetupAudioLoopback->setChecked(sGui->getIContextAudio()->isAudioLoopbackEnabled());
+                ui->cb_SetupAudioLoopback->setChecked(sGui->getCContextAudioBase()->isAudioLoopbackEnabled());
 
                 // the connects depend on initAudioDeviceLists
                 c = connect(ui->cb_SetupAudioInputDevice,  qOverload<int>(&QComboBox::currentIndexChanged), this, &CAudioDeviceVolumeSetupComponent::onAudioDeviceSelected);
@@ -107,21 +107,21 @@ namespace BlackGui
                 Q_ASSERT(c);
 
                 // context
-                c = connect(sGui->getIContextAudio(), &IContextAudio::changedAudioDevices, this, &CAudioDeviceVolumeSetupComponent::onAudioDevicesChanged, Qt::QueuedConnection);
+                c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::changedAudioDevices, this, &CAudioDeviceVolumeSetupComponent::onAudioDevicesChanged, Qt::QueuedConnection);
                 Q_ASSERT(c);
-                c = connect(sGui->getIContextAudio(), &IContextAudio::startedAudio, this, &CAudioDeviceVolumeSetupComponent::onAudioStarted, Qt::QueuedConnection);
-                Q_ASSERT(c);
-
-                c = connect(sGui->getIContextAudio(), &IContextAudio::outputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onOutputVU, Qt::QueuedConnection);
+                c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::startedAudio, this, &CAudioDeviceVolumeSetupComponent::onAudioStarted, Qt::QueuedConnection);
                 Q_ASSERT(c);
 
-                c = connect(sGui->getIContextAudio(), &IContextAudio::inputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onInputVU, Qt::QueuedConnection);
+                c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::outputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onOutputVU, Qt::QueuedConnection);
                 Q_ASSERT(c);
 
-                c = connect(sGui->getIContextAudio(), &IContextAudio::receivingCallsignsChanged, this, &CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged, Qt::QueuedConnection);
+                c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::inputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onInputVU, Qt::QueuedConnection);
                 Q_ASSERT(c);
 
-                c = connect(sGui->getIContextAudio(), &IContextAudio::updatedFromOwnAircraftCockpit, this, &CAudioDeviceVolumeSetupComponent::onUpdatedClientWithCockpitData, Qt::QueuedConnection);
+                c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::receivingCallsignsChanged, this, &CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged, Qt::QueuedConnection);
+                Q_ASSERT(c);
+
+                c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::updatedFromOwnAircraftCockpit, this, &CAudioDeviceVolumeSetupComponent::onUpdatedClientWithCockpitData, Qt::QueuedConnection);
                 Q_ASSERT(c);
 
                 this->onUpdatedClientWithCockpitData();
@@ -194,11 +194,11 @@ namespace BlackGui
         void CAudioDeviceVolumeSetupComponent::setTransmitReceiveInUiFromVoiceClient()
         {
             if (!this->hasAudio()) { return; }
-            const bool com1Enabled = sGui->getIContextAudio()->isEnabledComUnit(CComSystem::Com1);
-            const bool com2Enabled = sGui->getIContextAudio()->isEnabledComUnit(CComSystem::Com2);
+            const bool com1Enabled = sGui->getCContextAudioBase()->isEnabledComUnit(CComSystem::Com1);
+            const bool com2Enabled = sGui->getCContextAudioBase()->isEnabledComUnit(CComSystem::Com2);
 
-            const bool com1Tx = com1Enabled && sGui->getIContextAudio()->isTransmittingComUnit(CComSystem::Com1);
-            const bool com2Tx = com2Enabled && sGui->getIContextAudio()->isTransmittingComUnit(CComSystem::Com2);
+            const bool com1Tx = com1Enabled && sGui->getCContextAudioBase()->isTransmittingComUnit(CComSystem::Com1);
+            const bool com2Tx = com2Enabled && sGui->getCContextAudioBase()->isTransmittingComUnit(CComSystem::Com2);
 
             // we do not have receiving
             const bool com1Rx = com1Enabled;
@@ -218,14 +218,14 @@ namespace BlackGui
         void CAudioDeviceVolumeSetupComponent::initAudioDeviceLists()
         {
             if (!this->hasAudio()) { return; }
-            this->onAudioDevicesChanged(sGui->getIContextAudio()->getAudioDevices());
-            const CAudioDeviceInfoList currentDevices = sGui->getIContextAudio()->getCurrentAudioDevices();
+            this->onAudioDevicesChanged(sGui->getCContextAudioBase()->getAudioDevices());
+            const CAudioDeviceInfoList currentDevices = sGui->getCContextAudioBase()->getCurrentAudioDevices();
             this->onAudioStarted(currentDevices.getInputDevices().frontOrDefault(), currentDevices.getOutputDevices().frontOrDefault());
         }
 
         bool CAudioDeviceVolumeSetupComponent::hasAudio() const
         {
-            return sGui && sGui->getIContextAudio() && !sGui->getIContextAudio()->isEmptyObject();
+            return sGui && sGui->getCContextAudioBase();
         }
 
         void CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged(int v)
@@ -261,7 +261,7 @@ namespace BlackGui
             this->initAudioDeviceLists();
             const CAudioDeviceInfo i = this->getSelectedInputDevice();
             const CAudioDeviceInfo o = this->getSelectedInputDevice();
-            sGui->getIContextAudio()->setCurrentAudioDevices(i, o);
+            sGui->getCContextAudioBase()->setCurrentAudioDevices(i, o);
         }
 
         void CAudioDeviceVolumeSetupComponent::onResetVolumeIn()
@@ -287,14 +287,14 @@ namespace BlackGui
         CAudioDeviceInfo CAudioDeviceVolumeSetupComponent::getSelectedInputDevice() const
         {
             if (!hasAudio()) { return CAudioDeviceInfo(); }
-            const CAudioDeviceInfoList devices = sGui->getIContextAudio()->getAudioInputDevices();
+            const CAudioDeviceInfoList devices = sGui->getCContextAudioBase()->getAudioInputDevices();
             return devices.findByName(ui->cb_SetupAudioInputDevice->currentText());
         }
 
         CAudioDeviceInfo CAudioDeviceVolumeSetupComponent::getSelectedOutputDevice() const
         {
             if (!hasAudio()) { return CAudioDeviceInfo(); }
-            const CAudioDeviceInfoList devices = sGui->getIContextAudio()->getAudioOutputDevices();
+            const CAudioDeviceInfoList devices = sGui->getCContextAudioBase()->getAudioOutputDevices();
             return devices.findByName(ui->cb_SetupAudioOutputDevice->currentText());
         }
 
@@ -305,7 +305,7 @@ namespace BlackGui
 
             const CAudioDeviceInfo in  = this->getSelectedInputDevice();
             const CAudioDeviceInfo out = this->getSelectedOutputDevice();
-            sGui->getIContextAudio()->setCurrentAudioDevices(in, out);
+            sGui->getCContextAudioBase()->setCurrentAudioDevices(in, out);
         }
 
         void CAudioDeviceVolumeSetupComponent::onAudioStarted(const CAudioDeviceInfo &input, const CAudioDeviceInfo &output)
@@ -341,8 +341,8 @@ namespace BlackGui
         void CAudioDeviceVolumeSetupComponent::onLoopbackToggled(bool loopback)
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return; }
-            if (sGui->getIContextAudio()->isAudioLoopbackEnabled() == loopback) { return; }
-            sGui->getIContextAudio()->enableAudioLoopback(loopback);
+            if (sGui->getCContextAudioBase()->isAudioLoopbackEnabled() == loopback) { return; }
+            sGui->getCContextAudioBase()->enableAudioLoopback(loopback);
         }
 
         void CAudioDeviceVolumeSetupComponent::onDisableAudioEffectsToggled(bool disabled)

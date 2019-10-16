@@ -78,10 +78,10 @@ namespace BlackGui
                 ui->led_DBus->setOn(sGui->getIContextApplication()->isUsingImplementingObject());
             }
 
-            if (sGui->getIContextAudio())
+            if (sGui->getCContextAudioBase())
             {
-                ui->led_Audio->setOn(!sGui->getIContextAudio()->isMuted());
-                connect(sGui->getIContextAudio(), &IContextAudio::changedMute, this, &CInfoBarStatusComponent::onMuteChanged);
+                ui->led_Audio->setOn(!sGui->getCContextAudioBase()->isMuted());
+                connect(sGui->getCContextAudioBase(), &CContextAudioBase::changedMute, this, &CInfoBarStatusComponent::onMuteChanged);
             }
 
             QPointer<CInfoBarStatusComponent> myself(this);
@@ -224,7 +224,7 @@ namespace BlackGui
                 const QList<QAction *> actions = menuAudio.actions();
                 if (selectedItem == actions.at(0))
                 {
-                    sGui->getIContextAudio()->setMute(!sGui->getIContextAudio()->isMuted());
+                    sGui->getCContextAudioBase()->setMute(!sGui->getCContextAudioBase()->isMuted());
                 }
                 else if (actions.size() > 1 && selectedItem == actions.at(1))
                 {
@@ -280,8 +280,8 @@ namespace BlackGui
         {
             if (!sGui || sGui->isShuttingDown()) { return; }
 
-            IContextSimulator *simCon = sGui->getIContextSimulator();
-            if (sGui->getIContextSimulator())
+            const IContextSimulator *simCon = sGui->getIContextSimulator();
+            if (simCon)
             {
 
                 this->onSimulatorStatusChanged(simCon->getSimulatorStatus());
@@ -302,9 +302,9 @@ namespace BlackGui
             }
 
             // audio context can be empty depending on which side it is called
-            if (sGui->getIContextAudio() && !sGui->getIContextAudio()->isEmptyObject())
+            if (sGui->getCContextAudioBase())
             {
-                ui->led_Audio->setOn(!sGui->getIContextAudio()->isMuted());
+                ui->led_Audio->setOn(!sGui->getCContextAudioBase()->isMuted());
             }
             else
             {

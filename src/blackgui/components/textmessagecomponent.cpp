@@ -196,7 +196,7 @@ namespace BlackGui
                     // this is SELCAL for me
                     if (playNotification)
                     {
-                        sGui->getIContextAudio()->playSelcalTone(message.getSelcalCode());
+                        sGui->getCContextAudioBase()->playSelcalTone(message.getSelcalCode());
                     }
 
                     if (msgSettings.popupSelcalMessages())
@@ -231,7 +231,7 @@ namespace BlackGui
                     // callsign mentioned notification
                     if (relevantForMe && audioCsMentioned && ownAircraft.hasCallsign() && message.mentionsCallsign(ownAircraft.getCallsign()))
                     {
-                        sGui->getIContextAudio()->playNotification(CNotificationSounds::NotificationTextCallsignMentioned, false);
+                        sGui->getCContextAudioBase()->playNotification(CNotificationSounds::NotificationTextCallsignMentioned, false);
                     }
                 }
                 else if (message.isPrivateMessage() && !message.isServerMessage())
@@ -536,11 +536,11 @@ namespace BlackGui
                 const CSettings settings = m_audioSettings.get();
                 if (textMessage.isSupervisorMessage() && settings.textMessageSupervisor())
                 {
-                    sGui->getIContextAudio()->playNotification(CNotificationSounds::NotificationTextMessageSupervisor, true);
+                    sGui->getCContextAudioBase()->playNotification(CNotificationSounds::NotificationTextMessageSupervisor, true);
                 }
                 else if (textMessage.isPrivateMessage() && settings.textMessagePrivate())
                 {
-                    sGui->getIContextAudio()->playNotification(CNotificationSounds::NotificationTextMessagePrivate, true);
+                    sGui->getCContextAudioBase()->playNotification(CNotificationSounds::NotificationTextMessagePrivate, true);
                 }
             }
         }

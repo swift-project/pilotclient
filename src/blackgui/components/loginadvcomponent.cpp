@@ -217,9 +217,9 @@ namespace BlackGui
                 }
 
                 // Login
-                if (sGui && sGui->getIContextAudio())
+                if (sGui && sGui->getCContextAudioBase())
                 {
-                    sGui->getIContextAudio()->setVoiceSetup(currentServer.getVoiceSetup());
+                    sGui->getCContextAudioBase()->setVoiceSetup(currentServer.getVoiceSetup());
                 }
 
                 msg = sGui->getIContextNetwork()->connectToNetwork(currentServer, values.ownLiverySend, values.useLivery, values.ownAircraftModelStringSend, values.useModelString, partnerCs, mode);
