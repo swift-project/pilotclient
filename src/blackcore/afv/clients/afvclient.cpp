@@ -943,11 +943,47 @@ namespace BlackCore
 
                     if (it != m_aliasedStations.end())
                     {
-                        CLogMessage(this).debug(u"Aliasing %1Hz [VHF] to %2Hz [HF]")  << frequencyHz << it->frequencyHz;
-                        roundedFrequencyHz = it->frequencyHz;
+                        if (sApp->getIContextNetwork())
+                        {
+                            // Get the callsign for this frequency and fuzzy compare with our alias station
+                            const CComSystem::ChannelSpacing spacing = CComSystem::ChannelSpacing25KHz;
+                            CFrequency f(static_cast<int>(roundedFrequencyHz), CFrequencyUnit::Hz());
+                            CAtcStationList matchingAtcStations = sApp->getIContextNetwork()->getOnlineStationsForFrequency(f, spacing);
+                            CAtcStation closest = matchingAtcStations.findClosest(1, sApp->getIContextOwnAircraft()->getOwnAircraftSituation().getPosition()).frontOrDefault();
+
+                            if (fuzzyMatchCallSign(it->name, closest.getCallsign().asString()))
+                            {
+                                CLogMessage(this).debug(u"Aliasing %1Hz [VHF] to %2Hz [HF]")  << frequencyHz << it->frequencyHz;
+                                roundedFrequencyHz = it->frequencyHz;
+                            }
+                        }
+                        else
+                        {
+                            CLogMessage(this).debug(u"Aliasing %1Hz [VHF] to %2Hz [HF]")  << frequencyHz << it->frequencyHz;
+                            roundedFrequencyHz = it->frequencyHz;
+                        }
                     }
                 }
                 return roundedFrequencyHz;
+            }
+
+            bool CAfvClient::fuzzyMatchCallSign(const QString &callsign, const QString &compareTo) const
+            {
+                QString prefixA;
+                QString suffixA;
+                QString prefixB;
+                QString suffixB;
+                getPrefixSuffix(callsign, prefixA, suffixA);
+                getPrefixSuffix(compareTo, prefixB, suffixB);
+                return (prefixA == prefixB) && (suffixA == suffixB);
+            }
+
+            void CAfvClient::getPrefixSuffix(const QString &callsign, QString &prefix, QString &suffix) const
+            {
+                QRegularExpression separator("[(-|_)]");
+                QStringList parts = callsign.split(separator);
+                prefix = parts.first();
+                suffix = parts.last();
             }
 
             quint16 CAfvClient::comUnitToTransceiverId(CComSystem::ComUnit comUnit)
