@@ -257,13 +257,6 @@ namespace BlackCore
             void audioDecreaseVolume(bool enabled);
             //! @}
 
-            //! Get current COM unit from cockpit
-            //! \remark cross context
-            //! @{
-            BlackMisc::Aviation::CComSystem xCtxGetOwnComSystem(BlackMisc::Aviation::CComSystem::ComUnit unit) const;
-            bool xCtxIsComIntegratedWithSimulator() const;
-            //! @}
-
             //! Network connection status
             void xCtxNetworkConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 

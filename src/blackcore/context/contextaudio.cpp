@@ -385,29 +385,6 @@ namespace BlackCore
             this->setVoiceOutputVolume(v);
         }
 
-        CComSystem CContextAudioBase::xCtxGetOwnComSystem(CComSystem::ComUnit unit) const
-        {
-            if (!this->getIContextOwnAircraft())
-            {
-                // context not available
-                const double defFreq = 122.8;
-                switch (unit)
-                {
-                case CComSystem::Com1: return CComSystem::getCom1System(defFreq, defFreq);
-                case CComSystem::Com2: return CComSystem::getCom2System(defFreq, defFreq);
-                default: break;
-                }
-                return CComSystem::getCom1System(defFreq, defFreq);
-            }
-            return this->getIContextOwnAircraft()->getOwnComSystem(unit);
-        }
-
-        bool CContextAudioBase::xCtxIsComIntegratedWithSimulator() const
-        {
-            if (!this->getIContextSimulator()) { return false; }
-            return this->getIContextSimulator()->getSimulatorSettings().isComIntegrated();
-        }
-
         void CContextAudioBase::xCtxNetworkConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
             if (!m_voiceClient) { return; }
