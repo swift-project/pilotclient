@@ -32,6 +32,7 @@
 #include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/input/actionhotkeydefs.h"
+#include "blackmisc/genericdbusinterface.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/identifier.h"
 
@@ -61,18 +62,12 @@ namespace BlackCore
     namespace Context
     {
         //! Audio context interface
-        class BLACKCORE_EXPORT IContextAudio :
-            public IContext,
-            public BlackMisc::CIdentifiable
+        class BLACKCORE_EXPORT IContextAudio : public IContext
         {
             Q_OBJECT
             Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAUDIO_INTERFACENAME)
 
             friend class BlackCore::CCoreFacade;
-
-        protected:
-            //! Constructor
-            IContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 
         public:
             //! Interface name
@@ -87,8 +82,43 @@ namespace BlackCore
             //! Factory method
             static IContextAudio *create(CCoreFacade *runtime, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &connection);
 
+        signals:
+            // only use DBus signals here
+
+        public slots:
+            // ------------- DBus ---------------
+
+            //! Register a device on a machine (for core/GUI it will return all known devices on all machines)
+            virtual void registerDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) = 0;
+
+            //! Unregister devices
+            virtual void unRegisterDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) = 0;
+
+            //! All registered devices
+            virtual BlackMisc::Audio::CAudioDeviceInfoList getRegisteredDevices() const = 0;
+
+            // ------------- DBus ---------------
+
+        protected:
+            //! Constructor
+            IContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
+        };
+
+        //! Audio context interface
+        class BLACKCORE_EXPORT CContextAudioBase :
+            public IContextAudio,
+            public BlackMisc::CIdentifiable
+        {
+            Q_OBJECT
+            friend class BlackCore::CCoreFacade;
+
+        protected:
+            //! Constructor
+            CContextAudioBase(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
+
+        public:
             //! Destructor
-            virtual ~IContextAudio() override;
+            virtual ~CContextAudioBase() override;
 
             //! Graceful shutdown
             void gracefulShutdown();
@@ -150,38 +180,6 @@ namespace BlackCore
 
             // -------- parts which can run in core and GUI, referring to local voice client ------------
 
-        signals:
-            // -------- local settings, not DBus relayed -------
-
-            //! Audio volume changed
-            //! \sa setVoiceOutputVolume
-            void changedAudioVolume(int volume);
-
-            //! PTT status in a particular voice client
-            void ptt(bool active, BlackMisc::Audio::PTTCOM pttcom, const BlackMisc::CIdentifier &identifier);
-
-            //! Mute changed
-            void changedMute(bool muted);
-
-            //! Changed audio devices (e.g. device enabled/disable)
-            void changedAudioDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
-
-            //! Audio started with
-            void startedAudio(const BlackMisc::Audio::CAudioDeviceInfo &input, const BlackMisc::Audio::CAudioDeviceInfo &output);
-
-            //! VU levels @{
-            void inputVolumePeakVU(double value);
-            void outputVolumePeakVU(double value);
-            //! @}
-
-            //! Callsigns I receive have changed
-            void receivingCallsignsChanged(const BlackCore::Afv::Audio::TransceiverReceivingCallsignsChangedArgs &args);
-
-            //! Client updated from own aicraft data
-            void updatedFromOwnAircraftCockpit();
-
-            // -------- local settings, not DBus relayed -------
-
         public slots:
             // ------------- DBus ---------------
 
@@ -194,16 +192,39 @@ namespace BlackCore
             //! \copydoc IContext::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
 
-            //! Register a device on a machine (for core/GUI it will return all known devices on all machines)
-            virtual void registerDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) = 0;
-
-            //! Unregister devices
-            virtual void unRegisterDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) = 0;
-
-            //! All registered devices
-            virtual BlackMisc::Audio::CAudioDeviceInfoList getRegisteredDevices() const = 0;
-
             // ------------- DBus ---------------
+
+
+            // ------------ local signals -------
+        signals:
+            //! Audio volume changed
+            //! \sa setVoiceOutputVolume
+            void changedAudioVolume(int volume);
+
+            //! Mute changed
+            void changedMute(bool muted);
+
+            //! Changed audio devices (e.g. device enabled/disable)
+            void changedAudioDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
+
+            //! Audio started with
+            void startedAudio(const BlackMisc::Audio::CAudioDeviceInfo &input, const BlackMisc::Audio::CAudioDeviceInfo &output);
+
+            //! PTT in voice client received
+            void ptt(bool active, BlackMisc::Audio::PTTCOM pttcom, const BlackMisc::CIdentifier &identifier);
+
+            //! VU levels @{
+            void inputVolumePeakVU(double value);
+            void outputVolumePeakVU(double value);
+            //! @}
+
+            //! Callsigns I receive have changed
+            void receivingCallsignsChanged(const BlackCore::Afv::Audio::TransceiverReceivingCallsignsChangedArgs &args);
+
+            //! Client updated from own aicraft data
+            void updatedFromOwnAircraftCockpit();
+
+            // ------------ local signals -------
 
         private:
             //! Enable/disable voice transmission, nornally used with hotkey
@@ -236,28 +257,24 @@ namespace BlackCore
             bool xCtxIsComIntegratedWithSimulator() const;
             //! @}
 
-            //! Changed cockpit
-            //! \remark cross context
-            void xCtxChangedAircraftCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
-
             //! Network connection status
             void xCtxNetworkConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
-            CActionBind m_actionPtt     { BlackMisc::Input::pttHotkeyAction(),     BlackMisc::Input::pttHotkeyIcon(), this, &IContextAudio::setVoiceTransmissionComActive };
-            CActionBind m_actionPttCom1 { BlackMisc::Input::pttCom1HotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &IContextAudio::setVoiceTransmissionCom1 };
-            CActionBind m_actionPttCom2 { BlackMisc::Input::pttCom2HotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &IContextAudio::setVoiceTransmissionCom2 };
-            CActionBind m_actionAudioVolumeIncrease { BlackMisc::Input::audioVolumeIncreaseHotkeyAction(), BlackMisc::Input::audioVolumeIncreaseHotkeyIcon(), this, &IContextAudio::audioIncreaseVolume };
-            CActionBind m_actionAudioVolumeDecrease { BlackMisc::Input::audioVolumeDecreaseHotkeyAction(), BlackMisc::Input::audioVolumeDecreaseHotkeyIcon(), this, &IContextAudio::audioDecreaseVolume };
+            CActionBind m_actionPtt     { BlackMisc::Input::pttHotkeyAction(),     BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudioBase::setVoiceTransmissionComActive };
+            CActionBind m_actionPttCom1 { BlackMisc::Input::pttCom1HotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudioBase::setVoiceTransmissionCom1 };
+            CActionBind m_actionPttCom2 { BlackMisc::Input::pttCom2HotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudioBase::setVoiceTransmissionCom2 };
+            CActionBind m_actionAudioVolumeIncrease { BlackMisc::Input::audioVolumeIncreaseHotkeyAction(), BlackMisc::Input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudioBase::audioIncreaseVolume };
+            CActionBind m_actionAudioVolumeDecrease { BlackMisc::Input::audioVolumeDecreaseHotkeyAction(), BlackMisc::Input::audioVolumeDecreaseHotkeyIcon(), this, &CContextAudioBase::audioDecreaseVolume };
 
             int m_outVolumeBeforeMute = 90;
             static constexpr int MinUnmuteVolume = 20; //!< minimum volume when unmuted
 
             // settings
-            BlackMisc::CSetting<BlackMisc::Audio::TSettings>   m_audioSettings { this, &IContextAudio::onChangedAudioSettings };
-            BlackMisc::CSetting<BlackMisc::Audio::TVoiceSetup> m_voiceSettings { this, &IContextAudio::onChangedVoiceSettings };
+            BlackMisc::CSetting<BlackMisc::Audio::TSettings>   m_audioSettings { this, &CContextAudioBase::onChangedAudioSettings };
+            BlackMisc::CSetting<BlackMisc::Audio::TVoiceSetup> m_voiceSettings { this, &CContextAudioBase::onChangedVoiceSettings };
 
-            BlackMisc::CSetting<Audio::TInputDevice>  m_inputDeviceSetting  { this, &IContextAudio::changeDeviceSettings };
-            BlackMisc::CSetting<Audio::TOutputDevice> m_outputDeviceSetting { this, &IContextAudio::changeDeviceSettings };
+            BlackMisc::CSetting<Audio::TInputDevice>  m_inputDeviceSetting  { this, &CContextAudioBase::changeDeviceSettings };
+            BlackMisc::CSetting<Audio::TOutputDevice> m_outputDeviceSetting { this, &CContextAudioBase::changeDeviceSettings };
 
             // AFV
             Afv::Clients::CAfvClient *m_voiceClient = nullptr;

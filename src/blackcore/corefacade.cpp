@@ -110,7 +110,7 @@ namespace BlackCore
         times.insert("Application", time.restart());
 
         if (m_contextAudio) { m_contextAudio->deleteLater(); }
-        m_contextAudio = IContextAudio::create(this, m_config.getModeAudio(), m_dbusServer, m_dbusConnection);
+        m_contextAudio = qobject_cast<CContextAudioBase *>(IContextAudio::create(this, m_config.getModeAudio(), m_dbusServer, m_dbusConnection));
         times.insert("Audio", time.restart());
 
         if (m_contextOwnAircraft) { m_contextOwnAircraft->deleteLater(); }
@@ -261,14 +261,6 @@ namespace BlackCore
                 Q_ASSERT(c);
             }
 
-            // special case for the audio related connection (which mutes audio for a changed cockpit)
-            // hook up with audio if audio context is local
-            if (this->hasLocalAudio() && m_contextOwnAircraft)
-            {
-                c = connect(m_contextOwnAircraft, &IContextOwnAircraft::changedAircraftCockpit, this->getCContextAudio(), &IContextAudio::xCtxChangedAircraftCockpit, Qt::QueuedConnection);
-                Q_ASSERT(c);
-            }
-
             // times
             times.insert("Post setup, sim.connects", time.restart());
         }
@@ -288,7 +280,7 @@ namespace BlackCore
         {
             Q_ASSERT(m_contextApplication);
             c = connect(m_contextNetwork, &IContextNetwork::connectionStatusChanged,
-                        this->getCContextAudio(), &IContextAudio::xCtxNetworkConnectionStatusChanged, Qt::QueuedConnection);
+                        this->getCContextAudio(), &CContextAudio::xCtxNetworkConnectionStatusChanged, Qt::QueuedConnection);
             Q_ASSERT(c);
             times.insert("Post setup, connects audio", time.restart());
         }
@@ -350,11 +342,11 @@ namespace BlackCore
             m_contextNetwork = IContextNetwork::create(this, CCoreFacadeConfig::NotUsed, nullptr, defaultConnection);
         }
 
-        if (this->getIContextAudio())
+        if (this->getCContextAudioBase())
         {
             // there is no empty audio context since AFV
-            disconnect(this->getIContextAudio());
-            this->getIContextAudio()->gracefulShutdown();
+            disconnect(this->getCContextAudioBase());
+            this->getCContextAudioBase()->gracefulShutdown();
             this->getIContextAudio()->deleteLater();
             m_contextAudio = nullptr;
         }
@@ -413,6 +405,16 @@ namespace BlackCore
     }
 
     const IContextAudio *CCoreFacade::getIContextAudio() const
+    {
+        return m_contextAudio;
+    }
+
+    CContextAudioBase *CCoreFacade::getCContextAudioBase()
+    {
+        return m_contextAudio;
+    }
+
+    const CContextAudioBase *CCoreFacade::getCContextAudioBase() const
     {
         return m_contextAudio;
     }

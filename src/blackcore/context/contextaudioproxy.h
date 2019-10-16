@@ -43,7 +43,7 @@ namespace BlackCore
     {
         //! Audio context proxy
         //! \ingroup dbus
-        class BLACKCORE_EXPORT CContextAudioProxy : public IContextAudio
+        class BLACKCORE_EXPORT CContextAudioProxy : public CContextAudioBase
         {
             Q_OBJECT
             Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAUDIO_INTERFACENAME)
@@ -58,7 +58,7 @@ namespace BlackCore
             static void unitTestRelaySignals();
 
         public slots:
-            //! All Dbus xsinterface overrides
+            //! All DBus interface overrides
             //! \publicsection
             //! @{
             //! Register a device on a machine (for core/GUI it will return all known devices on all machines)
@@ -76,7 +76,7 @@ namespace BlackCore
 
         protected:
             //! Contructor
-            CContextAudioProxy(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextAudio(mode, runtime), m_dBusInterface(nullptr) {}
+            CContextAudioProxy(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : CContextAudioBase(mode, runtime), m_dBusInterface(nullptr) {}
 
             //! DBus version constructor
             CContextAudioProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);

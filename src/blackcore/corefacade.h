@@ -12,9 +12,9 @@
 #define BLACKCORE_COREFACADE_H
 
 #include "corefacadeconfig.h"
-#include "blackcore/blackcoreexport.h"
 #include "blackcore/data/launchersetup.h"
 #include "blackcore/vatsim/vatsimsettings.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/settingscache.h"
 
@@ -30,6 +30,7 @@ namespace BlackCore
     {
         class CContextApplication;
         class CContextAudio;
+        class CContextAudioBase;
         class CContextNetwork;
         class CContextOwnAircraft;
         class CContextSimulator;
@@ -90,6 +91,12 @@ namespace BlackCore
 
         //! Context for audio
         const Context::IContextAudio *getIContextAudio() const;
+
+        //! Context for audio
+        Context::CContextAudioBase *getCContextAudioBase();
+
+        //! Context for audio
+        const Context::CContextAudioBase *getCContextAudioBase() const;
 
         //! Context for application
         Context::IContextApplication *getIContextApplication();
@@ -178,7 +185,7 @@ namespace BlackCore
         // There is a reason why we do not use smart pointers here. When the context is deleted
         // we need to use deleteLater to gracefully shut the context
         Context::IContextApplication *m_contextApplication = nullptr;
-        Context::IContextAudio       *m_contextAudio       = nullptr;
+        Context::CContextAudioBase   *m_contextAudio       = nullptr;
         Context::IContextNetwork     *m_contextNetwork     = nullptr;
         Context::IContextOwnAircraft *m_contextOwnAircraft = nullptr;
         Context::IContextSimulator   *m_contextSimulator   = nullptr;

@@ -1532,6 +1532,12 @@ namespace BlackCore
         return m_coreFacade->getIContextAudio();
     }
 
+    const CContextAudioBase *CApplication::getCContextAudioBase() const
+    {
+        if (!supportsContexts()) { return nullptr; }
+        return m_coreFacade->getCContextAudioBase();
+    }
+
     const IContextApplication *CApplication::getIContextApplication() const
     {
         if (!supportsContexts()) { return nullptr; }
@@ -1560,6 +1566,12 @@ namespace BlackCore
     {
         if (!supportsContexts()) { return nullptr; }
         return m_coreFacade->getIContextAudio();
+    }
+
+    CContextAudioBase *CApplication::getCContextAudioBase()
+    {
+        if (!supportsContexts()) { return nullptr; }
+        return m_coreFacade->getCContextAudioBase();
     }
 
     IContextApplication *CApplication::getIContextApplication()

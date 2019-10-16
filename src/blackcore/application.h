@@ -64,6 +64,7 @@ namespace BlackCore
     {
         class IContextApplication;
         class IContextAudio;
+        class CContextAudioBase;
         class IContextNetwork;
         class IContextOwnAircraft;
         class IContextSimulator;
@@ -368,11 +369,13 @@ namespace BlackCore
         //! @{
         const Context::IContextNetwork     *getIContextNetwork() const;
         const Context::IContextAudio       *getIContextAudio() const;
+        const Context::CContextAudioBase   *getCContextAudioBase() const;
         const Context::IContextApplication *getIContextApplication() const;
         const Context::IContextOwnAircraft *getIContextOwnAircraft() const;
         const Context::IContextSimulator   *getIContextSimulator() const;
         Context::IContextNetwork           *getIContextNetwork();
         Context::IContextAudio             *getIContextAudio();
+        Context::CContextAudioBase         *getCContextAudioBase();
         Context::IContextApplication       *getIContextApplication();
         Context::IContextOwnAircraft       *getIContextOwnAircraft();
         Context::IContextSimulator         *getIContextSimulator();

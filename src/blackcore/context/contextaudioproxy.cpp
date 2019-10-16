@@ -7,6 +7,7 @@
  */
 
 #include "blackcore/context/contextaudioproxy.h"
+#include "blackcore/afv/clients/afvclient.h"
 #include "blackmisc/audio/ptt.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/dbusserver.h"
@@ -20,15 +21,16 @@ using namespace BlackMisc;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
+using namespace BlackCore::Afv::Clients;
 
 namespace BlackCore
 {
     namespace Context
     {
-        CContextAudioProxy::CContextAudioProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextAudio(mode, runtime), m_dBusInterface(nullptr)
+        CContextAudioProxy::CContextAudioProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
+            CContextAudioBase(mode, runtime), m_dBusInterface(nullptr)
         {
-            this->m_dBusInterface = new CGenericDBusInterface(
-                serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(), connection, this);
+            m_dBusInterface = new CGenericDBusInterface(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(), connection, this);
             this->relaySignals(serviceName, connection);
         }
 

@@ -32,8 +32,7 @@ namespace BlackCore
     namespace Context
     {
         //! Audio context implementation
-        class BLACKCORE_EXPORT CContextAudio :
-            public IContextAudio
+        class BLACKCORE_EXPORT CContextAudio : public CContextAudioBase
         {
             Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAUDIO_INTERFACENAME)
             Q_OBJECT
@@ -42,7 +41,7 @@ namespace BlackCore
             friend class IContextAudio;
 
         public slots:
-            // Interface implementations
+            // Interface implementations for DBus
             //! \publicsection
             //! @{
             virtual void registerDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;

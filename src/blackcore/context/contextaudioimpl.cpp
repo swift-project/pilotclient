@@ -7,27 +7,32 @@
  */
 
 #include "blackcore/context/contextaudioimpl.h"
+#include "blackcore/afv/clients/afvclient.h"
 #include "blackmisc/dbusserver.h"
 
 #include <QTimer>
 #include <QtGlobal>
 #include <QPointer>
 
-
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;
+using namespace BlackCore::Afv::Clients;
 
 namespace BlackCore
 {
     namespace Context
     {
         CContextAudio::CContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
-            IContextAudio(mode, runtime)
-        { }
+            CContextAudioBase(mode, runtime)
+        {
+            // void
+        }
 
         CContextAudio *CContextAudio::registerWithDBus(CDBusServer *server)
         {
             if (!server || m_mode != CCoreFacadeConfig::LocalInDBusServer) { return this; }
+
+            // remark that registers all SIGNALS, not only the interface ons
             server->addObject(IContextAudio::ObjectPath(), this);
             return this;
         }
