@@ -10,6 +10,7 @@
 #include "blackgui/components/commandinput.h"
 #include "blackgui/components/coreinfoareacomponent.h"
 #include "blackgui/components/coresettingsdialog.h"
+#include "blackgui/components/cockpitcomaudiodialog.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/rawfsdmessagesdialog.h"
 #include "blackgui/guiapplication.h"
@@ -55,14 +56,14 @@ CSwiftCore::CSwiftCore(QWidget *parent) :
     m_mwaOverlayFrame = nullptr;
     m_mwaStatusBar = nullptr;
 
-    connect(ui->pb_Restart, &QPushButton::clicked, this, &CSwiftCore::restart);
+    connect(ui->pb_Restart, &QPushButton::clicked,           this, &CSwiftCore::restart);
+    connect(ui->pb_Audio,   &QPushButton::clicked,           this, &CSwiftCore::audioDialog, Qt::QueuedConnection);
     connect(ui->pb_DisconnectNetwork, &QPushButton::clicked, this, &CSwiftCore::disconnectFromNetwork);
-    connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftCore::onStyleSheetsChanged, Qt::QueuedConnection);
+    connect(sGui, &CGuiApplication::styleSheetsChanged,      this, &CSwiftCore::onStyleSheetsChanged, Qt::QueuedConnection);
 
     this->initLogDisplay();
     this->initStyleSheet();
     this->initMenus();
-    this->initAudio();
 
     // log
     CStatusMessage m = CStatusMessage(this).info(u"Cmd: %1") << CGuiApplication::arguments().join(" ");
@@ -138,28 +139,12 @@ void CSwiftCore::initMenus()
     connect(ui->menu_RawFsdMessageDialog, &QAction::triggered, this, &CSwiftCore::showRawFsdMessageDialog);
 }
 
-void CSwiftCore::initAudio()
-{
-    if (!sGui->getIContextAudio()) { return; }
-    ui->lbl_AudioRunsWhere->setText(sGui->getIContextAudio()->audioRunsWhereInfo());
-    if (sGui->getIContextAudio()->isUsingImplementingObject())
-    {
-        ui->rb_AudioOnCore->setChecked(true);
-    }
-    else
-    {
-        ui->rb_AudioOnGui->setChecked(true);
-    }
-}
-
 void CSwiftCore::restart()
 {
     if (!sGui || sGui->isShuttingDown()) { return; }
     ui->pb_Restart->setEnabled(false);
     const QStringList args = this->getRestartCmdArgs();
     sGui->restartApplication(args);
-
-    // sGui->restartApplication(args, { "--coreaudio" });
 }
 
 void CSwiftCore::disconnectFromNetwork()
@@ -173,16 +158,18 @@ void CSwiftCore::disconnectFromNetwork()
     sGui->getIContextNetwork()->disconnectFromNetwork();
 }
 
-QString CSwiftCore::getAudioCmdFromRadioButtons() const
+void CSwiftCore::audioDialog()
 {
-    // if (ui->rb_AudioOnCore->isChecked()) { return QStringLiteral("--coreaudio"); }
-    return {};
+    if (!m_audioDialog)
+    {
+        m_audioDialog.reset(new CCockpitComAudioDialog(this));
+    }
+    m_audioDialog->setModal(false);
+    m_audioDialog->show();
 }
 
 QStringList CSwiftCore::getRestartCmdArgs() const
 {
-    // const QString coreAudio = this->getAudioCmdFromRadioButtons();
-    QStringList cmds = ui->comp_DBusSelector->getDBusCmdLineArgs();
-    // if (!coreAudio.isEmpty()) { cmds.append(coreAudio); }
+    const QStringList cmds = ui->comp_DBusSelector->getDBusCmdLineArgs();
     return cmds;
 }

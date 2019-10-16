@@ -29,6 +29,7 @@ namespace BlackGui
     {
         class CCoreSettingsDialog;
         class CRawFsdMessagesDialog;
+        class CCockpitComAudioDialog;
     }
 }
 namespace Ui { class CSwiftCore; }
@@ -57,7 +58,6 @@ private:
     void initLogDisplay();
     void initStyleSheet();
     void initMenus();
-    void initAudio();
     //! @}
 
     //! Add a message to log UI
@@ -81,14 +81,16 @@ private:
     //! Disconnect from network
     void disconnectFromNetwork();
 
-    //! Core mode from radio buttons
-    QString getAudioCmdFromRadioButtons() const;
+    //! Audio dialog
+    void audioDialog();
 
     //! Restart CMD args
     QStringList getRestartCmdArgs() const;
 
-    QScopedPointer<BlackGui::Components::CCoreSettingsDialog> m_settingsDialog;
+    QScopedPointer<BlackGui::Components::CCoreSettingsDialog>   m_settingsDialog;
     QScopedPointer<BlackGui::Components::CRawFsdMessagesDialog> m_rawFsdMessageDialog;
+    QScopedPointer<BlackGui::Components::CCockpitComAudioDialog>     m_audioDialog;
+
     QScopedPointer<Ui::CSwiftCore> ui;
 };
 
