@@ -99,7 +99,6 @@ namespace BlackCore
             connect(&m_interimPositionUpdateTimer, &QTimer::timeout, this, &CFSDClient::sendInterimPilotDataUpdate);
 
             connect(&m_scheduledConfigUpdate, &QTimer::timeout, this, &CFSDClient::sendIncrementalAircraftConfig);
-            m_scheduledConfigUpdate.setSingleShot(true);
 
             fsdMessageSettingsChanged();
 
@@ -761,16 +760,8 @@ namespace BlackCore
             // If it hasn't changed, return
             if (m_sentAircraftConfig == currentParts) { return; }
 
-            if (!m_tokenBucket.tryConsume())
-            {
-                // If timer is not yet active, start it
-                if (!m_scheduledConfigUpdate.isActive()) m_scheduledConfigUpdate.start(1000);
-                return;
-            }
+            if (!m_tokenBucket.tryConsume()) { return; }
 
-            // Method could have been triggered by another change in aircraft config
-            // so a previous update might still be scheduled. Stop it.
-            if (m_scheduledConfigUpdate.isActive()) m_scheduledConfigUpdate.stop();
             const QJsonObject previousConfig = m_sentAircraftConfig.toJson();
             const QJsonObject currentConfig = currentParts.toJson();
             const QJsonObject incrementalConfig = getIncrementalObject(previousConfig, currentConfig);
@@ -1780,6 +1771,7 @@ namespace BlackCore
         void CFSDClient::startPositionTimers()
         {
             m_positionUpdateTimer.start(c_updatePostionIntervalMsec);
+            m_scheduledConfigUpdate.start(c_processingIntervalMsec);
             if (this->isInterimPositionSendingEnabledForServer()) { m_interimPositionUpdateTimer.start(c_updateInterimPostionIntervalMsec); }
         }
 
@@ -1787,6 +1779,7 @@ namespace BlackCore
         {
             m_positionUpdateTimer.stop();
             m_interimPositionUpdateTimer.stop();
+            m_scheduledConfigUpdate.stop();
         }
 
         void CFSDClient::updateAtisMap(const QString &callsign, AtisLineType type, const QString &line)
