@@ -507,7 +507,7 @@ namespace BlackCore
             QStringList receivers;
             for (const int &frequency : frequencies)
             {
-                receivers.push_back(QString("@%1").arg(frequency - 100000));
+                receivers.push_back(QStringLiteral("@%1").arg(frequency - 100000));
             }
 
             TextMessage radioMessage(m_ownCallsign.asString(), receivers.join('&'), message);
@@ -562,7 +562,7 @@ namespace BlackCore
             this->increaseStatisticsValue(QStringLiteral("sendFlightPlan"));
         }
 
-        void CFSDClient::sendPlaneInfoRequest(const BlackMisc::Aviation::CCallsign &receiver)
+        void CFSDClient::sendPlaneInfoRequest(const CCallsign &receiver)
         {
             PlaneInfoRequest planeInfoRequest(m_ownCallsign.asString(), receiver.toQString());
             sendMessage(planeInfoRequest);
@@ -1010,8 +1010,8 @@ namespace BlackCore
             CAltitude cruiseAlt;
             cruiseAlt.parseFromString(cruiseAltString, CPqString::SeparatorBestGuess);
 
-            const QString depTimePlanned = QString("0000").append(QString::number(fp.m_estimatedDepTime)).right(4);
-            const QString depTimeActual  = QString("0000").append(QString::number(fp.m_actualDepTime)).right(4);
+            const QString depTimePlanned = QStringLiteral("0000").append(QString::number(fp.m_estimatedDepTime)).right(4);
+            const QString depTimeActual  = QStringLiteral("0000").append(QString::number(fp.m_actualDepTime)).right(4);
 
             const CCallsign callsign(fp.sender(), CCallsign::Aircraft);
             const CFlightPlan flightPlan(
@@ -1231,22 +1231,22 @@ namespace BlackCore
             ServerError serverError = ServerError::fromTokens(tokens);
             switch (serverError.m_errorNumber)
             {
-            case ServerErrorCode::CallsignInUse: CLogMessage(this).error(u"The requested callsign is already taken"); break;
-            case ServerErrorCode::InvalidCallsign: CLogMessage(this).error(u"The requested callsign is not valid"); break;
-            case ServerErrorCode::InvalidCidPassword:      CLogMessage(this).error(u"Wrong user ID or password, inactive account"); break;
-            case ServerErrorCode::InvalidRevision:        CLogMessage(this).error(u"This server does not support our protocol version"); break;
-            case ServerErrorCode::RequestedLevelTooHigh:           CLogMessage(this).error(u"You are not authorized to use the requested pilot rating"); break;
-            case ServerErrorCode::ServerFull:        CLogMessage(this).error(u"The server is full"); break;
-            case ServerErrorCode::CidSuspended:     CLogMessage(this).error(u"Your user account is suspended"); break;
-            case ServerErrorCode::RatingTooLow:          CLogMessage(this).error(u"You are not authorized to use the requested rating"); break;
-            case ServerErrorCode::InvalidClient:          CLogMessage(this).error(u"This software is not authorized for use on this network"); break;
+            case ServerErrorCode::CallsignInUse:       CLogMessage(this).error(u"The requested callsign is already taken"); break;
+            case ServerErrorCode::InvalidCallsign:     CLogMessage(this).error(u"The requested callsign is not valid"); break;
+            case ServerErrorCode::InvalidCidPassword:  CLogMessage(this).error(u"Wrong user ID or password, inactive account"); break;
+            case ServerErrorCode::InvalidRevision:     CLogMessage(this).error(u"This server does not support our protocol version"); break;
+            case ServerErrorCode::RequestedLevelTooHigh:  CLogMessage(this).error(u"You are not authorized to use the requested pilot rating"); break;
+            case ServerErrorCode::ServerFull:          CLogMessage(this).error(u"The server is full"); break;
+            case ServerErrorCode::CidSuspended:        CLogMessage(this).error(u"Your user account is suspended"); break;
+            case ServerErrorCode::RatingTooLow:        CLogMessage(this).error(u"You are not authorized to use the requested rating"); break;
+            case ServerErrorCode::InvalidClient:       CLogMessage(this).error(u"This software is not authorized for use on this network"); break;
 
-            case ServerErrorCode::NoError:            CLogMessage(this).info(u"OK"); break;
-            case ServerErrorCode::SyntaxError:          CLogMessage(this).info(u"Malformed packet: Syntax error: %1") << serverError.m_causingParameter; break;
-            case ServerErrorCode::InvalidSrcCallsign:      CLogMessage(this).info(u"FSD message was using an invalid callsign: %1 (%2)") << serverError.m_causingParameter << serverError.m_description; break;
-            case ServerErrorCode::NoSuchCallsign:        CLogMessage(this).info(u"FSD Server: no such callsign: %1 %2") << serverError.m_causingParameter << serverError.m_description; break;
-            case ServerErrorCode::NoFlightPlan:            CLogMessage(this).info(u"FSD Server: no flight plan"); break;
-            case ServerErrorCode::NoWeatherProfile:       CLogMessage(this).info(u"FSD Server: requested weather profile does not exist"); break;
+            case ServerErrorCode::NoError:             CLogMessage(this).info(u"OK"); break;
+            case ServerErrorCode::SyntaxError:         CLogMessage(this).info(u"Malformed packet: Syntax error: %1") << serverError.m_causingParameter; break;
+            case ServerErrorCode::InvalidSrcCallsign:  CLogMessage(this).info(u"FSD message was using an invalid callsign: %1 (%2)") << serverError.m_causingParameter << serverError.m_description; break;
+            case ServerErrorCode::NoSuchCallsign:      CLogMessage(this).info(u"FSD Server: no such callsign: %1 %2") << serverError.m_causingParameter << serverError.m_description; break;
+            case ServerErrorCode::NoFlightPlan:        CLogMessage(this).info(u"FSD Server: no flight plan"); break;
+            case ServerErrorCode::NoWeatherProfile:    CLogMessage(this).info(u"FSD Server: requested weather profile does not exist"); break;
 
             // we have no idea what these mean
             case ServerErrorCode::AlreadyRegistered:    CLogMessage(this).info(u"Server says already registered: %1") << serverError.m_description; break;
@@ -1543,8 +1543,7 @@ namespace BlackCore
             if (reLogoff.match(message).hasMatch())
             {
                 emit atisLogoffTimeReplyReceived(sender, message);
-                CInformationMessage atisMessage;
-                atisMessage.setType(CInformationMessage::ATIS);
+                CInformationMessage atisMessage(CInformationMessage::ATIS);
                 for (const auto &line : as_const(pendingQuery.m_atisMessage))
                 {
                     if (!atisMessage.isEmpty()) atisMessage.appendMessage("\n");
@@ -1565,13 +1564,13 @@ namespace BlackCore
             if (setting.getFileWriteMode() == CRawFsdMessageSettings::None || setting.getFileDir().isEmpty()) { return; }
             if (setting.getFileWriteMode() == CRawFsdMessageSettings::Truncate)
             {
-                QString filePath = CFileUtils::appendFilePaths(setting.getFileDir(), "rawfsdmessages.log");
+                const QString filePath = CFileUtils::appendFilePaths(setting.getFileDir(), "rawfsdmessages.log");
                 m_rawFsdMessageLogFile.setFileName(filePath);
                 m_rawFsdMessageLogFile.open(QIODevice::Text | QIODevice::WriteOnly);
             }
             else if (setting.getFileWriteMode() == CRawFsdMessageSettings::Append)
             {
-                QString filePath = CFileUtils::appendFilePaths(setting.getFileDir(), "rawfsdmessages.log");
+                const QString filePath = CFileUtils::appendFilePaths(setting.getFileDir(), "rawfsdmessages.log");
                 m_rawFsdMessageLogFile.setFileName(filePath);
                 m_rawFsdMessageLogFile.open(QIODevice::Text | QIODevice::WriteOnly | QIODevice::Append);
             }
@@ -1581,7 +1580,7 @@ namespace BlackCore
                 filename += QLatin1String("_");
                 filename += QDateTime::currentDateTime().toString(QStringLiteral("yyMMddhhmmss"));
                 filename += QLatin1String(".log");
-                QString filePath = CFileUtils::appendFilePaths(setting.getFileDir(), filename);
+                const QString filePath = CFileUtils::appendFilePaths(setting.getFileDir(), filename);
                 m_rawFsdMessageLogFile.setFileName(filePath);
                 m_rawFsdMessageLogFile.open(QIODevice::Text | QIODevice::WriteOnly);
             }
@@ -1672,8 +1671,8 @@ namespace BlackCore
         {
             while (m_socket.canReadLine())
             {
-                QByteArray dataEncoded = m_socket.readLine();
-                QString data = m_fsdTextCodec->toUnicode(dataEncoded);
+                const QByteArray dataEncoded = m_socket.readLine();
+                const QString data = m_fsdTextCodec->toUnicode(dataEncoded);
                 parseMessage(data);
             }
         }
@@ -1699,13 +1698,12 @@ namespace BlackCore
             if (messageType != MessageType::Unknown)
             {
                 // Cutoff the cmd from the beginning
-                QString payload = line.mid(cmd.size()).trimmed();
+                const QString payload = line.mid(cmd.size()).trimmed();
 
                 // We expected a payload, but there is nothing
                 if (payload.length() == 0) return;
 
-                QStringList tokens = payload.split(':');
-
+                const QStringList tokens = payload.split(':');
                 switch (messageType)
                 {
                 case MessageType::AddAtc: /* ignore */ return;
@@ -1746,7 +1744,7 @@ namespace BlackCore
                 }
             }
 
-            QString prefix = isSent ? "FSD Sent=>" : "FSD Recv=>";
+            const QString prefix = isSent ? "FSD Sent=>" : "FSD Recv=>";
             CRawFsdMessage rawMessage(prefix + fsdMessageFiltered);
             rawMessage.setCurrentUtcTime();
             if (m_rawFsdMessageLogFile.isOpen())
@@ -1813,9 +1811,7 @@ namespace BlackCore
                 // emit atisVoiceRoomReplyReceived(cs, m_mapAtisMessages[callsign].voiceRoom);
                 emit atisLogoffTimeReplyReceived(cs, m_mapAtisMessages[callsign].zuluLogoff);
 
-                CInformationMessage atisMessage;
-                atisMessage.setType(CInformationMessage::ATIS);
-
+                CInformationMessage atisMessage(CInformationMessage::ATIS);
                 for (const QString &tm : m_mapAtisMessages[callsign].textLines)
                 {
                     const QString fixed = tm.trimmed();

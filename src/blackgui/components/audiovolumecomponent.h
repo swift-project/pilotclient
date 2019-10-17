@@ -32,7 +32,7 @@ namespace BlackGui
             explicit CAudioVolumeComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAudioVolumeComponent();
+            virtual ~CAudioVolumeComponent() override;
 
         private:
             //! Mute toggleBlackGui::Components::CHotkeyDialog

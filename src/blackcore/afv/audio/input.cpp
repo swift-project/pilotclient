@@ -9,8 +9,9 @@
 //! \file
 
 #include "input.h"
-#include "blackmisc/logmessage.h"
 #include "blacksound/audioutilities.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/verify.h"
 
 #include <QtGlobal>
 #include <QStringBuilder>

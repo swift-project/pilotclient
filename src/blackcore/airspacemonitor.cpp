@@ -827,8 +827,7 @@ namespace BlackCore
     {
         Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "not in main thread");
         if (!this->isConnectedAndNotShuttingDown()) { return; }
-
-        BLACK_VERIFY_X(callsign.isValid(), Q_FUNC_INFO, "invalid callsign");
+        if (CBuildConfig::isLocalDeveloperDebugBuild()) { BLACK_VERIFY_X(callsign.isValid(), Q_FUNC_INFO, "invalid callsign"); }
         if (!callsign.isValid()) { return; }
         const ReverseLookupLogging reverseLookupEnabled = this->isReverseLookupMessagesEnabled();
         CStatusMessageList reverseLookupMessages;
@@ -1204,7 +1203,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::onConnectionStatusChanged(CConnectionStatus oldStatus, CConnectionStatus newStatus)
     {
-        Q_UNUSED(oldStatus);
+        Q_UNUSED(oldStatus)
         if (newStatus.isDisconnected()) { clear(); }
     }
 
