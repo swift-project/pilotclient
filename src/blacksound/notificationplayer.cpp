@@ -15,6 +15,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;
+using namespace BlackSound::SampleProvider;
 
 namespace BlackSound
 {
@@ -44,7 +45,7 @@ namespace BlackSound
 
                 // used for too long or hanging sounds
                 QPointer<CNotificationPlayer> myself(this);
-                QTimer::singleShot(2000, effect, [ = ]
+                QTimer::singleShot(3000, effect, [ = ]
                 {
                     if (!myself || !m_playingEffect) { return; }
                     m_playingEffect->stop();
@@ -71,6 +72,9 @@ namespace BlackSound
         this->updateEffect(CNotificationSounds::PTTBlocked, directory, "pttblocked.wav");
         this->updateEffect(CNotificationSounds::PTTClickKeyDown, directory, "pttclick.wav");
         this->updateEffect(CNotificationSounds::PTTClickKeyUp,   directory, "pttclick.wav");
+
+        // CNotificationSounds::AFVBlocked is generated
+        this->updateEffect(CNotificationSounds::AFVClicked, directory, Samples::fnClick());
     }
 
     void CNotificationPlayer::onPlayingChanged()
