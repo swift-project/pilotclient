@@ -198,6 +198,7 @@ namespace BlackCore
                 //! \threadsafe
                 //! @{
                 double getOutputVolumeDb() const;
+                double getOutputVolume()  const;
                 Q_INVOKABLE bool setOutputVolumeDb(double valueDb);
                 //! @}
 
@@ -356,6 +357,7 @@ namespace BlackCore
                 mutable QMutex m_mutexTransceivers;
                 mutable QMutex m_mutexCallsign;
                 mutable QMutex m_mutexConnection;
+                mutable QMutex m_mutexVolume;
             };
         } // ns
     } // ns

@@ -239,6 +239,7 @@ namespace BlackCore
                 this->initTransceivers();
 
                 // threadsafe block
+                const double outputVolume = this->getOutputVolume();
                 {
                     QMutexLocker lock{&m_mutex};
                     if (m_soundcardSampleProvider)
@@ -251,7 +252,7 @@ namespace BlackCore
 
                     if (m_outputSampleProvider) { m_outputSampleProvider->deleteLater(); }
                     m_outputSampleProvider = new CVolumeSampleProvider(m_soundcardSampleProvider, this);
-                    m_outputSampleProvider->setVolume(m_outputVolume);
+                    m_outputSampleProvider->setVolume(outputVolume);
 
                     m_output->start(outputDevice, m_outputSampleProvider);
                     m_input->start(inputDevice);
@@ -562,8 +563,14 @@ namespace BlackCore
 
             double CAfvClient::getOutputVolumeDb() const
             {
-                QMutexLocker lock(&m_mutex);
+                QMutexLocker lock(&m_mutexVolume);
                 return m_outputVolumeDb;
+            }
+
+            double CAfvClient::getOutputVolume() const
+            {
+                QMutexLocker lock(&m_mutexVolume);
+                return m_outputVolume;
             }
 
             int CAfvClient::getNormalizedInputVolume() const
@@ -899,7 +906,11 @@ namespace BlackCore
                 {
                     {
                         QMutexLocker lock(&m_mutexConnection);
-                        if (m_connection) { m_connection->updateTransceivers(callsign, newEnabledTransceivers); }
+                        if (m_connection)
+                        {
+                            // fire to network and forget
+                            m_connection->updateTransceivers(callsign, newEnabledTransceivers);
+                        }
                     }
 
                     {
@@ -1027,17 +1038,24 @@ namespace BlackCore
                 if (valueDb > MaxDbOut) { valueDb = MaxDbOut; }
                 else if (valueDb < MinDbOut) { valueDb = MinDbOut; }
 
-                QMutexLocker lock(&m_mutex);
-                bool changed = !qFuzzyCompare(m_outputVolumeDb, valueDb);
-                if (changed)
+                double outputVolume = 0;
+                bool changed = false;
                 {
-                    m_outputVolumeDb = valueDb;
-                    m_outputVolume   = qPow(10, m_outputVolumeDb / 20.0);
-
-                    if (m_outputSampleProvider)
+                    QMutexLocker lock(&m_mutexVolume);
+                    changed = !qFuzzyCompare(m_outputVolumeDb, valueDb);
+                    if (changed)
                     {
-                        changed = m_outputSampleProvider->setVolume(m_outputVolume);
+                        m_outputVolumeDb = valueDb;
+                        m_outputVolume   = qPow(10, m_outputVolumeDb / 20.0);
                     }
+                    outputVolume = m_outputVolume; // outside changed if needed for m_outputSampleProvider !!
+                }
+
+                // do NOT check on "changed", can be false, but "m_outputSampleProvider" is initialized
+                QMutexLocker lock(&m_mutex);
+                if (m_outputSampleProvider)
+                {
+                    changed = m_outputSampleProvider->setVolume(outputVolume);
                 }
                 return changed;
             }
