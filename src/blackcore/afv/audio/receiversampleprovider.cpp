@@ -164,8 +164,8 @@ namespace BlackCore
                 }
 
                 const CSettings s = m_audioSettings.get();
-                m_doClickWhenAppropriate = s.pttClickDown();
-                m_doBlockWhenAppropriate = s.pttBlocked();
+                m_doClickWhenAppropriate = s.afvClicked();
+                m_doBlockWhenAppropriate = s.afvBlocked();
             }
 
             void CReceiverSampleProvider::addSilentSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio)

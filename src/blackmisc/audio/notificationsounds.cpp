@@ -33,6 +33,8 @@ namespace BlackMisc
             static const QString pttBlocked("PTT blocked");
             static const QString load("load sounds");
             static const QString noaudiotx("No audio tx");
+            static const QString afvclick("AFC click");
+            static const QString afvblock("AFV blocked");
 
             switch (notification)
             {
@@ -46,6 +48,8 @@ namespace BlackMisc
             case PTTClickKeyDown:   return pttDown;
             case PTTClickKeyUp:     return pttUp;
             case PTTBlocked:        return pttBlocked;
+            case AFVClicked:        return afvclick;
+            case AFVBlocked:        return afvblock;
             default: break;
             }
             return unknown;
@@ -64,6 +68,9 @@ namespace BlackMisc
             if (notification.testFlag(PTTClickKeyUp))   n << flagToString(PTTClickKeyUp);
             if (notification.testFlag(PTTClickKeyDown)) n << flagToString(PTTClickKeyDown);
             if (notification.testFlag(PTTBlocked))      n << flagToString(PTTBlocked);
+
+            if (notification.testFlag(AFVClicked)) n << flagToString(AFVClicked);
+            if (notification.testFlag(AFVBlocked)) n << flagToString(AFVBlocked);
             return n.join(", ");
         }
     } // ns

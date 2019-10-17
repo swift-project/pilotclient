@@ -35,7 +35,7 @@ namespace BlackGui
 
         QSize CCockpitInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
         {
-            Q_UNUSED(areaIndex);
+            Q_UNUSED(areaIndex)
             return QSize(600, 400);
         }
 
@@ -44,12 +44,9 @@ namespace BlackGui
             InfoArea area = static_cast<InfoArea>(areaIndex);
             switch (area)
             {
-            case InfoAreaAudio:
-                return CIcons::appAudio16();
-            case InfoAreaVoiceRooms:
-                return CIcons::appVoiceRooms16();
-            default:
-                return CIcons::empty();
+            case InfoAreaAudio:      return CIcons::appAudio16();
+            case InfoAreaVoiceRooms: return CIcons::appVoiceRooms16();
+            default:                 return CIcons::empty();
             }
         }
 

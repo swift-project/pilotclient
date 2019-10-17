@@ -46,7 +46,9 @@ namespace BlackMisc
                 NotificationNoAudioTransmission   = 1 << 6,
                 PTTClickKeyDown                   = 1 << 7,
                 PTTClickKeyUp                     = 1 << 8,
-                PTTBlocked                        = 1 << 9
+                PTTBlocked                        = 1 << 9,
+                AFVClicked                        = 1 << 14,
+                AFVBlocked                        = 1 << 15
             };
             Q_DECLARE_FLAGS(Notification, NotificationFlag)
 
@@ -59,8 +61,11 @@ namespace BlackMisc
             //! All PTT notification flags
             constexpr static Notification AllPTTNotifications = Notification(PTTBlocked | PTTClickKeyUp | PTTClickKeyDown);
 
+            //! All AFV flags
+            constexpr static Notification AllAfv = Notification(AFVClicked | AFVBlocked);
+
             //! All notification flags
-            constexpr static Notification AllNotifications = Notification(NotificationError | AllTextNotifications | AllLoginNotifications | AllPTTNotifications);
+            constexpr static Notification AllNotifications = Notification(NotificationError | AllTextNotifications | AllLoginNotifications | AllPTTNotifications | AllAfv);
 
             //! Default notification flags
             constexpr static Notification DefaultNotifications = Notification(AllNotifications);
