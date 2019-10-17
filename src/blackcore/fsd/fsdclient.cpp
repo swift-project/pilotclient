@@ -1810,7 +1810,7 @@ namespace BlackCore
                 m_mapAtisMessages[callsign].lineCount++;
 
                 const CCallsign cs(callsign, CCallsign::Atc);
-                emit atisVoiceRoomReplyReceived(cs, m_mapAtisMessages[callsign].voiceRoom);
+                // emit atisVoiceRoomReplyReceived(cs, m_mapAtisMessages[callsign].voiceRoom);
                 emit atisLogoffTimeReplyReceived(cs, m_mapAtisMessages[callsign].zuluLogoff);
 
                 CInformationMessage atisMessage;

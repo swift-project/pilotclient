@@ -209,7 +209,7 @@ namespace BlackCore
             void atisReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atis);
 
             //! We received a reply to one of our ATIS queries, containing the controller's voice room URL.
-            void atisVoiceRoomReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
+            // void atisVoiceRoomReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
 
             //! We received a reply to one of our ATIS queries, containing the controller's planned logoff time.
             void atisLogoffTimeReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
