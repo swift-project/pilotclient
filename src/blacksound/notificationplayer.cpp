@@ -69,7 +69,7 @@ namespace BlackSound
         this->updateEffect(CNotificationSounds::NotificationTextCallsignMentioned, directory, "callsignmentioned.wav");
         this->updateEffect(CNotificationSounds::NotificationNoAudioTransmission, directory, "noaudiotransmission.wav");
         this->updateEffect(CNotificationSounds::PTTBlocked, directory, "pttblocked.wav");
-        this->updateEffect(CNotificationSounds::PTTClickKeyDown, directory, SampleProvider::Samples::fnClick());
+        this->updateEffect(CNotificationSounds::PTTClickKeyDown, directory, "pttclick.wav");
         this->updateEffect(CNotificationSounds::PTTClickKeyUp,   directory, "pttclick.wav");
     }
 

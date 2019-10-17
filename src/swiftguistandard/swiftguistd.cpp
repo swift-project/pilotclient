@@ -311,7 +311,7 @@ void SwiftGuiStd::onConnectionStatusChanged(const CConnectionStatus &from, const
     // sounds
     switch (to.getConnectionStatus())
     {
-    case CConnectionStatus::Connected: this->playNotifcationSound(CNotificationSounds::NotificationLogin); break;
+    case CConnectionStatus::Connected:    this->playNotifcationSound(CNotificationSounds::NotificationLogin); break;
     case CConnectionStatus::Disconnected: this->playNotifcationSound(CNotificationSounds::NotificationLogoff); break;
     default: break;
     }
@@ -543,13 +543,12 @@ void SwiftGuiStd::displayNetworkSettings()
 void SwiftGuiStd::onPttChanged(bool enabled)
 {
     Q_UNUSED(enabled)
-    if (!sGui || !sGui->getIContextAudio()) { return; }
+    if (!sGui || !sGui->getCContextAudioBase()) { return; }
 
-    /** wit AFV no longer play
-    sGui->getIContextAudio()->playNotification(
+    // based on user request still play with AFV
+    sGui->getCContextAudioBase()->playNotification(
         enabled ? CNotificationSounds::PTTClickKeyDown : CNotificationSounds::PTTClickKeyUp,
         true);
-    **/
 }
 
 void SwiftGuiStd::displayDBusReconnectDialog()
