@@ -425,6 +425,7 @@ namespace BlackCore
         void CContextOwnAircraft::xCtxChangedAtcStationOnlineConnectionStatus(const CAtcStation &atcStation, bool connected)
         {
             // any of our active frequencies?
+            // keep this to play notification sounds maybe
             Q_UNUSED(connected)
             Q_UNUSED(atcStation)
         }

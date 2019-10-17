@@ -733,9 +733,9 @@ namespace BlackCore
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
         if (!this->isConnectedAndNotShuttingDown()) { return; }
-        return;
         Q_UNUSED(url)
         Q_UNUSED(callsign)
+        return;
     }
 
     void CAirspaceMonitor::onAtisLogoffTimeReceived(const CCallsign &callsign, const QString &zuluTime)
