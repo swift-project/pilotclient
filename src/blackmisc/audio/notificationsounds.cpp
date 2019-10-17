@@ -35,6 +35,8 @@ namespace BlackMisc
             static const QString noaudiotx("No audio tx");
             static const QString afvclick("AFC click");
             static const QString afvblock("AFV blocked");
+            static const QString tunein("ATC tuned in");
+            static const QString tuneout("ATC tuned off");
 
             switch (notification)
             {
@@ -45,11 +47,14 @@ namespace BlackMisc
             case NotificationTextMessageSupervisor: return supMsg;
             case NotificationTextCallsignMentioned: return mentioned;
             case NotificationNoAudioTransmission:   return noaudiotx;
+            case NotificationAtcTunedIn:  return tunein;
+            case NotificationAtcTunedOut: return tuneout;
             case PTTClickKeyDown:   return pttDown;
             case PTTClickKeyUp:     return pttUp;
             case PTTBlocked:        return pttBlocked;
             case AFVClicked:        return afvclick;
             case AFVBlocked:        return afvblock;
+
             default: break;
             }
             return unknown;
@@ -65,6 +70,10 @@ namespace BlackMisc
             if (notification.testFlag(NotificationTextMessageSupervisor)) n << flagToString(NotificationTextMessageSupervisor);
             if (notification.testFlag(NotificationTextCallsignMentioned)) n << flagToString(NotificationTextCallsignMentioned);
             if (notification.testFlag(NotificationNoAudioTransmission))   n << flagToString(NotificationNoAudioTransmission);
+
+            if (notification.testFlag(NotificationAtcTunedIn))  n << flagToString(NotificationAtcTunedIn);
+            if (notification.testFlag(NotificationAtcTunedOut)) n << flagToString(NotificationAtcTunedOut);
+
             if (notification.testFlag(PTTClickKeyUp))   n << flagToString(PTTClickKeyUp);
             if (notification.testFlag(PTTClickKeyDown)) n << flagToString(PTTClickKeyDown);
             if (notification.testFlag(PTTBlocked))      n << flagToString(PTTBlocked);

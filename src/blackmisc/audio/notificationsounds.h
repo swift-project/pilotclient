@@ -44,6 +44,8 @@ namespace BlackMisc
                 NotificationTextMessageSupervisor = 1 << 4,
                 NotificationTextCallsignMentioned = 1 << 5,
                 NotificationNoAudioTransmission   = 1 << 6,
+                NotificationAtcTunedIn            = 1 << 10,
+                NotificationAtcTunedOut           = 1 << 11,
                 PTTClickKeyDown                   = 1 << 7,
                 PTTClickKeyUp                     = 1 << 8,
                 PTTBlocked                        = 1 << 9,
