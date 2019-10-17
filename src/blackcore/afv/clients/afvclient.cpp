@@ -112,11 +112,28 @@ namespace BlackCore
             void CAfvClient::connectWithContexts()
             {
                 if (m_connectedWithContext) { return; }
-                if (!hasContext()) { return; }
+                if (!hasContexts()) { return; }
                 this->disconnect(sApp->getIContextOwnAircraft());
                 sApp->getIContextOwnAircraft()->disconnect(this);
                 connect(sApp->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CAfvClient::onUpdateTransceiversFromContext, Qt::QueuedConnection);
                 m_connectedWithContext = true;
+            }
+
+            void CAfvClient::fetchSimulatorSettings()
+            {
+                // call that in correct thread
+                if (!hasContexts()) { return; }
+
+                if (QThread::currentThread() != sApp->getIContextSimulator()->thread())
+                {
+                    // Method needs to be executed in the context thread
+                    QPointer<CAfvClient> myself(this);
+                    QMetaObject::invokeMethod(sApp->getIContextSimulator(), [ = ]() { if (myself) { this->fetchSimulatorSettings(); }});
+                    return;
+                }
+
+                const bool integrated = sApp->getIContextSimulator()->getSimulatorSettings().isComIntegrated();
+                m_integratedComUnit = integrated;
             }
 
             void CAfvClient::connectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client)
@@ -406,7 +423,7 @@ namespace BlackCore
             {
                 // also update if NOT connected, values will be preset
 
-                if (hasContext())
+                if (hasContexts())
                 {
                     const CSimulatedAircraft ownAircraft = sApp->getIContextOwnAircraft()->getOwnAircraft();
                     this->updatePosition(ownAircraft.latitude().value(CAngleUnit::deg()),
@@ -790,7 +807,7 @@ namespace BlackCore
 
             void CAfvClient::onTimerUpdate()
             {
-                if (hasContext())
+                if (hasContexts())
                 {
                     // for pilot client
                     const CSimulatedAircraft aircraft = sApp->getIContextOwnAircraft()->getOwnAircraft();
@@ -798,6 +815,9 @@ namespace BlackCore
 
                     // disconnect if NOT connected
                     this->autoLogoffWithoutFsdNetwork();
+
+                    // get the settings in correct thread
+                    this->fetchSimulatorSettings();
                 }
                 else
                 {
@@ -816,7 +836,7 @@ namespace BlackCore
 
             void CAfvClient::autoLogoffWithoutFsdNetwork()
             {
-                if (!hasContext())        { return; }
+                if (!hasContexts())        { return; }
                 if (!this->isConnected()) { m_connectMismatches = 0; return; }
 
                 // AFV is connected
@@ -859,13 +879,6 @@ namespace BlackCore
                 bool rx1 = true;
                 bool tx2 = false;
                 bool rx2 = true;
-
-                // make sure to use defaults with COM integration disabled
-                if (hasContext())
-                {
-                    const bool integrated = sApp->getIContextSimulator()->getSimulatorSettings().isComIntegrated();
-                    m_integratedComUnit = integrated;
-                }
 
                 if (m_integratedComUnit)
                 {
@@ -1028,7 +1041,7 @@ namespace BlackCore
                 CLogMessage(this).info(u"UserClient instantiated (deferred init)");
             }
 
-            bool CAfvClient::hasContext()
+            bool CAfvClient::hasContexts()
             {
                 return sApp && !sApp->isShuttingDown() && sApp->getIContextOwnAircraft() && sApp->getIContextNetwork() && sApp->getIContextSimulator();
             }

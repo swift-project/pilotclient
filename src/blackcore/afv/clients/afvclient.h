@@ -329,7 +329,7 @@ namespace BlackCore
                 std::atomic_bool m_isStarted  { false };
                 std::atomic_bool m_loopbackOn { false };
                 std::atomic_bool m_winCoInitialized  { false }; //!< Windows only CoInitializeEx
-                std::atomic_bool m_integratedComUnit {false};   //!< is COM unit sychr
+                std::atomic_bool m_integratedComUnit {false};   //!< is COM unit sychronized, integrated
 
                 QDateTime m_startDateTimeUtc;
 
@@ -347,7 +347,8 @@ namespace BlackCore
                 void deferredInit();
                 void initTransceivers();
                 void connectWithContexts();
-                static bool hasContext();
+                void fetchSimulatorSettings();
+                static bool hasContexts();
 
                 std::atomic_bool m_connectedWithContext { false };
 
