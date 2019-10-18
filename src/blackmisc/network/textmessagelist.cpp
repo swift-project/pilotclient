@@ -150,6 +150,14 @@ namespace BlackMisc
             std::for_each(this->begin(), this->end(), [](CTextMessage & tm) { tm.markAsSent(); });
         }
 
+        CTextMessageList CTextMessageList::markedAsSent()
+        {
+            if (this->isEmpty()) { return {}; }
+            CTextMessageList copy = *this;
+            copy.markAsSent();
+            return copy;
+        }
+
         void CTextMessageList::addConsolidatedTextMessage(const CTextMessage &message)
         {
             if (message.isEmpty()) { return; }

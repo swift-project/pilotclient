@@ -100,6 +100,9 @@ namespace BlackMisc
             //! Mark all messages as sent
             void markAsSent();
 
+            //! Marked as sent
+            CTextMessageList markedAsSent();
+
             //! Add a text message, but append it to an existing message if possible
             void addConsolidatedTextMessage(const CTextMessage &message);
         };
