@@ -62,14 +62,16 @@ namespace BlackSound
         const QStringList types = QSoundEffect::supportedMimeTypes();
         CLogMessage(this).info(u"Notification mime types: %1") << types.join(", ");
 
-        this->updateEffect(CNotificationSounds::NotificationError, directory, "error.wav");
-        this->updateEffect(CNotificationSounds::NotificationLogin, directory, "login.wav");
+        this->updateEffect(CNotificationSounds::NotificationError,  directory, "error.wav");
+        this->updateEffect(CNotificationSounds::NotificationLogin,  directory, "login.wav");
         this->updateEffect(CNotificationSounds::NotificationLogoff, directory, "logoff.wav");
         this->updateEffect(CNotificationSounds::NotificationTextMessagePrivate, directory, "privatemessage.wav");
         this->updateEffect(CNotificationSounds::NotificationTextMessageSupervisor, directory, "supervisormessage.wav");
         this->updateEffect(CNotificationSounds::NotificationTextCallsignMentioned, directory, "callsignmentioned.wav");
-        this->updateEffect(CNotificationSounds::NotificationNoAudioTransmission, directory, "noaudiotransmission.wav");
-        this->updateEffect(CNotificationSounds::PTTBlocked, directory, "pttblocked.wav");
+        this->updateEffect(CNotificationSounds::NotificationNoAudioTransmission,   directory, "noaudiotransmission.wav");
+        this->updateEffect(CNotificationSounds::NotificationAtcTunedIn,  directory, "atctunedin.wav");
+        this->updateEffect(CNotificationSounds::NotificationAtcTunedOut, directory, "atctunedout.wav");
+        this->updateEffect(CNotificationSounds::PTTBlocked,      directory, "pttblocked.wav");
         this->updateEffect(CNotificationSounds::PTTClickKeyDown, directory, "pttclick.wav");
         this->updateEffect(CNotificationSounds::PTTClickKeyUp,   directory, "pttclick.wav");
 
