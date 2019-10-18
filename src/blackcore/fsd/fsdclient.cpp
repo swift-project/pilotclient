@@ -445,9 +445,8 @@ namespace BlackCore
         {
             if (messages.isEmpty()) { return; }
 
-            CTextMessageList privateMessages = messages.getPrivateMessages();
-            privateMessages.markAsSent();
-            for (const auto &message : as_const(privateMessages))
+            const CTextMessageList privateMessages = messages.getPrivateMessages().markedAsSent();
+            for (const auto &message : privateMessages)
             {
                 if (message.getRecipientCallsign().isEmpty()) { continue; }
                 TextMessage textMessage(m_ownCallsign.asString(), message.getRecipientCallsign().getFsdCallsignString(), message.getMessage());
@@ -457,8 +456,7 @@ namespace BlackCore
                 this->increaseStatisticsValue(QStringLiteral("sendTextMessages"));
             }
 
-            CTextMessageList radioMessages = messages.getRadioMessages();
-            radioMessages.markAsSent();
+            const CTextMessageList radioMessages = messages.getRadioMessages().markedAsSent();
             QVector<int> frequencies;
             for (const auto &message : radioMessages)
             {
@@ -486,10 +484,10 @@ namespace BlackCore
         void CFSDClient::sendTextMessage(TextMessageGroups receiverGroup, const QString &message)
         {
             QString receiver;
-            if (receiverGroup == TextMessageGroups::AllClients) { receiver = '*'; }
-            else if (receiverGroup == TextMessageGroups::AllAtcClients) { receiver = "*A"; }
-            else if (receiverGroup == TextMessageGroups::AllPilotClients) { receiver = "*P"; }
-            else if (receiverGroup == TextMessageGroups::AllSups) { receiver = "*S"; }
+            if (receiverGroup == TextMessageGroups::AllClients)           { receiver = '*'; }
+            else if (receiverGroup == TextMessageGroups::AllAtcClients)   { receiver = QStringLiteral("*A"); }
+            else if (receiverGroup == TextMessageGroups::AllPilotClients) { receiver = QStringLiteral("*P"); }
+            else if (receiverGroup == TextMessageGroups::AllSups)         { receiver = QStringLiteral("*S"); }
             else { return; }
             TextMessage textMessage(m_ownCallsign.asString(), receiver, message);
             sendMessage(textMessage);
@@ -502,15 +500,15 @@ namespace BlackCore
             sendTextMessage(msg);
         }
 
-        void CFSDClient::sendRadioMessage(const QVector<int> &frequencies, const QString &message)
+        void CFSDClient::sendRadioMessage(const QVector<int> &frequencieskHz, const QString &message)
         {
             QStringList receivers;
-            for (const int &frequency : frequencies)
+            for (const int &frequency : frequencieskHz)
             {
                 receivers.push_back(QStringLiteral("@%1").arg(frequency - 100000));
             }
 
-            TextMessage radioMessage(m_ownCallsign.asString(), receivers.join('&'), message);
+            const TextMessage radioMessage(m_ownCallsign.asString(), receivers.join('&'), message);
             sendMessage(radioMessage);
             this->increaseStatisticsValue(QStringLiteral("sendTextMessages"));
         }
@@ -520,7 +518,7 @@ namespace BlackCore
             // Removed with T353 although it is standard
             // const QString route = QString(flightPlan.getRoute()).replace(" ", ".");
 
-            const QString route = flightPlan.getRoute();
+            const QString route   = flightPlan.getRoute();
             const QString remarks = flightPlan.getRemarks();
 
             //! \fixme that would be the official string, can this be used?
@@ -540,23 +538,22 @@ namespace BlackCore
             default:                flightType = FlightType::IFR;  break;
             }
 
-            QList<int> timePartsEnroute = flightPlan.getEnrouteTime().getHrsMinSecParts();
-            QList<int> timePartsFuel = flightPlan.getFuelTime().getHrsMinSecParts();
-
-            FlightPlan fp(m_ownCallsign.asString(), "SERVER", flightType, act,
-                          flightPlan.getCruiseTrueAirspeed().valueInteger(CSpeedUnit::kts()),
-                          flightPlan.getOriginAirportIcao().asString(),
-                          flightPlan.getTakeoffTimePlanned().toUTC().toString("hhmm").toInt(),
-                          flightPlan.getTakeoffTimeActual().toUTC().toString("hhmm").toInt(),
-                          alt,
-                          flightPlan.getDestinationAirportIcao().asString(),
-                          timePartsEnroute[CTime::Hours],
-                          timePartsEnroute[CTime::Minutes],
-                          timePartsFuel[CTime::Hours],
-                          timePartsFuel[CTime::Minutes],
-                          flightPlan.getAlternateAirportIcao().asString(),
-                          remarks,
-                          route);
+            const QList<int> timePartsEnroute = flightPlan.getEnrouteTime().getHrsMinSecParts();
+            const QList<int> timePartsFuel    = flightPlan.getFuelTime().getHrsMinSecParts();
+            const FlightPlan fp(m_ownCallsign.asString(), "SERVER", flightType, act,
+                                flightPlan.getCruiseTrueAirspeed().valueInteger(CSpeedUnit::kts()),
+                                flightPlan.getOriginAirportIcao().asString(),
+                                flightPlan.getTakeoffTimePlanned().toUTC().toString("hhmm").toInt(),
+                                flightPlan.getTakeoffTimeActual().toUTC().toString("hhmm").toInt(),
+                                alt,
+                                flightPlan.getDestinationAirportIcao().asString(),
+                                timePartsEnroute[CTime::Hours],
+                                timePartsEnroute[CTime::Minutes],
+                                timePartsFuel[CTime::Hours],
+                                timePartsFuel[CTime::Minutes],
+                                flightPlan.getAlternateAirportIcao().asString(),
+                                remarks,
+                                route);
 
             sendMessage(fp);
             this->increaseStatisticsValue(QStringLiteral("sendFlightPlan"));
@@ -576,7 +573,7 @@ namespace BlackCore
             QString modelString = m_ownModelString.isEmpty() ? myAircraft.getModelString() : m_ownModelString;
             if (modelString.isEmpty()) { modelString = noModelString(); }
 
-            PlaneInfoRequestFsinn planeInfoRequestFsinn(m_ownCallsign.asString(), callsign.toQString(),
+            const PlaneInfoRequestFsinn planeInfoRequestFsinn(m_ownCallsign.asString(), callsign.toQString(),
                     myAircraft.getAirlineIcaoCodeDesignator(),
                     myAircraft.getAircraftIcaoCodeDesignator(),
                     myAircraft.getAircraftIcaoCombinedType(),
@@ -856,7 +853,7 @@ namespace BlackCore
 
         void CFSDClient::handleTextMessage(const QStringList &tokens)
         {
-            TextMessage textMessage = TextMessage::fromTokens(tokens);
+            const TextMessage textMessage = TextMessage::fromTokens(tokens);
 
             const CCallsign sender(textMessage.sender());
             const CCallsign receiver(textMessage.receiver());

@@ -136,7 +136,7 @@ namespace BlackCore
             void sendTextMessage(const BlackMisc::Network::CTextMessage &message);
             void sendTextMessage(TextMessageGroups receiverGroup, const QString &message);
             void sendTextMessage(const QString &receiver, const QString &message);
-            void sendRadioMessage(const QVector<int> &frequencies, const QString &message);
+            void sendRadioMessage(const QVector<int> &frequencieskHz, const QString &message);
             void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan);
             void sendPlaneInfoRequest(const BlackMisc::Aviation::CCallsign &receiver);
             void sendPlaneInfoRequestFsinn(const BlackMisc::Aviation::CCallsign &callsign);
@@ -230,7 +230,7 @@ namespace BlackCore
                 const QString payload = message.toTokens().join(':');
                 const QString line = message.pdu() + payload;
                 const QString buffer = line + "\r\n";
-                QByteArray bufferEncoded = m_fsdTextCodec->fromUnicode(buffer);
+                const QByteArray bufferEncoded = m_fsdTextCodec->fromUnicode(buffer);
                 emitRawFsdMessage(buffer.trimmed(), true);
                 if (m_printToConsole) { qDebug() << "FSD Sent=>" << bufferEncoded; }
                 if (! m_unitTestMode) { m_socket.write(bufferEncoded); }
