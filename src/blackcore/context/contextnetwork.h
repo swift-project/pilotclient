@@ -365,7 +365,10 @@ namespace BlackCore
             //! Connect to receive raw fsd messages
             virtual QMetaObject::Connection connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot) = 0;
 
+            //! Cmd.line arguments
             static const QList<QCommandLineOption> &getCmdLineOptions();
+
+            //! Client id and key from cmd.line
             static bool getCmdLineClientIdAndKey(int &id, QString &key);
 
         protected:

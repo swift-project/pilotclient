@@ -192,7 +192,6 @@ namespace BlackCore
             //! .unmute                        unmute           BlackCore::Context::CContextAudio
             //! .vol .volume   volume 0..100   set volume       BlackCore::Context::CContextAudio
             //! </pre>
-            //! \copydoc IContext::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
 
             // ------------- DBus ---------------

@@ -30,9 +30,12 @@ namespace BlackGui
     class BLACKGUI_EXPORT CLevelMeter : public QFrame
     {
         Q_OBJECT
+
+        //! Properties @{
         Q_PROPERTY(QColor lowColor  READ getLowColor  WRITE setLowColor)
         Q_PROPERTY(QColor highColor READ getHighColor WRITE setHighColor)
         Q_PROPERTY(QColor peakColor READ getPeakColor WRITE setPeakColor)
+        //! @}
 
     public:
         //! Constructor

@@ -25,7 +25,10 @@ namespace BlackCore
             class BLACKCORE_EXPORT CAfvMapReader : public QObject
             {
                 Q_OBJECT
+
+                //! Map reader properties @{
                 Q_PROPERTY(CSampleAtcStationModel *atcStationModel READ getAtcStationModel CONSTANT)
+                //! @}
 
             public:
                 //! Ctor

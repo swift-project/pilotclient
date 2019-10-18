@@ -31,6 +31,12 @@ namespace BlackSound
             //! Dtor
             ~COpusEncoder();
 
+            //! Non copyable
+            COpusEncoder(const COpusEncoder &temp_obj) = delete;
+
+            //! Non assignable
+            COpusEncoder &operator=(const COpusEncoder &temp_obj) = delete;
+
             //! Bit rate
             void setBitRate(int bitRate);
 
@@ -41,6 +47,7 @@ namespace BlackSound
             //! Frame count
             int frameCount(const QVector<qint16> pcmSamples);
 
+            //! Encode
             QByteArray encode(const QVector<qint16> pcmSamples, int samplesLength, int *encodedLength);
 
         private:

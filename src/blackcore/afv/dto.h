@@ -182,8 +182,10 @@ namespace BlackCore
         //! Heartbeat DTO
         struct HeartbeatDto
         {
+            //! Name @{
             static QByteArray getDtoName() { return "HeartbeatDto"; }
             static QByteArray getShortDtoName() { return "H"; }
+            //! @}
 
             std::string callsign; //!< callsign
             MSGPACK_DEFINE(callsign)
@@ -192,8 +194,11 @@ namespace BlackCore
         //! Heartbeat DTO
         struct HeartbeatAckDto
         {
+            //! Name @{
             static QByteArray getDtoName() { return "HeartbeatAckDto"; }
             static QByteArray getShortDtoName() { return "HA"; }
+            //! @}
+
             MSGPACK_DEFINE()
         };
 
@@ -206,6 +211,7 @@ namespace BlackCore
             float distanceRatio;
             // std::string RelayCallsign;
             //! @}
+
             MSGPACK_DEFINE(id, frequency, distanceRatio/*, RelayCallsign*/)
         };
 
