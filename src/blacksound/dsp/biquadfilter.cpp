@@ -7,10 +7,14 @@
  */
 
 #include "biquadfilter.h"
+#include "blackmisc/verify.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QtMath>
 #include <algorithm>
 
+using namespace BlackMisc;
+using namespace BlackConfig;
 
 namespace BlackSound
 {
@@ -19,27 +23,29 @@ namespace BlackSound
         float BiQuadFilter::transform(float inSample)
         {
             // compute result
-            double result = a0 * inSample + a1 * x1 + a2 * x2 - a3 * y1 - a4 * y2;
+            double result = m_a0 * inSample + m_a1 * m_x1 + m_a2 * m_x2 - m_a3 * m_y1 - m_a4 * m_y2;
 
             // shift x1 to x2, sample to x1
-            x2 = x1;
-            x1 = inSample;
+            m_x2 = m_x1;
+            m_x1 = inSample;
 
             // shift y1 to y2, result to y1
-            y2 = y1;
-            y1 = static_cast<float>(result);
+            m_y2 = m_y1;
+            m_y1 = static_cast<float>(result);
 
-            return y1;
+            return m_y1;
         }
 
         void BiQuadFilter::setCoefficients(double aa0, double aa1, double aa2, double b0, double b1, double b2)
         {
+            if (CBuildConfig::isLocalDeveloperDebugBuild()) { BLACK_VERIFY_X(qAbs(aa0) > 1E-06, Q_FUNC_INFO, "Div by zero?"); }
+
             // precompute the coefficients
-            a0 = b0 / aa0;
-            a1 = b1 / aa0;
-            a2 = b2 / aa0;
-            a3 = aa1 / aa0;
-            a4 = aa2 / aa0;
+            m_a0 = b0 / aa0;
+            m_a1 = b1 / aa0;
+            m_a2 = b2 / aa0;
+            m_a3 = aa1 / aa0;
+            m_a4 = aa2 / aa0;
         }
 
         void BiQuadFilter::setLowPassFilter(float sampleRate, float cutoffFrequency, float q)
