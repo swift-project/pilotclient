@@ -10,14 +10,19 @@
 
 #include "callsignsampleprovider.h"
 #include "callsigndelaycache.h"
+
+#include "blackcore/afv/audio/receiversampleprovider.h"
 #include "blacksound/sampleprovider/samples.h"
 #include "blacksound/audioutilities.h"
-#include "blackcore/afv/audio/receiversampleprovider.h"
+#include "blackmisc/logmessage.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QtMath>
 #include <QDebug>
 
+using namespace BlackMisc;
 using namespace BlackSound::SampleProvider;
+using namespace BlackConfig;
 
 namespace BlackCore
 {
@@ -78,7 +83,7 @@ namespace BlackCore
 
                 if (m_inUse && !m_underflow && m_audioInput->getBufferedBytes() == 0)
                 {
-                    qDebug() << "[" << m_callsign <<  "] [Delay++]";
+                    CLogMessage(this).debug(u"[%1] [Delay++]") << m_callsign;
                     CallsignDelayCache::instance().underflow(m_callsign);
                     m_underflow = true;
                 }
@@ -105,7 +110,7 @@ namespace BlackCore
                 m_underflow = false;
 
                 int delayMs = CallsignDelayCache::instance().get(callsign);
-                qDebug() << "[" << m_callsign << "] [Delay " << delayMs << "ms]";
+                CLogMessage(this).debug(u"[%1] [Delay %2]") << m_callsign << delayMs;
                 if (delayMs > 0)
                 {
                     int phaseDelayLength = (m_audioFormat.sampleRate() / 1000) * delayMs;
