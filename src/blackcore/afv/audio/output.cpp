@@ -9,8 +9,9 @@
 //! \file
 
 #include "output.h"
-#include "blackmisc/logmessage.h"
 #include "blacksound/audioutilities.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/verify.h"
 
 #include <QDebug>
 #include <QStringBuilder>
@@ -90,6 +91,9 @@ namespace BlackCore
             {
                 if (m_started) { return; }
 
+                BLACK_VERIFY_X(outputDevice.isValid() && outputDevice.isOutputDevice(), Q_FUNC_INFO, "Wrong output device");
+
+                if (m_audioOutputBuffer) { m_audioOutputBuffer->deleteLater(); }
                 m_audioOutputBuffer = new CAudioOutputBuffer(sampleProvider, this);
                 connect(m_audioOutputBuffer, &CAudioOutputBuffer::outputVolumeStream, this, &COutput::outputVolumeStream);
 

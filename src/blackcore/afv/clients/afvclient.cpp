@@ -14,6 +14,7 @@
 #include "blacksound/audioutilities.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/threadutils.h"
+#include "blackmisc/verify.h"
 
 #ifdef Q_OS_WIN
 #include "comdef.h"
@@ -242,6 +243,9 @@ namespace BlackCore
                     QMetaObject::invokeMethod(this, [ = ]() { startAudio(inputDevice, outputDevice); });
                     return;
                 }
+
+                BLACK_VERIFY_X(inputDevice.isValid()  && inputDevice.isInputDevice(), Q_FUNC_INFO, "Wrong input device");
+                BLACK_VERIFY_X(outputDevice.isValid() && outputDevice.isOutputDevice(), Q_FUNC_INFO, "Wrong output device");
 
                 if (m_isStarted)
                 {
@@ -829,8 +833,11 @@ namespace BlackCore
             void CAfvClient::onSettingsChanged()
             {
                 const CSettings audioSettings = m_audioSettings.get();
-                this->setNormalizedInputVolume(audioSettings.getInVolume());
-                this->setNormalizedOutputVolume(audioSettings.getOutVolume());
+                const int iv = audioSettings.getInVolume();
+                const int ov = audioSettings.getOutVolume();
+
+                this->setNormalizedInputVolume(iv);
+                this->setNormalizedOutputVolume(ov);
                 this->setBypassEffects(!audioSettings.isAudioEffectsEnabled());
             }
 
