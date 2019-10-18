@@ -88,7 +88,7 @@
           <item>
            <widget class="QToolBox" name="tb_Launcher">
             <property name="currentIndex">
-             <number>2</number>
+             <number>4</number>
             </property>
             <property name="tabSpacing">
              <number>6</number>
@@ -98,8 +98,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>392</width>
-               <height>309</height>
+               <width>135</width>
+               <height>109</height>
               </rect>
              </property>
              <attribute name="label">
@@ -153,8 +153,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>392</width>
-               <height>309</height>
+               <width>163</width>
+               <height>52</height>
               </rect>
              </property>
              <attribute name="label">
@@ -218,8 +218,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>392</width>
-               <height>309</height>
+               <width>233</width>
+               <height>166</height>
               </rect>
              </property>
              <attribute name="label">
@@ -350,8 +350,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>392</width>
-               <height>309</height>
+               <width>98</width>
+               <height>237</height>
               </rect>
              </property>
              <attribute name="label">
@@ -432,8 +432,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>376</width>
-                      <height>126</height>
+                      <width>98</width>
+                      <height>31</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="vl_DataUpdatesScrollArea">
@@ -533,6 +533,13 @@
                   <widget class="QPushButton" name="pb_LogDir">
                    <property name="text">
                     <string>log directory</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pb_DumpDir">
+                   <property name="text">
+                    <string>dump files</string>
                    </property>
                   </widget>
                  </item>

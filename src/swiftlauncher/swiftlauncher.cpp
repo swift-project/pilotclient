@@ -75,9 +75,10 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(ui->comp_DBusSelector, &CDBusServerAddressSelector::editingFinished,     this, &CSwiftLauncher::onDBusEditingFinished, Qt::QueuedConnection);
     connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftLauncher::onStyleSheetsChanged, Qt::QueuedConnection);
 
-    connect(ui->pb_Log,    &QPushButton::released, this, &CSwiftLauncher::showLogPage, Qt::QueuedConnection);
-    connect(ui->pb_Log,    &QPushButton::released, this, &CSwiftLauncher::showLogPage, Qt::QueuedConnection);
-    connect(ui->pb_LogDir, &QPushButton::released, sGui, &CGuiApplication::openStandardLogDirectory, Qt::QueuedConnection);
+    connect(ui->pb_Log,     &QPushButton::released, this, &CSwiftLauncher::showLogPage, Qt::QueuedConnection);
+    connect(ui->pb_Log,     &QPushButton::released, this, &CSwiftLauncher::showLogPage, Qt::QueuedConnection);
+    connect(ui->pb_LogDir,  &QPushButton::released, sGui, &CGuiApplication::openStandardLogDirectory, Qt::QueuedConnection);
+    connect(ui->pb_DumpDir, &QPushButton::released, sGui, &CGuiApplication::openStandardCrashDumpDirectory, Qt::QueuedConnection);
     connect(ui->pb_FSXConfigDirs, &QPushButton::released, this, &CSwiftLauncher::showSimulatorConfigDirs, Qt::QueuedConnection);
     connect(ui->pb_P3DConfigDirs, &QPushButton::released, this, &CSwiftLauncher::showSimulatorConfigDirs, Qt::QueuedConnection);
 

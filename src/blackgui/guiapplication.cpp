@@ -683,6 +683,14 @@ namespace BlackGui
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
+        a = menu.addAction(CIcons::disk16(), "Crash dumps directory");
+        c = connect(a, &QAction::triggered, this, [ = ]()
+        {
+            if (!sGui || sGui->isShuttingDown()) { return; }
+            this->openStandardCrashDumpDirectory();
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
         a = menu.addAction(CIcons::swift24(), "Check for updates");
         c = connect(a, &QAction::triggered, this, &CGuiApplication::checkNewVersionMenu);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
@@ -701,7 +709,7 @@ namespace BlackGui
             }
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-        Q_UNUSED(c);
+        Q_UNUSED(c)
     }
 
     void CGuiApplication::addMenuForStyleSheets(QMenu &menu)
@@ -722,7 +730,7 @@ namespace BlackGui
             this->openStandardWidgetStyleSheet();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-        Q_UNUSED(c);
+        Q_UNUSED(c)
     }
 
     void CGuiApplication::addMenuFile(QMenu &menu)
@@ -755,7 +763,7 @@ namespace BlackGui
         },
         Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-        Q_UNUSED(c);
+        Q_UNUSED(c)
     }
 
     void CGuiApplication::addMenuInternals(QMenu &menu)
@@ -818,7 +826,7 @@ namespace BlackGui
             this->displayTextInConsole(getAllUserMetatypesTypes());
         }, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-        Q_UNUSED(c);
+        Q_UNUSED(c)
     }
 
     void CGuiApplication::addMenuWindow(QMenu &menu)
@@ -862,7 +870,7 @@ namespace BlackGui
             this->toggleStayOnTop();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-        Q_UNUSED(c);
+        Q_UNUSED(c)
     }
 
     void CGuiApplication::addMenuHelp(QMenu &menu)
@@ -962,6 +970,13 @@ namespace BlackGui
     bool CGuiApplication::openStandardLogDirectory()
     {
         const QString path(QDir::toNativeSeparators(CDirectoryUtils::logDirectory()));
+        if (!QDir(path).exists()) { return false; }
+        return QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+    }
+
+    bool CGuiApplication::openStandardCrashDumpDirectory()
+    {
+        const QString path(QDir::toNativeSeparators(CDirectoryUtils::crashpadDatabaseDirectory()));
         if (!QDir(path).exists()) { return false; }
         return QDesktopServices::openUrl(QUrl::fromLocalFile(path));
     }
