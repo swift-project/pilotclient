@@ -74,7 +74,7 @@ namespace BlackGui
             void onAudioStarted(const BlackMisc::Audio::CAudioDeviceInfo &input, const BlackMisc::Audio::CAudioDeviceInfo &output);
 
             //! Audio devices changed
-            void onAudioDevicesChanged(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
+            bool onAudioDevicesChanged(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
 
             //! Loopback toggled
             void onLoopbackToggled(bool loopback);
@@ -113,6 +113,7 @@ namespace BlackGui
             //! @}
 
             QScopedPointer<Ui::CAudioDeviceVolumeSetupComponent> ui;
+            BlackMisc::Audio::CAudioDeviceInfoList m_cbDevices;
             BlackMisc::CDigestSignal m_volumeSliderChanged { this, &CAudioDeviceVolumeSetupComponent::saveVolumes, 1000, 10 };
             BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &CAudioDeviceVolumeSetupComponent::reloadSettings };
         };

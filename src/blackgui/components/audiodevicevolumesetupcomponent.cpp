@@ -222,7 +222,8 @@ namespace BlackGui
         void CAudioDeviceVolumeSetupComponent::initAudioDeviceLists()
         {
             if (!this->hasAudio()) { return; }
-            this->onAudioDevicesChanged(sGui->getCContextAudioBase()->getAudioDevices());
+            const bool changed = this->onAudioDevicesChanged(sGui->getCContextAudioBase()->getAudioDevices());
+            if (!changed) { return; }
             const CAudioDeviceInfoList currentDevices = sGui->getCContextAudioBase()->getCurrentAudioDevices();
             this->onAudioStarted(currentDevices.getInputDevices().frontOrDefault(), currentDevices.getOutputDevices().frontOrDefault());
         }
@@ -264,7 +265,7 @@ namespace BlackGui
             if (!hasAudio()) { return; }
             this->initAudioDeviceLists();
             const CAudioDeviceInfo i = this->getSelectedInputDevice();
-            const CAudioDeviceInfo o = this->getSelectedInputDevice();
+            const CAudioDeviceInfo o = this->getSelectedOutputDevice();
             sGui->getCContextAudioBase()->setCurrentAudioDevices(i, o);
         }
 
@@ -318,8 +319,11 @@ namespace BlackGui
             ui->cb_SetupAudioOutputDevice->setCurrentText(output.toQString(true));
         }
 
-        void CAudioDeviceVolumeSetupComponent::onAudioDevicesChanged(const CAudioDeviceInfoList &devices)
+        bool CAudioDeviceVolumeSetupComponent::onAudioDevicesChanged(const CAudioDeviceInfoList &devices)
         {
+            if (m_cbDevices.hasSameDevices(devices)) { return false; } // avoid numerous follow up actions
+            m_cbDevices = devices;
+
             ui->cb_SetupAudioOutputDevice->clear();
             ui->cb_SetupAudioInputDevice->clear();
 
@@ -340,6 +344,7 @@ namespace BlackGui
 
             if (!i.isEmpty()) { ui->cb_SetupAudioInputDevice->setCurrentText(i); }
             if (!o.isEmpty()) { ui->cb_SetupAudioOutputDevice->setCurrentText(o); }
+            return true;
         }
 
         void CAudioDeviceVolumeSetupComponent::onLoopbackToggled(bool loopback)
