@@ -139,6 +139,16 @@ namespace BlackMisc
             return names;
         }
 
+        bool CAudioDeviceInfoList::hasSameDevices(const CAudioDeviceInfoList &compareDevices) const
+        {
+            if (compareDevices.size() != this->size()) { return false; }
+            for (const CAudioDeviceInfo &d : *this)
+            {
+                if (!compareDevices.findRegisteredDevice(d).isValid()) { return false; }
+            }
+            return true;
+        }
+
         CAudioDeviceInfoList CAudioDeviceInfoList::allInputDevices()
         {
             CAudioDeviceInfoList devices;

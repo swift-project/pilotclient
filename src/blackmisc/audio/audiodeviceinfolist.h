@@ -79,6 +79,9 @@ namespace BlackMisc
             //! All names
             QStringList getDeviceNames() const;
 
+            //! Has same devices
+            bool hasSameDevices(const CAudioDeviceInfoList &compareDevices) const;
+
             //! Lists of all available devices @{
             static CAudioDeviceInfoList allInputDevices();
             static CAudioDeviceInfoList allOutputDevices();
