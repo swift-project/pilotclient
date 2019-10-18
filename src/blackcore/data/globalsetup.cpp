@@ -282,8 +282,8 @@ namespace BlackCore
             {
                 CServer::swiftFsdTestServer(),
                 CServer::fscFsdServer(),
-                CServer::afvFsdTestServer(),
                 CServer::esTowerView()
+                // CServer::afvFsdTestServer(),
             });
             CServerList testServers(m_predefinedServers);
             testServers.addIfAddressNotExists(hardcoded);
