@@ -19,6 +19,11 @@
 #include "blackcore/coremodeenums.h"
 #include "blackmisc/db/artifact.h"
 #include "blackmisc/identifiable.h"
+
+#ifdef Q_OS_MAC
+#include "blackmisc/macos/microphoneaccess.h"
+#endif
+
 #include <QDialog>
 #include <QTimer>
 #include <QScopedPointer>
@@ -95,6 +100,9 @@ private:
     QScopedPointer<BlackGui::Components::CConfigurationWizard> m_wizard;
     QScopedPointer<BlackGui::Components::CTextEditDialog>      m_textEditDialog;
     BlackMisc::CData<BlackCore::Data::TLauncherSetup>          m_setup { this }; //!< setup, i.e. last user selection
+#ifdef Q_OS_MAC
+    BlackMisc::CMacOSMicrophoneAccess m_micAccess;
+#endif
 
     QString     m_executable;
     QStringList m_executableArgs;
@@ -199,6 +207,9 @@ private:
 
     //! Show the FSX/P3D config simulator directories
     void showSimulatorConfigDirs();
+
+    //! Request MacOS microphone request
+    void requestMacMicrophoneAccess();
 
     //! Command line
     static QString toCmdLine(const QString &exe, const QStringList &exeArgs);

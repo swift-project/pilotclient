@@ -17,6 +17,7 @@
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackmisc/network/networkutils.h"
+#include "blacksound/audioutilities.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/icons.h"
@@ -43,6 +44,7 @@ using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackCore::Data;
 using namespace BlackCore::Vatsim;
+using namespace BlackSound;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;
@@ -96,6 +98,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     {
         if (!sGui || sGui->isShuttingDown() || !myself) { return; }
         this->onCoreModeReleased();
+        this->requestMacMicrophoneAccess();
         if (sGui->isInstallerOptionSet()) { myself->startWizard(); }
     });
 }
@@ -578,4 +581,16 @@ void CSwiftLauncher::showSimulatorConfigDirs()
     m_textEditDialog->setReadOnly();
     m_textEditDialog->textEdit()->setText(info);
     m_textEditDialog->show();
+}
+
+void CSwiftLauncher::requestMacMicrophoneAccess()
+{
+    // needed to be able to start core/GUI which need MIC access
+    // https://discordapp.com/channels/539048679160676382/567983892791951374/634806582013591603
+#ifdef Q_OS_MAC
+    const CMacOSMicrophoneAccess::AuthorizationStatus status = m_micAccess.getAuthorizationStatus();
+    if (status == CMacOSMicrophoneAccess::Authorized) { return; }
+    m_micAccess.requestAccess();
+    CLogMessage(this).info(u"MacOS requested input device");
+#endif
 }
