@@ -351,8 +351,8 @@ namespace BlackCore
             QString m_hostApplication;
             int m_versionMajor = 0;
             int m_versionMinor = 0;
-            ServerType m_serverType = ServerType::LegacyFsd;
             int m_protocolRevision = 0;
+            ServerType m_serverType = ServerType::LegacyFsd;
             Capabilities m_capabilities = Capabilities::None;
 
             vatsim_auth *clientAuth = nullptr;
@@ -360,29 +360,27 @@ namespace BlackCore
             QString m_lastServerAuthChallenge;
 
             // User data
-            BlackMisc::Network::CServer m_server;
+            BlackMisc::Network::CServer    m_server;
             BlackMisc::Network::CLoginMode m_loginMode;
-            SimType m_simType = SimType::Unknown;
+            SimType     m_simType     = SimType::Unknown;
             PilotRating m_pilotRating = PilotRating::Unknown;
-            AtcRating m_atcRating = AtcRating::Unknown;
-            QString m_com1Frequency;
+            AtcRating   m_atcRating   = AtcRating::Unknown;
+            QString     m_com1Frequency;
 
             // Parser
             QHash<QString, MessageType> m_messageTypeMapping;
 
             QTcpSocket m_socket;
 
-            bool m_unitTestMode = false;
+            bool m_unitTestMode   = false;
             bool m_printToConsole = false;
 
             BlackMisc::Network::CConnectionStatus m_connectionStatus;
-
-            BlackMisc::Aviation::CAircraftParts m_sentAircraftConfig;        //!< aircraft parts sent
-            BlackMisc::CTokenBucket             m_tokenBucket;               //!< used with aircraft parts messages
-            BlackMisc::Aviation::CCallsignSet   m_interimPositionReceivers;  //!< all aircraft receiving interim positions
-
-            BlackMisc::CDigestSignal m_dsSendTextMessage  { this, &CFSDClient::emitConsolidatedTextMessages, 500, 10 };
-            BlackMisc::Network::CTextMessageList m_textMessagesToConsolidate;
+            BlackMisc::Aviation::CAircraftParts   m_sentAircraftConfig;        //!< aircraft parts sent
+            BlackMisc::CTokenBucket               m_tokenBucket;               //!< used with aircraft parts messages
+            BlackMisc::Aviation::CCallsignSet     m_interimPositionReceivers;  //!< all aircraft receiving interim positions
+            BlackMisc::Network::CTextMessageList  m_textMessagesToConsolidate; //!< waiting for new messages
+            BlackMisc::CDigestSignal m_dsSendTextMessage  { this, &CFSDClient::emitConsolidatedTextMessages, 250, 10 };
 
             //! ATIS message
             struct AtisMessage

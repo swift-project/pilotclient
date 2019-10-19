@@ -183,6 +183,7 @@ namespace BlackFsdTest
     {
         QSignalSpy spy(client, &CFSDClient::textMessagesReceived);
         client->sendFsdMessage("#TMEDMM_CTR:BER721:Hey how are you doing?\r\n");
+        spy.wait(2000); // message consolidation
 
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();

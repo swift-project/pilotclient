@@ -874,8 +874,7 @@ namespace BlackCore
 
                 CTextMessage tm(textMessage.m_message, sender, receiver);
                 tm.setCurrentUtcTime();
-                this->consolidateTextMessage(tm);
-                // emit textMessagesReceived({ tm });
+                this->consolidateTextMessage(tm); // emit textMessagesReceived({ tm });
             }
             else if (textMessage.m_type == TextMessage::RadioMessage)
             {
@@ -1529,8 +1528,7 @@ namespace BlackCore
                 const QString atisMessage(pendingQuery.m_atisMessage.join(QChar::LineFeed));
                 CTextMessage tm(atisMessage, sender, receiver);
                 tm.setCurrentUtcTime();
-                // emit textMessagesReceived(tm);
-                this->consolidateTextMessage(tm);
+                this->consolidateTextMessage(tm); // emit textMessagesReceived(tm);
                 m_pendingAtisQueries.remove(sender);
                 return;
             }
