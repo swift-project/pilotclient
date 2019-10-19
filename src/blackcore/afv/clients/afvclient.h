@@ -355,13 +355,13 @@ namespace BlackCore
 
                 std::atomic_bool m_connectedWithContext { false };
 
-                mutable QMutex m_mutex;
-                mutable QMutex m_mutexInputStream;
-                mutable QMutex m_mutexOutputStream;
-                mutable QMutex m_mutexTransceivers;
-                mutable QMutex m_mutexCallsign;
-                mutable QMutex m_mutexConnection;
-                mutable QMutex m_mutexVolume;
+                mutable QMutex m_mutex             { QMutex::Recursive };
+                mutable QMutex m_mutexInputStream  { QMutex::Recursive };
+                mutable QMutex m_mutexOutputStream { QMutex::Recursive };
+                mutable QMutex m_mutexTransceivers { QMutex::Recursive };
+                mutable QMutex m_mutexCallsign     { QMutex::Recursive };
+                mutable QMutex m_mutexConnection   { QMutex::Recursive };
+                mutable QMutex m_mutexVolume       { QMutex::Recursive };
             };
         } // ns
     } // ns
