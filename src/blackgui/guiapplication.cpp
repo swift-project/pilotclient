@@ -870,6 +870,19 @@ namespace BlackGui
             this->toggleStayOnTop();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
+        a = menu.addAction("Toggle to front or back");
+        c = connect(a, &QAction::triggered, this, &CGuiApplication::windowToFrontBackToggle);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed");
+
+        a = menu.addAction("Window to front");
+        c = connect(a, &QAction::triggered, this, &CGuiApplication::windowToFront);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed");
+
+        a = menu.addAction("Window to back");
+        c = connect(a, &QAction::triggered, this, &CGuiApplication::windowToBack);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed");
+
         Q_UNUSED(c)
     }
 
@@ -894,7 +907,7 @@ namespace BlackGui
             dialog.exec();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-        Q_UNUSED(c);
+        Q_UNUSED(c)
 
         // https://joekuan.wordpress.com/2015/09/23/list-of-qt-icons/
         a = menu.addAction(QApplication::style()->standardIcon(QStyle::SP_TitleBarMenuButton), "About Qt");
@@ -903,7 +916,7 @@ namespace BlackGui
             QApplication::aboutQt();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-        Q_UNUSED(c);
+        Q_UNUSED(c)
     }
 
     void CGuiApplication::showHelp(const QString &context) const
@@ -1149,7 +1162,45 @@ namespace BlackGui
         const bool onTop = CGuiUtility::toggleStayOnTop(w);
         CLogMessage(w).info(onTop ? QStringLiteral("Window on top") : QStringLiteral("Window not always on top"));
         emit this->alwaysOnTop(onTop);
+        m_frontBack = onTop;
         return onTop;
+    }
+
+    void CGuiApplication::windowToFront()
+    {
+        if (this->isShuttingDown()) { return; }
+        QMainWindow *w = sGui->mainApplicationWindow();
+        if (!w)  { return; }
+        m_frontBack = true;
+        w->showNormal();     //bring window to top on OSX
+        w->raise();          //bring window from minimized state on OSX
+        w->activateWindow(); //bring window to front/unminimize on windows
+    }
+
+    void CGuiApplication::windowToBack()
+    {
+        if (this->isShuttingDown()) { return; }
+        m_frontBack = false;
+        QMainWindow *w = this->mainApplicationWindow();
+        if (!w)  { return; }
+        w->lower();
+    }
+
+    void CGuiApplication::windowToFrontBackToggle()
+    {
+        if (this->isShuttingDown()) { return; }
+        QMainWindow *w = sGui->mainApplicationWindow();
+        if (!w)  { return; }
+        if (w->isMinimized())    { this->windowToFront(); return; }
+        if (w->isMaximized())    { this->windowToBack(); return; }
+        if (m_frontBack)
+        {
+            this->windowToBack();
+        }
+        else
+        {
+            this->windowToFront();
+        }
     }
 
     void CGuiApplication::triggerNewVersionCheck(int delayedMs)

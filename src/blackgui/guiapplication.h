@@ -230,6 +230,12 @@ namespace BlackGui
         //! Toggle stay on top
         bool toggleStayOnTop();
 
+        //! Window to front/back @{
+        void windowToFront();
+        void windowToBack();
+        void windowToFrontBackToggle();
+        //! @}
+
         //! Save the main widget state?
         void setSaveMainWidgetState(bool save) { m_saveMainWidgetState = save; }
 
@@ -335,7 +341,8 @@ namespace BlackGui
         CStyleSheetUtility m_styleSheetUtility {{}, this};                 //!< style sheet utility
         bool m_uiSetupCompleted = false;                                   //!< ui setup completed
         bool m_saveMainWidgetState = true;                                 //!< save/restore main widget's state
-        QScopedPointer<CSplashScreen> m_splashScreen;                      //!< splash screen
+        bool m_frontBack = true;
+        QScopedPointer<CSplashScreen>  m_splashScreen;                     //!< splash screen
         Components::CUpdateInfoDialog *m_updateDialog = nullptr;           //!< software installation dialog
         Components::CApplicationCloseDialog *m_closeDialog = nullptr;      //!< close dialog (no QScopedPointer because I need to set parent)
         BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CGuiApplication::settingsChanged };
