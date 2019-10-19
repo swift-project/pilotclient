@@ -240,8 +240,10 @@ namespace BlackCore
         //! AudioTxOnTransceiversDto
         struct AudioTxOnTransceiversDto
         {
+            //! Names @{
             static QByteArray getDtoName() { return "AudioTxOnTransceiversDto"; }
             static QByteArray getShortDtoName() { return "AT"; }
+            //! @}
 
             //! Properties @{
             std::string callsign;
@@ -256,8 +258,10 @@ namespace BlackCore
         //! AudioRxOnTransceiversDto
         struct AudioRxOnTransceiversDto
         {
+            //! Names @{
             static QByteArray getDtoName() { return "AudioRxOnTransceiversDto"; }
             static QByteArray getShortDtoName() { return "AR"; }
+            //! @}
 
             //! Properties @{
             std::string callsign;

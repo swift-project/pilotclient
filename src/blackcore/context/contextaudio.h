@@ -136,9 +136,8 @@ namespace BlackCore
             //! \return input and output devices
             BlackMisc::Audio::CAudioDeviceInfoList getCurrentAudioDevices() const;
 
-            //! Set current audio device
-            //! \param audioDevice can be input or audio device
-            void setCurrentAudioDevices(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
+            //! Set current audio devices
+            void setCurrentAudioDevices(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
 
             //! Volume
             //! @{
@@ -192,6 +191,7 @@ namespace BlackCore
             //! .unmute                        unmute           BlackCore::Context::CContextAudio
             //! .vol .volume   volume 0..100   set volume       BlackCore::Context::CContextAudio
             //! </pre>
+            //! Parse command line
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
 
             // ------------- DBus ---------------

@@ -46,7 +46,7 @@ namespace BlackCoreTest
         //! Connecting test server
         void connectServer();
 
-        //! ping test server
+        //! Ping test server
         void pingServer();
 
         //! Test the watchdog BlackCore::Db::CNetworkWatchdog

@@ -739,36 +739,39 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testAuth()
     {
-        quint16 clientId = 0xb9ba;
-        QString privateKey("727d1efd5cb9f8d2c28372469d922bb4");
+        /** TODO RR fix with the test key
+
+        const quint16 clientId = 0xb9ba;
+        const QString privateKey("727d1efd5cb9f8d2c28372469d922bb4");
         Q_UNUSED(clientId)
         Q_UNUSED(privateKey)
 
-        // TODO fix with the test key
-//        QString initialChallenge("a054064f45cb6d6a6f1345");
+        QString initialChallenge("a054064f45cb6d6a6f1345");
 
-//        vatsim_auth *auth = vatsim_auth_create(m_clientId, qPrintable(m_privateKey));
-//        vatsim_auth_set_initial_challenge(auth, qPrintable(initialChallenge));
+        vatsim_auth *auth = vatsim_auth_create(m_clientId, qPrintable(m_privateKey));
+        vatsim_auth_set_initial_challenge(auth, qPrintable(initialChallenge));
 
-//        QString challenge("0b8244efa2bd0f6da0");
-//        char buffer[33];
-//        vatsim_auth_generate_response(auth, qPrintable(challenge), buffer);
-//        QString response(buffer);
-//        QCOMPARE(response, "df00748db5ec02ea416ab79b441a88f7");
+        QString challenge("0b8244efa2bd0f6da0");
+        char buffer[33];
+        vatsim_auth_generate_response(auth, qPrintable(challenge), buffer);
+        QString response(buffer);
+        QCOMPARE(response, "df00748db5ec02ea416ab79b441a88f7");
 
-//        challenge = "6d1beed4fa142b9b5567c0";
-//        vatsim_auth_generate_response(auth, qPrintable(challenge), buffer);
-//        response = QString(buffer);
-//        QCOMPARE(response, "5d7e48df0ff0f52b268d4e23d32483c2");
+        challenge = "6d1beed4fa142b9b5567c0";
+        vatsim_auth_generate_response(auth, qPrintable(challenge), buffer);
+        response = QString(buffer);
+        QCOMPARE(response, "5d7e48df0ff0f52b268d4e23d32483c2");
 
-//        vatsim_auth_generate_challenge(auth, buffer);
-//        QVERIFY(QString(buffer).length() > 0);
+        vatsim_auth_generate_challenge(auth, buffer);
+        QVERIFY(QString(buffer).length() > 0);
 
-//        char sysuid[50];
-//        vatsim_get_system_unique_id(sysuid);
-//        qDebug() << sysuid;
+        char sysuid[50];
+        vatsim_get_system_unique_id(sysuid);
+        qDebug() << sysuid;
+        **/
     }
 
+    //! Ping the server
     bool pingServer(const CServer &server)
     {
         QString m;
@@ -803,7 +806,7 @@ namespace BlackFsdTest
         QCOMPARE(CConnectionStatus::Connected, arguments.at(1).value<CConnectionStatus>().getConnectionStatus());
 
         QSignalSpy pongSpy(client, &CFSDClient::pongReceived);
-        connect(client, &CFSDClient::pongReceived, [](const QString &sender, double elapsedTimeM)
+        connect(client, &CFSDClient::pongReceived, [](const QString & sender, double elapsedTimeM)
         {
             qDebug() << "Received pong from" << sender << "in" << elapsedTimeM << "ms";
         });
