@@ -183,6 +183,29 @@ it and relaunch the installer.</text>
                 </platformTest>
             </ruleList>
         </writeFile>
+        <runProgram>
+            <program>${installdir}/bin/swiftlauncher</program>
+            <programArguments>-i --bootstrapurl https://datastore.swift-project.org/shared/ &amp;</programArguments>
+            <progressText>Run swift launcher wizard</progressText>
+            <ruleList>
+                <platformTest>
+                    <negate>1</negate>
+                    <type>osx</type>
+                </platformTest>
+                <isFalse value="${skipwizard}" />
+            </ruleList>
+        </runProgram>
+        <runProgram>
+            <program>open</program>
+            <programArguments>${Installdir}/bin/swiftlauncher.app --args -i --bootstrapurl https://datastore.swift-project.org/shared/ &amp;</programArguments>
+            <progressText>Run swift launcher wizard</progressText>
+            <ruleList>
+                <platformTest>
+                    <type>osx</type>
+                </platformTest>
+                <isFalse value="${skipwizard}" />
+            </ruleList>
+        </runProgram>
     </postInstallationActionList>
     <preUninstallationActionList>
         <actionGroup>
@@ -298,28 +321,6 @@ it and relaunch the uninstaller.</text>
         </language> -->
     </customLanguageFileList>
     <finalPageActionList>
-        <runProgram>
-            <program>${installdir}/bin/swiftlauncher</program>
-            <programArguments>-i --bootstrapurl https://datastore.swift-project.org/shared/ &amp;</programArguments>
-            <progressText>Run swift launcher wizard</progressText>
-            <ruleList>
-                <platformTest>
-                    <negate>1</negate>
-                    <type>osx</type>
-                </platformTest>
-            </ruleList>
-        </runProgram>
-        <runProgram>
-            <program>open</program>
-            <programArguments>${Installdir}/bin/swiftlauncher.app --args -i --bootstrapurl https://datastore.swift-project.org/shared/ &amp;</programArguments>
-            <progressText>Run swift launcher wizard</progressText>
-            <ruleList>
-                <platformTest>
-                    <type>osx</type>
-                </platformTest>
-            </ruleList>
-        </runProgram>
-
         <!-- <launchBrowser>
             <url>http://www.swift-project.org</url>
             <progressText>Visit the swift project page</progressText>
@@ -333,25 +334,44 @@ it and relaunch the uninstaller.</text>
         </licenseFile>
     </licenseFileList>
     <parameterList>
-        <directoryParameter>
-            <name>installdir</name>
-            <description>Installer.Parameter.installdir.description</description>
-            <explanation>Installer.Parameter.installdir.explanation</explanation>
-            <value></value>
-            <default>${platform_install_prefix}/${project.shortName}-${project.version}-${architecture}bit</default>
-            <allowEmptyValue>0</allowEmptyValue>
-            <cliOptionName>prefix</cliOptionName>
-            <mustBeWritable>yes</mustBeWritable>
-            <mustExist>0</mustExist>
-            <width>40</width>
-        </directoryParameter>
-        <stringParameter name="architecture" value="64" ask="0">
-            <description></description>
-            <explanation></explanation>
-            <default></default>
-            <allowEmptyValue>1</allowEmptyValue>
-            <width>40</width>
-        </stringParameter>
+        <parameterGroup>
+            <name>install</name>
+            <title>Installation</title>
+            <parameterList>
+                <directoryParameter>
+                    <name>installdir</name>
+                    <description>Installer.Parameter.installdir.description</description>
+                    <explanation>Installer.Parameter.installdir.explanation</explanation>
+                    <value></value>
+                    <default>${platform_install_prefix}/${project.shortName}-${project.version}-${architecture}bit</default>
+                    <allowEmptyValue>0</allowEmptyValue>
+                    <cliOptionName>prefix</cliOptionName>
+                    <mustBeWritable>yes</mustBeWritable>
+                    <mustExist>0</mustExist>
+                    <width>40</width>
+                </directoryParameter>
+                <stringParameter name="architecture" value="64" ask="0">
+                    <description></description>
+                    <explanation></explanation>
+                    <default></default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <width>40</width>
+                </stringParameter>
+                <booleanParameterGroup>
+                    <name>advanced</name>
+                    <title>Advanced options</title>
+                    <description>Enable advanced options</description>
+                    <parameterList>
+                        <booleanParameter>
+                            <name>skipwizard</name>
+                            <description>Don't run configuration wizard (swift must be configured manually!)</description>
+                            <displayStyle>checkbox-left</displayStyle>
+                            <value>0</value>
+                        </booleanParameter>
+                    </parameterList>
+                </booleanParameterGroup>
+            </parameterList>
+        </parameterGroup>
     </parameterList>
     <platformOptionsList>
         <platformOptions>
