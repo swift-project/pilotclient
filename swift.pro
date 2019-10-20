@@ -7,6 +7,7 @@ OTHER_FILES += mkspecs/features/*.prf
 OTHER_FILES += mkspecs/features/*.pri
 OTHER_FILES += *.supp
 OTHER_FILES += .astylerc
+OTHER_FILES += $$SWIFT_CONFIG_JSON
 
 CheckMandatoryDependency(gl)
 CheckMandatoryDependency(glu)
