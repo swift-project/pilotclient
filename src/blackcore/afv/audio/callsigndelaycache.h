@@ -8,8 +8,8 @@
 
 //! \file
 
-#ifndef CALLSIGNDELAYCACHE_H
-#define CALLSIGNDELAYCACHE_H
+#ifndef BLACKORE_AFV_AUDIO_CALLSIGNDELAYCACHE_H
+#define BLACKORE_AFV_AUDIO_CALLSIGNDELAYCACHE_H
 
 #include <QHash>
 #include <QString>
@@ -24,13 +24,24 @@ namespace BlackCore
             class CallsignDelayCache
             {
             public:
+                //! Initialize
                 void initialise(const QString &callsign);
+
+                //! Callsign index
                 int get(const QString &callsign);
+
+                //! Underflow
                 void underflow(const QString &callsign);
+
+                //! Success
                 void success(const QString &callsign);
+
+                //! Delay plus/minus @{
                 void increaseDelayMs(const QString &callsign);
                 void decreaseDelayMs(const QString &callsign);
+                //! @}
 
+                //! Singleton
                 static CallsignDelayCache &instance();
 
             private:

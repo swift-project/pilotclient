@@ -27,8 +27,7 @@ namespace BlackCore
 
             void CallsignDelayCache::underflow(const QString &callsign)
             {
-                if (!successfulTransmissionsCache.contains(callsign))
-                    return;
+                if (!successfulTransmissionsCache.contains(callsign)) return;
 
                 successfulTransmissionsCache[callsign] = 0;
                 increaseDelayMs(callsign);
@@ -36,8 +35,7 @@ namespace BlackCore
 
             void CallsignDelayCache::success(const QString &callsign)
             {
-                if (!successfulTransmissionsCache.contains(callsign))
-                    return;
+                if (!successfulTransmissionsCache.contains(callsign)) return;
 
                 successfulTransmissionsCache[callsign]++;
                 if (successfulTransmissionsCache[callsign] > 5)

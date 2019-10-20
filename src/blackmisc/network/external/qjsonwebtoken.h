@@ -114,7 +114,7 @@ public:
     /**
 
     \brief Sets the JWT *header* from a QString.
-    \param jdocHeader JWT *header* as a QString.
+    \param strHeader JWT *header* as a QString.
     \return true if the header was set, false if the header was not set.
 
     This method checks for a valid header format and returns false if the header is invalid.
@@ -144,7 +144,7 @@ public:
     /**
 
     \brief Sets the JWT *payload* from a QJsonDocument.
-    \param jdocHeader JWT *payload* as a QJsonDocument.
+    \param jdocPayload JWT *payload* as a QJsonDocument.
     \return true if the payload was set, false if the payload was not set.
 
     This method checks for a valid payload format and returns false if the payload is invalid.
@@ -155,7 +155,7 @@ public:
     /**
 
     \brief Sets the JWT *payload* from a QString.
-    \param jdocHeader JWT *payload* as a QString.
+    \param strPayload JWT *payload* as a QString.
     \return true if the payload was set, false if the payload was not set.
 
     This method checks for a valid payload format and returns false if the payload is invalid.
