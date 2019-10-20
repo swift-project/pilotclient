@@ -1246,10 +1246,10 @@ namespace BlackCore
             case ServerErrorCode::NoWeatherProfile:    CLogMessage(this).info(u"FSD Server: requested weather profile does not exist"); break;
 
             // we have no idea what these mean
-            case ServerErrorCode::AlreadyRegistered:    CLogMessage(this).info(u"Server says already registered: %1") << serverError.m_description; break;
-            case ServerErrorCode::InvalidCtrl:     CLogMessage(this).info(u"Server invalid control: %1") << serverError.m_description; break;
-            case ServerErrorCode::Unknown:  CLogMessage(this).info(u"Server sent unknown error code: %1 (%2)") << serverError.m_causingParameter << serverError.m_description; break;
-            case ServerErrorCode::AuthTimeout: CLogMessage(this).info(u"Client did not authenticate in time"); break;
+            case ServerErrorCode::AlreadyRegistered:   CLogMessage(this).info(u"Server says already registered: %1") << serverError.m_description; break;
+            case ServerErrorCode::InvalidCtrl:         CLogMessage(this).info(u"Server invalid control: %1") << serverError.m_description; break;
+            case ServerErrorCode::Unknown:             CLogMessage(this).info(u"Server sent unknown error code: %1 (%2)") << serverError.m_causingParameter << serverError.m_description; break;
+            case ServerErrorCode::AuthTimeout:         CLogMessage(this).info(u"Client did not authenticate in time"); break;
             }
             if (serverError.isFatalError()) { disconnectFromServer(); }
         }

@@ -208,9 +208,6 @@ namespace BlackCore
             //! We received a reply to one of our ATIS queries.
             void atisReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atis);
 
-            //! We received a reply to one of our ATIS queries, containing the controller's voice room URL.
-            // void atisVoiceRoomReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
-
             //! We received a reply to one of our ATIS queries, containing the controller's planned logoff time.
             void atisLogoffTimeReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
 
@@ -349,8 +346,8 @@ namespace BlackCore
             // Client data
             QString m_clientName;
             QString m_hostApplication;
-            int m_versionMajor = 0;
-            int m_versionMinor = 0;
+            int m_versionMajor     = 0;
+            int m_versionMinor     = 0;
             int m_protocolRevision = 0;
             ServerType m_serverType = ServerType::LegacyFsd;
             Capabilities m_capabilities = Capabilities::None;
@@ -413,7 +410,7 @@ namespace BlackCore
             QTimer m_positionUpdateTimer;        //!< sending positions
             QTimer m_interimPositionUpdateTimer; //!< sending interim positions
 
-            qint64 m_additionalOffsetTime = 0; //!< additional offset time
+            qint64 m_additionalOffsetTime = 0;   //!< additional offset time
 
             bool m_statistics = false;
             QMap <QString, int> m_callStatistics;

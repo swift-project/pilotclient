@@ -29,10 +29,10 @@ namespace BlackCore
             AddPilot(const QString &callsign, const QString &cid, const QString &password, PilotRating rating, int protocolRevision, SimType simType, const QString &realName);
 
             //! Get user cid
-            QString cid() const { return m_cid; }
+            const QString &cid() const { return m_cid; }
 
             //! Get user password
-            QString password() const { return m_password; }
+            const QString &password() const { return m_password; }
 
             //! Get pilot rating
             PilotRating rating() const { return m_rating; }
@@ -44,7 +44,7 @@ namespace BlackCore
             SimType simType() const { return m_simType; }
 
             //! Get real name
-            QString realName() const { return m_realName; }
+            const QString &realName() const { return m_realName; }
 
             //! Message converted to tokens
             QStringList toTokens() const;

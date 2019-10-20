@@ -224,7 +224,7 @@ namespace BlackCore
                 //! Recently used device
                 //! \threadsafe
                 //! @{
-                const BlackMisc::Audio::CAudioDeviceInfo &getInputDevice() const;
+                const BlackMisc::Audio::CAudioDeviceInfo &getInputDevice()  const;
                 const BlackMisc::Audio::CAudioDeviceInfo &getOutputDevice() const;
                 bool usesSameDevices(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
                 //! @}
@@ -232,8 +232,9 @@ namespace BlackCore
                 //! Callsigns currently received
                 //! \threadsafe
                 //! @{
-                QString getReceivingCallsignsCom1();
-                QString getReceivingCallsignsCom2();
+                QString getReceivingCallsignsCom1() const;
+                QString getReceivingCallsignsCom2() const;
+                QStringList getReceivingCallsignsCom1Com2() const;
                 //! @}
 
                 //! Update the voice server URL

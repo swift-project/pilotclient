@@ -747,18 +747,28 @@ namespace BlackCore
                 emit outputVolumePeakVU(args.PeakVU);
             }
 
-            QString CAfvClient::getReceivingCallsignsCom1()
+            QString CAfvClient::getReceivingCallsignsCom1() const
             {
                 QMutexLocker lock(&m_mutex);
                 if (!m_soundcardSampleProvider) return {};
                 return m_soundcardSampleProvider->getReceivingCallsigns(0);
             }
 
-            QString CAfvClient::getReceivingCallsignsCom2()
+            QString CAfvClient::getReceivingCallsignsCom2() const
             {
                 QMutexLocker lock(&m_mutex);
                 if (!m_soundcardSampleProvider) return {};
                 return m_soundcardSampleProvider->getReceivingCallsigns(1);
+            }
+
+            QStringList CAfvClient::getReceivingCallsignsCom1Com2() const
+            {
+                QStringList coms;
+                QMutexLocker lock(&m_mutex);
+                if (!m_soundcardSampleProvider) { return {{ QString(), QString()}}; }
+                coms << m_soundcardSampleProvider->getReceivingCallsigns(0);
+                coms << m_soundcardSampleProvider->getReceivingCallsigns(1);
+                return coms;
             }
 
             bool CAfvClient::updateVoiceServerUrl(const QString &url)

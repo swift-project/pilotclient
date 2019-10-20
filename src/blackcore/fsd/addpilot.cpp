@@ -11,6 +11,8 @@
 
 #include "blackmisc/logmessage.h"
 
+using namespace BlackMisc;
+
 namespace BlackCore
 {
     namespace Fsd
@@ -40,9 +42,9 @@ namespace BlackCore
         {
             if (tokens.size() < 6)
             {
-                BlackMisc::CLogMessage(static_cast<AddPilot*>(nullptr)).warning(u"Wrong number of arguments.");
+                CLogMessage(static_cast<AddPilot*>(nullptr)).warning(u"Wrong number of arguments.");
                 return {};
-            };
+            }
 
             PilotRating rating = static_cast<PilotRating>(tokens[4].toInt());
             int protocolRevision = tokens[5].toInt();

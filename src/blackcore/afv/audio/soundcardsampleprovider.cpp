@@ -169,7 +169,7 @@ namespace BlackCore
                 }
             }
 
-            QString CSoundcardSampleProvider::getReceivingCallsigns(quint16 transceiverID)
+            QString CSoundcardSampleProvider::getReceivingCallsigns(quint16 transceiverID) const
             {
                 return m_receiverInputs.at(transceiverID)->getReceivingCallsignsString();
             }

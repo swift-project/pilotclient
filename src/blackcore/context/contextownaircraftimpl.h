@@ -11,11 +11,11 @@
 #ifndef BLACKCORE_CONTEXT_CONTEXTOWNAIRCRAFT_IMPL_H
 #define BLACKCORE_CONTEXT_CONTEXTOWNAIRCRAFT_IMPL_H
 
-#include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/actionbind.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
@@ -211,16 +211,16 @@ namespace BlackCore
             CContextOwnAircraft *registerWithDBus(BlackMisc::CDBusServer *server);
 
         private:
-            BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< my aircraft
-            mutable QReadWriteLock m_lockAircraft;       //!< lock aircraft
+            BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft;  //!< my aircraft
+            mutable QReadWriteLock                    m_lockAircraft; //!< lock aircraft
 
             CActionBind m_actionToggleXpdr { BlackMisc::Input::toggleXPDRStateHotkeyAction(), BlackMisc::Input::toggleXPDRStateHotkeyIcon(), this, &CContextOwnAircraft::actionToggleTransponder };
             CActionBind m_actionIdent      { BlackMisc::Input::toggleXPDRIdentHotkeyAction(), BlackMisc::Input::toggleXPDRIdentHotkeyIcon(), this, &CContextOwnAircraft::actionIdent };
 
             static constexpr qint64 MinHistoryDeltaMs = 1000;
             static constexpr int MaxHistoryElements   = 20;
-            QTimer  m_historyTimer;                      //!< history timer
-            std::atomic_bool m_history { true };         //!< enable history
+            QTimer  m_historyTimer;              //!< history timer
+            std::atomic_bool m_history { true }; //!< enable history
             BlackMisc::Aviation::CAircraftSituationList m_situationHistory; //!< history, latest situation first
 
             BlackMisc::CSetting<BlackMisc::Network::Settings::TCurrentTrafficServer> m_currentNetworkServer { this };

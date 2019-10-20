@@ -52,7 +52,7 @@ namespace BlackCore
                 void updateRadioTransceivers(const QVector<TransceiverDto> &radioTransceivers);
 
                 //! Receiving callsign as single string
-                QString getReceivingCallsigns(quint16 transceiverID);
+                QString getReceivingCallsigns(quint16 transceiverID) const;
 
             signals:
                 //! Changed callsigns
