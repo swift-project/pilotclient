@@ -766,9 +766,8 @@ namespace BlackFsdTest
         vatsim_auth_generate_challenge(auth, buffer);
         QVERIFY(QString(buffer).length() > 0);
 
-        char sysuid[50];
-        vatsim_get_system_unique_id(sysuid);
-        qDebug() << sysuid;
+        std::array<char, 50> sysuid = {};
+        vatsim_get_system_unique_id(sysuid.data());
         **/
     }
 

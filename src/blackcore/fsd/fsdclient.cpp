@@ -717,11 +717,11 @@ namespace BlackCore
                 const int altitude = getOwnAircraft().getAltitude().valueInteger(CLengthUnit::ft());
                 const QString realName = m_server.getUser().getRealName();
 
-                char sysuid[50];
-                vatsim_get_system_unique_id(sysuid);
+                std::array<char, 50> sysuid = {};
+                vatsim_get_system_unique_id(sysuid.data());
 
                 userInfo += QString("CID=") % cid % " " % m_clientName % " IP=" % m_socket.localAddress().toString() %
-                            " SYS_UID=" % sysuid % " FSVER=" % m_hostApplication % " LT=" % QString::number(latitude) %
+                            " SYS_UID=" % sysuid.data() % " FSVER=" % m_hostApplication % " LT=" % QString::number(latitude) %
                             " LO=" % QString::number(longitude) % " AL=" % QString::number(altitude) %
                             " " % realName;
 
@@ -743,10 +743,10 @@ namespace BlackCore
 
         void CFSDClient::sendClientIdentification(const QString &fsdChallenge)
         {
-            char sysuid[50];
-            vatsim_get_system_unique_id(sysuid);
+            std::array<char, 50> sysuid = {};
+            vatsim_get_system_unique_id(sysuid.data());
             QString cid = m_server.getUser().getId();
-            const ClientIdentification clientIdentification(m_ownCallsign.asString(), vatsim_auth_get_client_id(clientAuth), m_clientName, m_versionMajor, m_versionMinor, cid, sysuid, fsdChallenge);
+            const ClientIdentification clientIdentification(m_ownCallsign.asString(), vatsim_auth_get_client_id(clientAuth), m_clientName, m_versionMajor, m_versionMinor, cid, sysuid.data(), fsdChallenge);
             this->sendMessage(clientIdentification);
             this->sendLogin();
             this->updateConnectionStatus(CConnectionStatus::Connected);
