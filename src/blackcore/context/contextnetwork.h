@@ -151,6 +151,9 @@ namespace BlackCore
             //! User has been kicked from network
             void kicked(const QString &kickMessage);
 
+            //! Network error
+            void severeNetworkError(const QString &errorMessage);
+
             //! Connection status changed
             //! \sa IContextNetwork::connectedServerChanged
             void connectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);

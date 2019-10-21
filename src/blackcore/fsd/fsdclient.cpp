@@ -90,7 +90,8 @@ namespace BlackCore
         {
             initializeMessageTypes();
             connect(&m_socket, &QTcpSocket::readyRead, this, &CFSDClient::readDataFromSocket);
-            connect(&m_socket, qOverload<QAbstractSocket::SocketError>(&QTcpSocket::error), this, &CFSDClient::printSocketError);
+            connect(&m_socket, qOverload<QAbstractSocket::SocketError>(&QTcpSocket::error), this, &CFSDClient::printSocketError, Qt::QueuedConnection);
+            connect(&m_socket, qOverload<QAbstractSocket::SocketError>(&QTcpSocket::error), this, &CFSDClient::printSocketError, Qt::QueuedConnection);
 
             m_positionUpdateTimer.setObjectName(this->objectName().append(":m_positionUpdateTimer"));
             connect(&m_positionUpdateTimer, &QTimer::timeout, this, &CFSDClient::sendPilotDataUpdate);
@@ -201,7 +202,7 @@ namespace BlackCore
         void CFSDClient::connectToServer()
         {
             if (m_socket.isOpen()) { return; }
-            Q_ASSERT(! m_clientName.isEmpty());
+            Q_ASSERT(!m_clientName.isEmpty());
             Q_ASSERT((m_versionMajor + m_versionMinor) > 0);
             Q_ASSERT(m_capabilities != Capabilities::None);
 
@@ -221,7 +222,7 @@ namespace BlackCore
         void CFSDClient::disconnectFromServer()
         {
             this->stopPositionTimers();
-            if (! m_socket.isOpen()) { return; }
+            if (!m_socket.isOpen()) { return; }
 
             updateConnectionStatus(CConnectionStatus::Disconnecting);
 
@@ -236,18 +237,19 @@ namespace BlackCore
 
         void CFSDClient::sendLogin()
         {
-            QString cid = m_server.getUser().getId();
-            QString password = m_server.getUser().getPassword();
-            QString realName = m_server.getUser().getRealName();
+            const QString cid = m_server.getUser().getId();
+            const QString password = m_server.getUser().getPassword();
+            const QString name = m_server.getUser().getRealNameAndHomeBase();
+            // const QString name = m_server.getUser().getRealName();
 
             if (m_loginMode.isPilot())
             {
-                AddPilot pilotLogin(m_ownCallsign.asString(), cid, password, m_pilotRating, m_protocolRevision, m_simType, realName);
+                const AddPilot pilotLogin(m_ownCallsign.asString(), cid, password, m_pilotRating, m_protocolRevision, m_simType, name);
                 sendMessage(pilotLogin);
             }
             else if (m_loginMode.isObserver())
             {
-                AddAtc addAtc(m_ownCallsign.asString(), realName, cid, password, m_atcRating, m_protocolRevision);
+                const AddAtc addAtc(m_ownCallsign.asString(), name, cid, password, m_atcRating, m_protocolRevision);
                 sendMessage(addAtc);
             }
         }
@@ -255,21 +257,21 @@ namespace BlackCore
         void CFSDClient::sendDeletePilot()
         {
             const QString cid = m_server.getUser().getId();
-            DeletePilot deletePilot(m_ownCallsign.getFsdCallsignString(), cid);
+            const DeletePilot deletePilot(m_ownCallsign.getFsdCallsignString(), cid);
             sendMessage(deletePilot);
         }
 
         void CFSDClient::sendDeleteAtc()
         {
             const QString cid = m_server.getUser().getId();
-            DeleteAtc deleteAtc(m_ownCallsign.asString(), cid);
+            const DeleteAtc deleteAtc(m_ownCallsign.asString(), cid);
             sendMessage(deleteAtc);
         }
 
         void CFSDClient::sendPilotDataUpdate()
         {
             if (m_connectionStatus.isDisconnected() && ! m_unitTestMode) { return; }
-            CSimulatedAircraft myAircraft(getOwnAircraft());
+            const CSimulatedAircraft myAircraft(getOwnAircraft());
             if (m_loginMode == BlackMisc::Network::CLoginMode::Observer)
             {
                 sendAtcDataUpdate(myAircraft.latitude().value(CAngleUnit::deg()), myAircraft.longitude().value(CAngleUnit::deg()));
@@ -296,7 +298,7 @@ namespace BlackCore
         void CFSDClient::sendInterimPilotDataUpdate()
         {
             if (m_connectionStatus.isDisconnected()) { return; }
-            CSimulatedAircraft myAircraft(getOwnAircraft());
+            const CSimulatedAircraft myAircraft(getOwnAircraft());
             InterimPilotDataUpdate interimPilotDataUpdate(m_ownCallsign.asString(),
                     QString(),
                     myAircraft.latitude().value(CAngleUnit::deg()),
@@ -318,16 +320,16 @@ namespace BlackCore
 
         void CFSDClient::sendAtcDataUpdate(double latitude, double longitude)
         {
-            AtcDataUpdate atcDataUpdate(m_ownCallsign.asString(), 199998, CFacilityType::OBS, 300, AtcRating::Observer, latitude, longitude, 0);
+            const AtcDataUpdate atcDataUpdate(m_ownCallsign.asString(), 199998, CFacilityType::OBS, 300, AtcRating::Observer, latitude, longitude, 0);
             sendMessage(atcDataUpdate);
         }
 
         void CFSDClient::sendPing(const QString &receiver)
         {
-            qint64 msecSinceEpoch = QDateTime::currentMSecsSinceEpoch();
-            QString timeString = QString::number(msecSinceEpoch);
+            const qint64 msecSinceEpoch = QDateTime::currentMSecsSinceEpoch();
+            const QString timeString = QString::number(msecSinceEpoch);
 
-            Ping ping(m_ownCallsign.asString(), receiver, timeString);
+            const Ping ping(m_ownCallsign.asString(), receiver, timeString);
             sendMessage(ping);
 
             // statistics
@@ -383,22 +385,22 @@ namespace BlackCore
             const QString reveiverCallsign = receiver.getFsdCallsignString();
             if (queryType == ClientQueryType::IsValidATC)
             {
-                ClientQuery clientQuery(m_ownCallsign.asString(), "SERVER", ClientQueryType::IsValidATC, queryData);
+                const ClientQuery clientQuery(m_ownCallsign.asString(), "SERVER", ClientQueryType::IsValidATC, queryData);
                 sendMessage(clientQuery);
             }
             else if (queryType == ClientQueryType::Capabilities)
             {
-                ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::Capabilities);
+                const ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::Capabilities);
                 sendMessage(clientQuery);
             }
             else if (queryType == ClientQueryType::Com1Freq)
             {
-                ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::Com1Freq);
+                const ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::Com1Freq);
                 sendMessage(clientQuery);
             }
             else if (queryType == ClientQueryType::RealName)
             {
-                ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::RealName);
+                const ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::RealName);
                 sendMessage(clientQuery);
             }
             else if (queryType == ClientQueryType::Server)
@@ -408,7 +410,7 @@ namespace BlackCore
             }
             else if (queryType == ClientQueryType::ATIS)
             {
-                ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::ATIS);
+                const ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::ATIS);
                 sendMessage(clientQuery);
                 if (m_serverType != ServerType::Vatsim)
                 {
@@ -417,12 +419,12 @@ namespace BlackCore
             }
             else if (queryType == ClientQueryType::PublicIP)
             {
-                ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::PublicIP);
+                const ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::PublicIP);
                 sendMessage(clientQuery);
             }
             else if (queryType == ClientQueryType::INF)
             {
-                ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::INF);
+                const ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::INF);
                 sendMessage(clientQuery);
             }
             else if (queryType == ClientQueryType::FP)
@@ -434,7 +436,7 @@ namespace BlackCore
             if (queryType == ClientQueryType::AircraftConfig)
             {
                 if (queryData.size() == 0) { return; }
-                ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::AircraftConfig, queryData);
+                const ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::AircraftConfig, queryData);
                 sendMessage(clientQuery);
             }
 
@@ -449,7 +451,7 @@ namespace BlackCore
             for (const auto &message : privateMessages)
             {
                 if (message.getRecipientCallsign().isEmpty()) { continue; }
-                TextMessage textMessage(m_ownCallsign.asString(), message.getRecipientCallsign().getFsdCallsignString(), message.getMessage());
+                const TextMessage textMessage(m_ownCallsign.asString(), message.getRecipientCallsign().getFsdCallsignString(), message.getMessage());
                 sendMessage(textMessage);
                 emit this->textMessageSent(message);
 
@@ -489,7 +491,7 @@ namespace BlackCore
             else if (receiverGroup == TextMessageGroups::AllPilotClients) { receiver = QStringLiteral("*P"); }
             else if (receiverGroup == TextMessageGroups::AllSups)         { receiver = QStringLiteral("*S"); }
             else { return; }
-            TextMessage textMessage(m_ownCallsign.asString(), receiver, message);
+            const TextMessage textMessage(m_ownCallsign.asString(), receiver, message);
             sendMessage(textMessage);
             this->increaseStatisticsValue(QStringLiteral("sendTextMessages"));
         }
@@ -795,15 +797,16 @@ namespace BlackCore
         void CFSDClient::handleAtcDataUpdate(const QStringList &tokens)
         {
             const AtcDataUpdate atcDataUpdate = AtcDataUpdate::fromTokens(tokens);
-
-            CFrequency freq(atcDataUpdate.m_frequencykHz, CFrequencyUnit::kHz());
-            freq.switchUnit(CFrequencyUnit::MHz()); // we would not need to bother, but this makes it easier to identify
-            const CLength networkRange(atcDataUpdate.m_visibleRange, CLengthUnit::NM());
             const QString senderCs = atcDataUpdate.sender();
             const CCallsign cs(senderCs, CCallsign::Atc);
 
             // Filter non-ATC like OBS stations, like pilots logging in as shared cockpit co-pilots.
-            if (atcDataUpdate.m_facility == CFacilityType::Unknown && !cs.isObserverCallsign()) { return; }
+            if (atcDataUpdate.m_facility == CFacilityType::Unknown && !cs.isObserverCallsign()) { return; } // like in old version
+            if (atcDataUpdate.m_facility == CFacilityType::OBS && !cs.hasSuffix()) { return; }
+
+            CFrequency freq(atcDataUpdate.m_frequencykHz, CFrequencyUnit::kHz());
+            freq.switchUnit(CFrequencyUnit::MHz()); // we would not need to bother, but this makes it easier to identify
+            const CLength networkRange(atcDataUpdate.m_visibleRange, CLengthUnit::NM());
 
             const CLength range = fixAtcRange(networkRange, cs);
             const CCoordinateGeodetic position(atcDataUpdate.m_latitude, atcDataUpdate.m_longitude, 0);
@@ -839,13 +842,13 @@ namespace BlackCore
 
         void CFSDClient::handleDeleteATC(const QStringList &tokens)
         {
-            DeleteAtc deleteAtc = DeleteAtc::fromTokens(tokens);
+            const DeleteAtc deleteAtc = DeleteAtc::fromTokens(tokens);
             emit deleteAtcReceived(deleteAtc.m_cid);
         }
 
         void CFSDClient::handleDeletePilot(const QStringList &tokens)
         {
-            DeletePilot deletePilot = DeletePilot::fromTokens(tokens);
+            const DeletePilot deletePilot = DeletePilot::fromTokens(tokens);
             const CCallsign cs(deletePilot.sender(), CCallsign::Aircraft);
             clearState(cs);
             emit deletePilotReceived(deletePilot.m_cid);
@@ -1290,7 +1293,6 @@ namespace BlackCore
                 // swift's updated interim pilot update.
                 if (!isInterimPositionReceivingEnabledForServer()) { return; }
 
-
                 InterimPilotDataUpdate interimPilotDataUpdate = InterimPilotDataUpdate::fromTokens(tokens);
                 const CCallsign callsign(interimPilotDataUpdate.sender(), CCallsign::Aircraft);
 
@@ -1312,7 +1314,7 @@ namespace BlackCore
             }
             else if (subType == "FSIPI")
             {
-                PlaneInformationFsinn planeInformationFsinn = PlaneInformationFsinn::fromTokens(tokens);
+                const PlaneInformationFsinn planeInformationFsinn = PlaneInformationFsinn::fromTokens(tokens);
                 emit planeInformationFsinnReceived(planeInformationFsinn.sender(),
                                                    planeInformationFsinn.m_airlineIcao,
                                                    planeInformationFsinn.m_aircraftIcao,
@@ -1321,7 +1323,7 @@ namespace BlackCore
             }
             else if (subType == "FSIPIR")
             {
-                PlaneInfoRequestFsinn planeInfoRequestFsinn = PlaneInfoRequestFsinn::fromTokens(tokens);
+                const PlaneInfoRequestFsinn planeInfoRequestFsinn = PlaneInfoRequestFsinn::fromTokens(tokens);
                 sendPlaneInformationFsinn(planeInfoRequestFsinn.sender());
                 emit planeInformationFsinnReceived(planeInfoRequestFsinn.sender(),
                                                    planeInfoRequestFsinn.m_airlineIcao,
@@ -1342,7 +1344,7 @@ namespace BlackCore
         {
             if (m_protocolRevision >= PROTOCOL_REVISION_VATSIM_AUTH)
             {
-                FSDIdentification fsdIdentification = FSDIdentification::fromTokens(tokens);
+                const FSDIdentification fsdIdentification = FSDIdentification::fromTokens(tokens);
                 vatsim_auth_set_initial_challenge(clientAuth, qPrintable(fsdIdentification.m_initialChallenge));
 
                 char fsdChallenge[33];
@@ -1359,19 +1361,35 @@ namespace BlackCore
 
         void CFSDClient::handleUnknownPacket(const QStringList &tokens)
         {
-            qDebug() << "handleUnknownPacket:" << tokens;
+            CLogMessage(this).warning(u"FSD unknown packet: %1") << tokens.join(", ");
         }
 
-        void CFSDClient::printSocketError(QAbstractSocket::SocketError)
+        void CFSDClient::printSocketError(QAbstractSocket::SocketError socketError)
         {
-            qDebug() << m_socket.errorString();
+            Q_UNUSED(socketError)
+            const QString error = m_socket.errorString();
+            CLogMessage(this).error(u"FSD socket error: %1") << socketError;
+        }
+
+        void CFSDClient::handleSocketError(QAbstractSocket::SocketError socketError)
+        {
+            const QString error = m_socket.errorString();
+            switch (socketError)
+            {
+            // all named here need a logoff
+            case QAbstractSocket::RemoteHostClosedError:
+                emit this->severeNetworkError(error);
+                this->disconnectFromServer();
+                break;
+            default:
+                break;
+            }
         }
 
         void CFSDClient::updateConnectionStatus(CConnectionStatus newStatus)
         {
             if (m_connectionStatus != newStatus)
             {
-
                 if (newStatus.isConnected())
                 {
                     m_server.setConnectedSinceNow();

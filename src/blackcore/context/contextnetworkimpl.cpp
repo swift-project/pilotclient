@@ -71,10 +71,11 @@ namespace BlackCore
             // 1. Init by "network driver"
             m_fsdClient = new CFSDClient(this, this->getRuntime()->getCContextOwnAircraft(), this, this);
             connect(m_fsdClient, &CFSDClient::connectionStatusChanged, this, &CContextNetwork::onFsdConnectionStatusChanged);
-            connect(m_fsdClient, &CFSDClient::killRequestReceived, this, &CContextNetwork::kicked);
-            connect(m_fsdClient, &CFSDClient::textMessagesReceived, this, &CContextNetwork::textMessagesReceived);
-//            connect(m_fsdClient, &FSDClient::textMessagesReceived, this, &CContextNetwork::checkForSupervisiorTextMessage);
-            connect(m_fsdClient, &CFSDClient::textMessageSent, this, &CContextNetwork::textMessageSent);
+            connect(m_fsdClient, &CFSDClient::killRequestReceived,     this, &CContextNetwork::kicked);
+            connect(m_fsdClient, &CFSDClient::textMessagesReceived,    this, &CContextNetwork::textMessagesReceived);
+            connect(m_fsdClient, &CFSDClient::textMessageSent,         this, &CContextNetwork::textMessageSent);
+            connect(m_fsdClient, &CFSDClient::severeNetworkError,      this, &CContextNetwork::severeNetworkError);
+            // connect(m_fsdClient, &FSDClient::textMessagesReceived,     this, &CContextNetwork::checkForSupervisiorTextMessage);
 
             // 2. Update timer for data (network data such as frequency)
             // we use 2 timers so we can query at different times (not too many queirs at once)
@@ -100,10 +101,10 @@ namespace BlackCore
             connect(m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked, Qt::QueuedConnection);
             connect(m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus, Qt::QueuedConnection);
             connect(m_airspace, &CAirspaceMonitor::changedAircraftInRange, this, &CContextNetwork::changedAircraftInRange, Qt::QueuedConnection);
-            connect(m_airspace, &CAirspaceMonitor::removedAircraft, this, &IContextNetwork::removedAircraft, Qt::QueuedConnection); // DBus
-            connect(m_airspace, &CAirspaceMonitor::readyForModelMatching, this, &CContextNetwork::readyForModelMatching, Qt::QueuedConnection);
-            connect(m_airspace, &CAirspaceMonitor::addedAircraft, this, &CContextNetwork::addedAircraft, Qt::QueuedConnection);
-            connect(m_airspace, &CAirspaceMonitor::changedAtisReceived, this, &CContextNetwork::onChangedAtisReceived, Qt::QueuedConnection);
+            connect(m_airspace, &CAirspaceMonitor::removedAircraft,        this, &IContextNetwork::removedAircraft, Qt::QueuedConnection); // DBus
+            connect(m_airspace, &CAirspaceMonitor::readyForModelMatching,  this, &CContextNetwork::readyForModelMatching, Qt::QueuedConnection);
+            connect(m_airspace, &CAirspaceMonitor::addedAircraft,          this, &CContextNetwork::addedAircraft, Qt::QueuedConnection);
+            connect(m_airspace, &CAirspaceMonitor::changedAtisReceived   , this, &CContextNetwork::onChangedAtisReceived, Qt::QueuedConnection);
         }
 
         CContextNetwork *CContextNetwork::registerWithDBus(BlackMisc::CDBusServer *server)

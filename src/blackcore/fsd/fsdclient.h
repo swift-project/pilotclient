@@ -75,6 +75,7 @@ namespace BlackCore
             Q_INTERFACES(BlackMisc::Network::IEcosystemProvider)
 
         public:
+            //! Ctor
             CFSDClient(BlackMisc::Network::IClientProvider *clientProvider,
                        BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                        BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
@@ -148,7 +149,7 @@ namespace BlackCore
             void sendFsdMessage(const QString &message);
 
             void setUnitTestMode(bool on) { m_unitTestMode = on; }
-            void printToConsole(bool on) { m_printToConsole = on; }
+            void printToConsole(bool on)  { m_printToConsole = on; }
 
             BlackMisc::Network::CConnectionStatus getConnectionStatus() const { return m_connectionStatus; }
 
@@ -187,7 +188,6 @@ namespace BlackCore
             void deletePilotReceived(const QString &cid);
             void pilotDataUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
             void pongReceived(const QString &sender, double elapsedTimeMs);
-            void killRequestReceived(const QString &reason);
             void flightPlanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
 
             void textMessagesReceived(const BlackMisc::Network::CTextMessageList &messages);
@@ -214,7 +214,14 @@ namespace BlackCore
             //! We have sent a text message.
             void textMessageSent(const BlackMisc::Network::CTextMessage &sentMessage);
 
+            //! Connection status has been changed
             void connectionStatusChanged(BlackMisc::Network::CConnectionStatus oldStatus, BlackMisc::Network::CConnectionStatus newStatus);
+
+            //! Network error
+            void severeNetworkError(const QString &errorMessage);
+
+            //! Kill request (aka kicked)
+            void killRequestReceived(const QString &reason);
 
         private:
             friend BlackFsdTest::CTestFSDClient;
@@ -230,7 +237,7 @@ namespace BlackCore
                 const QByteArray bufferEncoded = m_fsdTextCodec->fromUnicode(buffer);
                 emitRawFsdMessage(buffer.trimmed(), true);
                 if (m_printToConsole) { qDebug() << "FSD Sent=>" << bufferEncoded; }
-                if (! m_unitTestMode) { m_socket.write(bufferEncoded); }
+                if (!m_unitTestMode) { m_socket.write(bufferEncoded); }
             }
 
             //! Default model string
@@ -282,6 +289,7 @@ namespace BlackCore
             void handleUnknownPacket(const QStringList &tokens);
 
             void printSocketError(QAbstractSocket::SocketError socketError);
+            void handleSocketError(QAbstractSocket::SocketError socketError);
 
             void updateConnectionStatus(BlackMisc::Network::CConnectionStatus newStatus);
 
