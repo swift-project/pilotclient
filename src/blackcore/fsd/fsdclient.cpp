@@ -520,8 +520,10 @@ namespace BlackCore
             // Removed with T353 although it is standard
             // const QString route = QString(flightPlan.getRoute()).replace(" ", ".");
 
-            const QString route   = flightPlan.getRoute();
-            const QString remarks = flightPlan.getRemarks();
+            QString route   = flightPlan.getRoute();
+            QString remarks = flightPlan.getRemarks();
+            route.remove(':');
+            remarks.remove(':');
 
             //! \fixme that would be the official string, can this be used?
             const QString alt = flightPlan.getCruiseAltitude().asFpVatsimAltitudeString();

@@ -132,7 +132,7 @@ namespace BlackGui
             QString getDefaultFilename(bool load);
 
             //! Call \sa buildRemarksString from combo box signal
-            void currentTextChangedToBuildRemarks(const QString &text) { this->buildRemarksString(); Q_UNUSED(text); }
+            void currentTextChangedToBuildRemarks(const QString &text) { this->buildRemarksString(); Q_UNUSED(text) }
 
             //! Voice combo boxes shall display the same
             void syncVoiceComboBoxes(const QString &text);

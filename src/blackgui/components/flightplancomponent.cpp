@@ -18,6 +18,7 @@
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/webdataservices.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/aviation/altitude.h"
@@ -27,11 +28,12 @@
 #include "blackmisc/pq/units.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logmessage.h"
-#include "blackconfig/buildconfig.h"
 #include "blackmisc/network/user.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/stringutils.h"
+#include "blackconfig/buildconfig.h"
+
 #include "ui_flightplancomponent.h"
 
 #include <QCheckBox>
@@ -1103,11 +1105,18 @@ namespace BlackGui
             const QObject *sender = QObject::sender();
             if (sender == ui->cb_VoiceCapabilities)
             {
+                const QString ct = ui->cb_VoiceCapabilitiesFirstPage->currentText();
+                if (stringCompare(ct, text, Qt::CaseInsensitive)) { return; }
                 ui->cb_VoiceCapabilitiesFirstPage->setCurrentText(text);
             }
             else
             {
-                ui->cb_VoiceCapabilities->setCurrentText(text);
+                const QString ct = ui->cb_VoiceCapabilities->currentText();
+                if (!stringCompare(ct, text, Qt::CaseInsensitive))
+                {
+                    // avoid unnecessary roundtrips
+                    ui->cb_VoiceCapabilities->setCurrentText(text);
+                }
                 const QString r = CFlightPlanRemarks::replaceVoiceCapabilities(CFlightPlanRemarks::textToVoiceCapabilitiesRemarks(text), ui->pte_Remarks->toPlainText());
                 if (ui->pte_Remarks->toPlainText() != r)
                 {
