@@ -104,7 +104,7 @@ namespace BlackMisc
         {
             QString r = remarksIn;
             r.replace(':', ' ');
-            r = asciiOnlyString(simplifyAccents(remarksIn));
+            r = asciiOnlyString(simplifyAccents(r));
             return r;
         }
 
