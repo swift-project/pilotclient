@@ -946,7 +946,7 @@ namespace BlackCore
 
         void CFSDClient::handlePing(const QStringList &tokens)
         {
-            Ping ping = Ping::fromTokens(tokens);
+            const Ping ping = Ping::fromTokens(tokens);
             sendPong(ping.sender(), ping.m_timestamp);
         }
 
@@ -1884,6 +1884,13 @@ namespace BlackCore
             if (l1.isNull()) { return l2; }
             if (l2.isNull()) { return l1; }
             return (l2 > l1) ? l2 : l1;
+        }
+
+        QString CFSDClient::noColons(const QString &input)
+        {
+            if (!input.contains(':')) { return input; }
+            QString copy(input);
+            return copy.remove(':');
         }
 
         void CFSDClient::handleIllegalFsdState(const QString &message)

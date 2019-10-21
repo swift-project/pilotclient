@@ -134,7 +134,7 @@ void SwiftGuiStd::init()
     Q_ASSERT(s);
     s = connect(&m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::handleTimerBasedUpdates);
     Q_ASSERT(s);
-    Q_UNUSED(s);
+    Q_UNUSED(s)
 
     // check if DB data have been loaded
     // only check once, so data can be loaded and

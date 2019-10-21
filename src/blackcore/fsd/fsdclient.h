@@ -81,7 +81,9 @@ namespace BlackCore
                        BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                        QObject *parent = nullptr);
 
-            // Necessary functions to setup client. Set them all!
+            //! Preset functions
+            //! \remark Necessary functions to setup client. Set them all!
+            //! @{
             void setClientName(const QString &clientName) { m_clientName = clientName; }
             void setHostApplication(const QString &hostApplication) { m_hostApplication = hostApplication; }
             void setVersion(int major, int minor) { m_versionMajor = major; m_versionMinor = minor; }
@@ -89,40 +91,41 @@ namespace BlackCore
             void setClientCapabilities(Capabilities capabilities) { m_capabilities = capabilities; }
             void setServer(const BlackMisc::Network::CServer &server);
             void setSimulatorInfo(const BlackMisc::Simulation::CSimulatorPluginInfo &simInfo);
-            const BlackMisc::Network::CServer &getServer() const { return m_server; }
             void setLoginMode(const BlackMisc::Network::CLoginMode &mode) { m_loginMode = mode; }
             void setCallsign(const BlackMisc::Aviation::CCallsign &callsign);
             void setPartnerCallsign(const BlackMisc::Aviation::CCallsign &callsign) { m_partnerCallsign = callsign; }
             void setIcaoCodes(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
             void setLiveryAndModelString(const QString &livery, bool sendLiveryString, const QString &modelString, bool sendModelString);
-
             void setSimType(SimType type) { m_simType = type; }
             void setSimType(const BlackMisc::Simulation::CSimulatorPluginInfo &simInfo);
             void setPilotRating(PilotRating rating) { m_pilotRating = rating; }
             void setAtcRating(AtcRating rating) { m_atcRating = rating; }
+            //! @}
 
+            const BlackMisc::Network::CServer &getServer() const { return m_server; }
             QStringList getPresetValues() const;
             BlackMisc::Aviation::CCallsign getPresetPartnerCallsign() const { return m_partnerCallsign; }
+            BlackMisc::Network::CLoginMode getLoginMode() const;
 
+            //! Conenct/disconnect {
             void connectToServer();
             void disconnectFromServer();
+            //! @}
 
             void addInterimPositionReceiver(const BlackMisc::Aviation::CCallsign &receiver) { m_interimPositionReceivers.push_back(receiver); }
             void removeInterimPositionReceiver(const BlackMisc::Aviation::CCallsign &receiver) { m_interimPositionReceivers.remove(receiver); }
 
-            // Private:
-
+            //! Convenience functions for sendClientQuery
+            //! \private
+            //!  @{
             void sendLogin();
             void sendDeletePilot();
             void sendDeleteAtc();
             void sendPilotDataUpdate();
-
             void sendInterimPilotDataUpdate();
-
             void sendAtcDataUpdate(double latitude, double longitude);
             void sendPing(const QString &receiver);
-
-            // Convenience functions for sendClientQuery
+            //
             void sendClientQueryIsValidAtc(const BlackMisc::Aviation::CCallsign &callsign);
             void sendClientQueryCapabilities(const BlackMisc::Aviation::CCallsign &callsign);
             void sendClientQueryCom1Freq(const BlackMisc::Aviation::CCallsign &callsign);
@@ -131,7 +134,6 @@ namespace BlackCore
             void sendClientQueryAtis(const BlackMisc::Aviation::CCallsign &callsign);
             void sendClientQueryFlightPlan(const BlackMisc::Aviation::CCallsign callsign);
             void sendClientQueryAircraftConfig(const BlackMisc::Aviation::CCallsign callsign);
-
             void sendClientQuery(ClientQueryType queryType, const BlackMisc::Aviation::CCallsign &receiver, const QStringList &queryData = {});
             void sendTextMessages(const BlackMisc::Network::CTextMessageList &messages);
             void sendTextMessage(const BlackMisc::Network::CTextMessage &message);
@@ -145,25 +147,24 @@ namespace BlackCore
             void sendPlaneInformationFsinn(const BlackMisc::Aviation::CCallsign &callsign);
             void sendCustomPilotPacket(const QString &receiver, const QString &subType, const std::vector<QString> &payload);
             void sendAircraftConfiguration(const QString &receiver, const QString &aircraftConfigJson);
-
             void sendFsdMessage(const QString &message);
+            //! @}
 
+            //! Unit test/debug functions @{
             void setUnitTestMode(bool on) { m_unitTestMode = on; }
             void printToConsole(bool on)  { m_printToConsole = on; }
+            //! @}
 
-            BlackMisc::Network::CConnectionStatus getConnectionStatus() const { return m_connectionStatus; }
-
-            BlackMisc::Network::CLoginMode getLoginMode() const;
-
+            //! Interim pos.receivers @{
             BlackMisc::Aviation::CCallsignSet getInterimPositionReceivers() const;
             void setInterimPositionReceivers(const BlackMisc::Aviation::CCallsignSet &interimPositionReceivers);
+            //! @}
 
+            //! Connection status @{
+            BlackMisc::Network::CConnectionStatus getConnectionStatus() const { return m_connectionStatus; }
             bool isConnected() const { return m_connectionStatus.isConnected(); }
-            bool isPendingConnection() const
-            {
-                return m_connectionStatus.isConnecting() ||
-                       m_connectionStatus.isDisconnecting();
-            }
+            bool isPendingConnection() const { return m_connectionStatus.isConnecting() || m_connectionStatus.isDisconnecting(); }
+            //! @}
 
             //! Statistics enable functions @{
             bool setStatisticsEnable(bool enabled) { m_statistics = enabled; return enabled; }
@@ -182,6 +183,7 @@ namespace BlackCore
             QString getNetworkStatisticsAsText(bool reset, const QString &separator = "\n");
 
         signals:
+            //! Client responses received @{
             void atcDataUpdateReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq,
                                        const BlackMisc::Geo::CCoordinateGeodetic &pos, const BlackMisc::PhysicalQuantities::CLength &range);
             void deleteAtcReceived(const QString &cid);
@@ -189,11 +191,8 @@ namespace BlackCore
             void pilotDataUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
             void pongReceived(const QString &sender, double elapsedTimeMs);
             void flightPlanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
-
             void textMessagesReceived(const BlackMisc::Network::CTextMessageList &messages);
             void aircraftConfigReceived(const QString &sender, const QJsonObject &config, qint64 currentOffsetTimeMs);
-
-            // Client responses
             void validAtcResponseReceived(const QString &callsign, bool isValidAtc);
             void capabilityResponseReceived(const BlackMisc::Aviation::CCallsign &sender, BlackMisc::Network::CClient::Capabilities capabilities);
             void com1FrequencyResponseReceived(const QString &sender, const QString &frequency);
@@ -204,6 +203,7 @@ namespace BlackCore
             void interimPilotDataUpdatedReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
             void rawFsdMessage(const BlackMisc::Network::CRawFsdMessage &rawFsdMessage);
             void planeInformationFsinnReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &modelString);
+            //! @}
 
             //! We received a reply to one of our ATIS queries.
             void atisReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atis);
@@ -226,6 +226,7 @@ namespace BlackCore
         private:
             friend BlackFsdTest::CTestFSDClient;
 
+            //! Send FSD message
             template <class T>
             void sendMessage(const T &message)
             {
@@ -254,6 +255,7 @@ namespace BlackCore
                 return noms;
             }
 
+            //! JSON packets
             struct JsonPackets
             {
                 static const QJsonObject &aircraftConfigRequest();
@@ -270,6 +272,8 @@ namespace BlackCore
             void parseMessage(const QString &line);
 
             void initializeMessageTypes();
+
+            //! Handle response tokens @{
             void handleAtcDataUpdate(const QStringList &tokens);
             void handleAuthChallenge(const QStringList &tokens);
             void handleAuthResponse(const QStringList &tokens);
@@ -287,6 +291,7 @@ namespace BlackCore
             void handleCustomPilotPacket(const QStringList &tokens);
             void handleFsdIdentification(const QStringList &tokens);
             void handleUnknownPacket(const QStringList &tokens);
+            //! @}
 
             void printSocketError(QAbstractSocket::SocketError socketError);
             void handleSocketError(QAbstractSocket::SocketError socketError);
@@ -330,6 +335,8 @@ namespace BlackCore
             void maybeHandleAtisReply(const BlackMisc::Aviation::CCallsign &sender, const BlackMisc::Aviation::CCallsign &receiver, const QString &message);
 
             void fsdMessageSettingsChanged();
+
+            //! Emit raw FSD message (mostly for debugging)
             void emitRawFsdMessage(const QString &fsdMessage, bool isSent);
 
             //! Additional offset time @{
@@ -340,8 +347,10 @@ namespace BlackCore
             //! Save the statistics
             bool saveNetworkStatistics(const QString &server);
 
+            //! Timers @{
             void startPositionTimers();
             void stopPositionTimers();
+            //! @}
 
             void updateAtisMap(const QString &callsign, AtisLineType type, const QString &line);
 
@@ -350,6 +359,9 @@ namespace BlackCore
 
             //! Max or 1st non-null value
             static const BlackMisc::PhysicalQuantities::CLength &maxOrNotNull(const BlackMisc::PhysicalQuantities::CLength &l1, const BlackMisc::PhysicalQuantities::CLength &l2);
+
+            //! String withou colons
+            static QString noColons(const QString &input);
 
             // Client data
             QString m_clientName;
@@ -411,7 +423,7 @@ namespace BlackCore
 
             BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TRawFsdMessageSetting> m_fsdMessageSetting { this, &CFSDClient::fsdMessageSettingsChanged };
             QFile m_rawFsdMessageLogFile;
-            bool m_rawFsdMessagesEnabled = false;
+            bool m_rawFsdMessagesEnabled   = false;
             bool m_filterPasswordFromLogin = false;
 
             QTimer m_scheduledConfigUpdate;
@@ -440,8 +452,8 @@ namespace BlackCore
             void handleIllegalFsdState(const QString &message);
 
             static const int MaxOffseTimes = 6; //!< Max offset times kept
-            static int constexpr c_processingIntervalMsec = 100;            //!< interval for the processing timer
-            static int constexpr c_updatePostionIntervalMsec = 5000;        //!< interval for the position update timer (send our position to network)
+            static int constexpr c_processingIntervalMsec           = 100;  //!< interval for the processing timer
+            static int constexpr c_updatePostionIntervalMsec        = 5000; //!< interval for the position update timer (send our position to network)
             static int constexpr c_updateInterimPostionIntervalMsec = 1000; //!< interval for iterim position updates (send our position as interim position)
         };
     } // ns
