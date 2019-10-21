@@ -24,6 +24,7 @@
 #include <QtGlobal>
 #include <QPointer>
 #include <QFileDialog>
+#include <QStringLiteral>
 
 using namespace BlackCore;
 using namespace BlackCore::Afv::Audio;
@@ -45,8 +46,8 @@ namespace BlackGui
             ui->setupUi(this);
             connect(ui->hs_VolumeIn,         &QSlider::valueChanged, this, &CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged);
             connect(ui->hs_VolumeOut,        &QSlider::valueChanged, this, &CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged);
-            connect(ui->tb_RefreshInDevice,  &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onReloadDevices, Qt::QueuedConnection);
-            connect(ui->tb_RefreshOutDevice, &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onReloadDevices, Qt::QueuedConnection);
+            connect(ui->tb_RefreshInDevice,  &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onReloadDevices,  Qt::QueuedConnection);
+            connect(ui->tb_RefreshOutDevice, &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onReloadDevices,  Qt::QueuedConnection);
             connect(ui->tb_ResetInVolume,    &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onResetVolumeIn,  Qt::QueuedConnection);
             connect(ui->tb_ResetOutVolume,   &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onResetVolumeOut, Qt::QueuedConnection);
 
@@ -63,6 +64,13 @@ namespace BlackGui
             ui->cb_SetupAudioLoopback->setChecked(false);
             ui->cb_DisableAudioEffects->setChecked(!as.isAudioEffectsEnabled());
 
+            ui->led_AudioConnected->setToolTips("Voice on and authenticated", "Voice off");
+            ui->led_AudioConnected->setShape(CLedWidget::Rounded);
+            ui->led_Rx1->setToolTips("COM1 receiving", "COM1 idle");
+            ui->led_Rx1->setShape(CLedWidget::Rounded);
+            ui->led_Rx2->setToolTips("COM2 receiving", "COM2 idle");
+            ui->led_Rx2->setShape(CLedWidget::Rounded);
+
             // deferred init, because in a distributed swift system
             // it takes a moment until the settings are sychronized
             // this is leading to undesired "save settings" messages and played sounds
@@ -74,7 +82,7 @@ namespace BlackGui
             });
 
             // all tx/rec checkboxes
-            CGuiUtility::checkBoxesReadOnly(ui->fr_TxRec, true);
+            CGuiUtility::checkBoxesReadOnly(ui->fr_TxRx, true);
         }
 
         void CAudioDeviceVolumeSetupComponent::init()
@@ -122,7 +130,7 @@ namespace BlackGui
                 c = connect(sGui->getCContextAudioBase()->afvClient(), &CAfvClient::inputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onInputVU, Qt::QueuedConnection);
                 Q_ASSERT(c);
 
-                c = connect(sGui->getCContextAudioBase()->afvClient(), &CAfvClient::receivingCallsignsChanged, this, &CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged, Qt::QueuedConnection);
+                c = connect(sGui->getCContextAudioBase()->afvClient(), &CAfvClient::receivedCallsignsChanged, this, &CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged, Qt::QueuedConnection);
                 Q_ASSERT(c);
 
                 c = connect(sGui->getCContextAudioBase()->afvClient(), &CAfvClient::updatedFromOwnAircraftCockpit, this, &CAudioDeviceVolumeSetupComponent::onUpdatedClientWithCockpitData, Qt::QueuedConnection);
@@ -197,14 +205,22 @@ namespace BlackGui
 
         void CAudioDeviceVolumeSetupComponent::setTransmitReceiveInUiFromVoiceClient()
         {
-            if (!this->hasAudio()) { return; }
+            if (!this->hasAudio())
+            {
+                ui->led_AudioConnected->setOn(false);
+                return;
+            }
+
+            const bool on = sGui->getCContextAudioBase()->isAudioConnected();
+            ui->led_AudioConnected->setOn(on);
+
             const bool com1Enabled = sGui->getCContextAudioBase()->isEnabledComUnit(CComSystem::Com1);
             const bool com2Enabled = sGui->getCContextAudioBase()->isEnabledComUnit(CComSystem::Com2);
 
             const bool com1Tx = com1Enabled && sGui->getCContextAudioBase()->isTransmittingComUnit(CComSystem::Com1);
             const bool com2Tx = com2Enabled && sGui->getCContextAudioBase()->isTransmittingComUnit(CComSystem::Com2);
 
-            // we do not have receiving
+            // we do not have receiving, so we use enable
             const bool com1Rx = com1Enabled;
             const bool com2Rx = com2Enabled;
 
@@ -279,9 +295,15 @@ namespace BlackGui
             ui->hs_VolumeOut->setValue((ui->hs_VolumeOut->maximum() - ui->hs_VolumeOut->minimum()) / 2);
         }
 
-        void CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged(const TransceiverReceivingCallsignsChangedArgs &args)
+        void CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged(const CCallsignSet &com1Callsigns, const CCallsignSet &com2Callsigns)
         {
-            this->setInfo(args.receivingCallsigns.join(", "));
+            const QString info = (com1Callsigns.isEmpty() ? QString() : QStringLiteral("COM1: ") % com1Callsigns.getCallsignsAsString()) %
+                                 (!com1Callsigns.isEmpty() && !com2Callsigns.isEmpty() ? QStringLiteral(" | ") : QString()) %
+                                 (com2Callsigns.isEmpty() ? QString() : QStringLiteral("COM2: ") % com2Callsigns.getCallsignsAsString());
+
+            ui->led_Rx1->setOn(!com1Callsigns.isEmpty());
+            ui->led_Rx2->setOn(!com2Callsigns.isEmpty());
+            this->setInfo(info);
         }
 
         void CAudioDeviceVolumeSetupComponent::onUpdatedClientWithCockpitData()

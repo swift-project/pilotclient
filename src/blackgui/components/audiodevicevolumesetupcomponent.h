@@ -100,8 +100,9 @@ namespace BlackGui
             void onReloadDevices();
             void onResetVolumeIn();
             void onResetVolumeOut();
+
             // TODO: Move TransceiverReceivingCallsignsChangedArgs to Blackmisc
-            void onReceivingCallsignsChanged(const BlackCore::Afv::Audio::TransceiverReceivingCallsignsChangedArgs &args);
+            void onReceivingCallsignsChanged(const BlackMisc::Aviation::CCallsignSet &com1Callsigns, const BlackMisc::Aviation::CCallsignSet &com2Callsigns);
             void onUpdatedClientWithCockpitData();
 
             BlackMisc::Audio::CAudioDeviceInfo getSelectedInputDevice() const;

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>200</width>
+    <width>243</width>
     <height>267</height>
    </rect>
   </property>
@@ -123,8 +123,45 @@
     </widget>
    </item>
    <item row="1" column="0" colspan="2">
-    <widget class="QFrame" name="fr_TxRec">
+    <widget class="QFrame" name="fr_TxRx">
      <layout class="QHBoxLayout" name="hl_TxRec">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="BlackGui::CLedWidget" name="led_AudioConnected" native="true"/>
+      </item>
+      <item>
+       <widget class="BlackGui::CLedWidget" name="led_Rx1" native="true"/>
+      </item>
+      <item>
+       <widget class="BlackGui::CLedWidget" name="led_Rx2" native="true"/>
+      </item>
+      <item>
+       <spacer name="hs_AudioEffects">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
       <item>
        <widget class="QCheckBox" name="cb_1Tx">
         <property name="text">
@@ -217,13 +254,6 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="lbl_SetupAudioInputDevice">
-     <property name="text">
-      <string>In</string>
-     </property>
-    </widget>
-   </item>
    <item row="11" column="1">
     <widget class="QSlider" name="hs_VolumeOut">
      <property name="value">
@@ -254,6 +284,13 @@
      </property>
     </widget>
    </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="lbl_SetupAudioInputDevice">
+     <property name="text">
+      <string>In</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -261,6 +298,12 @@
    <class>BlackGui::CLevelMeter</class>
    <extends>QFrame</extends>
    <header>blackgui/levelmeter.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CLedWidget</class>
+   <extends>QWidget</extends>
+   <header>blackgui/led.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
