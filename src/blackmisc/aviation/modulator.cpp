@@ -34,13 +34,13 @@ namespace BlackMisc
         }
 
         template <class AVIO>
-        BlackMisc::PhysicalQuantities::CFrequency CModulator<AVIO>::getFrequencyActive() const
+        PhysicalQuantities::CFrequency CModulator<AVIO>::getFrequencyActive() const
         {
             return m_frequencyActive;
         }
 
         template <class AVIO>
-        BlackMisc::PhysicalQuantities::CFrequency CModulator<AVIO>::getFrequencyStandby() const
+        PhysicalQuantities::CFrequency CModulator<AVIO>::getFrequencyStandby() const
         {
             return m_frequencyStandby;
         }

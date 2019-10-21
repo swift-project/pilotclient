@@ -260,7 +260,7 @@ namespace BlackMisc
         {
             QString r = route;
             r.replace(':', ' ');
-            m_route =  asciiOnlyString(r).left(MaxRouteLength).toUpper();
+            m_route = asciiOnlyString(r).left(MaxRouteLength).toUpper();
         }
 
         void CFlightPlan::setRemarks(const QString &remarks)
