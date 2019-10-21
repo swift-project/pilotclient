@@ -23,10 +23,11 @@
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/transponder.h"
+#include "blackmisc/audio/notificationsounds.h"
 #include "blackcore/db/databaseutils.h"
-#include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
+#include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/simplecommandparser.h"
 #include "blackmisc/compare.h"
@@ -245,6 +246,56 @@ namespace BlackCore
             return true;
         }
 
+        void CContextOwnAircraft::evaluateComStations(bool atcChanged)
+        {
+            if (!sApp || sApp->isShuttingDown() || !sApp->getCContextAudioBase() || !sApp->getIContextNetwork()) { return; }
+
+            CComSystem com1;
+            CComSystem com2;
+            CComSystem lastCom1;
+            CComSystem lastCom2;
+            {
+                QReadLocker l(&m_lockAircraft);
+                com1 = m_ownAircraft.getCom1System();
+                com2 = m_ownAircraft.getCom2System();
+                lastCom1 = m_lastEvaluatedCom1;
+                lastCom2 = m_lastEvaluatedCom2;
+            }
+
+            const bool changedCom1Freq = (lastCom1.getFrequencyActive() != com1.getFrequencyActive());
+            const bool changedCom2Freq = (lastCom2.getFrequencyActive() != com2.getFrequencyActive());
+
+            if (!atcChanged && !changedCom1Freq && !changedCom2Freq) { return; }
+
+            const CAtcStationList atcs = sApp->getIContextNetwork()->getAtcStationsOnline(true).findInRange();
+            const bool atcCom1 = atcs.hasComUnitTunedInChannelSpacing(com1);
+            const bool atcCom2 = atcs.hasComUnitTunedInChannelSpacing(com2);
+
+            const bool tunedIn1 = atcCom1 && !lastCom1.isReceiveEnabled();
+            const bool tunedIn2 = atcCom2 && !lastCom2.isReceiveEnabled();
+            const bool tunedOut1 = !atcCom1 && lastCom1.isReceiveEnabled();
+            const bool tunedOut2 = !atcCom2 && lastCom2.isReceiveEnabled();
+
+            if (sApp && sApp->getCContextAudioBase() && sApp->getIContextNetwork()->isConnected())
+            {
+                if (tunedIn1 || tunedIn2)
+                {
+                    sApp->getCContextAudioBase()->playNotification(CNotificationSounds::NotificationAtcTunedIn, true);
+                }
+                else if (tunedOut1 || tunedOut2)
+                {
+                    sApp->getCContextAudioBase()->playNotification(CNotificationSounds::NotificationAtcTunedOut, true);
+                }
+            }
+
+            // remember if I was tuned in, abusing the flag
+            lastCom1.setReceiveEnabled(tunedIn1);
+            lastCom2.setReceiveEnabled(tunedIn2);
+            QWriteLocker l(&m_lockAircraft);
+            m_lastEvaluatedCom1 = lastCom1;
+            m_lastEvaluatedCom2 = lastCom2;
+        }
+
         bool CContextOwnAircraft::updateOwnSituation(const CAircraftSituation &situation)
         {
             QWriteLocker l(&m_lockAircraft);
@@ -309,6 +360,7 @@ namespace BlackCore
             }
             if (changed)
             {
+                this->evaluateComStations(false);
                 emit this->changedAircraftCockpit(m_ownAircraft, originator);
             }
             return changed;
@@ -349,7 +401,10 @@ namespace BlackCore
             {
                 com2.setFrequencyActive(frequency);
             }
-            return this->updateCockpit(com1, com2, xpdr, originator);
+
+            const bool changed = this->updateCockpit(com1, com2, xpdr, originator);
+            if (changed) { this->evaluateComStations(false); }
+            return changed;
         }
 
         bool CContextOwnAircraft::updateOwnAircraftPilot(const CUser &pilot)
@@ -424,10 +479,9 @@ namespace BlackCore
 
         void CContextOwnAircraft::xCtxChangedAtcStationOnlineConnectionStatus(const CAtcStation &atcStation, bool connected)
         {
-            // any of our active frequencies?
-            // keep this to play notification sounds maybe
             Q_UNUSED(connected)
             Q_UNUSED(atcStation)
+            this->evaluateComStations(true);
         }
 
         void CContextOwnAircraft::xCtxChangedSimulatorModel(const CAircraftModel &model, const CIdentifier &identifier)

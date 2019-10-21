@@ -47,6 +47,14 @@ namespace BlackMisc
             });
         }
 
+        bool CAtcStationList::hasComUnitTunedInChannelSpacing(const CComSystem &comUnit) const
+        {
+            return this->containsBy([&](const CAtcStation & atcStation)
+            {
+                return atcStation.isComUnitTunedInChannelSpacing(comUnit);
+            });
+        }
+
         CAtcStationList CAtcStationList::findIfFrequencyIsWithinSpacing(const CFrequency &frequency, CComSystem::ChannelSpacing spacing)
         {
             if (frequency.isNull()) { return CAtcStationList(); }
@@ -108,6 +116,14 @@ namespace BlackMisc
         int CAtcStationList::removeIfOutsideRange()
         {
             return this->removeIf(&CAtcStation::isInRange, false);
+        }
+
+        CAtcStationList CAtcStationList::findInRange() const
+        {
+            if (this->isEmpty()) { return {}; }
+            CAtcStationList copy(*this);
+            copy.removeIfOutsideRange();
+            return copy;
         }
 
         int CAtcStationList::synchronizeWithBookedStation(CAtcStation &bookedAtcStation)
