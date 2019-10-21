@@ -169,9 +169,14 @@ namespace BlackCore
                 }
             }
 
-            QString CSoundcardSampleProvider::getReceivingCallsigns(quint16 transceiverID) const
+            QString CSoundcardSampleProvider::getReceivingCallsignsString(quint16 transceiverID) const
             {
                 return m_receiverInputs.at(transceiverID)->getReceivingCallsignsString();
+            }
+
+            BlackMisc::Aviation::CCallsignSet CSoundcardSampleProvider::getReceivingCallsigns(quint16 transceiverID) const
+            {
+                return m_receiverInputs.at(transceiverID)->getReceivingCallsigns();
             }
 
         } // ns

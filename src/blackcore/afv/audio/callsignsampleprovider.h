@@ -62,8 +62,10 @@ namespace BlackCore
                 //! Clean
                 void clear();
 
+                //! Add samples @{
                 void addOpusSamples(const IAudioDto &audioDto, float distanceRatio);
                 void addSilentSamples(const IAudioDto &audioDto);
+                //! @}
 
                 //! Callsign in use
                 bool inUse() const;

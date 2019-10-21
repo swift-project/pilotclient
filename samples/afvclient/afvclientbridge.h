@@ -43,8 +43,8 @@ public:
     }
 
     //! Callsigns currently received @{
-    QString getReceivingCallsignsCom1() { return m_afvClient->getReceivingCallsignsCom1(); }
-    QString getReceivingCallsignsCom2() { return m_afvClient->getReceivingCallsignsCom2(); }
+    QString getReceivingCallsignsCom1() { return m_afvClient->getReceivingCallsignsStringCom1(); }
+    QString getReceivingCallsignsCom2() { return m_afvClient->getReceivingCallsignsStringCom2(); }
     //! @}
 
     //! \copydoc BlackCore::Afv::Clients::CAfvClient::connectTo

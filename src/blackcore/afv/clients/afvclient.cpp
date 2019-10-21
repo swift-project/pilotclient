@@ -269,7 +269,7 @@ namespace BlackCore
                         m_soundcardSampleProvider->deleteLater();
                     }
                     m_soundcardSampleProvider = new CSoundcardSampleProvider(SampleRate, allTransceiverIds(), this);
-                    connect(m_soundcardSampleProvider, &CSoundcardSampleProvider::receivingCallsignsChanged, this, &CAfvClient::receivingCallsignsChanged);
+                    connect(m_soundcardSampleProvider, &CSoundcardSampleProvider::receivingCallsignsChanged, this, &CAfvClient::onReceivingCallsignsChanged);
 
                     if (m_outputSampleProvider) { m_outputSampleProvider->deleteLater(); }
                     m_outputSampleProvider = new CVolumeSampleProvider(m_soundcardSampleProvider, this);
@@ -747,27 +747,41 @@ namespace BlackCore
                 emit outputVolumePeakVU(args.PeakVU);
             }
 
-            QString CAfvClient::getReceivingCallsignsCom1() const
+            QString CAfvClient::getReceivingCallsignsStringCom1() const
             {
                 QMutexLocker lock(&m_mutex);
                 if (!m_soundcardSampleProvider) return {};
-                return m_soundcardSampleProvider->getReceivingCallsigns(0);
+                return m_soundcardSampleProvider->getReceivingCallsignsString(comUnitToTransceiverId(CComSystem::Com1));
             }
 
-            QString CAfvClient::getReceivingCallsignsCom2() const
+            QString CAfvClient::getReceivingCallsignsStringCom2() const
             {
                 QMutexLocker lock(&m_mutex);
                 if (!m_soundcardSampleProvider) return {};
-                return m_soundcardSampleProvider->getReceivingCallsigns(1);
+                return m_soundcardSampleProvider->getReceivingCallsignsString(comUnitToTransceiverId(CComSystem::Com2));
             }
 
-            QStringList CAfvClient::getReceivingCallsignsCom1Com2() const
+            CCallsignSet CAfvClient::getReceivingCallsignsCom1() const
+            {
+                QMutexLocker lock(&m_mutex);
+                if (!m_soundcardSampleProvider) return {};
+                return m_soundcardSampleProvider->getReceivingCallsigns(comUnitToTransceiverId(CComSystem::Com1));
+            }
+
+            CCallsignSet CAfvClient::getReceivingCallsignsCom2() const
+            {
+                QMutexLocker lock(&m_mutex);
+                if (!m_soundcardSampleProvider) return {};
+                return m_soundcardSampleProvider->getReceivingCallsigns(comUnitToTransceiverId(CComSystem::Com2));
+            }
+
+            QStringList CAfvClient::getReceivingCallsignsStringCom1Com2() const
             {
                 QStringList coms;
                 QMutexLocker lock(&m_mutex);
                 if (!m_soundcardSampleProvider) { return {{ QString(), QString()}}; }
-                coms << m_soundcardSampleProvider->getReceivingCallsigns(0);
-                coms << m_soundcardSampleProvider->getReceivingCallsigns(1);
+                coms << m_soundcardSampleProvider->getReceivingCallsignsString(comUnitToTransceiverId(CComSystem::Com1));
+                coms << m_soundcardSampleProvider->getReceivingCallsignsString(comUnitToTransceiverId(CComSystem::Com2));
                 return coms;
             }
 
@@ -958,6 +972,29 @@ namespace BlackCore
                 this->updateFromOwnAircraft(aircraft);
             }
 
+            void CAfvClient::onReceivingCallsignsChanged(const TransceiverReceivingCallsignsChangedArgs &args)
+            {
+                const CComSystem::ComUnit unit = transceiverIdToComUnit(args.transceiverID);
+                CCallsignSet callsignsCom1;
+                CCallsignSet callsignsCom2;
+                switch (unit)
+                {
+                case CComSystem::Com1:
+                default:
+                    callsignsCom1 = CCallsignSet(args.receivingCallsigns);
+                    callsignsCom2 = this->getReceivingCallsignsCom2();
+                    break;
+
+                case CComSystem::Com2:
+                    callsignsCom2 = CCallsignSet(args.receivingCallsigns);
+                    callsignsCom1 = this->getReceivingCallsignsCom1();
+                    break;
+                }
+
+                emit this->receivedCallsignsChanged(callsignsCom1, callsignsCom2);
+                emit this->receivingCallsignsChanged(args);
+            }
+
             QVector<StationDto> CAfvClient::getAliasedStations() const
             {
                 QMutexLocker lock(&m_mutex);
@@ -1015,8 +1052,8 @@ namespace BlackCore
                 QString suffixA;
                 QString prefixB;
                 QString suffixB;
-                getPrefixSuffix(callsign, prefixA, suffixA);
-                getPrefixSuffix(compareTo, prefixB, suffixB);
+                this->getPrefixSuffix(callsign, prefixA, suffixA);
+                this->getPrefixSuffix(compareTo, prefixB, suffixB);
                 return (prefixA == prefixB) && (suffixA == suffixB);
             }
 

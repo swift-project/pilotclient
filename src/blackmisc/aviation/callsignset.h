@@ -35,7 +35,7 @@ namespace BlackMisc
             CCallsignSet();
 
             //! By string list
-            CCallsignSet(const QStringList &callsigns);
+            CCallsignSet(const QStringList &callsigns, CCallsign::TypeHint typeHint = CCallsign::NoHint);
 
             //! Construct from single callsign
             CCallsignSet(const CCallsign &callsign);

@@ -21,12 +21,12 @@ namespace BlackMisc
     {
         CCallsignSet::CCallsignSet() { }
 
-        CCallsignSet::CCallsignSet(const QStringList &callsigns)
+        CCallsignSet::CCallsignSet(const QStringList &callsigns, CCallsign::TypeHint typeHint)
         {
             for (const QString &c : callsigns)
             {
                 if (c.isEmpty()) { continue; }
-                const CCallsign cs(c);
+                const CCallsign cs = CCallsign(c, typeHint);
                 this->push_back(cs);
             }
         }

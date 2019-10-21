@@ -53,8 +53,8 @@ namespace BlackCore
                 Q_PROPERTY(double inputVolumePeakVU  READ getInputVolumePeakVU  NOTIFY inputVolumePeakVU)
                 Q_PROPERTY(double outputVolumePeakVU READ getOutputVolumePeakVU NOTIFY outputVolumePeakVU)
                 Q_PROPERTY(BlackCore::Afv::Clients::CAfvClient::ConnectionStatus connectionStatus READ getConnectionStatus NOTIFY connectionStatusChanged)
-                Q_PROPERTY(QString receivingCallsignsCom1 READ getReceivingCallsignsCom1 NOTIFY receivingCallsignsChanged)
-                Q_PROPERTY(QString receivingCallsignsCom2 READ getReceivingCallsignsCom2 NOTIFY receivingCallsignsChanged)
+                Q_PROPERTY(QString receivingCallsignsCom1 READ getReceivingCallsignsStringCom1 NOTIFY receivingCallsignsChanged)
+                Q_PROPERTY(QString receivingCallsignsCom2 READ getReceivingCallsignsStringCom2 NOTIFY receivingCallsignsChanged)
                 //! @}
 
             public:
@@ -232,9 +232,11 @@ namespace BlackCore
                 //! Callsigns currently received
                 //! \threadsafe
                 //! @{
-                QString getReceivingCallsignsCom1() const;
-                QString getReceivingCallsignsCom2() const;
-                QStringList getReceivingCallsignsCom1Com2() const;
+                QString getReceivingCallsignsStringCom1() const;
+                QString getReceivingCallsignsStringCom2() const;
+                BlackMisc::Aviation::CCallsignSet getReceivingCallsignsCom1() const;
+                BlackMisc::Aviation::CCallsignSet getReceivingCallsignsCom2() const;
+                QStringList getReceivingCallsignsStringCom1Com2() const;
                 //! @}
 
                 //! Update the voice server URL
@@ -247,6 +249,10 @@ namespace BlackCore
                 //! Receiving callsigns have been changed
                 //! \remark callsigns I do receive
                 void receivingCallsignsChanged(const BlackCore::Afv::Audio::TransceiverReceivingCallsignsChangedArgs &args);
+
+                //! Received callsigns have been changed
+                //! \remark swift style per com units
+                void receivedCallsignsChanged(const BlackMisc::Aviation::CCallsignSet &com1Callsigns, const BlackMisc::Aviation::CCallsignSet &com2Callsigns);
 
                 //! Connection status has been changed
                 void connectionStatusChanged(ConnectionStatus status);
@@ -285,6 +291,7 @@ namespace BlackCore
 
                 void updateTransceivers(bool updateFrequencies = true);
                 void onUpdateTransceiversFromContext(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+                void onReceivingCallsignsChanged(const BlackCore::Afv::Audio::TransceiverReceivingCallsignsChangedArgs &args);
 
                 //! All aliased stations
                 //! \threadsafe
@@ -333,7 +340,7 @@ namespace BlackCore
                 std::atomic_bool m_isStarted  { false };
                 std::atomic_bool m_loopbackOn { false };
                 std::atomic_bool m_winCoInitialized  { false }; //!< Windows only CoInitializeEx
-                std::atomic_bool m_integratedComUnit {false};   //!< is COM unit sychronized, integrated
+                std::atomic_bool m_integratedComUnit { false };   //!< is COM unit sychronized, integrated
 
                 QDateTime m_startDateTimeUtc;
 

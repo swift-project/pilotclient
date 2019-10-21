@@ -32,8 +32,8 @@ namespace BlackCore
             //! Arguments
             struct TransceiverReceivingCallsignsChangedArgs
             {
-                quint16 transceiverID;
-                QStringList receivingCallsigns;
+                quint16 transceiverID;          //!< transceiver id
+                QStringList receivingCallsigns; //!< callsigns
             };
 
             //! A sample provider

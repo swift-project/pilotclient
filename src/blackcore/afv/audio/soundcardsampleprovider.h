@@ -14,6 +14,7 @@
 #include "blacksound/sampleprovider/sampleprovider.h"
 #include "blacksound/sampleprovider/mixingsampleprovider.h"
 #include "blackcore/afv/audio/receiversampleprovider.h"
+#include "blackmisc/aviation/callsignset.h"
 
 #include <QAudioFormat>
 #include <QObject>
@@ -52,7 +53,10 @@ namespace BlackCore
                 void updateRadioTransceivers(const QVector<TransceiverDto> &radioTransceivers);
 
                 //! Receiving callsign as single string
-                QString getReceivingCallsigns(quint16 transceiverID) const;
+                QString getReceivingCallsignsString(quint16 transceiverID) const;
+
+                //! Receiving callsign as single string
+                BlackMisc::Aviation::CCallsignSet getReceivingCallsigns(quint16 transceiverID) const;
 
             signals:
                 //! Changed callsigns

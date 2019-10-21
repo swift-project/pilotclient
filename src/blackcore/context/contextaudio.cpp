@@ -189,12 +189,19 @@ namespace BlackCore
 
         bool CContextAudioBase::isEnabledComUnit(CComSystem::ComUnit comUnit) const
         {
+            if (!m_voiceClient) { return false; }
             return m_voiceClient->isEnabledComUnit(comUnit);
         }
 
         bool CContextAudioBase::isTransmittingComUnit(CComSystem::ComUnit comUnit) const
         {
+            if (!m_voiceClient) { return false; }
             return m_voiceClient->isTransmittingdComUnit(comUnit);
+        }
+
+        bool CContextAudioBase::isAudioConnected() const
+        {
+            return m_voiceClient && m_voiceClient->isConnected();
         }
 
         QString CContextAudioBase::audioRunsWhereInfo() const

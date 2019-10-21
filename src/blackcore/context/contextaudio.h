@@ -177,6 +177,9 @@ namespace BlackCore
             //! Is COM unit transmitting?
             bool isTransmittingComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
 
+            //! Is audio started
+            bool isAudioConnected() const;
+
             //! \todo WORKAROUND to hide the "local signals"
             Afv::Clients::CAfvClient *afvClient() const { return m_voiceClient; }
 
