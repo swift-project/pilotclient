@@ -222,16 +222,17 @@ namespace BlackCore
         void CFSDClient::disconnectFromServer()
         {
             this->stopPositionTimers();
-            if (!m_socket.isOpen()) { return; }
+            this->updateConnectionStatus(CConnectionStatus::Disconnecting);
 
-            updateConnectionStatus(CConnectionStatus::Disconnecting);
-
-            if (m_loginMode.isPilot()) { sendDeletePilot(); }
-            else if (m_loginMode.isObserver()) { sendDeleteAtc(); }
-
+            // allow also to close if broken
+            if (!m_socket.isOpen())
+            {
+                if (m_loginMode.isPilot()) { sendDeletePilot(); }
+                else if (m_loginMode.isObserver()) { sendDeleteAtc(); }
+            }
             m_socket.close();
 
-            updateConnectionStatus(CConnectionStatus::Disconnected);
+            this->updateConnectionStatus(CConnectionStatus::Disconnected);
             this->clearState();
         }
 
