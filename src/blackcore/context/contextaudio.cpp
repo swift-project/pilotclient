@@ -433,6 +433,13 @@ namespace BlackCore
             // we only change network connection of AFC client here
             if (to.isConnected() && this->getIContextNetwork())
             {
+                const CEcosystem ecoSystem = this->getIContextNetwork()->getConnectedServer().getEcosystem();
+                if (ecoSystem != CEcosystem::vatsim())
+                {
+                    CLogMessage(this).info(u"Will not use AFV as ecosystem is '%1'") << ecoSystem.toQString(true);
+                    return;
+                }
+
                 const CVoiceSetup vs = m_voiceSettings.getThreadLocal();
                 m_voiceClient->updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
 
