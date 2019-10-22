@@ -24,6 +24,8 @@ namespace BlackCore
         //! FSD Message: ATC data update
         class BLACKCORE_EXPORT AtcDataUpdate : public MessageBase
         {
+            friend bool operator==(const AtcDataUpdate &, const AtcDataUpdate &);
+
         public:
             //! Constructor
             AtcDataUpdate(const QString &sender, int frequencykHz, BlackMisc::Network::CFacilityType facility, int visibleRange, AtcRating rating,
@@ -35,18 +37,21 @@ namespace BlackCore
             //! Construct from tokens
             static AtcDataUpdate fromTokens(const QStringList &tokens);
 
-            //! PDU identifier
-            static QString pdu() { return "%"; }
-
+            //! Properties @{
             int m_frequencykHz = 0.0;
             BlackMisc::Network::CFacilityType m_facility;
             int m_visibleRange = 0.0;
             AtcRating m_rating = AtcRating::Unknown;
-            double m_latitude = 0.0;
+            double m_latitude  = 0.0;
             double m_longitude = 0.0;
             int m_elevation = 0.0;
+            //! @}
+
+            //! PDU identifier
+            static QString pdu() { return "%"; }
 
         private:
+            //! Ctor
             AtcDataUpdate();
         };
 

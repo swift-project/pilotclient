@@ -28,8 +28,8 @@
  */
 
 
-#ifndef __SIMPLE_GATE_H__
-#define __SIMPLE_GATE_H__
+#ifndef chunkware__SIMPLE_GATE_H
+#define chunkware__SIMPLE_GATE_H
 
 #include "SimpleHeader.h"       // common header
 #include "SimpleEnvelope.h"     // for base class
@@ -53,11 +53,13 @@ namespace chunkware_simple
         //! get threshold
         virtual double getThresh(void) const { return threshdB_; }
 
-        // init runtime
-        virtual void initRuntime(void);              // call before runtime (in resume())
+        //! Init runtime
+        //! \remark call before runtime (in resume())
+        virtual void initRuntime(void);
 
         //! Process audio
-        void process(double &in1, double &in2);      // gate runtime process
+        //! \remark gate runtime process
+        void process(double &in1, double &in2);
 
         //! Process audio stereo-linked
         void process(double &in1, double &in2, double keyLinked);    // with stereo-linked key in
@@ -71,7 +73,7 @@ namespace chunkware_simple
         double env_;        //!< over-threshold envelope (linear)
     };
 
-    //! simple gate with RMS detection
+    //! Simple gate with RMS detection
     class SimpleGateRms : public SimpleGate
     {
     public:

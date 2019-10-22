@@ -25,6 +25,7 @@ namespace BlackCore
             //! Constructor
             ClientResponse(const QString &sender, const QString &receiver, ClientQueryType queryType, const QStringList &responseData);
 
+            //! Unknow query?
             bool isUnknownQuery() const { return m_queryType == ClientQueryType::Unknown; }
 
             //! Message converted to tokens
@@ -36,8 +37,10 @@ namespace BlackCore
             //! PDU identifier
             static QString pdu() { return "$CR"; }
 
+            //! Properties @{
             ClientQueryType m_queryType;
-            QStringList m_responseData;
+            QStringList     m_responseData;
+            //! @}
 
         private:
             ClientResponse();

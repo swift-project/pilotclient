@@ -34,7 +34,7 @@ namespace BlackCore
             //! PDU identifier
             static QString pdu() { return QStringLiteral("$ZR"); }
 
-            QString m_response;
+            QString m_response; //!< response
 
         private:
             AuthResponse();

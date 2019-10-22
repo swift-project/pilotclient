@@ -171,12 +171,13 @@ namespace BlackCore
             AircraftConfig   = (1 << 8)
         };
 
+        //! Operators @{
         inline Capabilities operator | (Capabilities lhs, Capabilities rhs)
         {
             return static_cast<Capabilities>(static_cast<int>(lhs) | static_cast<int>(rhs));
         }
 
-        inline Capabilities& operator |= (Capabilities& lhs, Capabilities rhs)
+        inline Capabilities &operator |= (Capabilities &lhs, Capabilities rhs)
         {
             lhs = lhs | rhs;
             return lhs;
@@ -186,7 +187,9 @@ namespace BlackCore
         {
             return static_cast<int>(lhs) & static_cast<int>(rhs);
         }
+        //! @}
 
+        //! ATIS line type
         enum class AtisLineType
         {
             Unknown,

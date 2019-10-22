@@ -52,7 +52,7 @@ namespace BlackCore
             {
                 BlackMisc::CLogMessage(static_cast<AtcDataUpdate *>(nullptr)).warning(u"Wrong number of arguments.");
                 return {};
-            };
+            }
 
             AtcDataUpdate packet(tokens[0], tokens[1].toInt() + 100000, fromQString<CFacilityType>(tokens[2]), tokens[3].toInt(), fromQString<AtcRating>(tokens[4]),
                                tokens[5].toDouble(), tokens[6].toDouble(), tokens[7].toInt());

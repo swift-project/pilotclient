@@ -55,7 +55,7 @@ namespace chunkware_simple
         //! @{ get parameters
         virtual double getThresh(void) const { return threshdB_; }
         virtual double getRatio(void)  const { return ratio_; }
-        double getMakeUpGain(void) const { return makeUpGain_; }
+        double getMakeUpGain(void) const     { return makeUpGain_; }
         //! @}
 
         //! Init runtime
@@ -79,9 +79,7 @@ namespace chunkware_simple
 
     };  // end SimpleComp class
 
-    //-------------------------------------------------------------
-    // simple compressor with RMS detection
-    //-------------------------------------------------------------
+    //! Simple compressor with RMS detection
     class SimpleCompRms : public SimpleComp
     {
     public:

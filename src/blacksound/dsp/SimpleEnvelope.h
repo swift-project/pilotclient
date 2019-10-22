@@ -42,13 +42,16 @@ namespace chunkware_simple
     // USE:
     // 1. init envelope state to DC_OFFSET before processing
     // 2. add to input before envelope runtime function
-    static const double DC_OFFSET = 1.0E-25;
+    static constexpr double DC_OFFSET = 1.0E-25;
 
-    //! envelope detector
+    //! Envelope detector
     class EnvelopeDetector
     {
     public:
+        //! Ctor
         EnvelopeDetector(double ms = 1.0, double sampleRate = 44100.0);
+
+        //! Dtor
         virtual ~EnvelopeDetector() {}
 
         //! set time constant
@@ -70,34 +73,40 @@ namespace chunkware_simple
         }
 
     protected:
+        //! Set coefficients
+        virtual void setCoef(void); //!< coef calculation
 
         double sampleRate_;         //!< sample rate
         double ms_;                 //!< time constant in ms
         double coef_;               //!< runtime coefficient
-        virtual void setCoef(void); //!< coef calculation
-
     };  // end SimpleComp class
 
     //! attack/release envelope
     class AttRelEnvelope
     {
     public:
+        //! Ctor
         AttRelEnvelope(double att_ms = 10.0, double rel_ms = 100.0, double sampleRate = 44100.0);
+
+        //! Dtor
         virtual ~AttRelEnvelope() {}
 
-        // attack time constant
+        //! Attack time constant @{
         virtual void   setAttack(double ms);
         virtual double getAttack(void) const { return att_.getTc(); }
+        //! @}
 
-        // release time constant
+        //! Release time constant @{
         virtual void   setRelease(double ms);
         virtual double getRelease(void) const { return rel_.getTc(); }
+        //! @}
 
-        // sample rate dependencies
+        //! Sample rate dependencies @{
         virtual void   setSampleRate(double sampleRate);
         virtual double getSampleRate(void) const { return att_.getSampleRate(); }
+        //! @}
 
-        // runtime function
+        //! Runtime function
         INLINE void run(double in, double &state)
         {
 
@@ -114,7 +123,6 @@ namespace chunkware_simple
         }
 
     private:
-
         EnvelopeDetector att_;
         EnvelopeDetector rel_;
 

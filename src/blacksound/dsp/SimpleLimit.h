@@ -28,8 +28,8 @@
  */
 
 
-#ifndef __SIMPLE_LIMIT_H__
-#define __SIMPLE_LIMIT_H__
+#ifndef chunkware_SIMPLE_LIMIT_H
+#define chunkware_SIMPLE_LIMIT_H
 
 #include "SimpleHeader.h"       // common header
 #include "SimpleEnvelope.h"     // for base class of FastEnvelope
@@ -76,18 +76,21 @@ namespace chunkware_simple
 
     protected:
 
-        //! class for faster attack/release
+        //! Class for faster attack/release
         class FastEnvelope : public EnvelopeDetector
         {
         public:
+            //! Ctor
             FastEnvelope(double ms = 1.0, double sampleRate = 44100.0)
                 : EnvelopeDetector(ms, sampleRate)
             {}
-            virtual ~FastEnvelope() {}
+
+            //! Dtor
+            virtual ~FastEnvelope() override {}
 
         protected:
-            // override setCoef() - coefficient calculation
-            virtual void setCoef(void);
+            //! Override setCoef() - coefficient calculation
+            virtual void setCoef(void) override;
         };
 
     private:
@@ -123,4 +126,4 @@ namespace chunkware_simple
 // include inlined process function
 #include "SimpleLimitProcess.inl"
 
-#endif  // end __SIMPLE_LIMIT_H__
+#endif  // guard

@@ -56,7 +56,6 @@ namespace BlackCore
 
             //! Constructor
             MessageBase(const QString &sender, const QString &receiver);
-            virtual ~MessageBase() {}
 
             //! Set callsign
             void setCallsign(const QString &sender) { m_sender = sender; }

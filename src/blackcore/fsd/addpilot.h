@@ -25,7 +25,7 @@ namespace BlackCore
         class BLACKCORE_EXPORT AddPilot : public MessageBase
         {
         public:
-            // Constructor
+            //! Constructor
             AddPilot(const QString &callsign, const QString &cid, const QString &password, PilotRating rating, int protocolRevision, SimType simType, const QString &realName);
 
             //! Get user cid

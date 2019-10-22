@@ -37,6 +37,7 @@ namespace BlackCore
             //! PDU identifier
             static QString pdu() { return "$FP"; }
 
+            //! Properties @{
             FlightType m_flightType;
             QString m_aircraftIcaoType;
             int m_trueCruisingSpeed = 0;
@@ -52,6 +53,7 @@ namespace BlackCore
             QString m_altAirport;
             QString m_remarks;
             QString m_route;
+            //! @
 
         protected:
             FlightPlan();
