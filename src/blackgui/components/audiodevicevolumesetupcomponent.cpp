@@ -75,7 +75,7 @@ namespace BlackGui
             // it takes a moment until the settings are sychronized
             // this is leading to undesired "save settings" messages and played sounds
             QPointer<CAudioDeviceVolumeSetupComponent> myself(this);
-            QTimer::singleShot(1000, this, [ = ]
+            QTimer::singleShot(2000, this, [ = ]
             {
                 if (!myself || !sGui || sGui->isShuttingDown()) { return; }
                 this->init();
@@ -136,7 +136,15 @@ namespace BlackGui
                 c = connect(sGui->getCContextAudioBase()->afvClient(), &CAfvClient::updatedFromOwnAircraftCockpit, this, &CAudioDeviceVolumeSetupComponent::onUpdatedClientWithCockpitData, Qt::QueuedConnection);
                 Q_ASSERT(c);
 
-                this->onUpdatedClientWithCockpitData();
+                QPointer<CAudioDeviceVolumeSetupComponent> myself(this);
+                c = connect(sGui->getCContextAudioBase()->afvClient(), &CAfvClient::connectionStatusChanged, this, [ = ]
+                {
+                    if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+                    myself->setTransmitReceiveInUiFromVoiceClient();
+                }, Qt::QueuedConnection);
+                Q_ASSERT(c);
+
+                this->setTransmitReceiveInUiFromVoiceClient();
             }
             Q_UNUSED(c)
         }
