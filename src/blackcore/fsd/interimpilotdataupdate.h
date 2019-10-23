@@ -35,6 +35,7 @@ namespace BlackCore
             //! PDU identifier
             static QString pdu() { return "#SB"; }
 
+            //! Properties @{
             double m_latitude = 0.0;
             double m_longitude = 0.0;
             int m_altitudeTrue = 0.0;
@@ -42,7 +43,8 @@ namespace BlackCore
             double m_pitch = 0.0;
             double m_bank = 0.0;
             double m_heading = 0.0;
-            bool m_onGround = false;
+            bool   m_onGround = false;
+            //! @}
 
         private:
             InterimPilotDataUpdate();

@@ -34,7 +34,7 @@ namespace BlackCore
             //! PDU identifier
             static QString pdu() { return "$!!"; }
 
-            QString m_reason;
+            QString m_reason; //!< reason for kill request/kicked
 
         private:
             KillRequest();

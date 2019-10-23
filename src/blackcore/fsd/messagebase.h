@@ -16,6 +16,7 @@
 #include <QString>
 #include <QStringList>
 
+//! Message type
 enum class MessageType
 {
     Unknown,

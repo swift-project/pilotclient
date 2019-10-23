@@ -23,7 +23,6 @@ namespace BlackCore
         public:
             //! Constructor
             DeleteAtc(const QString &sender, const QString &cid);
-            virtual ~DeleteAtc() {}
 
             //! Message converted to tokens
             QStringList toTokens() const;
@@ -34,7 +33,7 @@ namespace BlackCore
             //! PDU identifier
             static QString pdu() { return "#DA"; }
 
-            QString m_cid;
+            QString m_cid; //! id
 
         private:
             DeleteAtc();

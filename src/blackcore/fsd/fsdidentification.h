@@ -33,8 +33,10 @@ namespace BlackCore
             //! PDU identifier
             static QString pdu() { return "$DI"; }
 
+            //! Properties @{
             QString m_serverVersion;
             QString m_initialChallenge;
+            //! @}
 
         private:
             FSDIdentification();
