@@ -11,12 +11,13 @@
 #ifndef SWIFTLAUNCHER_H
 #define SWIFTLAUNCHER_H
 
-#include "blackgui/overlaymessagesframe.h"
 #include "blackgui/enableforframelesswindow.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackgui/mainwindowaccess.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/launchersetup.h"
 #include "blackcore/coremodeenums.h"
+#include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/db/artifact.h"
 #include "blackmisc/identifiable.h"
 
@@ -50,6 +51,7 @@ class CSwiftLauncher :
     public QDialog,
     public BlackGui::CEnableForFramelessWindow,
     public BlackGui::IMainWindowAccess,
+    public BlackMisc::Simulation::Data::CCentralMultiSimulatorModelSetCachesAware,
     public BlackMisc::CIdentifiable
 {
     Q_OBJECT
@@ -210,6 +212,9 @@ private:
 
     //! Request MacOS microphone request
     void requestMacMicrophoneAccess();
+
+    //! Run in installer mode
+    void installerMode();
 
     //! Command line
     static QString toCmdLine(const QString &exe, const QStringList &exeArgs);

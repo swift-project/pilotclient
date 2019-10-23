@@ -8,16 +8,17 @@
 
 #include "swiftlauncher.h"
 #include "ui_swiftlauncher.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackgui/components/configurationwizard.h"
 #include "blackgui/components/texteditdialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/context/contextapplicationproxy.h"
 #include "blackcore/setupreader.h"
+#include "blacksound/audioutilities.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackmisc/network/networkutils.h"
-#include "blacksound/audioutilities.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/icons.h"
@@ -48,11 +49,14 @@ using namespace BlackSound;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::Data;
 using namespace BlackMisc::Simulation::FsCommon;
 
 CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     QDialog(parent, CEnableForFramelessWindow::modeToWindowFlags(CEnableForFramelessWindow::WindowNormal)),
     CEnableForFramelessWindow(CEnableForFramelessWindow::WindowFrameless, true, "framelessMainWindow", this),
+    CCentralMultiSimulatorModelSetCachesAware(),
     CIdentifiable(this),
     ui(new Ui::CSwiftLauncher)
 {
@@ -77,10 +81,10 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(ui->comp_DBusSelector, &CDBusServerAddressSelector::editingFinished,     this, &CSwiftLauncher::onDBusEditingFinished, Qt::QueuedConnection);
     connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftLauncher::onStyleSheetsChanged, Qt::QueuedConnection);
 
-    connect(ui->pb_Log,     &QPushButton::released, this, &CSwiftLauncher::showLogPage, Qt::QueuedConnection);
-    connect(ui->pb_Log,     &QPushButton::released, this, &CSwiftLauncher::showLogPage, Qt::QueuedConnection);
-    connect(ui->pb_LogDir,  &QPushButton::released, sGui, &CGuiApplication::openStandardLogDirectory, Qt::QueuedConnection);
-    connect(ui->pb_DumpDir, &QPushButton::released, sGui, &CGuiApplication::openStandardCrashDumpDirectory, Qt::QueuedConnection);
+    connect(ui->pb_LogDir,        &QPushButton::released, sGui, &CGuiApplication::openStandardLogDirectory, Qt::QueuedConnection);
+    connect(ui->pb_DumpDir,       &QPushButton::released, sGui, &CGuiApplication::openStandardCrashDumpDirectory, Qt::QueuedConnection);
+    connect(ui->pb_Log,           &QPushButton::released, this, &CSwiftLauncher::showLogPage, Qt::QueuedConnection);
+    connect(ui->pb_Log,           &QPushButton::released, this, &CSwiftLauncher::showLogPage, Qt::QueuedConnection);
     connect(ui->pb_FSXConfigDirs, &QPushButton::released, this, &CSwiftLauncher::showSimulatorConfigDirs, Qt::QueuedConnection);
     connect(ui->pb_P3DConfigDirs, &QPushButton::released, this, &CSwiftLauncher::showSimulatorConfigDirs, Qt::QueuedConnection);
 
@@ -92,15 +96,71 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     m_checkTimer.setInterval(2500);
     m_checkTimer.start();
 
-    // auto launch wizard nd other init parts
     const QPointer<CSwiftLauncher> myself(this);
+    if (sGui->isInstallerOptionSet())
+    {
+        QTimer::singleShot(1000, this, [ = ]
+        {
+            if (!sGui || sGui->isShuttingDown() || !myself) { return; }
+            ui->fr_SwiftLauncherMain->showOverlayHTMLMessage("Checking installation!<br>One moment please ....");
+            this->raise();
+        });
+    }
+
+    // auto launch wizard and other init parts
     QTimer::singleShot(2500, this, [ = ]
     {
         if (!sGui || sGui->isShuttingDown() || !myself) { return; }
         this->onCoreModeReleased();
         this->requestMacMicrophoneAccess();
-        if (sGui->isInstallerOptionSet()) { myself->startWizard(); }
+        this->installerMode();
     });
+}
+
+void CSwiftLauncher::installerMode()
+{
+    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (!sGui->isInstallerOptionSet())   { return; }
+
+    bool runDialog = false;
+    do
+    {
+        const QDir dir = CDirectoryUtils::logDirectory();
+        if (!dir.exists()) { break; }
+
+        if (sGui && sGui->getSetupReader())
+        {
+            sGui->getSetupReader()->prefillCacheWithLocalResourceBootstrapFile();
+        }
+
+        for (const CSimulatorInfo &sim : CSimulatorInfo::allSimulatorsSet())
+        {
+            this->synchronizeCache(sim);
+            const int c = this->getCachedModelsCount(sim);
+            if (c > 0)
+            {
+                // we already have data
+                runDialog = true;
+                break;
+            }
+        }
+    }
+    while (false);
+
+    bool startWizard = true;
+    ui->fr_SwiftLauncherMain->closeOverlay();
+
+    if (runDialog)
+    {
+        const QMessageBox::StandardButton ret =
+            QMessageBox::question(this,
+                                  tr("swift configuration"),
+                                  tr("This installation directory already contains a swift configuration.\n"
+                                     "Do you want to use that one?"));
+        if (ret != QMessageBox::No) { startWizard = false; }
+    }
+
+    if (startWizard) { this->startWizard(); }
 }
 
 CSwiftLauncher::~CSwiftLauncher()
