@@ -22,9 +22,8 @@ namespace BlackCore
         class BLACKCORE_EXPORT PlaneInfoRequest : public MessageBase
         {
         public:
+            //! Ctor
             PlaneInfoRequest(const QString &sender, const QString &receiver);
-
-            virtual ~PlaneInfoRequest() {}
 
             //! Message converted to tokens
             QStringList toTokens() const;

@@ -668,10 +668,10 @@ namespace BlackCore
 
     void CSetupReader::networkReplyProgress(int logId, qint64 current, qint64 max, const QUrl &url)
     {
-        Q_UNUSED(url);
-        Q_UNUSED(logId);
-        Q_UNUSED(current);
-        Q_UNUSED(max);
+        Q_UNUSED(url)
+        Q_UNUSED(logId)
+        Q_UNUSED(current)
+        Q_UNUSED(max)
     }
 
     CStatusMessageList CSetupReader::manageSetupAvailability(bool webRead, bool localRead)

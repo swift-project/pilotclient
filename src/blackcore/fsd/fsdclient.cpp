@@ -206,17 +206,17 @@ namespace BlackCore
             Q_ASSERT((m_versionMajor + m_versionMinor) > 0);
             Q_ASSERT(m_capabilities != Capabilities::None);
 
-            if (m_hostApplication.isEmpty()) { m_hostApplication = getSimulatorNameAndVersion().replace(':', ' '); }
+            if (m_hostApplication.isEmpty()) { m_hostApplication = this->getSimulatorNameAndVersion().replace(':', ' '); }
 
-            clearState();
+            this->clearState();
             m_filterPasswordFromLogin = true;
 
-            updateConnectionStatus(CConnectionStatus::Connecting);
+            this->updateConnectionStatus(CConnectionStatus::Connecting);
 
-            QString host = m_server.getAddress();
-            quint16 port = static_cast<quint16>(m_server.getPort());
+            const QString host = m_server.getAddress();
+            const quint16 port = static_cast<quint16>(m_server.getPort());
             m_socket.connectToHost(host, port);
-            startPositionTimers();
+            this->startPositionTimers();
         }
 
         void CFSDClient::disconnectFromServer()
@@ -225,10 +225,10 @@ namespace BlackCore
             this->updateConnectionStatus(CConnectionStatus::Disconnecting);
 
             // allow also to close if broken
-            if (!m_socket.isOpen())
+            if (m_socket.isOpen())
             {
-                if (m_loginMode.isPilot()) { sendDeletePilot(); }
-                else if (m_loginMode.isObserver()) { sendDeleteAtc(); }
+                if (m_loginMode.isPilot()) { this->sendDeletePilot(); }
+                else if (m_loginMode.isObserver()) { this->sendDeleteAtc(); }
             }
             m_socket.close();
 

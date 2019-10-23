@@ -42,15 +42,18 @@
 #include <QTimer>
 #include <QTextCodec>
 
+//! Protocol version @{
 #define PROTOCOL_REVISION_CLASSIC   9
 #define PROTOCOL_REVISION_VATSIM_ATC 10
 #define PROTOCOL_REVISION_VATSIM_AUTH 100
+//! @}
 
 namespace BlackFsdTest { class CTestFSDClient; }
 namespace BlackCore
 {
     namespace Fsd
     {
+        //! Message groups
         enum class TextMessageGroups
         {
             AllClients,
@@ -59,10 +62,9 @@ namespace BlackCore
             AllSups
         };
 
-        //! TODO:
-        //! Send (interim) data updates automatically
-        //! Check ':' in FSD messages. Disconnect if there is a wrong one
-
+        //! FSD client
+        //! Todo: Send (interim) data updates automatically
+        //! Todo Check ':' in FSD messages. Disconnect if there is a wrong one
         class BLACKCORE_EXPORT CFSDClient :
             public QObject,
             public BlackMisc::Network::IEcosystemProvider,            // provide info about used ecosystem
@@ -102,9 +104,16 @@ namespace BlackCore
             void setAtcRating(AtcRating rating) { m_atcRating = rating; }
             //! @}
 
+            //! Get the server
             const BlackMisc::Network::CServer &getServer() const { return m_server; }
+
+            //! List of all preset values
             QStringList getPresetValues() const;
+
+            //! Callsign
             BlackMisc::Aviation::CCallsign getPresetPartnerCallsign() const { return m_partnerCallsign; }
+
+            //! Mode
             BlackMisc::Network::CLoginMode getLoginMode() const;
 
             //! Conenct/disconnect {
@@ -112,8 +121,10 @@ namespace BlackCore
             void disconnectFromServer();
             //! @}
 
+            //! Interim positions @{
             void addInterimPositionReceiver(const BlackMisc::Aviation::CCallsign &receiver) { m_interimPositionReceivers.push_back(receiver); }
             void removeInterimPositionReceiver(const BlackMisc::Aviation::CCallsign &receiver) { m_interimPositionReceivers.remove(receiver); }
+            //! @}
 
             //! Convenience functions for sendClientQuery
             //! \private

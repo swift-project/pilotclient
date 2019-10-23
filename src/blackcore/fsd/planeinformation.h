@@ -34,9 +34,11 @@ namespace BlackCore
             //! PDU identifier
             static QString pdu() { return "#SB"; }
 
+            //! Properties @{
             QString m_aircraft;
             QString m_airline;
             QString m_livery;
+            //! @}
 
         private:
 

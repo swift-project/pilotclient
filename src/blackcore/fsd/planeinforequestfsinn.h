@@ -29,8 +29,6 @@ namespace BlackCore
                                   const QString &aircraftIcaoCombinedType,
                                   const QString &sendMModelString);
 
-            virtual ~PlaneInfoRequestFsinn() {}
-
             //! Message converted to tokens
             QStringList toTokens() const;
 
@@ -40,10 +38,12 @@ namespace BlackCore
             //! PDU identifier
             static QString pdu() { return QStringLiteral("#SB"); }
 
+            //! Properties @{
             QString m_airlineIcao;
             QString m_aircraftIcao;
             QString m_aircraftIcaoCombinedType;
             QString m_sendMModelString;
+            //! @}
 
         private:
             PlaneInfoRequestFsinn();

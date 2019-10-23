@@ -34,9 +34,10 @@ namespace BlackCore
             //! PDU identifier
             static QString pdu() { return QStringLiteral("#DP"); }
 
-            QString m_cid;
+            QString m_cid; //!< id
 
         private:
+            //! Ctor
             DeletePilot();
         };
 
