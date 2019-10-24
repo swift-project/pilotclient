@@ -92,6 +92,7 @@ namespace BlackCore
             connect(&m_socket, &QTcpSocket::readyRead, this, &CFSDClient::readDataFromSocket);
             connect(&m_socket, qOverload<QAbstractSocket::SocketError>(&QTcpSocket::error), this, &CFSDClient::printSocketError,  Qt::QueuedConnection);
             connect(&m_socket, qOverload<QAbstractSocket::SocketError>(&QTcpSocket::error), this, &CFSDClient::handleSocketError, Qt::QueuedConnection);
+            connect(&m_socket, &QTcpSocket::connected, this, &CFSDClient::handleSocketConnected);
 
             m_positionUpdateTimer.setObjectName(this->objectName().append(":m_positionUpdateTimer"));
             connect(&m_positionUpdateTimer, &QTimer::timeout, this, &CFSDClient::sendPilotDataUpdate);
@@ -1394,6 +1395,15 @@ namespace BlackCore
                 break;
             default:
                 break;
+            }
+        }
+
+        void CFSDClient::handleSocketConnected()
+        {
+            if (m_protocolRevision == PROTOCOL_REVISION_CLASSIC)
+            {
+                this->sendLogin();
+                this->updateConnectionStatus(CConnectionStatus::Connected);
             }
         }
 

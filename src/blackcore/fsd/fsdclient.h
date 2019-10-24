@@ -309,6 +309,7 @@ namespace BlackCore
 
             void printSocketError(QAbstractSocket::SocketError socketError);
             void handleSocketError(QAbstractSocket::SocketError socketError);
+            void handleSocketConnected();
 
             void updateConnectionStatus(BlackMisc::Network::CConnectionStatus newStatus);
 
