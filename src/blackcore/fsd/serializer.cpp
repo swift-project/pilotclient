@@ -14,6 +14,8 @@ namespace BlackCore
 {
     namespace Fsd
     {
+        //! private @{
+
         template<>
         QString toQString(const AtcRating &value)
         {
@@ -307,5 +309,7 @@ namespace BlackCore
             else if (str == "E") return AtisLineType::LineCount;
             else return AtisLineType::Unknown;
         }
+
+        //! @}
     }
 }

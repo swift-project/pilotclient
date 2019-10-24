@@ -25,6 +25,7 @@ namespace BlackCore
             //! Constructor
             ServerError(const QString &sender, const QString &receiver, ServerErrorCode errorCode, const QString &causingParameter, const QString &description);
 
+            //! Fatal?
             bool isFatalError() const;
 
             //! Message converted to tokens
@@ -36,11 +37,14 @@ namespace BlackCore
             //! PDU identifier
             static QString pdu() { return "$ER"; }
 
+            //! Properties @{
             ServerErrorCode m_errorNumber;
             QString m_causingParameter;
             QString m_description;
+            //! @}
 
         private:
+            //! Ctor
             ServerError();
         };
 
