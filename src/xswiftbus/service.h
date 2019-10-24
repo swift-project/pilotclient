@@ -143,6 +143,12 @@ namespace XSwiftBus
         //! Get whether all wheels are on the ground
         bool getAllWheelsOnGround() const { return m_onGroundAll.get(); }
 
+        //! COM Selection 6/7 @{
+        int getComSelection() const { return m_comAudioSelection.get(); }
+        bool isCom1Selected() const { return this->getComSelection() == 6; }
+        bool isCom2Selected() const { return this->getComSelection() == 7; }
+        //! @}
+
         //! Get the current COM1 active frequency in kHz
         int getCom1ActiveKhz() const { return m_com1Active.get(); }
 
@@ -162,7 +168,7 @@ namespace XSwiftBus
         bool isCom1Receiving() const { return this->getCom1Power() && this->getCom1Listening(); }
 
         //! Is COM1 transmitting?
-        bool isCom1Transmitting() const { return this->getCom1Power(); }
+        bool isCom1Transmitting() const { return this->getCom1Power() && this->isCom1Selected(); }
 
         //! Get the current COM2 active frequency in kHz
         int getCom2ActiveKhz() const { return m_com2Active.get(); }
@@ -183,7 +189,7 @@ namespace XSwiftBus
         bool isCom2Receiving() const { return this->getCom2Power() && this->getCom2Listening(); }
 
         //! Is COM2 transmitting?
-        bool isCom2Transmitting() const { return this->getCom2Power(); }
+        bool isCom2Transmitting() const { return this->getCom2Power() && this->isCom2Selected(); }
 
         //! Get the current transponder code in decimal
         int getTransponderCode() const { return m_xpdrCode.get(); }
@@ -319,6 +325,7 @@ namespace XSwiftBus
         DataRef<xplane::data::sim::flightmodel::failures::onground_all> m_onGroundAll;
         DataRef<xplane::data::sim::cockpit2::radios::actuators::com1_frequency_hz_833> m_com1Active;
         DataRef<xplane::data::sim::cockpit2::radios::actuators::com1_standby_frequency_hz_833> m_com1Standby;
+        DataRef<xplane::data::sim::cockpit2::radios::actuators::audio_com_selection> m_comAudioSelection; // 6==COM1, 7==COM2
         DataRef<xplane::data::sim::cockpit2::radios::actuators::com1_power> m_com1Power;
         DataRef<xplane::data::sim::cockpit2::radios::actuators::audio_volume_com1> m_com1Volume; // 0..1
         DataRef<xplane::data::sim::cockpit2::radios::actuators::audio_selection_com1> m_com1Listening;
