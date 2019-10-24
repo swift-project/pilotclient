@@ -11,6 +11,8 @@
 #ifndef BLACKGUI_COMPONENTS_AUDIOADVANCEDDISTRIBUTEDCOMPONENT_H
 #define BLACKGUI_COMPONENTS_AUDIOADVANCEDDISTRIBUTEDCOMPONENT_H
 
+#include "blackmisc/audio/audiodeviceinfo.h"
+
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -33,8 +35,20 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CAudioAdvancedDistributedComponent> ui;
+
+            //! Audio start/stop
+            void toggleAudioStartStop();
+
+            //! Start/stop button
+            void setStartButton();
+
+            void onAudioStarted(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
+            void onAudioStoppend();
+
+            //! Contexts
+            static bool hasContexts();
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard

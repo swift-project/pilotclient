@@ -235,8 +235,8 @@
         <property name="bottomMargin">
          <number>0</number>
         </property>
-        <item>
-         <widget class="BlackGui::Components::CAudioAdvancedDistributedComponent" name="compAudioAdv">
+        <item alignment="Qt::AlignTop">
+         <widget class="BlackGui::Components::CAudioAdvancedDistributedComponent" name="comp_AudioAdv">
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
           </property>
