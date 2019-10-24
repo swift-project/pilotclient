@@ -483,7 +483,7 @@
       <item row="0" column="1">
        <widget class="QCheckBox" name="cb_ModelSetVerificationOnlyErrorWarning">
         <property name="text">
-         <string>dialog only if wanrings/error</string>
+         <string>dialog only if warnings/error</string>
         </property>
        </widget>
       </item>
@@ -606,7 +606,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="bg_ICAOfirst"/>
   <buttongroup name="bg_AirlineGroup"/>
+  <buttongroup name="bg_ICAOfirst"/>
  </buttongroups>
 </ui>
