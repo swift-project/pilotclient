@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>99</width>
+    <width>248</width>
     <height>123</height>
    </rect>
   </property>
@@ -190,6 +190,67 @@
     </layout>
    </widget>
   </widget>
+  <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_AudioAdv">
+   <property name="allowedAreas">
+    <set>Qt::BottomDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Adv./distributed audio</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="qw_AudioAdvOuter">
+    <layout class="QVBoxLayout" name="vl_AudioAdvOuter">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QFrame" name="fr_AudioAdvInner">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QVBoxLayout" name="vl_AudioAdvInner">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Components::CAudioAdvancedDistributedComponent" name="compAudioAdv">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -208,6 +269,12 @@
    <class>BlackGui::Components::CAudioDeviceVolumeSetupComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/audiodevicevolumesetupcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CAudioAdvancedDistributedComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/audioadvanceddistributedcomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
