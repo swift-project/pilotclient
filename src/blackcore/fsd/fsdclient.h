@@ -280,6 +280,7 @@ namespace BlackCore
             void sendIncrementalAircraftConfig();
 
             void readDataFromSocket();
+            QString socketErrorToQString(QAbstractSocket::SocketError error);
             void parseMessage(const QString &line);
 
             void initializeMessageTypes();

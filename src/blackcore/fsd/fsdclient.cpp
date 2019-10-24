@@ -90,8 +90,8 @@ namespace BlackCore
         {
             initializeMessageTypes();
             connect(&m_socket, &QTcpSocket::readyRead, this, &CFSDClient::readDataFromSocket);
-            connect(&m_socket, qOverload<QAbstractSocket::SocketError>(&QTcpSocket::error), this, &CFSDClient::printSocketError, Qt::QueuedConnection);
-            connect(&m_socket, qOverload<QAbstractSocket::SocketError>(&QTcpSocket::error), this, &CFSDClient::printSocketError, Qt::QueuedConnection);
+            connect(&m_socket, qOverload<QAbstractSocket::SocketError>(&QTcpSocket::error), this, &CFSDClient::printSocketError,  Qt::QueuedConnection);
+            connect(&m_socket, qOverload<QAbstractSocket::SocketError>(&QTcpSocket::error), this, &CFSDClient::handleSocketError, Qt::QueuedConnection);
 
             m_positionUpdateTimer.setObjectName(this->objectName().append(":m_positionUpdateTimer"));
             connect(&m_positionUpdateTimer, &QTimer::timeout, this, &CFSDClient::sendPilotDataUpdate);
@@ -1369,14 +1369,12 @@ namespace BlackCore
 
         void CFSDClient::printSocketError(QAbstractSocket::SocketError socketError)
         {
-            Q_UNUSED(socketError)
-            const QString error = m_socket.errorString();
-            CLogMessage(this).error(u"FSD socket error: %1") << socketError;
+            CLogMessage(this).error(u"FSD socket error: %1") << socketErrorToQString(socketError);
         }
 
         void CFSDClient::handleSocketError(QAbstractSocket::SocketError socketError)
         {
-            const QString error = m_socket.errorString();
+            const QString error = socketErrorToQString(socketError);
             switch (socketError)
             {
             // all named here need a logoff
@@ -1693,6 +1691,12 @@ namespace BlackCore
                 const QString data = m_fsdTextCodec->toUnicode(dataEncoded);
                 parseMessage(data);
             }
+        }
+
+        QString CFSDClient::socketErrorToQString(QAbstractSocket::SocketError error)
+        {
+            static const QMetaEnum metaEnum = QMetaEnum::fromType<QAbstractSocket::SocketError>();
+            return metaEnum.valueToKey(error);
         }
 
         void CFSDClient::parseMessage(const QString &line)
