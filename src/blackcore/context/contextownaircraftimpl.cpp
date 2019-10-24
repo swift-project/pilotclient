@@ -271,8 +271,8 @@ namespace BlackCore
             const bool atcCom1 = atcs.hasComUnitTunedInChannelSpacing(com1);
             const bool atcCom2 = atcs.hasComUnitTunedInChannelSpacing(com2);
 
-            const bool tunedIn1 = atcCom1 && !lastCom1.isReceiveEnabled();
-            const bool tunedIn2 = atcCom2 && !lastCom2.isReceiveEnabled();
+            const bool tunedIn1  = atcCom1 && !lastCom1.isReceiveEnabled();
+            const bool tunedIn2  = atcCom2 && !lastCom2.isReceiveEnabled();
             const bool tunedOut1 = !atcCom1 && lastCom1.isReceiveEnabled();
             const bool tunedOut2 = !atcCom2 && lastCom2.isReceiveEnabled();
 
@@ -289,11 +289,11 @@ namespace BlackCore
             }
 
             // remember if I was tuned in, abusing the flag
-            lastCom1.setReceiveEnabled(tunedIn1);
-            lastCom2.setReceiveEnabled(tunedIn2);
+            com1.setReceiveEnabled(atcCom1);
+            com2.setReceiveEnabled(atcCom2);
             QWriteLocker l(&m_lockAircraft);
-            m_lastEvaluatedCom1 = lastCom1;
-            m_lastEvaluatedCom2 = lastCom2;
+            m_lastEvaluatedCom1 = com1;
+            m_lastEvaluatedCom2 = com1;
         }
 
         bool CContextOwnAircraft::updateOwnSituation(const CAircraftSituation &situation)
