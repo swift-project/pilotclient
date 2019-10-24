@@ -118,6 +118,7 @@ namespace BlackCore
                 //! @}
 
                 //! Start/stop client @{
+                void startAudio();
                 void startAudio(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
                 Q_INVOKABLE void startAudio(const QString &inputDeviceName, const QString &outputDeviceName);
                 void stopAudio();
@@ -270,6 +271,9 @@ namespace BlackCore
 
                 //! Started audio with devices
                 void startedAudio(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
+
+                //! Audio has been stopped
+                void stoppedAudio();
 
             protected:
                 //! \copydoc BlackMisc::CContinuousWorker::initialize

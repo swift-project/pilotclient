@@ -235,6 +235,13 @@ namespace BlackCore
                 this->setNormalizedOutputVolume(mute ? 0 : 50);
             }
 
+            void CAfvClient::startAudio()
+            {
+                const CAudioDeviceInfo inputDevice  = this->getInputDevice();
+                const CAudioDeviceInfo outputDevice = this->getOutputDevice();
+                this->startAudio(inputDevice, outputDevice);
+            }
+
             void CAfvClient::startAudio(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice)
             {
                 if (QThread::currentThread() != this->thread())
@@ -244,14 +251,17 @@ namespace BlackCore
                     return;
                 }
 
-                BLACK_VERIFY_X(inputDevice.isValid()  && inputDevice.isInputDevice(), Q_FUNC_INFO, "Wrong input device");
-                BLACK_VERIFY_X(outputDevice.isValid() && outputDevice.isOutputDevice(), Q_FUNC_INFO, "Wrong output device");
+                const CAudioDeviceInfo useInputDevice  = inputDevice.isValid()  ? inputDevice  : CAudioDeviceInfo::getDefaultInputDevice();
+                const CAudioDeviceInfo useOutputDevice = outputDevice.isValid() ? outputDevice : CAudioDeviceInfo::getDefaultOutputDevice();
+
+                BLACK_VERIFY_X(useInputDevice.isValid()  && useInputDevice.isInputDevice(),   Q_FUNC_INFO, "Wrong input device");
+                BLACK_VERIFY_X(useOutputDevice.isValid() && useOutputDevice.isOutputDevice(), Q_FUNC_INFO, "Wrong output device");
 
                 if (m_isStarted)
                 {
-                    if (this->usesSameDevices(inputDevice, outputDevice))
+                    if (this->usesSameDevices(useInputDevice, useOutputDevice))
                     {
-                        CLogMessage(this).info(u"Client already started for '%1'/'%2'") << inputDevice.getName() << outputDevice.getName();
+                        CLogMessage(this).info(u"Client already started for '%1'/'%2'") << useInputDevice.getName() << useOutputDevice.getName();
                         return;
                     }
                     this->stopAudio();
@@ -275,8 +285,8 @@ namespace BlackCore
                     m_outputSampleProvider = new CVolumeSampleProvider(m_soundcardSampleProvider, this);
                     m_outputSampleProvider->setVolume(outputVolume);
 
-                    m_output->start(outputDevice, m_outputSampleProvider);
-                    m_input->start(inputDevice);
+                    m_output->start(useOutputDevice, m_outputSampleProvider);
+                    m_input->start(useInputDevice);
 
                     m_startDateTimeUtc = QDateTime::currentDateTimeUtc();
 
@@ -288,11 +298,11 @@ namespace BlackCore
 
                 this->onSettingsChanged(); // make sure all settings are applied
                 m_isStarted = true;
-                CLogMessage(this).info(u"Started [Input: %1] [Output: %2]") << inputDevice.getName() << outputDevice.getName();
+                CLogMessage(this).info(u"Started [Input: %1] [Output: %2]") << useInputDevice.getName() << useOutputDevice.getName();
 
                 this->onTimerUpdate(); // update values
 
-                emit this->startedAudio(inputDevice, outputDevice);
+                emit this->startedAudio(useInputDevice, useOutputDevice);
             }
 
             void CAfvClient::startAudio(const QString &inputDeviceName, const QString &outputDeviceName)
@@ -328,6 +338,10 @@ namespace BlackCore
                     m_output->stop();
                 }
                 CLogMessage(this).info(u"Client stopped");
+
+                emit this->inputVolumePeakVU(0.0);
+                emit this->outputVolumePeakVU(0.0);
+                emit this->stoppedAudio();
             }
 
             void CAfvClient::setReceiveAudio(bool receive)

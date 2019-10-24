@@ -142,6 +142,7 @@ namespace BlackCore
             // connect(m_voiceClient, &CAfvClient::receivingCallsignsChanged,     this, &CContextAudioBase::receivingCallsignsChanged,     Qt::QueuedConnection);
             // connect(m_voiceClient, &CAfvClient::updatedFromOwnAircraftCockpit, this, &CContextAudioBase::updatedFromOwnAircraftCockpit, Qt::QueuedConnection);
             connect(m_voiceClient, &CAfvClient::startedAudio,                  this, &CContextAudioBase::startedAudio, Qt::QueuedConnection);
+            connect(m_voiceClient, &CAfvClient::stoppedAudio,                  this, &CContextAudioBase::stoppedAudio, Qt::QueuedConnection);
             connect(m_voiceClient, &CAfvClient::ptt,                           this, &CContextAudioBase::ptt,          Qt::QueuedConnection);
 
             const CSettings as = m_audioSettings.getThreadLocal();
@@ -202,6 +203,11 @@ namespace BlackCore
         bool CContextAudioBase::isAudioConnected() const
         {
             return m_voiceClient && m_voiceClient->isConnected();
+        }
+
+        bool CContextAudioBase::isAudioStarted() const
+        {
+            return m_voiceClient && m_voiceClient->isStarted();
         }
 
         QString CContextAudioBase::audioRunsWhereInfo() const

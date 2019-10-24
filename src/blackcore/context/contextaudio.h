@@ -177,8 +177,11 @@ namespace BlackCore
             //! Is COM unit transmitting?
             bool isTransmittingComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
 
-            //! Is audio started
+            //! Is audio connected?
             bool isAudioConnected() const;
+
+            //! Is audio started?
+            bool isAudioStarted() const;
 
             //! \todo WORKAROUND to hide the "local signals"
             Afv::Clients::CAfvClient *afvClient() const { return m_voiceClient; }
@@ -212,8 +215,11 @@ namespace BlackCore
             //! Changed audio devices (e.g. device enabled/disable)
             void changedAudioDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
 
-            //! Audio started with
+            //! Audio started with devices
             void startedAudio(const BlackMisc::Audio::CAudioDeviceInfo &input, const BlackMisc::Audio::CAudioDeviceInfo &output);
+
+            //! Audio stopped
+            void stoppedAudio();
 
             //! PTT in voice client received
             void ptt(bool active, BlackMisc::Audio::PTTCOM pttcom, const BlackMisc::CIdentifier &identifier);
