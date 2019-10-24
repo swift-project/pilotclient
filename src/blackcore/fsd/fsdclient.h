@@ -235,6 +235,7 @@ namespace BlackCore
             void killRequestReceived(const QString &reason);
 
         private:
+            //! \private
             friend BlackFsdTest::CTestFSDClient;
 
             //! Send FSD message
@@ -283,6 +284,7 @@ namespace BlackCore
             QString socketErrorToQString(QAbstractSocket::SocketError error);
             void parseMessage(const QString &line);
 
+            //! Init. the message types
             void initializeMessageTypes();
 
             //! Handle response tokens @{
@@ -342,10 +344,11 @@ namespace BlackCore
             bool isInterimPositionReceivingEnabledForServer() const;
             const BlackMisc::Network::CFsdSetup &getSetupForServer() const;
 
-            //! Handles ATIS replies from non-VATSIM servers. If the conditions are not met, the message is
-            //! released as normal text message.
+            //! Handles ATIS replies from non-VATSIM servers. If the conditions are not met,
+            //! the message is released as normal text message.
             void maybeHandleAtisReply(const BlackMisc::Aviation::CCallsign &sender, const BlackMisc::Aviation::CCallsign &receiver, const QString &message);
 
+            //! Settings have been changed
             void fsdMessageSettingsChanged();
 
             //! Emit raw FSD message (mostly for debugging)
@@ -364,7 +367,11 @@ namespace BlackCore
             void stopPositionTimers();
             //! @}
 
+            //! Update the ATIS map
             void updateAtisMap(const QString &callsign, AtisLineType type, const QString &line);
+
+            //! Check if there is a pending logon attempt which "hangs"
+            void pendingTimeoutCheck();
 
             //! Fix ATC station range
             static const BlackMisc::PhysicalQuantities::CLength &fixAtcRange(const BlackMisc::PhysicalQuantities::CLength &networkRange, const BlackMisc::Aviation::CCallsign &cs);
@@ -387,6 +394,8 @@ namespace BlackCore
             vatsim_auth *clientAuth = nullptr;
             vatsim_auth *serverAuth = nullptr;
             QString m_lastServerAuthChallenge;
+            qint64      m_loginSince = -1; //!< when login was triggered
+            static constexpr qint64 PendingConnectionTimeoutMs = 7500;
 
             // User data
             BlackMisc::Network::CServer    m_server;
@@ -399,7 +408,7 @@ namespace BlackCore
             // Parser
             QHash<QString, MessageType> m_messageTypeMapping;
 
-            QTcpSocket m_socket;
+            QTcpSocket m_socket; //!< used TCP socket
 
             bool m_unitTestMode   = false;
             bool m_printToConsole = false;

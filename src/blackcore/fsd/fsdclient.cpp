@@ -211,6 +211,16 @@ namespace BlackCore
             this->clearState();
             m_filterPasswordFromLogin = true;
 
+            m_loginSince = QDateTime::currentMSecsSinceEpoch();
+            QPointer<CFSDClient> myself(this);
+            const qint64 timerMs = qRound(PendingConnectionTimeoutMs * 1.25);
+
+            QTimer::singleShot(timerMs, this, [ = ]
+            {
+                if (!myself || !sApp || sApp->isShuttingDown()) { return; }
+                this->pendingTimeoutCheck();
+            });
+
             this->updateConnectionStatus(CConnectionStatus::Connecting);
 
             const QString host = m_server.getAddress();
@@ -1479,6 +1489,7 @@ namespace BlackCore
             m_lastPositionUpdate.clear();
             m_lastOffsetTimes.clear();
             m_sentAircraftConfig = CAircraftParts::null();
+            m_loginSince = -1;
         }
 
         void CFSDClient::clearState(const CCallsign &callsign)
@@ -1853,11 +1864,23 @@ namespace BlackCore
                     }
                 }
 
-                emit atisReplyReceived(cs, atisMessage);
+                emit this->atisReplyReceived(cs, atisMessage);
 
                 m_mapAtisMessages.remove(callsign);
                 return;
             }
+        }
+
+        void CFSDClient::pendingTimeoutCheck()
+        {
+            if (!this->isPendingConnection()) { return; }
+
+            const qint64 age = QDateTime::currentMSecsSinceEpoch() - m_loginSince;
+            if (age < PendingConnectionTimeoutMs) { return; }
+
+            // time out
+            CLogMessage(this).warning(u"Timeout on pending connection to '%1'") << this->getServer().getName();
+            this->disconnectFromServer();
         }
 
         const CLength &CFSDClient::fixAtcRange(const CLength &networkRange, const CCallsign &cs)
