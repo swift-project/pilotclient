@@ -22,6 +22,7 @@ namespace BlackCore
 {
     namespace Fsd
     {
+        //! From/to string serialization @{
         template<typename T>
         inline QString toQString(const T& value);
 
@@ -78,7 +79,7 @@ namespace BlackCore
 
         template<>
         AtisLineType fromQString(const QString &str);
-
+        //! @}
     }
 }
 

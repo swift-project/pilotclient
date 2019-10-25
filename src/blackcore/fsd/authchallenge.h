@@ -33,9 +33,10 @@ namespace BlackCore
             //! PDU identifier
             static QString pdu() { return QStringLiteral("$ZC"); }
 
-            QString m_challengeKey;
+            QString m_challengeKey; //!< key
 
         private:
+            //! Ctor
             AuthChallenge();
         };
 

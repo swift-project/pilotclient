@@ -33,7 +33,7 @@ namespace BlackCore
             //! PDU identifier
             static QString pdu() { return "#DA"; }
 
-            QString m_cid; //! id
+            QString m_cid; //!< id
 
         private:
             DeleteAtc();

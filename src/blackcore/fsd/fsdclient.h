@@ -116,7 +116,7 @@ namespace BlackCore
             //! Mode
             BlackMisc::Network::CLoginMode getLoginMode() const;
 
-            //! Conenct/disconnect {
+            //! Connenct/disconnect @{
             void connectToServer();
             void disconnectFromServer();
             //! @}

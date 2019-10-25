@@ -38,10 +38,12 @@ namespace BlackCore
             //! PDU identifier
             static QString pdu() { return "#SB"; }
 
+            //! Properties @{
             QString m_airlineIcao;
             QString m_aircraftIcao;
             QString m_aircraftIcaoCombinedType;
             QString m_sendMModelString;
+            //! @}
 
         private:
             PlaneInformationFsinn();
