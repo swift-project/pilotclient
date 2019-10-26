@@ -216,8 +216,8 @@ namespace BlackGui
                     {
                         // Rotations are summed up, hence rotate back before applying the new rotation.
                         // Doing a global transformation reset will not work as it resets also zooming.
-                        ui->gv_RadarView->rotate(-m_rotatenAngle);
-                        ui->gv_RadarView->rotate(headingDegree);
+                        ui->gv_RadarView->rotate(m_rotatenAngle);
+                        ui->gv_RadarView->rotate(-headingDegree);
                         m_rotatenAngle = headingDegree;
                     }
                 }
