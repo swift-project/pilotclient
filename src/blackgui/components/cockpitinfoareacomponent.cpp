@@ -44,9 +44,10 @@ namespace BlackGui
             InfoArea area = static_cast<InfoArea>(areaIndex);
             switch (area)
             {
-            case InfoAreaAudio:      return CIcons::appAudio16();
-            case InfoAreaVoiceRooms: return CIcons::appVoiceRooms16();
-            default:                 return CIcons::empty();
+            case InfoAreaAudio:         return CIcons::appAudio16();
+            case InfoAreaNotifications: return CIcons::appVoiceRooms16();
+            case InfoAreaAdvanced:      return CIcons::appSettings16();
+            default:                    return CIcons::empty();
             }
         }
 

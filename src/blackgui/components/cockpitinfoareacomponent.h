@@ -43,9 +43,10 @@ namespace BlackGui
             enum InfoArea
             {
                 // index must match tab index!
-                InfoAreaVoiceRooms   =  0,
-                InfoAreaAudio        =  1,
-                InfoAreaNone         = -1
+                InfoAreaNotifications =  0,
+                InfoAreaAudio         =  1,
+                InfoAreaAdvanced      =  2,
+                InfoAreaNone          = -1
             };
 
         public slots:
