@@ -56,6 +56,7 @@ namespace BlackCore
 
             // split parser values
             if (IContextNetwork::getCmdLineOptions().isEmpty()) { return false; } // no such option, avoid warnings
+            if (!sApp) { return false; }
             const QString clientIdAndKey = sApp->getParserValue("clientIdAndKey").toLower();
             if (clientIdAndKey.isEmpty() || !clientIdAndKey.contains(':')) { return false; }
             const QStringList stringList = clientIdAndKey.split(':');

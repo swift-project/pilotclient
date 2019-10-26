@@ -1049,7 +1049,6 @@ namespace BlackCore
                             const CAtcStationList matchingAtcStations = sApp->getIContextNetwork()->getOnlineStationsForFrequency(f, spacing);
                             const CAtcStation closest = matchingAtcStations.findClosest(1, sApp->getIContextOwnAircraft()->getOwnAircraftSituation().getPosition()).frontOrDefault();
 
-
                             if (fuzzyMatchCallSign(it->name, closest.getCallsign().asString()))
                             {
                                 // this is how it should be

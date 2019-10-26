@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     //! [SwiftApplicationDemo]
     CGuiApplication::highDpiScreenSupport(CGuiApplication::parseScaleFactor(argc, argv));
     QApplication qa(argc, argv);
-    Q_UNUSED(qa); // application init needed
+    Q_UNUSED(qa) // application init needed
 
     CCrashHandler::instance()->init();
     CSwiftGuiStdApplication a; // application with contexts

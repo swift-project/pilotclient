@@ -33,7 +33,7 @@ namespace BlackCore
             //! PDU identifier
             static QString pdu() { return "$PO"; }
 
-            QString m_timestamp;
+            QString m_timestamp; //!< timestamp
 
         private:
             Pong();

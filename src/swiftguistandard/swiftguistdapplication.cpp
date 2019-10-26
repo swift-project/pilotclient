@@ -88,7 +88,7 @@ bool CSwiftGuiStdApplication::parsingHookIn()
     const QString dBusAddress(this->getCmdDBusAddressValue());
     if (!dBusAddress.isEmpty())
     {
-        // check if rechable
+        // check if reachable
         if (!CDBusServer::isDBusAvailable(dBusAddress))
         {
             this->cmdLineErrorMessage("DBus server at '" + dBusAddress + "' can not be reached");

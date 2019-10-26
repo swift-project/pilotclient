@@ -235,8 +235,9 @@ namespace BlackCore
             void killRequestReceived(const QString &reason);
 
         private:
-            //! \private
+            //! \cond
             friend BlackFsdTest::CTestFSDClient;
+            //! \endcond
 
             //! Send FSD message
             template <class T>
