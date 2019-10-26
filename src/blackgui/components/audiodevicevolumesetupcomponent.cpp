@@ -101,10 +101,7 @@ namespace BlackGui
 
             if (audio)
             {
-                const QString ai = sGui->getCContextAudioBase()->audioRunsWhereInfo();
-                ui->le_Info->setText(ai);
-                ui->le_Info->setPlaceholderText(ai);
-
+                this->setAudioRunsWhere();
                 this->initAudioDeviceLists();
 
                 // default
@@ -121,18 +118,16 @@ namespace BlackGui
                 Q_ASSERT(c);
                 c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::startedAudio, this, &CAudioDeviceVolumeSetupComponent::onAudioStarted, Qt::QueuedConnection);
                 Q_ASSERT(c);
+                c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::stoppedAudio, this, &CAudioDeviceVolumeSetupComponent::onAudioStopped, Qt::QueuedConnection);
+                Q_ASSERT(c);
 
                 //! \todo Workaround to avoid context signals
-
                 c = connect(sGui->getCContextAudioBase()->afvClient(), &CAfvClient::outputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onOutputVU, Qt::QueuedConnection);
                 Q_ASSERT(c);
-
                 c = connect(sGui->getCContextAudioBase()->afvClient(), &CAfvClient::inputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onInputVU, Qt::QueuedConnection);
                 Q_ASSERT(c);
-
                 c = connect(sGui->getCContextAudioBase()->afvClient(), &CAfvClient::receivedCallsignsChanged, this, &CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged, Qt::QueuedConnection);
                 Q_ASSERT(c);
-
                 c = connect(sGui->getCContextAudioBase()->afvClient(), &CAfvClient::updatedFromOwnAircraftCockpit, this, &CAudioDeviceVolumeSetupComponent::onUpdatedClientWithCockpitData, Qt::QueuedConnection);
                 Q_ASSERT(c);
 
@@ -303,6 +298,12 @@ namespace BlackGui
             ui->hs_VolumeOut->setValue((ui->hs_VolumeOut->maximum() - ui->hs_VolumeOut->minimum()) / 2);
         }
 
+        void CAudioDeviceVolumeSetupComponent::setAudioRunsWhere()
+        {
+            const QString ai = sGui->getCContextAudioBase()->audioRunsWhereInfo();
+            ui->le_Info->setPlaceholderText(ai);
+        }
+
         void CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged(const CCallsignSet &com1Callsigns, const CCallsignSet &com2Callsigns)
         {
             const QString info = (com1Callsigns.isEmpty() ? QString() : QStringLiteral("COM1: ") % com1Callsigns.getCallsignsAsString()) %
@@ -347,6 +348,12 @@ namespace BlackGui
         {
             ui->cb_SetupAudioInputDevice->setCurrentText(input.toQString(true));
             ui->cb_SetupAudioOutputDevice->setCurrentText(output.toQString(true));
+            this->setAudioRunsWhere();
+        }
+
+        void CAudioDeviceVolumeSetupComponent::onAudioStopped()
+        {
+            this->setAudioRunsWhere();
         }
 
         bool CAudioDeviceVolumeSetupComponent::onAudioDevicesChanged(const CAudioDeviceInfoList &devices)
@@ -354,6 +361,7 @@ namespace BlackGui
             if (m_cbDevices.hasSameDevices(devices)) { return false; } // avoid numerous follow up actions
             m_cbDevices = devices;
 
+            this->setAudioRunsWhere();
             ui->cb_SetupAudioOutputDevice->clear();
             ui->cb_SetupAudioInputDevice->clear();
 
@@ -374,6 +382,7 @@ namespace BlackGui
 
             if (!i.isEmpty()) { ui->cb_SetupAudioInputDevice->setCurrentText(i); }
             if (!o.isEmpty()) { ui->cb_SetupAudioOutputDevice->setCurrentText(o); }
+
             return true;
         }
 

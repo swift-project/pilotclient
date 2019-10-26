@@ -11,6 +11,7 @@
 
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextaudio.h"
+#include "blackcore/context/contextnetwork.h"
 #include "blackcore/afv/clients/afvclient.h"
 
 using namespace BlackMisc::Audio;
@@ -28,9 +29,10 @@ namespace BlackGui
 
             connect(sGui->getCContextAudioBase(), &CContextAudioBase::startedAudio, this, &CAudioAdvancedDistributedComponent::onAudioStarted,  Qt::QueuedConnection);
             connect(sGui->getCContextAudioBase(), &CContextAudioBase::stoppedAudio, this, &CAudioAdvancedDistributedComponent::onAudioStoppend, Qt::QueuedConnection);
-            connect(ui->pb_StartStop,             &QPushButton::released,           this, &CAudioAdvancedDistributedComponent::toggleAudioStartStop, Qt::QueuedConnection);
+            connect(ui->pb_EnableDisable,         &QPushButton::pressed,            this, &CAudioAdvancedDistributedComponent::toggleAudioEnableDisable, Qt::QueuedConnection);
+            connect(ui->pb_StartStop,             &QPushButton::pressed,            this, &CAudioAdvancedDistributedComponent::toggleAudioStartStop,     Qt::QueuedConnection);
 
-            this->setStartButton();
+            this->setButtons();
         }
 
         CAudioAdvancedDistributedComponent::~CAudioAdvancedDistributedComponent()
@@ -42,37 +44,73 @@ namespace BlackGui
             const bool started = sGui->getCContextAudioBase()->isAudioStarted();
             if (started)
             {
-                sGui->getCContextAudioBase()->afvClient()->stopAudio();
+                sGui->getCContextAudioBase()->afvClient()->disconnectFromAndStop();
             }
             else
             {
                 sGui->getCContextAudioBase()->afvClient()->startAudio();
+                if (sGui->getIContextNetwork()->isConnected())
+                {
+                    sGui->getCContextAudioBase()->connectAudioWithNetworkCredentials();
+                }
             }
+
+            this->setButtons(2000);
         }
 
-        void CAudioAdvancedDistributedComponent::setStartButton()
+        void CAudioAdvancedDistributedComponent::toggleAudioEnableDisable()
+        {
+            if (!hasContexts()) { return; }
+            const bool enabled = sGui->getCContextAudioBase()->isAudioEnabled();
+            if (enabled)
+            {
+                sGui->getCContextAudioBase()->disableVoiceClient();
+            }
+            else
+            {
+                sGui->getCContextAudioBase()->enableVoiceClientAndStart();
+            }
+
+            this->setButtons(2000);
+        }
+
+        void CAudioAdvancedDistributedComponent::setButtons()
         {
             if (!hasContexts()) { return; }
             const bool started = sGui->getCContextAudioBase()->isAudioStarted();
+            const bool enabled = sGui->getCContextAudioBase()->isAudioEnabled();
             ui->pb_StartStop->setText(started ? "stop" : "start");
+            ui->pb_StartStop->setEnabled(enabled);
+            ui->pb_EnableDisable->setText(enabled ? "disable" : "enable");
+        }
+
+        void CAudioAdvancedDistributedComponent::setButtons(int delayMs)
+        {
+            if (!hasContexts()) { return; }
+            QPointer<CAudioAdvancedDistributedComponent> myself(this);
+            QTimer::singleShot(delayMs, this, [ = ]
+            {
+                if (!sGui || !myself || sGui->isShuttingDown()) { return; }
+                this->setButtons();
+            });
         }
 
         void CAudioAdvancedDistributedComponent::onAudioStarted(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice)
         {
             Q_UNUSED(inputDevice)
             Q_UNUSED(outputDevice)
-            this->setStartButton();
+            this->setButtons();
         }
 
         void CAudioAdvancedDistributedComponent::onAudioStoppend()
         {
-            this->setStartButton();
+            this->setButtons();
         }
 
         bool CAudioAdvancedDistributedComponent::hasContexts()
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->getCContextAudioBase()) { return false; }
-            if (!sGui->getCContextAudioBase()->afvClient()) { return false; }
+            if (!sGui->getIContextNetwork()) { return false; }
             return true;
         }
     }

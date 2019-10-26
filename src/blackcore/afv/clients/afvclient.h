@@ -94,7 +94,11 @@ namespace BlackCore
                 //! Disconnect from network
                 //! \threadsafe
                 //! \remark runs in thread of CAfvClient object and is ASYNC when called from another thread
-                Q_INVOKABLE void disconnectFrom();
+                //! @{
+                void disconnectFrom(bool stop);
+                Q_INVOKABLE void disconnectFrom() { this->disconnectFrom(false); }
+                void disconnectFromAndStop()      { this->disconnectFrom(true); }
+                //! @}
 
                 //! Audio devices @{
                 Q_INVOKABLE QStringList availableInputDevices() const;

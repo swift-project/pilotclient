@@ -73,6 +73,9 @@ namespace BlackGui
             //! Current audio devices changed
             void onAudioStarted(const BlackMisc::Audio::CAudioDeviceInfo &input, const BlackMisc::Audio::CAudioDeviceInfo &output);
 
+            //! Audio has been stopped
+            void onAudioStopped();
+
             //! Audio devices changed
             bool onAudioDevicesChanged(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
 
@@ -100,6 +103,8 @@ namespace BlackGui
             void onReloadDevices();
             void onResetVolumeIn();
             void onResetVolumeOut();
+
+            void setAudioRunsWhere();
 
             // TODO: Move TransceiverReceivingCallsignsChangedArgs to Blackmisc
             void onReceivingCallsignsChanged(const BlackMisc::Aviation::CCallsignSet &com1Callsigns, const BlackMisc::Aviation::CCallsignSet &com2Callsigns);

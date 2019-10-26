@@ -30,9 +30,9 @@ namespace BlackCore
             {
                 CLogMessage(this).debug(u"ClientConnection instantiated");
 
-                //    connect(&m_apiServerConnection, &ApiServerConnection::authenticationFinished, this, &ClientConnection::apiConnectionFinished);
-                //    connect(&m_apiServerConnection, &ApiServerConnection::addCallsignFinished, this, &ClientConnection::addCallsignFinished);
-                //    connect(&m_apiServerConnection, &ApiServerConnection::removeCallsignFinished, this, &ClientConnection::removeCallsignFinished);
+                // connect(&m_apiServerConnection, &ApiServerConnection::authenticationFinished, this, &ClientConnection::apiConnectionFinished);
+                // connect(&m_apiServerConnection, &ApiServerConnection::addCallsignFinished, this, &ClientConnection::addCallsignFinished);
+                // connect(&m_apiServerConnection, &ApiServerConnection::removeCallsignFinished, this, &ClientConnection::removeCallsignFinished);
 
                 connect(m_voiceServerTimer, &QTimer::timeout, this, &CClientConnection::voiceServerHeartbeat);
                 connect(m_udpSocket, &QUdpSocket::readyRead,  this, &CClientConnection::readPendingDatagrams);
@@ -69,7 +69,7 @@ namespace BlackCore
                             this->connectToVoiceServer();
                             // taskServerConnectionCheck.Start();
 
-                            CLogMessage(this).debug(u"Connected: '%1'") << callsign;
+                            CLogMessage(this).info(u"Connected: '%1' to voice server, socket open: ") << callsign << boolToYesNo(m_udpSocket->isOpen());
                         }
 
                         // callback of the calling parent
@@ -121,11 +121,11 @@ namespace BlackCore
 
             void CClientConnection::connectToVoiceServer()
             {
-                QHostAddress localAddress(QHostAddress::AnyIPv4);
+                const QHostAddress localAddress(QHostAddress::AnyIPv4);
                 m_udpSocket->bind(localAddress);
                 m_voiceServerTimer->start(3000);
 
-                CLogMessage(this).info(u"Connected to voice server '%1'") << m_connection.getTokens().VoiceServer.addressIpV4;
+                CLogMessage(this).info(u"Connected to voice server '%2'") << m_connection.getTokens().VoiceServer.addressIpV4;
             }
 
             void CClientConnection::disconnectFromVoiceServer()

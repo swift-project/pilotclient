@@ -186,13 +186,13 @@ namespace BlackCore
                 }
             }
 
-            void CAfvClient::disconnectFrom()
+            void CAfvClient::disconnectFrom(bool stop)
             {
                 if (QThread::currentThread() != thread())
                 {
                     // Method needs to be executed in the object thread since it will create new QObject children
                     QPointer<CAfvClient> myself(this);
-                    QMetaObject::invokeMethod(this, [ = ]() { if (myself) disconnectFrom(); });
+                    QMetaObject::invokeMethod(this, [ = ]() { if (myself) disconnectFrom(stop); });
                     return;
                 }
 
@@ -203,6 +203,8 @@ namespace BlackCore
                     m_connection->disconnectFrom();
                 }
                 emit connectionStatusChanged(Disconnected);
+
+                if (stop) { this->stopAudio(); }
             }
 
             QStringList CAfvClient::availableInputDevices() const

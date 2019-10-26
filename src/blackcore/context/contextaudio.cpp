@@ -111,6 +111,32 @@ namespace BlackCore
             CIdentifiable(this),
             m_voiceClient(new CAfvClient(CVoiceSetup().getAfvVoiceServerUrl(), this))
         {
+            this->initVoiceClient();
+            const CSettings as = m_audioSettings.getThreadLocal();
+            this->setVoiceOutputVolume(as.getOutVolume());
+            m_selcalPlayer = new CSelcalPlayer(CAudioDeviceInfo::getDefaultOutputDevice(), this);
+
+            this->changeDeviceSettings();
+            QPointer<CContextAudioBase> myself(this);
+            QTimer::singleShot(5000, this, [ = ]
+            {
+                if (!myself || !sApp || sApp->isShuttingDown()) { return; }
+                myself->onChangedAudioSettings();
+            });
+        }
+
+        CContextAudioBase::~CContextAudioBase()
+        {
+            this->gracefulShutdown();
+        }
+
+        void CContextAudioBase::initVoiceClient()
+        {
+            if (!m_voiceClient)
+            {
+                m_voiceClient = new CAfvClient(CVoiceSetup().getAfvVoiceServerUrl(), this);
+            }
+
             const CVoiceSetup vs = m_voiceSettings.getThreadLocal();
             m_voiceClient->updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
 
@@ -144,33 +170,16 @@ namespace BlackCore
             connect(m_voiceClient, &CAfvClient::startedAudio,                  this, &CContextAudioBase::startedAudio, Qt::QueuedConnection);
             connect(m_voiceClient, &CAfvClient::stoppedAudio,                  this, &CContextAudioBase::stoppedAudio, Qt::QueuedConnection);
             connect(m_voiceClient, &CAfvClient::ptt,                           this, &CContextAudioBase::ptt,          Qt::QueuedConnection);
-
-            const CSettings as = m_audioSettings.getThreadLocal();
-            this->setVoiceOutputVolume(as.getOutVolume());
-            m_selcalPlayer = new CSelcalPlayer(CAudioDeviceInfo::getDefaultOutputDevice(), this);
-
-            this->changeDeviceSettings();
-            QPointer<CContextAudioBase> myself(this);
-            QTimer::singleShot(5000, this, [ = ]
-            {
-                if (!myself || !sApp || sApp->isShuttingDown()) { return; }
-                myself->onChangedAudioSettings();
-            });
         }
 
-        CContextAudioBase::~CContextAudioBase()
-        {
-            gracefulShutdown();
-        }
-
-        void CContextAudioBase::gracefulShutdown()
+        void CContextAudioBase::terminateVoiceClient()
         {
             if (m_voiceClient)
             {
                 m_voiceClient->gracefulShutdown();
                 Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(m_voiceClient), Q_FUNC_INFO, "Needs to be back in current thread");
+                m_voiceClient->deleteLater();
                 m_voiceClient = nullptr;
-
 #ifdef Q_OS_WIN
                 if (m_winCoInitialized)
                 {
@@ -179,7 +188,21 @@ namespace BlackCore
                 }
 #endif
             }
+        }
+
+        void CContextAudioBase::gracefulShutdown()
+        {
+            this->terminateVoiceClient();
             QObject::disconnect(this);
+        }
+
+        void CContextAudioBase::enableVoiceClientAndStart()
+        {
+            this->initVoiceClient();
+            if (m_voiceClient) {
+                m_voiceClient->startAudio();
+                this->connectAudioWithNetworkCredentials();
+            }
         }
 
         const CIdentifier &CContextAudioBase::audioRunsWhere() const
@@ -200,6 +223,28 @@ namespace BlackCore
             return m_voiceClient->isTransmittingdComUnit(comUnit);
         }
 
+        bool CContextAudioBase::connectAudioWithNetworkCredentials()
+        {
+            if (!m_voiceClient) { return false; }
+            if (!sApp || sApp->isShuttingDown() || !sApp->getIContextNetwork()) { return false; }
+
+            const CEcosystem ecoSystem = this->getIContextNetwork()->getConnectedServer().getEcosystem();
+            if (ecoSystem != CEcosystem::vatsim())
+            {
+                CLogMessage(this).info(u"Will not use AFV as ecosystem is '%1'") << ecoSystem.toQString(true);
+                return false;
+            }
+
+            const CVoiceSetup vs = m_voiceSettings.getThreadLocal();
+            m_voiceClient->updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
+
+            const CUser connectedUser = this->getIContextNetwork()->getConnectedServer().getUser();
+            const QString client = "swift " % BlackConfig::CBuildConfig::getShortVersionString();
+            m_voiceClient->connectTo(connectedUser.getId(), connectedUser.getPassword(), connectedUser.getCallsign().asString(), client);
+
+            return true;
+        }
+
         bool CContextAudioBase::isAudioConnected() const
         {
             return m_voiceClient && m_voiceClient->isConnected();
@@ -212,7 +257,7 @@ namespace BlackCore
 
         QString CContextAudioBase::audioRunsWhereInfo() const
         {
-            static const QString s = QStringLiteral("Audio on '%1', '%2'.").arg(audioRunsWhere().getMachineName(), audioRunsWhere().getProcessName());
+            const QString s = QStringLiteral("[%1] Audio on '%2', '%3'.").arg(boolToEnabledDisabled(this->isAudioStarted()), audioRunsWhere().getMachineName(), audioRunsWhere().getProcessName());
             return s;
         }
 
@@ -439,19 +484,7 @@ namespace BlackCore
             // we only change network connection of AFC client here
             if (to.isConnected() && this->getIContextNetwork())
             {
-                const CEcosystem ecoSystem = this->getIContextNetwork()->getConnectedServer().getEcosystem();
-                if (ecoSystem != CEcosystem::vatsim())
-                {
-                    CLogMessage(this).info(u"Will not use AFV as ecosystem is '%1'") << ecoSystem.toQString(true);
-                    return;
-                }
-
-                const CVoiceSetup vs = m_voiceSettings.getThreadLocal();
-                m_voiceClient->updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
-
-                const CUser connectedUser = this->getIContextNetwork()->getConnectedServer().getUser();
-                const QString client = "swift " % BlackConfig::CBuildConfig::getShortVersionString();
-                m_voiceClient->connectTo(connectedUser.getId(), connectedUser.getPassword(), connectedUser.getCallsign().asString(), client);
+                this->connectAudioWithNetworkCredentials();
             }
             else if (to.isDisconnected())
             {

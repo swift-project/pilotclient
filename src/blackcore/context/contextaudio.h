@@ -41,7 +41,6 @@
 
 // clazy:excludeall=const-signal-or-slot
 
-
 //! \addtogroup dbus
 //! @{
 
@@ -123,6 +122,12 @@ namespace BlackCore
             //! Graceful shutdown
             void gracefulShutdown();
 
+            //! Enable/disable @{
+            void enableVoiceClient()  { this->initVoiceClient(); }
+            void enableVoiceClientAndStart();
+            void disableVoiceClient() { this->terminateVoiceClient(); }
+            //! @}
+
             // -------- parts which can run in core and GUI, referring to local voice client ------------
 
             //! Audio devices
@@ -177,11 +182,18 @@ namespace BlackCore
             //! Is COM unit transmitting?
             bool isTransmittingComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
 
+            //! Connect to audio with network credentials
+            //! \remark if there is no network connection/credential this just returns
+            bool connectAudioWithNetworkCredentials();
+
             //! Is audio connected?
             bool isAudioConnected() const;
 
             //! Is audio started?
             bool isAudioStarted() const;
+
+            //! Is audio enabled?
+            bool isAudioEnabled() const { return m_voiceClient; }
 
             //! \todo WORKAROUND to hide the "local signals"
             Afv::Clients::CAfvClient *afvClient() const { return m_voiceClient; }
@@ -237,11 +249,17 @@ namespace BlackCore
             //! Client updated from own aicraft data
             void updatedFromOwnAircraftCockpit();
 
-            **/
+            Workaround **/
 
             // ------------ local signals -------
 
         private:
+            //! Init the voice client
+            void initVoiceClient();
+
+            //! Terminate the voice client
+            void terminateVoiceClient();
+
             //! Enable/disable voice transmission, nornally used with hotkey
             //! @{
             void setVoiceTransmission(bool enable, BlackMisc::Audio::PTTCOM com);
