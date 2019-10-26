@@ -157,8 +157,8 @@ namespace BlackCore
 
             QVector<StationDto> CApiServerConnection::getAllAliasedStations()
             {
-                this->getAsVector<StationDto>("/api/v1/stations/aliased");
-                return {};
+                const QVector<StationDto> stations = this->getAsVector<StationDto>("/api/v1/stations/aliased");
+                return stations;
             }
 
             bool CApiServerConnection::setUrl(const QString &url)

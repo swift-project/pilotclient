@@ -162,6 +162,7 @@ namespace BlackCore
                         {
                             // this is the callback when the connection has been established
 
+                            // HF stations aliased
                             const QVector<StationDto> aliasedStations = m_connection->getAllAliasedStations();
                             this->setAliasedStations(aliasedStations); // threadsafe
                             this->onTimerUpdate();
@@ -1038,24 +1039,32 @@ namespace BlackCore
 
                     if (it != m_aliasedStations.end())
                     {
+                        roundedFrequencyHz = it->frequencyHz; // we use this frequency
                         if (sApp->getIContextNetwork())
                         {
                             // Get the callsign for this frequency and fuzzy compare with our alias station
+                            // !\todo KB 2019-10 replace by com unit channel spacing
                             const CComSystem::ChannelSpacing spacing = CComSystem::ChannelSpacing25KHz;
-                            CFrequency f(static_cast<int>(roundedFrequencyHz), CFrequencyUnit::Hz());
-                            CAtcStationList matchingAtcStations = sApp->getIContextNetwork()->getOnlineStationsForFrequency(f, spacing);
-                            CAtcStation closest = matchingAtcStations.findClosest(1, sApp->getIContextOwnAircraft()->getOwnAircraftSituation().getPosition()).frontOrDefault();
+                            const CFrequency f(static_cast<int>(roundedFrequencyHz), CFrequencyUnit::Hz());
+                            const CAtcStationList matchingAtcStations = sApp->getIContextNetwork()->getOnlineStationsForFrequency(f, spacing);
+                            const CAtcStation closest = matchingAtcStations.findClosest(1, sApp->getIContextOwnAircraft()->getOwnAircraftSituation().getPosition()).frontOrDefault();
+
 
                             if (fuzzyMatchCallSign(it->name, closest.getCallsign().asString()))
                             {
-                                CLogMessage(this).debug(u"Aliasing %1Hz [VHF] to %2Hz [HF]")  << frequencyHz << it->frequencyHz;
-                                roundedFrequencyHz = it->frequencyHz;
+                                // this is how it should be
+                                CLogMessage(this).debug(u"%1 Aliasing %2Hz [VHF] to %3Hz [HF]")  << closest.getCallsign() << frequencyHz << it->frequencyHz;
+                            }
+                            else
+                            {
+                                // Ups!
+                                CLogMessage(this).debug(u"Aliasing %1Hz [VHF] to %2Hz [HF], BUT station NOT found!")  << frequencyHz << it->frequencyHz;
                             }
                         }
                         else
                         {
+                            // without contexts
                             CLogMessage(this).debug(u"Aliasing %1Hz [VHF] to %2Hz [HF]")  << frequencyHz << it->frequencyHz;
-                            roundedFrequencyHz = it->frequencyHz;
                         }
                     }
                 }
