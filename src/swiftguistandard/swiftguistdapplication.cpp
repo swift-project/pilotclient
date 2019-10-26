@@ -24,6 +24,7 @@ CSwiftGuiStdApplication::CSwiftGuiStdApplication() :
     this->addParserOption(m_cmdFacadeMode);
     this->addDBusAddressOption();
     this->addVatlibOptions();
+    this->addAudioOptions();
 }
 
 CStatusMessageList CSwiftGuiStdApplication::startHookIn()

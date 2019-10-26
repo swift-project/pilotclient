@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
     a.addWindowStateOption();
     a.addDBusAddressOption();
     a.addVatlibOptions();
+    a.addAudioOptions();
     if (!a.parseAndSynchronizeSetup()) { return EXIT_FAILURE; }
 
     const QString dBusAdress(a.getCmdDBusAddressValue());

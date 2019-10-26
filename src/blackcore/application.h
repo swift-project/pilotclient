@@ -264,17 +264,20 @@ namespace BlackCore
         //! Add the VATLIB options
         void addVatlibOptions();
 
+        //! Add the audio options
+        void addAudioOptions();
+
         //! Private resource dir for developer's own resource files
         QString getCmdSwiftPrivateSharedDir() const;
-
-        //! Delegates to QCommandLineParser::isSet
-        bool isParserOptionSet(const QString &option) const;
 
         //! Called by installer?
         bool isInstallerOptionSet() const;
 
         //! Skip the single application check
         bool skipSingleApplicationCheck() const;
+
+        //! Delegates to QCommandLineParser::isSet
+        bool isParserOptionSet(const QString &option) const;
 
         //! Delegates to QCommandLineParser::isSet
         bool isParserOptionSet(const QCommandLineOption &option) const;

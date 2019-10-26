@@ -11,6 +11,7 @@
 #include "blackcore/db/networkwatchdog.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulatorimpl.h"
+#include "blackcore/context/contextaudio.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/cookiemanager.h"
 #include "blackcore/corefacade.h"
@@ -1312,7 +1313,12 @@ namespace BlackCore
 
     void CApplication::addVatlibOptions()
     {
-        this->addParserOptions(BlackCore::Context::IContextNetwork::getCmdLineOptions());
+        this->addParserOptions(IContextNetwork::getCmdLineOptions());
+    }
+
+    void CApplication::addAudioOptions()
+    {
+        this->addParserOptions(CContextAudioBase::getCmdLineOptions());
     }
 
     QString CApplication::getCmdDBusAddressValue() const

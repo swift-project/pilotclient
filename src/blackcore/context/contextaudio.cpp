@@ -108,10 +108,17 @@ namespace BlackCore
 
         CContextAudioBase::CContextAudioBase(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
             IContextAudio(mode, runtime),
-            CIdentifiable(this),
-            m_voiceClient(new CAfvClient(CVoiceSetup().getAfvVoiceServerUrl(), this))
+            CIdentifiable(this)
         {
-            this->initVoiceClient();
+            if (CContextAudioBase::isNoAudioSet())
+            {
+                CLogMessage(this).info(u"Voice client disabled");
+            }
+            else
+            {
+                this->initVoiceClient();
+            }
+
             const CSettings as = m_audioSettings.getThreadLocal();
             this->setVoiceOutputVolume(as.getOutVolume());
             m_selcalPlayer = new CSelcalPlayer(CAudioDeviceInfo::getDefaultOutputDevice(), this);
@@ -132,10 +139,8 @@ namespace BlackCore
 
         void CContextAudioBase::initVoiceClient()
         {
-            if (!m_voiceClient)
-            {
-                m_voiceClient = new CAfvClient(CVoiceSetup().getAfvVoiceServerUrl(), this);
-            }
+            if (!m_voiceClient) { return; }
+            m_voiceClient = new CAfvClient(CVoiceSetup().getAfvVoiceServerUrl(), this);
 
             const CVoiceSetup vs = m_voiceSettings.getThreadLocal();
             m_voiceClient->updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
@@ -159,7 +164,7 @@ namespace BlackCore
 #endif
 
             Q_ASSERT_X(CThreadUtils::isApplicationThread(m_voiceClient->thread()), Q_FUNC_INFO, "Should be in main thread");
-            m_voiceClient->start();
+            m_voiceClient->start(); // thread
             Q_ASSERT_X(m_voiceClient->owner() == this, Q_FUNC_INFO, "Wrong owner");
             Q_ASSERT_X(!CThreadUtils::isApplicationThread(m_voiceClient->thread()), Q_FUNC_INFO, "Must NOT be in main thread");
 
@@ -199,7 +204,8 @@ namespace BlackCore
         void CContextAudioBase::enableVoiceClientAndStart()
         {
             this->initVoiceClient();
-            if (m_voiceClient) {
+            if (m_voiceClient)
+            {
                 m_voiceClient->startAudio();
                 this->connectAudioWithNetworkCredentials();
             }
@@ -253,6 +259,21 @@ namespace BlackCore
         bool CContextAudioBase::isAudioStarted() const
         {
             return m_voiceClient && m_voiceClient->isStarted();
+        }
+
+        const QList<QCommandLineOption> &CContextAudioBase::getCmdLineOptions()
+        {
+            static const QList<QCommandLineOption> opts
+            {
+                QCommandLineOption({{"n", "noaudio"}, QCoreApplication::translate("CContextAudioBase", "No audio for GUI or core.", "noaudio")})
+            };
+            return opts;
+        }
+
+        bool CContextAudioBase::isNoAudioSet()
+        {
+            if (!sApp) { return false; }
+            return sApp->isParserOptionSet("noaudio");
         }
 
         QString CContextAudioBase::audioRunsWhereInfo() const

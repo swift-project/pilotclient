@@ -38,6 +38,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QCommandLineOption>
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -197,6 +198,12 @@ namespace BlackCore
 
             //! \todo WORKAROUND to hide the "local signals"
             Afv::Clients::CAfvClient *afvClient() const { return m_voiceClient; }
+
+            //! Cmd.line arguments
+            static const QList<QCommandLineOption> &getCmdLineOptions();
+
+            //! No audio?
+            static bool isNoAudioSet();
 
             // -------- parts which can run in core and GUI, referring to local voice client ------------
 
