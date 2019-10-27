@@ -74,7 +74,7 @@ namespace BlackCore
             void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
 
         private:
-            QString m_dBusAddress { "session" }; //!< DBus address
+            QString m_dBusAddress { "tcp:host=127.0.0.1,port=45000" }; //!< DBus address
             bool    m_windowFrameless = false;   //!< frameless window
             int     m_coreMode = static_cast<int>(Standalone); //!< core
 

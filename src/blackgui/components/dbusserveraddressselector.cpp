@@ -59,7 +59,7 @@ namespace BlackGui
         QString CDBusServerAddressSelector::getDBusAddress() const
         {
             if (ui->rb_DBusSession->isChecked()) { return CDBusServer::sessionBusAddress(); }
-            if (ui->rb_DBusSystem->isChecked()) { return CDBusServer::systemBusAddress(); }
+            if (ui->rb_DBusSystem->isChecked())  { return CDBusServer::systemBusAddress(); }
             return this->getP2PAddress();
         }
 
