@@ -320,7 +320,8 @@ bool CSwiftLauncher::setSwiftCoreExecutable()
     if (!sGui || sGui->isShuttingDown()) { return false; }
     this->saveSetup();
     QStringList args = ui->comp_DBusSelector->getDBusCmdLineArgs();
-    if (ui->cb_resetWindow->isChecked()) { args.append("--resetsize"); }
+    if (ui->cb_ResetWindow->isChecked())      { args.append("--resetsize"); }
+    if (ui->cb_DisableCoreAudio->isChecked()) { args.append("--noaudio"); }
 
     m_executableArgs = sGui->argumentsJoined(args);
     m_executable = CDirectoryUtils::executableFilePath(CBuildConfig::swiftCoreExecutableName());
@@ -355,9 +356,15 @@ bool CSwiftLauncher::setSwiftGuiExecutable()
         "--window", CEnableForFramelessWindow::windowModeToString(getWindowMode())
     };
 
-    if (ui->cb_resetWindow->isChecked()) { args << "--resetsize"; }
-    if (!this->isStandaloneGuiSelected())
+    if (ui->cb_ResetWindow->isChecked()) { args << "--resetsize"; }
+    if (this->isStandaloneGuiSelected())
     {
+        if (ui->cb_DisableSaAfv->isChecked()) { args.append("--noaudio"); }
+    }
+    else
+    {
+        if (ui->cb_DisableGUIAfv->isChecked()) { args.append("--noaudio"); }
+
         const QString dBus(ui->comp_DBusSelector->getDBusAddress());
         args.append(ui->comp_DBusSelector->getDBusCmdLineArgs());
         this->saveSetup();
@@ -601,6 +608,8 @@ void CSwiftLauncher::onCoreModeReleased()
     const bool sa = ui->rb_SwiftStandalone->isChecked();
     ui->comp_DBusSelector->setEnabled(!sa);
     ui->tb_SwiftCore->setEnabled(!sa);
+    ui->gb_AudioSa->setEnabled(sa);
+    ui->gb_AudioDistributed->setEnabled(!sa);
     this->saveSetup();
 }
 

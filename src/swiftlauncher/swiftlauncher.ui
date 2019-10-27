@@ -88,7 +88,7 @@
           <item>
            <widget class="QToolBox" name="tb_Launcher">
             <property name="currentIndex">
-             <number>4</number>
+             <number>2</number>
             </property>
             <property name="tabSpacing">
              <number>6</number>
@@ -98,8 +98,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>135</width>
-               <height>109</height>
+               <width>392</width>
+               <height>309</height>
               </rect>
              </property>
              <attribute name="label">
@@ -153,8 +153,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>163</width>
-               <height>52</height>
+               <width>392</width>
+               <height>309</height>
               </rect>
              </property>
              <attribute name="label">
@@ -218,8 +218,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>233</width>
-               <height>166</height>
+               <width>381</width>
+               <height>332</height>
               </rect>
              </property>
              <attribute name="label">
@@ -251,17 +251,46 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="1" alignment="Qt::AlignHCenter">
-               <widget class="QRadioButton" name="rb_SwiftDistributed">
-                <property name="text">
-                 <string>GUI and core (distributed)</string>
+              <item row="4" column="1">
+               <widget class="QGroupBox" name="gb_AudioDistributed">
+                <property name="minimumSize">
+                 <size>
+                  <width>200</width>
+                  <height>0</height>
+                 </size>
                 </property>
-                <attribute name="buttonGroup">
-                 <string notr="true">bg_CoreMode</string>
-                </attribute>
+                <property name="title">
+                 <string>Audio distributed</string>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_2">
+                 <item>
+                  <widget class="QCheckBox" name="cb_DisableCoreAudio">
+                   <property name="text">
+                    <string>disable core audio (AFV)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_DisableGUIAfv">
+                   <property name="text">
+                    <string>disable GUI audio (AFV)</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
-              <item row="3" column="0" colspan="2">
+              <item row="1" column="0" alignment="Qt::AlignHCenter">
+               <widget class="QLabel" name="lbl_SwiftStandaloneIcon">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="pixmap">
+                 <pixmap resource="swiftlauncher.qrc">:/launcher/icons/swiftNormal61x100.png</pixmap>
+                </property>
+               </widget>
+              </item>
+              <item row="9" column="0" colspan="2">
                <spacer name="vs_CoreButtomSpace">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -274,16 +303,39 @@
                 </property>
                </spacer>
               </item>
-              <item row="2" column="0" colspan="2" alignment="Qt::AlignRight">
+              <item row="0" column="1" alignment="Qt::AlignHCenter">
+               <widget class="QRadioButton" name="rb_SwiftDistributed">
+                <property name="text">
+                 <string>GUI and core (distributed)</string>
+                </property>
+                <attribute name="buttonGroup">
+                 <string notr="true">bg_CoreMode</string>
+                </attribute>
+               </widget>
+              </item>
+              <item row="0" column="0" alignment="Qt::AlignHCenter">
+               <widget class="QRadioButton" name="rb_SwiftStandalone">
+                <property name="text">
+                 <string>standalone</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+                <attribute name="buttonGroup">
+                 <string notr="true">bg_CoreMode</string>
+                </attribute>
+               </widget>
+              </item>
+              <item row="3" column="0" colspan="2" alignment="Qt::AlignRight">
                <widget class="QGroupBox" name="gb_DBusServer">
                 <property name="minimumSize">
                  <size>
-                  <width>225</width>
+                  <width>200</width>
                   <height>0</height>
                  </size>
                 </property>
                 <property name="title">
-                 <string>DBus (swift core/GUI, NOT XSwiftBus)</string>
+                 <string>DBus (core to GUI)</string>
                 </property>
                 <layout class="QVBoxLayout" name="vl_DBusGroupBox">
                  <property name="spacing">
@@ -320,27 +372,20 @@
                 </layout>
                </widget>
               </item>
-              <item row="1" column="0" alignment="Qt::AlignHCenter">
-               <widget class="QLabel" name="lbl_SwiftStandaloneIcon">
-                <property name="text">
-                 <string/>
+              <item row="4" column="0">
+               <widget class="QGroupBox" name="gb_AudioSa">
+                <property name="title">
+                 <string>Audio</string>
                 </property>
-                <property name="pixmap">
-                 <pixmap resource="swiftlauncher.qrc">:/launcher/icons/swiftNormal61x100.png</pixmap>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0" alignment="Qt::AlignHCenter">
-               <widget class="QRadioButton" name="rb_SwiftStandalone">
-                <property name="text">
-                 <string>standalone</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-                <attribute name="buttonGroup">
-                 <string notr="true">bg_CoreMode</string>
-                </attribute>
+                <layout class="QVBoxLayout" name="verticalLayout_3">
+                 <item>
+                  <widget class="QCheckBox" name="cb_DisableSaAfv">
+                   <property name="text">
+                    <string>disable audio (AFV)</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
              </layout>
@@ -350,8 +395,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>98</width>
-               <height>237</height>
+               <width>392</width>
+               <height>309</height>
               </rect>
              </property>
              <attribute name="label">
@@ -432,8 +477,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>98</width>
-                      <height>31</height>
+                      <width>376</width>
+                      <height>126</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="vl_DataUpdatesScrollArea">
@@ -755,7 +800,7 @@
                </widget>
               </item>
               <item row="0" column="3" colspan="2">
-               <widget class="QCheckBox" name="cb_resetWindow">
+               <widget class="QCheckBox" name="cb_ResetWindow">
                 <property name="text">
                  <string>reset window</string>
                 </property>
@@ -865,17 +910,25 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>rb_WindowNormal</tabstop>
-  <tabstop>rb_WindowFrameless</tabstop>
   <tabstop>rb_SwiftStandalone</tabstop>
   <tabstop>rb_SwiftDistributed</tabstop>
-  <tabstop>sa_DataUpdates</tabstop>
+  <tabstop>cb_ResetWindow</tabstop>
   <tabstop>tb_SwiftGui</tabstop>
   <tabstop>tb_SwiftCore</tabstop>
   <tabstop>tb_SwiftMappingTool</tabstop>
-  <tabstop>tb_Database</tabstop>
   <tabstop>tb_ConfigurationWizard</tabstop>
+  <tabstop>tb_Database</tabstop>
+  <tabstop>sa_DataUpdates</tabstop>
+  <tabstop>pb_Log</tabstop>
+  <tabstop>pb_LogDir</tabstop>
+  <tabstop>pb_DumpDir</tabstop>
+  <tabstop>pb_P3DConfigDirs</tabstop>
+  <tabstop>pb_FSXConfigDirs</tabstop>
+  <tabstop>tw_LatestNewsAbout</tabstop>
+  <tabstop>tbr_LatestNews</tabstop>
   <tabstop>tb_BackToMain</tabstop>
+  <tabstop>rb_WindowNormal</tabstop>
+  <tabstop>rb_WindowFrameless</tabstop>
  </tabstops>
  <resources>
   <include location="swiftlauncher.qrc"/>
