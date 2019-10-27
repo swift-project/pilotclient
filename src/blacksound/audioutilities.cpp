@@ -86,8 +86,12 @@ namespace BlackSound
     {
         if (device.isDefault() || !device.isValid())
         {
-            if (device.getType() == CAudioDeviceInfo::InputDevice) { return CAudioDeviceInfoList::defaultQtInputDevice(); }
-            else { return CAudioDeviceInfoList::defaultQtOutputDevice(); }
+            const QAudioDeviceInfo defDevice = device.isInputDevice() ? QAudioDeviceInfo::defaultInputDevice() : QAudioDeviceInfo::defaultOutputDevice();
+            if (!defDevice.isFormatSupported(format))
+            {
+                format = defDevice.nearestFormat(format);
+            }
+            return defDevice;
         }
 
         const QList<QAudioDeviceInfo> allQtDevices =

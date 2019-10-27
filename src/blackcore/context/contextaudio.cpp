@@ -139,7 +139,7 @@ namespace BlackCore
 
         void CContextAudioBase::initVoiceClient()
         {
-            if (!m_voiceClient) { return; }
+            if (m_voiceClient) { return; }
             m_voiceClient = new CAfvClient(CVoiceSetup().getAfvVoiceServerUrl(), this);
 
             const CVoiceSetup vs = m_voiceSettings.getThreadLocal();
@@ -172,9 +172,9 @@ namespace BlackCore
             // connect(m_voiceClient, &CAfvClient::inputVolumePeakVU,             this, &CContextAudioBase::inputVolumePeakVU,  Qt::QueuedConnection);
             // connect(m_voiceClient, &CAfvClient::receivingCallsignsChanged,     this, &CContextAudioBase::receivingCallsignsChanged,     Qt::QueuedConnection);
             // connect(m_voiceClient, &CAfvClient::updatedFromOwnAircraftCockpit, this, &CContextAudioBase::updatedFromOwnAircraftCockpit, Qt::QueuedConnection);
-            connect(m_voiceClient, &CAfvClient::startedAudio,                  this, &CContextAudioBase::startedAudio, Qt::QueuedConnection);
-            connect(m_voiceClient, &CAfvClient::stoppedAudio,                  this, &CContextAudioBase::stoppedAudio, Qt::QueuedConnection);
-            connect(m_voiceClient, &CAfvClient::ptt,                           this, &CContextAudioBase::ptt,          Qt::QueuedConnection);
+            connect(m_voiceClient, &CAfvClient::startedAudio, this, &CContextAudioBase::startedAudio, Qt::QueuedConnection);
+            connect(m_voiceClient, &CAfvClient::stoppedAudio, this, &CContextAudioBase::stoppedAudio, Qt::QueuedConnection);
+            connect(m_voiceClient, &CAfvClient::ptt,          this, &CContextAudioBase::ptt,          Qt::QueuedConnection);
         }
 
         void CContextAudioBase::terminateVoiceClient()
@@ -287,13 +287,38 @@ namespace BlackCore
             return CAudioDeviceInfoList::allDevices();
         }
 
+        CAudioDeviceInfoList CContextAudioBase::getAudioInputDevices() const
+        {
+            return this->getAudioDevices().getInputDevices();
+        }
+
+        CAudioDeviceInfoList CContextAudioBase::getAudioOutputDevices() const
+        {
+            return this->getAudioDevices().getOutputDevices();
+        }
+
+        CAudioDeviceInfoList CContextAudioBase::getAudioDevicesPlusDefault() const
+        {
+            return CAudioDeviceInfoList::allDevicesPlusDefault();
+        }
+
+        CAudioDeviceInfoList CContextAudioBase::getAudioInputDevicesPlusDefault() const
+        {
+            return this->getAudioDevicesPlusDefault().getInputDevices();
+        }
+
+        CAudioDeviceInfoList CContextAudioBase::getAudioOutputDevicesPlusDefault() const
+        {
+            return this->getAudioDevicesPlusDefault().getOutputDevices();
+        }
+
         CAudioDeviceInfoList CContextAudioBase::getCurrentAudioDevices() const
         {
             const QString inputDeviceName = m_inputDeviceSetting.get();
-            const CAudioDeviceInfo inputDevice = this->getAudioInputDevices().findByNameOrDefault(inputDeviceName, CAudioDeviceInfo::getDefaultInputDevice());
+            const CAudioDeviceInfo inputDevice = this->getAudioInputDevicesPlusDefault().findByNameOrDefault(inputDeviceName, CAudioDeviceInfo::getDefaultInputDevice());
 
             const QString outputDeviceName = m_outputDeviceSetting.get();
-            const CAudioDeviceInfo outputDevice = this->getAudioOutputDevices().findByNameOrDefault(outputDeviceName, CAudioDeviceInfo::getDefaultOutputDevice());
+            const CAudioDeviceInfo outputDevice = this->getAudioOutputDevicesPlusDefault().findByNameOrDefault(outputDeviceName, CAudioDeviceInfo::getDefaultOutputDevice());
 
             CAudioDeviceInfoList devices;
             devices.push_back(inputDevice);
@@ -459,10 +484,10 @@ namespace BlackCore
         void CContextAudioBase::changeDeviceSettings()
         {
             const QString inputDeviceName = m_inputDeviceSetting.get();
-            const CAudioDeviceInfo input = this->getAudioInputDevices().findByNameOrDefault(inputDeviceName, CAudioDeviceInfo::getDefaultInputDevice());
+            const CAudioDeviceInfo input = this->getAudioInputDevicesPlusDefault().findByNameOrDefault(inputDeviceName, CAudioDeviceInfo::getDefaultInputDevice());
 
             const QString outputDeviceName = m_outputDeviceSetting.get();
-            const CAudioDeviceInfo output = this->getAudioOutputDevices().findByNameOrDefault(outputDeviceName, CAudioDeviceInfo::getDefaultOutputDevice());
+            const CAudioDeviceInfo output = this->getAudioOutputDevicesPlusDefault().findByNameOrDefault(outputDeviceName, CAudioDeviceInfo::getDefaultOutputDevice());
 
             this->setCurrentAudioDevices(input, output);
         }

@@ -134,8 +134,11 @@ namespace BlackCore
             //! Audio devices
             //! @{
             BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const;
-            BlackMisc::Audio::CAudioDeviceInfoList getAudioInputDevices()  const { return this->getAudioDevices().getInputDevices(); }
-            BlackMisc::Audio::CAudioDeviceInfoList getAudioOutputDevices() const { return this->getAudioDevices().getOutputDevices(); }
+            BlackMisc::Audio::CAudioDeviceInfoList getAudioInputDevices()  const;
+            BlackMisc::Audio::CAudioDeviceInfoList getAudioOutputDevices() const;
+            BlackMisc::Audio::CAudioDeviceInfoList getAudioDevicesPlusDefault() const;
+            BlackMisc::Audio::CAudioDeviceInfoList getAudioInputDevicesPlusDefault()  const;
+            BlackMisc::Audio::CAudioDeviceInfoList getAudioOutputDevicesPlusDefault() const;
             //! @}
 
             //! Get current audio device
