@@ -98,6 +98,7 @@ namespace BlackFsdTest
         void testSendPlaneInformation3();
         void testSendPlaneInformation4();
         void testSendAircraftConfiguration();
+        void testSendIncrementalAircraftConfiguration();
         void testCom1FreqQueryResponse();
         void testPlaneInfoRequestResponse();
         void testAuth();
@@ -712,6 +713,23 @@ namespace BlackFsdTest
         QCOMPARE(arguments.size(), 1);
         CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>$CQABCD:XYZ:ACC:{\"request\":\"full\"}");
+    }
+
+    void CTestFSDClient::testSendIncrementalAircraftConfiguration()
+    {
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
+
+        CAircraftParts parts = COwnAircraftProviderDummy::instance()->getOwnAircraftParts();
+        parts.setGearDown(true);
+        COwnAircraftProviderDummy::instance()->updateOwnParts(parts);
+
+        client->sendIncrementalAircraftConfig();
+
+        QCOMPARE(spy.count(), 1);
+        QList<QVariant> arguments = spy.takeFirst();
+        QCOMPARE(arguments.size(), 1);
+        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>$CQABCD:@94835:ACC:{\"config\":{\"gear_down\":true}}");
     }
 
     void CTestFSDClient::testCom1FreqQueryResponse()

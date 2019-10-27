@@ -623,7 +623,9 @@ namespace BlackCore
 
         void CFSDClient::sendAircraftConfiguration(const QString &receiver, const QString &aircraftConfigJson)
         {
-            sendClientQuery(ClientQueryType::AircraftConfig, receiver, { aircraftConfigJson });
+            if (aircraftConfigJson.size() == 0) { return; }
+            const ClientQuery clientQuery(m_ownCallsign.asString(), receiver, ClientQueryType::AircraftConfig, { aircraftConfigJson });
+            sendMessage(clientQuery);
         }
 
         void CFSDClient::sendFsdMessage(const QString &message)
@@ -766,8 +768,7 @@ namespace BlackCore
 
         void CFSDClient::sendIncrementalAircraftConfig()
         {
-            if (!this->isConnected()) { return; }
-            if (!this->getSetupForServer().sendAircraftParts()) { return; }
+            if (!m_unitTestMode && (!this->isConnected() || !this->getSetupForServer().sendAircraftParts())) { return; }
             const CAircraftParts currentParts(this->getOwnAircraftParts());
 
             // If it hasn't changed, return
