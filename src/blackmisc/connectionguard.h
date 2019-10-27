@@ -57,6 +57,9 @@ namespace BlackMisc
         //! Disconnect all
         int disconnectAll();
 
+        //! Empty
+        bool isEmpty() const { return m_connections.isEmpty(); }
+
     private:
         QList<QMetaObject::Connection> m_connections;
     };

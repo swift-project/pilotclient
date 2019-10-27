@@ -108,9 +108,9 @@ namespace BlackGui
                 ui->cb_SetupAudioLoopback->setChecked(sGui->getCContextAudioBase()->isAudioLoopbackEnabled());
 
                 // the connects depend on initAudioDeviceLists
-                c = connect(ui->cb_SetupAudioInputDevice,  qOverload<int>(&QComboBox::currentIndexChanged), this, &CAudioDeviceVolumeSetupComponent::onAudioDeviceSelected);
+                c = connect(ui->cb_SetupAudioInputDevice,  qOverload<int>(&QComboBox::currentIndexChanged), this, &CAudioDeviceVolumeSetupComponent::onAudioDeviceSelected, Qt::QueuedConnection);
                 Q_ASSERT(c);
-                c = connect(ui->cb_SetupAudioOutputDevice, qOverload<int>(&QComboBox::currentIndexChanged), this, &CAudioDeviceVolumeSetupComponent::onAudioDeviceSelected);
+                c = connect(ui->cb_SetupAudioOutputDevice, qOverload<int>(&QComboBox::currentIndexChanged), this, &CAudioDeviceVolumeSetupComponent::onAudioDeviceSelected, Qt::QueuedConnection);
                 Q_ASSERT(c);
 
                 // context
@@ -121,27 +121,44 @@ namespace BlackGui
                 c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::stoppedAudio, this, &CAudioDeviceVolumeSetupComponent::onAudioStopped, Qt::QueuedConnection);
                 Q_ASSERT(c);
 
-                //! \todo Workaround to avoid context signals
-                c = connect(sGui->getCContextAudioBase()->afvClient(), &CAfvClient::outputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onOutputVU, Qt::QueuedConnection);
-                Q_ASSERT(c);
-                c = connect(sGui->getCContextAudioBase()->afvClient(), &CAfvClient::inputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onInputVU, Qt::QueuedConnection);
-                Q_ASSERT(c);
-                c = connect(sGui->getCContextAudioBase()->afvClient(), &CAfvClient::receivedCallsignsChanged, this, &CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged, Qt::QueuedConnection);
-                Q_ASSERT(c);
-                c = connect(sGui->getCContextAudioBase()->afvClient(), &CAfvClient::updatedFromOwnAircraftCockpit, this, &CAudioDeviceVolumeSetupComponent::onUpdatedClientWithCockpitData, Qt::QueuedConnection);
-                Q_ASSERT(c);
-
-                QPointer<CAudioDeviceVolumeSetupComponent> myself(this);
-                c = connect(sGui->getCContextAudioBase()->afvClient(), &CAfvClient::connectionStatusChanged, this, [ = ]
-                {
-                    if (!myself || !sGui || sGui->isShuttingDown()) { return; }
-                    myself->setTransmitReceiveInUiFromVoiceClient();
-                }, Qt::QueuedConnection);
-                Q_ASSERT(c);
-
-                this->setTransmitReceiveInUiFromVoiceClient();
+                this->initWithAfvClient();
+                m_init = true;
             }
             Q_UNUSED(c)
+        }
+
+        void CAudioDeviceVolumeSetupComponent::initWithAfvClient()
+        {
+            if (!afvClient()) { return; }
+            m_afvConnections.disconnectAll();
+
+            //! \todo Workaround to avoid context signals
+            CAfvClient *afv = afvClient();
+            const Qt::ConnectionType ct = Qt::QueuedConnection;
+            QMetaObject::Connection c;
+            c = connect(afv, &CAfvClient::outputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onOutputVU, ct);
+            Q_ASSERT(c);
+            m_afvConnections.append(c);
+            c = connect(afv, &CAfvClient::inputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onInputVU, ct);
+            Q_ASSERT(c);
+            m_afvConnections.append(c);
+            c = connect(afv, &CAfvClient::receivedCallsignsChanged, this, &CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged, ct);
+            Q_ASSERT(c);
+            m_afvConnections.append(c);
+            c = connect(afv, &CAfvClient::updatedFromOwnAircraftCockpit, this, &CAudioDeviceVolumeSetupComponent::onUpdatedClientWithCockpitData, ct);
+            Q_ASSERT(c);
+            m_afvConnections.append(c);
+
+            QPointer<CAudioDeviceVolumeSetupComponent> myself(this);
+            c = connect(afv, &CAfvClient::connectionStatusChanged, this, [ = ]
+            {
+                if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+                myself->setTransmitReceiveInUiFromVoiceClient();
+            }, ct);
+            Q_ASSERT(c);
+            m_afvConnections.append(c);
+
+            this->setTransmitReceiveInUiFromVoiceClient();
         }
 
         CAudioDeviceVolumeSetupComponent::~CAudioDeviceVolumeSetupComponent()
@@ -230,6 +247,12 @@ namespace BlackGui
             this->setTransmitReceiveInUi(com1Tx, com1Rx, com2Tx, com2Rx);
         }
 
+        CAfvClient *CAudioDeviceVolumeSetupComponent::afvClient()
+        {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getCContextAudioBase()) { return nullptr; }
+            return sGui->getCContextAudioBase()->afvClient();
+        }
+
         void CAudioDeviceVolumeSetupComponent::reloadSettings()
         {
             const CSettings as(m_audioSettings.getThreadLocal());
@@ -241,7 +264,7 @@ namespace BlackGui
         void CAudioDeviceVolumeSetupComponent::initAudioDeviceLists()
         {
             if (!this->hasAudio()) { return; }
-            const bool changed = this->onAudioDevicesChanged(sGui->getCContextAudioBase()->getAudioDevices());
+            const bool changed = this->onAudioDevicesChanged(sGui->getCContextAudioBase()->getAudioDevicesPlusDefault());
             if (!changed) { return; }
             const CAudioDeviceInfoList currentDevices = sGui->getCContextAudioBase()->getCurrentAudioDevices();
             this->onAudioStarted(currentDevices.getInputDevices().frontOrDefault(), currentDevices.getOutputDevices().frontOrDefault());
@@ -323,14 +346,14 @@ namespace BlackGui
         CAudioDeviceInfo CAudioDeviceVolumeSetupComponent::getSelectedInputDevice() const
         {
             if (!hasAudio()) { return CAudioDeviceInfo(); }
-            const CAudioDeviceInfoList devices = sGui->getCContextAudioBase()->getAudioInputDevices();
+            const CAudioDeviceInfoList devices = sGui->getCContextAudioBase()->getAudioInputDevicesPlusDefault();
             return devices.findByName(ui->cb_SetupAudioInputDevice->currentText());
         }
 
         CAudioDeviceInfo CAudioDeviceVolumeSetupComponent::getSelectedOutputDevice() const
         {
             if (!hasAudio()) { return CAudioDeviceInfo(); }
-            const CAudioDeviceInfoList devices = sGui->getCContextAudioBase()->getAudioOutputDevices();
+            const CAudioDeviceInfoList devices = sGui->getCContextAudioBase()->getAudioOutputDevicesPlusDefault();
             return devices.findByName(ui->cb_SetupAudioOutputDevice->currentText());
         }
 
@@ -346,6 +369,12 @@ namespace BlackGui
 
         void CAudioDeviceVolumeSetupComponent::onAudioStarted(const CAudioDeviceInfo &input, const CAudioDeviceInfo &output)
         {
+            if (!afvClient()) { return; }
+            if (m_afvConnections.isEmpty() && m_init)
+            {
+                this->initWithAfvClient();
+            }
+
             ui->cb_SetupAudioInputDevice->setCurrentText(input.toQString(true));
             ui->cb_SetupAudioOutputDevice->setCurrentText(output.toQString(true));
             this->setAudioRunsWhere();
@@ -354,6 +383,10 @@ namespace BlackGui
         void CAudioDeviceVolumeSetupComponent::onAudioStopped()
         {
             this->setAudioRunsWhere();
+            if (!afvClient())
+            {
+                m_afvConnections.disconnectAll();
+            }
         }
 
         bool CAudioDeviceVolumeSetupComponent::onAudioDevicesChanged(const CAudioDeviceInfoList &devices)

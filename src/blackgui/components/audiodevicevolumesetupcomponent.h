@@ -12,9 +12,10 @@
 #define BLACKGUI_COMPONENTS_AUDIODEVICEVOLUMESETUPCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackcore/afv/audio/receiversampleprovider.h"
 #include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
+#include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/connectionguard.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/digestsignal.h"
 
@@ -62,6 +63,9 @@ namespace BlackGui
         private:
             //! Init
             void init();
+
+            //! AFV client related part
+            void initWithAfvClient();
 
             //! Reload settings
             void reloadSettings();
@@ -118,6 +122,10 @@ namespace BlackGui
             void setTransmitReceiveInUiFromVoiceClient();
             //! @}
 
+            static BlackCore::Afv::Clients::CAfvClient *afvClient();
+
+            bool m_init = false;
+            BlackMisc::CConnectionGuard m_afvConnections;
             QScopedPointer<Ui::CAudioDeviceVolumeSetupComponent> ui;
             BlackMisc::Audio::CAudioDeviceInfoList m_cbDevices;
             BlackMisc::CDigestSignal m_volumeSliderChanged { this, &CAudioDeviceVolumeSetupComponent::saveVolumes, 1000, 10 };
