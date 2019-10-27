@@ -62,10 +62,10 @@ namespace BlackMisc
             bool isOutputDevice() const { return this->getType() == OutputDevice; }
 
             //! Valid audio device object?
-            bool isValid() const { return !m_deviceName.isEmpty() && (m_deviceName != Unknown); }
+            bool isValid() const { return !m_deviceName.isEmpty() && (m_type != Unknown); }
 
             //! Is this a default device?
-            bool isDefault() const { return m_deviceName == "default"; }
+            bool isDefault() const;
 
             //! Mathcing name, type and machine
             bool matchesNameTypeHostName(const CAudioDeviceInfo &device) const;
@@ -74,16 +74,10 @@ namespace BlackMisc
             static DeviceType fromQtMode(QAudio::Mode m);
 
             //! Default output device
-            static CAudioDeviceInfo getDefaultOutputDevice()
-            {
-                return CAudioDeviceInfo(OutputDevice, "default");
-            }
+            static CAudioDeviceInfo getDefaultOutputDevice();
 
             //! Default input device
-            static CAudioDeviceInfo getDefaultInputDevice()
-            {
-                return CAudioDeviceInfo(InputDevice, "default");
-            }
+            static CAudioDeviceInfo getDefaultInputDevice();
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;

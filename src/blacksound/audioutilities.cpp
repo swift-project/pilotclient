@@ -86,8 +86,8 @@ namespace BlackSound
     {
         if (device.isDefault() || !device.isValid())
         {
-            if (device.getType() == CAudioDeviceInfo::InputDevice) { return CAudioDeviceInfoList::defaultInputDevice(); }
-            else { return CAudioDeviceInfoList::defaultOutputDevice(); }
+            if (device.getType() == CAudioDeviceInfo::InputDevice) { return CAudioDeviceInfoList::defaultQtInputDevice(); }
+            else { return CAudioDeviceInfoList::defaultQtOutputDevice(); }
         }
 
         const QList<QAudioDeviceInfo> allQtDevices =
@@ -157,7 +157,7 @@ namespace BlackSound
 
     QAudioDeviceInfo getHighestCompatibleOutputDevice(const CAudioDeviceInfo &device, QAudioFormat &format)
     {
-        if (device.isDefault()) { return CAudioDeviceInfoList::defaultOutputDevice(); }
+        if (device.isDefault()) { return CAudioDeviceInfoList::defaultQtOutputDevice(); }
         const QList<QAudioDeviceInfo> allQtDevices = CAudioDeviceInfoList::allQtOutputDevices();
 
         QList<QAudioDeviceInfo> supportedDevices;

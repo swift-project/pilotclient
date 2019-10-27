@@ -12,6 +12,7 @@
 #include <QStringBuilder>
 #include <QHostInfo>
 #include <QtGlobal>
+#include <QAudioDeviceInfo>
 
 namespace BlackMisc
 {
@@ -26,6 +27,15 @@ namespace BlackMisc
             m_type(type),
             m_deviceName(name), m_hostName(QHostInfo::localHostName())
         { }
+
+        bool CAudioDeviceInfo::isDefault() const
+        {
+            if (m_deviceName.isEmpty())   { return false; }
+            if (m_deviceName == "default") { return true; }
+            if (this->isInputDevice()  &&  m_deviceName == QAudioDeviceInfo::defaultInputDevice().deviceName())  { return true; }
+            if (this->isOutputDevice() &&  m_deviceName == QAudioDeviceInfo::defaultOutputDevice().deviceName()) { return true; }
+            return false;
+        }
 
         bool CAudioDeviceInfo::matchesNameTypeHostName(const CAudioDeviceInfo &device) const
         {
@@ -43,6 +53,16 @@ namespace BlackMisc
             default: break;
             }
             return Unknown;
+        }
+
+        CAudioDeviceInfo CAudioDeviceInfo::getDefaultOutputDevice()
+        {
+            return CAudioDeviceInfo(OutputDevice, QAudioDeviceInfo::defaultOutputDevice().deviceName());
+        }
+
+        CAudioDeviceInfo CAudioDeviceInfo::getDefaultInputDevice()
+        {
+            return CAudioDeviceInfo(InputDevice, QAudioDeviceInfo::defaultInputDevice().deviceName());
         }
 
         QString CAudioDeviceInfo::convertToQString(bool i18n) const

@@ -86,10 +86,15 @@ namespace BlackMisc
             static CAudioDeviceInfoList allInputDevices();
             static CAudioDeviceInfoList allOutputDevices();
             static CAudioDeviceInfoList allDevices();
+            static CAudioDeviceInfoList allInputDevicesPlusDefault();
+            static CAudioDeviceInfoList allOutputDevicesPlusDefault();
+            static CAudioDeviceInfoList allDevicesPlusDefault();
             static QList<QAudioDeviceInfo> allQtInputDevices();
             static QList<QAudioDeviceInfo> allQtOutputDevices();
-            static QAudioDeviceInfo defaultInputDevice();
-            static QAudioDeviceInfo defaultOutputDevice();
+            static QAudioDeviceInfo defaultQtInputDevice();
+            static QAudioDeviceInfo defaultQtOutputDevice();
+            static CAudioDeviceInfo defaultInputDevice();
+            static CAudioDeviceInfo defaultOutputDevice();
             //! @}
         };
     } //namespace
