@@ -592,7 +592,8 @@ namespace BlackCore
         const bool complete = validRemoteCs &&
                               minSituations && (
                                   readiness.receivedAll() ||
-                                  (remoteAircraft.getModel().getModelType() == CAircraftModel::TypeFSInnData) || // here we know we have all data
+                                  // disable, because it can be model string is unknown in FsInn data
+                                  // (remoteAircraft.getModel().getModelType() == CAircraftModel::TypeFSInnData) || // here we know we have all data
                                   (remoteAircraft.hasModelString()) // we cannot expect more info
                               );
 
@@ -631,11 +632,10 @@ namespace BlackCore
         // some checks for special conditions, e.g. logout -> empty list, but still signals pending
         if (validRemoteCs)
         {
-            static const QString readyForMatching("Ready for matching callsign '%1' with model type '%2', '%3'");
+            static const QString readyForMatching("Ready (%1) for matching callsign '%2' with model type '%3', ICAO: '%4' '%5'");
 
             readiness.setFlag(ReadyForMatchingSent); // stored as readiness as reference
-
-            const QString readyMsg = readyForMatching.arg(callsign.toQString(), remoteAircraft.getModel().getModelTypeAsString(), readiness.toQString());
+            const QString readyMsg = readyForMatching.arg(readiness.toQString(), callsign.toQString(), remoteAircraft.getModel().getModelTypeAsString(), remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey(), remoteAircraft.getAirlineIcaoCode().getDesignatorDbKey());
             const CStatusMessage m = CLogUtilities::logMessage(callsign, readyMsg, getLogCategories());
             this->addReverseLookupMessage(callsign, m);
 
@@ -815,10 +815,13 @@ namespace BlackCore
                                                    QStringLiteral("FsInn modelstring ignored, as modelstring '%1' is not known").arg(modelString));
             }
 
-            // with no model we pretend to be a normal "queried model"
-            const CAircraftModel::ModelType modelType = usedModelString.isEmpty() ? CAircraftModel::TypeQueriedFromNetwork : CAircraftModel::TypeFSInnData;
-            this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, QString(), usedModelString, modelType, pReverseLookupMessages);
-            this->addReverseLookupMessages(callsign, reverseLookupMessages);
+            // if model string is empty, FsInn data are pointless
+            // in order not to override swift livery string data, we ignore those
+            if (!usedModelString.isEmpty())
+            {
+                this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, QString(), usedModelString, CAircraftModel::TypeFSInnData, pReverseLookupMessages);
+                this->addReverseLookupMessages(callsign, reverseLookupMessages);
+            }
             this->sendReadyForModelMatching(callsign, ReceivedFsInnPacket); // from FSInn
         }
     }
