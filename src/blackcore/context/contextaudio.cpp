@@ -34,6 +34,8 @@ using namespace BlackMisc::Simulation;
 using namespace BlackSound;
 using namespace BlackCore::Afv::Clients;
 
+//! \cond
+
 namespace BlackCore
 {
     namespace Context
@@ -539,3 +541,5 @@ namespace BlackCore
         }
     } // ns
 } // ns
+
+//! \endcond

@@ -213,14 +213,16 @@ namespace BlackCore
         public slots:
             // ------------- DBus ---------------
 
+            //! \cond
+            //! Parse command line
             //! \addtogroup swiftdotcommands
             //! <pre>
-            //! .mute                          mute             BlackCore::Context::CContextAudio
-            //! .unmute                        unmute           BlackCore::Context::CContextAudio
-            //! .vol .volume   volume 0..100   set volume       BlackCore::Context::CContextAudio
+            //! .mute                          mute             BlackCore::Context::CContextAudioBase
+            //! .unmute                        unmute           BlackCore::Context::CContextAudioBase
+            //! .vol .volume   volume 0..100   set volume       BlackCore::Context::CContextAudioBase
             //! </pre>
-            //! Parse command line
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+            //! \endcond
 
             // ------------- DBus ---------------
 
