@@ -290,7 +290,7 @@ namespace BlackGui
 
                 // Login mode
                 const CLoginMode mode = ui->frp_LoginMode->getLoginMode();
-                if(mode.isObserver()) { CLogMessage(this).info(u"login in observer mode"); }
+                if (mode.isObserver()) { CLogMessage(this).info(u"login in observer mode"); }
 
                 // Server
                 currentServer = this->getCurrentServer();
@@ -475,14 +475,14 @@ namespace BlackGui
 
         void CLoginComponent::onDetailsTabChanged(int index)
         {
-            Q_UNUSED(index);
+            Q_UNUSED(index)
             const bool showNetwork = (ui->tw_Details->currentWidget() != ui->tb_FsdDetails);
 
             const CServer server = this->getCurrentServer();
 
             // only override if not yet enabled
             if (!ui->form_FsdDetails->isFsdSetupEnabled()) { ui->form_FsdDetails->setValue(server.getFsdSetup()); }
-            if (!ui->form_Voice->isVoiceSetupEnabled()) { ui->form_Voice->setValue(server.getVoiceSetup()); }
+            if (!ui->form_Voice->isVoiceSetupEnabled())    { ui->form_Voice->setValue(server.getVoiceSetup()); }
 
             ui->tw_Network->setVisible(showNetwork);
             ui->tw_Details->setMinimumHeight(showNetwork ? 0 : 125);

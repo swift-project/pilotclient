@@ -101,10 +101,10 @@ namespace BlackCore
             connect(m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked, Qt::QueuedConnection);
             connect(m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus, Qt::QueuedConnection);
             connect(m_airspace, &CAirspaceMonitor::changedAircraftInRange, this, &CContextNetwork::changedAircraftInRange, Qt::QueuedConnection);
-            connect(m_airspace, &CAirspaceMonitor::removedAircraft,        this, &IContextNetwork::removedAircraft, Qt::QueuedConnection); // DBus
-            connect(m_airspace, &CAirspaceMonitor::readyForModelMatching,  this, &CContextNetwork::readyForModelMatching, Qt::QueuedConnection);
-            connect(m_airspace, &CAirspaceMonitor::addedAircraft,          this, &CContextNetwork::addedAircraft, Qt::QueuedConnection);
-            connect(m_airspace, &CAirspaceMonitor::changedAtisReceived   , this, &CContextNetwork::onChangedAtisReceived, Qt::QueuedConnection);
+            connect(m_airspace, &CAirspaceMonitor::removedAircraft,        this, &IContextNetwork::removedAircraft,        Qt::QueuedConnection); // DBus
+            connect(m_airspace, &CAirspaceMonitor::readyForModelMatching,  this, &CContextNetwork::readyForModelMatching,  Qt::QueuedConnection);
+            connect(m_airspace, &CAirspaceMonitor::addedAircraft,          this, &CContextNetwork::addedAircraft,          Qt::QueuedConnection);
+            connect(m_airspace, &CAirspaceMonitor::changedAtisReceived,    this, &CContextNetwork::onChangedAtisReceived,  Qt::QueuedConnection);
         }
 
         CContextNetwork *CContextNetwork::registerWithDBus(BlackMisc::CDBusServer *server)
