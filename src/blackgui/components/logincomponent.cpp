@@ -585,9 +585,12 @@ namespace BlackGui
                 if (sGui->getIContextSimulator()->isSimulatorAvailable())
                 {
                     // sim. attached, but no model data from DB
+
+                    /** for NOW, keep the values as they were
                     ui->le_AircraftCombinedType->clear();
                     ui->selector_AircraftIcao->clear();
                     ui->selector_AirlineIcao->clear();
+                    **/
                 }
             }
 
