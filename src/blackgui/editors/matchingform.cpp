@@ -86,7 +86,7 @@ namespace BlackGui
 
         CStatusMessageList CMatchingForm::validate(bool withNestedForms) const
         {
-            Q_UNUSED(withNestedForms);
+            Q_UNUSED(withNestedForms)
             return CStatusMessageList();
         }
 

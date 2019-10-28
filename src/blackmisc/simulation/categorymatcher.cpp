@@ -61,7 +61,7 @@ namespace BlackMisc
 
         CAircraftModelList CCategoryMatcher::reduceByCategories(const CAircraftModelList &alreadyMatchedModels, const CAircraftModelList &modelSet, const CAircraftMatcherSetup &setup, const CSimulatedAircraft &remoteAircraft, bool &reduced, bool shortLog, CStatusMessageList *log) const
         {
-            Q_UNUSED(shortLog);
+            Q_UNUSED(shortLog)
 
             reduced = false;
             if (!setup.useCategoryMatching())
