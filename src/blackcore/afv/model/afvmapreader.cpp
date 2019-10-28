@@ -1,12 +1,14 @@
 #include "afvmapreader.h"
 #include "blackcore/application.h"
 #include "blackcore/afv/dto.h"
+#include "blackmisc/aviation/callsign.h"
 #include <QEventLoop>
 #include <QNetworkReply>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
 
+using namespace BlackMisc::Aviation;
 
 namespace BlackCore
 {
@@ -28,7 +30,7 @@ namespace BlackCore
 
                 QEventLoop loop;
                 connect(sApp->getNetworkAccessManager(), &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
-                QNetworkReply *reply = sApp->getNetworkAccessManager()->get(QNetworkRequest(QUrl("https://afv-map.vatsim.net/atis-map-data")));
+                QNetworkReply *reply = sApp->getNetworkAccessManager()->get(QNetworkRequest(QUrl("https://voice1.vatsim.uk/api/v1/network/online/callsigns")));
                 while (! reply->isFinished()) { loop.exec(); }
                 QByteArray jsonData = reply->readAll();
                 reply->deleteLater();
@@ -36,50 +38,32 @@ namespace BlackCore
                 if (jsonData.isEmpty()) { return; }
 
                 QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData);
-                if (jsonDoc.isObject())
+                if (jsonDoc.isArray())
                 {
-                    const QJsonObject rootObject = jsonDoc.object();
+                    const QJsonArray rootArray = jsonDoc.array();
                     QVector<CSampleAtcStation> transceivers;
+                    QString callsign;
 
-                    if (rootObject.contains("controllers"))
+                    for (auto it = rootArray.begin(); it != rootArray.end(); ++it)
                     {
-                        const QJsonObject otherObject = rootObject.value("controllers").toObject();
-                        for (auto it = otherObject.begin(); it != otherObject.end(); ++it)
+                        if (it->isObject())
                         {
-                            const  QString callsign = it.key();
-                            if (it.value().isObject())
+                            const QJsonObject stationObject = it->toObject();
+
+                            if (stationObject.contains("callsign"))
                             {
-                                const QJsonObject stationObject = it.value().toObject();
-                                if (stationObject.contains("transceivers"))
-                                {
-                                    QJsonArray txArray = stationObject.value("transceivers").toArray();
-                                    for (auto jt = txArray.begin(); jt != txArray.end(); ++jt)
-                                    {
-                                        const TransceiverDto transceiver = TransceiverDto::fromJson(jt->toObject());
-                                        transceivers.push_back({ callsign, transceiver});
-                                    }
-                                }
+                                callsign = stationObject.value("callsign").toString();
                             }
-                        }
-                    }
 
-                    if (rootObject.contains("other") && rootObject.value("other").isObject())
-                    {
-                        const QJsonObject otherObject = rootObject.value("other").toObject();
-                        for (auto it = otherObject.begin(); it != otherObject.end(); ++it)
-                        {
-                            const QString callsign = it.key();
-                            if (it.value().isObject())
+                            if (callsign.isEmpty() || !CCallsign::looksLikeAtcCallsign(callsign)) { continue; }
+
+                            if (stationObject.contains("transceivers"))
                             {
-                                QJsonObject stationObject = it.value().toObject();
-                                if (stationObject.contains("transceivers"))
+                                QJsonArray txArray = stationObject.value("transceivers").toArray();
+                                for (auto jt = txArray.begin(); jt != txArray.end(); ++jt)
                                 {
-                                    const QJsonArray txArray = stationObject.value("transceivers").toArray();
-                                    for (auto jt = txArray.begin(); jt != txArray.end(); ++jt)
-                                    {
-                                        const TransceiverDto transceiver = TransceiverDto::fromJson(jt->toObject());
-                                        transceivers.push_back({ callsign, transceiver});
-                                    }
+                                    const TransceiverDto transceiver = TransceiverDto::fromJson(jt->toObject());
+                                    transceivers.push_back({ callsign, transceiver});
                                 }
                             }
                         }
