@@ -1168,8 +1168,8 @@ namespace BlackCore
         }
 
         const bool known = sApp->getWebDataServices()->containsAircraftIcaoDesignator(candidate);
-        static const QString sKnown("Known ICAO '%1'");
-        static const QString sUnknown("Unknown ICAO '%1'");
+        static const QString sKnown("Known ICAO designator '%1'");
+        static const QString sUnknown("Unknown ICAO designator '%1'");
         CLogUtilities::addLogDetailsToList(log, callsign, known ? sKnown.arg(candidate) : sUnknown.arg(candidate));
         return known;
     }
@@ -1379,7 +1379,7 @@ namespace BlackCore
     {
         CAircraftModelList matchedModels(modelSet);
         CAircraftModel matchedModel(remoteAircraft.getModel());
-        Q_UNUSED(whatToLog);
+        Q_UNUSED(whatToLog)
 
         const CAircraftMatcherSetup::MatchingMode mode = setup.getMatchingMode();
         CStatusMessageList *reduceLog = log && whatToLog.testFlag(MatchingLogStepwiseReduce) ? log : nullptr;

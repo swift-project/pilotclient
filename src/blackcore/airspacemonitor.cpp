@@ -883,7 +883,7 @@ namespace BlackCore
                 {
                     lookupModel = CAircraftMatcher::reverseLookupModelId(ids.model, callsign, log);
                     if (lookupModel.hasValidDbKey()) { break; } // found by model id from livery string
-                };
+                }
 
                 CAircraftMatcher::reverseLookupByIds(ids, aircraftIcao, livery, callsign, log);
                 if (livery.hasValidDbKey()) { airlineIcao = livery.getAirlineIcaoCode(); }
@@ -918,33 +918,41 @@ namespace BlackCore
                 const CFlightPlanRemarks fpRemarks = this->tryToGetFlightPlanRemarks(callsign);
                 // const bool hasParsedAirlineRemarks = fpRemarks.hasParsedAirlineRemarks();
 
+                QString airlineNameLookup;
+                QString telephonyLookup;
+                QString telephonyFromFp;
+                QString airlineNameFromFp;
+                QString airlineIcaoFromFp;
+
                 if (fpRemarks.isEmpty())
                 {
-                    CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("No flight plan remarks"));
+                    CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("No flight plan remarks, skipping FP resolution"));
                 }
                 else
                 {
                     CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("FP remarks: '%1'").arg(fpRemarks.getRemarks()));
                     CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("FP rem.parsed: '%1'").arg(fpRemarks.toQString(true)));
+
+                    // FP data if any
+                    telephonyFromFp   = CAircraftMatcher::reverseLookupTelephonyDesignator(fpRemarks.getRadioTelephony(), callsign, log);
+                    airlineNameFromFp = CAircraftMatcher::reverseLookupAirlineName(fpRemarks.getFlightOperator(), callsign, log);
+                    airlineIcaoFromFp = fpRemarks.getAirlineIcao().getDesignator();
+
+                    // turn into names as in DB
+                    airlineNameLookup = CAircraftMatcher::reverseLookupAirlineName(airlineNameFromFp);
+                    telephonyLookup   = CAircraftMatcher::reverseLookupTelephonyDesignator(telephonyFromFp);
+                    if (!airlineNameLookup.isEmpty()) { CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Using resolved airline name '%1' found by FP name '%2'").arg(airlineNameLookup, airlineNameFromFp), CAirspaceMonitor::getLogCategories()); }
+                    if (!telephonyLookup.isEmpty())   { CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Using resolved telephony designator '%1' found by FP telephoy '%2'").arg(telephonyLookup, telephonyFromFp), CAirspaceMonitor::getLogCategories()); }
                 }
 
-                // FP data if any
-                const QString telephonyFromFp   = CAircraftMatcher::reverseLookupTelephonyDesignator(fpRemarks.getRadioTelephony(), callsign, log);
-                const QString airlineNameFromFp = CAircraftMatcher::reverseLookupAirlineName(fpRemarks.getFlightOperator(), callsign, log);
-                const QString airlineIcaoFromFp = fpRemarks.getAirlineIcao().getDesignator();
-
-                // turn into names as in DB
-                const QString airlineNameLookup = CAircraftMatcher::reverseLookupAirlineName(airlineNameFromFp);
-                const QString telephonyLookup   = CAircraftMatcher::reverseLookupTelephonyDesignator(telephonyFromFp);
-                if (!airlineNameLookup.isEmpty()) { CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Using resolved airline name '%1' found by FP name '%2'").arg(airlineNameLookup, airlineNameFromFp), CAirspaceMonitor::getLogCategories()); }
-                if (!telephonyLookup.isEmpty())   { CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Using resolved telephony designator '%1' found by FP telephoy '%2'").arg(telephonyLookup, telephonyFromFp), CAirspaceMonitor::getLogCategories()); }
+                // This code is needed WITH and WITHOUT FP data
 
                 // INFO: CModelMatcherComponent::reverseLookup() contains the simulated lookup
                 // changed with T701: resolve first against model set, then all DB data
                 // if an airline is ambiguous most likely the one in the set is the best choice
                 airlineIcao = CAircraftMatcher::failoverValidAirlineIcaoDesignatorModelsFirst(callsign, airlineIcaoString, airlineIcaoFromFp, true, airlineNameFromFp, telephonyFromFp, modelSet, log);
 
-                // not found, create a seatch patterm
+                // not found, create a search patterm
                 if (!airlineIcao.isLoadedFromDb())
                 {
                     if (!airlineIcao.hasValidDesignator()) { airlineIcao.setDesignator(airlineIcaoString.isEmpty() ? callsign.getAirlinePrefix() : airlineIcaoString); }
