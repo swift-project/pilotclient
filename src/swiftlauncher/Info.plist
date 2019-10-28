@@ -24,5 +24,7 @@
 	<string>NSApplication</string>
 	<key>NSSupportsAutomaticGraphicsSwitching</key>
 	<true/>
+        <key>NSMicrophoneUsageDescription</key>
+        <string>This application needs access to your Microphone for Vatsim Voice.</string>
 </dict>
 </plist>
