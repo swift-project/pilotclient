@@ -44,9 +44,10 @@ namespace BlackCore
             // Interface implementations for DBus
             //! \publicsection
             //! @{
+            virtual BlackMisc::Audio::CAudioDeviceInfoList getRegisteredDevices() const override;
             virtual void registerDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;
             virtual void unRegisterDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;
-            virtual BlackMisc::Audio::CAudioDeviceInfoList getRegisteredDevices() const override;
+            virtual void unRegisterDevicesFor(const BlackMisc::CIdentifier &identifier) override;
             //! @}
 
         protected:

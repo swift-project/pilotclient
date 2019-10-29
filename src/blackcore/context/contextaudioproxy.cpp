@@ -54,6 +54,11 @@ namespace BlackCore
             m_dBusInterface->callDBus(QLatin1String("unRegisterDevices"));
         }
 
+        void CContextAudioProxy::unRegisterDevicesFor(const CIdentifier &identifier)
+        {
+            m_dBusInterface->callDBus(QLatin1String("unRegisterDevicesFor"), identifier);
+        }
+
         CAudioDeviceInfoList CContextAudioProxy::getRegisteredDevices() const
         {
             return m_dBusInterface->callDBusRet<BlackMisc::Audio::CAudioDeviceInfoList>(QLatin1String("getRegisteredDevices"));

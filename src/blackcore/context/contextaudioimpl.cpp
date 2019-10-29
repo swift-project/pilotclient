@@ -48,6 +48,11 @@ namespace BlackCore
             m_registeredDevices.unRegisterDevices(devices);
         }
 
+        void CContextAudio::unRegisterDevicesFor(const CIdentifier &identifier)
+        {
+            m_registeredDevices.unRegisterDevices(identifier);
+        }
+
         CAudioDeviceInfoList CContextAudio::getRegisteredDevices() const
         {
             return m_registeredDevices;

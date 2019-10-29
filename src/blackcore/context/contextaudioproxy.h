@@ -62,9 +62,10 @@ namespace BlackCore
             //! \publicsection
             //! @{
             //! Register a device on a machine (for core/GUI it will return all known devices on all machines)
+            virtual BlackMisc::Audio::CAudioDeviceInfoList getRegisteredDevices() const override;
             virtual void registerDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;
             virtual void unRegisterDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;
-            virtual BlackMisc::Audio::CAudioDeviceInfoList getRegisteredDevices() const override;
+            virtual void unRegisterDevicesFor(const BlackMisc::CIdentifier &identifier) override;
             //! @}
 
         private:
