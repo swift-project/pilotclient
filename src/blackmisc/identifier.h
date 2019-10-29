@@ -146,6 +146,9 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
         void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
+        //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
+        int comparePropertyByIndex(const CPropertyIndex &index, const CIdentifier &compareValue) const;
+
     private:
         //! Constructor.
         CIdentifier(const QString &name, const QString &machineId, const QString &machineName,

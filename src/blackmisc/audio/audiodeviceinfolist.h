@@ -12,6 +12,7 @@
 #define BLACKMISC_AUDIO_AUDIODEVICELIST_H
 
 #include "blackmisc/audio/audiodeviceinfo.h"
+#include "blackmisc/identifier.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
@@ -69,6 +70,9 @@ namespace BlackMisc
 
             //! Un-register devices
             void unRegisterDevices(const CAudioDeviceInfoList &devices);
+
+            //! Un-register devices
+            void unRegisterDevices(const CIdentifier &identifier);
 
             //! Is that a registered device?
             bool isRegisteredDevice(const CAudioDeviceInfo &device) const;

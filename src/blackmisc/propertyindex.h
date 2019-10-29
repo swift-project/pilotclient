@@ -146,6 +146,7 @@ namespace BlackMisc
             GlobalIndexCAircraftCfgEntries              =  8800,
             GlobalIndexCDistributor                     =  8900,
             GlobalIndexCVPilotModelRule                 =  9000,
+            GlobalIndexCAudioDeviceInfo                 = 10000,
             GlobalIndexCSettingKeyboardHotkey           = 11000,
             GlobalIndexCKeyboardKey                     = 11100,
             GlobalIndexCJoystickButton                  = 11200,

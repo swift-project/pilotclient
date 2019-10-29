@@ -7,6 +7,7 @@
  */
 
 #include "blackmisc/identifier.h"
+#include "blackmisc/comparefunctions.h"
 
 #include <QCoreApplication>
 #include <QHostInfo>
@@ -225,16 +226,38 @@ namespace BlackMisc
 
         switch (i)
         {
-        case IndexName: return CVariant::fromValue(m_name);
-        case IndexMachineIdBase64: return CVariant::fromValue(m_machineIdBase64);
-        case IndexMachineName: return CVariant::fromValue(getMachineName());
-        case IndexMachineId: return CVariant::fromValue(getMachineId());
-        case IndexProcessId: return CVariant::fromValue(m_processId);
-        case IndexProcessName: return CVariant::fromValue(m_processName);
+        case IndexName:               return CVariant::fromValue(m_name);
+        case IndexMachineIdBase64:    return CVariant::fromValue(m_machineIdBase64);
+        case IndexMachineName:        return CVariant::fromValue(getMachineName());
+        case IndexMachineId:          return CVariant::fromValue(getMachineId());
+        case IndexProcessId:          return CVariant::fromValue(m_processId);
+        case IndexProcessName:        return CVariant::fromValue(m_processName);
         case IndexIsFromLocalMachine: return CVariant::fromValue(isFromLocalMachine());
-        case IndexIsFromSameProcess: return CVariant::fromValue(hasApplicationProcessId());
+        case IndexIsFromSameProcess:  return CVariant::fromValue(hasApplicationProcessId());
         case IndexIsFromSameProcessName: return CVariant::fromValue(hasApplicationProcessName());
         default: return CValueObject::propertyByIndex(index);
+        }
+    }
+
+    int CIdentifier::comparePropertyByIndex(const CPropertyIndex &index, const CIdentifier &compareValue) const
+    {
+        if (index.isMyself()) { return Compare::compare(m_processId, compareValue.m_processId); }
+
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
+
+        switch (i)
+        {
+        case IndexName:               return m_name.compare(compareValue.m_name, Qt::CaseInsensitive);
+        case IndexMachineIdBase64:    return m_machineIdBase64.compare(compareValue.m_machineIdBase64, Qt::CaseInsensitive);
+        case IndexMachineName:        return m_machineName.compare(compareValue.m_machineName, Qt::CaseInsensitive);
+        case IndexMachineId:          return m_machineName.compare(compareValue.m_machineName, Qt::CaseInsensitive);
+        case IndexProcessId:          return Compare::compare(m_processId, compareValue.m_processId);
+        case IndexProcessName:        return m_processName.compare(compareValue.m_processName, Qt::CaseInsensitive);
+        case IndexIsFromLocalMachine: return Compare::compare(this->isFromLocalMachine(), compareValue.isFromLocalMachine());
+        case IndexIsFromSameProcess:  return Compare::compare(this->hasApplicationProcessId(), compareValue.hasApplicationProcessId());
+        case IndexIsFromSameProcessName: return Compare::compare(this->hasApplicationProcessName(), compareValue.hasApplicationProcessName());
+        default: return CValueObject::comparePropertyByIndex(index, compareValue);
         }
     }
 

@@ -1175,8 +1175,8 @@ namespace BlackCore
                 const CAudioDeviceInfo o = m_output->device();
                 lock.unlock();
 
-                return i.matchesNameTypeHostName(inputDevice) &&
-                       o.matchesNameTypeHostName(outputDevice);
+                return i.matchesNameTypeMachineName(inputDevice) &&
+                       o.matchesNameTypeMachineName(outputDevice);
             }
 
             CAfvClient::ConnectionStatus CAfvClient::getConnectionStatus() const

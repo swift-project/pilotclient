@@ -11,6 +11,7 @@
 #ifndef BLACKMISC_AUDIO_AUDIODEVICE_H
 #define BLACKMISC_AUDIO_AUDIODEVICE_H
 
+#include "blackmisc/identifier.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/blackmiscexport.h"
@@ -31,6 +32,15 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CAudioDeviceInfo : public CValueObject<CAudioDeviceInfo>
         {
         public:
+            //! Properties by index
+            enum ColumnIndex
+            {
+                IndexName = CPropertyIndex::GlobalIndexCAudioDeviceInfo,
+                IndexDeviceType,
+                IndexDeviceTypeAsString,
+                IndexIdentifier
+            };
+
             //! Type
             enum DeviceType
             {
@@ -39,7 +49,6 @@ namespace BlackMisc
                 Unknown
             };
 
-            //!
             //! Default constructor.
             CAudioDeviceInfo();
 
@@ -49,11 +58,17 @@ namespace BlackMisc
             //! Get the device name
             const QString &getName() const { return m_deviceName; }
 
-            //! Host name
-            const QString &getHostName() const { return m_hostName; }
+            //! Machine name
+            const QString &getMachineName() const { return m_identifier.getMachineName(); }
+
+            //! Identifier
+            const CIdentifier &getIdentifier() const { return m_identifier; }
 
             //! Type
             DeviceType getType() const { return m_type; }
+
+            //! Type as string
+            const QString &getTypeAsString() const { return deviceTypeToString(this->getType()); }
 
             //! Input device
             bool isInputDevice()  const { return this->getType() == InputDevice; }
@@ -67,8 +82,8 @@ namespace BlackMisc
             //! Is this a default device?
             bool isDefault() const;
 
-            //! Mathcing name, type and machine
-            bool matchesNameTypeHostName(const CAudioDeviceInfo &device) const;
+            //! Matching name, type and machine
+            bool matchesNameTypeMachineName(const CAudioDeviceInfo &device) const;
 
             //! Convert the Qt type
             static DeviceType fromQtMode(QAudio::Mode m);
@@ -79,19 +94,31 @@ namespace BlackMisc
             //! Default input device
             static CAudioDeviceInfo getDefaultInputDevice();
 
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
+
+            //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
+            int comparePropertyByIndex(const CPropertyIndex &index, const CAudioDeviceInfo &compareValue) const;
+
+            //! Device type as string
+            static const QString &deviceTypeToString(DeviceType t);
 
         private:
             DeviceType m_type = Unknown; //!< Device type, @see CAudioDeviceInfo::DeviceType
             QString m_deviceName;        //!< Device name
-            QString m_hostName;          //!< We use a DBus based system. Hence an audio device can reside on a differen computers, this here is its name
+            CIdentifier m_identifier;    //!< We use a DBus based system. Hence an audio device can reside on a different computers, this here is its name
 
             BLACK_METACLASS(
                 CAudioDeviceInfo,
                 BLACK_METAMEMBER(type),
                 BLACK_METAMEMBER(deviceName),
-                BLACK_METAMEMBER(hostName)
+                BLACK_METAMEMBER(identifier)
             );
         };
     } // namespace

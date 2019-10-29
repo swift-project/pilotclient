@@ -66,7 +66,7 @@ namespace BlackMisc
             CAudioDeviceInfoList devices;
             for (const CAudioDeviceInfo &d : *this)
             {
-                if (stringCompare(hostName, d.getHostName(), Qt::CaseInsensitive))
+                if (stringCompare(hostName, d.getMachineName(), Qt::CaseInsensitive))
                 {
                     devices.push_back(d);
                 }
@@ -78,7 +78,7 @@ namespace BlackMisc
         {
             for (const CAudioDeviceInfo &d : *this)
             {
-                if (device.matchesNameTypeHostName(d)) { return d; }
+                if (device.matchesNameTypeMachineName(d)) { return d; }
             }
             return {};
         }
@@ -114,6 +114,11 @@ namespace BlackMisc
             {
                 this->unRegisterDevice(device);
             }
+        }
+
+        void CAudioDeviceInfoList::unRegisterDevices(const CIdentifier &identifier)
+        {
+            this->removeIf(&CAudioDeviceInfo::getIdentifier, identifier);
         }
 
         bool CAudioDeviceInfoList::isRegisteredDevice(const CAudioDeviceInfo &device) const
