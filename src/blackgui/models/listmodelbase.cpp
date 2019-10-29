@@ -35,17 +35,17 @@ namespace BlackGui
         template <typename T, bool UseCompare>
         int CListModelBase<T, UseCompare>::rowCount(const QModelIndex &parentIndex) const
         {
-            Q_UNUSED(parentIndex);
+            Q_UNUSED(parentIndex)
             return this->containerOrFilteredContainer().size();
         }
 
         template <typename T, bool UseCompare>
         bool CListModelBase<T, UseCompare>::canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) const
         {
-            Q_UNUSED(action);
-            Q_UNUSED(row);
-            Q_UNUSED(column);
-            Q_UNUSED(parent);
+            Q_UNUSED(action)
+            Q_UNUSED(row)
+            Q_UNUSED(column)
+            Q_UNUSED(parent)
             if (!this->isDropAllowed()) { return false; }
             if (!this->acceptDrop(data)) { return false; }
             return true;
@@ -54,8 +54,8 @@ namespace BlackGui
         template <typename T, bool UseCompare>
         bool CListModelBase<T, UseCompare>::dropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column, const QModelIndex &parent)
         {
-            Q_UNUSED(row);
-            Q_UNUSED(column);
+            Q_UNUSED(row)
+            Q_UNUSED(column)
 
             if (!this->isOrderable() || !this->acceptDrop(mimeData)) { return false; }
             const CVariant valueVariant(this->toCVariant(mimeData));
@@ -191,7 +191,8 @@ namespace BlackGui
             }
 
             const int newSize = m_container.size();
-            Q_UNUSED(oldSize);
+            Q_UNUSED(oldSize)
+
             // I have to update even with same size because I cannot tell what/if data are changed
             this->emitModelDataChanged();
             return newSize;
@@ -218,7 +219,7 @@ namespace BlackGui
         template <typename T, bool UseCompare>
         CWorker *CListModelBase<T, UseCompare>::updateAsync(const ContainerType &container, bool sort)
         {
-            Q_UNUSED(sort);
+            Q_UNUSED(sort)
             if (m_modelDestroyed) { return nullptr; }
             const auto sortColumn = this->getSortColumn();
             const auto sortOrder  = this->getSortOrder();
@@ -474,9 +475,9 @@ namespace BlackGui
         void CListModelBase<T, UseCompare>::onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
         {
             // underlying base class changed
-            Q_UNUSED(topLeft);
-            Q_UNUSED(bottomRight);
-            Q_UNUSED(roles);
+            Q_UNUSED(topLeft)
+            Q_UNUSED(bottomRight)
+            Q_UNUSED(roles)
             this->emitModelDataChanged();
         }
 
@@ -492,8 +493,8 @@ namespace BlackGui
         void CListModelBase<T, UseCompare>::moveItems(const ContainerType &items, int position)
         {
             // overridden in specialized class
-            Q_UNUSED(items);
-            Q_UNUSED(position);
+            Q_UNUSED(items)
+            Q_UNUSED(position)
         }
 
         template <typename T, bool UseCompare>

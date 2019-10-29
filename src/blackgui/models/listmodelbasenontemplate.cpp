@@ -9,25 +9,8 @@
 // Drag and drop docu:
 // http://doc.qt.io/qt-5/model-view-programming.html#using-drag-and-drop-with-item-views
 
-//#include "blackgui/models/columnformatters.h"
 #include "blackgui/models/listmodelbasenontemplate.h"
-//#include "blackgui/models/allmodelcontainers.h"
-//#include "blackgui/guiutility.h"
-//#include "blackmisc/compare.h"
-//#include "blackmisc/predicates.h"
-//#include "blackmisc/propertyindex.h"
-//#include "blackmisc/fileutils.h"
-//#include "blackmisc/sequence.h"
-//#include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
-//#include "blackmisc/worker.h"
-
-//#include <QFlags>
-//#include <QJsonDocument>
-//#include <QList>
-//#include <QMimeData>
-//#include <QtGlobal>
-//#include <QFileInfo>
 
 using namespace BlackMisc;
 
@@ -37,7 +20,7 @@ namespace BlackGui
     {
         int CListModelBaseNonTemplate::columnCount(const QModelIndex &modelIndex) const
         {
-            Q_UNUSED(modelIndex);
+            Q_UNUSED(modelIndex)
             int c = m_columns.size();
             return c;
         }
@@ -62,13 +45,13 @@ namespace BlackGui
 
         QModelIndex CListModelBaseNonTemplate::index(int row, int column, const QModelIndex &parent) const
         {
-            Q_UNUSED(parent);
+            Q_UNUSED(parent)
             return QStandardItemModel::createIndex(row, column);
         }
 
         QModelIndex CListModelBaseNonTemplate::parent(const QModelIndex &child) const
         {
-            Q_UNUSED(child);
+            Q_UNUSED(child)
             return QModelIndex();
         }
 

@@ -11,10 +11,10 @@
 #ifndef BLACKGUI_MODELS_AIRPORTLISTMODEL_H
 #define BLACKGUI_MODELS_AIRPORTLISTMODEL_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelbase.h"
-#include "blackmisc/aviation/airport.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/aviation/airport.h"
 
 class QObject;
 

@@ -111,11 +111,11 @@ namespace BlackMisc
 
         int CEcosystem::comparePropertyByIndex(const CPropertyIndex &index, const CEcosystem &compareValue) const
         {
-            if (index.isMyself()) { return Compare::compare(this->m_system, compareValue.m_system); }
+            if (index.isMyself()) { return Compare::compare(m_system, compareValue.m_system); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexSystem: return Compare::compare(this->m_system, compareValue.m_system);
+            case IndexSystem: return Compare::compare(m_system, compareValue.m_system);
             default: break;
             }
             BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable("No comparison for index " + index.toQString()));

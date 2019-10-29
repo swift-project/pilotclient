@@ -44,7 +44,7 @@ namespace BlackGui
             using ObjectType = typename T::value_type;
 
             //! Destructor
-            virtual ~CListModelBase() {}
+            virtual ~CListModelBase() override {}
 
             //! \name Functions from QStandardItemModel
             //! @{
@@ -222,4 +222,5 @@ namespace BlackGui
         } // namespace
     } // namespace
 } // namespace
+
 #endif // guard
