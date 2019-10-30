@@ -17,5 +17,8 @@ namespace BlackGui
         template class CViewBase<BlackGui::Models::CStatusMessageListModel>;
         template class CViewBase<BlackGui::Models::CIdentifierListModel>;
         template class CViewBase<BlackGui::Models::CNameVariantPairModel>;
+
+        template class CViewBase<BlackGui::Models::CAudioDeviceInfoListModel>;
+
     } // namespace
 } // namespace

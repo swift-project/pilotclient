@@ -20,5 +20,7 @@ namespace BlackGui
         template class CListModelBase<BlackMisc::CNameVariantPairList, false>;
         template class CListModelBase<BlackMisc::CCountryList, true>;
 
+        template class CListModelBase<BlackMisc::Audio::CAudioDeviceInfoList, true>;
+
     } // namespace
 } // namespace

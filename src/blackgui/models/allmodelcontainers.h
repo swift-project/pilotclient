@@ -23,6 +23,7 @@
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftsituationchangelist.h"
 #include "blackmisc/aviation/liverylist.h"
+#include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/network/clientlist.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/textmessagelist.h"
