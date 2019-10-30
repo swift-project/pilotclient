@@ -105,6 +105,9 @@ namespace BlackCore
         protected:
             //! Constructor
             IContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
+
+            //! Devices have been changed
+            void onChangedLocalDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
         };
 
         //! Audio context interface
@@ -240,7 +243,7 @@ namespace BlackCore
             void changedMute(bool muted);
 
             //! Changed audio devices (e.g. device enabled/disable)
-            void changedAudioDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
+            void changedLocalAudioDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
 
             //! Audio started with devices
             void startedAudio(const BlackMisc::Audio::CAudioDeviceInfo &input, const BlackMisc::Audio::CAudioDeviceInfo &output);
@@ -320,6 +323,7 @@ namespace BlackCore
             // AFV
             Afv::Clients::CAfvClient *m_voiceClient = nullptr;
             bool m_winCoInitialized = false;
+            BlackMisc::Audio::CAudioDeviceInfoList m_activeLocalDevices;
 
             // Players
             BlackSound::CSelcalPlayer      *m_selcalPlayer = nullptr;

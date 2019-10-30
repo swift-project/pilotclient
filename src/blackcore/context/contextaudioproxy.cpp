@@ -32,6 +32,8 @@ namespace BlackCore
         {
             m_dBusInterface = new CGenericDBusInterface(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(), connection, this);
             this->relaySignals(serviceName, connection);
+
+            connect(this, &CContextAudioProxy::changedLocalAudioDevices, this, &CContextAudioProxy::onChangedLocalDevices, Qt::QueuedConnection);
         }
 
         void CContextAudioProxy::unitTestRelaySignals()
@@ -74,7 +76,7 @@ namespace BlackCore
                                    "changedMute", this, SIGNAL(changedMute(bool)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
-                                   "changedAudioDevices", this, SIGNAL(changedAudioDevices(BlackMisc::Audio::CAudioDeviceInfoList)));
+                                   "changedLocalAudioDevices", this, SIGNAL(changedLocalAudioDevices(BlackMisc::Audio::CAudioDeviceInfoList)));
             **/
 
             this->relayBaseClassSignals(serviceName, connection, IContextAudio::ObjectPath(), IContextAudio::InterfaceName());

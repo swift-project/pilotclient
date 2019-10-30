@@ -46,6 +46,11 @@ namespace BlackCore
             // void
         }
 
+        void IContextAudio::onChangedLocalDevices(const CAudioDeviceInfoList &devices)
+        {
+            this->registerDevices(devices);
+        }
+
         const QString &IContextAudio::InterfaceName()
         {
             static const QString s(BLACKCORE_CONTEXTAUDIO_INTERFACENAME);
@@ -131,6 +136,7 @@ namespace BlackCore
             {
                 if (!myself || !sApp || sApp->isShuttingDown()) { return; }
                 myself->onChangedAudioSettings();
+                myself->onChangedLocalDevices(m_activeLocalDevices);
             });
         }
 
@@ -177,6 +183,13 @@ namespace BlackCore
             connect(m_voiceClient, &CAfvClient::startedAudio, this, &CContextAudioBase::startedAudio, Qt::QueuedConnection);
             connect(m_voiceClient, &CAfvClient::stoppedAudio, this, &CContextAudioBase::stoppedAudio, Qt::QueuedConnection);
             connect(m_voiceClient, &CAfvClient::ptt,          this, &CContextAudioBase::ptt,          Qt::QueuedConnection);
+
+            const CAudioDeviceInfoList devices = CAudioDeviceInfoList::allDevices();
+            if (devices != m_activeLocalDevices)
+            {
+                m_activeLocalDevices = devices;
+                emit this->changedLocalAudioDevices(devices);
+            }
         }
 
         void CContextAudioBase::terminateVoiceClient()

@@ -25,7 +25,7 @@ namespace BlackCore
         CContextAudio::CContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
             CContextAudioBase(mode, runtime)
         {
-            // void
+            connect(this, &CContextAudio::changedLocalAudioDevices, this, &CContextAudio::onChangedLocalDevices, Qt::QueuedConnection);
         }
 
         CContextAudio *CContextAudio::registerWithDBus(CDBusServer *server)
