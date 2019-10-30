@@ -57,7 +57,7 @@ namespace BlackMisc
             CAudioDeviceInfoList findByHostName(const QString &hostName) const;
 
             //! Find registered device
-            CAudioDeviceInfo findRegisteredDevice(const CAudioDeviceInfo &device) const;
+            CAudioDeviceInfo findRegisteredDeviceOrDefault(const CAudioDeviceInfo &device) const;
 
             //! Register device
             void registerDevice(const CAudioDeviceInfo &device);

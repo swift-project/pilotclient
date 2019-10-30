@@ -74,11 +74,11 @@ namespace BlackMisc
             return devices;
         }
 
-        CAudioDeviceInfo CAudioDeviceInfoList::findRegisteredDevice(const CAudioDeviceInfo &device) const
+        CAudioDeviceInfo CAudioDeviceInfoList::findRegisteredDeviceOrDefault(const CAudioDeviceInfo &device) const
         {
             for (const CAudioDeviceInfo &d : *this)
             {
-                if (device.matchesNameTypeMachineName(d)) { return d; }
+                if (device.matchesNameTypeMachineProcess(d)) { return d; }
             }
             return {};
         }
@@ -101,7 +101,7 @@ namespace BlackMisc
         void CAudioDeviceInfoList::unRegisterDevice(const CAudioDeviceInfo &device)
         {
             if (!device.isValid()) { return; }
-            const CAudioDeviceInfo registeredDevice = this->findRegisteredDevice(device);
+            const CAudioDeviceInfo registeredDevice = this->findRegisteredDeviceOrDefault(device);
             if (registeredDevice.isValid())
             {
                 this->remove(registeredDevice);
@@ -123,7 +123,7 @@ namespace BlackMisc
 
         bool CAudioDeviceInfoList::isRegisteredDevice(const CAudioDeviceInfo &device) const
         {
-            return this->findRegisteredDevice(device).isValid();
+            return this->findRegisteredDeviceOrDefault(device).isValid();
         }
 
         int CAudioDeviceInfoList::count(CAudioDeviceInfo::DeviceType type) const
@@ -149,7 +149,7 @@ namespace BlackMisc
             if (compareDevices.size() != this->size()) { return false; }
             for (const CAudioDeviceInfo &d : *this)
             {
-                if (!compareDevices.findRegisteredDevice(d).isValid()) { return false; }
+                if (!compareDevices.findRegisteredDeviceOrDefault(d).isValid()) { return false; }
             }
             return true;
         }

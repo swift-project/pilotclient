@@ -45,6 +45,14 @@ namespace BlackMisc
                    stringCompare(device.getMachineName(), this->getMachineName(), Qt::CaseInsensitive);
         }
 
+        bool CAudioDeviceInfo::matchesNameTypeMachineProcess(const CAudioDeviceInfo &device) const
+        {
+            return device.getType() == this->getType() &&
+                   device.getIdentifier().getProcessId() == this->getIdentifier().getProcessId() &&
+                   stringCompare(device.getName(), this->getName(), Qt::CaseInsensitive) &&
+                   stringCompare(device.getMachineName(), this->getMachineName(), Qt::CaseInsensitive);
+        }
+
         CAudioDeviceInfo::DeviceType CAudioDeviceInfo::fromQtMode(QAudio::Mode m)
         {
             switch (m)

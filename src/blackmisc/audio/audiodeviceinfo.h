@@ -85,6 +85,9 @@ namespace BlackMisc
             //! Matching name, type and machine
             bool matchesNameTypeMachineName(const CAudioDeviceInfo &device) const;
 
+            //! Matching name, type and machine and process
+            bool matchesNameTypeMachineProcess(const CAudioDeviceInfo &device) const;
+
             //! Convert the Qt type
             static DeviceType fromQtMode(QAudio::Mode m);
 
