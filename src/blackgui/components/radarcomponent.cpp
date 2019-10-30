@@ -286,7 +286,19 @@ namespace BlackGui
 
         QPointF CRadarComponent::polarPoint(double distance, double angleRadians)
         {
-            return { -distance * qSin(angleRadians), -distance * qCos(angleRadians) };
+            angleRadians = -angleRadians; // conversion assumes angles are counterclockwise
+
+            // standard conversion from https://en.wikipedia.org/wiki/Polar_coordinate_system
+            QPointF p(distance * qCos(angleRadians), distance * qSin(angleRadians));
+
+            // conversion yields a coordinate system
+            // in which North=(1,0) and East=(-1,0)
+            // but we want North=(0,-1) and East=(0,1)
+            // (QGraphicsView y axis increases downwards)
+            qSwap(p.rx(), p.ry());
+            p.setX(-p.x());
+            p.setY(-p.y());
+            return p;
         }
     } // namespace
 } // namespace
