@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>166</width>
-    <height>55</height>
+    <width>270</width>
+    <height>275</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,18 +21,21 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="QPushButton" name="pb_StartStop">
-     <property name="text">
-      <string>stop</string>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0">
     <widget class="QLabel" name="lbl_EnableDisable">
      <property name="text">
       <string>Enable/disable:</string>
      </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="BlackGui::Views::CAudioDeviceInfoView" name="tvp_RegisteredDevices">
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="verticalHeaderHighlightSections">
+      <bool>true</bool>
+     </attribute>
     </widget>
    </item>
    <item row="1" column="0">
@@ -42,8 +45,29 @@
      </property>
     </widget>
    </item>
+   <item row="1" column="1">
+    <widget class="QPushButton" name="pb_StartStop">
+     <property name="text">
+      <string>stop</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QPushButton" name="pb_ReloadRegistered">
+     <property name="text">
+      <string>reload registered</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::Views::CAudioDeviceInfoView</class>
+   <extends>QTableView</extends>
+   <header>blackgui/views/audiodeviceinfoview.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>pb_StartStop</tabstop>
  </tabstops>

@@ -114,7 +114,7 @@ namespace BlackGui
                 Q_ASSERT(c);
 
                 // context
-                c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::changedAudioDevices, this, &CAudioDeviceVolumeSetupComponent::onAudioDevicesChanged, Qt::QueuedConnection);
+                c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::changedLocalAudioDevices, this, &CAudioDeviceVolumeSetupComponent::onAudioDevicesChanged, Qt::QueuedConnection);
                 Q_ASSERT(c);
                 c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::startedAudio, this, &CAudioDeviceVolumeSetupComponent::onAudioStarted, Qt::QueuedConnection);
                 Q_ASSERT(c);

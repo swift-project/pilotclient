@@ -42,6 +42,9 @@ namespace BlackGui
             //! Audio enable/disable
             void toggleAudioEnableDisable();
 
+            //! Reload registered devices
+            void reloadRegistered();
+
             //! Start/stop button @{
             void setButtons();
             void setButtons(int delayMs);

@@ -31,6 +31,7 @@ namespace BlackGui
             connect(sGui->getCContextAudioBase(), &CContextAudioBase::stoppedAudio, this, &CAudioAdvancedDistributedComponent::onAudioStoppend, Qt::QueuedConnection);
             connect(ui->pb_EnableDisable,         &QPushButton::pressed,            this, &CAudioAdvancedDistributedComponent::toggleAudioEnableDisable, Qt::QueuedConnection);
             connect(ui->pb_StartStop,             &QPushButton::pressed,            this, &CAudioAdvancedDistributedComponent::toggleAudioStartStop,     Qt::QueuedConnection);
+            connect(ui->pb_ReloadRegistered,      &QPushButton::pressed,            this, &CAudioAdvancedDistributedComponent::reloadRegistered,         Qt::QueuedConnection);
 
             this->setButtons();
         }
@@ -74,6 +75,13 @@ namespace BlackGui
             this->setButtons(2000);
         }
 
+        void CAudioAdvancedDistributedComponent::reloadRegistered()
+        {
+            if (!hasContexts()) { return; }
+            const CAudioDeviceInfoList registeredDevices = sGui->getIContextAudio()->getRegisteredDevices();
+            ui->tvp_RegisteredDevices->updateContainerMaybeAsync(registeredDevices);
+        }
+
         void CAudioAdvancedDistributedComponent::setButtons()
         {
             if (!hasContexts()) { return; }
@@ -100,11 +108,13 @@ namespace BlackGui
             Q_UNUSED(inputDevice)
             Q_UNUSED(outputDevice)
             this->setButtons();
+            this->reloadRegistered();
         }
 
         void CAudioAdvancedDistributedComponent::onAudioStoppend()
         {
             this->setButtons();
+            this->reloadRegistered();
         }
 
         bool CAudioAdvancedDistributedComponent::hasContexts()
