@@ -218,5 +218,24 @@ namespace BlackMisc
             static const QSet<QString> fsFamily({standardFS9(), standardFSX(), standardP3D()});
             return fsFamily;
         }
+
+        const QSet<QString> &CDistributor::xplaneMostPopular()
+        {
+            static const QSet<QString> mp({ xplaneBlueBell(), xplaneXcsl() });
+            return mp;
+        }
+
+        const QString &CDistributor::xplaneBlueBell()
+        {
+            static const QString k("BB");
+            return k;
+        }
+
+        const QString &CDistributor::xplaneXcsl()
+        {
+            static const QString k("XCSL");
+            return k;
+        }
+
     } // namespace
 } // namespace

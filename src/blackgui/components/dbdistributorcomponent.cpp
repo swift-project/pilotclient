@@ -38,9 +38,10 @@ namespace BlackGui
             ui->tvp_Distributors->allowDragDrop(true, false);
             ui->tvp_Distributors->setFilterWidget(ui->filter_Distributor);
 
-            connect(ui->tvp_Distributors, &CDistributorView::requestNewBackendData, this, &CDbDistributorComponent::reload);
+            connect(ui->tvp_Distributors,     &CDistributorView::requestNewBackendData, this, &CDbDistributorComponent::reload);
             connect(ui->pb_SelectAllFsFamily, &QPushButton::released, this, &CDbDistributorComponent::selectStandardModels);
-            connect(ui->pb_SelectXPlane, &QPushButton::released, this, &CDbDistributorComponent::selectStandardModels);
+            connect(ui->pb_SelectXPlaneBB,    &QPushButton::released, this, &CDbDistributorComponent::selectStandardModels);
+            connect(ui->pb_SelectXplaneXCSL,  &QPushButton::released, this, &CDbDistributorComponent::selectStandardModels);
 
             if (sGui && sGui->getWebDataServices())
             {
@@ -81,11 +82,12 @@ namespace BlackGui
 
         void CDbDistributorComponent::onDistributorsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
-            Q_UNUSED(count);
+            Q_UNUSED(count)
             if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
             if (entity.testFlag(CEntityFlags::DistributorEntity) && CEntityFlags::isFinishedReadState(readState))
             {
-                ui->tvp_Distributors->updateContainer(sGui->getWebDataServices()->getDistributors());
+                const CDistributorList distributors = sGui->getWebDataServices()->getDistributors();
+                ui->tvp_Distributors->updateContainer(distributors);
             }
         }
 
@@ -98,10 +100,15 @@ namespace BlackGui
                 this->filterBySimulator(CSimulatorInfo::AllFsFamily);
                 keys = CDistributor::standardAllFsFamily();
             }
-            else if (s == ui->pb_SelectXPlane)
+            else if (s == ui->pb_SelectXPlaneBB)
             {
                 this->filterBySimulator(CSimulatorInfo::XPLANE);
-                keys = QSet<QString>({ CDistributor::standardXPlane() });
+                keys = QSet<QString>({ CDistributor::xplaneBlueBell() });
+            }
+            else if (s == ui->pb_SelectXplaneXCSL)
+            {
+                this->filterBySimulator(CSimulatorInfo::XPLANE);
+                keys = QSet<QString>({ CDistributor::xplaneXcsl() });
             }
 
             // deferred because filter must first work and update

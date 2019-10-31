@@ -132,6 +132,9 @@ namespace BlackMisc
             static const QString &standardXPlane();
             static const QString &standardFlightGear();
             static const QSet<QString> &standardAllFsFamily();
+            static const QSet<QString> &xplaneMostPopular();
+            static const QString &xplaneBlueBell();
+            static const QString &xplaneXcsl();
             //! @}
 
         private:

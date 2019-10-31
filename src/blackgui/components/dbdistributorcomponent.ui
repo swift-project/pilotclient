@@ -111,9 +111,16 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pb_SelectXPlane">
+          <widget class="QPushButton" name="pb_SelectXPlaneBB">
            <property name="text">
-            <string>XPlane standard</string>
+            <string>XPlane BlueBell</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pb_SelectXplaneXCSL">
+           <property name="text">
+            <string>XPlane XCSL</string>
            </property>
           </widget>
          </item>
@@ -156,7 +163,7 @@
  </customwidgets>
  <tabstops>
   <tabstop>pb_SelectAllFsFamily</tabstop>
-  <tabstop>pb_SelectXPlane</tabstop>
+  <tabstop>pb_SelectXPlaneBB</tabstop>
   <tabstop>tvp_Distributors</tabstop>
  </tabstops>
  <resources/>
