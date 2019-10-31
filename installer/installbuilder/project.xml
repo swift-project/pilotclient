@@ -24,20 +24,14 @@
         </include>
     </componentList>
     <preInstallationActionList>
-        <actionGroup>
+        <validatedActionGroup>
             <explanation>Check that no swift applications running</explanation>
+            <text>It seems that some swift application is still in use,
+please close it and click Retry.</text>
+            <severity>warning</severity>
             <actionList>
-                <showWarning>
-                    <ruleEvaluationLogic>or</ruleEvaluationLogic>
-                    <text>It seems that some swift application is still in use, please close
-it and relaunch the installer.</text>
-                </showWarning>
-                <exit>
-                    <exitCode>1</exitCode>
-                </exit>
-            </actionList>
-            <ruleList>
-                <ruleGroup>
+                <throwError>
+                    <text>Swift is still running. User aborted installation.</text>
                     <ruleList>
                         <ruleGroup>
                             <ruleEvaluationLogic>or</ruleEvaluationLogic>
@@ -64,9 +58,9 @@ it and relaunch the installer.</text>
                             <type>windows</type>
                         </platformTest>
                     </ruleList>
-                </ruleGroup>
-            </ruleList>
-        </actionGroup>
+                </throwError>
+            </actionList>
+        </validatedActionGroup>
         <!-- TODO Linux/MacOS: Save and load last install dir -->
         <setInstallerVariable>
             <name>installBaseDir</name>
@@ -216,20 +210,14 @@ it and relaunch the installer.</text>
         </runProgram>
     </postInstallationActionList>
     <preUninstallationActionList>
-        <actionGroup>
+        <validatedActionGroup>
             <explanation>Check that no swift applications running</explanation>
+            <text>It seems that some swift application is still in use,
+please close it and click Retry.</text>
+            <severity>warning</severity>
             <actionList>
-                <showWarning>
-                    <ruleEvaluationLogic>or</ruleEvaluationLogic>
-                    <text>It seems that some swift application is still in use, please close
-it and relaunch the uninstaller.</text>
-                </showWarning>
-                <exit>
-                    <exitCode>1</exitCode>
-                </exit>
-            </actionList>
-            <ruleList>
-                <ruleGroup>
+                <throwError>
+                    <text>Swift is still running. User aborted installation.</text>
                     <ruleList>
                         <ruleGroup>
                             <ruleEvaluationLogic>or</ruleEvaluationLogic>
@@ -256,9 +244,9 @@ it and relaunch the uninstaller.</text>
                             <type>windows</type>
                         </platformTest>
                     </ruleList>
-                </ruleGroup>
-            </ruleList>
-        </actionGroup>
+                </throwError>
+            </actionList>
+        </validatedActionGroup>
         <runProgram>
             <program>launchctl</program>
             <programArguments>remove org.freedesktop.dbus-session.plist</programArguments>
