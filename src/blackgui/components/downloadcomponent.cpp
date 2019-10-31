@@ -313,17 +313,15 @@ namespace BlackGui
                     **/
                 }
 
-                const bool started = QProcess::startDetached(executable, arguments, dir.absolutePath());
-                if (started)
+                const bool shutdown = ui->cb_Shutdown->isChecked();
+                const bool started  = QProcess::startDetached(executable, arguments, dir.absolutePath());
+                if (started && shutdown && sGui)
                 {
-                    const bool shutdown = ui->cb_Shutdown->isChecked();
-                    if (sGui && shutdown)
+                    QTimer::singleShot(250, sGui, []
                     {
-                        QTimer::singleShot(1000, sGui, []
-                        {
-                            CGuiApplication::exit();
-                        });
-                    }
+                        if (!sGui) { return; }
+                        CGuiApplication::exit();
+                    });
                     break;
                 }
             } // files
