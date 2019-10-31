@@ -104,6 +104,14 @@ it and relaunch the installer.</text>
                 </platformTest>
             </ruleList>
         </setInstallerVariable>
+        <kill>
+            <name>dbus-daemon.exe</name>
+            <ruleList>
+                <platformTest>
+                    <type>windows</type>
+                </platformTest>
+            </ruleList>
+        </kill>
     </preInstallationActionList>
     <postInstallationActionList>
         <runProgram>
