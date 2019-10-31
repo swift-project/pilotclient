@@ -101,6 +101,10 @@ please close it and click Retry.</text>
         <kill>
             <name>dbus-daemon.exe</name>
             <ruleList>
+                <processTest>
+                    <logic>is_running</logic>
+                    <name>dbus-daemon.exe</name>
+                </processTest>
                 <platformTest>
                     <type>windows</type>
                 </platformTest>
@@ -276,6 +280,10 @@ please close it and click Retry.</text>
         <kill>
             <name>dbus-daemon.exe</name>
             <ruleList>
+                <processTest>
+                    <logic>is_running</logic>
+                    <name>dbus-daemon.exe</name>
+                </processTest>
                 <platformTest>
                     <type>windows</type>
                 </platformTest>
