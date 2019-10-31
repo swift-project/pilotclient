@@ -16,16 +16,17 @@ defineReplace(gitRevCount) {
 
 setSwiftConfig(version.full, $$swiftConfig(version.major).$$swiftConfig(version.minor).$$swiftConfig(version.micro))
 
-!win32 {
-    VER_MAJ = $$swiftConfig(version.major)
-    VER_MIN = $$swiftConfig(version.minor)
-    VER_PAT = $$swiftConfig(version.micro)
-    VERSION = $$swiftConfig(version.full)
-}
+VER_MAJ = $$swiftConfig(version.major)
+VER_MIN = $$swiftConfig(version.minor)
+VER_PAT = $$swiftConfig(version.micro)
+VERSION = $$swiftConfig(version.full)
 
 !isEmpty(GIT_BIN) {
     isEmpty(VER_REV) {
         VER_REV = $$gitRevCount()
         cache(VER_REV)
     }
+    win32: VERSION = $${VERSION}.$${VER_REV}
 }
+
+win32: CONFIG *= skip_target_version_ext
