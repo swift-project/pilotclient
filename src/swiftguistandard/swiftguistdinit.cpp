@@ -165,15 +165,20 @@ void SwiftGuiStd::init()
     // whether init has been completed
     this->setVisible(true);
 
-    emit sGui->startUpCompleted(true);
-    m_init = true;
-
+    // more checks
     QPointer<SwiftGuiStd> myself(this);
     QTimer::singleShot(5000, this, [ = ]
     {
         if (!myself) { return; }
         this->verifyPrerequisites();
     });
+
+    // trigger version check
+    sGui->triggerNewVersionCheck(10 * 1000);
+
+    // done
+    emit sGui->startUpCompleted(true);
+    m_init = true;
 }
 
 void SwiftGuiStd::initStyleSheet()

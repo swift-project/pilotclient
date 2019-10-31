@@ -1215,7 +1215,7 @@ namespace BlackGui
         QTimer::singleShot(delayedMs, this, [ = ]
         {
             if (!sGui || sGui->isShuttingDown()) { return; }
-            if (m_updateDialog) { return; }
+            if (m_updateDialog) { return; } // already checked elsewhere
             this->checkNewVersion(true);
         });
     }
