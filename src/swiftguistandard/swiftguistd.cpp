@@ -485,6 +485,15 @@ void SwiftGuiStd::onValidatedModelSet(const CSimulatorInfo &simulator, const CAi
 {
     // will NOT be called if no errors and setting is "only on errors"
     if (!sGui || sGui->isShuttingDown()) { return; }
+    if (QApplication::activeModalWidget())
+    {
+        // avoid too many "deadlocking" dialogs, display warning instead
+        if (invalid.isEmpty()) { return; }
+        const CStatusMessage m = CLogMessage(this).validationWarning(u"Model set validation has found %1 invalid models for '%2', check the model validation") << invalid.size() << simulator.toQString(true);
+        this->displayInOverlayWindow(m, 5000);
+        return;
+    }
+
     this->displayValidationDialog();
     m_validationDialog->validatedModelSet(simulator, valid, invalid, stopped, msgs);
 }
