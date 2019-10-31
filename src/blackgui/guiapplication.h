@@ -166,6 +166,9 @@ namespace BlackGui
         //! Window operations
         void addMenuWindow(QMenu &menu);
 
+        //! Open a given URL
+        void openUrl(const BlackMisc::Network::CUrl &url);
+
         //! Help operations
         void addMenuHelp(QMenu &menu);
 

@@ -886,6 +886,12 @@ namespace BlackGui
         Q_UNUSED(c)
     }
 
+    void CGuiApplication::openUrl(const CUrl &url)
+    {
+        if (url.isEmpty() || this->isShuttingDown()) { return; }
+        QDesktopServices::openUrl(url);
+    }
+
     void CGuiApplication::addMenuHelp(QMenu &menu)
     {
         QPointer<QWidget> w = mainApplicationWidget();
