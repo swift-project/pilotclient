@@ -237,11 +237,15 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
         INSTALLER_EXT = run
         ARCHITECTURE = 64
     }
+    swiftConfig(devBranch): INSTALLER_DEBUG = 1
+    else:                   INSTALLER_DEBUG = 0
+
     create_installer.commands = $${bitrock_builder_bin} quickbuild $${bitrock_project} $${INSTALLER_PLATFORM} \
                                     --setvars project.outputDirectory=$$shell_path($${PREFIX}/..) \
                                               project.installerFilename=$${INSTALLER_BASENAME}.$${INSTALLER_EXT} \
                                               project.version=$$swiftConfig(version.full) \
                                               project.windows64bitMode=$${WINDOWS64BITMODE} \
+                                              project.enableDebugger=$${INSTALLER_DEBUG} \
                                               architecture=$${ARCHITECTURE}
     QMAKE_EXTRA_TARGETS += create_installer
 }
