@@ -23,44 +23,70 @@
             <file>vcredist-x64.xml</file>
         </include>
     </componentList>
-    <preInstallationActionList>
-        <validatedActionGroup>
-            <explanation>Check that no swift applications running</explanation>
-            <text>It seems that some swift application is still in use,
-please close it and click Retry.</text>
-            <severity>warning</severity>
+    <functionDefinitionList>
+        <actionDefinition>
+            <name>checkForRunningSwift</name>
             <actionList>
-                <throwError>
-                    <text>Swift is still running. User aborted installation.</text>
-                    <ruleList>
-                        <ruleGroup>
-                            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                <validatedActionGroup>
+                    <explanation>Check that no swift applications running</explanation>
+                    <text>It seems that some swift application is still in use,
+please close it and click Retry.</text>
+                    <severity>warning</severity>
+                    <actionList>
+                        <throwError>
+                            <text>Swift is still running. User aborted installation.</text>
                             <ruleList>
-                                <processTest>
-                                    <logic>is_running</logic>
-                                    <name>swiftcore.exe</name>
-                                </processTest>
-                                <processTest>
-                                    <logic>is_running</logic>
-                                    <name>swiftguistd.exe</name>
-                                </processTest>
-                                <processTest>
-                                    <logic>is_running</logic>
-                                    <name>swiftlauncher.exe</name>
-                                </processTest>
-                                <processTest>
-                                    <logic>is_running</logic>
-                                    <name>swiftdata.exe</name>
-                                </processTest>
+                                <ruleGroup>
+                                    <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                                    <ruleList>
+                                        <processTest>
+                                            <logic>is_running</logic>
+                                            <name>swiftcore.exe</name>
+                                        </processTest>
+                                        <processTest>
+                                            <logic>is_running</logic>
+                                            <name>swiftguistd.exe</name>
+                                        </processTest>
+                                        <processTest>
+                                            <logic>is_running</logic>
+                                            <name>swiftlauncher.exe</name>
+                                        </processTest>
+                                        <processTest>
+                                            <logic>is_running</logic>
+                                            <name>swiftdata.exe</name>
+                                        </processTest>
+                                    </ruleList>
+                                </ruleGroup>
+                                <platformTest>
+                                    <type>windows</type>
+                                </platformTest>
                             </ruleList>
-                        </ruleGroup>
+                        </throwError>
+                    </actionList>
+                </validatedActionGroup>
+            </actionList>
+        </actionDefinition>
+        <actionDefinition>
+            <name>killDBusDaemon</name>
+            <actionList>
+                <kill>
+                    <name>dbus-daemon.exe</name>
+                    <ruleList>
+                        <processTest>
+                            <logic>is_running</logic>
+                            <name>dbus-daemon.exe</name>
+                        </processTest>
                         <platformTest>
                             <type>windows</type>
                         </platformTest>
                     </ruleList>
-                </throwError>
+                </kill>
             </actionList>
-        </validatedActionGroup>
+        </actionDefinition>
+    </functionDefinitionList>
+    <preInstallationActionList>
+        <checkForRunningSwift />
+        <killDBusDaemon />
         <!-- TODO Linux/MacOS: Save and load last install dir -->
         <setInstallerVariable>
             <name>installBaseDir</name>
@@ -98,18 +124,6 @@ please close it and click Retry.</text>
                 </platformTest>
             </ruleList>
         </setInstallerVariable>
-        <kill>
-            <name>dbus-daemon.exe</name>
-            <ruleList>
-                <processTest>
-                    <logic>is_running</logic>
-                    <name>dbus-daemon.exe</name>
-                </processTest>
-                <platformTest>
-                    <type>windows</type>
-                </platformTest>
-            </ruleList>
-        </kill>
     </preInstallationActionList>
     <postInstallationActionList>
         <runProgram>
@@ -214,43 +228,8 @@ please close it and click Retry.</text>
         </runProgram>
     </postInstallationActionList>
     <preUninstallationActionList>
-        <validatedActionGroup>
-            <explanation>Check that no swift applications running</explanation>
-            <text>It seems that some swift application is still in use,
-please close it and click Retry.</text>
-            <severity>warning</severity>
-            <actionList>
-                <throwError>
-                    <text>Swift is still running. User aborted installation.</text>
-                    <ruleList>
-                        <ruleGroup>
-                            <ruleEvaluationLogic>or</ruleEvaluationLogic>
-                            <ruleList>
-                                <processTest>
-                                    <logic>is_running</logic>
-                                    <name>swiftcore.exe</name>
-                                </processTest>
-                                <processTest>
-                                    <logic>is_running</logic>
-                                    <name>swiftguistd.exe</name>
-                                </processTest>
-                                <processTest>
-                                    <logic>is_running</logic>
-                                    <name>swiftlauncher.exe</name>
-                                </processTest>
-                                <processTest>
-                                    <logic>is_running</logic>
-                                    <name>swiftdata.exe</name>
-                                </processTest>
-                            </ruleList>
-                        </ruleGroup>
-                        <platformTest>
-                            <type>windows</type>
-                        </platformTest>
-                    </ruleList>
-                </throwError>
-            </actionList>
-        </validatedActionGroup>
+        <checkForRunningSwift />
+        <killDBusDaemon />
         <runProgram>
             <program>launchctl</program>
             <programArguments>remove org.freedesktop.dbus-session.plist</programArguments>
@@ -277,18 +256,6 @@ please close it and click Retry.</text>
                 </platformTest>
             </ruleList>
         </deleteFile>
-        <kill>
-            <name>dbus-daemon.exe</name>
-            <ruleList>
-                <processTest>
-                    <logic>is_running</logic>
-                    <name>dbus-daemon.exe</name>
-                </processTest>
-                <platformTest>
-                    <type>windows</type>
-                </platformTest>
-            </ruleList>
-        </kill>
     </preUninstallationActionList>
     <allowComponentSelection>1</allowComponentSelection>
     <compressionAlgorithm>lzma</compressionAlgorithm>
