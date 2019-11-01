@@ -1188,7 +1188,9 @@ namespace BlackGui
         if (this->isShuttingDown()) { return; }
         m_frontBack = false;
         QMainWindow *w = this->mainApplicationWindow();
-        if (!w)  { return; }
+        if (!w) { return; }
+        if (CGuiUtility::staysOnTop(w)) { CGuiUtility::stayOnTop(false, w); }
+
         w->lower();
     }
 
@@ -1197,8 +1199,10 @@ namespace BlackGui
         if (this->isShuttingDown()) { return; }
         QMainWindow *w = sGui->mainApplicationWindow();
         if (!w)  { return; }
-        if (w->isMinimized())    { this->windowToFront(); return; }
-        if (w->isMaximized())    { this->windowToBack(); return; }
+        if (w->isMinimized()) { this->windowToFront(); return; }
+        if (w->isMaximized()) { this->windowToBack(); return; }
+        if (CGuiUtility::staysOnTop(w)) { this->windowToBack(); return; }
+
         if (m_frontBack)
         {
             this->windowToBack();
