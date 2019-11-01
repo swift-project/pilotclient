@@ -1647,7 +1647,7 @@ namespace BlackCore
         usedFamily = remoteAircraft.getAircraftIcaoCode().getFamily();
         if (!usedFamily.isEmpty())
         {
-            CAircraftModelList matchedModels = ifPossibleReduceByFamily(remoteAircraft, usedFamily, allowPseudoFamily, inList, QStringLiteral("real family"), reduced, log);
+            CAircraftModelList matchedModels = ifPossibleReduceByFamily(remoteAircraft, usedFamily, allowPseudoFamily, inList, QStringLiteral("real family from ICAO"), reduced, log);
             if (reduced) { return matchedModels; }
         }
 
@@ -1660,7 +1660,7 @@ namespace BlackCore
     {
         // Use an algorithm to find the best match
         reduced = false;
-        if (family.isEmpty())
+        if (family.isEmpty() && !allowPseudoFamily)
         {
             if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, u"No family, skipping step (" % hint % u")", getLogCategories()); }
             return inList;
@@ -1672,28 +1672,42 @@ namespace BlackCore
             return inList;
         }
 
-        CAircraftModelList found(inList.findByFamily(family));
-        if (found.isEmpty())
+        CAircraftModelList foundByFamily(inList.findByFamily(family));
+        if (foundByFamily.isEmpty())
         {
             if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, u"Not found by family '" % family % u"' (" % hint % ")"); }
             if (!allowPseudoFamily) { return inList; }
             // fallthru
         }
+        else
+        {
+            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, u"Found by family '" % family % u"' (" % hint % u") size " % QString::number(foundByFamily.sizeInt()), getLogCategories()); }
+        }
 
+        CAircraftModelList foundByCM;
         if (allowPseudoFamily)
         {
-            found = inList.findByCombinedAndManufacturer(remoteAircraft.getAircraftIcaoCode());
-            if (found.isEmpty())
+            foundByCM = inList.findByCombinedAndManufacturer(remoteAircraft.getAircraftIcaoCode());
+            const QString pseudo = remoteAircraft.getAircraftIcaoCode().getCombinedType() % "/" % remoteAircraft.getAircraftIcaoCode().getManufacturer();
+            if (foundByCM.isEmpty())
             {
-                const QString pseudo = remoteAircraft.getAircraftIcaoCode().getCombinedType() % "/" % remoteAircraft.getAircraftIcaoCode().getManufacturer();
                 if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, u"Not found by pseudo family '" % pseudo % u"' (" % hint % ")"); }
-                return inList;
+            }
+            else
+            {
+                if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, u"Found by pseudo family '" % pseudo % u"' (" % hint % u") size " % QString::number(foundByCM.sizeInt()), getLogCategories()); }
             }
         }
 
+        if (foundByCM.isEmpty() && foundByFamily.isEmpty()) { return inList; }
         reduced = true;
-        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, u"Found by family '" % family % u"' (" % hint % u") size " % QString::number(found.sizeInt()), getLogCategories());
-        return found;
+
+        // avoid dpulicates, then add
+        if (!foundByFamily.isEmpty()) { foundByCM.removeModelsWithString(foundByFamily.getModelStringList(), Qt::CaseInsensitive); }
+        foundByFamily.push_back(foundByCM);
+
+        if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, u"Found by family (totally) '" % family % u"' (" % hint % u") size " % QString::number(foundByFamily.sizeInt()), getLogCategories()); }
+        return foundByFamily;
     }
 
     CAircraftModelList CAircraftMatcher::ifPossibleReduceByManufacturer(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &inList, const QString &info, bool &reduced, CStatusMessageList *log)
