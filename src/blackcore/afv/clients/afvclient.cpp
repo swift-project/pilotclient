@@ -461,7 +461,7 @@ namespace BlackCore
                 // threadsafe copies
                 const auto transceivers = this->getTransceivers();
                 const auto enabledTransceivers = this->getEnabledTransceivers();
-                const QString callsign = this->getCallsign();
+                const QString callsign = this->getCallsign(); // threadsafe
 
                 // transceivers
                 QVector<TransceiverDto> newEnabledTransceivers;
@@ -963,7 +963,7 @@ namespace BlackCore
                 }
 
                 // in connection and soundcard only use the enabled tarnsceivers
-                const QString callsign = this->getCallsign();
+                const QString callsign = this->getCallsign(); // threadsafe
                 {
                     {
                         QMutexLocker lock(&m_mutexConnection);

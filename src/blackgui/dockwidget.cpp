@@ -562,7 +562,7 @@ namespace BlackGui
         QScopedPointer<QMenu> contextMenu(new QMenu(this));
         this->addToContextMenu(contextMenu.data());
         QAction *selectedItem = contextMenu.data()->exec(globalPos);
-        Q_UNUSED(selectedItem);
+        Q_UNUSED(selectedItem)
     }
 
     void CDockWidget::onVisibilityChanged(bool visible)

@@ -485,7 +485,7 @@ namespace BlackCore
                     freqkHz = freqkHz / 10 * 10;
                 }
                 frequencies.push_back(freqkHz);
-                sendRadioMessage(frequencies, message.getMessage());
+                this->sendRadioMessage(frequencies, message.getMessage());
                 emit this->textMessageSent(message);
             }
         }
@@ -523,7 +523,7 @@ namespace BlackCore
             }
 
             const TextMessage radioMessage(m_ownCallsign.asString(), receivers.join('&'), message);
-            sendMessage(radioMessage);
+            this->sendMessage(radioMessage);
             this->increaseStatisticsValue(QStringLiteral("sendTextMessages"));
         }
 

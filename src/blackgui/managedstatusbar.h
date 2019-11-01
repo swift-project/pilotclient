@@ -32,7 +32,7 @@ namespace BlackGui
         explicit CManagedStatusBar(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CManagedStatusBar();
+        virtual ~CManagedStatusBar() override;
 
         //! Get the status bar
         QStatusBar *getStatusBar() const { return m_statusBar; }

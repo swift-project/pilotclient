@@ -1178,9 +1178,9 @@ namespace BlackGui
         QMainWindow *w = sGui->mainApplicationWindow();
         if (!w)  { return; }
         m_frontBack = true;
-        w->showNormal();     //bring window to top on OSX
-        w->raise();          //bring window from minimized state on OSX
-        w->activateWindow(); //bring window to front/unminimize on windows
+        w->showNormal();     // bring window to top on OSX
+        w->raise();          // bring window from minimized state on OSX
+        w->activateWindow(); // bring window to front/unminimize on windows
     }
 
     void CGuiApplication::windowToBack()

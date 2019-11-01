@@ -251,7 +251,7 @@ namespace BlackCore
                 const QByteArray bufferEncoded = m_fsdTextCodec->fromUnicode(buffer);
                 emitRawFsdMessage(buffer.trimmed(), true);
                 if (m_printToConsole) { qDebug() << "FSD Sent=>" << bufferEncoded; }
-                if (!m_unitTestMode) { m_socket.write(bufferEncoded); }
+                if (!m_unitTestMode)  { m_socket.write(bufferEncoded); }
             }
 
             //! Default model string
