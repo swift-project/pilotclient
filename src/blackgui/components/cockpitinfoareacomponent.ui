@@ -102,7 +102,7 @@
         <property name="bottomMargin">
          <number>0</number>
         </property>
-        <item>
+        <item alignment="Qt::AlignTop">
          <widget class="BlackGui::Components::CAudioDeviceVolumeSetupComponent" name="comp_DeviceVolume"/>
         </item>
        </layout>
