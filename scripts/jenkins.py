@@ -69,7 +69,7 @@ class Builder:
 
         qmake_call = ['qmake'] + qmake_args
         if dev_build:
-            qmake_call += ['"SWIFT_CONFIG.devBranch=true"']
+            qmake_call += ['SWIFT_CONFIG.devBranch=true']
 
         if eolInMonth > 0:
             eolYear = date.today().year
