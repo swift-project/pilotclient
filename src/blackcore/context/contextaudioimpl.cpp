@@ -16,6 +16,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;
+using namespace BlackMisc::Aviation;
 using namespace BlackCore::Afv::Clients;
 
 namespace BlackCore
@@ -51,6 +52,26 @@ namespace BlackCore
         void CContextAudio::unRegisterDevicesFor(const CIdentifier &identifier)
         {
             m_registeredDevices.unRegisterDevices(identifier);
+        }
+
+        void CContextAudio::registerAudioCallsign(const CCallsign &callsign, const CIdentifier &identifier)
+        {
+            m_registeredCallsigns.insert(identifier, callsign);
+        }
+
+        void CContextAudio::unRegisterAudioCallsign(const CCallsign &callsign, const CIdentifier &identifier)
+        {
+            m_registeredCallsigns.remove(identifier);
+            Q_UNUSED(callsign)
+        }
+
+        bool CContextAudio::hasRegisteredAudioCallsign(const CCallsign &callsign) const
+        {
+            for (const CCallsign &cs : m_registeredCallsigns.values())
+            {
+                if (callsign == cs) { return true; }
+            }
+            return false;
         }
 
         CAudioDeviceInfoList CContextAudio::getRegisteredDevices() const

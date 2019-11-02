@@ -66,6 +66,9 @@ namespace BlackCore
             virtual void registerDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;
             virtual void unRegisterDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;
             virtual void unRegisterDevicesFor(const BlackMisc::CIdentifier &identifier) override;
+            virtual void registerAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign,  const BlackMisc::CIdentifier &identifier)   override;
+            virtual void unRegisterAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign,  const BlackMisc::CIdentifier &identifier) override;
+            virtual bool hasRegisteredAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
             //! @}
 
         private:

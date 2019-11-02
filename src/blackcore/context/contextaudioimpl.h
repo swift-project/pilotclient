@@ -17,6 +17,7 @@
 #include "blackmisc/network/userlist.h"
 
 #include <QHash>
+#include <QMap>
 #include <QList>
 #include <QObject>
 #include <QSharedPointer>
@@ -45,9 +46,12 @@ namespace BlackCore
             //! \publicsection
             //! @{
             virtual BlackMisc::Audio::CAudioDeviceInfoList getRegisteredDevices() const override;
-            virtual void registerDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;
+            virtual void registerDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices)   override;
             virtual void unRegisterDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;
             virtual void unRegisterDevicesFor(const BlackMisc::CIdentifier &identifier) override;
+            virtual void registerAudioCallsign(const BlackMisc::Aviation::CCallsign   &callsign,  const BlackMisc::CIdentifier &identifier) override;
+            virtual void unRegisterAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign,  const BlackMisc::CIdentifier &identifier) override;
+            virtual bool hasRegisteredAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
             //! @}
 
         protected:
@@ -59,6 +63,7 @@ namespace BlackCore
 
         private:
             BlackMisc::Audio::CAudioDeviceInfoList m_registeredDevices;
+            QMap<BlackMisc::CIdentifier, BlackMisc::Aviation::CCallsign> m_registeredCallsigns;
         };
     } // namespace
 } // namespace

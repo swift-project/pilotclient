@@ -61,6 +61,21 @@ namespace BlackCore
             m_dBusInterface->callDBus(QLatin1String("unRegisterDevicesFor"), identifier);
         }
 
+        void CContextAudioProxy::registerAudioCallsign(const CCallsign &callsign, const CIdentifier &identifier)
+        {
+            m_dBusInterface->callDBus(QLatin1String("registerAudioCallsign"), callsign, identifier);
+        }
+
+        void CContextAudioProxy::unRegisterAudioCallsign(const CCallsign &callsign, const CIdentifier &identifier)
+        {
+            m_dBusInterface->callDBus(QLatin1String("unRegisterAudioCallsign"), callsign, identifier);
+        }
+
+        bool CContextAudioProxy::hasRegisteredAudioCallsign(const CCallsign &callsign) const
+        {
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("hasRegisteredAudioCallsign"), callsign);
+        }
+
         CAudioDeviceInfoList CContextAudioProxy::getRegisteredDevices() const
         {
             return m_dBusInterface->callDBusRet<BlackMisc::Audio::CAudioDeviceInfoList>(QLatin1String("getRegisteredDevices"));

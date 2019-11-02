@@ -100,6 +100,18 @@ namespace BlackCore
             //! Remove all devices for identifer (i.e. "a machine")
             virtual void unRegisterDevicesFor(const BlackMisc::CIdentifier &identifier) = 0;
 
+            //! Register an audio callsign (used with AFV)
+            //! \remarks normally called with login
+            virtual void registerAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign,  const BlackMisc::CIdentifier &identifier) = 0;
+
+            //! Un-register an audio callsign (used with AFV)
+            //! \remarks normally called with logoff
+            virtual void unRegisterAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign,  const BlackMisc::CIdentifier &identifier) = 0;
+
+            //! Un-register an audio callsign (used with AFV)
+            //! \remarks normally called with logoff
+            virtual bool hasRegisteredAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+
             // ------------- DBus ---------------
 
         protected:
@@ -303,6 +315,9 @@ namespace BlackCore
 
             //! Network connection status
             void xCtxNetworkConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+
+            //! AFV client connection status changed
+            void onAfvConnectionStatusChanged(int status);
 
             CActionBind m_actionPtt     { BlackMisc::Input::pttHotkeyAction(),     BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudioBase::setVoiceTransmissionComActive };
             CActionBind m_actionPttCom1 { BlackMisc::Input::pttCom1HotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudioBase::setVoiceTransmissionCom1 };

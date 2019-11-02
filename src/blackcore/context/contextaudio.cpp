@@ -183,6 +183,7 @@ namespace BlackCore
             connect(m_voiceClient, &CAfvClient::startedAudio, this, &CContextAudioBase::startedAudio, Qt::QueuedConnection);
             connect(m_voiceClient, &CAfvClient::stoppedAudio, this, &CContextAudioBase::stoppedAudio, Qt::QueuedConnection);
             connect(m_voiceClient, &CAfvClient::ptt,          this, &CContextAudioBase::ptt,          Qt::QueuedConnection);
+            connect(m_voiceClient, &CAfvClient::connectionStatusChanged, this, &CContextAudioBase::onAfvConnectionStatusChanged, Qt::QueuedConnection);
 
             const CAudioDeviceInfoList devices = CAudioDeviceInfoList::allDevices();
             if (devices != m_activeLocalDevices)
@@ -261,8 +262,16 @@ namespace BlackCore
 
             const CUser connectedUser = this->getIContextNetwork()->getConnectedServer().getUser();
             const QString client = "swift " % BlackConfig::CBuildConfig::getShortVersionString();
-            m_voiceClient->connectTo(connectedUser.getId(), connectedUser.getPassword(), connectedUser.getCallsign().asString(), client);
-
+            CCallsign cs = connectedUser.getCallsign();
+            this->unRegisterAudioCallsign(cs, this->identifier()); // un-register "myself"
+            if (this->hasRegisteredAudioCallsign(cs)) // anybody else using that callsign
+            {
+                //! \todo KB 2019-11 would need a better algorithm to really find a cs
+                cs = CCallsign(cs.asString() +  "2");
+            }
+            CLogMessage(this).info(u"About to connect to voice as '%1' '%2'") << connectedUser.getId() << cs;
+            m_voiceClient->connectTo(connectedUser.getId(), connectedUser.getPassword(), cs.asString(), client);
+            this->registerAudioCallsign(cs, this->identifier()); // login can still fail, but we "block" this callsign
             return true;
         }
 
@@ -550,6 +559,24 @@ namespace BlackCore
             else if (to.isDisconnected())
             {
                 m_voiceClient->disconnectFrom();
+            }
+        }
+
+        void CContextAudioBase::onAfvConnectionStatusChanged(int status)
+        {
+            if (!m_voiceClient) { return; }
+
+            const CCallsign cs = m_voiceClient->getCallsign();
+            const CAfvClient::ConnectionStatus s = static_cast<CAfvClient::ConnectionStatus>(status);
+
+            switch (s)
+            {
+            case CAfvClient::Connected:
+                this->registerAudioCallsign(cs, this->identifier());
+                break;
+            case CAfvClient::Disconnected:
+                this->unRegisterAudioCallsign(cs, this->identifier());
+                break;
             }
         }
     } // ns
