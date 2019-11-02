@@ -11,6 +11,7 @@
 #include "blackgui/components/coreinfoareacomponent.h"
 #include "blackgui/components/coresettingsdialog.h"
 #include "blackgui/components/cockpitcomaudiodialog.h"
+#include "blackgui/components/audioadvanceddistributeddialog.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/rawfsdmessagesdialog.h"
 #include "blackgui/guiapplication.h"
@@ -57,9 +58,10 @@ CSwiftCore::CSwiftCore(QWidget *parent) :
     m_mwaStatusBar = nullptr;
 
     connect(ui->pb_Restart, &QPushButton::clicked,           this, &CSwiftCore::restart);
-    connect(ui->pb_Audio,   &QPushButton::clicked,           this, &CSwiftCore::audioDialog, Qt::QueuedConnection);
-    connect(ui->pb_DisconnectNetwork, &QPushButton::clicked, this, &CSwiftCore::disconnectFromNetwork);
-    connect(sGui, &CGuiApplication::styleSheetsChanged,      this, &CSwiftCore::onStyleSheetsChanged, Qt::QueuedConnection);
+    connect(ui->pb_Audio,   &QPushButton::clicked,           this, &CSwiftCore::audioDialog,           Qt::QueuedConnection);
+    connect(ui->pb_AudioAdvanced,     &QPushButton::clicked, this, &CSwiftCore::audioAdvancedDialog,   Qt::QueuedConnection);
+    connect(ui->pb_DisconnectNetwork, &QPushButton::clicked, this, &CSwiftCore::disconnectFromNetwork, Qt::QueuedConnection);
+    connect(sGui, &CGuiApplication::styleSheetsChanged,      this, &CSwiftCore::onStyleSheetsChanged,  Qt::QueuedConnection);
 
     this->initLogDisplay();
     this->initStyleSheet();
@@ -150,7 +152,7 @@ void CSwiftCore::restart()
 void CSwiftCore::disconnectFromNetwork()
 {
     if (!sGui || sGui->isShuttingDown()) { return; }
-    if (!sGui->getIContextNetwork()) { return; }
+    if (!sGui->getIContextNetwork())     { return; }
     if (!sGui->getIContextNetwork()->isConnected()) { return; }
 
     const QMessageBox::StandardButton reply = QMessageBox::question(this, "Disconnect", "Disconnect from network?", QMessageBox::Yes | QMessageBox::No);
@@ -166,6 +168,16 @@ void CSwiftCore::audioDialog()
     }
     m_audioDialog->setModal(false);
     m_audioDialog->show();
+}
+
+void CSwiftCore::audioAdvancedDialog()
+{
+    if (!m_audioAdvDialog)
+    {
+        m_audioAdvDialog.reset(new CAudioAdvancedDistributedDialog(this));
+    }
+    m_audioAdvDialog->setModal(false);
+    m_audioAdvDialog->show();
 }
 
 QStringList CSwiftCore::getRestartCmdArgs() const

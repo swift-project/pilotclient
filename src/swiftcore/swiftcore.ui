@@ -158,34 +158,6 @@ QTextEdit {
       </property>
      </widget>
     </item>
-    <item row="1" column="2">
-     <widget class="QGroupBox" name="gb_AudioAndCockpit">
-      <property name="title">
-       <string>Audio/Cockpit</string>
-      </property>
-      <layout class="QVBoxLayout" name="vl_Audio">
-       <property name="leftMargin">
-        <number>9</number>
-       </property>
-       <property name="topMargin">
-        <number>4</number>
-       </property>
-       <property name="rightMargin">
-        <number>9</number>
-       </property>
-       <property name="bottomMargin">
-        <number>4</number>
-       </property>
-       <item alignment="Qt::AlignRight">
-        <widget class="QPushButton" name="pb_Audio">
-         <property name="text">
-          <string>audio</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
     <item row="1" column="0" rowspan="2" colspan="2">
      <widget class="QGroupBox" name="gb_DBus">
       <property name="title">
@@ -211,6 +183,41 @@ QTextEdit {
          </property>
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QGroupBox" name="gb_AudioAndCockpit">
+      <property name="title">
+       <string>Audio/Cockpit</string>
+      </property>
+      <layout class="QHBoxLayout" name="hl_AudioCockpit">
+       <property name="leftMargin">
+        <number>9</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>9</number>
+       </property>
+       <property name="bottomMargin">
+        <number>4</number>
+       </property>
+       <item>
+        <widget class="QPushButton" name="pb_AudioAdvanced">
+         <property name="text">
+          <string>advanced</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pb_Audio">
+         <property name="text">
+          <string>audio</string>
          </property>
         </widget>
        </item>
@@ -314,8 +321,10 @@ QTextEdit {
  </customwidgets>
  <tabstops>
   <tabstop>lep_CommandLineInput</tabstop>
-  <tabstop>pb_DisconnectNetwork</tabstop>
+  <tabstop>pb_Audio</tabstop>
+  <tabstop>pb_AudioAdvanced</tabstop>
   <tabstop>pb_Restart</tabstop>
+  <tabstop>pb_DisconnectNetwork</tabstop>
  </tabstops>
  <resources/>
  <connections/>
