@@ -14,12 +14,12 @@ namespace BlackCore
     {
         return (
                    // those 3 should decide whether we are running the server
-                   this->m_network == LocalInDBusServer ||
-                   this->m_ownAircraft == LocalInDBusServer ||
-                   this->m_simulator == LocalInDBusServer ||
+                   m_network == LocalInDBusServer ||
+                   m_ownAircraft == LocalInDBusServer ||
+                   m_simulator == LocalInDBusServer ||
 
                    // added as work around
-                   this->m_audio == LocalInDBusServer
+                   m_audio == LocalInDBusServer
                );
     }
 
@@ -30,11 +30,11 @@ namespace BlackCore
 
     bool CCoreFacadeConfig::any(CCoreFacadeConfig::ContextMode mode) const
     {
-        return (this->m_application == mode ||
-                this->m_audio == mode ||
-                this->m_network == mode ||
-                this->m_ownAircraft == mode ||
-                this->m_simulator == mode);
+        return (m_application == mode ||
+                m_audio       == mode ||
+                m_network     == mode ||
+                m_ownAircraft == mode ||
+                m_simulator   == mode);
     }
 
     bool CCoreFacadeConfig::anyRemote() const
@@ -62,7 +62,6 @@ namespace BlackCore
     CCoreFacadeConfig CCoreFacadeConfig::remote(const QString &dbusBootstrapAddress)
     {
         CCoreFacadeConfig cfg = CCoreFacadeConfig(CCoreFacadeConfig(CCoreFacadeConfig::Remote, dbusBootstrapAddress));
-        cfg.m_audio = CCoreFacadeConfig::LocalInDBusServer;
         return cfg;
     }
 

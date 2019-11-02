@@ -52,31 +52,31 @@ namespace BlackCore
             m_dbusAddress(dbusBootstrapAddress)
         {}
 
-        //! application mode
+        //! Application mode
         ContextMode getModeApplication() const { return m_application; }
 
-        //! audio mode
+        //! Audio mode
         ContextMode getModeAudio() const { return m_audio; }
 
-        //! network mode
+        //! Network mode
         ContextMode getModeNetwork() const { return m_network; }
 
-        //! own aircraft
+        //! Own aircraft
         ContextMode getModeOwnAircraft() const { return m_ownAircraft; }
 
-        //! settings mode
+        //! Settings mode
         ContextMode getModeSettings() const { return m_settings; }
 
-        //! simulator mode
+        //! Simulator mode
         ContextMode getModeSimulator() const { return m_simulator; }
 
-        //! local settings?
+        //! Local settings?
         bool hasLocalSettings() const { return m_settings == Local || m_settings == LocalInDBusServer; }
 
-        //! requires server (at least one in server)?
+        //! Requires server (at least one in server)?
         bool requiresDBusSever() const;
 
-        //! requires DBus connection (at least one remote)?
+        //! Requires DBus connection (at least one remote)?
         bool requiresDBusConnection() const;
 
         //! DBus address
