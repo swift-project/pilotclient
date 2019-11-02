@@ -33,6 +33,9 @@ namespace BlackGui
             //! Dtor
             virtual ~CAudioAdvancedDistributedComponent() override;
 
+            //! Reload registered devices
+            void reloadRegisteredDevices();
+
         private:
             QScopedPointer<Ui::CAudioAdvancedDistributedComponent> ui;
 
@@ -41,9 +44,6 @@ namespace BlackGui
 
             //! Audio enable/disable
             void toggleAudioEnableDisable();
-
-            //! Reload registered devices
-            void reloadRegistered();
 
             //! Start/stop button @{
             void setButtons();

@@ -23,6 +23,12 @@
    </item>
    <item row="2" column="0" colspan="3">
     <widget class="BlackGui::Views::CAudioDeviceInfoView" name="tvp_RegisteredDevices">
+     <property name="selectionMode">
+      <enum>QAbstractItemView::SingleSelection</enum>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
      <attribute name="verticalHeaderVisible">
       <bool>false</bool>
      </attribute>
