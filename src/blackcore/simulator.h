@@ -736,6 +736,8 @@ namespace BlackCore
     };
 } // namespace
 
+Q_DECLARE_METATYPE(BlackCore::ISimulator::SimulatorStatusFlag)
+Q_DECLARE_METATYPE(BlackCore::ISimulator::SimulatorStatus)
 Q_DECLARE_INTERFACE(BlackCore::ISimulator, "org.swift-project.blackcore.simulator")
 Q_DECLARE_INTERFACE(BlackCore::ISimulatorFactory, "org.swift-project.blackcore.simulatorfactory")
 Q_DECLARE_OPERATORS_FOR_FLAGS(BlackCore::ISimulator::SimulatorStatus)

@@ -25,7 +25,7 @@ namespace BlackMisc
         { }
 
         CAudioDeviceInfo::CAudioDeviceInfo(DeviceType type, const QString &name) :
-            m_type(type),
+            m_type(static_cast<int>(type)),
             m_deviceName(name)
         { }
 
@@ -83,7 +83,7 @@ namespace BlackMisc
             case IndexDeviceType:  return CVariant::fromValue(this->getType());
             case IndexDeviceTypeAsString: return CVariant::fromValue(this->getTypeAsString());
             case IndexName:        return CVariant::fromValue(this->getName());
-            case IndexIdentifier: return m_identifier.propertyByIndex(index.copyFrontRemoved());
+            case IndexIdentifier:  return m_identifier.propertyByIndex(index.copyFrontRemoved());
             default: break;
             }
             return CValueObject::propertyByIndex(index);
@@ -95,8 +95,8 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDeviceType:  m_type = static_cast<DeviceType>(variant.toInt()); return;
-            case IndexName:        m_deviceName = variant.toQString(); return;
+            case IndexDeviceType: m_type = static_cast<DeviceType>(variant.toInt()); return;
+            case IndexName:       m_deviceName = variant.toQString(); return;
             case IndexIdentifier: m_identifier.setPropertyByIndex(index.copyFrontRemoved(), variant); return;
             default: break;
             }
@@ -110,8 +110,8 @@ namespace BlackMisc
             switch (i)
             {
             case IndexDeviceTypeAsString:
-            case IndexDeviceType:  return Compare::compare(m_type, compareValue.m_type);
-            case IndexName:        return m_deviceName.compare(compareValue.m_deviceName, Qt::CaseInsensitive);
+            case IndexDeviceType: return Compare::compare(m_type, compareValue.m_type);
+            case IndexName:       return m_deviceName.compare(compareValue.m_deviceName, Qt::CaseInsensitive);
             case IndexIdentifier: return m_identifier.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIdentifier());
             default: break;
             }
@@ -127,7 +127,7 @@ namespace BlackMisc
 
             switch (t)
             {
-            case InputDevice: return i;
+            case InputDevice:  return i;
             case OutputDevice: return o;
             default: break;
             }

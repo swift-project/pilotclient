@@ -87,6 +87,10 @@ namespace BlackCore
             //! Destructor
             virtual ~IContextSimulator() override {}
 
+            //! Get simulator status as enum
+            //! \fixme To be removed with Qt 5.5 when getSimualtorStatus directly provides the enum
+            BlackCore::ISimulator::SimulatorStatus getSimulatorStatusEnum() const;
+
         signals:
             //! Simulator combined status
             //! \sa ISimulator::SimulatorStatus
@@ -170,10 +174,6 @@ namespace BlackCore
 
             //! Simulator combined status
             virtual int getSimulatorStatus() const = 0;
-
-            //! Get simulator status as enum
-            //! \fixme To be removed with Qt 5.5 when getSimualtorStatus directly provides the enum
-            BlackCore::ISimulator::SimulatorStatus getSimulatorStatusEnum() const;
 
             //! Simulator setup
             virtual BlackMisc::Simulation::CSimulatorInternals getSimulatorInternals() const = 0;

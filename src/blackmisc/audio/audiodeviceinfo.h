@@ -65,7 +65,7 @@ namespace BlackMisc
             const CIdentifier &getIdentifier() const { return m_identifier; }
 
             //! Type
-            DeviceType getType() const { return m_type; }
+            DeviceType getType() const { return static_cast<DeviceType>(m_type); }
 
             //! Type as string
             const QString &getTypeAsString() const { return deviceTypeToString(this->getType()); }
@@ -113,9 +113,9 @@ namespace BlackMisc
             static const QString &deviceTypeToString(DeviceType t);
 
         private:
-            DeviceType m_type = Unknown; //!< Device type, @see CAudioDeviceInfo::DeviceType
-            QString m_deviceName;        //!< Device name
-            CIdentifier m_identifier;    //!< We use a DBus based system. Hence an audio device can reside on a different computers, this here is its name
+            int         m_type = static_cast<int>(Unknown); //!< Device type, @see CAudioDeviceInfo::DeviceType
+            QString     m_deviceName;  //!< Device name
+            CIdentifier m_identifier;  //!< We use a DBus based system. Hence an audio device can reside on a different computers, this here is its name
 
             BLACK_METACLASS(
                 CAudioDeviceInfo,

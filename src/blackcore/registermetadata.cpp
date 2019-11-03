@@ -14,11 +14,12 @@
 #include "blackcore/db/databasereader.h"
 #include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/fsd/fsdclient.h"
+#include "blackcore/afv/clients/afvclient.h"
+#include "blackcore/simulator.h"
 #include "blackcore/webreaderflags.h"
 #include "blackcore/aircraftmatcher.h"
-#include "blackcore/afv/clients/afvclient.h"
-#include "blackmisc/dbus.h"
 #include "blackmisc/network/network.h"
+#include "blackmisc/dbus.h"
 #include "blackmisc/valueobject.h"
 
 #include <QDBusMetaType>
@@ -43,6 +44,8 @@ namespace BlackCore
         qDBusRegisterMetaType<Context::CLogSubscriptionPair>();
         qDBusRegisterMetaType<Context::CSettingsDictionary>();
         qDBusRegisterMetaType<BlackMisc::Network::CLoginMode>();
+        qDBusRegisterMetaType<BlackCore::ISimulator::SimulatorStatusFlag>();
+        qDBusRegisterMetaType<BlackCore::ISimulator::SimulatorStatus>();
 
         qRegisterMetaTypeStreamOperators<Context::CLogSubscriptionHash>();
         qRegisterMetaTypeStreamOperators<Context::CLogSubscriptionPair>();

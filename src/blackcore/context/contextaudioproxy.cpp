@@ -47,13 +47,13 @@ namespace BlackCore
         void CContextAudioProxy::registerDevices(const CAudioDeviceInfoList &devices)
         {
             if (devices.isEmpty()) { return; }
-            m_dBusInterface->callDBus(QLatin1String("registerDevices"));
+            m_dBusInterface->callDBus(QLatin1String("registerDevices"), devices);
         }
 
         void CContextAudioProxy::unRegisterDevices(const CAudioDeviceInfoList &devices)
         {
             if (devices.isEmpty()) { return; }
-            m_dBusInterface->callDBus(QLatin1String("unRegisterDevices"));
+            m_dBusInterface->callDBus(QLatin1String("unRegisterDevices"), devices);
         }
 
         void CContextAudioProxy::unRegisterDevicesFor(const CIdentifier &identifier)
