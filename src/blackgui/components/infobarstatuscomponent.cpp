@@ -82,6 +82,10 @@ namespace BlackGui
             {
                 ui->led_Audio->setOn(!sGui->getCContextAudioBase()->isMuted());
                 connect(sGui->getCContextAudioBase(), &CContextAudioBase::changedMute, this, &CInfoBarStatusComponent::onMuteChanged);
+
+                // PTT as received on audio
+                // that also would need to be reconnected if audio is disabled/enabled
+                // connect(sGui->getCContextAudioBase(), &CContextAudioBase::ptt, this, &CInfoBarStatusComponent::onPttChanged, Qt::QueuedConnection);
             }
 
             QPointer<CInfoBarStatusComponent> myself(this);
@@ -260,6 +264,23 @@ namespace BlackGui
         void CInfoBarStatusComponent::onPttChanged(bool enabled)
         {
             ui->led_Ptt->setOn(enabled);
+        }
+
+        void CInfoBarStatusComponent::onAudioPtt(bool active, PTTCOM pttcom, const CIdentifier &identifier)
+        {
+            // those here come directly from AUDIO client,
+            // we display COM1/2 directly, but COM is directly hooked up with onPttChanged
+
+            Q_UNUSED(identifier)
+            Q_UNUSED(active)
+            Q_UNUSED(pttcom)
+
+            /**
+            if (pttcom == COM1 || pttcom == COM2)
+            {
+                this->onPttChanged(active);
+            }
+            **/
         }
 
         void CInfoBarStatusComponent::onInternetAccessibleChanged(bool access)

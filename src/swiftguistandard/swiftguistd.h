@@ -122,7 +122,9 @@ private:
     QScopedPointer<BlackGui::Components::CAfvMapDialog>       m_mapDialog;         //!< map dialog
     QScopedPointer<BlackGui::Components::CAircraftModelSetValidationDialog> m_validationDialog; //!< aircraft model validation dialog
     BlackMisc::CData<BlackMisc::Simulation::Data::TLastAutoPublish> m_lastAutoPublish { this };
-    BlackCore::CActionBind m_actionPtt { BlackMisc::Input::pttHotkeyAction(), BlackMisc::CIcons::StandardIconRadio16, this, &SwiftGuiStd::onPttChanged };
+    BlackCore::CActionBind m_actionPtt  { BlackMisc::Input::pttHotkeyAction(),     BlackMisc::CIcons::StandardIconRadio16, this, &SwiftGuiStd::onPttChanged };
+    BlackCore::CActionBind m_actionPtt1 { BlackMisc::Input::pttCom1HotkeyAction(), BlackMisc::CIcons::StandardIconRadio16, this, &SwiftGuiStd::onPttChanged };
+    BlackCore::CActionBind m_actionPtt2 { BlackMisc::Input::pttCom2HotkeyAction(), BlackMisc::CIcons::StandardIconRadio16, this, &SwiftGuiStd::onPttChanged };
     BlackCore::CActionBindings  m_menuHotkeyHandlers;
     BlackGui::CManagedStatusBar m_statusBar;
     BlackMisc::CLogSubscriber   m_logSubscriber { this, &SwiftGuiStd::displayStatusMessageInGui };

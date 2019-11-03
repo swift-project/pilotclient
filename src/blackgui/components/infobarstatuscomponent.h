@@ -13,6 +13,8 @@
 
 #include "blackcore/actionbind.h"
 #include "blackgui/blackguiexport.h"
+
+#include "blackmisc/audio/ptt.h"
 #include "blackmisc/input/actionhotkeydefs.h"
 #include "blackmisc/network/connectionstatus.h"
 
@@ -59,7 +61,10 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CInfoBarStatusComponent> ui;
-            BlackCore::CActionBind m_actionPtt  { BlackMisc::Input::pttHotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CInfoBarStatusComponent::onPttChanged };
+            BlackCore::CActionBind m_actionPtt  { BlackMisc::Input::pttHotkeyAction(),     BlackMisc::Input::pttHotkeyIcon(), this, &CInfoBarStatusComponent::onPttChanged };
+            BlackCore::CActionBind m_actionPtt1 { BlackMisc::Input::pttCom1HotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CInfoBarStatusComponent::onPttChanged };
+            BlackCore::CActionBind m_actionPtt2 { BlackMisc::Input::pttCom2HotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CInfoBarStatusComponent::onPttChanged };
+
             BlackMisc::CDigestSignal m_dsResize { this, &CInfoBarStatusComponent::adjustTextSize, 1000, 50 };
 
             //! Init the LEDs
@@ -83,8 +88,11 @@ namespace BlackGui
             //! Mapper is ready
             void onMapperReady();
 
-            //! Ptt button changed
+            //! PTT button changed
             void onPttChanged(bool enabled);
+
+            //! PTT, as received in in audio
+            void onAudioPtt(bool active, BlackMisc::Audio::PTTCOM pttcom, const BlackMisc::CIdentifier &identifier);
 
             //! Internet accessible?
             void onInternetAccessibleChanged(bool access);
