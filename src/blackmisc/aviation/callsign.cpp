@@ -70,23 +70,25 @@ namespace BlackMisc
 
         QString CCallsign::unifyCallsign(const QString &callsign, TypeHint hint)
         {
+            const QString ucCallsign = callsign.trimmed().toUpper();
+
             // Ref T664, allow ATC with hyphen, such as Ml-SNO_CTR
             switch (hint)
             {
             // ATC allows "-", aircraft not
-            case Atc:      return removeChars(callsign.toUpper().trimmed(), [](QChar c) { return !c.isLetterOrNumber() && c != '_' && c != '-'; });
-            case Aircraft: return removeChars(callsign.toUpper().trimmed(), [](QChar c) { return !c.isLetterOrNumber() && c != '_'; });
+            case Atc:      return removeChars(ucCallsign, [](QChar c) { return !c.isLetterOrNumber() && c != '_' && c != '-'; });
+            case Aircraft: return removeChars(ucCallsign, [](QChar c) { return !c.isLetterOrNumber() && c != '_'; });
             default: break;
             }
 
             // no hint
-            if (CCallsign::looksLikeAtcCallsign(callsign))
+            if (CCallsign::looksLikeAtcCallsign(ucCallsign))
             {
-                return removeChars(callsign.toUpper().trimmed(), [](QChar c) { return !c.isLetterOrNumber() && c != '_' && c != '-'; });
+                return removeChars(ucCallsign, [](QChar c) { return !c.isLetterOrNumber() && c != '_' && c != '-'; });
             }
 
             // strict check
-            return removeChars(callsign.toUpper().trimmed(), [](QChar c) { return !c.isLetterOrNumber() && c != '_'; });
+            return removeChars(ucCallsign, [](QChar c) { return !c.isLetterOrNumber() && c != '_'; });
         }
 
         const CIcon &CCallsign::convertToIcon(const CCallsign &callsign)
@@ -372,22 +374,24 @@ namespace BlackMisc
 
         const QStringList &CCallsign::atcCallsignSuffixes()
         {
-            static const QStringList a({ "APP", "GND", "TWR", "DEL", "CTR" });
+            static const QStringList a({ "APP", "GND", "DEP", "TWR", "DEL", "CTR" });
             return a;
         }
 
         const QStringList &CCallsign::atcAlikeCallsignSuffixes()
         {
-            static const QStringList a({ "ATIS", "APP", "GND", "OBS", "TWR", "DEL", "CTR", "SUP", "FSS", "INS" });
+            static const QStringList a({ "ATIS", "APP", "GND", "OBS", "DEP", "TWR", "DEL", "CTR", "SUP", "FSS", "INS" });
             return a;
         }
 
         bool CCallsign::looksLikeAtcCallsign(const QString &callsign)
         {
             if (!callsign.contains("_")) { return false; }
+            const QStringView uc = callsign.toUpper();
+
             for (const QString &r : CCallsign::atcAlikeCallsignSuffixes())
             {
-                if (callsign.endsWith(r)) { return true; }
+                if (uc.endsWith(r)) { return true; }
             }
             return false;
         }
