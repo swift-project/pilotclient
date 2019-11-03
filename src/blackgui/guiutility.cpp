@@ -512,7 +512,7 @@ namespace BlackGui
             flags |= Qt::WindowStaysOnTopHint;
         }
         widget->setWindowFlags(flags);
-        widget->show();
+        widget->show(); // without that the window sometimes just disappears
         return Qt::WindowStaysOnTopHint & flags;
     }
 
@@ -531,6 +531,7 @@ namespace BlackGui
             // flags |= Qt::WindowStaysOnBottomHint;
         }
         widget->setWindowFlags(flags);
+        widget->show(); // without that the window sometimes just disappears
         return onTop;
     }
 
@@ -552,7 +553,7 @@ namespace BlackGui
         Q_ASSERT_X(ok, Q_FUNC_INFO, "malformed number");
         const int b = parts.at(3).toInt(&ok);
         Q_ASSERT_X(ok, Q_FUNC_INFO, "malformed number");
-        Q_UNUSED(ok);
+        Q_UNUSED(ok)
         return QMargins(l, t, r, b);
     }
 

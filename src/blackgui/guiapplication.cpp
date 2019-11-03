@@ -1177,20 +1177,33 @@ namespace BlackGui
         if (this->isShuttingDown()) { return; }
         QMainWindow *w = sGui->mainApplicationWindow();
         if (!w)  { return; }
+
         m_frontBack = true;
         w->showNormal();     // bring window to top on OSX
         w->raise();          // bring window from minimized state on OSX
-        w->activateWindow(); // bring window to front/unminimize on windows
+
+        // In order to show also on top if another window is (permanent) on top
+        if (!CGuiUtility::staysOnTop(w))
+        {
+            CGuiUtility::stayOnTop(true, w);
+            emit this->alwaysOnTop(true);
+        }
+
+        // w->activateWindow(); // bring window to front/unminimize on windows
     }
 
     void CGuiApplication::windowToBack()
     {
         if (this->isShuttingDown()) { return; }
-        m_frontBack = false;
         QMainWindow *w = this->mainApplicationWindow();
         if (!w) { return; }
-        if (CGuiUtility::staysOnTop(w)) { CGuiUtility::stayOnTop(false, w); }
 
+        m_frontBack = false;
+        if (CGuiUtility::staysOnTop(w))
+        {
+            CGuiUtility::stayOnTop(false, w);
+            emit this->alwaysOnTop(false);
+        }
         w->lower();
     }
 
