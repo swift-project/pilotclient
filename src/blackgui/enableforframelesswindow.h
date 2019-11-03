@@ -16,6 +16,7 @@
 #include <QByteArray>
 #include <QPoint>
 #include <QString>
+#include <QSize>
 #include <Qt>
 
 class QEvent;
@@ -88,6 +89,7 @@ namespace BlackGui
 
     protected:
         QPoint       m_framelessDragPosition;             //!< position, if moving is handled with frameless window
+        QSize        m_moveSize;                          //!< size when moved (in frameless window)
         QPushButton *m_framelessCloseButton = nullptr;    //!< close button
         WindowMode   m_windowMode = WindowNormal;         //!< Window mode, \sa WindowMode
         WindowMode   m_originalWindowMode = WindowNormal; //!< mode when initialized

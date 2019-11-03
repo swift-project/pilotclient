@@ -213,8 +213,19 @@ namespace BlackGui
     bool CEnableForFramelessWindow::handleMouseMoveEvent(QMouseEvent *event)
     {
         Q_ASSERT(m_widget);
-        if (m_windowMode == WindowFrameless && event->buttons() & Qt::LeftButton && !m_framelessDragPosition.isNull())
+        if (m_windowMode == WindowFrameless && event->buttons() == Qt::LeftButton && !m_framelessDragPosition.isNull())
         {
+            const QSize s = m_widget->size();
+            const bool changedSize = (m_moveSize != s);
+
+            // avoid "jumping around" if window was resized
+            // resizing in frameless is subject of QSizeGrip in the status bar
+            if (changedSize)
+            {
+                m_moveSize = s;
+                return false;
+            }
+
             m_widget->move(event->globalPos() - m_framelessDragPosition);
             event->accept();
             return true;

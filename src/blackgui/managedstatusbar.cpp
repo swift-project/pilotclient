@@ -45,7 +45,7 @@ namespace BlackGui
         m_ownedStatusBar = statusBar ? false : true;
         m_statusBar = statusBar ? statusBar : new QStatusBar();
         if (m_statusBar->objectName().isEmpty()) { m_statusBar->setObjectName("sb_ManagedStatusBar"); }
-        if (m_ownedStatusBar) { m_statusBar->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);}
+        // if (m_ownedStatusBar) { m_statusBar->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);}
 
         m_statusBarIcon = new QLabel(m_statusBar);
         m_statusBarIcon->setObjectName(QString("lbl_StatusBarIcon").append(m_statusBar->objectName()));
@@ -67,7 +67,7 @@ namespace BlackGui
         if (m_ownedStatusBar)
         {
             // self created status bar
-            QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+            QSizePolicy sizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
             sizePolicy.setHorizontalStretch(0);
             sizePolicy.setVerticalStretch(0);
             sizePolicy.setHeightForWidth(m_statusBar->sizePolicy().hasHeightForWidth());
