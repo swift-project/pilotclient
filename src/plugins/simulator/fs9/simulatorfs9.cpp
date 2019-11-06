@@ -201,7 +201,7 @@ namespace BlackSimPlugin
             delete fs9Client;
             m_hashFs9Clients.remove(callsign);
             updateAircraftRendered(callsign, false);
-            CLogMessage(this).info(u"FS9: Removed aircraft %1") << callsign.toQString();
+            CLogMessage(this).info(u"FS9: Removed aircraft '%1'") << callsign.toQString();
             return CSimulatorFsCommon::physicallyRemoveRemoteAircraft(callsign);
         }
 

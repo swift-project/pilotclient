@@ -54,6 +54,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::XPlane;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::Weather;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::Simulation::Data;
@@ -1125,7 +1126,7 @@ namespace BlackCore
             m_simulatorPlugin.second->setWeatherActivated(activated);
         }
 
-        void CContextSimulator::requestWeatherGrid(const Weather::CWeatherGrid &weatherGrid, const CIdentifier &identifier)
+        void CContextSimulator::requestWeatherGrid(const CWeatherGrid &weatherGrid, const CIdentifier &identifier)
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << identifier; }
             m_weatherManager.requestWeatherGrid(weatherGrid, identifier);

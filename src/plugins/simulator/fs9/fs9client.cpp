@@ -309,8 +309,7 @@ namespace BlackSimPlugin
                 return logDirectPlayError(hr);
             }
 
-
-            CLogMessage(this).debug() << m_callsign << " connected to session.";
+            CLogMessage(this).info(u"Callsign '%1' connected to session.") << m_callsign;
             sendMultiplayerChangePlayerPlane();
             sendMultiplayerPosition();
             sendMultiplayerParamaters();
@@ -327,7 +326,7 @@ namespace BlackSimPlugin
             HRESULT hr = s_ok();
 
             if (m_clientStatus == Disconnected) { return hr; }
-            CLogMessage(this).debug() << "Closing DirectPlay connection for " << m_callsign;
+            CLogMessage(this).info(u"Closing DirectPlay connection for '%1'") << m_callsign;
             if (isFailure(hr = m_directPlayPeer->Close(0)))
             {
                 return logDirectPlayError(hr);
