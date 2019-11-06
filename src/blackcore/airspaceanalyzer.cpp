@@ -186,8 +186,8 @@ namespace BlackCore
         for (const CCallsign &callsign : callsignsAtc) // clazy:exclude=container-anti-pattern,range-loop
         {
             if (!enabled) { m_aircraftCallsignTimestamps[callsign] = timeoutAtcEpochMs + 1000; } // fake value so it can be re-enabled
-            const qint64 tsv = m_aircraftCallsignTimestamps.value(callsign);
-            if (m_atcCallsignTimestamps.value(callsign) > timeoutAtcEpochMs) { continue; }
+            const qint64 tsv = m_atcCallsignTimestamps.value(callsign);
+            if (tsv > timeoutAtcEpochMs) { continue; }
             CLogMessage(this).debug() << QStringLiteral("ATC '%1' timed out after %2ms").arg(callsign.toQString()).arg(currentTimeMsEpoch - tsv);
             m_atcCallsignTimestamps.remove(callsign);
             emit this->timeoutAtc(callsign);
