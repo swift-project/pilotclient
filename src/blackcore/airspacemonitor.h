@@ -391,9 +391,6 @@ namespace BlackCore
         void onAircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, qint64 currentOffsetMs);
         void onAircraftInterimUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
         void onConnectionStatusChanged(BlackMisc::Network::CConnectionStatus oldStatus, BlackMisc::Network::CConnectionStatus newStatus);
-
-        //! \deprecated
-        void onAtisVoiceRoomReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
     };
 } // namespace
 

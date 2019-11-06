@@ -729,15 +729,6 @@ namespace BlackCore
         if (changedAtis) { emit this->changedAtisReceived(callsign); }
     }
 
-    void CAirspaceMonitor::onAtisVoiceRoomReceived(const CCallsign &callsign, const QString &url)
-    {
-        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
-        if (!this->isConnectedAndNotShuttingDown()) { return; }
-        Q_UNUSED(url)
-        Q_UNUSED(callsign)
-        return;
-    }
-
     void CAirspaceMonitor::onAtisLogoffTimeReceived(const CCallsign &callsign, const QString &zuluTime)
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));

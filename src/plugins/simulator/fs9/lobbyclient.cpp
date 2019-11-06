@@ -14,13 +14,17 @@
 #include "directplayutils.h"
 #include "fs9.h"
 #include "lobbyclient.h"
+
 #include "blackmisc/logmessage.h"
+
 #include <QDebug>
 #include <QTimer>
 #include <QFile>
 #include <QStringList>
 #include <QScopedPointer>
 #include <QMutexLocker>
+
+using namespace BlackMisc;
 
 namespace BlackSimPlugin
 {
@@ -90,20 +94,20 @@ namespace BlackSimPlugin
         bool CLobbyClient::canLobbyConnect()
         {
             if (!m_dpLobbyClient) { return false; }
-            GUID appGuid = CFs9Sdk::guid();
-            DWORD dwSize = 0;
+            GUID appGuid  = CFs9Sdk::guid();
+            DWORD dwSize  = 0;
             DWORD dwItems = 0;
-            HRESULT hr = m_dpLobbyClient->EnumLocalPrograms(&appGuid, nullptr, &dwSize, &dwItems, 0);
+            const HRESULT hr = m_dpLobbyClient->EnumLocalPrograms(&appGuid, nullptr, &dwSize, &dwItems, 0);
             if (hr == DPNERR_BUFFERTOOSMALL)
             {
-                QScopedArrayPointer<BYTE> memPtr (new BYTE[dwSize]);
+                QScopedArrayPointer<BYTE> memPtr(new BYTE[dwSize]);
                 DPL_APPLICATION_INFO *appInfo = reinterpret_cast<DPL_APPLICATION_INFO *>(memPtr.data());
 
                 m_dpLobbyClient->EnumLocalPrograms(&appGuid, memPtr.data(), &dwSize, &dwItems, 0);
 
                 if (dwItems > 0)
                 {
-                    BlackMisc::CLogMessage(this).debug() << "Found lobby application:" << QString::fromWCharArray(appInfo->pwszApplicationName);;
+                    CLogMessage(this).debug() << "Found lobby application:" << QString::fromWCharArray(appInfo->pwszApplicationName);
                     return true;
                 }
                 else
@@ -133,23 +137,20 @@ namespace BlackSimPlugin
             dnConnectInfo.guidApplication = pAppGuid;
 
             if (FAILED(hr = allocAndInitConnectSettings(address, &pAppGuid, &dnConnectInfo.pdplConnectionSettings)))
+            {
                 return S_FALSE;
+            }
 
             hr = m_dpLobbyClient->ConnectApplication(&dnConnectInfo,
                     nullptr,
                     &m_applicationHandle,
                     INFINITE,
                     0);
-            if (FAILED(hr))
-            {
-                return hr;
-            }
-            else
-            {
-                qDebug() << "Connected!";
-                freeConnectSettings(dnConnectInfo.pdplConnectionSettings);
-                return S_OK;
-            }
+            if (FAILED(hr)) { return hr; }
+
+            CLogMessage(this).info(u"Lobby client '%1' connected!") << address;
+            freeConnectSettings(dnConnectInfo.pdplConnectionSettings);
+            return S_OK;
         }
 
         HRESULT CLobbyClient::allocAndInitConnectSettings(const QString &address, GUID *pAppGuid, DPL_CONNECTION_SETTINGS **ppdplConnectSettings)
@@ -269,7 +270,7 @@ namespace BlackSimPlugin
                 {
                     PDPL_MESSAGE_DISCONNECT pDisconnectMsg;
                     pDisconnectMsg = (PDPL_MESSAGE_DISCONNECT)msgBuffer;
-                    Q_UNUSED(pDisconnectMsg);
+                    Q_UNUSED(pDisconnectMsg)
 
                     emit disconnected();
 
@@ -312,10 +313,11 @@ namespace BlackSimPlugin
                     case DPLSESSION_HOSTMIGRATEDHERE:
                         message.append("Host migrated to this client"); break;
                     default:
-                        message.append(QString("Unknown PDPL_MESSAGE_SESSION_STATUS: %1").arg(pStatusMsg->dwStatus));
+                        message.append(QStringLiteral("Unknown PDPL_MESSAGE_SESSION_STATUS: %1").arg(pStatusMsg->dwStatus));
                         break;
                     }
-                    qDebug() << message;
+
+                    CLogMessage(this).info(message);
                     break;
                 }
 

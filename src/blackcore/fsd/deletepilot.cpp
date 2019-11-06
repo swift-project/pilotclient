@@ -7,8 +7,9 @@
  */
 
 #include "deletepilot.h"
-
 #include "blackmisc/logmessage.h"
+
+using namespace BlackMisc;
 
 namespace BlackCore
 {
@@ -34,9 +35,10 @@ namespace BlackCore
         {
             if (tokens.size() < 1)
             {
-                BlackMisc::CLogMessage(static_cast<DeletePilot *>(nullptr)).debug(u"Wrong number of arguments.");
+                CLogMessage(static_cast<DeletePilot *>(nullptr)).debug(u"Wrong number of arguments.");
                 return {};
-            };
+            }
+
             // VATSIM FSD will always supply the CERTIFICATE ID when it rebroadcasts this PDU without regard for whether
             // the client originally specified it. But other FSDs might not.
             DeletePilot packet(tokens[0], (tokens.size() >= 2) ? tokens[1] : "");

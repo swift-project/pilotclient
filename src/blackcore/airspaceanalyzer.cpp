@@ -24,10 +24,11 @@
 #include <QWriteLocker>
 
 using namespace BlackMisc;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Geo;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Simulation;
 using namespace BlackCore::Fsd;
 
 namespace BlackCore
@@ -63,7 +64,7 @@ namespace BlackCore
         // Monitor
         c = connect(airspaceMonitorParent, &CAirspaceMonitor::addedAircraftSituation, this, &CAirspaceAnalyzer::watchdogTouchAircraftCallsign);
         Q_ASSERT(c);
-        Q_UNUSED(c);
+        Q_UNUSED(c)
 
         // start in own thread
         this->start(QThread::LowestPriority);
@@ -89,7 +90,7 @@ namespace BlackCore
 
     void CAirspaceAnalyzer::onNetworkPositionUpdate(const CAircraftSituation &situation, const CTransponder &transponder)
     {
-        Q_UNUSED(transponder);
+        Q_UNUSED(transponder)
         this->watchdogTouchAircraftCallsign(situation);
     }
 
@@ -99,17 +100,17 @@ namespace BlackCore
         m_aircraftCallsignTimestamps[situation.getCallsign()] = QDateTime::currentMSecsSinceEpoch();
     }
 
-    void CAirspaceAnalyzer::watchdogTouchAtcCallsign(const CCallsign &callsign, const CFrequency &frequency, const Geo::CCoordinateGeodetic &position, const CLength &range)
+    void CAirspaceAnalyzer::watchdogTouchAtcCallsign(const CCallsign &callsign, const CFrequency &frequency, const CCoordinateGeodetic &position, const CLength &range)
     {
-        Q_UNUSED(frequency);
-        Q_UNUSED(position);
-        Q_UNUSED(range);
+        Q_UNUSED(frequency)
+        Q_UNUSED(position)
+        Q_UNUSED(range)
         m_atcCallsignTimestamps[callsign] = QDateTime::currentMSecsSinceEpoch();
     }
 
     void CAirspaceAnalyzer::onConnectionStatusChanged(CConnectionStatus oldStatus, CConnectionStatus newStatus)
     {
-        Q_UNUSED(oldStatus);
+        Q_UNUSED(oldStatus)
         if (newStatus.isDisconnected())
         {
             this->clear();
@@ -164,11 +165,11 @@ namespace BlackCore
         m_doNotRunAgainBefore = -1;
 
         // checks
-        const qint64 aircraftTimeoutMs = m_timeoutAircraft.valueInteger(CTimeUnit::ms());
-        const qint64 atcTimeoutMs = m_timeoutAtc.valueInteger(CTimeUnit::ms());
+        const qint64 aircraftTimeoutMs      = m_timeoutAircraft.valueInteger(CTimeUnit::ms());
+        const qint64 atcTimeoutMs           = m_timeoutAtc.valueInteger(CTimeUnit::ms());
         const qint64 timeoutAircraftEpochMs = currentTimeMsEpoch - aircraftTimeoutMs;
-        const qint64 timeoutAtcEpochMs = currentTimeMsEpoch - atcTimeoutMs;
-        const bool enabled = m_enabledWatchdog;
+        const qint64 timeoutAtcEpochMs      = currentTimeMsEpoch - atcTimeoutMs;
+        const bool enabled                  = m_enabledWatchdog;
 
         const QList<CCallsign> callsignsAircraft = m_aircraftCallsignTimestamps.keys();
         for (const CCallsign &callsign : callsignsAircraft) // clazy:exclude=container-anti-pattern,range-loop
