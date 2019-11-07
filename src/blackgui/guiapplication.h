@@ -239,6 +239,9 @@ namespace BlackGui
         void windowToFrontBackToggle();
         //! @}
 
+        //! Window minimize/normalize
+        void windowMinimizeNormalToggle();
+
         //! Save the main widget state?
         void setSaveMainWidgetState(bool save) { m_saveMainWidgetState = save; }
 
@@ -344,7 +347,8 @@ namespace BlackGui
         CStyleSheetUtility m_styleSheetUtility {{}, this};                 //!< style sheet utility
         bool m_uiSetupCompleted = false;                                   //!< ui setup completed
         bool m_saveMainWidgetState = true;                                 //!< save/restore main widget's state
-        bool m_frontBack = true;
+        bool m_frontBack = true;                                           //!< for front/back toggle
+        bool m_normalizeMinimize = true;                                   //!< for normalize/minimize toggle
         QScopedPointer<CSplashScreen>  m_splashScreen;                     //!< splash screen
         Components::CUpdateInfoDialog *m_updateDialog = nullptr;           //!< software installation dialog
         Components::CApplicationCloseDialog *m_closeDialog = nullptr;      //!< close dialog (no QScopedPointer because I need to set parent)
