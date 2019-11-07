@@ -41,17 +41,20 @@ namespace BlackCore
         Q_ASSERT_X(fsdClient, Q_FUNC_INFO, "Network object required to connect");
 
         // all in new thread from here on
-        this->setObjectName(getName());
+        this->setObjectName(this->getName());
         m_updateTimer.start(7500);
         m_lastWatchdogCallMsSinceEpoch = QDateTime::currentMSecsSinceEpoch();
         bool c = connect(&m_updateTimer, &QTimer::timeout, this, &CAirspaceAnalyzer::onTimeout);
         Q_ASSERT(c);
 
         // network connected
-        c = connect(fsdClient, &CFSDClient::deletePilotReceived, this, &CAirspaceAnalyzer::watchdogRemoveAircraftCallsign, Qt::QueuedConnection);
-        Q_ASSERT(c);
-        c = connect(fsdClient, &CFSDClient::deleteAtcReceived, this, &CAirspaceAnalyzer::watchdogRemoveAtcCallsign, Qt::QueuedConnection);
-        Q_ASSERT(c);
+
+        // those are CID and not callsign related
+        // c = connect(fsdClient, &CFSDClient::deletePilotReceived, this, &CAirspaceAnalyzer::watchdogRemoveAircraftCallsign, Qt::QueuedConnection);
+        // Q_ASSERT(c);
+        // c = connect(fsdClient, &CFSDClient::deleteAtcReceived, this, &CAirspaceAnalyzer::watchdogRemoveAtcCallsign, Qt::QueuedConnection);
+        // Q_ASSERT(c);
+
         c = connect(fsdClient, &CFSDClient::connectionStatusChanged, this, &CAirspaceAnalyzer::onConnectionStatusChanged, Qt::QueuedConnection);
         Q_ASSERT(c);
 
@@ -64,6 +67,12 @@ namespace BlackCore
         // Monitor
         c = connect(airspaceMonitorParent, &CAirspaceMonitor::addedAircraftSituation, this, &CAirspaceAnalyzer::watchdogTouchAircraftCallsign);
         Q_ASSERT(c);
+        c = connect(airspaceMonitorParent, &CAirspaceMonitor::removedAircraft, this, &CAirspaceAnalyzer::watchdogRemoveAircraftCallsign);
+        Q_ASSERT(c);
+        c = connect(airspaceMonitorParent, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CAirspaceAnalyzer::onChangedAtcStationOnlineConnectionStatus);
+        Q_ASSERT(c);
+
+        // --------------------
         Q_UNUSED(c)
 
         // start in own thread
@@ -94,10 +103,24 @@ namespace BlackCore
         this->watchdogTouchAircraftCallsign(situation);
     }
 
+    void CAirspaceAnalyzer::onChangedAtcStationOnlineConnectionStatus(const CAtcStation &station, bool isConnected)
+    {
+        const CCallsign cs = station.getCallsign();
+        if (isConnected)
+        {
+            m_atcCallsignTimestamps[cs] = QDateTime::currentMSecsSinceEpoch();
+        }
+        else
+        {
+            this->watchdogRemoveAtcCallsign(cs);
+        }
+    }
+
     void CAirspaceAnalyzer::watchdogTouchAircraftCallsign(const CAircraftSituation &situation)
     {
-        Q_ASSERT_X(!situation.getCallsign().isEmpty(), Q_FUNC_INFO, "No callsign in situaton");
-        m_aircraftCallsignTimestamps[situation.getCallsign()] = QDateTime::currentMSecsSinceEpoch();
+        const CCallsign cs = situation.getCallsign();
+        Q_ASSERT_X(!cs.isEmpty(), Q_FUNC_INFO, "No callsign in situaton");
+        m_aircraftCallsignTimestamps[cs] = QDateTime::currentMSecsSinceEpoch();
     }
 
     void CAirspaceAnalyzer::watchdogTouchAtcCallsign(const CCallsign &callsign, const CFrequency &frequency, const CCoordinateGeodetic &position, const CLength &range)

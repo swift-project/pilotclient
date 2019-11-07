@@ -17,6 +17,7 @@
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
+#include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/length.h"
@@ -114,6 +115,9 @@ namespace BlackCore
 
         //! Network position update
         void onNetworkPositionUpdate(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
+
+        //! ATC stations online
+        void onChangedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool isConnected);
 
         //! Run a check
         void onTimeout();
