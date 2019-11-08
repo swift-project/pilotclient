@@ -312,7 +312,7 @@ namespace BlackCore
                 //! \threadsafe
                 quint32 getAliasFrequencyHz(quint32 frequencyHz) const;
 
-                bool fuzzyMatchCallSign(const QString &callsign, const QString &compareTo) const;
+                bool fuzzyMatchCallsign(const QString &callsign, const QString &compareTo) const;
                 void getPrefixSuffix(const QString &callsign, QString &prefix, QString &suffix) const;
 
                 static constexpr int PositionUpdatesMs = 20000; //!< position timer
