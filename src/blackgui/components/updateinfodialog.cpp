@@ -47,10 +47,8 @@ namespace BlackGui
             const CDistribution distribution = ui->comp_UpdateInfo->getCurrentDistribution();
             if (!distribution.hasDownloadUrls()) { return QDialog::Rejected; }
 
-            // in future, start download and close application
-            // for now, just open URL
-            QDesktopServices::openUrl(distribution.getDownloadUrls().getRandomUrl());
-            return QDialog::Rejected;
+            ui->comp_UpdateInfo->triggerDownload();
+            return r;
         }
 
         bool CUpdateInfoDialog::event(QEvent *event)

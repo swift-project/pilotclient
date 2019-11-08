@@ -73,6 +73,16 @@ namespace BlackGui
             return (vCurrentChannelPlatform > vCurrent);
         }
 
+        void CUpdateInfoComponent::triggerDownload()
+        {
+            QPointer<CUpdateInfoComponent> myself(this);
+            QTimer::singleShot(10, this, [ = ]
+            {
+                if (!myself) { return; }
+                ui->pb_DownloadInstaller->click();
+            });
+        }
+
         void CUpdateInfoComponent::requestLoadOfSetup()
         {
             if (!sGui || sGui->isShuttingDown()) { return; }

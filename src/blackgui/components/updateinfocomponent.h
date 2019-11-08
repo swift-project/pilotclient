@@ -39,13 +39,16 @@ namespace BlackGui
             explicit CUpdateInfoComponent(QWidget *parent = nullptr);
 
             //! Dtor
-            virtual ~CUpdateInfoComponent();
+            virtual ~CUpdateInfoComponent() override;
 
             //! Is there a new version available return version, else empty string
             BlackMisc::Db::CArtifact getLatestAvailablePilotClientArtifactForSelection() const;
 
             //! Is there a new version available?
             bool isNewPilotClientVersionAvailable() const;
+
+            //! Trigger download
+            void triggerDownload();
 
             //! Current distribution
             BlackMisc::Db::CDistribution getCurrentDistribution() const { return this->getSelectedOrDefaultDistribution(); }
