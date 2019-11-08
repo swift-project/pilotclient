@@ -342,8 +342,8 @@ namespace BlackMisc
         int CPhysicalQuantity<MU, PQ>::valueInteger(MU unit) const
         {
             Q_ASSERT_X(!unit.isNull(), Q_FUNC_INFO, "Cannot convert to null");
-            const double v = unit.roundValue(this->value(unit), 0);
-            return static_cast<int>(v);
+            const double v = this->value(unit);
+            return qRound(v);
         }
 
         template<class MU, class PQ>
