@@ -156,8 +156,8 @@ namespace BlackCore
             Q_ASSERT_X(m_connectionStatus.isDisconnected(), Q_FUNC_INFO, "Can't change ICAO codes while still connected");
             m_ownAircraftIcaoCode  = ownAircraft.getAircraftIcaoCode();
             m_ownAirlineIcaoCode   = ownAircraft.getAirlineIcaoCode();
-            m_ownLivery = ownAircraft.getModel().getSwiftLiveryString();
-            m_ownModelString = ownAircraft.getModelString();
+            m_ownLivery        = ownAircraft.getModel().getSwiftLiveryString();
+            m_ownModelString   = ownAircraft.getModelString();
             m_sendLiveryString = true;
             m_sendMModelString = true;
             updateOwnIcaoCodes(m_ownAircraftIcaoCode, m_ownAirlineIcaoCode);
@@ -165,8 +165,8 @@ namespace BlackCore
 
         void CFSDClient::setLiveryAndModelString(const QString &livery, bool sendLiveryString, const QString &modelString, bool sendModelString)
         {
-            m_ownLivery = livery;
-            m_ownModelString = modelString;
+            m_ownLivery        = livery;
+            m_ownModelString   = modelString;
             m_sendLiveryString = sendLiveryString;
             m_sendMModelString = sendModelString;
         }
@@ -177,12 +177,12 @@ namespace BlackCore
             const CSimulatorInfo::Simulator sim = simInfo.getSimulatorInfo().getSimulator();
             switch (sim)
             {
-            case CSimulatorInfo::FSX: m_simType = SimType::MSFSX; break;
-            case CSimulatorInfo::P3D: m_simType = SimType::P3Dv4; break;
-            case CSimulatorInfo::FS9: m_simType = SimType::MSFS2004;    break;
-            case CSimulatorInfo::FG:  m_simType = SimType::FlightGear;  break;
-            case CSimulatorInfo::XPLANE: m_simType = SimType::XPLANE11; break;
-            default: m_simType = SimType::Unknown; break;
+            case CSimulatorInfo::FSX:    m_simType = SimType::MSFSX;       break;
+            case CSimulatorInfo::P3D:    m_simType = SimType::P3Dv4;       break;
+            case CSimulatorInfo::FS9:    m_simType = SimType::MSFS2004;    break;
+            case CSimulatorInfo::FG:     m_simType = SimType::FlightGear;  break;
+            case CSimulatorInfo::XPLANE: m_simType = SimType::XPLANE11;    break;
+            default:                     m_simType = SimType::Unknown;     break;
             }
         }
 
@@ -284,7 +284,7 @@ namespace BlackCore
         {
             if (m_connectionStatus.isDisconnected() && ! m_unitTestMode) { return; }
             const CSimulatedAircraft myAircraft(getOwnAircraft());
-            if (m_loginMode == BlackMisc::Network::CLoginMode::Observer)
+            if (m_loginMode == CLoginMode::Observer)
             {
                 sendAtcDataUpdate(myAircraft.latitude().value(CAngleUnit::deg()), myAircraft.longitude().value(CAngleUnit::deg()));
             }
@@ -442,7 +442,7 @@ namespace BlackCore
             else if (queryType == ClientQueryType::FP)
             {
                 if (queryData.size() == 0) { return; }
-                ClientQuery clientQuery(m_ownCallsign.asString(), "SERVER", ClientQueryType::FP, queryData);
+                const ClientQuery clientQuery(m_ownCallsign.asString(), "SERVER", ClientQueryType::FP, queryData);
                 sendMessage(clientQuery);
             }
             if (queryType == ClientQueryType::AircraftConfig)
@@ -579,7 +579,7 @@ namespace BlackCore
         {
             PlaneInfoRequest planeInfoRequest(m_ownCallsign.asString(), receiver.toQString());
             sendMessage(planeInfoRequest);
-            this->increaseStatisticsValue(QStringLiteral("sendPlaneInfoRequest"));
+            increaseStatisticsValue(QStringLiteral("sendPlaneInfoRequest"));
         }
 
         void CFSDClient::sendPlaneInfoRequestFsinn(const CCallsign &callsign)
@@ -595,14 +595,14 @@ namespace BlackCore
                     myAircraft.getAircraftIcaoCombinedType(),
                     m_sendMModelString ? modelString : QString());
             sendMessage(planeInfoRequestFsinn);
-            this->increaseStatisticsValue(QStringLiteral("sendPlaneInfoRequestFsinn"));
+            increaseStatisticsValue(QStringLiteral("sendPlaneInfoRequestFsinn"));
         }
 
         void CFSDClient::sendPlaneInformation(const QString &receiver, const QString &aircraft, const QString &airline, const QString &livery)
         {
             PlaneInformation planeInformation(m_ownCallsign.asString(), receiver, aircraft, airline, livery);
             sendMessage(planeInformation);
-            this->increaseStatisticsValue(QStringLiteral("sendPlaneInformation"));
+            increaseStatisticsValue(QStringLiteral("sendPlaneInformation"));
         }
 
         void CFSDClient::sendPlaneInformationFsinn(const CCallsign &callsign)
@@ -618,7 +618,7 @@ namespace BlackCore
                     myAircraft.getAircraftIcaoCombinedType(),
                     m_sendMModelString ? modelString : QString());
             sendMessage(planeInformationFsinn);
-            this->increaseStatisticsValue(QStringLiteral("sendPlaneInformationFsinn"));
+            increaseStatisticsValue(QStringLiteral("sendPlaneInformationFsinn"));
         }
 
         void CFSDClient::sendAircraftConfiguration(const QString &receiver, const QString &aircraftConfigJson)
@@ -638,7 +638,7 @@ namespace BlackCore
         {
             AuthChallenge pduAuthChallenge(m_ownCallsign.asString(), "SERVER", challenge);
             sendMessage(pduAuthChallenge);
-            this->increaseStatisticsValue(QStringLiteral("sendAuthChallenge"));
+            increaseStatisticsValue(QStringLiteral("sendAuthChallenge"));
         }
 
         void CFSDClient::sendAuthResponse(const QString &response)
@@ -723,21 +723,20 @@ namespace BlackCore
             }
             else if (queryType == ClientQueryType::INF)
             {
-                QString userInfo;
-                QString cid = m_server.getUser().getId();
-                CSimulatedAircraft myAircraft(getOwnAircraft());
-                const double latitude = getOwnAircraftPosition().latitude().value(CAngleUnit::deg());
+                const QString cid = m_server.getUser().getId();
+                const CSimulatedAircraft myAircraft(getOwnAircraft());
+                const double latitude  = getOwnAircraftPosition().latitude().value(CAngleUnit::deg());
                 const double longitude = getOwnAircraftPosition().longitude().value(CAngleUnit::deg());
-                const int altitude = getOwnAircraft().getAltitude().valueInteger(CLengthUnit::ft());
+                const int altitude     = getOwnAircraft().getAltitude().valueInteger(CLengthUnit::ft());
                 const QString realName = m_server.getUser().getRealName();
 
                 std::array<char, 50> sysuid = {};
                 vatsim_get_system_unique_id(sysuid.data());
 
-                userInfo += QString("CID=") % cid % " " % m_clientName % " IP=" % m_socket.localAddress().toString() %
-                            " SYS_UID=" % sysuid.data() % " FSVER=" % m_hostApplication % " LT=" % QString::number(latitude) %
-                            " LO=" % QString::number(longitude) % " AL=" % QString::number(altitude) %
-                            " " % realName;
+                const QString userInfo = QStringLiteral("CID=") % cid % " " % m_clientName % " IP=" % m_socket.localAddress().toString() %
+                                         " SYS_UID=" % sysuid.data() % " FSVER=" % m_hostApplication % " LT=" % QString::number(latitude) %
+                                         " LO=" % QString::number(longitude) % " AL=" % QString::number(altitude) %
+                                         " " % realName;
 
                 TextMessage textMessage(m_ownCallsign.asString(), receiver, userInfo);
                 sendMessage(textMessage);
@@ -777,8 +776,8 @@ namespace BlackCore
 
             if (!m_tokenBucket.tryConsume()) { return; }
 
-            const QJsonObject previousConfig = m_sentAircraftConfig.toJson();
-            const QJsonObject currentConfig = currentParts.toJson();
+            const QJsonObject previousConfig    = m_sentAircraftConfig.toJson();
+            const QJsonObject currentConfig     = currentParts.toJson();
             const QJsonObject incrementalConfig = getIncrementalObject(previousConfig, currentConfig);
 
             const QString dataStr = convertToUnicodeEscaped(QJsonDocument(QJsonObject { { "config", incrementalConfig } }).toJson(QJsonDocument::Compact));
@@ -1252,11 +1251,11 @@ namespace BlackCore
             case ServerErrorCode::InvalidCallsign:     CLogMessage(this).error(u"The requested callsign is not valid"); break;
             case ServerErrorCode::InvalidCidPassword:  CLogMessage(this).error(u"Wrong user ID or password, inactive account"); break;
             case ServerErrorCode::InvalidRevision:     CLogMessage(this).error(u"This server does not support our protocol version"); break;
-            case ServerErrorCode::RequestedLevelTooHigh:  CLogMessage(this).error(u"You are not authorized to use the requested pilot rating"); break;
             case ServerErrorCode::ServerFull:          CLogMessage(this).error(u"The server is full"); break;
             case ServerErrorCode::CidSuspended:        CLogMessage(this).error(u"Your user account is suspended"); break;
             case ServerErrorCode::RatingTooLow:        CLogMessage(this).error(u"You are not authorized to use the requested rating"); break;
             case ServerErrorCode::InvalidClient:       CLogMessage(this).error(u"This software is not authorized for use on this network"); break;
+            case ServerErrorCode::RequestedLevelTooHigh: CLogMessage(this).error(u"You are not authorized to use the requested pilot rating"); break;
 
             case ServerErrorCode::NoError:             CLogMessage(this).info(u"OK"); break;
             case ServerErrorCode::SyntaxError:         CLogMessage(this).info(u"Malformed packet: Syntax error: %1") << serverError.m_causingParameter; break;
@@ -1747,31 +1746,31 @@ namespace BlackCore
                 const QString payload = line.mid(cmd.size()).trimmed();
 
                 // We expected a payload, but there is nothing
-                if (payload.length() == 0) return;
+                if (payload.length() == 0) { return; }
 
                 const QStringList tokens = payload.split(':');
                 switch (messageType)
                 {
-                case MessageType::AddAtc: /* ignore */ return;
-                case MessageType::AddPilot: /* ignore */ return;
-                case MessageType::AtcDataUpdate: handleAtcDataUpdate(tokens); return;
-                case MessageType::AuthChallenge: handleAuthChallenge(tokens); return;
-                case MessageType::AuthResponse: handleAuthResponse(tokens); return;
-                case MessageType::ClientIdentification: /* do nothing */ return;
-                case MessageType::ClientQuery: handleClientQuery(tokens); return;
-                case MessageType::ClientResponse: handleClientReponse(tokens); return;
-                case MessageType::DeleteATC: handleDeleteATC(tokens); return;
-                case MessageType::DeletePilot: handleDeletePilot(tokens); return;
-                case MessageType::FlightPlan: handleFlightPlan(tokens); return;
-                case MessageType::FsdIdentification: handleFsdIdentification(tokens); return;
-                case MessageType::KillRequest: handleKillRequest(tokens); return;
-                case MessageType::PilotDataUpdate: handlePilotDataUpdate(tokens); return;
-                case MessageType::Ping: handlePing(tokens); return;
-                case MessageType::Pong: handlePong(tokens); return;
-                case MessageType::ServerError: handleServerError(tokens); return;
-                case MessageType::TextMessage: handleTextMessage(tokens); return;
-                case MessageType::PilotClientCom: handleCustomPilotPacket(tokens); return;
-                case MessageType::Unknown: handleUnknownPacket(tokens); return;
+                case MessageType::AddAtc:   /* ignore */ break;
+                case MessageType::AddPilot: /* ignore */ break;
+                case MessageType::AtcDataUpdate:     handleAtcDataUpdate(tokens);     break;
+                case MessageType::AuthChallenge:     handleAuthChallenge(tokens);     break;
+                case MessageType::AuthResponse:      handleAuthResponse(tokens);      break;
+                case MessageType::ClientIdentification: /* do nothing */              break;
+                case MessageType::ClientQuery:       handleClientQuery(tokens);       break;
+                case MessageType::ClientResponse:    handleClientReponse(tokens);     break;
+                case MessageType::DeleteATC:         handleDeleteATC(tokens);         break;
+                case MessageType::DeletePilot:       handleDeletePilot(tokens);       break;
+                case MessageType::FlightPlan:        handleFlightPlan(tokens);        break;
+                case MessageType::FsdIdentification: handleFsdIdentification(tokens); break;
+                case MessageType::KillRequest:       handleKillRequest(tokens);       break;
+                case MessageType::PilotDataUpdate:   handlePilotDataUpdate(tokens);   break;
+                case MessageType::Ping:              handlePing(tokens);              break;
+                case MessageType::Pong:              handlePong(tokens);              break;
+                case MessageType::ServerError:       handleServerError(tokens);       break;
+                case MessageType::TextMessage:       handleTextMessage(tokens);       break;
+                case MessageType::PilotClientCom:    handleCustomPilotPacket(tokens); break;
+
                 }
             }
         }

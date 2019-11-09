@@ -459,13 +459,13 @@ namespace BlackCore
             QMap <QString, int> m_callStatistics;
             QVector <QPair<qint64, QString>> m_callByTime;
 
-            BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorInfo;             //!< used simulator
-            BlackMisc::Aviation::CCallsign              m_ownCallsign;               //!< "buffered callsign", as this must not change when connected
-            BlackMisc::Aviation::CCallsign              m_partnerCallsign;           //!< callsign of partner flying in shared cockpit
-            BlackMisc::Aviation::CAircraftIcaoCode      m_ownAircraftIcaoCode;       //!< "buffered icao", as this must not change when connected
-            BlackMisc::Aviation::CAirlineIcaoCode       m_ownAirlineIcaoCode;        //!< "buffered icao", as this must not change when connected
-            QString                                     m_ownLivery;                 //!< "buffered livery", as this must not change when connected
-            QString                                     m_ownModelString;            //!< "buffered model string", as this must not change when connected
+            BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorInfo;        //!< used simulator
+            BlackMisc::Aviation::CCallsign              m_ownCallsign;          //!< "buffered callsign", as this must not change when connected
+            BlackMisc::Aviation::CCallsign              m_partnerCallsign;      //!< callsign of partner flying in shared cockpit
+            BlackMisc::Aviation::CAircraftIcaoCode      m_ownAircraftIcaoCode;  //!< "buffered icao", as this must not change when connected
+            BlackMisc::Aviation::CAirlineIcaoCode       m_ownAirlineIcaoCode;   //!< "buffered icao", as this must not change when connected
+            QString                                     m_ownLivery;            //!< "buffered livery", as this must not change when connected
+            QString                                     m_ownModelString;       //!< "buffered model string", as this must not change when connected
             bool m_sendLiveryString = true;
             bool m_sendMModelString = true;
 
