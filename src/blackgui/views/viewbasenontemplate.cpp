@@ -727,6 +727,7 @@ namespace BlackGui
         {
             if (!m_enabledLoadIndicator) { return -1; }
             if (m_showingLoadIndicator)  { return -1; }
+
             if (this->hasDockWidgetArea())
             {
                 if (!this->isVisibleWidget()) { return -1; }

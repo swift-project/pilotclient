@@ -569,7 +569,7 @@ namespace BlackGui
             int m_loadIndicatorTimeoutMsDefault       = 30 * 1000;             //!< default time for timeout
             bool m_forceStretchLastColumnWhenResized  = true;                  //!< a small table might (few columns) fail stretching, force again
             bool m_showingLoadIndicator               = false;                 //!< showing loading indicator
-            bool m_enabledLoadIndicator               = true;                  //!< loading indicator enabled/disabled
+            bool m_enabledLoadIndicator               = false;                 //!< loading indicator enabled/disabled
             bool m_acceptClickSelection               = false;                 //!< clicked
             bool m_acceptRowSelection                 = false;                 //!< selection changed
             bool m_acceptDoubleClickSelection         = false;                 //!< double clicked

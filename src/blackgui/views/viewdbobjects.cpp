@@ -45,6 +45,7 @@ namespace BlackGui
             CViewBase<ModelClass>(parent)
         {
             // void
+            CViewBaseNonTemplate::m_enabledLoadIndicator = true; // indicator for DB views
         }
 
         template <class T>
