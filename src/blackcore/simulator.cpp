@@ -1236,14 +1236,14 @@ namespace BlackCore
 
     void ISimulator::rapOnRecalculatedRenderedAircraft(const CAirspaceAircraftSnapshot &snapshot)
     {
-        if (!this->isConnected()) { return; }
+        if (!this->isConnected())   { return; }
         if (this->isShuttingDown()) { return; }
         this->onRecalculatedRenderedAircraft(snapshot);
     }
 
     void ISimulator::rapOnRemoteProviderRemovedAircraft(const CCallsign &callsign)
     {
-        Q_UNUSED(callsign);
+        Q_UNUSED(callsign)
         // currently not used, the calls are handled by context call logicallyRemoveRemoteAircraft
     }
 

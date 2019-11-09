@@ -125,7 +125,7 @@ namespace BlackCore
                 m_udpSocket->bind(localAddress);
                 m_voiceServerTimer->start(3000);
 
-                CLogMessage(this).info(u"Connected to voice server '%2'") << m_connection.getTokens().VoiceServer.addressIpV4;
+                CLogMessage(this).info(u"Connected to voice server '%1'") << m_connection.getTokens().VoiceServer.addressIpV4;
             }
 
             void CClientConnection::disconnectFromVoiceServer()
