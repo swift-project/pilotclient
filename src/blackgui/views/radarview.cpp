@@ -15,8 +15,7 @@ namespace BlackGui
 {
     namespace Views
     {
-        CRadarView::CRadarView(QWidget *parent)
-            : QGraphicsView(parent)
+        CRadarView::CRadarView(QWidget *parent) : QGraphicsView(parent)
         {
             setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
             setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -33,15 +32,9 @@ namespace BlackGui
         void CRadarView::wheelEvent(QWheelEvent *event)
         {
             const QPoint delta = event->angleDelta();
-            if (delta.y() > 0)
-            {
-                emit zoomEvent(true);
-            }
-            else
-            {
-                emit zoomEvent(false);
-            }
             event->accept();
+            const bool zoom = (delta.y() > 0);
+            emit zoomEvent(zoom);
         }
     } // ns
 } // ns

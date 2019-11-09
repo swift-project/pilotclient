@@ -105,7 +105,7 @@ namespace BlackGui
                 return nullptr;
             }
 
-            Q_UNUSED(sort);
+            Q_UNUSED(sort)
             ModelClass *model = this->derivedModel();
             const auto sortColumn = model->getSortColumn();
             const auto sortOrder  = model->getSortOrder();
@@ -476,7 +476,7 @@ namespace BlackGui
             {
                 const QFileInfo fi = CGuiUtility::representedMimeFile(event->mimeData());
                 const CStatusMessage msgs = this->loadJsonFile(fi.absoluteFilePath());
-                Q_UNUSED(msgs);
+                Q_UNUSED(msgs)
                 return;
             }
             CViewBaseNonTemplate::dropEvent(event);
@@ -632,7 +632,7 @@ namespace BlackGui
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
                 c = connect(m_model, &ModelClass::changed, this, &CViewBase::onModelChanged);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-                Q_UNUSED(c);
+                Q_UNUSED(c)
             }
 
             this->setModel(m_model); // via QTableView
@@ -684,8 +684,8 @@ namespace BlackGui
         void CViewBase<T>::mouseOverCallback(const QModelIndex &index, bool mouseOver)
         {
             // void
-            Q_UNUSED(index);
-            Q_UNUSED(mouseOver);
+            Q_UNUSED(index)
+            Q_UNUSED(mouseOver)
         }
 
         template <class T>
@@ -697,13 +697,13 @@ namespace BlackGui
         template <class T>
         void CViewBase<T>::selectObjects(const ContainerType &selectedObjects)
         {
-            Q_UNUSED(selectedObjects);
+            Q_UNUSED(selectedObjects)
         }
 
         template <class T>
         CStatusMessage CViewBase<T>::modifyLoadedJsonData(ContainerType &data) const
         {
-            Q_UNUSED(data);
+            Q_UNUSED(data)
             static const CStatusMessage e(this, CStatusMessage::SeverityInfo, u"no modification", true);
             return e;
         }
@@ -711,7 +711,7 @@ namespace BlackGui
         template <class T>
         CStatusMessage CViewBase<T>::validateLoadedJsonData(const ContainerType &data) const
         {
-            Q_UNUSED(data);
+            Q_UNUSED(data)
             static const CStatusMessage e(this, CStatusMessage::SeverityInfo, u"validation passed", true);
             return e;
         }
@@ -719,7 +719,7 @@ namespace BlackGui
         template <class T>
         void CViewBase<T>::jsonLoadedAndModelUpdated(const ContainerType &data)
         {
-            Q_UNUSED(data);
+            Q_UNUSED(data)
         }
 
         template<class T>
@@ -890,7 +890,7 @@ namespace BlackGui
             }
             catch (const CJsonException &ex)
             {
-                Q_UNUSED(ex);
+                Q_UNUSED(ex)
             }
         }
 
