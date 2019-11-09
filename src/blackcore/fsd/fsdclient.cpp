@@ -630,6 +630,7 @@ namespace BlackCore
 
         void CFSDClient::sendFsdMessage(const QString &message)
         {
+            // UNIT tests
             parseMessage(message);
         }
 
@@ -1174,9 +1175,10 @@ namespace BlackCore
                     QString keyValuePair = clientResponse.m_responseData.at(i);
                     if (keyValuePair.count('=') != 1) { continue; }
 
-                    QStringList split = keyValuePair.split('=');
-                    QString key = split.at(0);
-                    QString value = split.at(1);
+                    const QStringList split = keyValuePair.split('=');
+                    if (split.size() < 2) { continue; }
+                    const QString key   = split.at(0);
+                    const QString value = split.at(1);
 
                     if (value == "1")
                     {
@@ -1243,7 +1245,7 @@ namespace BlackCore
 
         void CFSDClient::handleServerError(const QStringList &tokens)
         {
-            ServerError serverError = ServerError::fromTokens(tokens);
+            const ServerError serverError = ServerError::fromTokens(tokens);
             switch (serverError.m_errorNumber)
             {
             case ServerErrorCode::CallsignInUse:       CLogMessage(this).error(u"The requested callsign is already taken"); break;
@@ -1267,7 +1269,7 @@ namespace BlackCore
             case ServerErrorCode::AlreadyRegistered:   CLogMessage(this).info(u"Server says already registered: %1") << serverError.m_description; break;
             case ServerErrorCode::InvalidCtrl:         CLogMessage(this).info(u"Server invalid control: %1") << serverError.m_description; break;
             case ServerErrorCode::Unknown:             CLogMessage(this).info(u"Server sent unknown error code: %1 (%2)") << serverError.m_causingParameter << serverError.m_description; break;
-            case ServerErrorCode::AuthTimeout:         CLogMessage(this).info(u"Client did not authenticate in time"); break;
+            case ServerErrorCode::AuthTimeout:         CLogMessage(this).error(u"Client did not authenticate in time"); break;
             }
             if (serverError.isFatalError()) { disconnectFromServer(); }
         }

@@ -158,10 +158,10 @@ namespace BlackCore
             void sendPlaneInformationFsinn(const BlackMisc::Aviation::CCallsign &callsign);
             void sendCustomPilotPacket(const QString &receiver, const QString &subType, const std::vector<QString> &payload);
             void sendAircraftConfiguration(const QString &receiver, const QString &aircraftConfigJson);
-            void sendFsdMessage(const QString &message);
             //! @}
 
             //! Unit test/debug functions @{
+            void sendFsdMessage(const QString &message);
             void setUnitTestMode(bool on) { m_unitTestMode = on; }
             void printToConsole(bool on)  { m_printToConsole = on; }
             //! @}

@@ -69,7 +69,7 @@ namespace BlackCore
                             this->connectToVoiceServer();
                             // taskServerConnectionCheck.Start();
 
-                            CLogMessage(this).info(u"Connected: '%1' to voice server, socket open: ") << callsign << boolToYesNo(m_udpSocket->isOpen());
+                            CLogMessage(this).info(u"Connected: '%1' to voice server, socket open: %2") << callsign << boolToYesNo(m_udpSocket->isOpen());
                         }
 
                         // callback of the calling parent
