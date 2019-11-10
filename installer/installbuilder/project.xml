@@ -27,15 +27,16 @@
         <actionDefinition>
             <name>checkForRunningSwift</name>
             <actionList>
-                <validatedActionGroup>
-                    <explanation>Check that no swift applications running</explanation>
-                    <text>It seems that some swift application is still in use,
-please close it and click Retry.</text>
-                    <severity>warning</severity>
+                <showProgressDialog>
+                    <title>Waiting for swift to be closed</title>
                     <actionList>
-                        <throwError>
-                            <text>Swift is still running. User aborted installation.</text>
-                            <ruleList>
+                        <while>
+                            <progressText>It seems that some swift application is still in use.
+It must be closed before the installation can proceed</progressText>
+                            <actionList>
+                                <wait><ms>50</ms></wait>
+                            </actionList>
+                            <conditionRuleList>
                                 <ruleGroup>
                                     <ruleEvaluationLogic>or</ruleEvaluationLogic>
                                     <ruleList>
@@ -60,10 +61,10 @@ please close it and click Retry.</text>
                                 <platformTest>
                                     <type>windows</type>
                                 </platformTest>
-                            </ruleList>
-                        </throwError>
+                            </conditionRuleList>
+                        </while>
                     </actionList>
-                </validatedActionGroup>
+                </showProgressDialog>
             </actionList>
         </actionDefinition>
         <actionDefinition>
