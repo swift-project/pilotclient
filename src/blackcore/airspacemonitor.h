@@ -332,7 +332,7 @@ namespace BlackCore
         //! Asynchronously add aircraft
         //! \threadsafe
         //! \sa addNewAircraftInRange
-        void asyncAddNewAircraftInRange(const BlackMisc::Simulation::CSimulatedAircraftList &aircraft, bool readyForModelMatching);
+        void asyncReInitializeAllAircraft(const BlackMisc::Simulation::CSimulatedAircraftList &aircraft, bool readyForModelMatching);
 
         //! Update online stations by callsign
         int updateOnlineStation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true, bool sendSignal = true);

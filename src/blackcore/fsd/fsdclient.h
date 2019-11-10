@@ -400,8 +400,8 @@ namespace BlackCore
 
             vatsim_auth *clientAuth = nullptr;
             vatsim_auth *serverAuth = nullptr;
-            QString m_lastServerAuthChallenge;
-            qint64      m_loginSince = -1; //!< when login was triggered
+            QString      m_lastServerAuthChallenge;
+            qint64       m_loginSince = -1; //!< when login was triggered
             static constexpr qint64 PendingConnectionTimeoutMs = 7500;
 
             // User data
@@ -425,7 +425,7 @@ namespace BlackCore
             BlackMisc::CTokenBucket               m_tokenBucket;               //!< used with aircraft parts messages
             BlackMisc::Aviation::CCallsignSet     m_interimPositionReceivers;  //!< all aircraft receiving interim positions
             BlackMisc::Network::CTextMessageList  m_textMessagesToConsolidate; //!< waiting for new messages
-            BlackMisc::CDigestSignal m_dsSendTextMessage  { this, &CFSDClient::emitConsolidatedTextMessages, 250, 10 };
+            BlackMisc::CDigestSignal              m_dsSendTextMessage  { this, &CFSDClient::emitConsolidatedTextMessages, 250, 10 };
 
             //! ATIS message
             struct AtisMessage

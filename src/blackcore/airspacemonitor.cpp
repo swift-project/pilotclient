@@ -295,9 +295,8 @@ namespace BlackCore
 
     CAtcStation CAirspaceMonitor::getAtcStationForComUnit(const CComSystem &comSystem) const
     {
-        CAtcStation station;
         CAtcStationList stations = m_atcStationsOnline.findIfComUnitTunedInChannelSpacing(comSystem);
-        if (stations.isEmpty()) { return station; }
+        if (stations.isEmpty()) { return {}; }
         stations.sortByDistanceToReferencePosition();
         return stations.front();
     }
@@ -431,7 +430,7 @@ namespace BlackCore
     {
         const CSimulatedAircraftList aircraft = this->getAircraftInRange();
         CRemoteAircraftProvider::removeAllAircraft();
-        this->asyncAddNewAircraftInRange(aircraft, true);
+        this->asyncReInitializeAllAircraft(aircraft, true);
         return aircraft.size();
     }
 
@@ -1027,7 +1026,7 @@ namespace BlackCore
         return added;
     }
 
-    void CAirspaceMonitor::asyncAddNewAircraftInRange(const CSimulatedAircraftList &aircraft, bool readyForModelMatching)
+    void CAirspaceMonitor::asyncReInitializeAllAircraft(const CSimulatedAircraftList &aircraft, bool readyForModelMatching)
     {
         if (aircraft.isEmpty()) { return; }
         if (!sApp || sApp->isShuttingDown()) { return; }

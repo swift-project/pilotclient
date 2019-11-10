@@ -90,9 +90,9 @@ namespace BlackCore
         {
             initializeMessageTypes();
             connect(&m_socket, &QTcpSocket::readyRead, this, &CFSDClient::readDataFromSocket,  Qt::QueuedConnection);
+            connect(&m_socket, &QTcpSocket::connected, this, &CFSDClient::handleSocketConnected);
             connect(&m_socket, qOverload<QAbstractSocket::SocketError>(&QTcpSocket::error), this, &CFSDClient::printSocketError,  Qt::QueuedConnection);
             connect(&m_socket, qOverload<QAbstractSocket::SocketError>(&QTcpSocket::error), this, &CFSDClient::handleSocketError, Qt::QueuedConnection);
-            connect(&m_socket, &QTcpSocket::connected, this, &CFSDClient::handleSocketConnected);
 
             m_positionUpdateTimer.setObjectName(this->objectName().append(":m_positionUpdateTimer"));
             connect(&m_positionUpdateTimer, &QTimer::timeout, this, &CFSDClient::sendPilotDataUpdate);
@@ -154,12 +154,12 @@ namespace BlackCore
         void CFSDClient::setIcaoCodes(const CSimulatedAircraft &ownAircraft)
         {
             Q_ASSERT_X(m_connectionStatus.isDisconnected(), Q_FUNC_INFO, "Can't change ICAO codes while still connected");
-            m_ownAircraftIcaoCode  = ownAircraft.getAircraftIcaoCode();
-            m_ownAirlineIcaoCode   = ownAircraft.getAirlineIcaoCode();
-            m_ownLivery        = ownAircraft.getModel().getSwiftLiveryString();
-            m_ownModelString   = ownAircraft.getModelString();
-            m_sendLiveryString = true;
-            m_sendMModelString = true;
+            m_ownAircraftIcaoCode = ownAircraft.getAircraftIcaoCode();
+            m_ownAirlineIcaoCode  = ownAircraft.getAirlineIcaoCode();
+            m_ownLivery           = ownAircraft.getModel().getSwiftLiveryString();
+            m_ownModelString      = ownAircraft.getModelString();
+            m_sendLiveryString    = true;
+            m_sendMModelString    = true;
             updateOwnIcaoCodes(m_ownAircraftIcaoCode, m_ownAirlineIcaoCode);
         }
 
@@ -251,8 +251,7 @@ namespace BlackCore
         {
             const QString cid = m_server.getUser().getId();
             const QString password = m_server.getUser().getPassword();
-            const QString name = m_server.getUser().getRealNameAndHomeBase();
-            // const QString name = m_server.getUser().getRealName();
+            const QString name = m_server.getUser().getRealNameAndHomeBase(); // m_server.getUser().getRealName();
 
             if (m_loginMode.isPilot())
             {
@@ -611,8 +610,7 @@ namespace BlackCore
             const CSimulatedAircraft myAircraft(getOwnAircraft());
             QString modelString = m_ownModelString.isEmpty() ? myAircraft.getModelString() : m_ownModelString;
             if (modelString.isEmpty()) { modelString = noModelString(); }
-
-            PlaneInformationFsinn planeInformationFsinn(m_ownCallsign.asString(), callsign.toQString(),
+            const PlaneInformationFsinn planeInformationFsinn(m_ownCallsign.asString(), callsign.toQString(),
                     myAircraft.getAirlineIcaoCodeDesignator(),
                     myAircraft.getAircraftIcaoCodeDesignator(),
                     myAircraft.getAircraftIcaoCombinedType(),
@@ -636,7 +634,7 @@ namespace BlackCore
 
         void CFSDClient::sendAuthChallenge(const QString &challenge)
         {
-            AuthChallenge pduAuthChallenge(m_ownCallsign.asString(), "SERVER", challenge);
+            const AuthChallenge pduAuthChallenge(m_ownCallsign.asString(), "SERVER", challenge);
             sendMessage(pduAuthChallenge);
             increaseStatisticsValue(QStringLiteral("sendAuthChallenge"));
         }
@@ -650,7 +648,7 @@ namespace BlackCore
 
         void CFSDClient::sendPong(const QString &receiver, const QString &timestamp)
         {
-            Pong pong(m_ownCallsign.asString(), receiver, timestamp);
+            const Pong pong(m_ownCallsign.asString(), receiver, timestamp);
             sendMessage(pong);
             this->increaseStatisticsValue(QStringLiteral("sendPong"));
         }
@@ -695,7 +693,8 @@ namespace BlackCore
             else if (queryType == ClientQueryType::RealName)
             {
                 // real name
-                responseData.push_back(m_server.getUser().getRealName());
+                // responseData.push_back(m_server.getUser().getRealName());
+                responseData.push_back(m_server.getUser().getRealNameAndHomeBase()); // getHomeBase
                 // sector file in use (blank if pilot)
                 responseData.push_back({});
                 // current user rating
@@ -738,7 +737,7 @@ namespace BlackCore
                                          " LO=" % QString::number(longitude) % " AL=" % QString::number(altitude) %
                                          " " % realName;
 
-                TextMessage textMessage(m_ownCallsign.asString(), receiver, userInfo);
+                const TextMessage textMessage(m_ownCallsign.asString(), receiver, userInfo);
                 sendMessage(textMessage);
             }
             else if (queryType == ClientQueryType::FP)
@@ -758,7 +757,7 @@ namespace BlackCore
         {
             std::array<char, 50> sysuid = {};
             vatsim_get_system_unique_id(sysuid.data());
-            QString cid = m_server.getUser().getId();
+            const QString cid = m_server.getUser().getId();
             const ClientIdentification clientIdentification(m_ownCallsign.asString(), vatsim_auth_get_client_id(clientAuth), m_clientName, m_versionMajor, m_versionMinor, cid, sysuid.data(), fsdChallenge);
             this->sendMessage(clientIdentification);
             this->sendLogin();
@@ -831,7 +830,7 @@ namespace BlackCore
 
         void CFSDClient::handleAuthChallenge(const QStringList &tokens)
         {
-            AuthChallenge authChallenge = AuthChallenge::fromTokens(tokens);
+            const AuthChallenge authChallenge = AuthChallenge::fromTokens(tokens);
             char response[33];
             vatsim_auth_generate_response(clientAuth, qPrintable(authChallenge.m_challengeKey), response);
             sendAuthResponse(QString(response));
@@ -844,7 +843,7 @@ namespace BlackCore
 
         void CFSDClient::handleAuthResponse(const QStringList &tokens)
         {
-            AuthResponse authResponse = AuthResponse::fromTokens(tokens);
+            const AuthResponse authResponse = AuthResponse::fromTokens(tokens);
 
             char expectedResponse[33];
             vatsim_auth_generate_response(serverAuth, qPrintable(m_lastServerAuthChallenge), expectedResponse);
@@ -919,7 +918,7 @@ namespace BlackCore
 
         void CFSDClient::handlePilotDataUpdate(const QStringList &tokens)
         {
-            PilotDataUpdate dataUpdate = PilotDataUpdate::fromTokens(tokens);
+            const PilotDataUpdate dataUpdate = PilotDataUpdate::fromTokens(tokens);
             const CCallsign callsign(dataUpdate.sender(), CCallsign::Aircraft);
 
             CAircraftSituation situation(
@@ -1145,9 +1144,9 @@ namespace BlackCore
 
         void CFSDClient::handleClientReponse(const QStringList &tokens)
         {
-            ClientResponse clientResponse = ClientResponse::fromTokens(tokens);
+            const ClientResponse clientResponse = ClientResponse::fromTokens(tokens);
             if (clientResponse.isUnknownQuery()) { return; }
-            QString sender = clientResponse.sender();
+            const QString sender = clientResponse.sender();
 
             QString responseData1;
             QString responseData2;
@@ -1296,7 +1295,7 @@ namespace BlackCore
                 }
                 else if (tokens.size() > 4 && tokens.at(3) == "GEN")
                 {
-                    PlaneInformation planeInformation = PlaneInformation::fromTokens(tokens);
+                    const PlaneInformation planeInformation = PlaneInformation::fromTokens(tokens);
                     emit planeInformationReceived(planeInformation.sender(), planeInformation.m_aircraft, planeInformation.m_airline, planeInformation.m_livery);
                 }
             }
@@ -1309,7 +1308,7 @@ namespace BlackCore
                 // swift's updated interim pilot update.
                 if (!isInterimPositionReceivingEnabledForServer()) { return; }
 
-                InterimPilotDataUpdate interimPilotDataUpdate = InterimPilotDataUpdate::fromTokens(tokens);
+                const InterimPilotDataUpdate interimPilotDataUpdate = InterimPilotDataUpdate::fromTokens(tokens);
                 const CCallsign callsign(interimPilotDataUpdate.sender(), CCallsign::Aircraft);
 
                 CAircraftSituation situation(
@@ -1719,6 +1718,7 @@ namespace BlackCore
             while (m_socket.canReadLine())
             {
                 const QByteArray dataEncoded = m_socket.readLine();
+                if (dataEncoded.isEmpty()) { continue; }
                 const QString data = m_fsdTextCodec->toUnicode(dataEncoded);
                 this->parseMessage(data);
                 lines++;
@@ -1777,8 +1777,8 @@ namespace BlackCore
                 const QStringList tokens = payload.split(':');
                 switch (messageType)
                 {
-                case MessageType::AddAtc:   /* ignore */ break;
-                case MessageType::AddPilot: /* ignore */ break;
+                case MessageType::AddAtc:            /* ignore */ break;
+                case MessageType::AddPilot:          /* ignore */ break;
                 case MessageType::AtcDataUpdate:     handleAtcDataUpdate(tokens);     break;
                 case MessageType::AuthChallenge:     handleAuthChallenge(tokens);     break;
                 case MessageType::AuthResponse:      handleAuthResponse(tokens);      break;
