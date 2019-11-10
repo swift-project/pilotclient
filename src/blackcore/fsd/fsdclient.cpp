@@ -445,7 +445,7 @@ namespace BlackCore
                 const ClientQuery clientQuery(m_ownCallsign.asString(), "SERVER", ClientQueryType::FP, queryData);
                 sendMessage(clientQuery);
             }
-            if (queryType == ClientQueryType::AircraftConfig)
+            else if (queryType == ClientQueryType::AircraftConfig)
             {
                 if (queryData.size() == 0) { return; }
                 const ClientQuery clientQuery(m_ownCallsign.asString(), reveiverCallsign, ClientQueryType::AircraftConfig, queryData);
