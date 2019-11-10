@@ -89,7 +89,7 @@ namespace BlackCore
               m_tokenBucket(10, CTime(5, CTimeUnit::s()), 1)
         {
             initializeMessageTypes();
-            connect(&m_socket, &QTcpSocket::readyRead, this, &CFSDClient::readDataFromSocket);
+            connect(&m_socket, &QTcpSocket::readyRead, this, &CFSDClient::readDataFromSocket,  Qt::QueuedConnection);
             connect(&m_socket, qOverload<QAbstractSocket::SocketError>(&QTcpSocket::error), this, &CFSDClient::printSocketError,  Qt::QueuedConnection);
             connect(&m_socket, qOverload<QAbstractSocket::SocketError>(&QTcpSocket::error), this, &CFSDClient::handleSocketError, Qt::QueuedConnection);
             connect(&m_socket, &QTcpSocket::connected, this, &CFSDClient::handleSocketConnected);
@@ -213,7 +213,7 @@ namespace BlackCore
             m_filterPasswordFromLogin = true;
 
             m_loginSince = QDateTime::currentMSecsSinceEpoch();
-            QPointer<CFSDClient> myself(this);
+            const QPointer<CFSDClient> myself(this);
             const qint64 timerMs = qRound(PendingConnectionTimeoutMs * 1.25);
 
             QTimer::singleShot(timerMs, this, [ = ]
@@ -1375,9 +1375,14 @@ namespace BlackCore
             }
         }
 
+        void CFSDClient::handleUnknownPacket(const QString &line)
+        {
+            CLogMessage(this).warning(u"FSD unknown packet: '%1'") << line;
+        }
+
         void CFSDClient::handleUnknownPacket(const QStringList &tokens)
         {
-            CLogMessage(this).warning(u"FSD unknown packet: %1") << tokens.join(", ");
+            this->handleUnknownPacket(tokens.join(", "));
         }
 
         void CFSDClient::printSocketError(QAbstractSocket::SocketError socketError)
@@ -1708,11 +1713,25 @@ namespace BlackCore
 
         void CFSDClient::readDataFromSocket()
         {
+            if (m_socket.bytesAvailable() < 1) { return; }
+
+            int lines = 0;
             while (m_socket.canReadLine())
             {
                 const QByteArray dataEncoded = m_socket.readLine();
                 const QString data = m_fsdTextCodec->toUnicode(dataEncoded);
-                parseMessage(data);
+                this->parseMessage(data);
+                lines++;
+                if (lines > 30)
+                {
+                    CLogMessage(this).debug(u"ReadDataFromSocket has too many lines");
+                    QPointer<CFSDClient> myself(this);
+                    QTimer::singleShot(10, this, [ = ]
+                    {
+                        if (myself) { myself->readDataFromSocket(); }
+                    });
+                    break;
+                }
             }
         }
 
@@ -1722,22 +1741,29 @@ namespace BlackCore
             return metaEnum.valueToKey(error);
         }
 
-        void CFSDClient::parseMessage(const QString &line)
+        void CFSDClient::parseMessage(const QString &lineRaw)
         {
             MessageType messageType = MessageType::Unknown;
             QString cmd;
+            const QString line = lineRaw.trimmed();
 
             if (m_printToConsole) { qDebug() << "FSD Recv=>" << line; }
-            emitRawFsdMessage(line.trimmed(), false);
+            emitRawFsdMessage(line, false);
 
-            for (const auto &str : makeKeysRange(as_const(m_messageTypeMapping)))
+            for (const QString &str : makeKeysRange(as_const(m_messageTypeMapping)))
             {
                 if (line.startsWith(str))
                 {
                     cmd = str;
-                    messageType = m_messageTypeMapping[str];
+                    messageType = m_messageTypeMapping.value(str, MessageType::Unknown);
                     break;
                 }
+            }
+
+            // statistics
+            if (m_statistics)
+            {
+                this->increaseStatisticsValue(QStringLiteral("parseMessage"), this->messageTypeToString(messageType));
             }
 
             if (messageType != MessageType::Unknown)
@@ -1771,7 +1797,16 @@ namespace BlackCore
                 case MessageType::TextMessage:       handleTextMessage(tokens);       break;
                 case MessageType::PilotClientCom:    handleCustomPilotPacket(tokens); break;
 
+                // normally we should not get here
+                default:
+                case MessageType::Unknown:
+                    handleUnknownPacket(tokens);
+                    break;
                 }
+            }
+            else
+            {
+                handleUnknownPacket(line);
             }
         }
 
@@ -1931,6 +1966,19 @@ namespace BlackCore
             if (!input.contains(':')) { return input; }
             QString copy(input);
             return copy.remove(':');
+        }
+
+        const QString &CFSDClient::messageTypeToString(MessageType mt) const
+        {
+            QHash<QString, MessageType>::const_iterator i = m_messageTypeMapping.constBegin();
+            while (i != m_messageTypeMapping.constEnd())
+            {
+                if (i.value() == mt) { return i.key(); }
+                ++i;
+            }
+
+            static const QString empty;
+            return empty;
         }
 
         void CFSDClient::handleIllegalFsdState(const QString &message)

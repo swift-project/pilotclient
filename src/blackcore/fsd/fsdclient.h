@@ -283,10 +283,13 @@ namespace BlackCore
 
             void readDataFromSocket();
             QString socketErrorToQString(QAbstractSocket::SocketError error);
-            void parseMessage(const QString &line);
+            void parseMessage(const QString &lineRaw);
 
             //! Init. the message types
             void initializeMessageTypes();
+
+            // Type to string
+            const QString &messageTypeToString(MessageType mt) const;
 
             //! Handle response tokens @{
             void handleAtcDataUpdate(const QStringList &tokens);
@@ -305,6 +308,8 @@ namespace BlackCore
             void handleServerError(const QStringList &tokens);
             void handleCustomPilotPacket(const QStringList &tokens);
             void handleFsdIdentification(const QStringList &tokens);
+            //
+            void handleUnknownPacket(const QString &line);
             void handleUnknownPacket(const QStringList &tokens);
             //! @}
 
