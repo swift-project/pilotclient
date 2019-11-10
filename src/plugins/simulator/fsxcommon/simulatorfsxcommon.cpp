@@ -642,7 +642,7 @@ namespace BlackSimPlugin
 
             static const QString format("hh:mm:ss.zzz");
             const QString untilString = QDateTime::fromMSecsSinceEpoch(traceUntil).toString(format);
-            CLogMessage(this).info(u"Triggered auto trace until %1") << untilString;
+            CLogMessage(this).info(u"Triggered FSX/P3D auto trace until %1") << untilString;
             const QPointer<CSimulatorFsxCommon> myself(this);
             QTimer::singleShot(traceTimeMs * 1.2, this, [ = ]
             {

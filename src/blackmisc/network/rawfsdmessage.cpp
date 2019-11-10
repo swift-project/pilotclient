@@ -28,7 +28,7 @@ namespace BlackMisc
 
         QString CRawFsdMessage::convertToQString(bool i18n) const
         {
-            Q_UNUSED(i18n);
+            Q_UNUSED(i18n)
             return QStringLiteral("%1 %2").arg(this->getFormattedUtcTimestampHmsz(), m_rawMessage);
         }
 
