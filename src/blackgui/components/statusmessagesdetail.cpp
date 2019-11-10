@@ -99,11 +99,9 @@ namespace BlackGui
         void CStatusMessagesDetail::deferredUpdate()
         {
             if (m_pending.isEmpty()) { return; }
-            const CStatusMessageList add(m_pending);
-            m_pending.clear();
-
             CStatusMessageList newMsgs(ui->tvp_StatusMessages->container());
-            newMsgs.push_front(add); // default in many cases, latest first
+            newMsgs.push_front(m_pending); // default in many cases, latest first
+            m_pending.clear();
 
             // cleanup outdated: do not remove every time, but when a threshold is reached
             if (m_maxLogMessages < 0)
