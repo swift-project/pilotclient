@@ -169,7 +169,7 @@ namespace BlackGui
                 const CLoginMode mode = ui->comp_NetworkDetails->getLoginMode();
                 switch (mode.getLoginMode())
                 {
-                case CLoginMode::Observer: CLogMessage(this).info(u"login in observer mode"); break;
+                case CLoginMode::Observer: CLogMessage(this).info(u"Login in observer mode"); break;
                 default: break; // INetwork::LoginNormal
                 }
 

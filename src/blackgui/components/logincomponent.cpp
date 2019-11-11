@@ -290,7 +290,7 @@ namespace BlackGui
 
                 // Login mode
                 const CLoginMode mode = ui->frp_LoginMode->getLoginMode();
-                if (mode.isObserver()) { CLogMessage(this).info(u"login in observer mode"); }
+                if (mode.isObserver()) { CLogMessage(this).info(u"Login in observer mode"); }
 
                 // Server
                 currentServer = this->getCurrentServer();
