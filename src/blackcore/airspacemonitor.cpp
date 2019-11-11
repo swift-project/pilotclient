@@ -822,6 +822,8 @@ namespace BlackCore
         if (!this->isConnectedAndNotShuttingDown()) { return; }
         if (CBuildConfig::isLocalDeveloperDebugBuild()) { BLACK_VERIFY_X(callsign.isValid(), Q_FUNC_INFO, "invalid callsign"); }
         if (!callsign.isValid()) { return; }
+        if (!this->isAircraftInRange(callsign)) { return; } // FSD overload issue, do not do anything if unknown
+
         const ReverseLookupLogging reverseLookupEnabled = this->isReverseLookupMessagesEnabled();
         CStatusMessageList reverseLookupMessages;
         CStatusMessageList *pReverseLookupMessages = reverseLookupEnabled.testFlag(RevLogEnabled) ? &reverseLookupMessages : nullptr;
@@ -1104,15 +1106,20 @@ namespace BlackCore
         }
         else
         {
+            /* FSD overload issue, do NOT to add new aircraft other than from positions
             const CAircraftModel model = this->reverseLookupModelWithFlightplanData(callsign, aircraftIcao, airlineIcao, livery, modelString, modelType, log);
             const CSimulatedAircraft initAircraft(model);
             this->addNewAircraftInRange(initAircraft);
+            */
         }
         return aircraft;
     }
 
     void CAirspaceMonitor::onAircraftUpdateReceived(const CAircraftSituation &situation, const CTransponder &transponder)
     {
+        static constexpr int MaxDistanceNM = 125;
+        static constexpr int MaxDistanceNMHysteresis = qRound(1.1 * MaxDistanceNM);
+
         Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Called in different thread");
         if (!this->isConnectedAndNotShuttingDown()) { return; }
 
@@ -1120,6 +1127,16 @@ namespace BlackCore
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
 
         if (this->isCopilotAircraft(callsign)) { return; }
+        const bool existsInRange = this->isAircraftInRange(callsign);
+
+        // hardcoded range (FSD overload issue)
+        const int distanceNM = this->getOwnAircraft().calculateGreatCircleDistance(situation).valueInteger(CLengthUnit::NM());
+        if (existsInRange && distanceNM > MaxDistanceNMHysteresis)
+        {
+            this->removeClient(callsign);
+            return;
+        }
+        if (distanceNM > MaxDistanceNM) { return; }
 
         // update client info
         this->autoAdjustCientGndCapability(situation);
@@ -1127,11 +1144,10 @@ namespace BlackCore
         // store situation history
         this->storeAircraftSituation(situation); // updates situation
 
-        const bool existsInRange = this->isAircraftInRange(callsign);
-        const bool hasFsInnPacket = m_tempFsInnPackets.contains(callsign);
-
         if (!existsInRange)
         {
+            const bool hasFsInnPacket = m_tempFsInnPackets.contains(callsign);
+
             CSimulatedAircraft aircraft;
             aircraft.setCallsign(callsign);
             aircraft.setSituation(situation);

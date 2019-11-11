@@ -246,8 +246,8 @@ namespace BlackCore
                 if (!message.isValid()) return;
 
                 const QString payload = message.toTokens().join(':');
-                const QString line = message.pdu() + payload;
-                const QString buffer = line + "\r\n";
+                const QString line    = message.pdu() + payload;
+                const QString buffer  = line + "\r\n";
                 const QByteArray bufferEncoded = m_fsdTextCodec->fromUnicode(buffer);
                 emitRawFsdMessage(buffer.trimmed(), true);
                 if (m_printToConsole) { qDebug() << "FSD Sent=>" << bufferEncoded; }

@@ -643,14 +643,14 @@ namespace BlackCore
         {
             AuthResponse pduAuthResponse(m_ownCallsign.asString(), "SERVER", response);
             sendMessage(pduAuthResponse);
-            this->increaseStatisticsValue(QStringLiteral("sendAuthResponse"));
+            increaseStatisticsValue(QStringLiteral("sendAuthResponse"));
         }
 
         void CFSDClient::sendPong(const QString &receiver, const QString &timestamp)
         {
             const Pong pong(m_ownCallsign.asString(), receiver, timestamp);
             sendMessage(pong);
-            this->increaseStatisticsValue(QStringLiteral("sendPong"));
+            increaseStatisticsValue(QStringLiteral("sendPong"));
         }
 
         void CFSDClient::sendClientResponse(ClientQueryType queryType, const QString &receiver)
@@ -664,22 +664,14 @@ namespace BlackCore
             else if (queryType == ClientQueryType::Capabilities)
             {
                 responseData.clear();
-                if (m_capabilities & Capabilities::AtcInfo)
-                    responseData.push_back(toQString(Capabilities::AtcInfo) % "=1");
-                if (m_capabilities & Capabilities::SecondaryPos)
-                    responseData.push_back(toQString(Capabilities::SecondaryPos) % "=1");
-                if (m_capabilities & Capabilities::AircraftInfo)
-                    responseData.push_back(toQString(Capabilities::AircraftInfo) % "=1");
-                if (m_capabilities & Capabilities::OngoingCoord)
-                    responseData.push_back(toQString(Capabilities::OngoingCoord) % "=1");
-                if (m_capabilities & Capabilities::InterminPos)
-                    responseData.push_back(toQString(Capabilities::InterminPos) % "=1");
-                if (m_capabilities & Capabilities::FastPos)
-                    responseData.push_back(toQString(Capabilities::FastPos) % "=1");
-                if (m_capabilities & Capabilities::Stealth)
-                    responseData.push_back(toQString(Capabilities::Stealth) % "=1");
-                if (m_capabilities & Capabilities::AircraftConfig)
-                    responseData.push_back(toQString(Capabilities::AircraftConfig) % "=1");
+                if (m_capabilities & Capabilities::AtcInfo)        responseData.push_back(toQString(Capabilities::AtcInfo) % "=1");
+                if (m_capabilities & Capabilities::SecondaryPos)   responseData.push_back(toQString(Capabilities::SecondaryPos) % "=1");
+                if (m_capabilities & Capabilities::AircraftInfo)   responseData.push_back(toQString(Capabilities::AircraftInfo) % "=1");
+                if (m_capabilities & Capabilities::OngoingCoord)   responseData.push_back(toQString(Capabilities::OngoingCoord) % "=1");
+                if (m_capabilities & Capabilities::InterminPos)    responseData.push_back(toQString(Capabilities::InterminPos) % "=1");
+                if (m_capabilities & Capabilities::FastPos)        responseData.push_back(toQString(Capabilities::FastPos) % "=1");
+                if (m_capabilities & Capabilities::Stealth)        responseData.push_back(toQString(Capabilities::Stealth) % "=1");
+                if (m_capabilities & Capabilities::AircraftConfig) responseData.push_back(toQString(Capabilities::AircraftConfig) % "=1");
                 const ClientResponse clientResponse(m_ownCallsign.asString(), receiver, ClientQueryType::Capabilities, responseData);
                 sendMessage(clientResponse);
             }
@@ -713,12 +705,10 @@ namespace BlackCore
             else if (queryType == ClientQueryType::ATIS)
             {
                 this->handleIllegalFsdState(QStringLiteral("Dont send '%1' as pilot client!").arg(toQString(ClientQueryType::ATIS)));
-                return;
             }
             else if (queryType == ClientQueryType::PublicIP)
             {
                 this->handleIllegalFsdState(QStringLiteral("Dont send '%1' as pilot client!").arg(toQString(ClientQueryType::PublicIP)));
-                return;
             }
             else if (queryType == ClientQueryType::INF)
             {
@@ -743,12 +733,10 @@ namespace BlackCore
             else if (queryType == ClientQueryType::FP)
             {
                 this->handleIllegalFsdState(QStringLiteral("Dont send '%1' as pilot client!").arg(toQString(ClientQueryType::FP)));
-                return;
             }
             else if (queryType == ClientQueryType::AircraftConfig)
             {
                 this->handleIllegalFsdState(QStringLiteral("Dont send '%1' as pilot client!").arg(toQString(ClientQueryType::AircraftConfig)));
-                return;
             }
             this->increaseStatisticsValue(QStringLiteral("sendClientResponse"), toQString(queryType));
         }

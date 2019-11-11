@@ -43,14 +43,14 @@ namespace BlackCore
         AtcRating fromQString(const QString &str)
         {
             if (str == "1") return AtcRating::Observer;
-            else if (str == "2") return AtcRating::Student;
-            else if (str == "3") return AtcRating::Student2;
-            else if (str == "4") return AtcRating::Student3;
-            else if (str == "5") return AtcRating::Controller1;
-            else if (str == "6") return AtcRating::Controller2;
-            else if (str == "7") return AtcRating::Controller3;
-            else if (str == "8") return AtcRating::Instructor1;
-            else if (str == "9") return AtcRating::Instructor2;
+            else if (str == "2")  return AtcRating::Student;
+            else if (str == "3")  return AtcRating::Student2;
+            else if (str == "4")  return AtcRating::Student3;
+            else if (str == "5")  return AtcRating::Controller1;
+            else if (str == "6")  return AtcRating::Controller2;
+            else if (str == "7")  return AtcRating::Controller3;
+            else if (str == "8")  return AtcRating::Instructor1;
+            else if (str == "9")  return AtcRating::Instructor2;
             else if (str == "10") return AtcRating::Instructor3;
             else if (str == "11") return AtcRating::Supervisor;
             else if (str == "12") return AtcRating::Administrator;
@@ -176,17 +176,17 @@ namespace BlackCore
         {
             switch (value)
             {
-            case ClientQueryType::IsValidATC: return "ATC";
-            case ClientQueryType::Capabilities: return "CAPS";
-            case ClientQueryType::Com1Freq: return "C?";
-            case ClientQueryType::RealName: return "RN";
-            case ClientQueryType::Server: return "SV";
-            case ClientQueryType::ATIS: return "ATIS";
-            case ClientQueryType::PublicIP: return "IP";
-            case ClientQueryType::INF: return "INF";
-            case ClientQueryType::FP: return "FP";
+            case ClientQueryType::IsValidATC:     return "ATC";
+            case ClientQueryType::Capabilities:   return "CAPS";
+            case ClientQueryType::Com1Freq:       return "C?";
+            case ClientQueryType::RealName:       return "RN";
+            case ClientQueryType::Server:         return "SV";
+            case ClientQueryType::ATIS:           return "ATIS";
+            case ClientQueryType::PublicIP:       return "IP";
+            case ClientQueryType::INF:            return "INF";
+            case ClientQueryType::FP:             return "FP";
             case ClientQueryType::AircraftConfig: return "ACC";
-            case ClientQueryType::Unknown: qFatal("Don't serialize ClientQueryType::Unknown!");
+            case ClientQueryType::Unknown:        return "Unknown query type";
             }
             Q_UNREACHABLE();
             return {};
@@ -204,7 +204,7 @@ namespace BlackCore
             else if (str == "IP")   return ClientQueryType::PublicIP;
             else if (str == "INF")  return ClientQueryType::INF;
             else if (str == "FP")   return ClientQueryType::FP;
-            else if (str == "ACC")   return ClientQueryType::AircraftConfig;
+            else if (str == "ACC")  return ClientQueryType::AircraftConfig;
             else
             {
                 // networkLog(vatSeverityDebug, "ClientQueryType fromString(str)", "Unknown client query type");
@@ -229,11 +229,11 @@ namespace BlackCore
         template<>
         FlightType fromQString(const QString &str)
         {
-            if (str == QLatin1String("I"))          return FlightType::IFR;
-            else if (str == QLatin1String("V"))     return FlightType::VFR;
-            else if (str == QLatin1String("S"))     return FlightType::SVFR;
-            else if (str == QLatin1String("D"))     return FlightType::DVFR;
-            else                                    return FlightType::IFR;
+            if (str == QLatin1String("I"))       return FlightType::IFR;
+            else if (str == QLatin1String("V"))  return FlightType::VFR;
+            else if (str == QLatin1String("S"))  return FlightType::SVFR;
+            else if (str == QLatin1String("D"))  return FlightType::DVFR;
+            else                                 return FlightType::IFR;
         }
 
         template<>
@@ -262,10 +262,10 @@ namespace BlackCore
         template<>
         CTransponder::TransponderMode fromQString(const QString &str)
         {
-            if (str == "S")         return CTransponder::StateStandby;
-            else if (str == "N")    return CTransponder::ModeC;
-            else if (str == "Y")    return CTransponder::StateIdent;
-            else                    return CTransponder::StateStandby;
+            if (str == "S")       return CTransponder::StateStandby;
+            else if (str == "N")  return CTransponder::ModeC;
+            else if (str == "Y")  return CTransponder::StateIdent;
+            else                  return CTransponder::StateStandby;
         }
 
         template<>
