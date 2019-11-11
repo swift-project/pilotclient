@@ -789,7 +789,7 @@ namespace BlackCore
             m_messageTypeMapping["#DA"] = MessageType::DeleteATC;
             m_messageTypeMapping["#DP"] = MessageType::DeletePilot;
             m_messageTypeMapping["$FP"] = MessageType::FlightPlan;
-            m_messageTypeMapping["#PC"] = MessageType::FlightPlanAcknowledge;
+            m_messageTypeMapping["#PC"] = MessageType::ProController;
             m_messageTypeMapping["$DI"] = MessageType::FsdIdentification;
             m_messageTypeMapping["$!!"] = MessageType::KillRequest;
             m_messageTypeMapping["@"]   = MessageType::PilotDataUpdate;
@@ -1763,14 +1763,17 @@ namespace BlackCore
                 const QStringList tokens = payload.split(':');
                 switch (messageType)
                 {
-                case MessageType::AddAtc:                 /* ignore */ break;
-                case MessageType::AddPilot:               /* ignore */ break;
-                case MessageType::ServerHeartbeat:        /* ignore */ break;
-                case MessageType::FlightPlanAcknowledge:  /* ignore */ break;
+                // ignored ones
+                case MessageType::AddAtc:
+                case MessageType::AddPilot:
+                case MessageType::ServerHeartbeat:
+                case MessageType::ProController:
+                case MessageType::ClientIdentification:
+                    break;
+                // handled ones
                 case MessageType::AtcDataUpdate:     handleAtcDataUpdate(tokens);     break;
                 case MessageType::AuthChallenge:     handleAuthChallenge(tokens);     break;
                 case MessageType::AuthResponse:      handleAuthResponse(tokens);      break;
-                case MessageType::ClientIdentification: /* do nothing */              break;
                 case MessageType::ClientQuery:       handleClientQuery(tokens);       break;
                 case MessageType::ClientResponse:    handleClientReponse(tokens);     break;
                 case MessageType::DeleteATC:         handleDeleteATC(tokens);         break;

@@ -32,7 +32,7 @@ enum class MessageType
     DeleteATC,
     DeletePilot,
     FlightPlan,
-    FlightPlanAcknowledge,
+    ProController,
     FsdIdentification,
     KillRequest,
     PilotDataUpdate,
