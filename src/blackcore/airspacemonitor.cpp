@@ -313,14 +313,6 @@ namespace BlackCore
             {
                 m_queryPilot.enqueue(aircraft.getCallsign());
             }
-
-            /**
-            m_network->sendFrequencyQuery(cs);
-            if (!aircraft.hasAircraftDesignator())
-            {
-                m_network->sendIcaoCodesQuery(cs);
-            }
-            **/
         }
     }
 
@@ -951,8 +943,8 @@ namespace BlackCore
                 if (!airlineIcao.isLoadedFromDb())
                 {
                     if (!airlineIcao.hasValidDesignator()) { airlineIcao.setDesignator(airlineIcaoString.isEmpty() ? callsign.getAirlinePrefix() : airlineIcaoString); }
-                    if (!airlineNameLookup.isEmpty()) { airlineIcao.setName(airlineNameLookup); }
-                    if (!telephonyLookup.isEmpty())   { airlineIcao.setTelephonyDesignator(telephonyLookup); }
+                    if (!airlineNameLookup.isEmpty())      { airlineIcao.setName(airlineNameLookup); }
+                    if (!telephonyLookup.isEmpty())        { airlineIcao.setTelephonyDesignator(telephonyLookup); }
 
                     // already try to resolve at this stage by a smart lookup with all the filled data from above
                     airlineIcao = CAircraftMatcher::reverseLookupAirlineIcao(airlineIcao, callsign, log);
@@ -1347,7 +1339,7 @@ namespace BlackCore
             }
         }
 
-        Q_UNUSED(haveRequestedElevation);
+        Q_UNUSED(haveRequestedElevation)
         return correctedSituation;
     }
 

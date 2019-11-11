@@ -25,9 +25,6 @@ using namespace BlackCore::Fsd;
 int main(int argc, char *argv[])
 {
     QCoreApplication qa(argc, argv);
-
-
-
     COwnAircraftProviderDummy::instance()->updateOwnCallsign("BER368");
 
     CFSDClient client(CClientProviderDummy::instance(), COwnAircraftProviderDummy::instance(), CRemoteAircraftProviderDummy::instance(), &qa);
