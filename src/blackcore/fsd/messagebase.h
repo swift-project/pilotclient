@@ -17,6 +17,7 @@
 #include <QStringList>
 
 //! Message type
+//! \remark FSD Server docu https://studentweb.uvic.ca/~norrisng/fsd-doc/
 enum class MessageType
 {
     Unknown,
@@ -31,12 +32,14 @@ enum class MessageType
     DeleteATC,
     DeletePilot,
     FlightPlan,
+    FlightPlanAcknowledge,
     FsdIdentification,
     KillRequest,
     PilotDataUpdate,
     Ping,
     Pong,
     ServerError,
+    ServerHeartbeat,
     TextMessage,
     PilotClientCom,
 };

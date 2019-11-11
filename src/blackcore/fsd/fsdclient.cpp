@@ -655,13 +655,17 @@ namespace BlackCore
 
         void CFSDClient::sendClientResponse(ClientQueryType queryType, const QString &receiver)
         {
-            QStringList responseData;
+            if (queryType == ClientQueryType::Unknown) { return; }
             if (queryType == ClientQueryType::IsValidATC)
             {
                 this->handleIllegalFsdState("Never use sendClientResponse with IsValidATC from the client");
                 return;
             }
-            else if (queryType == ClientQueryType::Capabilities)
+
+            this->increaseStatisticsValue(QStringLiteral("sendClientResponse"), toQString(queryType));
+
+            QStringList responseData;
+            if (queryType == ClientQueryType::Capabilities)
             {
                 responseData.clear();
                 if (m_capabilities & Capabilities::AtcInfo)        responseData.push_back(toQString(Capabilities::AtcInfo) % "=1");
@@ -738,7 +742,6 @@ namespace BlackCore
             {
                 this->handleIllegalFsdState(QStringLiteral("Dont send '%1' as pilot client!").arg(toQString(ClientQueryType::AircraftConfig)));
             }
-            this->increaseStatisticsValue(QStringLiteral("sendClientResponse"), toQString(queryType));
         }
 
         void CFSDClient::sendClientIdentification(const QString &fsdChallenge)
@@ -786,12 +789,14 @@ namespace BlackCore
             m_messageTypeMapping["#DA"] = MessageType::DeleteATC;
             m_messageTypeMapping["#DP"] = MessageType::DeletePilot;
             m_messageTypeMapping["$FP"] = MessageType::FlightPlan;
+            m_messageTypeMapping["#PC"] = MessageType::FlightPlanAcknowledge;
             m_messageTypeMapping["$DI"] = MessageType::FsdIdentification;
             m_messageTypeMapping["$!!"] = MessageType::KillRequest;
             m_messageTypeMapping["@"]   = MessageType::PilotDataUpdate;
             m_messageTypeMapping["$PI"] = MessageType::Ping;
             m_messageTypeMapping["$PO"] = MessageType::Pong;
             m_messageTypeMapping["$ER"] = MessageType::ServerError;
+            m_messageTypeMapping["#DL"] = MessageType::ServerHeartbeat;
             m_messageTypeMapping["#TM"] = MessageType::TextMessage;
             m_messageTypeMapping["#SB"] = MessageType::PilotClientCom;
         }
@@ -1765,8 +1770,10 @@ namespace BlackCore
                 const QStringList tokens = payload.split(':');
                 switch (messageType)
                 {
-                case MessageType::AddAtc:            /* ignore */ break;
-                case MessageType::AddPilot:          /* ignore */ break;
+                case MessageType::AddAtc:                 /* ignore */ break;
+                case MessageType::AddPilot:               /* ignore */ break;
+                case MessageType::ServerHeartbeat:        /* ignore */ break;
+                case MessageType::FlightPlanAcknowledge:  /* ignore */ break;
                 case MessageType::AtcDataUpdate:     handleAtcDataUpdate(tokens);     break;
                 case MessageType::AuthChallenge:     handleAuthChallenge(tokens);     break;
                 case MessageType::AuthResponse:      handleAuthResponse(tokens);      break;
