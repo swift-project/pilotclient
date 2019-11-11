@@ -1186,8 +1186,11 @@ namespace BlackCore
             }
             else if (clientResponse.m_queryType == ClientQueryType::Com1Freq)
             {
-                emit com1FrequencyResponseReceived(clientResponse.sender(), responseData1);
-                return;
+                if (responseData1.isEmpty()) { return; }
+                bool ok;
+                const double freqMHz = responseData1.toDouble(&ok);
+                if (!ok) { return; }
+                emit com1FrequencyResponseReceived(clientResponse.sender(), CFrequency(freqMHz, CFrequencyUnit::MHz()));
             }
             else if (clientResponse.m_queryType == ClientQueryType::RealName)
             {

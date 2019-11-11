@@ -206,7 +206,7 @@ namespace BlackCore
             void aircraftConfigReceived(const QString &sender, const QJsonObject &config, qint64 currentOffsetTimeMs);
             void validAtcResponseReceived(const QString &callsign, bool isValidAtc);
             void capabilityResponseReceived(const BlackMisc::Aviation::CCallsign &sender, BlackMisc::Network::CClient::Capabilities capabilities);
-            void com1FrequencyResponseReceived(const QString &sender, const QString &frequency);
+            void com1FrequencyResponseReceived(const QString &sender, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
             void realNameResponseReceived(const QString &sender, const QString &realName);
             void serverResponseReceived(const QString &sender, const QString &hostName);
             void planeInformationReceived(const QString &sender, const QString &aircraft, const QString &airline, const QString &livery);
