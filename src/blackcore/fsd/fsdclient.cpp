@@ -1156,7 +1156,6 @@ namespace BlackCore
             if (clientResponse.m_queryType == ClientQueryType::IsValidATC)
             {
                 emit validAtcResponseReceived(responseData2, responseData1 == u"Y");
-                return;
             }
             else if (clientResponse.m_queryType == ClientQueryType::Capabilities)
             {
@@ -1184,7 +1183,6 @@ namespace BlackCore
                 if (capabilities & Capabilities::AircraftConfig) { caps |= CClient::FsdWithAircraftConfig; }
 
                 emit capabilityResponseReceived(clientResponse.sender(), caps);
-                return;
             }
             else if (clientResponse.m_queryType == ClientQueryType::Com1Freq)
             {
@@ -1195,42 +1193,34 @@ namespace BlackCore
             {
                 // The response also includes sector name and pilot rating, but we ignore them here.
                 emit realNameResponseReceived(clientResponse.sender(), responseData1);
-                return;
             }
             else if (clientResponse.m_queryType == ClientQueryType::Server)
             {
                 emit serverResponseReceived(clientResponse.sender(), responseData1);
-                return;
             }
             else if (clientResponse.m_queryType == ClientQueryType::ATIS)
             {
                 if (responseData1.isEmpty())
                 {
                     // networkLog(vatSeverityDebug, "VatFsdClient::handleClientQueryReponse", "ATIS line type cannot be empty!");
-                    return;
                 }
                 updateAtisMap(clientResponse.sender(), fromQString<AtisLineType>(responseData1), responseData2);
-                return;
             }
             else if (clientResponse.m_queryType == ClientQueryType::PublicIP)
             {
                 // To be implemented if needed
-                return;
             }
             else if (clientResponse.m_queryType == ClientQueryType::INF)
             {
                 // To be implemented if needed
-                return;
             }
             else if (clientResponse.m_queryType == ClientQueryType::FP)
             {
                 // FP is sent back as a $FP answer from the server and never as part of a client response.
-                return;
             }
             else if (clientResponse.m_queryType == ClientQueryType::AircraftConfig)
             {
                 // Currently not existing.
-                return;
             }
         }
 
