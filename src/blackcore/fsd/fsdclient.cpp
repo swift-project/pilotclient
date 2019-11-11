@@ -641,7 +641,7 @@ namespace BlackCore
 
         void CFSDClient::sendAuthResponse(const QString &response)
         {
-            AuthResponse pduAuthResponse(m_ownCallsign.asString(), "SERVER", response);
+            const AuthResponse pduAuthResponse(m_ownCallsign.asString(), "SERVER", response);
             sendMessage(pduAuthResponse);
             increaseStatisticsValue(QStringLiteral("sendAuthResponse"));
         }

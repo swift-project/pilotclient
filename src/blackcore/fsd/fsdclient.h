@@ -127,17 +127,9 @@ namespace BlackCore
             //! @}
 
             //! Convenience functions for sendClientQuery
+            //! \remark pseudo private, used in CAirspaceMonitor and network context
             //! \private
             //!  @{
-            void sendLogin();
-            void sendDeletePilot();
-            void sendDeleteAtc();
-            void sendPilotDataUpdate();
-            void sendInterimPilotDataUpdate();
-            void sendAtcDataUpdate(double latitude, double longitude);
-            void sendPing(const QString &receiver);
-            //
-            void sendClientQueryIsValidAtc(const BlackMisc::Aviation::CCallsign &callsign);
             void sendClientQueryCapabilities(const BlackMisc::Aviation::CCallsign &callsign);
             void sendClientQueryCom1Freq(const BlackMisc::Aviation::CCallsign &callsign);
             void sendClientQueryRealName(const BlackMisc::Aviation::CCallsign &callsign);
@@ -145,25 +137,13 @@ namespace BlackCore
             void sendClientQueryAtis(const BlackMisc::Aviation::CCallsign &callsign);
             void sendClientQueryFlightPlan(const BlackMisc::Aviation::CCallsign callsign);
             void sendClientQueryAircraftConfig(const BlackMisc::Aviation::CCallsign callsign);
-            void sendClientQuery(ClientQueryType queryType, const BlackMisc::Aviation::CCallsign &receiver, const QStringList &queryData = {});
             void sendTextMessages(const BlackMisc::Network::CTextMessageList &messages);
             void sendTextMessage(const BlackMisc::Network::CTextMessage &message);
             void sendTextMessage(TextMessageGroups receiverGroup, const QString &message);
-            void sendTextMessage(const QString &receiver, const QString &message);
             void sendRadioMessage(const QVector<int> &frequencieskHz, const QString &message);
             void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan);
             void sendPlaneInfoRequest(const BlackMisc::Aviation::CCallsign &receiver);
             void sendPlaneInfoRequestFsinn(const BlackMisc::Aviation::CCallsign &callsign);
-            void sendPlaneInformation(const QString &receiver, const QString &aircraft, const QString &airline = {}, const QString &livery = {});
-            void sendPlaneInformationFsinn(const BlackMisc::Aviation::CCallsign &callsign);
-            void sendCustomPilotPacket(const QString &receiver, const QString &subType, const std::vector<QString> &payload);
-            void sendAircraftConfiguration(const QString &receiver, const QString &aircraftConfigJson);
-            //! @}
-
-            //! Unit test/debug functions @{
-            void sendFsdMessage(const QString &message);
-            void setUnitTestMode(bool on) { m_unitTestMode = on; }
-            void printToConsole(bool on)  { m_printToConsole = on; }
             //! @}
 
             //! Interim pos.receivers @{
@@ -192,6 +172,9 @@ namespace BlackCore
 
             //! Text statistics
             QString getNetworkStatisticsAsText(bool reset, const QString &separator = "\n");
+
+            //! Debugging and UNIT tests
+            void printToConsole(bool on)  { m_printToConsole = on; }
 
         signals:
             //! Client responses received @{
@@ -238,6 +221,31 @@ namespace BlackCore
             //! \cond
             friend BlackFsdTest::CTestFSDClient;
             //! \endcond
+
+            //! Convenience functions for sendClientQuery
+            //! \remark really private, ONLY used by UNIT test, not CAirspaceMonitor
+            //!  @{
+            void sendLogin();
+            void sendDeletePilot();
+            void sendDeleteAtc();
+            void sendPilotDataUpdate();
+            void sendInterimPilotDataUpdate();
+            void sendAtcDataUpdate(double latitude, double longitude);
+            void sendPing(const QString &receiver);
+            //
+            void sendClientQueryIsValidAtc(const BlackMisc::Aviation::CCallsign &callsign);
+            void sendClientQuery(ClientQueryType queryType, const BlackMisc::Aviation::CCallsign &receiver, const QStringList &queryData = {});
+            void sendTextMessage(const QString &receiver, const QString &message);
+            void sendPlaneInformation(const QString &receiver, const QString &aircraft, const QString &airline = {}, const QString &livery = {});
+            void sendPlaneInformationFsinn(const BlackMisc::Aviation::CCallsign &callsign);
+            void sendCustomPilotPacket(const QString &receiver, const QString &subType, const std::vector<QString> &payload);
+            void sendAircraftConfiguration(const QString &receiver, const QString &aircraftConfigJson);
+            //! @}
+
+            //! Unit test/debug functions @{
+            void sendFsdMessage(const QString &message);
+            void setUnitTestMode(bool on) { m_unitTestMode = on; }
+            //! @}
 
             //! Send FSD message
             template <class T>
