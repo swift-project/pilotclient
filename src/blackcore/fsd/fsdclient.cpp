@@ -703,7 +703,7 @@ namespace BlackCore
             else if (queryType == ClientQueryType::Server)
             {
                 responseData.push_back(m_server.getAddress());
-                ClientResponse pduClientQueryResponse(m_ownCallsign.asString(), receiver, ClientQueryType::Server, responseData);
+                const ClientResponse pduClientQueryResponse(m_ownCallsign.asString(), receiver, ClientQueryType::Server, responseData);
                 sendMessage(pduClientQueryResponse);
             }
             else if (queryType == ClientQueryType::ATIS)
@@ -973,7 +973,6 @@ namespace BlackCore
         void CFSDClient::handleFlightPlan(const QStringList &tokens)
         {
             FlightPlan fp = FlightPlan::fromTokens(tokens);
-
             CFlightPlan::FlightRules rules = CFlightPlan::VFR;
 
             switch (fp.m_flightType)
@@ -1045,54 +1044,42 @@ namespace BlackCore
         {
             ClientQuery clientQuery = ClientQuery::fromTokens(tokens);
 
-            if (clientQuery.m_queryType == ClientQueryType::Unknown)
-            {
-                return;
-            }
-            else if (clientQuery.m_queryType == ClientQueryType::IsValidATC)
+            if (clientQuery.m_queryType == ClientQueryType::Unknown) { return; }
+            if (clientQuery.m_queryType == ClientQueryType::IsValidATC)
             {
                 // This is usually sent to the server only. If it ever arrives here, just ignore it.
-                return;
             }
             else if (clientQuery.m_queryType == ClientQueryType::Capabilities)
             {
                 sendClientResponse(ClientQueryType::Capabilities, clientQuery.sender());
-                return;
             }
             else if (clientQuery.m_queryType == ClientQueryType::Com1Freq)
             {
                 sendClientResponse(ClientQueryType::Com1Freq, clientQuery.sender());
-                return;
             }
             else if (clientQuery.m_queryType == ClientQueryType::RealName)
             {
                 sendClientResponse(ClientQueryType::RealName, clientQuery.sender());
-                return;
             }
             else if (clientQuery.m_queryType == ClientQueryType::Server)
             {
                 sendClientResponse(ClientQueryType::Server, clientQuery.sender());
-                return;
             }
             else if (clientQuery.m_queryType == ClientQueryType::ATIS)
             {
                 // This is answered by ATC clients only. If we get such a request, ignore it.
-                return;
             }
             else if (clientQuery.m_queryType == ClientQueryType::PublicIP)
             {
                 // This is usually sent to the server only. If it ever arrives here, just ignore it.
-                return;
             }
             else if (clientQuery.m_queryType == ClientQueryType::INF)
             {
                 sendClientResponse(ClientQueryType::INF, clientQuery.sender());
-                return;
             }
             else if (clientQuery.m_queryType == ClientQueryType::FP)
             {
                 // This is usually sent to the server only. If it ever arrives here, just ignore it.
-                return;
             }
             else if (clientQuery.m_queryType == ClientQueryType::AircraftConfig)
             {
@@ -1131,7 +1118,6 @@ namespace BlackCore
 
                 const qint64 offsetTimeMs = currentOffsetTime(callsign);
                 emit aircraftConfigReceived(clientQuery.sender(), config, offsetTimeMs);
-                return;
             }
         }
 
@@ -1841,7 +1827,10 @@ namespace BlackCore
         {
             m_positionUpdateTimer.start(c_updatePostionIntervalMsec);
             m_scheduledConfigUpdate.start(c_processingIntervalMsec);
+
+            // interim positions
             if (this->isInterimPositionSendingEnabledForServer()) { m_interimPositionUpdateTimer.start(c_updateInterimPostionIntervalMsec); }
+            else { m_interimPositionUpdateTimer.stop(); }
         }
 
         void CFSDClient::stopPositionTimers()

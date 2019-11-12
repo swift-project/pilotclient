@@ -460,10 +460,12 @@ namespace BlackMisc
 
         QString CSimulatedAircraft::getNetworkModelAircraftIcaoDifference() const
         {
-            const CAircraftIcaoCode icao(this->getModel().getAircraftIcaoCode());
             const CAircraftIcaoCode icaoNw(this->getNetworkModel().getAircraftIcaoCode());
-            if (!icao.hasDesignator()) { return QStringLiteral("[x] no sim."); }
             if (!icaoNw.hasDesignator()) { return QStringLiteral("[x] no nw."); }
+
+            const CAircraftIcaoCode icao(this->getModel().getAircraftIcaoCode());
+            if (!icao.hasDesignator())   { return QStringLiteral("[x] no sim."); }
+
             if (icao.isDbEqual(icaoNw) || icao == icaoNw) { return u"[==] " % icao.getDesignatorDbKey(); }
             if (icao.getDesignator() == icaoNw.getDesignator()) { return u"[=] " % icao.getDesignator(); }
             return QStringLiteral("%1 -> %2").arg(icaoNw.getDesignator(), icao.getDesignator());
