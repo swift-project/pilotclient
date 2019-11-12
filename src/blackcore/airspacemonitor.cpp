@@ -117,7 +117,7 @@ namespace BlackCore
 
         // timer
         connect(&m_processTimer, &QTimer::timeout, this, &CAirspaceMonitor::process);
-        m_processTimer.start(ProcessInterval);
+        m_processTimer.start(ProcessIntervalMs);
     }
 
     bool CAirspaceMonitor::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositonUpdates)
@@ -564,17 +564,12 @@ namespace BlackCore
         if (!this->isConnectedAndNotShuttingDown()) { return; }
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
 
-        // times
-        constexpr qint64 CheckAgainMs    = 2000;
-        constexpr qint64 MaxAgeMs        = CheckAgainMs * 3;
-        constexpr qint64 MaxAgeThreshold = CheckAgainMs * 10;
-
         // set flag and init ts
         Readiness &readiness = this->addMatchingReadinessFlag(callsign, rf);
 
         // skip if already sent in the last x seconds
         const qint64 ageMs = readiness.getAgeMs();
-        if (readiness.wasMatchingSent() && readiness.getAgeMs() < MaxAgeThreshold) { return; }
+        if (readiness.wasMatchingSent() && readiness.getAgeMs() < MMMaxAgeThresholdMs) { return; }
 
         // checking for min. situations ensures the aircraft is stable, can be interpolated ...
         const CSimulatedAircraft remoteAircraft = this->getAircraftInRangeForCallsign(callsign);
@@ -589,14 +584,14 @@ namespace BlackCore
                               );
 
         const ReverseLookupLogging revLogEnabled = this->whatToReverseLog();
-        if (validRemoteCs && ageMs <= MaxAgeMs && !complete)
+        if (rf != Verified && validRemoteCs && ageMs <= MMMaxAgeMs && !complete)
         {
             static const QString ws("Wait for further data, '%1' age: %2ms ts: %3");
             static const QString format("hh:mm:ss.zzz");
             if (!revLogEnabled.testFlag(RevLogSimplifiedInfo)) { this->addReverseLookupMessage(callsign, ws.arg(readiness.toQString()).arg(ageMs).arg(QDateTime::currentDateTimeUtc().toString(format))); }
 
             const QPointer<CAirspaceMonitor> myself(this);
-            QTimer::singleShot(CheckAgainMs, this, [ = ]()
+            QTimer::singleShot(MMCheckAgainMs, this, [ = ]()
             {
                 if (!myself || !sApp || sApp->isShuttingDown()) { return; }
                 if (!this->isAircraftInRange(callsign))
@@ -638,6 +633,35 @@ namespace BlackCore
             this->addReverseLookupMessage(callsign, m);
             m_readiness.remove(callsign);
         }
+    }
+
+    void CAirspaceMonitor::verifyReceivedIcaoData(const CCallsign &callsign)
+    {
+        if (callsign.isEmpty() || !this->isAircraftInRange(callsign)) { return; }
+
+        // set flag and init ts
+        Readiness &readiness = m_readiness[callsign];
+        if (readiness.wasMatchingSent()) { return; }
+        if (readiness.wasVerified())
+        {
+            CLogMessage(this).warning(u"Verfied '%1' again, using it as it is!") << callsign;
+            this->sendReadyForModelMatching(callsign, Verified);
+            return;
+        }
+
+        // new trial
+        readiness.addFlag(Verified);
+
+        if (!readiness.receivedIcaoCodes())
+        {
+            CLogMessage(this).info(u"Query ICAO codes for '%1' again") << callsign;
+            this->sendInitialPilotQueries(callsign, true, true);
+            return;
+        }
+
+        // normally we should never get here
+        CLogMessage(this).info(u"Verified '%1' again, has ICAO codes, ready for matching!") << callsign;
+        this->sendReadyForModelMatching(callsign, Verified);
     }
 
     void CAirspaceMonitor::onAtcPositionUpdate(const CCallsign &callsign, const CFrequency &frequency, const CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range)
@@ -1008,14 +1032,25 @@ namespace BlackCore
             sApp->getWebDataServices()->updateWithVatsimDataFileData(newAircraft);
         }
         const bool added = CRemoteAircraftProvider::addNewAircraftInRange(newAircraft);
-        if (added && aircraft.hasModelString())
+        if (added)
         {
-            // most likely I could take the CG at this time from aircraft
-            // to make sure it is really the DB value i query again
-            const CAircraftModel model = sApp->getWebDataServices()->getModelForModelString(aircraft.getModelString());
-            const CLength cg = model.hasValidDbKey() ? model.getCG() : CLength::null();
-            this->rememberCGFromDB(cg, aircraft.getModelString());
-            this->rememberCGFromDB(cg, aircraft.getCallsign());
+            const QPointer<CAirspaceMonitor> myself(this);
+            QTimer::singleShot(MMVerifyMs, this, [ = ]()
+            {
+                // makes sure we have ICAO data
+                if (!myself || !sApp || sApp->isShuttingDown()) { return; }
+                this->verifyReceivedIcaoData(callsign);
+            });
+
+            if (aircraft.hasModelString())
+            {
+                // most likely I could take the CG at this time from aircraft
+                // to make sure it is really the DB value I query again
+                const CAircraftModel model = sApp->getWebDataServices()->getModelForModelString(aircraft.getModelString());
+                const CLength cg = model.hasValidDbKey() ? model.getCG() : CLength::null();
+                this->rememberCGFromDB(cg, aircraft.getModelString());
+                this->rememberCGFromDB(cg, aircraft.getCallsign());
+            }
         }
         return added;
     }
@@ -1367,7 +1402,7 @@ namespace BlackCore
         if (!this->isConnectedAndNotShuttingDown()) { return; }
 
         if (withIcaoQuery) { m_fsdClient->sendPlaneInfoRequest(callsign); }
-        if (withFsInn) { m_fsdClient->sendPlaneInfoRequestFsinn(callsign); }
+        if (withFsInn)     { m_fsdClient->sendPlaneInfoRequestFsinn(callsign); }
 
         m_fsdClient->sendClientQueryCom1Freq(callsign);
         m_fsdClient->sendClientQueryRealName(callsign);

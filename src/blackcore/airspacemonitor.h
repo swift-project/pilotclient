@@ -161,7 +161,8 @@ namespace BlackCore
             ReceivedFsInnPacket  = 1 << 1,  //!< FsInn pcket received
             ReadyForMatchingSent = 1 << 2,  //!< Read for matching sending
             RecursiveCall        = 1 << 3,  //!< recursion
-            ReceivedAll          = ReceivedIcaoCodes | ReceivedFsInnPacket
+            ReceivedAll          = ReceivedIcaoCodes | ReceivedFsInnPacket,
+            Verified             = 1 << 4,  //!< verified already
         };
         Q_DECLARE_FLAGS(MatchingReadiness, MatchingReadinessFlag)
 
@@ -224,6 +225,9 @@ namespace BlackCore
                 return *this;
             }
 
+            //! Reset timestamp to now
+            void resetTimestampToNow() { ts = QDateTime::currentMSecsSinceEpoch(); }
+
             //! Set the flag
             Readiness &setFlag(MatchingReadinessFlag flag)
             {
@@ -233,11 +237,17 @@ namespace BlackCore
                 return *this;
             }
 
-            //! Received all data
+            //! Received all data?
             bool receivedAll() const { return readyness.testFlag(ReceivedIcaoCodes) && readyness.testFlag(ReceivedFsInnPacket); }
 
-            //! Was matching ready sent?
+            //! Received ICAO codes?
+            bool receivedIcaoCodes() const { return readyness.testFlag(ReceivedIcaoCodes); }
+
+            //! Was matching already sent?
             bool wasMatchingSent() const { return readyness.testFlag(ReadyForMatchingSent); }
+
+            //! Was verifed?
+            bool wasVerified() const { return readyness.testFlag(Verified); }
 
             //! currnt age in ms
             qint64 getAgeMs() const
@@ -265,7 +275,13 @@ namespace BlackCore
         CAirspaceAnalyzer *m_analyzer  = nullptr;  //!< owned analyzer
         bool m_bookingsRequested       = false;    //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
         QTimer m_processTimer;
-        static constexpr int ProcessInterval = 50; // in ms
+        static constexpr int ProcessIntervalMs = 50; // in ms
+
+        // model matching times
+        static constexpr qint64 MMCheckAgainMs      = 2000;
+        static constexpr qint64 MMMaxAgeMs          = MMCheckAgainMs * 3;
+        static constexpr qint64 MMMaxAgeThresholdMs = MMCheckAgainMs * 10;
+        static constexpr qint64 MMVerifyMs          = MMCheckAgainMs * 12;
 
         //! Processing by timer
         void process();
@@ -350,6 +366,10 @@ namespace BlackCore
         //! \note it can take some time to obtain all data for model matching, so function recursively calls itself if something is still missing (trial)
         //! \sa reverseLookupModelWithFlightplanData
         void sendReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign, MatchingReadinessFlag rf);
+
+        //! Make sure we got ICAO data
+        //! \remark did we get any responses for ICAO data (standard, FsInn)
+        void verifyReceivedIcaoData(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Reverse lookup, if available flight plan data are considered
         //! \remark this is where a model is created based on network data
