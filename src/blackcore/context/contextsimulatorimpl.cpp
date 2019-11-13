@@ -711,6 +711,8 @@ namespace BlackCore
                 emit this->aircraftRenderingChanged(brokenAircraft);
                 return;
             }
+
+            // here the model is added to the simulator
             m_simulatorPlugin.second->logicallyAddRemoteAircraft(aircraftAfterModelApplied);
             CLogUtilities::addLogDetailsToList(pMatchingMessages, callsign, QStringLiteral("Logically added remote aircraft: %1").arg(aircraftAfterModelApplied.toQString()));
 

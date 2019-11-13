@@ -16,6 +16,7 @@
 #include <QObject>
 #include <QString>
 #include <QtGlobal>
+#include <QQueue>
 #include <functional>
 
 #include "blackcore/blackcoreexport.h"
@@ -135,8 +136,8 @@ namespace BlackCore
             virtual BlackMisc::Network::CClient getClientOrDefaultForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool hasClientInfo(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool addNewClient(const BlackMisc::Network::CClient &client) override;
-            virtual int updateOrAddClient(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true) override;
-            virtual int removeClient(const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual int  updateOrAddClient(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true) override;
+            virtual int  removeClient(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual bool autoAdjustCientGndCapability(const BlackMisc::Aviation::CAircraftSituation &situation) override;
             virtual bool addClientGndCapability(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual bool setClientGndCapability(const BlackMisc::Aviation::CCallsign &callsign, bool supportGndFlag) override;
@@ -295,16 +296,19 @@ namespace BlackCore
             void setSimulationEnvironmentProvider(BlackMisc::Simulation::ISimulationEnvironmentProvider *provider);
 
         private:
-            CAirspaceMonitor           *m_airspace = nullptr;
-            Fsd::CFSDClient             *m_fsdClient = nullptr;
             BlackMisc::Network::CLoginMode m_currentMode = BlackMisc::Network::CLoginMode::Pilot;    //!< current modeM
-            QTimer                     *m_requestAircraftDataTimer = nullptr;     //!< general updates such as frequencies, see requestAircraftDataUpdates()
-            QTimer                     *m_requestAtisTimer         = nullptr;     //!< general updates such as ATIS
+            CAirspaceMonitor  *m_airspace = nullptr;
+            Fsd::CFSDClient   *m_fsdClient = nullptr;
+            QTimer            *m_requestAircraftDataTimer = nullptr;  //!< general updates such as frequencies, see requestAircraftDataUpdates()
+            QTimer            *m_requestAtisTimer         = nullptr;  //!< general updates such as ATIS
+            QTimer            *m_staggeredMatchingTimer   = nullptr;  //!< staggered update
 
             // Digest signals, only sending after some time
             BlackMisc::CDigestSignal m_dsAtcStationsBookedChanged { this, &IContextNetwork::changedAtcStationsBooked, &IContextNetwork::changedAtcStationsBookedDigest, 1000, 2 };
             BlackMisc::CDigestSignal m_dsAtcStationsOnlineChanged { this, &IContextNetwork::changedAtcStationsOnline, &IContextNetwork::changedAtcStationsOnlineDigest, 1000, 4 };
             BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged  { this, &IContextNetwork::changedAircraftInRange, &IContextNetwork::changedAircraftInRangeDigest, 1000, 4 };
+
+            QQueue<BlackMisc::Simulation::CSimulatedAircraft> m_readyForModelMatching;  //!< ready for matching
 
             //! Own aircraft from \sa CContextOwnAircraft
             const BlackMisc::Simulation::CSimulatedAircraft ownAircraft() const;
@@ -320,6 +324,12 @@ namespace BlackCore
 
             //! Connection status changed
             void onFsdConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+
+            //! Ready for matching
+            void onReadyForModelMatching(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! Emit ready for matching
+            void emitReadyForMatching();
 
             //! Relay to partner callsign
             void createRelayMessageToPartnerCallsign(const BlackMisc::Network::CTextMessage &textMessage, const BlackMisc::Aviation::CCallsign &partnerCallsign, BlackMisc::Network::CTextMessageList &relayedMessages);
