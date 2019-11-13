@@ -451,7 +451,7 @@ namespace BlackCore
                 sendMessage(clientQuery);
             }
 
-            this->increaseStatisticsValue(QStringLiteral("sendClientQuery"), toQString(queryType));
+            increaseStatisticsValue(QStringLiteral("sendClientQuery"), toQString(queryType));
         }
 
         void CFSDClient::sendTextMessages(const CTextMessageList &messages)
@@ -504,7 +504,7 @@ namespace BlackCore
             else { return; }
             const TextMessage textMessage(m_ownCallsign.asString(), receiver, message);
             sendMessage(textMessage);
-            this->increaseStatisticsValue(QStringLiteral("sendTextMessages"));
+            increaseStatisticsValue(QStringLiteral("sendTextMessages"));
         }
 
         void CFSDClient::sendTextMessage(const QString &receiver, const QString &message)
@@ -576,7 +576,7 @@ namespace BlackCore
 
         void CFSDClient::sendPlaneInfoRequest(const CCallsign &receiver)
         {
-            PlaneInfoRequest planeInfoRequest(m_ownCallsign.asString(), receiver.toQString());
+            const PlaneInfoRequest planeInfoRequest(m_ownCallsign.asString(), receiver.toQString());
             sendMessage(planeInfoRequest);
             increaseStatisticsValue(QStringLiteral("sendPlaneInfoRequest"));
         }

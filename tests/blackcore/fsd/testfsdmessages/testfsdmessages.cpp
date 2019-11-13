@@ -165,11 +165,11 @@ namespace BlackMiscTest
         QCOMPARE(message.receiver(), QString("SERVER"));
         QCOMPARE(QString("7a57f2dd9d360d347b"), message.m_challengeKey);
 
-        QString stringRef("ABCD:SERVER:7a57f2dd9d360d347b");
-        QString str = message.toTokens().join(":");
+        const QString stringRef("ABCD:SERVER:7a57f2dd9d360d347b");
+        const QString str = message.toTokens().join(":");
         QCOMPARE(str, stringRef);
 
-        QStringList tokens = QString("ABCD:SERVER:7a57f2dd9d360d347b").split(':');
+        const QStringList tokens = QString("ABCD:SERVER:7a57f2dd9d360d347b").split(':');
         const AuthChallenge messageFromTokens = AuthChallenge::fromTokens(tokens);
         QCOMPARE(messageFromTokens, message);
     }
@@ -181,13 +181,13 @@ namespace BlackMiscTest
         QCOMPARE(message.receiver(), QString("SERVER"));
         QCOMPARE(QString("7a57f2dd9d360d347b"), message.m_response);
 
-        QString stringRef("ABCD:SERVER:7a57f2dd9d360d347b");
-        QString str = message.toTokens().join(":");
+        const QString stringRef("ABCD:SERVER:7a57f2dd9d360d347b");
+        const QString str = message.toTokens().join(":");
         QCOMPARE(str, stringRef);
 
         const AuthResponse reference("ABCD", "SERVER", "7a57f2dd9d360d347b");
 
-        QStringList tokens = QString("ABCD:SERVER:7a57f2dd9d360d347b").split(':');
+        const QStringList tokens = QString("ABCD:SERVER:7a57f2dd9d360d347b").split(':');
         const AuthResponse messageFromTokens = AuthResponse::fromTokens(tokens);
         QCOMPARE(messageFromTokens, message);
 
@@ -212,7 +212,7 @@ namespace BlackMiscTest
 
         const ClientIdentification reference("ABCD", 0xe410, "Client", 1, 5, "1234567", "1108540872", "29bbc8b1398eb38e0139");
 
-        QStringList tokens = QString("ABCD:SERVER:e410:Client:1:5:1234567:1108540872:29bbc8b1398eb38e0139").split(':');
+        const QStringList tokens = QString("ABCD:SERVER:e410:Client:1:5:1234567:1108540872:29bbc8b1398eb38e0139").split(':');
         const ClientIdentification messageFromTokens = ClientIdentification::fromTokens(tokens);
         QCOMPARE(messageFromTokens, message);
     }

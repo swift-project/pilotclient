@@ -25,8 +25,7 @@ namespace BlackCore
               m_rating(rating),
               m_protocolRevision(protocolRevision),
               m_realName(realName)
-        {
-        }
+        { }
 
         QStringList AddAtc::toTokens() const
         {

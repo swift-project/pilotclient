@@ -21,7 +21,7 @@ namespace BlackCore
         { }
 
         AtcDataUpdate::AtcDataUpdate(const QString &sender, int frequencykHz, CFacilityType facility, int visibleRange, AtcRating rating,
-                                 double latitude, double longitude, int elevation) :
+                                     double latitude, double longitude, int elevation) :
             MessageBase(sender, {}),
                     m_frequencykHz(frequencykHz),
                     m_facility(facility),
@@ -40,7 +40,7 @@ namespace BlackCore
             tokens.push_back(toQString(m_facility));
             tokens.push_back(QString::number(m_visibleRange));
             tokens.push_back(toQString(m_rating));
-            tokens.push_back(QString::number(m_latitude, 'f', 5));
+            tokens.push_back(QString::number(m_latitude,  'f', 5));
             tokens.push_back(QString::number(m_longitude, 'f', 5));
             tokens.push_back(QString::number(m_elevation));
             return tokens;
@@ -55,7 +55,7 @@ namespace BlackCore
             }
 
             AtcDataUpdate packet(tokens[0], tokens[1].toInt() + 100000, fromQString<CFacilityType>(tokens[2]), tokens[3].toInt(), fromQString<AtcRating>(tokens[4]),
-                               tokens[5].toDouble(), tokens[6].toDouble(), tokens[7].toInt());
+                                 tokens[5].toDouble(), tokens[6].toDouble(), tokens[7].toInt());
             return packet;
         }
     }

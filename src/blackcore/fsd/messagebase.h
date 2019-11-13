@@ -80,16 +80,10 @@ namespace BlackCore
             void setValid(bool isValid) { m_isValid = isValid; }
 
         protected:
-
-            // Meta data
-            // MessageType messageType = MessageType::Unknown;
-
             QString m_sender;       //!< message sender
             QString m_receiver;     //!< message receiver
 
             bool m_isValid = true;  //!< is valid?
         };
-    }
-}
 
 #endif // guard
