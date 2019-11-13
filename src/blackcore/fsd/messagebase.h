@@ -14,7 +14,9 @@
 #include "blackcore/blackcoreexport.h"
 
 #include <QString>
+#include <QStringBuilder>
 #include <QStringList>
+#include <QDebug>
 
 //! Message type
 //! \remark FSD Server docu https://studentweb.uvic.ca/~norrisng/fsd-doc/
@@ -85,5 +87,15 @@ namespace BlackCore
 
             bool m_isValid = true;  //!< is valid?
         };
+
+        //! String which will be send
+        template <class T>
+        QString messageToFSDString(const T &message)
+        {
+            if (!message.isValid()) return {};
+            return message.pdu() % message.toTokens().join(':') % QStringLiteral("\r\n");
+        }
+    } // ns
+} // ns
 
 #endif // guard
