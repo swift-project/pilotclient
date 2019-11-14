@@ -219,12 +219,12 @@ namespace BlackCore
             //! \addtogroup swiftdotcommands
             //! @{
             //! <pre>
-            //! .m .msg .chat              message text
-            //! .altos .altoffset          altitude offset for testing
-            //! .addtimeos .addtimeoffse   additional offset time for testing
-            //! .reinit .reinitialize      re-initialize all aircraft
-            //! .watchdog on|off           watchdog on/off
-            //! .wallop message            send wallop message
+            //! .m .msg .chat callsign|freq. message   message text
+            //! .altos .altoffset                      altitude offset for testing
+            //! .addtimeos .addtimeoffset              additional offset time for testing
+            //! .reinit .reinitialize                  re-initialize all aircraft
+            //! .watchdog on|off                       watchdog on/off
+            //! .wallop message                        send wallop message
             //! </pre>
             //! @}
             //! \copydoc IContextNetwork::parseCommandLine

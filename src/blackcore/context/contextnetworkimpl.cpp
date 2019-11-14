@@ -314,7 +314,7 @@ namespace BlackCore
         {
             Q_UNUSED(originator;)
             if (commandLine.isEmpty()) { return false; }
-            static const QStringList cmds({ ".msg", ".m", ".chat", ".altos", ".altoffset", ".addtimeos", ".addtimeoffset", ".wallop", ".watchdog", ".reinit", ".reinitialize", ".enable", ".disable", ".ignore", ".unignore" });
+            static const QStringList cmds({ ".msg", ".m", ".chat", ".altos", ".altoffset", ".addtimeos", ".addtimeoffset", ".wallop", ".watchdog", ".reinit", ".reinitialize", ".enable", ".disable", ".ignore", ".unignore", ".fsd" });
             CSimpleCommandParser parser(cmds);
             parser.parse(commandLine);
             if (!parser.isKnownCommand()) { return false; }
@@ -470,8 +470,8 @@ namespace BlackCore
             else if (parser.matchesCommand(".wallop"))
             {
                 if (parser.countParts() < 2) { return false; }
-                if (!m_fsdClient) { return false; }
-                if (!this->isConnected()) { return false; }
+                if (!m_fsdClient)            { return false; }
+                if (!this->isConnected())    { return false; }
                 const QString wallopMsg = parser.part(1).simplified().trimmed();
                 m_fsdClient->sendTextMessage(TextMessageGroups::AllSups, wallopMsg);
                 return true;
@@ -479,18 +479,22 @@ namespace BlackCore
             else if (parser.matchesCommand(".enable", ".unignore"))
             {
                 if (parser.countParts() < 2) { return false; }
-                if (!m_fsdClient) { return false; }
-                if (!this->isConnected()) { return false; }
+                if (!m_fsdClient)            { return false; }
+                if (!this->isConnected())    { return false; }
                 const CCallsign cs(parser.part(1));
                 if (cs.isValid()) { this->updateAircraftEnabled(cs, true); }
             }
             else if (parser.matchesCommand(".disable", ".ignore"))
             {
                 if (parser.countParts() < 2) { return false; }
-                if (!m_fsdClient) { return false; }
-                if (!this->isConnected()) { return false; }
+                if (!m_fsdClient)            { return false; }
+                if (!this->isConnected())    { return false; }
                 const CCallsign cs(parser.part(1));
                 if (cs.isValid()) { this->updateAircraftEnabled(cs, false); }
+            }
+            else if (m_airspace && parser.matchesCommand(".fsd"))
+            {
+                return m_airspace->parseCommandLine(commandLine, originator);
             }
 
             return false;

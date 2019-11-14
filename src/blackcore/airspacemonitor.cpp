@@ -118,6 +118,9 @@ namespace BlackCore
         // timer
         connect(&m_processTimer, &QTimer::timeout, this, &CAirspaceMonitor::process);
         m_processTimer.start(ProcessIntervalMs);
+
+        // dot command
+        CAirspaceMonitor::registerHelp();
     }
 
     bool CAirspaceMonitor::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositonUpdates)
@@ -392,6 +395,28 @@ namespace BlackCore
         return s.join(", ");
     }
 
+    bool CAirspaceMonitor::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
+    {
+        Q_UNUSED(originator;)
+        if (commandLine.isEmpty()) { return false; }
+        static const QStringList cmds({ ".fsd" });
+        CSimpleCommandParser parser(cmds);
+        parser.parse(commandLine);
+        if (!parser.isKnownCommand()) { return false; }
+        if (parser.matchesCommand(".fsd"))
+        {
+            if (parser.countParts() < 2) { return false; }
+            if (parser.matchesPart(1, "range") && parser.countParts() > 2)
+            {
+                const QString r = parser.part(2);
+                CLength d;
+                d.parseFromString(r);
+                this->setMaxRange(d);
+            }
+        }
+        return false;
+    }
+
     void CAirspaceMonitor::process()
     {
         if (this->isConnectedAndNotShuttingDown())
@@ -424,6 +449,19 @@ namespace BlackCore
         CRemoteAircraftProvider::removeAllAircraft();
         this->asyncReInitializeAllAircraft(aircraft, true);
         return aircraft.size();
+    }
+
+    void CAirspaceMonitor::setMaxRange(const CLength &range)
+    {
+        int rInt = 125;
+        if (!range.isNull())
+        {
+            rInt = range.valueInteger(CLengthUnit::NM());
+        }
+
+        CLogMessage(this).info(u"Set airspace max. range to %1NM") << rInt;
+        m_maxDistanceNM = rInt;
+        m_maxDistanceNMHysteresis = qRound(rInt * 1.1);
     }
 
     void CAirspaceMonitor::onRealNameReplyReceived(const CCallsign &callsign, const QString &realname)
@@ -1099,9 +1137,16 @@ namespace BlackCore
         return c;
     }
 
-    void CAirspaceMonitor::copilotDetected()
+    bool CAirspaceMonitor::handleMaxRange(const CAircraftSituation &situation)
     {
-        // for future usage
+        if (situation.isNull()) { return false; }
+        const int distanceNM = this->getOwnAircraft().calculateGreatCircleDistance(situation).valueInteger(CLengthUnit::NM());
+        if (distanceNM > m_maxDistanceNMHysteresis)
+        {
+            this->removeAircraft(situation.getCallsign());
+            return false;
+        }
+        return distanceNM <= m_maxDistanceNM;
     }
 
     bool CAirspaceMonitor::recallFsInnPacket(const CCallsign &callsign)
@@ -1144,9 +1189,6 @@ namespace BlackCore
 
     void CAirspaceMonitor::onAircraftUpdateReceived(const CAircraftSituation &situation, const CTransponder &transponder)
     {
-        static constexpr int MaxDistanceNM = 125;
-        static constexpr int MaxDistanceNMHysteresis = qRound(1.1 * MaxDistanceNM);
-
         Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Called in different thread");
         if (!this->isConnectedAndNotShuttingDown()) { return; }
 
@@ -1156,14 +1198,8 @@ namespace BlackCore
         if (this->isCopilotAircraft(callsign)) { return; }
         const bool existsInRange = this->isAircraftInRange(callsign);
 
-        // hardcoded range (FSD overload issue)
-        const int distanceNM = this->getOwnAircraft().calculateGreatCircleDistance(situation).valueInteger(CLengthUnit::NM());
-        if (existsInRange && distanceNM > MaxDistanceNMHysteresis)
-        {
-            this->removeClient(callsign);
-            return;
-        }
-        if (distanceNM > MaxDistanceNM) { return; }
+        // range (FSD overload issue)
+        if (!this->handleMaxRange(situation)) { return; }
 
         // update client info
         this->autoAdjustCientGndCapability(situation);
@@ -1208,7 +1244,8 @@ namespace BlackCore
         // checks
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
 
-        if (isCopilotAircraft(callsign)) { return; }
+        if (isCopilotAircraft(callsign))        { return; }
+        if (!this->isAircraftInRange(callsign)) { return; }
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
@@ -1230,9 +1267,6 @@ namespace BlackCore
 
         // store situation history
         this->storeAircraftSituation(interimSituation);
-
-        // if we have no aircraft in range yet, we stop here
-        if (!this->isAircraftInRange(callsign)) { return; }
 
         const bool samePosition = lastSituation.equalNormalVectorDouble(interimSituation);
         if (samePosition) { return; } // nothing to update
@@ -1334,7 +1368,7 @@ namespace BlackCore
                     if (oldSituations.size() > 1)
                     {
                         const bool extrapolated = correctedSituation.extrapolateElevation(oldSituations[0], oldSituations[1], oldChanges.frontOrDefault());
-                        Q_UNUSED(extrapolated);
+                        Q_UNUSED(extrapolated)
                     }
                 }
             } // gnd. elevation

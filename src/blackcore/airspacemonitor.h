@@ -14,9 +14,6 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/simulation/settings/modelmatchersettings.h"
 #include "blackmisc/simulation/aircraftmodelsetprovider.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/network/ecosystem.h"
-#include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/matchinglog.h"
@@ -24,18 +21,22 @@
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/simulationenvironmentprovider.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/network/server.h"
+#include "blackmisc/network/ecosystem.h"
+#include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/network/clientprovider.h"
 #include "blackmisc/network/userlist.h"
-#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/flightplan.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/angle.h"
+#include "blackmisc/simplecommandparser.h"
 #include "blackmisc/identifier.h"
 
 #include <QJsonObject>
@@ -52,10 +53,7 @@
 
 namespace BlackCore
 {
-    namespace Fsd
-    {
-        class CFSDClient;
-    }
+    namespace Fsd { class CFSDClient; }
     class CAirspaceAnalyzer;
 
     //! Keeps track of other entities in the airspace: aircraft, ATC stations, etc.
@@ -145,6 +143,9 @@ namespace BlackCore
         //! Re-init all aircrft
         int reInitializeAllAircraft();
 
+        //! Max (FSD) range
+        void setMaxRange(const BlackMisc::PhysicalQuantities::CLength &range);
+
         //! Create dummy entries for performance tests
         //! \private for testing purposes
         void testCreateDummyOnlineAtcStations(int number);
@@ -170,6 +171,22 @@ namespace BlackCore
         static const QString &enumFlagToString(MatchingReadinessFlag r);
         static QString enumToString(MatchingReadiness r);
         //! @}
+
+        //! \addtogroup swiftdotcommands
+        //! @{
+        //! <pre>
+        //! .fsd range distance        max.range e.g. ".fsd range 100NM"
+        //! </pre>
+        //! @}
+        //! \copydoc BlackCore::Context::IContextNetwork::parseCommandLine
+        bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator);
+
+        //! Register help
+        static void registerHelp()
+        {
+            if (BlackMisc::CSimpleCommandParser::registered("BlackCore::Fsd::CFSDClient")) { return; }
+            BlackMisc::CSimpleCommandParser::registerCommand({".fsd range distance", "FSD max. range"});
+        }
 
     signals:
         //! Online ATC stations were changed
@@ -271,20 +288,24 @@ namespace BlackCore
         BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< settings
         QQueue<BlackMisc::Aviation::CCallsign> m_queryAtis;  //!< query the ATIS
         QQueue<BlackMisc::Aviation::CCallsign> m_queryPilot; //!< query the pilot data
-        Fsd::CFSDClient   *m_fsdClient = nullptr;  //!< corresponding network interface
-        CAirspaceAnalyzer *m_analyzer  = nullptr;  //!< owned analyzer
-        bool m_bookingsRequested       = false;    //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
-        QTimer m_processTimer;
+        Fsd::CFSDClient   *m_fsdClient = nullptr;            //!< corresponding network interface
+        CAirspaceAnalyzer *m_analyzer  = nullptr;            //!< owned analyzer
+        bool m_bookingsRequested       = false;              //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
+        int m_maxDistanceNM = 125;                           //!< position range / FSD range
+        int m_maxDistanceNMHysteresis = qRound(1.1 * m_maxDistanceNM);
+
+        // Processing interval
         static constexpr int ProcessIntervalMs = 50; // in ms
+        QTimer m_processTimer;
+
+        //! Processing by timer
+        void process();
 
         // model matching times
         static constexpr qint64 MMCheckAgainMs      = 2000;
         static constexpr qint64 MMMaxAgeMs          = MMCheckAgainMs * 3;
         static constexpr qint64 MMMaxAgeThresholdMs = MMCheckAgainMs * 10;
         static constexpr qint64 MMVerifyMs          = MMCheckAgainMs * 12;
-
-        //! Processing by timer
-        void process();
 
         //! Remove ATC online stations
         void removeAllOnlineAtcStations();
@@ -356,8 +377,8 @@ namespace BlackCore
         //! Update booked station by callsign
         int updateBookedStation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true, bool sendSignal = true);
 
-        //! Co-pilot detected
-        void copilotDetected();
+        //! Handle max.range
+        bool handleMaxRange(const BlackMisc::Aviation::CAircraftSituation &situation);
 
         //! Call CAirspaceMonitor::onCustomFSInnPacketReceived with stored packet
         bool recallFsInnPacket(const BlackMisc::Aviation::CCallsign &callsign);
