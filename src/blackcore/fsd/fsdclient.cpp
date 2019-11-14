@@ -100,7 +100,11 @@ namespace BlackCore
             m_interimPositionUpdateTimer.setObjectName(this->objectName().append(":m_interimPositionUpdateTimer"));
             connect(&m_interimPositionUpdateTimer, &QTimer::timeout, this, &CFSDClient::sendInterimPilotDataUpdate);
 
+            m_scheduledConfigUpdate.setObjectName(this->objectName().append(":m_scheduledConfigUpdate"));
             connect(&m_scheduledConfigUpdate, &QTimer::timeout, this, &CFSDClient::sendIncrementalAircraftConfig);
+
+            m_fsdSendMessageTimer.setObjectName(this->objectName().append(":m_fsdSendMessageTimer"));
+            connect(&m_fsdSendMessageTimer, &QTimer::timeout, this, &CFSDClient::sendQueuedMessage);
 
             fsdMessageSettingsChanged();
 
@@ -624,6 +628,55 @@ namespace BlackCore
             if (aircraftConfigJson.size() == 0) { return; }
             const ClientQuery clientQuery(m_ownCallsign.asString(), receiver, ClientQueryType::AircraftConfig, { aircraftConfigJson });
             sendMessage(clientQuery);
+        }
+
+        /* Send FSD message
+        template <class T>
+        void sendMessage(const T &message)
+        {
+            if (!message.isValid()) return;
+
+            const QString payload = message.toTokens().join(':');
+            const QString line    = message.pdu() + payload;
+            const QString buffer  = line + "\r\n";
+            const QByteArray bufferEncoded = m_fsdTextCodec->fromUnicode(buffer);
+            emitRawFsdMessage(buffer.trimmed(), true);
+            if (m_printToConsole) { qDebug() << "FSD Sent=>" << bufferEncoded; }
+            if (!m_unitTestMode)  { m_socket.write(bufferEncoded); }
+        }
+        */
+
+        void CFSDClient::sendMessageString(const QString &message)
+        {
+            if (message.isEmpty()) { return; }
+            const QByteArray bufferEncoded = m_fsdTextCodec->fromUnicode(message);
+            if (m_printToConsole) { qDebug() << "FSD Sent=>" << bufferEncoded; }
+            if (!m_unitTestMode)  { m_socket.write(bufferEncoded); }
+
+            // remove CR/LF and emit
+            emitRawFsdMessage(message.trimmed(), true);
+        }
+
+        void CFSDClient::sendQueuedMessage()
+        {
+            if (m_queuedFsdMessages.isEmpty()) { return; }
+            const int s = m_queuedFsdMessages.size();
+            this->sendMessageString(m_queuedFsdMessages.dequeue());
+
+            // send up to 3 at once
+            if (s > 20) { this->sendMessageString(m_queuedFsdMessages.dequeue()); }
+            if (s > 30) { this->sendMessageString(m_queuedFsdMessages.dequeue()); }
+
+            // overload
+            // no idea, if we ever get here
+            if (s > 50)
+            {
+                for (int i = 0; i < 45; i++)
+                {
+                    this->sendMessageString(m_queuedFsdMessages.dequeue());
+                }
+                CLogMessage(this).warning(u"Too many queued messages, send them (almost) all!");
+            }
         }
 
         void CFSDClient::sendFsdMessage(const QString &message)
@@ -1476,6 +1529,7 @@ namespace BlackCore
             m_pendingAtisQueries.clear();
             m_lastPositionUpdate.clear();
             m_lastOffsetTimes.clear();
+            m_queuedFsdMessages.clear();
             m_sentAircraftConfig = CAircraftParts::null();
             m_loginSince = -1;
         }
@@ -1827,6 +1881,8 @@ namespace BlackCore
         {
             m_positionUpdateTimer.start(c_updatePostionIntervalMsec);
             m_scheduledConfigUpdate.start(c_processingIntervalMsec);
+            m_fsdSendMessageTimer.start(c_sendFsdMsgIntervalMsec);
+            m_queuedFsdMessages.clear(); // clear everything before the timer is started
 
             // interim positions
             if (this->isInterimPositionSendingEnabledForServer()) { m_interimPositionUpdateTimer.start(c_updateInterimPostionIntervalMsec); }
@@ -1838,6 +1894,7 @@ namespace BlackCore
             m_positionUpdateTimer.stop();
             m_interimPositionUpdateTimer.stop();
             m_scheduledConfigUpdate.stop();
+            m_fsdSendMessageTimer.stop();
         }
 
         void CFSDClient::updateAtisMap(const QString &callsign, AtisLineType type, const QString &line)

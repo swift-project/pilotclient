@@ -16,19 +16,19 @@
 #include "blackcore/fsd/enums.h"
 #include "blackcore/fsd/messagebase.h"
 
+#include "blackmisc/simulation/ownaircraftprovider.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
+#include "blackmisc/simulation/simulationenvironmentprovider.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/digestsignal.h"
 #include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/network/loginmode.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/ecosystemprovider.h"
 #include "blackmisc/network/clientprovider.h"
 #include "blackmisc/network/textmessagelist.h"
-#include "blackmisc/simulation/ownaircraftprovider.h"
-#include "blackmisc/simulation/remoteaircraftprovider.h"
-#include "blackmisc/simulation/simulationenvironmentprovider.h"
+#include "blackmisc/digestsignal.h"
 #include "blackmisc/tokenbucket.h"
 
 #include "vatsim/vatsimauth.h"
@@ -41,6 +41,7 @@
 #include <QCommandLineOption>
 #include <QTimer>
 #include <QTextCodec>
+#include <QQueue>
 
 //! Protocol version @{
 #define PROTOCOL_REVISION_CLASSIC   9
@@ -179,7 +180,7 @@ namespace BlackCore
         signals:
             //! Client responses received @{
             void atcDataUpdateReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq,
-                                       const BlackMisc::Geo::CCoordinateGeodetic &pos, const BlackMisc::PhysicalQuantities::CLength &range);
+                                       const BlackMisc::Geo::CCoordinateGeodetic &pos, const BlackMisc::PhysicalQuantities::CLength    &range);
             void deleteAtcReceived(const QString &cid);
             void deletePilotReceived(const QString &cid);
             void pilotDataUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
@@ -240,27 +241,24 @@ namespace BlackCore
             void sendPlaneInformationFsinn(const BlackMisc::Aviation::CCallsign &callsign);
             void sendCustomPilotPacket(const QString &receiver, const QString &subType, const std::vector<QString> &payload);
             void sendAircraftConfiguration(const QString &receiver, const QString &aircraftConfigJson);
+            //
+            void sendMessageString(const QString &message);
+            void sendQueuedMessage();
             //! @}
+
+            //! Message send to FSD
+            template <class T>
+            void sendMessage(const T &message)
+            {
+                if (!message.isValid()) { return; }
+                m_queuedFsdMessages.enqueue(messageToFSDString(message));
+                // this->sendMessageString(messageToFSDString(message));
+            }
 
             //! Unit test/debug functions @{
             void sendFsdMessage(const QString &message);
             void setUnitTestMode(bool on) { m_unitTestMode = on; }
             //! @}
-
-            //! Send FSD message
-            template <class T>
-            void sendMessage(const T &message)
-            {
-                if (!message.isValid()) return;
-
-                const QString payload = message.toTokens().join(':');
-                const QString line    = message.pdu() + payload;
-                const QString buffer  = line + "\r\n";
-                const QByteArray bufferEncoded = m_fsdTextCodec->fromUnicode(buffer);
-                emitRawFsdMessage(buffer.trimmed(), true);
-                if (m_printToConsole) { qDebug() << "FSD Sent=>" << bufferEncoded; }
-                if (!m_unitTestMode)  { m_socket.write(bufferEncoded); }
-            }
 
             //! Default model string
             static const QString &defaultModelString()
@@ -465,6 +463,7 @@ namespace BlackCore
             QTimer m_scheduledConfigUpdate;
             QTimer m_positionUpdateTimer;        //!< sending positions
             QTimer m_interimPositionUpdateTimer; //!< sending interim positions
+            QTimer m_fsdSendMessageTimer;        //!< FSD message sending
 
             qint64 m_additionalOffsetTime = 0;   //!< additional offset time
 
@@ -482,7 +481,8 @@ namespace BlackCore
             bool m_sendLiveryString = true;
             bool m_sendMModelString = true;
 
-            QTextCodec *m_fsdTextCodec = nullptr;
+            QTextCodec     *m_fsdTextCodec = nullptr;
+            QQueue<QString> m_queuedFsdMessages;
 
             //! An illegal FSD state has been detected
             void handleIllegalFsdState(const QString &message);
@@ -491,6 +491,7 @@ namespace BlackCore
             static int constexpr c_processingIntervalMsec           = 100;  //!< interval for the processing timer
             static int constexpr c_updatePostionIntervalMsec        = 5000; //!< interval for the position update timer (send our position to network)
             static int constexpr c_updateInterimPostionIntervalMsec = 1000; //!< interval for iterim position updates (send our position as interim position)
+            static int constexpr c_sendFsdMsgIntervalMsec           = 10;   //!< interval for FSD send messages
         };
     } // ns
 } // ns
