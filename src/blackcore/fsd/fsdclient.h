@@ -248,11 +248,23 @@ namespace BlackCore
 
             //! Message send to FSD
             template <class T>
-            void sendMessage(const T &message)
+            void sendQueudedMessage(const T &message)
             {
                 if (!message.isValid()) { return; }
+                if (m_unitTestMode)
+                {
+                    this->sendDirectMessage(message);
+                    return;
+                }
                 m_queuedFsdMessages.enqueue(messageToFSDString(message));
-                // this->sendMessageString(messageToFSDString(message));
+            }
+
+            //! Message send to FSD
+            template <class T>
+            void sendDirectMessage(const T &message)
+            {
+                if (!message.isValid()) { return; }
+                this->sendMessageString(messageToFSDString(message));
             }
 
             //! Unit test/debug functions @{

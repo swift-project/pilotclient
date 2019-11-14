@@ -348,8 +348,8 @@ namespace BlackFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 5);
-        /*QCOMPARE(arguments.at(0).toString(), "DLH123");
-        QCOMPARE(arguments.at(1).toString(), "Jon Doe");*/
+        // QCOMPARE(arguments.at(0).toString(), "DLH123");
+        // QCOMPARE(arguments.at(1).toString(), "Jon Doe");
     }
 
     void CTestFSDClient::testPlaneInformationFsinn()
@@ -360,8 +360,8 @@ namespace BlackFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 5);
-//        QCOMPARE(arguments.at(0).toString(), "DLH123");
-//        QCOMPARE(arguments.at(1).toString(), "Jon Doe");
+        // QCOMPARE(arguments.at(0).toString(), "DLH123");
+        // QCOMPARE(arguments.at(1).toString(), "Jon Doe");
     }
 
     void CTestFSDClient::testSendPilotLogin()
