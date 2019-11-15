@@ -32,6 +32,7 @@ namespace BlackSound
         {
             if (!m_playingEffect && effect->isLoaded() && !effect->isPlaying())
             {
+                const int currentEffect = ++m_playingEffectCounter;
                 const qreal v = volume / 100.0f;
                 m_playingEffect = effect;
                 effect->setVolume(v); // 0..1
@@ -48,6 +49,7 @@ namespace BlackSound
                 QTimer::singleShot(3000, effect, [ = ]
                 {
                     if (!myself || !m_playingEffect) { return; }
+                    if (currentEffect != m_playingEffectCounter) { return; }
                     m_playingEffect->stop();
                 });
             }

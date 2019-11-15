@@ -43,6 +43,7 @@ namespace BlackSound
         QHash<BlackMisc::Audio::CNotificationSounds::NotificationFlag, QSoundEffect *> m_effects;
         QString m_directory;
         QPointer<QSoundEffect> m_playingEffect;
+        int m_playingEffectCounter = 0;
 
         //! Playing of effect has been changed
         void onPlayingChanged();
