@@ -149,7 +149,7 @@ namespace BlackMisc
 
     bool CSimpleCommandParser::registered(const QString &helpContext)
     {
-        if (s_registered.contains(helpContext)) { return true; };
+        if (s_registered.contains(helpContext)) { return true; }
         s_registered.insert(helpContext);
         return false;
     }

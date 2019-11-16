@@ -26,6 +26,12 @@ namespace BlackGui
             CLineEditHistory(parent),
             CIdentifiable(this)
         {
+            if (!CSimpleCommandParser::registered("BlackGui::Components::CCommandInput"))
+            {
+                CSimpleCommandParser::registerCommand({".tooltip", "toggle dot command tooltip"});
+                CSimpleCommandParser::registerCommand({".help", "show help"});
+            }
+
             if (this->placeholderText().isEmpty())
             {
                 this->setPlaceholderText(".dot commands");
@@ -91,7 +97,7 @@ namespace BlackGui
 
         void CCommandInput::onSimulatorPluginChanged(const CSimulatorPluginInfo &info)
         {
-            Q_UNUSED(info);
+            Q_UNUSED(info)
 
             // different simulators have different commands
             m_dsCommandTooltip.inputSignal();
@@ -99,7 +105,7 @@ namespace BlackGui
 
         void CCommandInput::onConnectedServerChanged(const Network::CServer &server)
         {
-            Q_UNUSED(server);
+            Q_UNUSED(server)
 
             // commands of network
             m_dsCommandTooltip.inputSignal();
