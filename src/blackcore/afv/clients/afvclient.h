@@ -164,6 +164,13 @@ namespace BlackCore
                 QSet<quint16> getEnabledTransceivers() const;
                 //! @}
 
+                //! Aliased stations enabled?
+                //! \threadsafe
+                //! @{
+                bool isAliasedStationsEnabled() const    { return m_enableAliased; }
+                void enableAliasedStations(bool enabled) { m_enableAliased = enabled; }
+                //! @}
+
                 //! Update frequency
                 //! \threadsafe
                 //! @{
@@ -345,10 +352,11 @@ namespace BlackCore
                 static const QVector<quint16> &allTransceiverIds() { static const QVector<quint16> transceiverIds{0, 1}; return transceiverIds; }
 
                 std::atomic_int  m_connectMismatches { 0 };
-                std::atomic_bool m_isStarted  { false };
-                std::atomic_bool m_loopbackOn { false };
-                std::atomic_bool m_winCoInitialized  { false }; //!< Windows only CoInitializeEx
-                std::atomic_bool m_integratedComUnit { false };   //!< is COM unit sychronized, integrated
+                std::atomic_bool m_isStarted     { false };
+                std::atomic_bool m_loopbackOn    { false };
+                std::atomic_bool m_enableAliased { true  };
+                std::atomic_bool m_winCoInitialized   { false }; //!< Windows only CoInitializeEx
+                std::atomic_bool m_integratedComUnit  { false }; //!< is COM unit sychronized, integrated?
 
                 QDateTime m_startDateTimeUtc;
 

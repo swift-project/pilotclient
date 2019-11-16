@@ -17,6 +17,7 @@
 #include "blackcore/context/contextaudioproxy.h"
 #include "blackmisc/simplecommandparser.h"
 #include "blackmisc/dbusserver.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/icons.h"
 #include "blackconfig/buildconfig.h"
@@ -90,7 +91,8 @@ namespace BlackCore
             {
                 ".vol", ".volume",    // output volume
                 ".mute",              // mute
-                ".unmute"             // unmute
+                ".unmute",            // unmute
+                ".aliased"
             });
             parser.parse(commandLine);
             if (!parser.isKnownCommand()) { return false; }
@@ -107,8 +109,17 @@ namespace BlackCore
             }
             else if (parser.commandStartsWith("vol") && parser.countParts() > 1)
             {
-                int v = parser.toInt(1);
+                const int v = parser.toInt(1);
                 this->setVoiceOutputVolume(v);
+                return true;
+            }
+            else if (afvClient() && parser.matchesCommand(".aliased") && parser.countParts() > 1)
+            {
+                const bool enable = parser.toBool(1, true);
+                afvClient()->enableAliasedStations(enable);
+
+                CLogMessage(this).info(u"Aliased stations are: %1") << boolToOnOff(enable);
+                return true;
             }
             return false;
         }
@@ -117,6 +128,8 @@ namespace BlackCore
             IContextAudio(mode, runtime),
             CIdentifiable(this)
         {
+            CContextAudioBase::registerHelp();
+
             if (CContextAudioBase::isNoAudioSet())
             {
                 CLogMessage(this).info(u"Voice client disabled");

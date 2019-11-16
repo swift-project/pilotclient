@@ -33,6 +33,7 @@
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/input/actionhotkeydefs.h"
 #include "blackmisc/genericdbusinterface.h"
+#include "blackmisc/simplecommandparser.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/identifier.h"
 
@@ -226,6 +227,16 @@ namespace BlackCore
             //! No audio?
             static bool isNoAudioSet();
 
+            //! Register the commands
+            static void registerHelp()
+            {
+                if (BlackMisc::CSimpleCommandParser::registered("BlackCore::Context::CContextAudioBase")) { return; }
+                BlackMisc::CSimpleCommandParser::registerCommand({".mute", "mute audio"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".unmute", "unmute audio"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".vol volume", "volume 0..100"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".aliased on|off", "aliased HF frequencies"});
+            }
+
             // -------- parts which can run in core and GUI, referring to local voice client ------------
 
         public slots:
@@ -238,12 +249,12 @@ namespace BlackCore
             //! .mute                          mute             BlackCore::Context::CContextAudioBase
             //! .unmute                        unmute           BlackCore::Context::CContextAudioBase
             //! .vol .volume   volume 0..100   set volume       BlackCore::Context::CContextAudioBase
+            //! .aliased on|off                aliased stations BlackCore::Context::CContextAudioBase
             //! </pre>
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
             //! \endcond
 
             // ------------- DBus ---------------
-
 
             // ------------ local signals -------
         signals:
