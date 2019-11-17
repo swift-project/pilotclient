@@ -428,7 +428,6 @@ namespace BlackCore
             SimType     m_simType     = SimType::Unknown;
             PilotRating m_pilotRating = PilotRating::Unknown;
             AtcRating   m_atcRating   = AtcRating::Unknown;
-            QString     m_com1Frequency;
 
             // Parser
             QHash<QString, MessageType> m_messageTypeMapping;

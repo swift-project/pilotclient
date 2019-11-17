@@ -630,22 +630,6 @@ namespace BlackCore
             sendQueudedMessage(clientQuery);
         }
 
-        /* Send FSD message
-        template <class T>
-        void sendMessage(const T &message)
-        {
-            if (!message.isValid()) return;
-
-            const QString payload = message.toTokens().join(':');
-            const QString line    = message.pdu() + payload;
-            const QString buffer  = line + "\r\n";
-            const QByteArray bufferEncoded = m_fsdTextCodec->fromUnicode(buffer);
-            emitRawFsdMessage(buffer.trimmed(), true);
-            if (m_printToConsole) { qDebug() << "FSD Sent=>" << bufferEncoded; }
-            if (!m_unitTestMode)  { m_socket.write(bufferEncoded); }
-        }
-        */
-
         void CFSDClient::sendMessageString(const QString &message)
         {
             if (message.isEmpty()) { return; }
