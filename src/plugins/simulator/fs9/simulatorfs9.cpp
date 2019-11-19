@@ -182,7 +182,7 @@ namespace BlackSimPlugin
             client->start();
 
             m_hashFs9Clients.insert(callsign, client);
-            bool updated = updateAircraftRendered(callsign, rendered);
+            const bool updated = updateAircraftRendered(callsign, rendered);
             CSimulatedAircraft remoteAircraftCopy(newRemoteAircraft);
             remoteAircraftCopy.setRendered(rendered);
             if (updated)
@@ -303,7 +303,7 @@ namespace BlackSimPlugin
             CFs9Client *client = m_hashFs9Clients[callsign].data();
             if (!client) { return false; }
 
-            Q_UNUSED(parts);
+            Q_UNUSED(parts)
             int u = 0;
             if (situation.isNull())
             {

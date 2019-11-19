@@ -190,7 +190,7 @@ namespace BlackSimPlugin
 
         void CFs9Client::timerEvent(QTimerEvent *event)
         {
-            Q_UNUSED(event);
+            Q_UNUSED(event)
 
             sendMultiplayerPosition();
             sendMultiplayerParamaters();
@@ -199,10 +199,9 @@ namespace BlackSimPlugin
         HRESULT CFs9Client::enumDirectPlayHosts()
         {
             HRESULT hr = s_ok();
-
             if (isFailure(hr = createHostAddress()))
             {
-                qWarning() << "isFailure to create host address!";
+                CLogMessage(this).warning(u"FS9Client isFailure to create host address!");
                 return hr;
             }
 
