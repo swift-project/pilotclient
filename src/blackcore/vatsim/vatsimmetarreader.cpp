@@ -140,8 +140,7 @@ namespace BlackCore
                     else { invalidLines++; }
                 }
 
-                static const QString ms("METAR statistic: %1 Metars (invalid %2)");
-                CLogMessage(this).debug() << ms.arg(metars.size()).arg(invalidLines);
+                CLogMessage(this).info(u"METARs: %1 Metars (invalid %2) from '%3'" )<< metars.size() << invalidLines << metarUrl;
                 {
                     QWriteLocker l(&m_lock);
                     m_metars = metars;

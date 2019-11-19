@@ -679,7 +679,7 @@ namespace BlackCore
             }
         }
 
-        void CContextNetwork::updateMetars(const BlackMisc::Weather::CMetarList &metars)
+        void CContextNetwork::updateMetars(const CMetarList &metars)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             CLogMessage(this).info(u"%1 METARs updated") << metars.size();
