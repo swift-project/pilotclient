@@ -78,7 +78,7 @@ namespace BlackCore
         CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider      *ownAircraft,
                          BlackMisc::Simulation::IAircraftModelSetProvider *modelSetProvider,
                          Fsd::CFSDClient *fsdClient,
-                         QObject  *parent);
+                         QObject         *parent);
 
         //! Members not implenented or fully implenented by CRemoteAircraftProvider
         //! \ingroup remoteaircraftprovider

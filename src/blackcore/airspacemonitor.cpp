@@ -75,7 +75,7 @@ namespace BlackCore
         this->setObjectName("CAirspaceMonitor");
         this->enableReverseLookupMessages(sApp->isDeveloperFlagSet() || CBuildConfig::isLocalDeveloperDebugBuild() ? RevLogEnabled : RevLogEnabledSimplified);
 
-        // FSD TODO
+        // FSD runs in its own thread!
         connect(m_fsdClient, &CFSDClient::atcDataUpdateReceived,           this, &CAirspaceMonitor::onAtcPositionUpdate);
         connect(m_fsdClient, &CFSDClient::atisReplyReceived,               this, &CAirspaceMonitor::onAtisReceived);
         connect(m_fsdClient, &CFSDClient::atisLogoffTimeReplyReceived,     this, &CAirspaceMonitor::onAtisLogoffTimeReceived);

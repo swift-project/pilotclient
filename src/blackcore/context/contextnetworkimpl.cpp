@@ -69,12 +69,17 @@ namespace BlackCore
             CContextNetwork::registerHelp();
 
             // 1. Init by "network driver"
-            m_fsdClient = new CFSDClient(this, this->getRuntime()->getCContextOwnAircraft(), this, this);
-            connect(m_fsdClient, &CFSDClient::connectionStatusChanged, this, &CContextNetwork::onFsdConnectionStatusChanged);
-            connect(m_fsdClient, &CFSDClient::killRequestReceived,     this, &CContextNetwork::kicked);
-            connect(m_fsdClient, &CFSDClient::textMessagesReceived,    this, &CContextNetwork::textMessagesReceived);
-            connect(m_fsdClient, &CFSDClient::textMessageSent,         this, &CContextNetwork::textMessageSent);
-            connect(m_fsdClient, &CFSDClient::severeNetworkError,      this, &CContextNetwork::severeNetworkError);
+            m_fsdClient = new CFSDClient(
+                this,  // client provider
+                this->getRuntime()->getCContextOwnAircraft(), // own aircraft provider
+                this,  // remote aircraft provider
+                this); // thread owner
+            m_fsdClient->start(); // FSD thread
+            connect(m_fsdClient, &CFSDClient::connectionStatusChanged, this, &CContextNetwork::onFsdConnectionStatusChanged, Qt::QueuedConnection);
+            connect(m_fsdClient, &CFSDClient::killRequestReceived,     this, &CContextNetwork::kicked, Qt::QueuedConnection);
+            connect(m_fsdClient, &CFSDClient::textMessagesReceived,    this, &CContextNetwork::textMessagesReceived, Qt::QueuedConnection);
+            connect(m_fsdClient, &CFSDClient::textMessageSent,         this, &CContextNetwork::textMessageSent, Qt::QueuedConnection);
+            connect(m_fsdClient, &CFSDClient::severeNetworkError,      this, &CContextNetwork::severeNetworkError, Qt::QueuedConnection);
 
             // 2. Update timer for data (network data such as frequency)
             // we use 2 timers so we can query at different times (not too many queirs at once)
@@ -107,7 +112,7 @@ namespace BlackCore
             connect(m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked, Qt::QueuedConnection);
             connect(m_airspace, &CAirspaceMonitor::changedAircraftInRange,   this, &CContextNetwork::changedAircraftInRange,   Qt::QueuedConnection);
             connect(m_airspace, &CAirspaceMonitor::removedAircraft,          this, &IContextNetwork::removedAircraft,          Qt::QueuedConnection); // DBus
-            connect(m_airspace, &CAirspaceMonitor::readyForModelMatching,    this, &CContextNetwork::onReadyForModelMatching);
+            connect(m_airspace, &CAirspaceMonitor::readyForModelMatching,    this, &CContextNetwork::onReadyForModelMatching); // intentionally NOT QueuedConnection
             connect(m_airspace, &CAirspaceMonitor::addedAircraft,            this, &CContextNetwork::addedAircraft,            Qt::QueuedConnection);
             connect(m_airspace, &CAirspaceMonitor::changedAtisReceived,      this, &CContextNetwork::onChangedAtisReceived,    Qt::QueuedConnection);
         }
@@ -121,7 +126,7 @@ namespace BlackCore
 
         void CContextNetwork::setSimulationEnvironmentProvider(ISimulationEnvironmentProvider *provider)
         {
-            if (m_airspace) { m_airspace->setSimulationEnvironmentProvider(provider); }
+            if (m_airspace)  { m_airspace->setSimulationEnvironmentProvider(provider);  }
             if (m_fsdClient) { m_fsdClient->setSimulationEnvironmentProvider(provider); }
         }
 
@@ -217,8 +222,12 @@ namespace BlackCore
         {
             this->disconnect(); // all signals
             if (this->isConnected()) { this->disconnectFromNetwork(); }
-            if (m_fsdClient)  { m_fsdClient->setClientProvider(nullptr); }
-            if (m_airspace) { m_airspace->gracefulShutdown(); }
+            if (m_airspace)  { m_airspace->gracefulShutdown(); }
+            if (m_fsdClient)
+            {
+                m_fsdClient->gracefulShutdown();
+                m_fsdClient->setClientProvider(nullptr);
+            }
         }
 
         CStatusMessage CContextNetwork::connectToNetwork(const CServer &server, const QString &extraLiveryString, bool sendLivery, const QString &extraModelString, bool sendModelString, const CCallsign &partnerCallsign, CLoginMode mode)
