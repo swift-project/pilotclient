@@ -28,6 +28,7 @@
 #include "blackmisc/network/ecosystemprovider.h"
 #include "blackmisc/network/clientprovider.h"
 #include "blackmisc/network/textmessagelist.h"
+#include "blackmisc/worker.h"
 #include "blackmisc/digestsignal.h"
 #include "blackmisc/tokenbucket.h"
 
@@ -41,7 +42,10 @@
 #include <QCommandLineOption>
 #include <QTimer>
 #include <QTextCodec>
+#include <QReadWriteLock>
 #include <QQueue>
+
+#include <atomic>
 
 //! Protocol version @{
 #define PROTOCOL_REVISION_CLASSIC   9
@@ -67,7 +71,7 @@ namespace BlackCore
         //! Todo: Send (interim) data updates automatically
         //! Todo Check ':' in FSD messages. Disconnect if there is a wrong one
         class BLACKCORE_EXPORT CFSDClient :
-            public QObject,
+            public BlackMisc::CContinuousWorker,
             public BlackMisc::Network::IEcosystemProvider,            // provide info about used ecosystem
             public BlackMisc::Network::CClientAware,                  // network can set client information
             public BlackMisc::Simulation::COwnAircraftAware,          // network vatlib consumes own aircraft data and sets ICAO/callsign data
@@ -79,43 +83,44 @@ namespace BlackCore
 
         public:
             //! Ctor
-            CFSDClient(BlackMisc::Network::IClientProvider *clientProvider,
-                       BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+            CFSDClient(BlackMisc::Network::IClientProvider            *clientProvider,
+                       BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
                        BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                       QObject *parent = nullptr);
+                       QObject *owner = nullptr);
 
             //! Preset functions
             //! \remark Necessary functions to setup client. Set them all!
+            //! \threadsafe
             //! @{
-            void setClientName(const QString &clientName) { m_clientName = clientName; }
-            void setHostApplication(const QString &hostApplication) { m_hostApplication = hostApplication; }
-            void setVersion(int major, int minor) { m_versionMajor = major; m_versionMinor = minor; }
+            void setClientName(const QString &clientName) { QWriteLocker l(&m_lockUserClientBuffered); m_clientName = clientName; }
+            void setHostApplication(const QString &hostApplication) { QWriteLocker l(&m_lockUserClientBuffered); m_hostApplication = hostApplication; }
+            void setVersion(int major, int minor) { QWriteLocker l(&m_lockUserClientBuffered); m_versionMajor = major; m_versionMinor = minor; }
             void setClientIdAndKey(quint16 id, const QByteArray &key);
-            void setClientCapabilities(Capabilities capabilities) { m_capabilities = capabilities; }
+            void setClientCapabilities(Capabilities capabilities) { QWriteLocker l(&m_lockUserClientBuffered); m_capabilities = capabilities; }
             void setServer(const BlackMisc::Network::CServer &server);
             void setSimulatorInfo(const BlackMisc::Simulation::CSimulatorPluginInfo &simInfo);
-            void setLoginMode(const BlackMisc::Network::CLoginMode &mode) { m_loginMode = mode; }
+            void setLoginMode(const BlackMisc::Network::CLoginMode &mode) { QWriteLocker l(&m_lockUserClientBuffered); m_loginMode = mode; }
             void setCallsign(const BlackMisc::Aviation::CCallsign &callsign);
-            void setPartnerCallsign(const BlackMisc::Aviation::CCallsign &callsign) { m_partnerCallsign = callsign; }
+            void setPartnerCallsign(const BlackMisc::Aviation::CCallsign &callsign) { QWriteLocker l(&m_lockUserClientBuffered); m_partnerCallsign = callsign; }
             void setIcaoCodes(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
             void setLiveryAndModelString(const QString &livery, bool sendLiveryString, const QString &modelString, bool sendModelString);
-            void setSimType(SimType type) { m_simType = type; }
+            void setSimType(SimType type) { QWriteLocker l(&m_lockUserClientBuffered); m_simType = type; }
             void setSimType(const BlackMisc::Simulation::CSimulatorPluginInfo &simInfo);
-            void setPilotRating(PilotRating rating) { m_pilotRating = rating; }
-            void setAtcRating(AtcRating rating) { m_atcRating = rating; }
+            void setPilotRating(PilotRating rating) { QWriteLocker l(&m_lockUserClientBuffered); m_pilotRating = rating; }
+            void setAtcRating(AtcRating rating)     { QWriteLocker l(&m_lockUserClientBuffered); m_atcRating = rating; }
             //! @}
 
             //! Get the server
-            const BlackMisc::Network::CServer &getServer() const { return m_server; }
+            const BlackMisc::Network::CServer &getServer() const { QReadLocker l(&m_lockUserClientBuffered); return m_server; }
 
             //! List of all preset values
             QStringList getPresetValues() const;
 
             //! Callsign
-            BlackMisc::Aviation::CCallsign getPresetPartnerCallsign() const { return m_partnerCallsign; }
+            BlackMisc::Aviation::CCallsign getPresetPartnerCallsign() const { QReadLocker l(&m_lockUserClientBuffered); return m_partnerCallsign; }
 
             //! Mode
-            BlackMisc::Network::CLoginMode getLoginMode() const;
+            BlackMisc::Network::CLoginMode getLoginMode() const { QReadLocker l(&m_lockUserClientBuffered); return m_loginMode; }
 
             //! Connenct/disconnect @{
             void connectToServer();
@@ -153,19 +158,15 @@ namespace BlackCore
             //! @}
 
             //! Connection status @{
-            BlackMisc::Network::CConnectionStatus getConnectionStatus() const { return m_connectionStatus; }
-            bool isConnected() const { return m_connectionStatus.isConnected(); }
-            bool isPendingConnection() const { return m_connectionStatus.isConnecting() || m_connectionStatus.isDisconnecting(); }
+            BlackMisc::Network::CConnectionStatus getConnectionStatus() const { QReadLocker l(&m_lockConnectionStatus); return m_connectionStatus; }
+            bool isConnected()    const { return this->getConnectionStatus().isConnected(); }
+            bool isDisconnected() const { return this->getConnectionStatus().isDisconnected(); }
+            bool isPendingConnection() const;
             //! @}
 
             //! Statistics enable functions @{
             bool setStatisticsEnable(bool enabled) { m_statistics = enabled; return enabled; }
             bool isStatisticsEnabled() const { return m_statistics; }
-            //! @}
-
-            //! Increase the statistics value for given identifier @{
-            int increaseStatisticsValue(const QString &identifier, const QString &appendix = {});
-            int increaseStatisticsValue(const QString &identifier, int value);
             //! @}
 
             //! Clear the statistics
@@ -176,6 +177,9 @@ namespace BlackCore
 
             //! Debugging and UNIT tests
             void printToConsole(bool on)  { m_printToConsole = on; }
+
+            //! Gracefully shut down FSD client
+            void gracefulShutdown();
 
         signals:
             //! Client responses received @{
@@ -244,6 +248,11 @@ namespace BlackCore
             //
             void sendMessageString(const QString &message);
             void sendQueuedMessage();
+            //! @}
+
+            //! Increase the statistics value for given identifier @{
+            int increaseStatisticsValue(const QString &identifier, const QString &appendix = {});
+            int increaseStatisticsValue(const QString &identifier, int value);
             //! @}
 
             //! Message send to FSD
@@ -407,37 +416,23 @@ namespace BlackCore
             //! String withou colons
             static QString noColons(const QString &input);
 
-            // Client data
-            QString m_clientName;
-            QString m_hostApplication;
-            int m_versionMajor     = 0;
-            int m_versionMinor     = 0;
-            int m_protocolRevision = 0;
-            ServerType m_serverType = ServerType::LegacyFsd;
-            Capabilities m_capabilities = Capabilities::None;
-
-            vatsim_auth *clientAuth = nullptr;
-            vatsim_auth *serverAuth = nullptr;
+            vatsim_auth *m_clientAuth = nullptr;
+            vatsim_auth *m_serverAuth = nullptr;
             QString      m_lastServerAuthChallenge;
             qint64       m_loginSince = -1; //!< when login was triggered
             static constexpr qint64 PendingConnectionTimeoutMs = 7500;
 
-            // User data
-            BlackMisc::Network::CServer    m_server;
-            BlackMisc::Network::CLoginMode m_loginMode;
-            SimType     m_simType     = SimType::Unknown;
-            PilotRating m_pilotRating = PilotRating::Unknown;
-            AtcRating   m_atcRating   = AtcRating::Unknown;
-
             // Parser
             QHash<QString, MessageType> m_messageTypeMapping;
 
-            QTcpSocket m_socket; //!< used TCP socket
+            QTcpSocket m_socket { this }; //!< used TCP socket, parent needed as it runs in worker thread
 
-            bool m_unitTestMode   = false;
-            bool m_printToConsole = false;
+            std::atomic_bool m_unitTestMode   { false };
+            std::atomic_bool m_printToConsole { false };
 
             BlackMisc::Network::CConnectionStatus m_connectionStatus;
+            mutable QReadWriteLock m_lockConnectionStatus { QReadWriteLock::Recursive };
+
             BlackMisc::Aviation::CAircraftParts   m_sentAircraftConfig;        //!< aircraft parts sent
             BlackMisc::CTokenBucket               m_tokenBucket;               //!< used with aircraft parts messages
             BlackMisc::Aviation::CCallsignSet     m_interimPositionReceivers;  //!< all aircraft receiving interim positions
@@ -458,7 +453,7 @@ namespace BlackCore
             //! Pending ATIS query since
             struct PendingAtisQuery
             {
-                QDateTime m_queryTime = QDateTime::currentDateTimeUtc();
+                QDateTime   m_queryTime = QDateTime::currentDateTimeUtc();
                 QStringList m_atisMessage;
             };
 
@@ -468,31 +463,53 @@ namespace BlackCore
 
             BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TRawFsdMessageSetting> m_fsdMessageSetting { this, &CFSDClient::fsdMessageSettingsChanged };
             QFile m_rawFsdMessageLogFile;
-            bool m_rawFsdMessagesEnabled   = false;
-            bool m_filterPasswordFromLogin = false;
+            std::atomic_bool m_rawFsdMessagesEnabled   { false };
+            std::atomic_bool m_filterPasswordFromLogin { false };
 
-            QTimer m_scheduledConfigUpdate;
-            QTimer m_positionUpdateTimer;        //!< sending positions
-            QTimer m_interimPositionUpdateTimer; //!< sending interim positions
-            QTimer m_fsdSendMessageTimer;        //!< FSD message sending
+            // timer parents are needed as we move to thread
+            QTimer m_scheduledConfigUpdate { this };  //!< config updates
+            QTimer m_positionUpdateTimer   { this };  //!< sending positions
+            QTimer m_interimPositionUpdateTimer { this }; //!< sending interim positions
+            QTimer m_fsdSendMessageTimer        { this }; //!< FSD message sending
 
             qint64 m_additionalOffsetTime = 0;   //!< additional offset time
 
-            bool m_statistics = false;
-            QMap <QString, int> m_callStatistics;
-            QVector <QPair<qint64, QString>> m_callByTime;
+            std::atomic_bool m_statistics { false };
+            QMap <QString, int> m_callStatistics;          //!< how many calls?
+            QVector <QPair<qint64, QString>> m_callByTime; //!< "last call vs. ms"
+            mutable QReadWriteLock m_lockStatistics { QReadWriteLock::Recursive }; //!< for user, client and buffered data
 
+            // User data
+            BlackMisc::Network::CServer    m_server;
+            BlackMisc::Network::CLoginMode m_loginMode;
+            QTextCodec  *m_fsdTextCodec = nullptr;
+            SimType      m_simType      = SimType::Unknown;
+            PilotRating  m_pilotRating  = PilotRating::Unknown;
+            AtcRating    m_atcRating    = AtcRating::Unknown;
+
+            // Client data
+            QString m_clientName;
+            QString m_hostApplication;
+            int m_versionMajor     = 0;
+            int m_versionMinor     = 0;
+            int m_protocolRevision = 0;
+            ServerType   m_serverType   = ServerType::LegacyFsd;
+            Capabilities m_capabilities = Capabilities::None;
+
+            // buffered data for FSD
             BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorInfo;        //!< used simulator
             BlackMisc::Aviation::CCallsign              m_ownCallsign;          //!< "buffered callsign", as this must not change when connected
-            BlackMisc::Aviation::CCallsign              m_partnerCallsign;      //!< callsign of partner flying in shared cockpit
+            BlackMisc::Aviation::CCallsign              m_partnerCallsign;      //!< "buffered"callsign", of partner flying in shared cockpit
             BlackMisc::Aviation::CAircraftIcaoCode      m_ownAircraftIcaoCode;  //!< "buffered icao", as this must not change when connected
             BlackMisc::Aviation::CAirlineIcaoCode       m_ownAirlineIcaoCode;   //!< "buffered icao", as this must not change when connected
             QString                                     m_ownLivery;            //!< "buffered livery", as this must not change when connected
             QString                                     m_ownModelString;       //!< "buffered model string", as this must not change when connected
-            bool m_sendLiveryString = true;
-            bool m_sendMModelString = true;
+            std::atomic_bool m_sendLiveryString { true };
+            std::atomic_bool m_sendMModelString { true };
 
-            QTextCodec     *m_fsdTextCodec = nullptr;
+            mutable QReadWriteLock m_lockUserClientBuffered { QReadWriteLock::Recursive }; //!< for user, client and buffered data
+            QString getOwnCallsignAsString() const { QReadLocker l(&m_lockUserClientBuffered); return m_ownCallsign.asString(); }
+
             QQueue<QString> m_queuedFsdMessages;
 
             //! An illegal FSD state has been detected
