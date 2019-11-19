@@ -12,6 +12,8 @@
 #include <QObject>
 #include <QThread>
 #include <QtGlobal>
+#include <QPointer>
+#include <QTimer>
 
 namespace BlackMisc
 {
@@ -86,5 +88,19 @@ namespace BlackMisc
     const QString CThreadUtils::currentThreadInfo()
     {
         return threadInfo(QThread::currentThread());
+    }
+
+    bool CThreadUtils::callInObjectThread(QObject *object, std::function<void()> callFunct)
+    {
+        if (!object) { return false; }
+        if (CThreadUtils::isCurrentThreadObjectThread(object)) {  return false; }
+
+        QPointer<QObject> myself(object);
+        QTimer::singleShot(0, object, [ = ]
+        {
+            if (!myself) { return; }
+            callFunct();
+        });
+        return true;
     }
 } // ns

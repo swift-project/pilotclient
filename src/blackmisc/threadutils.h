@@ -12,7 +12,9 @@
 #define BLACKMISC_CTHREADUTILS_H
 
 #include "blackmisc/blackmiscexport.h"
+
 #include <QThread>
+#include <functional>
 
 namespace BlackMisc
 {
@@ -52,6 +54,9 @@ namespace BlackMisc
 
         //! Info about current thread
         static const QString currentThreadInfo();
+
+        //! Call in object's thread IF not already in object's thread
+        static bool callInObjectThread(QObject *object, std::function<void()> callFunct);
     };
 } // ns
 
