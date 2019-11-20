@@ -109,6 +109,7 @@ namespace BlackMisc
             int c = 0;
             for (CTextMessage &m : *this)
             {
+                // Turn "relay" message into private message
                 if (m.relayedMessageToPrivateMessage()) { c++; }
             }
             return c;

@@ -63,7 +63,7 @@ namespace BlackCore
             {
                 BlackMisc::CLogMessage(static_cast<ServerError *>(nullptr)).debug(u"Wrong number of arguments.");
                 return {};
-            };
+            }
             return ServerError(tokens[0], tokens[1], static_cast<ServerErrorCode>(tokens[2].toInt()), tokens[3], tokens[4]);
         }
     }

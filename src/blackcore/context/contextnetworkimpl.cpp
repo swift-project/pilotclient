@@ -76,10 +76,10 @@ namespace BlackCore
                 this); // thread owner
             m_fsdClient->start(); // FSD thread
             connect(m_fsdClient, &CFSDClient::connectionStatusChanged, this, &CContextNetwork::onFsdConnectionStatusChanged, Qt::QueuedConnection);
-            connect(m_fsdClient, &CFSDClient::killRequestReceived,     this, &CContextNetwork::kicked, Qt::QueuedConnection);
-            connect(m_fsdClient, &CFSDClient::textMessagesReceived,    this, &CContextNetwork::textMessagesReceived, Qt::QueuedConnection);
-            connect(m_fsdClient, &CFSDClient::textMessageSent,         this, &CContextNetwork::textMessageSent, Qt::QueuedConnection);
-            connect(m_fsdClient, &CFSDClient::severeNetworkError,      this, &CContextNetwork::severeNetworkError, Qt::QueuedConnection);
+            connect(m_fsdClient, &CFSDClient::killRequestReceived,     this, &CContextNetwork::kicked,                 Qt::QueuedConnection);
+            connect(m_fsdClient, &CFSDClient::textMessagesReceived,    this, &CContextNetwork::onTextMessagesReceived, Qt::QueuedConnection);
+            connect(m_fsdClient, &CFSDClient::textMessageSent,         this, &CContextNetwork::onTextMessageSent,      Qt::QueuedConnection);
+            connect(m_fsdClient, &CFSDClient::severeNetworkError,      this, &CContextNetwork::severeNetworkError,     Qt::QueuedConnection);
 
             // 2. Update timer for data (network data such as frequency)
             // we use 2 timers so we can query at different times (not too many queirs at once)
@@ -703,7 +703,7 @@ namespace BlackCore
         void CContextNetwork::onTextMessagesReceived(const CTextMessageList &messages)
         {
             const CTextMessageList textMessages = messages.withRelayedToPrivateMessages();
-            emit this->textMessagesReceived(textMessages);
+            emit this->textMessagesReceived(textMessages); // relayed messaged "now look like PMs"
 
             if (textMessages.containsPrivateMessages())
             {
@@ -714,10 +714,9 @@ namespace BlackCore
                 }
 
                 // part to send to partner "forward"
-                if (m_fsdClient && !m_fsdClient->getPresetPartnerCallsign().isEmpty())
+                const CCallsign partnerCallsign = m_fsdClient ? m_fsdClient->getPresetPartnerCallsign() : CCallsign();
+                if (!partnerCallsign.isEmpty())
                 {
-                    const CCallsign partnerCallsign = m_fsdClient->getPresetPartnerCallsign();
-
                     // IMPORTANT: use messages AND NOT textMessages here, exclude messages from partner to avoid infinite roundtrips
                     CTextMessageList relayedMessages;
                     const CTextMessageList privateMessages = messages.getPrivateMessages().withRemovedPrivateMessagesFromCallsign(partnerCallsign);
@@ -736,6 +735,14 @@ namespace BlackCore
                     }
                 } // relay to partner
             }
+        }
+
+        void CContextNetwork::onTextMessageSent(const CTextMessage &message)
+        {
+            if (message.isEmpty()) { return; }
+            if (message.isRelayedMessage()) { return; }
+
+            emit this->textMessageSent(message);
         }
 
         const CSimulatedAircraft CContextNetwork::ownAircraft() const

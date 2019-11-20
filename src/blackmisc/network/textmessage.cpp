@@ -97,7 +97,7 @@ namespace BlackMisc
             if (index < CTextMessage::swiftRelayMessage().length()) { return false; }
             if (m_message.length() <= index + 1) { return false; } // no next line
             const QString originalSender = m_message.left(index).remove(CTextMessage::swiftRelayMessage()).trimmed();
-            this->setSenderCallsign(CCallsign(originalSender, CCallsign::Aircraft));
+            this->setSenderCallsign(CCallsign(originalSender)); // sender can be aircraft or ATC
             m_message = m_message.mid(index + 1);
             return true;
         }

@@ -316,8 +316,11 @@ namespace BlackCore
             //! Update METAR collection
             void updateMetars(const BlackMisc::Weather::CMetarList &metars);
 
-            //! Check if a supervisor message was received, message has to be relayed ...
+            //! Check when a message was received, if the message has to be relayed, is a supervisor message ...
             void onTextMessagesReceived(const BlackMisc::Network::CTextMessageList &messages);
+
+            //! Text message has been sent
+            void onTextMessageSent(const BlackMisc::Network::CTextMessage &message);
 
             //! An ATIS has been received
             void onChangedAtisReceived(const BlackMisc::Aviation::CCallsign &callsign);
