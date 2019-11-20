@@ -191,7 +191,8 @@ namespace BlackGui
                             double headingRad = sa.getHeading().value(CAngleUnit::rad());
                             QPen pen(Qt::green, 1);
                             pen.setCosmetic(true);
-                            QGraphicsLineItem *li = new QGraphicsLineItem(QLineF({ 0.0, 0.0 }, polarPoint(20.0, headingRad)), dot);
+                            QGraphicsLineItem *li = new QGraphicsLineItem(QLineF({ 0.0, 0.0 }, polarPoint(20.0, headingRad)), &m_radarTargets);
+                            li->setPos(position);
                             li->setPen(pen);
                         }
                     }
