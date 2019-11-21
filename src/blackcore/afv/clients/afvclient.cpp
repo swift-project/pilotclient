@@ -40,6 +40,15 @@ namespace BlackCore
     {
         namespace Clients
         {
+            constexpr int CAfvClient::PositionUpdatesMs;
+            constexpr int CAfvClient::SampleRate;
+            constexpr int CAfvClient::FrameSize;
+            constexpr double CAfvClient::MinDbIn;
+            constexpr double CAfvClient::MaxDbIn;
+            constexpr double CAfvClient::MinDbOut;
+            constexpr double CAfvClient::MaxDbOut;
+            constexpr quint32 CAfvClient::UniCom;
+
             const CLogCategoryList &CAfvClient::getLogCategories()
             {
                 static const CLogCategoryList cats { CLogCategory::audio(), CLogCategory::vatsimSpecific() };
