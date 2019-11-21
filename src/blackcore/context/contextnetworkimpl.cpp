@@ -242,7 +242,7 @@ namespace BlackCore
 
             this->getIContextOwnAircraft()->updateOwnAircraftPilot(server.getUser());
             const CSimulatedAircraft ownAircraft(this->ownAircraft());
-            m_fsdClient->setPartnerCallsign(partnerCallsign);
+            m_fsdClient->setPartnerCallsign(isValidPartnerCallsign(ownAircraft.getCallsign(), partnerCallsign) ? partnerCallsign : CCallsign());
 
             // Fall back to observer mode, if no simulator is available or not simulating
             if (!CBuildConfig::isLocalDeveloperDebugBuild() && !this->getIContextSimulator()->isSimulatorSimulating())
@@ -346,16 +346,25 @@ namespace BlackCore
                 }
 
                 // set receiver
-                const QString receiver = parser.part(1).trimmed().toLower(); // receiver
                 const CSimulatedAircraft ownAircraft(this->getIContextOwnAircraft()->getOwnAircraft());
-                if (ownAircraft.getCallsign().isEmpty())
+                const QString receiver = parser.part(1).trimmed().toLower(); // receiver
+                CCallsign ownCallsign  = ownAircraft.getCallsign();
+                if (m_fsdClient)
+                {
+                    // override with the preset callsign, as the own callsign can be different for partner callsign scenarios
+                    // copilot scenarios
+                    const CCallsign presetCallsign = m_fsdClient->getPresetCallsign();
+                    if (!presetCallsign.isEmpty()) { ownCallsign = presetCallsign; }
+                }
+
+                if (ownCallsign.isEmpty())
                 {
                     CLogMessage(this).validationError(u"No own callsign");
                     return false;
                 }
 
                 CTextMessage tm;
-                tm.setSenderCallsign(ownAircraft.getCallsign());
+                tm.setSenderCallsign(ownCallsign);
 
                 // based on the CPZ bug https://discordapp.com/channels/539048679160676382/539486309882789888/576765888401768449
                 // no longer use starts/ends with
@@ -714,7 +723,7 @@ namespace BlackCore
                 }
 
                 // part to send to partner "forward"
-                const CCallsign partnerCallsign = m_fsdClient ? m_fsdClient->getPresetPartnerCallsign() : CCallsign();
+                const CCallsign partnerCallsign = this->getPartnerCallsign();
                 if (!partnerCallsign.isEmpty())
                 {
                     // IMPORTANT: use messages AND NOT textMessages here, exclude messages from partner to avoid infinite roundtrips
@@ -742,6 +751,24 @@ namespace BlackCore
             if (message.isEmpty()) { return; }
             if (message.isRelayedMessage()) { return; }
 
+            if (message.isPrivateMessage())
+            {
+                const CCallsign partnerCallsign = this->getPartnerCallsign();
+                if (!partnerCallsign.isEmpty())
+                {
+                    QPointer<CContextNetwork> myself(this);
+                    CTextMessageList relayedMessages;
+                    this->createRelayMessageToPartnerCallsign(message, partnerCallsign, relayedMessages);
+                    if (!relayedMessages.isEmpty())
+                    {
+                        QTimer::singleShot(10, this, [ = ]
+                        {
+                            if (myself) { myself->sendTextMessages(relayedMessages); }
+                        });
+                    }
+                }
+            }
+
             emit this->textMessageSent(message);
         }
 
@@ -750,6 +777,18 @@ namespace BlackCore
             Q_ASSERT(this->getRuntime());
             Q_ASSERT(this->getRuntime()->getCContextOwnAircraft());
             return this->getRuntime()->getCContextOwnAircraft()->getOwnAircraft();
+        }
+
+        CCallsign CContextNetwork::getPartnerCallsign() const
+        {
+            return m_fsdClient ? m_fsdClient->getPresetPartnerCallsign() : CCallsign();
+        }
+
+        bool CContextNetwork::isValidPartnerCallsign(const CCallsign &ownCallsign, const CCallsign &partnerCallsign)
+        {
+            if (partnerCallsign.isEmpty())      { return false; }
+            if (ownCallsign == partnerCallsign) { return false; } // MUST NOT be the same
+            return true;
         }
 
         CAtcStationList CContextNetwork::getAtcStationsOnline(bool recalculateDistance) const

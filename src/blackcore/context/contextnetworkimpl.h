@@ -313,6 +313,12 @@ namespace BlackCore
             //! Own aircraft from \sa CContextOwnAircraft
             const BlackMisc::Simulation::CSimulatedAircraft ownAircraft() const;
 
+            //! Get the partner callsign if any
+            BlackMisc::Aviation::CCallsign getPartnerCallsign() const;
+
+            //! Check if a callsign is a valid partner callsign
+            bool isValidPartnerCallsign(const BlackMisc::Aviation::CCallsign &ownCallsign, const BlackMisc::Aviation::CCallsign &partnerCallsign);
+
             //! Update METAR collection
             void updateMetars(const BlackMisc::Weather::CMetarList &metars);
 

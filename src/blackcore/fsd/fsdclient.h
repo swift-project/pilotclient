@@ -116,7 +116,10 @@ namespace BlackCore
             //! List of all preset values
             QStringList getPresetValues() const;
 
-            //! Callsign
+            //! Callsign if any
+            BlackMisc::Aviation::CCallsign getPresetCallsign() const { QReadLocker l(&m_lockUserClientBuffered); return m_ownCallsign; }
+
+            //! Partner callsign if any
             BlackMisc::Aviation::CCallsign getPresetPartnerCallsign() const { QReadLocker l(&m_lockUserClientBuffered); return m_partnerCallsign; }
 
             //! Mode
