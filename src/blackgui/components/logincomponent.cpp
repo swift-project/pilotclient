@@ -365,7 +365,7 @@ namespace BlackGui
         void CLoginComponent::onWebServiceDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
         {
             if (!CEntityFlags::isFinishedReadState(state)) { return; }
-            Q_UNUSED(number);
+            Q_UNUSED(number)
 
             if (entity == CEntityFlags::VatsimDataFile)
             {
@@ -441,7 +441,7 @@ namespace BlackGui
 
         void CLoginComponent::onNetworkStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
-            Q_UNUSED(from);
+            Q_UNUSED(from)
             if (to != CConnectionStatus::Connected) { return; }
 
             this->setUiLoginState(true);
@@ -450,7 +450,7 @@ namespace BlackGui
 
         void CLoginComponent::onServerTabWidgetChanged(int index)
         {
-            Q_UNUSED(index);
+            Q_UNUSED(index)
             if (!m_updatePilotOnServerChanges) { return; }
             const bool vatsim = this->isVatsimNetworkTabSelected();
             const CServer server = vatsim ? this->getCurrentVatsimServer() : this->getCurrentOtherServer();
@@ -634,10 +634,12 @@ namespace BlackGui
                 (ownAircraft.hasAirlineDesignator() ? (u' ' % ownAircraft.getAirlineIcaoCodeDesignator()) : QString()) %
                 (ownAircraft.hasModelString() ? (u' ' % ownAircraft.getModelString()) : QString())
             );
+            const QString cs = ownAircraft.getCallsignAsString();
             ui->le_LoginSince->setText(QDateTime::currentDateTimeUtc().toString());
             ui->le_LoginAsAircaft->setText(ac);
-            ui->le_LoginCallsign->setText(ownAircraft.getCallsignAsString());
             ui->le_LoginAsAircaft->home(false);
+            ui->le_LoginCallsign->setText(cs);
+            if (!cs.isEmpty()) { ui->le_Callsign->setText(cs); }
         }
 
         bool CLoginComponent::validateAircraftValues()
@@ -836,7 +838,7 @@ namespace BlackGui
             bool changedCallsign = false;
             if (!cs.isEmpty() && ownAircraft.getCallsignAsString() != cs)
             {
-                const CCallsign callsign(cs);
+                const CCallsign callsign(cs, CCallsign::Aircraft);
                 sGui->getIContextOwnAircraft()->updateOwnCallsign(callsign);
                 ownAircraft.setCallsign(callsign); // also update
                 changedCallsign = true;
@@ -892,14 +894,14 @@ namespace BlackGui
             const IContextNetwork *nwc = sGui->getIContextNetwork();
             const bool connected = nwc->isConnected();
             if (!connected) { return; }
+            const CSimulatedAircraft ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
+            this->setGuiLoginAsValues(ownAircraft);
             this->setUiLoginState(connected);
             this->setOwnModelAndIcaoValues();
             const CServer server = nwc->getConnectedServer();
             ui->le_LoginHomeBase->setText(server.getUser().getHomeBase().asString());
             ui->frp_CurrentServer->setServer(server);
             ui->frp_LoginMode->setLoginMode(nwc->getLoginMode());
-            const CSimulatedAircraft ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
-            this->setGuiLoginAsValues(ownAircraft);
         }
     } // namespace
 } // namespace
