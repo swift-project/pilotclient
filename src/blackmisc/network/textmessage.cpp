@@ -82,11 +82,12 @@ namespace BlackMisc
         void CTextMessage::makeRelayedMessage(const CCallsign &partnerCallsign)
         {
             if (this->getMessage().startsWith(CTextMessage::swiftRelayMessage())) { return; }
+            const QString sender    = this->getSenderCallsign().asString();
+            const QString recipient = this->getRecipientCallsign().asString();
             this->markAsRelayedMessage();
             this->setRecipientCallsign(partnerCallsign);
             m_recipientCallsign.setTypeHint(CCallsign::Aircraft);
-            const QString sender = this->getSenderCallsign().asString();
-            const QString newMessage = CTextMessage::swiftRelayMessage() % sender % u";" % this->getMessage();
+            const QString newMessage = CTextMessage::swiftRelayMessage() % sender % u" " % recipient % u";" % this->getMessage();
             m_message = newMessage;
         }
 
@@ -96,8 +97,13 @@ namespace BlackMisc
             const int index = m_message.indexOf(';');
             if (index < CTextMessage::swiftRelayMessage().length()) { return false; }
             if (m_message.length() <= index + 1) { return false; } // no next line
-            const QString originalSender = m_message.left(index).remove(CTextMessage::swiftRelayMessage()).trimmed();
-            this->setSenderCallsign(CCallsign(originalSender)); // sender can be aircraft or ATC
+            const QString senderRecipient = m_message.left(index).remove(CTextMessage::swiftRelayMessage()).trimmed();
+            const QStringList sr = senderRecipient.split(' ');
+            if (sr.size() != 2) { return false; }
+            const QString originalSender    = sr.first();
+            const QString originalRecipient = sr.last();
+            this->setSenderCallsign(CCallsign(originalSender));       // sender can be aircraft or ATC
+            this->setRecipientCallsign(CCallsign(originalRecipient)); // recipient can be aircraft or ATC
             m_message = m_message.mid(index + 1);
             return true;
         }

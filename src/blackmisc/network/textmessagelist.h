@@ -82,6 +82,15 @@ namespace BlackMisc
             //! Find by frequency
             CTextMessageList findByFrequency(const PhysicalQuantities::CFrequency &frequency) const;
 
+            //! Find by sender
+            CTextMessageList findBySender(const BlackMisc::Aviation::CCallsign &sender) const;
+
+            //! Find by recipient
+            CTextMessageList findByRecipient(const BlackMisc::Aviation::CCallsign &recipient) const;
+
+            //! Find by recipient is NOT addressed
+            CTextMessageList findByNotForRecipient(const BlackMisc::Aviation::CCallsign &recipient) const;
+
             //! Toggle all sender <-> recipients
             void toggleSenderRecipients();
 

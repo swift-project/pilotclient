@@ -711,8 +711,34 @@ namespace BlackCore
 
         void CContextNetwork::onTextMessagesReceived(const CTextMessageList &messages)
         {
-            const CTextMessageList textMessages = messages.withRelayedToPrivateMessages();
-            emit this->textMessagesReceived(textMessages); // relayed messaged "now look like PMs"
+            if (messages.isEmpty()) { return; }
+
+            const CCallsign partnerCallsign = this->getPartnerCallsign();
+            const CCallsign ownCallsign = this->ownAircraft().getCallsign();
+
+            CTextMessageList textMessages = messages.withRelayedToPrivateMessages();
+            CTextMessageList partnerMessages;
+
+            if (!partnerCallsign.isEmpty())
+            {
+                partnerMessages = textMessages.findBySender(partnerCallsign);
+                const CTextMessageList relayedSentMessages = partnerMessages.findByNotForRecipient(ownCallsign).markedAsSent();
+                partnerMessages = partnerMessages.findByRecipient(ownCallsign); // really send to me as PM and not a forwared one
+
+                // avoid infinite rountrips
+                textMessages = textMessages.withRemovedPrivateMessagesFromCallsign(partnerCallsign);
+
+                // fake those as sent by myself
+                for (const CTextMessage &rsm : relayedSentMessages)
+                {
+                    emit this->textMessageSent(rsm);
+                }
+            }
+
+            // 1) relayed messaged "now look like PMs"
+            // 2) all messaged of partner are EXCLUDED
+            if (!textMessages.isEmpty())    { emit this->textMessagesReceived(textMessages); }
+            if (!partnerMessages.isEmpty()) { emit this->textMessagesReceived(partnerMessages); }
 
             if (textMessages.containsPrivateMessages())
             {
@@ -722,13 +748,12 @@ namespace BlackCore
                     emit this->supervisorTextMessageReceived(m);
                 }
 
-                // part to send to partner "forward"
-                const CCallsign partnerCallsign = this->getPartnerCallsign();
+                // part to send to partner, "forward/relay" to partner
                 if (!partnerCallsign.isEmpty())
                 {
-                    // IMPORTANT: use messages AND NOT textMessages here, exclude messages from partner to avoid infinite roundtrips
+                    // IMPORTANT: partner messages already received
                     CTextMessageList relayedMessages;
-                    const CTextMessageList privateMessages = messages.getPrivateMessages().withRemovedPrivateMessagesFromCallsign(partnerCallsign);
+                    const CTextMessageList privateMessages = messages.getPrivateMessages();
                     for (const CTextMessage &m : privateMessages)
                     {
                         this->createRelayMessageToPartnerCallsign(m, partnerCallsign, relayedMessages);
@@ -753,8 +778,9 @@ namespace BlackCore
 
             if (message.isPrivateMessage())
             {
+                // forward messages which are NO real PMs tp the partner
                 const CCallsign partnerCallsign = this->getPartnerCallsign();
-                if (!partnerCallsign.isEmpty())
+                if (!partnerCallsign.isEmpty() && message.getRecipientCallsign() != partnerCallsign)
                 {
                     QPointer<CContextNetwork> myself(this);
                     CTextMessageList relayedMessages;

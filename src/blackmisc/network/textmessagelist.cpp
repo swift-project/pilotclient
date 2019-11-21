@@ -97,6 +97,31 @@ namespace BlackMisc
             return this->findBy(&CTextMessage::getFrequency, frequency);
         }
 
+        CTextMessageList CTextMessageList::findBySender(const CCallsign &sender) const
+        {
+            return this->findBy(&CTextMessage::getSenderCallsign, sender);
+        }
+
+        CTextMessageList CTextMessageList::findByRecipient(const CCallsign &recipient) const
+        {
+            return this->findBy(&CTextMessage::getRecipientCallsign, recipient);
+        }
+
+        CTextMessageList CTextMessageList::findByNotForRecipient(const CCallsign &recipient) const
+        {
+            CTextMessageList result;
+            if (recipient.isEmpty()) { return result; }
+            for (const CTextMessage &m : *this)
+            {
+                if (m.getRecipientCallsign().isEmpty()) { continue; }
+                if (m.getRecipientCallsign() != recipient)
+                {
+                    result.push_back(m);
+                }
+            }
+            return result;
+        }
+
         void CTextMessageList::toggleSenderRecipients()
         {
             if (this->isEmpty()) { return; }
