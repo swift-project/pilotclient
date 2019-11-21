@@ -40,7 +40,7 @@ namespace BlackCore
             //! \copydoc IContextNetwork::getAtcStationsOnline()
             virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline(bool recalculateDistance) const override
             {
-                Q_UNUSED(recalculateDistance);
+                Q_UNUSED(recalculateDistance)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Aviation::CAtcStationList();
             }
@@ -48,7 +48,7 @@ namespace BlackCore
             //! \copydoc IContextNetwork::getClosestAtcStationsOnline()
             virtual BlackMisc::Aviation::CAtcStationList getClosestAtcStationsOnline(int number) const override
             {
-                Q_UNUSED(number);
+                Q_UNUSED(number)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Aviation::CAtcStationList();
             }
@@ -56,7 +56,7 @@ namespace BlackCore
             //! \copydoc IContextNetwork::getAtcStationsBooked()
             virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked(bool recalculateDistance) const override
             {
-                Q_UNUSED(recalculateDistance);
+                Q_UNUSED(recalculateDistance)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Aviation::CAtcStationList();
             }
@@ -71,7 +71,7 @@ namespace BlackCore
             //! \copydoc IContextNetwork::getAircraftInRangeForCallsign
             virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override
             {
-                Q_UNUSED(callsign);
+                Q_UNUSED(callsign)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Simulation::CSimulatedAircraft();
             }
@@ -79,8 +79,8 @@ namespace BlackCore
             //! \copydoc IContextNetwork::getOnlineStationsForFrequency
             virtual BlackMisc::Aviation::CAtcStationList getOnlineStationsForFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ChannelSpacing channelSpacing) const override
             {
-                Q_UNUSED(frequency);
-                Q_UNUSED(channelSpacing);
+                Q_UNUSED(frequency)
+                Q_UNUSED(channelSpacing)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Aviation::CAtcStationList();
             }
@@ -102,7 +102,7 @@ namespace BlackCore
             //! \copydoc IContextNetwork::isAircraftInRange
             virtual bool isAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign) const override
             {
-                Q_UNUSED(callsign);
+                Q_UNUSED(callsign)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
@@ -110,7 +110,7 @@ namespace BlackCore
             //! \copydoc IContextNetwork::getOnlineStationForCallsign
             virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override
             {
-                Q_UNUSED(callsign);
+                Q_UNUSED(callsign)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Aviation::CAtcStation();
             }
@@ -118,7 +118,7 @@ namespace BlackCore
             //! \copydoc IContextNetwork::isOnlineStation
             virtual bool isOnlineStation(const BlackMisc::Aviation::CCallsign &callsign) const override
             {
-                Q_UNUSED(callsign);
+                Q_UNUSED(callsign)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
@@ -126,19 +126,26 @@ namespace BlackCore
             //! \copydoc IContextNetwork::connectToNetwork
             virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, const QString &extraLiveryString, bool sendLivery, const QString &extraModelString, bool sendModelString, const BlackMisc::Aviation::CCallsign &partnerCallsign, BlackMisc::Network::CLoginMode mode) override
             {
-                Q_UNUSED(mode);
-                Q_UNUSED(server);
-                Q_UNUSED(extraModelString);
-                Q_UNUSED(extraLiveryString);
-                Q_UNUSED(sendLivery);
-                Q_UNUSED(sendModelString);
-                Q_UNUSED(partnerCallsign);
+                Q_UNUSED(mode)
+                Q_UNUSED(server)
+                Q_UNUSED(extraModelString)
+                Q_UNUSED(extraLiveryString)
+                Q_UNUSED(sendLivery)
+                Q_UNUSED(sendModelString)
+                Q_UNUSED(partnerCallsign)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return statusMessageEmptyContext();
             }
 
             //! \copydoc IContextNetwork::getNetworkPresetValues
             virtual QStringList getNetworkPresetValues() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return {};
+            }
+
+            //! \copydoc IContextNetwork::getPartnerCallsign
+            virtual BlackMisc::Aviation::CCallsign getPartnerCallsign() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return {};
@@ -175,21 +182,21 @@ namespace BlackCore
             //! \copydoc IContextNetwork::sendTextMessages()
             virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override
             {
-                Q_UNUSED(textMessages);
+                Q_UNUSED(textMessages)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextNetwork::sendFlightPlan()
             virtual void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) override
             {
-                Q_UNUSED(flightPlan);
+                Q_UNUSED(flightPlan)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextNetwork::loadFlightPlanFromNetwork()
             virtual BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const override
             {
-                Q_UNUSED(callsign);
+                Q_UNUSED(callsign)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Aviation::CFlightPlan();
             }
@@ -197,7 +204,7 @@ namespace BlackCore
             //! \copydoc IContextNetwork::getMetarForAirport
             BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) const override
             {
-                Q_UNUSED(airportIcaoCode);
+                Q_UNUSED(airportIcaoCode)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return {};
             }
@@ -220,7 +227,7 @@ namespace BlackCore
             //! \copydoc IContextNetwork::getUsersForCallsigns
             virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override
             {
-                Q_UNUSED(callsigns);
+                Q_UNUSED(callsigns)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Network::CUserList();
             }
@@ -228,7 +235,7 @@ namespace BlackCore
             //! \copydoc IContextNetwork::getUserForCallsign
             virtual BlackMisc::Network::CUser getUserForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override
             {
-                Q_UNUSED(callsign);
+                Q_UNUSED(callsign)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Network::CUser();
             }
@@ -243,7 +250,7 @@ namespace BlackCore
             //! \copydoc IContextNetwork::getClientsForCallsigns
             virtual BlackMisc::Network::CClientList getClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override
             {
-                Q_UNUSED(callsigns);
+                Q_UNUSED(callsigns)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Network::CClientList();
             }
@@ -251,7 +258,7 @@ namespace BlackCore
             //! \copydoc IContextNetwork::setOtherClient
             virtual bool setOtherClient(const BlackMisc::Network::CClient &client) override
             {
-                Q_UNUSED(client);
+                Q_UNUSED(client)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
@@ -271,7 +278,7 @@ namespace BlackCore
             //! \copydoc IContextNetwork::getLibraryInfo
             virtual QString getLibraryInfo(bool detailed) const override
             {
-                Q_UNUSED(detailed);
+                Q_UNUSED(detailed)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return QString("N/A");
             }
@@ -279,38 +286,38 @@ namespace BlackCore
             //! \copydoc IContextNetwork::testCreateDummyOnlineAtcStations
             virtual void testCreateDummyOnlineAtcStations(int number) override
             {
-                Q_UNUSED(number);
+                Q_UNUSED(number)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextNetwork::testAddAircraftParts
             virtual void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) override
             {
-                Q_UNUSED(callsign);
-                Q_UNUSED(parts);
-                Q_UNUSED(incremental);
+                Q_UNUSED(callsign)
+                Q_UNUSED(parts)
+                Q_UNUSED(incremental)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextNetwork::testReceivedTextMessages
             virtual void testReceivedTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override
             {
-                Q_UNUSED(textMessages);
+                Q_UNUSED(textMessages)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextNetwork::testRequestAircraftConfig
             virtual void testRequestAircraftConfig(const BlackMisc::Aviation::CCallsign &callsign) override
             {
-                Q_UNUSED(callsign);
+                Q_UNUSED(callsign)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextNetwork::testAddAltitudeOffset
             virtual bool testAddAltitudeOffset(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &offset = BlackMisc::PhysicalQuantities::CLength::null()) override
             {
-                Q_UNUSED(callsign);
-                Q_UNUSED(offset);
+                Q_UNUSED(callsign)
+                Q_UNUSED(offset)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
@@ -319,16 +326,16 @@ namespace BlackCore
             //! \copydoc IContextNetwork::testReceivedAtisMessage
             virtual void testReceivedAtisMessage(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &msg) override
             {
-                Q_UNUSED(callsign);
-                Q_UNUSED(msg);
+                Q_UNUSED(callsign)
+                Q_UNUSED(msg)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextNetwork::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override
             {
-                Q_UNUSED(commandLine);
-                Q_UNUSED(originator);
+                Q_UNUSED(commandLine)
+                Q_UNUSED(originator)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
@@ -350,8 +357,8 @@ namespace BlackCore
             //! \copydoc IContextNetwork::updateAircraftEnabled
             virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override
             {
-                Q_UNUSED(callsign);
-                Q_UNUSED(enabledForRendering);
+                Q_UNUSED(callsign)
+                Q_UNUSED(enabledForRendering)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
@@ -359,8 +366,8 @@ namespace BlackCore
             //! \copydoc IContextNetwork::updateAircraftSupportingGndFLag
             virtual bool updateAircraftSupportingGndFLag(const BlackMisc::Aviation::CCallsign &callsign, bool supportGndFlag) override
             {
-                Q_UNUSED(callsign);
-                Q_UNUSED(supportGndFlag);
+                Q_UNUSED(callsign)
+                Q_UNUSED(supportGndFlag)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
@@ -368,9 +375,9 @@ namespace BlackCore
             //! \copydoc IContextNetwork::updateAircraftModel
             virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override
             {
-                Q_UNUSED(callsign);
-                Q_UNUSED(model);
-                Q_UNUSED(originator);
+                Q_UNUSED(callsign)
+                Q_UNUSED(model)
+                Q_UNUSED(originator)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
@@ -378,9 +385,9 @@ namespace BlackCore
             //! \copydoc IContextNetwork::updateAircraftNetworkModel
             virtual bool updateAircraftNetworkModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override
             {
-                Q_UNUSED(callsign);
-                Q_UNUSED(model);
-                Q_UNUSED(originator);
+                Q_UNUSED(callsign)
+                Q_UNUSED(model)
+                Q_UNUSED(originator)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
@@ -389,8 +396,8 @@ namespace BlackCore
             virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending) override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                Q_UNUSED(callsign);
-                Q_UNUSED(enableFastPositionSending);
+                Q_UNUSED(callsign)
+                Q_UNUSED(enableFastPositionSending)
                 return false;
             }
 
@@ -398,8 +405,8 @@ namespace BlackCore
             virtual bool setAircraftEnabledFlag(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                Q_UNUSED(callsign);
-                Q_UNUSED(enabledForRendering);
+                Q_UNUSED(callsign)
+                Q_UNUSED(enabledForRendering)
                 return false;
             }
 
@@ -412,7 +419,7 @@ namespace BlackCore
             //! \copydoc IContextNetwork::setFastPositionEnabledCallsigns
             virtual void setFastPositionEnabledCallsigns(BlackMisc::Aviation::CCallsignSet &callsigns) override
             {
-                Q_UNUSED(callsigns);
+                Q_UNUSED(callsigns)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
@@ -427,7 +434,7 @@ namespace BlackCore
             virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                Q_UNUSED(callsign);
+                Q_UNUSED(callsign)
                 return BlackMisc::CStatusMessageList();
             }
 
@@ -442,14 +449,14 @@ namespace BlackCore
             virtual void enableReverseLookupMessages(BlackMisc::Simulation::ReverseLookupLogging enable) override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                Q_UNUSED(enable);
+                Q_UNUSED(enable)
             }
 
             //! \copydoc IContextNetwork::getAircraftPartsHistory
             virtual BlackMisc::CStatusMessageList getAircraftPartsHistory(const BlackMisc::Aviation::CCallsign &callsign) const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                Q_UNUSED(callsign);
+                Q_UNUSED(callsign)
                 return BlackMisc::CStatusMessageList();
             }
 
@@ -457,7 +464,7 @@ namespace BlackCore
             virtual BlackMisc::Aviation::CAircraftPartsList getRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign) const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                Q_UNUSED(callsign);
+                Q_UNUSED(callsign)
                 return BlackMisc::Aviation::CAircraftPartsList();
             }
 
@@ -472,15 +479,15 @@ namespace BlackCore
             virtual void enableAircraftPartsHistory(bool enabled) override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                Q_UNUSED(enabled);
+                Q_UNUSED(enabled)
             }
 
             //! \copydoc IContextNetwork::getNetworkStatistics
             virtual QString getNetworkStatistics(bool reset, const QString &separator) override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                Q_UNUSED(reset);
-                Q_UNUSED(separator);
+                Q_UNUSED(reset)
+                Q_UNUSED(separator)
                 return {};
             }
 
@@ -488,7 +495,7 @@ namespace BlackCore
             virtual bool setNetworkStatisticsEnable(bool enabled) override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                Q_UNUSED(enabled;);
+                Q_UNUSED(enabled;)
                 return false;
             }
 
@@ -497,8 +504,8 @@ namespace BlackCore
             virtual QMetaObject::Connection connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot) override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                Q_UNUSED(receiver);
-                Q_UNUSED(rawFsdMessageReceivedSlot);
+                Q_UNUSED(receiver)
+                Q_UNUSED(rawFsdMessageReceivedSlot)
                 return {};
             }
         };

@@ -317,6 +317,11 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<QStringList>(QLatin1String("getNetworkPresetValues"));
         }
 
+        CCallsign CContextNetworkProxy::getPartnerCallsign() const
+        {
+            return m_dBusInterface->callDBusRet<CCallsign>(QLatin1String("getPartnerCallsign"));
+        }
+
         void CContextNetworkProxy::testCreateDummyOnlineAtcStations(int number)
         {
             m_dBusInterface->callDBus(QLatin1String("testCreateDummyOnlineAtcStations"), number);

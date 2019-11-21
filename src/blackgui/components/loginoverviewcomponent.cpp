@@ -159,6 +159,7 @@ namespace BlackGui
             ui->form_Server->resetToFirstTab();
             ui->form_Pilot->setUser(server.getUser());
             ui->le_LoginMode->setText(sGui->getIContextNetwork()->getLoginModeAsString());
+            ui->le_PartnerCallsign->setText(sGui->getIContextNetwork()->getPartnerCallsign().asString());
             ui->comp_NetworkAircraft->showValues();
         }
 

@@ -63,9 +63,9 @@
    <item>
     <widget class="QGroupBox" name="gb_LoginMode">
      <property name="title">
-      <string>Login mode</string>
+      <string>Login mode / partner callsign</string>
      </property>
-     <layout class="QFormLayout" name="fl_LoginMode">
+     <layout class="QGridLayout" name="gl_LoginMode">
       <property name="leftMargin">
        <number>4</number>
       </property>
@@ -78,6 +78,20 @@
       <property name="bottomMargin">
        <number>4</number>
       </property>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="le_LoginMode">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="lbl_PartnerCallsign">
+        <property name="text">
+         <string>Partner</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="lbl_LoginMode">
         <property name="text">
@@ -85,8 +99,8 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="le_LoginMode">
+      <item row="0" column="3">
+       <widget class="QLineEdit" name="le_PartnerCallsign">
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -301,6 +315,7 @@
  </customwidgets>
  <tabstops>
   <tabstop>le_LoginMode</tabstop>
+  <tabstop>le_PartnerCallsign</tabstop>
   <tabstop>gb_OwnAircraft</tabstop>
   <tabstop>cb_AutoLogoff</tabstop>
   <tabstop>pb_Disconnect</tabstop>

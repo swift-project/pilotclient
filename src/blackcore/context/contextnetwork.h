@@ -341,6 +341,9 @@ namespace BlackCore
             //! Network preset values
             virtual QStringList getNetworkPresetValues() const = 0;
 
+            //! Partner callsign if any
+            virtual BlackMisc::Aviation::CCallsign getPartnerCallsign() const = 0;
+
             // ------------------------ testing ------------------------
 
             //! Create dummy ATC stations for performance tests etc.

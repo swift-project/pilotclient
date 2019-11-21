@@ -201,6 +201,7 @@ namespace BlackCore
             virtual bool setNetworkStatisticsEnable(bool enabled) override;
             virtual bool testAddAltitudeOffset(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &offset = BlackMisc::PhysicalQuantities::CLength::null()) override;
             virtual QStringList getNetworkPresetValues() const override;
+            virtual BlackMisc::Aviation::CCallsign getPartnerCallsign() const override;
             //! @}
 
             //! \ingroup clientprovider
@@ -312,9 +313,6 @@ namespace BlackCore
 
             //! Own aircraft from \sa CContextOwnAircraft
             const BlackMisc::Simulation::CSimulatedAircraft ownAircraft() const;
-
-            //! Get the partner callsign if any
-            BlackMisc::Aviation::CCallsign getPartnerCallsign() const;
 
             //! Check if a callsign is a valid partner callsign
             bool isValidPartnerCallsign(const BlackMisc::Aviation::CCallsign &ownCallsign, const BlackMisc::Aviation::CCallsign &partnerCallsign);
