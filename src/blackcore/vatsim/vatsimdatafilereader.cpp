@@ -296,13 +296,13 @@ namespace BlackCore
 
                             const double alt = clientPartsMap["altitude"].toDouble(&ok);
                             if (!ok) { validPos = false; posMsg << QStringLiteral("altitude: '%1'").arg(clientPartsMap["altitude"]); }
-                            CCoordinateGeodetic position = validPos ? CCoordinateGeodetic(lat, lng, alt) : CCoordinateGeodetic::null();
+                            const CCoordinateGeodetic position = validPos ? CCoordinateGeodetic(lat, lng, alt) : CCoordinateGeodetic::null();
 
                             Q_ASSERT_X((validPos && posMsg.isEmpty()) || (!validPos && !posMsg.isEmpty()), Q_FUNC_INFO, "Inconsistent data");
                             if (!posMsg.isEmpty())
                             {
                                 // Only info not to flood lof with warning
-                                CLogMessage(this).validationInfo(u"Callsign '%1' %2") << callsign << posMsg.join(", ");
+                                CLogMessage(this).validationInfo(u"Callsign '%1' %2 (VATSIM data file)") << callsign << posMsg.join(", ");
                             }
 
                             const CFrequency frequency = CFrequency(clientPartsMap["frequency"].toDouble(), CFrequencyUnit::MHz());
