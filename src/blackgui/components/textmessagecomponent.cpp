@@ -530,7 +530,7 @@ namespace BlackGui
             textEdit->insertTextMessage(textMessage);
 
             // sound
-            const bool playSound = !m_usedAsOverlayWidget && sGui && !sGui->isShuttingDown() && sGui->getIContextAudio();
+            const bool playSound = !textMessage.wasSent() && !m_usedAsOverlayWidget && sGui && !sGui->isShuttingDown() && sGui->getIContextAudio();
             if (sGui && sGui->getIContextAudio() && playSound)
             {
                 const CSettings settings = m_audioSettings.get();
