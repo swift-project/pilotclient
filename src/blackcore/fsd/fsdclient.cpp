@@ -700,14 +700,14 @@ namespace BlackCore
         void CFSDClient::sendAuthChallenge(const QString &challenge)
         {
             const AuthChallenge pduAuthChallenge(getOwnCallsignAsString(), "SERVER", challenge);
-            sendQueudedMessage(pduAuthChallenge);
+            sendDirectMessage(pduAuthChallenge); // avoid timeouts
             increaseStatisticsValue(QStringLiteral("sendAuthChallenge"));
         }
 
         void CFSDClient::sendAuthResponse(const QString &response)
         {
             const AuthResponse pduAuthResponse(getOwnCallsignAsString(), "SERVER", response);
-            sendQueudedMessage(pduAuthResponse);
+            sendDirectMessage(pduAuthResponse); // avoid timeouts
             increaseStatisticsValue(QStringLiteral("sendAuthResponse"));
         }
 
