@@ -453,12 +453,16 @@ namespace BlackCore
 
     void CAirspaceMonitor::setMaxRange(const CLength &range)
     {
-        int rInt = 125;
-        if (!range.isNull())
+        if (range.isNull() || range.isNegativeWithEpsilonConsidered() || range.isZeroEpsilonConsidered())
         {
-            rInt = range.valueInteger(CLengthUnit::NM());
+            // off
+            m_maxDistanceNM = -1;
+            m_maxDistanceNMHysteresis = -1;
+            CLogMessage(this).info(u"No airspace range restriction");
+            return;
         }
 
+        const int rInt = range.valueInteger(CLengthUnit::NM());
         CLogMessage(this).info(u"Set airspace max. range to %1NM") << rInt;
         m_maxDistanceNM = rInt;
         m_maxDistanceNMHysteresis = qRound(rInt * 1.1);
@@ -1139,7 +1143,8 @@ namespace BlackCore
 
     bool CAirspaceMonitor::handleMaxRange(const CAircraftSituation &situation)
     {
-        if (situation.isNull()) { return false; }
+        if (situation.isNull())  { return false; }
+        if (m_maxDistanceNM < 0) { return true; }
         const int distanceNM = this->getOwnAircraft().calculateGreatCircleDistance(situation).valueInteger(CLengthUnit::NM());
         if (distanceNM > m_maxDistanceNMHysteresis)
         {
@@ -1196,10 +1201,11 @@ namespace BlackCore
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
 
         if (this->isCopilotAircraft(callsign)) { return; }
-        const bool existsInRange = this->isAircraftInRange(callsign);
 
         // range (FSD overload issue)
-        if (!this->handleMaxRange(situation)) { return; }
+        const bool validMaxRange = this->handleMaxRange(situation);
+        const bool existsInRange = this->isAircraftInRange(callsign); // AFTER valid max.range check!
+        if (!validMaxRange && !existsInRange) { return; } // not valid at all
 
         // update client info
         this->autoAdjustCientGndCapability(situation);
@@ -1207,8 +1213,10 @@ namespace BlackCore
         // store situation history
         this->storeAircraftSituation(situation); // updates situation
 
-        if (!existsInRange)
+        // in case we only have
+        if (!existsInRange && validMaxRange)
         {
+            // NEW aircraft
             const bool hasFsInnPacket = m_tempFsInnPackets.contains(callsign);
 
             CSimulatedAircraft aircraft;
@@ -1222,7 +1230,7 @@ namespace BlackCore
             const CClient client(callsign);
             this->addNewClient(client);
         }
-        else
+        else if (existsInRange)
         {
             // update, aircraft already exists
             CPropertyIndexVariantMap vm;
@@ -1282,6 +1290,13 @@ namespace BlackCore
     void CAirspaceMonitor::onConnectionStatusChanged(CConnectionStatus oldStatus, CConnectionStatus newStatus)
     {
         Q_UNUSED(oldStatus)
+        if (newStatus == CConnectionStatus::Connecting && m_fsdClient)
+        {
+            const CServer server = m_fsdClient->getServer();
+            const bool isVatsim = server.getEcosystem().isSystem(CEcosystem::VATSIM);
+            const CLength maxRange(isVatsim ? 125 : -1, CLengthUnit::NM());
+            this->setMaxRange(maxRange);
+        }
         if (newStatus.isDisconnected()) { clear(); }
     }
 
