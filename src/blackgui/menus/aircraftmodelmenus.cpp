@@ -126,6 +126,12 @@ namespace BlackGui
                 const QUrl url = QUrl::fromLocalFile(model.getFileName());
                 QDesktopServices::openUrl(url);
             }
+            else
+            {
+                const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityError, QStringLiteral("No file for model '&1'").arg(model.getFileName()), true);
+                if (m_messageFrame) { m_messageFrame->showOverlayHTMLMessage(m); }
+                CLogMessage::preformatted(m);
+            }
         }
 
         void CShowSimulatorFileMenu::displayIcon()
@@ -165,7 +171,7 @@ namespace BlackGui
             {
                 const bool ok = modelsTargetSetable() || modelsTargetUpdatable();
                 Q_ASSERT_X(ok, Q_FUNC_INFO, "Neither setable nor updatable");
-                Q_UNUSED(ok);
+                Q_UNUSED(ok)
             }
         }
 
@@ -270,7 +276,7 @@ namespace BlackGui
             {
                 const bool ok = modelsTargetSetable() || modelsTargetUpdatable();
                 Q_ASSERT_X(ok, Q_FUNC_INFO, "Neither setable nor updatable");
-                Q_UNUSED(ok);
+                Q_UNUSED(ok)
             }
         }
 
