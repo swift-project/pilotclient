@@ -674,19 +674,20 @@ namespace BlackCore
             const int s = m_queuedFsdMessages.size();
             this->sendMessageString(m_queuedFsdMessages.dequeue());
 
-            // send up to 3 at once
+            // send up to 4 at once
+            if (s > 5)  { this->sendMessageString(m_queuedFsdMessages.dequeue()); }
+            if (s > 10) { this->sendMessageString(m_queuedFsdMessages.dequeue()); }
             if (s > 20) { this->sendMessageString(m_queuedFsdMessages.dequeue()); }
-            if (s > 30) { this->sendMessageString(m_queuedFsdMessages.dequeue()); }
 
             // overload
             // no idea, if we ever get here
             if (s > 50)
             {
-                for (int i = 0; i < 45; i++)
+                CLogMessage(this).warning(u"Too many queued messages (%1), bulk send!") << s;
+                for (int i = 0; i < 10; i++)
                 {
                     this->sendMessageString(m_queuedFsdMessages.dequeue());
                 }
-                CLogMessage(this).warning(u"Too many queued messages, send them (almost) all!");
             }
         }
 
