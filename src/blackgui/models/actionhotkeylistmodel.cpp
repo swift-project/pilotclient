@@ -43,17 +43,19 @@ namespace BlackGui
 
             if (role == Qt::DisplayRole)
             {
-                if (index.column() == 0)
+                const int col = index.column();
+                if (col == 0)
                 {
                     const CIdentifier identifier = m_actionHotkeys[index.row()].getApplicableMachine();
                     return identifier.getMachineName();
                 }
-                if (index.column() == 1)
+                if (col == 1)
                 {
-                    CHotkeyCombination combination = m_actionHotkeys[index.row()].getCombination();
-                    return combination.toQString();
+                    const CHotkeyCombination combination = m_actionHotkeys[index.row()].getCombination();
+                    return combination.asStringWithDeviceNames();
+                    // return combination.toQString();
                 }
-                if (index.column() == 2)
+                if (col == 2)
                 {
                     return m_actionHotkeys[index.row()].getAction();
                 }

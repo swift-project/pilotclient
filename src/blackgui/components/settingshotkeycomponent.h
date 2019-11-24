@@ -55,11 +55,12 @@ namespace BlackGui
             void editEntry();
             void removeEntry();
             void hotkeySlot(bool keyDown);
-            void addHotkeytoSettings(const BlackMisc::Input::CActionHotkey &actionHotkey);
+            void addHotkeyToSettings(const BlackMisc::Input::CActionHotkey &actionHotkey);
             void updateHotkeyInSettings(const BlackMisc::Input::CActionHotkey &oldValue, const BlackMisc::Input::CActionHotkey &newValue);
             void removeHotkeyFromSettings(const BlackMisc::Input::CActionHotkey &actionHotkey);
             bool checkAndConfirmConflicts(const BlackMisc::Input::CActionHotkey &actionHotkey, const BlackMisc::Input::CActionHotkeyList &ignore = {});
             BlackMisc::CIdentifierList getAllIdentifiers() const;
+            void resizeView();
 
             QScopedPointer<Ui::CSettingsHotkeyComponent> ui;
             Models::CActionHotkeyListModel m_model; //!< hotkeys model

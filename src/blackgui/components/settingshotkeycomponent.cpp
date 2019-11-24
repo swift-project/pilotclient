@@ -76,12 +76,13 @@ namespace BlackGui
             const CActionHotkey selectedActionHotkey = CHotkeyDialog::getActionHotkey(CActionHotkey(), getAllIdentifiers(), this);
             if (selectedActionHotkey.isValid() && checkAndConfirmConflicts(selectedActionHotkey))
             {
-                addHotkeytoSettings(selectedActionHotkey);
+                addHotkeyToSettings(selectedActionHotkey);
                 const int position = m_model.rowCount();
                 m_model.insertRows(position, 1, QModelIndex());
                 const QModelIndex index = m_model.index(position, 0, QModelIndex());
                 m_model.setData(index, QVariant::fromValue(selectedActionHotkey), CActionHotkeyListModel::ActionHotkeyRole);
             }
+            this->resizeView();
         }
 
         void CSettingsHotkeyComponent::editEntry()
@@ -100,6 +101,7 @@ namespace BlackGui
                 updateHotkeyInSettings(actionHotkey, selectedActionHotkey);
                 m_model.setData(indexHotkey, QVariant::fromValue(selectedActionHotkey), CActionHotkeyListModel::ActionHotkeyRole);
             }
+            this->resizeView();
         }
 
         void CSettingsHotkeyComponent::removeEntry()
@@ -111,9 +113,10 @@ namespace BlackGui
                 removeHotkeyFromSettings(actionHotkey);
                 m_model.removeRows(index.row(), 1, QModelIndex());
             }
+            this->resizeView();
         }
 
-        void CSettingsHotkeyComponent::addHotkeytoSettings(const CActionHotkey &actionHotkey)
+        void CSettingsHotkeyComponent::addHotkeyToSettings(const CActionHotkey &actionHotkey)
         {
             CActionHotkeyList actionHotkeyList(m_actionHotkeys.getThreadLocal());
             actionHotkeyList.push_back(actionHotkey);
@@ -171,6 +174,7 @@ namespace BlackGui
                 const QModelIndex index = m_model.index(position, 0, QModelIndex());
                 m_model.setData(index, QVariant::fromValue(hotkey), CActionHotkeyListModel::ActionHotkeyRole);
             }
+            this->resizeView();
         }
 
         CIdentifierList CSettingsHotkeyComponent::getAllIdentifiers() const
@@ -182,6 +186,11 @@ namespace BlackGui
             // add local application
             identifiers.push_back(CIdentifier("local identifer for hotkeys"));
             return identifiers;
+        }
+
+        void CSettingsHotkeyComponent::resizeView()
+        {
+            ui->tv_Hotkeys->resizeRowsToContents();
         }
 
         void CSettingsHotkeyComponent::hotkeySlot(bool keyDown)
