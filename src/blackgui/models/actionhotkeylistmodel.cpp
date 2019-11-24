@@ -24,8 +24,7 @@ namespace BlackGui
     {
         CActionHotkeyListModel::CActionHotkeyListModel(QObject *parent) :
             QAbstractTableModel(parent)
-        {
-        }
+        { }
 
         int CActionHotkeyListModel::rowCount(const QModelIndex & /** parent **/) const
         {
@@ -40,14 +39,13 @@ namespace BlackGui
         QVariant CActionHotkeyListModel::data(const QModelIndex &index, int role) const
         {
             if (!index.isValid()) { return QVariant(); }
-
             if (index.row() >= m_actionHotkeys.size() || index.row() < 0) { return QVariant(); }
 
             if (role == Qt::DisplayRole)
             {
                 if (index.column() == 0)
                 {
-                    BlackMisc::CIdentifier identifier = m_actionHotkeys[index.row()].getApplicableMachine();
+                    const CIdentifier identifier = m_actionHotkeys[index.row()].getApplicableMachine();
                     return identifier.getMachineName();
                 }
                 if (index.column() == 1)
@@ -62,7 +60,7 @@ namespace BlackGui
             }
             else if (role == ActionHotkeyRole)
             {
-                auto hotkey = m_actionHotkeys[index.row()];
+                const auto hotkey = m_actionHotkeys[index.row()];
                 return QVariant::fromValue(hotkey);
             }
             return {};
@@ -72,15 +70,13 @@ namespace BlackGui
         {
             if (role == Qt::DisplayRole)
             {
-                if (orientation == Qt::Horizontal) {
+                if (orientation == Qt::Horizontal)
+                {
                     switch (section)
                     {
-                    case 0:
-                        return QStringLiteral("Machine");
-                    case 1:
-                        return QStringLiteral("Combination");
-                    case 2:
-                        return QStringLiteral("Action");
+                    case 0: return QStringLiteral("Machine");
+                    case 1: return QStringLiteral("Combination");
+                    case 2: return QStringLiteral("Action");
                     }
                 }
             }
@@ -89,7 +85,7 @@ namespace BlackGui
 
         bool CActionHotkeyListModel::insertRows(int position, int rows, const QModelIndex &index)
         {
-            Q_UNUSED(index);
+            Q_UNUSED(index)
             beginInsertRows(QModelIndex(), position, position + rows - 1);
 
             for (int row = 0; row < rows; ++row)
@@ -103,7 +99,7 @@ namespace BlackGui
 
         bool CActionHotkeyListModel::removeRows(int position, int rows, const QModelIndex &index)
         {
-            Q_UNUSED(index);
+            Q_UNUSED(index)
             beginRemoveRows(QModelIndex(), position, position + rows - 1);
 
             Q_ASSERT(position + rows - 1 < m_actionHotkeys.size());
@@ -136,6 +132,5 @@ namespace BlackGui
             m_actionHotkeys.clear();
             endResetModel();
         }
-
     }
 } // namespace

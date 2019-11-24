@@ -7,7 +7,6 @@
  */
 
 #include "blackmisc/input/joystickbutton.h"
-
 #include "blackmisc/variant.h"
 
 namespace BlackMisc
@@ -20,7 +19,7 @@ namespace BlackMisc
 
         QString CJoystickButton::getButtonAsStringWithDeviceName() const
         {
-            return QString("%1 Button%2").arg(m_deviceName).arg(m_buttonIndex);
+            return QStringLiteral("%1%2 - %3").arg(buttonIndentifier()).arg(m_buttonIndex).arg(m_deviceName);
         }
 
         void CJoystickButton::setButtonIndex(int buttonIndex)
@@ -30,20 +29,19 @@ namespace BlackMisc
 
         bool CJoystickButton::isValid() const
         {
-            if (!m_deviceName.isEmpty() && m_buttonIndex >= 0)  { return true; }
-            else { return false; }
+            return (!m_deviceName.isEmpty() && m_buttonIndex >= 0);
         }
 
         void CJoystickButton::setButtonObject(CJoystickButton button)
         {
-            m_deviceName = button.m_deviceName;
+            m_deviceName  = button.m_deviceName;
             m_buttonIndex = button.m_buttonIndex;
         }
 
         void CJoystickButton::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CJoystickButton>(); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexDeviceName:
@@ -65,13 +63,13 @@ namespace BlackMisc
         CVariant CJoystickButton::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDeviceName: return CVariant::from(this->getDeviceName());
-            case IndexButton: return CVariant::from(this->getButtonIndex());
+            case IndexDeviceName:     return CVariant::from(this->getDeviceName());
+            case IndexButton:         return CVariant::from(this->getButtonIndex());
             case IndexButtonAsString: return CVariant::from(this->getButtonAsString());
-            case IndexButtonObject: return CVariant::from(*this);
+            case IndexButtonObject:   return CVariant::from(*this);
             }
 
             Q_ASSERT_X(false, "CJoystickButton", "index unknown");
@@ -81,25 +79,22 @@ namespace BlackMisc
 
         QString CJoystickButton::buttonIndexToString(qint32 buttonIndex)
         {
-            QString buttonString("Button");
-            return buttonString.append(QStringLiteral("%1").arg(buttonIndex));
+            return buttonIndentifier() + QString::number(buttonIndex);
         }
 
         int CJoystickButton::buttonIndexFromString(const QString &buttonName)
         {
-            QString name("Button");
-            if (!buttonName.startsWith(name)) return getInvalidIndex();
-
-            name.remove("Button");
-            return name.toInt();
+            if (!buttonName.startsWith(buttonIndentifier())) { return getInvalidIndex(); }
+            QString name(buttonName);
+            name.remove(buttonIndentifier());
+            if (name.contains('-')) { name = name.mid(0, name.indexOf('-')); }
+            return name.trimmed().toInt();
         }
 
         QString CJoystickButton::convertToQString(bool /* i18n */) const
         {
-            QString s = getButtonAsString();
-            return s.trimmed();
+            return getButtonAsString().trimmed();
         }
 
-    } // namespace Hardware
-
-} // BlackMisc
+    } // namespace
+} // namespacexs

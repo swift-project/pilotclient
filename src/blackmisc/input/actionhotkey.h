@@ -100,9 +100,9 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            CIdentifier m_identifier; //!< Identifier to which machine this hotkey belongs to
+            CIdentifier        m_identifier;  //!< Identifier to which machine this hotkey belongs to
             CHotkeyCombination m_combination; //!< hotkey combination
-            QString m_action; //!< hotkey action
+            QString            m_action;      //!< hotkey action
 
             BLACK_METACLASS(
                 CActionHotkey,

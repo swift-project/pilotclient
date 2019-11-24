@@ -76,6 +76,7 @@ namespace BlackCore
     void CInputManager::processKeyCombinationChanged(const CHotkeyCombination &combination)
     {
         // Merge in the joystick part
+        // mixed on purpose, as any joystick keyboard combination is possible
         CHotkeyCombination copy(combination);
         copy.setJoystickButtons(m_lastCombination.getJoystickButtons());
         processCombination(copy);
@@ -83,7 +84,8 @@ namespace BlackCore
 
     void CInputManager::processButtonCombinationChanged(const CHotkeyCombination &combination)
     {
-        // Merge in the keyboard dkeys
+        // Merge in the keyboard keys
+        // mixed on purpose, as any joystick keyboard combination is possible
         CHotkeyCombination copy(combination);
         copy.setKeyboardKeys(m_lastCombination.getKeyboardKeys());
         processCombination(copy);
@@ -124,7 +126,7 @@ namespace BlackCore
     {
         m_keyboard = IKeyboard::create(this);
         m_joystick = IJoystick::create(this);
-        connect(m_keyboard.get(), &IKeyboard::keyCombinationChanged,    this, &CInputManager::processKeyCombinationChanged, Qt::QueuedConnection);
+        connect(m_keyboard.get(), &IKeyboard::keyCombinationChanged,    this, &CInputManager::processKeyCombinationChanged,    Qt::QueuedConnection);
         connect(m_joystick.get(), &IJoystick::buttonCombinationChanged, this, &CInputManager::processButtonCombinationChanged, Qt::QueuedConnection);
     }
 

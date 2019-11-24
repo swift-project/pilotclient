@@ -81,16 +81,17 @@ namespace BlackMisc
             static int buttonIndexFromString(const QString &button);
 
             //! Invalid button index
-            static int getInvalidIndex() { return m_invalidIndex; }
+            static int getInvalidIndex() { return InvalidButtonIndex; }
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         private:
-            QString m_deviceName;
-            int m_buttonIndex = m_invalidIndex;
+            static const QString &buttonIndentifier() { static const QString bn("Button"); return bn; }
+            static constexpr int InvalidButtonIndex = -1;
 
-            static constexpr int m_invalidIndex = -1;
+            QString m_deviceName;
+            int m_buttonIndex = InvalidButtonIndex;
 
             BLACK_METACLASS(
                 CJoystickButton,
@@ -98,8 +99,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(buttonIndex)
             );
         };
-    }
-}
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Input::CJoystickButton)
 

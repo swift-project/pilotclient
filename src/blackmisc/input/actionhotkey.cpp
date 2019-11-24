@@ -69,13 +69,13 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexIdentifier: return CVariant::from(m_identifier);
-            case IndexIdentifierAsString: return CVariant::from(m_identifier.getMachineName());
-            case IndexAction: return CVariant::from(m_action);
-            case IndexActionAsString: return CVariant::from(m_action);
-            case IndexCombination: return CVariant::from(m_combination);
+            case IndexIdentifier:          return CVariant::from(m_identifier);
+            case IndexIdentifierAsString:  return CVariant::from(m_identifier.getMachineName());
+            case IndexAction:              return CVariant::from(m_action);
+            case IndexActionAsString:      return CVariant::from(m_action);
+            case IndexCombination:         return CVariant::from(m_combination);
             case IndexCombinationAsString: return CVariant::from(QString(m_combination.toQString()));
-            default: return CValueObject::propertyByIndex(index);
+            default:                       return CValueObject::propertyByIndex(index);
             }
         }
 

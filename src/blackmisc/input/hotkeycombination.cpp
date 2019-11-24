@@ -102,7 +102,7 @@ namespace BlackMisc
 
         QString CHotkeyCombination::convertToQString(bool i18n) const
         {
-            Q_UNUSED(i18n);
+            Q_UNUSED(i18n)
             QStringList sl;
             sl.reserve(m_keyboardKeys.size() + m_joystickButtons.size());
             for (const auto &key : m_keyboardKeys)

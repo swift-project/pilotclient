@@ -71,6 +71,7 @@ namespace BlackGui
         private:
             BlackMisc::Input::CActionHotkeyList m_actionHotkeys;
         };
-    }
-}
+    } // ns
+} // ns
+
 #endif // guard

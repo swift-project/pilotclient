@@ -98,7 +98,7 @@ namespace BlackMisc
             QString asStringWithDeviceNames() const;
 
         private:
-            CKeyboardKeyList m_keyboardKeys;
+            CKeyboardKeyList    m_keyboardKeys;
             CJoystickButtonList m_joystickButtons;
 
             BLACK_METACLASS(

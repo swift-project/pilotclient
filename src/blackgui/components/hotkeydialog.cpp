@@ -113,7 +113,7 @@ namespace BlackGui
 
             if (sGui && sGui->getInputManager())
             {
-                connect(sGui->getInputManager(), &BlackCore::CInputManager::combinationSelectionChanged, this, &CHotkeyDialog::combinationSelectionChanged);
+                connect(sGui->getInputManager(), &BlackCore::CInputManager::combinationSelectionChanged,  this, &CHotkeyDialog::combinationSelectionChanged);
                 connect(sGui->getInputManager(), &BlackCore::CInputManager::combinationSelectionFinished, this, &CHotkeyDialog::combinationSelectionFinished);
             }
 
@@ -199,7 +199,7 @@ namespace BlackGui
 
         void CHotkeyDialog::changeSelectedAction(const QItemSelection &selected, const QItemSelection &deselected)
         {
-            Q_UNUSED(deselected);
+            Q_UNUSED(deselected)
             if (selected.indexes().isEmpty()) { return; }
             const auto index = selected.indexes().first();
             m_actionHotkey.setAction(index.data(CActionModel::ActionRole).toString());
@@ -265,7 +265,7 @@ namespace BlackGui
 
         void CHotkeyDialog::changeApplicableMachine(int index)
         {
-            Q_UNUSED(index);
+            Q_UNUSED(index)
             const QVariant userData = ui->cb_Identifier->currentData();
             Q_ASSERT(userData.canConvert<CIdentifier>());
             m_actionHotkey.setApplicableMachine(userData.value<CIdentifier>());
