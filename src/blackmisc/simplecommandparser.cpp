@@ -57,7 +57,7 @@ namespace BlackMisc
         return m_splitParts.at(index);
     }
 
-    QString CSimpleCommandParser::remainingStringAfter(int index) const
+    QString CSimpleCommandParser::partAndRemainingStringAfter(int index) const
     {
         if (index < 0) { return m_cleanedLine; }
         const QString p = this->part(index);

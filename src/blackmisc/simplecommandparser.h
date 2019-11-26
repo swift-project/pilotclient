@@ -45,8 +45,9 @@ namespace BlackMisc
         //! Get part, 0 is command itself
         const QString &part(int index) const;
 
-        //! Remaining part after
-        QString remainingStringAfter(int index) const;
+        //! Part and remaing string after
+        //! \remark trimmed and simlified
+        QString partAndRemainingStringAfter(int index) const;
 
         //! Count parts
         int countParts() const;

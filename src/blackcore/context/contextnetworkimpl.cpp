@@ -402,7 +402,7 @@ namespace BlackCore
                     }
                 }
 
-                const QString msg(parser.remainingStringAfter(2));
+                const QString msg(parser.partAndRemainingStringAfter(2));
                 tm.setMessage(msg);
                 if (tm.isEmpty())
                 {
@@ -490,7 +490,12 @@ namespace BlackCore
                 if (parser.countParts() < 2) { return false; }
                 if (!m_fsdClient)            { return false; }
                 if (!this->isConnected())    { return false; }
-                const QString wallopMsg = parser.part(1).simplified().trimmed();
+                const QString wallopMsg = parser.partAndRemainingStringAfter(1);
+                if (wallopMsg.isEmpty())
+                {
+                    CLogMessage(this).validationError(u"No wallop message body");
+                    return false;
+                }
                 m_fsdClient->sendTextMessage(TextMessageGroups::AllSups, wallopMsg);
                 return true;
             }
