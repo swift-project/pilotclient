@@ -438,6 +438,15 @@ namespace BlackMisc
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 CAircraftModelList orderedModels(models);
                 orderedModels.setModelType(CAircraftModel::TypeOwnSimulatorModel); // unify type
+
+                if (simulator.isXPlane())
+                {
+                    // see https://discordapp.com/channels/539048679160676382/539064750055751690/648974956306366499
+                    // this solves the issue that ACF models are loaded in CSimulatorXPlane::loadCslPackages
+                    const int removed = orderedModels.removeXPlaneFlyablePlanes();
+                    if (removed > 0) { CLogMessage(this).info(u"Removed %1 flyable models from XPlane model set!"); }
+                }
+
                 if (orderedModels.needsOrder())
                 {
                     orderedModels.resetOrder();

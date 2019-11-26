@@ -340,6 +340,9 @@ namespace BlackMisc
             //! \return number of elements removed
             int removeIfExcluded();
 
+            //! Remove the XPlane flyable planes
+            int removeXPlaneFlyablePlanes();
+
             //! Remove by distributor
             //! \return number of elements removed
             int removeByDistributor(const CDistributor &distributor);

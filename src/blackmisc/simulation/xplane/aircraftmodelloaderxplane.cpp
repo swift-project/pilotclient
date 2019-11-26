@@ -187,7 +187,7 @@ namespace BlackMisc
 
             CAircraftModelList CAircraftModelLoaderXPlane::parseFlyableAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories)
             {
-                Q_UNUSED(excludeDirectories);
+                Q_UNUSED(excludeDirectories)
                 if (rootDirectory.isEmpty()) { return {}; }
 
                 QDir searchPath(rootDirectory, fileFilterFlyable());

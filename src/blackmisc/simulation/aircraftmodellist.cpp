@@ -947,6 +947,11 @@ namespace BlackMisc
             return diff;
         }
 
+        int CAircraftModelList::removeXPlaneFlyablePlanes()
+        {
+            return this->removeIfExcluded();
+        }
+
         int CAircraftModelList::removeByDistributor(const CDistributor &distributor)
         {
             return this->removeIf(&CAircraftModel::getDistributor, distributor);
