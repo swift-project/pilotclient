@@ -406,8 +406,13 @@ void CSwiftLauncher::setDefaults()
     ui->rb_WindowNormal->setChecked(!setup.useFramelessWindow());
 
     const CLauncherSetup::CoreMode mode = setup.getCoreMode();
-    ui->rb_SwiftStandalone->setChecked(mode == CLauncherSetup::Standalone   ? true : false);
+    ui->rb_SwiftStandalone->setChecked(mode  == CLauncherSetup::Standalone  ? true : false);
     ui->rb_SwiftDistributed->setChecked(mode == CLauncherSetup::Distributed ? true : false);
+
+    const CLauncherSetup::AudioMode audio = setup.getAudioMode();
+    ui->cb_DisableCoreAudio->setChecked(audio.testFlag(CLauncherSetup::AudioDisableDistributedCoreAudio));
+    ui->cb_DisableGUIAfv->setChecked(audio.testFlag(CLauncherSetup::AudioDisableDistributedGuiAudio));
+    ui->cb_DisableSaAfv->setChecked(audio.testFlag(CLauncherSetup::AudioDisableStandaloneAudio));
 }
 
 void CSwiftLauncher::saveSetup()
@@ -417,10 +422,18 @@ void CSwiftLauncher::saveSetup()
     if (!dBus.isEmpty()) { setup.setDBusAddress(dBus); }
     setup.setFramelessWindow(ui->rb_WindowFrameless->isChecked());
     setup.setCoreMode(CLauncherSetup::Standalone);
+
+    CLauncherSetup::AudioMode audio = CLauncherSetup::AudioNothingDisabled;
+    audio.setFlag(CLauncherSetup::AudioDisableDistributedCoreAudio, ui->cb_DisableCoreAudio->isChecked());
+    audio.setFlag(CLauncherSetup::AudioDisableDistributedGuiAudio,  ui->cb_DisableGUIAfv->isChecked());
+    audio.setFlag(CLauncherSetup::AudioDisableStandaloneAudio,      ui->cb_DisableSaAfv->isChecked());
+    setup.setAudioMode(audio);
+
     if (ui->rb_SwiftDistributed->isChecked())
     {
         setup.setCoreMode(CLauncherSetup::Distributed);
     }
+
     const CStatusMessage msg = m_setup.set(setup);
     Q_UNUSED(msg)
 }
@@ -566,9 +579,9 @@ void CSwiftLauncher::showLogPage()
 void CSwiftLauncher::checkRunningApplicationsAndCore()
 {
     // wait some time before buttons are enabled (allows startup)
-    if (m_startCoreWaitCycles > 0) { m_startCoreWaitCycles--; }
+    if (m_startCoreWaitCycles > 0)        { m_startCoreWaitCycles--; }
     if (m_startMappingToolWaitCycles > 0) { m_startMappingToolWaitCycles--; }
-    if (m_startGuiWaitCycles > 0) { m_startGuiWaitCycles--; }
+    if (m_startGuiWaitCycles > 0)         { m_startGuiWaitCycles--; }
 
     const CApplicationInfoList runningApps = sGui->getRunningApplications();
     const bool foundLocalCore           = runningApps.containsApplication(CApplicationInfo::PilotClientCore);

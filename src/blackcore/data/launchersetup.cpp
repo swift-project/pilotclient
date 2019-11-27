@@ -17,7 +17,7 @@ namespace BlackCore
     {
         QString CLauncherSetup::convertToQString(bool i18n) const
         {
-            Q_UNUSED(i18n);
+            Q_UNUSED(i18n)
             return QStringLiteral("DBus: %1 frameless: %2 mode: %3").arg(m_dBusAddress, boolToYesNo(m_windowFrameless)).arg(m_coreMode);
         }
 
@@ -27,14 +27,11 @@ namespace BlackCore
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDBusAddress:
-                return CVariant::fromValue(this->m_dBusAddress);
-            case IndexFramelessWindow:
-                return CVariant::fromValue(this->m_windowFrameless);
-            case IndexCoreMode:
-                return CVariant::fromValue(this->m_coreMode);
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexDBusAddress:     return CVariant::fromValue(m_dBusAddress);
+            case IndexFramelessWindow: return CVariant::fromValue(m_windowFrameless);
+            case IndexCoreMode:        return CVariant::fromValue(m_coreMode);
+            case IndexAudioMode:       return CVariant::fromValue(m_audioMode);
+            default:                   return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -44,15 +41,10 @@ namespace BlackCore
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDBusAddress:
-                this->setDBusAddress(variant.toQString());
-                break;
-            case IndexFramelessWindow:
-                this->m_windowFrameless = variant.toBool();
-                break;
-            case IndexCoreMode:
-                this->m_coreMode = variant.toInt();
-                break;
+            case IndexDBusAddress:       this->setDBusAddress(variant.toQString());  break;
+            case IndexFramelessWindow:   m_windowFrameless = variant.toBool();       break;
+            case IndexCoreMode:          m_coreMode  = variant.toInt();              break;
+            case IndexAudioMode:         m_audioMode = variant.toInt();              break;
             default:
                 CValueObject::setPropertyByIndex(index, variant);
                 break;

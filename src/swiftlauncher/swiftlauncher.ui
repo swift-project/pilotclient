@@ -88,7 +88,7 @@
           <item>
            <widget class="QToolBox" name="tb_Launcher">
             <property name="currentIndex">
-             <number>2</number>
+             <number>4</number>
             </property>
             <property name="tabSpacing">
              <number>6</number>
@@ -99,7 +99,7 @@
                <x>0</x>
                <y>0</y>
                <width>392</width>
-               <height>309</height>
+               <height>334</height>
               </rect>
              </property>
              <attribute name="label">
@@ -154,7 +154,7 @@
                <x>0</x>
                <y>0</y>
                <width>392</width>
-               <height>309</height>
+               <height>334</height>
               </rect>
              </property>
              <attribute name="label">
@@ -218,8 +218,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>381</width>
-               <height>332</height>
+               <width>392</width>
+               <height>334</height>
               </rect>
              </property>
              <attribute name="label">
@@ -342,13 +342,13 @@
                   <number>4</number>
                  </property>
                  <property name="leftMargin">
-                  <number>4</number>
+                  <number>2</number>
                  </property>
                  <property name="topMargin">
-                  <number>4</number>
+                  <number>2</number>
                  </property>
                  <property name="rightMargin">
-                  <number>0</number>
+                  <number>2</number>
                  </property>
                  <property name="bottomMargin">
                   <number>4</number>
@@ -396,7 +396,7 @@
                <x>0</x>
                <y>0</y>
                <width>392</width>
-               <height>309</height>
+               <height>334</height>
               </rect>
              </property>
              <attribute name="label">
@@ -478,7 +478,7 @@
                       <x>0</x>
                       <y>0</y>
                       <width>376</width>
-                      <height>126</height>
+                      <height>151</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="vl_DataUpdatesScrollArea">
@@ -529,7 +529,7 @@
                <x>0</x>
                <y>0</y>
                <width>392</width>
-               <height>309</height>
+               <height>334</height>
               </rect>
              </property>
              <attribute name="label">
@@ -623,21 +623,13 @@
             <property name="minimumSize">
              <size>
               <width>0</width>
-              <height>175</height>
+              <height>150</height>
              </size>
             </property>
             <property name="currentIndex">
              <number>0</number>
             </property>
             <widget class="QWidget" name="pg_Start">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>392</width>
-               <height>151</height>
-              </rect>
-             </property>
              <attribute name="label">
               <string>Start application</string>
              </attribute>

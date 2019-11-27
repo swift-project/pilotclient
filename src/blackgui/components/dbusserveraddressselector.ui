@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>CDBusServerAddressSelector</class>
  <widget class="QFrame" name="CDBusServerAddressSelector">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>158</width>
-    <height>118</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>DBus selector</string>
   </property>
