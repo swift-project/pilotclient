@@ -660,6 +660,7 @@ namespace BlackSimPlugin
                         planesPositions.pitchesDeg.push_back(interpolatedSituation.getPitch().value(CAngleUnit::deg()));
                         planesPositions.rollsDeg.push_back(interpolatedSituation.getBank().value(CAngleUnit::deg()));
                         planesPositions.headingsDeg.push_back(interpolatedSituation.getHeading().value(CAngleUnit::deg()));
+                        planesPositions.groundSpeedKts.push_back(interpolatedSituation.getGroundSpeed().value(CSpeedUnit::kts()));
                         planesPositions.onGrounds.push_back(interpolatedSituation.getOnGround() == CAircraftSituation::OnGround);
                     }
                 }
