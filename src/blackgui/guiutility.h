@@ -206,8 +206,8 @@ namespace BlackGui
         static bool isTopLevelWindow(QWidget *widget);
 
         //! Check window type @{
-        static bool isQMainWindow(QWidget *widget);
-        static bool isDialog(QWidget *widget);
+        static bool isQMainWindow(const QWidget *widget);
+        static bool isDialog(const QWidget *widget);
         //! @}
 
         //! Fade in a widget
@@ -260,6 +260,9 @@ namespace BlackGui
 
         //! Find parent dialog if there is any, otherwise null
         static QDialog *findParentDialog(QWidget *widget);
+
+        //! Find parent dialog if there is any, otherwise null
+        static QDialog *findParentDialog(QWidget *widget, int maxLevel);
 
         //! Set elided text
         static void setElidedText(QLabel *label, const QString &text, Qt::TextElideMode mode = Qt::ElideMiddle);

@@ -179,6 +179,9 @@ namespace BlackGui
             //! Update distributor order
             void updateDistributorOrder(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
+            //! Is that component running in a dialog
+            bool runsInDialog();
+
             QScopedPointer<Ui::CDbOwnModelSetComponent> ui;
             QScopedPointer<CDbOwnModelSetFormDialog> m_modelSetFormDialog;
             QScopedPointer<CFirstModelSetDialog>     m_firstModelSetDialog;

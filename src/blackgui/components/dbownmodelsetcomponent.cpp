@@ -6,7 +6,6 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackgui/guiapplication.h"
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/components/dbownmodelsetcomponent.h"
 #include "blackgui/components/dbownmodelsetformdialog.h"
@@ -19,6 +18,8 @@
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackgui/views/viewbase.h"
 #include "blackgui/views/aircraftmodelstatisticsdialog.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
 #include "blackmisc/simulation/aircraftmodelutils.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/distributorlist.h"
@@ -238,15 +239,24 @@ namespace BlackGui
                 if (!ownModelSet.isEmpty())
                 {
                     const CSimulatorInfo sim = this->getSelectedSimulator();
-                    const CStatusMessage m = this->setCachedModels(ownModelSet, sim);
+                    const CStatusMessage m   = this->setCachedModels(ownModelSet, sim);
                     CLogMessage::preformatted(m);
                     if (m.isSuccess())
                     {
-                        this->showMappingComponentOverlayHtmlMessage(QStringLiteral("Save model set for '%1'").arg(sim.toQString(true)), 5000);
+                        const QString msg = QStringLiteral("Saved model set for '%1'").arg(sim.toQString(true));
+
+                        // display either as overlay of componet or view
+                        if (!this->showMappingComponentOverlayHtmlMessage(msg, 5000))
+                        {
+                            ui->tvp_OwnModelSet->showOverlayHTMLMessage(msg, 5000);
+                        }
                     }
                     else
                     {
-                        this->showMappingComponentOverlayMessage(m);
+                        if (!this->showMappingComponentOverlayMessage(m))
+                        {
+                            ui->tvp_OwnModelSet->showOverlayMessage(m);
+                        }
                     }
                 }
                 return;
@@ -491,6 +501,11 @@ namespace BlackGui
             {
                 ui->tvp_OwnModelSet->updateContainerAsync(modelSet);
             }
+        }
+
+        bool CDbOwnModelSetComponent::runsInDialog()
+        {
+            return CGuiUtility::findParentDialog(this, 5);
         }
 
         void CDbOwnModelSetComponent::CLoadModelSetMenu::customMenu(CMenuActions &menuActions)

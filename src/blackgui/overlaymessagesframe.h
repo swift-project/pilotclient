@@ -188,21 +188,23 @@ namespace BlackGui
         }
 
         //! \copydoc BlackGui::COverlayMessages::showOverlayMessage
-        void showOverlayMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1)
+        bool showOverlayMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1)
         {
-            if (message.isEmpty()) { return; }
+            if (message.isEmpty()) { return false; }
             this->initInnerFrame();
             m_overlayMessages->showOverlayMessage(message, timeOutMs);
             WIDGET::repaint();
+            return true;
         }
 
         //! \copydoc BlackGui::COverlayMessages::showOverlayTextMessage
-        void showOverlayTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int timeOutMs = -1)
+        bool showOverlayTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int timeOutMs = -1)
         {
-            if (textMessage.isEmpty()) { return; }
+            if (textMessage.isEmpty()) { return false; }
             this->initInnerFrame();
             m_overlayMessages->showOverlayTextMessage(textMessage, timeOutMs);
             WIDGET::repaint();
+            return true;
         }
 
         //! \copydoc BlackGui::COverlayMessages::showOverlayVariant
@@ -231,19 +233,21 @@ namespace BlackGui
         }
 
         //! \copydoc BlackGui::COverlayMessages::showHTMLMessage
-        void showOverlayHTMLMessage(const QString &htmlMessage, int timeOutMs = -1)
+        bool showOverlayHTMLMessage(const QString &htmlMessage, int timeOutMs = -1)
         {
             this->initMinimalFrame();
             m_overlayMessages->showHTMLMessage(htmlMessage, timeOutMs);
             WIDGET::repaint();
+            return true;
         }
 
         //! \copydoc BlackGui::COverlayMessages::showHTMLMessage
-        void showOverlayHTMLMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1)
+        bool showOverlayHTMLMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1)
         {
             this->initMinimalFrame();
             m_overlayMessages->showHTMLMessage(message, timeOutMs);
             WIDGET::repaint();
+            return true;
         }
 
         //! \copydoc BlackGui::COverlayMessages::showDownloadProgress

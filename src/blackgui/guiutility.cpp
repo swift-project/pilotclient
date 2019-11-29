@@ -591,17 +591,17 @@ namespace BlackGui
         return QApplication::topLevelWidgets().contains(widget);
     }
 
-    bool CGuiUtility::isQMainWindow(QWidget *widget)
+    bool CGuiUtility::isQMainWindow(const QWidget *widget)
     {
         if (!widget) { return false; }
-        QMainWindow *mw = qobject_cast<QMainWindow *>(widget);
+        const QMainWindow *mw = qobject_cast<const QMainWindow *>(widget);
         return mw;
     }
 
-    bool CGuiUtility::isDialog(QWidget *widget)
+    bool CGuiUtility::isDialog(const QWidget *widget)
     {
         if (!widget) { return false; }
-        QDialog *mw = qobject_cast<QDialog *>(widget);
+        const QDialog *mw = qobject_cast<const QDialog *>(widget);
         return mw;
     }
 
@@ -783,6 +783,20 @@ namespace BlackGui
         if (CGuiUtility::isDialog(widget)) { return qobject_cast<QDialog *>(widget); }
         while (widget->parent())
         {
+            widget = widget->parentWidget();
+            if (CGuiUtility::isDialog(widget)) { return qobject_cast<QDialog *>(widget); }
+        }
+        return nullptr;
+    }
+
+    QDialog *CGuiUtility::findParentDialog(QWidget *widget, int maxLevel)
+    {
+        if (CGuiUtility::isDialog(widget)) { return qobject_cast<QDialog *>(widget); }
+        int level = 0;
+        while (widget->parent())
+        {
+            level++;
+            if (level > maxLevel) { return nullptr; }
             widget = widget->parentWidget();
             if (CGuiUtility::isDialog(widget)) { return qobject_cast<QDialog *>(widget); }
         }

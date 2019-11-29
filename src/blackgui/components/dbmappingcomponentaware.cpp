@@ -33,16 +33,16 @@ namespace BlackGui
             m_mappingComponent = m;
         }
 
-        void CDbMappingComponentAware::showMappingComponentOverlayMessage(const CStatusMessage &message, int timeoutMs)
+        bool CDbMappingComponentAware::showMappingComponentOverlayMessage(const CStatusMessage &message, int timeoutMs)
         {
-            if (!m_mappingComponent) { return; }
-            m_mappingComponent->showOverlayMessage(message, timeoutMs);
+            if (!m_mappingComponent) { return false; }
+            return m_mappingComponent->showOverlayMessage(message, timeoutMs);
         }
 
-        void CDbMappingComponentAware::showMappingComponentOverlayHtmlMessage(const CStatusMessage &message, int timeoutMs)
+        bool CDbMappingComponentAware::showMappingComponentOverlayHtmlMessage(const CStatusMessage &message, int timeoutMs)
         {
-            if (!m_mappingComponent) { return; }
-            m_mappingComponent->showOverlayHTMLMessage(message, timeoutMs);
+            if (!m_mappingComponent) { return false; }
+            return m_mappingComponent->showOverlayHTMLMessage(message, timeoutMs);
         }
     } // ns
 } // ns
