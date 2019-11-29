@@ -50,15 +50,15 @@ namespace BlackGui
 
             connect(ui->gv_RadarView, &CRadarView::radarViewResized, this, &CRadarComponent::fitInView);
             connect(ui->gv_RadarView, &CRadarView::zoomEvent, this, &CRadarComponent::changeRangeInSteps);
-            connect(&m_updateTimer, &QTimer::timeout, this, &CRadarComponent::refreshTargets);
-            connect(&m_headingTimer, &QTimer::timeout, this, &CRadarComponent::rotateView);
+            connect(&m_updateTimer,   &QTimer::timeout, this, &CRadarComponent::refreshTargets);
+            connect(&m_headingTimer,  &QTimer::timeout, this, &CRadarComponent::rotateView);
 
-            connect(ui->cb_RadarRange, qOverload<int>(&QComboBox::currentIndexChanged), this, &CRadarComponent::changeRangeFromUserSelection);
-            connect(ui->cb_Callsign, &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
-            connect(ui->cb_Heading, &QCheckBox::toggled,  this, &CRadarComponent::refreshTargets);
-            connect(ui->cb_Altitude, &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
+            connect(ui->cb_RadarRange,  qOverload<int>(&QComboBox::currentIndexChanged), this, &CRadarComponent::changeRangeFromUserSelection);
+            connect(ui->cb_Callsign,    &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
+            connect(ui->cb_Heading,     &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
+            connect(ui->cb_Altitude,    &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
             connect(ui->cb_GroundSpeed, &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
-            connect(ui->cb_Grid, &QCheckBox::toggled, this, &CRadarComponent::toggleGrid);
+            connect(ui->cb_Grid,        &QCheckBox::toggled, this, &CRadarComponent::toggleGrid);
 
             prepareScene();
 
@@ -188,10 +188,10 @@ namespace BlackGui
 
                         if (ui->cb_Heading->isChecked() && groundSpeedKts > 3.0)
                         {
-                            double headingRad = sa.getHeading().value(CAngleUnit::rad());
+                            const double headingRad = sa.getHeading().value(CAngleUnit::rad());
                             QPen pen(Qt::green, 1);
                             pen.setCosmetic(true);
-                            QGraphicsLineItem *li = new QGraphicsLineItem(QLineF({ 0.0, 0.0 }, polarPoint(20.0, headingRad)), &m_radarTargets);
+                            QGraphicsLineItem *li = new QGraphicsLineItem(QLineF({ 0.0, 0.0 }, polarPoint(5.0, headingRad)), &m_radarTargets);
                             li->setPos(position);
                             li->setPen(pen);
                         }
@@ -268,7 +268,7 @@ namespace BlackGui
 
         void CRadarComponent::onInfoAreaTabBarChanged(int index)
         {
-            Q_UNUSED(index);
+            Q_UNUSED(index)
 
             // ignore in those cases
             if (!this->isVisibleWidget()) return;

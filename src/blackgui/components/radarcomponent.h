@@ -63,7 +63,7 @@ namespace BlackGui
             void onInfoAreaTabBarChanged(int index);
 
             QScopedPointer<Ui::CRadarComponent> ui;
-            QGraphicsScene m_scene;
+            QGraphicsScene     m_scene;
             QGraphicsItemGroup m_radarTargets;
             QGraphicsItemGroup m_center;
             QGraphicsItemGroup m_macroGraticule;
@@ -71,10 +71,8 @@ namespace BlackGui
             QGraphicsItemGroup m_radials;
 
             QPen m_radarTargetPen = { Qt::green, 1 };
-
-            qreal m_rangeNM = 10.0;
-            int m_rotatenAngle = 0;
-
+            qreal  m_rangeNM      = 10.0;
+            int    m_rotatenAngle = 0;
             QTimer m_updateTimer;
             QTimer m_headingTimer;
         };

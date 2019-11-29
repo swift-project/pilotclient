@@ -54,7 +54,7 @@
       <item row="0" column="1">
        <widget class="QCheckBox" name="cb_Heading">
         <property name="text">
-         <string>Heading Bug</string>
+         <string>Track line</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -129,8 +129,12 @@
  <tabstops>
   <tabstop>gv_RadarView</tabstop>
   <tabstop>cb_Callsign</tabstop>
+  <tabstop>cb_Heading</tabstop>
+  <tabstop>cb_Altitude</tabstop>
+  <tabstop>cb_LockNorth</tabstop>
   <tabstop>cb_GroundSpeed</tabstop>
   <tabstop>cb_Grid</tabstop>
+  <tabstop>cb_RadarRange</tabstop>
  </tabstops>
  <resources/>
  <connections/>
