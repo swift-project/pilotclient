@@ -212,7 +212,7 @@ namespace BlackGui
 
         void CDbOwnModelSetComponent::tabIndexChanged(int index)
         {
-            Q_UNUSED(index);
+            Q_UNUSED(index)
         }
 
         void CDbOwnModelSetComponent::buttonClicked()
@@ -279,8 +279,9 @@ namespace BlackGui
 
         void CDbOwnModelSetComponent::onRowCountChanged(int count, bool withFilter)
         {
-            Q_UNUSED(count);
-            Q_UNUSED(withFilter);
+            Q_UNUSED(count)
+            Q_UNUSED(withFilter)
+
             const int realUnfilteredCount = ui->tvp_OwnModelSet->container().size();
             const bool canSave = this->getModelSetSimulator().isSingleSimulator() && (realUnfilteredCount > 0);
             ui->pb_SaveAsSetForSimulator->setEnabled(canSave);
@@ -508,7 +509,7 @@ namespace BlackGui
                         QAction *a = new QAction(CIcons::appModels16(), "FSX models", this);
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
                         {
-                            Q_UNUSED(checked);
+                            Q_UNUSED(checked)
                             ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::FSX));
                         });
                         m_setActions.append(a);
@@ -516,7 +517,7 @@ namespace BlackGui
                         a = new QAction(CIcons::appModels16(), "New set FSX models", this);
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
                         {
-                            Q_UNUSED(checked);
+                            Q_UNUSED(checked)
                             ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::FSX));
                         });
                         m_setNewActions.append(a);
@@ -526,7 +527,7 @@ namespace BlackGui
                         QAction *a = new QAction(CIcons::appModels16(), "P3D models", this);
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
                         {
-                            Q_UNUSED(checked);
+                            Q_UNUSED(checked)
                             ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::P3D));
                         });
                         m_setActions.append(a);
@@ -534,7 +535,7 @@ namespace BlackGui
                         a = new QAction(CIcons::appModels16(), "New set P3D models", this);
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
                         {
-                            Q_UNUSED(checked);
+                            Q_UNUSED(checked)
                             ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::P3D));
                         });
                         m_setNewActions.append(a);
@@ -544,7 +545,7 @@ namespace BlackGui
                         QAction *a = new QAction(CIcons::appModels16(), "FS9 models", this);
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
                         {
-                            Q_UNUSED(checked);
+                            Q_UNUSED(checked)
                             ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::FS9));
                         });
                         m_setActions.append(a);
@@ -552,7 +553,7 @@ namespace BlackGui
                         a = new QAction(CIcons::appModels16(), "New set FS9 models", this);
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
                         {
-                            Q_UNUSED(checked);
+                            Q_UNUSED(checked)
                             ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::FS9));
                         });
                         m_setNewActions.append(a);
@@ -562,7 +563,7 @@ namespace BlackGui
                         QAction *a = new QAction(CIcons::appModels16(), "XPlane models", this);
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
                         {
-                            Q_UNUSED(checked);
+                            Q_UNUSED(checked)
                             ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::XPLANE));
                         });
                         m_setActions.append(a);
@@ -570,7 +571,7 @@ namespace BlackGui
                         a = new QAction(CIcons::appModels16(), "New set XPlane models", this);
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
                         {
-                            Q_UNUSED(checked);
+                            Q_UNUSED(checked)
                             ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::XPLANE));
                         });
                         m_setNewActions.append(a);
@@ -580,7 +581,7 @@ namespace BlackGui
                         QAction *a = new QAction(CIcons::appModels16(), "FG models", this);
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
                         {
-                            Q_UNUSED(checked);
+                            Q_UNUSED(checked)
                             ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::FG));
                         });
                         m_setActions.append(a);
@@ -588,7 +589,7 @@ namespace BlackGui
                         a = new QAction(CIcons::appModels16(), "New set FG models", this);
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
                         {
-                            Q_UNUSED(checked);
+                            Q_UNUSED(checked)
                             ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::FG));
                         });
                         m_setNewActions.append(a);

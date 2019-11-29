@@ -111,8 +111,9 @@ namespace BlackGui
 
         void CAutoPublishComponent::onAutoPublished(bool success, const QString &url, const CStatusMessageList &msgs)
         {
-            Q_UNUSED(url);
-            Q_UNUSED(success);
+            Q_UNUSED(url)
+            Q_UNUSED(success)
+
             if (success)
             {
                 QPointer<CAutoPublishComponent> myself(this);
