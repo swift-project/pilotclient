@@ -76,7 +76,8 @@ namespace BlackSimPlugin
             QList<double> pitchesDeg;      //!< List of pitches
             QList<double> rollsDeg;        //!< List of rolls
             QList<double> headingsDeg;     //!< List of headings
-            QList<bool>   onGrounds;       //!< List of onGrounds
+            QList<double> groundSpeedKts; //!<List of groundspeeds
+            QList<bool> onGrounds;      //!< List of onGrounds
         };
 
         //! Planes surfaces

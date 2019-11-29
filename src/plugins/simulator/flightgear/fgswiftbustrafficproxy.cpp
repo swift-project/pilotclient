@@ -84,7 +84,7 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBus(QLatin1String("setPlanesPositions"),
                                       planesPositions.callsigns, planesPositions.latitudesDeg, planesPositions.longitudesDeg,
                                       planesPositions.altitudesFt, planesPositions.pitchesDeg, planesPositions.rollsDeg,
-                                      planesPositions.headingsDeg, planesPositions.onGrounds);
+                                      planesPositions.headingsDeg, planesPositions.groundSpeedKts, planesPositions.onGrounds);
         }
 
         void CFGSwiftBusTrafficProxy::getRemoteAircraftData(const QStringList &callsigns, const RemoteAircraftDataCallback &setter) const
