@@ -795,6 +795,8 @@ namespace BlackGui
 
             // force display
             if (!m_usedAsOverlayWidget) { this->displayMyself(); }
+
+            emit this->textMessageTabSelected();
         }
 
         void CTextMessageComponent::showCorrespondingTabForFrequency(const CFrequency &frequency)
@@ -822,12 +824,14 @@ namespace BlackGui
             // set via widget, as ALL can be removed
             switch (tab)
             {
-            case TextMessagesAll : ui->tw_TextMessages->setCurrentWidget(ui->tb_TextMessagesAll); break;
+            case TextMessagesAll : ui->tw_TextMessages->setCurrentWidget(ui->tb_TextMessagesAll);  break;
             case TextMessagesCom1: ui->tw_TextMessages->setCurrentWidget(ui->tb_TextMessagesCOM1); break;
             case TextMessagesCom2: ui->tw_TextMessages->setCurrentWidget(ui->tb_TextMessagesCOM2); break;
             case TextMessagesUnicom: ui->tw_TextMessages->setCurrentWidget(ui->tb_TextMessagesUnicom); break;
             default: break;
             }
+
+            emit this->textMessageTabSelected();
         }
 
         void CTextMessageComponent::setAtcButtonsRowsColumns(int rows, int cols, bool setMaxElements)

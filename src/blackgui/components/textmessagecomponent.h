@@ -118,6 +118,9 @@ namespace BlackGui
             //! Command line was entered
             void commandEntered(const QString &commandLine, const BlackMisc::CIdentifier &originator);
 
+            //! Text message tab selected
+            void textMessageTabSelected();
+
         private:
             QScopedPointer<Ui::CTextMessageComponent> ui;
             BlackMisc::CIdentifier m_identifier { "TextMessageComponent", this };

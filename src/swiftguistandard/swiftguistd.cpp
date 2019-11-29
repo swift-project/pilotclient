@@ -16,6 +16,7 @@
 #include "blackgui/components/logindialog.h"
 #include "blackgui/components/modelbrowserdialog.h"
 #include "blackgui/components/settingscomponent.h"
+#include "blackgui/components/textmessagecomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/overlaymessagesframe.h"
@@ -440,6 +441,25 @@ void SwiftGuiStd::onRequestedConsoleMessage(const QString &logMsg, bool clear)
     Q_ASSERT_X(log, Q_FUNC_INFO, "Missing log component");
     if (clear) { log->clearConsole(); }
     log->appendPlainTextToConsole(logMsg);
+}
+
+void SwiftGuiStd::focusInMainEntryField()
+{
+    ui->comp_MainKeypadArea->focusInEntryField();
+}
+
+void SwiftGuiStd::focusInTextMessageEntryField()
+{
+    if (!ui->comp_MainInfoArea->getTextMessageComponent()) { return; }
+    if (ui->comp_MainInfoArea->getTextMessageComponent()->isParentDockWidgetFloating())
+    {
+        ui->comp_MainInfoArea->getTextMessageComponent()->activateWindow();
+        ui->comp_MainInfoArea->getTextMessageComponent()->focusTextEntry();
+    }
+    else
+    {
+        this->focusInMainEntryField();
+    }
 }
 
 void SwiftGuiStd::showMinimized()

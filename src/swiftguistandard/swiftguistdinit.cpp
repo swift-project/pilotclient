@@ -208,9 +208,12 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::connectPressed, this, &SwiftGuiStd::loginRequested);
     connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::changedOpacity, this, &SwiftGuiStd::onChangedWindowOpacity);
     connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::identPressed, ui->comp_MainInfoArea->getCockpitComponent(), &CCockpitComponent::setSelectedTransponderModeStateIdent);
-    connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::textEntered, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::handleGlobalCommandLineText);
+    connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::textEntered,  ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::handleGlobalCommandLineText);
     connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::audioPressed, ui->comp_MainInfoArea, &CMainInfoAreaComponent::selectAudioTab);
     connect(ui->comp_MainInfoArea,   &CMainInfoAreaComponent::changedInfoAreaStatus, ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::onMainInfoAreaChanged);
+
+    // text component
+    connect(ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::textMessageTabSelected, this, &SwiftGuiStd::focusInTextMessageEntryField, Qt::QueuedConnection);
 
     // audio
     connect(ui->comp_MainInfoArea->getAtcStationComponent(), &CAtcStationComponent::requestAudioWidget, ui->comp_MainInfoArea, &CMainInfoAreaComponent::selectAudioTab);

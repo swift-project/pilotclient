@@ -107,14 +107,19 @@ namespace BlackGui
                 if (pb) { pb->setChecked(true); }
             }
 
-            Q_UNUSED(dockedIndexes);
+            Q_UNUSED(dockedIndexes)
+        }
+
+        void CMainKeypadAreaComponent::focusInEntryField()
+        {
+            ui->lep_CommandLineInput->setFocus();
         }
 
         void CMainKeypadAreaComponent::buttonSelected()
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
             QPushButton *senderButton = static_cast<QPushButton *>(QObject::sender());
             Q_ASSERT_X(senderButton, Q_FUNC_INFO, "No sender button");
-            if (!sGui || sGui->isShuttingDown()) { return; }
             if (!senderButton) { return; }
             const CMainInfoAreaComponent::InfoArea infoArea = buttonToMainInfoArea(senderButton);
             if (infoArea != CMainInfoAreaComponent::InfoAreaNone)
@@ -157,7 +162,7 @@ namespace BlackGui
 
         void CMainKeypadAreaComponent::connectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
-            Q_UNUSED(from);
+            Q_UNUSED(from)
 
             // Connected button
             if (to.isConnected())

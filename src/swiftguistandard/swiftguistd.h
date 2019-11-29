@@ -281,6 +281,12 @@ private:
     //! UI Console message has been recevied
     void onRequestedConsoleMessage(const QString &logMsg, bool clear);
 
+    //! Focus in main entry window
+    void focusInMainEntryField();
+
+    //! Focus in the text message entry field
+    void focusInTextMessageEntryField();
+
     //! Show window minimized
     void showMinimized();
 

@@ -46,6 +46,9 @@ namespace BlackGui
             //! Main info area changed
             void onMainInfoAreaChanged(int currentTabIndex, QList<int> dockedIndexes, QList<int> floatingIndexes);
 
+            //! Focus in entry fields
+            void focusInEntryField();
+
         signals:
             //! Button to select main info area has been pressed
             //! \sa CMainInfoAreaComponent
