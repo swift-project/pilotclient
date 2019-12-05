@@ -118,6 +118,12 @@ namespace BlackMisc
             }
         }
 
+        int CAltitude::comparePropertyByIndex(const CPropertyIndex &index, const CAltitude &compareValue) const
+        {
+            if (index.isMyself()) { return this->compare(compareValue); }
+            return CLength::comparePropertyByIndex(index, compareValue);
+        }
+
         bool CAltitude::toFlightLevel()
         {
             if (m_datum != MeanSeaLevel && m_datum != FlightLevel) { return false; }

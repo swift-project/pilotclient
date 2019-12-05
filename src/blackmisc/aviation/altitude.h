@@ -45,7 +45,7 @@ namespace BlackMisc
             public PhysicalQuantities::CLength,
             public Mixin::MetaType<CAltitude>,
             public Mixin::EqualsByMetaClass<CAltitude>,
-            public Mixin::CompareByMetaClass<CAltitude>,
+            // public Mixin::CompareByMetaClass<CAltitude>,
             public Mixin::HashByMetaClass<CAltitude>,
             public Mixin::DBusByMetaClass<CAltitude>,
             public Mixin::DBusByMetaClass<CAltitude, LosslessTag>,
@@ -87,9 +87,6 @@ namespace BlackMisc
                 PressureAltitude,   //!< Altitude above the standard datum plane
                 TrueAltitude        //!< Height of the airplane above Mean Sea Level (MSL)
             };
-
-            //! \copydoc BlackMisc::Mixin::String::toQString
-            QString convertToQString(bool i18n = false) const;
 
             //! Default constructor: 0m Altitude MSL
             CAltitude() : CLength(0, PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel) {}
@@ -196,6 +193,12 @@ namespace BlackMisc
 
             //! \copydoc PhysicalQuantities::CPhysicalQuantity::compare
             int compare(const CAltitude &otherAltitude) const;
+
+            //! \copydoc BlackMisc::Mixin::String::toQString
+            QString convertToQString(bool i18n = false) const;
+
+            //! \copydoc Mixin::Index::setPropertyByIndex
+            int comparePropertyByIndex(const CPropertyIndex &index, const CAltitude &compareValue) const;
 
             //! Round to the nearest 100ft, like needed for China and Russia
             //! \remark https://en.wikipedia.org/wiki/Flight_level
