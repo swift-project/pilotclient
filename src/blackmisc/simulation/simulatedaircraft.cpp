@@ -376,8 +376,8 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexCallsign: m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexPilot: m_pilot.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexCallsign:     m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexPilot:        m_pilot.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexRelativeDistance: m_relativeDistance.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexCom1System:   m_com1system.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexCom2System:   m_com2system.setPropertyByIndex(index.copyFrontRemoved(), variant); break;

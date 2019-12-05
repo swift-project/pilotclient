@@ -328,27 +328,27 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexPosition: return m_position.propertyByIndex(index.copyFrontRemoved());
-            case IndexLatitude: return this->latitude().propertyByIndex(index.copyFrontRemoved());
+            case IndexPosition:  return m_position.propertyByIndex(index.copyFrontRemoved());
+            case IndexLatitude:  return this->latitude().propertyByIndex(index.copyFrontRemoved());
             case IndexLongitude: return this->longitude().propertyByIndex(index.copyFrontRemoved());
-            case IndexAltitude: return this->getAltitude().propertyByIndex(index.copyFrontRemoved());
-            case IndexHeading: return m_heading.propertyByIndex(index.copyFrontRemoved());
-            case IndexPitch: return m_pitch.propertyByIndex(index.copyFrontRemoved());
-            case IndexPBHInfo: return CVariant::fromValue(this->getPBHInfo());
-            case IndexBank: return m_bank.propertyByIndex(index.copyFrontRemoved());
-            case IndexCG: return m_cg.propertyByIndex(index.copyFrontRemoved());
+            case IndexAltitude:  return this->getAltitude().propertyByIndex(index.copyFrontRemoved());
+            case IndexHeading:   return m_heading.propertyByIndex(index.copyFrontRemoved());
+            case IndexPitch:     return m_pitch.propertyByIndex(index.copyFrontRemoved());
+            case IndexPBHInfo:   return CVariant::fromValue(this->getPBHInfo());
+            case IndexBank:      return m_bank.propertyByIndex(index.copyFrontRemoved());
+            case IndexCG:        return m_cg.propertyByIndex(index.copyFrontRemoved());
             case IndexSceneryOffset: return m_sceneryOffset.propertyByIndex(index.copyFrontRemoved());
-            case IndexGroundSpeed: return m_groundSpeed.propertyByIndex(index.copyFrontRemoved());
-            case IndexGroundElevationPlane: return m_groundElevationPlane.propertyByIndex(index.copyFrontRemoved());
-            case IndexCallsign: return m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
-            case IndexIsOnGround: return CVariant::fromValue(m_onGround);
-            case IndexIsOnGroundString: return CVariant::fromValue(this->onGroundAsString());
-            case IndexOnGroundReliability: return CVariant::fromValue(m_onGroundDetails);
-            case IndexOnGroundReliabilityString: return CVariant::fromValue(this->getOnGroundDetailsAsString());
-            case IndexGroundElevationInfo: return CVariant::fromValue(this->getGroundElevationInfo());
+            case IndexGroundSpeed:                    return m_groundSpeed.propertyByIndex(index.copyFrontRemoved());
+            case IndexGroundElevationPlane:           return m_groundElevationPlane.propertyByIndex(index.copyFrontRemoved());
+            case IndexCallsign:                       return m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
+            case IndexIsOnGround:                     return CVariant::fromValue(m_onGround);
+            case IndexIsOnGroundString:               return CVariant::fromValue(this->onGroundAsString());
+            case IndexOnGroundReliability:            return CVariant::fromValue(m_onGroundDetails);
+            case IndexOnGroundReliabilityString:      return CVariant::fromValue(this->getOnGroundDetailsAsString());
+            case IndexGroundElevationInfo:            return CVariant::fromValue(this->getGroundElevationInfo());
             case IndexGroundElevationInfoTransferred: return CVariant::fromValue(this->isGroundElevationInfoTransferred());
-            case IndexGroundElevationInfoString: return CVariant::fromValue(this->getGroundElevationInfoAsString());
-            case IndexGroundElevationPlusInfo: return CVariant::fromValue(this->getGroundElevationAndInfo());
+            case IndexGroundElevationInfoString:      return CVariant::fromValue(this->getGroundElevationInfoAsString());
+            case IndexGroundElevationPlusInfo:        return CVariant::fromValue(this->getGroundElevationAndInfo());
             case IndexCanLikelySkipNearGroundInterpolation: return CVariant::fromValue(this->canLikelySkipNearGroundInterpolation());
             default: return CValueObject::propertyByIndex(index);
             }
@@ -363,16 +363,16 @@ namespace BlackMisc
             switch (i)
             {
             case IndexPosition: m_position.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexPitch: m_pitch.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexBank: m_bank.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexCG: m_cg.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexPitch:    m_pitch.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexBank:     m_bank.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexCG:       m_cg.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexSceneryOffset: m_sceneryOffset.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexGroundSpeed: m_groundSpeed.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexGroundSpeed:   m_groundSpeed.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexGroundElevationPlane: m_groundElevationPlane.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexCallsign: m_correspondingCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexIsOnGround: m_onGround = variant.toInt(); break;
-            case IndexOnGroundReliability: m_onGroundDetails = variant.toInt(); break;
-            case IndexGroundElevationInfo: m_elvInfo = variant.toInt(); break;
+            case IndexCallsign:             m_correspondingCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexIsOnGround:           m_onGround = variant.toInt(); break;
+            case IndexOnGroundReliability:  m_onGroundDetails = variant.toInt(); break;
+            case IndexGroundElevationInfo:  m_elvInfo = variant.toInt(); break;
             case IndexGroundElevationInfoTransferred: m_isElvInfoTransferred = variant.toBool(); break;
             case IndexGroundElevationPlusInfo: break;
             case IndexCanLikelySkipNearGroundInterpolation: break;
@@ -390,11 +390,11 @@ namespace BlackMisc
             case IndexPosition: return m_position.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPosition());
             case IndexAltitude: return this->getAltitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getAltitude());
             case IndexPBHInfo: // fall through
-            case IndexPitch: return m_pitch.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPitch());
-            case IndexBank: return m_bank.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getBank());
-            case IndexCG: return m_cg.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCG());
+            case IndexPitch:         return m_pitch.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPitch());
+            case IndexBank:          return m_bank.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getBank());
+            case IndexCG:            return m_cg.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCG());
             case IndexSceneryOffset: return m_sceneryOffset.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getSceneryOffset());
-            case IndexGroundSpeed: return m_groundSpeed.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getGroundSpeed());
+            case IndexGroundSpeed:   return m_groundSpeed.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getGroundSpeed());
             case IndexGroundElevationPlane:
             case IndexGroundElevationPlusInfo:
                 {
@@ -585,9 +585,9 @@ namespace BlackMisc
             }
 
             // "extreme" values for which we are surely not on ground
-            if (qAbs(this->getPitch().value(CAngleUnit::deg())) > 20)  { if (details) { *details = QStringLiteral("max.pitch"); }; return true; } // some tail wheel aircraft already have 11° pitch on ground
-            if (qAbs(this->getBank().value(CAngleUnit::deg()))  > 10)  { if (details) { *details = QStringLiteral("max.bank"); }; return true; }
-            if (this->getGroundSpeed() > sureRotateSpeed) { if (details) { *details = u"gs. > vr " % sureRotateSpeed.valueRoundedWithUnit(1); }; return true; }
+            if (qAbs(this->getPitch().value(CAngleUnit::deg())) > 20)  { if (details) { *details = QStringLiteral("max.pitch"); } return true; } // some tail wheel aircraft already have 11° pitch on ground
+            if (qAbs(this->getBank().value(CAngleUnit::deg()))  > 10)  { if (details) { *details = QStringLiteral("max.bank"); }  return true; }
+            if (this->getGroundSpeed() > sureRotateSpeed) { if (details) { *details = u"gs. > vr " % sureRotateSpeed.valueRoundedWithUnit(1); } return true; }
 
             // use the most accurate or reliable guesses here first
             // ------------------------------------------------------
@@ -643,7 +643,7 @@ namespace BlackMisc
                 if (this->getGroundSpeed() < guessedRotateSpeed)
                 {
                     this->setOnGround(OnGround, CAircraftSituation::OnGroundByGuessing);
-                    if (details) { *details = QStringLiteral("Guessing, max.guessed gs.") + guessedRotateSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1); };
+                    if (details) { *details = QStringLiteral("Guessing, max.guessed gs.") + guessedRotateSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1); }
                     return true;
                 }
             }
@@ -726,7 +726,7 @@ namespace BlackMisc
         QString CAircraftSituation::getGroundElevationAndInfo() const
         {
             static const QString n("null");
-            if (m_groundElevationPlane.isNull()) { return n; };
+            if (m_groundElevationPlane.isNull()) { return n; }
 
             return m_groundElevationPlane.getAltitude().toQString(true) %
                    u" [" % this->getGroundElevationInfoAsString() % u']';

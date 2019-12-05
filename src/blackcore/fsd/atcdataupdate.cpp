@@ -11,6 +11,7 @@
 
 #include "blackmisc/logmessage.h"
 
+using namespace BlackMisc;
 using namespace BlackMisc::Network;
 
 namespace BlackCore
@@ -50,7 +51,7 @@ namespace BlackCore
         {
             if (tokens.size() < 7)
             {
-                BlackMisc::CLogMessage(static_cast<AtcDataUpdate *>(nullptr)).warning(u"Wrong number of arguments.");
+                CLogMessage(static_cast<AtcDataUpdate *>(nullptr)).warning(u"Wrong number of arguments.");
                 return {};
             }
 

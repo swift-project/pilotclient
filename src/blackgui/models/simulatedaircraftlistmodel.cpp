@@ -77,7 +77,7 @@ namespace BlackGui
 
                     m_columns.addColumn(CColumn("frequency", { CSimulatedAircraft::IndexCom1System, CComSystem::IndexActiveFrequency }, new CComFrequencyFormatter()));
                     m_columns.addColumn(CColumn::standardString("transponder", { CSimulatedAircraft::IndexTransponder, CTransponder::IndexTransponderCodeAndModeFormatted }));
-                    m_columns.addColumn(CColumn("latitude",  { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexLatitude }, new CLatLonFormatter()));
+                    m_columns.addColumn(CColumn("latitude",  { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexLatitude },  new CLatLonFormatter()));
                     m_columns.addColumn(CColumn("longitude", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexLongitude }, new CLatLonFormatter()));
 
                     // default sort order
@@ -101,7 +101,7 @@ namespace BlackGui
                     m_columns.addColumnIncognito(CColumn::standardString("realname", "pilot's real name", { CSimulatedAircraft::IndexPilot, CUser::IndexRealName }));
                     m_columns.addColumn(CColumn::standardString("icao", CSimulatedAircraft::IndexCombinedIcaoLiveryString));
                     m_columns.addColumn(CColumn::standardString("model", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexModelString}));
-                    m_columns.addColumn(CColumn::standardString("type", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexModelTypeAsString}));
+                    m_columns.addColumn(CColumn::standardString("type",  { CSimulatedAircraft::IndexModel, CAircraftModel::IndexModelTypeAsString}));
                     m_columns.addColumn(CColumn::standardString("desc.", "description", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexDescription}));
                     m_columns.addColumn(CColumn::standardString("aircraft", "rendered vs. network aircraft ICAO", CSimulatedAircraft::IndexNetworkModelAircraftIcaoDifference));
                     m_columns.addColumn(CColumn::standardString("livery", "rendered vs. network livery", CSimulatedAircraft::IndexNetworkModelLiveryDifference));

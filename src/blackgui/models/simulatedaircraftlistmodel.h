@@ -15,8 +15,6 @@
 #include "blackgui/models/listmodelcallsignobjects.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 
-class QObject;
-
 namespace BlackMisc { namespace Simulation { class CSimulatedAircraft; } }
 namespace BlackGui
 {
@@ -41,7 +39,7 @@ namespace BlackGui
             explicit CSimulatedAircraftListModel(QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CSimulatedAircraftListModel() {}
+            virtual ~CSimulatedAircraftListModel() override {}
 
             //! Mode
             void setAircraftMode(AircraftMode mode);

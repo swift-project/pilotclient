@@ -351,6 +351,7 @@ namespace BlackGui
             {
                 m_updateTimer.stop();
                 this->clearOnlineViews();
+                this->update();
             }
         }
 

@@ -881,8 +881,11 @@ namespace BlackCore
 
             CFrequency freq(atcDataUpdate.m_frequencykHz, CFrequencyUnit::kHz());
             freq.switchUnit(CFrequencyUnit::MHz()); // we would not need to bother, but this makes it easier to identify
-            const CLength networkRange(atcDataUpdate.m_visibleRange, CLengthUnit::NM());
 
+            // Here we could round to channel spacing, based on https://discordapp.com/channels/539048679160676382/539486489977946112/651514202405601291
+            // CComSystem::roundToChannelSpacing(freq, CComSystem::ChannelSpacing25KHz);
+
+            const CLength networkRange(atcDataUpdate.m_visibleRange, CLengthUnit::NM());
             const CLength range = fixAtcRange(networkRange, cs);
             const CCoordinateGeodetic position(atcDataUpdate.m_latitude, atcDataUpdate.m_longitude, 0);
 
