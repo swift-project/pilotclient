@@ -89,6 +89,11 @@ namespace BlackCore
                 //! Corresponding device
                 const BlackMisc::Audio::CAudioDeviceInfo &device() const { return m_device; }
 
+                //! The device's volume 0..1 @{
+                double getDeviceOutputVolume() const;
+                bool setDeviceOutputVolume(double volume);
+                //! @}
+
             signals:
                 //! Streaming data
                 void outputVolumeStream(const OutputVolumeStreamArgs &args);
@@ -96,7 +101,7 @@ namespace BlackCore
             private:
                 bool m_started = false;
                 BlackMisc::Audio::CAudioDeviceInfo m_device;
-                QScopedPointer<QAudioOutput>       m_audioOutputCom;
+                QScopedPointer<QAudioOutput>       m_audioOutput;
                 CAudioOutputBuffer                *m_audioOutputBuffer = nullptr;
             };
         } // ns

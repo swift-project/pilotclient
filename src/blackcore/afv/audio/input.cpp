@@ -86,6 +86,20 @@ namespace BlackCore
                 return true;
             }
 
+            double CInput::getDeviceInputVolume() const
+            {
+                if (m_audioInput) { return static_cast<double>(m_audioInput->volume()); }
+                return 0.0;
+            }
+
+            bool CInput::setDeviceInputVolume(double volume)
+            {
+                if (!m_audioInput && m_started) { return false; }
+                const qreal v = normalize0to100qr(volume);
+                m_audioInput->setVolume(v);
+                return true;
+            }
+
             void CInput::start(const CAudioDeviceInfo &inputDevice)
             {
                 if (m_started) { return; }

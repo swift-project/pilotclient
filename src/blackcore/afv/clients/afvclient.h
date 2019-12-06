@@ -128,6 +128,13 @@ namespace BlackCore
                 void stopAudio();
                 //! @}
 
+                //! The device's volume 0..1 @{
+                double getDeviceInputVolume() const;
+                bool   setDeviceInputVolume(double volume);
+                double getDeviceOutputVolume() const;
+                bool   setDeviceOutputVolume(double volume);
+                //! @}
+
                 //! Receive audio
                 //! \threadsafe
                 void setReceiveAudio(bool receive);

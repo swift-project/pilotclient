@@ -64,8 +64,8 @@ namespace BlackCore
             //! Opus data arguments
             struct OpusDataAvailableArgs
             {
-                uint sequenceCounter = 0;   //!< sequence counter
-                QByteArray audio;           //!< audio data
+                uint sequenceCounter = 0; //!< sequence counter
+                QByteArray audio;         //!< audio data
             };
 
             //! Input volume stream arguments
@@ -101,9 +101,14 @@ namespace BlackCore
                 void setOpusBytesEncoded(int opusBytesEncoded) { m_opusBytesEncoded = opusBytesEncoded; }
                 //! @}
 
-                //! Volume @{
+                //! Volume 0..1 @{
                 double volume() const { return m_volume; }
                 bool setVolume(double volume);
+                //! @}
+
+                //! The device's volume 0..1 @{
+                double getDeviceInputVolume() const;
+                bool setDeviceInputVolume(double volume);
                 //! @}
 
                 //! Started?

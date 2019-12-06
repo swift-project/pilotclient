@@ -233,4 +233,16 @@ namespace BlackSound
         static const QString unknown("unknown");
         return unknown;
     }
+
+    double normalize0to100(double in)
+    {
+        if (in < 0) { return 0; }
+        return (in >= 1.0) ? 1.0 : in;
+    }
+
+    qreal normalize0to100qr(double in)
+    {
+        return static_cast<qreal>(normalize0to100(in));
+    }
+
 } // ns

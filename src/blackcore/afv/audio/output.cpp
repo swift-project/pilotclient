@@ -39,7 +39,7 @@ namespace BlackCore
             {
                 const int sampleBytes  = m_outputFormat.sampleSize() / 8;
                 const int channelCount = m_outputFormat.channelCount();
-                const qint64 count = maxlen / (sampleBytes * channelCount);
+                const qint64 count     = maxlen / (sampleBytes * channelCount);
                 QVector<float> buffer;
                 m_sampleProvider->readSamples(buffer, count);
 
@@ -70,8 +70,7 @@ namespace BlackCore
                     buffer = convertFromMonoToStereo(buffer);
                 }
 
-                memcpy(data, buffer.constData(), maxlen);
-
+                memcpy(data, buffer.constData(), static_cast<size_t>(maxlen));
                 return maxlen;
             }
 
@@ -111,10 +110,10 @@ namespace BlackCore
                 const QAudioDeviceInfo selectedDevice = getLowestLatencyDevice(outputDevice, outputFormat);
                 CLogMessage(this).info(u"Starting: '%1' with: %2") << selectedDevice.deviceName() << format;
 
-                m_audioOutputCom.reset(new QAudioOutput(selectedDevice, outputFormat));
+                m_audioOutput.reset(new QAudioOutput(selectedDevice, outputFormat));
                 m_audioOutputBuffer->open(QIODevice::ReadWrite | QIODevice::Unbuffered);
                 m_audioOutputBuffer->setAudioFormat(outputFormat);
-                m_audioOutputCom->start(m_audioOutputBuffer);
+                m_audioOutput->start(m_audioOutputBuffer);
 
                 m_started = true;
             }
@@ -123,14 +122,29 @@ namespace BlackCore
             {
                 if (!m_started) { return; }
                 m_started = false;
-                m_audioOutputCom->stop();
-                m_audioOutputCom.reset();
+                m_audioOutput->stop();
+                m_audioOutput.reset();
                 if (m_audioOutputBuffer)
                 {
                     m_audioOutputBuffer->deleteLater();
                     m_audioOutputBuffer = nullptr;
                 }
             }
+
+            double COutput::getDeviceOutputVolume() const
+            {
+                if (m_audioOutput && m_started) { return static_cast<double>(m_audioOutput->volume()); }
+                return 0.0;
+            }
+
+            bool COutput::setDeviceOutputVolume(double volume)
+            {
+                if (!m_audioOutput) { return false; }
+                const qreal v = normalize0to100qr(volume);
+                m_audioOutput->setVolume(v);
+                return true;
+            }
+
         } // ns
     } // ns
 } // ns

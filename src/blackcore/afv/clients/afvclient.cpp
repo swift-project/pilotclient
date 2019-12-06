@@ -357,6 +357,30 @@ namespace BlackCore
                 emit this->stoppedAudio();
             }
 
+            double CAfvClient::getDeviceInputVolume() const
+            {
+                if (m_input) { return m_input->getDeviceInputVolume(); }
+                return 0;
+            }
+
+            bool CAfvClient::setDeviceInputVolume(double volume)
+            {
+                if (m_input) { return m_input->setDeviceInputVolume(volume); }
+                return false;
+            }
+
+            double CAfvClient::getDeviceOutputVolume() const
+            {
+                if (m_output) { return m_output->getDeviceOutputVolume(); }
+                return 0;
+            }
+
+            bool CAfvClient::setDeviceOutputVolume(double volume)
+            {
+                if (m_output) { return m_output->setDeviceOutputVolume(volume); }
+                return false;
+            }
+
             void CAfvClient::setReceiveAudio(bool receive)
             {
                 QMutexLocker lock(&m_mutexConnection);

@@ -35,6 +35,12 @@ namespace BlackSound
     BLACKSOUND_EXPORT const QString &toQString(QAudioFormat::Endian e);
     BLACKSOUND_EXPORT const QString &toQString(QAudioFormat::SampleType s);
     //! @}
+
+    //! Normalize audio volume to 0..100 @{
+    BLACKSOUND_EXPORT double normalize0to100(double in);
+    BLACKSOUND_EXPORT qreal  normalize0to100qr(double in);
+    //! @}
+
 } // ns
 
 #endif // guard
