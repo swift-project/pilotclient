@@ -24,7 +24,7 @@ QCheckBox {
 
 /* CGuiUtility::checkBoxReadOnly */
 /* used for read-only checkboxes */
-/* QCheckBox[readOnly="true"] { background: rgba(40,40,40); } */
+/* QCheckBox[readOnly="true"] { background: rgb(40,40,40); } */
 
 QCheckBox::indicator {
   color: #b1b1b1;
@@ -327,13 +327,13 @@ QLineEdit {
 }
 
 QLineEdit[readOnly="true"] {
-  background: rgba(40,40,40);
-  border: 1px solid rgba(50,50,50);
+  background: rgb(40,40,40);
+  border: 1px solid rgb(50,50,50);
 }
 
 QLineEdit:disabled {
-  background: rgba(40,40,40);
-  border: 1px solid rgba(50,50,50);
+  background: rgb(40,40,40);
+  border: 1px solid rgb(50,50,50);
 }
 
 QLineEdit[validation="error"]   { border: 2px solid red; }
@@ -412,8 +412,8 @@ QComboBox {
 }
 
 QComboBox:disabled {
-  background: rgba(40,40,40);
-  border: 1px solid rgba(50,50,50);
+  background: rgb(40,40,40);
+  border: 1px solid rgb(50,50,50);
 }
 
 /* drop down list */

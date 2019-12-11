@@ -372,7 +372,7 @@ namespace BlackGui
         BLACK_VERIFY_X(checkBox, Q_FUNC_INFO, "no checkbox");
         if (!checkBox) { return; }
 
-        static const QString background("background: rgba(40,40,40)"); //! \fixme hardcoded stylesheet setting, should come from stylesheet
+        static const QString background("background: rgb(40,40,40)"); //! \fixme hardcoded stylesheet setting, should come from stylesheet
         if (readOnly)
         {
             checkBox->setAttribute(Qt::WA_TransparentForMouseEvents);
