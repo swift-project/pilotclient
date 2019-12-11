@@ -223,6 +223,14 @@ namespace BlackGui
                 ui->le_AircraftType->setText(aircraft.getAircraftIcaoCodeDesignator());
             }
             m_model = aircraft.getModel();
+
+            if (aircraft.getAircraftIcaoCode().isLoadedFromDb() && aircraft.getAircraftIcaoCode().hasValidWtc())
+            {
+                const QString wtc = aircraft.getAircraftIcaoCode().getWtc().toUpper();
+                const bool heavyFlag = (wtc.startsWith("H", Qt::CaseInsensitive) || wtc.startsWith("S", Qt::CaseInsensitive));
+                ui->cb_Heavy->setChecked(heavyFlag);
+            }
+
             this->prefillWithUserData(aircraft.getPilot());
             this->buildPrefixIcaoSuffix();
         }
