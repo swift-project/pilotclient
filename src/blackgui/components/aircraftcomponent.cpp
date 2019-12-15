@@ -55,7 +55,7 @@ namespace BlackGui
             this->tabBar()->setUsesScrollButtons(true);
             ui->tvp_AirportsInRange->setResizeMode(CAirportView::ResizingOnce);
             ui->tvp_AircraftInRange->setAircraftMode(CSimulatedAircraftListModel::NetworkMode);
-            ui->tvp_AircraftInRange->configureMenu(true, true, false, true, true);
+            ui->tvp_AircraftInRange->configureMenu(true, true, false, true, true, true);
 
             connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::modelDataChangedDigest, this, &CAircraftComponent::onRowCountChanged);
             connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestTextMessageWidget, this, &CAircraftComponent::requestTextMessageWidget);
@@ -145,13 +145,13 @@ namespace BlackGui
                 if (!myself) { return; }
                 myself->update();
             });
-            Q_UNUSED(index);
+            Q_UNUSED(index)
         }
 
         void CAircraftComponent::onRowCountChanged(int count, bool withFilter)
         {
-            Q_UNUSED(count);
-            Q_UNUSED(withFilter);
+            Q_UNUSED(count)
+            Q_UNUSED(withFilter)
             const int ac = this->indexOf(ui->tb_AircraftInRange);
             const int ap = this->indexOf(ui->tb_AirportsInRange);
             QString acs = this->tabBar()->tabText(ac);
@@ -164,7 +164,7 @@ namespace BlackGui
 
         void CAircraftComponent::onConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
-            Q_UNUSED(from);
+            Q_UNUSED(from)
             if (to.isDisconnected())
             {
                 ui->tvp_AircraftInRange->clear();
