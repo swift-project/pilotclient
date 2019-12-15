@@ -360,19 +360,35 @@ namespace BlackMisc
 
         QString CFlightPlan::convertToQString(bool i18n) const
         {
+            return this->buildString(i18n, " ");
+        }
+
+        QString CFlightPlan::asHTML(bool i18n) const
+        {
+            return this->buildString(i18n, "<br>");
+        }
+
+        QString CFlightPlan::buildString(bool i18n, const QString &separator) const
+        {
             const QString s = m_callsign.toQString(i18n)
-                              % u' ' % m_equipmentSuffix
-                              % u' ' % m_originAirportIcao.toQString(i18n)
-                              % u' ' % m_destinationAirportIcao.toQString(i18n)
-                              % u' ' % m_alternateAirportIcao.toQString(i18n)
-                              % u' ' % m_takeoffTimePlanned.toString("ddhhmm")
-                              % u' ' % m_takeoffTimeActual.toString("ddhhmm")
-                              % u' ' % m_enrouteTime.toQString(i18n)
-                              % u' ' % m_fuelTime.toQString(i18n)
-                              % u' ' % m_cruiseAltitude.toQString(i18n)
-                              % u' ' % m_cruiseTrueAirspeed.toQString(i18n)
-                              % u' ' % m_route
-                              % u' ' % this->getRemarks();
+                              % u" aircraft: " % m_equipmentSuffix
+                              % separator
+                              % u"origin: "       % m_originAirportIcao.toQString(i18n)
+                              % u" destination: " % m_destinationAirportIcao.toQString(i18n)
+                              % u" alternate: "   % m_alternateAirportIcao.toQString(i18n)
+                              % separator
+                              % u"takeoff planed: " % m_takeoffTimePlanned.toString("ddhhmm")
+                              % u" actual: " % m_takeoffTimeActual.toString("ddhhmm")
+                              % separator
+                              % u"enroute time: " % m_enrouteTime.toQString(i18n)
+                              % u" fuel time:" % m_fuelTime.toQString(i18n)
+                              % separator
+                              % u"altitude: " % m_cruiseAltitude.toQString(i18n)
+                              % u" speed: "   % m_cruiseTrueAirspeed.toQString(i18n)
+                              % separator
+                              % u"route: " % m_route
+                              % separator
+                              % u"remarks: " % this->getRemarks();
             return s;
         }
 
@@ -615,7 +631,7 @@ namespace BlackMisc
             catch (const CJsonException &ex)
             {
                 const CStatusMessage m = ex.toStatusMessage(&fp, QString("Parsing flight plan from failed."));
-                Q_UNUSED(m);
+                Q_UNUSED(m)
             }
             return fp;
         }

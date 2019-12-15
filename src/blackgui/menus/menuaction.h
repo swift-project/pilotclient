@@ -171,6 +171,9 @@ namespace BlackGui
             //! Client model set related
             static const QString &pathClientModelSet() { static const QString p("Client.Model set"); return p; }
 
+            //! Network data
+            static const QString &pathClientNetwork() { static const QString p("ClientNetwork/Network"); return p; }
+
             // ---- standard view paths --------
 
             //! Database

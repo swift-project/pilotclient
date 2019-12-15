@@ -185,7 +185,6 @@ namespace BlackMisc
             static constexpr int MaxRouteLength   = 512; //!< Max.route length
             static constexpr int MaxRouteAndRemarksLength = 624; //!< Max.length for Route and Remarks
 
-
             //! Default constructor
             CFlightPlan();
 
@@ -385,6 +384,9 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;
 
+            //! As HTML
+            QString asHTML(bool i18n = false) const;
+
             //! From vPilot data
             static CFlightPlan fromVPilotFormat(const QString &vPilotData);
 
@@ -456,23 +458,26 @@ namespace BlackMisc
             static const QStringList &prefixCodes();
 
         private:
-            CCallsign m_callsign;             //!< aircraft callsign
-            CAircraftIcaoCode m_aircraftIcao; //!< Aircraft ICAO code
-            QString m_prefix;                 //!< e.g. "T/A320/F" -> the "T"
-            QString m_equipmentSuffix;        //!< e.g. "T/A320/F" -> the "F"
-            CAirportIcaoCode m_originAirportIcao;
-            CAirportIcaoCode m_destinationAirportIcao;
-            CAirportIcaoCode m_alternateAirportIcao;
-            QDateTime m_takeoffTimePlanned;
-            QDateTime m_takeoffTimeActual;
+            CCallsign         m_callsign;        //!< aircraft callsign
+            CAircraftIcaoCode m_aircraftIcao;    //!< Aircraft ICAO code
+            QString           m_prefix;          //!< e.g. "T/A320/F" -> the "T"
+            QString           m_equipmentSuffix; //!< e.g. "T/A320/F" -> the "F"
+            CAirportIcaoCode  m_originAirportIcao;
+            CAirportIcaoCode  m_destinationAirportIcao;
+            CAirportIcaoCode  m_alternateAirportIcao;
+            QDateTime         m_takeoffTimePlanned;
+            QDateTime         m_takeoffTimeActual;
             PhysicalQuantities::CTime m_enrouteTime;
             PhysicalQuantities::CTime m_fuelTime;
             CAltitude m_cruiseAltitude;
-            QString m_cruiseAltitudeString;
+            QString   m_cruiseAltitudeString;
             PhysicalQuantities::CSpeed m_cruiseTrueAirspeed;
-            FlightRules m_flightRules;
-            QString m_route;
+            FlightRules        m_flightRules;
+            QString            m_route;
             CFlightPlanRemarks m_remarks;
+
+            //! As string
+            QString buildString(bool i18n = false, const QString &separator = " ") const;
 
             BLACK_METACLASS(
                 CFlightPlan,

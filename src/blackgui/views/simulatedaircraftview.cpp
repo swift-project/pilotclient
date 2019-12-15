@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackconfig/buildconfig.h"
-#include "blackgui/views/simulatedaircraftview.h"
+#include "simulatedaircraftview.h"
+#include "flightplandialog.h"
 #include "blackgui/models/simulatedaircraftlistmodel.h"
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/guiapplication.h"
@@ -16,6 +16,7 @@
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/icons.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QStringBuilder>
 #include <QPointer>
@@ -46,13 +47,14 @@ namespace BlackGui
             this->setSortIndicator();
         }
 
-        void CSimulatedAircraftView::configureMenu(bool menuRecalculate, bool menuHighlightAndFollow, bool menuEnableAircraft, bool menuFastPositionUpdates, bool menuGndFlag)
+        void CSimulatedAircraftView::configureMenu(bool menuRecalculate, bool menuHighlightAndFollow, bool menuEnableAircraft, bool menuFastPositionUpdates, bool menuGndFlag, bool menuFlightPlan)
         {
             m_withRecalculate            = menuRecalculate;
             m_withMenuEnableAircraft     = menuEnableAircraft;
             m_withMenuFastPosition       = menuFastPositionUpdates;
             m_withMenuHighlightAndFollow = menuHighlightAndFollow;
             m_withMenuEnableGndFlag      = menuGndFlag;
+            m_withMenuFlightPlan         = menuFlightPlan;
         }
 
         void CSimulatedAircraftView::configureMenuFastPositionUpdates(bool menuFastPositionUpdates)
@@ -99,6 +101,10 @@ namespace BlackGui
                     menuActions.addMenuCom();
                     menuActions.addAction(CIcons::appTextMessages16(), "Show text messages", CMenuAction::pathClientCom(), { this, &CSimulatedAircraftView::requestTextMessage });
 
+                    if (m_withMenuFlightPlan && networkContext() && networkContext()->isConnected())
+                    {
+                        menuActions.addAction(CIcons::appFlightPlan16(), "Flight plan",  CMenuAction::pathClientNetwork(), { this, &CSimulatedAircraftView::showFlightPlanDialog });
+                    }
                     if (m_withMenuEnableAircraft)
                     {
                         menuActions.addAction(CIcons::appAircraft16(), aircraft.isEnabled() ? "Disable aircraft" : "Enabled aircraft", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::toggleEnabledAircraft });
@@ -116,7 +122,8 @@ namespace BlackGui
                     {
                         menuActions.addAction(CIcons::globe16(), aircraft.fastPositionUpdates() ? "Normal updates" : "Fast position updates (send)",  CMenuAction::pathClientSimulationTransfer(), { this, &CSimulatedAircraftView::toggleFastPositionUpdates });
                     }
-                    const bool any = m_withMenuEnableAircraft || m_withMenuFastPosition || m_withMenuHighlightAndFollow || m_withMenuEnableGndFlag;
+
+                    const bool any = m_withMenuEnableAircraft || m_withMenuFastPosition || m_withMenuHighlightAndFollow || m_withMenuEnableGndFlag || m_withMenuFlightPlan;
                     if (any && (sApp && sApp->isDeveloperFlagSet()))
                     {
                         menuActions.addAction(CIcons::appSimulator16(), "Show position log.", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::showPositionLogInSimulator });
@@ -291,6 +298,19 @@ namespace BlackGui
             IContextNetwork *nwContext = networkContext();
             if (!nwContext) { return; }
             nwContext->updateAircraftSupportingGndFLag(aircraft.getCallsign(), aircraft.isSupportingGndFlag());
+        }
+
+        void CSimulatedAircraftView::showFlightPlanDialog()
+        {
+            if (!m_withMenuFlightPlan) { return; }
+            if (!networkContext() || !networkContext()->isConnected()) { return; }
+
+            const CSimulatedAircraft aircraft = this->selectedObject();
+            if (!aircraft.hasCallsign()) { return; }
+
+            const CCallsign cs = aircraft.getCallsign();
+            if (!m_fpDialog) { m_fpDialog = new CFlightPlanDialog(this); }
+            m_fpDialog->showFlightPlan(cs);
         }
 
         IContextSimulator *CSimulatedAircraftView::simulatorContext()

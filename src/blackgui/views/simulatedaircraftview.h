@@ -36,6 +36,8 @@ namespace BlackGui
     namespace Menus { class CMenuActions; }
     namespace Views
     {
+        class CFlightPlanDialog;
+
         //! Aircraft view
         class BLACKGUI_EXPORT CSimulatedAircraftView :
             public CViewWithCallsignObjects<Models::CSimulatedAircraftListModel>
@@ -50,7 +52,7 @@ namespace BlackGui
             void setAircraftMode(Models::CSimulatedAircraftListModel::AircraftMode mode);
 
             //! Configure the menu
-            void configureMenu(bool menuRecalculate, bool menuHighlightAndFollow, bool menuEnableAircraft, bool menuFastPositionUpdates, bool menuGndFlag);
+            void configureMenu(bool menuRecalculate, bool menuHighlightAndFollow, bool menuEnableAircraft, bool menuFastPositionUpdates, bool menuGndFlag, bool menuFlightPlan);
 
             //! Configure fast position updates menu
             void configureMenuFastPositionUpdates(bool menuFastPositionUpdates);
@@ -127,6 +129,9 @@ namespace BlackGui
             //! Update the gnd.flag support
             void updateAircraftSupportingGndFLag(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
+            //! FP dialog
+            void showFlightPlanDialog();
+
             //! Simulator context
             static BlackCore::Context::IContextSimulator *simulatorContext();
 
@@ -138,6 +143,9 @@ namespace BlackGui
             bool m_withMenuEnableAircraft     = true;
             bool m_withMenuEnableGndFlag      = true;
             bool m_withMenuFastPosition       = true;
+            bool m_withMenuFlightPlan         = true;
+
+            CFlightPlanDialog *m_fpDialog = nullptr;
         };
     } // ns
 } // ns
