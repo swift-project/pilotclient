@@ -26,6 +26,9 @@ namespace BlackSimPlugin
 {
     namespace Fs9
     {
+        HRESULT inline s_success_pending() { return DPNSUCCESS_PENDING; }
+        bool inline isPending(HRESULT hr) { return hr == s_success_pending(); }
+
         //! DirectPlay peer implementation
         //! More information can be found in the DirectX9 SDK documentation
         //! http://doc.51windows.net/Directx9_SDK/?url=/Directx9_SDK/play/dplay.htm
@@ -49,6 +52,8 @@ namespace BlackSimPlugin
             //! Log categories
             static const BlackMisc::CLogCategoryList &getLogCategories();
 
+
+
         public slots:
             //! Send a custom DirectPlay message
             HRESULT sendMessage(const QByteArray &data);
@@ -59,6 +64,9 @@ namespace BlackSimPlugin
         signals:
             //! Received custom FS9 packet
             void customPacketReceived(const QByteArray &data);
+
+            //! Async operatione complete
+            void connectionComplete();
 
         protected:
             //! DirectPlay message handler

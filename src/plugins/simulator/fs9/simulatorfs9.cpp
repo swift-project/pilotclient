@@ -174,22 +174,13 @@ namespace BlackSimPlugin
                 this->physicallyRemoveRemoteAircraft(callsign);
             }
 
-            bool rendered = true;
-            updateAircraftRendered(callsign, rendered);
-            CFs9Client *client = new CFs9Client(callsign, newRemoteAircraft.getModelString(), CTime(25, CTimeUnit::ms()), &m_interpolationLogger, this);
+            CFs9Client *client = new CFs9Client(newRemoteAircraft, CTime(25, CTimeUnit::ms()), &m_interpolationLogger, this);
             client->setHostAddress(m_fs9Host->getHostAddress());
             client->setPlayerUserId(m_fs9Host->getPlayerUserId());
+            connect(client, &CFs9Client::statusChanged, this, &CSimulatorFs9::updateRenderStatus);
             client->start();
 
             m_hashFs9Clients.insert(callsign, client);
-            const bool updated = updateAircraftRendered(callsign, rendered);
-            CSimulatedAircraft remoteAircraftCopy(newRemoteAircraft);
-            remoteAircraftCopy.setRendered(rendered);
-            if (updated)
-            {
-                emit aircraftRenderingChanged(remoteAircraftCopy);
-            }
-            CLogMessage(this).info(u"FS9: Added aircraft '%1'") << callsign.toQString();
             return true;
         }
 
@@ -426,6 +417,18 @@ namespace BlackSimPlugin
             } // slow updates
 
             m_ownAircraftUpdateCycles++;
+        }
+
+        void CSimulatorFs9::updateRenderStatus(const CSimulatedAircraft &remoteAircraft, CFs9Client::ClientStatus)
+        {
+            const bool updated = updateAircraftRendered(remoteAircraft.getCallsign(), true);
+            CSimulatedAircraft remoteAircraftCopy(remoteAircraft);
+            remoteAircraftCopy.setRendered(true);
+            if (updated)
+            {
+                emit aircraftRenderingChanged(remoteAircraftCopy);
+            }
+            CLogMessage(this).info(u"FS9: Added aircraft '%1'") << remoteAircraft.getCallsignAsString();
         }
 
         void CSimulatorFs9::disconnectAllClients()

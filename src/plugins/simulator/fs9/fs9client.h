@@ -38,8 +38,7 @@ namespace BlackSimPlugin
             };
 
             //! Constructor
-            CFs9Client(const BlackMisc::Aviation::CCallsign &callsign,
-                       const QString &modelName,
+            CFs9Client(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft,
                        const BlackMisc::PhysicalQuantities::CTime &updateInterval,
                        BlackMisc::Simulation::CInterpolationLogger *logger,
                        BlackCore::ISimulator *simulator);
@@ -69,7 +68,7 @@ namespace BlackSimPlugin
 
         signals:
             //! Client status changed
-            void statusChanged(const BlackMisc::Aviation::CCallsign &callsign, BlackSimPlugin::Fs9::CFs9Client::ClientStatus);
+            void statusChanged(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, BlackSimPlugin::Fs9::CFs9Client::ClientStatus);
 
         protected:
             //! \copydoc QObject::timerEvent
@@ -95,9 +94,12 @@ namespace BlackSimPlugin
             void sendMultiplayerChangePlayerPlane();
             //! @}
 
+            void handleConnectionCompleted();
+
             //! Simulator interface
             const BlackCore::ISimulator *simulator() const;
 
+            BlackMisc::Simulation::CSimulatedAircraft m_remoteAircraft;
             BlackMisc::PhysicalQuantities::CTime m_updateInterval;
             BlackMisc::Simulation::CInterpolatorMulti m_interpolator;
             QString m_modelName;

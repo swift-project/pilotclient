@@ -32,16 +32,19 @@ namespace BlackSimPlugin
 {
     namespace Fs9
     {
-        CFs9Client::CFs9Client(const CCallsign &callsign, const QString &modelName,
+        CFs9Client::CFs9Client(const CSimulatedAircraft &remoteAircraft,
                                const CTime &updateInterval,
                                CInterpolationLogger *logger, ISimulator *simulator) :
-            CDirectPlayPeer(simulator, callsign),
+            CDirectPlayPeer(simulator, remoteAircraft.getCallsign()),
+            m_remoteAircraft(remoteAircraft),
             m_updateInterval(updateInterval),
-            m_interpolator(callsign, simulator, simulator, simulator->getRemoteAircraftProvider(), logger),
-            m_modelName(modelName)
+            m_interpolator(remoteAircraft.getCallsign(), simulator, simulator, simulator->getRemoteAircraftProvider(), logger),
+            m_modelName(remoteAircraft.getModelString())
         {
             m_interpolator.attachLogger(logger);
             Q_ASSERT_X(this->simulator(), Q_FUNC_INFO, "Wrong owner, expect simulator object");
+
+            connect(this, &CFs9Client::connectionComplete, this, &CFs9Client::handleConnectionCompleted);
         }
 
         MPPositionVelocity aircraftSituationToFS9(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, double updateInterval)
@@ -282,10 +285,8 @@ namespace BlackSimPlugin
             m_player.dwDataSize = sizeof(PLAYER_INFO_STRUCT);
             m_player.dwInfoFlags = DPNINFO_NAME | DPNINFO_DATA;
             m_player.pwszName = wszPlayername.data();
-            if (isFailure(hr = m_directPlayPeer->SetPeerInfo(&m_player, nullptr, nullptr, DPNSETPEERINFO_SYNC)))
-            {
-                return logDirectPlayError(hr);
-            }
+            hr = m_directPlayPeer->SetPeerInfo(&m_player, nullptr, nullptr, DPNSETPEERINFO_SYNC);
+            if (isFailure(hr)) { return logDirectPlayError(hr); }
 
             // Now set up the Application Description
             DPN_APPLICATION_DESC dpAppDesc;
@@ -293,8 +294,8 @@ namespace BlackSimPlugin
             dpAppDesc.dwSize = sizeof(DPN_APPLICATION_DESC);
             dpAppDesc.guidApplication = CFs9Sdk::guid();
 
-            // We are now ready to host the app
-            if (isFailure(hr = m_directPlayPeer->Connect(&dpAppDesc,      // AppDesc
+            DPNHANDLE asyncOpHandle;
+            hr = m_directPlayPeer->Connect(&dpAppDesc,
                                m_hostAddress,
                                m_deviceAddress,
                                nullptr,
@@ -302,21 +303,9 @@ namespace BlackSimPlugin
                                nullptr, 0,
                                nullptr,
                                nullptr,
-                               nullptr,
-                               DPNCONNECT_SYNC)))
-            {
-                return logDirectPlayError(hr);
-            }
-
-            CLogMessage(this).info(u"Callsign '%1' connected to session.") << m_callsign;
-            sendMultiplayerChangePlayerPlane();
-            sendMultiplayerPosition();
-            sendMultiplayerParamaters();
-            m_timerId = startTimer(m_updateInterval.valueInteger(CTimeUnit::ms()));
-
-            m_clientStatus = Connected;
-            emit statusChanged(m_callsign, m_clientStatus);
-
+                               &asyncOpHandle,
+                               0);
+            if (!isPending(hr) && isFailure(hr)) { return logDirectPlayError(hr); }
             return hr;
         }
 
@@ -332,7 +321,7 @@ namespace BlackSimPlugin
             }
 
             m_clientStatus = Disconnected;
-            emit statusChanged(m_callsign, m_clientStatus);
+            emit statusChanged(m_remoteAircraft, m_clientStatus);
             return hr;
         }
 
@@ -385,6 +374,18 @@ namespace BlackSimPlugin
             MultiPlayerPacketParser::writeSize(message, mpChangePlayerPlane.size());
             message = MultiPlayerPacketParser::writeMessage(message, mpChangePlayerPlane);
             sendMessage(message);
+        }
+
+        void CFs9Client::handleConnectionCompleted()
+        {
+            CLogMessage(this).info(u"Callsign '%1' connected to session.") << m_callsign;
+            sendMultiplayerChangePlayerPlane();
+            sendMultiplayerPosition();
+            sendMultiplayerParamaters();
+            m_timerId = startTimer(m_updateInterval.valueInteger(CTimeUnit::ms()));
+
+            m_clientStatus = Connected;
+            emit statusChanged(m_remoteAircraft, m_clientStatus);
         }
 
         const ISimulator *CFs9Client::simulator() const

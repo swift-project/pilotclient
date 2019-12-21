@@ -150,11 +150,23 @@ namespace BlackSimPlugin
                     }
                     break;
                 }
+            case DPN_MSGID_CONNECT_COMPLETE:
+            {
+                const PDPNMSG_CONNECT_COMPLETE connectCompleteMsg = static_cast<PDPNMSG_CONNECT_COMPLETE>(msgBuffer);
+                if (connectCompleteMsg->hResultCode == DPN_OK)
+                {
+                    emit connectionComplete();
+                }
+                else
+                {
+                    CLogMessage(this).warning(u"DirectPlay connection returned: %1") << connectCompleteMsg->hResultCode;
+                }
+            }
             }
 
             // Directx9 SDK: Unless otherwise noted, this function should return S_OK.
             // http://doc.51windows.net/Directx9_SDK/play/ref/callbacks/pfndpnmessagehandler.htm
-            return S_OK;
+            return DPN_OK;
         }
 
         HRESULT CDirectPlayPeer::initDirectPlay()
