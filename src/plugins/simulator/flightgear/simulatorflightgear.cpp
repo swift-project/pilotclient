@@ -1039,10 +1039,11 @@ namespace BlackSimPlugin
                 return;
             }
 
-            MultiplayerAcquireInfo info = traffic.acquireMultiplayerPlanes();
-            if (! info.hasAcquired)
+            const MultiplayerAcquireInfo info = traffic.acquireMultiplayerPlanes();
+            if (!info.hasAcquired)
             {
-                CLogMessage(this).error(u"Connection to FGSwiftBus successful, but could not acquire multiplayer planes. %1 has acquired them already. Disable %2 or remove it if not required and reload FGSwiftBus.") << info.owner << info.owner;
+                const QString owner = info.owner.trimmed().isEmpty() ? QStringLiteral("Some/this plugin/application") : info.owner.trimmed();
+                CLogMessage(this).error(u"Connection to FGSwiftBus successful, but could not acquire multiplayer planes. '%1' has acquired them already. Disable '%2' or remove it if not required and reload FGSwiftBus.") << owner << owner.toLower();
                 return;
             }
 
