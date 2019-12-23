@@ -474,7 +474,8 @@ namespace BlackSimPlugin
             ISimulatorListener(info),
             m_timer(new QTimer(this)),
             m_fs9Host(fs9Host),
-            m_lobbyClient(lobbyClient)
+            m_lobbyClient(lobbyClient),
+            m_fsuipc(new CFsuipc(this))
         {
             const int QueryInterval = 5 * 1000; // 5 seconds
             m_timer->setInterval(QueryInterval);
@@ -517,6 +518,10 @@ namespace BlackSimPlugin
 
         bool CSimulatorFs9Listener::checkConnection(bool canLobbyConnect)
         {
+            m_fsuipc->open();
+            if (! m_fsuipc->isOpen()) { return false; }
+            m_fsuipc->close();
+
             if (m_fs9Host->getHostAddress().isEmpty()) { return false; } // host not yet set up
             if (canLobbyConnect)
             {
@@ -533,7 +538,6 @@ namespace BlackSimPlugin
                 m_isConnecting = false;
                 emit this->simulatorStarted(this->getPluginInfo());
             }
-
             return m_isConnecting;
         }
 

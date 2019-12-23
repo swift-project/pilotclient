@@ -148,6 +148,7 @@ namespace BlackSimPlugin
             bool m_isStarted    = false;
             QSharedPointer<CFs9Host> m_fs9Host;
             QSharedPointer<CLobbyClient> m_lobbyClient;
+            FsCommon::CFsuipc *m_fsuipc = nullptr;
         };
 
         //! Factory implementation to create CSimulatorFs9 instances
