@@ -8,7 +8,6 @@
 
 //! \cond PRIVATE
 
-
 #include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/logmessage.h"
@@ -48,15 +47,22 @@ namespace BlackMisc
         class IMetarDecoderPart
         {
         public:
-            virtual ~IMetarDecoderPart();
-        protected:
-            virtual bool isRepeatable() const { return false; }
-            virtual const QRegularExpression &getRegExp() const = 0;
-            virtual bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const = 0;
-            virtual bool isMandatory() const = 0;
+            //! Destructor
+            virtual ~IMetarDecoderPart() {}
+
+            //! Decoder type ("name")
             virtual QString getDecoderType() const = 0;
 
+        protected:
+            //! The regular expression used for parsing
+            virtual const QRegularExpression &getRegExp() const = 0;
+
+            virtual bool isRepeatable() const { return false; }
+            virtual bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const = 0;
+            virtual bool isMandatory() const = 0;
+
         public:
+            //! Parse METAR string
             bool parse(QString &metarString, CMetar &metar)
             {
                 bool isValid = false;
@@ -71,7 +77,11 @@ namespace BlackMisc
                     if (match.hasMatch())
                     {
                         // If invalid data, we return straight away
-                        if (!validateAndSet(match, metar)) return false;
+                        if (!validateAndSet(match, metar))
+                        {
+                            return false;
+                        }
+
                         // Remove the captured part
                         metarString.replace(re, QString());
                         isValid = true;
@@ -87,17 +97,18 @@ namespace BlackMisc
 
                 if (!isValid)
                 {
-                    CLogMessage(static_cast<CMetarDecoder*>(nullptr)).debug() << "Failed to match" << getDecoderType() << "in remaining METAR:" << metarString;
+                    CLogMessage(static_cast<CMetarDecoder *>(nullptr)).debug() << "Failed to match" << getDecoderType() << "in remaining METAR:" << metarString;
                 }
                 return isValid;
             }
         };
 
-        IMetarDecoderPart::~IMetarDecoderPart()
-        { }
-
+        //! METAR report type
         class CMetarDecoderReportType : public IMetarDecoderPart
         {
+        public:
+            virtual QString getDecoderType() const override { return "ReportType"; }
+
         protected:
             const QRegularExpression &getRegExp() const override
             {
@@ -115,7 +126,6 @@ namespace BlackMisc
             }
 
             virtual bool isMandatory() const override { return false; }
-            virtual QString getDecoderType() const override { return "ReportType"; }
 
         private:
             const QHash<QString, CMetar::ReportType> &getReportTypeHash() const
@@ -131,6 +141,9 @@ namespace BlackMisc
 
         class CMetarDecoderAirport : public IMetarDecoderPart
         {
+        public:
+            virtual QString getDecoderType() const override { return "Airport"; }
+
         protected:
             const QRegularExpression &getRegExp() const override
             {
@@ -147,41 +160,45 @@ namespace BlackMisc
             }
 
             virtual bool isMandatory() const override { return true; }
-            virtual QString getDecoderType() const override { return "Airport"; }
         };
 
         class CMetarDecoderDayTime : public IMetarDecoderPart
         {
+        public:
+            virtual QString getDecoderType() const override { return "DayTime"; }
+
         protected:
             const QRegularExpression &getRegExp() const override
             {
-                static const QRegularExpression re (QStringLiteral("^(?<day>\\d{2})(?<hour>\\d{2})(?<minute>\\d{2})Z "));
+                static const QRegularExpression re(QStringLiteral("^(?<day>\\d{2})(?<hour>\\d{2})(?<minute>\\d{2})Z "));
                 return re;
             }
 
             bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
             {
                 bool ok = false;
-                int day = match.captured("day").toInt(&ok);
-                int hour = match.captured("hour").toInt(&ok);
+                int day    = match.captured("day").toInt(&ok);
+                int hour   = match.captured("hour").toInt(&ok);
                 int minute = match.captured("minute").toInt(&ok);
                 if (!ok) return false;
 
-                if (day < 1 || day > 31) return false;
-                if (hour < 0 || hour > 23) return false;
+                if (day < 1    || day > 31)    return false;
+                if (hour < 0   || hour > 23)   return false;
                 if (minute < 0 || minute > 59) return false;
 
-                BlackMisc::PhysicalQuantities::CTime time(hour, minute, 0);
+                PhysicalQuantities::CTime time(hour, minute, 0);
                 metar.setDayTime(day, time);
                 return true;
             }
 
             virtual bool isMandatory() const override { return true; }
-            virtual QString getDecoderType() const override { return "DayTime"; }
         };
 
         class CMetarDecoderStatus : public IMetarDecoderPart
         {
+        public:
+            virtual QString getDecoderType() const override { return "Status"; }
+
         protected:
             // Possible matches:
             // * (AUTO) - Automatic Station Indicator
@@ -202,11 +219,13 @@ namespace BlackMisc
             }
 
             virtual bool isMandatory() const override { return false; }
-            virtual QString getDecoderType() const override { return "Status"; }
         };
 
         class CMetarDecoderWind : public IMetarDecoderPart
         {
+        public:
+            virtual QString getDecoderType() const override { return "Wind"; }
+
         protected:
             const QHash<QString, CSpeedUnit> &getWindUnitHash() const
             {
@@ -265,7 +284,6 @@ namespace BlackMisc
             }
 
             virtual bool isMandatory() const override { return false; }
-            virtual QString getDecoderType() const override { return "Wind"; }
 
         private:
             QString getRegExpImpl() const
@@ -286,6 +304,9 @@ namespace BlackMisc
 
         class CMetarDecoderVariationsWindDirection : public IMetarDecoderPart
         {
+        public:
+            virtual QString getDecoderType() const override { return "WindDirection"; }
+
         protected:
             const QRegularExpression &getRegExp() const override
             {
@@ -313,7 +334,6 @@ namespace BlackMisc
             }
 
             virtual bool isMandatory() const override { return false; }
-            virtual QString getDecoderType() const override { return "WindDirection"; }
 
         private:
             QString getRegExpImpl() const
@@ -330,8 +350,10 @@ namespace BlackMisc
 
         class CMetarDecoderVisibility : public IMetarDecoderPart
         {
-        protected:
+        public:
+            virtual QString getDecoderType() const override { return "Visibility"; }
 
+        protected:
             const QHash<QString, QString> &getCardinalDirections() const
             {
                 static const QHash<QString, QString> hash =
@@ -350,7 +372,6 @@ namespace BlackMisc
 
             const QRegularExpression &getRegExp() const override
             {
-
                 static const QRegularExpression re(getRegExpImpl());
                 return re;
             }
@@ -401,7 +422,6 @@ namespace BlackMisc
             }
 
             virtual bool isMandatory() const override { return false; }
-            virtual QString getDecoderType() const override { return "Visibility"; }
 
         private:
             QString getRegExpImpl() const
@@ -428,6 +448,9 @@ namespace BlackMisc
 
         class CMetarDecoderRunwayVisualRange : public IMetarDecoderPart
         {
+        public:
+            virtual QString getDecoderType() const override { return "RunwayVisualRange"; }
+
         protected:
             const QRegularExpression &getRegExp() const override
             {
@@ -448,14 +471,13 @@ namespace BlackMisc
                 CLengthUnit lengthUnit = CLengthUnit::m();
                 if (match.captured("unit") == "FT") lengthUnit = CLengthUnit::ft();
                 // Ignore for now until we make use of it.
-                Q_UNUSED(metar);
-                Q_UNUSED(runwayVisibility);
-                Q_UNUSED(lengthUnit);
+                Q_UNUSED(metar)
+                Q_UNUSED(runwayVisibility)
+                Q_UNUSED(lengthUnit)
                 return true;
             }
 
             virtual bool isMandatory() const override { return false; }
-            virtual QString getDecoderType() const override { return "RunwayVisualRange"; }
 
         private:
             QString getRegExpImpl() const
@@ -483,6 +505,9 @@ namespace BlackMisc
 
         class CMetarDecoderPresentWeather : public IMetarDecoderPart
         {
+        public:
+            virtual QString getDecoderType() const override { return "PresentWeather"; }
+
         protected:
             const QHash<QString, CPresentWeather::Intensity> &getIntensityHash() const
             {
@@ -573,7 +598,6 @@ namespace BlackMisc
             }
 
             virtual bool isMandatory() const override { return false; }
-            virtual QString getDecoderType() const override { return "PresentWeather"; }
 
         private:
             QString getRegExpImpl() const
@@ -599,6 +623,9 @@ namespace BlackMisc
 
         class CMetarDecoderCloud : public IMetarDecoderPart
         {
+        public:
+            virtual QString getDecoderType() const override { return "Cloud"; }
+
         protected:
             const QStringList &getClearSkyTokens() const
             {
@@ -662,7 +689,6 @@ namespace BlackMisc
             }
 
             virtual bool isMandatory() const override { return false; }
-            virtual QString getDecoderType() const override { return "Cloud"; }
 
         private:
             QString getRegExpImpl() const
@@ -683,6 +709,9 @@ namespace BlackMisc
 
         class CMetarDecoderVerticalVisibility : public IMetarDecoderPart
         {
+        public:
+            virtual QString getDecoderType() const override { return "VerticalVisibility"; }
+
         protected:
             const QRegularExpression &getRegExp() const override
             {
@@ -697,7 +726,6 @@ namespace BlackMisc
             }
 
             virtual bool isMandatory() const override { return false; }
-            virtual QString getDecoderType() const override { return "VerticalVisibility"; }
 
         private:
             QString getRegExpImpl() const
@@ -711,6 +739,9 @@ namespace BlackMisc
 
         class CMetarDecoderTemperature : public IMetarDecoderPart
         {
+        public:
+            virtual QString getDecoderType() const override { return "Temperature"; }
+
         protected:
             const QRegularExpression &getRegExp() const override
             {
@@ -753,7 +784,6 @@ namespace BlackMisc
             }
 
             virtual bool isMandatory() const override { return false; }
-            virtual QString getDecoderType() const override { return "Temperature"; }
 
         private:
             QString getRegExpImpl() const
@@ -772,8 +802,10 @@ namespace BlackMisc
 
         class CMetarDecoderPressure : public IMetarDecoderPart
         {
-        protected:
+        public:
+            virtual QString getDecoderType() const override { return "Pressure"; }
 
+        protected:
             const QHash<QString, CPressureUnit> &getPressureUnits() const
             {
                 static const QHash<QString, CPressureUnit> hash =
@@ -821,7 +853,6 @@ namespace BlackMisc
             }
 
             virtual bool isMandatory() const override { return false; }
-            virtual QString getDecoderType() const override { return "Pressure"; }
 
         private:
             QString getRegExpImpl() const
@@ -840,6 +871,9 @@ namespace BlackMisc
 
         class CMetarDecoderRecentWeather : public IMetarDecoderPart
         {
+        public:
+            virtual QString getDecoderType() const override { return "RecentWeather"; }
+
         protected:
             const QRegularExpression &getRegExp() const override
             {
@@ -854,7 +888,6 @@ namespace BlackMisc
             }
 
             virtual bool isMandatory() const override { return false; }
-            virtual QString getDecoderType() const override { return "RecentWeather"; }
 
         private:
             QString getRegExpImpl() const
@@ -872,14 +905,17 @@ namespace BlackMisc
             }
 
             const QStringList m_descriptor = QStringList { "MI", "BC", "PR", "DR", "BL", "SH", "TS", "FZ" };
-            const QStringList m_phenomina = QStringList { "DZ", "RA", "SN", "SG", "IC", "PE", "GR", "GS",
-                                                                "BR", "FG", "FU", "VA", "IC", "DU", "SA", "HZ",
-                                                                "PY", "PO", "SQ", "FC", "SS", "DS"
-                                                              };
+            const QStringList m_phenomina = QStringList  { "DZ", "RA", "SN", "SG", "IC", "PE", "GR", "GS",
+                                                           "BR", "FG", "FU", "VA", "IC", "DU", "SA", "HZ",
+                                                           "PY", "PO", "SQ", "FC", "SS", "DS"
+                                                         };
         };
 
         class CMetarDecoderWindShear : public IMetarDecoderPart
         {
+        public:
+            virtual QString getDecoderType() const override { return "WindShear"; }
+
         protected:
             const QRegularExpression &getRegExp() const override
             {
@@ -893,15 +929,14 @@ namespace BlackMisc
                 if (!runwayAsString.isEmpty())
                 {
                     // Ignore for now until we make use of it.
-                    Q_UNUSED(runwayAsString);
-                    Q_UNUSED(metar);
+                    Q_UNUSED(runwayAsString)
+                    Q_UNUSED(metar)
                 }
 
                 return true;
             }
 
             virtual bool isMandatory() const override { return false; }
-            virtual QString getDecoderType() const override { return "WindShear"; }
 
         private:
             QString getRegExpImpl() const
@@ -921,8 +956,7 @@ namespace BlackMisc
         }
 
         CMetarDecoder::~CMetarDecoder()
-        {
-        }
+        { }
 
         CMetar CMetarDecoder::decode(const QString &metarString) const
         {
@@ -933,7 +967,8 @@ namespace BlackMisc
             {
                 if (!decoder->parse(metarStringCopy, metar))
                 {
-                    CLogMessage(this).debug() << "Invalid METAR:" << metarString;
+                    const QString type = decoder->getDecoderType();
+                    CLogMessage(this).debug() << "Invalid METAR:" << metarString << type;
                     return CMetar();
                 }
             }

@@ -48,7 +48,7 @@ namespace BlackMisc
 
         void CMetar::setDayTime(int reportDay, const PhysicalQuantities::CTime &reportTime)
         {
-            m_reportDay = reportDay;
+            m_reportDay  = reportDay;
             m_reportTime = reportTime;
         }
 

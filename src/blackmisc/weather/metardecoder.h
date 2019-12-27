@@ -23,7 +23,6 @@ namespace BlackMisc
 {
     namespace Weather
     {
-
         class IMetarDecoderPart;
 
         //! Metar Decoder
@@ -36,7 +35,7 @@ namespace BlackMisc
             CMetarDecoder();
 
             //! Default destructor
-            ~CMetarDecoder();
+            virtual ~CMetarDecoder() override;
 
             //! Decode metar
             CMetar decode(const QString &metarString) const;
