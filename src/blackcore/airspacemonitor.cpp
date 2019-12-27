@@ -115,9 +115,11 @@ namespace BlackCore
         connect(m_analyzer, &CAirspaceAnalyzer::timeoutAircraft, this, &CAirspaceMonitor::onPilotDisconnected,         Qt::QueuedConnection);
         connect(m_analyzer, &CAirspaceAnalyzer::timeoutAtc,      this, &CAirspaceMonitor::onAtcControllerDisconnected, Qt::QueuedConnection);
 
-        // timer
-        connect(&m_processTimer, &QTimer::timeout, this, &CAirspaceMonitor::process);
-        m_processTimer.start(ProcessIntervalMs);
+        // timers
+        connect(&m_fastProcessTimer, &QTimer::timeout, this, &CAirspaceMonitor::fastProcessing);
+        connect(&m_slowProcessTimer, &QTimer::timeout, this, &CAirspaceMonitor::slowProcessing);
+        m_fastProcessTimer.start(FastProcessIntervalMs);
+        m_slowProcessTimer.start(SlowProcessIntervalMs);
 
         // dot command
         CAirspaceMonitor::registerHelp();
@@ -417,14 +419,20 @@ namespace BlackCore
         return false;
     }
 
-    void CAirspaceMonitor::process()
+    void CAirspaceMonitor::fastProcessing()
     {
-        if (this->isConnectedAndNotShuttingDown())
-        {
-            // only send one
-            const bool send = this->sendNextStaggeredAtisQuery();
-            if (!send) { this->sendNextStaggeredPilotDataQuery(); }
-        }
+        if (!this->isConnectedAndNotShuttingDown()) { return; }
+
+        // only send one query
+        const bool send = this->sendNextStaggeredAtisQuery();
+        if (!send) { this->sendNextStaggeredPilotDataQuery(); }
+
+    }
+
+    void CAirspaceMonitor::slowProcessing()
+    {
+        if (!this->isConnectedAndNotShuttingDown()) { return; }
+        this->queryAllOnlineAtcStations();
     }
 
     void CAirspaceMonitor::clear()
@@ -1299,7 +1307,11 @@ namespace BlackCore
             const CLength maxRange(isVatsim ? 125 : -1, CLengthUnit::NM());
             this->setMaxRange(maxRange);
         }
-        if (newStatus.isDisconnected()) { clear(); }
+
+        if (newStatus.isDisconnected())
+        {
+            this->clear();
+        }
     }
 
     void CAirspaceMonitor::onPilotDisconnected(const CCallsign &callsign)
@@ -1436,6 +1448,18 @@ namespace BlackCore
         m_fsdClient->sendClientQueryAtis(callsign); // request ATIS and voice rooms
         m_fsdClient->sendClientQueryCapabilities(callsign);
         m_fsdClient->sendClientQueryServer(callsign);
+    }
+
+    void CAirspaceMonitor::queryAllOnlineAtcStations()
+    {
+        if (!this->isConnectedAndNotShuttingDown()) { return; }
+        const CAtcStationList onlineStations = this->getAtcStationsOnlineRecalculated();
+        for (const CAtcStation &station : onlineStations)
+        {
+            const CCallsign cs = station.getCallsign();
+            if (cs.isEmpty()) { continue; }
+            m_fsdClient->sendClientQueryRealName(cs);
+        }
     }
 
     bool CAirspaceMonitor::sendNextStaggeredAtisQuery()

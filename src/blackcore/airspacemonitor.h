@@ -294,12 +294,19 @@ namespace BlackCore
         int m_maxDistanceNM = 125;                           //!< position range / FSD range
         int m_maxDistanceNMHysteresis = qRound(1.1 * m_maxDistanceNM);
 
-        // Processing interval
-        static constexpr int ProcessIntervalMs = 50; // in ms
-        QTimer m_processTimer;
+        // Processing for queries etc. (fast)
+        static constexpr int FastProcessIntervalMs = 50; //!< interval in ms
+        QTimer m_fastProcessTimer; //!< process timer for fast updates
 
         //! Processing by timer
-        void process();
+        void fastProcessing();
+
+        // Processing for validations etc. (slow)
+        static constexpr int SlowProcessIntervalMs = 125 * 1000; //!< interval in ms
+        QTimer m_slowProcessTimer; //!< process timer for slow updates
+
+        //! Slow processing
+        void slowProcessing();
 
         // model matching times
         static constexpr qint64 MMCheckAgainMs      = 2000;
@@ -320,6 +327,9 @@ namespace BlackCore
 
         //! Network queries for ATC
         void sendInitialAtcQueries(const BlackMisc::Aviation::CCallsign &callsign);
+
+        //! Query all online ATC stations
+        void queryAllOnlineAtcStations();
 
         //! Network queries for ATIS
         bool sendNextStaggeredAtisQuery();
