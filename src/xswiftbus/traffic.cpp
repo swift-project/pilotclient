@@ -251,6 +251,10 @@ namespace XSwiftBus
             // whether or not async loading is enabled: 1 means enabled, 0 means disabled
             return 1;
         }
+        else if (strcmp(section, "debug") == 0 && strcmp(name, "render_phases") == 0)
+        {
+            return s_instance->getConfig().getDebugMode() ? 1 : 0;
+        }
         return def;
     }
 

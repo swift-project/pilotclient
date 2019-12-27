@@ -50,10 +50,14 @@ namespace XSwiftBus
         //! Get current DBus server port
         int getDBusPort() const { return m_dbusPort; }
 
+        //! Get debug on/off
+        bool getDebugMode() const { return m_debug; }
+
     private:
         bool parseDBusMode(const std::string &value);
         bool parseDBusAddress(const std::string &value);
         bool parseDBusPort(const std::string &value);
+        bool parseDebug(const std::string &value);
 
         static std::string dbusModeToString(DBusMode mode);
 
@@ -61,6 +65,7 @@ namespace XSwiftBus
         DBusMode m_dbusMode = DBusP2P;
         std::string m_dbusAddress = "127.0.0.1";
         int m_dbusPort = 45001;
+        bool m_debug = false;
     };
 } // ns
 

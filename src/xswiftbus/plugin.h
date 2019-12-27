@@ -62,6 +62,9 @@ namespace XSwiftBus
         //! Should stop
         bool shouldStop() const { return m_shouldStop; }
 
+        //! \copydoc XSwiftBus::CSettingsProvider::getConfig
+        virtual const CConfig &getConfig() const override { return m_pluginConfig; }
+
     private:
         CConfig         m_pluginConfig;
         CDBusDispatcher m_dbusDispatcher;

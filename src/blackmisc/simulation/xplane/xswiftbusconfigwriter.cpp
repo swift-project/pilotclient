@@ -36,6 +36,11 @@ namespace BlackMisc
 
             }
 
+            void CXSwiftBusConfigWriter::setDebugMode(bool on)
+            {
+                m_debug = on;
+            }
+
             void CXSwiftBusConfigWriter::updateInAllXPlaneVersions()
             {
                 updateInXPlane9();
@@ -77,6 +82,9 @@ namespace BlackMisc
                     ts << endl;
                     ts << "# DBus server port - relevant for P2P mode only" << endl;
                     ts << "dbusPort = " << m_dbusPort << endl;
+                    ts << endl;
+                    ts << "# Render phase debugging - to help diagnose crashes" << endl;
+                    ts << "debug = " << boolToOnOff(m_debug) << endl;
                 }
             }
         } // ns

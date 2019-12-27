@@ -10,6 +10,7 @@
 #define BLACKMISC_XSWIFTBUS_CSETTINGS_H
 
 #include "blackmisc/simulation/settings/xswiftbussettingsqtfree.h"
+#include "config.h"
 #include <string>
 #include <mutex>
 
@@ -41,6 +42,9 @@ namespace XSwiftBus
         //! \threadsafe
         void setSettings(const CSettings &settings);
 
+        //! Get settings from xswiftbus.conf (needed during plugin initialization)
+        virtual const CConfig &getConfig() const = 0;
+
     private:
         mutable std::mutex m_settingsMutex;
         CSettings          m_pluginSettings; //!< owner of the settings
@@ -61,6 +65,9 @@ namespace XSwiftBus
 
         //! \copydoc CSettingsProvider::setSettings
         void setSettings(const CSettings &settings);
+
+        //! \copydoc CSettingsProvider::getConfig
+        const CConfig &getConfig() const;
 
     private:
         CSettingsProvider *m_provider = nullptr;

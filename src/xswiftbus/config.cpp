@@ -59,6 +59,7 @@ namespace XSwiftBus
             if (stringCompareCaseInsensitive(key, "dbusMode")) { valid = parseDBusMode(value); }
             else if (stringCompareCaseInsensitive(key, "dbusAddress")) { valid = parseDBusAddress(value); }
             else if (stringCompareCaseInsensitive(key, "dbusPort")) { valid = parseDBusPort(value); }
+            else if (stringCompareCaseInsensitive(key, "debug")) { valid = parseDebug(value); }
             else
             {
                 WARNING_LOG("xswiftbus.conf line " + std::to_string(lineNo) + ": Unknown variable " + value + "!");
@@ -112,6 +113,19 @@ namespace XSwiftBus
 
         if (port < 0 || port > 65535) { return false; }
         m_dbusPort = port;
+        return true;
+    }
+
+    bool CConfig::parseDebug(const std::string &value)
+    {
+        if (stringCompareCaseInsensitive(value, "on"))
+        {
+            m_debug = true;
+        }
+        else
+        {
+            m_debug = false;
+        }
         return true;
     }
 
