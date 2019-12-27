@@ -58,15 +58,15 @@ namespace BlackCore
         //! Equal to operator
         inline bool operator==(const AtcDataUpdate &lhs, const AtcDataUpdate &rhs)
         {
-            return  lhs.sender() == rhs.sender() &&
-                    lhs.receiver() == rhs.receiver() &&
+            return  lhs.sender()       == rhs.sender() &&
+                    lhs.receiver()     == rhs.receiver() &&
                     lhs.m_frequencykHz == rhs.m_frequencykHz &&
-                    lhs.m_facility == rhs.m_facility &&
+                    lhs.m_facility     == rhs.m_facility &&
                     lhs.m_visibleRange == rhs.m_visibleRange &&
-                    lhs.m_rating == rhs.m_rating &&
-                    qFuzzyCompare(1 + lhs.m_latitude, 1 + rhs.m_latitude) &&
+                    lhs.m_rating       == rhs.m_rating &&
+                    qFuzzyCompare(1 + lhs.m_latitude,  1 + rhs.m_latitude)  &&
                     qFuzzyCompare(1 + lhs.m_longitude, 1 + rhs.m_longitude) &&
-                    lhs.m_elevation == rhs.m_elevation;
+                    lhs.m_elevation    == rhs.m_elevation;
         }
 
         //! Not equal to operator

@@ -470,13 +470,16 @@ namespace BlackCore
 
     void CAirspaceMonitor::onRealNameReplyReceived(const CCallsign &callsign, const QString &realname)
     {
-        if (!this->isConnectedAndNotShuttingDown() || realname.isEmpty()) { return; }
-        int wasAtc = false;
+        if (!this->isConnectedAndNotShuttingDown() || realname.isEmpty())   { return; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return; }
+
+        bool wasAtc = false;
+        const QString rn = CUser::beautifyRealName(realname);
 
         if (callsign.hasSuffix())
         {
             // very likely and ATC callsign
-            const CPropertyIndexVariantMap vm = CPropertyIndexVariantMap({ CAtcStation::IndexController, CUser::IndexRealName }, realname);
+            const CPropertyIndexVariantMap vm = CPropertyIndexVariantMap({ CAtcStation::IndexController, CUser::IndexRealName }, rn);
             const int c1 = this->updateOnlineStation(callsign, vm, false, true);
             const int c2 = this->updateBookedStation(callsign, vm, false, true);
             wasAtc = c1 > 0 || c2 > 0;
@@ -484,14 +487,13 @@ namespace BlackCore
 
         if (!wasAtc)
         {
-            const CPropertyIndexVariantMap vm = CPropertyIndexVariantMap({CSimulatedAircraft::IndexPilot, CUser::IndexRealName}, realname);
+            const CPropertyIndexVariantMap vm = CPropertyIndexVariantMap({CSimulatedAircraft::IndexPilot, CUser::IndexRealName}, rn);
             this->updateAircraftInRange(callsign, vm);
         }
 
         // Client
-        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return; }
         const CVoiceCapabilities voiceCaps = sApp->getWebDataServices()->getVoiceCapabilityForCallsign(callsign);
-        CPropertyIndexVariantMap vm = CPropertyIndexVariantMap({ CClient::IndexUser, CUser::IndexRealName }, realname);
+        CPropertyIndexVariantMap vm = CPropertyIndexVariantMap({ CClient::IndexUser, CUser::IndexRealName }, rn);
         vm.addValue({ CClient::IndexVoiceCapabilities }, voiceCaps);
         this->updateOrAddClient(callsign, vm, false);
     }
