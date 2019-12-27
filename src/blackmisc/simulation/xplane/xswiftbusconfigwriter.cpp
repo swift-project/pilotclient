@@ -41,6 +41,11 @@ namespace BlackMisc
                 m_debug = on;
             }
 
+            void CXSwiftBusConfigWriter::setTcasEnabled(bool on)
+            {
+                m_tcas = on;
+            }
+
             void CXSwiftBusConfigWriter::updateInAllXPlaneVersions()
             {
                 updateInXPlane9();
@@ -85,6 +90,9 @@ namespace BlackMisc
                     ts << endl;
                     ts << "# Render phase debugging - to help diagnose crashes" << endl;
                     ts << "debug = " << boolToOnOff(m_debug) << endl;
+                    ts << endl;
+                    ts << "# TCAS traffic - to disable in case of crashes" << endl;
+                    ts << "tcas = " << boolToOnOff(m_debug) << endl;
                 }
             }
         } // ns

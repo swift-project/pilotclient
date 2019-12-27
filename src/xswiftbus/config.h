@@ -53,11 +53,15 @@ namespace XSwiftBus
         //! Get debug on/off
         bool getDebugMode() const { return m_debug; }
 
+        //! Get tcas traffic on/off
+        bool getTcasEnabled() const { return m_tcas; }
+
     private:
         bool parseDBusMode(const std::string &value);
         bool parseDBusAddress(const std::string &value);
         bool parseDBusPort(const std::string &value);
         bool parseDebug(const std::string &value);
+        bool parseTcas(const std::string &value);
 
         static std::string dbusModeToString(DBusMode mode);
 
@@ -66,6 +70,7 @@ namespace XSwiftBus
         std::string m_dbusAddress = "127.0.0.1";
         int m_dbusPort = 45001;
         bool m_debug = false;
+        bool m_tcas = true;
     };
 } // ns
 

@@ -36,6 +36,9 @@ namespace BlackMisc
                 //! Set debug on/off
                 void setDebugMode(bool on);
 
+                //! Set TCAS on/off
+                void setTcasEnabled(bool on);
+
                 //! Update xswiftbus.conf in all known X-Plane versions (XP9 - XP11 are supported)
                 void updateInAllXPlaneVersions();
 
@@ -56,6 +59,7 @@ namespace BlackMisc
                 QString m_dbusAddress = "127.0.0.1";
                 QString m_dbusPort = "45001";
                 bool m_debug = false;
+                bool m_tcas = true;
             };
         }
     }

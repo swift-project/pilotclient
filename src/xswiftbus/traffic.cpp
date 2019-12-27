@@ -255,6 +255,10 @@ namespace XSwiftBus
         {
             return s_instance->getConfig().getDebugMode() ? 1 : 0;
         }
+        else if (strcmp(section, "debug") == 0 && strcmp(name, "tcas_traffic") == 0)
+        {
+            return s_instance->getConfig().getTcasEnabled() ? 1 : 0;
+        }
         return def;
     }
 
