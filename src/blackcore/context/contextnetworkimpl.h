@@ -238,7 +238,7 @@ namespace BlackCore
                 BlackMisc::CSimpleCommandParser::registerCommand({".m", "alias: .msg, .chat"});
                 BlackMisc::CSimpleCommandParser::registerCommand({".m message text", "send text message"});
                 BlackMisc::CSimpleCommandParser::registerCommand({".m callsign message text", "send text message"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".altos callsign|? offsetvalue", "set altitude offset value (testing)"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".altos callsign|? offsetvalue", "set altitude offset value (testing), ?=all"});
                 BlackMisc::CSimpleCommandParser::registerCommand({".addtimeos offsetvalue", "add (delta) time offset (testing), e.g. 50ms"});
                 BlackMisc::CSimpleCommandParser::registerCommand({".watchdog on|off", "enable/disable network watchdog (testing)"});
                 BlackMisc::CSimpleCommandParser::registerCommand({".wallop message", "send a wallop message"});
