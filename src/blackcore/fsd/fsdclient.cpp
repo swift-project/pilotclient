@@ -1300,7 +1300,7 @@ namespace BlackCore
             case ServerErrorCode::RequestedLevelTooHigh: CLogMessage(this).error(u"You are not authorized to use the requested pilot rating"); break;
 
             case ServerErrorCode::NoError:               CLogMessage(this).info(u"OK"); break;
-            case ServerErrorCode::SyntaxError:           CLogMessage(this).error(u"Malformed packet: Syntax error: %1")                << serverError.getCausingParameter(); break;
+            case ServerErrorCode::SyntaxError:           CLogMessage(this).error(u"Malformed packe, syntax error: '%1'. This can also occur if an OBS sends frequency text messages.") << serverError.getCausingParameter(); break;
             case ServerErrorCode::InvalidSrcCallsign:    CLogMessage(this).info(u"FSD message was using an invalid callsign: %1 (%2)") << serverError.getCausingParameter() << serverError.getDescription(); break;
             case ServerErrorCode::NoSuchCallsign:        CLogMessage(this).info(u"FSD Server: no such callsign: %1 %2")                << serverError.getCausingParameter() << serverError.getDescription(); break;
             case ServerErrorCode::NoFlightPlan:          CLogMessage(this).info(u"FSD Server: no flight plan"); break;
