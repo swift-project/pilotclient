@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
-    <height>450</height>
+    <width>378</width>
+    <height>585</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>300</width>
-    <height>425</height>
+    <width>275</width>
+    <height>475</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -158,14 +158,14 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
+      <item row="7" column="0">
        <widget class="QLabel" name="lbl_MessageBox">
         <property name="text">
          <string>Message box </string>
         </property>
        </widget>
       </item>
-      <item row="5" column="1">
+      <item row="7" column="1">
        <widget class="QWidget" name="wi_MessageBox" native="true">
         <layout class="QHBoxLayout" name="hl_MessageBox">
          <property name="leftMargin">
@@ -193,33 +193,17 @@
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QSpinBox" name="sb_MessageBoxDuration">
-           <property name="suffix">
-            <string>ms</string>
-           </property>
-           <property name="minimum">
-            <number>1000</number>
-           </property>
-           <property name="maximum">
-            <number>25000</number>
-           </property>
-           <property name="singleStep">
-            <number>250</number>
-           </property>
-          </widget>
-         </item>
         </layout>
        </widget>
       </item>
-      <item row="6" column="0">
+      <item row="9" column="0">
        <widget class="QLabel" name="lbl_MessageBoxMargins">
         <property name="text">
          <string>Box margins px.</string>
         </property>
        </widget>
       </item>
-      <item row="6" column="1">
+      <item row="9" column="1">
        <widget class="QWidget" name="wi_Margins" native="true">
         <layout class="QGridLayout" name="gl_MessageBoxMargins">
          <property name="leftMargin">
@@ -293,14 +277,14 @@
         </layout>
        </widget>
       </item>
-      <item row="7" column="0">
+      <item row="10" column="0">
        <widget class="QLabel" name="lbl_NightTextureMode">
         <property name="text">
          <string>Night texture</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="1">
+      <item row="10" column="1">
        <widget class="QComboBox" name="cb_NightTextureMode">
         <item>
          <property name="text">
@@ -317,6 +301,57 @@
           <string>night texture only</string>
          </property>
         </item>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QCheckBox" name="cb_LogRenderPhases">
+        <property name="text">
+         <string>log.render phases</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="lbl_DebugMode">
+        <property name="text">
+         <string>Logging</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QCheckBox" name="cb_TcasEnabled">
+        <property name="text">
+         <string>show traffic on TCAS</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="lbl_TcasEnabled">
+        <property name="text">
+         <string>TCAS</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QSpinBox" name="sb_MessageBoxDuration">
+        <property name="suffix">
+         <string>ms</string>
+        </property>
+        <property name="minimum">
+         <number>1000</number>
+        </property>
+        <property name="maximum">
+         <number>25000</number>
+        </property>
+        <property name="singleStep">
+         <number>250</number>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="lbl_MessageBoxDuration">
+        <property name="text">
+         <string>Box disappears after</string>
+        </property>
        </widget>
       </item>
      </layout>
@@ -351,8 +386,9 @@
   <tabstop>sb_FollowAircraftDistanceM</tabstop>
   <tabstop>cb_DrawLabels</tabstop>
   <tabstop>cb_BundleTaxiLandingLights</tabstop>
+  <tabstop>cb_TcasEnabled</tabstop>
+  <tabstop>cb_LogRenderPhases</tabstop>
   <tabstop>sb_MessageBoxLines</tabstop>
-  <tabstop>sb_MessageBoxDuration</tabstop>
   <tabstop>le_MsgBoxMarginsTop</tabstop>
   <tabstop>le_MsgBoxMarginsBottom</tabstop>
   <tabstop>le_MsgBoxMarginsLeft</tabstop>

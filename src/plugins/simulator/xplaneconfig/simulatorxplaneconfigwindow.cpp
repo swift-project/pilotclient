@@ -55,6 +55,8 @@ namespace BlackSimPlugin
                 m_xSwiftBusServerSettings.set(changed);
                 CXSwiftBusConfigWriter xswiftbusConfigWriter;
                 xswiftbusConfigWriter.setDBusAddress(changed.getDBusServerAddressQt());
+                xswiftbusConfigWriter.setDebugMode(s.isLogRenderPhases());
+                xswiftbusConfigWriter.setTcasEnabled(s.isTcasEnabled());
                 xswiftbusConfigWriter.updateInAllXPlaneVersions();
             }
             this->close();
@@ -70,6 +72,8 @@ namespace BlackSimPlugin
             s.setDrawingLabels(ui->cb_DrawLabels->isChecked());
             s.setNightTextureModeQt(ui->cb_NightTextureMode->currentText());
             s.setBundlingTaxiAndLandingLights(ui->cb_BundleTaxiLandingLights->isChecked());
+            s.setTcasEnabled(ui->cb_TcasEnabled->isChecked());
+            s.setLogRenderPhases(ui->cb_LogRenderPhases->isChecked());
 
             // left, top, right, bottom, height
             s.setMessageBoxValues(
@@ -88,9 +92,11 @@ namespace BlackSimPlugin
             ui->comp_SettingsXSwiftBus->set(settings.getDBusServerAddressQt());
             ui->sb_MaxAircraft->setValue(settings.getMaxPlanes());
             ui->sb_FollowAircraftDistanceM->setValue(settings.getFollowAircraftDistanceM());
-            ui->cb_DrawLabels->setChecked(settings.isDrawingLabels());
             ui->ds_MaxDrawDistanceNM->setValue(settings.getMaxDrawDistanceNM());
+            ui->cb_DrawLabels->setChecked(settings.isDrawingLabels());
             ui->cb_BundleTaxiLandingLights->setChecked(settings.isBundlingTaxiAndLandingLights());
+            ui->cb_TcasEnabled->setChecked(settings.isTcasEnabled());
+            ui->cb_LogRenderPhases->setChecked(settings.isLogRenderPhases());
 
             const QString s = settings.getNightTextureModeQt().left(1);
             if (!s.isEmpty())

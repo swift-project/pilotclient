@@ -29,6 +29,8 @@ constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonNi
 constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonMessageBox[];
 constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonBundleTaxiLandingLights[];
 constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonTimestamp[];
+constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonTcas[];
+constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonLogRenderPhases[];
 //! @endcond
 
 namespace BlackMisc
@@ -67,6 +69,14 @@ namespace BlackMisc
                 {
                     m_bundleTaxiLandingLights = settingsDoc[CXSwiftBusSettingsQtFree::JsonBundleTaxiLandingLights].GetBool();  c++;
                 }
+                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonTcas) && settingsDoc[CXSwiftBusSettingsQtFree::JsonTcas].IsBool())
+                {
+                    m_tcasEnabled = settingsDoc[CXSwiftBusSettingsQtFree::JsonTcas].GetBool();  c++;
+                }
+                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonLogRenderPhases) && settingsDoc[CXSwiftBusSettingsQtFree::JsonLogRenderPhases].IsBool())
+                {
+                    m_logRenderPhases = settingsDoc[CXSwiftBusSettingsQtFree::JsonLogRenderPhases].GetBool();  c++;
+                }
                 if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonMaxPlanes) && settingsDoc[CXSwiftBusSettingsQtFree::JsonMaxPlanes].IsInt())
                 {
                     m_maxPlanes = settingsDoc[CXSwiftBusSettingsQtFree::JsonMaxPlanes].GetInt();  c++;
@@ -84,7 +94,7 @@ namespace BlackMisc
                     m_msSinceEpochQtFree = settingsDoc[CXSwiftBusSettingsQtFree::JsonTimestamp].GetInt64();  c++;
                 }
                 this->objectUpdated(); // post processing
-                return c == 9;
+                return c == 11;
             }
 
             std::string CXSwiftBusSettingsQtFree::toXSwiftBusJsonString() const
@@ -97,15 +107,17 @@ namespace BlackMisc
                 Document::AllocatorType &a = document.GetAllocator();
                 // Value k1(JsonDBusServerAddress, a);
                 // Value v1(m_dBusServerAddress, a);
-                document.AddMember(JsonDBusServerAddress,   StringRef(m_dBusServerAddress.c_str()), a);
-                document.AddMember(JsonNightTextureMode,    StringRef(m_nightTextureMode.c_str()), a);
-                document.AddMember(JsonMessageBox,   StringRef(m_msgBox.c_str()), a);
+                document.AddMember(JsonDBusServerAddress, StringRef(m_dBusServerAddress.c_str()), a);
+                document.AddMember(JsonNightTextureMode,  StringRef(m_nightTextureMode.c_str()), a);
+                document.AddMember(JsonMessageBox,        StringRef(m_msgBox.c_str()), a);
                 document.AddMember(JsonMaxPlanes,         m_maxPlanes, a);
-                document.AddMember(JsonMaxDrawDistance,   m_maxDrawDistanceNM, a);
+                document.AddMember(JsonMaxDrawDistance,   m_maxDrawDistanceNM,  a);
                 document.AddMember(JsonTimestamp,         m_msSinceEpochQtFree, a);
                 document.AddMember(JsonDrawingLabels,     m_drawingLabels, a);
                 document.AddMember(JsonBundleTaxiLandingLights, m_bundleTaxiLandingLights, a);
                 document.AddMember(JsonFollowAircraftDistanceM, m_followAircraftDistanceM, a);
+                document.AddMember(JsonLogRenderPhases,   m_logRenderPhases,   a);
+                document.AddMember(JsonTcas,              m_tcasEnabled, a);
 
                 // document[CXSwiftBusSettingsQtFree::JsonDBusServerAddress].SetString(StringRef(m_dBusServerAddress.c_str(), m_dBusServerAddress.size()));
                 // document[CXSwiftBusSettingsQtFree::JsonDrawingLabels].SetBool(m_drawingLabels);
@@ -122,27 +134,31 @@ namespace BlackMisc
             std::string CXSwiftBusSettingsQtFree::convertToString() const
             {
                 return "DBusServer: " + m_dBusServerAddress +
-                       ", drawLabels: "    + QtFreeUtils::boolToYesNo(m_drawingLabels) +
-                       ", bundle lights: " + QtFreeUtils::boolToYesNo(m_bundleTaxiLandingLights) +
-                       ", night t.: "   + m_nightTextureMode +
-                       ", max planes: " + std::to_string(m_maxPlanes) +
+                       ", drawLabels: "      + QtFreeUtils::boolToYesNo(m_drawingLabels) +
+                       ", bundle lights: "   + QtFreeUtils::boolToYesNo(m_bundleTaxiLandingLights) +
+                       ", phases: "          + QtFreeUtils::boolToYesNo(m_logRenderPhases) +
+                       ", TCAS: "            + QtFreeUtils::boolToYesNo(m_tcasEnabled) +
+                       ", night t.: "        + m_nightTextureMode +
+                       ", max planes: "      + std::to_string(m_maxPlanes) +
                        ", max distance NM: " + std::to_string(m_maxDrawDistanceNM) +
                        ", follow dist m: "   + std::to_string(m_followAircraftDistanceM) +
-                       ", msg.box: "    + m_msgBox +
-                       ", ts: " + std::to_string(m_msSinceEpochQtFree);
+                       ", msg.box: "         + m_msgBox +
+                       ", ts: "              + std::to_string(m_msSinceEpochQtFree);
             }
 
             int CXSwiftBusSettingsQtFree::update(const CXSwiftBusSettingsQtFree &newValues)
             {
                 int changed = 0;
                 if (m_dBusServerAddress  != newValues.m_dBusServerAddress)  { m_dBusServerAddress  = newValues.m_dBusServerAddress;  changed++; }
-                if (m_msgBox      != newValues.m_msgBox)      { m_msgBox      = newValues.m_msgBox;    changed++; }
+                if (m_msgBox             != newValues.m_msgBox)             { m_msgBox             = newValues.m_msgBox;             changed++; }
                 if (m_drawingLabels      != newValues.m_drawingLabels)      { m_drawingLabels      = newValues.m_drawingLabels;      changed++; }
-                if (m_bundleTaxiLandingLights != newValues.m_bundleTaxiLandingLights) { m_bundleTaxiLandingLights = newValues.m_bundleTaxiLandingLights; changed++; }
                 if (m_nightTextureMode   != newValues.m_nightTextureMode)   { m_nightTextureMode   = newValues.m_nightTextureMode;   changed++; }
+                if (m_logRenderPhases    != newValues.m_logRenderPhases)    { m_logRenderPhases    = newValues.m_logRenderPhases;          changed++; }
+                if (m_tcasEnabled        != newValues.m_tcasEnabled)        { m_tcasEnabled        = newValues.m_tcasEnabled;        changed++; }
                 if (m_maxPlanes          != newValues.m_maxPlanes)          { m_maxPlanes          = newValues.m_maxPlanes;          changed++; }
                 if (m_msSinceEpochQtFree != newValues.m_msSinceEpochQtFree) { m_msSinceEpochQtFree = newValues.m_msSinceEpochQtFree; changed++; }
-                if (m_followAircraftDistanceM != newValues.m_followAircraftDistanceM)  { m_followAircraftDistanceM = newValues.m_followAircraftDistanceM; changed++; }
+                if (m_bundleTaxiLandingLights != newValues.m_bundleTaxiLandingLights) { m_bundleTaxiLandingLights = newValues.m_bundleTaxiLandingLights;   changed++; }
+                if (m_followAircraftDistanceM != newValues.m_followAircraftDistanceM) { m_followAircraftDistanceM = newValues.m_followAircraftDistanceM;   changed++; }
                 if (!QtFreeUtils::isFuzzyEqual(m_maxDrawDistanceNM, newValues.m_maxDrawDistanceNM)) { m_maxDrawDistanceNM = newValues.m_maxDrawDistanceNM; changed++; }
 
                 if (changed > 0) { this->objectUpdated(); } // post processing

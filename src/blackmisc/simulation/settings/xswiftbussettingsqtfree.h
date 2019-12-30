@@ -121,6 +121,18 @@ namespace BlackMisc
                     return true;
                 }
 
+                //! Debug messages?
+                bool isLogRenderPhases() const { return m_logRenderPhases; }
+
+                //! Debug messages?
+                void setLogRenderPhases(bool log) { m_logRenderPhases = log; }
+
+                //! TCAS functionality?
+                bool isTcasEnabled() const { return m_tcasEnabled; }
+
+                //! TCAS functionality?
+                void setTcasEnabled(bool tcas) { m_tcasEnabled = tcas; }
+
                 //! Load and parse config file
                 bool parseXSwiftBusString(const std::string &json);
 
@@ -145,6 +157,8 @@ namespace BlackMisc
                 //! The JSON members @{
                 static constexpr char JsonDBusServerAddress[] = "dbusserveradress";
                 static constexpr char JsonDrawingLabels[]     = "drawinglabels";
+                static constexpr char JsonLogRenderPhases[]   = "renderPhases";
+                static constexpr char JsonTcas[]              = "tcas";
                 static constexpr char JsonMaxPlanes[]         = "maxplanes";
                 static constexpr char JsonMaxDrawDistance[]   = "maxDrawDistance";
                 static constexpr char JsonNightTextureMode[]  = "nighttexture";
@@ -157,13 +171,15 @@ namespace BlackMisc
                 //! Object has been updated
                 virtual void objectUpdated() = 0;
 
-                std::string m_dBusServerAddress { "tcp:host=127.0.0.1,port=45001" }; //!< DBus server
+                std::string m_dBusServerAddress { "tcp:host=127.0.0.1,port=45001" }; //!< DBus server (also in class CXSwiftBusConfigWriter)
                 std::string m_nightTextureMode  { "auto" }; //!< night texture mode
                 std::string m_msgBox            { "20;20;20;-1;5;5000" }; //!< left, top, right, bottom, lines, duration
-                int    m_maxPlanes = 100;                   //!< max. planes in XPlane
+                int    m_maxPlanes               = 100;     //!< max. planes in XPlane
                 int    m_followAircraftDistanceM = 200;     //!< follow aircraft in distance
                 bool   m_drawingLabels           = true;    //!< labels in XPlane
                 bool   m_bundleTaxiLandingLights = true;    //!< bundle taxi and landing lights
+                bool   m_logRenderPhases         = false;   //!< render phases debug messages
+                bool   m_tcasEnabled             = true;    //!< TCAS functionality
                 double m_maxDrawDistanceNM       = 50.0;    //!< distance in XPlane
                 int64_t m_msSinceEpochQtFree     = 0;       //!< timestamp
             };

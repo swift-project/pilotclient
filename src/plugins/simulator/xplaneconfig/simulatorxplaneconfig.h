@@ -38,7 +38,7 @@ namespace BlackSimPlugin
             CSimulatorXPlaneConfig(QObject *parent = nullptr);
 
             //! Dtor
-            virtual ~CSimulatorXPlaneConfig() {}
+            virtual ~CSimulatorXPlaneConfig() override {}
 
             //! \copydoc BlackGui::IPluginConfig::createConfigWindow()
             BlackGui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;
