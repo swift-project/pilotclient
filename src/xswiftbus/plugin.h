@@ -41,7 +41,7 @@ namespace XSwiftBus
     /*!
      * Main plugin class
      */
-    class CPlugin : public CSettingsProvider
+    class CPlugin final : public CSettingsProvider
     {
     public:
         //! Constructor

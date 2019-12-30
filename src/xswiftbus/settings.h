@@ -45,6 +45,10 @@ namespace XSwiftBus
         //! Get settings from xswiftbus.conf (needed during plugin initialization)
         virtual const CConfig &getConfig() const = 0;
 
+    protected:
+        //! Destructor
+        ~CSettingsProvider() = default;
+
     private:
         mutable std::mutex m_settingsMutex;
         CSettings          m_pluginSettings; //!< owner of the settings
