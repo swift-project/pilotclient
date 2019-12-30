@@ -91,6 +91,7 @@ namespace BlackMisc
     }
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
 /*!
  * Operator for marshalling enums with QDataStream.
  */
@@ -111,6 +112,7 @@ QDataStream &operator >>(QDataStream &stream, E &value)
     value = static_cast<E>(temp);
     return stream;
 }
+#endif // Qt < 5.14.0
 
 /*!
  * Operator for marshalling pairs with QDataStream.
