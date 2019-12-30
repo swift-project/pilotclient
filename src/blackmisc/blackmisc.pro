@@ -26,55 +26,55 @@ TRANSLATIONS += translations/blackmisc_i18n_de.ts \
                 translations/blackmisc_i18n_en.ts
 
 HEADERS +=  *.h \
-            $$PWD/audio/*.h \
-#            $$PWD/audio/settings/*.h \
-            $$PWD/aviation/*.h \
-            $$PWD/db/*.h \
-            $$PWD/geo/*.h \
-            $$PWD/input/*.h \
-            $$PWD/math/*.h \
-            $$PWD/network/*.h \
-            $$PWD/network/data/*.h \
-            $$PWD/network/settings/*.h \
-            $$PWD/network/external/*.h \
-            $$PWD/pq/*.h \
-            $$PWD/simulation/*.h \
-            $$PWD/simulation/data/*.h \
-            $$PWD/simulation/settings/*.h \
-            $$PWD/simulation/flightgear/*.h \
-            $$PWD/simulation/fscommon/*.h \
-            $$PWD/simulation/fsx/*.h \
-            $$PWD/simulation/xplane/*.h \
-            $$PWD/thirdparty/*.h \
-            $$PWD/test/*.h \
-            $$PWD/weather/*.h \
+            $$files($$PWD/audio/*.h) \
+#            $$files($$PWD/audio/settings/*.h) \
+            $$files($$PWD/aviation/*.h) \
+            $$files($$PWD/db/*.h) \
+            $$files($$PWD/geo/*.h) \
+            $$files($$PWD/input/*.h) \
+            $$files($$PWD/math/*.h) \
+            $$files($$PWD/network/*.h) \
+            $$files($$PWD/network/data/*.h) \
+            $$files($$PWD/network/settings/*.h) \
+            $$files($$PWD/network/external/*.h) \
+            $$files($$PWD/pq/*.h) \
+            $$files($$PWD/simulation/*.h) \
+            $$files($$PWD/simulation/data/*.h) \
+            $$files($$PWD/simulation/settings/*.h) \
+            $$files($$PWD/simulation/flightgear/*.h) \
+            $$files($$PWD/simulation/fscommon/*.h) \
+            $$files($$PWD/simulation/fsx/*.h) \
+            $$files($$PWD/simulation/xplane/*.h) \
+            $$files($$PWD/thirdparty/*.h) \
+            $$files($$PWD/test/*.h) \
+            $$files($$PWD/weather/*.h) \
 
 SOURCES +=  *.cpp \
-            $$PWD/audio/*.cpp \
-#           $$PWD/audio/settings/*.cpp \
-            $$PWD/aviation/*.cpp \
-            $$PWD/db/*.cpp \
-            $$PWD/geo/*.cpp \
-            $$PWD/input/*.cpp \
-            $$PWD/math/*.cpp \
-            $$PWD/network/*.cpp \
-            $$PWD/network/settings/*.cpp \
-            $$PWD/network/external/*.cpp \
-            $$PWD/pq/*.cpp \
-            $$PWD/simulation/*.cpp \
-            $$PWD/simulation/data/*.cpp \
-            $$PWD/simulation/settings/*.cpp \
-            $$PWD/simulation/flightgear/*.cpp \
-            $$PWD/simulation/fscommon/*.cpp \
-            $$PWD/simulation/fsx/*.cpp \
-            $$PWD/simulation/xplane/*.cpp \
-            $$PWD/thirdparty/*.cpp \
-            $$PWD/test/*.cpp \
-            $$PWD/weather/*.cpp \
+            $$files($$PWD/audio/*.cpp) \
+#           $$files($$PWD/audio/settings/*.cpp) \
+            $$files($$PWD/aviation/*.cpp) \
+            $$files($$PWD/db/*.cpp) \
+            $$files($$PWD/geo/*.cpp) \
+            $$files($$PWD/input/*.cpp) \
+            $$files($$PWD/math/*.cpp) \
+            $$files($$PWD/network/*.cpp) \
+            $$files($$PWD/network/settings/*.cpp) \
+            $$files($$PWD/network/external/*.cpp) \
+            $$files($$PWD/pq/*.cpp) \
+            $$files($$PWD/simulation/*.cpp) \
+            $$files($$PWD/simulation/data/*.cpp) \
+            $$files($$PWD/simulation/settings/*.cpp) \
+            $$files($$PWD/simulation/flightgear/*.cpp) \
+            $$files($$PWD/simulation/fscommon/*.cpp) \
+            $$files($$PWD/simulation/fsx/*.cpp) \
+            $$files($$PWD/simulation/xplane/*.cpp) \
+            $$files($$PWD/thirdparty/*.cpp) \
+            $$files($$PWD/test/*.cpp) \
+            $$files($$PWD/weather/*.cpp) \
 
 macx {
-    HEADERS += $$PWD/macos/microphoneaccess.h
-    OBJECTIVE_SOURCES += $$PWD/macos/microphoneaccess.mm
+    HEADERS += $$files($$PWD/macos/microphoneaccess.h)
+    OBJECTIVE_SOURCES += $$files($$PWD/macos/microphoneaccess.mm)
 }
 
 INCLUDEPATH *= $$EXTERNALSROOT/common/include/crashpad

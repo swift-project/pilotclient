@@ -16,16 +16,16 @@ DEPENDPATH += . ..
 DEFINES += LOG_IN_FILE BUILD_BLACKSOUND_LIB
 
 HEADERS += *.h
-HEADERS += $$PWD/wav/wavfile.h
-HEADERS += $$PWD/dsp/*.h
-HEADERS += $$PWD/codecs/*.h
-HEADERS += $$PWD/sampleprovider/*.h
+HEADERS += $$files($$PWD/wav/wavfile.h)
+HEADERS += $$files($$PWD/dsp/*.h)
+HEADERS += $$files($$PWD/codecs/*.h)
+HEADERS += $$files($$PWD/sampleprovider/*.h)
 
 SOURCES += *.cpp
-SOURCES += $$PWD/wav/wavfile.cpp
-SOURCES += $$PWD/dsp/*.cpp
-SOURCES += $$PWD/codecs/*.cpp
-SOURCES += $$PWD/sampleprovider/*.cpp
+SOURCES += $$files($$PWD/wav/wavfile.cpp)
+SOURCES += $$files($$PWD/dsp/*.cpp)
+SOURCES += $$files($$PWD/codecs/*.cpp)
+SOURCES += $$files($$PWD/sampleprovider/*.cpp)
 
 LIBS *= -lopus
 
@@ -33,7 +33,7 @@ DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin
 
 OTHER_FILES += ./share/sounds/*.wav ./share/sounds/readme.txt
-COPY_FILES += $$PWD/share/sounds/*
+COPY_FILES += $$files($$PWD/share/sounds/*)
 # RESOURCES +=
 
 win32 {

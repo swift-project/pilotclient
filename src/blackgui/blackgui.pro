@@ -34,37 +34,37 @@ DEFINES += LOG_IN_FILE BUILD_BLACKGUI_LIB QWT_DLL
 
 HEADERS += *.h
 SOURCES += *.cpp
-HEADERS += $$PWD/models/*.h
-SOURCES += $$PWD/models/*.cpp
-HEADERS += $$PWD/menus/*.h
-SOURCES += $$PWD/menus/*.cpp
+HEADERS += $$files($$PWD/models/*.h)
+SOURCES += $$files($$PWD/models/*.cpp)
+HEADERS += $$files($$PWD/menus/*.h)
+SOURCES += $$files($$PWD/menus/*.cpp)
 
-HEADERS += $$PWD/views/*.h
-SOURCES += $$PWD/views/*.cpp
-FORMS   += $$PWD/views/*.ui
+HEADERS += $$files($$PWD/views/*.h)
+SOURCES += $$files($$PWD/views/*.cpp)
+FORMS   += $$files($$PWD/views/*.ui)
 
-HEADERS += $$PWD/components/*.h
-HEADERS += $$PWD/settings/*.h
-SOURCES += $$PWD/components/*.cpp
-SOURCES += $$PWD/settings/*.cpp
-FORMS   += $$PWD/components/*.ui
+HEADERS += $$files($$PWD/components/*.h)
+HEADERS += $$files($$PWD/settings/*.h)
+SOURCES += $$files($$PWD/components/*.cpp)
+SOURCES += $$files($$PWD/settings/*.cpp)
+FORMS   += $$files($$PWD/components/*.ui)
 
-HEADERS += $$PWD/filters/*.h
-SOURCES += $$PWD/filters/*.cpp
-FORMS   += $$PWD/filters/*.ui
+HEADERS += $$files($$PWD/filters/*.h)
+SOURCES += $$files($$PWD/filters/*.cpp)
+FORMS   += $$files($$PWD/filters/*.ui)
 
-HEADERS += $$PWD/editors/*.h
-SOURCES += $$PWD/editors/*.cpp
-FORMS   += $$PWD/editors/*.ui
+HEADERS += $$files($$PWD/editors/*.h)
+SOURCES += $$files($$PWD/editors/*.cpp)
+FORMS   += $$files($$PWD/editors/*.ui)
 
-HEADERS += $$PWD/graphs/*.h
-SOURCES += $$PWD/graphs/*.cpp
+HEADERS += $$files($$PWD/graphs/*.h)
+SOURCES += $$files($$PWD/graphs/*.cpp)
 
-FORMS   += $$PWD/*.ui
+FORMS   += $$files($$PWD/*.ui)
 
 win32 {
-    HEADERS += $$PWD/win/*.h
-    SOURCES += $$PWD/win/*.cpp
+    HEADERS += $$files($$PWD/win/*.h)
+    SOURCES += $$files($$PWD/win/*.cpp)
 }
 
 win32 {
@@ -84,8 +84,8 @@ DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin
 
 OTHER_FILES += ./share/qss/*.qss ./share/qss/*.qss.in ./share/qss/*.css
-COPY_FILES += $$PWD/share/qss/*.qss
-COPY_FILES += $$PWD/share/qss/*.css
+COPY_FILES += $$files($$PWD/share/qss/*.qss)
+COPY_FILES += $$files($$PWD/share/qss/*.css)
 
 win32 {
     dlltarget.path = $$PREFIX/bin

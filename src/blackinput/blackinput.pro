@@ -20,8 +20,8 @@ HEADERS += *.h
 SOURCES += *.cpp
 
 win32 {
-    HEADERS += $$PWD/win/*.h
-    SOURCES += $$PWD/win/*.cpp
+    HEADERS += $$files($$PWD/win/*.h)
+    SOURCES += $$files($$PWD/win/*.cpp)
 
     DEFINES += DIRECTINPUT_VERSION=0x0800
 
@@ -29,13 +29,13 @@ win32 {
 }
 
 unix:!macx {
-    HEADERS += $$PWD/linux/*.h
-    SOURCES += $$PWD/linux/*.cpp
+    HEADERS += $$files($$PWD/linux/*.h)
+    SOURCES += $$files($$PWD/linux/*.cpp)
 }
 
 macx {
-    HEADERS += $$PWD/macos/*.h
-    OBJECTIVE_SOURCES += $$PWD/macos/*.mm
+    HEADERS += $$files($$PWD/macos/*.h)
+    OBJECTIVE_SOURCES += $$files($$PWD/macos/*.mm)
     LIBS += -framework CoreFoundation -framework ApplicationServices -framework Foundation -framework AppKit
 }
 

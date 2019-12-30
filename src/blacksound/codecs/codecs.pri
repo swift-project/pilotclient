@@ -1,7 +1,7 @@
 SOURCES += \
-    $$PWD/opusdecoder.cpp \
-    $$PWD/opusencoder.cpp \
+    $$files($$PWD/codecs/opusdecoder.cpp) \
+    $$files($$PWD/codecs/opusencoder.cpp) \
 
 HEADERS += \
-    $$PWD/opusdecoder.h \
-    $$PWD/opusencoder.h \
+    $$files($$PWD/codecs/opusdecoder.h) \
+    $$files($$PWD/codecs/opusencoder.h) \
