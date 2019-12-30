@@ -22,6 +22,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/variant.h"
 
+#include <QKeyEvent>
 #include <QFrame>
 #include <QTabWidget>
 #include <QWizardPage>

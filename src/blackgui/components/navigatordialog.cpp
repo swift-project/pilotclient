@@ -16,6 +16,7 @@
 #include "ui_navigatordialog.h"
 
 #include <QAction>
+#include <QMouseEvent>
 #include <QEvent>
 #include <QFrame>
 #include <QMainWindow>
