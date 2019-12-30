@@ -207,10 +207,11 @@ defineTest(addLibraryDependency) {
 }
 
 ################################
-# Workarounds needed when using MSVC /permissive- flag
+# ISO C++ conformance mode for MSVC
 ################################
 
-msvc:contains(QMAKE_CXXFLAGS, /permissive-): QMAKE_CXXFLAGS *= /FIpermissiveworkarounds.h
+msvc:greaterThan(QMAKE_MSC_VER, 1923): QMAKE_CXXFLAGS *= /permissive-
+msvc:contains(QMAKE_CXXFLAGS, /permissive-): QMAKE_CXXFLAGS *= /FI$${SourceRoot}\src\permissiveworkarounds.h
 
 ################################
 # Experimental support for Clang on Windows
