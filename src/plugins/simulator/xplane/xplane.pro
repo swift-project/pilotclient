@@ -21,6 +21,9 @@ HEADERS += *.h
 DISTFILES += simulatorxplane.json
 DESTDIR = $$DestRoot/bin/plugins/simulator
 
+isEmpty(XSWIFTBUS_COMMIT): error(Missing XSWIFTBUS_COMMIT variable)
+DEFINES += XSWIFTBUS_COMMIT=\\\"$$XSWIFTBUS_COMMIT\\\"
+
 win32 {
     dlltarget.path = $$PREFIX/bin/plugins/simulator
     INSTALLS += dlltarget

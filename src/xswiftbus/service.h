@@ -62,6 +62,9 @@ namespace XSwiftBus
         //! Returns the XSwiftBus version number
         std::string getVersionNumber() const;
 
+        //! Returns the SHA1 of the last commit that could influence xswiftbus.
+        std::string getCommitHash() const;
+
         //! Add a text message to the on-screen display, with RGB components in the range [0,1]
         void addTextMessage(const std::string &text, double red, double green, double blue);
 

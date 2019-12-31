@@ -100,6 +100,9 @@ namespace BlackSimPlugin
             //! Get XSwiftBus version number
             QString getVersionNumber();
 
+            //! Get SHA1 of the last commit that could influence xswiftbus
+            QString getCommitHash();
+
             //! Get own aircraft situation data
             void getOwnAircraftSituationDataAsync(BlackSimPlugin::XPlane::XPlaneData *o_xplaneData);
 

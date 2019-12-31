@@ -28,4 +28,6 @@ swiftConfig(unitTests) {
 
 include(install.pri)
 
+include(src/xswiftbus/version.pri)
+
 load(common_post)

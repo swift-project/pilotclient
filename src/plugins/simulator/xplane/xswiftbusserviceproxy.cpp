@@ -43,6 +43,11 @@ namespace BlackSimPlugin
             return m_dbusInterface->callDBusRet<QString>(QLatin1String("getVersionNumber"));
         }
 
+        QString CXSwiftBusServiceProxy::getCommitHash()
+        {
+            return m_dbusInterface->callDBusRet<QString>(QLatin1String("getCommitHash"));
+        }
+
         void CXSwiftBusServiceProxy::getOwnAircraftSituationDataAsync(XPlaneData *o_xplaneData)
         {
             if (!o_xplaneData) { return; }

@@ -77,10 +77,15 @@ using namespace BlackCore;
 
 namespace
 {
-    inline const QString &xswiftbusServiceName()
+    const QString &xswiftbusServiceName()
     {
         static const QString name("org.swift-project.xswiftbus");
         return name;
+    }
+    const QString &commitHash()
+    {
+        static const QString hash(XSWIFTBUS_COMMIT);
+        return hash;
     }
 }
 
@@ -1362,11 +1367,12 @@ namespace BlackSimPlugin
 
             const QString swiftVersion = CBuildConfig::getVersionString();
             const QString xswiftbusVersion = service.getVersionNumber();
+            const QString xswiftbusCommitHash = service.getCommitHash();
             if (xswiftbusVersion.isEmpty())
             {
                 CLogMessage(this).warning(u"Could not determine which version of XSwiftBus is running. Mismatched versions might cause instability.");
             }
-            else if (swiftVersion != xswiftbusVersion)
+            else if (commitHash() != xswiftbusCommitHash)
             {
                 CLogMessage(this).error(u"You are using an incorrect version of XSwiftBus. The version of XSwiftBus (%1) should match the version of swift (%2). Consider upgrading!") << xswiftbusVersion << swiftVersion;
             }

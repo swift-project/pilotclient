@@ -86,6 +86,9 @@ isEmpty(GIT_BIN) {
 DEFINES += XSWIFTBUS_VERSION=\\\"$$swiftConfig(version.full)\\\"
 DEFINES += GIT_COMMIT_TS=\\\"$$GIT_COMMIT_TS\\\"
 
+isEmpty(XSWIFTBUS_COMMIT): error(Missing XSWIFTBUS_COMMIT variable)
+DEFINES += XSWIFTBUS_COMMIT=\\\"$$XSWIFTBUS_COMMIT\\\"
+
 # X-Plane plugins must follow a prescribed filename and directory structure.
 TARGET_EXT = .xpl
 win32:TARGET = win

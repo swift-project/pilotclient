@@ -58,6 +58,11 @@ namespace XSwiftBus
         return version;
     }
 
+    std::string CService::getCommitHash() const
+    {
+        return XSWIFTBUS_COMMIT;
+    }
+
     void CService::addTextMessage(const std::string &text, double red, double green, double blue)
     {
         if (text.empty()) { return; }
@@ -251,6 +256,13 @@ namespace XSwiftBus
                 queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getVersionNumber());
+                });
+            }
+            else if (message.getMethodName() == "getCommitHash")
+            {
+                queueDBusCall([ = ]()
+                {
+                    sendDBusReply(sender, serial, getCommitHash());
                 });
             }
             else if (message.getMethodName() == "addTextMessage")
