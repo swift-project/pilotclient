@@ -208,6 +208,12 @@ namespace BlackSimPlugin
             void isUsingRealTimeAsync(bool *o_isRealTime);
             //! @}
 
+            //! \copydoc XSwiftBus::CService::getAverageFPS
+            //! @{
+            double getAverageFPS() const;
+            void getAverageFPSAsync(double *o_frameRate);
+            //! @}
+
             //! \copydoc XSwiftBus::CService::getLatitudeDeg
             //! @{
             double getLatitudeDeg() const;

@@ -319,6 +319,15 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBusAsync(QLatin1String("isUsingRealTime"), setterCallback(o_isRealTime));
         }
 
+        double CXSwiftBusServiceProxy::getAverageFPS() const
+        {
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getAverageFPS"));
+        }
+        void CXSwiftBusServiceProxy::getAverageFPSAsync(double *o_frameRate)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getAverageFPS"), setterCallback(o_frameRate));
+        }
+
         double CXSwiftBusServiceProxy::getLatitudeDeg() const
         {
             return m_dbusInterface->callDBusRet<double>(QLatin1String("getLatitudeDeg"));

@@ -23,11 +23,53 @@ using namespace BlackMisc::Simulation::XPlane::QtFreeUtils;
 
 namespace XSwiftBus
 {
-    CService::CService(CSettingsProvider *settingsProvider) : CDBusObject(settingsProvider)
+    //! \private
+    struct CService::FramePeriodSampler : public CDrawable
+    {
+        DataRef<xplane::data::sim::operation::misc::frame_rate_period> m_thisFramePeriod;
+        DataRef<xplane::data::sim::time::framerate_period> m_thisFramePeriodXP11;
+        std::vector<float> m_samples;
+        float m_total = 0;
+        size_t m_lastSampleIndex = 0;
+        static constexpr size_t c_maxSampleCount = 500;
+
+        FramePeriodSampler() : CDrawable(xplm_Phase_LastCockpit, false) {}
+
+        float getAverageFPS()
+        {
+            if (m_total == 0) { return 0; }
+            const float fps = m_samples.size() / m_total;
+            m_total = 0;
+            m_samples.clear();
+            m_lastSampleIndex = 0;
+            return fps;
+        }
+
+    protected:
+        virtual void draw() override // called once per frame
+        {
+            float current = m_thisFramePeriodXP11.isValid() ? m_thisFramePeriodXP11.get() : m_thisFramePeriod.get();
+            ++m_lastSampleIndex %= c_maxSampleCount;
+            if (m_samples.size() == c_maxSampleCount)
+            {
+                m_total -= m_samples[m_lastSampleIndex];
+                m_samples[m_lastSampleIndex] = current;
+            }
+            else { m_samples.push_back(current); }
+            m_total += m_samples[m_lastSampleIndex];
+        }
+    };
+
+    CService::CService(CSettingsProvider *settingsProvider) :
+        CDBusObject(settingsProvider),
+        m_framePeriodSampler(std::make_unique<FramePeriodSampler>())
     {
         this->updateAirportsInRange();
         this->updateMessageBoxFromSettings();
+        m_framePeriodSampler->show();
     }
+
+    CService::~CService() = default;
 
     void CService::onAircraftModelChanged()
     {
@@ -61,6 +103,12 @@ namespace XSwiftBus
     std::string CService::getCommitHash() const
     {
         return XSWIFTBUS_COMMIT;
+    }
+
+    double CService::getAverageFPS()
+    {
+        if (!m_framePeriodSampler) { return 0; }
+        return static_cast<double>(m_framePeriodSampler->getAverageFPS());
     }
 
     void CService::addTextMessage(const std::string &text, double red, double green, double blue)

@@ -40,7 +40,7 @@ namespace XSwiftBus
         CService(CSettingsProvider *settingsProvider);
 
         //! Destructor
-        virtual ~CService() override = default;
+        virtual ~CService() override;
 
         //! DBus interface name
         static const std::string &InterfaceName()
@@ -109,6 +109,11 @@ namespace XSwiftBus
 
         //! True if sim time is tracking operating system time
         bool isUsingRealTime() const { return m_useSystemTime.get(); }
+
+        //! Frames-per-second, averaged over the last 500 frames,
+        //! or since this function was last called, whichever is later.
+        //! \return Zero if no samples were collected since this function was last called.
+        double getAverageFPS();
 
         //! Get aircraft latitude in degrees
         double getLatitudeDeg() const { return m_latitude.get(); }
@@ -308,6 +313,9 @@ namespace XSwiftBus
 
         //! Redraw message box after reading from the settings
         void updateMessageBoxFromSettings();
+
+        struct FramePeriodSampler;
+        std::unique_ptr<FramePeriodSampler> m_framePeriodSampler;
 
         StringDataRef<xplane::data::sim::aircraft::view::acf_livery_path> m_liveryPath;
         StringDataRef<xplane::data::sim::aircraft::view::acf_ICAO> m_icao;

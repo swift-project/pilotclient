@@ -36,6 +36,8 @@ namespace XSwiftBus
             }
         }
 
+        bool isValid() const { return m_ref; }
+
         template <typename T>
         void implSet(T);
 
@@ -59,6 +61,8 @@ namespace XSwiftBus
                 XPLMDebugString("\n");
             }
         }
+
+        bool isValid() const { return m_ref; }
 
         template <typename T>
         void implSetAll(std::vector<T> const &);
@@ -108,6 +112,8 @@ namespace XSwiftBus
 
         //! Get the value of the dataref
         DataRefType get() const { return DataRefImpl::implGet<DataRefType>(); }
+
+        using DataRefImpl::isValid;
     };
 
     /*!
@@ -141,6 +147,8 @@ namespace XSwiftBus
 
         //! Get the value of a single element
         DataRefType getAt(int index) const { return ArrayDataRefImpl::implGetAt<DataRefType>(index); }
+
+        using ArrayDataRefImpl::isValid;
     };
 
     /*!
@@ -164,6 +172,9 @@ namespace XSwiftBus
                 XPLMDebugString("\n");
             }
         }
+
+        //! True if the dataref exists
+        bool isValid() const { return m_ref; }
 
         //! Set the value of the whole string (if it is writable)
         void set(std::string const &s) { setSubstr(0, s); }
