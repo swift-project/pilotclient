@@ -270,6 +270,13 @@ namespace BlackMisc
             return cat;
         }
 
+        //! FSD specific
+        static const CLogCategory &fsd()
+        {
+            static const CLogCategory cat { "swift.fsd" };
+            return cat;
+        }
+
         //! Aviation specific
         static const CLogCategory &aviation()
         {
@@ -294,6 +301,7 @@ namespace BlackMisc
                 download(),
                 driver(),
                 flightPlan(),
+                fsd(),
                 guiComponent(),
                 interpolator(),
                 json(),

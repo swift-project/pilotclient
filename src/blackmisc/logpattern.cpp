@@ -31,6 +31,7 @@ namespace BlackMisc
             { "downloading data",            exactMatch(CLogCategory::download()) },
             { "driver",                      exactMatch(CLogCategory::driver()) },
             { "flight plan",                 exactMatch(CLogCategory::flightPlan()) },
+            { "FSD",                         exactMatch(CLogCategory::fsd()) },
             { "interpolator",                exactMatch(CLogCategory::interpolator()) },
             { "JSON (conversion)",           exactMatch(CLogCategory::json()) },
             { "model cache",                 exactMatch(CLogCategory::modelCache()) },
@@ -321,7 +322,7 @@ namespace BlackMisc
 
     QString CLogPattern::convertToQString(bool i18n) const
     {
-        Q_UNUSED(i18n);
+        Q_UNUSED(i18n)
         QString strategy;
         QString categories = m_strings.values().join("|"); // clazy:exclude=container-anti-pattern
         switch (m_strategy)

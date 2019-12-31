@@ -80,6 +80,18 @@ namespace BlackCore
             return escaped;
         }
 
+        const CLogCategoryList &CFSDClient::getLogCategories()
+        {
+            static const CLogCategoryList cats = []
+            {
+                CLogCategoryList cl = CContinuousWorker::getLogCategories();
+                cl.push_back(CLogCategory::network());
+                cl.push_back(CLogCategory::fsd());
+                return cl;
+            }();
+            return cats;
+        }
+
         CFSDClient::CFSDClient(IClientProvider         *clientProvider,
                                IOwnAircraftProvider    *ownAircraftProvider,
                                IRemoteAircraftProvider *remoteAircraftProvider,

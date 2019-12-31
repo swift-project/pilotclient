@@ -82,6 +82,9 @@ namespace BlackCore
             Q_INTERFACES(BlackMisc::Network::IEcosystemProvider)
 
         public:
+            //! Categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
             //! Ctor
             CFSDClient(BlackMisc::Network::IClientProvider            *clientProvider,
                        BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,

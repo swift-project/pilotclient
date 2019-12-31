@@ -236,7 +236,10 @@ namespace BlackCore
             if (m_voiceClient)
             {
                 m_voiceClient->startAudio();
-                this->connectAudioWithNetworkCredentials();
+                const bool connected = this->connectAudioWithNetworkCredentials();
+                Q_UNUSED(connected)
+
+                // one reason for not connecting is NOT using the VATSIM ecosystem
             }
         }
 
@@ -564,10 +567,13 @@ namespace BlackCore
             Q_UNUSED(from)
             BLACK_VERIFY_X(this->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
 
-            // we only change network connection of AFC client here
+            // we only change network connection of AFV client here
             if (to.isConnected() && this->getIContextNetwork())
             {
-                this->connectAudioWithNetworkCredentials();
+                const bool connected = this->connectAudioWithNetworkCredentials();
+                Q_UNUSED(connected)
+
+                // one reason for not connecting is NOT using the VATSIM ecosystem
             }
             else if (to.isDisconnected())
             {

@@ -52,7 +52,10 @@ namespace BlackGui
                 sGui->getCContextAudioBase()->afvClient()->startAudio();
                 if (sGui->getIContextNetwork()->isConnected())
                 {
-                    sGui->getCContextAudioBase()->connectAudioWithNetworkCredentials();
+                    const bool connected = sGui->getCContextAudioBase()->connectAudioWithNetworkCredentials();
+                    Q_UNUSED(connected)
+
+                    // one reason for not connecting is NOT using the VATSIM ecosystem
                 }
             }
 
