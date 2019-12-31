@@ -91,7 +91,8 @@ namespace BlackMisc
                 QStringList remove(toUpper(modelsToBeRemoved));
                 remove.sort();
 
-                QSet<QString> removeSet(knownModels.toSet() & remove.toSet());
+                QSet<QString> removeSet(knownModels.begin(), knownModels.end());
+                removeSet &= QSet<QString>(remove.begin(), remove.end());
                 int c = 0;
                 for (const QString &model : removeSet)
                 {
@@ -108,7 +109,8 @@ namespace BlackMisc
                 QStringList keep(toUpper(modelsToBeKept));
                 keep.sort();
 
-                QSet<QString> removeSet(knownModels.toSet().subtract(keep.toSet()));
+                QSet<QString> removeSet(knownModels.begin(), knownModels.end());
+                removeSet.subtract(QSet<QString>(keep.begin(), keep.end()));
                 int c = 0;
                 for (const QString &model : removeSet)
                 {

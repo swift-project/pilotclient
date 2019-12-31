@@ -12,6 +12,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/compressutils.h"
+#include <QElapsedTimer>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Json;
@@ -162,7 +163,7 @@ namespace BlackCore
         {
             if (models.isEmpty() || simulatorModels.isEmpty()) { return models; }
 
-            QTime timer;
+            QElapsedTimer timer;
             timer.start();
             const QSet<QString> allOwnModelsModelStrings = simulatorModels.getModelStringSet();
             CAircraftModelList consolidatedModels;
@@ -204,7 +205,7 @@ namespace BlackCore
         {
             if (models.isEmpty() || simulatorModels.isEmpty()) { return models; }
 
-            QTime timer;
+            QElapsedTimer timer;
             timer.start();
             const QSet<QString> allOwnModelsModelStrings = simulatorModels.getModelStringSet();
             CAircraftModelList consolidatedModels;
@@ -252,7 +253,7 @@ namespace BlackCore
 
         int CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(CAircraftModelList &models, bool force, bool processEvents)
         {
-            QTime timer;
+            QElapsedTimer timer;
             timer.start();
             int c = 0;
             if (models.isEmpty()) { return c; }
@@ -275,7 +276,7 @@ namespace BlackCore
         {
             if (dbModels.isEmpty() || simulatorModels.isEmpty()) { return 0; }
 
-            QTime timer;
+            QElapsedTimer timer;
             timer.start();
             const QSet<QString> dbModelsModelStrings = dbModels.getModelStringSet();
 

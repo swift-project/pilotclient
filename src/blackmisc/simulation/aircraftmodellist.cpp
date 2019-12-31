@@ -1762,7 +1762,7 @@ namespace BlackMisc
             if (aircraftStats)
             {
                 const CAircraftIcaoCodeList icaos = this->getAircraftIcaoCodesFromDb();
-                QStringList designators(icaos.allDesignators().toList());
+                QStringList designators(icaos.allDesignators().values());
                 designators.sort();
                 stats += sep % sep %
                          u"Aircraft ICAOs from DB: " % sep %

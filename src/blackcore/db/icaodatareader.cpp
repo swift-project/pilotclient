@@ -17,6 +17,7 @@
 #include "blackmisc/statusmessage.h"
 
 #include <QStringBuilder>
+#include <QElapsedTimer>
 #include <QDateTime>
 #include <QDir>
 #include <QFlags>
@@ -316,7 +317,7 @@ namespace BlackCore
             else
             {
                 // normally read from special DB view which already filters incomplete
-                QTime time;
+                QElapsedTimer time;
                 time.start();
                 codes  = CAircraftIcaoCodeList::fromDatabaseJson(res, categories, true, &inconsistent);
                 this->logParseMessage("aircraft ICAO", codes.size(), time.elapsed(), res);
@@ -371,7 +372,7 @@ namespace BlackCore
             else
             {
                 // normally read from special DB view which already filters incomplete
-                QTime time;
+                QElapsedTimer time;
                 time.start();
                 codes = CAirlineIcaoCodeList::fromDatabaseJson(res, true, &inconsistent);
                 this->logParseMessage("airline ICAO", codes.size(), time.elapsed(), res);
@@ -423,7 +424,7 @@ namespace BlackCore
             else
             {
                 // normally read from special DB view which already filters incomplete
-                QTime time;
+                QElapsedTimer time;
                 time.start();
                 countries = CCountryList::fromDatabaseJson(res);
                 this->logParseMessage("countries", countries.size(), time.elapsed(), res);
@@ -468,7 +469,7 @@ namespace BlackCore
             else
             {
                 // normally read from special DB view which already filters incomplete
-                QTime time;
+                QElapsedTimer time;
                 time.start();
                 categories  = CAircraftCategoryList::fromDatabaseJson(res);
                 this->logParseMessage("categories", categories.size(), time.elapsed(), res);
@@ -526,7 +527,7 @@ namespace BlackCore
                         {
                             const CCountryList countries = CCountryList::fromMultipleJsonFormats(countriesJson);
                             const int c = countries.size();
-                            msgs.push_back(m_countryCache.set(countries, fi.created().toUTC().toMSecsSinceEpoch()));
+                            msgs.push_back(m_countryCache.set(countries, fi.birthTime().toUTC().toMSecsSinceEpoch()));
                             reallyRead |= CEntityFlags::CountryEntity;
                             emit this->dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, c);
                         }
@@ -564,7 +565,7 @@ namespace BlackCore
                         {
                             const CAircraftIcaoCodeList aircraftIcaos = CAircraftIcaoCodeList::fromMultipleJsonFormats(aircraftJson);
                             const int c = aircraftIcaos.size();
-                            msgs.push_back(m_aircraftIcaoCache.set(aircraftIcaos, fi.created().toUTC().toMSecsSinceEpoch()));
+                            msgs.push_back(m_aircraftIcaoCache.set(aircraftIcaos, fi.birthTime().toUTC().toMSecsSinceEpoch()));
                             reallyRead |= CEntityFlags::AircraftIcaoEntity;
                             emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, c);
                         }
@@ -602,7 +603,7 @@ namespace BlackCore
                         {
                             const CAirlineIcaoCodeList airlineIcaos = CAirlineIcaoCodeList::fromMultipleJsonFormats(airlineJson);
                             const int c = airlineIcaos.size();
-                            msgs.push_back(m_airlineIcaoCache.set(airlineIcaos, fi.created().toUTC().toMSecsSinceEpoch()));
+                            msgs.push_back(m_airlineIcaoCache.set(airlineIcaos, fi.birthTime().toUTC().toMSecsSinceEpoch()));
                             reallyRead |= CEntityFlags::AirlineIcaoEntity;
                             emit this->dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, c);
                         }
@@ -640,7 +641,7 @@ namespace BlackCore
                         {
                             const CAircraftCategoryList aircraftCategories = CAircraftCategoryList::fromMultipleJsonFormats(aircraftCategory);
                             const int c = aircraftCategories.size();
-                            msgs.push_back(m_categoryCache.set(aircraftCategories, fi.created().toUTC().toMSecsSinceEpoch()));
+                            msgs.push_back(m_categoryCache.set(aircraftCategories, fi.birthTime().toUTC().toMSecsSinceEpoch()));
                             reallyRead |= CEntityFlags::AircraftCategoryEntity;
                             emit this->dataRead(CEntityFlags::AircraftCategoryEntity, CEntityFlags::ReadFinished, c);
                         }

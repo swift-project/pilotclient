@@ -128,11 +128,11 @@ namespace BlackGui
             if (sGui->getWebDataServices()->getAircraftIcaoCodesCount() < 1) { return; }
             m_hasCompleters = true;
             const CAircraftIcaoCodeList codes = sGui->getWebDataServices()->getAircraftIcaoCodes();
-            const QStringList designators = codes.allDesignators().toList();
+            const QStringList designators = codes.allDesignators().values();
             ui->le_Designator->setCompleter(new QCompleter(designators, ui->le_Designator));
-            const QStringList families = codes.allFamilies().toList();
+            const QStringList families = codes.allFamilies().values();
             ui->le_Family->setCompleter(new QCompleter(families, ui->le_Family));
-            const QStringList manufacturers = codes.allManufacturers().toList();
+            const QStringList manufacturers = codes.allManufacturers().values();
             ui->le_Manufacturer->setCompleter(new QCompleter(manufacturers, ui->le_Manufacturer));
         }
     } // ns

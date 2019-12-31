@@ -76,7 +76,7 @@ namespace BlackCoreTest
     {
         if (!sApp->hasSetupReader()) { QSKIP("Cannot load bootstrap file, skip unit test"); }
         const CUrl url = sApp->getGlobalSetup().getDbHomePageUrl();
-        QTime timer;
+        QElapsedTimer timer;
         timer.start();
         constexpr int max = 5;
         for (int i = 0; i < max; i++)
@@ -94,7 +94,7 @@ namespace BlackCoreTest
         if (!sApp->hasSetupReader()) { QSKIP("Cannot load bootstrap file, skip unit test"); }
         const CUrl url = sApp->getGlobalSetup().getDbHomePageUrl();
         const QString host(url.getHost());
-        QTime timer;
+        QElapsedTimer timer;
         timer.start();
         constexpr int max = 5;
         for (int i = 0; i < max; i++)

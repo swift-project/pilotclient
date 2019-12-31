@@ -39,7 +39,7 @@
 #include <QObject>
 #include <QStringBuilder>
 #include <QString>
-#include <QTime>
+#include <QElapsedTimer>
 #include <QtGlobal>
 
 using namespace BlackMisc;
@@ -82,7 +82,7 @@ namespace BlackCore
         if (m_initalized || m_shuttingDown) { return; }
 
         QMap<QString, int> times;
-        QTime time;
+        QElapsedTimer time;
         CCoreFacade::registerMetadata();
 
         // either use explicit setting or last value
@@ -178,7 +178,7 @@ namespace BlackCore
     {
         bool c = false;
         Q_UNUSED(c) // for release version
-        QTime time;
+        QElapsedTimer time;
         time.start();
 
         times.insert("Post setup, connects first", time.restart());

@@ -23,7 +23,7 @@
 #include <QCoreApplication>
 #include <QString>
 #include <QTextStream>
-#include <QTime>
+#include <QElapsedTimer>
 #include <QtGlobal>
 
 using namespace BlackMisc;
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     QTextStream streamOut(stdout);
 
     bool run = true;
-    QTime t;
+    QElapsedTimer t;
     while (run)
     {
         streamOut << "Run samples:" << endl;

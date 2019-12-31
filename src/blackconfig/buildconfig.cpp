@@ -20,6 +20,7 @@
 #include <QStringBuilder>
 #include <QtGlobal>
 #include <QSysInfo>
+#include <QOperatingSystemVersion>
 
 namespace BlackConfig
 {
@@ -50,13 +51,8 @@ namespace BlackConfig
 
     bool CBuildConfig::isRunningOnWindows10()
     {
-#ifdef Q_OS_WIN
-        // QSysInfo::WindowsVersion only available on Win platforms
         if (!CBuildConfig::isRunningOnWindowsNtPlatform()) { return false; }
-        return (QSysInfo::WindowsVersion == QSysInfo::WV_10_0);
-#else
-        return false;
-#endif
+        return (QOperatingSystemVersion::current() >= QOperatingSystemVersion::Windows10);
     }
 
     const QString &CBuildConfig::getPlatformString()
@@ -186,7 +182,7 @@ namespace BlackConfig
         {
             // Mar 27 2017 20:17:06 (needs to be on english locale, otherwise fails - e.g.
             QDateTime dt = QLocale(QLocale::English).toDateTime(CBuildConfig::buildDateAndTime().simplified(), "MMM d yyyy hh:mm:ss");
-            dt.setUtcOffset(0);
+            dt.setOffsetFromUtc(0);
             return dt;
         }
     }

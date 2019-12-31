@@ -1068,7 +1068,7 @@ namespace BlackGui
         void CFlightPlanComponent::initCompleters()
         {
             if (!sGui || !sGui->hasWebDataServices()) { return; }
-            const QStringList aircraft(sGui->getWebDataServices()->getAircraftIcaoCodes().allDesignators().toList());
+            const QStringList aircraft(sGui->getWebDataServices()->getAircraftIcaoCodes().allDesignators().values());
             QCompleter *aircraftCompleter = new QCompleter(aircraft, this);
             aircraftCompleter->setMaxVisibleItems(10);
             aircraftCompleter->popup()->setMinimumWidth(75);

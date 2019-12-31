@@ -906,9 +906,9 @@ namespace BlackMisc
         {
             static const QStringList e = []
             {
-                QSet<QString> el(CFlightPlan::faaEquipmentCodes().toSet());
-                el.unite(CFlightPlan::squawkBoxEquipmentCodes().toSet());
-                return el.toList();
+                QSet<QString> el(CFlightPlan::faaEquipmentCodes().begin(), CFlightPlan::faaEquipmentCodes().end());
+                el.unite(QSet<QString>(CFlightPlan::squawkBoxEquipmentCodes().begin(), CFlightPlan::squawkBoxEquipmentCodes().end()));
+                return el.values();
             }();
             return e;
         }

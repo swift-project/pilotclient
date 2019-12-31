@@ -414,7 +414,7 @@ namespace BlackMisc
     {
         if (set.isEmpty()) { return {}; }
         if (set.size() == 1) { return *set.begin(); }
-        return set.toList().join(separator);
+        return set.values().join(separator);
     }
 
     QMap<QString, QString> parseIniValues(const QString &data)

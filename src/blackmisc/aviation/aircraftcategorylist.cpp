@@ -61,7 +61,7 @@ namespace BlackMisc
         {
             const QSet<QString> levels = this->getLevelStrings();
             if (levels.isEmpty()) {return {}; }
-            return levels.toList().join(separator);
+            return levels.values().join(separator);
         }
 
         QList<int> CAircraftCategoryList::getFirstLevels() const
@@ -72,7 +72,7 @@ namespace BlackMisc
                 levels.insert(category.getFirstLevel());
             }
             levels.remove(0);
-            QList<int> ll = levels.toList();
+            QList<int> ll = levels.values();
             std::sort(ll.begin(), ll.end());
             return ll;
         }
@@ -85,7 +85,7 @@ namespace BlackMisc
                 levels.insert(category.getSecondLevel());
             }
             levels.remove(0);
-            QList<int> ll = levels.toList();
+            QList<int> ll = levels.values();
             std::sort(ll.begin(), ll.end());
             return ll;
         }

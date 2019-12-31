@@ -420,7 +420,7 @@ namespace BlackMisc
                 auto deferrals = fromJson(json.value("deferrals").toArray());
                 m_admittedValues.unite(m_admittedQueue);
                 if (updateUuid) { m_admittedQueue.clear(); }
-                else if (! m_admittedQueue.isEmpty()) { m_admittedQueue.intersect(QSet<QString>::fromList(m_timestamps.keys())); }
+                else if (! m_admittedQueue.isEmpty()) { m_admittedQueue.intersect(QSet<QString>(m_timestamps.keyBegin(), m_timestamps.keyEnd())); }
 
                 for (const auto &key : m_timestamps.keys()) // clazy:exclude=container-anti-pattern,range-loop
                 {
@@ -548,7 +548,7 @@ namespace BlackMisc
         QMutexLocker lock(&m_mutex);
 
         Q_ASSERT(m_updateInProgress);
-        return QSet<QString>::fromList(m_timestamps.keys());
+        return QSet<QString>(m_timestamps.keyBegin(), m_timestamps.keyEnd());
     }
 
     const QMap<QString, qint64> &CDataCacheRevision::newerTimestamps() const

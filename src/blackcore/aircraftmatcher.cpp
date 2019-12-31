@@ -1203,7 +1203,7 @@ namespace BlackCore
         }
 
         const QSet<QString> allIcaos = aircraft.allDesignators();
-        const QString allIcaosStr = allIcaos.toList().join(", ");
+        const QString allIcaosStr = allIcaos.values().join(", ");
         CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Aircraft '%1' known for airline '%2'").arg(allIcaosStr, airline.getDesignator()));
 
         const CAircraftIcaoCode code = aircraft.findBestFuzzyMatchOrDefault(candidateString);

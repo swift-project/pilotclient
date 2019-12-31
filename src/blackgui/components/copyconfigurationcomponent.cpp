@@ -156,8 +156,8 @@ namespace BlackGui
             const QFileSystemModel *sourceModel = qobject_cast<QFileSystemModel *>(ui->tv_Source->model());
             if (!sourceModel) { return; }
 
-            QStringList select = comp.missingInTarget.toList();
-            select.append(comp.newerInSource.toList());
+            QStringList select = comp.missingInTarget.values();
+            select.append(comp.newerInSource.values());
             for (const QString &file : as_const(comp.missingInTarget))
             {
                 const QModelIndex index = sourceModel->index(file);

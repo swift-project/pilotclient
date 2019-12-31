@@ -101,14 +101,16 @@ namespace BlackMisc
     {
         if (categories.size() == 0) { return empty(); }
         if (categories.size() == 1) { return exactMatch(categories[0]); }
-        return { AnyOf, QSet<QString>::fromList(categories.toQStringList()) };
+        const QStringList strList = categories.toQStringList();
+        return { AnyOf, QSet<QString>(strList.begin(), strList.end()) };
     }
 
     CLogPattern CLogPattern::allOf(const CLogCategoryList &categories)
     {
         if (categories.size() == 0) { return {}; }
         if (categories.size() == 1) { return exactMatch(categories[0]); }
-        return { AllOf, QSet<QString>::fromList(categories.toQStringList()) };
+        const QStringList strList = categories.toQStringList();
+        return { AnyOf, QSet<QString>(strList.begin(), strList.end()) };
     }
 
     CLogPattern CLogPattern::startsWith(const QString &prefix)
@@ -321,7 +323,7 @@ namespace BlackMisc
     {
         Q_UNUSED(i18n);
         QString strategy;
-        QString categories = QStringList(m_strings.toList()).join("|"); // clazy:exclude=container-anti-pattern
+        QString categories = m_strings.values().join("|"); // clazy:exclude=container-anti-pattern
         switch (m_strategy)
         {
         case Everything: strategy = "none"; break;
@@ -343,7 +345,7 @@ namespace BlackMisc
         quint8 severities = 0;
         for (auto s : m_severities) { severities |= (1 << static_cast<int>(s)); }
 
-        argument << severities << m_strategy << m_strings.toList();
+        argument << severities << m_strategy << m_strings.values();
     }
 
     void CLogPattern::unmarshallFromDbus(const QDBusArgument &argument)
@@ -351,7 +353,7 @@ namespace BlackMisc
         quint8 severities;
         QStringList strings;
         argument >> severities >> m_strategy >> strings;
-        m_strings = strings.toSet();
+        m_strings = QSet<QString>(strings.begin(), strings.end());
 
         m_severities.clear();
         for (int s : { 0, 1, 2, 3 })
@@ -365,7 +367,7 @@ namespace BlackMisc
         quint8 severities = 0;
         for (auto s : m_severities) { severities |= (1 << static_cast<int>(s)); }
 
-        stream << severities << m_strategy << m_strings.toList();
+        stream << severities << m_strategy << m_strings.values();
     }
 
     void CLogPattern::unmarshalFromDataStream(QDataStream &stream)
@@ -373,7 +375,7 @@ namespace BlackMisc
         quint8 severities;
         QStringList strings;
         stream >> severities >> m_strategy >> strings;
-        m_strings = strings.toSet();
+        m_strings = QSet<QString>(strings.begin(), strings.end());
 
         m_severities.clear();
         for (int s : { 0, 1, 2, 3 })

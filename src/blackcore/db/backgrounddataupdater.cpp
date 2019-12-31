@@ -15,7 +15,7 @@
 #include "blackmisc/threadutils.h"
 #include "blackmisc/eventloop.h"
 #include "blackmisc/logmessage.h"
-#include <QTime>
+#include <QElapsedTimer>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -125,7 +125,7 @@ namespace BlackCore
                                                 dbModelsConsidered;
             if (dbModels.isEmpty()) { return; }
             const QSet<CSimulatorInfo> simulatorsSet = simulators.asSingleSimulatorSet();
-            QTime time;
+            QElapsedTimer time;
             for (const CSimulatorInfo &singleSimulator : simulatorsSet)
             {
                 if (!this->doWorkCheck()) { return; }

@@ -209,8 +209,8 @@ namespace BlackMisc
 
         QSet<QString> CAutoPublishData::allModelStrings() const
         {
-            QSet<QString> allStrings(m_modelStringVsCG.keys().toSet());
-            allStrings.unite(m_modelStringVsSimulatorInfo.keys().toSet());
+            QSet<QString> allStrings(m_modelStringVsCG.keyBegin(), m_modelStringVsCG.keyEnd());
+            allStrings.unite(QSet<QString>(m_modelStringVsSimulatorInfo.keyBegin(), m_modelStringVsSimulatorInfo.keyEnd()));
             return allStrings;
         }
 
@@ -287,7 +287,7 @@ namespace BlackMisc
             {
                 const QFileInfo fi(fn.contains(dir.absolutePath()) ? fn : CFileUtils::appendFilePathsAndFixUnc(dir.absolutePath(), fn));
                 if (!fi.exists()) { continue; }
-                const QDateTime created = fi.created().toUTC();
+                const QDateTime created = fi.birthTime().toUTC();
                 if (deadline < created)
                 {
                     correctedList << fn;

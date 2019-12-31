@@ -24,7 +24,7 @@
 #include <QScopedPointer>
 #include <QScopedPointerDeleteLater>
 #include <QTimer>
-#include <QTime>
+#include <QElapsedTimer>
 #include <QPointer>
 #include <QUrl>
 #include <QWriteLocker>
@@ -318,7 +318,7 @@ namespace BlackCore
             }
             else
             {
-                QTime time;
+                QElapsedTimer time;
                 time.start();
                 liveries  = CLiveryList::fromDatabaseJson(res);
                 this->logParseMessage("liveries", liveries.size(), time.elapsed(), res);
@@ -366,7 +366,7 @@ namespace BlackCore
             }
             else
             {
-                QTime time;
+                QElapsedTimer time;
                 time.start();
                 distributors = CDistributorList::fromDatabaseJson(res);
                 this->logParseMessage("distributors", distributors.size(), time.elapsed(), res);
@@ -424,7 +424,7 @@ namespace BlackCore
             }
             else
             {
-                QTime time;
+                QElapsedTimer time;
                 time.start();
                 models = CAircraftModelList::fromDatabaseJsonCaching(res, icaos, categories, liveries, distributors);
                 this->logParseMessage("models", models.size(), time.elapsed(), res);
@@ -483,7 +483,7 @@ namespace BlackCore
                         {
                             const CLiveryList liveries = CLiveryList::fromMultipleJsonFormats(liveriesJson);
                             const int c = liveries.size();
-                            msgs.push_back(m_liveryCache.set(liveries, fi.created().toUTC().toMSecsSinceEpoch()));
+                            msgs.push_back(m_liveryCache.set(liveries, fi.birthTime().toUTC().toMSecsSinceEpoch()));
                             emit this->dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, c);
                             reallyRead |= CEntityFlags::LiveryEntity;
                         }
@@ -521,7 +521,7 @@ namespace BlackCore
                         {
                             const CAircraftModelList models = CAircraftModelList::fromMultipleJsonFormats(modelsJson);
                             const int c = models.size();
-                            msgs.push_back(m_modelCache.set(models, fi.created().toUTC().toMSecsSinceEpoch()));
+                            msgs.push_back(m_modelCache.set(models, fi.birthTime().toUTC().toMSecsSinceEpoch()));
                             emit this->dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, c);
                             reallyRead |= CEntityFlags::ModelEntity;
                         }
@@ -559,7 +559,7 @@ namespace BlackCore
                         {
                             const CDistributorList distributors = CDistributorList::fromMultipleJsonFormats(distributorsJson);
                             const int c = distributors.size();
-                            msgs.push_back(m_distributorCache.set(distributors, fi.created().toUTC().toMSecsSinceEpoch()));
+                            msgs.push_back(m_distributorCache.set(distributors, fi.birthTime().toUTC().toMSecsSinceEpoch()));
                             emit this->dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, c);
                             reallyRead |= CEntityFlags::DistributorEntity;
                         }

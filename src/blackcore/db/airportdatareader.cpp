@@ -14,6 +14,7 @@
 
 #include <QStringBuilder>
 #include <QNetworkReply>
+#include <QElapsedTimer>
 #include <QFileInfo>
 #include <QPointer>
 
@@ -106,7 +107,7 @@ namespace BlackCore
                     {
                         const CAirportList airports = CAirportList::fromMultipleJsonFormats(airportsJson);
                         c = airports.size();
-                        msgs.push_back(m_airportCache.set(airports, fi.created().toUTC().toMSecsSinceEpoch()));
+                        msgs.push_back(m_airportCache.set(airports, fi.birthTime().toUTC().toMSecsSinceEpoch()));
 
                         emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFinished, c);
                         reallyRead |= CEntityFlags::AirportEntity;
@@ -211,7 +212,7 @@ namespace BlackCore
             }
             else
             {
-                QTime time;
+                QElapsedTimer time;
                 time.start();
                 airports = CAirportList::fromDatabaseJson(res, &inconsistent);
                 this->logParseMessage("airports", airports.size(), time.elapsed(), res);

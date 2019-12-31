@@ -527,7 +527,7 @@ namespace BlackMisc
         auto values = getAllValues();
         QSet<QString> files;
         for (auto it = values.begin(); it != values.end(); ++it) { files.insert(dir + "/" + filenameForKey(it.key())); }
-        return files.toList();
+        return files.values();
     }
 
     void CValueCache::clearAllValues(const QString &keyPrefix)

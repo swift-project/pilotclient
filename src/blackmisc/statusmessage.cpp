@@ -406,7 +406,7 @@ namespace BlackMisc
         if (min == SeverityDebug && max == SeverityError) { static const QString all("all severities"); return all; }
         if (min == SeverityDebug) { return u"at or below " % severityToString(max); }
         if (max == SeverityError) { return u"at or above " % severityToString(min); }
-        auto list = severities.toList();
+        auto list = severities.values();
         std::sort(list.begin(), list.end());
         QStringList ret;
         std::transform(list.cbegin(), list.cend(), std::back_inserter(ret), severityToString);

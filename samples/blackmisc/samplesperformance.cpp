@@ -38,7 +38,7 @@
 #include <QStringList>
 #include <QStringBuilder>
 #include <QTextStream>
-#include <QTime>
+#include <QElapsedTimer>
 #include <QVector>
 #include <Qt>
 #include <algorithm>
@@ -58,7 +58,7 @@ namespace BlackSample
 {
     int CSamplesPerformance::samplesMisc(QTextStream &out)
     {
-        QTime timer;
+        QElapsedTimer timer;
         int ms, number;
         CSamplesPerformance::copy10kStations(1); // init
 
@@ -194,7 +194,7 @@ namespace BlackSample
 
         qint64 halfTime = baseTimeEpoch + DeltaTime * numberOfTimes / 2;
 
-        QTime timer;
+        QElapsedTimer timer;
         timer.start();
         for (int cs = 0; cs < numberOfCallsigns; cs++)
         {
@@ -245,7 +245,7 @@ namespace BlackSample
 
     int CSamplesPerformance::samplesJson(QTextStream &out)
     {
-        QTime timer;
+        QElapsedTimer timer;
         auto situations = createSituations(0, 10000, 10);
         auto models = createModels(10000, 100);
 
@@ -297,7 +297,7 @@ namespace BlackSample
 
         // DB format, all models denormalized in DB JSON format
         CDatabaseReader::JsonDatastoreResponse response;
-        QTime timer;
+        QElapsedTimer timer;
 
         CDatabaseReader::stringToDatastoreResponse(liveryData, response);
         timer.start();
@@ -345,7 +345,7 @@ namespace BlackSample
 
     int CSamplesPerformance::samplesStringUtilsVsRegEx(QTextStream &out)
     {
-        QTime timer;
+        QElapsedTimer timer;
         static const QString chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~_-=+!\"@#$%^&*()[]{} \t;:\\/?,.<>";
         QStringList strings;
         std::generate_n(std::back_inserter(strings), 100000, []
@@ -438,7 +438,7 @@ namespace BlackSample
         const QString x8 = "88-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         const QString x9 = "99-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-        QTime time;
+        QElapsedTimer time;
         time.start();
         for (int i = 0; i < loop; i++)
         {
@@ -510,7 +510,7 @@ namespace BlackSample
     int CSamplesPerformance::samplesStringLiteralVsConstQString(QTextStream &out)
     {
         const int loop = 1e7;
-        QTime time;
+        QElapsedTimer time;
         QString x;
         time.start();
         for (int i = 0; i < loop; i++)
@@ -597,7 +597,7 @@ namespace BlackSample
         Q_ASSERT(cs_25_100_rnd.size() == 100);
         Q_ASSERT(cs_50_100_rnd.size() == 100);
 
-        QTime time;
+        QElapsedTimer time;
         time.start();
         for (int i = 1; i < 10000; ++i)
         {

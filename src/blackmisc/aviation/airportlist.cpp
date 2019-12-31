@@ -110,7 +110,7 @@ namespace BlackMisc
                 locations.insert(airport.getLocation());
             }
 
-            QStringList locs = locations.toList();
+            QStringList locs = locations.values();
             if (sorted) { locs.sort(); }
             return locs;
         }

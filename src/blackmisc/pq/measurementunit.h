@@ -427,7 +427,7 @@ namespace BlackMisc
                     {
                         s.insert(symbol.toLower());
                     }
-                    return s.toList();
+                    return s.values();
                 }();
                 return symbols;
             }

@@ -407,7 +407,7 @@ namespace BlackMisc
 
         auto it = std::max_element(files.cbegin(), files.cend(), [](const QFileInfo & a, const QFileInfo & b)
         {
-            return a.created() < b.created();
+            return a.birthTime() < b.birthTime();
         });
         return *it;
     }

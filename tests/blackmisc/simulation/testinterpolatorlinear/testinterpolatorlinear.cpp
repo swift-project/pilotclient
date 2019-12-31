@@ -124,7 +124,7 @@ namespace BlackMiscTest
             lngOld = lngDeg;
         }
 
-        QTime timer;
+        QElapsedTimer timer;
         timer.start();
         int interpolationNo = 0;
         const qint64 startTimeMsSinceEpoch = ts - 2 * deltaT;

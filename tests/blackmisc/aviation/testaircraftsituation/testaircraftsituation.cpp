@@ -244,7 +244,7 @@ namespace BlackMiscTest
             listOfLists2.back().setAdjustedSortHint(CAircraftSituationList::AdjustedTimestampLatestFirst);
         }
 
-        QTime time;
+        QElapsedTimer time;
         int cpuTime = getThreadCpuTimeMs();
         time.start();
         for (int i = 0; i < Loops; ++i)

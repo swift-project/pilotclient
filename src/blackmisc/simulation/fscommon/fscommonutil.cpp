@@ -225,7 +225,7 @@ namespace BlackMisc
             QStringList CFsCommonUtil::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir)
             {
                 // finding the user settings only works on P3D machine
-                QStringList allPaths = CFsCommonUtil::allFsxSimObjectPaths().toList();
+                QStringList allPaths = CFsCommonUtil::allFsxSimObjectPaths().values();
                 const QString sod = CFileUtils::normalizeFilePathToQtStandard(simObjectsDir.isEmpty() ? CFsCommonUtil::fsxSimObjectsDir() : simObjectsDir);
                 if (!sod.isEmpty() && !allPaths.contains(sod, Qt::CaseInsensitive))
                 {
@@ -242,7 +242,7 @@ namespace BlackMisc
             QStringList CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir, const QString &versionHint)
             {
                 // finding the user settings only works on P3D machine
-                QStringList allPaths = CFsCommonUtil::allP3dAddOnXmlSimObjectPaths(versionHint).toList();
+                QStringList allPaths = CFsCommonUtil::allP3dAddOnXmlSimObjectPaths(versionHint).values();
                 const QString sod = CFileUtils::normalizeFilePathToQtStandard(simObjectsDir.isEmpty() ? CFsCommonUtil::p3dSimObjectsDir() : simObjectsDir);
                 if (!sod.isEmpty() && !allPaths.contains(sod, Qt::CaseInsensitive))
                 {
@@ -549,10 +549,10 @@ namespace BlackMisc
             QSet<QString> CFsCommonUtil::allP3dAddOnXmlSimObjectPaths(const QString &versionHint)
             {
                 // all add-ons.cfg files
-                const QStringList addOnConfigFiles = CFsCommonUtil::findP3dAddOnConfigFiles(versionHint).toList();
+                const QStringList addOnConfigFiles = CFsCommonUtil::findP3dAddOnConfigFiles(versionHint).values();
 
                 // all PATH values in those files
-                const QStringList addOnPaths = CFsCommonUtil::allConfigFilesPathValues(addOnConfigFiles, true, {}).toList();
+                const QStringList addOnPaths = CFsCommonUtil::allConfigFilesPathValues(addOnConfigFiles, true, {}).values();
 
                 // based on all paths of all config files search the XML files
                 const QSet<QString> all = CFsCommonUtil::allP3dAddOnXmlSimObjectPaths(addOnPaths, true);
@@ -704,15 +704,15 @@ namespace BlackMisc
             CStatusMessageList CFsCommonUtil::validateP3DSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped, const QString &simulatorDir)
             {
                 const QString simObjectsDir = simulatorDir.isEmpty() ? CFsCommonUtil::p3dSimObjectsDir() : CFsCommonUtil::p3dSimObjectsDirFromSimDir(simulatorDir);
-                const QSet<QString> simObjectPaths = CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(simObjectsDir, "v4").toSet();
-                return CFsCommonUtil::validateSimObjectsPath(simObjectPaths, models, validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, stopped);
+                const QStringList simObjectPaths = CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(simObjectsDir, "v4");
+                return CFsCommonUtil::validateSimObjectsPath(QSet<QString>(simObjectPaths.begin(), simObjectPaths.end()), models, validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, stopped);
             }
 
             CStatusMessageList CFsCommonUtil::validateFSXSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped, const QString &simulatorDir)
             {
                 Q_UNUSED(simulatorDir);
-                const QSet<QString> simObjectPaths = CFsCommonUtil::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths().toSet();
-                return CFsCommonUtil::validateSimObjectsPath(simObjectPaths, models, validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, stopped);
+                const QStringList simObjectPaths = CFsCommonUtil::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths();
+                return CFsCommonUtil::validateSimObjectsPath(QSet<QString>(simObjectPaths.begin(), simObjectPaths.end()), models, validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, stopped);
             }
 
             const QString CFsCommonUtil::airFileFilter()

@@ -17,7 +17,7 @@
 
 #include <QColor>
 #include <QObject>
-#include <QTime>
+#include <QElapsedTimer>
 #include <QFrame>
 
 class QPaintEvent;
@@ -76,7 +76,7 @@ namespace BlackGui
         double m_peakLevel = 0.0;
 
         //! Time at which m_peakLevel was last changed.
-        QTime m_peakLevelChanged;
+        QElapsedTimer m_peakLevelChanged;
 
         static constexpr double High       = 0.60;
         static constexpr double DecayValue = 0.10;

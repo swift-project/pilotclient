@@ -111,7 +111,7 @@ namespace BlackMiscTest
 
         // performance
         int constexpr Loops = 10000;
-        QTime time;
+        QElapsedTimer time;
         time.start();
         for (int i = 0; i < Loops; i++)
         {

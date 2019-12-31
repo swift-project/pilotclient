@@ -70,7 +70,7 @@ namespace BlackMisc
 
             // to HTML
             QString html("<table>\n");
-            QStringList airlineIcaos = models.getAirlineVDesignators().toList();
+            QStringList airlineIcaos = models.getAirlineVDesignators().values();
             airlineIcaos.sort();
             airlineIcaos.push_front(colorLiveryDesignator);
             airlineIcaos.push_back(emptyDesignator);

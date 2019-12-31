@@ -371,9 +371,9 @@ namespace BlackMisc
                 // store all entries
                 const QFileInfo fileInfo(fnFixed);
                 QDateTime fileTimestamp(fileInfo.lastModified());
-                if (!fileTimestamp.isValid() || fileInfo.created() > fileTimestamp)
+                if (!fileTimestamp.isValid() || fileInfo.birthTime() > fileTimestamp)
                 {
-                    fileTimestamp = fileInfo.created();
+                    fileTimestamp = fileInfo.birthTime();
                 }
                 Q_ASSERT_X(fileTimestamp.isValid(), Q_FUNC_INFO, "Missing file timestamp");
 

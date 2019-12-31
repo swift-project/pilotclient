@@ -650,10 +650,10 @@ namespace BlackCore
 
         bool CDatabaseReader::overrideCacheFromFile(bool overrideNewerOnly, const QFileInfo &fileInfo, CEntityFlags::Entity entity, CStatusMessageList &msgs) const
         {
-            if (!fileInfo.created().isValid()) { return false; }
+            if (!fileInfo.birthTime().isValid()) { return false; }
             if (!overrideNewerOnly) { return true; }
 
-            const qint64 fileTs = fileInfo.created().toUTC().toMSecsSinceEpoch();
+            const qint64 fileTs = fileInfo.birthTime().toUTC().toMSecsSinceEpoch();
             const QDateTime cacheDateTime(this->getCacheTimestamp(entity));
             if (!cacheDateTime.isValid()) { return true; } // no cache
             const qint64 cacheTs = cacheDateTime.toUTC().toMSecsSinceEpoch();

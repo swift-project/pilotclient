@@ -829,7 +829,7 @@ namespace BlackGui
         label->setToolTip(longText);
         const QFontMetrics metrics(label->font());
         const int width = qMax(label->width() - 2, 0);
-        const int wl = metrics.width(longText);
+        const int wl = metrics.horizontalAdvance(longText);
         if (wl >= width) { label->setText(longText); return; }
         if (qRound(wl * 0.85) > wl)
         {

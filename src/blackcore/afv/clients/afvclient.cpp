@@ -746,7 +746,7 @@ namespace BlackCore
                         dto.sequenceCounter = args.sequenceCounter;
                         dto.audio = std::vector<char>(args.audio.begin(), args.audio.end());
                         dto.lastPacket = false;
-                        dto.transceivers = transmittingTransceivers.toStdVector();
+                        dto.transceivers = std::vector<TxTransceiverDto>(transmittingTransceivers.begin(), transmittingTransceivers.end());
                         QMutexLocker lock(&m_mutexConnection);
                         m_connection->sendToVoiceServer(dto);
                     }
@@ -758,7 +758,7 @@ namespace BlackCore
                         dto.sequenceCounter = args.sequenceCounter;
                         dto.audio = std::vector<char>(args.audio.begin(), args.audio.end());
                         dto.lastPacket = true;
-                        dto.transceivers = transmittingTransceivers.toStdVector();
+                        dto.transceivers = std::vector<TxTransceiverDto>(transmittingTransceivers.begin(), transmittingTransceivers.end());
                         QMutexLocker lock(&m_mutexConnection);
                         m_connection->sendToVoiceServer(dto);
                     }
@@ -775,7 +775,7 @@ namespace BlackCore
                 audioData.sequenceCounter = dto.sequenceCounter;
 
                 QMutexLocker lock(&m_mutex);
-                m_soundcardSampleProvider->addOpusSamples(audioData, QVector<RxTransceiverDto>::fromStdVector(dto.transceivers));
+                m_soundcardSampleProvider->addOpusSamples(audioData, QVector<RxTransceiverDto>(dto.transceivers.begin(), dto.transceivers.end()));
             }
 
             void CAfvClient::inputVolumeStream(const InputVolumeStreamArgs &args)

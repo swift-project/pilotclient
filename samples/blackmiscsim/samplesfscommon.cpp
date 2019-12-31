@@ -21,7 +21,7 @@
 #include <QString>
 #include <QTemporaryFile>
 #include <QTextStream>
-#include <QTime>
+#include <QElapsedTimer>
 #include <QDir>
 #include <QtGlobal>
 
@@ -60,7 +60,7 @@ namespace BlackSample
         Q_UNUSED(input);
 
         streamOut << "reading directly" << endl;
-        QTime time;
+        QElapsedTimer time;
         time.start();
         streamOut << "reading " << parser.getFirstModelDirectoryOrDefault() << endl;
         parser.startLoading();
