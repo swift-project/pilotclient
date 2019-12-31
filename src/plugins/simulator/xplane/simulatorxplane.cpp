@@ -15,7 +15,7 @@
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/simulation/settings/xswiftbussettingsqtfree.hpp"
+#include "blackmisc/simulation/settings/xswiftbussettingsqtfree.inc"
 #include "blackmisc/weather/cloudlayer.h"
 #include "blackmisc/weather/cloudlayerlist.h"
 #include "blackmisc/weather/gridpoint.h"

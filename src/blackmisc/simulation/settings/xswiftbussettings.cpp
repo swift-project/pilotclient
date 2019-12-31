@@ -7,7 +7,7 @@
  */
 
 #include "xswiftbussettings.h"
-#include "xswiftbussettingsqtfree.hpp"
+#include "xswiftbussettingsqtfree.inc"
 
 namespace BlackMisc
 {

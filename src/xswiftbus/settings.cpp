@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackmisc/simulation/settings/xswiftbussettingsqtfree.hpp"
+#include "blackmisc/simulation/settings/xswiftbussettingsqtfree.inc"
 #include "settings.h"
 #include <string>
 

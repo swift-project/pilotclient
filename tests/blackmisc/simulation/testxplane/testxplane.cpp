@@ -12,7 +12,7 @@
 
 #include "blackmisc/simulation/xplane/qtfreeutils.h"
 #include "blackmisc/simulation/settings/xswiftbussettings.h"
-#include "blackmisc/simulation/settings/xswiftbussettingsqtfree.hpp"
+#include "blackmisc/simulation/settings/xswiftbussettingsqtfree.inc"
 #include "blackmisc/directoryutils.h"
 #include "test.h"
 
