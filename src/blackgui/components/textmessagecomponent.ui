@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>260</width>
+    <width>300</width>
     <height>367</height>
    </rect>
   </property>
@@ -159,9 +159,6 @@
          <property name="readOnly">
           <bool>true</bool>
          </property>
-         <property name="tabStopWidth">
-          <number>10</number>
-         </property>
         </widget>
        </item>
       </layout>
@@ -199,9 +196,6 @@
          </property>
          <property name="readOnly">
           <bool>true</bool>
-         </property>
-         <property name="tabStopWidth">
-          <number>10</number>
          </property>
         </widget>
        </item>

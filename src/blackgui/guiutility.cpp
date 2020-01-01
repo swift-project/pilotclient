@@ -690,7 +690,9 @@ namespace BlackGui
 
     void CGuiUtility::centerWidget(QWidget *widget)
     {
-        const QRect screenGeometry = QApplication::desktop()->screenGeometry();
+        // const QRect screenGeometry = QApplication::desktop()->screenGeometry();
+        const QScreen *pScreen = QGuiApplication::screenAt(widget->mapToGlobal({widget->width() / 2, 0}));
+        const QRect screenGeometry = pScreen->availableGeometry();
         const int x = (screenGeometry.width()  - widget->width())  / 2;
         const int y = (screenGeometry.height() - widget->height()) / 2;
         widget->move(x, y);
