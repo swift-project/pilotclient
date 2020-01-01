@@ -53,7 +53,6 @@
                     <origin>../../dist/bin/Qt5Xml*.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/dbus-1-3.dll</origin>
                 </distributionFile>
                 <distributionFile>
@@ -64,10 +63,12 @@
                     <origin>../../dist/bin/expat.dll*</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/libeay32.dll</origin>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/libcrypto-1_1*.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/ssleay32.dll</origin>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/libssl-1_1*.dll</origin>
                 </distributionFile>
             </distributionFileList>
         </folder>
