@@ -37,18 +37,4 @@ const QString &BlackConfig::CBuildConfig::gitHeadSha1()
     return gitHeadSha1;
 }
 
-namespace Private
-{
-    const QDateTime lastCommitTimestampImpl()
-    {
-        QDateTime dt = QDateTime::fromString(\"$$GIT_COMMIT_TS\", \"yyyyMMddHHmm\");
-        dt.setTimeSpec(Qt::UTC);
-        return dt;
-    }
-}
-
-const QDateTime &BlackConfig::CBuildConfig::lastCommitTimestamp()
-{
-    static const QDateTime dt = Private::lastCommitTimestampImpl();
-    return dt;
-}
+int BlackConfig::CBuildConfig::versionRevision() { return $$GIT_REV_COUNT; }

@@ -118,12 +118,6 @@ namespace BlackConfig
         //! Returns SHA-1 of git HEAD at build time
         static const QString &gitHeadSha1();
 
-        //! Timestamp of the last commit (NOT the authored timestamp)
-        static const QDateTime &lastCommitTimestamp(); // defined in buildconfig_gen.cpp.in
-
-        //! Build timestamp
-        static const QDateTime &buildTimestamp();
-
         //! Returns the build date and time as string
         static const QString &buildDateAndTime();
 
@@ -139,14 +133,8 @@ namespace BlackConfig
         //! Version as QVersionNumber plus platform info
         static const QString &getVersionStringPlatform();
 
-        //! Turns last commit timestamp into a version number
-        static int lastCommitTimestampAsVersionSegment(const QDateTime &lastCommitTimestamp);
-
         //! Build ABI parts as in http://doc.qt.io/qt-5/qsysinfo.html#buildAbi
         static const QStringList &getBuildAbiParts();
-
-        //! Turn build timestamp into 4th version segment
-        static int buildTimestampAsVersionSegment(const QDateTime &buildTimestamp);
 
         //! Whether this swift application is build as 32 or 64bit application
         //! \returns 32, 64 or -1 (in case no info is possible)
@@ -161,6 +149,9 @@ namespace BlackConfig
 
         //! Patch version
         static constexpr int versionMicro(); // defined in buildconfig_gen.inc.in
+
+        //! Revision version
+        static int versionRevision(); // defined in buildconfig_gen.cpp.in
     };
 } // ns
 

@@ -223,31 +223,10 @@ namespace BlackMisc
         {
             if (filename.isEmpty()) { return {}; }
 
-            // swift-installer-linux-64-0.7.3_2017-03-25_11-24-50.run
-            thread_local const QRegularExpression firstSegments("\\d+\\.\\d+\\.\\d+");
-            const QRegularExpressionMatch firstSegmentsMatch = firstSegments.match(filename);
-            if (!firstSegmentsMatch.hasMatch())
-            {
-                return {}; // no version, invalid
-            }
-            QString v = firstSegmentsMatch.captured(0); // first 3 segments, like 0.9.3
-            if (!v.endsWith('.')) { v += '.'; }
-
-            thread_local const QRegularExpression ts1("\\d{4}.?\\d{2}.?\\d{2}.?\\d{2}.?\\d{2}.?\\d{2}");
-            const QRegularExpressionMatch ts1Match = ts1.match(filename);
-            if (!ts1Match.hasMatch())
-            {
-                // version without timestamp
-                v += "0";
-                return v;
-            }
-
-            const QString versionTimestampString = digitOnlyString(ts1Match.captured(0));
-            const QDateTime versionTimestamp = fromStringUtc(versionTimestampString, "yyyyMMddHHmmss");
-            const QString lastSegment = QString::number(CBuildConfig::buildTimestampAsVersionSegment(versionTimestamp));
-
-            v += lastSegment;
-            return v;
+            // swiftinstaller-linux-64-0.9.2.123.run
+            thread_local const QRegularExpression regex { R"(\d+\.\d+\.\d+\.\d+)" };
+            const QRegularExpressionMatch match = regex.match(filename);
+            return match.captured();
         }
 
         CArtifact::ArtifactType CArtifact::stringToType(const QString &str)
@@ -273,10 +252,9 @@ namespace BlackMisc
 
         QString CArtifact::trim4thSegment(const QString &seg)
         {
-            // yyyyMMddHHmmss (14): offset is 2010xxxxx
-            if (seg.length() <= 13) { return seg; }
-            const int fs = CBuildConfig::buildTimestampAsVersionSegment(fromStringUtc(seg, "yyyyMMddHHmmss"));
-            return QString::number(fs);
+            // old schema: yMMddHHmm (9)
+            if (seg.length() >= 9) { return QStringLiteral("0"); }
+            return seg;
         }
     } // ns
 } // ns

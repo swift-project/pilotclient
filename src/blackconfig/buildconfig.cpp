@@ -153,7 +153,7 @@ namespace BlackConfig
 
     const QVersionNumber &CBuildConfig::getVersion()
     {
-        static const QVersionNumber v { versionMajor(), versionMinor(), versionMicro(), lastCommitTimestampAsVersionSegment(lastCommitTimestamp()) };
+        static const QVersionNumber v { versionMajor(), versionMinor(), versionMicro(), versionRevision() };
         return v;
     }
 
@@ -174,61 +174,6 @@ namespace BlackConfig
     {
         static const QString s = getPlatformString() % u' ' % getVersionString();
         return s;
-    }
-
-    namespace Private
-    {
-        const QDateTime buildTimestampImpl()
-        {
-            // Mar 27 2017 20:17:06 (needs to be on english locale, otherwise fails - e.g.
-            QDateTime dt = QLocale(QLocale::English).toDateTime(CBuildConfig::buildDateAndTime().simplified(), "MMM d yyyy hh:mm:ss");
-            dt.setOffsetFromUtc(0);
-            return dt;
-        }
-    }
-
-    const QDateTime &CBuildConfig::buildTimestamp()
-    {
-        // Mar 27 2017 20:17:06
-        static const QDateTime dt = Private::buildTimestampImpl();
-        return dt;
-    }
-
-    int CBuildConfig::lastCommitTimestampAsVersionSegment(const QDateTime &lastCommitTimestamp)
-    {
-        if (lastCommitTimestamp.isValid())
-        {
-            const QString bts = lastCommitTimestamp.toString("yyyyMMddHHmm");
-            bool ok;
-            const long long lctsll = bts.toLongLong(&ok); // at least 64bit
-            if (!ok) { return 0; }
-            // now we have to converto int
-            // max 2147483647 (2^31 - 1)
-            //      1MMddHHmm (years since 2010)
-            const long long yearOffset = 201000000000;
-            const int lctsInt = static_cast<int>(lctsll - yearOffset);
-            return lctsInt;
-        }
-        return 0; // intentionally 0 => 0.7.3.0 <-
-    }
-
-    int CBuildConfig::buildTimestampAsVersionSegment(const QDateTime &buildTimestamp)
-    {
-        if (buildTimestamp.isValid())
-        {
-            const QString bts = buildTimestamp.toString("yyyyMMddHHmm");
-            bool ok;
-            const long long btsll = bts.toLongLong(&ok); // at least 64bit
-            if (!ok) { return 0; }
-            // now we have to convert to int, otherwise we would fail 2021
-            // max 2147483647 (2^31 - 1)
-            //     yyMMddHHmm (years since 2010)
-            //                           yyyyMMddHHmm
-            const long long yearOffset = 201000000000;
-            const int btsInt = static_cast<int>(btsll - yearOffset);
-            return btsInt;
-        }
-        return 0; // intentionally 0 => 0.7.3.0 <-
     }
 
     const QStringList &CBuildConfig::getBuildAbiParts()

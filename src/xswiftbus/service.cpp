@@ -87,17 +87,7 @@ namespace XSwiftBus
 
     std::string CService::getVersionNumber() const
     {
-        std::string version(XSWIFTBUS_VERSION);
-        const std::string lastCommitTs(GIT_COMMIT_TS);
-
-        const long long lctsll = std::stoll(lastCommitTs); // at least 64bit
-        // now we have to converto int
-        // max 2147483647 (2^31 - 1)
-        //      1MMddHHmm (years since 2010)
-        const long long yearOffset = 201000000000;
-        const int lctsInt = static_cast<int>(lctsll - yearOffset);
-        version = version + "." + std::to_string(lctsInt);
-        return version;
+        return XSWIFTBUS_VERSION;
     }
 
     std::string CService::getCommitHash() const

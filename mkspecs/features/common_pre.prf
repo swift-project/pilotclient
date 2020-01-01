@@ -24,14 +24,7 @@ include(config.pri)
 # Version number
 ################################
 
-setSwiftConfig(version.full, $$swiftConfig(version.major).$$swiftConfig(version.minor).$$swiftConfig(version.micro))
-
-!win32 {
-    VER_MAJ = $$swiftConfig(version.major)
-    VER_MIN = $$swiftConfig(version.minor)
-    VER_MIC = $$swiftConfig(version.micro)
-    VERSION = $$swiftConfig(version.full)
-}
+include(version.pri)
 
 ################################
 # QMake options

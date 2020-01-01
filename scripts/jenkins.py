@@ -266,25 +266,36 @@ class Builder:
         self.make_cmd = self._get_make_cmd()
         self.version = self.__get_swift_version()
 
+    def __get_config_file(self):
+        return path.abspath(path.join(self._get_swift_source_path(), 'default')) + '.json';
+
     def __get_swift_version(self):
-        config_file = path.abspath(path.join(self._get_swift_source_path(), 'default')) + '.json'
-        f = open(config_file)
+        return self.__get_swift_version_base() + '.' + str(self.__get_rev_count())
+
+    def __get_swift_version_base(self):
+        f = open(self.__get_config_file())
         config_json = json.load(f)
         f.close()
         version_major = config_json['version']['major']
         version_minor = config_json['version']['minor']
         version_micro = config_json['version']['micro']
+        return '.'.join([str(version_major), str(version_minor), str(version_micro)])
 
-        # Converted from swift's CBuildConfig::lastCommitTimestampAsVersionSegment
-        last_commit_timestamp = int(self.__get_last_commit_timestamp())
-        year_offset = 201000000000
-        last_commit_timestamp = last_commit_timestamp - year_offset
-        version = '.'.join([str(version_major), str(version_minor), str(version_micro), str(last_commit_timestamp)])
-        return version
-
-    def __get_last_commit_timestamp(self):
-        out = subprocess.check_output(['git', 'log', '-1', '--date=format:"%Y%m%d%H%M"', '--pretty=format:%cd'])
-        return out.decode("utf-8").strip('"')
+    def __get_rev_count(self):
+        this_version = self.__get_swift_version_base()
+        config_log = subprocess.check_output(['git', 'log', '--format=%H', self.__get_config_file()])
+        for sha in config_log.decode("utf-8").split():
+            json_data = subprocess.check_output(['git', 'show', sha + ':default.json'])
+            config_json = json.loads(json_data.decode("utf-8"))
+            version_major = config_json['version']['major']
+            version_minor = config_json['version']['minor']
+            version_micro = config_json['version']['micro']
+            if this_version == '.'.join([str(version_major), str(version_minor), str(version_micro)]):
+                base_commit = sha
+            else:
+                break
+        count = subprocess.check_output(['git', 'rev-list', '--count', 'HEAD', '^' + base_commit])
+        return int(count.decode("utf-8"))
 
     def __upload_symbol_files(self, symbols_package):
         print('Uploading symbols')
