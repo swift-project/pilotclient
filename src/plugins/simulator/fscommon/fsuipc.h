@@ -32,7 +32,7 @@ namespace BlackSimPlugin
             //! Destructor
             virtual ~CFsuipc() override;
 
-            //! Open conenction with FSUIPC
+            //! Open connection with FSUIPC
             bool open(bool force = false);
 
             //! Disconnect

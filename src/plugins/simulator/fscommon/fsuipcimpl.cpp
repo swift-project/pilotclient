@@ -562,7 +562,7 @@ namespace BlackSimPlugin
 
         void CFsuipc::timerEvent(QTimerEvent *event)
         {
-            Q_UNUSED(event);
+            Q_UNUSED(event)
             processWeatherMessages();
         }
 
