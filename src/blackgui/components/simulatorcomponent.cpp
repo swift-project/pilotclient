@@ -146,7 +146,14 @@ namespace BlackGui
             if (m_simulator.isAnySimulator())
             {
                 this->addOrUpdateLiveDataByName("simulator", m_simulator.toQString(true), m_simulator.toIcon());
+
+                if (sGui->getISimulator())
+                {
+                    const double fps = sGui->getISimulator()->getAverageFPS();
+                    this->addOrUpdateLiveDataByName(QStringLiteral("FPS"), fps < 0 ? QStringLiteral("N/A") : QString::number(fps, 'g', 1), CIconList::allIcons().findByIndex(CIcons::ApplicationSimulator));
+                }
             }
+
             this->addOrUpdateLiveDataByName(QStringLiteral("latitude"),  s.latitude().toQString(),  iconLatLng);
             this->addOrUpdateLiveDataByName(QStringLiteral("longitude"), s.longitude().toQString(), iconLatLng);
             this->addOrUpdateLiveDataByName(QStringLiteral("altitude, true (ft)"), s.getAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1), iconAlt);
@@ -157,7 +164,7 @@ namespace BlackGui
             if (s.hasGroundElevation())
             {
                 this->addOrUpdateLiveDataByName(QStringLiteral("elevation (ft)"), s.getGroundElevation().valueRoundedWithUnit(CLengthUnit::ft(), 1), iconAlt);
-                this->addOrUpdateLiveDataByName(QStringLiteral("elevation (m)"), s.getGroundElevation().valueRoundedWithUnit(CLengthUnit::m(),  2), iconAlt);
+                this->addOrUpdateLiveDataByName(QStringLiteral("elevation (m)"),  s.getGroundElevation().valueRoundedWithUnit(CLengthUnit::m(),  2), iconAlt);
             }
             else
             {

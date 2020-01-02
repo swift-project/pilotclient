@@ -250,6 +250,9 @@ namespace BlackSimPlugin
             QTimer m_slowTimer;
             QTimer m_airportUpdater;
             QTimer m_pendingAddedTimer;
+            int m_fastTimerCalls = 0; //!< how often called
+            int m_slowTimerCalls = 0; //!< how often called
+
             BlackMisc::Aviation::CAirportList m_airportsInRange; //!< aiports in range of own aircraft
             BlackMisc::Simulation::CSimulatedAircraftList m_pendingToBeAddedAircraft; //!< aircraft to be added
             QHash<BlackMisc::Aviation::CCallsign, qint64> m_addingInProgressAircraft; //!< aircraft just adding

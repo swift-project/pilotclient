@@ -259,6 +259,7 @@ namespace BlackCore
     void ISimulator::reset()
     {
         this->clearAllRemoteAircraftData(); // reset
+        m_averageFps = -1.0;
     }
 
     bool ISimulator::isUpdateAllRemoteAircraft(qint64 currentTimestamp) const
@@ -316,7 +317,7 @@ namespace BlackCore
 
     void ISimulator::injectWeatherGrid(const CWeatherGrid &weatherGrid)
     {
-        Q_UNUSED(weatherGrid);
+        Q_UNUSED(weatherGrid)
     }
 
     void ISimulator::blinkHighlightedAircraft()
@@ -350,8 +351,8 @@ namespace BlackCore
 
     bool ISimulator::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
     {
-        Q_UNUSED(reference);
-        Q_UNUSED(callsign);
+        Q_UNUSED(reference)
+        Q_UNUSED(callsign)
         return false;
     }
 
@@ -361,7 +362,7 @@ namespace BlackCore
 
         ISimulationEnvironmentProvider::rememberGroundElevation(callsign, plane); // in simulator
         const int updated = CRemoteAircraftAware::updateAircraftGroundElevation(callsign, plane, CAircraftSituation::FromProvider);
-        Q_UNUSED(updated);
+        Q_UNUSED(updated)
         emit this->receivedRequestedElevation(plane, callsign);
     }
 
@@ -1032,7 +1033,7 @@ namespace BlackCore
 
     bool ISimulator::disconnectFrom()
     {
-        // supposed to be overridden
+        m_averageFps = -1.0;
         return true;
     }
 

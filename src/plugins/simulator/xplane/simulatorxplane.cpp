@@ -236,6 +236,8 @@ namespace BlackSimPlugin
         {
             if (this->isConnected())
             {
+                m_fastTimerCalls++;
+
                 m_serviceProxy->getOwnAircraftSituationDataAsync(&m_xplaneData);
                 m_serviceProxy->getOwnAircraftCom1DataAsync(&m_xplaneData);
                 m_serviceProxy->getOwnAircraftCom2DataAsync(&m_xplaneData);
@@ -313,6 +315,8 @@ namespace BlackSimPlugin
         {
             if (isConnected())
             {
+                m_slowTimerCalls++;
+
                 // own aircraft data
                 m_serviceProxy->getOwnAircraftModelDataAsync(&m_xplaneData);
                 m_serviceProxy->getOwnAircraftLightsAsync(&m_xplaneData);
@@ -359,6 +363,13 @@ namespace BlackSimPlugin
                 for (const CCallsign &cs : invalid)
                 {
                     this->triggerRemoveAircraft(cs, ++i * 100);
+                }
+
+                // FPS
+                if ((m_slowTimerCalls % 5) == 0)
+                {
+                    // reading FPS resets average, so we only monitor over some time
+                    m_averageFps = m_serviceProxy->getAverageFPS();
                 }
             }
         }
@@ -435,6 +446,9 @@ namespace BlackSimPlugin
             m_serviceProxy = nullptr;
             m_trafficProxy = nullptr;
             m_weatherProxy = nullptr;
+            m_fastTimerCalls = 0;
+            m_slowTimerCalls = 0;
+
             this->emitSimulatorCombinedStatus();
             return true;
         }
