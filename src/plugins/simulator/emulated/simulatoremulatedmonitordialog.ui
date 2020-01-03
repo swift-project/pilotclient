@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>700</width>
-    <height>625</height>
+    <height>710</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>650</width>
-    <height>625</height>
+    <height>630</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -600,8 +600,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>646</width>
-               <height>344</height>
+               <width>634</width>
+               <height>353</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="vl_LogMessagesScrollArea">
@@ -659,15 +659,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Components::CSettingsSwiftPlugin</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/settingsswiftplugin.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Components::CLogComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/logcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CSettingsSwiftPlugin</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/settingsswiftplugin.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

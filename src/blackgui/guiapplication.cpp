@@ -328,9 +328,11 @@ namespace BlackGui
 
     void CGuiApplication::highDpiScreenSupport(double scaleFactor)
     {
+        // https://lists.qt-project.org/pipermail/development/2019-September/037434.html
         if (scaleFactor < 0)
         {
-            qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
+            // qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1"); // until 5.14
+            qputenv("QT_ENABLE_HIGHDPI_SCALING", "1");
         }
         else
         {

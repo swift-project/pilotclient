@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>220</width>
-    <height>225</height>
+    <width>298</width>
+    <height>269</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -105,6 +105,12 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
         <property name="toolTip">
          <string>0-100%</string>
         </property>
@@ -179,7 +185,7 @@
            <property name="sizeHint" stdset="0">
             <size>
              <width>40</width>
-             <height>20</height>
+             <height>30</height>
             </size>
            </property>
           </spacer>

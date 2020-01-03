@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>450</width>
+    <width>625</width>
     <height>550</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>450</width>
+    <width>550</width>
     <height>550</height>
    </size>
   </property>
@@ -231,8 +231,8 @@ QTextEdit {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>450</width>
-     <height>19</height>
+     <width>625</width>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -270,7 +270,7 @@ QTextEdit {
   </widget>
   <action name="menu_SettingsDialog">
    <property name="icon">
-    <iconset>
+    <iconset resource="../blackmisc/blackmisc.qrc">
      <normaloff>:/pastel/icons/pastel/16/wrench-orange.png</normaloff>:/pastel/icons/pastel/16/wrench-orange.png</iconset>
    </property>
    <property name="text">
@@ -289,15 +289,15 @@ QTextEdit {
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Components::CCommandInput</class>
-   <extends>QLineEdit</extends>
-   <header>blackgui/components/commandinput.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Components::CDBusServerAddressSelector</class>
    <extends>QFrame</extends>
    <header>blackgui/components/dbusserveraddressselector.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CCommandInput</class>
+   <extends>QLineEdit</extends>
+   <header>blackgui/components/commandinput.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -326,6 +326,8 @@ QTextEdit {
   <tabstop>pb_Restart</tabstop>
   <tabstop>pb_DisconnectNetwork</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../blackmisc/blackmisc.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -29,19 +29,19 @@ namespace BlackGui
             connect(ui->le_Factor, &QLineEdit::editingFinished, this, &CScaleScreenFactor::onEditFinished);
 
             const QDesktopWidget *w = qApp->desktop();
-            this->setToolTip(
-                QStringLiteral(
-                    "Scaling only works on High DPI screens\n"
-                    "Width/height: %1/%2 Ratio: %3\n"
-                    "Logical DPI x/y: %4/%5\n"
-                    "Physical DPI x/y: %6/%7\n"
-                    "width/height MM: %8/%9"
-                ).
-                arg(w->width()).arg(w->height()).arg(QString::number(CGuiUtility::mainApplicationWidgetPixelRatio(), 'f', 2)).
-                arg(w->logicalDpiX()).arg(w->logicalDpiY()).
-                arg(w->physicalDpiX()).arg(w->physicalDpiY()).
-                arg(w->widthMM()).arg(w->heightMM())
-            );
+            const QString tt = QStringLiteral(
+                                   "Scaling only works on High DPI screens\n"
+                                   "Width/height: %1/%2 Ratio: %3\n"
+                                   "Logical DPI x/y: %4/%5\n"
+                                   "Physical DPI x/y: %6/%7\n"
+                                   "width/height MM: %8/%9"
+                               ).
+                               arg(w->width()).arg(w->height()).arg(QString::number(CGuiUtility::mainApplicationWidgetPixelRatio(), 'f', 2)).
+                               arg(w->logicalDpiX()).arg(w->logicalDpiY()).
+                               arg(w->physicalDpiX()).arg(w->physicalDpiY()).
+                               arg(w->widthMM()).arg(w->heightMM());
+
+            this->setToolTip(tt);
         }
 
         CScaleScreenFactor::~CScaleScreenFactor()
@@ -53,9 +53,10 @@ namespace BlackGui
             ui->hs_Factor->setMaximum(max);
             ui->le_Factor->setValidator(new QIntValidator(min, max, ui->le_Factor));
 
-            ui->le_Factor->setToolTip(QStringLiteral("%1-%2").arg(min).arg(max));
-            ui->le_Factor->setPlaceholderText(QStringLiteral("%1-%2").arg(min).arg(max));
-            ui->hs_Factor->setToolTip(QStringLiteral("%1-%2").arg(min, max));
+            const QString tt = QStringLiteral("%1-%2").arg(min).arg(max);
+            ui->le_Factor->setToolTip(tt);
+            ui->le_Factor->setPlaceholderText(tt);
+            ui->hs_Factor->setToolTip(tt);
 
             const int v = (min + max) / 2;
             ui->hs_Factor->setValue(v);

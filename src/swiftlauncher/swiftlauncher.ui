@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>675</height>
+    <width>475</width>
+    <height>750</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>400</width>
-    <height>675</height>
+    <width>425</width>
+    <height>700</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -88,7 +88,7 @@
           <item>
            <widget class="QToolBox" name="tb_Launcher">
             <property name="currentIndex">
-             <number>4</number>
+             <number>2</number>
             </property>
             <property name="tabSpacing">
              <number>6</number>
@@ -98,8 +98,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>392</width>
-               <height>334</height>
+               <width>467</width>
+               <height>356</height>
               </rect>
              </property>
              <attribute name="label">
@@ -109,7 +109,7 @@
               <item>
                <widget class="QTabWidget" name="tw_LatestNewsAbout">
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>1</number>
                 </property>
                 <widget class="QWidget" name="tb_LatestNews">
                  <attribute name="title">
@@ -153,8 +153,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>392</width>
-               <height>334</height>
+               <width>467</width>
+               <height>356</height>
               </rect>
              </property>
              <attribute name="label">
@@ -214,18 +214,10 @@
              </layout>
             </widget>
             <widget class="QWidget" name="pg_CoreMode">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>392</width>
-               <height>334</height>
-              </rect>
-             </property>
              <attribute name="label">
               <string>&amp;Core mode</string>
              </attribute>
-             <layout class="QGridLayout" name="gl_CoreMode" columnstretch="0,0">
+             <layout class="QGridLayout" name="gl_CoreMode" columnstretch="1,1">
               <property name="leftMargin">
                <number>4</number>
               </property>
@@ -241,28 +233,48 @@
               <property name="spacing">
                <number>4</number>
               </property>
-              <item row="1" column="1" alignment="Qt::AlignHCenter">
-               <widget class="QLabel" name="lbl_SwiftCoreIcon">
+              <item row="0" column="0" alignment="Qt::AlignHCenter">
+               <widget class="QRadioButton" name="rb_SwiftStandalone">
                 <property name="text">
-                 <string/>
+                 <string>standalone</string>
                 </property>
-                <property name="pixmap">
-                 <pixmap resource="swiftlauncher.qrc">:/launcher/icons/swiftGUIandCore115x85.png</pixmap>
+                <property name="checked">
+                 <bool>true</bool>
                 </property>
+                <attribute name="buttonGroup">
+                 <string notr="true">bg_CoreMode</string>
+                </attribute>
                </widget>
+              </item>
+              <item row="0" column="1" alignment="Qt::AlignHCenter">
+               <widget class="QRadioButton" name="rb_SwiftDistributed">
+                <property name="text">
+                 <string>GUI and core (distributed)</string>
+                </property>
+                <attribute name="buttonGroup">
+                 <string notr="true">bg_CoreMode</string>
+                </attribute>
+               </widget>
+              </item>
+              <item row="9" column="0" colspan="2">
+               <spacer name="vs_CoreButtomSpace">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
               <item row="4" column="1">
                <widget class="QGroupBox" name="gb_AudioDistributed">
-                <property name="minimumSize">
-                 <size>
-                  <width>200</width>
-                  <height>0</height>
-                 </size>
-                </property>
                 <property name="title">
                  <string>Audio distributed</string>
                 </property>
-                <layout class="QVBoxLayout" name="verticalLayout_2">
+                <layout class="QVBoxLayout" name="vl_AudioDistributed">
                  <item>
                   <widget class="QCheckBox" name="cb_DisableCoreAudio">
                    <property name="text">
@@ -280,6 +292,22 @@
                 </layout>
                </widget>
               </item>
+              <item row="4" column="0">
+               <widget class="QGroupBox" name="gb_AudioSa">
+                <property name="title">
+                 <string>Standalone audio</string>
+                </property>
+                <layout class="QVBoxLayout" name="vl_AudioStandalone">
+                 <item>
+                  <widget class="QCheckBox" name="cb_DisableSaAfv">
+                   <property name="text">
+                    <string>disable audio (AFV)</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
               <item row="1" column="0" alignment="Qt::AlignHCenter">
                <widget class="QLabel" name="lbl_SwiftStandaloneIcon">
                 <property name="text">
@@ -290,50 +318,18 @@
                 </property>
                </widget>
               </item>
-              <item row="9" column="0" colspan="2">
-               <spacer name="vs_CoreButtomSpace">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item row="0" column="1" alignment="Qt::AlignHCenter">
-               <widget class="QRadioButton" name="rb_SwiftDistributed">
+              <item row="1" column="1" alignment="Qt::AlignHCenter">
+               <widget class="QLabel" name="lbl_SwiftCoreIcon">
                 <property name="text">
-                 <string>GUI and core (distributed)</string>
+                 <string/>
                 </property>
-                <attribute name="buttonGroup">
-                 <string notr="true">bg_CoreMode</string>
-                </attribute>
+                <property name="pixmap">
+                 <pixmap resource="swiftlauncher.qrc">:/launcher/icons/swiftGUIandCore115x85.png</pixmap>
+                </property>
                </widget>
               </item>
-              <item row="0" column="0" alignment="Qt::AlignHCenter">
-               <widget class="QRadioButton" name="rb_SwiftStandalone">
-                <property name="text">
-                 <string>standalone</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-                <attribute name="buttonGroup">
-                 <string notr="true">bg_CoreMode</string>
-                </attribute>
-               </widget>
-              </item>
-              <item row="3" column="0" colspan="2" alignment="Qt::AlignRight">
+              <item row="2" column="1">
                <widget class="QGroupBox" name="gb_DBusServer">
-                <property name="minimumSize">
-                 <size>
-                  <width>200</width>
-                  <height>0</height>
-                 </size>
-                </property>
                 <property name="title">
                  <string>DBus (core to GUI)</string>
                 </property>
@@ -362,26 +358,10 @@
                     </size>
                    </property>
                    <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
+                    <enum>QFrame::Panel</enum>
                    </property>
                    <property name="frameShadow">
                     <enum>QFrame::Raised</enum>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item row="4" column="0">
-               <widget class="QGroupBox" name="gb_AudioSa">
-                <property name="title">
-                 <string>Audio</string>
-                </property>
-                <layout class="QVBoxLayout" name="verticalLayout_3">
-                 <item>
-                  <widget class="QCheckBox" name="cb_DisableSaAfv">
-                   <property name="text">
-                    <string>disable audio (AFV)</string>
                    </property>
                   </widget>
                  </item>
@@ -395,8 +375,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>392</width>
-               <height>334</height>
+               <width>467</width>
+               <height>356</height>
               </rect>
              </property>
              <attribute name="label">
@@ -477,8 +457,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>376</width>
-                      <height>151</height>
+                      <width>451</width>
+                      <height>160</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="vl_DataUpdatesScrollArea">
@@ -528,8 +508,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>392</width>
-               <height>334</height>
+               <width>467</width>
+               <height>356</height>
               </rect>
              </property>
              <attribute name="label">
@@ -623,13 +603,21 @@
             <property name="minimumSize">
              <size>
               <width>0</width>
-              <height>150</height>
+              <height>165</height>
              </size>
             </property>
             <property name="currentIndex">
              <number>0</number>
             </property>
             <widget class="QWidget" name="pg_Start">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>467</width>
+               <height>134</height>
+              </rect>
+             </property>
              <attribute name="label">
               <string>Start application</string>
              </attribute>
@@ -658,7 +646,7 @@
                  <string>swift GUI</string>
                 </property>
                 <property name="icon">
-                 <iconset>
+                 <iconset resource="../blackmisc/blackmisc.qrc">
                   <normaloff>:/own/icons/own/swift3D/sw3DBlue-256.png</normaloff>:/own/icons/own/swift3D/sw3DBlue-256.png</iconset>
                 </property>
                 <property name="iconSize">
@@ -678,7 +666,7 @@
                  <string>swift core</string>
                 </property>
                 <property name="icon">
-                 <iconset>
+                 <iconset resource="../blackmisc/blackmisc.qrc">
                   <normaloff>:/own/icons/own/swift3D/sw3DOrange-256.png</normaloff>:/own/icons/own/swift3D/sw3DOrange-256.png</iconset>
                 </property>
                 <property name="iconSize">
@@ -698,7 +686,7 @@
                  <string>mapping tool</string>
                 </property>
                 <property name="icon">
-                 <iconset>
+                 <iconset resource="../blackmisc/blackmisc.qrc">
                   <normaloff>:/own/icons/own/swift3D/sw3DGreen-256.png</normaloff>:/own/icons/own/swift3D/sw3DGreen-256.png</iconset>
                 </property>
                 <property name="iconSize">
@@ -715,7 +703,7 @@
                  <string>...</string>
                 </property>
                 <property name="icon">
-                 <iconset>
+                 <iconset resource="../blackmisc/blackmisc.qrc">
                   <normaloff>:/misc/icons/misc/toolWizard128.png</normaloff>:/misc/icons/misc/toolWizard128.png</iconset>
                 </property>
                 <property name="iconSize">
@@ -735,7 +723,7 @@
                  <string>goto swift database</string>
                 </property>
                 <property name="icon">
-                 <iconset>
+                 <iconset resource="../blackmisc/blackmisc.qrc">
                   <normaloff>:/own/icons/own/swift3D/sw3DGreen-256.png</normaloff>:/own/icons/own/swift3D/sw3DGreen-256.png</iconset>
                 </property>
                 <property name="iconSize">
@@ -837,7 +825,7 @@
           <string>back to main</string>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="../blackmisc/blackmisc.qrc">
            <normaloff>:/diagona/icons/diagona/icons/arrow-180.png</normaloff>:/diagona/icons/diagona/icons/arrow-180.png</iconset>
          </property>
          <property name="shortcut">
@@ -923,6 +911,7 @@
   <tabstop>rb_WindowFrameless</tabstop>
  </tabstops>
  <resources>
+  <include location="../blackmisc/blackmisc.qrc"/>
   <include location="swiftlauncher.qrc"/>
  </resources>
  <connections/>
