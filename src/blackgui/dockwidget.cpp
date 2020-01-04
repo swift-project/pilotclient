@@ -452,6 +452,7 @@ namespace BlackGui
     {
 #       ifdef Q_OS_LINUX
         // Give XCB platforms enough time to handle window events before adjusting it.
+        // close T593 if this is no longer needed
         QThread::msleep(100);
 #       endif
 
