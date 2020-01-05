@@ -608,6 +608,11 @@ QHeaderView {
   background-color: darkslategray;
 }
 
+/* the corner between horizontal and vertical header */
+QTableView QTableCornerButton::section {
+  background-color: darkslategray;
+}
+
 /* style the sort indicator */
 QHeaderView::down-arrow {
   image: url(:/diagona/icons/diagona/icons/arrow-270-small.png);
