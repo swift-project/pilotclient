@@ -35,6 +35,9 @@ namespace BlackGui
 
             //! Sorted by a timestamp property
             bool isSortedByTimestampProperty() const;
+
+            //! Sorted by a timestamp property, latest messages at the end
+            bool isSortedByTimestampPropertyLatestLast() const;
         };
     } // namespace
 } // namespace

@@ -186,6 +186,7 @@ namespace BlackGui
             const bool playNotification = sGui && sGui->getIContextAudio();
             const bool audioCsMentioned = playNotification && m_audioSettings.get().textCallsignMentioned();
 
+            bool addedToAllMessages = false;
             for (const CTextMessage &message : messages)
             {
                 bool relevantForMe = false;
@@ -246,6 +247,7 @@ namespace BlackGui
                 {
                     ui->tvp_TextMessagesAll->push_back(message); // no sorting
                     ui->tvp_TextMessagesAll->resort();
+                    addedToAllMessages = true;
                 }
                 if (!relevantForMe) { continue; }
 
@@ -262,6 +264,11 @@ namespace BlackGui
                     }
                 } // message
             } // for
+
+            if (addedToAllMessages && ui->tvp_TextMessagesAll->isSortedByTimestampPropertyLatestLast())
+            {
+                ui->tvp_TextMessagesAll->scrollToBottom();
+            }
         }
 
         void CTextMessageComponent::onChangedAircraftCockpit(const CSimulatedAircraft &aircraft, const CIdentifier &originator)

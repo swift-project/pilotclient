@@ -35,5 +35,11 @@ namespace BlackGui
         {
             return m_model->isSortedByTimestampProperty();
         }
+
+        bool CTextMessageView::isSortedByTimestampPropertyLatestLast() const
+        {
+            return m_model->isSortedByTimestampProperty() && this->getSortOrder() == Qt::AscendingOrder;
+        }
+
     } // namespace
 } // namespace

@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>CTextMessageComponent</class>
  <widget class="QFrame" name="CTextMessageComponent">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>300</width>
-    <height>367</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Text messages</string>
   </property>
@@ -56,20 +48,11 @@
        </property>
        <item>
         <widget class="BlackGui::Views::CTextMessageView" name="tvp_TextMessagesAll">
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>16777215</height>
-          </size>
-         </property>
          <property name="verticalScrollBarPolicy">
           <enum>Qt::ScrollBarAsNeeded</enum>
          </property>
          <property name="horizontalScrollBarPolicy">
           <enum>Qt::ScrollBarAsNeeded</enum>
-         </property>
-         <property name="sizeAdjustPolicy">
-          <enum>QAbstractScrollArea::AdjustToContents</enum>
          </property>
          <property name="autoScroll">
           <bool>false</bool>
