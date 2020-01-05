@@ -91,8 +91,10 @@ namespace BlackMiscTest
         QVERIFY2(a1 > h3, "200deg are more than 181deg");
         QVERIFY2(h4 == h1, "Values shall be equal");
 
-        h1 -= h1;
-        QCOMPARE(h1.value() + 1, 1.0);
+        const CHeading copy(h1);
+        h1 -= copy;
+        QVERIFY2(h1.isZeroEpsilonConsidered(), "Expect zero value");
+        QCOMPARE(h1.value(), 0.0);
 
         // h4 = h1 + h2; does not work, because misleading
         h2 += h2; // add just angle
