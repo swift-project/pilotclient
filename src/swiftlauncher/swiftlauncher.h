@@ -216,6 +216,9 @@ private:
     //! Run in installer mode
     void installerMode();
 
+    //! Clear Windows registry
+    void clearWindowsRegistry();
+
     //! Command line
     static QString toCmdLine(const QString &exe, const QStringList &exeArgs);
 };

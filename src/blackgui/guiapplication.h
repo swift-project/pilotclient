@@ -82,6 +82,12 @@ namespace BlackGui
         //! Own log categories
         static const BlackMisc::CLogCategoryList &getLogCategories();
 
+        //! Organization string used for settings, is the registry key under windows
+        static const QString &settingsOrganization();
+
+        //! Remove all registry entries
+        static bool removeAllWindowsSwiftRegistryEntries();
+
         //! Constructor
         CGuiApplication(const QString &applicationName = executable(), BlackMisc::CApplicationInfo::Application application = BlackMisc::CApplicationInfo::Unknown, const QPixmap &icon = BlackMisc::CIcons::swift64());
 

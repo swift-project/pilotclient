@@ -91,6 +91,31 @@ namespace BlackGui
         return l;
     }
 
+    const QString &CGuiApplication::settingsOrganization()
+    {
+        static const QString o("swift-project.org");
+        return o;
+    }
+
+    bool CGuiApplication::removeAllWindowsSwiftRegistryEntries()
+    {
+        if (!CBuildConfig::isRunningOnWindowsNtPlatform()) { return false; }
+
+        // On Windows, NativeFormat settings are stored in the following registry paths:
+        // HKEY_CURRENT_USER\Software\MySoft\Star Runner.
+        // HKEY_CURRENT_USER\Software\MySoft\OrganizationDefaults.
+        // HKEY_LOCAL_MACHINE\Software\MySoft\Star Runner.
+        // HKEY_LOCAL_MACHINE\Software\MySoft\OrganizationDefaults.
+
+        QSettings s1("HKEY_CURRENT_USER\\Software\\" + settingsOrganization(), QSettings::NativeFormat);
+        s1.remove("");
+
+        QSettings s2("HKEY_LOCAL_MACHINE\\Software\\" + settingsOrganization(), QSettings::NativeFormat);
+        s2.remove("");
+
+        return true;
+    }
+
     CGuiApplication::CGuiApplication(const QString &applicationName, CApplicationInfo::Application application, const QPixmap &icon) :
         CApplication(applicationName, application, false)
     {
@@ -372,7 +397,7 @@ namespace BlackGui
     bool CGuiApplication::saveWindowGeometryAndState(const QMainWindow *window) const
     {
         if (!window) { return false; }
-        QSettings settings("swift-project.org", this->getApplicationName());
+        QSettings settings(settingsOrganization(), this->getApplicationName());
         settings.setValue("geometry", window->saveGeometry());
         settings.setValue("windowState", window->saveState());
         return true;
@@ -381,7 +406,7 @@ namespace BlackGui
     void CGuiApplication::resetWindowGeometryAndState()
     {
         QByteArray ba;
-        QSettings settings("swift-project.org", this->getApplicationName());
+        QSettings settings(settingsOrganization(), this->getApplicationName());
         settings.setValue("geometry", ba);
         settings.setValue("windowState", ba);
     }

@@ -96,6 +96,13 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     m_checkTimer.setInterval(2500);
     m_checkTimer.start();
 
+    // platform specific tool
+    ui->gb_ToolsWindows->setEnabled(CBuildConfig::isRunningOnWindowsNtPlatform());
+    if (CBuildConfig::isRunningOnWindowsNtPlatform())
+    {
+        connect(ui->pb_ClearRegistry, &QPushButton::released, this, &CSwiftLauncher::clearWindowsRegistry);
+    }
+
     const QPointer<CSwiftLauncher> myself(this);
     if (sGui->isInstallerOptionSet())
     {
@@ -161,6 +168,18 @@ void CSwiftLauncher::installerMode()
     }
 
     if (startWizard) { this->startWizard(); }
+}
+
+void CSwiftLauncher::clearWindowsRegistry()
+{
+    if (!CBuildConfig::isRunningOnWindowsNtPlatform()) { return; }
+    const QMessageBox::StandardButton ret = QMessageBox::warning(this,
+                                            tr("Registry swift applications"),
+                                            tr("Do you really want to delete all entries?\nThis cannot be undone!"),
+                                            QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel,
+                                            QMessageBox::No);
+    if (ret != QMessageBox::Yes) { return; }
+    CGuiApplication::removeAllWindowsSwiftRegistryEntries();
 }
 
 CSwiftLauncher::~CSwiftLauncher()
