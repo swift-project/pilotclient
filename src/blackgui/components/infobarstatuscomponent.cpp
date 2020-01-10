@@ -78,9 +78,9 @@ namespace BlackGui
                 ui->led_DBus->setOn(sGui->getIContextApplication()->isUsingImplementingObject());
             }
 
+            ui->led_Audio->setOn(CInfoBarStatusComponent::isAudioAvailableAndNotMuted());
             if (sGui->getCContextAudioBase())
             {
-                ui->led_Audio->setOn(!sGui->getCContextAudioBase()->isMuted());
                 connect(sGui->getCContextAudioBase(), &CContextAudioBase::changedMute, this, &CInfoBarStatusComponent::onMuteChanged);
 
                 // PTT as received on audio
@@ -228,6 +228,7 @@ namespace BlackGui
                 const QList<QAction *> actions = menuAudio.actions();
                 if (selectedItem == actions.at(0))
                 {
+                    // toggle MUTED
                     sGui->getCContextAudioBase()->setMute(!sGui->getCContextAudioBase()->isMuted());
                 }
                 else if (actions.size() > 1 && selectedItem == actions.at(1))
@@ -323,14 +324,7 @@ namespace BlackGui
             }
 
             // audio context can be empty depending on which side it is called
-            if (sGui->getCContextAudioBase())
-            {
-                ui->led_Audio->setOn(!sGui->getCContextAudioBase()->isMuted());
-            }
-            else
-            {
-                ui->led_Audio->setOn(false);
-            }
+            ui->led_Audio->setOn(CInfoBarStatusComponent::isAudioAvailableAndNotMuted());
         }
 
         void CInfoBarStatusComponent::updateSpacing()
@@ -339,6 +333,13 @@ namespace BlackGui
             const int w = sGui->mainApplicationWidget()->width();
             const int s = (w >= 400) ? 6 : 2;
             this->setSpacing(s);
+        }
+
+        bool CInfoBarStatusComponent::isAudioAvailableAndNotMuted()
+        {
+            if (!sGui || !sGui->getCContextAudioBase() || sGui->isShuttingDown()) { return false; }
+            if (!sGui->getCContextAudioBase()->isAudioStarted()) { return false; }
+            return !sGui->getCContextAudioBase()->isMuted();
         }
     } // namespace
 } // namespace

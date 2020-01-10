@@ -67,6 +67,9 @@ namespace BlackGui
 
             BlackMisc::CDigestSignal m_dsResize { this, &CInfoBarStatusComponent::adjustTextSize, 1000, 50 };
 
+            //! Audio available and NOT muted
+            static bool isAudioAvailableAndNotMuted();
+
             //! Init the LEDs
             void initLeds();
 
