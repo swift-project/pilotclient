@@ -3,6 +3,9 @@ R"(<node>
     <method name="getVersionNumber">
       <arg type="s" direction="out"/>
     </method>
+    <method name="getCommitHash">
+      <arg type="s" direction="out"/>
+    </method>
     <method name="addTextMessage">
       <arg name="text" type="s" direction="in"/>
       <arg name="red" type="d" direction="in"/>
@@ -59,6 +62,10 @@ R"(<node>
     </method>
     <method name="isUsingRealTime">
       <arg type="b" direction="out"/>
+    </method>
+    <method name="getFrameStats">
+      <arg name="averageFps" type="d" direction="out"/>
+      <arg name="simTimeRatio" type="d" direction="out"/>
     </method>
     <method name="getLatitudeDeg">
       <arg type="d" direction="out"/>
