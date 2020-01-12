@@ -93,12 +93,13 @@ namespace BlackMisc
         //! Call DBus with asynchronous return value
         //! Callback can be any callable object taking a single argument of type QDBusPendingCallWatcher*.
         template <typename Func, typename... Args>
-        void callDBusAsync(QLatin1String method, Func callback, Args &&... args)
+        QDBusPendingCallWatcher *callDBusAsync(QLatin1String method, Func callback, Args &&... args)
         {
             QList<QVariant> argumentList { QVariant::fromValue(std::forward<Args>(args))... };
             QDBusPendingCall pc = this->asyncCallWithArgumentList(method, argumentList);
             auto pcw = new QDBusPendingCallWatcher(pc, this);
             connect(pcw, &QDBusPendingCallWatcher::finished, callback);
+            return pcw;
         }
 
         //! Cancel all asynchronous DBus calls which are currently pending

@@ -319,13 +319,34 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBusAsync(QLatin1String("isUsingRealTime"), setterCallback(o_isRealTime));
         }
 
-        double CXSwiftBusServiceProxy::getAverageFPS() const
+        void CXSwiftBusServiceProxy::getFrameStats(double *o_averageFps, double *o_simTimeRatio) const
         {
-            return m_dbusInterface->callDBusRet<double>(QLatin1String("getAverageFPS"));
+            std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
+            {
+                QDBusPendingReply<double, double> reply = *watcher;
+                if (!reply.isError())
+                {
+                    *o_averageFps = reply.argumentAt<0>();
+                    *o_simTimeRatio = reply.argumentAt<1>();
+                }
+                watcher->deleteLater();
+            };
+            m_dbusInterface->callDBusAsync(QLatin1String("getFrameStats"), callback)->waitForFinished();
         }
-        void CXSwiftBusServiceProxy::getAverageFPSAsync(double *o_frameRate)
+
+        void CXSwiftBusServiceProxy::getFrameStatsAsync(double *o_averageFps, double *o_simTimeRatio)
         {
-            m_dbusInterface->callDBusAsync(QLatin1String("getAverageFPS"), setterCallback(o_frameRate));
+            std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
+            {
+                QDBusPendingReply<double, double> reply = *watcher;
+                if (!reply.isError())
+                {
+                    *o_averageFps = reply.argumentAt<0>();
+                    *o_simTimeRatio = reply.argumentAt<1>();
+                }
+                watcher->deleteLater();
+            };
+            m_dbusInterface->callDBusAsync(QLatin1String("getFrameStats"), callback);
         }
 
         double CXSwiftBusServiceProxy::getLatitudeDeg() const

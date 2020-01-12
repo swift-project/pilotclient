@@ -112,8 +112,9 @@ namespace XSwiftBus
 
         //! Frames-per-second, averaged over the last 500 frames,
         //! or since this function was last called, whichever is later.
+        //! Second part is the average simulation time ratio during the same period.
         //! \return Zero if no samples were collected since this function was last called.
-        double getAverageFPS();
+        std::pair<double, double> getFrameStats();
 
         //! Get aircraft latitude in degrees
         double getLatitudeDeg() const { return m_latitude.get(); }

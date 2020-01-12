@@ -30,33 +30,48 @@ namespace XSwiftBus
         DataRef<xplane::data::sim::time::framerate_period> m_thisFramePeriodXP11;
         std::vector<float> m_samples;
         float m_total = 0;
+        float m_totalOverBudget = 0;
         size_t m_lastSampleIndex = 0;
         static constexpr size_t c_maxSampleCount = 500;
+        static constexpr float c_framePeriodBudget = 0.05f;
 
         FramePeriodSampler() : CDrawable(xplm_Phase_LastCockpit, false) {}
 
-        float getAverageFPS()
+        std::pair<float, float> getFrameStats()
         {
-            if (m_total == 0) { return 0; }
+            if (m_total == 0) { return {}; }
             const float fps = m_samples.size() / m_total;
+            const float ratio = 1 - m_totalOverBudget / m_total;
             m_total = 0;
+            m_totalOverBudget = 0;
             m_samples.clear();
             m_lastSampleIndex = 0;
-            return fps;
+            return { fps, ratio };
         }
 
     protected:
         virtual void draw() override // called once per frame
         {
             float current = m_thisFramePeriodXP11.isValid() ? m_thisFramePeriodXP11.get() : m_thisFramePeriod.get();
+
             ++m_lastSampleIndex %= c_maxSampleCount;
             if (m_samples.size() == c_maxSampleCount)
             {
-                m_total -= m_samples[m_lastSampleIndex];
-                m_samples[m_lastSampleIndex] = current;
+                auto& oldSample = m_samples[m_lastSampleIndex];
+                m_total -= oldSample;
+                if (oldSample > c_framePeriodBudget)
+                {
+                    m_totalOverBudget -= oldSample - c_framePeriodBudget;
+                }
+                oldSample = current;
             }
             else { m_samples.push_back(current); }
-            m_total += m_samples[m_lastSampleIndex];
+
+            m_total += current;
+            if (current > c_framePeriodBudget)
+            {
+                m_totalOverBudget += current - c_framePeriodBudget;
+            }
         }
     };
 
@@ -95,10 +110,11 @@ namespace XSwiftBus
         return XSWIFTBUS_COMMIT;
     }
 
-    double CService::getAverageFPS()
+    std::pair<double, double> CService::getFrameStats()
     {
-        if (!m_framePeriodSampler) { return 0; }
-        return static_cast<double>(m_framePeriodSampler->getAverageFPS());
+        if (!m_framePeriodSampler) { return {}; }
+        const auto result = m_framePeriodSampler->getFrameStats();
+        return { static_cast<double>(result.first), static_cast<double>(result.second) };
     }
 
     void CService::addTextMessage(const std::string &text, double red, double green, double blue)
@@ -545,6 +561,18 @@ namespace XSwiftBus
                 queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, isUsingRealTime());
+                });
+            }
+            else if (message.getMethodName() == "getFrameStats")
+            {
+                queueDBusCall([ = ]()
+                {
+                    const auto stats = getFrameStats();
+                    CDBusMessage reply = CDBusMessage::createReply(sender, serial);
+                    reply.beginArgumentWrite();
+                    reply.appendArgument(stats.first);
+                    reply.appendArgument(stats.second);
+                    sendDBusMessage(reply);
                 });
             }
             else if (message.getMethodName() == "getLatitudeDeg")
