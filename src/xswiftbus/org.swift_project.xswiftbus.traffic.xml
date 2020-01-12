@@ -1,4 +1,4 @@
-R"(<node>
+R"XML(<node>
   <interface name="org.swift_project.xswiftbus.traffic">
     <method name="acquireMultiplayerPlanes">
       <arg name="acquired" type="b" direction="out"/>
@@ -93,4 +93,4 @@ R"(<node>
        <arg name="callsign" type="s" direction="in"/>
     </method>
   </interface>
-</node>)"
+</node>)XML"

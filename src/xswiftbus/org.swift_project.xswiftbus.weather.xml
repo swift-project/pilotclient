@@ -1,4 +1,4 @@
-R"(<node>
+R"XML(<node>
   <interface name="org.swift_project.xswiftbus.weather">
     <method name="isUsingRealWeather">
       <arg type="b" direction="out"/>
@@ -47,4 +47,4 @@ R"(<node>
       <arg name="turbulence" type="i" direction="in"/>
     </method>
   </interface>
-</node>)"
+</node>)XML"

@@ -1,4 +1,4 @@
-R"(<node>
+R"XML(<node>
   <interface name="org.swift_project.xswiftbus.service">
     <method name="getVersionNumber">
       <arg type="s" direction="out"/>
@@ -178,4 +178,4 @@ R"(<node>
     <method name="toggleMessageBoxVisibility">
     </method>
   </interface>
-</node>)"
+</node>)XML"
