@@ -5,6 +5,8 @@ TEMPLATE = lib
 CONFIG += shared plugin
 CONFIG -= qt
 
+CONFIG += c++17
+
 INCLUDEPATH += $$EXTERNALSROOT/common/include/XPLM
 
 LIBS += -levent_core -ldbus-1
