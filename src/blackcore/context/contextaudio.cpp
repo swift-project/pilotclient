@@ -148,6 +148,7 @@ namespace BlackCore
             QTimer::singleShot(5000, this, [ = ]
             {
                 if (!myself || !sApp || sApp->isShuttingDown()) { return; }
+                // myself->changeDeviceSettings();
                 myself->onChangedAudioSettings();
                 myself->onChangedLocalDevices(m_activeLocalDevices);
             });
@@ -369,8 +370,19 @@ namespace BlackCore
         void CContextAudioBase::setCurrentAudioDevices(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice)
         {
             if (!m_voiceClient) { return; }
-            if (!inputDevice.getName().isEmpty())  { m_inputDeviceSetting.setAndSave(inputDevice.getName()); }
-            if (!outputDevice.getName().isEmpty()) { m_outputDeviceSetting.setAndSave(outputDevice.getName()); }
+
+            if (!inputDevice.getName().isEmpty() && inputDevice.getName() != m_inputDeviceSetting.get())
+            {
+                Q_ASSERT_X(inputDevice.isInputDevice(), Q_FUNC_INFO, "Need input device");
+                const CStatusMessage m = m_inputDeviceSetting.setAndSave(inputDevice.getName());
+                CLogMessage::preformatted(m);
+            }
+            if (!outputDevice.getName().isEmpty() && outputDevice.getName() != m_outputDeviceSetting.get())
+            {
+                Q_ASSERT_X(outputDevice.isOutputDevice(), Q_FUNC_INFO, "Need output device");
+                const CStatusMessage m = m_outputDeviceSetting.setAndSave(outputDevice.getName());
+                CLogMessage::preformatted(m);
+            }
 
             m_voiceClient->startAudio(inputDevice, outputDevice);
         }
@@ -523,12 +535,11 @@ namespace BlackCore
 
         void CContextAudioBase::changeDeviceSettings()
         {
-            const QString inputDeviceName = m_inputDeviceSetting.get();
-            const CAudioDeviceInfo input = this->getAudioInputDevicesPlusDefault().findByNameOrDefault(inputDeviceName, CAudioDeviceInfo::getDefaultInputDevice());
+            const CAudioDeviceInfoList devices = this->getCurrentAudioDevices();
+            Q_ASSERT_X(devices.size() == 2, Q_FUNC_INFO, "Expect INPUT and OUTPUT device");
 
-            const QString outputDeviceName = m_outputDeviceSetting.get();
-            const CAudioDeviceInfo output = this->getAudioOutputDevicesPlusDefault().findByNameOrDefault(outputDeviceName, CAudioDeviceInfo::getDefaultOutputDevice());
-
+            const CAudioDeviceInfo input  = devices.front();
+            const CAudioDeviceInfo output = devices.back();
             this->setCurrentAudioDevices(input, output);
         }
 

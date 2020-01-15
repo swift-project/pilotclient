@@ -127,7 +127,7 @@ namespace BlackGui
             bool m_init = false;
             BlackMisc::CConnectionGuard m_afvConnections;
             QScopedPointer<Ui::CAudioDeviceVolumeSetupComponent> ui;
-            BlackMisc::Audio::CAudioDeviceInfoList m_cbDevices;
+            BlackMisc::Audio::CAudioDeviceInfoList m_cbDevices; //!< devices to be displayed in the checkbox
             BlackMisc::CDigestSignal m_volumeSliderChanged { this, &CAudioDeviceVolumeSetupComponent::saveVolumes, 1000, 10 };
             BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &CAudioDeviceVolumeSetupComponent::reloadSettings };
         };
