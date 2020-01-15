@@ -49,7 +49,7 @@ namespace BlackMisc
         return {};
     }
 
-    BlackMisc::CStatusMessage CSettingsCache::saveToStore(const QString &keyPrefix)
+    CStatusMessage CSettingsCache::saveToStore(const QString &keyPrefix)
     {
         QLockFile lock(lockFileName());
         const CStatusMessage lockStatus = lockFile(lock);
@@ -58,7 +58,7 @@ namespace BlackMisc
         return saveToFiles(persistentStore(), keyPrefix);
     }
 
-    BlackMisc::CStatusMessage CSettingsCache::saveToStore(const QStringList &keys)
+    CStatusMessage CSettingsCache::saveToStore(const QStringList &keys)
     {
         QLockFile lock(lockFileName());
         const CStatusMessage lockStatus = lockFile(lock);
@@ -86,7 +86,7 @@ namespace BlackMisc
         CLogMessage::preformatted(status);
     }
 
-    BlackMisc::CStatusMessage CSettingsCache::loadFromStore()
+    CStatusMessage CSettingsCache::loadFromStore()
     {
         QLockFile lock(lockFileName());
         const CStatusMessage lockStatus = lockFile(lock);
