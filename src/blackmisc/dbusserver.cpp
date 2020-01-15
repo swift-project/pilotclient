@@ -109,6 +109,12 @@ namespace BlackMisc
         return CDBusServer::isP2PConnection(connection) ? empty : CDBusServer::coreServiceName();
     }
 
+    const CLogCategoryList &CDBusServer::getLogCategories()
+    {
+        static const CLogCategoryList cats({ CLogCategory::dbus() });
+        return cats;
+    }
+
     bool CDBusServer::isP2PAddress(const QString &address)
     {
         return modeOfAddress(address) == SERVERMODE_P2P;

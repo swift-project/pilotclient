@@ -67,6 +67,13 @@ namespace BlackMisc
             return cat;
         }
 
+        //! DBus related
+        static const CLogCategory &dbus()
+        {
+            static const CLogCategory cat { "swift.dbus" };
+            return cat;
+        }
+
         //! Contexts
         static const CLogCategory &context()
         {
@@ -297,6 +304,7 @@ namespace BlackMisc
                 cmdLine(),
                 context(),
                 contextSlot(),
+                dbus(),
                 dataInconsistency(),
                 download(),
                 driver(),

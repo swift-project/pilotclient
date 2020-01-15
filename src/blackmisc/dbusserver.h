@@ -11,6 +11,7 @@
 #ifndef BLACKMISC_DBUSSERVER_H
 #define BLACKMISC_DBUSSERVER_H
 
+#include "blackmisc/logcategorylist.h"
 #include "blackmisc/blackmiscexport.h"
 
 #include <QDBusConnection>
@@ -46,6 +47,9 @@ namespace BlackMisc
         //! Service name, empty if is P2P connection
         static const QString &coreServiceName(const QDBusConnection &connection);
 
+        //! Log categories
+        static const CLogCategoryList &getLogCategories();
+
         //! Server mode
         enum ServerMode
         {
@@ -61,7 +65,7 @@ namespace BlackMisc
         CDBusServer(const QString &service, const QString &address, QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CDBusServer();
+        virtual ~CDBusServer() override;
 
         //! Add a QObject to be exposed via DBus
         void addObject(const QString &name, QObject *object);

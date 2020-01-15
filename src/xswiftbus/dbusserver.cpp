@@ -1,4 +1,3 @@
-#include <utility>
 
 /* Copyright (C) 2018
  * swift project Community / Contributors
@@ -12,6 +11,7 @@
 #include "dbusobject.h"
 #include "utils.h"
 
+#include <utility>
 #include <algorithm>
 #include <cassert>
 #include <memory>

@@ -28,6 +28,7 @@ namespace BlackMisc
             { "cache",                       exactMatch(CLogCategory::cache()) },
             { "cmd.line handling",           exactMatch(CLogCategory::cmdLine()) },
             { "data inconsistency",          exactMatch(CLogCategory::dataInconsistency()) },
+            { "DBus",                        exactMatch(CLogCategory::dbus()) },
             { "downloading data",            exactMatch(CLogCategory::download()) },
             { "driver",                      exactMatch(CLogCategory::driver()) },
             { "flight plan",                 exactMatch(CLogCategory::flightPlan()) },
