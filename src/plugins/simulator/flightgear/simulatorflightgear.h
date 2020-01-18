@@ -138,9 +138,6 @@ namespace BlackSimPlugin
             virtual bool testSendSituationAndParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) override;
             //! @}
 
-            //! Creates an appropriate dbus connection from the string describing it
-            static QDBusConnection connectionFromString(const QString &str);
-
         protected:
             //! \name ISimulator implementations
             //! @{
@@ -264,7 +261,7 @@ namespace BlackSimPlugin
 
         private:
             void checkConnection();
-            void checkConnectionViaBus(const QString &address);
+            void checkConnectionViaSessionBus();
             void checkConnectionViaPeer(const QString &address);
             void checkConnectionCommon();
 
@@ -273,7 +270,7 @@ namespace BlackSimPlugin
 
             QTimer m_timer { this };
             QDBusConnection m_conn { "default" };
-            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TFGSwiftBusServer> m_fgswiftbusServerSetting { this, &CSimulatorFlightgearListener::fgSwiftBusServerSettingChanged };
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TFGSwiftBusServer> m_fgSswiftBusServerSetting { this, &CSimulatorFlightgearListener::fgSwiftBusServerSettingChanged };
         };
 
         //! Factory for creating CSimulatorFlightgear instance

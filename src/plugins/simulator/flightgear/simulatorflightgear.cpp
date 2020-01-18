@@ -319,7 +319,7 @@ namespace BlackSimPlugin
 
             if (CDBusServer::isSessionOrSystemAddress(dbusAddress))
             {
-                m_dBusConnection = connectionFromString(dbusAddress);
+                m_dBusConnection = QDBusConnection::sessionBus();
                 m_dbusMode = Session;
             }
             else if (CDBusServer::isQtDBusAddress(dbusAddress))
@@ -444,13 +444,6 @@ namespace BlackSimPlugin
                 CLogMessage(this).info(u"Flightgear provides real time synchronization, use this one");
             }
             return false;
-        }
-
-        QDBusConnection CSimulatorFlightgear::connectionFromString(const QString &str)
-        {
-            if (str == CDBusServer::sessionBusAddress()) { return QDBusConnection::sessionBus(); }
-            Q_UNREACHABLE();
-            return QDBusConnection("NO CONNECTION");
         }
 
         bool CSimulatorFlightgear::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
@@ -981,10 +974,10 @@ namespace BlackSimPlugin
             if (this->isShuttingDown()) { return; }
             Q_ASSERT_X(!CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background");
 
-            QString dbusAddress = m_fgswiftbusServerSetting.getThreadLocal();
+            QString dbusAddress = m_fgSswiftBusServerSetting.getThreadLocal();
             if (CDBusServer::isSessionOrSystemAddress(dbusAddress))
             {
-                checkConnectionViaBus(dbusAddress);
+                checkConnectionViaSessionBus();
             }
             else if (CDBusServer::isQtDBusAddress(dbusAddress))
             {
@@ -992,9 +985,9 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorFlightgearListener::checkConnectionViaBus(const QString &address)
+        void CSimulatorFlightgearListener::checkConnectionViaSessionBus()
         {
-            m_conn = CSimulatorFlightgear::connectionFromString(address);
+            m_conn = QDBusConnection::sessionBus();
             if (!m_conn.isConnected())
             {
                 m_conn.disconnectFromBus(m_conn.name());

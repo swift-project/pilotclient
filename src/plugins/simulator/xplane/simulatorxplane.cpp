@@ -386,7 +386,7 @@ namespace BlackSimPlugin
 
             if (CDBusServer::isSessionOrSystemAddress(dBusServerAddress))
             {
-                m_dBusConnection = connectionFromString(dBusServerAddress);
+                m_dBusConnection = QDBusConnection::sessionBus();
                 m_dbusMode = Session;
             }
             else if (CDBusServer::isQtDBusAddress(dBusServerAddress))
@@ -538,19 +538,12 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::setTimeSynchronization(bool enable, const PhysicalQuantities::CTime &offset)
         {
-            Q_UNUSED(offset);
+            Q_UNUSED(offset)
             if (enable)
             {
                 CLogMessage(this).info(u"X-Plane provides real time synchronization, use this one");
             }
             return false;
-        }
-
-        QDBusConnection CSimulatorXPlane::connectionFromString(const QString &str)
-        {
-            if (str == CDBusServer::sessionBusAddress()) { return QDBusConnection::sessionBus(); }
-            Q_UNREACHABLE();
-            return QDBusConnection("NO CONNECTION");
         }
 
         bool CSimulatorXPlane::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
@@ -1337,7 +1330,7 @@ namespace BlackSimPlugin
             m_dBusServerAddress = m_xSwiftBusServerSettings.getThreadLocal().getDBusServerAddressQt();
             if (CDBusServer::isSessionOrSystemAddress(m_dBusServerAddress))
             {
-                checkConnectionViaBus(m_dBusServerAddress);
+                checkConnectionViaSessionBus();
             }
             else if (CDBusServer::isQtDBusAddress(m_dBusServerAddress))
             {
@@ -1345,9 +1338,9 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorXPlaneListener::checkConnectionViaBus(const QString &address)
+        void CSimulatorXPlaneListener::checkConnectionViaSessionBus()
         {
-            m_DBusConnection = CSimulatorXPlane::connectionFromString(address);
+            m_DBusConnection = QDBusConnection::sessionBus();
             if (!m_DBusConnection.isConnected())
             {
                 m_DBusConnection.disconnectFromBus(m_DBusConnection.name());

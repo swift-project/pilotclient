@@ -149,9 +149,6 @@ namespace BlackSimPlugin
             //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
             virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
 
-            //! Creates an appropriate dbus connection from the string describing it
-            static QDBusConnection connectionFromString(const QString &str);
-
         protected:
             //! \name ISimulator implementations
             //! @{
@@ -296,7 +293,7 @@ namespace BlackSimPlugin
 
         private:
             void checkConnection();
-            void checkConnectionViaBus(const QString &address);
+            void checkConnectionViaSessionBus();
             void checkConnectionViaPeer(const QString &address);
             void checkConnectionCommon();
 

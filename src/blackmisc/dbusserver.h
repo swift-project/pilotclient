@@ -120,6 +120,7 @@ namespace BlackMisc
         static bool isQtDBusAddress(const QString &address);
 
         //! True if address is session or system bus address
+        //! \remark actually swift does NOT support system DBus anymore
         static bool isSessionOrSystemAddress(const QString &address);
 
         //! False if address is session or system bus address
