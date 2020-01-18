@@ -150,7 +150,7 @@ namespace BlackGui
                 if (sGui->getISimulator())
                 {
                     const double fps = sGui->getISimulator()->getAverageFPS();
-                    this->addOrUpdateLiveDataByName(QStringLiteral("FPS"), fps < 0 ? QStringLiteral("N/A") : QString::number(fps, 'g', 1), CIconList::allIcons().findByIndex(CIcons::ApplicationSimulator));
+                    this->addOrUpdateLiveDataByName(QStringLiteral("FPS"), fps < 0 ? QStringLiteral("N/A") : QString::number(fps, 'f', 1), CIconList::allIcons().findByIndex(CIcons::ApplicationSimulator));
 
                     const double ratio = sGui->getISimulator()->getSimTimeRatio();
                     this->addOrUpdateLiveDataByName(QStringLiteral("Time Ratio"), QString::number(ratio), CIconList::allIcons().findByIndex(CIcons::ApplicationSimulator));
