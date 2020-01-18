@@ -41,3 +41,8 @@ macx-clang {
     # TODO
     WORD_SIZE = 64
 }
+
+win32-clang-g++ {
+    # TODO
+    WORD_SIZE = 64
+}

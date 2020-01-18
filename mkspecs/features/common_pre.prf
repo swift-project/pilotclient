@@ -192,7 +192,7 @@ defineTest(addLibraryDependency) {
     }
     else {
         win32:msvc: PRE_TARGETDEPS += $$DestRoot/lib/$${1}.lib
-        win32-g++*: PRE_TARGETDEPS += $$DestRoot/lib/lib$${1}.a
+        win32:gcc:  PRE_TARGETDEPS += $$DestRoot/lib/lib$${1}.a
         linux-g++*: PRE_TARGETDEPS += $$DestRoot/lib/lib$${1}.so
         macx-clang: PRE_TARGETDEPS += $$DestRoot/lib/lib$${1}.dylib
         export(PRE_TARGETDEPS)
@@ -210,7 +210,12 @@ msvc:contains(QMAKE_CXXFLAGS, /permissive-): QMAKE_CXXFLAGS *= /FI$${SourceRoot}
 # Experimental support for Clang on Windows
 ################################
 
-clang_cl {
+win32:llvm {
+    mingw {
+        equals(WORD_SIZE,32): QMAKE_CXXFLAGS += --target=i686-pc-windows-gnu
+        equals(WORD_SIZE,64): QMAKE_CXXFLAGS += --target=x86_64-pc-windows-gnu
+    }
+
     # Address Sanitizer
     # https://stackoverflow.com/a/48585886/1639256
     # http://lists.llvm.org/pipermail/cfe-dev/2016-April/048288.html

@@ -21,9 +21,10 @@ isEmpty(EXTERNALSROOT) {
 # Externals
 ################################
 
-win32-clang-msvc: EXTERNALS_SPEC = win32-msvc
-else:linux:       EXTERNALS_SPEC = linux-g++
-else:             EXTERNALS_SPEC = $$basename(QMAKESPEC)
+win32-clang-msvc:       EXTERNALS_SPEC = win32-msvc
+else:win32-clang-g++:   EXTERNALS_SPEC = win32-g++
+else:linux:             EXTERNALS_SPEC = linux-g++
+else:                   EXTERNALS_SPEC = $$basename(QMAKESPEC)
 
 msvc {
     INCLUDEPATH *= $$EXTERNALSROOT/common/include
