@@ -14,7 +14,7 @@ namespace BlackMisc
     {
         QString CFacilityType::convertToQString(bool i18n) const
         {
-            Q_UNUSED(i18n);
+            Q_UNUSED(i18n)
 
             switch (m_facilityType)
             {
@@ -29,7 +29,7 @@ namespace BlackMisc
             }
 
             Q_UNREACHABLE();
-            return {};
+            return QStringLiteral("Unknown");
         }
 
     } // namespace

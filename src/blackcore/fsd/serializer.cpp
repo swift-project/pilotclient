@@ -7,6 +7,7 @@
  */
 
 #include "serializer.h"
+#include "blackmisc/verify.h"
 
 using namespace BlackMisc::Aviation;
 
@@ -35,8 +36,9 @@ namespace BlackCore
             case AtcRating::Supervisor:     return "11";
             case AtcRating::Administrator:  return "12";
             }
+
             Q_UNREACHABLE();
-            return {};
+            return "0";
         }
 
         template<>
@@ -54,7 +56,11 @@ namespace BlackCore
             else if (str == "10") return AtcRating::Instructor3;
             else if (str == "11") return AtcRating::Supervisor;
             else if (str == "12") return AtcRating::Administrator;
-            else return AtcRating::Unknown;
+
+            // we should NOT get here
+            const QByteArray msg = QStringLiteral("Unknown ATC rating '%1'").arg(str).toLatin1();
+            BLACK_AUDIT_X(false, Q_FUNC_INFO, msg.constData());
+            return AtcRating::Unknown;
         }
 
         template<>
@@ -69,8 +75,9 @@ namespace BlackCore
             case PilotRating::Instructor:   return "4";
             case PilotRating::Supervisor:   return "5";
             }
+
             Q_UNREACHABLE();
-            return {};
+            return "0";
         }
 
         template<>
@@ -82,8 +89,11 @@ namespace BlackCore
             else if (str == "3") return PilotRating::IFR;
             else if (str == "4") return PilotRating::Instructor;
             else if (str == "5") return PilotRating::Supervisor;
-            Q_UNREACHABLE();
-            return {};
+
+            // we should NOT get here
+            const QByteArray msg = QStringLiteral("Unknown Pilot rating '%1'").arg(str).toLatin1();
+            BLACK_AUDIT_X(false, Q_FUNC_INFO, msg.constData());
+            return PilotRating::Unknown;
         }
 
         template<>
@@ -111,8 +121,9 @@ namespace BlackCore
             case SimType::P3Dv3:        return "30";
             case SimType::P3Dv4:        return "30";
             }
+
             Q_UNREACHABLE();
-            return {};
+            return "0";
         }
 
         template<>
@@ -135,7 +146,12 @@ namespace BlackCore
             else if (str == "25") return SimType::FlightGear;
             // Still ambigious which P3D version. No standard defined yet.
             else if (str == "30") return SimType::P3Dv4;
-            else return SimType::Unknown;
+
+            // we should NOT get here
+            const QByteArray msg = QStringLiteral("Unknown SimType '%1'").arg(str).toLatin1();
+            BLACK_AUDIT_X(false, Q_FUNC_INFO, msg.constData());
+
+            return SimType::Unknown;
         }
 
         template<>
@@ -153,6 +169,7 @@ namespace BlackCore
             case CFacilityType::CTR: return "6";
             case CFacilityType::Unknown: return {};
             }
+
             Q_UNREACHABLE();
             return {};
         }
@@ -168,7 +185,12 @@ namespace BlackCore
             else if (str == "4") return CFacilityType::TWR;
             else if (str == "5") return CFacilityType::APP;
             else if (str == "6") return CFacilityType::CTR;
-            else return CFacilityType::Unknown;
+
+            // we should NOT get here
+            const QByteArray msg = QStringLiteral("Unknown CFacilityType '%1'").arg(str).toLatin1();
+            BLACK_AUDIT_X(false, Q_FUNC_INFO, msg.constData());
+
+            return CFacilityType::Unknown;
         }
 
         template<>
@@ -189,7 +211,7 @@ namespace BlackCore
             case ClientQueryType::Unknown:        return "Unknown query type";
             }
             Q_UNREACHABLE();
-            return {};
+            return "Unknown query type";
         }
 
         template<>
@@ -205,11 +227,12 @@ namespace BlackCore
             else if (str == "INF")  return ClientQueryType::INF;
             else if (str == "FP")   return ClientQueryType::FP;
             else if (str == "ACC")  return ClientQueryType::AircraftConfig;
-            else
-            {
-                // networkLog(vatSeverityDebug, "ClientQueryType fromString(str)", "Unknown client query type");
-                return ClientQueryType::Unknown;
-            }
+
+            // we should NOT get here
+            const QByteArray msg = QStringLiteral("Unknown ClientQueryType '%1'").arg(str).toLatin1();
+            BLACK_AUDIT_X(false, Q_FUNC_INFO, msg.constData());
+            // networkLog(vatSeverityDebug, "ClientQueryType fromString(str)", "Unknown client query type");
+            return ClientQueryType::Unknown;
         }
 
         template<>
@@ -222,6 +245,7 @@ namespace BlackCore
             case FlightType::SVFR: return "S";
             case FlightType::DVFR: return "D";
             }
+
             Q_UNREACHABLE();
             return {};
         }
@@ -255,8 +279,9 @@ namespace BlackCore
             case CTransponder::StateIdent:
                 return QStringLiteral("Y");
             }
+
             Q_UNREACHABLE();
-            return {};
+            return QStringLiteral("S");
         }
 
         template<>
@@ -269,35 +294,37 @@ namespace BlackCore
         }
 
         template<>
-        QString toQString(const Capabilities& value)
+        QString toQString(const Capabilities &value)
         {
             switch (value)
             {
-            case Capabilities::None: return {};
-            case Capabilities::AtcInfo: return "ATCINFO";
-            case Capabilities::SecondaryPos: return "SECPOS";
-            case Capabilities::AircraftInfo: return "MODELDESC";
-            case Capabilities::OngoingCoord: return "ONGOINGCOORD";
-            case Capabilities::InterminPos: return "INTERIMPOS";
-            case Capabilities::FastPos: return "FASTPOS";
-            case Capabilities::Stealth: return "STEALTH";
+            case Capabilities::None:           return {};
+            case Capabilities::AtcInfo:        return "ATCINFO";
+            case Capabilities::SecondaryPos:   return "SECPOS";
+            case Capabilities::AircraftInfo:   return "MODELDESC";
+            case Capabilities::OngoingCoord:   return "ONGOINGCOORD";
+            case Capabilities::InterminPos:    return "INTERIMPOS";
+            case Capabilities::FastPos:        return "FASTPOS";
+            case Capabilities::Stealth:        return "STEALTH";
             case Capabilities::AircraftConfig: return "ACCONFIG";
             }
+
             return {};
         }
 
         template<>
         Capabilities fromQString(const QString &str)
         {
-            if (str == "ATCINFO") return Capabilities::AtcInfo;
-            else if (str == "SECPOS") return Capabilities::SecondaryPos;
-            else if (str == "MODELDESC") return Capabilities::AircraftInfo;
+            if (str == "ATCINFO")           return Capabilities::AtcInfo;
+            else if (str == "SECPOS")       return Capabilities::SecondaryPos;
+            else if (str == "MODELDESC")    return Capabilities::AircraftInfo;
             else if (str == "ONGOINGCOORD") return Capabilities::OngoingCoord;
-            else if (str == "INTERIMPOS") return Capabilities::InterminPos;
-            else if (str == "FASTPOS") return Capabilities::FastPos;
-            else if (str == "STEALTH") return Capabilities::Stealth;
-            else if (str == "ACCONFIG") return Capabilities::AircraftConfig;
-            else return Capabilities::None;
+            else if (str == "INTERIMPOS")   return Capabilities::InterminPos;
+            else if (str == "FASTPOS")      return Capabilities::FastPos;
+            else if (str == "STEALTH")      return Capabilities::Stealth;
+            else if (str == "ACCONFIG")     return Capabilities::AircraftConfig;
+
+            return Capabilities::None;
         }
 
         template<>
@@ -307,9 +334,11 @@ namespace BlackCore
             else if (str == "Z") return AtisLineType::ZuluLogoff;
             else if (str == "T") return AtisLineType::TextMessage;
             else if (str == "E") return AtisLineType::LineCount;
-            else return AtisLineType::Unknown;
+
+            return AtisLineType::Unknown;
         }
 
         //! @}
-    }
-}
+
+    } // ns
+} // ns

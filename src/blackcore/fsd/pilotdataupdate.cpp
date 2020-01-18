@@ -63,7 +63,7 @@ namespace BlackCore
             {
                 BlackMisc::CLogMessage(static_cast<PilotDataUpdate *>(nullptr)).debug(u"Wrong number of arguments.");
                 return {};
-            };
+            }
 
             double pitch = 0.0;
             double bank = 0.0;

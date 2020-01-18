@@ -14,11 +14,11 @@ namespace BlackMisc
     {
         QString CLoginMode::convertToQString(bool i18n) const
         {
-            Q_UNUSED(i18n);
+            Q_UNUSED(i18n)
 
             switch (m_loginMode)
             {
-            case Pilot: return QStringLiteral("Pilot");
+            case Pilot:    return QStringLiteral("Pilot");
             case Observer: return QStringLiteral("Observer");
             }
 
