@@ -641,7 +641,7 @@ namespace BlackMisc
         Q_ASSERT_X(! m_elements.contains(key), "CValuePage", "Can't have two CCached in the same object referring to the same value");
         Q_ASSERT_X(defaultValue.isValid() ? defaultValue.userType() == metaType : true, "CValuePage", "Metatype mismatch for default value");
         Q_ASSERT_X(defaultValue.isValid() && validator ? validator(defaultValue, unused) : true, "CValuePage", "Validator rejects default value");
-        Q_UNUSED(unused);
+        Q_UNUSED(unused)
 
         auto &element = *(m_elements[key] = ElementPtr(new Element(key, name, metaType, validator, defaultValue)));
         std::forward_as_tuple(element.m_value.uniqueWrite(), element.m_timestamp, element.m_saved) = m_cache->getValue(key);

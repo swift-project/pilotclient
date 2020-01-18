@@ -287,7 +287,7 @@ namespace BlackMisc
         applyDeferredChanges(); // apply changes which we grabbed at the last minute above
     }
 
-    CDataCacheRevision::LockGuard CDataCacheSerializer::loadFromStore(const BlackMisc::CValueCachePacket &baseline, bool defer, bool pinsOnly)
+    CDataCacheRevision::LockGuard CDataCacheSerializer::loadFromStore(const CValueCachePacket &baseline, bool defer, bool pinsOnly)
     {
         auto lock = m_cache->m_revision.beginUpdate(baseline.toTimestampMap(), ! pinsOnly, pinsOnly);
         if (lock && m_cache->m_revision.isPendingRead())
