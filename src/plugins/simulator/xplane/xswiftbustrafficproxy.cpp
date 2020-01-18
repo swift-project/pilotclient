@@ -9,6 +9,7 @@
 #include "xswiftbustrafficproxy.h"
 #include <QLatin1String>
 #include <QDBusConnection>
+#include <cmath>
 
 #define XSWIFTBUS_SERVICENAME "org.swift-project.xswiftbus"
 
@@ -170,7 +171,7 @@ namespace BlackSimPlugin
                 {
                     const CCallsign cs(reply.argumentAt<0>());
                     const double elevationMeters = reply.argumentAt<1>();
-                    const CAltitude elevationAlt(elevationMeters, CLengthUnit::m(), CLengthUnit::ft());
+                    const CAltitude elevationAlt = std::isnan(elevationMeters) ? CAltitude::null() : CAltitude(elevationMeters, CLengthUnit::m(), CLengthUnit::ft());
                     const CElevationPlane elevation(CLatitude(latitudeDeg, CAngleUnit::deg()),
                                                     CLongitude(longitudeDeg, CAngleUnit::deg()),
                                                     elevationAlt, CElevationPlane::singlePointRadius());

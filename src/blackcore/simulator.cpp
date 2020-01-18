@@ -360,6 +360,7 @@ namespace BlackCore
     void ISimulator::callbackReceivedRequestedElevation(const CElevationPlane &plane, const CCallsign &callsign)
     {
         if (this->isShuttingDown()) { return; }
+        if (plane.isNull()) { return; }
 
         ISimulationEnvironmentProvider::rememberGroundElevation(callsign, plane); // in simulator
         const int updated = CRemoteAircraftAware::updateAircraftGroundElevation(callsign, plane, CAircraftSituation::FromProvider);

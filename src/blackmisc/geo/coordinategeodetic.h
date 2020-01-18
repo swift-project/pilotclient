@@ -322,7 +322,11 @@ namespace BlackMisc
             }
 
             //! Is null?
-            virtual bool isNull() const override { return Math::CMathUtils::epsilonZeroLimits(m_x) && Math::CMathUtils::epsilonZeroLimits(m_y) && Math::CMathUtils::epsilonZeroLimits(m_z); }
+            virtual bool isNull() const override
+            {
+                if (m_geodeticHeight.isNull()) { return true; }
+                return Math::CMathUtils::epsilonZeroLimits(m_x) && Math::CMathUtils::epsilonZeroLimits(m_y) && Math::CMathUtils::epsilonZeroLimits(m_z);
+            }
 
             //! Coordinate by WGS84 position data
             static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const Aviation::CAltitude &geodeticHeight = {});
