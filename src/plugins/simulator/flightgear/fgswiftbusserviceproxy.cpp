@@ -407,5 +407,15 @@ namespace BlackSimPlugin
         {
             m_dbusInterface->callDBusAsync(QLatin1String("getSpeedBrakeRatio"), setterCallback(o_speedBrakeRatio));
         }
+
+        double CFGSwiftBusServiceProxy::getGroundElevation() const
+        {
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getGroundElevation"));
+        }
+
+        void CFGSwiftBusServiceProxy::getGroundElevationAsync(double *o_groundElevation)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getGroundElevation"),setterCallback(o_groundElevation));
+        }
     } // ns
 } // ns
