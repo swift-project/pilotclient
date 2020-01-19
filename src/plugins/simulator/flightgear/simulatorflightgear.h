@@ -98,6 +98,7 @@ namespace BlackSimPlugin
             QList<double> enginesN1Percentage;  //!< N1 per engine [%]
             double speedBrakeRatio;             //!< Speed break ratio [%]
             double pressureAltitudeFt;          //!< Pressure altitude [inhg]
+            double groundElevation;             //!< Ground Elevation [m]
         };
 
         //! Flightgear ISimulator implementation

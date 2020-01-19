@@ -321,6 +321,12 @@ namespace BlackSimPlugin
             double getSpeedBrakeRatio() const;
             void getSpeedBrakeRatioAsync(double *o_speedBrakeRatio);
             //! @}
+
+            //! Get ground elevation [m] for current airplane position
+            //! @{
+            double getGroundElevation() const;
+            void getGroundElevationAsync(double *o_groundElevation);
+            //! @}
         };
     }
 }

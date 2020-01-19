@@ -208,6 +208,7 @@ namespace BlackSimPlugin
                 m_serviceProxy->getTransponderModeAsync(&m_flightgearData.xpdrMode);
                 m_serviceProxy->getTransponderIdentAsync(&m_flightgearData.xpdrIdent);
                 m_serviceProxy->getAllWheelsOnGroundAsync(&m_flightgearData.onGroundAll);
+                m_serviceProxy->getGroundElevationAsync(&m_flightgearData.groundElevation);
 
                 CAircraftSituation situation;
                 situation.setPosition({ m_flightgearData.latitudeDeg, m_flightgearData.longitudeDeg, 0 });
@@ -217,6 +218,7 @@ namespace BlackSimPlugin
                 situation.setPitch({ m_flightgearData.pitchDeg, CAngleUnit::deg() });
                 situation.setBank({ m_flightgearData.rollDeg, CAngleUnit::deg() });
                 situation.setGroundSpeed({ m_flightgearData.groundspeedKts, CSpeedUnit::kts() });
+                situation.setGroundElevation(CAltitude(m_flightgearData.groundElevation,CAltitude::MeanSeaLevel,CLengthUnit::m()),CAircraftSituation::FromProvider);
 
                 // Updates
                 // Do not update ICAO codes, as this overrides reverse lookups
