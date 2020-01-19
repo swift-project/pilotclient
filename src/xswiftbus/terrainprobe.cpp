@@ -27,16 +27,21 @@ namespace XSwiftBus
         auto result = XPLMProbeTerrainXYZ(m_ref, static_cast<float>(x), static_cast<float>(y), static_cast<float>(z), &probe);
         if (result != xplm_ProbeHitTerrain)
         {
-            std::string error;
-            if (result == xplm_ProbeError) { error = "probe error"; }
-            else if (result == xplm_ProbeMissed) { error = "probe missed"; }
-            else { error = "unknown probe result"; }
-            WARNING_LOG(callsign + " " + error + " at " + std::to_string(degreesLatitude) + ", " + std::to_string(degreesLongitude) + ", " + std::to_string(metersAltitude));
+            if (m_logMessageCount < 100)
+            {
+                m_logMessageCount++;
+                std::string error;
+                if (result == xplm_ProbeError) { error = "probe error"; }
+                else if (result == xplm_ProbeMissed) { error = "probe missed"; }
+                else { error = "unknown probe result"; }
+                WARNING_LOG(callsign + " " + error + " at " + std::to_string(degreesLatitude) + ", " + std::to_string(degreesLongitude) + ", " + std::to_string(metersAltitude));
+            }
 
             return std::numeric_limits<double>::quiet_NaN();
         }
-        if (probe.is_wet)
+        if (probe.is_wet && m_logMessageCount < 100)
         {
+            m_logMessageCount++;
             DEBUG_LOG(callsign + " probe hit water at " + std::to_string(degreesLatitude) + ", " + std::to_string(degreesLongitude) + ", " + std::to_string(metersAltitude));
         }
 

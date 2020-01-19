@@ -39,6 +39,7 @@ namespace XSwiftBus
 
     private:
         XPLMProbeRef m_ref = nullptr;
+        mutable int m_logMessageCount = 0;
     };
 } // ns
 
