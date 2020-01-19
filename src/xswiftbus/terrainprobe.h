@@ -10,6 +10,7 @@
 #define BLACKSIM_XSWIFTBUS_ELEVATIONPROVIDER_H
 
 #include <XPLM/XPLMScenery.h>
+#include <string>
 
 namespace XSwiftBus
 {
@@ -34,7 +35,7 @@ namespace XSwiftBus
         //! Get the elevation in meters at the given point in OpenGL space.
         //! \note Due to the Earth's curvature, the OpenGL vertical axis may not be exactly perpendicular to the surface of the geoid.
         //! \return NaN if no ground was detected.
-        double getElevation(double degreesLatitude, double degreesLongitude, double metersAltitude) const;
+        double getElevation(double degreesLatitude, double degreesLongitude, double metersAltitude, const std::string &callsign) const;
 
     private:
         XPLMProbeRef m_ref = nullptr;
