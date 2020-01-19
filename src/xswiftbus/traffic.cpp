@@ -509,7 +509,7 @@ namespace XSwiftBus
 
             const double latDeg = plane->position.lat;
             const double lonDeg = plane->position.lon;
-            double groundElevation = plane->terrainProbe.getElevation(latDeg, lonDeg, plane->position.elevation);
+            double groundElevation = plane->terrainProbe.getElevation(latDeg, lonDeg, plane->position.elevation, requestedCallsign);
             if (std::isnan(groundElevation)) { groundElevation = 0.0; }
             double fudgeFactor = 3.0;
             bool hasOffset = XPMPGetVerticalOffset(plane->id, &fudgeFactor);
@@ -528,11 +528,11 @@ namespace XSwiftBus
         if (planeIt != m_planesByCallsign.end())
         {
             const Plane *plane = planeIt->second;
-            return plane->terrainProbe.getElevation(latitudeDeg, longitudeDeg, altitudeMeters);
+            return plane->terrainProbe.getElevation(latitudeDeg, longitudeDeg, altitudeMeters, callsign);
         }
         else
         {
-            return m_terrainProbe.getElevation(latitudeDeg, longitudeDeg, altitudeMeters);
+            return m_terrainProbe.getElevation(latitudeDeg, longitudeDeg, altitudeMeters, callsign + " (plane not found)");
         }
     }
 
