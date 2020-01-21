@@ -364,6 +364,11 @@ namespace BlackCore
         //! Get the facade
         CCoreFacade *getCoreFacade() { return m_coreFacade.data(); }
 
+        //! Local or DBus application? @{
+        bool isLocalContext() const;
+        bool isDBusContext()  const;
+        //! @}
+
         //! Get the facade
         const CCoreFacade *getCoreFacade() const { return m_coreFacade.data(); }
         //! @}

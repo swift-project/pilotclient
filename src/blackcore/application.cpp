@@ -903,6 +903,16 @@ namespace BlackCore
         return this->startWebDataServices();
     }
 
+    bool CApplication::isLocalContext() const
+    {
+        return this->getIContextApplication() && this->getIContextApplication()->isUsingImplementingObject();
+    }
+
+    bool CApplication::isDBusContext() const
+    {
+        return this->getIContextApplication() && !this->getIContextApplication()->isUsingImplementingObject() && !this->getIContextApplication()->isEmptyObject();
+    }
+
     CStatusMessageList CApplication::startCoreFacadeAndWebDataServices()
     {
         Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Call this function after parsing");

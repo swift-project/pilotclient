@@ -362,6 +362,7 @@ void SwiftGuiStd::setContextAvailability()
         if (m_coreAvailable)
         {
             // core has just become available (startup)
+            // this HERE is called with and without DBus
             sGui->getIContextApplication()->synchronizeLogSubscriptions();
             sGui->getIContextApplication()->synchronizeLocalSettings();
         }
