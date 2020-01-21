@@ -108,7 +108,7 @@ namespace BlackCore
                 m_device = inputDevice;
 
                 QAudioFormat inputFormat;
-                inputFormat.setSampleRate(m_sampleRate);
+                inputFormat.setSampleRate(m_sampleRate); // normally 48000
                 inputFormat.setChannelCount(1);
                 inputFormat.setSampleSize(16);
                 inputFormat.setSampleType(QAudioFormat::SignedInt);
