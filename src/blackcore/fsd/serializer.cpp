@@ -217,16 +217,41 @@ namespace BlackCore
         template<>
         ClientQueryType fromQString(const QString &str)
         {
-            if (str == "ATC")       return ClientQueryType::IsValidATC;
-            else if (str == "CAPS") return ClientQueryType::Capabilities;
-            else if (str == "C?")   return ClientQueryType::Com1Freq;
-            else if (str == "RN")   return ClientQueryType::RealName;
-            else if (str == "SV")   return ClientQueryType::Server;
-            else if (str == "ATIS") return ClientQueryType::ATIS;
-            else if (str == "IP")   return ClientQueryType::PublicIP;
-            else if (str == "INF")  return ClientQueryType::INF;
-            else if (str == "FP")   return ClientQueryType::FP;
-            else if (str == "ACC")  return ClientQueryType::AircraftConfig;
+            if (str == "ATC")  return ClientQueryType::IsValidATC;
+            if (str == "CAPS") return ClientQueryType::Capabilities;
+            if (str == "C?")   return ClientQueryType::Com1Freq;
+            if (str == "RN")   return ClientQueryType::RealName;
+            if (str == "SV")   return ClientQueryType::Server;
+            if (str == "ATIS") return ClientQueryType::ATIS;
+            if (str == "IP")   return ClientQueryType::PublicIP;
+            if (str == "INF")  return ClientQueryType::INF;
+            if (str == "FP")   return ClientQueryType::FP;
+            if (str == "ACC")  return ClientQueryType::AircraftConfig;
+
+            // intentionally ignored (ATC ONLY)
+            // discussion: https://discordapp.com/channels/539048679160676382/539925070550794240/669186795790925848
+            if (str == "BC")   return ClientQueryType::Unknown;
+            if (str == "BY")   return ClientQueryType::Unknown; // CCP_Break
+            if (str == "DI")   return ClientQueryType::Unknown; // CCP_ASRC_DI
+            if (str == "DP")   return ClientQueryType::Unknown; // CCP_PushToDepartureList
+            if (str == "DR")   return ClientQueryType::Unknown; // CCP_DropTrack
+            if (str == "FA")   return ClientQueryType::Unknown;
+            if (str == "HC")   return ClientQueryType::Unknown; // CCP_HandoffCancelled
+            if (str == "HI")   return ClientQueryType::Unknown; // CCP_NoBreak
+            if (str == "HT")   return ClientQueryType::Unknown; // CCP_HandoffTo
+            if (str == "ID")   return ClientQueryType::Unknown; // CCP_ASRC_ID
+            if (str == "IH")   return ClientQueryType::Unknown; // CCP_IHave
+            if (str == "IT")   return ClientQueryType::Unknown; // CCP_StartTrack
+            if (str == "PT")   return ClientQueryType::Unknown; // CCP_Pointout
+            if (str == "SC")   return ClientQueryType::Unknown;
+            if (str == "ST")   return ClientQueryType::Unknown; // CCP_PushStrip
+            if (str == "TA")   return ClientQueryType::Unknown;
+            if (str == "VT")   return ClientQueryType::Unknown;
+            if (str == "VER")  return ClientQueryType::Unknown; // CCP_Version
+            if (str == "WH")   return ClientQueryType::Unknown; // CCP_WhoHas
+            // -- help
+            if (str == "HLP")   return ClientQueryType::Unknown; // CCP_HelpOn
+            if (str == "NOHLP") return ClientQueryType::Unknown; // CCP_HelpOff
 
             // we should NOT get here
             const QByteArray msg = QStringLiteral("Unknown ClientQueryType '%1'").arg(str).toLatin1();
