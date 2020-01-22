@@ -139,16 +139,19 @@ namespace BlackCore
                 this->initVoiceClient();
             }
 
-            const CSettings as = m_audioSettings.getThreadLocal();
-            this->setVoiceOutputVolume(as.getOutVolume());
-            m_selcalPlayer = new CSelcalPlayer(CAudioDeviceInfo::getDefaultOutputDevice(), this);
+            // here we are in a base class of one context
+            // the whole context/facade system is not initialized when this code here is executed
 
-            this->changeDeviceSettings();
             QPointer<CContextAudioBase> myself(this);
             QTimer::singleShot(5000, this, [ = ]
             {
                 if (!myself || !sApp || sApp->isShuttingDown()) { return; }
-                // myself->changeDeviceSettings();
+
+                const CSettings as = m_audioSettings.getThreadLocal();
+                this->setVoiceOutputVolume(as.getOutVolume());
+                m_selcalPlayer = new CSelcalPlayer(CAudioDeviceInfo::getDefaultOutputDevice(), this);
+
+                myself->changeDeviceSettings();
                 myself->onChangedAudioSettings();
                 myself->onChangedLocalDevices(m_activeLocalDevices);
             });
@@ -370,6 +373,7 @@ namespace BlackCore
         void CContextAudioBase::setCurrentAudioDevices(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice)
         {
             if (!m_voiceClient) { return; }
+            if (!sApp)          { return; }
 
             if (!inputDevice.getName().isEmpty() && inputDevice.getName() != m_inputDeviceSetting.get())
             {
@@ -609,6 +613,12 @@ namespace BlackCore
                 break;
             }
         }
+
+        bool CContextAudioBase::isRunningWithLocalCore()
+        {
+            return sApp && sApp->isLocalContext();
+        }
+
     } // ns
 } // ns
 

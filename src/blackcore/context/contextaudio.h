@@ -339,6 +339,9 @@ namespace BlackCore
             int m_outVolumeBeforeMute = 90;
             static constexpr int MinUnmuteVolume = 20; //!< minimum volume when unmuted
 
+            //! Do we use a local core
+            static bool isRunningWithLocalCore();
+
             // settings
             BlackMisc::CSetting<BlackMisc::Audio::TSettings>   m_audioSettings { this, &CContextAudioBase::onChangedAudioSettings };
             BlackMisc::CSetting<BlackMisc::Audio::TVoiceSetup> m_voiceSettings { this, &CContextAudioBase::onChangedVoiceSettings };
