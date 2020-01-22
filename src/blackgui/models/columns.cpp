@@ -121,14 +121,14 @@ namespace BlackGui
         QString CColumns::propertyIndexToColumnName(const CPropertyIndex &propertyIndex, bool i18n) const
         {
             const int column = this->propertyIndexToColumn(propertyIndex);
-            Q_UNUSED(i18n); // not implemented
+            Q_UNUSED(i18n) // not implemented
             return m_columns.at(column).getColumnName();
         }
 
         QString CColumns::columnToName(int column, bool i18n) const
         {
             Q_ASSERT(isValidColumn(column));
-            Q_UNUSED(i18n); // not implemented
+            Q_UNUSED(i18n) // not implemented
             return m_columns.at(column).getColumnName();
         }
 
