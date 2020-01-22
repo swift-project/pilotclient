@@ -126,6 +126,7 @@ namespace BlackCore
                 void startAudio(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
                 Q_INVOKABLE void startAudio(const QString &inputDeviceName, const QString &outputDeviceName);
                 void stopAudio();
+                void restartAudio();
                 //! @}
 
                 //! The device's volume 0..1 @{

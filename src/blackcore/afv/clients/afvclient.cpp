@@ -203,7 +203,7 @@ namespace BlackCore
                 {
                     // Method needs to be executed in the object thread since it will create new QObject children
                     QPointer<CAfvClient> myself(this);
-                    QMetaObject::invokeMethod(this, [ = ]() { if (myself) disconnectFrom(stop); });
+                    QMetaObject::invokeMethod(this, [ = ]() { if (myself) { disconnectFrom(stop); }});
                     return;
                 }
 
@@ -260,7 +260,8 @@ namespace BlackCore
                 if (QThread::currentThread() != this->thread())
                 {
                     // Method needs to be executed in the object thread since it will create new QObject children
-                    QMetaObject::invokeMethod(this, [ = ]() { startAudio(inputDevice, outputDevice); });
+                    QPointer<CAfvClient> myself(this);
+                    QMetaObject::invokeMethod(this, [ = ]() { if (myself) { startAudio(inputDevice, outputDevice); }});
                     return;
                 }
 
@@ -362,6 +363,23 @@ namespace BlackCore
                 emit this->inputVolumePeakVU(0.0);
                 emit this->outputVolumePeakVU(0.0);
                 emit this->stoppedAudio();
+            }
+
+            void CAfvClient::restartAudio()
+            {
+                if (!m_isStarted)
+                {
+                    // just need to start
+                    this->startAudio();
+                    return;
+                }
+
+                this->stopAudio();
+                QPointer<CAfvClient> myself(this);
+                QTimer::singleShot(1000, this, [ = ]
+                {
+                    if (myself) { myself->startAudio(); }
+                });
             }
 
             double CAfvClient::getDeviceInputVolume() const
