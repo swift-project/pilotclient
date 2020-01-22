@@ -230,7 +230,7 @@ namespace BlackCore
 
             void CAfvClient::setBypassEffects(bool value)
             {
-                QMutexLocker lock(&m_mutex);
+                QMutexLocker lock(&m_mutexSampleProviders);
                 if (m_soundcardSampleProvider)
                 {
                     m_soundcardSampleProvider->setBypassEffects(value);
@@ -285,26 +285,33 @@ namespace BlackCore
                 // threadsafe block
                 const double outputVolume = this->getOutputVolume();
                 {
-                    QMutexLocker lock{&m_mutex};
-                    if (m_soundcardSampleProvider)
+                    // lock block 1
                     {
-                        m_soundcardSampleProvider->disconnect();
-                        m_soundcardSampleProvider->deleteLater();
+                        QMutexLocker lock{&m_mutexSampleProviders};
+                        if (m_soundcardSampleProvider)
+                        {
+                            m_soundcardSampleProvider->disconnect();
+                            m_soundcardSampleProvider->deleteLater();
+                        }
+                        m_soundcardSampleProvider = new CSoundcardSampleProvider(SampleRate, allTransceiverIds(), this);
+                        connect(m_soundcardSampleProvider, &CSoundcardSampleProvider::receivingCallsignsChanged, this, &CAfvClient::onReceivingCallsignsChanged);
+
+                        if (m_outputSampleProvider) { m_outputSampleProvider->deleteLater(); }
+                        m_outputSampleProvider = new CVolumeSampleProvider(m_soundcardSampleProvider, this);
+                        m_outputSampleProvider->setVolume(outputVolume);
                     }
-                    m_soundcardSampleProvider = new CSoundcardSampleProvider(SampleRate, allTransceiverIds(), this);
-                    connect(m_soundcardSampleProvider, &CSoundcardSampleProvider::receivingCallsignsChanged, this, &CAfvClient::onReceivingCallsignsChanged);
 
-                    if (m_outputSampleProvider) { m_outputSampleProvider->deleteLater(); }
-                    m_outputSampleProvider = new CVolumeSampleProvider(m_soundcardSampleProvider, this);
-                    m_outputSampleProvider->setVolume(outputVolume);
+                    // lock block 2
+                    {
+                        QMutexLocker lock(&m_mutex);
 
-                    m_output->start(useOutputDevice, m_outputSampleProvider);
-                    m_input->start(useInputDevice);
+                        m_output->start(useOutputDevice, m_outputSampleProvider);
+                        m_input->start(useInputDevice);
+                        m_startDateTimeUtc = QDateTime::currentDateTimeUtc();
 
-                    m_startDateTimeUtc = QDateTime::currentDateTimeUtc();
-
-                    // runs in correct thread
-                    m_voiceServerTimer->start(PositionUpdatesMs); // start for preset values
+                        // runs in correct thread
+                        m_voiceServerTimer->start(PositionUpdatesMs); // start for preset values
+                    }
                 }
 
                 this->setReceiveAudio(true); // threadsafe
@@ -513,7 +520,7 @@ namespace BlackCore
                     if (m_connection) { m_connection->updateTransceivers(callsign, newEnabledTransceivers); }
                 }
                 {
-                    QMutexLocker lock(&m_mutex);
+                    QMutexLocker lock(&m_mutexSampleProviders);
                     if (m_soundcardSampleProvider) { m_soundcardSampleProvider->updateRadioTransceivers(newEnabledTransceivers); }
                 }
             }
@@ -588,7 +595,7 @@ namespace BlackCore
 
                 // thread safe block
                 {
-                    QMutexLocker lock(&m_mutex);
+                    QMutexLocker lock(&m_mutexSampleProviders);
                     if (m_soundcardSampleProvider)
                     {
                         m_soundcardSampleProvider->pttUpdate(active, m_transmittingTransceivers);
@@ -617,7 +624,19 @@ namespace BlackCore
 
             bool CAfvClient::setInputVolumeDb(double valueDb)
             {
-                if (valueDb > MaxDbIn) { valueDb = MaxDbIn; }
+                if (!CThreadUtils::isCurrentThreadObjectThread(this))
+                {
+                    // call in background thread of AFVClient to avoid lock issues
+                    QPointer<CAfvClient> myself(this);
+                    QTimer::singleShot(0, this, [ = ]
+                    {
+                        if (!myself || !CAfvClient::hasContexts()) { return; }
+                        myself->setInputVolumeDb(valueDb);
+                    });
+                    return true; // not exactly "true" as we do it async
+                }
+
+                if (valueDb > MaxDbIn)      { valueDb = MaxDbIn; }
                 else if (valueDb < MinDbIn) { valueDb = MinDbIn; }
 
                 QMutexLocker lock(&m_mutex);
@@ -728,7 +747,7 @@ namespace BlackCore
                     const RxTransceiverDto com1 = { 0, transceivers.size() > 0 ?  transceivers[0].frequencyHz : UniCom, 1.0 };
                     const RxTransceiverDto com2 = { 1, transceivers.size() > 1 ?  transceivers[1].frequencyHz : UniCom, 1.0 };
 
-                    QMutexLocker lock(&m_mutex);
+                    QMutexLocker lock(&m_mutexSampleProviders);
                     m_soundcardSampleProvider->addOpusSamples(audioData, { com1, com2 });
                     return;
                 }
@@ -774,7 +793,7 @@ namespace BlackCore
                 audioData.lastPacket      = dto.lastPacket;
                 audioData.sequenceCounter = dto.sequenceCounter;
 
-                QMutexLocker lock(&m_mutex);
+                QMutexLocker lock(&m_mutexSampleProviders);
                 m_soundcardSampleProvider->addOpusSamples(audioData, QVector<RxTransceiverDto>(dto.transceivers.begin(), dto.transceivers.end()));
             }
 
@@ -807,21 +826,21 @@ namespace BlackCore
 
             QString CAfvClient::getReceivingCallsignsStringCom2() const
             {
-                QMutexLocker lock(&m_mutex);
+                QMutexLocker lock(&m_mutexSampleProviders);
                 if (!m_soundcardSampleProvider) return {};
                 return m_soundcardSampleProvider->getReceivingCallsignsString(comUnitToTransceiverId(CComSystem::Com2));
             }
 
             CCallsignSet CAfvClient::getReceivingCallsignsCom1() const
             {
-                QMutexLocker lock(&m_mutex);
+                QMutexLocker lock(&m_mutexSampleProviders);
                 if (!m_soundcardSampleProvider) return {};
                 return m_soundcardSampleProvider->getReceivingCallsigns(comUnitToTransceiverId(CComSystem::Com1));
             }
 
             CCallsignSet CAfvClient::getReceivingCallsignsCom2() const
             {
-                QMutexLocker lock(&m_mutex);
+                QMutexLocker lock(&m_mutexSampleProviders);
                 if (!m_soundcardSampleProvider) return {};
                 return m_soundcardSampleProvider->getReceivingCallsigns(comUnitToTransceiverId(CComSystem::Com2));
             }
@@ -829,7 +848,7 @@ namespace BlackCore
             QStringList CAfvClient::getReceivingCallsignsStringCom1Com2() const
             {
                 QStringList coms;
-                QMutexLocker lock(&m_mutex);
+                QMutexLocker lock(&m_mutexSampleProviders);
                 if (!m_soundcardSampleProvider) { return {{ QString(), QString()}}; }
                 coms << m_soundcardSampleProvider->getReceivingCallsignsString(comUnitToTransceiverId(CComSystem::Com1));
                 coms << m_soundcardSampleProvider->getReceivingCallsignsString(comUnitToTransceiverId(CComSystem::Com2));
@@ -1009,7 +1028,7 @@ namespace BlackCore
                     }
 
                     {
-                        QMutexLocker lock(&m_mutex);
+                        QMutexLocker lock(&m_mutexSampleProviders);
                         if (m_soundcardSampleProvider) { m_soundcardSampleProvider->updateRadioTransceivers(newEnabledTransceivers); }
                     }
                 }
@@ -1168,7 +1187,19 @@ namespace BlackCore
 
             bool CAfvClient::setOutputVolumeDb(double valueDb)
             {
-                if (valueDb > MaxDbOut) { valueDb = MaxDbOut; }
+                if (!CThreadUtils::isCurrentThreadObjectThread(this))
+                {
+                    // call in background thread of AFVClient to avoid lock issues
+                    QPointer<CAfvClient> myself(this);
+                    QTimer::singleShot(0, this, [ = ]
+                    {
+                        if (!myself || !CAfvClient::hasContexts()) { return; }
+                        myself->setOutputVolumeDb(valueDb);
+                    });
+                    return true; // not exactly "true" as we do it async
+                }
+
+                if (valueDb > MaxDbOut)      { valueDb = MaxDbOut; }
                 else if (valueDb < MinDbOut) { valueDb = MinDbOut; }
 
                 double outputVolume = 0;
@@ -1185,11 +1216,18 @@ namespace BlackCore
                 }
 
                 // do NOT check on "changed", can be false, but "m_outputSampleProvider" is initialized
-                QMutexLocker lock(&m_mutex);
+                // HINT: I do this tryLock here because I had deadlocks here, and I need to further investigate
+                // As deadlocks mean (for the user) he needs to terminate the client I keep "trylock" that for now
+                if (!m_mutexSampleProviders.tryLock(1000))
+                {
+                    return false;
+                }
+
                 if (m_outputSampleProvider)
                 {
                     changed = m_outputSampleProvider->setVolume(outputVolume);
                 }
+                m_mutexSampleProviders.unlock();
                 return changed;
             }
 
