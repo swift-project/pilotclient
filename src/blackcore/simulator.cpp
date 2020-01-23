@@ -261,6 +261,7 @@ namespace BlackCore
         this->clearAllRemoteAircraftData(); // reset
         m_averageFps = -1.0;
         m_simTimeRatio = 1.0;
+        m_trackMilesShort = 0.0;
     }
 
     bool ISimulator::isUpdateAllRemoteAircraft(qint64 currentTimestamp) const
@@ -1037,6 +1038,7 @@ namespace BlackCore
     {
         m_averageFps = -1.0;
         m_simTimeRatio = 1.0;
+        m_trackMilesShort = 0.0;
         return true;
     }
 

@@ -14,6 +14,7 @@
 #include <XPLM/XPLMPlanes.h>
 #include <XPLM/XPLMUtilities.h>
 
+#include <cmath>
 #include <cstring>
 #include <algorithm>
 
@@ -28,31 +29,35 @@ namespace XSwiftBus
     {
         DataRef<xplane::data::sim::operation::misc::frame_rate_period> m_thisFramePeriod;
         DataRef<xplane::data::sim::time::framerate_period> m_thisFramePeriodXP11;
+        DataRef<xplane::data::sim::flightmodel::position::groundspeed> m_groundSpeed;
+
         std::vector<float> m_samples;
         float m_total = 0;
         float m_totalOverBudget = 0;
+        float m_totalMetersShort = 0;
         size_t m_lastSampleIndex = 0;
         static constexpr size_t c_maxSampleCount = 500;
         static constexpr float c_framePeriodBudget = 0.05f;
 
         FramePeriodSampler() : CDrawable(xplm_Phase_LastCockpit, false) {}
 
-        std::pair<float, float> getFrameStats()
+        std::tuple<float, float, float> getFrameStats()
         {
             if (m_total == 0) { return {}; }
             const float fps = m_samples.size() / m_total;
             const float ratio = 1 - m_totalOverBudget / m_total;
+            const float miles = m_totalMetersShort / 1852.0f;
             m_total = 0;
             m_totalOverBudget = 0;
             m_samples.clear();
             m_lastSampleIndex = 0;
-            return { fps, ratio };
+            return std::make_tuple(fps, ratio, miles);
         }
 
     protected:
         virtual void draw() override // called once per frame
         {
-            float current = m_thisFramePeriodXP11.isValid() ? m_thisFramePeriodXP11.get() : m_thisFramePeriod.get();
+            const float current = m_thisFramePeriodXP11.isValid() ? m_thisFramePeriodXP11.get() : m_thisFramePeriod.get();
 
             ++m_lastSampleIndex %= c_maxSampleCount;
             if (m_samples.size() == c_maxSampleCount)
@@ -72,6 +77,9 @@ namespace XSwiftBus
             {
                 m_totalOverBudget += current - c_framePeriodBudget;
             }
+
+            const float metersShort = m_groundSpeed.get() * std::max(0.0f, current - c_framePeriodBudget);
+            m_totalMetersShort += metersShort;
         }
     };
 
@@ -110,11 +118,20 @@ namespace XSwiftBus
         return XSWIFTBUS_COMMIT;
     }
 
-    std::pair<double, double> CService::getFrameStats()
+    std::tuple<double, double, double> CService::getFrameStats()
     {
         if (!m_framePeriodSampler) { return {}; }
         const auto result = m_framePeriodSampler->getFrameStats();
-        return { static_cast<double>(result.first), static_cast<double>(result.second) };
+        return std::make_tuple(static_cast<double>(std::get<0>(result)), static_cast<double>(std::get<1>(result)), static_cast<double>(std::get<2>(result)));
+    }
+
+    void CService::resetMilesLost()
+    {
+        if (m_framePeriodSampler)
+        {
+            m_framePeriodSampler->m_totalMetersShort = 0;
+            m_framePeriodSampler->m_totalSecondsLate = 0;
+        }
     }
 
     void CService::addTextMessage(const std::string &text, double red, double green, double blue)
@@ -570,8 +587,9 @@ namespace XSwiftBus
                     const auto stats = getFrameStats();
                     CDBusMessage reply = CDBusMessage::createReply(sender, serial);
                     reply.beginArgumentWrite();
-                    reply.appendArgument(stats.first);
-                    reply.appendArgument(stats.second);
+                    reply.appendArgument(std::get<0>(stats));
+                    reply.appendArgument(std::get<1>(stats));
+                    reply.appendArgument(std::get<2>(stats));
                     sendDBusMessage(reply);
                 });
             }

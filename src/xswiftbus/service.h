@@ -113,8 +113,12 @@ namespace XSwiftBus
         //! Frames-per-second, averaged over the last 500 frames,
         //! or since this function was last called, whichever is later.
         //! Second part is the average simulation time ratio during the same period.
+        //! Third part is the total track miles over-reported during the same period.
         //! \return Zero if no samples were collected since this function was last called.
-        std::pair<double, double> getFrameStats();
+        std::tuple<double, double, double> getFrameStats();
+
+        //! Reset the monitoring of total track miles lost due to low frame rate.
+        void resetMilesLost();
 
         //! Get aircraft latitude in degrees
         double getLatitudeDeg() const { return m_latitude.get(); }

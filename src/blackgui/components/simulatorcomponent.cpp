@@ -153,7 +153,10 @@ namespace BlackGui
                     this->addOrUpdateLiveDataByName(QStringLiteral("FPS"), fps < 0 ? QStringLiteral("N/A") : QString::number(fps, 'f', 1), CIconList::allIcons().findByIndex(CIcons::ApplicationSimulator));
 
                     const double ratio = sGui->getISimulator()->getSimTimeRatio();
-                    this->addOrUpdateLiveDataByName(QStringLiteral("Time Ratio"), QString::number(ratio), CIconList::allIcons().findByIndex(CIcons::ApplicationSimulator));
+                    this->addOrUpdateLiveDataByName(QStringLiteral("Time Ratio"), QString::number(ratio, 'f', 2), CIconList::allIcons().findByIndex(CIcons::ApplicationSimulator));
+
+                    const double miles = sGui->getISimulator()->getTrackMilesShort();
+                    this->addOrUpdateLiveDataByName(QStringLiteral("Miles Short"), QString::number(miles, 'f', 1), CIconList::allIcons().findByIndex(CIcons::ApplicationSimulator));
                 }
             }
 
