@@ -161,6 +161,7 @@ namespace XSwiftBus
         if (m_service)
         {
             m_service->onAircraftModelChanged();
+            m_service->resetMilesLost();
         }
     }
 
@@ -169,6 +170,7 @@ namespace XSwiftBus
         if (m_service)
         {
             m_service->updateAirportsInRange();
+            m_service->resetMilesLost();
         }
     }
 

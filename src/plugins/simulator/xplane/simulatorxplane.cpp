@@ -369,7 +369,7 @@ namespace BlackSimPlugin
                 if ((m_slowTimerCalls % 5u) == 0u)
                 {
                     // reading FPS resets average, so we only monitor over some time
-                    m_serviceProxy->getFrameStats(&m_averageFps, &m_simTimeRatio);
+                    m_serviceProxy->getFrameStats(&m_averageFps, &m_simTimeRatio, &m_trackMilesShort);
                 }
             }
         }

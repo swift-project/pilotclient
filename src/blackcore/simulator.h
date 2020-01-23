@@ -221,6 +221,9 @@ namespace BlackCore
         //! Ratio of simulation time to real time, due to low FPS
         double getSimTimeRatio() const { return m_simTimeRatio; }
 
+        //! Number of track miles over-reported, due to low FPS
+        double getTrackMilesShort() const { return m_trackMilesShort; }
+
         //! Send situation/parts for testing
         virtual bool testSendSituationAndParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) = 0;
 
@@ -583,6 +586,7 @@ namespace BlackCore
         double m_statsUpdateAircraftTimeAvgMs   = 0;      //!< statistics average update time
         double m_averageFps                     = -1.0;   //!< FPS
         double m_simTimeRatio                   = 1.0;    //!< ratio of simulation time to real time, due to low FPS (X-Plane)
+        double m_trackMilesShort                = 0.0;    //!< difference between real and reported groundspeed, multiplied by time
         qint64 m_updateAllRemoteAircraftUntil   = 0;      //!< force an update of all remote aircraft, used when own aircraft is moved, paused to make sure all remote aircraft are updated
         qint64 m_statsUpdateAircraftTimeTotalMs = 0;      //!< statistics total update time
         qint64 m_statsCurrentUpdateTimeMs       = 0;      //!< statistics current update time
