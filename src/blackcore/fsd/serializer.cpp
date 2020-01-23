@@ -44,6 +44,10 @@ namespace BlackCore
         template<>
         AtcRating fromQString(const QString &str)
         {
+            // empty string intentionally ignored, also for UNIT test and 3rd parth networks
+            if (str.isEmpty()) return AtcRating::Unknown;
+
+            // valid types
             if (str == "1") return AtcRating::Observer;
             else if (str == "2")  return AtcRating::Student;
             else if (str == "3")  return AtcRating::Student2;
@@ -83,6 +87,10 @@ namespace BlackCore
         template<>
         PilotRating fromQString(const QString &str)
         {
+            // empty string intentionally ignored, also for UNIT test and 3rd parth networks
+            if (str.isEmpty()) return PilotRating::Unknown;
+
+            // valid types
             if (str == "0") return PilotRating::Unknown;
             else if (str == "1") return PilotRating::Student;
             else if (str == "2") return PilotRating::VFR;
@@ -129,6 +137,10 @@ namespace BlackCore
         template<>
         SimType fromQString(const QString &str)
         {
+            // empty string intentionally ignored, also for UNIT test and 3rd parth networks
+            if (str.isEmpty()) return SimType::Unknown;
+
+            // valid types
             if (str == "0") return SimType::Unknown;
             else if (str == "1") return SimType::MSFS95;
             else if (str == "2") return SimType::MSFS98;
@@ -178,6 +190,10 @@ namespace BlackCore
         BlackMisc::Network::CFacilityType fromQString(const QString &str)
         {
             using namespace BlackMisc::Network;
+
+            // empty string intentionally ignored, also for UNIT test and 3rd parth networks
+            if (str.isEmpty()) return CFacilityType::Unknown;
+
             if (str == "0") return CFacilityType::OBS;
             if (str == "1") return CFacilityType::FSS;
             else if (str == "2") return CFacilityType::DEL;
@@ -217,6 +233,10 @@ namespace BlackCore
         template<>
         ClientQueryType fromQString(const QString &str)
         {
+            // empty string intentionally ignored, also for UNIT test, 3rd party networks
+            if (str.isEmpty()) return ClientQueryType::Unknown;
+
+            // valid queries
             if (str == "ATC")  return ClientQueryType::IsValidATC;
             if (str == "CAPS") return ClientQueryType::Capabilities;
             if (str == "C?")   return ClientQueryType::Com1Freq;
@@ -282,7 +302,8 @@ namespace BlackCore
             else if (str == QLatin1String("V"))  return FlightType::VFR;
             else if (str == QLatin1String("S"))  return FlightType::SVFR;
             else if (str == QLatin1String("D"))  return FlightType::DVFR;
-            else                                 return FlightType::IFR;
+
+            return FlightType::IFR;
         }
 
         template<>
@@ -315,7 +336,8 @@ namespace BlackCore
             if (str == "S")       return CTransponder::StateStandby;
             else if (str == "N")  return CTransponder::ModeC;
             else if (str == "Y")  return CTransponder::StateIdent;
-            else                  return CTransponder::StateStandby;
+
+            return CTransponder::StateStandby;
         }
 
         template<>
