@@ -213,6 +213,7 @@ namespace BlackGui
         void CAudioDeviceVolumeSetupComponent::setInfo(const QString &info)
         {
             ui->le_Info->setText(info);
+            ui->le_Info->setToolTip(info);
         }
 
         void CAudioDeviceVolumeSetupComponent::setTransmitReceiveInUi(bool tx1, bool rec1, bool tx2, bool rec2)
