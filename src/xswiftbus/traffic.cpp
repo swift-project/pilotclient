@@ -509,8 +509,12 @@ namespace XSwiftBus
 
             const double latDeg = plane->position.lat;
             const double lonDeg = plane->position.lon;
-            double groundElevation = plane->terrainProbe.getElevation(latDeg, lonDeg, plane->position.elevation, requestedCallsign);
-            if (std::isnan(groundElevation)) { groundElevation = 0.0; }
+            double groundElevation = 0.0;
+            if (getSettings().isTerrainProbeEnabled())
+            {
+                groundElevation = plane->terrainProbe.getElevation(latDeg, lonDeg, plane->position.elevation, requestedCallsign);
+                if (std::isnan(groundElevation)) { groundElevation = 0.0; }
+            }
             double fudgeFactor = 3.0;
             bool hasOffset = XPMPGetVerticalOffset(plane->id, &fudgeFactor);
 
@@ -524,6 +528,8 @@ namespace XSwiftBus
 
     double CTraffic::getElevationAtPosition(const std::string &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters) const
     {
+        if (getSettings().isTerrainProbeEnabled()) { return std::numeric_limits<double>::quiet_NaN(); }
+
         auto planeIt = m_planesByCallsign.find(callsign);
         if (planeIt != m_planesByCallsign.end())
         {

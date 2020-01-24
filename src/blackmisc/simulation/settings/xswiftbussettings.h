@@ -105,6 +105,7 @@ namespace BlackMisc
                     BLACK_METAMEMBER(followAircraftDistanceM),
                     BLACK_METAMEMBER(logRenderPhases),
                     BLACK_METAMEMBER(tcasEnabled),
+                    BLACK_METAMEMBER(terrainProbeEnabled),
                     BLACK_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForComparison | DisabledForHashing)
                 );
             };

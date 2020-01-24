@@ -66,16 +66,6 @@
      </layout>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QDialogButtonBox" name="bb_OkCancel">
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-     <property name="centerButtons">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="0">
     <widget class="QGroupBox" name="gb_XPSettings">
      <property name="title">
@@ -158,14 +148,42 @@
         </property>
        </widget>
       </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="lbl_TcasEnabled">
+        <property name="text">
+         <string>TCAS</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QCheckBox" name="cb_TcasEnabled">
+        <property name="text">
+         <string>show traffic on TCAS</string>
+        </property>
+       </widget>
+      </item>
       <item row="7" column="0">
+       <widget class="QLabel" name="lbl_DebugMode">
+        <property name="text">
+         <string>Logging</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QCheckBox" name="cb_LogRenderPhases">
+        <property name="text">
+         <string>log.render phases</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
        <widget class="QLabel" name="lbl_MessageBox">
         <property name="text">
          <string>Message box </string>
         </property>
        </widget>
       </item>
-      <item row="7" column="1">
+      <item row="8" column="1">
        <widget class="QWidget" name="wi_MessageBox" native="true">
         <layout class="QHBoxLayout" name="hl_MessageBox">
          <property name="leftMargin">
@@ -197,13 +215,36 @@
        </widget>
       </item>
       <item row="9" column="0">
+       <widget class="QLabel" name="lbl_MessageBoxDuration">
+        <property name="text">
+         <string>Box disappears after</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1">
+       <widget class="QSpinBox" name="sb_MessageBoxDuration">
+        <property name="suffix">
+         <string>ms</string>
+        </property>
+        <property name="minimum">
+         <number>1000</number>
+        </property>
+        <property name="maximum">
+         <number>25000</number>
+        </property>
+        <property name="singleStep">
+         <number>250</number>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="0">
        <widget class="QLabel" name="lbl_MessageBoxMargins">
         <property name="text">
          <string>Box margins px.</string>
         </property>
        </widget>
       </item>
-      <item row="9" column="1">
+      <item row="10" column="1">
        <widget class="QWidget" name="wi_Margins" native="true">
         <layout class="QGridLayout" name="gl_MessageBoxMargins">
          <property name="leftMargin">
@@ -277,14 +318,14 @@
         </layout>
        </widget>
       </item>
-      <item row="10" column="0">
+      <item row="11" column="0">
        <widget class="QLabel" name="lbl_NightTextureMode">
         <property name="text">
          <string>Night texture</string>
         </property>
        </widget>
       </item>
-      <item row="10" column="1">
+      <item row="11" column="1">
        <widget class="QComboBox" name="cb_NightTextureMode">
         <item>
          <property name="text">
@@ -303,58 +344,31 @@
         </item>
        </widget>
       </item>
-      <item row="6" column="1">
-       <widget class="QCheckBox" name="cb_LogRenderPhases">
-        <property name="text">
-         <string>log.render phases</string>
-        </property>
-       </widget>
-      </item>
       <item row="6" column="0">
-       <widget class="QLabel" name="lbl_DebugMode">
+       <widget class="QLabel" name="lbl_TerrainProbeEnabled">
         <property name="text">
-         <string>Logging</string>
+         <string>Terrain probe</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="1">
-       <widget class="QCheckBox" name="cb_TcasEnabled">
+      <item row="6" column="1">
+       <widget class="QCheckBox" name="cb_TerrainProbeEnabled">
         <property name="text">
-         <string>show traffic on TCAS</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="lbl_TcasEnabled">
-        <property name="text">
-         <string>TCAS</string>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="1">
-       <widget class="QSpinBox" name="sb_MessageBoxDuration">
-        <property name="suffix">
-         <string>ms</string>
-        </property>
-        <property name="minimum">
-         <number>1000</number>
-        </property>
-        <property name="maximum">
-         <number>25000</number>
-        </property>
-        <property name="singleStep">
-         <number>250</number>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="0">
-       <widget class="QLabel" name="lbl_MessageBoxDuration">
-        <property name="text">
-         <string>Box disappears after</string>
+         <string>probe to determine ground elevation</string>
         </property>
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QDialogButtonBox" name="bb_OkCancel">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+     <property name="centerButtons">
+      <bool>false</bool>
+     </property>
     </widget>
    </item>
    <item row="2" column="0">
