@@ -276,11 +276,12 @@ namespace BlackCore
         }
 
         // connection status of network changed
-        if (m_contextAudio && m_contextAudio->isUsingImplementingObject())
+        // with AFV no longer use m_contextAudio->isUsingImplementingObject() as audio can run on both sides
+        if (this->getCContextAudioBase() && m_contextNetwork)
         {
             Q_ASSERT(m_contextApplication);
             c = connect(m_contextNetwork, &IContextNetwork::connectionStatusChanged,
-                        this->getCContextAudio(), &CContextAudio::xCtxNetworkConnectionStatusChanged, Qt::QueuedConnection);
+                        this->getCContextAudioBase(), &CContextAudio::xCtxNetworkConnectionStatusChanged, Qt::QueuedConnection);
             Q_ASSERT(c);
             times.insert("Post setup, connects audio", time.restart());
         }
