@@ -200,7 +200,7 @@ namespace BlackCore
         void initDBusServer(const QString &dBusAddress);
 
         //! post init tasks, load simulator and connecting context signal slots
-        void initPostSetup(QMap<QString, int> &times);
+        void initPostSetup(QMap<QString, qint64> &times);
     };
 } // namespace
 #endif // guard

@@ -81,7 +81,7 @@ namespace BlackCore
     {
         if (m_initalized || m_shuttingDown) { return; }
 
-        QMap<QString, int> times;
+        QMap<QString, qint64> times;
         QElapsedTimer time;
         CCoreFacade::registerMetadata();
 
@@ -174,7 +174,7 @@ namespace BlackCore
         CLogMessage(this).info(u"DBus server on address: '%1'") << dBusAddress;
     }
 
-    void CCoreFacade::initPostSetup(QMap<QString, int> &times)
+    void CCoreFacade::initPostSetup(QMap<QString, qint64> &times)
     {
         bool c = false;
         Q_UNUSED(c) // for release version
