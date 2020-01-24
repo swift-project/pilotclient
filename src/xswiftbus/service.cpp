@@ -40,7 +40,7 @@ namespace XSwiftBus
         static constexpr size_t c_maxSampleCount = 500;
         static constexpr float c_framePeriodBudget = 0.05f;
 
-        FramePeriodSampler() : CDrawable(xplm_Phase_LastCockpit, false) {}
+        FramePeriodSampler() : CDrawable(xplm_Phase_LastScene, false) {}
 
         std::tuple<float, float, float, float> getFrameStats()
         {
