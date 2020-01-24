@@ -30,6 +30,7 @@ constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonMe
 constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonBundleTaxiLandingLights[];
 constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonTimestamp[];
 constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonTcas[];
+constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonTerrainProbe[];
 constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonLogRenderPhases[];
 //! @endcond
 
@@ -73,6 +74,10 @@ namespace BlackMisc
                 {
                     m_tcasEnabled = settingsDoc[CXSwiftBusSettingsQtFree::JsonTcas].GetBool();  c++;
                 }
+                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonTerrainProbe) && settingsDoc[CXSwiftBusSettingsQtFree::JsonTerrainProbe].IsBool())
+                {
+                    m_terrainProbeEnabled = settingsDoc[CXSwiftBusSettingsQtFree::JsonTerrainProbe].GetBool();  c++;
+                }
                 if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonLogRenderPhases) && settingsDoc[CXSwiftBusSettingsQtFree::JsonLogRenderPhases].IsBool())
                 {
                     m_logRenderPhases = settingsDoc[CXSwiftBusSettingsQtFree::JsonLogRenderPhases].GetBool();  c++;
@@ -94,7 +99,7 @@ namespace BlackMisc
                     m_msSinceEpochQtFree = settingsDoc[CXSwiftBusSettingsQtFree::JsonTimestamp].GetInt64();  c++;
                 }
                 this->objectUpdated(); // post processing
-                return c == 11;
+                return c == 12;
             }
 
             std::string CXSwiftBusSettingsQtFree::toXSwiftBusJsonString() const
@@ -118,6 +123,7 @@ namespace BlackMisc
                 document.AddMember(JsonFollowAircraftDistanceM, m_followAircraftDistanceM, a);
                 document.AddMember(JsonLogRenderPhases,   m_logRenderPhases,   a);
                 document.AddMember(JsonTcas,              m_tcasEnabled, a);
+                document.AddMember(JsonTerrainProbe,      m_terrainProbeEnabled, a);
 
                 // document[CXSwiftBusSettingsQtFree::JsonDBusServerAddress].SetString(StringRef(m_dBusServerAddress.c_str(), m_dBusServerAddress.size()));
                 // document[CXSwiftBusSettingsQtFree::JsonDrawingLabels].SetBool(m_drawingLabels);
@@ -138,6 +144,7 @@ namespace BlackMisc
                        ", bundle lights: "   + QtFreeUtils::boolToYesNo(m_bundleTaxiLandingLights) +
                        ", phases: "          + QtFreeUtils::boolToYesNo(m_logRenderPhases) +
                        ", TCAS: "            + QtFreeUtils::boolToYesNo(m_tcasEnabled) +
+                       ", terr.probe: "      + QtFreeUtils::boolToYesNo(m_terrainProbeEnabled) +
                        ", night t.: "        + m_nightTextureMode +
                        ", max planes: "      + std::to_string(m_maxPlanes) +
                        ", max distance NM: " + std::to_string(m_maxDrawDistanceNM) +
@@ -155,6 +162,7 @@ namespace BlackMisc
                 if (m_nightTextureMode   != newValues.m_nightTextureMode)   { m_nightTextureMode   = newValues.m_nightTextureMode;   changed++; }
                 if (m_logRenderPhases    != newValues.m_logRenderPhases)    { m_logRenderPhases    = newValues.m_logRenderPhases;          changed++; }
                 if (m_tcasEnabled        != newValues.m_tcasEnabled)        { m_tcasEnabled        = newValues.m_tcasEnabled;        changed++; }
+                if (m_terrainProbeEnabled != newValues.m_terrainProbeEnabled) { m_terrainProbeEnabled = newValues.m_terrainProbeEnabled;   changed++; }
                 if (m_maxPlanes          != newValues.m_maxPlanes)          { m_maxPlanes          = newValues.m_maxPlanes;          changed++; }
                 if (m_msSinceEpochQtFree != newValues.m_msSinceEpochQtFree) { m_msSinceEpochQtFree = newValues.m_msSinceEpochQtFree; changed++; }
                 if (m_bundleTaxiLandingLights != newValues.m_bundleTaxiLandingLights) { m_bundleTaxiLandingLights = newValues.m_bundleTaxiLandingLights;   changed++; }

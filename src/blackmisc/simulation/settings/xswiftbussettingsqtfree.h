@@ -133,6 +133,12 @@ namespace BlackMisc
                 //! TCAS functionality?
                 void setTcasEnabled(bool tcas) { m_tcasEnabled = tcas; }
 
+                //! Terrain probe to establish ground elevation?
+                bool isTerrainProbeEnabled() const { return m_terrainProbeEnabled; }
+
+                //! Terrain probe to establish ground elevation?
+                void setTerrainProbeEnabled(bool enabled) { m_terrainProbeEnabled = enabled; }
+
                 //! Load and parse config file
                 bool parseXSwiftBusString(const std::string &json);
 
@@ -159,6 +165,7 @@ namespace BlackMisc
                 static constexpr char JsonDrawingLabels[]     = "drawinglabels";
                 static constexpr char JsonLogRenderPhases[]   = "renderPhases";
                 static constexpr char JsonTcas[]              = "tcas";
+                static constexpr char JsonTerrainProbe[]      = "terrainProbe";
                 static constexpr char JsonMaxPlanes[]         = "maxplanes";
                 static constexpr char JsonMaxDrawDistance[]   = "maxDrawDistance";
                 static constexpr char JsonNightTextureMode[]  = "nighttexture";
@@ -180,6 +187,7 @@ namespace BlackMisc
                 bool   m_bundleTaxiLandingLights = true;    //!< bundle taxi and landing lights
                 bool   m_logRenderPhases         = false;   //!< render phases debug messages
                 bool   m_tcasEnabled             = true;    //!< TCAS functionality
+                bool   m_terrainProbeEnabled     = true;    //!< terrain probe to establish ground elevation
                 double m_maxDrawDistanceNM       = 50.0;    //!< distance in XPlane
                 int64_t m_msSinceEpochQtFree     = 0;       //!< timestamp
             };

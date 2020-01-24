@@ -73,6 +73,7 @@ namespace BlackSimPlugin
             s.setNightTextureModeQt(ui->cb_NightTextureMode->currentText());
             s.setBundlingTaxiAndLandingLights(ui->cb_BundleTaxiLandingLights->isChecked());
             s.setTcasEnabled(ui->cb_TcasEnabled->isChecked());
+            s.setTerrainProbeEnabled(ui->cb_TerrainProbeEnabled->isChecked());
             s.setLogRenderPhases(ui->cb_LogRenderPhases->isChecked());
 
             // left, top, right, bottom, height
@@ -96,6 +97,7 @@ namespace BlackSimPlugin
             ui->cb_DrawLabels->setChecked(settings.isDrawingLabels());
             ui->cb_BundleTaxiLandingLights->setChecked(settings.isBundlingTaxiAndLandingLights());
             ui->cb_TcasEnabled->setChecked(settings.isTcasEnabled());
+            ui->cb_TerrainProbeEnabled->setChecked(settings.isTerrainProbeEnabled());
             ui->cb_LogRenderPhases->setChecked(settings.isLogRenderPhases());
 
             const QString s = settings.getNightTextureModeQt().left(1);
