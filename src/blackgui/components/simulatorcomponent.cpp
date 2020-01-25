@@ -157,6 +157,9 @@ namespace BlackGui
 
                     const double miles = sGui->getISimulator()->getTrackMilesShort();
                     this->addOrUpdateLiveDataByName(QStringLiteral("Miles Short"), QString::number(miles, 'f', 1), CIconList::allIcons().findByIndex(CIcons::ApplicationSimulator));
+
+                    const double minutes = sGui->getISimulator()->getMinutesLate();
+                    this->addOrUpdateLiveDataByName(QStringLiteral("Minutes Late"), QString::number(minutes, 'f', 1), CIconList::allIcons().findByIndex(CIcons::ApplicationSimulator));
                 }
             }
 
