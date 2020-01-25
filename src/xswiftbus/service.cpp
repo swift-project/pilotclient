@@ -35,23 +35,25 @@ namespace XSwiftBus
         float m_total = 0;
         float m_totalOverBudget = 0;
         float m_totalMetersShort = 0;
+        float m_totalSecondsLate = 0;
         size_t m_lastSampleIndex = 0;
         static constexpr size_t c_maxSampleCount = 500;
         static constexpr float c_framePeriodBudget = 0.05f;
 
         FramePeriodSampler() : CDrawable(xplm_Phase_LastCockpit, false) {}
 
-        std::tuple<float, float, float> getFrameStats()
+        std::tuple<float, float, float, float> getFrameStats()
         {
             if (m_total == 0) { return {}; }
             const float fps = m_samples.size() / m_total;
             const float ratio = 1 - m_totalOverBudget / m_total;
             const float miles = m_totalMetersShort / 1852.0f;
+            const float minutes = m_totalSecondsLate / 60.0f;
             m_total = 0;
             m_totalOverBudget = 0;
             m_samples.clear();
             m_lastSampleIndex = 0;
-            return std::make_tuple(fps, ratio, miles);
+            return std::make_tuple(fps, ratio, miles, minutes);
         }
 
     protected:
@@ -80,6 +82,7 @@ namespace XSwiftBus
 
             const float metersShort = m_groundSpeed.get() * std::max(0.0f, current - c_framePeriodBudget);
             m_totalMetersShort += metersShort;
+            if (m_groundSpeed.get() > 1.0f) { m_totalSecondsLate += std::max(0.0f, current - c_framePeriodBudget); }
         }
     };
 
@@ -118,14 +121,14 @@ namespace XSwiftBus
         return XSWIFTBUS_COMMIT;
     }
 
-    std::tuple<double, double, double> CService::getFrameStats()
+    std::tuple<double, double, double, double> CService::getFrameStats()
     {
         if (!m_framePeriodSampler) { return {}; }
         const auto result = m_framePeriodSampler->getFrameStats();
-        return std::make_tuple(static_cast<double>(std::get<0>(result)), static_cast<double>(std::get<1>(result)), static_cast<double>(std::get<2>(result)));
+        return std::make_tuple(static_cast<double>(std::get<0>(result)), static_cast<double>(std::get<1>(result)), static_cast<double>(std::get<2>(result)), static_cast<double>(std::get<3>(result)));
     }
 
-    void CService::resetMilesLost()
+    void CService::resetFrameTotals()
     {
         if (m_framePeriodSampler)
         {
@@ -590,6 +593,7 @@ namespace XSwiftBus
                     reply.appendArgument(std::get<0>(stats));
                     reply.appendArgument(std::get<1>(stats));
                     reply.appendArgument(std::get<2>(stats));
+                    reply.appendArgument(std::get<3>(stats));
                     sendDBusMessage(reply);
                 });
             }

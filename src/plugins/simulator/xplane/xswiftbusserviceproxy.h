@@ -210,8 +210,8 @@ namespace BlackSimPlugin
 
             //! \copydoc XSwiftBus::CService::getFrameStats
             //! @{
-            void getFrameStats(double *o_averageFps, double *o_simTimeRatio, double *o_trackMilesLost) const;
-            void getFrameStatsAsync(double *o_averageFps, double *o_simTimeRatio, double *o_trackMilesLost);
+            void getFrameStats(double *o_averageFps, double *o_simTimeRatio, double *o_trackMilesShort, double *o_minutesLate) const;
+            void getFrameStatsAsync(double *o_averageFps, double *o_simTimeRatio, double *o_trackMilesShort, double *o_minutesLate);
             //! @}
 
             //! \copydoc XSwiftBus::CService::getLatitudeDeg

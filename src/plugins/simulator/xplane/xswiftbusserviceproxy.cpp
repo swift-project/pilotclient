@@ -319,32 +319,34 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBusAsync(QLatin1String("isUsingRealTime"), setterCallback(o_isRealTime));
         }
 
-        void CXSwiftBusServiceProxy::getFrameStats(double *o_averageFps, double *o_simTimeRatio, double *o_trackMilesLost) const
+        void CXSwiftBusServiceProxy::getFrameStats(double *o_averageFps, double *o_simTimeRatio, double *o_trackMilesShort, double *o_minutesLate) const
         {
             std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
             {
-                QDBusPendingReply<double, double, double> reply = *watcher;
+                QDBusPendingReply<double, double, double, double> reply = *watcher;
                 if (!reply.isError())
                 {
                     *o_averageFps = reply.argumentAt<0>();
                     *o_simTimeRatio = reply.argumentAt<1>();
-                    *o_trackMilesLost = reply.argumentAt<2>();
+                    *o_trackMilesShort = reply.argumentAt<2>();
+                    *o_minutesLate = reply.argumentAt<3>();
                 }
                 watcher->deleteLater();
             };
             m_dbusInterface->callDBusAsync(QLatin1String("getFrameStats"), callback)->waitForFinished();
         }
 
-        void CXSwiftBusServiceProxy::getFrameStatsAsync(double *o_averageFps, double *o_simTimeRatio, double *o_trackMilesLost)
+        void CXSwiftBusServiceProxy::getFrameStatsAsync(double *o_averageFps, double *o_simTimeRatio, double *o_trackMilesShort, double *o_minutesLate)
         {
             std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
             {
-                QDBusPendingReply<double, double, double> reply = *watcher;
+                QDBusPendingReply<double, double, double, double> reply = *watcher;
                 if (!reply.isError())
                 {
                     *o_averageFps = reply.argumentAt<0>();
                     *o_simTimeRatio = reply.argumentAt<1>();
-                    *o_trackMilesLost = reply.argumentAt<2>();
+                    *o_trackMilesShort = reply.argumentAt<2>();
+                    *o_minutesLate = reply.argumentAt<3>();
                 }
                 watcher->deleteLater();
             };
