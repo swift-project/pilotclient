@@ -67,6 +67,7 @@ R"XML(<node>
       <arg name="averageFps" type="d" direction="out"/>
       <arg name="simTimeRatio" type="d" direction="out"/>
       <arg name="trackMilesShort" type="d" direction="out"/>
+      <arg name="minutesLate" type="d" direction="out"/>
     </method>
     <method name="getLatitudeDeg">
       <arg type="d" direction="out"/>
