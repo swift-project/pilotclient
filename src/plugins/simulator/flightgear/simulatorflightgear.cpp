@@ -62,6 +62,8 @@
 #include <QPointer>
 #include <math.h>
 
+#define FGSWIFTBUS_API_VERSION 1
+
 using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -1020,12 +1022,9 @@ namespace BlackSimPlugin
             bool result = service.isValid() && traffic.isValid();
             if (! result) { return; }
 
-            QString flightgearVersion = service.getVersionNumber();
-            QString flightgearVersionMinimum = "2019.2.0";
-
-            if (flightgearVersion < flightgearVersionMinimum)
+            if (service.getVersionNumber() != FGSWIFTBUS_API_VERSION)
             {
-                CLogMessage(this).error(u"You are using Flightgear %1. This version of swift is only compatible with Flightgear %2 or newer. Consider upgrading!") << flightgearVersion << flightgearVersionMinimum;
+                CLogMessage(this).error(u"This version of swift is not compatible with this Flightgear version. For further information check http://wiki.flightgear.org/Swift.");
                 return;
             }
             if (!traffic.initialize())

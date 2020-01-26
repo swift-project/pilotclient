@@ -98,7 +98,7 @@ namespace BlackSimPlugin
 
         public slots:
             //! Get Flightgear version number
-            QString getVersionNumber();
+            int getVersionNumber();
 
             //! Get own aircraft situation data
             void getOwnAircraftSituationData(FlightgearData *o_flightgearData);
