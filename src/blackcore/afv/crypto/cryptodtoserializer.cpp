@@ -28,19 +28,19 @@ namespace BlackCore
                 QBuffer buffer(&data);
                 buffer.open(QIODevice::ReadOnly);
 
-                buffer.read((char *)&headerLength, sizeof(headerLength));
+                buffer.read((char *)&m_headerLength, sizeof(m_headerLength));
 
-                QByteArray headerBuffer = buffer.read(headerLength);
+                QByteArray headerBuffer = buffer.read(m_headerLength);
 
                 msgpack::object_handle oh = msgpack::unpack(headerBuffer.data(), headerBuffer.size());
-                header = oh.get().as<CryptoDtoHeaderDto>();
+                m_header = oh.get().as<CryptoDtoHeaderDto>();
 
-                if (header.Mode == CryptoDtoMode::AEAD_ChaCha20Poly1305)
+                if (m_header.Mode == CryptoDtoMode::AEAD_ChaCha20Poly1305)
                 {
-                    int aeLength = buffer.size() - (2 + headerLength);
+                    int aeLength = buffer.size() - (2 + m_headerLength);
                     const QByteArray aePayloadBuffer = buffer.read(aeLength);
 
-                    const QByteArray adBuffer = data.left(2 + headerLength);
+                    const QByteArray adBuffer = data.left(2 + m_headerLength);
 
                     QByteArray nonce;
                     nonce.fill(0, crypto_aead_chacha20poly1305_IETF_NPUBBYTES);
@@ -48,7 +48,7 @@ namespace BlackCore
                     nonceBuffer.open(QIODevice::WriteOnly);
                     uint32_t id = 0;
                     nonceBuffer.write(reinterpret_cast<const char *>(&id), sizeof(id));
-                    nonceBuffer.write(reinterpret_cast<const char *>(&header.Sequence), sizeof(header.Sequence));
+                    nonceBuffer.write(reinterpret_cast<const char *>(&m_header.Sequence), sizeof(m_header.Sequence));
                     nonceBuffer.close();
 
                     QByteArray decryptedPayload;
@@ -73,12 +73,12 @@ namespace BlackCore
 
                         QBuffer decryptedPayloadBuffer(&decryptedPayload);
                         decryptedPayloadBuffer.open(QIODevice::ReadOnly);
-                        decryptedPayloadBuffer.read((char *)&dtoNameLength, sizeof(dtoNameLength));
-                        dtoNameBuffer = decryptedPayloadBuffer.read(dtoNameLength);
+                        decryptedPayloadBuffer.read((char *)&m_dtoNameLength, sizeof(m_dtoNameLength));
+                        m_dtoNameBuffer = decryptedPayloadBuffer.read(m_dtoNameLength);
 
-                        decryptedPayloadBuffer.read((char *)&dataLength, sizeof(dataLength));
-                        dataBuffer = decryptedPayloadBuffer.read(dataLength);
-                        verified = true;
+                        decryptedPayloadBuffer.read((char *)&m_dataLength, sizeof(m_dataLength));
+                        m_dataBuffer = decryptedPayloadBuffer.read(m_dataLength);
+                        m_verified = true;
                     }
                 }
             }

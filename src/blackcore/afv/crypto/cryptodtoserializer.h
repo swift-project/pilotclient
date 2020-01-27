@@ -131,10 +131,10 @@ namespace BlackCore
                     template<typename T>
                     T getDto()
                     {
-                        if (! verified) return {};
-                        if (dtoNameBuffer == T::getDtoName() || dtoNameBuffer == T::getShortDtoName())
+                        if (! m_verified) return {};
+                        if (m_dtoNameBuffer == T::getDtoName() || m_dtoNameBuffer == T::getShortDtoName())
                         {
-                            msgpack::object_handle oh2 = msgpack::unpack(dataBuffer.data(), dataBuffer.size());
+                            msgpack::object_handle oh2 = msgpack::unpack(m_dataBuffer.data(), static_cast<std::size_t>(m_dataBuffer.size()));
                             msgpack::object obj = oh2.get();
                             T dto = obj.as<T>();
                             return dto;
@@ -143,21 +143,21 @@ namespace BlackCore
                     }
 
                     //! Header data @{
-                    quint16 headerLength;
-                    CryptoDtoHeaderDto header;
+                    quint16 m_headerLength;
+                    CryptoDtoHeaderDto m_header;
                     //! @}
 
                     //! Name data @{
-                    quint16 dtoNameLength;
-                    QByteArray dtoNameBuffer;
+                    quint16 m_dtoNameLength;
+                    QByteArray m_dtoNameBuffer;
                     //! @}
 
                     //! Data @{
-                    quint16 dataLength;
-                    QByteArray dataBuffer;
+                    quint16 m_dataLength;
+                    QByteArray m_dataBuffer;
                     //! @}
 
-                    bool verified = false; //!< is verified
+                    bool m_verified = false; //!< is verified
                 };
 
                 //! Deserialize
