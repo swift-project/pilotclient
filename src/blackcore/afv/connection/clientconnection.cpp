@@ -58,7 +58,6 @@ namespace BlackCore
                     {
                         // callback when connection has been established
                         if (!myself)  { return; }
-                        m_connection.setConnected(authenticated);
 
                         if (authenticated)
                         {
@@ -71,6 +70,9 @@ namespace BlackCore
 
                             CLogMessage(this).info(u"Connected: '%1' to voice server, socket open: %2") << callsign << boolToYesNo(m_udpSocket->isOpen());
                         }
+
+                        // Make sure crypto channels etc. are created
+                        m_connection.setConnected(authenticated);
 
                         // callback of the calling parent
                         if (callback) { callback(authenticated); }
@@ -146,6 +148,12 @@ namespace BlackCore
 
             void CClientConnection::processMessage(const QByteArray &messageDdata, bool loopback)
             {
+                if (!m_connection.m_voiceCryptoChannel)
+                {
+                    BLACK_VERIFY_X(false, Q_FUNC_INFO, "processMessage used without crypto channel");
+                    return;
+                }
+
                 CryptoDtoSerializer::Deserializer deserializer = CryptoDtoSerializer::deserialize(*m_connection.m_voiceCryptoChannel, messageDdata, loopback);
 
                 if (deserializer.dtoNameBuffer == AudioRxOnTransceiversDto::getShortDtoName())
@@ -176,6 +184,12 @@ namespace BlackCore
 
             void CClientConnection::voiceServerHeartbeat()
             {
+                if (!m_connection.m_voiceCryptoChannel || !m_udpSocket)
+                {
+                    BLACK_VERIFY_X(false, Q_FUNC_INFO, "voiceServerHeartbeat used without crypto channel or socket");
+                    return;
+                }
+
                 const QUrl voiceServerUrl("udp://" + m_connection.getTokens().VoiceServer.addressIpV4);
                 if (CBuildConfig::isLocalDeveloperDebugBuild()) { CLogMessage(this).debug(u"Sending voice server heartbeat to '%1'") << voiceServerUrl.host(); }
                 HeartbeatDto keepAlive;

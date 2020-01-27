@@ -43,7 +43,6 @@ namespace BlackCore
                     return;
                 }
                 m_voiceCryptoChannel.reset(new CCryptoDtoChannel(m_tokens.VoiceServer.channelConfig));
-                // dataCryptoChannel.reset(new CryptoDtoChannel(m_tokens.DataServer.channelConfig));
             }
 
             void CClientConnectionData::setTsAuthenticatedToNow()

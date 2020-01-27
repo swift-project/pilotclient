@@ -15,6 +15,7 @@
 #include "blackcore/afv/connection/clientconnectiondata.h"
 #include "blackcore/afv/connection/apiserverconnection.h"
 #include "blackcore/afv/dto.h"
+#include "blackmisc/verify.h"
 
 #include <QObject>
 #include <QString>
@@ -69,6 +70,11 @@ namespace BlackCore
                 template<typename T>
                 void sendToVoiceServer(const T &dto)
                 {
+                    if (!m_connection.m_voiceCryptoChannel || !m_udpSocket)
+                    {
+                        BLACK_VERIFY_X(false, Q_FUNC_INFO, "sendVoice used without crypto channel or socket");
+                        return;
+                    }
                     const QUrl voiceServerUrl("udp://" + m_connection.getTokens().VoiceServer.addressIpV4);
                     const QByteArray dataBytes = Crypto::CryptoDtoSerializer::serialize(*m_connection.m_voiceCryptoChannel, Crypto::CryptoDtoMode::AEAD_ChaCha20Poly1305, dto);
                     m_udpSocket->writeDatagram(dataBytes, QHostAddress(voiceServerUrl.host()), static_cast<quint16>(voiceServerUrl.port()));
