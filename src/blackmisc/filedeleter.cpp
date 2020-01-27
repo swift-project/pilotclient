@@ -7,6 +7,8 @@
  */
 
 #include "blackmisc/filedeleter.h"
+#include "blackmisc/threadutils.h"
+#include "blackmisc/verify.h"
 
 #include <QFile>
 #include <QtGlobal>
@@ -58,7 +60,11 @@ namespace BlackMisc
     void CTimedFileDeleter::timerEvent(QTimerEvent *event)
     {
         Q_UNUSED(event)
-        if (m_timerId > 0) { this->killTimer(m_timerId); }
+        if (m_timerId >= 0)
+        {
+            BLACK_AUDIT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Try to kill timer from another thread");
+            this->killTimer(m_timerId);
+        }
         m_timerId = -1;
         m_fileDeleter.deleteFiles();
         this->deleteLater();
