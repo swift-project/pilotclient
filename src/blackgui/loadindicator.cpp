@@ -10,6 +10,8 @@
 
 #include "loadindicator.h"
 #include "guiapplication.h"
+#include "blackmisc/verify.h"
+#include "blackmisc/threadutils.h"
 
 #include <QColor>
 #include <QPainter>
@@ -17,6 +19,8 @@
 #include <QRect>
 #include <QSizePolicy>
 #include <QtGlobal>
+
+using namespace BlackMisc;
 
 namespace BlackGui
 {
@@ -86,7 +90,11 @@ namespace BlackGui
             if (!m_pendingIds.isEmpty()) { return; }
         }
         m_pendingIds.clear();
-        if (m_timerId != -1) { killTimer(m_timerId); }
+        if (m_timerId != -1)
+        {
+            BLACK_AUDIT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Try to kill timer from another thread");
+            this->killTimer(m_timerId);
+        }
         m_timerId = -1;
         this->hide();
         this->setEnabled(false);
@@ -96,7 +104,11 @@ namespace BlackGui
     void CLoadIndicator::setAnimationDelay(int delay)
     {
         m_delayMs = delay;
-        if (m_timerId != -1) { this->killTimer(m_timerId); }
+        if (m_timerId != -1)
+        {
+            BLACK_AUDIT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Try to kill timer from another thread");
+            this->killTimer(m_timerId);
+        }
         m_timerId = this->startTimer(m_delayMs);
     }
 
@@ -118,14 +130,14 @@ namespace BlackGui
 
     void CLoadIndicator::timerEvent(QTimerEvent *event)
     {
-        Q_UNUSED(event);
+        Q_UNUSED(event)
         m_angle = (m_angle + 30) % 360;
         this->update();
     }
 
     void CLoadIndicator::paintEvent(QPaintEvent *event)
     {
-        Q_UNUSED(event);
+        Q_UNUSED(event)
         QPainter p(this);
         this->paint(p);
     }

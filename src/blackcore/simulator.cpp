@@ -314,6 +314,7 @@ namespace BlackCore
     void ISimulator::safeKillTimer()
     {
         if (m_timerId < 0) { return; }
+        BLACK_AUDIT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Try to kill timer from another thread");
         this->killTimer(m_timerId);
         m_timerId = -1;
     }
