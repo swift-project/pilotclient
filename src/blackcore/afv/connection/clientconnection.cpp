@@ -156,7 +156,7 @@ namespace BlackCore
 
                 CryptoDtoSerializer::Deserializer deserializer = CryptoDtoSerializer::deserialize(*m_connection.m_voiceCryptoChannel, messageDdata, loopback);
 
-                if (deserializer.dtoNameBuffer == AudioRxOnTransceiversDto::getShortDtoName())
+                if (deserializer.m_dtoNameBuffer == AudioRxOnTransceiversDto::getShortDtoName())
                 {
                     // qDebug() << "Received audio data";
                     const AudioRxOnTransceiversDto audioOnTransceiverDto = deserializer.getDto<AudioRxOnTransceiversDto>();
@@ -165,14 +165,14 @@ namespace BlackCore
                         emit audioReceived(audioOnTransceiverDto);
                     }
                 }
-                else if (deserializer.dtoNameBuffer == HeartbeatAckDto::getShortDtoName())
+                else if (deserializer.m_dtoNameBuffer == HeartbeatAckDto::getShortDtoName())
                 {
                     m_connection.setTsHeartbeatToNow();
                     if (CBuildConfig::isLocalDeveloperDebugBuild()) { CLogMessage(this).debug(u"Received voice server heartbeat"); }
                 }
                 else
                 {
-                    CLogMessage(this).warning(u"Received unknown data: %1 %2") << QString(deserializer.dtoNameBuffer) << deserializer.dataLength;
+                    CLogMessage(this).warning(u"Received unknown data: %1 %2") << QString(deserializer.m_dtoNameBuffer) << deserializer.m_dataLength;
                 }
             }
 
