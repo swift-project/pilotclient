@@ -68,8 +68,12 @@ win32 {
 }
 
 win32 {
-    CONFIG(debug, debug|release): LIBS *= -lqwtd
-    CONFIG(release, debug|release): LIBS *= -lqwt
+    msvc {
+        CONFIG(debug, debug|release): LIBS *= -lqwtd
+        CONFIG(release, debug|release): LIBS *= -lqwt
+    } else {
+        LIBS *= -lqwt
+    }
 }
 else:macx {
     macx: LIBS *= -framework qwt
