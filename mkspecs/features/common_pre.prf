@@ -176,7 +176,7 @@ isEmpty(PREFIX) {
 # Debug Suffix
 ################################
 
-win32: CONFIG(debug, debug|release): DLL_DEBUG_SUFFIX = d
+msvc: CONFIG(debug, debug|release): DLL_DEBUG_SUFFIX = d
 
 ################################
 # Inter-project dependencies
