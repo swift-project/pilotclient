@@ -83,7 +83,7 @@ namespace BlackSimPlugin
             this->enableInterpolationLogButtons(false);
             this->setSimulatorUiValues();
             this->setInternalAircraftUiValues();
-            this->updateWindowTitle(simulator->getSimulatorInfo());
+            this->updateWindowTitleAndUiValues(simulator->getSimulatorInfo());
         }
 
         CSimulatorEmulatedMonitorDialog::~CSimulatorEmulatedMonitorDialog()
@@ -147,10 +147,11 @@ namespace BlackSimPlugin
             ui->pte_TextMessages->setPlainText(message.toQString(true));
         }
 
-        void CSimulatorEmulatedMonitorDialog::updateWindowTitle(const CSimulatorInfo &info)
+        void CSimulatorEmulatedMonitorDialog::updateWindowTitleAndUiValues(const CSimulatorInfo &info)
         {
             if (!info.isSingleSimulator()) { return; }
             this->setWindowTitle("Emulated driver : " + info.toQString());
+            this->setSimulatorUiValues();
         }
 
         void CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged()

@@ -68,7 +68,7 @@
    <item>
     <widget class="QTabWidget" name="tw_SwiftMonitorDialog">
      <property name="currentIndex">
-      <number>0</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="tb_AircraftSituation">
       <attribute name="title">
@@ -659,15 +659,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Components::CLogComponent</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/logcomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Components::CSettingsSwiftPlugin</class>
    <extends>QFrame</extends>
    <header>blackgui/components/settingsswiftplugin.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CLogComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/logcomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
