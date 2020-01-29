@@ -78,7 +78,7 @@ namespace BlackGui
             connect(ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance, Qt::QueuedConnection);
             connect(ui->pb_ApplyComSync,     &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyComSync,             Qt::QueuedConnection);
             connect(ui->pb_ApplyCGSource,    &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyCGSource,            Qt::QueuedConnection);
-            connect(ui->pb_ApplyRecordOwnAircraftGnd, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyRecordGnd,       Qt::QueuedConnection);
+            connect(ui->pb_ApplyRecordOwnAircraftGnd, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyRecordGnd,  Qt::QueuedConnection);
 
             connect(ui->pb_ClearRestrictedRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::clearRestricedRendering);
             connect(ui->pb_DisableRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyDisableRendering);
@@ -338,8 +338,17 @@ namespace BlackGui
             bool ok = false;
             CSimulatorSettings settings = this->getSimulatorSettings(ok);
             if (!ok) { return; }
-            CLength radius;
-            radius.parseFromString(ui->le_RecordOwnGndPositionsRadius->text());
+
+            // get value, automatically add default unit if unit is missing
+            CLength radius = CLength::null();
+            QString radiusString = ui->le_RecordOwnGndPositionsRadius->text().trimmed();
+            if (!radiusString.isEmpty())
+            {
+                if (!CMeasurementUnit::endWithValidUnitSymbol<CLengthUnit>(radiusString)) { radiusString += "m"; }
+                radius.parseFromString(radiusString);
+            }
+            ui->le_RecordOwnGndPositionsRadius->setText(radius.valueRoundedWithUnit(1));
+
             const bool c1 = settings.setRecordOwnAircraftGnd(ui->cb_RecordOwnGndPositions->isChecked());
             const bool c2 = settings.setRecordedGndRadius(radius);
             if (!c1 && !c2) { return; }
