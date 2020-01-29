@@ -41,6 +41,8 @@ namespace BlackSound
     BLACKSOUND_EXPORT qreal  normalize0to100qr(double in);
     //! @}
 
+    //! Open a input device
+    BLACKSOUND_EXPORT void occupyAudioInputDevice();
 } // ns
 
 #endif // guard
