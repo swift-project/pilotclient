@@ -30,6 +30,7 @@
 #include "blackcore/webdataservices.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulator.h"
+#include "blacksound/audioutilities.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/logmessage.h"
@@ -72,8 +73,10 @@ void SwiftGuiStd::init()
     m_mwaStatusBar = &m_statusBar;
     m_mwaOverlayFrame = ui->fr_CentralFrameInside;
     m_mwaLogComponent = ui->comp_MainInfoArea->getLogComponent();
-
     sGui->initMainApplicationWidget(this);
+
+    // experimental: avoid mic flickering
+    if (CBuildConfig::isLocalDeveloperDebugBuild()) { BlackSound::occupyAudioInputDevice(); }
 
     // log messages
     m_logSubscriber.changeSubscription(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));

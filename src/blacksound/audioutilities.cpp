@@ -8,10 +8,13 @@
 
 #include "audioutilities.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
+#include "blackconfig/buildconfig.h"
+
 #include <QStringBuilder>
 #include <QAudioInput>
 #include <QAudioOutput>
 
+using namespace BlackConfig;
 using namespace BlackMisc::Audio;
 
 namespace BlackSound
@@ -243,6 +246,12 @@ namespace BlackSound
     qreal normalize0to100qr(double in)
     {
         return static_cast<qreal>(normalize0to100(in));
+    }
+
+    void occupyAudioInputDevice()
+    {
+        if (!CBuildConfig::isRunningOnWindows10()) { return; }
+        static const QAudioInput input(QAudioDeviceInfo::defaultInputDevice());
     }
 
 } // ns
