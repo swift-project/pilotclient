@@ -471,6 +471,36 @@ namespace BlackMisc
                 return false;
             }
 
+            /*!
+             * Contains valid unit symbol?
+             * \param candidate to be tested
+             * \param caseSensitivity check case sensitiv?
+             */
+            template <class U> static bool containsValidUnitSymbol(const QString &candidate, Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive)
+            {
+                if (candidate.isEmpty()) return false;
+                for (const auto &unit : U::allUnits())
+                {
+                    if (candidate.contains(unit.getSymbol(), caseSensitivity)) { return true; }
+                }
+                return false;
+            }
+
+            /*!
+             * Ends with valid unit symbol?
+             * \param candidate to be tested
+             * \param caseSensitivity check case sensitiv?
+             */
+            template <class U> static bool endWithValidUnitSymbol(const QString &candidate, Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive)
+            {
+                if (candidate.isEmpty()) return false;
+                for (const auto &unit : U::allUnits())
+                {
+                    if (candidate.endsWith(unit.getSymbol(), caseSensitivity)) { return true; }
+                }
+                return false;
+            }
+
             //! Dimensionless unit
             static CMeasurementUnit None()
             {
