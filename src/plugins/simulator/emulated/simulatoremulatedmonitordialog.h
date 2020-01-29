@@ -63,7 +63,7 @@ namespace BlackSimPlugin
             void displayTextMessage(const BlackMisc::Network::CTextMessage &message);
 
             //! The title
-            void updateWindowTitle(const BlackMisc::Simulation::CSimulatorInfo &info);
+            void updateWindowTitleAndUiValues(const BlackMisc::Simulation::CSimulatorInfo &info);
 
         private:
             static int constexpr MaxLogMessages = 500; //!< desired log message number

@@ -438,7 +438,7 @@ namespace BlackSimPlugin
             // update provider, own name, title
             this->updateOwnModel(settings.getOwnModel());
             this->setObjectName(simulator);
-            if (m_monitorWidget) { m_monitorWidget->updateWindowTitle(simulator); }
+            if (m_monitorWidget) { m_monitorWidget->updateWindowTitleAndUiValues(simulator); }
         }
 
         void CSimulatorEmulated::connectOwnSignals()

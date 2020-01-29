@@ -528,7 +528,7 @@ namespace BlackSimPlugin
                 if (m_isConnecting || isOk(m_lobbyClient->connectFs9ToHost(m_fs9Host->getHostAddress())))
                 {
                     m_isConnecting = true;
-                    CLogMessage(this).info(u"swift is joining FS9 to the multiplayer session...");
+                    CLogMessage(this).info(u"swift is joining FS9 to the multiplayer session ...");
                 }
             }
 
