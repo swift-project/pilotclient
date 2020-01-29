@@ -111,6 +111,12 @@ win32-g++: CONFIG += optimize_debug
 # win32-g++: QMAKE_CXXFLAGS *= -Wa,-mbig-obj
 
 ################################
+# MinGW: Separate debug info into separate .debug files
+################################
+
+win32-g++: CONFIG += separate_debug_info
+
+################################
 # FSX or FS9 on 32bit Windows only
 ################################
 
