@@ -305,7 +305,7 @@ namespace BlackGui
                         connect(m_loadActions[0], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             if (!ownModelsComp) { return; }
-                            Q_UNUSED(checked);
+                            Q_UNUSED(checked)
                             ownModelsComp->setSimulator(CSimulatorInfo::fsx(), true);
                         });
                     }
@@ -319,7 +319,7 @@ namespace BlackGui
                         connect(m_loadActions[1], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             if (!ownModelsComp) { return; }
-                            Q_UNUSED(checked);
+                            Q_UNUSED(checked)
                             ownModelsComp->setSimulator(CSimulatorInfo::p3d(), true);
                         });
                     }
@@ -333,7 +333,7 @@ namespace BlackGui
                         connect(m_loadActions[2], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             if (!ownModelsComp) { return; }
-                            Q_UNUSED(checked);
+                            Q_UNUSED(checked)
                             ownModelsComp->setSimulator(CSimulatorInfo::fs9(), true);
                         });
                     }
@@ -347,7 +347,7 @@ namespace BlackGui
                         connect(m_loadActions[3], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             if (!ownModelsComp) { return; }
-                            Q_UNUSED(checked);
+                            Q_UNUSED(checked)
                             ownModelsComp->setSimulator(CSimulatorInfo::xplane(), true);
                         });
                     }
@@ -361,7 +361,7 @@ namespace BlackGui
                         connect(m_loadActions[4], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             if (!ownModelsComp) { return; }
-                            Q_UNUSED(checked);
+                            Q_UNUSED(checked)
                             ownModelsComp->setSimulator(CSimulatorInfo::fg(), true);
                         });
                     }
@@ -382,7 +382,7 @@ namespace BlackGui
                             connect(m_reloadActions[0], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 if (!ownModelsComp) { return; }
-                                Q_UNUSED(checked);
+                                Q_UNUSED(checked)
                                 ownModelsComp->requestSimulatorModels(CSimulatorInfo::fsx(), IAircraftModelLoader::InBackgroundNoCache);
                             });
 
@@ -390,7 +390,7 @@ namespace BlackGui
                             connect(m_reloadActions[1], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 if (!ownModelsComp) { return; }
-                                Q_UNUSED(checked);
+                                Q_UNUSED(checked)
                                 const CSimulatorInfo sim(CSimulatorInfo::FSX);
                                 const QString dir = ownModelsComp->directorySelector(sim);
                                 if (!dir.isEmpty())
@@ -410,7 +410,7 @@ namespace BlackGui
                             connect(m_reloadActions[2], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 if (!ownModelsComp) { return; }
-                                Q_UNUSED(checked);
+                                Q_UNUSED(checked)
                                 ownModelsComp->requestSimulatorModels(CSimulatorInfo::p3d(), IAircraftModelLoader::InBackgroundNoCache);
                             });
 
@@ -418,7 +418,7 @@ namespace BlackGui
                             connect(m_reloadActions[3], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 if (!ownModelsComp) { return; }
-                                Q_UNUSED(checked);
+                                Q_UNUSED(checked)
                                 const CSimulatorInfo sim(CSimulatorInfo::P3D);
                                 const QString dir = ownModelsComp->directorySelector(sim);
                                 if (!dir.isEmpty())
@@ -438,7 +438,7 @@ namespace BlackGui
                             connect(m_reloadActions[4], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 if (!ownModelsComp) { return; }
-                                Q_UNUSED(checked);
+                                Q_UNUSED(checked)
                                 ownModelsComp->requestSimulatorModels(CSimulatorInfo::fs9(), IAircraftModelLoader::InBackgroundNoCache);
                             });
 
@@ -446,7 +446,7 @@ namespace BlackGui
                             connect(m_reloadActions[5], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 if (!ownModelsComp) { return; }
-                                Q_UNUSED(checked);
+                                Q_UNUSED(checked)
                                 const CSimulatorInfo sim(CSimulatorInfo::FS9);
                                 const QString dir = ownModelsComp->directorySelector(sim);
                                 if (!dir.isEmpty())
@@ -466,14 +466,14 @@ namespace BlackGui
                             connect(m_reloadActions[6], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 if (!ownModelsComp) { return; }
-                                Q_UNUSED(checked);
+                                Q_UNUSED(checked)
                                 ownModelsComp->requestSimulatorModels(CSimulatorInfo::xplane(), IAircraftModelLoader::InBackgroundNoCache);
                             });
                             m_reloadActions[7] = new QAction(CIcons::appModels16(), "XPlane models from directoy", this);
                             connect(m_reloadActions[7], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 if (!ownModelsComp) { return; }
-                                Q_UNUSED(checked);
+                                Q_UNUSED(checked)
                                 const CSimulatorInfo sim(CSimulatorInfo::XPLANE);
                                 const QString dir = ownModelsComp->directorySelector(sim);
                                 if (!dir.isEmpty())
@@ -494,14 +494,14 @@ namespace BlackGui
                             connect(m_reloadActions[8], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 if (!ownModelsComp) { return; }
-                                Q_UNUSED(checked);
+                                Q_UNUSED(checked)
                                 ownModelsComp->requestSimulatorModels(CSimulatorInfo::fg(), IAircraftModelLoader::InBackgroundNoCache);
                             });
                             m_reloadActions[9] = new QAction(CIcons::appModels16(), "FG models from directoy", this);
                             connect(m_reloadActions[9], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 if (!ownModelsComp) { return; }
-                                Q_UNUSED(checked);
+                                Q_UNUSED(checked)
                                 const CSimulatorInfo sim(CSimulatorInfo::FG);
                                 const QString dir = ownModelsComp->directorySelector(sim);
                                 if (!dir.isEmpty())
