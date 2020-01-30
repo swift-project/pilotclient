@@ -208,6 +208,9 @@ namespace BlackMisc
     //! Return string in quotes
     BLACKMISC_EXPORT QString inQuotes(const QString &in, bool ignoreEmpty = false);
 
+    //! Has balanced quotes
+    BLACKMISC_EXPORT bool hasBalancedQuotes(const QString &in, char quote = '"');
+
     //! Remove surrounding apostrophes 'foo' -> foo
     BLACKMISC_EXPORT QString removeSurroundingApostrophes(const QString &in);
 
@@ -328,7 +331,7 @@ namespace BlackMisc
             //! Operator << when there is no debug stream
             friend QNoDebug operator<<(QNoDebug nodebug, const Derived &obj)
             {
-                Q_UNUSED(obj);
+                Q_UNUSED(obj)
                 return nodebug;
             }
 
