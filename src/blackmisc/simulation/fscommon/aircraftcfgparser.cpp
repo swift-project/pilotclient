@@ -14,6 +14,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/worker.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QDateTime>
 #include <QDir>
@@ -32,6 +33,7 @@
 #include <tuple>
 #include <QStringView>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
@@ -63,7 +65,7 @@ namespace BlackMisc
             void CAircraftCfgParser::startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories)
             {
                 static const CStatusMessage statusLoadingOk(this, CStatusMessage::SeverityInfo, u"Aircraft config parser loaded data");
-                static const CStatusMessage statusLoadingError(this, CStatusMessage::SeverityError, u"Aircraft config parser did not load data");
+                static const CStatusMessage statusLoadingError(this, CStatusMessage::SeverityError, u"Aircraft config parser did NOT load data");
 
                 const CSimulatorInfo simulator = this->getSimulator();
                 const QStringList modelDirs = this->getInitializedModelDirectories(modelDirectories, simulator);
@@ -99,13 +101,10 @@ namespace BlackMisc
                                 this->setModelsForSimulator(models, this->getSimulator());
                             }
                             // currently I treat no data as error
-                            emit this->loadingFinished(hasData ? statusLoadingOk : statusLoadingError, simulator, ParsedData);
+                            m_loadingMessages.push_front(hasData ? statusLoadingOk : statusLoadingError);
                         }
-                        else
-                        {
-                            m_loadingMessages.freezeOrder();
-                            emit this->loadingFinished(m_loadingMessages, simulator, ParsedData);
-                        }
+                        m_loadingMessages.freezeOrder();
+                        emit this->loadingFinished(m_loadingMessages, simulator, ParsedData);
                     });
                 }
                 else if (mode == LoadDirectly)
@@ -153,7 +152,8 @@ namespace BlackMisc
                 // excluded?
                 if (CFileUtils::isExcludedDirectory(directory, excludeDirectories) || isExcludedSubDirectory(directory))
                 {
-                    CLogMessage(this).debug() << "Skipping directory (excluded)" << directory;
+                    const CStatusMessage m = CStatusMessage(this).info(u"Skipping directory '%1' (excluded)") << directory;
+                    messages.push_back(m);
                     return CAircraftCfgEntriesList();
                 }
 
@@ -178,7 +178,13 @@ namespace BlackMisc
                 // if not we assume these files can be ignored
                 const QDir dirForAir(directory, CFsCommonUtil::airFileFilter(), QDir::Name, QDir::Files | QDir::NoDotAndDotDot);
                 const int airFilesCount = dirForAir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot, QDir::DirsLast).size();
-                const bool hasAirFile =  airFilesCount > 0;
+                const bool hasAirFiles =  airFilesCount > 0;
+
+                if (!hasAirFiles)
+                {
+                    const CStatusMessage m = CStatusMessage(this).warning(u"No \"air\" files in '%1'") << currentDir;
+                    messages.push_back(m);
+                }
 
                 for (const auto &fileInfo : files)
                 {
@@ -202,7 +208,11 @@ namespace BlackMisc
                     }
                     else
                     {
-                        if (!hasAirFile) { continue; }
+                        if (!hasAirFiles)
+                        {
+                            if (!CBuildConfig::isLocalDeveloperDebugBuild()) { continue; } // "productive versions"
+                            // for testing purposes we continue in dev.versions
+                        }
 
                         // due to the filter we expect only "aircraft.cfg"/"sim.cfg" here
                         // remark: in a 1st version I have used QSettings to parse to file as ini file
