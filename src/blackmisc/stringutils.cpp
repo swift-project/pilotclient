@@ -484,6 +484,13 @@ namespace BlackMisc
         return false;
     }
 
+    bool hasBalancedQuotes(const QString &in, char quote)
+    {
+        if (in.isEmpty()) { return true; }
+        const int c = in.count(quote);
+        return (c % 2) == 0;
+    }
+
 } // ns
 
 //! \endcond
