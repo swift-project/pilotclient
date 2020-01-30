@@ -433,15 +433,36 @@ namespace BlackMisc
             QString CAircraftCfgParser::getFixedIniLineContent(const QString &line)
             {
                 if (line.isEmpty()) { return {}; }
-                int index = line.indexOf('=');
+                const int index = line.indexOf('=');
                 if (index < 0) { return {}; }
                 if (line.length() < index + 1) { return {}; }
 
                 QString content(line.midRef(index + 1).trimmed().toString());
 
                 // fix "" strings, some are malformed and just contain " at beginning, not at the end
-                if (content.endsWith('"')) { content.remove(content.size() - 1, 1); }
-                if (content.startsWith('"')) { content.remove(0, 1); }
+                if (hasBalancedQuotes(content, '"'))
+                {
+                    // seems to be OK
+                    // ex: title=B767-300ER - Condor "Retro Jet"
+
+                    if (content.size() > 2 && content.startsWith('"') && content.endsWith('"'))
+                    {
+                        // completly in quotes, example title="B767-300ER - Condor Retro Jet"
+                        // we assume the quotes shall be removed
+                        content.remove(0, 1);
+                        content.chop(1);
+                    }
+                }
+                else
+                {
+                    // UNBALANCED
+
+                    // could be OK, example title=B767-300ER - Condor Retro Jet"
+                    // if (content.endsWith('"'))   { content.remove(content.size() - 1, 1); }
+
+                    // Unlikely, title="B767-300ER - Condor "Retro Jet
+                    if (content.startsWith('"')) { content.remove(0, 1); }
+                }
 
                 // fix C style linebreaks
                 content.replace("\\n", " ");
