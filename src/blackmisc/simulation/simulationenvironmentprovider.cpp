@@ -30,7 +30,7 @@ namespace BlackMisc
             {
                 // we keep latest at front
                 // * we assume we find them faster
-                // * and need the more frequently (the recent ones)
+                // * and need them more frequently (the recent ones)
                 const qint64 now = QDateTime::currentMSecsSinceEpoch();
                 QWriteLocker l(&m_lockElvCoordinates);
                 if (m_elvCoordinates.size() > m_maxElevations) { m_elvCoordinates.pop_back(); }
