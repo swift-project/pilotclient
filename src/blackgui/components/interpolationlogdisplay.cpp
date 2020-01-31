@@ -16,6 +16,8 @@
 #include "blackmisc/timestampobjectlist.h"
 #include "blackmisc/stringutils.h"
 
+#include <QStringLiteral>
+
 using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackGui::Views;
@@ -44,7 +46,7 @@ namespace BlackGui
             ui->hs_UpdateTime->setValue(timeSecs);
             this->onSliderChanged(timeSecs);
 
-            CLedWidget::LedShape shape = CLedWidget::Rounded;
+            const CLedWidget::LedShape shape = CLedWidget::Rounded;
             ui->led_Parts->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Parts received", "", 14);
             ui->led_Situation->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Situation received", "", 14);
             ui->led_Elevation->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Elevation received", "", 14);
@@ -53,6 +55,14 @@ namespace BlackGui
 
             m_callsign = ui->comp_CallsignCompleter->getCallsign();
             ui->tvp_InboundAircraftSituations->setWithMenuRequestElevation(true);
+
+            m_elvHistoryModel = new QStringListModel(this);
+            ui->lv_ElevevationHistory->setModel(m_elvHistoryModel);
+            ui->lv_ElevevationHistory->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+            const int elvHistoryCount = 100;
+            m_elvHistoryCount = elvHistoryCount;
+            ui->le_ElvHistoryCount->setText(QString::number(elvHistoryCount));
 
             connect(&m_updateTimer, &QTimer::timeout, this, &CInterpolationLogDisplay::updateLog);
             connect(ui->comp_CallsignCompleter, &CCallsignCompleter::editingFinishedDigest, this, &CInterpolationLogDisplay::onCallsignEntered);
@@ -66,9 +76,12 @@ namespace BlackGui
             connect(ui->pb_RequestElevation2, &QPushButton::released, this, &CInterpolationLogDisplay::requestElevationClicked);
             connect(ui->pb_GetLastInterpolation, &QPushButton::released, this, &CInterpolationLogDisplay::getLogAmdDisplayLastInterpolation);
             connect(ui->pb_InjectElevation, &QPushButton::released, this, &CInterpolationLogDisplay::onInjectElevation);
+            connect(ui->pb_ElvClear, &QPushButton::released, this, &CInterpolationLogDisplay::clearElevationResults);
             connect(ui->tvp_InboundAircraftSituations, &CAircraftSituationView::requestElevation, this, &CInterpolationLogDisplay::requestElevation);
-            connect(ui->le_InjectElevation, &QLineEdit::returnPressed, this, &CInterpolationLogDisplay::onInjectElevation);
+            connect(ui->le_InjectElevation, &QLineEdit::returnPressed,   this, &CInterpolationLogDisplay::onInjectElevation);
+            connect(ui->le_ElvHistoryCount, &QLineEdit::editingFinished, this, &CInterpolationLogDisplay::onElevationHistoryCountFinished);
             connect(ui->editor_ElevationCoordinate, &CCoordinateForm::changedCoordinate, this, &CInterpolationLogDisplay::requestElevationAtPosition);
+            connect(ui->cb_ElvAllowPseudo, &QCheckBox::toggled, this, &CInterpolationLogDisplay::onPseudoElevationToggled);
             connect(sGui, &CGuiApplication::aboutToShutdown, this, &CInterpolationLogDisplay::onAboutToShutdown, Qt::QueuedConnection);
         }
 
@@ -228,6 +241,12 @@ namespace BlackGui
             }
         }
 
+        void CInterpolationLogDisplay::onPseudoElevationToggled(bool checked)
+        {
+            if (!m_simulator) { return; }
+            m_simulator->setTestEnablePseudoElevation(checked);
+        }
+
         void CInterpolationLogDisplay::toggleStartStop()
         {
             const bool running = m_updateTimer.isActive();
@@ -240,7 +259,7 @@ namespace BlackGui
             if (m_callsign.isEmpty()) { return; }
             if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
 
-            const QString cmd = QStringLiteral(".drv pos ") + m_callsign.asString();
+            const QString cmd = QStringLiteral(".drv pos ") % m_callsign.asString();
             sGui->getIContextSimulator()->parseCommandLine(cmd, this->identifier());
         }
 
@@ -294,7 +313,7 @@ namespace BlackGui
 
         void CInterpolationLogDisplay::onSimulatorStatusChanged(ISimulator::SimulatorStatus status)
         {
-            Q_UNUSED(status);
+            Q_UNUSED(status)
             m_updateTimer.stop();
             this->resetStatistics();
         }
@@ -327,6 +346,23 @@ namespace BlackGui
         void CInterpolationLogDisplay::onElevationReceived(const CElevationPlane &elevationPlane, const CCallsign &callsign)
         {
             m_elvReceived++;
+
+            if (m_elvHistoryCount > 0)
+            {
+                const QString history = callsign.asString()  %
+                                        QStringLiteral(": ") % QTime::currentTime().toString("hh:mm:ss.zzz") %
+                                        QStringLiteral(" ")  % elevationPlane.toQString(true);
+                m_elvHistoryModel->insertRow(0);
+                const QModelIndex index = m_elvHistoryModel->index(0, 0);
+                m_elvHistoryModel->setData(index, history);
+
+                const int c = m_elvHistoryModel->rowCount();
+                if (m_elvHistoryCount < c)
+                {
+                    m_elvHistoryModel->removeRows(m_elvHistoryCount, c - m_elvHistoryCount);
+                }
+            }
+
             if (callsign == CInterpolationLogDisplay::pseudoCallsignElevation())
             {
                 this->displayArbitraryElevation(elevationPlane);
@@ -364,6 +400,19 @@ namespace BlackGui
             m_simulator->callbackReceivedRequestedElevation(ep, m_callsign);
         }
 
+        void CInterpolationLogDisplay::onElevationHistoryCountFinished()
+        {
+            const QString cs = ui->le_ElvHistoryCount->text().trimmed();
+            int c = -1;
+            if (!cs.isEmpty())
+            {
+                bool ok = false;
+                const int cc = cs.toInt(&ok);
+                if (ok) { c = cc; }
+            }
+            m_elvHistoryCount = c;
+        }
+
         void CInterpolationLogDisplay::resetStatistics()
         {
             if (m_simulator) { m_simulator->resetAircraftStatistics(); }
@@ -388,6 +437,17 @@ namespace BlackGui
             ui->le_Limited->clear();
             m_elvReceived = m_elvRequested = 0;
             m_lastInterpolations.clear();
+
+            this->clearElevationResults();
+        }
+
+        void CInterpolationLogDisplay::clearElevationResults()
+        {
+            ui->pte_ElevationAtPosition->clear();
+            if (m_elvHistoryModel)
+            {
+                m_elvHistoryModel->removeRows(0, m_elvHistoryModel->rowCount());
+            }
         }
 
         bool CInterpolationLogDisplay::checkLogPrerequisites()

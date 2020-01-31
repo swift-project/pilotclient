@@ -209,10 +209,10 @@ namespace BlackCore
         //! Simulator running?
         virtual bool isSimulating() const { return this->isConnected(); }
 
-        //! Set test mode
+        //! Set test mode (driver can skip code parts etc., driver dependent)
         void setTestMode(bool test) { m_test = test; }
 
-        //! Test mode?
+        //! Test mode? (driver can skip code parts etc., driver dependent)
         bool isTestMode() const { return m_test; }
 
         //! Average FPS (frames per second)
@@ -229,6 +229,9 @@ namespace BlackCore
 
         //! Send situation/parts for testing
         virtual bool testSendSituationAndParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) = 0;
+
+        //! Enable pseudo elevations (testing)
+        void setTestEnablePseudoElevation(bool enable) { m_enablePseudoElevation = enable; }
 
         //! Debug function to check state after all aircraft have been removed
         //! \remarks only in local developer builds
@@ -583,6 +586,7 @@ namespace BlackCore
 
         bool   m_pausedSimFreezesInterpolation  = false;  //!< paused simulator will also pause interpolation (so AI aircraft will hold)
         bool   m_updateRemoteAircraftInProgress = false;  //!< currently updating remote aircraft
+        bool   m_enablePseudoElevation = false;           //!< return faked elevations (testing)
         int    m_timerId = -1;                            //!< dispatch timer id
         int    m_statsUpdateAircraftRuns        = 0;      //!< statistics update count
         int    m_statsUpdateAircraftLimited     = 0;      //!< skipped because of max.update limitations
