@@ -318,7 +318,7 @@ namespace BlackGui
         void CInterpolationLogDisplay::onPartsAdded(const CCallsign &callsign, const CAircraftParts &parts)
         {
             if (!this->logCallsign(callsign)) { return; }
-            Q_UNUSED(parts);
+            Q_UNUSED(parts)
             const CAircraftPartsList partsList = m_airspaceMonitor->remoteAircraftParts(callsign);
             ui->tvp_InboundAircraftParts->updateContainerAsync(partsList);
             ui->led_Parts->blink();
@@ -444,7 +444,7 @@ namespace BlackGui
             if (!m_airspaceMonitor) { return; }
             static const QString info("%1/%2 hits %3 times: %4");
             const QString foundMissed = m_airspaceMonitor->getElevationsFoundMissedInfo();
-            const QString reqTimes = m_airspaceMonitor->getElevationRequestTimesInfo();
+            const QString reqTimes    = m_airspaceMonitor->getElevationRequestTimesInfo();
             ui->le_ElevationReqRec->setText(info.arg(m_elvRequested).arg(m_elvReceived).arg(foundMissed, reqTimes));
         }
 
