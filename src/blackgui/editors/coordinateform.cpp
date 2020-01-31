@@ -125,6 +125,10 @@ namespace BlackGui
             ui->le_X->setText(QString::number(v[0]));
             ui->le_Y->setText(QString::number(v[1]));
             ui->le_Z->setText(QString::number(v[2]));
+            ui->le_X->home(false);
+            ui->le_Y->home(false);
+            ui->le_Z->home(false);
+
             return true;
         }
 
