@@ -122,7 +122,7 @@ namespace BlackCore
 
     bool ISimulator::followAircraft(const CCallsign &callsign)
     {
-        Q_UNUSED(callsign);
+        Q_UNUSED(callsign)
         return false;
     }
 
@@ -1160,7 +1160,7 @@ namespace BlackCore
 
     void ISimulator::onOwnModelChanged(const CAircraftModel &newModel)
     {
-        Q_UNUSED(newModel);
+        Q_UNUSED(newModel)
         // can be overridden
     }
 
@@ -1190,7 +1190,7 @@ namespace BlackCore
                     const CLength radius = settings.getRecordedGndRadius().isNull() ? CElevationPlane::singlePointRadius() : settings.getRecordedGndRadius();
                     const CElevationPlane ep(situation, radius);
                     const bool remembered = this->rememberGroundElevation(cs, ep, radius);
-                    Q_UNUSED(remembered); // false means it was already in that cache, or something else is wrong
+                    Q_UNUSED(remembered) // false means it was already in that cache, or something else is wrong
                 }
             }
         }

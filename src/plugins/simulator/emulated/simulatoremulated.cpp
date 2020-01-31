@@ -10,7 +10,11 @@
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/math/mathutils.h"
 
+#include <QPointer>
+#include <QTimer>
 #include <QApplication>
 
 using namespace BlackGui;
@@ -19,6 +23,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Math;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::Weather;
@@ -204,6 +209,30 @@ namespace BlackSimPlugin
             return true;
         }
 
+        bool CSimulatorEmulated::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
+        {
+            const bool hasRequested = CSimulatorPluginCommon::requestElevation(reference, callsign);
+            if (hasRequested || !m_enablePseudoElevation) { return hasRequested; }
+
+            // For TESTING purposes ONLY
+            // we could not request elevation
+            // very crude 1st implementation
+            const double elvRnd = CMathUtils::randomDouble(1000);
+            const CAltitude alt(elvRnd, CLengthUnit::ft());
+            CElevationPlane elv(reference, CElevationPlane::singlePointRadius());
+            elv.setGeodeticHeight(alt);
+
+            QPointer<CSimulatorEmulated> myself(this);
+            QTimer::singleShot(444, this, [ = ]
+            {
+                if (!myself) { return; }
+                emit myself->receivedRequestedElevation(elv, callsign);
+            });
+
+            emit this->requestedElevation(callsign);
+            return true;
+        }
+
         void CSimulatorEmulated::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)
         {
             if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraftToHighlight.toQString(), boolToTrueFalse(enableHighlight), displayTime.toQString()); }
@@ -348,8 +377,8 @@ namespace BlackSimPlugin
             // debugging/logging (just here for debugging purposes)
             const CAircraftModel networkModel = remoteAircraft.getNetworkModel();
             const CAircraftModel currentModel = remoteAircraft.getModel();
-            Q_UNUSED(networkModel);
-            Q_UNUSED(currentModel);
+            Q_UNUSED(networkModel)
+            Q_UNUSED(currentModel)
 
             return true;
         }
@@ -513,8 +542,8 @@ namespace BlackSimPlugin
                 const CAircraftParts p = result;
                 m_countInterpolatedParts++;
                 m_countInterpolatedSituations++;
-                Q_UNUSED(s);
-                Q_UNUSED(p);
+                Q_UNUSED(s)
+                Q_UNUSED(p)
             }
 
             this->finishUpdateRemoteAircraftAndSetStatistics(now);

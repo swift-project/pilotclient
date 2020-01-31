@@ -18,6 +18,8 @@
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/identifiable.h"
+
+#include <QStringListModel>
 #include <QFrame>
 #include <QTimer>
 #include <QScopedPointer>
@@ -84,6 +86,9 @@ namespace BlackGui
             //! Callsign has been changed
             void onCallsignEntered();
 
+            //! Use pseudo elevation
+            void onPseudoElevationToggled(bool checked);
+
             //! Toggle start/stop
             void toggleStartStop();
 
@@ -126,6 +131,9 @@ namespace BlackGui
             //! Call the callback of requested elevations as it would come from the simulator
             void onInjectElevation();
 
+            //! Entering a count failed
+            void onElevationHistoryCountFinished();
+
             //! \copydoc BlackCore::ISimulator::resetAircraftStatistics
             void resetStatistics();
 
@@ -134,6 +142,10 @@ namespace BlackGui
 
             //! Clear
             void clear();
+
+            //! Clear elevation results
+            void clearElevationResults();
+
 
             //! Check if can do logging, otherwise stop and display message
             bool checkLogPrerequisites();
@@ -165,8 +177,10 @@ namespace BlackGui
             QPointer<BlackCore::CAirspaceMonitor> m_airspaceMonitor; //!< related airspace monitor
             BlackMisc::Aviation::CAircraftSituationList m_lastInterpolations; //!< list of last interpolations
             BlackMisc::Aviation::CCallsign m_callsign; //!< current callsign
-            int m_elvRequested = 0; //!< counted via signal
-            int m_elvReceived  = 0; //!< counted via signal
+            int m_elvRequested = 0;     //!< counted via signal
+            int m_elvReceived  = 0;     //!< counted via signal
+            int m_elvHistoryCount = -1; //!< how many in history
+            QStringListModel *m_elvHistoryModel = nullptr;
 
             static const QString &startText();
             static const QString &stopText();

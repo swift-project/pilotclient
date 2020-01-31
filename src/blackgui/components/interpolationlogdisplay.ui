@@ -860,12 +860,87 @@
          <property name="title">
           <string>Result</string>
          </property>
-         <layout class="QVBoxLayout" name="vl_ElevationAtPositionResult">
-          <item>
+         <layout class="QGridLayout" name="gl_Elevation" columnstretch="4,6">
+          <item row="1" column="0">
            <widget class="QPlainTextEdit" name="pte_ElevationAtPosition">
             <property name="readOnly">
              <bool>true</bool>
             </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QListView" name="lv_ElevevationHistory"/>
+          </item>
+          <item row="0" column="0" colspan="2">
+           <widget class="QWidget" name="wi_ElvButtons" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <spacer name="hs_Elevation">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pb_ElvClear">
+               <property name="text">
+                <string>clear</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lbl_ElvHistory">
+               <property name="text">
+                <string>history</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="le_ElvHistoryCount">
+               <property name="maximumSize">
+                <size>
+                 <width>100</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>0</string>
+               </property>
+               <property name="maxLength">
+                <number>6</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="hs_ElevationGap">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="cb_ElvAllowPseudo">
+               <property name="text">
+                <string>fake elevation</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
