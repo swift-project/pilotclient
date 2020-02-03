@@ -78,6 +78,14 @@ namespace BlackMisc
             //! Supervisor?
             bool isSupervisorCallsign() const;
 
+            //! Pseudo callsing for broadcast messages
+            //! \remark hack, workaround for VATSIM using "*" as callsign for text messages
+            bool isBroadcastCallsign() const;
+
+            //! Set a human readable name as "broadcast" callsign
+            //! \remark hack, workaround for VATSIM using "*" as callsign for text messages
+            void markAsBroadcastCallsign();
+
             //! Returns true if this is a co-pilot callsign of pilot. The logic is that the callsign is the same as the pilot one
             //! but with a single character as suffix.
             //! e.g Pilot logged in as DLH123, observer logged in as DLH123A

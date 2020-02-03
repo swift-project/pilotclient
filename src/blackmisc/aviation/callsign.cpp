@@ -134,6 +134,17 @@ namespace BlackMisc
             return m_callsign.endsWith("SUP");
         }
 
+        bool CCallsign::isBroadcastCallsign() const
+        {
+            return m_callsignAsSet == "*" || m_callsign == "*" || m_callsignAsSet == "BROADCAST";
+        }
+
+        void CCallsign::markAsBroadcastCallsign()
+        {
+            m_callsignAsSet = "BROADCAST";
+            m_callsign = "BROADCAST";
+        }
+
         bool CCallsign::isMaybeCopilotCallsign(const CCallsign &pilotCallsign) const
         {
             return  m_callsign.startsWith(pilotCallsign.asString()) &&
