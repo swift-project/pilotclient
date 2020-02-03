@@ -25,8 +25,8 @@
 #include <QScopedPointer>
 #include <QPointer>
 
-namespace BlackCore { class CAirspaceMonitor; }
 namespace Ui { class CInterpolationLogDisplay; }
+namespace BlackCore  { class CAirspaceMonitor; }
 namespace BlackGui
 {
     namespace Components

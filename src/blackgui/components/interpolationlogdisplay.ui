@@ -342,12 +342,18 @@
             <property name="readOnly">
              <bool>true</bool>
             </property>
+            <property name="placeholderText">
+             <string>simulator specific information</string>
+            </property>
            </widget>
           </item>
           <item row="0" column="0">
            <widget class="QLabel" name="lbl_CG">
+            <property name="toolTip">
+             <string>Simulator CG per callsign</string>
+            </property>
             <property name="text">
-             <string>CG:</string>
+             <string>Sim.CG:</string>
             </property>
            </widget>
           </item>
@@ -871,11 +877,11 @@
           <item row="1" column="1">
            <widget class="QListView" name="lv_ElevevationHistory"/>
           </item>
-          <item row="0" column="0" colspan="2">
+          <item row="0" column="1">
            <widget class="QWidget" name="wi_ElvButtons" native="true">
             <layout class="QHBoxLayout" name="horizontalLayout">
              <item>
-              <spacer name="hs_Elevation">
+              <spacer name="hs_ElvButtons">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -941,6 +947,13 @@
               </widget>
              </item>
             </layout>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl_ElevationAtPosition">
+            <property name="text">
+             <string>Elevation for coordinates:</string>
+            </property>
            </widget>
           </item>
          </layout>

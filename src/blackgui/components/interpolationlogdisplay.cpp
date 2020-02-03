@@ -138,7 +138,7 @@ namespace BlackGui
                 const QString log = m_simulator->latestLoggedDataFormatted(m_callsign);
                 ui->te_TextLog->setText(log);
             }
-            else if (ui->tw_LogTabs->currentWidget() == ui->tb_DataFlow)
+            else if (ui->tw_LogTabs->currentWidget() == ui->tb_DataFlow && m_airspaceMonitor)
             {
                 ui->le_CG->setText(m_airspaceMonitor->getSimulatorCG(m_callsign).valueRoundedWithUnit(CLengthUnit::ft(), 1));
                 ui->le_CG->home(false);
