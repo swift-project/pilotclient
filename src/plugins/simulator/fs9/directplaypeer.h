@@ -13,7 +13,6 @@
 #include "hostnode.h"
 #include "callbackwrapper.h"
 #include "blackmisc/aviation/callsign.h"
-#include "blackmisc/worker.h"
 #include "blackmisc/logcategorylist.h"
 #include <QObject>
 #include <QList>
@@ -38,7 +37,7 @@ namespace BlackSimPlugin
 
         public:
             //! Constructor
-            CDirectPlayPeer(QObject *parent, const BlackMisc::Aviation::CCallsign &callsign);
+            CDirectPlayPeer(const BlackMisc::Aviation::CCallsign &callsign, QObject *parent = nullptr);
 
             //! Destructor
             virtual ~CDirectPlayPeer() override;

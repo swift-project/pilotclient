@@ -31,7 +31,7 @@ namespace BlackSimPlugin
             };
 
             //! Constructor
-            CFs9Host(QObject *owner);
+            CFs9Host(QObject *parent = nullptr);
 
             //! Destructor
             virtual ~CFs9Host() override;
