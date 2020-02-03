@@ -54,6 +54,10 @@ else:unix: {
     QT5_LIBRARIES *= libQt5Xml.so.5
     QT5_LIBRARIES *= libQt5MultimediaGstTools.so.5
 
+    ICU_LIBRARIES *= libicui18n.so.56
+    ICU_LIBRARIES *= libicuuc.so.56
+    ICU_LIBRARIES *= libicudata.so.56
+
     qt5_target.path = $${PREFIX}/lib
     QT5_LIBRARY_DIR = $$[QT_INSTALL_LIBS]
 }
@@ -64,15 +68,10 @@ for (LIBRARY, QT5_LIBRARIES) {
     qt5_target.files *= $${LIBRARY_PATH}
 }
 
-unix {
-    ICU_LIBRARIES *= libicui18n.so.55
-    ICU_LIBRARIES *= libicuuc.so.55
-    ICU_LIBRARIES *= libicudata.so.55
 
-    for (LIBRARY, ICU_LIBRARIES) {
-        LIBRARY_PATH = /opt/icu55/$${LIBRARY}
-        exists($$LIBRARY_PATH): qt5_target.files *= $${LIBRARY_PATH}
-    }
+for (LIBRARY, ICU_LIBRARIES) {
+    LIBRARY_PATH = $${QT5_LIBRARY_DIR}/$${LIBRARY}
+    exists($$LIBRARY_PATH): qt5_target.files *= $${LIBRARY_PATH}
 }
 
 INSTALLS += qt5_target
