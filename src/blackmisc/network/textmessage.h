@@ -114,6 +114,9 @@ namespace BlackMisc
             //! Initial message of server?
             bool isServerMessage() const;
 
+            //! Is this a broadcast message
+            bool isBroadcastMessage() const;
+
             //! Whole message as formatted string. Used to display message in a console window.
             //! \param withSender        include sender information in string?
             //! \param withRecipient     include recipient information in string?
@@ -155,6 +158,9 @@ namespace BlackMisc
 
             //! Mark as relayed message
             void markAsRelayedMessage() { m_relayedMessage = true; }
+
+            //! Mark as broadcast message
+            void markAsBroadcastMessage();
 
             //! Mark as relayed and keep original sender
             void makeRelayedMessage(const Aviation::CCallsign &partnerCallsign);

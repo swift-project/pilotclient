@@ -62,6 +62,10 @@ namespace BlackMisc
 
         bool CTextMessage::isSupervisorMessage() const
         {
+            // ignore broadcast messages
+            if (this->isBroadcastMessage()) { return false; }
+
+            // normal SUP message
             return m_senderCallsign.isSupervisorCallsign();
         }
 
@@ -77,6 +81,11 @@ namespace BlackMisc
         bool CTextMessage::isRelayedMessage() const
         {
             return m_relayedMessage || this->getMessage().startsWith(CTextMessage::swiftRelayMessage());
+        }
+
+        void CTextMessage::markAsBroadcastMessage()
+        {
+
         }
 
         void CTextMessage::makeRelayedMessage(const CCallsign &partnerCallsign)
@@ -191,6 +200,12 @@ namespace BlackMisc
             if (!this->isPrivateMessage()) { return false; }
             const CCallsign cs = this->getSenderCallsign();
             return (cs.asString().startsWith("SERVER", Qt::CaseInsensitive));
+        }
+
+        bool CTextMessage::isBroadcastMessage() const
+        {
+            const CCallsign cs = this->getRecipientCallsign();
+            return cs.isBroadcastCallsign();
         }
 
         QString CTextMessage::asString(bool withSender, bool withRecipient, const QString &separator) const

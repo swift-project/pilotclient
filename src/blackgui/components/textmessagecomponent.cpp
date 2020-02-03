@@ -214,8 +214,18 @@ namespace BlackGui
                     relevantForMe = true;
                 }
 
-                // check message
-                if (message.isRadioMessage())
+                // check message, handle special cases first
+                if (message.isServerMessage())
+                {
+                    // void
+                }
+                else if (message.isBroadcastMessage())
+                {
+                    // FAKE private message
+                    this->addPrivateChannelTextMessage(message);
+                    relevantForMe = true;
+                }
+                else if (message.isRadioMessage())
                 {
                     // check for own COM frequencies
                     if (message.isSendToFrequency(ownAircraft.getCom1System().getFrequencyActive()))
@@ -235,11 +245,16 @@ namespace BlackGui
                         sGui->getCContextAudioBase()->playNotification(CNotificationSounds::NotificationTextCallsignMentioned, false);
                     }
                 }
-                else if (message.isPrivateMessage() && !message.isServerMessage())
+                else if (message.isPrivateMessage())
                 {
                     // private message
                     this->addPrivateChannelTextMessage(message);
                     relevantForMe = true;
+                }
+                else
+                {
+                    BLACK_AUDIT_X(false, Q_FUNC_INFO, "Wrong message type");
+                    continue;
                 }
 
                 // message for me? right frequency? otherwise quit
@@ -252,7 +267,10 @@ namespace BlackGui
                 if (!relevantForMe) { continue; }
 
                 // overlay message if this channel is not selected
-                if (!message.wasSent() && !message.isSendToUnicom() && !message.isServerMessage())
+                if (message.isServerMessage())    { continue; }
+                if (message.isBroadcastMessage()) { continue; }
+
+                if (!message.wasSent() && !message.isSendToUnicom())
                 {
                     // if the channel is selected, do nothing
                     if (!this->isCorrespondingTextMessageTabSelected(message))
@@ -526,8 +544,12 @@ namespace BlackGui
         void CTextMessageComponent::addPrivateChannelTextMessage(const CTextMessage &textMessage)
         {
             if (!textMessage.isPrivateMessage()) { return; }
-            const CCallsign cs = textMessage.wasSent() ? textMessage.getRecipientCallsign() : textMessage.getSenderCallsign();
+            CCallsign cs = textMessage.wasSent() ? textMessage.getRecipientCallsign() : textMessage.getSenderCallsign();
             if (cs.isEmpty()) { return; }
+
+            const bool isBroadcast = textMessage.isBroadcastMessage();
+            if (isBroadcast) { cs.markAsBroadcastCallsign(); }
+
             const QWidget *tab = this->findTextMessageTabByCallsign(cs);
             if (!tab) { tab = this->addNewTextMessageTab(cs); }
             Q_ASSERT_X(tab, Q_FUNC_INFO, "Missing tab");
@@ -537,6 +559,9 @@ namespace BlackGui
             textEdit->insertTextMessage(textMessage);
 
             // sound
+            if (textMessage.isServerMessage()) { return; }
+            if (isBroadcast) { return; }
+
             const bool playSound = !textMessage.wasSent() && !m_usedAsOverlayWidget && sGui && !sGui->isShuttingDown() && sGui->getIContextAudio();
             if (sGui && sGui->getIContextAudio() && playSound)
             {
