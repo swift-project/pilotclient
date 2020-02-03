@@ -553,7 +553,7 @@ namespace BlackSimPlugin
 
         CSimulatorFs9Factory::CSimulatorFs9Factory(QObject *parent) :
             QObject(parent),
-            m_fs9Host(new CFs9Host(this), cleanupFs9Host),
+            m_fs9Host(new CFs9Host, cleanupFs9Host),
             m_lobbyClient(new CLobbyClient, cleanupLobbyClient)
         {
             registerMetadata();

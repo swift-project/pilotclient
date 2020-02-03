@@ -35,7 +35,7 @@ namespace BlackSimPlugin
         CFs9Client::CFs9Client(const CSimulatedAircraft &remoteAircraft,
                                const CTime &updateInterval,
                                CInterpolationLogger *logger, ISimulator *simulator) :
-            CDirectPlayPeer(simulator, remoteAircraft.getCallsign()),
+            CDirectPlayPeer(remoteAircraft.getCallsign(), simulator),
             m_remoteAircraft(remoteAircraft),
             m_updateInterval(updateInterval),
             m_interpolator(remoteAircraft.getCallsign(), simulator, simulator, simulator->getRemoteAircraftProvider(), logger),
@@ -296,15 +296,15 @@ namespace BlackSimPlugin
 
             DPNHANDLE asyncOpHandle;
             hr = m_directPlayPeer->Connect(&dpAppDesc,
-                               m_hostAddress,
-                               m_deviceAddress,
-                               nullptr,
-                               nullptr,
-                               nullptr, 0,
-                               nullptr,
-                               nullptr,
-                               &asyncOpHandle,
-                               0);
+                                           m_hostAddress,
+                                           m_deviceAddress,
+                                           nullptr,
+                                           nullptr,
+                                           nullptr, 0,
+                                           nullptr,
+                                           nullptr,
+                                           &asyncOpHandle,
+                                           0);
             if (!isPending(hr) && isFailure(hr)) { return logDirectPlayError(hr); }
             return hr;
         }
