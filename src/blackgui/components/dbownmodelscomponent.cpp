@@ -649,7 +649,7 @@ namespace BlackGui
             const CStatusMessage loadingMsg = CStatusMessage(this).info(u"%1 loading: %2") << simulator.toQString(true) << message;
             this->showOverlayHTMLMessage(loadingMsg, 5000);
             ui->tvp_OwnAircraftModels->showLoadIndicatorWithTimeout(5000); // trigger new load indicator
-            Q_UNUSED(progress);
+            Q_UNUSED(progress)
         }
 
         void CDbOwnModelsComponent::onModelLoaderLoadingFinished(const CStatusMessageList &statusMessages, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info)
@@ -657,27 +657,29 @@ namespace BlackGui
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Expect single simulator");
 
             bool hideIndicator = false; // hide in case loading failed
+            CStatusMessage summaryMsg;
+
             if (IAircraftModelLoader::isLoadedInfo(info) && m_modelLoader)
             {
                 const CAircraftModelList models(m_modelLoader->getCachedModels(simulator));
                 const int modelsLoaded = models.size();
                 ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models);
-                CStatusMessage m;
+
                 if (modelsLoaded < 1)
                 {
                     // loading ok, but no data
-                    m = CLogMessage(this).warning(u"Loading completed for simulator '%1', but no models") << simulator;
+                    summaryMsg = CLogMessage(this).warning(u"Loading completed for simulator '%1', but no models") << simulator;
                     hideIndicator = true;
                 }
                 else
                 {
-                    m = CLogMessage(this).info(u"Loading completed for simulator '%1' with %2 models") << simulator << modelsLoaded;
+                    summaryMsg = CLogMessage(this).info(u"Loading completed for simulator '%1' with %2 models") << simulator << modelsLoaded;
                 }
 
                 // overlay
-                if (!m.isEmpty() && info == IAircraftModelLoader::ParsedData)
+                if (!summaryMsg.isEmpty() && info == IAircraftModelLoader::ParsedData)
                 {
-                    this->showOverlayHTMLMessage(m, 5000);
+                    this->showOverlayHTMLMessage(summaryMsg, 5000);
                 }
 
                 // signal
@@ -696,18 +698,33 @@ namespace BlackGui
             }
 
             // with errors we make sure errors are on top
-            int timeoutMs = -1;
             if (statusMessages.hasErrorMessages())
             {
                 this->setOverlayMessagesSorting(CStatusMessage::IndexSeverityAsIcon, Qt::DescendingOrder);
+                this->showOverlayMessages(statusMessages, false, -1);
             }
-            else if (!statusMessages.hasWarningOrErrorMessages())
+            else
             {
-                // no issues
-                timeoutMs = 5000;
+                // no issues, directly hide
+                const int timeoutMs = statusMessages.hasWarningOrErrorMessages() ? -1 : 7500;
+                if (statusMessages.size() < 50)
+                {
+                    // small number of messages
+                    this->showOverlayMessages(statusMessages, false, timeoutMs);
+                }
+                else
+                {
+                    QPointer<CDbOwnModelsComponent> myself(this);
+                    const QString confirmMessage = QStringLiteral("Do you want to see the %1 detailled messages?").arg(statusMessages.size());
+                    this->showOverlayMessagesWithConfirmation(summaryMsg, false, confirmMessage, [ = ]
+                    {
+                        if (!myself) { return; }
+                        myself->showOverlayMessages(statusMessages);
+                    });
+                }
             }
 
-            this->showOverlayMessages(statusMessages, false, timeoutMs);
+
             if (hideIndicator) { ui->tvp_OwnAircraftModels->hideLoadIndicatorForced(); }
 
             // cache loads may occur in background, do not adjust UI settings
