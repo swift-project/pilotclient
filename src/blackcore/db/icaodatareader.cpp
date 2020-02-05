@@ -784,7 +784,7 @@ namespace BlackCore
 
         bool CIcaoDataReader::hasChangedUrl(CEntityFlags::Entity entity, CUrl &oldUrlInfo, CUrl &newUrlInfo) const
         {
-            Q_UNUSED(entity);
+            Q_UNUSED(entity)
             oldUrlInfo = m_readerUrlCache.get();
             newUrlInfo = this->getBaseUrl(CDbFlags::DbReading);
             return CDatabaseReader::isChangedUrl(oldUrlInfo, newUrlInfo);
