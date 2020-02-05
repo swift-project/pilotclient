@@ -273,6 +273,9 @@ namespace BlackCore
             if (str == "HLP")   return ClientQueryType::Unknown; // CCP_HelpOn
             if (str == "NOHLP") return ClientQueryType::Unknown; // CCP_HelpOff
 
+            // Query types from customized FSD servers
+            if (str == "NEWATIS")   return ClientQueryType::Unknown;
+
             // we should NOT get here
             const QByteArray msg = QStringLiteral("Unknown ClientQueryType '%1'").arg(str).toLatin1();
             BLACK_AUDIT_X(false, Q_FUNC_INFO, msg.constData());
