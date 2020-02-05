@@ -102,7 +102,7 @@ namespace BlackCore
 
         // trigger reading
         // but do not start all at the same time
-        const CEntityFlags::Entity icaoPart = entities & CEntityFlags::AllIcaoAndCountries;
+        const CEntityFlags::Entity icaoPart  = entities & CEntityFlags::AllIcaoCountriesCategory;
         const CEntityFlags::Entity modelPart = entities & CEntityFlags::DistributorLiveryModel;
         CEntityFlags::Entity remainingEntities = entities & ~icaoPart;
         remainingEntities &= ~modelPart;

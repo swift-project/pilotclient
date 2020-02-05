@@ -56,7 +56,8 @@ namespace BlackCore
 
             // we accept cached data
             Q_ASSERT_X(!entities.testFlag(CEntityFlags::DbInfoObjectEntity), Q_FUNC_INFO, "Read info objects directly");
-            const bool hasDbInfoObjects = this->hasDbInfoObjects(); // no info objects is not necessarily an error, but indicates a) either data not available (DB down) or b) only caches are used
+            const bool hasDbInfoObjects     = this->hasDbInfoObjects(); // no info objects is not necessarily an error, but indicates a) either data not available (DB down) or b) only caches are used
+            // const bool hasSharedInfoObjects = this->hasSharedInfoObjects();
             CEntityFlags::Entity allEntities    = entities;
             CEntityFlags::Entity cachedEntities = CEntityFlags::NoEntity;
             CEntityFlags::Entity dbEntities     = CEntityFlags::NoEntity;
@@ -74,7 +75,7 @@ namespace BlackCore
                 const CDbFlags::DataRetrievalModeFlag rmDbOrSharedFlag = CDbFlags::modeToModeFlag(rm & CDbFlags::DbReadingOrShared);
                 const QString rmDbOrSharedFlagString = CDbFlags::flagToString(rmDbOrSharedFlag);
                 const bool rmDbReadingOrShared = (rmDbOrSharedFlag == CDbFlags::DbReading || rmDbOrSharedFlag == CDbFlags::Shared);
-                const int currentEntityCount = this->getCacheCount(currentEntity);
+                const int currentEntityCount   = this->getCacheCount(currentEntity);
 
                 if (rm.testFlag(CDbFlags::Ignore) || rm.testFlag(CDbFlags::Canceled))
                 {
@@ -82,7 +83,9 @@ namespace BlackCore
                 }
                 else if (rm.testFlag(CDbFlags::Cached))
                 {
-                    // info object comparisons only for: cache + shared or cache + DB data
+                    //
+                    // !!! info object comparisons only for: cache + shared or cache + DB data
+                    //
                     if (hasDbInfoObjects && rmDbReadingOrShared)
                     {
                         // check mode here for consistency
@@ -123,7 +126,7 @@ namespace BlackCore
                     else
                     {
                         if (!rmDbReadingOrShared) { CLogMessage(this).info(u"No DB or shared reading for '%1', read mode is: '%2'") << currentEntityName << rmString; }
-                        if (!hasDbInfoObjects) { CLogMessage(this).info(u"No DB info objects for '%1', read mode is: '%2'") << currentEntityName << rmString; }
+                        if (!hasDbInfoObjects)    { CLogMessage(this).info(u"No DB info objects for '%1', read mode is: '%2'") << currentEntityName << rmString; }
                         if (currentEntityCount > 0)
                         {
                             CLogMessage(this).info(u"Cache for '%1' already read, %2 entries") << currentEntityName << currentEntityCount;
