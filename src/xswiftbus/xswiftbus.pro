@@ -32,8 +32,8 @@ else:unix {
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
 
-SOURCES += $$files(*.cpp)
-HEADERS += $$files(*.h)
+SOURCES += $$files($$PWD/*.cpp)
+HEADERS += $$files($$PWD/*.h)
 
 # Using the $$files function so we can remove some with -= below
 SOURCES += $$files(libxplanemp/src/*.cpp)
