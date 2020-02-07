@@ -95,7 +95,7 @@ namespace BlackSimPlugin
                 this->speedBrakes.push_back(parts.isSpoilersOut() ? 1 : 0);
                 this->slats.push_back(parts.getFlapsPercent() / 100.0);
                 this->wingSweeps.push_back(0.0);
-                this->thrusts.push_back(parts.isAnyEngineOn() ? 0 : 0.75);
+                this->thrusts.push_back(parts.isAnyEngineOn() ? 0.75 : 0);
                 this->elevators.push_back(0.0);
                 this->rudders.push_back(0.0);
                 this->ailerons.push_back(0.0);
