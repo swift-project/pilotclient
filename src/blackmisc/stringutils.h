@@ -308,6 +308,12 @@ namespace BlackMisc
     //! Contains any string of the list?
     BLACKMISC_EXPORT bool containsAny(const QString &testString, const QStringList &any, Qt::CaseSensitivity cs);
 
+    //! Parse a fraction like 2/3
+    BLACKMISC_EXPORT double parseFraction(const QString &fraction, double failDefault = std::numeric_limits<double>::quiet_NaN());
+
+    //! Remove leading 0, trailing 0, " ", and "." from a number
+    BLACKMISC_EXPORT QString cleanNumber(const QString &number);
+
     namespace Mixin
     {
         /*!

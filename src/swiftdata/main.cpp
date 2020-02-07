@@ -25,9 +25,9 @@ using namespace BlackGui;
 
 int main(int argc, char *argv[])
 {
-    CGuiApplication::highDpiScreenSupport(CGuiApplication::parseScaleFactor(argc, argv));
+    CGuiApplication::highDpiScreenSupport(CGuiApplication::scaleFactor(argc, argv));
     QApplication qa(argc, argv);
-    Q_UNUSED(qa);
+    Q_UNUSED(qa)
 
     CCrashHandler::instance()->init();
     CGuiApplication a(CApplicationInfo::swiftMappingTool(), CApplicationInfo::MappingTool, CIcons::swiftDatabase48());

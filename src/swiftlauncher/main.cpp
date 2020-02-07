@@ -29,7 +29,7 @@ using namespace BlackCore::Db;
 int main(int argc, char *argv[])
 {
     //! [SwiftApplicationDemo]
-    CGuiApplication::highDpiScreenSupport(CGuiApplication::parseScaleFactor(argc, argv));
+    CGuiApplication::highDpiScreenSupport(CGuiApplication::scaleFactor(argc, argv));
     QApplication qa(argc, argv); // needed
     Q_UNUSED(qa)
     CGuiApplication a(CApplicationInfo::swiftLauncher(), CApplicationInfo::Laucher, CIcons::swiftLauncher1024());

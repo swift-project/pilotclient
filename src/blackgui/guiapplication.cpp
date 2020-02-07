@@ -66,6 +66,7 @@
 #include <QMessageBox>
 #include <QtGlobal>
 #include <QWhatsThis>
+#include <Qt>
 
 using namespace BlackConfig;
 using namespace BlackMisc;
@@ -351,21 +352,27 @@ namespace BlackGui
         CApplication::exit(retcode);
     }
 
-    void CGuiApplication::highDpiScreenSupport(double scaleFactor)
+    void CGuiApplication::highDpiScreenSupport(const QString &scaleFactor)
     {
         // https://lists.qt-project.org/pipermail/development/2019-September/037434.html
-        if (scaleFactor < 0)
+        // QSize s = CGuiUtility::physicalScreenSizeOs();
+        QString sf = scaleFactor.trimmed().isEmpty() ? defaultScaleFactorString() : scaleFactor;
+        if (sf.contains('/'))
         {
-            // qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1"); // until 5.14
-            qputenv("QT_ENABLE_HIGHDPI_SCALING", "1");
+            const double sfd = parseFraction(scaleFactor, -1);
+            sf = sfd < 0 ? "1.0" : QString::number(sfd, 'f', 8);
         }
-        else
-        {
-            QApplication::setAttribute(Qt::AA_EnableHighDpiScaling); // DPI support
-            QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps); // HiDPI pixmaps
-            const QString sf = QString::number(scaleFactor, 'f', 2);
-            qputenv("QT_SCALE_FACTOR", sf.toLatin1());
-        }
+
+        sf = cleanNumber(sf);
+
+        QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);  // DPI support
+        QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps); // HiDPI pixmaps
+
+        // qputenv("QT_ENABLE_HIGHDPI_SCALING", "1");
+        QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::Floor);
+
+        const QByteArray sfa = sf.toLatin1();
+        qputenv("QT_SCALE_FACTOR", sfa);
     }
 
     bool CGuiApplication::isUsingHighDpiScreenSupport()
@@ -375,7 +382,7 @@ namespace BlackGui
 
     QScreen *CGuiApplication::currentScreen()
     {
-        QWidget *w = CGuiApplication::mainApplicationWidget();
+        const QWidget *w = CGuiApplication::mainApplicationWidget();
         const int s = QApplication::desktop()->screenNumber(w);
         if (s < QGuiApplication::screens().size()) { return QGuiApplication::screens()[s]; }
         return QGuiApplication::primaryScreen();
@@ -550,6 +557,37 @@ namespace BlackGui
             }
         }
         return -1.0;
+    }
+
+    QString CGuiApplication::scaleFactor(int argc, char *argv[])
+    {
+        for (int i = 1; i < argc; ++i)
+        {
+            if (qstrcmp(argv[i], "--scale") == 0 || qstrcmp(argv[i], "-scale") == 0)
+            {
+                if (i + 1 >= argc) { return QString(); } // no value
+                const QString factor(argv[i + 1]);
+                return factor.trimmed();
+            }
+        }
+        return QString();
+    }
+
+    QString CGuiApplication::defaultScaleFactorString()
+    {
+        if (!CBuildConfig::isRunningOnWindowsNtPlatform()) { return "1.0"; }
+
+        // On windows
+        // Qt 5.14.1 default is device ratio 3
+        // Qt 5.14.0 default device ratio was 2
+
+        // 2/3 (0.66667) => device ratio 3
+        // 0.75 => device ratio 2.25
+        // 0.8  => device ratio 2.4
+        // 1.00 => device ratio 3
+
+        // currently NOT used
+        return "1.0";
     }
 
     bool CGuiApplication::cmdLineErrorMessage(const QString &errorMessage, bool retry) const

@@ -491,6 +491,64 @@ namespace BlackMisc
         return (c % 2) == 0;
     }
 
+    double parseFraction(const QString &fraction, double failDefault)
+    {
+        if (fraction.isEmpty()) { return failDefault; }
+        bool ok;
+
+        double r = failDefault;
+        if (fraction.contains('/'))
+        {
+            const QStringList parts = fraction.split('/');
+            if (parts.size() != 2) { return failDefault; }
+            const double c = parts.front().trimmed().toDouble(&ok);
+            if (!ok) { return failDefault; }
+
+            const double d = parts.last().trimmed().toDouble(&ok);
+            if (!ok) { return failDefault; }
+            if (qFuzzyCompare(0.0, d)) { return failDefault; }
+            r = c / d;
+        }
+        else
+        {
+            r = fraction.trimmed().toDouble(&ok);
+            if (!ok) { return failDefault; }
+        }
+        return r;
+    }
+
+    QString cleanNumber(const QString &number)
+    {
+        QString n = number.trimmed();
+        if (n.isEmpty()) { return QString(); }
+
+        int dp = n.indexOf('.');
+        if (dp < 0) { dp = n.indexOf(','); }
+
+        // clean all trailing stuff
+        while (dp >= 0 && !n.isEmpty())
+        {
+            const QChar l = n.at(n.size() - 1);
+            if (l == '0')
+            {
+                n.chop(1);
+                continue;
+            }
+            else if (l == '.' || l == ',')
+            {
+                n.chop(1);
+            }
+            break;
+        }
+
+        while (n.startsWith("00"))
+        {
+            n.remove(0, 1);
+        }
+
+        return n;
+    }
+
 } // ns
 
 //! \endcond
