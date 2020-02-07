@@ -76,7 +76,8 @@ void SwiftGuiStd::init()
     sGui->initMainApplicationWidget(this);
 
     // experimental: avoid mic flickering
-    if (CBuildConfig::isLocalDeveloperDebugBuild()) { BlackSound::occupyAudioInputDevice(); }
+    // disabled for 5.14.1
+    // if (CBuildConfig::isLocalDeveloperDebugBuild()) { BlackSound::occupyAudioInputDevice(); }
 
     // log messages
     m_logSubscriber.changeSubscription(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));

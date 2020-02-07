@@ -43,6 +43,14 @@
 #include <QPropertyAnimation>
 #include <QDesktopWidget>
 
+// for the screen size
+
+#ifdef Q_OS_WINDOWS
+#include "wtypes.h"
+#include "ShellScalingApi.h"
+#include <iostream>
+#endif
+
 using namespace BlackMisc;
 
 namespace BlackGui
@@ -114,6 +122,79 @@ namespace BlackGui
         return QApplication::desktop()->screenGeometry(QApplication::desktop()).size();
     }
 
+    QSizeF CGuiUtility::physicalScreenSize(QWidget *currentWidget)
+    {
+        QScreen *s = QGuiApplication::screens().front();
+        if (currentWidget)
+        {
+            const int sn = QApplication::desktop()->screenNumber(currentWidget);
+            s = QGuiApplication::screens().at(sn);
+        }
+
+        if (!s) { return QSizeF(); }
+        const QSizeF ps1 = s->physicalSize();
+        return ps1;
+    }
+
+    namespace Private
+    {
+#ifdef Q_OS_WINDOWS
+        QSize windowsGetDesktopResolution()
+        {
+            /**
+            // https://stackoverflow.com/questions/8690619/how-to-get-screen-resolution-in-c
+            RECT desktop;
+            // Get a handle to the desktop window
+            const HWND hDesktop = GetDesktopWindow();
+            // Get the size of screen to the variable desktop
+            GetWindowRect(hDesktop, &desktop);
+            // The top left corner will have coordinates (0,0)
+            // and the bottom right corner will have coordinates
+            // (horizontal, vertical)
+            const int horizontal = desktop.right;
+            const int vertical   = desktop.bottom;
+            return QSize(vertical, horizontal);
+            **/
+
+            // https://stackoverflow.com/questions/2156212/how-to-get-the-monitor-screen-resolution-from-a-hwnd
+            const HWND hDesktop = GetDesktopWindow();
+            HMONITOR monitor = MonitorFromWindow(hDesktop, MONITOR_DEFAULTTONEAREST);
+            MONITORINFO info;
+            info.cbSize = sizeof(MONITORINFO);
+            GetMonitorInfo(monitor, &info);
+
+            /**
+            DEVICE_SCALE_FACTOR pScale;
+            GetScaleFactorForMonitor(monitor, &pScale);
+            **/
+
+            const int monitor_width  = info.rcMonitor.right  - info.rcMonitor.left;
+            const int monitor_height = info.rcMonitor.bottom - info.rcMonitor.top;
+            return QSize(monitor_height, monitor_width);
+
+            /**
+            // https://stackoverflow.com/a/50205813/356726
+            const int width  = static_cast<int>(GetSystemMetrics(SM_CXSCREEN));
+            const int height = static_cast<int>(GetSystemMetrics(SM_CYSCREEN));
+            return QSize(width, height);
+            **/
+        }
+#endif
+    } // namespace Private
+
+    QSize CGuiUtility::physicalScreenSizeOs()
+    {
+#ifdef Q_OS_WINDOWS
+        return Private::windowsGetDesktopResolution();
+#elif defined(Q_OS_MAC)
+        return QSize();
+#elif defined(Q_OS_LINUX)
+        return QSize();
+#else
+        return QSize();
+#endif
+    }
+
     bool CGuiUtility::isMainWindowFrameless()
     {
         const CEnableForFramelessWindow *mw = CGuiUtility::mainFramelessEnabledWindow();
@@ -122,8 +203,15 @@ namespace BlackGui
 
     QString CGuiUtility::screenInformation(const QString &separator)
     {
+        const QSize ps = physicalScreenSizeOs();
         QString i = u"Number of screens: " % QString::number(QGuiApplication::screens().size()) % separator %
-                    u"Primary screen: " % QGuiApplication::primaryScreen()->name();
+                    u"Primary screen: " % QGuiApplication::primaryScreen()->name() % separator %
+                    u"QT_AUTO_SCREEN_SCALE_FACTOR: " % qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR") % separator %
+                    u"QT_SCALE_FACTOR: " % qgetenv("QT_SCALE_FACTOR") % separator %
+                    u"QT_ENABLE_HIGHDPI_SCALING: " % qgetenv("QT_ENABLE_HIGHDPI_SCALING") % separator %
+                    u"QT_SCALE_FACTOR_ROUNDING_POLICY: " % qgetenv("QT_SCALE_FACTOR_ROUNDING_POLICY") % separator %
+                    u"QT_SCREEN_SCALE_FACTORS: " % qgetenv("QT_SCREEN_SCALE_FACTORS") % separator %
+                    u"OS screen res." % QString::number(ps.width()) % u"/" % QString::number(ps.height()) % separator;
 
         for (const QScreen *screen : QGuiApplication::screens())
         {
@@ -509,7 +597,7 @@ namespace BlackGui
         else
         {
             flags &= ~Qt::WindowStaysOnBottomHint;
-            flags |= Qt::WindowStaysOnTopHint;
+            flags |=  Qt::WindowStaysOnTopHint;
         }
         widget->setWindowFlags(flags);
         widget->show(); // without that the window sometimes just disappears
@@ -523,7 +611,7 @@ namespace BlackGui
         if (onTop)
         {
             flags &= ~Qt::WindowStaysOnBottomHint;
-            flags |= Qt::WindowStaysOnTopHint;
+            flags |=  Qt::WindowStaysOnTopHint;
         }
         else
         {

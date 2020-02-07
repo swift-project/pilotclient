@@ -25,6 +25,9 @@ else {
     QMAKE_CXXFLAGS += -idirafter $$EXTERNALSROOT/common/include/qwt
 }
 
+# needed for "ShellScalingApi.h" only
+# win32 { LIBS *= -lSHCore }
+
 DEPENDPATH += . ..
 
 PRECOMPILED_HEADER = pch/pch.h

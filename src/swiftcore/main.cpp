@@ -27,7 +27,7 @@ using namespace BlackGui;
 int main(int argc, char *argv[])
 {
     //! [SwiftApplicationDemo]
-    CGuiApplication::highDpiScreenSupport(CGuiApplication::parseScaleFactor(argc, argv));
+    CGuiApplication::highDpiScreenSupport(CGuiApplication::scaleFactor(argc, argv));
     QApplication qa(argc, argv);
     Q_UNUSED(qa) // init of qa is required, but qa not used
 

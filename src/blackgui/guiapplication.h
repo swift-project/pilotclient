@@ -284,7 +284,7 @@ namespace BlackGui
 
         //! Support for high DPI screens
         //! \note Needs to be at the beginning of main
-        static void highDpiScreenSupport(double scaleFactor = -1);
+        static void highDpiScreenSupport(const QString &scaleFactor = {});
 
         //! Uses the high DPI support?
         static bool isUsingHighDpiScreenSupport();
@@ -300,7 +300,14 @@ namespace BlackGui
         static void modalWindowToFront();
 
         //! Parse scale factor if any
+        //! \deprecated using scaleFactor now
         static double parseScaleFactor(int argc, char *argv[]);
+
+        //! Get the scale factor
+        static QString scaleFactor(int argc, char *argv[]);
+
+        //! Get a default scale factor
+        static QString defaultScaleFactorString();
 
     signals:
         //! Style sheet changed
