@@ -12,7 +12,7 @@
 #pragma push_macro("interface")
 #undef interface
 
-#include <windows.h>
+#include <Windows.h>
 #include <SimConnect.h>
 
 #pragma pop_macro("interface")

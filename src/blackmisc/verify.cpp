@@ -17,7 +17,7 @@
 
 #if defined(Q_CC_MSVC)
 #include <intrin.h>
-#include <windows.h>
+#include <Windows.h>
 #endif
 
 #if defined(Q_CC_CLANG)
@@ -35,12 +35,12 @@ namespace BlackMisc
         // cppcheck-suppress unusedFunction
         void failedVerify(const char *condition, const char *filename, int line, const char *context, const char *message, bool audit)
         {
-            Q_UNUSED(condition);
-            Q_UNUSED(filename);
-            Q_UNUSED(line);
-            Q_UNUSED(context);
-            Q_UNUSED(message);
-            Q_UNUSED(audit);
+            Q_UNUSED(condition)
+            Q_UNUSED(filename)
+            Q_UNUSED(line)
+            Q_UNUSED(context)
+            Q_UNUSED(message)
+            Q_UNUSED(audit)
 
 #if defined(QT_DEBUG)
 #   if defined(Q_CC_MSVC)

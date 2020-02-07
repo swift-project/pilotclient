@@ -65,7 +65,7 @@ namespace BlackConfig
             {
                 if (CBuildConfig::buildWordSize() == 32) return QString("Win32");
                 if (CBuildConfig::buildWordSize() == 64) return QString("Win64");
-            };
+            }
             return QString("unknown");
         }());
         return p;
