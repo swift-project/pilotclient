@@ -23,6 +23,8 @@ INCLUDEPATH += \
 
 SOURCES += testcontext.cpp
 
+win32: LIBS += -lOle32
+
 DESTDIR = $$DestRoot/bin
 
 load(common_post)
