@@ -392,15 +392,15 @@ namespace BlackGui
         {
             const bool frameless = this->isFrameless();
 
-            contextMenu->addAction(CIcons::dockTop16(), "Dock", this, &CDockWidget::toggleFloating, Qt::QueuedConnection);
-            contextMenu->addAction(CIcons::tableSheet16(), frameless ? "Normal window" : "Frameless", this, &CDockWidget::toggleFrameless, Qt::QueuedConnection);
-            contextMenu->addAction(CIcons::dockTop16(), "Always on top", this, &CDockWidget::windowAlwaysOnTop, Qt::QueuedConnection);
-            contextMenu->addAction(CIcons::dockTop16(), "Not on top", this, &CDockWidget::windowNotAlwaysOnTop, Qt::QueuedConnection);
-            contextMenu->addAction(CIcons::refresh16(), "Redraw", this, qOverload<>(&CDockWidget::update), Qt::QueuedConnection);
+            contextMenu->addAction(CIcons::dockTop16(), "Dock", this, &CDockWidget::toggleFloating);
+            contextMenu->addAction(CIcons::tableSheet16(), frameless ? "Normal window" : "Frameless", this, &CDockWidget::toggleFrameless);
+            contextMenu->addAction(CIcons::dockTop16(), "Always on top", this, &CDockWidget::windowAlwaysOnTop);
+            contextMenu->addAction(CIcons::dockTop16(), "Not on top", this, &CDockWidget::windowNotAlwaysOnTop);
+            contextMenu->addAction(CIcons::refresh16(), "Redraw", this, qOverload<>(&CDockWidget::update));
         }
         else
         {
-            contextMenu->addAction(CIcons::floatOne16(), "Float", this, &CDockWidget::toggleFloating, Qt::QueuedConnection);
+            contextMenu->addAction(CIcons::floatOne16(), "Float", this, &CDockWidget::toggleFloating);
         }
 
         // Font actions
@@ -411,10 +411,10 @@ namespace BlackGui
         }
 
         // State actions (windows state)
-        contextMenu->addAction(CIcons::load16(),    "Restore from settings", this, &CDockWidget::restoreFromSettings,        Qt::QueuedConnection);
-        contextMenu->addAction(CIcons::save16(),    "Save state",            this, &CDockWidget::saveCurrentStateToSettings, Qt::QueuedConnection);
-        contextMenu->addAction(CIcons::refresh16(), "Reset to defaults",     this, &CDockWidget::resetSettings,              Qt::QueuedConnection);
-        contextMenu->addAction(CIcons::refresh16(), "Reset position",        this, &CDockWidget::resetPosition,              Qt::QueuedConnection);
+        contextMenu->addAction(CIcons::load16(),    "Restore from settings", this, &CDockWidget::restoreFromSettings);
+        contextMenu->addAction(CIcons::save16(),    "Save state",            this, &CDockWidget::saveCurrentStateToSettings);
+        contextMenu->addAction(CIcons::refresh16(), "Reset to defaults",     this, &CDockWidget::resetSettings);
+        contextMenu->addAction(CIcons::refresh16(), "Reset position",        this, &CDockWidget::resetPosition);
 
         m_input->setMargins(this->contentsMargins());
         contextMenu->addAction(CIcons::tableSheet16(), "Margins", this, &CDockWidget::dummy);
