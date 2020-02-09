@@ -266,6 +266,7 @@ namespace BlackGui
             this->setAllowedAreas(Qt::NoDockWidgetArea);
         }
 
+        // with shift ALWAYS reset
         if (shift && floating) { this->resetPosition(); }
         if (floating)
         {
@@ -559,7 +560,7 @@ namespace BlackGui
 
     void CDockWidget::showContextMenu(const QPoint &pos)
     {
-        QPoint globalPos = this->mapToGlobal(pos);
+        const QPoint globalPos = this->mapToGlobal(pos);
         QScopedPointer<QMenu> contextMenu(new QMenu(this));
         this->addToContextMenu(contextMenu.data());
         QAction *selectedItem = contextMenu.data()->exec(globalPos);
@@ -695,15 +696,17 @@ namespace BlackGui
         if (!sGui) { return; }
 
         // pos can be null during init
-        QWidget *mw = CGuiUtility::mainApplicationWidget();
+        const QWidget *mw = CGuiUtility::mainApplicationWidget();
         QPoint pos = mw && mw->isVisible() ? CGuiUtility::mainWidgetGlobalPosition() : QPoint();
         if (pos.isNull())
         {
             pos = CGuiApplication::currentScreen()->geometry().center() - this->rect().center();
         }
 
-        const int x = pos.x() + m_offsetWhenFloating.x();
-        const int y = pos.y() + m_offsetWhenFloating.y();
+        const int osFloatingX = m_offsetWhenFloating.x();
+        const int osFloatingY = m_offsetWhenFloating.y();
+        const int x = pos.x() + osFloatingX;
+        const int y = pos.y() + osFloatingY;
         this->move(x, y);
     }
 } // namespace
