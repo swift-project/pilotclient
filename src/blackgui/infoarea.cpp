@@ -167,7 +167,7 @@ namespace BlackGui
 
             // tab bar position
             menu->addAction(CIcons::dockBottom16(), "Toggle tabbar position", this, &CInfoArea::toggleTabBarPosition);
-            Q_UNUSED(c);
+            Q_UNUSED(c)
         }
     }
 
@@ -309,7 +309,7 @@ namespace BlackGui
     void CInfoArea::paintEvent(QPaintEvent *event)
     {
         CStyleSheetUtility::useStyleSheetInDerivedWidget(this, QStyle::PE_FrameWindow);
-        Q_UNUSED(event);
+        Q_UNUSED(event)
     }
 
     void CInfoArea::keyPressEvent(QKeyEvent *event)
@@ -805,7 +805,7 @@ namespace BlackGui
     void CInfoArea::onWidgetTopLevelChanged(CDockWidget *dockWidget, bool topLevel)
     {
         Q_ASSERT(dockWidget);
-        Q_UNUSED(topLevel);
+        Q_UNUSED(topLevel)
         if (!dockWidget) { return; }
 
         // fix pixmaps
@@ -841,7 +841,7 @@ namespace BlackGui
         this->addToContextMenu(contextMenu.data());
 
         QAction *selectedItem = contextMenu.data()->exec(globalPos);
-        Q_UNUSED(selectedItem);
+        Q_UNUSED(selectedItem)
     }
 
     void CInfoArea::showTabTexts(bool show)
