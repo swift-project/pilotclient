@@ -22,7 +22,7 @@ VER_MIN = $$swiftConfig(version.minor)
 VER_PAT = $$swiftConfig(version.micro)
 VERSION = $$swiftConfig(version.full)
 
-!isEmpty(GIT_BIN) {
+!qtc_run: !isEmpty(GIT_BIN) {
     isEmpty(VER_REV) {
         VER_REV = $$gitRevCount()
         cache(VER_REV)
