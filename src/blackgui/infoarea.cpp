@@ -92,8 +92,10 @@ namespace BlackGui
         bool hasDockedWidgets = this->countDockedWidgetInfoAreas() > 0;
         if (hasDockedWidgets)
         {
-            menu->addAction(CIcons::dockTop16(), "Dock all", this, &CInfoArea::dockAllWidgets);
+            menu->addAction(CIcons::dockTop16(),  "Dock all",  this, &CInfoArea::dockAllWidgets);
             menu->addAction(CIcons::floatAll16(), "Float all", this, &CInfoArea::floatAllWidgets);
+            menu->addAction(CIcons::refresh16(),  "Reset all to defaults", this, &CInfoArea::resetAllWidgetSettings);
+
             menu->addAction(CIcons::floatOne16(), QStringLiteral("Dock / float '%1'").arg(this->windowTitle()), this, &CInfoArea::toggleFloatingWholeInfoArea);
             QAction *lockTabBarMenuAction = new QAction(menu);
             lockTabBarMenuAction->setObjectName(this->objectName().append("LockTabBar"));
@@ -349,6 +351,15 @@ namespace BlackGui
         {
             if (dw->isFloating()) { continue; }
             dw->toggleFloating();
+        }
+    }
+
+    void CInfoArea::resetAllWidgetSettings()
+    {
+        for (CDockWidgetInfoArea *dw : as_const(m_dockWidgetInfoAreas))
+        {
+            if (!dw->isFloating()) { continue; }
+            dw->resetSettings();
         }
     }
 
