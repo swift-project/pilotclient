@@ -94,7 +94,7 @@ namespace BlackGui
         void setPreferredSizeWhenFloating(const QSize &size);
 
         //! Position offset when floating first time
-        void setOffsetWhenFloating(const QPoint &point) { m_offsetWhenFloating = point; }
+        void setOffsetWhenFloating(const QPoint &point, bool frameless);
 
         //! \copydoc CEnableForFramelessWindow::setFrameless
         virtual void setFrameless(bool frameless) override;
@@ -109,7 +109,7 @@ namespace BlackGui
         void toggleFrameless();
 
         //! Toggle frameless deferred
-        void toggleFramelessDeferred(int delayMs = 1000);
+        // void toggleFramelessDeferred(int delayMs = 1000);
 
         //! Window always on top
         void windowAlwaysOnTop();
