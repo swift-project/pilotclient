@@ -104,6 +104,9 @@ namespace BlackGui
         //! All floating info areas on top
         void allFloatingOnTop();
 
+        //! Reset all widgets
+        void resetAllWidgetSettings();
+
         //! Toggle dock / floating of the whole info area
         virtual void toggleFloatingWholeInfoArea();
 
