@@ -11,6 +11,7 @@ defineReplace(gitRevCount) {
         v = $${jsonData.version.major}.$${jsonData.version.minor}.$${jsonData.version.micro}
         equals(v, $$swiftConfig(version.full)): BASE_COMMIT = $$sha
     }
+    isEmpty(BASE_COMMIT): warning(Failed to find commit that changed version number to '$$swiftConfig(version.full)')
     return($$system(git rev-list --count HEAD $$system_quote(^$$BASE_COMMIT)))
 }
 
