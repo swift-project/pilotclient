@@ -9,10 +9,12 @@ OTHER_FILES += *.supp
 OTHER_FILES += .astylerc
 OTHER_FILES += $$SWIFT_CONFIG_JSON
 
-CheckMandatoryDependency(gl)
-CheckMandatoryDependency(glu)
-CheckMandatoryDependency(libpng)
-CheckMandatoryDependency(zlib)
+!qtc_run {
+    CheckMandatoryDependency(gl)
+    CheckMandatoryDependency(glu)
+    CheckMandatoryDependency(libpng)
+    CheckMandatoryDependency(zlib)
+}
 
 swiftConfig(doxygen) {
     SUBDIRS += docs
