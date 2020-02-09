@@ -204,6 +204,12 @@ namespace BlackGui
         m_preferredSizeWhenFloating = size;
     }
 
+    void CDockWidget::setOffsetWhenFloating(const QPoint &point, bool frameless)
+    {
+        Q_UNUSED(frameless)
+        m_offsetWhenFloating = point;
+    }
+
     void CDockWidget::setFrameless(bool frameless)
     {
         CEnableForFramelessWindow::setFrameless(frameless);
@@ -290,6 +296,7 @@ namespace BlackGui
         this->setFrameless(!frameless);
     }
 
+    /**
     void CDockWidget::toggleFramelessDeferred(int delayMs)
     {
         QPointer<CDockWidget> myself(this);
@@ -298,6 +305,7 @@ namespace BlackGui
             if (myself) { myself->toggleFrameless(); }
         });
     }
+    **/
 
     void CDockWidget::windowAlwaysOnTop()
     {
@@ -335,18 +343,33 @@ namespace BlackGui
         if (s.isFloating() != this->isFloating())
         {
             this->toggleFloating();
+            QPointer<CDockWidget> myself(this);
+            QTimer::singleShot(500, this, [ = ]
+            {
+                if (myself) { myself->restoreFromSettings(); }
+            });
+            return true;
         }
+
+        if (s.isFramless() != this->isFrameless())
+        {
+            this->toggleFrameless();
+            QPointer<CDockWidget> myself(this);
+            QTimer::singleShot(500, this, [ = ]
+            {
+                if (myself) { myself->restoreFromSettings(); }
+            });
+            return true;
+        }
+
+        // now frameless and floating is correct
         const QByteArray geo(s.getGeometry());
         if (!geo.isEmpty())
         {
             const bool ok = this->restoreGeometry(geo);
             if (ok) { this->rememberFloatingSizeAndPosition(); }
         }
-        if (s.isFramless() != this->isFrameless())
-        {
-            // not working if directly called
-            this->toggleFramelessDeferred();
-        }
+
         this->setMargins();
         return true;
     }
@@ -356,12 +379,15 @@ namespace BlackGui
         if (this->isFloating())
         {
             this->toggleFloating();
+            QPointer<CDockWidget> myself(this);
+            QTimer::singleShot(500, this, [ = ]
+            {
+                if (myself) { myself->close(); }
+            });
             event->setAccepted(false); // refuse -> do not close
+            return;
         }
-        else
-        {
-            QDockWidget::closeEvent(event);
-        }
+        QDockWidget::closeEvent(event);
     }
 
     void CDockWidget::paintEvent(QPaintEvent *event)
@@ -675,9 +701,12 @@ namespace BlackGui
     void CDockWidget::saveCurrentStateToSettings()
     {
         CDockWidgetSettings s = this->getSettings();
-        s.setFloating(this->isFloating());
-        s.setFrameless(this->isFrameless());
-        s.setGeometry(this->saveGeometry());
+        const bool floating   = this->isFloating();
+        const bool frameless  = this->isFrameless();
+        const QByteArray geo = this->saveGeometry();
+        s.setFloating(floating);
+        s.setFrameless(frameless);
+        s.setGeometry(geo);
         this->saveSettings(s);
     }
 

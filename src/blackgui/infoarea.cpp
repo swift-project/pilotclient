@@ -578,7 +578,7 @@ namespace BlackGui
                 const QPoint offset(i * 10, i * 10);
                 // after->setVisible(false);
                 // after->setFloating(true);
-                after->setOffsetWhenFloating(offset);
+                after->setOffsetWhenFloating(offset, after->isFrameless());
                 const QSize floatingSize = this->getPreferredSizeWhenFloating(i);
                 after->setPreferredSizeWhenFloating(floatingSize);
                 after->initialFloating();
