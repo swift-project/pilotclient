@@ -37,9 +37,10 @@ namespace BlackMisc
     {
         template <typename Derived>
         CInterpolator<Derived>::CInterpolator(const CCallsign &callsign,
-                                              ISimulationEnvironmentProvider *simEnvProvider, IInterpolationSetupProvider *setupProvider,
+                                              ISimulationEnvironmentProvider *simEnvProvider,
+                                              IInterpolationSetupProvider    *setupProvider,
                                               IRemoteAircraftProvider *remoteProvider,
-                                              CInterpolationLogger *logger) : m_callsign(callsign)
+                                              CInterpolationLogger    *logger) : m_callsign(callsign)
         {
             // normally when created m_cg is still null since there is no CG in the provider yet
 
@@ -105,7 +106,7 @@ namespace BlackMisc
                 {
                     const CLength addValue = os * -1.0; // positive values means too high, negative values too low
                     int changed = validSituations.addAltitudeOffset(addValue);
-                    Q_UNUSED(changed);
+                    Q_UNUSED(changed)
                 }
             }
             else
@@ -318,13 +319,13 @@ namespace BlackMisc
             if (this->doLogging())
             {
                 log.tsCurrent = m_currentTimeMsSinceEpoch;
-                log.callsign = m_callsign;
-                log.groundFactor = currentSituation.getOnGroundFactor();
-                log.altCorrection = CAircraftSituation::altitudeCorrectionToString(altCorrection);
-                log.situationCurrent = currentSituation;
+                log.callsign  = m_callsign;
+                log.groundFactor      = currentSituation.getOnGroundFactor();
+                log.altCorrection     = CAircraftSituation::altitudeCorrectionToString(altCorrection);
+                log.situationCurrent  = currentSituation;
                 log.interpolantRecalc = interpolant.isRecalculated();
-                log.change = m_pastSituationsChange;
-                log.usedSetup = m_currentSetup;
+                log.change        = m_pastSituationsChange;
+                log.usedSetup     = m_currentSetup;
                 log.elevationInfo = this->getElevationsFoundMissedInfo();
                 log.cgAboveGround = currentSituation.getCG();
                 log.sceneryOffset = m_currentSceneryOffset;
@@ -573,7 +574,7 @@ namespace BlackMisc
 
             // preset elevation here, as we do not know where the situation will be after the interpolation step!
             const bool preset = currentSituation.presetGroundElevation(oldSituation, newSituation, m_pastSituationsChange);
-            Q_UNUSED(preset);
+            Q_UNUSED(preset)
 
             // fetch CG once
             const CLength cg(this->getModelCG());
@@ -656,8 +657,8 @@ namespace BlackMisc
         {
             m_extraInfo.clear();
             m_isValidSituation = false;
-            m_isInterpolated = false;
-            m_isSameSituation = false;
+            m_isInterpolated   = false;
+            m_isSameSituation  = false;
             m_situations = -1;
         }
 

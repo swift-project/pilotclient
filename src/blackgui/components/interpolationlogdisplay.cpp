@@ -64,24 +64,24 @@ namespace BlackGui
             m_elvHistoryCount = elvHistoryCount;
             ui->le_ElvHistoryCount->setText(QString::number(elvHistoryCount));
 
-            connect(&m_updateTimer, &QTimer::timeout, this, &CInterpolationLogDisplay::updateLog);
-            connect(ui->comp_CallsignCompleter, &CCallsignCompleter::editingFinishedDigest, this, &CInterpolationLogDisplay::onCallsignEntered);
-            connect(ui->hs_UpdateTime, &QSlider::valueChanged, this, &CInterpolationLogDisplay::onSliderChanged);
-            connect(ui->pb_StartStop, &QPushButton::released, this, &CInterpolationLogDisplay::toggleStartStop);
-            connect(ui->pb_ResetLastSent, &QPushButton::released, this, &CInterpolationLogDisplay::resetLastSentValues);
-            connect(ui->pb_ResetStats, &QPushButton::released, this, &CInterpolationLogDisplay::resetStatistics);
-            connect(ui->pb_ShowLogInSimulator, &QPushButton::released, this, &CInterpolationLogDisplay::showLogInSimulator);
-            connect(ui->pb_FollowInSimulator, &QPushButton::released, this, &CInterpolationLogDisplay::followInSimulator);
-            connect(ui->pb_RequestElevation1, &QPushButton::released, this, &CInterpolationLogDisplay::requestElevationClicked);
-            connect(ui->pb_RequestElevation2, &QPushButton::released, this, &CInterpolationLogDisplay::requestElevationClicked);
+            connect(&m_updateTimer,              &QTimer::timeout, this, &CInterpolationLogDisplay::updateLog);
+            connect(ui->comp_CallsignCompleter,  &CCallsignCompleter::editingFinishedDigest, this, &CInterpolationLogDisplay::onCallsignEntered);
+            connect(ui->hs_UpdateTime,           &QSlider::valueChanged, this, &CInterpolationLogDisplay::onSliderChanged);
+            connect(ui->pb_StartStop,            &QPushButton::released, this, &CInterpolationLogDisplay::toggleStartStop);
+            connect(ui->pb_ResetLastSent,        &QPushButton::released, this, &CInterpolationLogDisplay::resetLastSentValues);
+            connect(ui->pb_ResetStats,           &QPushButton::released, this, &CInterpolationLogDisplay::resetStatistics);
+            connect(ui->pb_ShowLogInSimulator,   &QPushButton::released, this, &CInterpolationLogDisplay::showLogInSimulator);
+            connect(ui->pb_FollowInSimulator,    &QPushButton::released, this, &CInterpolationLogDisplay::followInSimulator);
+            connect(ui->pb_RequestElevation1,    &QPushButton::released, this, &CInterpolationLogDisplay::requestElevationClicked);
+            connect(ui->pb_RequestElevation2,    &QPushButton::released, this, &CInterpolationLogDisplay::requestElevationClicked);
             connect(ui->pb_GetLastInterpolation, &QPushButton::released, this, &CInterpolationLogDisplay::getLogAmdDisplayLastInterpolation);
-            connect(ui->pb_InjectElevation, &QPushButton::released, this, &CInterpolationLogDisplay::onInjectElevation);
-            connect(ui->pb_ElvClear, &QPushButton::released, this, &CInterpolationLogDisplay::clearElevationResults);
+            connect(ui->pb_InjectElevation,      &QPushButton::released, this, &CInterpolationLogDisplay::onInjectElevation);
+            connect(ui->pb_ElvClear,             &QPushButton::released, this, &CInterpolationLogDisplay::clearElevationResults);
             connect(ui->tvp_InboundAircraftSituations, &CAircraftSituationView::requestElevation, this, &CInterpolationLogDisplay::requestElevation);
             connect(ui->le_InjectElevation, &QLineEdit::returnPressed,   this, &CInterpolationLogDisplay::onInjectElevation);
             connect(ui->le_ElvHistoryCount, &QLineEdit::editingFinished, this, &CInterpolationLogDisplay::onElevationHistoryCountFinished);
+            connect(ui->cb_ElvAllowPseudo,  &QCheckBox::toggled, this, &CInterpolationLogDisplay::onPseudoElevationToggled);
             connect(ui->editor_ElevationCoordinate, &CCoordinateForm::changedCoordinate, this, &CInterpolationLogDisplay::requestElevationAtPosition);
-            connect(ui->cb_ElvAllowPseudo, &QCheckBox::toggled, this, &CInterpolationLogDisplay::onPseudoElevationToggled);
             connect(sGui, &CGuiApplication::aboutToShutdown, this, &CInterpolationLogDisplay::onAboutToShutdown, Qt::QueuedConnection);
         }
 
@@ -474,8 +474,7 @@ namespace BlackGui
 
                 if (!m_simulator->isLogCallsign(m_callsign))
                 {
-                    static const CStatusMessage ms = CStatusMessage(this).validationError(u"No longer logging callsign");
-                    m = ms;
+                    m = CStatusMessage(this).validationError(u"No longer logging callsign '%1'") << m_callsign;
                     break;
                 }
                 return true;
