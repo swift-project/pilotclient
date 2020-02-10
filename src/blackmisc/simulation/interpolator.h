@@ -167,14 +167,14 @@ namespace BlackMisc
 
             //! Implicit conversion @{
             operator const Aviation::CAircraftSituation &() const { return m_interpolatedSituation; }
-            operator const Aviation::CAircraftParts &() const { return m_interpolatedParts; }
+            operator const Aviation::CAircraftParts &()     const { return m_interpolatedParts; }
             //! @}
 
         private:
             Aviation::CAircraftSituation m_interpolatedSituation; //!< interpolated situation
-            Aviation::CAircraftParts m_interpolatedParts;         //!< guessed or interpolated parts
-            CInterpolationStatus m_interpolationStatus;           //!< interpolation status
-            CPartsStatus m_partsStatus;                           //!< parts status
+            Aviation::CAircraftParts     m_interpolatedParts;     //!< guessed or interpolated parts
+            CInterpolationStatus         m_interpolationStatus;   //!< interpolation status
+            CPartsStatus                 m_partsStatus;           //!< parts status
         };
 
         //! Interpolator, calculation inbetween positions

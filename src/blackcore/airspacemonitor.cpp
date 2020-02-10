@@ -1363,18 +1363,22 @@ namespace BlackCore
         if (!correctedSituation.hasGroundElevation() && !canLikelySkipNearGround)
         {
             // fetch from cache or request
-            const CAircraftSituationList situations = this->remoteAircraftSituations(callsign);
+            const CAircraftSituationList situations   = this->remoteAircraftSituations(callsign);
             const CAircraftSituation situationWithElv = situations.findCLosestElevationWithinRange(correctedSituation, correctedSituation.getDistancePerTime(100, CElevationPlane::singlePointRadius()));
             if (!situationWithElv.getGroundElevation().isNull())
             {
+                // from nearby situations of own aircraft
                 correctedSituation.transferGroundElevation(situationWithElv);
             }
             else
             {
+                // from cache
                 const CLength distance(correctedSituation.getDistancePerTime250ms(CElevationPlane::singlePointRadius())); // distance per ms
                 const CElevationPlane ep = this->findClosestElevationWithinRangeOrRequest(correctedSituation, distance, callsign);
-                haveRequestedElevation = ep.isNull();  // NULL means we requested
-                Q_ASSERT_X(ep.isNull() || !ep.getRadius().isNull(), Q_FUNC_INFO, "null radius");
+                haveRequestedElevation   = ep.isNull();  // NULL means we requested
+                Q_ASSERT_X(haveRequestedElevation || !ep.getRadius().isNull(), Q_FUNC_INFO, "null radius");
+
+                // also can handle NULL elevations
                 correctedSituation.setGroundElevation(ep, CAircraftSituation::FromCache);
             }
 
@@ -1382,7 +1386,7 @@ namespace BlackCore
             {
                 // we have a new situation, so we try to get the elevation
                 // so far we have requested it, but we set it upfront either by
-                // a) average value from other plane in the vicinity or
+                // a) average value from other planes in the vicinity or
                 // b) by extrapolating
                 const CElevationPlane averagePlane = this->averageElevationOfNonMovingAircraft(situation, CElevationPlane::majorAirportRadius(), 2);
                 if (!averagePlane.isNull())
@@ -1392,7 +1396,7 @@ namespace BlackCore
                 else
                 {
                     // values before updating (i.e. "storing") so the new situation is not yet considered
-                    const CAircraftSituationList oldSituations = this->remoteAircraftSituations(callsign);
+                    const CAircraftSituationList    oldSituations = this->remoteAircraftSituations(callsign);
                     const CAircraftSituationChangeList oldChanges = this->remoteAircraftSituationChanges(callsign);
                     if (oldSituations.size() > 1)
                     {

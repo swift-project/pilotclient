@@ -68,9 +68,9 @@ namespace BlackGui
             ui->le_TxtMsgTo->setValidator(new CUpperCaseValidator(ui->le_TxtMsgFrom));
             ui->le_AtisCallsign->setValidator(new CUpperCaseValidator(ui->le_AtisCallsign));
 
-            connect(ui->pb_SendAircraftPartsGui, &QPushButton::released, this, &CInternalsComponent::sendAircraftParts);
+            connect(ui->pb_SendAircraftPartsGui,  &QPushButton::released, this, &CInternalsComponent::sendAircraftParts);
             connect(ui->pb_SendAircraftPartsJson, &QPushButton::released, this, &CInternalsComponent::sendAircraftParts);
-            connect(ui->pb_CurrentParts, &QPushButton::released, this, &CInternalsComponent::setCurrentParts);
+            connect(ui->pb_CurrentParts,          &QPushButton::released, this, &CInternalsComponent::setCurrentParts);
 
             connect(ui->cb_DebugContextAudio,       &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
             connect(ui->cb_DebugContextApplication, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
@@ -92,7 +92,7 @@ namespace BlackGui
 
             connect(ui->pb_NetworkUpdateAndReset,  &QPushButton::released, this, &CInternalsComponent::networkStatistics);
             connect(ui->pb_NetworkUpdate,          &QPushButton::released, this, &CInternalsComponent::networkStatistics);
-            connect(ui->cb_NetworkStatistics,    &QCheckBox::stateChanged, this, &CInternalsComponent::onNetworkStatisticsToggled);
+            connect(ui->cb_NetworkStatistics,      &QCheckBox::stateChanged, this, &CInternalsComponent::onNetworkStatisticsToggled);
 
             connect(ui->comp_RemoteAircraftSelector, &CRemoteAircraftSelector::changedCallsign, this, &CInternalsComponent::selectorChanged);
 
@@ -152,7 +152,7 @@ namespace BlackGui
                 if (reply != QMessageBox::Yes) { return; }
                 client.addCapability(CClient::FsdWithAircraftConfig);
                 const bool enabled = sGui->getIContextNetwork()->setOtherClient(client);
-                Q_UNUSED(enabled);
+                Q_UNUSED(enabled)
             }
 
             const bool json = (QObject::sender() == ui->pb_SendAircraftPartsJson);

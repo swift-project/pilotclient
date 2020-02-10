@@ -408,7 +408,7 @@ namespace BlackCore
     protected:
         //! Constructor with all the providers
         ISimulator(const BlackMisc::Simulation::CSimulatorPluginInfo &pluginInfo,
-                   BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                   BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
                    BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                    BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                    BlackMisc::Network::IClientProvider *clientProvider,

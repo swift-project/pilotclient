@@ -298,14 +298,14 @@ namespace BlackCore
         static constexpr int FastProcessIntervalMs = 50; //!< interval in ms
         QTimer m_fastProcessTimer; //!< process timer for fast updates
 
-        //! Processing by timer
+        //! Fast processing by timer
         void fastProcessing();
 
         // Processing for validations etc. (slow)
         static constexpr int SlowProcessIntervalMs = 125 * 1000; //!< interval in ms
         QTimer m_slowProcessTimer; //!< process timer for slow updates
 
-        //! Slow processing
+        //! Slow processing by timer
         void slowProcessing();
 
         // model matching times
