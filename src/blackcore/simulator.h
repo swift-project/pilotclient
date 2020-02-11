@@ -233,6 +233,9 @@ namespace BlackCore
         //! Enable pseudo elevations (testing)
         void setTestEnablePseudoElevation(bool enable) { m_enablePseudoElevation = enable; }
 
+        //! Set an elevation for testing
+        void setTestElevation(const BlackMisc::Aviation::CAltitude &altitude) { m_pseudoElevation = altitude; }
+
         //! Debug function to check state after all aircraft have been removed
         //! \remarks only in local developer builds
         virtual BlackMisc::CStatusMessageList debugVerifyStateAfterAllAircraftRemoved() const;
@@ -603,6 +606,7 @@ namespace BlackCore
         qint64 m_statsLastUpdateAircraftRequestedMs  = 0; //!< when was the last aircraft update requested
         qint64 m_statsUpdateAircraftRequestedDeltaMs = 0; //!< delta time between 2 aircraft updates
 
+        BlackMisc::Aviation::CAltitude              m_pseudoElevation { BlackMisc::Aviation::CAltitude::null() }; //!< pseudo elevation for testing purposes
         BlackMisc::Simulation::CSimulatorInternals  m_simulatorInternals;  //!< setup read from the sim
         BlackMisc::Simulation::CInterpolationLogger m_interpolationLogger; //!< log.interpolation
         BlackMisc::Simulation::CAutoPublishData     m_autoPublishing;      //!< for the DB

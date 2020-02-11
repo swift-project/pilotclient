@@ -245,6 +245,19 @@ namespace BlackGui
         {
             if (!m_simulator) { return; }
             m_simulator->setTestEnablePseudoElevation(checked);
+
+            CAltitude elvTest = CAltitude::null();
+            if (!ui->le_ElevationTestValue->text().isEmpty())
+            {
+                CLength l;
+                const QString v = ui->le_ElevationTestValue->text();
+                l.parseFromString(v);
+                if (!l.isNull())
+                {
+                    elvTest = CAltitude(l, CAltitude::MeanSeaLevel);
+                }
+            }
+            m_simulator->setTestElevation(elvTest);
         }
 
         void CInterpolationLogDisplay::toggleStartStop()

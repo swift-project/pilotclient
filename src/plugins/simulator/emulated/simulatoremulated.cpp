@@ -215,17 +215,31 @@ namespace BlackSimPlugin
             if (hasRequested || !m_enablePseudoElevation) { return hasRequested; }
 
             // For TESTING purposes ONLY
-            // we could not request elevation
-            // very crude 1st implementation
-            const double elvRnd = CMathUtils::randomDouble(1000);
-            const CAltitude alt(elvRnd, CLengthUnit::ft());
+            // we could not request elevation, so we provide a random value or set value
             CElevationPlane elv(reference, CElevationPlane::singlePointRadius());
-            elv.setGeodeticHeight(alt);
+            if (m_pseudoElevation.isNull())
+            {
+                const double elvRnd = CMathUtils::randomDouble(1000);
+                const CAltitude alt(elvRnd, CLengthUnit::ft());
+                elv.setGeodeticHeight(alt);
+            }
+            else
+            {
+                elv.setGeodeticHeight(m_pseudoElevation);
+            }
 
             QPointer<CSimulatorEmulated> myself(this);
             QTimer::singleShot(444, this, [ = ]
             {
                 if (!myself) { return; }
+
+                // update in simulator
+                ISimulationEnvironmentProvider::rememberGroundElevation(callsign, elv); // in simulator
+
+                // and in remote aircraft for given callsign
+                const int updated = CRemoteAircraftAware::updateAircraftGroundElevation(callsign, elv, CAircraftSituation::FromProvider);
+                Q_UNUSED(updated)
+
                 emit myself->receivedRequestedElevation(elv, callsign);
             });
 
