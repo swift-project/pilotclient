@@ -622,7 +622,10 @@ namespace BlackCore
         void CFSDClient::sendPlaneInfoRequestFsinn(const CCallsign &callsign)
         {
             if (CThreadUtils::callInObjectThread(this, [ = ] { if (sApp && !sApp->isShuttingDown()) { this->sendPlaneInfoRequestFsinn(callsign); }})) { return; }
-            Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
+            const bool connected = isConnected();
+            BLACK_VERIFY_X(connected, Q_FUNC_INFO, "Can't send to server when disconnected");
+            if (!connected) { return; }
+
             const CSimulatedAircraft myAircraft(getOwnAircraft());
             QString modelString;
             {
