@@ -17,6 +17,7 @@
 #include "blackmisc/simulation/interpolationlogger.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/logcategorylist.h"
 #include "blackmisc/identifiable.h"
 
 #include <QStringListModel>
@@ -41,6 +42,9 @@ namespace BlackGui
             Q_OBJECT
 
         public:
+            //! Categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
             //! Tabs
             enum Tab
             {
