@@ -481,6 +481,8 @@ namespace BlackSimPlugin
             // update provider, own name, title
             this->updateOwnModel(settings.getOwnModel());
             this->setObjectName(simulator);
+            m_interpolationLogger.setObjectName("Logger (emulated driver): " + simulator.toQString());
+
             if (m_monitorWidget) { m_monitorWidget->updateWindowTitleAndUiValues(simulator); }
         }
 

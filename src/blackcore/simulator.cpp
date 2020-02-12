@@ -445,7 +445,8 @@ namespace BlackCore
                 this->clearInterpolationLogCallsigns();
 
                 // write
-                m_interpolationLogger.writeLogInBackground();
+                const bool clearLog = true;
+                m_interpolationLogger.writeLogInBackground(clearLog);
                 CLogMessage(this).info(u"Started writing interpolation log");
                 return true;
             }
@@ -687,6 +688,8 @@ namespace BlackCore
         CIdentifiable(this)
     {
         this->setObjectName("Simulator: " + pluginInfo.getIdentifier());
+        m_interpolationLogger.setObjectName("Logger: " + pluginInfo.getIdentifier());
+
         ISimulator::registerHelp();
 
         // provider signals, hook up with remote aircraft provider
