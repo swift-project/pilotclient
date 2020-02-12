@@ -45,7 +45,7 @@ namespace BlackMisc
             return cats;
         }
 
-        CWorker *CInterpolationLogger::writeLogInBackground()
+        CWorker *CInterpolationLogger::writeLogInBackground(bool clearLog)
         {
             QList<SituationLog> situations;
             QList<PartsLog> parts;
@@ -58,10 +58,13 @@ namespace BlackMisc
                 parts = m_partsLogs;
             }
 
-            CWorker *worker = CWorker::fromTask(this, "WriteInterpolationLog", [situations, parts]()
+            QPointer<CInterpolationLogger> myself(this);
+            CWorker *worker = CWorker::fromTask(this, "WriteInterpolationLog", [situations, parts, myself, clearLog]()
             {
                 const CStatusMessageList msg = CInterpolationLogger::writeLogFiles(situations, parts);
                 CLogMessage::preformatted(msg);
+
+                if (clearLog && myself) { myself->clearLog(); }
             });
             return worker;
         }

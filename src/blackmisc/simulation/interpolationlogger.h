@@ -104,7 +104,7 @@ namespace BlackMisc
             static const CLogCategoryList &getLogCategories();
 
             //! Write a log in background
-            CWorker *writeLogInBackground();
+            CWorker *writeLogInBackground(bool clearLog);
 
             //! Clear log file
             void clearLog();
