@@ -33,6 +33,12 @@ namespace BlackGui
 {
     namespace Components
     {
+        const CLogCategoryList &CInterpolationLogDisplay::getLogCategories()
+        {
+            static const CLogCategoryList cats { CLogCategory::interpolator(), CLogCategory::driver() };
+            return cats;
+        }
+
         CInterpolationLogDisplay::CInterpolationLogDisplay(QWidget *parent) :
             COverlayMessagesFrame(parent),
             CIdentifiable(this),
@@ -210,6 +216,7 @@ namespace BlackGui
             if (!m_simulator)
             {
                 this->stop();
+                CLogMessage(this).warning(u"Stopping logging (log.display), no simulator");
                 return;
             }
 
@@ -239,6 +246,7 @@ namespace BlackGui
             {
                 this->initPartsView();
             }
+            CLogMessage(this).info(u"Starting logging (log.display) of '%1'") << m_callsign;
         }
 
         void CInterpolationLogDisplay::onPseudoElevationToggled(bool checked)
