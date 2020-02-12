@@ -508,16 +508,15 @@ namespace BlackMisc
 
             const qint64 lastModifed = this->situationsLastModified(m_callsign);
             const bool slowUpdateStep = (((m_interpolatedSituationsCounter + aircraftNumber) % 25) == 0); // flag when parts are updated, which need not to be updated every time
-            const bool changedSetup = m_currentSetup != setup;
             const bool changedSituations = lastModifed > m_situationsLastModified;
 
             m_currentTimeMsSinceEpoch = currentTimeSinceEpoc;
             m_currentInterpolationStatus.reset();
             m_currentPartsStatus.reset();
+            m_currentSetup = setup;
 
-            if (changedSetup || changedSituations)
+            if (changedSituations)
             {
-                m_currentSetup = setup;
                 m_situationsLastModified = lastModifed;
                 m_currentSituations = this->remoteAircraftSituationsAndChange(setup); // only update when needed
             }
