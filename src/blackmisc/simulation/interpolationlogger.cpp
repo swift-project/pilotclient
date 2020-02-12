@@ -359,9 +359,9 @@ namespace BlackMisc
                     u"<td class=\"new\">" % situationNew.getAltitude().valueRoundedWithUnit(ft, 1) % u"</td>" %
                     u"<td class=\"cur\">" % log.situationCurrent.getAltitude().valueRoundedWithUnit(ft, 1) % u"</td>" %
 
-                    u"<td class=\"old\">" % situationOld.getGroundElevation().valueRoundedWithUnit(ft, 1) % u"</td>" %
-                    u"<td class=\"new\">" % situationNew.getGroundElevation().valueRoundedWithUnit(ft, 1) % u"</td>" %
-                    u"<td class=\"cur\">" % log.situationCurrent.getGroundElevation().valueRoundedWithUnit(ft, 1) % u"</td>" %
+                    u"<td class=\"old\">" % situationOld.getGroundElevation().valueRoundedWithUnit(ft, 1) % u" " % situationOld.getGroundElevationInfoAsString() % u"</td>" %
+                    u"<td class=\"new\">" % situationNew.getGroundElevation().valueRoundedWithUnit(ft, 1) % u" " % situationNew.getGroundElevationInfoAsString() % u"</td>" %
+                    u"<td class=\"cur\">" % log.situationCurrent.getGroundElevation().valueRoundedWithUnit(ft, 1) % u" " % log.situationCurrent.getGroundElevationInfoAsString() % u"</td>" %
 
                     u"<td>" % QString::number(log.groundFactor) % u"</td>" %
                     u"<td class=\"old\">" % situationOld.getOnGroundInfo() % u"</td>" %
