@@ -271,8 +271,16 @@ namespace BlackGui
         void CInterpolationLogDisplay::toggleStartStop()
         {
             const bool running = m_updateTimer.isActive();
-            if (running) { this->stop(); }
-            else { this->start(); }
+            m_callsign.clear(); // force update of data and log. start/stop
+            if (running)
+            {
+                this->stop();
+            }
+            else
+            {
+                // treat like a callsign was entered
+                this->onCallsignEntered();
+            }
         }
 
         void CInterpolationLogDisplay::showLogInSimulator()
