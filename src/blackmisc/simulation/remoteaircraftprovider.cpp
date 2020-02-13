@@ -264,7 +264,7 @@ namespace BlackMisc
             if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
                 BLACK_VERIFY_X(situation.getTimeOffsetMs() > 0, Q_FUNC_INFO, "Missing offset");
-                BLACK_VERIFY_X(situation.isValidVectorRange(), Q_FUNC_INFO, "Invalid vector");
+                BLACK_VERIFY_X(situation.isValidVectorRange(),  Q_FUNC_INFO, "Invalid vector");
             }
 
             // add altitude offset (for testing only)
@@ -767,7 +767,7 @@ namespace BlackMisc
         CElevationPlane CRemoteAircraftProvider::averageElevationOfNonMovingAircraft(const CAircraftSituation &reference, const CLength &range, int minValues) const
         {
             const CAircraftSituationList situations = this->latestOnGroundProviderElevations();
-            return situations.averageElevationOfNonMovingAircraft(reference, range, minValues);
+            return situations.averageElevationOfTaxiingOnGroundAircraft(reference, range, minValues);
         }
 
         bool CRemoteAircraftProvider::testAddAltitudeOffset(const CCallsign &callsign, const CLength &offset)

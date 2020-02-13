@@ -207,8 +207,8 @@ namespace BlackMisc
             //! \pre requires a list which is sorted "latest first"
             int transferElevationForward(const PhysicalQuantities::CLength &radius = Geo::CElevationPlane::singlePointRadius());
 
-            //! Average elevation for "nearby" aircraft "not moving" and having an elevation
-            Geo::CElevationPlane averageElevationOfNonMovingAircraft(const CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues = 1) const;
+            //! Average elevation for "nearby" aircraft "not/slowly moving" and having an elevation
+            Geo::CElevationPlane averageElevationOfTaxiingOnGroundAircraft(const CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues = 1) const;
         };
 
         //! Situation per callsign

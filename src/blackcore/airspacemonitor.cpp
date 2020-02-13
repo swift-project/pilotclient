@@ -1382,12 +1382,15 @@ namespace BlackCore
                 correctedSituation.setGroundElevation(ep, CAircraftSituation::FromCache);
             }
 
+            // we have a new situation, so we try to get the elevation
+            // so far we have requested it, but we set it upfront either by
+            // a) average value from other planes in the vicinity or
+            // b) by extrapolating
+            //
+            // if we would NOT preset it, we could end up with oscillation
+            //
             if (!correctedSituation.hasGroundElevation())
             {
-                // we have a new situation, so we try to get the elevation
-                // so far we have requested it, but we set it upfront either by
-                // a) average value from other planes in the vicinity or
-                // b) by extrapolating
                 const CElevationPlane averagePlane = this->averageElevationOfNonMovingAircraft(situation, CElevationPlane::majorAirportRadius(), 2);
                 if (!averagePlane.isNull())
                 {
@@ -1401,7 +1404,7 @@ namespace BlackCore
                     if (oldSituations.size() > 1)
                     {
                         const bool extrapolated = correctedSituation.extrapolateElevation(oldSituations[0], oldSituations[1], oldChanges.frontOrDefault());
-                        Q_UNUSED(extrapolated)
+                        BLACK_AUDIT_X(extrapolated, Q_FUNC_INFO, "Cannot extrapolate");
                     }
                 }
             } // gnd. elevation

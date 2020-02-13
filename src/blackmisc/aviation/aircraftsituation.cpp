@@ -300,6 +300,8 @@ namespace BlackMisc
         bool CAircraftSituation::extrapolateElevation(CAircraftSituation &newSituation, const CAircraftSituation &oldSituation, const CAircraftSituation &olderSituation, const CAircraftSituationChange &oldChange)
         {
             if (newSituation.hasGroundElevation()) { return false; }
+
+            // if acceptable transfer
             if (oldSituation.transferGroundElevationFromThis(newSituation)) { return true; }
             if (oldSituation.isNull() || olderSituation.isNull()) { return false; }
 
@@ -310,7 +312,7 @@ namespace BlackMisc
                 const double deltaAltFt = qAbs(newSituation.getAltitude().value(CLengthUnit::ft()) - olderSituation.getAltitude().value(CLengthUnit::ft()));
                 if (deltaAltFt <= CAircraftSituationChange::allowedAltitudeDeviation().value(CLengthUnit::ft()))
                 {
-                    // the ccurrent alt is also not much different
+                    // the current alt is also not much different
                     newSituation.setGroundElevation(oldSituation.getGroundElevation(), Extrapolated);
                     return true;
                 }
@@ -1082,7 +1084,7 @@ namespace BlackMisc
                 if (!min.isNull()) { return min; }
                 return CLength(0, CLengthUnit::nullUnit());
             }
-            const double seconds = milliseconds / 1000;
+            const double seconds = milliseconds / 1000.0;
             const double gsMeterSecond = this->getGroundSpeed().value(CSpeedUnit::m_s());
             const CLength d(seconds * gsMeterSecond, CLengthUnit::m());
             if (!min.isNull() && d < min) { return min; }
