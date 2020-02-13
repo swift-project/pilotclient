@@ -289,6 +289,7 @@ namespace BlackMisc
 
         const CLength &CAircraftSituationChange::allowedAltitudeDeviation()
         {
+            // approx. 1 meter
             static const CLength allowedStdDev(3, CLengthUnit::ft());
             return allowedStdDev;
         }

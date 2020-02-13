@@ -594,7 +594,7 @@ namespace BlackMisc
             return c;
         }
 
-        CElevationPlane CAircraftSituationList::averageElevationOfNonMovingAircraft(const CAircraftSituation &reference, const CLength &range, int minValues) const
+        CElevationPlane CAircraftSituationList::averageElevationOfTaxiingOnGroundAircraft(const CAircraftSituation &reference, const CLength &range, int minValues) const
         {
             if (this->size() < minValues) { return CElevationPlane::null(); } // no change to succeed
 

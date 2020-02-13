@@ -60,7 +60,7 @@ namespace BlackGui
             explicit CInterpolationLogDisplay(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CInterpolationLogDisplay();
+            virtual ~CInterpolationLogDisplay() override;
 
             //! Set simulator
             void setSimulator(BlackCore::ISimulator *simulator);

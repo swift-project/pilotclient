@@ -1032,7 +1032,7 @@ namespace BlackCore
 
         bool CContextSimulator::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
         {
-            Q_UNUSED(originator);
+            Q_UNUSED(originator)
             if (commandLine.isEmpty()) { return false; }
             CSimpleCommandParser parser(
             {

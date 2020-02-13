@@ -106,10 +106,10 @@ namespace BlackGui
             }
             m_simulator = simulator;
             if (!simulator) { return; }
-            connect(m_simulator, &ISimulator::receivedRequestedElevation, this, &CInterpolationLogDisplay::onElevationReceived, Qt::QueuedConnection);
-            connect(m_simulator, &ISimulator::requestedElevation, this, &CInterpolationLogDisplay::onElevationRequested, Qt::QueuedConnection);
-            connect(m_simulator, &ISimulator::destroyed, this, &CInterpolationLogDisplay::onSimulatorUnloaded);
-            connect(m_simulator, &ISimulator::simulatorStatusChanged, this, &CInterpolationLogDisplay::onSimulatorStatusChanged);
+            connect(m_simulator, &ISimulator::receivedRequestedElevation, this, &CInterpolationLogDisplay::onElevationReceived,  Qt::QueuedConnection);
+            connect(m_simulator, &ISimulator::requestedElevation,         this, &CInterpolationLogDisplay::onElevationRequested, Qt::QueuedConnection);
+            connect(m_simulator, &ISimulator::destroyed,                  this, &CInterpolationLogDisplay::onSimulatorUnloaded);
+            connect(m_simulator, &ISimulator::simulatorStatusChanged,     this, &CInterpolationLogDisplay::onSimulatorStatusChanged);
         }
 
         void CInterpolationLogDisplay::setAirspaceMonitor(CAirspaceMonitor *airspaceMonitor)
