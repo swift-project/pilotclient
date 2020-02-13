@@ -873,7 +873,7 @@ namespace BlackCore
     void ISimulator::rememberElevationAndSimulatorCG(const CCallsign &callsign, const CAircraftModel &model, const CElevationPlane &elevation, const CLength &simulatorCG)
     {
         if (callsign.isEmpty()) { return; }
-        if (!elevation.isNull())
+        if (elevation.hasMSLGeodeticHeight())
         {
             const int aircraftCount = this->getAircraftInRangeCount();
             this->setMaxElevationsRemembered(aircraftCount * 3); // at least 3 elevations per aircraft, even better as not all are requesting elevations
@@ -1187,7 +1187,7 @@ namespace BlackCore
                     elevation = (cg.isNull() || situation.getAltitude().isNull()) ? CAltitude::null() : (situation.getAltitude().withOffset(cg * -1.0));
                 }
 
-                if (!elevation.isNull())
+                if (elevation.hasMeanSeaLevelValue())
                 {
                     const CCallsign cs = situation.hasCallsign() ? situation.getCallsign() : ownAircraft.getCallsign();
                     const CLength radius = settings.getRecordedGndRadius().isNull() ? CElevationPlane::singlePointRadius() : settings.getRecordedGndRadius();

@@ -144,6 +144,9 @@ namespace BlackMisc
             //! Flightlevel to MSL
             bool toMeanSeaLevel();
 
+            //! Non-NULL MSL value?
+            bool hasMeanSeaLevelValue() const { return this->isMeanSeaLevel() && !this->isNull(); }
+
             //! Current altitude type
             AltitudeType getAltitudeType() const { return m_altitudeType; }
 

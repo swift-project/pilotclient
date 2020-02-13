@@ -7,12 +7,13 @@
  */
 
 #include "simulationenvironmentprovider.h"
+#include "verify.h"
 #include <QStringBuilder>
 
-using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Simulation::Settings;
 
 namespace BlackMisc
 {
@@ -20,6 +21,12 @@ namespace BlackMisc
     {
         bool ISimulationEnvironmentProvider::rememberGroundElevation(const CCallsign &requestedForCallsign, const ICoordinateGeodetic &elevationCoordinate, const CLength &epsilon)
         {
+            if (!elevationCoordinate.hasMSLGeodeticHeight())
+            {
+                BLACK_AUDIT_X(false, Q_FUNC_INFO, "Elevation needs to be MSL NON NULL");
+                return false;
+            }
+
             {
                 // no 2nd elevation nearby?
                 QReadLocker l(&m_lockElvCoordinates);
