@@ -76,13 +76,17 @@ namespace BlackGui
             connect(ui->pb_StartStop,            &QPushButton::released, this, &CInterpolationLogDisplay::toggleStartStop);
             connect(ui->pb_ResetLastSent,        &QPushButton::released, this, &CInterpolationLogDisplay::resetLastSentValues);
             connect(ui->pb_ResetStats,           &QPushButton::released, this, &CInterpolationLogDisplay::resetStatistics);
-            connect(ui->pb_ShowLogInSimulator,   &QPushButton::released, this, &CInterpolationLogDisplay::showLogInSimulator);
+            connect(ui->pb_ShowLogInSimulator,   &QPushButton::released, this, &CInterpolationLogDisplay::logPosCommand);
             connect(ui->pb_FollowInSimulator,    &QPushButton::released, this, &CInterpolationLogDisplay::followInSimulator);
             connect(ui->pb_RequestElevation1,    &QPushButton::released, this, &CInterpolationLogDisplay::requestElevationClicked);
             connect(ui->pb_RequestElevation2,    &QPushButton::released, this, &CInterpolationLogDisplay::requestElevationClicked);
             connect(ui->pb_GetLastInterpolation, &QPushButton::released, this, &CInterpolationLogDisplay::getLogAmdDisplayLastInterpolation);
             connect(ui->pb_InjectElevation,      &QPushButton::released, this, &CInterpolationLogDisplay::onInjectElevation);
             connect(ui->pb_ElvClear,             &QPushButton::released, this, &CInterpolationLogDisplay::clearElevationResults);
+            connect(ui->pb_ClearLog,             &QPushButton::released, this, &CInterpolationLogDisplay::clearLogCommand);
+            connect(ui->pb_ClearLog2,            &QPushButton::released, this, &CInterpolationLogDisplay::clearLogCommand);
+            connect(ui->pb_WriteLogToFile,       &QPushButton::released, this, &CInterpolationLogDisplay::writeLogCommand);
+            connect(ui->pb_WriteLogToFile2,      &QPushButton::released, this, &CInterpolationLogDisplay::writeLogCommand);
             connect(ui->tvp_InboundAircraftSituations, &CAircraftSituationView::requestElevation, this, &CInterpolationLogDisplay::requestElevation);
             connect(ui->le_InjectElevation, &QLineEdit::returnPressed,   this, &CInterpolationLogDisplay::onInjectElevation);
             connect(ui->le_ElvHistoryCount, &QLineEdit::editingFinished, this, &CInterpolationLogDisplay::onElevationHistoryCountFinished);
@@ -180,6 +184,7 @@ namespace BlackGui
 
         void CInterpolationLogDisplay::getLogAmdDisplayLastInterpolation()
         {
+            if (!m_simulator) { return; }
             const SituationLog sLog = m_simulator->interpolationLogger().getLastSituationLog();
             this->displayLastInterpolation(sLog);
         }
@@ -281,15 +286,6 @@ namespace BlackGui
                 // treat like a callsign was entered
                 this->onCallsignEntered();
             }
-        }
-
-        void CInterpolationLogDisplay::showLogInSimulator()
-        {
-            if (m_callsign.isEmpty()) { return; }
-            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
-
-            const QString cmd = QStringLiteral(".drv pos ") % m_callsign.asString();
-            sGui->getIContextSimulator()->parseCommandLine(cmd, this->identifier());
         }
 
         void CInterpolationLogDisplay::followInSimulator()
@@ -479,13 +475,38 @@ namespace BlackGui
             }
         }
 
+        void CInterpolationLogDisplay::logPosCommand()
+        {
+            if (m_callsign.isEmpty()) { return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+
+            const QString cmd = QStringLiteral(".drv logint clear") % m_callsign.asString();
+            sGui->getIContextSimulator()->parseCommandLine(cmd, this->identifier());
+        }
+
+        void CInterpolationLogDisplay::clearLogCommand()
+        {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+
+            const QString cmd = QStringLiteral(".drv logint clear");
+            sGui->getIContextSimulator()->parseCommandLine(cmd, this->identifier());
+        }
+
+        void CInterpolationLogDisplay::writeLogCommand()
+        {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+
+            const QString cmd = QStringLiteral(".drv logint write");
+            sGui->getIContextSimulator()->parseCommandLine(cmd, this->identifier());
+        }
+
         bool CInterpolationLogDisplay::checkLogPrerequisites()
         {
             CStatusMessage m;
             do
             {
                 if (!this->isVisible()) { return false; } // silently return
-                if (!sApp || sApp->isShuttingDown()) { break; } // stop and return
+                if (!sGui || sGui->isShuttingDown()) { break; } // stop and return
                 if (m_callsign.isEmpty())
                 {
                     // static const CStatusMessage ms = CStatusMessage(this).validationError(u"No callsign for logging");

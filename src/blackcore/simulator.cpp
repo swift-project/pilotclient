@@ -418,14 +418,14 @@ namespace BlackCore
             const QString part2 = parser.part(2).toLower();
             if (part2 == "off" || part2 == "false")
             {
-                CStatusMessage(this).info(u"Disabled interpolation logging");
+                CLogMessage(this).info(u"Disabled interpolation logging");
                 this->clearInterpolationLogCallsigns();
                 return true;
             }
             if (part2 == "clear" || part2 == "clr")
             {
                 m_interpolationLogger.clearLog();
-                CStatusMessage(this).info(u"Cleared interpolation logging");
+                CLogMessage(this).info(u"Cleared interpolation logging");
                 this->clearInterpolationLogCallsigns();
                 return true;
             }
@@ -436,7 +436,7 @@ namespace BlackCore
                 const int max = parser.part(3).toInt(&ok);
                 if (!ok) { return false; }
                 m_interpolationLogger.setMaxSituations(max);
-                CStatusMessage(this).info(u"Max.situations logged: %1") << max;
+                CLogMessage(this).info(u"Max.situations logged: %1") << max;
                 return true;
             }
             if (part2 == "write" || part2 == "save")

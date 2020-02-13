@@ -177,7 +177,7 @@
       </item>
       <item>
        <widget class="QFrame" name="fr_LogStatus">
-        <layout class="QHBoxLayout" name="hl_LogCallsign" stretch="2,0,0,0,0,0">
+        <layout class="QHBoxLayout" name="hl_LogCallsign" stretch="2,0,0,0,0,0,0,0">
          <property name="leftMargin">
           <number>3</number>
          </property>
@@ -194,6 +194,20 @@
           <widget class="BlackGui::Components::CCallsignCompleter" name="comp_CallsignCompleter">
            <property name="focusPolicy">
             <enum>Qt::StrongFocus</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pb_WriteLogToFile">
+           <property name="text">
+            <string>write log.</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pb_ClearLog">
+           <property name="text">
+            <string>clear log.</string>
            </property>
           </widget>
          </item>
@@ -665,6 +679,20 @@
            </widget>
           </item>
           <item>
+           <widget class="QPushButton" name="pb_WriteLogToFile2">
+            <property name="text">
+             <string>write log.</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pb_ClearLog2">
+            <property name="text">
+             <string>clear log.</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="pb_GetLastInterpolation">
             <property name="text">
              <string> last interpolation </string>
@@ -1018,6 +1046,8 @@
   <tabstop>hs_UpdateTime</tabstop>
   <tabstop>pb_StartStop</tabstop>
   <tabstop>comp_CallsignCompleter</tabstop>
+  <tabstop>pb_WriteLogToFile</tabstop>
+  <tabstop>pb_ClearLog</tabstop>
   <tabstop>pb_ResetStats</tabstop>
   <tabstop>pb_ResetLastSent</tabstop>
   <tabstop>pb_ShowLogInSimulator</tabstop>
@@ -1037,6 +1067,7 @@
   <tabstop>le_ElevationReqRec</tabstop>
   <tabstop>le_Elevation</tabstop>
   <tabstop>le_SimulatorSpecific</tabstop>
+  <tabstop>le_InboundSituationsInfo</tabstop>
   <tabstop>tvp_InboundAircraftSituations</tabstop>
   <tabstop>tvp_InboundAircraftParts</tabstop>
   <tabstop>tvp_Changes</tabstop>
@@ -1050,7 +1081,12 @@
   <tabstop>tvp_InterpolatedAircraftSituations</tabstop>
   <tabstop>tvp_LoopbackAircraftSituations</tabstop>
   <tabstop>te_TextLog</tabstop>
+  <tabstop>pb_ElvClear</tabstop>
+  <tabstop>le_ElvHistoryCount</tabstop>
+  <tabstop>cb_ElvAllowPseudo</tabstop>
+  <tabstop>le_ElevationTestValue</tabstop>
   <tabstop>pte_ElevationAtPosition</tabstop>
+  <tabstop>lv_ElevevationHistory</tabstop>
  </tabstops>
  <resources/>
  <connections/>

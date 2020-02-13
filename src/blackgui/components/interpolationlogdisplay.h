@@ -96,9 +96,6 @@ namespace BlackGui
             //! Toggle start/stop
             void toggleStartStop();
 
-            //! Display log in simulator
-            void showLogInSimulator();
-
             //! Follow aircraft in simulator
             void followInSimulator();
 
@@ -150,6 +147,14 @@ namespace BlackGui
             //! Clear elevation results
             void clearElevationResults();
 
+            //! Clear log. command
+            void clearLogCommand();
+
+            //! Write log. command
+            void writeLogCommand();
+
+            //! Display log in simulator
+            void logPosCommand();
 
             //! Check if can do logging, otherwise stop and display message
             bool checkLogPrerequisites();
