@@ -233,14 +233,8 @@ namespace BlackSimPlugin
             {
                 if (!myself) { return; }
 
-                // update in simulator
-                ISimulationEnvironmentProvider::rememberGroundElevation(callsign, elv); // in simulator
-
-                // and in remote aircraft for given callsign
-                const int updated = CRemoteAircraftAware::updateAircraftGroundElevation(callsign, elv, CAircraftSituation::FromProvider);
-                Q_UNUSED(updated)
-
-                emit myself->receivedRequestedElevation(elv, callsign);
+                // updates in providers and emits signal
+                ISimulator::callbackReceivedRequestedElevation(elv, callsign);
             });
 
             emit this->requestedElevation(callsign);
