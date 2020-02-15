@@ -49,8 +49,13 @@ namespace BlackGui
             this->setAcceptDrops(true);
             this->setAcceptedMetaTypeIds({qMetaTypeId<CAircraftIcaoCode>(), qMetaTypeId<CAircraftIcaoCodeList>()});
             ui->le_Aircraft->setValidator(new CUpperCaseValidator(this));
+
             connect(ui->le_Aircraft, &QLineEdit::editingFinished, this, &CDbAircraftIcaoSelectorComponent::onDataChanged);
-            connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAircraftIcaoSelectorComponent::onCodesRead, Qt::QueuedConnection);
+            if (sApp && sApp->hasWebDataServices())
+            {
+                connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAircraftIcaoSelectorComponent::onCodesRead, Qt::QueuedConnection);
+            }
+
             this->onCodesRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, sApp->getWebDataServices()->getAircraftIcaoCodesCount());
         }
 

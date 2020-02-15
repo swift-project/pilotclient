@@ -1113,10 +1113,10 @@ namespace BlackCore
 
                     if (it != m_aliasedStations.end())
                     {
-                        if (sApp->getIContextNetwork())
+                        if (sApp && sApp->getIContextNetwork())
                         {
                             // Get the callsign for this frequency and fuzzy compare with our alias station
-                            // !\todo KB 2019-10 replace by com unit channel spacing
+                            // !\todo KB 2019-10 replace by COM unit channel spacing
                             const CComSystem::ChannelSpacing spacing = CComSystem::ChannelSpacing25KHz;
                             const CFrequency f(static_cast<int>(roundedFrequencyHz), CFrequencyUnit::Hz());
                             const CAtcStationList matchingAtcStations = sApp->getIContextNetwork()->getOnlineStationsForFrequency(f, spacing);
