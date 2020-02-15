@@ -47,7 +47,7 @@ namespace BlackCore
 
     CAircraftMatcher::CAircraftMatcher(const CAircraftMatcherSetup &setup, QObject *parent) : QObject(parent), m_setup(setup)
     {
-        if (sApp && !sApp->isShuttingDown())
+        if (sApp && sApp->hasWebDataServices())
         {
             sApp->getWebDataServices()->synchronizeDbCaches(CEntityFlags::AircraftCategoryEntity);
             const CAircraftCategoryList categories = sApp->getWebDataServices()->getAircraftCategories();
@@ -513,7 +513,8 @@ namespace BlackCore
         const CCallsign callsign = inModel.getCallsign();
 
         if (js.isEmpty() && log) { CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Matching script is empty")); }
-        while (!js.isEmpty() && sApp && !sApp->isShuttingDown())
+
+        while (!js.isEmpty() && sApp && sApp->hasWebDataServices())
         {
             rv.runScript = true;
 

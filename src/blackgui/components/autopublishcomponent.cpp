@@ -38,7 +38,7 @@ namespace BlackGui
             connect(ui->pb_SendToDB,    &QPushButton::released, this, &CAutoPublishComponent::sendToDb, Qt::QueuedConnection);
             connect(ui->pb_DeleteFiles, &QPushButton::released, this, &CAutoPublishComponent::deleteAllFiles, Qt::QueuedConnection);
 
-            if (sGui && sGui->getWebDataServices() && sGui->getWebDataServices()->getDatabaseWriter())
+            if (sGui && sGui->hasWebDataServices() && sGui->getWebDataServices()->getDatabaseWriter())
             {
                 CDatabaseWriter *w = sGui->getWebDataServices()->getDatabaseWriter();
                 connect(w, &CDatabaseWriter::autoPublished, this, &CAutoPublishComponent::onAutoPublished, Qt::QueuedConnection);
@@ -77,7 +77,7 @@ namespace BlackGui
                 return;
             }
 
-            if (!sGui->getWebDataServices())
+            if (!sGui->hasWebDataServices())
             {
                 this->showOverlayHTMLMessage("No publishing web service!", 5000);
                 return;
