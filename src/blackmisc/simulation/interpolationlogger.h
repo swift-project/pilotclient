@@ -17,6 +17,7 @@
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/logcategorylist.h"
+
 #include <QObject>
 #include <QStringList>
 #include <QtGlobal>
@@ -30,13 +31,13 @@ namespace BlackMisc
         struct BLACKMISC_EXPORT SituationLog
         {
             QChar interpolator;             //!< what interpolator is used
-            qint64 tsCurrent = -1;          //!< current timestamp
-            qint64 tsInterpolated = -1;     //!< timestamp interpolated
-            double groundFactor = -1;       //!< current ground factor
-            double simTimeFraction = -1;    //!< time fraction, expected 0..1
+            qint64 tsCurrent          = -1; //!< current timestamp
+            qint64 tsInterpolated     = -1; //!< timestamp interpolated
+            double groundFactor       = -1; //!< current ground factor
+            double simTimeFraction    = -1; //!< time fraction, expected 0..1
             double deltaSampleTimesMs = -1; //!< delta time between samples (i.e. 2 situations)
-            bool useParts = false;          //!< supporting aircraft parts
-            bool vtolAircraft = false;      //!< VTOL aircraft
+            bool useParts          = false; //!< supporting aircraft parts
+            bool vtolAircraft      = false; //!< VTOL aircraft
             bool interpolantRecalc = false; //!< interpolant recalculated
             int noNetworkSituations = 0;    //!< available network situations
             int noInvalidSituations = 0;    //!< invalid situations, missing situations for timestampd
@@ -70,6 +71,14 @@ namespace BlackMisc
             const Aviation::CAircraftSituation &newestInterpolationSituation() const
             {
                 return interpolationSituations.backOrDefault();
+            }
+
+            //! The second latest situation (spline)
+            const Aviation::CAircraftSituation &secondInterpolationSituation() const
+            {
+                if (interpolationSituations.size() < 2) { return Aviation::CAircraftSituation::null(); }
+                const Aviation::CAircraftSituationList::size_type i = interpolationSituations.size() - 2; // 2nd latest, latest at end
+                return interpolationSituations[i];
             }
 
             //! To string

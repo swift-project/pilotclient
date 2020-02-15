@@ -302,8 +302,8 @@ namespace BlackMisc
                     u"<th>Interpolation ts.</th><th>Sample &Delta;t</th><th>fraction</th>"
                     u"<th>lat.old</th><th>lat.new</th><th>lat.cur</th>"
                     u"<th>lng.old</th><th>lng.new</th><th>lng.cur</th>"
-                    u"<th>alt.old</th><th>alt.new</th><th>alt.cur</th>"
-                    u"<th>elv.old</th><th>elv.new</th><th>elv.cur</th>"
+                    u"<th>alt.old</th><th>alt.2nd</th><th>alt.new</th><th>alt.cur</th>"
+                    u"<th>elv.old</th><th>elv.2nd</th><th>elv.new</th><th>elv.cur</th>"
                     u"<th>gnd.factor</th>"
                     u"<th>onGnd.old</th><th>onGnd.new</th><th>onGnd.cur</th>"
                     u"<th>CG</th>"
@@ -320,6 +320,7 @@ namespace BlackMisc
             {
                 const CAircraftSituation situationOld = log.oldestInterpolationSituation();
                 const CAircraftSituation situationNew = log.newestInterpolationSituation();
+                const CAircraftSituation situation2nd = log.secondInterpolationSituation();
                 const bool changedNewPosition = (newPosTs != situationNew.getMSecsSinceEpoch());
                 const bool changedParts = (lastParts != log.parts);
                 newPosTs = situationNew.getMSecsSinceEpoch();
@@ -341,7 +342,7 @@ namespace BlackMisc
                     u"<td class=\"new\">" % situationNew.getTimestampAndOffset(true) % u"</td>" %
                     u"<td class=\"cur\">" % log.situationCurrent.getTimestampAndOffset(true) % u"</td>" %
 
-                    u"<td>" % msSinceEpochToTime(log.tsInterpolated) % u"</td>" %
+                    u"<td>" % msSinceEpochToTime(log.tsInterpolated)  % u"</td>" %
                     u"<td>" % QString::number(log.deltaSampleTimesMs) % u"ms</td>" %
                     u"<td>" % QString::number(log.simTimeFraction) % u"</td>" %
 
@@ -356,10 +357,12 @@ namespace BlackMisc
 
                     // tableRows +=
                     u"<td class=\"old\">" % situationOld.getAltitude().valueRoundedWithUnit(ft, 1) % u"</td>" %
+                    u"<td class=\"old\">" % situation2nd.getAltitude().valueRoundedWithUnit(ft, 1) % u"</td>" %
                     u"<td class=\"new\">" % situationNew.getAltitude().valueRoundedWithUnit(ft, 1) % u"</td>" %
                     u"<td class=\"cur\">" % log.situationCurrent.getAltitude().valueRoundedWithUnit(ft, 1) % u"</td>" %
 
                     u"<td class=\"old\">" % situationOld.getGroundElevation().valueRoundedWithUnit(ft, 1) % u" " % situationOld.getGroundElevationInfoAsString() % u"</td>" %
+                    u"<td class=\"old\">" % situation2nd.getGroundElevation().valueRoundedWithUnit(ft, 1) % u" " % situation2nd.getGroundElevationInfoAsString() % u"</td>" %
                     u"<td class=\"new\">" % situationNew.getGroundElevation().valueRoundedWithUnit(ft, 1) % u" " % situationNew.getGroundElevationInfoAsString() % u"</td>" %
                     u"<td class=\"cur\">" % log.situationCurrent.getGroundElevation().valueRoundedWithUnit(ft, 1) % u" " % log.situationCurrent.getGroundElevationInfoAsString() % u"</td>" %
 
