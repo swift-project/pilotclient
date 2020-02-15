@@ -56,7 +56,11 @@ namespace BlackMisc
 
         bool ISimulationEnvironmentProvider::rememberGroundElevation(const CCallsign &requestedForCallsign, const CElevationPlane &elevationPlane)
         {
-            if (!elevationPlane.hasMSLGeodeticHeight()) { return false; }
+            if (!elevationPlane.hasMSLGeodeticHeight())
+            {
+                BLACK_AUDIT_X(false, Q_FUNC_INFO, "Elevation plane needs to be MSL NON NULL");
+                return false;
+            }
             return this->rememberGroundElevation(requestedForCallsign, elevationPlane, elevationPlane.getRadius());
         }
 
