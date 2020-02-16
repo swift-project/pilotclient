@@ -386,7 +386,7 @@ namespace BlackMisc
             return found;
         }
 
-        CAircraftSituation CAircraftSituationList::findCLosestElevationWithinRange(const ICoordinateGeodetic &coordinate, const CLength &range) const
+        CAircraftSituation CAircraftSituationList::findClosestElevationWithinRange(const ICoordinateGeodetic &coordinate, const CLength &range) const
         {
             CLength r = range.isNull() || range < CElevationPlane::singlePointRadius() ? CElevationPlane::singlePointRadius() : range;
             CAircraftSituation situationWithElevation = CAircraftSituation::null();

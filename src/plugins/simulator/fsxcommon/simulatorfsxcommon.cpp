@@ -258,7 +258,7 @@ namespace BlackSimPlugin
             case CStatusMessage::SeverityError:   type = SIMCONNECT_TEXT_TYPE_PRINT_RED;    break;
             }
             const HRESULT hr = SimConnect_Text(m_hSimConnect, type, 7.5, EventTextMessage, static_cast<DWORD>(m.size()), m.data());
-            Q_UNUSED(hr);
+            Q_UNUSED(hr)
         }
 
         void CSimulatorFsxCommon::displayTextMessage(const CTextMessage &message) const
@@ -272,7 +272,7 @@ namespace BlackSimPlugin
             else if (message.isRadioMessage())   { type = SIMCONNECT_TEXT_TYPE_PRINT_GREEN; }
 
             const HRESULT hr = SimConnect_Text(m_hSimConnect, type, 7.5, EventTextMessage, static_cast<DWORD>(m.size()), m.data());
-            Q_UNUSED(hr);
+            Q_UNUSED(hr)
         }
 
         bool CSimulatorFsxCommon::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
@@ -622,13 +622,13 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::removeCamera(CSimConnectObject &simObject)
         {
             // not in FSX
-            Q_UNUSED(simObject);
+            Q_UNUSED(simObject)
         }
 
         void CSimulatorFsxCommon::removeObserver(CSimConnectObject &simObject)
         {
             // not in FSX
-            Q_UNUSED(simObject);
+            Q_UNUSED(simObject)
         }
 
         bool CSimulatorFsxCommon::triggerAutoTraceSendId(qint64 traceTimeMs)
@@ -734,7 +734,7 @@ namespace BlackSimPlugin
                 com1.setReceiveEnabled(com1Status == 0 && (comReceiveAll || com1Transmit));
                 const bool changedCom1 = myAircraft.getCom1System() != com1;
                 m_simCom1 = com1;
-                Q_UNUSED(com1Test);
+                Q_UNUSED(com1Test)
 
                 com2.setFrequencyActive(CFrequency(simulatorOwnAircraft.com2ActiveMHz, CFrequencyUnit::MHz()));
                 com2.setFrequencyStandby(CFrequency(simulatorOwnAircraft.com2StandbyMHz, CFrequencyUnit::MHz()));
@@ -745,7 +745,7 @@ namespace BlackSimPlugin
                 com2.setReceiveEnabled(com2Status == 0 && (comReceiveAll || com2Transmit));
                 const bool changedCom2 = myAircraft.getCom2System() != com2;
                 m_simCom2 = com2;
-                Q_UNUSED(com2Test);
+                Q_UNUSED(com2Test)
 
                 CTransponder transponder(myAircraft.getTransponder());
                 transponder.setTransponderCode(qRound(simulatorOwnAircraft.transponderCode));
@@ -1363,7 +1363,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::timerEvent(QTimerEvent *event)
         {
-            Q_UNUSED(event);
+            Q_UNUSED(event)
             if (this->isShuttingDown()) { return; }
             this->dispatch();
         }
@@ -2018,7 +2018,7 @@ namespace BlackSimPlugin
 
                 // Interpolated parts
                 const bool updatedParts = this->updateRemoteAircraftParts(simObject, result, forceUpdate);
-                Q_UNUSED(updatedParts);
+                Q_UNUSED(updatedParts)
 
             } // all callsigns
 
@@ -2874,7 +2874,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommonListener::SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext)
         {
-            Q_UNUSED(cbData);
+            Q_UNUSED(cbData)
             CSimulatorFsxCommonListener *simListener = static_cast<CSimulatorFsxCommonListener *>(pContext);
             switch (pData->dwID)
             {

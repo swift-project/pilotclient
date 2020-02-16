@@ -583,7 +583,7 @@ namespace BlackSimPlugin
         {
             Q_ASSERT(this->isConnected());
             if (originator == this->identifier()) { return false; }
-            Q_UNUSED(selcal);
+            Q_UNUSED(selcal)
 
             //! \fixme KB 8/2017 use SELCAL??
             return false;
@@ -1198,7 +1198,7 @@ namespace BlackSimPlugin
             }
 
             const bool wasPending = (m_addingInProgressAircraft.remove(cs) > 0);
-            Q_UNUSED(wasPending);
+            Q_UNUSED(wasPending)
 
             if (failedRemoteAircraft.hasCallsign() && !m_aircraftAddedFailed.containsCallsign(cs))
             {
