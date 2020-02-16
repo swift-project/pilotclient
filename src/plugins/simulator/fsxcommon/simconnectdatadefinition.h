@@ -184,6 +184,9 @@ namespace BlackSimPlugin
 
             //! Above ground ft
             double aboveGroundFt() const { return altitudeFt - elevationFt; }
+
+            //! Above ground ft
+            bool isOnGround() const { return this->aboveGroundFt() < 1.0; }
         };
 
         //! Data struct simulator environment
