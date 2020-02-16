@@ -1050,7 +1050,7 @@ namespace BlackMisc
 
         bool CAircraftSituation::canLikelySkipNearGroundInterpolation() const
         {
-            // those we can exclude, we are ON GROUND
+            // those we can exclude, we are ON GROUND not guessed
             if (this->isOnGround() && this->hasInboundGroundDetails()) { return false; }
 
             // cases where we can skip

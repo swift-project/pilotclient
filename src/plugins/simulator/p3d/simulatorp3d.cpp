@@ -85,9 +85,9 @@ namespace BlackSimPlugin
                     if (pObjData->dwArraySize != 1) { break; }
                     const SIMCONNECT_DATA_GROUND_INFO gi = pObjData->rgData[0];
                     if (!gi.bIsValid) { break; }
-                    const CLatitude lat(gi.fLat, CAngleUnit::deg());
+                    const CLatitude  lat(gi.fLat, CAngleUnit::deg());
                     const CLongitude lng(gi.fLon, CAngleUnit::deg());
-                    const CAltitude alt(gi.fAlt, CAltitude::MeanSeaLevel, CAltitude::TrueAltitude, CLengthUnit::ft());
+                    const CAltitude  alt(gi.fAlt, CAltitude::MeanSeaLevel, CAltitude::TrueAltitude, CLengthUnit::ft());
                     const CCoordinateGeodetic coordinate(lat, lng, alt);
                     const CElevationPlane ep(coordinate, CElevationPlane::singlePointRadius());
 
