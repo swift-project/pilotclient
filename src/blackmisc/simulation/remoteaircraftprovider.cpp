@@ -551,7 +551,7 @@ namespace BlackMisc
             return c;
         }
 
-        int CRemoteAircraftProvider::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation, CAircraftSituation::GndElevationInfo info)
+        int CRemoteAircraftProvider::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation, CAircraftSituation::GndElevationInfo info, bool *setForOnGroundPosition)
         {
             if (!this->isAircraftInRange(callsign)) { return 0; }
 
@@ -559,12 +559,14 @@ namespace BlackMisc
             const qint64 now = QDateTime::currentMSecsSinceEpoch();
             const CAircraftModel model = this->getAircraftInRangeModelForCallsign(callsign);
             CAircraftSituationChange change;
+            bool setForOnGndPosition = false;
+
             int updated = 0;
             {
                 QWriteLocker l(&m_lockSituations);
                 CAircraftSituationList &situations = m_situationsByCallsign[callsign];
                 if (situations.isEmpty()) { return 0; }
-                updated = situations.setGroundElevationCheckedAndGuessGround(elevation, info, model, &change);
+                updated = situations.setGroundElevationCheckedAndGuessGround(elevation, info, model, &change, &setForOnGndPosition);
                 if (updated < 1) { return 0; }
                 m_situationsLastModified[callsign] = now;
                 const CAircraftSituation latestSituation = situations.front();
@@ -587,6 +589,7 @@ namespace BlackMisc
                 m_aircraftInRange[callsign].setGroundElevationChecked(elevation, info);
             }
 
+            if (setForOnGroundPosition) { *setForOnGroundPosition = setForOnGndPosition; }
             return updated; // updated situations
         }
 
@@ -981,10 +984,10 @@ namespace BlackMisc
             return this->provider()->updateMultipleAircraftRendered(callsigns, rendered);
         }
 
-        int CRemoteAircraftAware::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation, CAircraftSituation::GndElevationInfo info)
+        int CRemoteAircraftAware::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation, CAircraftSituation::GndElevationInfo info, bool *updatedAircraftGroundElevation)
         {
             Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
-            return this->provider()->updateAircraftGroundElevation(callsign, elevation, info);
+            return this->provider()->updateAircraftGroundElevation(callsign, elevation, info, updatedAircraftGroundElevation);
         }
 
         bool CRemoteAircraftAware::updateCG(const CCallsign &callsign, const CLength &cg)

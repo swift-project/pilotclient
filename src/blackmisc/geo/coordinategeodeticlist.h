@@ -11,8 +11,10 @@
 #ifndef BLACKMISC_GEO_COORDINATEGEODETICLIST_H
 #define BLACKMISC_GEO_COORDINATEGEODETICLIST_H
 
+#include "elevationplane.h"
 #include "coordinategeodetic.h"
 #include "geoobjectlist.h"
+
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/json.h"
@@ -43,6 +45,9 @@ namespace BlackMisc
 
             //! Construct from a base class object.
             CCoordinateGeodeticList(const CSequence<CCoordinateGeodetic> &other);
+
+            //! Average height within range and having an height
+            CElevationPlane averageGeodeticHeight(const CCoordinateGeodetic &reference, const PhysicalQuantities::CLength &range, const PhysicalQuantities::CLength &maxDeviation = PhysicalQuantities::CLength(1.0, PhysicalQuantities::CLengthUnit::m()), int minValues = 3) const;
         };
     } //namespace
 } // namespace

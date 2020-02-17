@@ -19,7 +19,7 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        bool ISimulationEnvironmentProvider::rememberGroundElevation(const CCallsign &requestedForCallsign, const ICoordinateGeodetic &elevationCoordinate, const CLength &epsilon)
+        bool ISimulationEnvironmentProvider::rememberGroundElevation(const CCallsign &requestedForCallsign, bool likelyOnGroundElevation, const ICoordinateGeodetic &elevationCoordinate, const CLength &epsilon)
         {
             if (!elevationCoordinate.hasMSLGeodeticHeight())
             {
@@ -27,11 +27,14 @@ namespace BlackMisc
                 return false;
             }
 
+            const CLength minRange = ISimulationEnvironmentProvider::minRange(epsilon);
             {
-                // no 2nd elevation nearby?
                 QReadLocker l(&m_lockElvCoordinates);
                 if (!m_enableElevation) { return false; }
-                if (m_elvCoordinates.containsObjectInRange(elevationCoordinate, minRange(epsilon))) { return false; }
+
+                // check if we have already an elevation within range
+                if (m_elvCoordinatesGnd.containsObjectInRange(elevationCoordinate, minRange)) { return false; }
+                if (m_elvCoordinates.containsObjectInRange(elevationCoordinate,    minRange)) { return false; }
             }
 
             {
@@ -39,13 +42,24 @@ namespace BlackMisc
                 // * we assume we find them faster
                 // * and need them more frequently (the recent ones)
                 const qint64 now = QDateTime::currentMSecsSinceEpoch();
+
                 QWriteLocker l(&m_lockElvCoordinates);
-                if (m_elvCoordinates.size() > m_maxElevations) { m_elvCoordinates.pop_back(); }
-                m_elvCoordinates.push_front(elevationCoordinate);
+                if (likelyOnGroundElevation)
+                {
+                    if (m_elvCoordinatesGnd.size() > m_maxElevationsGnd) { m_elvCoordinatesGnd.pop_back(); }
+                    m_elvCoordinatesGnd.push_front(elevationCoordinate);
+                }
+                else
+                {
+                    if (m_elvCoordinates.size() > m_maxElevations) { m_elvCoordinates.pop_back(); }
+                    m_elvCoordinates.push_front(elevationCoordinate);
+                }
+
+                // statistics
                 if (m_pendingElevationRequests.contains(requestedForCallsign))
                 {
                     const qint64 startedMs = m_pendingElevationRequests.value(requestedForCallsign);
-                    const qint64 deltaMs = now - startedMs;
+                    const qint64 deltaMs   = now - startedMs;
                     m_pendingElevationRequests.remove(requestedForCallsign);
                     m_statsCurrentElevRequestTimeMs = deltaMs;
                     if (m_statsMaxElevRequestTimeMs < deltaMs) { m_statsMaxElevRequestTimeMs = deltaMs; }
@@ -54,14 +68,14 @@ namespace BlackMisc
             return true;
         }
 
-        bool ISimulationEnvironmentProvider::rememberGroundElevation(const CCallsign &requestedForCallsign, const CElevationPlane &elevationPlane)
+        bool ISimulationEnvironmentProvider::rememberGroundElevation(const CCallsign &requestedForCallsign, bool likelyOnGroundElevation, const CElevationPlane &elevationPlane)
         {
             if (!elevationPlane.hasMSLGeodeticHeight())
             {
                 BLACK_AUDIT_X(false, Q_FUNC_INFO, "Elevation plane needs to be MSL NON NULL");
                 return false;
             }
-            return this->rememberGroundElevation(requestedForCallsign, elevationPlane, elevationPlane.getRadius());
+            return this->rememberGroundElevation(requestedForCallsign, likelyOnGroundElevation, elevationPlane, elevationPlane.getRadius());
         }
 
         bool ISimulationEnvironmentProvider::insertCG(const CLength &cg, const CCallsign &cs)
@@ -69,15 +83,10 @@ namespace BlackMisc
             if (cs.isEmpty()) { return false; }
 
             const bool remove = cg.isNull();
-            if (remove)
             {
                 QWriteLocker l(&m_lockCG);
-                m_cgsPerCallsign.remove(cs);
-            }
-            else
-            {
-                QWriteLocker l(&m_lockCG);
-                m_cgsPerCallsign[cs] = cg;
+                if (remove) { m_cgsPerCallsign.remove(cs); }
+                else        { m_cgsPerCallsign[cs] = cg;   }
             }
             return true;
         }
@@ -86,7 +95,7 @@ namespace BlackMisc
         {
             bool ok = false;
             QWriteLocker l(&m_lockCG);
-            if (!m_enableCG) { return false; }
+            if (!m_enableCG)   { return false; }
             if (!cs.isEmpty()) { m_cgsPerCallsign[cs] = cg; ok = true; }
             if (!modelString.isEmpty()) { m_cgsPerModel[modelString.toUpper()] = cg; ok = true; }
             return ok;
@@ -95,6 +104,7 @@ namespace BlackMisc
         bool ISimulationEnvironmentProvider::insertCGForModelString(const CLength &cg, const QString &modelString)
         {
             if (modelString.isEmpty()) { return false; }
+
             QWriteLocker l(&m_lockCG);
             if (!m_enableCG) { return false; }
             if (cg.isNull())
@@ -141,23 +151,33 @@ namespace BlackMisc
                    range;
         }
 
-        CCoordinateGeodeticList ISimulationEnvironmentProvider::getElevationCoordinates() const
+        CCoordinateGeodeticList ISimulationEnvironmentProvider::getAllElevationCoordinates() const
         {
             QReadLocker l(&m_lockElvCoordinates);
-            return m_elvCoordinates;
+            CCoordinateGeodeticList cl(m_elvCoordinatesGnd);
+            cl.push_back(m_elvCoordinates);
+            return cl;
         }
 
-        CCoordinateGeodeticList ISimulationEnvironmentProvider::getElevationCoordinates(int &maxRemembered) const
+        CCoordinateGeodeticList ISimulationEnvironmentProvider::getElevationCoordinatesOnGround() const
+        {
+            QReadLocker l(&m_lockElvCoordinates);
+            return m_elvCoordinatesGnd;
+        }
+
+        CCoordinateGeodeticList ISimulationEnvironmentProvider::getAllElevationCoordinates(int &maxRemembered) const
         {
             QReadLocker l(&m_lockElvCoordinates);
             maxRemembered = m_maxElevations;
-            return m_elvCoordinates;
+            CCoordinateGeodeticList cl(m_elvCoordinatesGnd);
+            cl.push_back(m_elvCoordinates);
+            return cl;
         }
 
         int ISimulationEnvironmentProvider::cleanUpElevations(const ICoordinateGeodetic &referenceCoordinate, int maxNumber)
         {
             int currentMax;
-            CCoordinateGeodeticList coordinates(this->getElevationCoordinates(currentMax));
+            CCoordinateGeodeticList coordinates(this->getAllElevationCoordinates(currentMax));
             if (maxNumber < 0) { maxNumber = currentMax; }
             const int size = coordinates.size();
             if (size <= maxNumber) { return 0; }
@@ -177,10 +197,12 @@ namespace BlackMisc
 
             // for single point we use a slightly optimized version
             const bool singlePoint = (&range == &CElevationPlane::singlePointRadius() || range.isNull() || range <= CElevationPlane::singlePointRadius());
+            const CCoordinateGeodeticList elevations = this->getAllElevationCoordinates();
             const CCoordinateGeodetic coordinate = singlePoint ?
-                                                   this->getElevationCoordinates().findFirstWithinRangeOrDefault(reference, CElevationPlane::singlePointRadius()) :
-                                                   this->getElevationCoordinates().findClosestWithinRange(reference, range);
+                                                   elevations.findFirstWithinRangeOrDefault(reference, CElevationPlane::singlePointRadius()) :
+                                                   elevations.findClosestWithinRange(reference, range);
             const bool found = !coordinate.isNull();
+
             {
                 QWriteLocker l{&m_lockElvCoordinates };
                 if (found)
@@ -455,6 +477,7 @@ namespace BlackMisc
         {
             QWriteLocker l(&m_lockElvCoordinates);
             m_elvCoordinates.clear();
+            m_elvCoordinatesGnd.clear();
             m_pendingElevationRequests.clear();
             m_statsCurrentElevRequestTimeMs = -1;
             m_statsMaxElevRequestTimeMs     = -1;

@@ -190,7 +190,7 @@ namespace BlackMisc
 
             //! Update the ground elevation
             //! \threadsafe
-            virtual int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info) = 0;
+            virtual int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info, bool *updateAircraftGroundElevation) = 0;
 
             //! Update the CG
             //! \threadsafe
@@ -248,7 +248,8 @@ namespace BlackMisc
             //! \threadsafe
             virtual qint64 partsLastModified(const Aviation::CCallsign &callsign) const = 0;
 
-            //! \copydoc BlackMisc::Aviation::CAircraftSituationList::averageElevationOfNonMovingAircraft
+            //! Average elevation of aircraft in given range, which are NOT moving
+            //! \remark can be used to anticipate field elevation
             //! \threadsafe
             virtual Geo::CElevationPlane averageElevationOfNonMovingAircraft(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues = 1) const = 0;
 
@@ -328,7 +329,7 @@ namespace BlackMisc
             virtual bool updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
             virtual bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered) override;
             virtual int updateMultipleAircraftRendered(const Aviation::CCallsignSet &callsigns, bool rendered) override;
-            virtual int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info) override;
+            virtual int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info, bool *setForOnGroundPosition) override;
             virtual bool updateCG(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg) override;
             virtual bool updateCGAndModelString(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg, const QString &modelString) override;
             virtual PhysicalQuantities::CLength getCGFromDB(const Aviation::CCallsign &callsign) const override;
@@ -474,7 +475,7 @@ namespace BlackMisc
 
             Aviation::CAircraftSituationListPerCallsign m_situationsByCallsign;        //!< situations, for performance reasons per callsign, thread safe access required
             Aviation::CAircraftSituationPerCallsign m_latestSituationByCallsign;       //!< latest situations, for performance reasons per callsign, thread safe access required
-            Aviation::CAircraftSituationPerCallsign m_latestOnGroundProviderElevation; //!< situation on ground with elevation from provider
+            Aviation::CAircraftSituationPerCallsign m_latestOnGroundProviderElevation; //!< situations on ground with elevation from provider
             Aviation::CAircraftPartsListPerCallsign m_partsByCallsign;                 //!< parts, for performance reasons per callsign, thread safe access required
             Aviation::CAircraftSituationChangeListPerCallsign m_changesByCallsign;     //!< changes, for performance reasons per callsign, thread safe access required (same timestamps as corresponding situations)
             Aviation::CCallsignSet m_aircraftWithParts;                                //!< aircraft supporting parts, thread safe access required
@@ -588,7 +589,7 @@ namespace BlackMisc
             bool updateMultipleAircraftRendered(const Aviation::CCallsignSet &callsigns, bool rendered);
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftGroundElevation
-            int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info);
+            int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info, bool *updateAircraftGroundElevation);
 
             //! \copydoc IRemoteAircraftProvider::updateCG
             bool updateCG(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg);
