@@ -64,7 +64,9 @@ namespace BlackMisc
             return c;
         }
 
-        int CAircraftSituationList::setGroundElevationCheckedAndGuessGround(const CElevationPlane &elevationPlane, CAircraftSituation::GndElevationInfo info, const CAircraftModel &model, CAircraftSituationChange *changeOut)
+        int CAircraftSituationList::setGroundElevationCheckedAndGuessGround(
+            const CElevationPlane &elevationPlane, CAircraftSituation::GndElevationInfo info, const CAircraftModel &model,
+            CAircraftSituationChange *changeOut, bool *setForOnGroundPosition)
         {
             if (elevationPlane.isNull()) { return 0; }
             if (this->isEmpty()) { return 0; }
@@ -74,6 +76,7 @@ namespace BlackMisc
             const CAircraftSituationChange simpleChange(*this, model.getCG(), model.isVtol(), true, false);
             int c = 0; // changed elevations
             bool latest = true;
+            bool setForOnGndPosition = false;
 
             for (CAircraftSituation &s : *this)
             {
@@ -82,12 +85,21 @@ namespace BlackMisc
                 {
                     // simpleChange is only valid for the latest situation
                     // this will do nothing if not appropriate!
-                    s.guessOnGround(latest ? simpleChange : CAircraftSituationChange::null(), model);
+                    const bool guessed = s.guessOnGround(latest ? simpleChange : CAircraftSituationChange::null(), model);
+                    Q_UNUSED(guessed)
                     c++;
+
+                    // if not guessed and "on ground" we mark the "elevation"
+                    // as an elevation for a ground position
+                    if (!setForOnGndPosition && s.hasInboundGroundDetails() && s.isOnGround())
+                    {
+                        setForOnGndPosition = true;
+                    }
                 }
-                latest = false;
+                latest = false; // only first pos. is "the latest" one
             }
 
+            if (setForOnGroundPosition) { *setForOnGroundPosition = setForOnGndPosition; }
             if (changeOut)
             {
                 const CAircraftSituationChange change(*this, model.getCG(), model.isVtol(), true, true);
