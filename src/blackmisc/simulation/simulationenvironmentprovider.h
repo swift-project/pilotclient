@@ -34,9 +34,13 @@ namespace BlackMisc
         class BLACKMISC_EXPORT ISimulationEnvironmentProvider : public IProvider
         {
         public:
-            //! All remembered coordiantes
+            //! All remembered coordinates
             //! \threadsafe
-            Geo::CCoordinateGeodeticList getElevationCoordinates() const;
+            Geo::CCoordinateGeodeticList getAllElevationCoordinates() const;
+
+            //! All remembered coordinates
+            //! \threadsafe
+            Geo::CCoordinateGeodeticList getElevationCoordinatesOnGround() const;
 
             //! Find closest elevation (or return NULL)
             //! \threadsafe
@@ -141,7 +145,7 @@ namespace BlackMisc
 
             //! All remembered coordiantes plus max.remembered situations
             //! \threadsafe
-            Geo::CCoordinateGeodeticList getElevationCoordinates(int &maxRemembered) const;
+            Geo::CCoordinateGeodeticList getAllElevationCoordinates(int &maxRemembered) const;
 
             //! New plugin info and default model
             //! \remark normally only used by emulated driver
@@ -196,11 +200,11 @@ namespace BlackMisc
 
             //! Remember a given elevation
             //! \threadsafe
-            bool rememberGroundElevation(const Aviation::CCallsign &requestedForCallsign, const Geo::ICoordinateGeodetic &elevationCoordinate, const PhysicalQuantities::CLength &epsilon = Geo::CElevationPlane::singlePointRadius());
+            bool rememberGroundElevation(const Aviation::CCallsign &requestedForCallsign, bool likelyOnGroundElevation, const Geo::ICoordinateGeodetic &elevationCoordinate, const PhysicalQuantities::CLength &epsilon = Geo::CElevationPlane::singlePointRadius());
 
             //! Remember a given elevation
             //! \threadsafe
-            bool rememberGroundElevation(const Aviation::CCallsign &requestedForCallsign, const Geo::CElevationPlane &elevationPlane) ;
+            bool rememberGroundElevation(const Aviation::CCallsign &requestedForCallsign, bool likelyOnGroundElevation, const Geo::CElevationPlane &elevationPlane);
 
             //! Insert or replace a CG
             //! \remark passing a NULL value will remove the CG
@@ -240,8 +244,13 @@ namespace BlackMisc
             QString m_simulatorDetails;    //!< describes version etc.
             QString m_simulatorVersion;    //!< simulator version
             CAircraftModel m_defaultModel; //!< default model
-            int m_maxElevations = 100;     //!< How many elevations we keep
-            Geo::CCoordinateGeodeticList    m_elvCoordinates; //!< elevation cache
+
+            // idea: the elevations on gnd are likely taxiways and runways, so we keep those
+            int m_maxElevations    = 100;   //!< How many elevations we keep
+            int m_maxElevationsGnd = 400;   //!< How many elevations we keep for elevations on gnd.
+            Geo::CCoordinateGeodeticList    m_elvCoordinates;    //!< elevation cache
+            Geo::CCoordinateGeodeticList    m_elvCoordinatesGnd; //!< elevation cache for on ground situations
+
             Aviation::CTimestampPerCallsign m_pendingElevationRequests; //!< pending elevation requests for aircraft callsign
             Aviation::CLengthPerCallsign    m_cgsPerCallsign;           //!< CGs per callsign
             QHash<QString, PhysicalQuantities::CLength> m_cgsPerModel;  //!< CGs per model string
@@ -250,7 +259,7 @@ namespace BlackMisc
             qint64 m_statsCurrentElevRequestTimeMs = -1;
 
             bool m_enableElevation = true;
-            bool m_enableCG = true;
+            bool m_enableCG        = true;
 
             mutable int m_elvFound  = 0;   //!< statistics only
             mutable int m_elvMissed = 0;   //!< statistics only

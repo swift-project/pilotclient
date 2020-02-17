@@ -1140,9 +1140,9 @@ namespace BlackCore
             return c;
         }
 
-        int CContextNetwork::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation, CAircraftSituation::GndElevationInfo info)
+        int CContextNetwork::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation, CAircraftSituation::GndElevationInfo info, bool *setForOnGroundPosition)
         {
-            return m_airspace->updateAircraftGroundElevation(callsign, elevation, info);
+            return m_airspace->updateAircraftGroundElevation(callsign, elevation, info, setForOnGroundPosition);
         }
 
         void CContextNetwork::updateMarkAllAsNotRendered()
