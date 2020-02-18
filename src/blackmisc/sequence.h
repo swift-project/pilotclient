@@ -119,11 +119,20 @@ namespace BlackMisc
         //! Swap this sequence with another.
         void swap(CSequence &other) noexcept { m_impl.swap(other.m_impl); }
 
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-overflow"
+#endif
+
         //! Access an element by its index.
         reference operator [](size_type index) { Q_ASSERT(index >= 0 && index < m_impl.size()); return m_impl[index]; }
 
         //! Access an element by its index.
         const_reference operator [](size_type index) const { Q_ASSERT(index >= 0 && index < m_impl.size()); return m_impl[index]; }
+
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 
         //! Access the first element.
         reference front() { Q_ASSERT(!empty()); return m_impl.front(); }

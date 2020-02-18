@@ -583,5 +583,20 @@ namespace BlackMisc
             if (interpolator == 'l') { return l; }
             return u;
         }
+
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-overflow"
+#endif
+        const CAircraftSituation &SituationLog::secondInterpolationSituation() const
+        {
+            if (interpolationSituations.size() < 2) { return Aviation::CAircraftSituation::null(); }
+            const Aviation::CAircraftSituationList::size_type i = interpolationSituations.size() - 2; // 2nd latest, latest at end
+            return interpolationSituations[i];
+        }
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
+
     } // namespace
 } // namespace

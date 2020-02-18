@@ -74,12 +74,7 @@ namespace BlackMisc
             }
 
             //! The second latest situation (spline)
-            const Aviation::CAircraftSituation &secondInterpolationSituation() const
-            {
-                if (interpolationSituations.size() < 2) { return Aviation::CAircraftSituation::null(); }
-                const Aviation::CAircraftSituationList::size_type i = interpolationSituations.size() - 2; // 2nd latest, latest at end
-                return interpolationSituations[i];
-            }
+            const Aviation::CAircraftSituation &secondInterpolationSituation() const;
 
             //! To string
             QString toQString(bool withSetup,
