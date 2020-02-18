@@ -7,6 +7,8 @@
  */
 
 #include "simulationenvironmentprovider.h"
+#include "blackmisc/aviation/aircraftsituationchange.h"
+
 #include "verify.h"
 #include <QStringBuilder>
 
@@ -163,6 +165,12 @@ namespace BlackMisc
         {
             QReadLocker l(&m_lockElvCoordinates);
             return m_elvCoordinatesGnd;
+        }
+
+        CElevationPlane ISimulationEnvironmentProvider::averageElevationOfOnGroundAircraft(const CAircraftSituation &reference, const CLength &range, int minValues) const
+        {
+            const CCoordinateGeodeticList coordinates = this->getElevationCoordinatesOnGround();
+            return coordinates.averageGeodeticHeight(reference, range, CAircraftSituationChange::allowedAltitudeDeviation(), minValues);
         }
 
         CCoordinateGeodeticList ISimulationEnvironmentProvider::getAllElevationCoordinates(int &maxRemembered) const
@@ -513,6 +521,12 @@ namespace BlackMisc
         {
             if (!this->hasProvider()) { return CElevationPlane::null(); }
             return this->provider()->findClosestElevationWithinRangeOrRequest(reference, range, callsign);
+        }
+
+        CElevationPlane CSimulationEnvironmentAware::averageElevationOfOnGroundAircraft(const CAircraftSituation &reference, const CLength &range, int minValues) const
+        {
+            if (!this->hasProvider()) { return CElevationPlane::null(); }
+            return this->provider()->averageElevationOfOnGroundAircraft(reference, range, minValues);
         }
 
         bool CSimulationEnvironmentAware::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
