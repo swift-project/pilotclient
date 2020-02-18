@@ -365,12 +365,13 @@ namespace BlackCore
         if (this->isShuttingDown()) { return; }
         if (plane.isNull()) { return; }
 
-        // update in simulator
-        ISimulationEnvironmentProvider::rememberGroundElevation(callsign, plane); // in simulator
+        // Update in remote aircraft for given callsign
+        bool updatedForOnGroundPosition = false;
+        const int updated = CRemoteAircraftAware::updateAircraftGroundElevation(callsign, plane, CAircraftSituation::FromProvider, &updatedForOnGroundPosition);
 
-        // and in remote aircraft for given callsign
-        const int updated = CRemoteAircraftAware::updateAircraftGroundElevation(callsign, plane, CAircraftSituation::FromProvider);
-        Q_UNUSED(updated)
+        // update in simulator
+        const bool likelyOnGroundElevation = updated > 0 && updatedForOnGroundPosition;
+        ISimulationEnvironmentProvider::rememberGroundElevation(callsign, likelyOnGroundElevation, plane); // in simulator
 
         // signal we have received the elevation
         // used by log display
@@ -877,7 +878,7 @@ namespace BlackCore
         {
             const int aircraftCount = this->getAircraftInRangeCount();
             this->setMaxElevationsRemembered(aircraftCount * 3); // at least 3 elevations per aircraft, even better as not all are requesting elevations
-            this->rememberGroundElevation(callsign, elevation);
+            this->rememberGroundElevation(callsign, false, elevation);
         }
 
         const QString modelString = model.getModelString();
@@ -1192,7 +1193,7 @@ namespace BlackCore
                     const CCallsign cs = situation.hasCallsign() ? situation.getCallsign() : ownAircraft.getCallsign();
                     const CLength radius = settings.getRecordedGndRadius().isNull() ? CElevationPlane::singlePointRadius() : settings.getRecordedGndRadius();
                     const CElevationPlane ep(situation, radius);
-                    const bool remembered = this->rememberGroundElevation(cs, ep, radius);
+                    const bool remembered = this->rememberGroundElevation(cs, situation.isOnGround(), ep, radius);
                     Q_UNUSED(remembered) // false means it was already in that cache, or something else is wrong
                 }
             }
