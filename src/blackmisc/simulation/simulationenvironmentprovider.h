@@ -42,6 +42,14 @@ namespace BlackMisc
             //! \threadsafe
             Geo::CCoordinateGeodeticList getElevationCoordinatesOnGround() const;
 
+            //! Average elevation of "on ground" cached values
+            //! \threadsafe
+            Geo::CElevationPlane averageElevationOfOnGroundAircraft(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues) const;
+
+            //! Highest elevation
+            //! \threadsafe
+            Aviation::CAltitude highestElevation() const;
+
             //! Find closest elevation (or return NULL)
             //! \threadsafe
             Geo::CElevationPlane findClosestElevationWithinRange(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const;
@@ -284,6 +292,9 @@ namespace BlackMisc
 
             //! \copydoc ISimulationEnvironmentProvider::findClosestElevationWithinRangeOrRequest
             Geo::CElevationPlane findClosestElevationWithinRangeOrRequest(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range, const Aviation::CCallsign &callsign);
+
+            //! \copydoc ISimulationEnvironmentProvider::averageElevationOfOnGroundAircraft
+            Geo::CElevationPlane averageElevationOfOnGroundAircraft(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues) const;
 
             //! \copydoc ISimulationEnvironmentProvider::requestElevation
             bool requestElevation(const Geo::ICoordinateGeodetic &reference, const Aviation::CCallsign &callsign);
