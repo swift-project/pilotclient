@@ -83,6 +83,9 @@ namespace BlackMisc
             //! Find min/max/average height
             MinMaxAverageHeight findMinMaxAverageHeight() const;
 
+            //! Find min/max/average height
+            Aviation::CAltitude findMaxHeight() const;
+
             //! Remove outside range
             int removeOutsideRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range);
 

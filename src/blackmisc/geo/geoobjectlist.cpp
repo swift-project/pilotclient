@@ -133,6 +133,20 @@ namespace BlackMisc
             return stats;
         }
 
+        template<class OBJ, class CONTAINER>
+        CAltitude IGeoObjectList<OBJ, CONTAINER>::findMaxHeight() const
+        {
+            if (this->container().isEmpty()) { return CAltitude::null(); }
+            CAltitude max = CAltitude::null();
+            for (const OBJ &obj : this->container())
+            {
+                if (!obj.hasMSLGeodeticHeight()) { continue; }
+                const CAltitude alt = obj.geodeticHeight();
+                if (max.isNull() || alt > max) { max = alt; }
+            }
+            return max;
+        }
+
         template <class OBJ, class CONTAINER>
         int IGeoObjectList<OBJ, CONTAINER>::removeOutsideRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range)
         {
