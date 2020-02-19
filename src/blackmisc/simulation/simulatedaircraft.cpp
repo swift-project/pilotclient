@@ -461,14 +461,14 @@ namespace BlackMisc
         QString CSimulatedAircraft::getNetworkModelAircraftIcaoDifference() const
         {
             const CAircraftIcaoCode icaoNw(this->getNetworkModel().getAircraftIcaoCode());
-            if (!icaoNw.hasDesignator()) { return QStringLiteral("[x] no nw."); }
+            if (!icaoNw.hasDesignator()) { return QStringLiteral("[x] no nw. ICAO"); }
 
-            const CAircraftIcaoCode icao(this->getModel().getAircraftIcaoCode());
-            if (!icao.hasDesignator())   { return QStringLiteral("[x] no sim."); }
+            const CAircraftIcaoCode icaoModel(this->getModel().getAircraftIcaoCode());
+            if (!icaoModel.hasDesignator())   { return QStringLiteral("[x] no sim. ICAO"); }
 
-            if (icao.isDbEqual(icaoNw) || icao == icaoNw) { return u"[==] " % icao.getDesignatorDbKey(); }
-            if (icao.getDesignator() == icaoNw.getDesignator()) { return u"[=] " % icao.getDesignator(); }
-            return QStringLiteral("%1 -> %2").arg(icaoNw.getDesignator(), icao.getDesignator());
+            if (icaoModel.isDbEqual(icaoNw) || icaoModel == icaoNw)  { return u"[==] " % icaoModel.getDesignatorDbKey(); }
+            if (icaoModel.getDesignator() == icaoNw.getDesignator()) { return u"[=] "  % icaoModel.getDesignator(); }
+            return QStringLiteral("%1 -> %2").arg(icaoNw.getDesignator(), icaoModel.getDesignator());
         }
 
         QString CSimulatedAircraft::getNetworkModelAirlineIcaoDifference() const
