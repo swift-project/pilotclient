@@ -173,6 +173,13 @@ namespace BlackMisc
             return coordinates.averageGeodeticHeight(reference, range, CAircraftSituationChange::allowedAltitudeDeviation(), minValues);
         }
 
+        CAltitude ISimulationEnvironmentProvider::highestElevation() const
+        {
+            const CCoordinateGeodeticList coordinates = this->getElevationCoordinatesOnGround();
+            if (coordinates.isEmpty()) { return CAltitude::null(); }
+            return coordinates.findMaxHeight();
+        }
+
         CCoordinateGeodeticList ISimulationEnvironmentProvider::getAllElevationCoordinates(int &maxRemembered) const
         {
             QReadLocker l(&m_lockElvCoordinates);
@@ -392,6 +399,60 @@ namespace BlackMisc
             m_elvFound = m_elvMissed        =  0;
         }
 
+        bool ISimulationEnvironmentProvider::cleanElevationValues(const CAircraftSituation &reference, const CLength &range, bool forced)
+        {
+            if (reference.isNull() || range.isNull()) { return false; }
+            const CLength r = minRange(range);
+
+            CCoordinateGeodeticList elvs;
+            CCoordinateGeodeticList cleanedElvs;
+            bool maxReached = false;
+            bool cleaned    = false;
+
+            {
+                QReadLocker l(&m_lockElvCoordinates);
+                elvs = m_elvCoordinates;
+                maxReached = m_elvCoordinates.size() >= m_maxElevations;
+            }
+            if (!elvs.isEmpty() && (forced || maxReached))
+            {
+                for (const CAircraftSituation &s : elvs)
+                {
+                    if (s.isWithinRange(reference, r)) { cleanedElvs.push_back(s); }
+                }
+
+                if (cleanedElvs.size() < elvs.size())
+                {
+                    cleaned = true;
+                    QWriteLocker l(&m_lockElvCoordinates);
+                    m_elvCoordinates = cleanedElvs;
+                }
+            }
+
+            cleanedElvs.clear();
+            {
+                QReadLocker l(&m_lockElvCoordinates);
+                elvs = m_elvCoordinatesGnd;
+                maxReached = m_elvCoordinatesGnd.size() >= m_maxElevationsGnd;
+            }
+            if (!elvs.isEmpty() && (forced || maxReached))
+            {
+                for (const CAircraftSituation &s : elvs)
+                {
+                    if (s.isWithinRange(reference, r)) { cleanedElvs.push_back(s); }
+                }
+
+                if (cleanedElvs.size() < elvs.size())
+                {
+                    cleaned = true;
+                    QWriteLocker l(&m_lockElvCoordinates);
+                    m_elvCoordinatesGnd = cleanedElvs;
+                }
+            }
+
+            return cleaned;
+        }
+
         ISimulationEnvironmentProvider::ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo) :
             m_simulatorPluginInfo(pluginInfo)
         { }
@@ -529,6 +590,12 @@ namespace BlackMisc
             return this->provider()->averageElevationOfOnGroundAircraft(reference, range, minValues);
         }
 
+        CAltitude CSimulationEnvironmentAware::highestElevation() const
+        {
+            if (!this->hasProvider()) { return CAltitude::null(); }
+            return this->provider()->highestElevation();
+        }
+
         bool CSimulationEnvironmentAware::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
         {
             if (!this->hasProvider()) { return false; }
@@ -604,6 +671,12 @@ namespace BlackMisc
         {
             if (!this->hasProvider()) { return false; }
             return this->provider()->hasSimulatorCG(callsign);
+        }
+
+        bool CSimulationEnvironmentAware::cleanElevationValues(const CAircraftSituation &reference, const CLength &range, bool forced)
+        {
+            if (!this->hasProvider()) { return false; }
+            return this->provider()->cleanElevationValues(reference, range, forced);
         }
     } // namespace
 } // namespace

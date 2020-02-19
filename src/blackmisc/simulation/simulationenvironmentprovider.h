@@ -134,6 +134,10 @@ namespace BlackMisc
             //! \threadsafe
             void resetSimulationEnvironmentStatistics();
 
+            //! Average elevation of "on ground" cached values
+            //! \threadsafe
+            bool cleanElevationValues(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, bool forced = false);
+
         protected:
             //! Ctor
             ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo);
@@ -296,6 +300,9 @@ namespace BlackMisc
             //! \copydoc ISimulationEnvironmentProvider::averageElevationOfOnGroundAircraft
             Geo::CElevationPlane averageElevationOfOnGroundAircraft(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues) const;
 
+            //! \copydoc ISimulationEnvironmentProvider::highestElevation
+            Aviation::CAltitude highestElevation() const;
+
             //! \copydoc ISimulationEnvironmentProvider::requestElevation
             bool requestElevation(const Geo::ICoordinateGeodetic &reference, const Aviation::CCallsign &callsign);
 
@@ -334,6 +341,9 @@ namespace BlackMisc
 
             //! \copydoc ISimulationEnvironmentProvider::hasSimulatorCG
             bool hasSimulatorCG(const Aviation::CCallsign &callsign) const;
+
+            //! \copydoc ISimulationEnvironmentProvider::cleanElevationValues
+            bool cleanElevationValues(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, bool forced = false);
 
         protected:
             //! Default constructor
