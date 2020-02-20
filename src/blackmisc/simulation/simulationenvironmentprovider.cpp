@@ -261,12 +261,20 @@ namespace BlackMisc
 
         QString ISimulationEnvironmentProvider::getElevationsFoundMissedInfo() const
         {
-            static const QString info("%1/%2 %3%");
+            static const QString info("%1/%2 %3% in %4 (all)/%5 (gnd)");
             const QPair<int, int> foundMissed = this->getElevationsFoundMissed();
             const int f = foundMissed.first;
             const int m = foundMissed.second;
             const double hitRatioPercent = 100.0 * static_cast<double>(f) / static_cast<double>(f + m);
-            return info.arg(f).arg(m).arg(QString::number(hitRatioPercent, 'f', 1));
+
+            int elvGnd;
+            int elv;
+            {
+                QReadLocker l(&m_lockElvCoordinates);
+                elvGnd = m_elvCoordinatesGnd.sizeInt();
+                elv    = m_elvCoordinates.sizeInt();
+            }
+            return info.arg(f).arg(m).arg(QString::number(hitRatioPercent, 'f', 1)).arg(elv).arg(elvGnd);
         }
 
         QPair<qint64, qint64> ISimulationEnvironmentProvider::getElevationRequestTimes() const

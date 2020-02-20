@@ -371,7 +371,6 @@ namespace BlackGui
         void CInterpolationLogDisplay::onElevationReceived(const CElevationPlane &elevationPlane, const CCallsign &callsign)
         {
             m_elvReceived++;
-
             if (m_elvHistoryCount > 0)
             {
                 const QString history = callsign.asString()  %
@@ -388,6 +387,7 @@ namespace BlackGui
                 }
             }
 
+            // not for a real plane, but to get elevation at any position for testing
             if (callsign == CInterpolationLogDisplay::pseudoCallsignElevation())
             {
                 this->displayArbitraryElevation(elevationPlane);
@@ -395,6 +395,9 @@ namespace BlackGui
             }
 
             if (!this->logCallsign(callsign)) { return; }
+
+            // for logged callsign
+            m_elvReceivedLoggedCs++;
             ui->le_Elevation->setText(elevationPlane.toQString());
             this->displayElevationRequestReceive();
             ui->led_Elevation->blink();
@@ -402,8 +405,11 @@ namespace BlackGui
 
         void CInterpolationLogDisplay::onElevationRequested(const CCallsign &callsign)
         {
-            if (!this->logCallsign(callsign)) { return; }
             m_elvRequested++;
+            if (!this->logCallsign(callsign)) { return; }
+
+            // for logged callsign
+            m_elvRequestedLoggedCs++;
             this->displayElevationRequestReceive();
             ui->led_Elevation->blink();
         }
@@ -456,10 +462,12 @@ namespace BlackGui
             ui->le_CG->clear();
             ui->le_Elevation->clear();
             ui->le_ElevationReqRec->clear();
+            ui->le_ElevationReqRec->setToolTip("elevation requested");
             ui->le_Parts->clear();
             ui->le_UpdateTimes->clear();
             ui->le_UpdateTimes->clear();
             ui->le_Limited->clear();
+            m_elvReceivedLoggedCs = m_elvRequestedLoggedCs = 0;
             m_elvReceived = m_elvRequested = 0;
             m_lastInterpolations.clear();
 
@@ -551,10 +559,14 @@ namespace BlackGui
         void CInterpolationLogDisplay::displayElevationRequestReceive()
         {
             if (!m_airspaceMonitor) { return; }
-            static const QString info("%1/%2 hits %3 times: %4");
+            static const QString info("req. %1, %2/rec. %3, %4 | found/missed: '%5' | times: %6");
             const QString foundMissed = m_airspaceMonitor->getElevationsFoundMissedInfo();
             const QString reqTimes    = m_airspaceMonitor->getElevationRequestTimesInfo();
-            ui->le_ElevationReqRec->setText(info.arg(m_elvRequested).arg(m_elvReceived).arg(foundMissed, reqTimes));
+            const QString reqRec      = info.arg(m_elvRequestedLoggedCs).arg(m_elvRequested).arg(m_elvReceivedLoggedCs).arg(m_elvReceived).arg(foundMissed, reqTimes);
+
+            ui->le_ElevationReqRec->setText(reqRec);
+            ui->le_ElevationReqRec->setToolTip(reqRec);
+            ui->le_ElevationReqRec->home(false);
         }
 
         void CInterpolationLogDisplay::displayArbitraryElevation(const CElevationPlane &elevation)
