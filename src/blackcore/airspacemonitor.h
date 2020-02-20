@@ -293,6 +293,8 @@ namespace BlackCore
         bool m_bookingsRequested       = false;              //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
         int m_maxDistanceNM            = 125;                //!< position range / FSD range
         int m_maxDistanceNMHysteresis  = qRound(1.1 * m_maxDistanceNM);
+        int m_foundInNonMovingAircraft = 0;
+        int m_foundInElevationsOnGnd   = 0;
 
         // Processing for queries etc. (fast)
         static constexpr int FastProcessIntervalMs = 50; //!< interval in ms

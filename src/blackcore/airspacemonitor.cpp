@@ -443,6 +443,9 @@ namespace BlackCore
         this->removeAllOnlineAtcStations();
         this->removeAllAircraft();
         this->clearClients();
+
+        m_foundInNonMovingAircraft = 0;
+        m_foundInElevationsOnGnd   = 0;
     }
 
     void CAirspaceMonitor::gracefulShutdown()
@@ -470,10 +473,10 @@ namespace BlackCore
             return;
         }
 
-        const int rInt = range.valueInteger(CLengthUnit::NM());
-        CLogMessage(this).info(u"Set airspace max. range to %1NM") << rInt;
-        m_maxDistanceNM = rInt;
-        m_maxDistanceNMHysteresis = qRound(rInt * 1.1);
+        const int rIntNM = range.valueInteger(CLengthUnit::NM());
+        CLogMessage(this).info(u"Set airspace max. range to %1NM") << rIntNM;
+        m_maxDistanceNM = rIntNM;
+        m_maxDistanceNMHysteresis = qRound(rIntNM * 1.1);
     }
 
     void CAirspaceMonitor::onRealNameReplyReceived(const CCallsign &callsign, const QString &realname)
@@ -1419,17 +1422,18 @@ namespace BlackCore
                         bool fromNonMoving = false;
                         bool triedExtrapolation  = false;
                         bool couldNotExtrapolate = false;
-
                         CElevationPlane averagePlane = this->averageElevationOfOnGroundAircraft(situation, CElevationPlane::majorAirportRadius(), 2, 3);
                         if (averagePlane.isNull())
                         {
                             averagePlane = this->averageElevationOfNonMovingAircraft(situation, CElevationPlane::majorAirportRadius(), 2);
+                            fromNonMoving = true;
                         }
 
                         // do we have a elevation yet?
                         if (!averagePlane.isNull())
                         {
                             correctedSituation.setGroundElevation(averagePlane, CAircraftSituation::Average);
+                            if (fromNonMoving) { m_foundInNonMovingAircraft++; } else { m_foundInElevationsOnGnd++; }
                         }
                         else
                         {
