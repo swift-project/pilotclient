@@ -291,8 +291,8 @@ namespace BlackCore
         Fsd::CFSDClient   *m_fsdClient = nullptr;            //!< corresponding network interface
         CAirspaceAnalyzer *m_analyzer  = nullptr;            //!< owned analyzer
         bool m_bookingsRequested       = false;              //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
-        int m_maxDistanceNM = 125;                           //!< position range / FSD range
-        int m_maxDistanceNMHysteresis = qRound(1.1 * m_maxDistanceNM);
+        int m_maxDistanceNM            = 125;                //!< position range / FSD range
+        int m_maxDistanceNMHysteresis  = qRound(1.1 * m_maxDistanceNM);
 
         // Processing for queries etc. (fast)
         static constexpr int FastProcessIntervalMs = 50; //!< interval in ms
@@ -364,8 +364,8 @@ namespace BlackCore
 
         //! Store an aircraft situation under consideration of gnd.flags/CG and elevation
         //! \threadsafe
-        //! \remark sets gnd flag from parts if parts are available
-        //! \remark uses gnd elevation if found
+        //! \remark sets gnd.flag from parts if parts are available
+        //! \remark uses gnd.elevation if found
         virtual BlackMisc::Aviation::CAircraftSituation storeAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation, bool allowTestOffset = true) override;
 
         //! Add or update aircraft

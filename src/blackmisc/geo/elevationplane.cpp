@@ -167,7 +167,7 @@ namespace BlackMisc
 
         int CElevationPlane::comparePropertyByIndex(const CPropertyIndex &index, const CElevationPlane &elevationPlane) const
         {
-            Q_UNUSED(index);
+            Q_UNUSED(index)
             return this->getAltitude().compare(elevationPlane.getAltitude());
         }
 
