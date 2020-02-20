@@ -410,7 +410,7 @@ namespace BlackGui
 
         void CInterpolationLogDisplay::onInjectElevation()
         {
-            if (!m_simulator) { return; }
+            if (!m_simulator)  { return; }
             const QString elv = ui->le_InjectElevation->text().trimmed();
             if (elv.isEmpty()) { return; }
 

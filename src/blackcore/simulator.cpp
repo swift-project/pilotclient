@@ -380,16 +380,16 @@ namespace BlackCore
 
     void ISimulator::resetAircraftStatistics()
     {
-        m_statsUpdateAircraftRuns = 0;
-        m_statsUpdateAircraftTimeAvgMs = 0;
+        m_statsUpdateAircraftRuns        = 0;
+        m_statsUpdateAircraftTimeAvgMs   = 0;
         m_statsUpdateAircraftTimeTotalMs = 0;
-        m_statsMaxUpdateTimeMs = 0;
-        m_statsCurrentUpdateTimeMs = 0;
-        m_statsPhysicallyAddedAircraft = 0;
+        m_statsMaxUpdateTimeMs           = 0;
+        m_statsCurrentUpdateTimeMs       = 0;
+        m_statsPhysicallyAddedAircraft   = 0;
         m_statsPhysicallyRemovedAircraft = 0;
-        m_statsLastUpdateAircraftRequestedMs = 0;
+        m_statsUpdateAircraftLimited     = 0;
+        m_statsLastUpdateAircraftRequestedMs  = 0;
         m_statsUpdateAircraftRequestedDeltaMs = 0;
-        m_statsUpdateAircraftLimited = 0;
         ISimulationEnvironmentProvider::resetSimulationEnvironmentStatistics();
     }
 

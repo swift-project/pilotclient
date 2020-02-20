@@ -188,7 +188,7 @@ namespace BlackMisc
         {
             // recalculate derivatives only if they changed
             const bool recalculate = (m_currentTimeMsSinceEpoch >= m_nextSampleAdjustedTime) || // new step
-                                     (m_situationsLastModified > m_situationsLastModifiedUsed); // modified
+                                     (m_situationsLastModified  >  m_situationsLastModifiedUsed); // modified
 
             if (recalculate)
             {
