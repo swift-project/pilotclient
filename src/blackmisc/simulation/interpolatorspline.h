@@ -88,7 +88,7 @@ namespace BlackMisc
 
         private:
             //! Update the elevations used in CInterpolatorSpline::m_s
-            bool updateElevations();
+            bool updateElevations(bool canSkip);
 
             //! Are any elevations missing in CInterpolatorSpline::m_s
             bool areAnyElevationsMissing() const;

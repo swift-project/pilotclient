@@ -174,7 +174,7 @@ namespace BlackMisc
                     static const QString vm("Unverified situations, m0-2 (oldest latest) %1 %2 %3");
                     const QString vmValues = vm.arg(olderAdjusted).arg(currentAdjusted).arg(latestAdjusted);
                     CLogMessage(this).warning(vmValues);
-                    Q_UNUSED(vmValues);
+                    Q_UNUSED(vmValues)
                 }
             }
             return hasNewer;
@@ -219,7 +219,7 @@ namespace BlackMisc
                 // - on an airport the plane does not move very fast, or not at all
                 // - and the elevation remains (almost) constant for a wider area
                 // - during flying the ground elevation not really matters
-                this->updateElevations();
+                this->updateElevations(true);
                 static const CLengthUnit altUnit = CAltitude::defaultUnit();
                 const CLength cg(this->getModelCG().switchedUnit(altUnit));
                 const double a0 = m_s[0].getCorrectedAltitude(cg).value(altUnit); // oldest
@@ -284,14 +284,16 @@ namespace BlackMisc
             return m_interpolant;
         }
 
-        bool CInterpolatorSpline::updateElevations()
+        bool CInterpolatorSpline::updateElevations(bool canSkip)
         {
             bool updated = false;
-            for (unsigned int i = 0; i < m_s.size(); i++)
+            for (CAircraftSituation &s : m_s)
             {
-                if (m_s[i].hasGroundElevation()) { continue; } // do not override existing values
-                const CElevationPlane plane = this->findClosestElevationWithinRange(m_s[i], CElevationPlane::singlePointRadius());
-                const bool u = m_s[i].setGroundElevationChecked(plane, CAircraftSituation::FromCache);
+                if (s.hasGroundElevation()) { continue; } // do not override existing values
+                if (canSkip && s.canLikelySkipNearGroundInterpolation()) { continue; }
+
+                const CElevationPlane plane = this->findClosestElevationWithinRange(s, CElevationPlane::singlePointRadius());
+                const bool u = s.setGroundElevationChecked(plane, CAircraftSituation::FromCache);
                 updated |= u;
             }
             return updated;
