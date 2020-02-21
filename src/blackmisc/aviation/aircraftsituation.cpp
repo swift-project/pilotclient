@@ -1050,12 +1050,15 @@ namespace BlackMisc
 
         bool CAircraftSituation::canLikelySkipNearGroundInterpolation() const
         {
+            if (this->isNull()) { return true; }
+
             // those we can exclude, we are ON GROUND not guessed
             if (this->isOnGround() && this->hasInboundGroundDetails()) { return false; }
 
             // cases where we can skip
-            if (this->isNull()) { return true; }
-            if (this->getGroundSpeed().value(CSpeedUnit::kts()) > 250) { return true; }
+            // Concorde had a take-off speed of 220 knots (250 mph) and
+            // landing speed was 187 mph
+            if (this->getGroundSpeed().value(CSpeedUnit::kts()) > 225.0) { return true; }
 
             if (this->hasGroundElevation())
             {

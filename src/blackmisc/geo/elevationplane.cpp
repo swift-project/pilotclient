@@ -171,12 +171,13 @@ namespace BlackMisc
             return this->getAltitude().compare(elevationPlane.getAltitude());
         }
 
-        // 100km/h 27,8m/s
-        //  50km/h 13,9m/s
+        // distance per second     distance per 5 secs (taxi speeds)
+        // 100km/h 27,8m/s         10kts   51m/5secs
+        //  50km/h 13,9m/s         20kts  102m/5secs
         // 100kts  51,4m/s
         const CLength &CElevationPlane::singlePointRadius()
         {
-            static const CLength l(25.0, CLengthUnit::m());
+            static const CLength l(50.0, CLengthUnit::m());
             return l;
         }
 
