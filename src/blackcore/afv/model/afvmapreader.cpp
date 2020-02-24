@@ -26,7 +26,7 @@ namespace BlackCore
 
             void CAfvMapReader::updateFromMap()
             {
-                if (!sApp || sApp->isShuttingDown()) { return; }
+                if (!sApp || !sApp->getNetworkAccessManager() || sApp->isShuttingDown()) { return; }
 
                 QEventLoop loop;
                 connect(sApp->getNetworkAccessManager(), &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
