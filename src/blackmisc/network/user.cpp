@@ -217,7 +217,7 @@ namespace BlackMisc
                 // Joe McArthur -> valid
                 if (uc > 1 && lc > 2 && lc > uc) { return newRealName; } // mixed case name, no need to beautify
                 if (ch.isLower()) { lc++; continue; }
-                if (ch.isUpper()) { uc++; continue;}
+                if (ch.isUpper()) { uc++; continue; }
             }
 
             // simple title case beautifying

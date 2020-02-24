@@ -133,10 +133,10 @@ namespace BlackMisc
                 //! TCAS functionality?
                 void setTcasEnabled(bool tcas) { m_tcasEnabled = tcas; }
 
-                //! Terrain probe to establish ground elevation?
+                //! Terrain probe to query ground elevation enabled?
                 bool isTerrainProbeEnabled() const { return m_terrainProbeEnabled; }
 
-                //! Terrain probe to establish ground elevation?
+                //! Terrain probe to query ground elevation enabled?
                 void setTerrainProbeEnabled(bool enabled) { m_terrainProbeEnabled = enabled; }
 
                 //! Load and parse config file
