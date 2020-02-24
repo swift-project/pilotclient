@@ -1042,8 +1042,8 @@ namespace BlackSimPlugin
             if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
                 Q_ASSERT_X(elevationsMeters.size() == size, Q_FUNC_INFO, "Wrong elevations");
-                Q_ASSERT_X(latitudesDeg.size() == size, Q_FUNC_INFO, "Wrong latitudesDeg");
-                Q_ASSERT_X(longitudesDeg.size() == size, Q_FUNC_INFO, "Wrong longitudesDeg");
+                Q_ASSERT_X(latitudesDeg.size()     == size, Q_FUNC_INFO, "Wrong latitudesDeg");
+                Q_ASSERT_X(longitudesDeg.size()    == size, Q_FUNC_INFO, "Wrong longitudesDeg");
                 Q_ASSERT_X(verticalOffsetsMeters.size() == size, Q_FUNC_INFO, "Wrong CG");
             }
 

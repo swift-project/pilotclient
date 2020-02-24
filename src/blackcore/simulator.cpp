@@ -363,7 +363,7 @@ namespace BlackCore
     void ISimulator::callbackReceivedRequestedElevation(const CElevationPlane &plane, const CCallsign &callsign)
     {
         if (this->isShuttingDown()) { return; }
-        if (plane.isNull()) { return; }
+        if (plane.isNull()) { return; } // this happens if requested for a coordinate where scenery is not available-
 
         // Update in remote aircraft for given callsign
         bool updatedForOnGroundPosition = false;

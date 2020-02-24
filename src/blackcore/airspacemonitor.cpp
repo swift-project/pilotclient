@@ -1429,7 +1429,7 @@ namespace BlackCore
                             fromNonMoving = true;
                         }
 
-                        // do we have a elevation yet?
+                        // do we have an elevation yet?
                         if (!averagePlane.isNull())
                         {
                             correctedSituation.setGroundElevation(averagePlane, CAircraftSituation::Average);
