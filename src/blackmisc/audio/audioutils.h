@@ -19,6 +19,10 @@ namespace BlackMisc
     {
         //! Start the Windows mixer
         BLACKMISC_EXPORT bool startWindowsMixer();
+
+        //! On windows init the audio devices
+        //! \remarks workaround for WSAPI driver crashes, hoping that upfront init already sets global vars. etc.
+        BLACKMISC_EXPORT void initWindowsAudioDevices();
     }
 }
 

@@ -8,6 +8,7 @@
 
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/guiapplication.h"
+#include "blackmisc/audio/audioutils.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/crashhandler.h"
 #include "blackmisc/appstarttime.h"
@@ -19,6 +20,7 @@
 
 using namespace BlackGui;
 using namespace BlackMisc;
+using namespace BlackMisc::Audio;
 using namespace BlackCore;
 
 int main(int argc, char *argv[])
@@ -28,6 +30,7 @@ int main(int argc, char *argv[])
     QApplication qa(argc, argv);
     Q_UNUSED(qa) // application init needed
 
+    initWindowsAudioDevices();
     CCrashHandler::instance()->init();
     CSwiftGuiStdApplication a; // application with contexts
     a.setSignalStartupAutomatically(false); // application will signal startup on its own
