@@ -1061,7 +1061,7 @@ namespace BlackSimPlugin
                 if (!xpAircraft.hasCallsign()) { continue; }
 
                 const double cgValue = verticalOffsetsMeters[i]; // XP offset is swift CG
-                const CAltitude elevationAlt(elevationsMeters[i], CLengthUnit::m(), CLengthUnit::ft());
+                const CAltitude elevationAlt = std::isnan(elevationsMeters[i]) ? CAltitude::null() : CAltitude(elevationsMeters[i], CLengthUnit::m(), CLengthUnit::ft());
                 const CElevationPlane elevation(CLatitude(latitudesDeg[i], CAngleUnit::deg()), CLongitude(longitudesDeg[i], CAngleUnit::deg()), elevationAlt, CElevationPlane::singlePointRadius());
                 const CLength cg = std::isnan(cgValue) ?
                                    CLength::null() :
