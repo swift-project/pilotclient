@@ -530,7 +530,7 @@ namespace XSwiftBus
     {
         if (!getSettings().isTerrainProbeEnabled()) { return {{ std::numeric_limits<double>::quiet_NaN(), latitudeDeg, longitudeDeg }}; }
 
-        auto planeIt = m_planesByCallsign.find(callsign);
+        const auto planeIt = m_planesByCallsign.find(callsign);
         if (planeIt != m_planesByCallsign.end())
         {
             const Plane *plane = planeIt->second;
