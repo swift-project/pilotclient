@@ -10,6 +10,7 @@
 #include "utils.h"
 #include <XPLM/XPLMGraphics.h>
 #include <limits>
+#include <cmath>
 
 namespace XSwiftBus
 {
@@ -17,7 +18,7 @@ namespace XSwiftBus
 
     CTerrainProbe::~CTerrainProbe() { XPLMDestroyProbe(m_ref); }
 
-    double CTerrainProbe::getElevation(double degreesLatitude, double degreesLongitude, double metersAltitude, const std::string &callsign) const
+    std::array<double, 3> CTerrainProbe::getElevation(double degreesLatitude, double degreesLongitude, double metersAltitude, const std::string &callsign) const
     {
         double x, y, z;
         XPLMWorldToLocal(degreesLatitude, degreesLongitude, metersAltitude, &x, &y, &z);
@@ -37,15 +38,20 @@ namespace XSwiftBus
                 WARNING_LOG(callsign + " " + error + " at " + std::to_string(degreesLatitude) + ", " + std::to_string(degreesLongitude) + ", " + std::to_string(metersAltitude));
             }
 
-            return std::numeric_limits<double>::quiet_NaN();
+            return {{ std::numeric_limits<double>::quiet_NaN(), degreesLatitude, degreesLongitude }};
         }
+        XPLMLocalToWorld(probe.locationX, probe.locationY, probe.locationZ, &degreesLatitude, &degreesLongitude, &metersAltitude);
+
         if (probe.is_wet && m_logMessageCount < 100)
         {
             m_logMessageCount++;
             DEBUG_LOG(callsign + " probe hit water at " + std::to_string(degreesLatitude) + ", " + std::to_string(degreesLongitude) + ", " + std::to_string(metersAltitude));
         }
-
-        XPLMLocalToWorld(probe.locationX, probe.locationY, probe.locationZ, &degreesLatitude, &degreesLongitude, &metersAltitude);
-        return metersAltitude;
+        if (std::isnan(metersAltitude) && m_logMessageCount < 100)
+        {
+            m_logMessageCount++;
+            DEBUG_LOG(callsign + " probe returned NaN at " + std::to_string(degreesLatitude) + ", " + std::to_string(degreesLongitude) + ", " + std::to_string(metersAltitude));
+        }
+        return {{ metersAltitude, degreesLatitude, degreesLongitude }};
     }
 } // ns

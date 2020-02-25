@@ -118,7 +118,7 @@ namespace XSwiftBus
                                    std::vector<double> &elevationsM, std::vector<double> &verticalOffsets) const;
 
         //! Get the ground elevation at an arbitrary position
-        double getElevationAtPosition(const std::string &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters) const;
+        std::array<double, 3> getElevationAtPosition(const std::string &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters) const;
 
         //! Sets the aircraft with callsign to be followed in plane view
         void setFollowedAircraft(const std::string &callsign);

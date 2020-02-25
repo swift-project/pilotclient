@@ -88,6 +88,8 @@ R"XML(<node>
       <arg name="altitudeMeters" type="d" direction="in"/>
       <arg type="s" direction="out"/>
       <arg type="d" direction="out"/>
+      <arg type="d" direction="out"/>
+      <arg type="d" direction="out"/>
     </method>
     <method name="setFollowedAircraft">
        <arg name="callsign" type="s" direction="in"/>

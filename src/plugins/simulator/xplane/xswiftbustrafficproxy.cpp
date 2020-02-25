@@ -166,14 +166,16 @@ namespace BlackSimPlugin
         {
             std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
             {
-                QDBusPendingReply<QString, double> reply = *watcher;
+                QDBusPendingReply<QString, double, double, double> reply = *watcher;
                 if (!reply.isError())
                 {
                     const CCallsign cs(reply.argumentAt<0>());
                     const double elevationMeters = reply.argumentAt<1>();
+                    const double latitudeDegrees = reply.argumentAt<2>();
+                    const double longitudeDegrees = reply.argumentAt<3>();
                     const CAltitude elevationAlt = std::isnan(elevationMeters) ? CAltitude::null() : CAltitude(elevationMeters, CLengthUnit::m(), CLengthUnit::ft());
-                    const CElevationPlane elevation(CLatitude(latitudeDeg, CAngleUnit::deg()),
-                                                    CLongitude(longitudeDeg, CAngleUnit::deg()),
+                    const CElevationPlane elevation(CLatitude(latitudeDegrees, CAngleUnit::deg()),
+                                                    CLongitude(longitudeDegrees, CAngleUnit::deg()),
                                                     elevationAlt, CElevationPlane::singlePointRadius());
                     setter(elevation, cs);
                 }
