@@ -8,6 +8,7 @@
 
 #include "blackcore/corefacadeconfig.h"
 #include "blackgui/guiapplication.h"
+#include "blackmisc/audio/audioutils.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/crashhandler.h"
@@ -21,6 +22,7 @@
 #include <Qt>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Audio;
 using namespace BlackCore;
 using namespace BlackGui;
 
@@ -31,6 +33,7 @@ int main(int argc, char *argv[])
     QApplication qa(argc, argv);
     Q_UNUSED(qa) // init of qa is required, but qa not used
 
+    initWindowsAudioDevices();
     CCrashHandler::instance()->init();
     CGuiApplication a(CApplicationInfo::swiftCore(), CApplicationInfo::PilotClientCore, CIcons::swiftCore24());
     a.addWindowStateOption();

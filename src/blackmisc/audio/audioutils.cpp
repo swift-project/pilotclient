@@ -11,6 +11,7 @@
 
 #include <QProcess>
 #include <QStringList>
+#include <QAudioDeviceInfo>
 
 using namespace BlackConfig;
 
@@ -23,5 +24,16 @@ namespace BlackMisc
             if (!CBuildConfig::isRunningOnWindowsNtPlatform()) { return false; }
             return QProcess::startDetached("SndVol.exe");
         }
+
+        void initWindowsAudioDevices()
+        {
+            if (!CBuildConfig::isRunningOnWindowsNtPlatform()) { return; }
+
+            // force init of device lists
+            // see https://discordapp.com/channels/539048679160676382/539925070550794240/676418182038421534
+            QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
+            QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
+        }
+
     } // ns
 } // ns
