@@ -28,12 +28,16 @@ namespace BlackCore
             {
                 if (!sApp || !sApp->getNetworkAccessManager() || sApp->isShuttingDown()) { return; }
 
-                QEventLoop loop;
+                QEventLoop loop(sApp);
                 connect(sApp->getNetworkAccessManager(), &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
+                connect(sApp, &CApplication::aboutToShutdown, &loop, &QEventLoop::quit);
                 QNetworkReply *reply = sApp->getNetworkAccessManager()->get(QNetworkRequest(QUrl("https://voice1.vatsim.uk/api/v1/network/online/callsigns")));
-                while (! reply->isFinished()) { loop.exec(); }
-                QByteArray jsonData = reply->readAll();
-                reply->deleteLater();
+                while (reply && !reply->isFinished() && sApp && !sApp->isShuttingDown())
+                {
+                    loop.exec();
+                }
+                const QByteArray jsonData = reply->readAll();
+                if (reply) { reply->deleteLater(); }
 
                 if (jsonData.isEmpty()) { return; }
 
