@@ -512,7 +512,7 @@ namespace XSwiftBus
             double groundElevation = 0.0;
             if (getSettings().isTerrainProbeEnabled())
             {
-                groundElevation = plane->terrainProbe.getElevation(latDeg, lonDeg, plane->position.elevation, requestedCallsign);
+                groundElevation = plane->terrainProbe.getElevation(latDeg, lonDeg, plane->position.elevation, requestedCallsign).front();
                 if (std::isnan(groundElevation)) { groundElevation = 0.0; }
             }
             double fudgeFactor = 3.0;
@@ -526,9 +526,9 @@ namespace XSwiftBus
         }
     }
 
-    double CTraffic::getElevationAtPosition(const std::string &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters) const
+    std::array<double, 3> CTraffic::getElevationAtPosition(const std::string &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters) const
     {
-        if (!getSettings().isTerrainProbeEnabled()) { return std::numeric_limits<double>::quiet_NaN(); }
+        if (!getSettings().isTerrainProbeEnabled()) { return {{ std::numeric_limits<double>::quiet_NaN(), latitudeDeg, longitudeDeg }}; }
 
         auto planeIt = m_planesByCallsign.find(callsign);
         if (planeIt != m_planesByCallsign.end())
@@ -822,11 +822,13 @@ namespace XSwiftBus
                 message.getArgument(altitudeMeters);
                 queueDBusCall([ = ]()
                 {
-                    double elevation = getElevationAtPosition(callsign, latitudeDeg, longitudeDeg, altitudeMeters);
+                    const auto elevation = getElevationAtPosition(callsign, latitudeDeg, longitudeDeg, altitudeMeters);
                     CDBusMessage reply = CDBusMessage::createReply(sender, serial);
                     reply.beginArgumentWrite();
                     reply.appendArgument(callsign);
-                    reply.appendArgument(elevation);
+                    reply.appendArgument(elevation[0]);
+                    reply.appendArgument(elevation[1]);
+                    reply.appendArgument(elevation[2]);
                     sendDBusMessage(reply);
                 });
             }
