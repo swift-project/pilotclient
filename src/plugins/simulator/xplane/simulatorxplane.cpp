@@ -597,7 +597,7 @@ namespace BlackSimPlugin
             struct Prefix
             {
                 Prefix(const QString &p) : s(p + '/') {}
-                operator QString() const { return s.chopped(1); }
+                QString parent() const { return s.section('/', 0, -2, QString::SectionSkipEmpty | QString::SectionIncludeLeadingSep); }
                 bool isPrefixOf(const QString &o) const { return o.startsWith(s); }
                 QString s;
             };
@@ -634,8 +634,14 @@ namespace BlackSimPlugin
 
             // comment KB 2019-06
             // a package is one xsb_aircraft.txt file BB has 9, X-CSL has 76
+            QSet<QString> superpackages;
+            for (const Prefix& package : as_const(packages))
+            {
+                superpackages.insert(package.parent());
+            }
+
             const QDir simDir = getSimulatorSettings().getSimulatorDirectoryOrDefault();
-            for (const Prefix &package : as_const(packages))
+            for (const QString &package : as_const(superpackages))
             {
                 if (CDirectoryUtils::isSameOrSubDirectoryOf(package, simDir))
                 {
@@ -661,7 +667,7 @@ namespace BlackSimPlugin
             {
                 if (dir.exists(QStringLiteral("xsb_aircraft.txt")))
                 {
-                    if (dir.cdUp()) { return dir.path(); }
+                    return dir.path();
                 }
             }
             while (dir.cdUp());
