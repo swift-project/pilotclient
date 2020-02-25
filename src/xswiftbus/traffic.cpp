@@ -528,7 +528,7 @@ namespace XSwiftBus
 
     double CTraffic::getElevationAtPosition(const std::string &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters) const
     {
-        if (getSettings().isTerrainProbeEnabled()) { return std::numeric_limits<double>::quiet_NaN(); }
+        if (!getSettings().isTerrainProbeEnabled()) { return std::numeric_limits<double>::quiet_NaN(); }
 
         auto planeIt = m_planesByCallsign.find(callsign);
         if (planeIt != m_planesByCallsign.end())
