@@ -7,12 +7,15 @@
  */
 
 #include "xswiftbustrafficproxy.h"
+#include "blackmisc/logmessage.h"
+
 #include <QLatin1String>
 #include <QDBusConnection>
 #include <cmath>
 
 #define XSWIFTBUS_SERVICENAME "org.swift-project.xswiftbus"
 
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
@@ -21,6 +24,12 @@ namespace BlackSimPlugin
 {
     namespace XPlane
     {
+        const CLogCategoryList &CXSwiftBusTrafficProxy::getLogCategories()
+        {
+            static const CLogCategoryList cats { CLogCategory::driver(), CLogCategory::dbus() };
+            return cats;
+        }
+
         CXSwiftBusTrafficProxy::CXSwiftBusTrafficProxy(QDBusConnection &connection, QObject *parent, bool dummy) : QObject(parent)
         {
             m_dbusInterface = new BlackMisc::CGenericDBusInterface(XSWIFTBUS_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
@@ -178,10 +187,13 @@ namespace BlackSimPlugin
                                                     CLongitude(longitudeDegrees, CAngleUnit::deg()),
                                                     elevationAlt, CElevationPlane::singlePointRadius());
                     setter(elevation, cs);
+                    // CLogMessage(this).debug(u"XPlane elv. response: '%1' %2 %3 %4") << cs.asString() << latitudeDeg << longitudeDeg << elevationMeters;
                 }
                 watcher->deleteLater();
             };
+
             m_dbusInterface->callDBusAsync(QLatin1String("getElevationAtPosition"), callback, callsign.asString(), latitudeDeg, longitudeDeg, altitudeMeters);
+            // CLogMessage(this).debug(u"XPlane elv. request: '%1' %2 %3 %4") << callsign.asString() << latitudeDeg << longitudeDeg << altitudeMeters;
         }
 
         void CXSwiftBusTrafficProxy::setFollowedAircraft(const QString &callsign)
