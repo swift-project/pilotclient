@@ -280,6 +280,9 @@ namespace BlackMisc
             //! Elevation of the ground directly beneath
             const Geo::CElevationPlane &getGroundElevationPlane() const { return m_groundElevationPlane; }
 
+            //! Distance of coordinates of situation to coordinates of elevation plane
+            PhysicalQuantities::CLength getGroundElevationDistance() const;
+
             //! How did we get gnd.elevation?
             GndElevationInfo getGroundElevationInfo() const;
 
@@ -302,10 +305,13 @@ namespace BlackMisc
             //! \remark "transfer" can be used, if the positions are known, "preset" if they are still unknown
             //! \sa CAircraftSituation::interpolateGroundElevation
             //! \sa CAircraftSituation::interpolateElevation
-            bool transferGroundElevationFromThis(CAircraftSituation &transferToSituation, const PhysicalQuantities::CLength &radius = Geo::CElevationPlane::singlePointRadius()) const;
+            bool transferGroundElevationFromMe(CAircraftSituation &transferToSituation, const PhysicalQuantities::CLength &radius = Geo::CElevationPlane::singlePointRadius()) const;
 
-            //! Transfer ground elevation from given situation
-            void transferGroundElevation(const CAircraftSituation &fromSituation);
+            //! Transfer ground elevation from given situation (to me)
+            bool transferGroundElevationToMe(const CAircraftSituation &fromSituation, const PhysicalQuantities::CLength &radius, bool transferred);
+
+            //! Transfer ground elevation from given situation (to me)
+            bool transferGroundElevationToMe(const CAircraftSituation &fromSituation, bool transferred);
 
             //! Preset "this" elevation from the two adjacent positions
             //! \remark it is not required that the position of "this" is already known
@@ -314,8 +320,8 @@ namespace BlackMisc
             //! \sa CAircraftSituation::interpolateElevation
             bool presetGroundElevation(const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &newSituation, const CAircraftSituationChange &change);
 
-            //! Set "this" elevation from older situations.
-            //! \remark this is a future value
+            //! Set "my" elevation from older situations.
+            //! \remark this object normally is a future value
             //! \sa CAircraftSituation::transferGroundElevation
             //! \sa CAircraftSituation::interpolateElevation
             bool extrapolateElevation(const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &olderSituation, const CAircraftSituationChange &change);
@@ -339,10 +345,10 @@ namespace BlackMisc
             bool hasInboundGroundDetails() const;
 
             //! Elevation of the ground directly beneath at the given situation
-            void setGroundElevation(const Aviation::CAltitude &altitude, GndElevationInfo info, bool transferred = false);
+            bool setGroundElevation(const Aviation::CAltitude &altitude, GndElevationInfo info, bool transferred = false);
 
             //! Elevation of the ground directly beneath
-            void setGroundElevation(const Geo::CElevationPlane &elevationPlane, GndElevationInfo info, bool transferred = false);
+            bool setGroundElevation(const Geo::CElevationPlane &elevationPlane, GndElevationInfo info, bool transferred = false);
 
             //! Set elevation of the ground directly beneath, but checked
             //! \remark override if better
@@ -542,7 +548,7 @@ namespace BlackMisc
             }
             //! @}
 
-            //! Preset the ground elevation based on info we already have
+            //! Preset the ground elevation based on info we already have, either by transfer or elevation
             //! \remark either sets a gnd. elevation or sets it to null
             //! \remark situationToPreset position is unknown
             //! \remark situationToPreset needs to be between oldSituation and newSituation
@@ -550,9 +556,9 @@ namespace BlackMisc
             static bool presetGroundElevation(CAircraftSituation &situationToPreset, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const CAircraftSituationChange &change);
 
             //! Extrapolated between the 2 situations for situation
-            //! \remark situation is not between oldSituation and olderSituation
-            //! \remark NULL if there are no two elevations
-            static bool extrapolateElevation(CAircraftSituation &newSituation, const CAircraftSituation &oldSituation, const CAircraftSituation &olderSituation, const CAircraftSituationChange &oldChange);
+            //! \remark normally used if situationToBeUpdated is not between oldSituation and olderSituation (that would be interpolation)
+            //! \return false if there are no two elevations, there is already an elevation, or no extrapolation is possible (too much deviation)
+            static bool extrapolateElevation(CAircraftSituation &situationToBeUpdated, const CAircraftSituation &oldSituation, const CAircraftSituation &olderSituation, const CAircraftSituationChange &oldChange);
 
             //! Interpolate between the 2 situations for situation
             //! \remark NULL if there are no two elevations or threshold MaxDeltaElevationFt is exceeded

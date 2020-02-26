@@ -1387,9 +1387,10 @@ namespace BlackCore
 
                 if (!canLikelySkipNearGround)
                 {
+                    const CLength dpt = correctedSituation.getDistancePerTime(100, CElevationPlane::singlePointRadius());
                     const CAircraftSituationList situationsBeforeStoring    = this->remoteAircraftSituations(callsign);
-                    const CAircraftSituation situationWithElvBeforeStoring  = situationsBeforeStoring.findClosestElevationWithinRange(correctedSituation, correctedSituation.getDistancePerTime(100, CElevationPlane::singlePointRadius()));
-                    if (!situationWithElvBeforeStoring.getGroundElevation().isNull())
+                    const CAircraftSituation situationWithElvBeforeStoring  = situationsBeforeStoring.findClosestElevationWithinRange(correctedSituation, dpt);
+                    if (situationWithElvBeforeStoring.transferGroundElevationFromMe(correctedSituation, dpt))
                     {
                         // from nearby situations of own aircraft, data was transferred above
                         // we use transfer first as it is slightly faster as cache
@@ -1433,7 +1434,8 @@ namespace BlackCore
                         if (!averagePlane.isNull())
                         {
                             correctedSituation.setGroundElevation(averagePlane, CAircraftSituation::Average);
-                            if (fromNonMoving) { m_foundInNonMovingAircraft++; } else { m_foundInElevationsOnGnd++; }
+                            if (fromNonMoving) { m_foundInNonMovingAircraft++; }
+                            else { m_foundInElevationsOnGnd++; }
                         }
                         else
                         {

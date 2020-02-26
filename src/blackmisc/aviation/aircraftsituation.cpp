@@ -219,7 +219,7 @@ namespace BlackMisc
                     {
                         // same positions, we can use existing elevation
                         // means we were not moving between old an new
-                        situationToPreset.transferGroundElevation(oldSituation);
+                        situationToPreset.transferGroundElevationToMe(oldSituation, true);
                         break;
                     }
                 }
@@ -230,7 +230,7 @@ namespace BlackMisc
                     if (oldSituation.hasGroundElevation())
                     {
                         // almost same positions, we can use existing elevation
-                        situationToPreset.transferGroundElevation(oldSituation);
+                        situationToPreset.transferGroundElevationToMe(oldSituation, true);
                         break;
                     }
                 }
@@ -297,23 +297,23 @@ namespace BlackMisc
             }
         }
 
-        bool CAircraftSituation::extrapolateElevation(CAircraftSituation &newSituation, const CAircraftSituation &oldSituation, const CAircraftSituation &olderSituation, const CAircraftSituationChange &oldChange)
+        bool CAircraftSituation::extrapolateElevation(CAircraftSituation &situationToBeUpdated, const CAircraftSituation &oldSituation, const CAircraftSituation &olderSituation, const CAircraftSituationChange &oldChange)
         {
-            if (newSituation.hasGroundElevation()) { return false; }
+            if (situationToBeUpdated.hasGroundElevation()) { return false; }
 
             // if acceptable transfer
-            if (oldSituation.transferGroundElevationFromThis(newSituation)) { return true; }
+            if (oldSituation.transferGroundElevationFromMe(situationToBeUpdated)) { return true; }
             if (oldSituation.isNull() || olderSituation.isNull()) { return false; }
 
             if (oldChange.isNull()) { return false; }
             if (oldChange.isConstOnGround() && oldChange.hasAltitudeDevWithinAllowedRange() && oldChange.hasElevationDevWithinAllowedRange())
             {
                 // we have almost const altitudes and elevations
-                const double deltaAltFt = qAbs(newSituation.getAltitude().value(CLengthUnit::ft()) - olderSituation.getAltitude().value(CLengthUnit::ft()));
+                const double deltaAltFt = qAbs(situationToBeUpdated.getAltitude().value(CLengthUnit::ft()) - olderSituation.getAltitude().value(CLengthUnit::ft()));
                 if (deltaAltFt <= CAircraftSituationChange::allowedAltitudeDeviation().value(CLengthUnit::ft()))
                 {
                     // the current alt is also not much different
-                    newSituation.setGroundElevation(oldSituation.getGroundElevation(), Extrapolated);
+                    situationToBeUpdated.setGroundElevation(oldSituation.getGroundElevation(), Extrapolated);
                     return true;
                 }
             }
@@ -712,6 +712,12 @@ namespace BlackMisc
             return this->onGroundAsString() % u' ' % this->getOnGroundDetailsAsString();
         }
 
+        CLength CAircraftSituation::getGroundElevationDistance() const
+        {
+            // returns NULL if elevation is N/A
+            return this->getGroundElevationPlane().calculateGreatCircleDistance(*this);
+        }
+
         CAircraftSituation::GndElevationInfo CAircraftSituation::getGroundElevationInfo() const
         {
             if (!this->hasGroundElevation()) { return NoElevationInfo; }
@@ -741,25 +747,28 @@ namespace BlackMisc
             // decide if transfer makes sense
             // always transfer from provider, but do not override provider
             if (transferToSituation.getGroundElevationInfo() == CAircraftSituation::FromProvider) { return false; }
-            if (this->getGroundElevationInfo() != CAircraftSituation::FromProvider &&  transferToSituation.getGroundElevationInfo() == CAircraftSituation::FromCache) { return false; }
+            if (this->getGroundElevationInfo() != CAircraftSituation::FromProvider && transferToSituation.getGroundElevationInfo() == CAircraftSituation::FromCache) { return false; }
 
             // distance
-            const CLength distance = this->getGroundElevationPlane().calculateGreatCircleDistance(transferToSituation);
+            const CLength distance  = this->getGroundElevationPlane().calculateGreatCircleDistance(transferToSituation);
             const bool transferable = (distance <= radius);
             return transferable;
         }
 
-        bool CAircraftSituation::transferGroundElevationFromThis(CAircraftSituation &transferToSituation, const CLength &radius) const
+        bool CAircraftSituation::transferGroundElevationFromMe(CAircraftSituation &transferToSituation, const CLength &radius) const
         {
-            if (!this->canTransferGroundElevation(transferToSituation, radius)) { return false; }
-            transferToSituation.transferGroundElevation(*this);
-            Q_ASSERT_X(!transferToSituation.getGroundElevationRadius().isNull(), Q_FUNC_INFO, "null radius");
-            return true;
+            return transferToSituation.transferGroundElevationToMe(*this, radius, true);
         }
 
-        void CAircraftSituation::transferGroundElevation(const CAircraftSituation &fromSituation)
+        bool CAircraftSituation::transferGroundElevationToMe(const CAircraftSituation &fromSituation, const CLength &radius, bool transferred)
         {
-            this->setGroundElevation(fromSituation.getGroundElevation(), fromSituation.getGroundElevationInfo(), true);
+            if (!fromSituation.canTransferGroundElevation(*this, radius)) { return false; }
+            return this->setGroundElevation(fromSituation.getGroundElevationPlane(), fromSituation.getGroundElevationInfo(), transferred);
+        }
+
+        bool CAircraftSituation::transferGroundElevationToMe(const CAircraftSituation &fromSituation, bool transferred)
+        {
+            return this->setGroundElevation(fromSituation.getGroundElevationPlane(), fromSituation.getGroundElevationInfo(), transferred);
         }
 
         bool CAircraftSituation::presetGroundElevation(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const CAircraftSituationChange &change)
@@ -811,8 +820,9 @@ namespace BlackMisc
             return this->getOnGroundDetails() == CAircraftSituation::InFromParts || this->getOnGroundDetails() == CAircraftSituation::InFromNetwork;
         }
 
-        void CAircraftSituation::setGroundElevation(const CAltitude &altitude, GndElevationInfo info, bool transferred)
+        bool CAircraftSituation::setGroundElevation(const CAltitude &altitude, GndElevationInfo info, bool transferred)
         {
+            bool set = false;
             if (altitude.isNull())
             {
                 m_groundElevationPlane = CElevationPlane::null();
@@ -826,11 +836,14 @@ namespace BlackMisc
                 m_isElvInfoTransferred = transferred;
                 m_groundElevationPlane.setGeodeticHeight(altitude.switchedUnit(this->getAltitudeUnit()));
                 this->setGroundElevationInfo(info);
+                set = true;
             }
+            return set;
         }
 
-        void CAircraftSituation::setGroundElevation(const CElevationPlane &elevationPlane, GndElevationInfo info, bool transferred)
+        bool CAircraftSituation::setGroundElevation(const CElevationPlane &elevationPlane, GndElevationInfo info, bool transferred)
         {
+            bool set = false;
             if (elevationPlane.isNull())
             {
                 m_groundElevationPlane = CElevationPlane::null();
@@ -845,7 +858,9 @@ namespace BlackMisc
                 this->setGroundElevationInfo(info);
                 Q_ASSERT_X(!m_groundElevationPlane.getRadius().isNull(), Q_FUNC_INFO, "Null radius");
                 m_groundElevationPlane.switchUnit(this->getAltitudeOrDefaultUnit()); // we use ft as internal unit, no "must" but simplification
+                set = true;
             }
+            return set;
         }
 
         bool CAircraftSituation::setGroundElevationChecked(const CElevationPlane &elevationPlane, GndElevationInfo info, bool transferred)
