@@ -16,6 +16,7 @@
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/geo/elevationplane.h"
+#include "blackmisc/logcategorylist.h"
 
 #include <QObject>
 #include <QString>
@@ -172,6 +173,9 @@ namespace BlackSimPlugin
                 static QString s(XSWIFTBUS_TRAFFIC_OBJECTPATH);
                 return s;
             }
+
+            //! Log. categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
 
             //! Constructor
             CXSwiftBusTrafficProxy(QDBusConnection &connection, QObject *parent = nullptr, bool dummy = false);
