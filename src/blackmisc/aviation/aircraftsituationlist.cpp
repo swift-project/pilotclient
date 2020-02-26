@@ -400,14 +400,19 @@ namespace BlackMisc
 
         CAircraftSituation CAircraftSituationList::findClosestElevationWithinRange(const ICoordinateGeodetic &coordinate, const CLength &range) const
         {
-            CLength r = range.isNull() || range < CElevationPlane::singlePointRadius() ? CElevationPlane::singlePointRadius() : range;
+            const CLength r = range.isNull() || range < CElevationPlane::singlePointRadius() ? CElevationPlane::singlePointRadius() : range;
             CAircraftSituation situationWithElevation = CAircraftSituation::null();
 
             CLength bestDistance = CLength::null();
             for (const CAircraftSituation &s : *this)
             {
                 if (!s.hasGroundElevation()) { continue; }
-                const CLength distance = s.calculateGreatCircleDistance(coordinate);
+
+                // we need to calculate distance to coordinates of the plane
+                // not the situation using the coordinate
+                // const CLength distance = s.calculateGreatCircleDistance(coordinate);
+                const CLength distance = s.getGroundElevationPlane().calculateGreatCircleDistance(coordinate);
+
                 if (distance > r) { continue; }
                 if (bestDistance.isNull() || bestDistance > distance)
                 {
@@ -601,7 +606,7 @@ namespace BlackMisc
             {
                 const CAircraftSituation &oldSituation = (*this)[i];
                 CAircraftSituation &newSituation = (*this)[i - 1];
-                if (oldSituation.transferGroundElevationFromThis(newSituation, radius)) { c++; }
+                if (oldSituation.transferGroundElevationFromMe(newSituation, radius)) { c++; }
             }
             return c;
         }

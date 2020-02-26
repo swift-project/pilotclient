@@ -233,7 +233,7 @@ namespace BlackMisc
                 {
                     // we still have no elevation
                     const CLength radius = currentSituation.getDistancePerTime250ms(CElevationPlane::singlePointRadius());
-                    if (!m_lastSituation.transferGroundElevationFromThis(currentSituation, radius))
+                    if (!m_lastSituation.transferGroundElevationFromMe(currentSituation, radius))
                     {
                         if (currentSituation.canLikelySkipNearGroundInterpolation())
                         {
