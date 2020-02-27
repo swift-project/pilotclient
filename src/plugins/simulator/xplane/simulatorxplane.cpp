@@ -597,7 +597,7 @@ namespace BlackSimPlugin
             struct Prefix
             {
                 Prefix(const QString &p) : s(p + '/') {}
-                QString parent() const { return s.section('/', 0, -2); }
+                QString parent() const { return s.section('/', 0, -2, QString::SectionSkipEmpty | QString::SectionIncludeLeadingSep); }
                 bool isPrefixOf(const QString &o) const { return o.startsWith(s); }
                 QString s;
             };
