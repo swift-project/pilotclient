@@ -146,8 +146,23 @@ namespace BlackGui
             //! Load from disk
             void loadFromDisk();
 
+            //! Load template from disk
+            void loadTemplateFromDisk();
+
             //! Save to disk
             void saveToDisk();
+
+            //! Save FP to disk
+            bool saveFPToDisk(const QString &fileName);
+
+            //! Save template to disk
+            void saveTemplateToDisk();
+
+            //! Clear template
+            void clearTemplate();
+
+            //! Get the template name (full path and file)
+            QString getTemplateName() const;
 
             //! Set SELCAL in own aircrafr
             void setSelcalInOwnAircraft();
