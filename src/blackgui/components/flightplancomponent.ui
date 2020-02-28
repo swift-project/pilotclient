@@ -42,9 +42,9 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
-         <width>371</width>
-         <height>504</height>
+         <y>-71</y>
+         <width>368</width>
+         <height>548</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -653,34 +653,6 @@
            <property name="spacing">
             <number>3</number>
            </property>
-           <item row="2" column="2">
-            <widget class="QCheckBox" name="cb_StrictCheck">
-             <property name="toolTip">
-              <string>strict check</string>
-             </property>
-             <property name="text">
-              <string>strict &amp;check</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QPushButton" name="pb_SimBrief">
-             <property name="text">
-              <string>SimBrief</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QPushButton" name="pb_Reset">
-             <property name="text">
-              <string>&amp;Reset</string>
-             </property>
-             <property name="icon">
-              <iconset resource="../../blackmisc/blackmisc.qrc">
-               <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
-             </property>
-            </widget>
-           </item>
            <item row="2" column="0">
             <widget class="QPushButton" name="pb_SaveDisk">
              <property name="toolTip">
@@ -692,6 +664,17 @@
              <property name="icon">
               <iconset resource="../../blackmisc/blackmisc.qrc">
                <normaloff>:/pastel/icons/pastel/16/disk.png</normaloff>:/pastel/icons/pastel/16/disk.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="pb_Reset">
+             <property name="text">
+              <string>&amp;Reset</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../../blackmisc/blackmisc.qrc">
+               <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
              </property>
             </widget>
            </item>
@@ -709,17 +692,24 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QPushButton" name="pb_Send">
+           <item row="2" column="2">
+            <widget class="QCheckBox" name="cb_StrictCheck">
              <property name="toolTip">
-              <string>Send flight plan to network</string>
+              <string>strict check</string>
              </property>
              <property name="text">
-              <string>Send</string>
+              <string>strict &amp;check</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="pb_ValidateFlightPlan">
+             <property name="text">
+              <string>&amp;Validate</string>
              </property>
              <property name="icon">
               <iconset resource="../../blackmisc/blackmisc.qrc">
-               <normaloff>:/diagona/icons/diagona/icons/network-cloud.png</normaloff>:/diagona/icons/diagona/icons/network-cloud.png</iconset>
+               <normaloff>:/diagona/icons/diagona/icons/abacus.png</normaloff>:/diagona/icons/diagona/icons/abacus.png</iconset>
              </property>
             </widget>
            </item>
@@ -737,6 +727,27 @@
              </property>
             </widget>
            </item>
+           <item row="1" column="2">
+            <widget class="QPushButton" name="pb_SimBrief">
+             <property name="text">
+              <string>SimBrief</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="pb_Send">
+             <property name="toolTip">
+              <string>Send flight plan to network</string>
+             </property>
+             <property name="text">
+              <string>Send</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../../blackmisc/blackmisc.qrc">
+               <normaloff>:/diagona/icons/diagona/icons/network-cloud.png</normaloff>:/diagona/icons/diagona/icons/network-cloud.png</iconset>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="0">
             <widget class="QPushButton" name="pb_Prefill">
              <property name="toolTip">
@@ -751,14 +762,24 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
-            <widget class="QPushButton" name="pb_ValidateFlightPlan">
+           <item row="3" column="0">
+            <widget class="QPushButton" name="pb_SaveTemplate">
              <property name="text">
-              <string>&amp;Validate</string>
+              <string>Save template</string>
              </property>
-             <property name="icon">
-              <iconset resource="../../blackmisc/blackmisc.qrc">
-               <normaloff>:/diagona/icons/diagona/icons/abacus.png</normaloff>:/diagona/icons/diagona/icons/abacus.png</iconset>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QPushButton" name="pb_ClearTemplate">
+             <property name="text">
+              <string>Clear template</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QPushButton" name="pb_LoadTemplate">
+             <property name="text">
+              <string>Load template</string>
              </property>
             </widget>
            </item>
@@ -799,7 +820,7 @@
          <x>0</x>
          <y>0</y>
          <width>382</width>
-         <height>480</height>
+         <height>477</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="vl_RemarksGeneratorScroll">
@@ -1224,21 +1245,16 @@ p, li { white-space: pre-wrap; }
  </customwidgets>
  <tabstops>
   <tabstop>sa_FlightPlanTabMain</tabstop>
-  <tabstop>cb_FlightRule</tabstop>
-  <tabstop>le_Callsign</tabstop>
-  <tabstop>tb_SyncWithSimulator</tabstop>
-  <tabstop>le_AircraftType</tabstop>
-  <tabstop>le_CruiseTrueAirspeed</tabstop>
   <tabstop>cb_Heavy</tabstop>
   <tabstop>cb_Tcas</tabstop>
   <tabstop>le_PrefixIcaoSuffix</tabstop>
   <tabstop>le_EquipmentSuffix</tabstop>
   <tabstop>tb_HelpEquipment</tabstop>
+  <tabstop>pte_Route</tabstop>
   <tabstop>le_OriginAirport</tabstop>
   <tabstop>le_TakeOffTimePlanned</tabstop>
   <tabstop>lep_CrusingAltitude</tabstop>
   <tabstop>tb_AltitudeDialog</tabstop>
-  <tabstop>pte_Route</tabstop>
   <tabstop>le_DestinationAirport</tabstop>
   <tabstop>le_EstimatedTimeEnroute</tabstop>
   <tabstop>le_FuelOnBoard</tabstop>
@@ -1251,6 +1267,18 @@ p, li { white-space: pre-wrap; }
   <tabstop>le_PilotsName</tabstop>
   <tabstop>le_PilotsHomeBase</tabstop>
   <tabstop>le_LastSent</tabstop>
+  <tabstop>pb_Prefill</tabstop>
+  <tabstop>pb_Reset</tabstop>
+  <tabstop>pb_ValidateFlightPlan</tabstop>
+  <tabstop>pb_Send</tabstop>
+  <tabstop>pb_Download</tabstop>
+  <tabstop>pb_SimBrief</tabstop>
+  <tabstop>pb_SaveDisk</tabstop>
+  <tabstop>pb_LoadDisk</tabstop>
+  <tabstop>cb_StrictCheck</tabstop>
+  <tabstop>pb_SaveTemplate</tabstop>
+  <tabstop>pb_LoadTemplate</tabstop>
+  <tabstop>pb_ClearTemplate</tabstop>
   <tabstop>sa_RemarksGenerator</tabstop>
   <tabstop>le_AirlineOperator</tabstop>
   <tabstop>le_AircraftRegistration</tabstop>
@@ -1263,8 +1291,13 @@ p, li { white-space: pre-wrap; }
   <tabstop>pte_RemarksGenerated</tabstop>
   <tabstop>pb_AddRemarks</tabstop>
   <tabstop>pte_AdditionalRemarks</tabstop>
-  <tabstop>tbr_EquipmentCodes</tabstop>
   <tabstop>pb_CopyOver</tabstop>
+  <tabstop>tbr_EquipmentCodes</tabstop>
+  <tabstop>le_CruiseTrueAirspeed</tabstop>
+  <tabstop>tb_SyncWithSimulator</tabstop>
+  <tabstop>le_Callsign</tabstop>
+  <tabstop>le_AircraftType</tabstop>
+  <tabstop>cb_FlightRule</tabstop>
  </tabstops>
  <resources>
   <include location="../../blackmisc/blackmisc.qrc"/>

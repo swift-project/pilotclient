@@ -49,6 +49,7 @@
 #include <QCompleter>
 #include <QStringBuilder>
 #include <QPointer>
+#include <QFile>
 #include <QMessageBox>
 #include <Qt>
 
@@ -128,8 +129,12 @@ namespace BlackGui
             connect(ui->pb_Reset,    &QPushButton::pressed, this, &CFlightPlanComponent::resetFlightPlan, Qt::QueuedConnection);
             connect(ui->pb_ValidateFlightPlan, &QPushButton::pressed,  this, &CFlightPlanComponent::validateFlightPlan, Qt::QueuedConnection);
             connect(ui->tb_SyncWithSimulator,  &QPushButton::released, this, &CFlightPlanComponent::syncWithSimulator,  Qt::QueuedConnection);
-            connect(ui->pb_Prefill,            &QPushButton::pressed,  this, &CFlightPlanComponent::anticipateValues, Qt::QueuedConnection);
-            connect(ui->pb_SimBrief,           &QPushButton::pressed,  this, &CFlightPlanComponent::loadFromSimBrief, Qt::QueuedConnection);
+            connect(ui->pb_Prefill,            &QPushButton::pressed,  this, &CFlightPlanComponent::anticipateValues,   Qt::QueuedConnection);
+            connect(ui->pb_SimBrief,           &QPushButton::pressed,  this, &CFlightPlanComponent::loadFromSimBrief,   Qt::QueuedConnection);
+
+            connect(ui->pb_SaveTemplate,  &QPushButton::released, this, &CFlightPlanComponent::saveTemplateToDisk,   Qt::QueuedConnection);
+            connect(ui->pb_LoadTemplate,  &QPushButton::released, this, &CFlightPlanComponent::loadTemplateFromDisk, Qt::QueuedConnection);
+            connect(ui->pb_ClearTemplate, &QPushButton::released, this, &CFlightPlanComponent::clearTemplate,        Qt::QueuedConnection);
 
             connect(ui->cb_VoiceCapabilities,          &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
             connect(ui->cb_VoiceCapabilities,          &QComboBox::currentTextChanged, this, &CFlightPlanComponent::syncVoiceComboBoxes, Qt::QueuedConnection);
@@ -176,6 +181,8 @@ namespace BlackGui
             QTimer::singleShot(2500, this, [ = ]
             {
                 if (!sGui || sGui->isShuttingDown() || !myself) { return; }
+
+                this->loadTemplateFromDisk();
                 if (sGui->getIContextSimulator()->isSimulatorAvailable())
                 {
                     this->prefillWithOwnAircraftData();
@@ -581,6 +588,20 @@ namespace BlackGui
             }
         }
 
+        void CFlightPlanComponent::loadTemplateFromDisk()
+        {
+            const QFile f(this->getTemplateName());
+            if (!f.exists()) { return; }
+
+            CStatusMessageList msgs;
+            CFlightPlan fp = CFlightPlan::loadFromMultipleFormats(f.fileName(), &msgs);
+            if (!fp.hasCallsign()) { fp.setCallsign(ui->le_Callsign->text()); } // set callsign if it wasn't set
+            if (msgs.isSuccess())
+            {
+                this->fillWithFlightPlanData(fp);
+            }
+        }
+
         void CFlightPlanComponent::saveToDisk()
         {
             CStatusMessage m;
@@ -605,13 +626,7 @@ namespace BlackGui
                     if (ret != QMessageBox::Save) { return; }
                 }
 
-                CFlightPlan fp;
-                this->validateAndInitializeFlightPlan(fp); // get data
-
-                // save as CVariant format
-                const CVariant variantFp = CVariant::fromValue(fp);
-                const QString json(variantFp.toJsonString());
-                const bool ok = CFileUtils::writeStringToFile(json, fileName);
+                const bool ok = this->saveFPToDisk(fileName);
                 if (ok)
                 {
                     m = CStatusMessage(this, CStatusMessage::SeverityInfo, u"Written " % fileName, true);
@@ -624,6 +639,53 @@ namespace BlackGui
             }
             while (false);
             if (m.isFailure()) { CLogMessage::preformatted(m); }
+        }
+
+        bool CFlightPlanComponent::saveFPToDisk(const QString &fileName)
+        {
+            CFlightPlan fp;
+            const CStatusMessageList msgs = this->validateAndInitializeFlightPlan(fp); // get data
+            // if (msgs.hasErrorMessages()) { return false; }
+            Q_UNUSED(msgs)
+
+            // save as CVariant format
+            const CVariant variantFp = CVariant::fromValue(fp);
+            const QString json(variantFp.toJsonString());
+            const bool ok = CFileUtils::writeStringToFile(json, fileName);
+
+            return ok;
+        }
+
+        void CFlightPlanComponent::saveTemplateToDisk()
+        {
+            const QString fn = this->getTemplateName();
+            const bool ok = this->saveFPToDisk(fn);
+            if (ok)
+            {
+                CLogMessage(this).info(u"Saved FP template '%1'") << fn;
+            }
+            else
+            {
+                CLogMessage(this).warning(u"Saving FP template '%1' failed") << fn;
+            }
+        }
+
+        void CFlightPlanComponent::clearTemplate()
+        {
+            QFile f(this->getTemplateName());
+            if (!f.exists()) { return; }
+            const bool r = f.remove();
+            if (r) { CLogMessage(this).info(u"Deleted FP template '%1'") << f.fileName(); }
+        }
+
+        QString CFlightPlanComponent::getTemplateName() const
+        {
+            const QString fn =
+                CFileUtils::appendFilePathsAndFixUnc(
+                    CDirectoryUtils::normalizedApplicationDataDirectory(),
+                    QStringLiteral("swiftFlightPlanTemplate.json")
+                );
+            return fn;
         }
 
         void CFlightPlanComponent::setSelcalInOwnAircraft()
