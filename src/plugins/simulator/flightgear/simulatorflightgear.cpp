@@ -821,7 +821,6 @@ namespace BlackSimPlugin
 
         void CSimulatorFlightgear::onRemoteAircraftAddingFailed(const QString &callsign)
         {
-
             BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
             if (callsign.isEmpty()) { return; }
             const CCallsign cs(callsign);
@@ -838,7 +837,7 @@ namespace BlackSimPlugin
             }
 
             const bool wasPending = (m_addingInProgressAircraft.remove(cs) > 0);
-            Q_UNUSED(wasPending);
+            Q_UNUSED(wasPending)
 
             if (failedRemoteAircraft.hasCallsign() && !m_aircraftAddedFailed.containsCallsign(cs))
             {
