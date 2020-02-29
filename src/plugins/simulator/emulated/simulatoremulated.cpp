@@ -48,7 +48,7 @@ namespace BlackSimPlugin
             this->onSettingsChanged(); // init from settings
 
             m_myAircraft = this->getOwnAircraft(); // sync with provider
-            m_monitorWidget.reset(new CSimulatorEmulatedMonitorDialog(this, sGui->mainApplicationWidget()));
+            m_monitorWidget = new CSimulatorEmulatedMonitorDialog(this, sGui->mainApplicationWidget());
 
             connect(qApp, &QApplication::aboutToQuit,            this, &CSimulatorEmulated::closeMonitor);
             connect(sGui, &CGuiApplication::aboutToShutdown,     this, &CSimulatorEmulated::closeMonitor, Qt::QueuedConnection);
@@ -56,6 +56,17 @@ namespace BlackSimPlugin
 
             // connect own signals for monitoring
             this->connectOwnSignals();
+        }
+
+        CSimulatorEmulated::~CSimulatorEmulated()
+        {
+            if (m_monitorWidget)
+            {
+                // if the widget still exists, close and delete it
+                m_monitorWidget->close();
+                m_monitorWidget->deleteLater();
+                m_monitorWidget.clear();
+            }
         }
 
         bool CSimulatorEmulated::isTimeSynchronized() const

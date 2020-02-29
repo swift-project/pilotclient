@@ -24,7 +24,7 @@
 
 #include <QMap>
 #include <QTimer>
-#include <QScopedPointer>
+#include <QPointer>
 
 namespace BlackSimPlugin
 {
@@ -49,6 +49,9 @@ namespace BlackSimPlugin
                 BlackMisc::Weather::IWeatherGridProvider       *weatherGridProvider,
                 BlackMisc::Network::IClientProvider            *clientProvider,
                 QObject *parent = nullptr);
+
+            //! Destructor
+            virtual ~CSimulatorEmulated() override;
 
             // functions implemented
             virtual bool isTimeSynchronized() const override;
@@ -177,7 +180,7 @@ namespace BlackSimPlugin
             BlackMisc::PhysicalQuantities::CTime            m_offsetTime;
             BlackMisc::Simulation::CSimulatedAircraft       m_myAircraft;       //!< represents own aircraft of simulator
             BlackMisc::Simulation::CSimulatedAircraftList   m_renderedAircraft; //!< represents remote aircraft in simulator
-            QScopedPointer<CSimulatorEmulatedMonitorDialog> m_monitorWidget;    //!< parent will be main window, so we need to destroy widget when destroyed
+            QPointer<CSimulatorEmulatedMonitorDialog>       m_monitorWidget;    //!< parent will be main window, so we need to destroy widget when destroyed
             BlackMisc::CConnectionGuard                     m_connectionGuard;  //!< connected with provider
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSwiftPlugin> m_pluginSettings { this, &CSimulatorEmulated::onSettingsChanged };
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CInterpolatorMultiWrapper> m_interpolators; //!< interpolators per callsign
