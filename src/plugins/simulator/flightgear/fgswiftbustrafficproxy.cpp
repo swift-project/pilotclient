@@ -105,5 +105,26 @@ namespace BlackSimPlugin
             };
             m_dbusInterface->callDBusAsync(QLatin1String("getRemoteAircraftData"), callback, callsigns);
         }
+
+        void CFGSwiftBusTrafficProxy::getElevationAtPosition(const CCallsign &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters,
+                const ElevationCallback &setter) const
+        {
+            std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
+            {
+                QDBusPendingReply<QString, double> reply = *watcher;
+                if (!reply.isError())
+                {
+                    const CCallsign cs(reply.argumentAt<0>());
+                    const double elevationMeters = reply.argumentAt<1>();
+                    const CAltitude elevationAlt = std::isnan(elevationMeters) ? CAltitude::null() : CAltitude(elevationMeters, CLengthUnit::m(), CLengthUnit::ft());
+                    const CElevationPlane elevation(CLatitude(latitudeDeg, CAngleUnit::deg()),
+                                                    CLongitude(longitudeDeg, CAngleUnit::deg()),
+                                                    elevationAlt, CElevationPlane::singlePointRadius());
+                    setter(elevation, cs);
+                }
+                watcher->deleteLater();
+            };
+            m_dbusInterface->callDBusAsync(QLatin1String("getElevationAtPosition"), callback, callsign.asString(), latitudeDeg, longitudeDeg, altitudeMeters);
+        }
     } // ns
 } // ns
