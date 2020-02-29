@@ -104,6 +104,11 @@ namespace BlackMisc
             return true;
         }
 
+        unsigned long CBackgroundValidation::waitTimeoutMs() const
+        {
+            return 0;
+        }
+
         void CBackgroundValidation::doWork()
         {
             if (m_inWork) { return; }

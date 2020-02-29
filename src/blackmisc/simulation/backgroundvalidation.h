@@ -75,6 +75,10 @@ namespace BlackMisc
             //! Validated for simulator
             void validated(const CSimulatorInfo &simulator, const CAircraftModelList &validModels, const CAircraftModelList &invalidModels, bool stopped, const CStatusMessageList &msgs);
 
+        protected:
+            //! \copydoc CContinuousWorker::waitTimeoutMs
+            virtual unsigned long waitTimeoutMs() const override;
+
         private:
             mutable QReadWriteLock m_lock;        //!< lock snapshot
             std::atomic_bool m_inWork { false };  //!< indicates a running update

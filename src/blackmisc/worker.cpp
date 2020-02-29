@@ -9,6 +9,7 @@
 #include "blackmisc/threadutils.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/verify.h"
+#include "blackmisc/logmessage.h"
 
 #include <future>
 #include <QTimer>
@@ -34,6 +35,8 @@ namespace BlackMisc
 
     CRegularThread::~CRegularThread()
     {
+        const QString name = this->objectName();
+
 #ifdef Q_OS_WIN32
         auto handle = m_handle.load();
         if (handle)
@@ -44,8 +47,8 @@ namespace BlackMisc
                 switch (status)
                 {
                 default:
-                case WAIT_FAILED: qWarning() << "Thread" << objectName() << "unspecified error"; break;
-                case WAIT_OBJECT_0: qWarning() << "Thread" << objectName() << "unsafely terminated by program shutdown"; break;
+                case WAIT_FAILED:   qWarning() << "Thread" << name << "unspecified error"; break;
+                case WAIT_OBJECT_0: qWarning() << "Thread" << name << "unsafely terminated by program shutdown"; break;
                 case WAIT_TIMEOUT: break;
                 }
             }
@@ -53,9 +56,13 @@ namespace BlackMisc
 #endif
         quit();
 
-        bool ok = wait(30 * 1000); //! \todo KB 2017-10 temp workaround: in T145 this will be fixed, sometimes (very rarely) hanging here during shutdown
-        Q_ASSERT_X(ok, Q_FUNC_INFO, "Wait timeout"); // MS 2018-09 assert because we want a stack trace of all threads, via breakpad
-        Q_UNUSED(ok);
+        // the wait avoids: QThread: Destroyed while thread is still running
+        const unsigned long timeoutMs = 5 * 1000;
+        const bool ok = wait(timeoutMs); //! \todo KB 2017-10 temp workaround: in T145 this will be fixed, sometimes (very rarely) hanging here during shutdown
+        const QString as = QStringLiteral("Wait timeout after %1ms for '%2'").arg(timeoutMs).arg(name);
+        const QByteArray asBA = as.toLatin1();
+        BLACK_AUDIT_X(ok, Q_FUNC_INFO, asBA); // MS 2018-09 assert because we want a stack trace of all threads, via breakpad
+        Q_UNUSED(ok)
     }
 
     CWorker *CWorker::fromTaskImpl(QObject *owner, const QString &name, int typeId, const std::function<CVariant()> &task)
@@ -74,7 +81,7 @@ namespace BlackMisc
         worker->moveToThread(thread);
         const bool s = QMetaObject::invokeMethod(worker, &CWorker::ps_runTask);
         Q_ASSERT_X(s, Q_FUNC_INFO, "cannot invoke");
-        Q_UNUSED(s);
+        Q_UNUSED(s)
         thread->start();
         return worker;
     }
@@ -157,7 +164,7 @@ namespace BlackMisc
         }
 
         moveToThread(thread);
-        connect(thread, &QThread::started, this, &CContinuousWorker::initialize);
+        connect(thread, &QThread::started,  this, &CContinuousWorker::initialize);
         connect(thread, &QThread::finished, &m_updateTimer, &QTimer::stop);
         connect(thread, &QThread::finished, this, &CContinuousWorker::cleanup);
         connect(thread, &QThread::finished, this, &CContinuousWorker::finish);
@@ -172,6 +179,7 @@ namespace BlackMisc
         if (this->thread() == m_owner->thread()) { return; }
 
         // remark: cannot stop timer here, as I am normally not in the correct thread
+        this->beforeQuit();
         thread()->quit();
     }
 
@@ -189,9 +197,16 @@ namespace BlackMisc
         this->quit();
 
         // T647, discussed here: https://discordapp.com/channels/539048679160676382/539925070550794240/573260844004016148
-        const bool ok = workerThread->wait(30 * 1000); //! \todo KB 2017-10 temp workaround: in T145 this will be fixed, sometimes (very rarely) hanging here during shutdown
-        BLACK_AUDIT_X(ok, Q_FUNC_INFO, "Wait timeout"); // MS 2019-05 VERIFY because we want a stack trace of all threads, via breakpad
-        Q_UNUSED(ok);
+        const unsigned long waitTimeoutMs = this->waitTimeoutMs();
+        const QString name(this->getName());
+        qint64 waitTime = QDateTime::currentMSecsSinceEpoch();
+        const bool ok = workerThread->wait(waitTimeoutMs); //! \todo KB 2017-10 temp workaround: in T145 this will be fixed, sometimes (very rarely) hanging here during shutdown
+        waitTime = QDateTime::currentMSecsSinceEpoch() - waitTime;
+        const QString msg = QStringLiteral("Waiting for quitAndWait of '%1' for %2ms").arg(name).arg(waitTime);
+        const QByteArray msgBA = msg.toLatin1();
+        BLACK_AUDIT_X(ok, Q_FUNC_INFO, msgBA); // MS 2019-05 AUDIT because we want a stack trace of all threads, via breakpad
+        CLogMessage(this).info(msg);
+        Q_UNUSED(ok)
     }
 
     void CContinuousWorker::startUpdating(int updateTimeSecs)
