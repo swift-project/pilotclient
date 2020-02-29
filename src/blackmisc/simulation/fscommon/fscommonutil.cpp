@@ -639,14 +639,14 @@ namespace BlackMisc
                 return paths;
             }
 
-            CStatusMessageList CFsCommonUtil::validateAircraftConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped)
+            CStatusMessageList CFsCommonUtil::validateAircraftConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &wasStopped)
             {
                 CStatusMessage m;
                 CAircraftModelList sorted(models);
                 sorted.sortByFileName();
-                stopped = false;
-                CStatusMessageList msgs = sorted.validateFiles(validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, stopped, QString(), true);
-                if (stopped || validModels.isEmpty()) { return msgs; }
+                wasStopped = false;
+                CStatusMessageList msgs = sorted.validateFiles(validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, wasStopped, QString(), true);
+                if (wasStopped || validModels.isEmpty()) { return msgs; }
 
                 const CAircraftModelList nonFsModels = validModels.findNonFsFamilyModels();
                 if (!nonFsModels.isEmpty())
@@ -655,6 +655,7 @@ namespace BlackMisc
                     {
                         m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, QStringLiteral("Removed '%1' non FS family model").arg(model.getModelStringAndDbKey()), true);
                         msgs.push_back(m);
+                        if (wasStopped) { break; } // allow to break from "outside"
                     }
 
                     const int d = validModels.removeIfNotFsFamily();
@@ -668,6 +669,7 @@ namespace BlackMisc
                 for (const QString &fileName : fileNames)
                 {
                     bool ok = false;
+                    if (wasStopped) { break; } // allow to break from "outside"
                     const CAircraftCfgEntriesList entries  = CAircraftCfgParser::performParsingOfSingleFile(fileName, ok, msgs);
                     const QSet<QString> removeModelStrings = entries.getTitleSetUpperCase();
                     const CAircraftModelList removedModels = validModels.removeIfFileButNotInSet(fileName, removeModelStrings);
@@ -701,16 +703,16 @@ namespace BlackMisc
                 return msgs;
             }
 
-            CStatusMessageList CFsCommonUtil::validateP3DSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped, const QString &simulatorDir)
+            CStatusMessageList CFsCommonUtil::validateP3DSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &wasStopped, const QString &simulatorDir)
             {
                 const QString simObjectsDir = simulatorDir.isEmpty() ? CFsCommonUtil::p3dSimObjectsDir() : CFsCommonUtil::p3dSimObjectsDirFromSimDir(simulatorDir);
                 const QStringList simObjectPaths = CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(simObjectsDir, "v4");
-                return CFsCommonUtil::validateSimObjectsPath(QSet<QString>(simObjectPaths.begin(), simObjectPaths.end()), models, validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, stopped);
+                return CFsCommonUtil::validateSimObjectsPath(QSet<QString>(simObjectPaths.begin(), simObjectPaths.end()), models, validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, wasStopped);
             }
 
             CStatusMessageList CFsCommonUtil::validateFSXSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped, const QString &simulatorDir)
             {
-                Q_UNUSED(simulatorDir);
+                Q_UNUSED(simulatorDir)
                 const QStringList simObjectPaths = CFsCommonUtil::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths();
                 return CFsCommonUtil::validateSimObjectsPath(QSet<QString>(simObjectPaths.begin(), simObjectPaths.end()), models, validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, stopped);
             }

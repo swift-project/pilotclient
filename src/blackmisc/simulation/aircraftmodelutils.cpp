@@ -140,7 +140,7 @@ namespace BlackMisc
             return ok ? dir.absoluteFilePath(fn) : "";
         }
 
-        CStatusMessageList CAircraftModelUtilities::validateModelFiles(const CSimulatorInfo &simulator, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped, const QString &simulatorDir)
+        CStatusMessageList CAircraftModelUtilities::validateModelFiles(const CSimulatorInfo &simulator, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &wasStopped, const QString &simulatorDir)
         {
             // some generic tests
             CStatusMessageList msgs;
@@ -170,27 +170,27 @@ namespace BlackMisc
             CStatusMessageList specificTests;
             if (simulator.isMicrosoftOrPrepare3DSimulator() || models.isLikelyFsFamilyModelList())
             {
-                const CStatusMessageList specificTests1 = FsCommon::CFsCommonUtil::validateAircraftConfigFiles(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped);
+                const CStatusMessageList specificTests1 = FsCommon::CFsCommonUtil::validateAircraftConfigFiles(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped);
                 specificTests.push_back(specificTests1);
 
                 if (simulator.isP3D())
                 {
-                    const CStatusMessageList specificTests2 = FsCommon::CFsCommonUtil::validateP3DSimObjectsPath(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped, simulatorDir);
+                    const CStatusMessageList specificTests2 = FsCommon::CFsCommonUtil::validateP3DSimObjectsPath(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped, simulatorDir);
                     specificTests.push_back(specificTests2);
                 }
                 else if (simulator.isFSX())
                 {
-                    const CStatusMessageList specificTests2 = FsCommon::CFsCommonUtil::validateFSXSimObjectsPath(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped, simulatorDir);
+                    const CStatusMessageList specificTests2 = FsCommon::CFsCommonUtil::validateFSXSimObjectsPath(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped, simulatorDir);
                     specificTests.push_back(specificTests2);
                 }
             }
             else if (simulator.isXPlane() || models.isLikelyXPlaneModelList())
             {
-                specificTests = models.validateFiles(validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped, simulatorDir);
+                specificTests = models.validateFiles(validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped, simulatorDir);
             }
             else
             {
-                specificTests = models.validateFiles(validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped, {});
+                specificTests = models.validateFiles(validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped, {});
             }
 
             msgs.push_back(specificTests);

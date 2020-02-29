@@ -1527,9 +1527,9 @@ namespace BlackMisc
             return msgs;
         }
 
-        CStatusMessageList CAircraftModelList::validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped, const QString &simRootDirectory, bool alreadySortedByFn) const
+        CStatusMessageList CAircraftModelList::validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &wasStopped, const QString &simRootDirectory, bool alreadySortedByFn) const
         {
-            stopped = false;
+            wasStopped = false;
 
             CStatusMessageList msgs;
             QSet<QString> failedFiles;
@@ -1549,6 +1549,7 @@ namespace BlackMisc
 
             for (const CAircraftModel &model : as_const(sorted))
             {
+                if (wasStopped) { break; } // allow breaking from external
                 bool ok = false;
                 do
                 {
@@ -1600,7 +1601,7 @@ namespace BlackMisc
                 CAircraftModelList::addAsValidOrInvalidModel(model, ok, validModels, invalidModels);
                 if (stopAtFailedFiles > 0 && failedFilesCount >= stopAtFailedFiles)
                 {
-                    stopped = true;
+                    wasStopped = true;
                     msgs.push_back(CStatusMessage(this).validationWarning(u"Stopping after %1 failed files") << failedFilesCount);
                     break;
                 }
