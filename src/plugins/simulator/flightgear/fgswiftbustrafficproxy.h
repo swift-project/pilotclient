@@ -216,6 +216,10 @@ namespace BlackSimPlugin
             //! Get remote aircrafts data (lat, lon, elevation and CG)
             void getRemoteAircraftData(const QStringList &callsigns, const RemoteAircraftDataCallback &setter) const;
 
+            //! \copydoc XSwiftBus::CTraffic::getElevationAtPosition
+            void getElevationAtPosition(const BlackMisc::Aviation::CCallsign &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters,
+                                        const ElevationCallback &setter) const;
+
         private:
             BlackMisc::CGenericDBusInterface *m_dbusInterface = nullptr;
         };
