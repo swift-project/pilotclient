@@ -78,22 +78,22 @@ namespace BlackMisc
             aircraftIcaos.sort();
 
             // header
-            html += "<thead><tr>\n";
-            html += "<th></th>";
+            html += "<thead><tr>\n"
+                    "<th></th>";
             for (const QString &airline : as_const(airlineIcaos))
             {
                 html += "<th>";
                 html += airline;
                 html += "</th>";
             }
-            html += "\n</tr></thead>\n";
+            html += "\n</tr></thead>\n"
+                    "<tbody>\n";
 
             // fill data
-            html += "<tbody>\n";
             for (const QString &aircraftIcao : as_const(aircraftIcaos))
             {
-                html += "<tr>\n";
-                html += "  <th>";
+                html += "<tr>\n"
+                        "  <th>";
                 html += aircraftIcao;
                 html += "</th>\n";
 
@@ -108,8 +108,8 @@ namespace BlackMisc
                         html += QString::number(models.size());
                         html += "</a><div class=\"mouseoverdisplay\">";
                         html += models.asHtmlSummary();
-                        html += "</div>";
-                        html += "</td>\n";
+                        html += "</div>"
+                                "</td>\n";
                     }
                     else
                     {
@@ -118,8 +118,8 @@ namespace BlackMisc
                 }
                 html += "</tr>\n";
             }
-            html += "</tbody>\n";
-            html += "</table>\n";
+            html += "</tbody>\n"
+                    "</table>\n";
             return html;
         }
 
