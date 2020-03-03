@@ -119,7 +119,7 @@ namespace BlackCore
             virtual void rememberCGFromDB(const BlackMisc::PhysicalQuantities::CLength &cgFromDB, const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual void rememberCGFromDB(const BlackMisc::PhysicalQuantities::CLength &cgFromDB, const QString &modelString) override;
             virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
-            virtual BlackMisc::Geo::CElevationPlane averageElevationOfNonMovingAircraft(const BlackMisc::Aviation::CAircraftSituation &reference, const BlackMisc::PhysicalQuantities::CLength &range, int minValues = 1) const override;
+            virtual BlackMisc::Geo::CElevationPlane averageElevationOfNonMovingAircraft(const BlackMisc::Aviation::CAircraftSituation &reference, const BlackMisc::PhysicalQuantities::CLength &range, int minValues = 1, int sufficientValues = 2) const override;
             virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
                 QObject *receiver,
                 std::function<void(const BlackMisc::Aviation::CAircraftSituation &)> addedSituationSlot,

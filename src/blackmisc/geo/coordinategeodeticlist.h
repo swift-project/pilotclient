@@ -47,7 +47,7 @@ namespace BlackMisc
             CCoordinateGeodeticList(const CSequence<CCoordinateGeodetic> &other);
 
             //! Average height within range and having an height
-            CElevationPlane averageGeodeticHeight(const CCoordinateGeodetic &reference, const PhysicalQuantities::CLength &range, const PhysicalQuantities::CLength &maxDeviation = PhysicalQuantities::CLength(1.0, PhysicalQuantities::CLengthUnit::m()), int minValues = 3) const;
+            CElevationPlane averageGeodeticHeight(const CCoordinateGeodetic &reference, const PhysicalQuantities::CLength &range, const PhysicalQuantities::CLength &maxDeviation = PhysicalQuantities::CLength(1.0, PhysicalQuantities::CLengthUnit::m()), int minValues = 3, int sufficentValues = 5) const;
         };
     } //namespace
 } // namespace

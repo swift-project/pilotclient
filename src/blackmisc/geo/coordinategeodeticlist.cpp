@@ -27,23 +27,23 @@ namespace BlackMisc
             CSequence<CCoordinateGeodetic>(other)
         { }
 
-        CElevationPlane CCoordinateGeodeticList::averageGeodeticHeight(const CCoordinateGeodetic &reference, const CLength &range, const CLength &maxDeviation, int minValues) const
+        CElevationPlane CCoordinateGeodeticList::averageGeodeticHeight(const CCoordinateGeodetic &reference, const CLength &range, const CLength &maxDeviation, int minValues, int sufficentValues) const
         {
             if (this->size() < minValues) { return CElevationPlane::null(); } // no change to succeed
 
             QList<double> valuesInFt;
-            int count = 0;
-            for (const CCoordinateGeodetic &coordinate : *this)
+            const CCoordinateGeodeticList sorted = this->findWithGeodeticMSLHeight().findWithinRange(reference, range).sortedByEuclideanDistanceSquared(reference);
+            if (sorted.size() < minValues) { return CElevationPlane::null(); }
+
+            // we know all values have MSL and are within range
+            for (const CCoordinateGeodetic &coordinate : sorted)
             {
-                if (!coordinate.hasMSLGeodeticHeight()) { continue; }
-                if (!coordinate.isWithinRange(reference, range)) { continue; }
                 const double elvFt = coordinate.geodeticHeight().value(CLengthUnit::ft());
                 valuesInFt.push_back(elvFt);
-                count++;
-                if (count > 5 && valuesInFt.size() > 3 * minValues) { break; }
+                if (valuesInFt.size() >= sufficentValues) { break; }
             }
 
-            if (count < minValues) { return CElevationPlane::null(); }
+            if (valuesInFt.size() < minValues) { return CElevationPlane::null(); }
 
             const double MaxDevFt = maxDeviation.value(CLengthUnit::ft());
             const QPair<double, double> elvStdDevMean = CMathUtils::standardDeviationAndMean(valuesInFt);

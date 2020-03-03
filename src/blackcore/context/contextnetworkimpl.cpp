@@ -1181,9 +1181,9 @@ namespace BlackCore
             return m_airspace->getLatestAirspaceAircraftSnapshot();
         }
 
-        CElevationPlane CContextNetwork::averageElevationOfNonMovingAircraft(const CAircraftSituation &reference, const CLength &range, int minValues) const
+        CElevationPlane CContextNetwork::averageElevationOfNonMovingAircraft(const CAircraftSituation &reference, const CLength &range, int minValues, int sufficientValues) const
         {
-            return m_airspace->averageElevationOfNonMovingAircraft(reference, range, minValues);
+            return m_airspace->averageElevationOfNonMovingAircraft(reference, range, minValues, sufficientValues);
         }
 
         void CContextNetwork::setClients(const CClientList &clients)

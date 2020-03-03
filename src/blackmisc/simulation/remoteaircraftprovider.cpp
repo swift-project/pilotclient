@@ -767,10 +767,10 @@ namespace BlackMisc
             return m_partsLastModified.value(callsign, -1);
         }
 
-        CElevationPlane CRemoteAircraftProvider::averageElevationOfNonMovingAircraft(const CAircraftSituation &reference, const CLength &range, int minValues) const
+        CElevationPlane CRemoteAircraftProvider::averageElevationOfNonMovingAircraft(const CAircraftSituation &reference, const CLength &range, int minValues, int sufficientValues) const
         {
             const CAircraftSituationList situations = this->latestOnGroundProviderElevations();
-            return situations.averageElevationOfTaxiingOnGroundAircraft(reference, range, minValues);
+            return situations.averageElevationOfTaxiingOnGroundAircraft(reference, range, minValues, sufficientValues);
         }
 
         bool CRemoteAircraftProvider::testAddAltitudeOffset(const CCallsign &callsign, const CLength &offset)
