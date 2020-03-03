@@ -1423,10 +1423,11 @@ namespace BlackCore
                         bool fromNonMoving = false;
                         bool triedExtrapolation  = false;
                         bool couldNotExtrapolate = false;
+
                         CElevationPlane averagePlane = this->averageElevationOfOnGroundAircraft(situation, CElevationPlane::majorAirportRadius(), 2, 3);
                         if (averagePlane.isNull())
                         {
-                            averagePlane = this->averageElevationOfNonMovingAircraft(situation, CElevationPlane::majorAirportRadius(), 2);
+                            averagePlane = this->averageElevationOfNonMovingAircraft(situation, CElevationPlane::majorAirportRadius(), 2, 3);
                             fromNonMoving = true;
                         }
 

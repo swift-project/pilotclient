@@ -611,25 +611,25 @@ namespace BlackMisc
             return c;
         }
 
-        CElevationPlane CAircraftSituationList::averageElevationOfTaxiingOnGroundAircraft(const CAircraftSituation &reference, const CLength &range, int minValues) const
+        CElevationPlane CAircraftSituationList::averageElevationOfTaxiingOnGroundAircraft(const CAircraftSituation &reference, const CLength &range, int minValues, int sufficientValues) const
         {
             if (this->size() < minValues) { return CElevationPlane::null(); } // no change to succeed
 
+            const CAircraftSituationList sorted = this->findWithGeodeticMSLHeight().findWithinRange(reference, range).sortedByEuclideanDistanceSquared(reference);
+            if (sorted.size() < minValues) { return CElevationPlane::null(); }
             QList<double> valuesInFt;
-            int count = 0;
             for (const CAircraftSituation &situation : *this)
             {
                 if (situation.getGroundElevationInfo() != CAircraftSituation::FromProvider) { continue; }
                 const bool canUse = !situation.isMoving() || (situation.isOnGroundFromNetwork() || situation.isOnGroundFromParts());
                 if (!canUse) { continue; }
-                if (!situation.isWithinRange(reference, range)) { continue; }
+
                 const double elvFt = situation.getGroundElevationPlane().getAltitude().value(CLengthUnit::ft());
                 valuesInFt.push_back(elvFt);
-                count++;
-                if (count > 5 && valuesInFt.size() > 3 * minValues) { break; }
+                if (valuesInFt.size() >= sufficientValues) { break; }
             }
 
-            if (count < minValues) { return CElevationPlane::null(); }
+            if (valuesInFt.size() < minValues) { return CElevationPlane::null(); }
 
             static const double MaxDevFt = CAircraftSituationChange::allowedAltitudeDeviation().value(CLengthUnit::ft());
             const QPair<double, double> elvStdDevMean = CMathUtils::standardDeviationAndMean(valuesInFt);

@@ -44,7 +44,7 @@ namespace BlackMisc
 
             //! Average elevation of "on ground" cached values
             //! \threadsafe
-            Geo::CElevationPlane averageElevationOfOnGroundAircraft(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues) const;
+            Geo::CElevationPlane averageElevationOfOnGroundAircraft(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues, int sufficientValues) const;
 
             //! Highest elevation
             //! \threadsafe
@@ -298,7 +298,7 @@ namespace BlackMisc
             Geo::CElevationPlane findClosestElevationWithinRangeOrRequest(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range, const Aviation::CCallsign &callsign);
 
             //! \copydoc ISimulationEnvironmentProvider::averageElevationOfOnGroundAircraft
-            Geo::CElevationPlane averageElevationOfOnGroundAircraft(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues) const;
+            Geo::CElevationPlane averageElevationOfOnGroundAircraft(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues, int sufficientValues) const;
 
             //! \copydoc ISimulationEnvironmentProvider::highestElevation
             Aviation::CAltitude highestElevation() const;

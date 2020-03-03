@@ -251,7 +251,7 @@ namespace BlackMisc
             //! Average elevation of aircraft in given range, which are NOT moving
             //! \remark can be used to anticipate field elevation
             //! \threadsafe
-            virtual Geo::CElevationPlane averageElevationOfNonMovingAircraft(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues = 1) const = 0;
+            virtual Geo::CElevationPlane averageElevationOfNonMovingAircraft(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues = 1, int sufficientValues = 2) const = 0;
 
             //! Connect signals to slot receiver. As the interface is no QObject, slots can not be connected directly.
             //! In order to disconnect a list of connections is provided, which have to be disconnected manually.
@@ -344,7 +344,7 @@ namespace BlackMisc
             virtual int aircraftPartsAdded() const override;
             virtual qint64 situationsLastModified(const Aviation::CCallsign &callsign) const override;
             virtual qint64 partsLastModified(const Aviation::CCallsign &callsign) const override;
-            virtual Geo::CElevationPlane averageElevationOfNonMovingAircraft(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues = 1) const override;
+            virtual Geo::CElevationPlane averageElevationOfNonMovingAircraft(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues = 1, int sufficientValues = 2) const override;
             virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
                 QObject *receiver,
                 std::function<void(const Aviation::CAircraftSituation &)> addedSituationSlot,

@@ -167,10 +167,10 @@ namespace BlackMisc
             return m_elvCoordinatesGnd;
         }
 
-        CElevationPlane ISimulationEnvironmentProvider::averageElevationOfOnGroundAircraft(const CAircraftSituation &reference, const CLength &range, int minValues) const
+        CElevationPlane ISimulationEnvironmentProvider::averageElevationOfOnGroundAircraft(const CAircraftSituation &reference, const CLength &range, int minValues, int sufficientValues) const
         {
             const CCoordinateGeodeticList coordinates = this->getElevationCoordinatesOnGround();
-            return coordinates.averageGeodeticHeight(reference, range, CAircraftSituationChange::allowedAltitudeDeviation(), minValues);
+            return coordinates.averageGeodeticHeight(reference, range, CAircraftSituationChange::allowedAltitudeDeviation(), minValues, sufficientValues);
         }
 
         CAltitude ISimulationEnvironmentProvider::highestElevation() const
@@ -592,10 +592,10 @@ namespace BlackMisc
             return this->provider()->findClosestElevationWithinRangeOrRequest(reference, range, callsign);
         }
 
-        CElevationPlane CSimulationEnvironmentAware::averageElevationOfOnGroundAircraft(const CAircraftSituation &reference, const CLength &range, int minValues) const
+        CElevationPlane CSimulationEnvironmentAware::averageElevationOfOnGroundAircraft(const CAircraftSituation &reference, const CLength &range, int minValues, int sufficientValues) const
         {
             if (!this->hasProvider()) { return CElevationPlane::null(); }
-            return this->provider()->averageElevationOfOnGroundAircraft(reference, range, minValues);
+            return this->provider()->averageElevationOfOnGroundAircraft(reference, range, minValues, sufficientValues);
         }
 
         CAltitude CSimulationEnvironmentAware::highestElevation() const
