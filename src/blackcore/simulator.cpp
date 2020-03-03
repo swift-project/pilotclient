@@ -568,7 +568,8 @@ namespace BlackCore
         // CG override
         if (part1 == QStringView(u"cg") && parser.hasPart(3))
         {
-            const QString ms = parser.part(3).toUpper();
+            // ms can be a string like "B773 B773_RR SDM"
+            const QString ms = parser.partAndRemainingStringAfter(3).toUpper();
             CLength cg;
             cg.parseFromString(parser.part(2), CPqString::SeparatorBestGuess);
             if (!ms.isEmpty())
