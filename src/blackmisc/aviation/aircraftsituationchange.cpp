@@ -107,7 +107,7 @@ namespace BlackMisc
 
         QString CAircraftSituationChange::convertToQString(bool i18n) const
         {
-            Q_UNUSED(i18n);
+            Q_UNUSED(i18n)
             static const QString null("null");
             if (this->isNull()) { return null; }
             return u"CS: '" % this->getCallsign().asString() %

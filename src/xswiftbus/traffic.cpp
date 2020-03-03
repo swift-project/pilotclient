@@ -512,6 +512,7 @@ namespace XSwiftBus
             double groundElevation = 0.0;
             if (getSettings().isTerrainProbeEnabled())
             {
+                // we expect elevation in meters
                 groundElevation = plane->terrainProbe.getElevation(latDeg, lonDeg, plane->position.elevation, requestedCallsign).front();
                 if (std::isnan(groundElevation)) { groundElevation = 0.0; }
             }
