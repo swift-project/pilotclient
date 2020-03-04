@@ -181,6 +181,9 @@ namespace BlackCore
             //! Register myself in DBus
             CContextSimulator *registerWithDBus(BlackMisc::CDBusServer *server);
 
+            //! Simulator plugin available?
+            bool isSimulatorPluginAvailable() const;
+
         private:
             static constexpr int MatchingLogMaxModelSetSize  = 250; //!< default value for switching matching log on
             static constexpr int MaxModelAddedFailoverTrials = 3;   //!< if model cannot be added, try again max <n> times

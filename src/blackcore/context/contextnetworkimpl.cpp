@@ -1109,6 +1109,13 @@ namespace BlackCore
             return c;
         }
 
+        CCallsignSet CContextNetwork::updateCGForModel(const QString &modelString, const CLength &cg)
+        {
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << modelString << cg.valueRoundedWithUnit(1); }
+            const CCallsignSet set = m_airspace->updateCGForModel(modelString, cg);
+            return set;
+        }
+
         bool CContextNetwork::updateCGAndModelString(const CCallsign &callsign, const CLength &cg, const QString &modelString)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << cg.valueRoundedWithUnit(1) << modelString; }

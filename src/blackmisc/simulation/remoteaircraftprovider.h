@@ -196,6 +196,10 @@ namespace BlackMisc
             //! \threadsafe
             virtual bool updateCG(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg) = 0;
 
+            //! Update the CG for this model string
+            //! \threadsafe
+            virtual Aviation::CCallsignSet updateCGForModel(const QString &modelString, const PhysicalQuantities::CLength &cg) = 0;
+
             //! Update the CG and model string
             //! \threadsafe
             virtual bool updateCGAndModelString(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg, const QString &modelString) = 0;
@@ -332,6 +336,7 @@ namespace BlackMisc
             virtual int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info, bool *setForOnGroundPosition) override;
             virtual bool updateCG(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg) override;
             virtual bool updateCGAndModelString(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg, const QString &modelString) override;
+            virtual Aviation::CCallsignSet updateCGForModel(const QString &modelString, const PhysicalQuantities::CLength &cg) override;
             virtual PhysicalQuantities::CLength getCGFromDB(const Aviation::CCallsign &callsign) const override;
             virtual PhysicalQuantities::CLength getCGFromDB(const QString &modelString) const override;
             virtual void rememberCGFromDB(const PhysicalQuantities::CLength &cgFromDB, const Aviation::CCallsign &callsign) override;
@@ -593,6 +598,9 @@ namespace BlackMisc
 
             //! \copydoc IRemoteAircraftProvider::updateCG
             bool updateCG(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg);
+
+            //! \copydoc IRemoteAircraftProvider::updateCGForModel
+            Aviation::CCallsignSet updateCGForModel(const QString &modelString, const PhysicalQuantities::CLength &cg);
 
             //! \copydoc IRemoteAircraftProvider::updateCGAndModelString
             bool updateCGAndModelString(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg, const QString &modelString);
