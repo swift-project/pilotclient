@@ -124,6 +124,11 @@ namespace BlackCore
             return this;
         }
 
+        bool CContextSimulator::isSimulatorPluginAvailable() const
+        {
+            return m_simulatorPlugin.second && IContextSimulator::isSimulatorAvailable();
+        }
+
         CContextSimulator::~CContextSimulator()
         {
             this->gracefulShutdown();
@@ -525,7 +530,7 @@ namespace BlackCore
             Q_ASSERT(c);
             c = connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, this, &CContextSimulator::relayStatusMessageToSimulator);
             Q_ASSERT(c);
-            Q_UNUSED(c);
+            Q_UNUSED(c)
 
             // Once the simulator signaled it is ready to simulate, add all known aircraft
             m_initallyAddAircraft = true;
@@ -603,7 +608,7 @@ namespace BlackCore
             {
                 const bool s = QMetaObject::invokeMethod(listener, &ISimulatorListener::start, Qt::QueuedConnection);
                 Q_ASSERT_X(s, Q_FUNC_INFO, "cannot invoke method");
-                Q_UNUSED(s);
+                Q_UNUSED(s)
             }
             CLogMessage(this).info(u"Listening for simulator '%1'") << simulatorInfo.getIdentifier();
             return true;
@@ -658,7 +663,8 @@ namespace BlackCore
 
         void CContextSimulator::xCtxAddedRemoteAircraftReadyForModelMatching(const CSimulatedAircraft &remoteAircraft)
         {
-            if (!this->isSimulatorAvailable()) { return; }
+            if (!this->isSimulatorPluginAvailable()) { return; }
+
             const CCallsign callsign = remoteAircraft.getCallsign();
             BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Remote aircraft with empty callsign");
             if (callsign.isEmpty()) { return; }
@@ -691,6 +697,9 @@ namespace BlackCore
             default:
                 break; // leave CG from model alone
             }
+
+            const CLength overriddenCG = m_simulatorPlugin.second->overriddenCGorDefault(CLength::null(), aircraftModel.getModelString());
+            if (!overriddenCG.isNull()) { aircraftModel.setCG(overriddenCG); }
 
             // model in provider
             this->updateAircraftModel(callsign, aircraftModel, this->identifier());

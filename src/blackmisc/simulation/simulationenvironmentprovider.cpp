@@ -95,12 +95,72 @@ namespace BlackMisc
 
         bool ISimulationEnvironmentProvider::insertCG(const CLength &cg, const QString &modelString, const CCallsign &cs)
         {
-            bool ok = false;
+            bool stored = false;
             QWriteLocker l(&m_lockCG);
             if (!m_enableCG)   { return false; }
-            if (!cs.isEmpty()) { m_cgsPerCallsign[cs] = cg; ok = true; }
-            if (!modelString.isEmpty()) { m_cgsPerModel[modelString.toUpper()] = cg; ok = true; }
-            return ok;
+            if (!cs.isEmpty())
+            {
+                if (m_cgsPerCallsignOverridden.contains(cs))
+                {
+                    // only keep as overridden value
+                    m_cgsPerCallsignOverridden[cs] = cg;
+                }
+                else
+                {
+                    m_cgsPerCallsign[cs] = cg; stored = true;
+                }
+            }
+            if (!modelString.isEmpty())
+            {
+                const QString ms = modelString.toUpper();
+                if (m_cgsPerModelOverridden.contains(ms))
+                {
+                    // only keep as overridden value
+                    m_cgsPerModelOverridden[ms] = cg;
+                }
+                else
+                {
+                    m_cgsPerModel[ms] = cg;
+                    stored = true;
+                }
+            }
+            return stored;
+        }
+
+        bool ISimulationEnvironmentProvider::insertCGOverridden(const CLength &cg, const CCallsign &cs)
+        {
+            if (cs.isEmpty()) { return false; }
+
+            QWriteLocker l(&m_lockCG);
+            if (!m_enableCG) { return false; }
+            if (cg.isNull())
+            {
+                m_cgsPerCallsignOverridden.remove(cs);
+                return false;
+            }
+
+            m_cgsPerCallsignOverridden[cs] = cg;
+            return true;
+        }
+
+        bool ISimulationEnvironmentProvider::insertCGOverridden(const CLength &cg, const CCallsignSet &callsigns)
+        {
+            if (callsigns.isEmpty()) { return false; }
+
+            QWriteLocker l(&m_lockCG);
+            if (!m_enableCG) { return false; }
+            for (const CCallsign &cs : callsigns)
+            {
+                if (cg.isNull())
+                {
+                    m_cgsPerCallsignOverridden.remove(cs);
+                }
+                else
+                {
+                    m_cgsPerCallsignOverridden[cs] = cg;
+                }
+            }
+            return true;
         }
 
         bool ISimulationEnvironmentProvider::insertCGForModelString(const CLength &cg, const QString &modelString)
@@ -132,17 +192,29 @@ namespace BlackMisc
             return true;
         }
 
-        CLength ISimulationEnvironmentProvider::overriddenCGorDefault(const CLength &cg, const QString &modelString) const
+        CLengthPerCallsign ISimulationEnvironmentProvider::clearCGOverrides()
         {
-            if (modelString.isEmpty()) { return cg; }
+            QWriteLocker l(&m_lockCG);
+            m_cgsPerModelOverridden.clear();
+            m_cgsPerCallsignOverridden.clear();
+            return m_cgsPerCallsign; // all remaining CGs
+        }
+
+        CLength ISimulationEnvironmentProvider::overriddenCGorDefault(const CLength &defaultCG, const QString &modelString) const
+        {
+            if (modelString.isEmpty()) { return defaultCG; }
+            const QString ms = modelString.toUpper();
             QReadLocker l(&m_lockCG);
-            if (!m_cgsPerModelOverridden.contains(modelString.toUpper())) { return cg; }
-            return m_cgsPerModelOverridden[modelString.toUpper()];
+            if (!m_cgsPerModelOverridden.contains(ms)) { return defaultCG; }
+            return m_cgsPerModelOverridden[ms];
         }
 
         int ISimulationEnvironmentProvider::removeSimulatorCG(const CCallsign &cs)
         {
+            if (cs.isEmpty()) { return 0; }
+
             QWriteLocker l(&m_lockCG);
+            m_cgsPerCallsignOverridden.remove(cs);
             return m_cgsPerCallsign.remove(cs);
         }
 
@@ -328,11 +400,28 @@ namespace BlackMisc
             return m_defaultModel;
         }
 
+        CLengthPerCallsign ISimulationEnvironmentProvider::getSimulatorCGsPerCallsign() const
+        {
+            QReadLocker l(&m_lockCG);
+            return m_cgsPerCallsign;
+        }
+
+        QHash<QString, CLength> ISimulationEnvironmentProvider::getSimulatorCGsPerModelString() const
+        {
+            QReadLocker l(&m_lockCG);
+            return m_cgsPerModel;
+        }
+
         CLength ISimulationEnvironmentProvider::getSimulatorCG(const Aviation::CCallsign &callsign) const
         {
             if (callsign.isEmpty()) { return CLength::null(); }
             QReadLocker l(&m_lockCG);
-            if (!m_enableCG || !m_cgsPerCallsign.contains(callsign)) { return CLength::null(); }
+            if (!m_enableCG) { return CLength::null(); }
+            if (m_cgsPerCallsignOverridden.contains(callsign))
+            {
+                return m_cgsPerCallsignOverridden[callsign];
+            }
+            if (!m_cgsPerCallsign.contains(callsign)) { return CLength::null(); }
             return m_cgsPerCallsign.value(callsign);
         }
 
@@ -351,8 +440,12 @@ namespace BlackMisc
             if (modelString.isEmpty()) { return CLength::null(); }
             const QString ms = modelString.toUpper();
             QReadLocker l(&m_lockCG);
-            if (m_cgsPerModelOverridden.contains(ms)) { return m_cgsPerModelOverridden.value(ms); }
-            if (!m_enableCG || !m_cgsPerModel.contains(ms)) { return CLength::null(); }
+            if (!m_enableCG) { return CLength::null(); }
+            if (m_cgsPerModelOverridden.contains(ms))
+            {
+                return m_cgsPerModelOverridden.value(ms);
+            }
+            if (!m_cgsPerModel.contains(ms)) { return CLength::null(); }
             return m_cgsPerModel.value(ms);
         }
 
@@ -375,13 +468,19 @@ namespace BlackMisc
         {
             if (callsign.isEmpty()) { return false; }
             QReadLocker l(&m_lockCG);
-            return m_enableCG && m_cgsPerCallsign.contains(callsign);
+            return m_enableCG && (m_cgsPerCallsign.contains(callsign) || m_cgsPerCallsignOverridden.contains(callsign));
         }
 
         bool ISimulationEnvironmentProvider::hasSameSimulatorCG(const CLength &cg, const CCallsign &callsign) const
         {
             if (callsign.isEmpty()) { return false; }
             QReadLocker l(&m_lockCG);
+            if (m_cgsPerCallsignOverridden.contains(callsign))
+            {
+                return m_cgsPerCallsignOverridden[callsign] == cg;
+            }
+
+            // normal values
             if (!m_cgsPerCallsign.contains(callsign)) { return false; }
             return m_cgsPerCallsign[callsign] == cg;
         }
@@ -565,6 +664,7 @@ namespace BlackMisc
         {
             QWriteLocker l(&m_lockCG);
             m_cgsPerCallsign.clear();
+            m_cgsPerCallsignOverridden.clear();
             // intentionally not cleaning CGs per model, as models will not change, callsign do!
         }
 

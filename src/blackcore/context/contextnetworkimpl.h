@@ -178,6 +178,7 @@ namespace BlackCore
             virtual bool setAircraftEnabledFlag(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;
             virtual int  reInitializeAllAircraft() override;
             virtual bool updateCG(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &cg) override;
+            virtual BlackMisc::Aviation::CCallsignSet updateCGForModel(const QString &modelString, const BlackMisc::PhysicalQuantities::CLength &cg) override;
             virtual bool updateCGAndModelString(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &cg, const QString &modelString) override;
             virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
             virtual BlackMisc::Aviation::CCallsignSet getAircraftInRangeCallsigns() const override;

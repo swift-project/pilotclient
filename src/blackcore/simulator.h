@@ -285,19 +285,19 @@ namespace BlackCore
         //! \addtogroup swiftdotcommands
         //! @{
         //! <pre>
-        //! .drv cg length modelstring     set overridden CG for model string      BlackCore::ISimulator
-        //! .drv unload                    unload plugin                           BlackCore::ISimulator
-        //! .drv limit number              limit the number of updates             BlackCore::ISimulator
-        //! .drv logint callsign           log interpolator for callsign           BlackCore::ISimulator
-        //! .drv logint off                no log information for interpolator     BlackCore::ISimulator
-        //! .drv logint write              write interpolator log to file          BlackCore::ISimulator
-        //! .drv logint clear              clear current log                       BlackCore::ISimulator
-        //! .drv pos callsign              shows current position in simulator     BlackCore::ISimulator
-        //! .drv spline|linear callsign    interpolator spline or linear           BlackCore::ISimulator
-        //! .drv aircraft readd callsign   re-add (add again) aircraft             BlackCore::ISimulator
-        //! .drv aircraft readd all        re-add all aircraft                     BlackCore::ISimulator
-        //! .drv aircraft rm callsign      remove aircraft                         BlackCore::ISimulator
-        //! .drv fsuipc   on|off           enable/disable FSUIPC (if applicable)   BlackSimPlugin::FsCommon::CSimulatorFsCommon
+        //! .drv cg length clear|modelstring  set overridden CG for model string      BlackCore::ISimulator
+        //! .drv unload                       unload plugin                           BlackCore::ISimulator
+        //! .drv limit number                 limit the number of updates             BlackCore::ISimulator
+        //! .drv logint callsign              log interpolator for callsign           BlackCore::ISimulator
+        //! .drv logint off                   no log information for interpolator     BlackCore::ISimulator
+        //! .drv logint write                 write interpolator log to file          BlackCore::ISimulator
+        //! .drv logint clear                 clear current log                       BlackCore::ISimulator
+        //! .drv pos callsign                 shows current position in simulator     BlackCore::ISimulator
+        //! .drv spline|linear callsign       interpolator spline or linear           BlackCore::ISimulator
+        //! .drv aircraft readd callsign      re-add (add again) aircraft             BlackCore::ISimulator
+        //! .drv aircraft readd all           re-add all aircraft                     BlackCore::ISimulator
+        //! .drv aircraft rm callsign         remove aircraft                         BlackCore::ISimulator
+        //! .drv fsuipc   on|off              enable/disable FSUIPC (if applicable)   BlackSimPlugin::FsCommon::CSimulatorFsCommon
         //! </pre>
         //! @}
         //! Parse command line for simulator drivers, derived classes can add specific parsing by overriding ISimulator::parseDetails

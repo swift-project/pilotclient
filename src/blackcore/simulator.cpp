@@ -487,7 +487,8 @@ namespace BlackCore
             {
                 const CCallsign cs(parser.part(2));
                 const bool changed = this->setInterpolationMode(part1, cs);
-                CLogMessage(this).info(changed ? QStringLiteral("Changed interpolation mode for '%1'")
+                CLogMessage(this).info(changed
+                                       ? QStringLiteral("Changed interpolation mode for '%1'")
                                        : QStringLiteral("Unchanged interpolation mode for '%1'")) << cs.asString();
                 return true;
             }
@@ -496,7 +497,8 @@ namespace BlackCore
                 CInterpolationAndRenderingSetupGlobal setup = this->getInterpolationSetupGlobal();
                 const bool changed = setup.setInterpolatorMode(part1);
                 if (changed) { this->setInterpolationSetupGlobal(setup); }
-                CLogMessage(this).info(changed ? QStringLiteral("Changed interpolation mode globally")
+                CLogMessage(this).info(changed
+                                       ? QStringLiteral("Changed interpolation mode globally")
                                        : QStringLiteral("Unchanged interpolation mode"));
                 return true;
             }
@@ -566,17 +568,47 @@ namespace BlackCore
         }
 
         // CG override
-        if (part1 == QStringView(u"cg") && parser.hasPart(3))
+        if (part1 == QStringView(u"cg"))
         {
-            // ms can be a string like "B773 B773_RR SDM"
-            const QString ms = parser.partAndRemainingStringAfter(3).toUpper();
-            CLength cg;
-            cg.parseFromString(parser.part(2), CPqString::SeparatorBestGuess);
-            if (!ms.isEmpty())
+            if (parser.part(2).startsWith("clear", Qt::CaseInsensitive))
             {
-                CLogMessage(this).info(u"Setting CG for '%1': %2") << ms << cg.valueRoundedWithUnit();
-                this->insertCGForModelStringOverridden(cg, ms);
+                CLogMessage(this).info(u"Clear all overridden CGs");
+                const CLengthPerCallsign cgsPerCallsign = this->clearCGOverrides();
+
+                // restore all CGs
+                for (const CCallsign &cs : this->getAircraftInRangeCallsigns())
+                {
+                    // reset CGs per callsign
+                    const CLength cg = cgsPerCallsign.contains(cs) ? cgsPerCallsign[cs] : CLength::null();
+                    this->updateCG(cs, cg);
+                }
+                return true;
             }
+
+            if (parser.hasPart(3))
+            {
+                // ms can be a string like "B773 B773_RR SDM"
+                const QString ms = parser.partAndRemainingStringAfter(3).toUpper();
+                CLength cg;
+                cg.parseFromString(parser.part(2), CPqString::SeparatorBestGuess);
+                if (!ms.isEmpty())
+                {
+                    CLogMessage(this).info(u"Setting CG for '%1': %2") << ms << cg.valueRoundedWithUnit();
+                    const bool set = this->insertCGForModelStringOverridden(cg, ms);
+                    if (set)
+                    {
+                        const CCallsignSet callsigns = this->updateCGForModel(ms, cg);
+                        if (!callsigns.isEmpty())
+                        {
+                            this->insertCGOverridden(cg, callsigns);
+                            CLogMessage(this).info(u"Setting CG for '%1': %2") << callsigns.getCallsignsAsString(true) << cg.valueRoundedWithUnit();
+                        }
+                        return true;
+
+                    } // set
+                } // model string
+
+            } // 3 parts
         }
 
         // driver specific cmd line arguments
@@ -588,7 +620,7 @@ namespace BlackCore
         if (CSimpleCommandParser::registered("BlackCore::ISimulator")) { return; }
         CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
         CSimpleCommandParser::registerCommand({".drv unload", "unload driver"});
-        CSimpleCommandParser::registerCommand({".drv cg length modelstring", "override CG"});
+        CSimpleCommandParser::registerCommand({".drv cg length clear|modelstr.", "override CG"});
         CSimpleCommandParser::registerCommand({".drv limit number/secs.", "limit updates to number per second (0..off)"});
         CSimpleCommandParser::registerCommand({".drv logint callsign", "log interpolator for callsign"});
         CSimpleCommandParser::registerCommand({".drv logint off", "no log information for interpolator"});
@@ -884,9 +916,12 @@ namespace BlackCore
 
         const QString modelString = model.getModelString();
         if (modelString.isEmpty()) { return; }
+
+        // this value now is the simulator or overridden value
         const CLength cgOvr = this->overriddenCGorDefault(simulatorCG, modelString);
         if (!cgOvr.isNull() && !this->hasSameSimulatorCG(cgOvr, callsign))
         {
+            // the value did change
             const CSimulatorSettings::CGSource source = this->getSimulatorSettings().getSimulatorSettings().getCGSource();
             if (source != CSimulatorSettings::CGFromDBOnly)
             {

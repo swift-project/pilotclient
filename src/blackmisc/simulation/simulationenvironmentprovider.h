@@ -98,6 +98,14 @@ namespace BlackMisc
             //! \threadsafe
             CAircraftModel getDefaultModel() const;
 
+            //! All CGs per callsign
+            //! \threadsafe
+            Aviation::CLengthPerCallsign getSimulatorCGsPerCallsign() const;
+
+            //! All CGs per modelstring
+            //! \threadsafe
+            QHash<QString, PhysicalQuantities::CLength> getSimulatorCGsPerModelString() const;
+
             //! Get CG per callsign, NULL if not found
             //! \threadsafe
             PhysicalQuantities::CLength getSimulatorCG(const Aviation::CCallsign &callsign) const;
@@ -113,6 +121,10 @@ namespace BlackMisc
             //! Get CG per model string, NULL if not found
             //! \threadsafe
             PhysicalQuantities::CLength getSimulatorOrDbCGPerModelString(const QString &modelString, const PhysicalQuantities::CLength &dbCG) const;
+
+            //! Return the overridden CG value or the given default CG value
+            //! \threadsafe
+            PhysicalQuantities::CLength overriddenCGorDefault(const PhysicalQuantities::CLength &defaultCG, const QString &modelString) const;
 
             //! Has a CG?
             //! \threadsafe
@@ -231,6 +243,16 @@ namespace BlackMisc
             //! Insert or replace a CG
             //! \remark passing a NULL value will remove the CG
             //! \threadsafe
+            bool insertCGOverridden(const PhysicalQuantities::CLength &cg, const Aviation::CCallsign &cs);
+
+            //! Insert or replace an overridden CG
+            //! \remark passing a NULL value will remove the CG
+            //! \threadsafe
+            bool insertCGOverridden(const PhysicalQuantities::CLength &cg, const Aviation::CCallsignSet &callsigns);
+
+            //! Insert or replace a CG
+            //! \remark passing a NULL value will remove the CG
+            //! \threadsafe
             bool insertCGForModelString(const PhysicalQuantities::CLength &cg, const QString &modelString);
 
             //! Insert or replace a CG (overridden mode)
@@ -238,11 +260,11 @@ namespace BlackMisc
             //! \threadsafe
             bool insertCGForModelStringOverridden(const PhysicalQuantities::CLength &cg, const QString &modelString);
 
-            //! Return the overridden CG value or the given default CG value
+            //! Clear all overridden values
             //! \threadsafe
-            PhysicalQuantities::CLength overriddenCGorDefault(const PhysicalQuantities::CLength &cg, const QString &modelString) const;
+            Aviation::CLengthPerCallsign clearCGOverrides();
 
-            //! Remove a CG
+            //! Remove a CG for a given callsign
             //! \threadsafe
             int removeSimulatorCG(const Aviation::CCallsign &cs);
 
@@ -265,8 +287,9 @@ namespace BlackMisc
 
             Aviation::CTimestampPerCallsign m_pendingElevationRequests; //!< pending elevation requests for aircraft callsign
             Aviation::CLengthPerCallsign    m_cgsPerCallsign;           //!< CGs per callsign
+            Aviation::CLengthPerCallsign    m_cgsPerCallsignOverridden; //!< CGs per callsign overridden (manually forced)
             QHash<QString, PhysicalQuantities::CLength> m_cgsPerModel;  //!< CGs per model string
-            QHash<QString, PhysicalQuantities::CLength> m_cgsPerModelOverridden; //!< CGs per model string manually forced
+            QHash<QString, PhysicalQuantities::CLength> m_cgsPerModelOverridden; //!< CGs per model string (manually forced)
             qint64 m_statsMaxElevRequestTimeMs     = -1;
             qint64 m_statsCurrentElevRequestTimeMs = -1;
 
