@@ -246,6 +246,7 @@ namespace BlackMisc
     QString simplifyByDecomposition(const QString &s)
     {
         QString result;
+        // QChar c (NOT QChar &c), see https://discordapp.com/channels/539048679160676382/539925070550794240/686321311076581440
         for (const QChar c : s)
         {
             if (c.decompositionTag() == QChar::NoDecomposition)
