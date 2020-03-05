@@ -13,6 +13,7 @@
 #endif
 
 #include "utils.h"
+#include <XPMPMultiplayer.h>
 #include <XPMPMultiplayerCSL.h>
 #include <XPLM/XPLMUtilities.h>
 #include <XPLM/XPLMPlugin.h>
@@ -51,7 +52,7 @@ namespace XSwiftBus
 
         assert(!filePath.empty());
         std::ostringstream ss;
-        ss << "xswiftbus: ";
+        ss << XPMPTimestamp() << "xswiftbus: ";
 
 #if defined(XSWIFTBUS_ENABLE_TRACE_LOG)
         switch (type)
@@ -90,7 +91,7 @@ namespace XSwiftBus
         ss << message;
         ss << "\n";
 
-        std::string buffer = ss.str();
+        const std::string buffer = ss.str();
         XPLMDebugString(buffer.c_str());
     }
 }
