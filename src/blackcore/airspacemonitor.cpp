@@ -675,7 +675,7 @@ namespace BlackCore
         {
             static const QString readyForMatching("Ready (%1) for matching callsign '%2' with model type '%3', ICAO: '%4' '%5'");
 
-            readiness.setFlag(ReadyForMatchingSent); // stored as readiness as reference
+            readiness.setFlag(ReadyForMatchingSent); // stored in readiness as reference
             const QString readyMsg = readyForMatching.arg(readiness.toQString(), callsign.toQString(), remoteAircraft.getModel().getModelTypeAsString(), remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey(), remoteAircraft.getAirlineIcaoCode().getDesignatorDbKey());
             const CStatusMessage m = CLogUtilities::logMessage(callsign, readyMsg, getLogCategories());
             this->addReverseLookupMessage(callsign, m);
@@ -711,6 +711,16 @@ namespace BlackCore
         {
             CLogMessage(this).info(u"Query ICAO codes for '%1' again") << callsign;
             this->sendInitialPilotQueries(callsign, true, true);
+
+            // if the queries now yield a result all will be fine
+            // otherwise we need to check again
+            const QPointer<CAirspaceMonitor> myself(this);
+            QTimer::singleShot(MMVerifyMs, this, [ = ]()
+            {
+                // makes sure we have ICAO data
+                if (!myself || !sApp || sApp->isShuttingDown()) { return; }
+                this->verifyReceivedIcaoData(callsign);
+            });
             return;
         }
 
