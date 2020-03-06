@@ -282,9 +282,9 @@ namespace BlackCore
 
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline; //!< online ATC stations
         BlackMisc::Aviation::CAtcStationList m_atcStationsBooked; //!< booked ATC stations
-        QHash<BlackMisc::Aviation::CCallsign, FsInnPacket> m_tempFsInnPackets;
-        QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache; //!< flight plan information retrieved from network and cached
-        QHash<BlackMisc::Aviation::CCallsign, Readiness> m_readiness; //!< readiness
+        QHash<BlackMisc::Aviation::CCallsign, FsInnPacket>                      m_tempFsInnPackets; //!< unhandled FsInn packets
+        QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache;  //!< flight plan information retrieved from network and cached
+        QHash<BlackMisc::Aviation::CCallsign, Readiness>                        m_readiness;        //!< readiness
         BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< settings
         QQueue<BlackMisc::Aviation::CCallsign> m_queryAtis;  //!< query the ATIS
         QQueue<BlackMisc::Aviation::CCallsign> m_queryPilot; //!< query the pilot data
