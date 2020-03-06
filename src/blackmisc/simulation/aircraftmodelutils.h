@@ -11,6 +11,7 @@
 #ifndef BLACKMISC_SIMULATION_AIRCRAFTMODELUTILS_H
 #define BLACKMISC_SIMULATION_AIRCRAFTMODELUTILS_H
 
+#include <atomic>
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 
@@ -36,7 +37,7 @@ namespace BlackMisc
             static QString createIcaoAirlineAircraftHtmlMatrixFile(const BlackMisc::Simulation::CAircraftModelList &models, const QString &tempDir);
 
             //! Validate aircraft.cfg entries
-            static CStatusMessageList validateModelFiles(const CSimulatorInfo &simulator, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &wasStopped, const QString &simulatorDir);
+            static CStatusMessageList validateModelFiles(const CSimulatorInfo &simulator, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simulatorDir);
         };
     } //namespace
 } // namespace

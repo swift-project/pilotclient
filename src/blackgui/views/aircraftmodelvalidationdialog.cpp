@@ -13,6 +13,7 @@
 #include <QPushButton>
 #include <QDialogButtonBox>
 #include <QPointer>
+#include <atomic>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -63,7 +64,7 @@ namespace BlackGui
             CAircraftModelList invalid;
             const bool ignoreEmpty = false;
             const int  maxFailedFiles = 25;
-            bool wasStopped = false;
+            std::atomic_bool wasStopped { false };
             const CStatusMessageList msgs = CAircraftModelUtilities::validateModelFiles(m_simulator, m_models, valid, invalid, ignoreEmpty, maxFailedFiles, wasStopped, m_simulatorDir);
             ui->comp_StatusMessage->clear();
             ui->comp_StatusMessage->setNoSorting(); // we use the pre-sorted list

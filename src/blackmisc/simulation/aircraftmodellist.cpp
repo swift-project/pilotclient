@@ -1527,7 +1527,7 @@ namespace BlackMisc
             return msgs;
         }
 
-        CStatusMessageList CAircraftModelList::validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &wasStopped, const QString &simRootDirectory, bool alreadySortedByFn) const
+        CStatusMessageList CAircraftModelList::validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simRootDirectory, bool alreadySortedByFn) const
         {
             wasStopped = false;
 
@@ -1575,7 +1575,7 @@ namespace BlackMisc
 
                     if (workingFiles.contains(fn) || model.hasExistingCorrespondingFile())
                     {
-                        if (!simRootDirectory.isEmpty()  && !fn.contains(simRootDir))
+                        if (!simRootDirectory.isEmpty() && !fn.contains(simRootDir))
                         {
                             // check if in root directory
                             msgs.push_back(CStatusMessage(this).validationError(u"'%1', not in root directory '%2', '%3' skipped") << model.getModelStringAndDbKey() << simRootDir << model.getFileName());
@@ -1663,17 +1663,17 @@ namespace BlackMisc
             // convert
             {
                 CJsonScope scope("aircraftIcaos");
-                Q_UNUSED(scope);
+                Q_UNUSED(scope)
                 helper.getTable<CAircraftIcaoCode>().convertFromJson(aircraftIcaos.toObject());
             }
             {
                 CJsonScope scope("liveries");
-                Q_UNUSED(scope);
+                Q_UNUSED(scope)
                 helper.getTable<CLivery>().convertFromJson(liveries.toObject());
             }
             {
                 CJsonScope scope("distributors");
-                Q_UNUSED(scope);
+                Q_UNUSED(scope)
                 helper.getTable<CDistributor>().convertFromJson(distributors.toObject());
             }
 
@@ -1681,7 +1681,7 @@ namespace BlackMisc
             for (auto i = array.begin(); i != array.end(); ++i)
             {
                 CJsonScope scope("containerbase", index++);
-                Q_UNUSED(scope);
+                Q_UNUSED(scope)
                 CAircraftModel value;
                 value.convertFromMemoizedJson(i->toObject(), helper);
                 this->push_back(value);

@@ -639,7 +639,7 @@ namespace BlackMisc
                 return paths;
             }
 
-            CStatusMessageList CFsCommonUtil::validateAircraftConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &wasStopped)
+            CStatusMessageList CFsCommonUtil::validateAircraftConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &wasStopped)
             {
                 CStatusMessage m;
                 CAircraftModelList sorted(models);
@@ -703,14 +703,14 @@ namespace BlackMisc
                 return msgs;
             }
 
-            CStatusMessageList CFsCommonUtil::validateP3DSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &wasStopped, const QString &simulatorDir)
+            CStatusMessageList CFsCommonUtil::validateP3DSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simulatorDir)
             {
                 const QString simObjectsDir = simulatorDir.isEmpty() ? CFsCommonUtil::p3dSimObjectsDir() : CFsCommonUtil::p3dSimObjectsDirFromSimDir(simulatorDir);
                 const QStringList simObjectPaths = CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(simObjectsDir, "v4");
                 return CFsCommonUtil::validateSimObjectsPath(QSet<QString>(simObjectPaths.begin(), simObjectPaths.end()), models, validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, wasStopped);
             }
 
-            CStatusMessageList CFsCommonUtil::validateFSXSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped, const QString &simulatorDir)
+            CStatusMessageList CFsCommonUtil::validateFSXSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &stopped, const QString &simulatorDir)
             {
                 Q_UNUSED(simulatorDir)
                 const QStringList simObjectPaths = CFsCommonUtil::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths();
@@ -726,7 +726,7 @@ namespace BlackMisc
             CStatusMessageList CFsCommonUtil::validateSimObjectsPath(
                 const QSet<QString> &simObjectDirs, const CAircraftModelList &models,
                 CAircraftModelList &validModels, CAircraftModelList &invalidModels,
-                bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped)
+                bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &stopped)
             {
                 CStatusMessageList msgs;
                 if (simObjectDirs.isEmpty())

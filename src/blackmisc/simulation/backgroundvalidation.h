@@ -76,14 +76,15 @@ namespace BlackMisc
             void validated(const CSimulatorInfo &simulator, const CAircraftModelList &validModels, const CAircraftModelList &invalidModels, bool stopped, const CStatusMessageList &msgs);
 
         protected:
-            //! \copydoc CContinuousWorker::waitTimeoutMs
-            virtual unsigned long waitTimeoutMs() const override;
+            //! \copydoc CContinuousWorker::beforeQuit
+            virtual void beforeQuit() noexcept override;
 
         private:
-            mutable QReadWriteLock m_lock;        //!< lock snapshot
-            std::atomic_bool m_inWork { false };  //!< indicates a running update
-            CSimulatorInfo   m_simulator;         //!< simulator
-            QString          m_simDirectory;      //!< corresponding sim directory
+            mutable QReadWriteLock m_lock;           //!< lock snapshot
+            std::atomic_bool m_inWork     { false }; //!< indicates a running update
+            std::atomic_bool m_wasStopped { false }; //!< has been stopped or should be stopped
+            CSimulatorInfo   m_simulator;            //!< simulator
+            QString          m_simDirectory;         //!< corresponding sim directory
 
             // last result values, mostly needed when running in the distributed swift system and we want to get the values
             CAircraftModelList m_lastResultValid;

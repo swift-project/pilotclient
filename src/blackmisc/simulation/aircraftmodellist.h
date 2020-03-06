@@ -36,6 +36,7 @@
 #include <Qt>
 #include <QHash>
 #include <QMap>
+#include <atomic>
 
 namespace BlackMisc
 {
@@ -509,7 +510,7 @@ namespace BlackMisc
             CStatusMessageList validateDistributors(const CDistributorList &distributors, CAircraftModelList &validModels, CAircraftModelList &invalidModels) const;
 
             //! Validate files (file exists etc.)
-            CStatusMessageList validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &wasStopped, const QString &simRootDirectory, bool alreadySortedByFn = false) const;
+            CStatusMessageList validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simRootDirectory, bool alreadySortedByFn = false) const;
 
             //! To compact JSON format
             QJsonObject toMemoizedJson() const;

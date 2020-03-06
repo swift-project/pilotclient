@@ -140,7 +140,7 @@ namespace BlackMisc
             return ok ? dir.absoluteFilePath(fn) : "";
         }
 
-        CStatusMessageList CAircraftModelUtilities::validateModelFiles(const CSimulatorInfo &simulator, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &wasStopped, const QString &simulatorDir)
+        CStatusMessageList CAircraftModelUtilities::validateModelFiles(const CSimulatorInfo &simulator, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simulatorDir)
         {
             // some generic tests
             CStatusMessageList msgs;

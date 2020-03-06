@@ -15,6 +15,7 @@
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/blackmiscexport.h"
 
+#include <atomic>
 #include <QSet>
 #include <QStringList>
 
@@ -139,15 +140,15 @@ namespace BlackMisc
 
                 //! Validate aircraft.cfg entries (sometimes also sim.cfg)
                 //! \remark only for FSX/P3D/FS9 models
-                static CStatusMessageList validateAircraftConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &wasStopped);
+                static CStatusMessageList validateAircraftConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &wasStopped);
 
                 //! Validate if known SimObjects path are used
                 //! \remark only for P3D
-                static CStatusMessageList validateP3DSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &wasStopped, const QString &simulatorDir);
+                static CStatusMessageList validateP3DSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simulatorDir);
 
                 //! Validate if known SimObjects path are used
                 //! \remark only for FSX
-                static CStatusMessageList validateFSXSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &wasStopped, const QString &simulatorDir);
+                static CStatusMessageList validateFSXSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simulatorDir);
 
                 //! .air file filter
                 static const QString airFileFilter();
@@ -159,7 +160,7 @@ namespace BlackMisc
 
                 //! Validate if known SimObjects path are used
                 //! \remark only for P3D/FSX
-                static CStatusMessageList validateSimObjectsPath(const QSet<QString> &simObjectDirs, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped);
+                static CStatusMessageList validateSimObjectsPath(const QSet<QString> &simObjectDirs, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &stopped);
 
                 //! Log the reading of config files
                 static bool logConfigPathReading();

@@ -104,9 +104,10 @@ namespace BlackMisc
             return true;
         }
 
-        unsigned long CBackgroundValidation::waitTimeoutMs() const
+        void CBackgroundValidation::beforeQuit() noexcept
         {
-            return 0;
+            m_wasStopped = true; // stop in utility functions
+            m_updateTimer.stop();
         }
 
         void CBackgroundValidation::doWork()
@@ -119,11 +120,11 @@ namespace BlackMisc
             CAircraftModelList valid;
             CAircraftModelList invalid;
             CStatusMessageList msgs;
-            bool wasStopped = false;
             bool validated  = false;
             bool onlyErrorsAndWarnings = false;
             const CSimulatorInfo simulator = this->getCurrentSimulator();
             const qint64 started = QDateTime::currentMSecsSinceEpoch();
+            m_wasStopped = false;
 
             do
             {
@@ -144,7 +145,7 @@ namespace BlackMisc
                 }
                 else
                 {
-                    msgs = CAircraftModelUtilities::validateModelFiles(simulator, models, valid, invalid, false, 25, wasStopped, m_simDirectory);
+                    msgs = CAircraftModelUtilities::validateModelFiles(simulator, models, valid, invalid, false, 25, m_wasStopped, m_simDirectory);
                 }
 
                 const qint64 deltaTimeMs = now - started;
@@ -155,7 +156,7 @@ namespace BlackMisc
                 QWriteLocker l(&m_lock);
                 m_lastResultValid      = valid;
                 m_lastResultInvalid    = invalid;
-                m_lastResultWasStopped = wasStopped;
+                m_lastResultWasStopped = m_wasStopped;
                 m_lastResultSimulator  = simulator;
                 m_lastResultMsgs       = msgs;
                 m_checkedSimulatorMsgs.insert(simulator, msgs);
@@ -178,7 +179,7 @@ namespace BlackMisc
             if (validated)
             {
                 const bool e = !onlyErrorsAndWarnings || (!invalid.isEmpty() || msgs.hasWarningOrErrorMessages());
-                if (e || !isTimerBased) { emit this->validated(simulator, valid, invalid, wasStopped, msgs); }
+                if (e || !isTimerBased) { emit this->validated(simulator, valid, invalid, m_wasStopped, msgs); }
             }
         }
     } // ns
