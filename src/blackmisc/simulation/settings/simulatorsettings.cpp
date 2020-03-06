@@ -147,7 +147,7 @@ namespace BlackMisc
 
             QString CSimulatorSettings::convertToQString(const QString &separator, bool i18n) const
             {
-                Q_UNUSED(i18n);
+                Q_UNUSED(i18n)
                 return u"model directories: " %
                        m_modelDirectories.join(',') %
                        separator %
@@ -180,11 +180,11 @@ namespace BlackMisc
                 {
                 case IndexSimulatorDirectory:   this->setSimulatorDirectory(variant.toQString()); break;
                 case IndexModelDirectories:     this->setSimulatorDirectory(variant.toQString()); break;
-                case IndexModelExcludeDirectoryPatterns: m_excludeDirectoryPatterns = variant.value<QStringList>(); break;
                 case IndexComIntegration:       this->setComIntegrated(variant.toBool()); break;
                 case IndexRecordOwnAircraftGnd: this->setRecordOwnAircraftGnd(variant.toBool()); break;
-                case IndexCGSource:                    m_cgSource = variant.toInt(); break;
-                case IndexRecordOwnAircraftGndRadius:  m_recordedGndRadius.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+                case IndexModelExcludeDirectoryPatterns: m_excludeDirectoryPatterns = variant.value<QStringList>(); break;
+                case IndexCGSource:                      m_cgSource = variant.toInt(); break;
+                case IndexRecordOwnAircraftGndRadius:    m_recordedGndRadius.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
                 default: CValueObject::setPropertyByIndex(index, variant); break;
                 }
             }
@@ -204,10 +204,10 @@ namespace BlackMisc
                 }
                 switch (simulator.getSimulator())
                 {
-                case CSimulatorInfo::FG:  return m_simSettingsFG.get();
-                case CSimulatorInfo::FS9: return m_simSettingsFs9.get();
-                case CSimulatorInfo::FSX: return m_simSettingsFsx.get();
-                case CSimulatorInfo::P3D: return m_simSettingsP3D.get();
+                case CSimulatorInfo::FG:     return m_simSettingsFG.get();
+                case CSimulatorInfo::FS9:    return m_simSettingsFs9.get();
+                case CSimulatorInfo::FSX:    return m_simSettingsFsx.get();
+                case CSimulatorInfo::P3D:    return m_simSettingsP3D.get();
                 case CSimulatorInfo::XPLANE: return m_simSettingsXP.get();
 
                 default:
@@ -510,7 +510,7 @@ namespace BlackMisc
 
             QString CSimulatorMessagesSettings::convertToQString(bool i18n) const
             {
-                Q_UNUSED(i18n);
+                Q_UNUSED(i18n)
                 static const QString s("Enabled %1, text messages: %2, severity: %3");
                 QString severity;
                 if (this->isRelayTechnicalMessages())
@@ -736,21 +736,21 @@ namespace BlackMisc
 
             QString CFsxP3DSettings::convertToQString(bool i18n) const
             {
-                Q_UNUSED(i18n);
+                Q_UNUSED(i18n)
                 return u"SimulatedObject: " % boolToYesNo(m_useSimulatedObjectAdding) %
                        u" SB offsets: " % boolToYesNo(m_useSbOffsets);
             }
 
             CVariant CFsxP3DSettings::propertyByIndex(const CPropertyIndex &index) const
             {
-                Q_UNUSED(index);
+                Q_UNUSED(index)
                 return {};
             }
 
             void CFsxP3DSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
             {
-                Q_UNUSED(index);
-                Q_UNUSED(variant);
+                Q_UNUSED(index)
+                Q_UNUSED(variant)
             }
 
             CFsxP3DSettings CMultiSimulatorDetailsSettings::getSettings(const CSimulatorInfo &sim) const
