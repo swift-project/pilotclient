@@ -30,9 +30,7 @@ namespace XSwiftBus
         if (! configFile.is_open()) { return; }
 
         std::string line;
-        int lineNo = 1;
-
-        while (std::getline(configFile, line))
+        for (int lineNo = 1; std::getline(configFile, line); ++lineNo)
         {
             line.erase(std::remove_if(line.begin(), line.end(), isspace), line.end());
             if (line.empty() || line[0] == '#') { continue; }
@@ -41,7 +39,6 @@ namespace XSwiftBus
             if (delimiterPos == std::string::npos)
             {
                 WARNING_LOG("xswiftbus.conf line " + std::to_string(lineNo) + ": Skipping invalid line!");
-                lineNo++;
                 continue;
             }
 
@@ -51,7 +48,6 @@ namespace XSwiftBus
             if (key.empty() || value.empty())
             {
                 WARNING_LOG("xswiftbus.conf line " + std::to_string(lineNo) + ": Skipping invalid line!");
-                lineNo++;
                 continue;
             }
 
@@ -64,18 +60,14 @@ namespace XSwiftBus
             else
             {
                 WARNING_LOG("xswiftbus.conf line " + std::to_string(lineNo) + ": Unknown variable " + key + "!");
-                lineNo++;
                 continue;
             }
 
             if (! valid)
             {
                 WARNING_LOG("xswiftbus.conf line " + std::to_string(lineNo) + ": Skipping invalid line!");
-                lineNo++;
                 continue;
             }
-
-            lineNo++;
         }
     }
 
