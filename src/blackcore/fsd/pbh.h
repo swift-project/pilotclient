@@ -55,12 +55,12 @@ namespace BlackCore
         {
             PBH pbhstrct;
             pbhstrct.pitch = qFloor(pitch * pitchMultiplier());
-            pbhstrct.bank = qFloor(bank * bankMultiplier());
-            pbhstrct.hdg = static_cast<unsigned int>(heading * headingMultiplier());
+            pbhstrct.bank  = qFloor(bank * bankMultiplier());
+            pbhstrct.hdg   = static_cast<unsigned int>(heading * headingMultiplier());
 
             // FSD has inverted pitch and bank angles
             pbhstrct.pitch = ~pbhstrct.pitch;
-            pbhstrct.bank = ~pbhstrct.bank;
+            pbhstrct.bank  = ~pbhstrct.bank;
 
             pbhstrct.onground = onGround ? 1 : 0;
 
@@ -77,10 +77,10 @@ namespace BlackCore
 
             // MSFS has inverted pitch and bank angles
             iPitch = ~iPitch;
-            iBank = ~iBank;
+            iBank  = ~iBank;
 
-            pitch = iPitch;
-            bank = iBank;
+            pitch   = iPitch;
+            bank    = iBank;
             heading = pbhstrct.hdg / headingMultiplier();
 
             onGround = pbhstrct.onground == 1;
