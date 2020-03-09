@@ -63,7 +63,7 @@ namespace XSwiftBus
             else if (stringCompareCaseInsensitive(key, "tcas")) { valid = parseTcas(value); }
             else
             {
-                WARNING_LOG("xswiftbus.conf line " + std::to_string(lineNo) + ": Unknown variable " + value + "!");
+                WARNING_LOG("xswiftbus.conf line " + std::to_string(lineNo) + ": Unknown variable " + key + "!");
                 lineNo++;
                 continue;
             }
