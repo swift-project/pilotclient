@@ -36,12 +36,12 @@ namespace BlackCore
             static QString pdu() { return "#SB"; }
 
             //! Properties @{
-            double m_latitude = 0.0;
+            double m_latitude  = 0.0;
             double m_longitude = 0.0;
             int m_altitudeTrue = 0.0;
-            int m_groundSpeed = 0.0;
+            int m_groundSpeed  = 0.0;
             double m_pitch = 0.0;
-            double m_bank = 0.0;
+            double m_bank  = 0.0;
             double m_heading = 0.0;
             bool   m_onGround = false;
             //! @}
@@ -55,12 +55,12 @@ namespace BlackCore
         {
             return  lhs.sender() == rhs.sender() &&
                     lhs.receiver() == rhs.receiver() &&
-                    lhs.m_latitude == rhs.m_latitude &&
-                    lhs.m_longitude == rhs.m_longitude &&
+                    qFuzzyCompare(lhs.m_latitude,  rhs.m_latitude)  &&
+                    qFuzzyCompare(lhs.m_longitude, rhs.m_longitude) &&
                     lhs.m_altitudeTrue == rhs.m_altitudeTrue &&
-                    lhs.m_pitch == rhs.m_pitch &&
-                    lhs.m_bank == rhs.m_bank &&
-                    lhs.m_heading == rhs.m_heading &&
+                    qFuzzyCompare(lhs.m_pitch, rhs.m_pitch)  &&
+                    qFuzzyCompare(lhs.m_bank,  rhs.m_bank)   &&
+                    qFuzzyCompare(lhs.m_heading, rhs.m_heading) &&
                     lhs.m_onGround == rhs.m_onGround;
         }
 

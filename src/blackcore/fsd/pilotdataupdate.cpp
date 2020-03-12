@@ -48,7 +48,7 @@ namespace BlackCore
             tokens.push_back(m_sender);
             tokens.push_back(QString::number(m_transponderCode));
             tokens.push_back(toQString(m_rating));
-            tokens.push_back(QString::number(m_latitude, 'f', 5));
+            tokens.push_back(QString::number(m_latitude,  'f', 5));
             tokens.push_back(QString::number(m_longitude, 'f', 5));
             tokens.push_back(QString::number(m_altitudeTrue));
             tokens.push_back(QString::number(m_groundSpeed));
@@ -66,7 +66,7 @@ namespace BlackCore
             }
 
             double pitch = 0.0;
-            double bank = 0.0;
+            double bank  = 0.0;
             double heading = 0.0;
             bool onGround = false;
             unpackPBH(tokens[8].toUInt(), pitch, bank, heading, onGround);

@@ -63,14 +63,14 @@ namespace BlackCore
                     lhs.m_transponderMode == rhs.m_transponderMode &&
                     lhs.m_transponderCode == rhs.m_transponderCode &&
                     lhs.m_rating == rhs.m_rating &&
-                    lhs.m_latitude == rhs.m_latitude &&
-                    lhs.m_longitude == rhs.m_longitude &&
+                    qFuzzyCompare(lhs.m_latitude,  rhs.m_latitude)  &&
+                    qFuzzyCompare(lhs.m_longitude, rhs.m_longitude) &&
                     lhs.m_altitudeTrue == rhs.m_altitudeTrue &&
                     lhs.m_altitudePressure == rhs.m_altitudePressure &&
-                    lhs.m_groundSpeed == rhs.m_groundSpeed &&
-                    lhs.m_pitch == rhs.m_pitch &&
-                    lhs.m_bank == rhs.m_bank &&
-                    lhs.m_heading == rhs.m_heading &&
+                    lhs.m_groundSpeed == rhs.m_groundSpeed  &&
+                    qFuzzyCompare(lhs.m_pitch, rhs.m_pitch) &&
+                    qFuzzyCompare(lhs.m_bank, rhs.m_bank)   &&
+                    qFuzzyCompare(lhs.m_heading, rhs.m_heading) &&
                     lhs.m_onGround == rhs.m_onGround;
         }
 
