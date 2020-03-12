@@ -236,7 +236,7 @@ namespace BlackSimPlugin
             void resetFlightgearData()
             {
                 m_flightgearData = { "", "", 0, 0, 0, 0, 0, 0, 0, false, 122800, 122800, 122800, 122800, 2000, 0, false, false, false, false,
-                                     false, false, 0, 0, {}, 0.0, 0.0
+                                     false, false, 0, 0, {}, 0.0, 0.0, 0.0
                                    };
 
             }
