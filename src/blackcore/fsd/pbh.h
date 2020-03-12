@@ -24,8 +24,8 @@ namespace BlackCore
             unsigned int pbh = 0; //!< Pitch/Bank/Heading as integer value
             struct
             {
-                unsigned int unused   : 1; //!< unused bit
-                unsigned int onground : 1; //!< Onground flag
+                unsigned int unused   : 1;  //!< unused bit
+                unsigned int onground : 1;  //!< Onground flag
                 unsigned int hdg      : 10; //!< Heading
                 int bank              : 10; //!< Bank
                 int pitch             : 10; //!< Pitch
@@ -54,16 +54,18 @@ namespace BlackCore
         inline void packPBH(double pitch, double bank, double heading, bool onGround, quint32 &pbh)
         {
             PBH pbhstrct;
-            pbhstrct.pitch = qFloor(pitch * pitchMultiplier());
-            pbhstrct.bank  = qFloor(bank * bankMultiplier());
+            pbhstrct.pitch = qFloor(pitch * -pitchMultiplier()); // the "-" is the inverted pitch/bank
+            pbhstrct.bank  = qFloor(bank  * -bankMultiplier());
             pbhstrct.hdg   = static_cast<unsigned int>(heading * headingMultiplier());
 
             // FSD has inverted pitch and bank angles
-            pbhstrct.pitch = ~pbhstrct.pitch;
-            pbhstrct.bank  = ~pbhstrct.bank;
+            // based on discussion https://discordapp.com/channels/539048679160676382/539925070550794240/687390301530095634
+            // we use *-1 inversion, not "~" (vPilot also uses *-1)
+            // with "~" 0->-1 (that is why we saw many -1 PB values on ground)
+            // pbhstrct.pitch = ~pbhstrct.pitch;
+            // pbhstrct.bank  = ~pbhstrct.bank;
 
             pbhstrct.onground = onGround ? 1 : 0;
-
             pbh = pbhstrct.pbh;
         }
 
@@ -72,12 +74,15 @@ namespace BlackCore
         {
             PBH pbhstrct;
             pbhstrct.pbh = pbh;
-            int iPitch = qFloor(pbhstrct.pitch / pitchMultiplier());
-            int iBank = qFloor(pbhstrct.bank / bankMultiplier());
+            const int iPitch = qFloor(pbhstrct.pitch / -pitchMultiplier()); // the "-" is the inverted pitch/bank
+            const int iBank  = qFloor(pbhstrct.bank  / -bankMultiplier());
 
-            // MSFS has inverted pitch and bank angles
-            iPitch = ~iPitch;
-            iBank  = ~iBank;
+            // FSD has inverted pitch and bank angles
+            // based on discussion https://discordapp.com/channels/539048679160676382/539925070550794240/687390301530095634
+            // we use *-1 inversion, not "~" (vPilot also uses *-1)
+            // with "~" 0->-1 (that is why we saw many -1 PB values on ground)
+            // iPitch = ~iPitch;
+            // iBank  = ~iBank;
 
             pitch   = iPitch;
             bank    = iBank;
