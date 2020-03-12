@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     QApplication qa(argc, argv);
     Q_UNUSED(qa) // application init needed
 
-    initWindowsAudioDevices();
+    // initWindowsAudioDevices();
     CCrashHandler::instance()->init();
     CSwiftGuiStdApplication a; // application with contexts
     a.setSignalStartupAutomatically(false); // application will signal startup on its own

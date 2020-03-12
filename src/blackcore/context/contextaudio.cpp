@@ -165,10 +165,13 @@ namespace BlackCore
         void CContextAudioBase::initVoiceClient()
         {
             if (m_voiceClient) { return; }
-            m_voiceClient = new CAfvClient(CVoiceSetup().getAfvVoiceServerUrl(), this);
 
-            const CVoiceSetup vs = m_voiceSettings.getThreadLocal();
-            m_voiceClient->updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
+            const CAudioDeviceInfoList devices = CAudioDeviceInfoList::allDevices();
+            if (devices != m_activeLocalDevices)
+            {
+                m_activeLocalDevices = devices;
+                emit this->changedLocalAudioDevices(devices);
+            }
 
 #ifdef Q_OS_WIN
             if (!m_winCoInitialized)
@@ -188,6 +191,10 @@ namespace BlackCore
             }
 #endif
 
+            m_voiceClient = new CAfvClient(CVoiceSetup().getAfvVoiceServerUrl(), this);
+            const CVoiceSetup vs = m_voiceSettings.getThreadLocal();
+            m_voiceClient->updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
+
             Q_ASSERT_X(CThreadUtils::isApplicationThread(m_voiceClient->thread()), Q_FUNC_INFO, "Should be in main thread");
             m_voiceClient->start(); // thread
             Q_ASSERT_X(m_voiceClient->owner() == this, Q_FUNC_INFO, "Wrong owner");
@@ -201,13 +208,6 @@ namespace BlackCore
             connect(m_voiceClient, &CAfvClient::stoppedAudio, this, &CContextAudioBase::stoppedAudio, Qt::QueuedConnection);
             connect(m_voiceClient, &CAfvClient::ptt,          this, &CContextAudioBase::ptt,          Qt::QueuedConnection);
             connect(m_voiceClient, &CAfvClient::connectionStatusChanged, this, &CContextAudioBase::onAfvConnectionStatusChanged, Qt::QueuedConnection);
-
-            const CAudioDeviceInfoList devices = CAudioDeviceInfoList::allDevices();
-            if (devices != m_activeLocalDevices)
-            {
-                m_activeLocalDevices = devices;
-                emit this->changedLocalAudioDevices(devices);
-            }
         }
 
         void CContextAudioBase::terminateVoiceClient()
