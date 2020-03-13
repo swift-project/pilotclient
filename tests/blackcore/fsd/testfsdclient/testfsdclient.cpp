@@ -79,6 +79,7 @@ namespace BlackFsdTest
         void testSendDeleteAtc();
         void testSendPilotDataUpdate1();
         void testSendPilotDataUpdate2();
+        void testSendPilotDataUpdate3();
         void testSendAtcDataUpdate();
         void testSendPing();
         void testSendPong();
@@ -249,10 +250,10 @@ namespace BlackFsdTest
         QCOMPARE(situation.getPressureAltitude(), CAltitude(111, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::ft()));
         QCOMPARE(situation.getGroundSpeed(), CSpeed(0.0, CSpeedUnit::kts()));
         // TODO
-//        QVERIFY(qAbs(arguments.at(9).toDouble()) < 1.0);
-//        QVERIFY(qAbs(arguments.at(10).toDouble()) < 1.0);
-//        QVERIFY(qAbs(arguments.at(11).toDouble() - 25) < 1.0);
-//        QCOMPARE(arguments.at(12).toBool(), false);
+        //        QVERIFY(qAbs(arguments.at(9).toDouble()) < 1.0);
+        //        QVERIFY(qAbs(arguments.at(10).toDouble()) < 1.0);
+        //        QVERIFY(qAbs(arguments.at(11).toDouble() - 25) < 1.0);
+        //        QCOMPARE(arguments.at(12).toBool(), false);
     }
 
     void CTestFSDClient::testAtcDataUpdate()
@@ -423,8 +424,8 @@ namespace BlackFsdTest
 
         const Geo::CCoordinateGeodetic ownPosition(48.353855, 11.786155);
         const CHeading heading(25.0, CAngleUnit::deg());
-        const CAngle pitch(0.0, CAngleUnit::deg());
-        const CAngle bank(0.0, CAngleUnit::deg());
+        const CAngle pitch(1.0, CAngleUnit::deg());
+        const CAngle bank (1.0, CAngleUnit::deg());
         const CSpeed gs(0.0, CSpeedUnit::kts());
         CAircraftSituation situation;
         situation.setPosition(ownPosition);
@@ -442,8 +443,8 @@ namespace BlackFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
-        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>@N:ABCD:1200:0:48.35386:11.78616:110:0:4294963484:1");
+        const CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>@N:ABCD:1200:0:48.35386:11.78616:110:0:4286566684:1");
     }
 
     void CTestFSDClient::testSendPilotDataUpdate2()
@@ -453,7 +454,7 @@ namespace BlackFsdTest
         const Geo::CCoordinateGeodetic ownPosition(48.353855, 11.786155);
         const CHeading heading(25.0, CAngleUnit::deg());
         const CAngle pitch(0.0, CAngleUnit::deg());
-        const CAngle bank(0.0, CAngleUnit::deg());
+        const CAngle bank (0.0, CAngleUnit::deg());
         const CSpeed gs(0.0, CSpeedUnit::kts());
         CAircraftSituation situation;
         situation.setPosition(ownPosition);
@@ -472,7 +473,41 @@ namespace BlackFsdTest
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
         CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
-        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>@N:ABCD:1200:0:48.35386:11.78616:110:0:4294963484:1");
+
+        // changed after we changed to PB inversion to *-1
+        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>@N:ABCD:1200:0:48.35386:11.78616:110:0:284:1");
+        // QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>@N:ABCD:1200:0:48.35386:11.78616:110:0:4294963484:1");
+    }
+
+    void CTestFSDClient::testSendPilotDataUpdate3()
+    {
+        QSignalSpy spy(client, &CFSDClient::rawFsdMessage);
+
+        const Geo::CCoordinateGeodetic ownPosition(48.353855, 11.786155);
+        const CHeading heading(25.0, CAngleUnit::deg());
+        const CAngle pitch(-1.0, CAngleUnit::deg());
+        const CAngle bank (-1.0, CAngleUnit::deg());
+        const CSpeed gs(0.0, CSpeedUnit::kts());
+        CAircraftSituation situation;
+        situation.setPosition(ownPosition);
+        situation.setAltitude(CAltitude(110, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
+        situation.setPressureAltitude(CAltitude(111, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::ft()));
+        situation.setGroundSpeed(gs);
+        situation.setPitch(pitch);
+        situation.setBank(bank);
+        situation.setHeading(heading);
+        COwnAircraftProviderDummy::instance()->updateOwnSituation(situation);
+        COwnAircraftProviderDummy::instance()->updateCockpit({}, {}, CTransponder(1200, CTransponder::ModeC), {});
+
+        client->sendPilotDataUpdate();
+
+        QCOMPARE(spy.count(), 1);
+        QList<QVariant> arguments = spy.takeFirst();
+        QCOMPARE(arguments.size(), 1);
+        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+
+        // changed after we changed to PB inversion to *-1
+        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>@N:ABCD:1200:0:48.35386:11.78616:110:0:8397084:1");
     }
 
     void CTestFSDClient::testSendAtcDataUpdate()
