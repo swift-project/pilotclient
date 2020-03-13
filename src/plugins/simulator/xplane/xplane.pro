@@ -25,7 +25,7 @@ HEADERS += *.h
 DISTFILES += simulatorxplane.json
 DESTDIR = $$DestRoot/bin/plugins/simulator
 
-isEmpty(XSWIFTBUS_COMMIT): error(Missing XSWIFTBUS_COMMIT variable)
+!qtc_run:isEmpty(XSWIFTBUS_COMMIT): error(Missing XSWIFTBUS_COMMIT variable)
 DEFINES += XSWIFTBUS_COMMIT=\\\"$$XSWIFTBUS_COMMIT\\\"
 
 win32 {

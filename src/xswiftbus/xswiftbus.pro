@@ -80,7 +80,7 @@ DEFINES += XPMP_CLIENT_LONGNAME=\\\"xswiftbus\\\"
 
 DEFINES += XSWIFTBUS_VERSION=\\\"$$swiftConfig(version.full).$$VER_REV\\\"
 
-isEmpty(XSWIFTBUS_COMMIT): error(Missing XSWIFTBUS_COMMIT variable)
+!qtc_run:isEmpty(XSWIFTBUS_COMMIT): error(Missing XSWIFTBUS_COMMIT variable)
 DEFINES += XSWIFTBUS_COMMIT=\\\"$$XSWIFTBUS_COMMIT\\\"
 
 # X-Plane plugins must follow a prescribed filename and directory structure.
