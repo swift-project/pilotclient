@@ -95,6 +95,8 @@ namespace BlackCore
 
             const CReaderSettings settings = m_settings.get();
             this->logNetworkReplyReceived(nwReplyPtr);
+            const QUrl url = nwReply->url();
+
             if (nwReply->error() == QNetworkReply::NoError)
             {
                 static const QString timestampFormat("yyyy-MM-dd HH:mm:ss");
@@ -105,7 +107,7 @@ namespace BlackCore
                 {
                     CLogMessage(this).warning(u"Reading bookings wrong XML format for '%1'") << nwReply->url().toString();
                     m_failures++;
-                    emit this->dataRead(CEntityFlags::BookingEntity, CEntityFlags::ReadFailed, 0);
+                    emit this->dataRead(CEntityFlags::BookingEntity, CEntityFlags::ReadFailed, 0, url);
                     return;
                 }
 
@@ -121,7 +123,7 @@ namespace BlackCore
                     {
                         CLogMessage(this).warning(u"Reading bookings wrong XML timestamp format for '%1'") << nwReply->url().toString();
                         m_failures++;
-                        emit this->dataRead(CEntityFlags::BookingEntity, CEntityFlags::ReadFailed, 0);
+                        emit this->dataRead(CEntityFlags::BookingEntity, CEntityFlags::ReadFailed, 0, url);
                         return;
                     }
                     else
@@ -202,13 +204,13 @@ namespace BlackCore
                     this->setInitialAndPeriodicTime(settings.getInitialTime().toMs(), 3 * settings.getPeriodicTime().toMs()); // slow down, we have some bookings now
 
                     emit this->atcBookingsRead(bookedStations);
-                    emit this->dataRead(CEntityFlags::BookingEntity, CEntityFlags::ReadFinished, bookedStations.size());
+                    emit this->dataRead(CEntityFlags::BookingEntity, CEntityFlags::ReadFinished, bookedStations.size(), url);
                 } // node
             }
             else
             {
                 // network error
-                CLogMessage(this).warning(u"Reading bookings failed '%1' '%2'") << nwReply->errorString() << nwReply->url().toString();
+                CLogMessage(this).warning(u"Reading bookings failed '%1' '%2'") << nwReply->errorString() << url.toString();
                 nwReply->abort();
                 m_failures++;
                 if (m_failures > 3)
@@ -217,7 +219,7 @@ namespace BlackCore
                     this->setInitialAndPeriodicTime(settings.getInitialTime().toMs(), 10 * settings.getPeriodicTime().toMs()); // massively slow down
                     CLogMessage(this).warning(u"Too many booking reader failures %1, slower updates") << m_failures;
                 }
-                emit this->dataRead(CEntityFlags::BookingEntity, CEntityFlags::ReadFailed, 0);
+                emit this->dataRead(CEntityFlags::BookingEntity, CEntityFlags::ReadFailed, 0, url);
             }
         } // method
 

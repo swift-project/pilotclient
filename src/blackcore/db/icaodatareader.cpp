@@ -178,16 +178,18 @@ namespace BlackCore
             this->threadAssertCheck(); // runs in background thread
             if (!this->doWorkCheck()) { return; }
             entities &= CEntityFlags::AllIcaoCountriesCategory;
+
             if (!this->isInternetAccessible())
             {
-                emit this->dataRead(entities, CEntityFlags::ReadSkipped, 0);
+                emit this->dataRead(entities, CEntityFlags::ReadSkipped, 0, {});
                 return;
             }
 
             CEntityFlags::Entity entitiesTriggered = CEntityFlags::NoEntity;
+            CUrl url;
             if (entities.testFlag(CEntityFlags::AircraftIcaoEntity))
             {
-                CUrl url(this->getAircraftIcaoUrl(mode));
+                url = this->getAircraftIcaoUrl(mode);
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
@@ -202,7 +204,7 @@ namespace BlackCore
 
             if (entities.testFlag(CEntityFlags::AirlineIcaoEntity))
             {
-                CUrl url(this->getAirlineIcaoUrl(mode));
+                url = this->getAirlineIcaoUrl(mode);
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
@@ -217,7 +219,7 @@ namespace BlackCore
 
             if (entities.testFlag(CEntityFlags::CountryEntity))
             {
-                CUrl url(this->getCountryUrl(mode));
+                url = this->getCountryUrl(mode);
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
@@ -232,7 +234,7 @@ namespace BlackCore
 
             if (entities.testFlag(CEntityFlags::AircraftCategoryEntity))
             {
-                CUrl url(this->getAircraftCategoryUrl(mode));
+                url = this->getAircraftCategoryUrl(mode);
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
@@ -247,7 +249,7 @@ namespace BlackCore
 
             if (entitiesTriggered != CEntityFlags::NoEntity)
             {
-                emit this->dataRead(entitiesTriggered, CEntityFlags::ReadStarted, 0);
+                emit this->dataRead(entitiesTriggered, CEntityFlags::ReadStarted, 0, url);
             }
         }
 
@@ -295,14 +297,16 @@ namespace BlackCore
             if (!this->doWorkCheck()) { return; }
 
             const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+            const QUrl url = nwReply->url();
+
             if (res.hasErrorMessage())
             {
                 CLogMessage::preformatted(res.lastWarningOrAbove());
-                emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFailed, 0);
+                emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFailed, 0, url);
                 return;
             }
 
-            emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadParsing, 0);
+            emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadParsing, 0, url);
             CAircraftIcaoCodeList codes;
             CAircraftIcaoCodeList inconsistent;
             const CAircraftCategoryList categories = this->getAircraftCategories();
@@ -320,7 +324,7 @@ namespace BlackCore
                 QElapsedTimer time;
                 time.start();
                 codes  = CAircraftIcaoCodeList::fromDatabaseJson(res, categories, true, &inconsistent);
-                this->logParseMessage("aircraft ICAO", codes.size(), time.elapsed(), res);
+                this->logParseMessage("aircraft ICAO", codes.size(), static_cast<int>(time.elapsed()), res);
             }
 
             if (!inconsistent.isEmpty())
@@ -350,15 +354,16 @@ namespace BlackCore
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             if (!this->doWorkCheck()) { return; }
 
+            const QUrl url = nwReply->url();
             const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
             {
                 CLogMessage::preformatted(res.lastWarningOrAbove());
-                emit this->dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFailed, 0);
+                emit this->dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFailed, 0, url);
                 return;
             }
 
-            emit this->dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadParsing, 0);
+            emit this->dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadParsing, 0, url);
             CAirlineIcaoCodeList codes;
             CAirlineIcaoCodeList inconsistent;
             if (res.isRestricted())
@@ -375,7 +380,7 @@ namespace BlackCore
                 QElapsedTimer time;
                 time.start();
                 codes = CAirlineIcaoCodeList::fromDatabaseJson(res, true, &inconsistent);
-                this->logParseMessage("airline ICAO", codes.size(), time.elapsed(), res);
+                this->logParseMessage("airline ICAO", codes.size(), static_cast<int>(time.elapsed()), res);
             }
 
             if (!inconsistent.isEmpty())
@@ -404,14 +409,16 @@ namespace BlackCore
         {
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+            const QUrl url = nwReply->url();
+
             if (res.hasErrorMessage())
             {
                 CLogMessage::preformatted(res.lastWarningOrAbove());
-                emit this->dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFailed, 0);
+                emit this->dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFailed, 0, url);
                 return;
             }
 
-            emit this->dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadParsing, 0);
+            emit this->dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadParsing, 0, url);
             CCountryList countries;
             if (res.isRestricted())
             {
@@ -427,7 +434,7 @@ namespace BlackCore
                 QElapsedTimer time;
                 time.start();
                 countries = CCountryList::fromDatabaseJson(res);
-                this->logParseMessage("countries", countries.size(), time.elapsed(), res);
+                this->logParseMessage("countries", countries.size(), static_cast<int>(time.elapsed()), res);
             }
 
             if (!this->doWorkCheck()) { return; }
@@ -449,14 +456,16 @@ namespace BlackCore
         {
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+            const QUrl url = nwReply->url();
+
             if (res.hasErrorMessage())
             {
                 CLogMessage::preformatted(res.lastWarningOrAbove());
-                emit this->dataRead(CEntityFlags::AircraftCategoryEntity, CEntityFlags::ReadFailed, 0);
+                emit this->dataRead(CEntityFlags::AircraftCategoryEntity, CEntityFlags::ReadFailed, 0, url);
                 return;
             }
 
-            emit this->dataRead(CEntityFlags::AircraftCategoryEntity, CEntityFlags::ReadParsing, 0);
+            emit this->dataRead(CEntityFlags::AircraftCategoryEntity, CEntityFlags::ReadParsing, 0, url);
             CAircraftCategoryList categories;
             if (res.isRestricted())
             {
@@ -472,7 +481,7 @@ namespace BlackCore
                 QElapsedTimer time;
                 time.start();
                 categories  = CAircraftCategoryList::fromDatabaseJson(res);
-                this->logParseMessage("categories", categories.size(), time.elapsed(), res);
+                this->logParseMessage("categories", categories.size(), static_cast<int>(time.elapsed()), res);
             }
 
             if (!this->doWorkCheck()) { return; }
@@ -516,6 +525,7 @@ namespace BlackCore
                 }
                 else
                 {
+                    const QUrl url = QUrl::fromLocalFile(fi.absoluteFilePath());
                     const QJsonObject countriesJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
                     if (countriesJson.isEmpty())
                     {
@@ -529,11 +539,11 @@ namespace BlackCore
                             const int c = countries.size();
                             msgs.push_back(m_countryCache.set(countries, fi.birthTime().toUTC().toMSecsSinceEpoch()));
                             reallyRead |= CEntityFlags::CountryEntity;
-                            emit this->dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, c);
+                            emit this->dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, c, url);
                         }
                         catch (const CJsonException &ex)
                         {
-                            emit this->dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFailed, 0);
+                            emit this->dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFailed, 0, url);
                             msgs.push_back(ex.toStatusMessage(this, QStringLiteral("Reading countries from '%1'").arg(fileName)));
                         }
                     }
@@ -554,6 +564,7 @@ namespace BlackCore
                 }
                 else
                 {
+                    const QUrl url = QUrl::fromLocalFile(fi.absoluteFilePath());
                     const QJsonObject aircraftJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
                     if (aircraftJson.isEmpty())
                     {
@@ -567,11 +578,11 @@ namespace BlackCore
                             const int c = aircraftIcaos.size();
                             msgs.push_back(m_aircraftIcaoCache.set(aircraftIcaos, fi.birthTime().toUTC().toMSecsSinceEpoch()));
                             reallyRead |= CEntityFlags::AircraftIcaoEntity;
-                            emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, c);
+                            emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, c, url);
                         }
                         catch (const CJsonException &ex)
                         {
-                            emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFailed, 0);
+                            emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFailed, 0, url);
                             msgs.push_back(ex.toStatusMessage(this, QStringLiteral("Reading aircraft ICAOs from '%1'").arg(fileName)));
                         }
                     }
@@ -592,6 +603,7 @@ namespace BlackCore
                 }
                 else
                 {
+                    const QUrl url = QUrl::fromLocalFile(fi.absoluteFilePath());
                     const QJsonObject airlineJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
                     if (airlineJson.isEmpty())
                     {
@@ -605,11 +617,11 @@ namespace BlackCore
                             const int c = airlineIcaos.size();
                             msgs.push_back(m_airlineIcaoCache.set(airlineIcaos, fi.birthTime().toUTC().toMSecsSinceEpoch()));
                             reallyRead |= CEntityFlags::AirlineIcaoEntity;
-                            emit this->dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, c);
+                            emit this->dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, c, url);
                         }
                         catch (const CJsonException &ex)
                         {
-                            emit this->dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFailed, 0);
+                            emit this->dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFailed, 0, url);
                             msgs.push_back(ex.toStatusMessage(this, QStringLiteral("Reading airline ICAOs from '%1'").arg(fileName)));
                         }
                     }
@@ -630,6 +642,7 @@ namespace BlackCore
                 }
                 else
                 {
+                    const QUrl url = QUrl::fromLocalFile(fi.absoluteFilePath());
                     const QJsonObject aircraftCategory(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
                     if (aircraftCategory.isEmpty())
                     {
@@ -643,11 +656,11 @@ namespace BlackCore
                             const int c = aircraftCategories.size();
                             msgs.push_back(m_categoryCache.set(aircraftCategories, fi.birthTime().toUTC().toMSecsSinceEpoch()));
                             reallyRead |= CEntityFlags::AircraftCategoryEntity;
-                            emit this->dataRead(CEntityFlags::AircraftCategoryEntity, CEntityFlags::ReadFinished, c);
+                            emit this->dataRead(CEntityFlags::AircraftCategoryEntity, CEntityFlags::ReadFinished, c, url);
                         }
                         catch (const CJsonException &ex)
                         {
-                            emit this->dataRead(CEntityFlags::AircraftCategoryEntity, CEntityFlags::ReadFailed, 0);
+                            emit this->dataRead(CEntityFlags::AircraftCategoryEntity, CEntityFlags::ReadFailed, 0, url);
                             msgs.push_back(ex.toStatusMessage(this, QStringLiteral("Reading categories from '%1'").arg(fileName)));
                         }
                     }

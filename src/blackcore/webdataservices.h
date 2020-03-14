@@ -97,7 +97,7 @@ namespace BlackCore
         CWebDataServices(CWebReaderFlags::WebReader readerFlags, const BlackCore::Db::CDatabaseReaderConfigList &dbReaderConfig, BlackMisc::Restricted<CApplication>, QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CWebDataServices();
+        virtual ~CWebDataServices() override;
 
         //! Shutdown
         void gracefulShutdown();
@@ -516,7 +516,7 @@ namespace BlackCore
 
     signals:
         //! Combined read signal
-        void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+        void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
         //! Download progress for an entity
         void entityDownloadProgress(BlackMisc::Network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
@@ -580,7 +580,7 @@ namespace BlackCore
         void vatsimStatusFileRead(int lines);
 
         //! Read finished from reader
-        void readFromSwiftReader(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+        void readFromSwiftReader(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
         //! Init the readers
         void initReaders(CWebReaderFlags::WebReader readersNeeded, BlackMisc::Network::CEntityFlags::Entity entities);

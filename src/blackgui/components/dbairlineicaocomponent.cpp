@@ -44,7 +44,7 @@ namespace BlackGui
             connect(ui->tvp_AirlineIcao, &CAirlineIcaoCodeView::requestNewBackendData, this, &CDbAirlineIcaoComponent::onReload);
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAirlineIcaoComponent::onIcaoRead, Qt::QueuedConnection);
             connect(sGui->getWebDataServices(), &CWebDataServices::entityDownloadProgress, this, &CDbAirlineIcaoComponent::onEntityDownloadProgress, Qt::QueuedConnection);
-            this->onIcaoRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getAirlineIcaoCodesCount());
+            this->onIcaoRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getAirlineIcaoCodesCount(), {});
         }
 
         CDbAirlineIcaoComponent::~CDbAirlineIcaoComponent()
@@ -55,9 +55,11 @@ namespace BlackGui
             return ui->tvp_AirlineIcao;
         }
 
-        void CDbAirlineIcaoComponent::onIcaoRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+        void CDbAirlineIcaoComponent::onIcaoRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count, const QUrl &url)
         {
-            Q_UNUSED(count);
+            Q_UNUSED(count)
+            Q_UNUSED(url)
+
             if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
             if (!entity.testFlag(CEntityFlags::AirlineIcaoEntity)) { return; }
 

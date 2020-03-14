@@ -48,7 +48,7 @@ namespace BlackGui
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect");
             }
 
-            Q_UNUSED(c);
+            Q_UNUSED(c)
         }
 
         CInfoBarWebReadersStatusBase::~CInfoBarWebReadersStatusBase()

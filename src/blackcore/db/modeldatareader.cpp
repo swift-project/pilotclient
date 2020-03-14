@@ -192,14 +192,16 @@ namespace BlackCore
             entities &= CEntityFlags::DistributorLiveryModel;
             if (!this->isInternetAccessible())
             {
-                emit this->dataRead(entities, CEntityFlags::ReadSkipped, 0);
+                emit this->dataRead(entities, CEntityFlags::ReadSkipped, 0, {});
                 return;
             }
 
             CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
+            CUrl url;
+
             if (entities.testFlag(CEntityFlags::LiveryEntity))
             {
-                CUrl url(getLiveryUrl(mode));
+                url = this->getLiveryUrl(mode);
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
@@ -214,7 +216,7 @@ namespace BlackCore
 
             if (entities.testFlag(CEntityFlags::DistributorEntity))
             {
-                CUrl url(getDistributorUrl(mode));
+                url = this->getDistributorUrl(mode);
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
@@ -229,7 +231,7 @@ namespace BlackCore
 
             if (entities.testFlag(CEntityFlags::ModelEntity))
             {
-                CUrl url(getModelUrl(mode));
+                url = this->getModelUrl(mode);
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
@@ -244,7 +246,7 @@ namespace BlackCore
 
             if (triggeredRead != CEntityFlags::NoEntity)
             {
-                emit dataRead(triggeredRead, CEntityFlags::ReadStarted, 0);
+                emit dataRead(triggeredRead, CEntityFlags::ReadStarted, 0, url);
             }
         }
 
@@ -301,12 +303,12 @@ namespace BlackCore
             if (res.hasErrorMessage())
             {
                 CLogMessage::preformatted(res.lastWarningOrAbove());
-                emit dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFailed, 0);
+                emit dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFailed, 0, res.getUrl());
                 return;
             }
 
             // get all or incremental set of distributor
-            emit this->dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadParsing, 0);
+            emit this->dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadParsing, 0, res.getUrl());
             CLiveryList liveries;
             if (res.isRestricted())
             {
@@ -321,7 +323,7 @@ namespace BlackCore
                 QElapsedTimer time;
                 time.start();
                 liveries  = CLiveryList::fromDatabaseJson(res);
-                this->logParseMessage("liveries", liveries.size(), time.elapsed(), res);
+                this->logParseMessage("liveries", liveries.size(), static_cast<int>(time.elapsed()), res);
             }
 
             if (!this->doWorkCheck()) { return; }
@@ -349,12 +351,12 @@ namespace BlackCore
             if (res.hasErrorMessage())
             {
                 CLogMessage::preformatted(res.lastWarningOrAbove());
-                emit dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFailed, 0);
+                emit dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFailed, 0, res.getUrl());
                 return;
             }
 
             // get all or incremental set of distributors
-            emit this->dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadParsing, 0);
+            emit this->dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadParsing, 0, res.getUrl());
             CDistributorList distributors;
             if (res.isRestricted())
             {
@@ -369,7 +371,7 @@ namespace BlackCore
                 QElapsedTimer time;
                 time.start();
                 distributors = CDistributorList::fromDatabaseJson(res);
-                this->logParseMessage("distributors", distributors.size(), time.elapsed(), res);
+                this->logParseMessage("distributors", distributors.size(), static_cast<int>(time.elapsed()), res);
             }
 
             if (!this->doWorkCheck()) { return; }
@@ -394,16 +396,16 @@ namespace BlackCore
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             if (!this->doWorkCheck()) { return; }
-            CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+            const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
             {
                 CLogMessage::preformatted(res.lastWarningOrAbove());
-                emit this->dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFailed, 0);
+                emit this->dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFailed, 0, res.getUrl());
                 return;
             }
 
             // get all or incremental set of models
-            emit this->dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadParsing, 0);
+            emit this->dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadParsing, 0, res.getUrl());
 
             // use prefilled data:
             // this saves a lot of parsing time as the models do not need to re-parse the sub parts
@@ -427,7 +429,7 @@ namespace BlackCore
                 QElapsedTimer time;
                 time.start();
                 models = CAircraftModelList::fromDatabaseJsonCaching(res, icaos, categories, liveries, distributors);
-                this->logParseMessage("models", models.size(), time.elapsed(), res);
+                this->logParseMessage("models", models.size(), static_cast<int>(time.elapsed()), res);
             }
 
             // synchronized update
@@ -473,6 +475,7 @@ namespace BlackCore
                 else
                 {
                     const QJsonObject liveriesJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
+                    const QUrl url = QUrl::fromLocalFile(fi.absoluteFilePath());
                     if (liveriesJson.isEmpty())
                     {
                         msgs.push_back(CStatusMessage(this).error(u"Failed to read from file/empty file '%1'") << fileName);
@@ -484,12 +487,12 @@ namespace BlackCore
                             const CLiveryList liveries = CLiveryList::fromMultipleJsonFormats(liveriesJson);
                             const int c = liveries.size();
                             msgs.push_back(m_liveryCache.set(liveries, fi.birthTime().toUTC().toMSecsSinceEpoch()));
-                            emit this->dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, c);
+                            emit this->dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, c, url);
                             reallyRead |= CEntityFlags::LiveryEntity;
                         }
                         catch (const CJsonException &ex)
                         {
-                            emit this->dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFailed, 0);
+                            emit this->dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFailed, 0, url);
                             msgs.push_back(ex.toStatusMessage(this, QStringLiteral("Reading liveries from '%1'").arg(fileName)));
                         }
                     }
@@ -511,6 +514,8 @@ namespace BlackCore
                 else
                 {
                     const QJsonObject modelsJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
+                    const QUrl url = QUrl::fromLocalFile(fi.absoluteFilePath());
+
                     if (modelsJson.isEmpty())
                     {
                         msgs.push_back(CStatusMessage(this).error(u"Failed to read from file/empty file '%1'") << fileName);
@@ -522,12 +527,12 @@ namespace BlackCore
                             const CAircraftModelList models = CAircraftModelList::fromMultipleJsonFormats(modelsJson);
                             const int c = models.size();
                             msgs.push_back(m_modelCache.set(models, fi.birthTime().toUTC().toMSecsSinceEpoch()));
-                            emit this->dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, c);
+                            emit this->dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, c, url);
                             reallyRead |= CEntityFlags::ModelEntity;
                         }
                         catch (const CJsonException &ex)
                         {
-                            emit this->dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFailed, 0);
+                            emit this->dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFailed, 0, url);
                             msgs.push_back(ex.toStatusMessage(this, QStringLiteral("Reading models from '%1'").arg(fileName)));
                         }
                     }
@@ -549,6 +554,8 @@ namespace BlackCore
                 else
                 {
                     const QJsonObject distributorsJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
+                    const QUrl url = QUrl::fromLocalFile(fi.absoluteFilePath());
+
                     if (distributorsJson.isEmpty())
                     {
                         msgs.push_back(CStatusMessage(this).error(u"Failed to read from file/empty file '%1'") << fileName);
@@ -560,12 +567,12 @@ namespace BlackCore
                             const CDistributorList distributors = CDistributorList::fromMultipleJsonFormats(distributorsJson);
                             const int c = distributors.size();
                             msgs.push_back(m_distributorCache.set(distributors, fi.birthTime().toUTC().toMSecsSinceEpoch()));
-                            emit this->dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, c);
+                            emit this->dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, c, url);
                             reallyRead |= CEntityFlags::DistributorEntity;
                         }
                         catch (const CJsonException &ex)
                         {
-                            emit this->dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFailed, 0);
+                            emit this->dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFailed, 0, url);
                             msgs.push_back(ex.toStatusMessage(this, QStringLiteral("Reading distributors from '%1'").arg(fileName)));
                         }
                     }
@@ -687,7 +694,7 @@ namespace BlackCore
 
         bool CModelDataReader::hasChangedUrl(CEntityFlags::Entity entity, CUrl &oldUrlInfo, CUrl &newUrlInfo) const
         {
-            Q_UNUSED(entity);
+            Q_UNUSED(entity)
             oldUrlInfo = m_readerUrlCache.get();
             newUrlInfo = this->getBaseUrl(CDbFlags::DbReading);
             return CDatabaseReader::isChangedUrl(oldUrlInfo, newUrlInfo);

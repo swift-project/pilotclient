@@ -59,7 +59,7 @@ namespace BlackCore
             void metarsRead(const BlackMisc::Weather::CMetarList &metars);
 
             //! Data have been read
-            void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+            void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
         protected:
             //! \name BlackCore::CThreadedReader overrides

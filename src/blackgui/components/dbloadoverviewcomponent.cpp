@@ -365,9 +365,11 @@ namespace BlackGui
             sGui->getWebDataServices()->triggerReadOfSharedInfoObjects();
         }
 
-        void CDbLoadOverviewComponent::dataLoaded(CEntityFlags::Entity entities, CEntityFlags::ReadState state, int number)
+        void CDbLoadOverviewComponent::dataLoaded(CEntityFlags::Entity entities, CEntityFlags::ReadState state, int number, const QUrl &url)
         {
-            Q_UNUSED(number);
+            Q_UNUSED(number)
+            Q_UNUSED(url)
+
             if (!CEntityFlags::isFinishedReadState(state)) return;
             if (!entities.testFlag(CEntityFlags::SharedInfoObjectEntity) && !entities.testFlag(CEntityFlags::DbInfoObjectEntity) && !CEntityFlags::anySwiftDbEntity(entities)) { return; }
             m_loadInProgress = false;

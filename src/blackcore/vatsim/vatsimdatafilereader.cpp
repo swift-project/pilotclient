@@ -218,7 +218,9 @@ namespace BlackCore
 
             this->logNetworkReplyReceived(nwReplyPtr);
             QStringList illegalEquipmentCodes;
-            const QString urlString = nwReply->url().toString();
+            const QUrl url = nwReply->url();
+            const QString urlString = url.toString();
+
             if (nwReply->error() == QNetworkReply::NoError)
             {
                 const QString dataFileData = nwReply->readAll();
@@ -439,14 +441,14 @@ namespace BlackCore
 
                 // data read finished
                 emit this->dataFileRead(lines.count());
-                emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, lines.count());
+                emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, lines.count(), url);
             }
             else
             {
                 // network error
                 CLogMessage(this).warning(u"Reading VATSIM data file failed '%1' '%2'") << nwReply->errorString() << urlString;
                 nwReply->abort();
-                emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFailed, 0);
+                emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFailed, 0, url);
             }
         }
 

@@ -61,7 +61,7 @@ namespace BlackGui
 
         private:
             //! Models have been read
-            void onModelsRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+            void onModelsRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count, const QUrl &url);
 
             //! Reload models
             void onReload();

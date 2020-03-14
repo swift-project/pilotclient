@@ -82,7 +82,7 @@ namespace BlackGui
             QScopedPointer<Ui::CDbAutoStashingComponent> ui;
 
             //! Data have been read
-            void onEntitiesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+            void onEntitiesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count, const QUrl &url);
 
             //! Reset the description settings
             void resetDescription();

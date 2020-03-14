@@ -206,7 +206,7 @@ namespace BlackCore
                         {
                             if (!myself) { return; }
                             if (!sApp || sApp->isShuttingDown()) { return; }
-                            emit this->dataRead(validInCacheEntities, CEntityFlags::ReadFinished, 0);
+                            emit this->dataRead(validInCacheEntities, CEntityFlags::ReadFinished, 0, {});
                         });
                     }
                     if (newerHeaderEntities == CEntityFlags::NoEntity) { return CEntityFlags::NoEntity; }
@@ -490,7 +490,7 @@ namespace BlackCore
                 const int c = this->getCacheCount(currentCachedEntity);
                 if (!onlyIfHasData || c > 0)
                 {
-                    emit this->dataRead(currentCachedEntity, CEntityFlags::ReadFinished, c);
+                    emit this->dataRead(currentCachedEntity, CEntityFlags::ReadFinished, c, {});
                     emitted |= currentCachedEntity;
                 }
                 currentCachedEntity = CEntityFlags::iterateDbEntities(cachedEntitiesToEmit);
@@ -503,7 +503,7 @@ namespace BlackCore
             // never emit when lock is held, deadlock
             Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Expect single entity");
             CLogMessage(this).info(u"Read %1 entities of '%2' from '%3' (%4)") << number << CEntityFlags::flagToString(entity) << res.getUrlString() << res.getLoadTimeStringWithStartedHint();
-            emit this->dataRead(entity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, number);
+            emit this->dataRead(entity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, number, res.getUrl());
         }
 
         void CDatabaseReader::logNoWorkingUrl(CEntityFlags::Entity entity)

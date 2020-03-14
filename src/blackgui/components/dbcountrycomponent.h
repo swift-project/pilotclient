@@ -42,11 +42,11 @@ namespace BlackGui
             explicit CDbCountryComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbCountryComponent();
+            virtual ~CDbCountryComponent() override;
 
         private:
             //! Countries have been read
-            void onCountriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+            void onCountriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count, const QUrl &url);
 
             //! Reload models
             void onReload();

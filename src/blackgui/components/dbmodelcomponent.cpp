@@ -58,7 +58,7 @@ namespace BlackGui
             connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDbModelComponent::onStyleSheetChanged, Qt::QueuedConnection);
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbModelComponent::onModelsRead);
             connect(sGui->getWebDataServices(), &CWebDataServices::entityDownloadProgress, this, &CDbModelComponent::onEntityDownloadProgress, Qt::QueuedConnection);
-            this->onModelsRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, sApp->getWebDataServices()->getModelsCount());
+            this->onModelsRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, sApp->getWebDataServices()->getModelsCount(), {});
         }
 
         CDbModelComponent::~CDbModelComponent()
@@ -84,9 +84,11 @@ namespace BlackGui
             sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::ModelEntity, ts);
         }
 
-        void CDbModelComponent::onModelsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+        void CDbModelComponent::onModelsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count, const QUrl &url)
         {
-            Q_UNUSED(count);
+            Q_UNUSED(count)
+            Q_UNUSED(url)
+
             if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
             if (!entity.testFlag(CEntityFlags::ModelEntity)) { return; }
 
@@ -116,7 +118,7 @@ namespace BlackGui
         {
             if (!entity.testFlag(CEntityFlags::ModelEntity)) { return; }
             this->showDownloadProgress(progress, current, max, url, 5000);
-            Q_UNUSED(logId);
+            Q_UNUSED(logId)
         }
     } // ns
 } // ns

@@ -103,7 +103,7 @@ namespace BlackGui
             }
         }
 
-        void CDbLoadDataDialog::onDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
+        void CDbLoadDataDialog::onDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number, const QUrl &url)
         {
             if (m_pendingEntities == CEntityFlags::NoEntity) { return; } // not triggered from here
             if (!m_pendingEntities.testFlag(CEntityFlags::entityToEntityFlag(entity))) { return; }
@@ -115,7 +115,7 @@ namespace BlackGui
             if (!CEntityFlags::isFinishedReadStateOrFailure(state)) { return; }
             if (state == CEntityFlags::ReadFailed)
             {
-                CLogMessage(this).warning(u"Read failed for %1") << e;
+                CLogMessage(this).warning(u"Read failed for %1 from '%2'") << e << url.toString();
             }
 
             m_pendingEntities &= ~entity;
@@ -157,12 +157,12 @@ namespace BlackGui
 
         void CDbLoadDataDialog::onEntityDownloadProgress(CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url)
         {
-            Q_UNUSED(entity);
-            Q_UNUSED(logId);
-            Q_UNUSED(progress);
-            Q_UNUSED(current);
-            Q_UNUSED(max);
-            Q_UNUSED(url);
+            Q_UNUSED(entity)
+            Q_UNUSED(logId)
+            Q_UNUSED(progress)
+            Q_UNUSED(current)
+            Q_UNUSED(max)
+            Q_UNUSED(url)
         }
 
         void CDbLoadDataDialog::onRejected()

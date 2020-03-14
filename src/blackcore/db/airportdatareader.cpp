@@ -100,6 +100,7 @@ namespace BlackCore
             }
             else
             {
+                const QUrl url = QUrl::fromLocalFile(fi.absoluteFilePath());
                 const QJsonObject airportsJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
                 if (!airportsJson.isEmpty())
                 {
@@ -109,12 +110,12 @@ namespace BlackCore
                         c = airports.size();
                         msgs.push_back(m_airportCache.set(airports, fi.birthTime().toUTC().toMSecsSinceEpoch()));
 
-                        emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFinished, c);
+                        emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFinished, c, url);
                         reallyRead |= CEntityFlags::AirportEntity;
                     }
                     catch (const CJsonException &ex)
                     {
-                        emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFailed, 0);
+                        emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFailed, 0, url);
                         return ex.toStatusMessage(this, QStringLiteral("Reading airports from '%1'").arg(fileName));
                     }
                 }
@@ -168,7 +169,7 @@ namespace BlackCore
 
         bool CAirportDataReader::hasChangedUrl(CEntityFlags::Entity entity, CUrl &oldUrlInfo, CUrl &newUrlInfo) const
         {
-            Q_UNUSED(entity);
+            Q_UNUSED(entity)
             oldUrlInfo = m_readerUrlCache.get();
             newUrlInfo = this->getBaseUrl(CDbFlags::DbReading);
             return CDatabaseReader::isChangedUrl(oldUrlInfo, newUrlInfo);
@@ -192,15 +193,17 @@ namespace BlackCore
             if (!this->doWorkCheck()) { return; }
 
             const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReplyPtr);
+            const QUrl url = nwReply->url();
+
             if (res.hasErrorMessage())
             {
                 CLogMessage::preformatted(res.lastWarningOrAbove());
-                emit this->dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFailed, 0);
+                emit this->dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFailed, 0, url);
                 return;
             }
 
             // parsing
-            emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadParsing, 0);
+            emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadParsing, 0, url);
             CAirportList airports;
             CAirportList inconsistent;
             if (res.isRestricted())
@@ -215,7 +218,7 @@ namespace BlackCore
                 QElapsedTimer time;
                 time.start();
                 airports = CAirportList::fromDatabaseJson(res, &inconsistent);
-                this->logParseMessage("airports", airports.size(), time.elapsed(), res);
+                this->logParseMessage("airports", airports.size(), static_cast<int>(time.elapsed()), res);
             }
 
             if (!inconsistent.isEmpty())
@@ -247,7 +250,7 @@ namespace BlackCore
             entity &= CEntityFlags::AirportEntity;
             if (!this->isInternetAccessible())
             {
-                emit this->dataRead(entity, CEntityFlags::ReadSkipped, 0);
+                emit this->dataRead(entity, CEntityFlags::ReadSkipped, 0, {});
                 return;
             }
 
@@ -258,7 +261,7 @@ namespace BlackCore
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
                     this->getFromNetworkAndLog(url, { this, &CAirportDataReader::parseAirportData });
-                    emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadStarted, 0);
+                    emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadStarted, 0, url);
                 }
                 else
                 {

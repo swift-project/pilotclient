@@ -162,7 +162,7 @@ namespace BlackGui
             void loginCancelled();
 
             //! VATSIM data file was loaded
-            void onWebServiceDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+            void onWebServiceDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
             //! Validate aircaft
             bool validateAircraftValues();

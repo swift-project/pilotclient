@@ -169,7 +169,7 @@ namespace BlackGui
             this->validateAircraftValues();
             ui->form_Pilot->validate();
             ui->cb_AutoLogoff->setChecked(m_networkSetup.useAutoLogoff());
-            this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1);
+            this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1, {});
             this->reloadOtherServersSetup();
 
             connect(ui->pb_OverrideCredentialsVatsim, &QPushButton::clicked, this, &CLoginComponent::overrideCredentialsToPilot);
@@ -362,11 +362,13 @@ namespace BlackGui
             }
         }
 
-        void CLoginComponent::onWebServiceDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
+        void CLoginComponent::onWebServiceDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number, const QUrl &url)
         {
             if (!CEntityFlags::isFinishedReadState(state)) { return; }
             if (!sGui || !sGui->getIContextNetwork() || sGui->isShuttingDown()) { return; }
+
             Q_UNUSED(number)
+            Q_UNUSED(url)
 
             if (entity == CEntityFlags::VatsimDataFile)
             {
@@ -682,7 +684,7 @@ namespace BlackGui
 
         void CLoginComponent::onChangedAirlineIcao(const CAirlineIcaoCode &icao)
         {
-            Q_UNUSED(icao);
+            Q_UNUSED(icao)
             this->validateAircraftValues();
         }
 

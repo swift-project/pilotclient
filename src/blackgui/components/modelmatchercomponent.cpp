@@ -200,8 +200,11 @@ namespace BlackGui
             ui->tvp_ResultMessages->updateContainer(msgs);
         }
 
-        void CModelMatcherComponent::onWebDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
+        void CModelMatcherComponent::onWebDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number, const QUrl &url)
         {
+            Q_UNUSED(url)
+
+            if (!sGui || sGui->isShuttingDown()) { return; }
             if (number > 0 && entity.testFlag(CEntityFlags::ModelEntity) && CEntityFlags::isFinishedReadState(state))
             {
                 const QStringList modelStrings(sGui->getWebDataServices()->getModelStrings(true));

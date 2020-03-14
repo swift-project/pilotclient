@@ -39,15 +39,17 @@ namespace BlackGui
             ui->tvp_Countries->allowDragDrop(true, false);
 
             connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbCountryComponent::onCountriesRead, Qt::QueuedConnection);
-            this->onCountriesRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getCountriesCount());
+            this->onCountriesRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getCountriesCount(), {});
         }
 
         CDbCountryComponent::~CDbCountryComponent()
         { }
 
-        void CDbCountryComponent::onCountriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+        void CDbCountryComponent::onCountriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count, const QUrl &url)
         {
-            Q_UNUSED(count);
+            Q_UNUSED(count)
+            Q_UNUSED(url)
+
             if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
             if (entity.testFlag(CEntityFlags::CountryEntity) && CEntityFlags::isFinishedReadState(readState))
             {

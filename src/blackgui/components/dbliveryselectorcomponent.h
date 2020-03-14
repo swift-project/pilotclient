@@ -100,7 +100,7 @@ namespace BlackGui
             void onCompleterActivated(const QString &liveryCode);
 
             //! Distributors have been read
-            void onLiveriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+            void onLiveriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count, const QUrl &url);
 
             //! Strip extra info from livery code
             QString stripExtraInfo(const QString &liveryCode) const;
