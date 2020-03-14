@@ -68,9 +68,9 @@ namespace BlackSound
 
         BlackMisc::Audio::CAudioDeviceInfo m_deviceInfo;
         QAudioOutput *m_audioOutput = nullptr;
-        QByteArray m_bufferData;
-        QBuffer m_buffer;
-        QAudioFormat m_audioFormat;
+        QByteArray    m_bufferData;
+        QBuffer       m_buffer;
+        QAudioFormat  m_audioFormat;
         QMap<CTonePair, QByteArray> m_tonePairCache;
         mutable QMutex m_mutex { QMutex::Recursive };
     };
