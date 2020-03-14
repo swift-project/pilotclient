@@ -28,12 +28,16 @@ namespace BlackSound
 
     void CThreadedTonePairPlayer::play(int volume, const QList<CTonePair> &tonePairs)
     {
+        QPointer<CThreadedTonePairPlayer> myself(this);
         QMutexLocker ml(&m_mutex);
         if (m_audioOutput->state() != QAudio::StoppedState) { return; }
 
         m_bufferData = this->getAudioByTonePairs(tonePairs);
         m_audioOutput->setVolume(static_cast<qreal>(0.01 * volume));
-        QTimer::singleShot(0, this, &CThreadedTonePairPlayer::playBuffer);
+        QTimer::singleShot(0, this, [ = ]
+        {
+            if (myself) { myself->playBuffer(); }
+        });
     }
 
     bool CThreadedTonePairPlayer::reinitializeAudio(const CAudioDeviceInfo &device)
