@@ -107,7 +107,7 @@ namespace BlackMisc
         void CBackgroundValidation::beforeQuit() noexcept
         {
             m_wasStopped = true; // stop in utility functions
-            m_updateTimer.stop();
+            this->stopUpdateTimer();
         }
 
         void CBackgroundValidation::doWork()

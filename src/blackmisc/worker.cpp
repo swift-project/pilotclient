@@ -237,6 +237,27 @@ namespace BlackMisc
         }
     }
 
+    void CContinuousWorker::stopUpdateTimer()
+    {
+        if (!m_updateTimer.isActive()) { return; }
+
+        // avoid "Timers cannot be stopped from another thread"
+        if (CThreadUtils::isCurrentThreadObjectThread(&m_updateTimer))
+        {
+            m_updateTimer.stop();
+        }
+        else
+        {
+            QPointer<CContinuousWorker> myself(this);
+            QTimer::singleShot(0, &m_updateTimer, [ = ]
+            {
+                // stop timer in timer thread
+                if (!myself) { return; }
+                m_updateTimer.stop();
+            });
+        }
+    }
+
     void CContinuousWorker::finish()
     {
         this->setFinished();
