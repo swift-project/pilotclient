@@ -334,6 +334,9 @@ namespace BlackMisc
         //! Wait time for quitAndWait, 0 means not waiting
         virtual unsigned long waitTimeoutMs() const { return 15 * 1000; }
 
+        //! Safely stop update time
+        void stopUpdateTimer();
+
         QTimer m_updateTimer { this }; //!< timer which can be used by implementing classes
 
     private:
@@ -345,7 +348,7 @@ namespace BlackMisc
         using CWorkerBase::setFinished;
 
         QObject *m_owner = nullptr; //!< owner, parent of the QThread
-        QString m_name; //!< worker's name
+        QString  m_name; //!< worker's name
         std::atomic<bool> m_enabled { true }; //!< marker it is enabled
     };
 }
