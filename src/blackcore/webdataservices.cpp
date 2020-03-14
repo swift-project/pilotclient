@@ -1233,7 +1233,7 @@ namespace BlackCore
             // relay signal
             c = connect(m_sharedInfoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Info reader connect failed");
-            Q_UNUSED(c);
+            Q_UNUSED(c)
 
             // start in own thread
             m_sharedInfoDataReader->start(QThread::LowPriority);
@@ -1330,24 +1330,28 @@ namespace BlackCore
         CLogMessage(this).info(u"Read VATSIM status file, %1 lines") << lines;
     }
 
-    void CWebDataServices::readFromSwiftReader(CEntityFlags::Entity entities, CEntityFlags::ReadState state, int number)
+    void CWebDataServices::readFromSwiftReader(CEntityFlags::Entity entities, CEntityFlags::ReadState state, int number, const QUrl &url)
     {
         if (state == CEntityFlags::ReadStarted) { return; } // just started
+
+        const QString from   = url.isEmpty() ? QStringLiteral("") : QStringLiteral(" from '%1'").arg(url.toString());
+        const QString entStr = CEntityFlags::flagToString(entities);
+
         if (CEntityFlags::isWarningOrAbove(state))
         {
             const CStatusMessage::StatusSeverity severity = CEntityFlags::flagToSeverity(state);
             if (severity == CStatusMessage::SeverityWarning)
             {
-                CLogMessage(this).warning(u"Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::stateToString(state);
+                CLogMessage(this).warning(u"Read data '%1' entries: %2 state: %3%4") << entStr << number << CEntityFlags::stateToString(state) << from;
             }
             else
             {
-                CLogMessage(this).error(u"Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::stateToString(state);
+                CLogMessage(this).error(u"Read data '%1' entries: %2 state: %3%4") << entStr << number << CEntityFlags::stateToString(state) << from;
             }
         }
         else
         {
-            CLogMessage(this).info(u"Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::stateToString(state);
+            CLogMessage(this).info(u"Read data '%1' entries: %2 state: %3%4") << entStr << number << CEntityFlags::stateToString(state) << from;
         }
 
         m_swiftDbEntitiesRead |= entities;

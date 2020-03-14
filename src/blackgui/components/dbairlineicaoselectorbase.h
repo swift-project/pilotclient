@@ -91,7 +91,7 @@ namespace BlackGui
 
         private:
             //! Airlines have been read
-            void onCodesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+            void onCodesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count, const QUrl &url);
 
             //! Data have been changed
             void onCompleterActivated(const QString &icaoString);

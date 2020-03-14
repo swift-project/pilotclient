@@ -109,7 +109,9 @@ namespace BlackCore
             }
 
             this->logNetworkReplyReceived(nwReplyPtr);
-            const QString metarUrl = nwReply->url().toString();
+            const QUrl url = nwReply->url();
+            const QString metarUrl = url.toString();
+
             if (nwReply->error() == QNetworkReply::NoError)
             {
                 QString metarData = nwReply->readAll();
@@ -153,14 +155,14 @@ namespace BlackCore
                 }
 
                 emit metarsRead(metars);
-                emit dataRead(CEntityFlags::MetarEntity, CEntityFlags::ReadFinished, metars.size());
+                emit dataRead(CEntityFlags::MetarEntity, CEntityFlags::ReadFinished, metars.size(), url);
             }
             else
             {
                 // network error
                 CLogMessage(this).warning(u"Reading METARs failed '%1' for '%2'") << nwReply->errorString() << metarUrl;
                 nwReply->abort();
-                emit this->dataRead(CEntityFlags::MetarEntity, CEntityFlags::ReadFailed, 0);
+                emit this->dataRead(CEntityFlags::MetarEntity, CEntityFlags::ReadFailed, 0, url);
             }
         } // method
 

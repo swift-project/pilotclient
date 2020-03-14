@@ -121,11 +121,12 @@ namespace BlackGui
             this->setVisible(true);
         }
 
-        void CDbAutoStashingComponent::onEntitiesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+        void CDbAutoStashingComponent::onEntitiesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count, const QUrl &url)
         {
             if (readState != CEntityFlags::ReadFinished) { return; }
-            Q_UNUSED(count);
-            Q_UNUSED(entity);
+            Q_UNUSED(count)
+            Q_UNUSED(entity)
+            Q_UNUSED(url)
         }
 
         void CDbAutoStashingComponent::resetDescription()

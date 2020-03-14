@@ -69,7 +69,7 @@ namespace BlackGui
             ui->tw_Network->setCurrentIndex(tab);
 
             this->reloadOtherServersSetup();
-            this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1);
+            this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1, {});
         }
 
         CNetworkDetailsComponent::~CNetworkDetailsComponent()
@@ -142,7 +142,7 @@ namespace BlackGui
                 return;
             }
 
-            Q_UNUSED(index);
+            Q_UNUSED(index)
             const CServer server = this->getCurrentServer();
 
             // only override if not yet enabled
@@ -169,7 +169,7 @@ namespace BlackGui
 
         void CNetworkDetailsComponent::onServerTabWidgetChanged(int index)
         {
-            Q_UNUSED(index);
+            Q_UNUSED(index)
             if (!m_updatePilotOnServerChanges) { return; }
             const bool vatsim = this->isVatsimServerSelected();
             const CServer server = vatsim ? this->getCurrentVatsimServer() : this->getCurrentOtherServer();
@@ -184,10 +184,11 @@ namespace BlackGui
             emit this->overridePilot(server.getUser());
         }
 
-        void CNetworkDetailsComponent::onWebServiceDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
+        void CNetworkDetailsComponent::onWebServiceDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number, const QUrl &url)
         {
             if (!CEntityFlags::isFinishedReadState(state)) { return; }
-            Q_UNUSED(number);
+            Q_UNUSED(number)
+            Q_UNUSED(url)
 
             if (entity == CEntityFlags::VatsimDataFile)
             {

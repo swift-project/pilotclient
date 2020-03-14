@@ -54,7 +54,7 @@ namespace BlackGui
             connect(ui->le_Livery, &QLineEdit::returnPressed, this, &CDbLiverySelectorComponent::onDataChanged);
 
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLiverySelectorComponent::onLiveriesRead, Qt::QueuedConnection);
-            this->onLiveriesRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getLiveriesCount());
+            this->onLiveriesRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getLiveriesCount(), {});
         }
 
         CDbLiverySelectorComponent::~CDbLiverySelectorComponent()
@@ -183,14 +183,16 @@ namespace BlackGui
             }
         }
 
-        void CDbLiverySelectorComponent::onLiveriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+        void CDbLiverySelectorComponent::onLiveriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count, const QUrl &url)
         {
+            Q_UNUSED(url)
+
             if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
             if (entity.testFlag(CEntityFlags::LiveryEntity) && CEntityFlags::isFinishedReadState(readState))
             {
                 if (count > 0)
                 {
-                    QStringList codes(sApp->getWebDataServices()->getLiveries().getCombinedCodesPlusInfo(true));
+                    const QStringList codes(sApp->getWebDataServices()->getLiveries().getCombinedCodesPlusInfo(true));
                     QCompleter *c = new QCompleter(codes, this);
                     c->setCaseSensitivity(Qt::CaseInsensitive);
                     c->setCompletionMode(QCompleter::PopupCompletion);

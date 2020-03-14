@@ -151,7 +151,7 @@ namespace BlackCore
             if (!url.isEmpty())
             {
                 this->getFromNetworkAndLog(url, { this, &CInfoDataReader::parseInfoObjectsData});
-                emit this->dataRead(this->getEntityForMode(), CEntityFlags::ReadStarted, 0);
+                emit this->dataRead(this->getEntityForMode(), CEntityFlags::ReadStarted, 0, url);
             }
             else
             {
@@ -170,7 +170,7 @@ namespace BlackCore
             if (res.hasErrorMessage())
             {
                 CLogMessage::preformatted(res.lastWarningOrAbove());
-                emit this->dataRead(this->getEntityForMode(), CEntityFlags::ReadFailed, 0);
+                emit this->dataRead(this->getEntityForMode(), CEntityFlags::ReadFailed, 0, res.getUrl());
                 return;
             }
 
@@ -181,7 +181,7 @@ namespace BlackCore
             // Service URL => DB data
             // DB data directory => shared files
             const QString urlStr = nwReply->url().toString();
-            Q_UNUSED(urlStr); // debug only
+            Q_UNUSED(urlStr) // debug only
 
             // this part needs to be synchronized
             {
@@ -212,9 +212,9 @@ namespace BlackCore
 
         void CInfoDataReader::read(CEntityFlags::Entity entities, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
         {
-            Q_UNUSED(entities);
-            Q_UNUSED(mode);
-            Q_UNUSED(newerThan);
+            Q_UNUSED(entities)
+            Q_UNUSED(mode)
+            Q_UNUSED(newerThan)
             Q_ASSERT_X(false, Q_FUNC_INFO, "Not implemented for CInfoDataReader");
         }
 
@@ -231,9 +231,9 @@ namespace BlackCore
 
         CStatusMessageList CInfoDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewer)
         {
-            Q_UNUSED(dir);
-            Q_UNUSED(whatToRead);
-            Q_UNUSED(overrideNewer);
+            Q_UNUSED(dir)
+            Q_UNUSED(whatToRead)
+            Q_UNUSED(overrideNewer)
             Q_ASSERT_X(false, Q_FUNC_INFO, "Not supported");
 
             return CStatusMessage(this).error(u"Not supported");
@@ -241,8 +241,8 @@ namespace BlackCore
 
         bool CInfoDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewer)
         {
-            Q_UNUSED(dir);
-            Q_UNUSED(whatToRead);
+            Q_UNUSED(dir)
+            Q_UNUSED(whatToRead)
             Q_UNUSED(overrideNewer)
             Q_ASSERT_X(false, Q_FUNC_INFO, "Not supported");
             return false;

@@ -53,7 +53,7 @@ namespace BlackGui
                 {
                     if (!sGui || sGui->isShuttingDown()) { return; }
                     if (!myself) { return; }
-                    this->onCodesRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, c);
+                    this->onCodesRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, c, {});
                 });
             }
         }
@@ -130,8 +130,10 @@ namespace BlackGui
             }
         }
 
-        void CDbAirlineIcaoSelectorBase::onCodesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+        void CDbAirlineIcaoSelectorBase::onCodesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count, const QUrl &url)
         {
+            Q_UNUSED(url)
+
             if (!sGui) { return; }
             if (entity.testFlag(CEntityFlags::AirlineIcaoEntity) && CEntityFlags::isFinishedReadState(readState))
             {

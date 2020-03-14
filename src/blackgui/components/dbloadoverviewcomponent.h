@@ -97,7 +97,7 @@ namespace BlackGui
             void setSharedUrlValues();
 
             //! Data have been loaded
-            void dataLoaded(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+            void dataLoaded(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
             //! Load info objects if not already loaded
             void loadInfoObjects();

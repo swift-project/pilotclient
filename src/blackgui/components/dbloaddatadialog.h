@@ -53,7 +53,7 @@ namespace BlackGui
             void onButtonClicked(QAbstractButton *button);
 
             //! Data are/have been read
-            void onDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+            void onDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
             //! Download progress
             void onEntityDownloadProgress(BlackMisc::Network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
