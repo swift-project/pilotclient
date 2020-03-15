@@ -196,8 +196,8 @@ namespace BlackMisc
             static const QString icaoAircraft("by ICAO aircraft first");
             static const QString icaoAirline("by ICAO airline first");
             static const QString family("by family");
-            static const QString forceMil("force military");
-            static const QString forceCiv("force civilian");
+            static const QString military("by military");
+            static const QString civilian("by civilian");
             static const QString vtol("VTOL");
             static const QString livery("by livery");
             static const QString combined("by combined code");
@@ -228,8 +228,8 @@ namespace BlackMisc
             case ByCombinedType:              return combined;
             case ByIcaoOrderAircraftFirst:    return icaoAircraft;
             case ByIcaoOrderAirlineFirst:     return icaoAirline;
-            case ByForceCivilian:             return forceCiv;
-            case ByForceMilitary:             return forceMil;
+            case ByCivilian:                  return civilian;
+            case ByMilitary:                  return military;
             case ByVtol:                      return vtol;
             case ByCategoryGlider:            return categoryGlider;
             case ByCategoryMilitary:          return categoryMilitary;
@@ -263,8 +263,8 @@ namespace BlackMisc
             if (mode.testFlag(ByFamily))                    { modes << modeFlagToString(ByFamily); }
             if (mode.testFlag(ByLivery))                    { modes << modeFlagToString(ByLivery); }
             if (mode.testFlag(ByCombinedType))              { modes << modeFlagToString(ByCombinedType); }
-            if (mode.testFlag(ByForceCivilian))             { modes << modeFlagToString(ByForceCivilian); }
-            if (mode.testFlag(ByForceMilitary))             { modes << modeFlagToString(ByForceMilitary); }
+            if (mode.testFlag(ByCivilian))                  { modes << modeFlagToString(ByCivilian); }
+            if (mode.testFlag(ByMilitary))                  { modes << modeFlagToString(ByMilitary); }
             if (mode.testFlag(ByCategoryGlider))            { modes << modeFlagToString(ByCategoryGlider); }
             if (mode.testFlag(ByCategoryMilitary))          { modes << modeFlagToString(ByCategoryMilitary); }
             if (mode.testFlag(ByCategorySmallAircraft))     { modes << modeFlagToString(ByCategorySmallAircraft); }
@@ -301,8 +301,8 @@ namespace BlackMisc
         CAircraftMatcherSetup::MatchingMode CAircraftMatcherSetup::matchingMode(
             bool revModelString,    bool revLiveryIds,
             bool byModelString,     bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st, bool byFamily, bool byLivery, bool byCombinedType,
-            bool byForceMilitary,   bool byForceCivilian, bool byVtol,
-            bool byGliderCategory,  bool byMilitaryCategory, bool bySmallAircraftCategory,
+            bool byMilitary,        bool byCivilian,            bool byVtol,
+            bool byGliderCategory,  bool byMilitaryCategory,    bool bySmallAircraftCategory,
             bool scoreIgnoreZeros,  bool scorePreferColorLiveries,
             bool excludeNoDbData,   bool excludeNoExcluded,
             bool modelVerification, bool modelVerificationWarnError,
@@ -316,8 +316,8 @@ namespace BlackMisc
             if (byFamily)                   { mode |= ByFamily; }
             if (byLivery)                   { mode |= ByLivery; }
             if (byCombinedType)             { mode |= ByCombinedType; }
-            if (byForceMilitary)            { mode |= ByForceMilitary; }
-            if (byForceCivilian)            { mode |= ByForceCivilian; }
+            if (byMilitary)                 { mode |= ByMilitary; }
+            if (byCivilian)                 { mode |= ByCivilian; }
             if (byVtol)                     { mode |= ByVtol; }
             if (byGliderCategory)           { mode |= ByCategoryGlider; }
             if (byMilitaryCategory)         { mode |= ByCategoryMilitary; }
