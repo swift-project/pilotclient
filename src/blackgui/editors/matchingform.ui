@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>315</width>
-    <height>664</height>
+    <width>378</width>
+    <height>696</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -272,69 +272,14 @@
       <property name="bottomMargin">
        <number>3</number>
       </property>
-      <item row="2" column="0" colspan="2">
-       <widget class="Line" name="line_Reduction">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QCheckBox" name="cb_ByLivery">
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="rb_AirlineGroupNo">
         <property name="text">
-         <string> livery</string>
+         <string>no airline group</string>
         </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QCheckBox" name="cb_ByForceCivilian">
-        <property name="toolTip">
-         <string>inbound civilian force matched civilian</string>
-        </property>
-        <property name="text">
-         <string>force civilian</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2">
-       <widget class="QCheckBox" name="cb_ByFamily">
-        <property name="text">
-         <string>family</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QCheckBox" name="cb_ByCombinedCode">
-        <property name="text">
-         <string>combined code</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1" colspan="2">
-       <widget class="QCheckBox" name="cb_ByVtol">
-        <property name="toolTip">
-         <string>Vertical Takeoff or Landing</string>
-        </property>
-        <property name="text">
-         <string>VTOL (helicopters and such)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QCheckBox" name="cb_ByModelString">
-        <property name="text">
-         <string>model string</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QCheckBox" name="cb_ByForceMilitary">
-        <property name="toolTip">
-         <string>inbound military force matched military</string>
-        </property>
-        <property name="text">
-         <string>force military</string>
-        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bg_AirlineGroup</string>
+        </attribute>
        </widget>
       </item>
       <item row="0" column="1">
@@ -357,14 +302,59 @@
         </attribute>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QRadioButton" name="rb_AirlineGroupNo">
+      <item row="3" column="2">
+       <widget class="QCheckBox" name="cb_ByFamily">
         <property name="text">
-         <string>no airline group</string>
+         <string>family</string>
         </property>
-        <attribute name="buttonGroup">
-         <string notr="true">bg_AirlineGroup</string>
-        </attribute>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="cb_ByLivery">
+        <property name="text">
+         <string> livery</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QCheckBox" name="cb_ByCivilian">
+        <property name="toolTip">
+         <string>inbound civilian try to match civilian</string>
+        </property>
+        <property name="text">
+         <string>civilian</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="3">
+       <widget class="Line" name="line_Reduction">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1" colspan="2">
+       <widget class="QCheckBox" name="cb_ByVtol">
+        <property name="toolTip">
+         <string>Vertical Takeoff or Landing</string>
+        </property>
+        <property name="text">
+         <string>VTOL (helicopters and such)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="cb_ByModelString">
+        <property name="text">
+         <string>model string</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="cb_ByCombinedCode">
+        <property name="text">
+         <string>combined code</string>
+        </property>
        </widget>
       </item>
       <item row="1" column="1">
@@ -375,6 +365,16 @@
         <attribute name="buttonGroup">
          <string notr="true">bg_AirlineGroup</string>
         </attribute>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QCheckBox" name="cb_ByMilitary">
+        <property name="toolTip">
+         <string>inbound military try to find military</string>
+        </property>
+        <property name="text">
+         <string>military</string>
+        </property>
        </widget>
       </item>
       <item row="1" column="2">
@@ -589,8 +589,8 @@
   <tabstop>cb_ByFamily</tabstop>
   <tabstop>cb_ByCombinedCode</tabstop>
   <tabstop>cb_ByVtol</tabstop>
-  <tabstop>cb_ByForceMilitary</tabstop>
-  <tabstop>cb_ByForceCivilian</tabstop>
+  <tabstop>cb_ByMilitary</tabstop>
+  <tabstop>cb_ByCivilian</tabstop>
   <tabstop>cb_CategoryGlider</tabstop>
   <tabstop>cb_CategoryMilitaryAircraft</tabstop>
   <tabstop>cb_CategorySmallAircraft</tabstop>

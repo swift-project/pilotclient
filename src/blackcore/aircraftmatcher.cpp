@@ -1440,13 +1440,13 @@ namespace BlackCore
 
             // military / civilian
             bool milFlagReduced = false;
-            if (mode.testFlag(CAircraftMatcherSetup::ByForceMilitary) && remoteAircraft.isMilitary())
+            if (mode.testFlag(CAircraftMatcherSetup::ByMilitary) && remoteAircraft.isMilitary())
             {
                 matchedModels = ifPossibleReduceByMilitaryFlag(remoteAircraft, matchedModels, reduced, reduceLog);
                 milFlagReduced = true;
             }
 
-            if (!milFlagReduced && mode.testFlag(CAircraftMatcherSetup::ByForceCivilian) && !remoteAircraft.isMilitary())
+            if (!milFlagReduced && mode.testFlag(CAircraftMatcherSetup::ByCivilian) && !remoteAircraft.isMilitary())
             {
                 matchedModels = ifPossibleReduceByMilitaryFlag(remoteAircraft, matchedModels, reduced, reduceLog);
                 milFlagReduced = true;

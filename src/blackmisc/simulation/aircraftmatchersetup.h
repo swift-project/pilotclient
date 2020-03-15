@@ -39,9 +39,9 @@ namespace BlackMisc
                 ByLivery         = 1 << 3,
                 ByCombinedType   = 1 << 4,
                 ByManufacturer   = 1 << 5,
-                ByForceMilitary  = 1 << 6, //!< military (in) will only search in military
-                ByForceCivilian  = 1 << 7, //!< civilian (in) will only search in civilian
-                ByMilitary       = ByForceCivilian | ByForceMilitary,
+                ByMilitary       = 1 << 6, //!< military (in) will only search in military
+                ByCivilian       = 1 << 7, //!< civilian (in) will only search in civilian
+                ByMilOrCivilian  = ByCivilian | ByMilitary,
                 ByVtol           = 1 << 8,
                 ByIcaoOrderAircraftFirst    = (1 <<  9) | ByIcaoData,
                 ByIcaoOrderAirlineFirst     = (1 << 10) | ByIcaoData,
@@ -75,7 +75,7 @@ namespace BlackMisc
 
                 // --- others ---
                 ModeNone          = 0,
-                ModeByFLags       = ByMilitary  | ByVtol,
+                ModeByFLags       = ByMilOrCivilian  | ByVtol,
 
                 // default mode for set handling
                 ModeDefaultSet    = ModelSetRemoveFailedModel | ModelVerificationAtStartup | ModelFailoverIfNoModelCanBeAdded,
