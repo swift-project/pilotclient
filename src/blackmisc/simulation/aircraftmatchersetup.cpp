@@ -97,9 +97,10 @@ namespace BlackMisc
 
         QString CAircraftMatcherSetup::convertToQString(bool i18n) const
         {
-            Q_UNUSED(i18n);
-            return u"algorithm: '" % this->getMatchingAlgorithmAsString() %
-                   u"' mode: '" % this->getMatchingModeAsString() %
+            Q_UNUSED(i18n)
+            return u"algorithm: '"  % this->getMatchingAlgorithmAsString() %
+                   u"' mode: '"     % this->getMatchingModeAsString() %
+                   u"' force: '"    % this->getForceModeAsString()    %
                    u"' strategy: '" % this->getPickStrategyAsString() %
                    u"\' matching script: " % boolToOnOff(m_msReverseEnabled) % u'/' % boolToOnOff(m_msMatchingEnabled);
         }
@@ -113,6 +114,7 @@ namespace BlackMisc
             case IndexMatchingAlgorithm:   return CVariant::fromValue(m_algorithm);
             case IndexMatchingMode:        return CVariant::fromValue(m_mode);
             case IndexPickStrategy:        return CVariant::fromValue(m_strategy);
+            case IndexForceMode:           return CVariant::fromValue(m_force);
             case IndexMsNetworkEntryFile:  return CVariant::fromValue(m_msReverseLookupFile);
             case IndexMsMatchingStageFile: return CVariant::fromValue(m_msMatchingStageFile);
             case IndexMsNetworkEnabled:    return CVariant::fromValue(m_msReverseEnabled);
@@ -129,7 +131,8 @@ namespace BlackMisc
             switch (i)
             {
             case IndexMatchingAlgorithm:      m_algorithm = variant.toInt(); break;
-            case IndexMatchingMode:           m_mode = variant.toInt(); break;
+            case IndexMatchingMode:           m_mode  = variant.toInt(); break;
+            case IndexForceMode:              m_force = variant.toInt(); break;
             case IndexPickStrategy:           m_strategy = variant.toInt(); break;
             case IndexMsNetworkEntryFile:     m_msReverseLookupFile  = variant.toQString(); break;
             case IndexMsMatchingStageFile:    m_msMatchingStageFile  = variant.toQString(); break;
@@ -278,6 +281,36 @@ namespace BlackMisc
             if (mode.testFlag(ModelVerificationOnlyWarnError))   { modes << modeFlagToString(ModelVerificationOnlyWarnError); }
             if (mode.testFlag(ModelFailoverIfNoModelCanBeAdded)) { modes << modeFlagToString(ModelFailoverIfNoModelCanBeAdded); }
             return modes.join(", ");
+        }
+
+        const QString &CAircraftMatcherSetup::forceFlagToString(CAircraftMatcherSetup::ForceModeFlag forceFlag)
+        {
+            static const QString t("type");
+            static const QString ec("engine count");
+            static const QString e("engine");
+            static const QString n("nothing");
+
+            switch (forceFlag)
+            {
+            case ForceType:        return t;
+            case ForceEnginecount: return ec;
+            case ForceEngine:      return e;
+            case ForceNothing:
+            default:
+                break;
+            }
+            return n;
+        }
+
+        const QString CAircraftMatcherSetup::forceToString(ForceMode force)
+        {
+            if (force.testFlag(ForceNothing)) { return QStringLiteral("nothing"); }
+
+            QStringList forces;
+            if (force.testFlag(ForceType))        { forces << forceToString(ForceType); }
+            if (force.testFlag(ForceEnginecount)) { forces << forceToString(ForceEnginecount); }
+            if (force.testFlag(ForceEngine))      { forces << forceToString(ForceEngine); }
+            return forces.join(", ");
         }
 
         const QString &CAircraftMatcherSetup::strategyToString(CAircraftMatcherSetup::PickSimilarStrategy strategy)

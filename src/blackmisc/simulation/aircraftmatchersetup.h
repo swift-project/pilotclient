@@ -87,6 +87,16 @@ namespace BlackMisc
             };
             Q_DECLARE_FLAGS(MatchingMode, MatchingModeFlag)
 
+            //! Force values
+            enum ForceModeFlag
+            {
+                ForceNothing     = 0,
+                ForceType        = 1 << 0,
+                ForceEnginecount = 1 << 1,
+                ForceEngine      = 1 << 2
+            };
+            Q_DECLARE_FLAGS(ForceMode, ForceModeFlag)
+
             //! How to pick among similar candiates
             enum PickSimilarStrategy
             {
@@ -100,6 +110,7 @@ namespace BlackMisc
             {
                 IndexMatchingAlgorithm = CPropertyIndex::GlobalIndexCAircraftMatcherSetup,
                 IndexMatchingMode,
+                IndexForceMode,
                 IndexPickStrategy,
                 IndexMsNetworkEntryFile,
                 IndexMsMatchingStageFile,
@@ -127,6 +138,15 @@ namespace BlackMisc
 
             //! Matching mode
             MatchingMode getMatchingMode() const { return static_cast<MatchingMode>(m_mode); }
+
+            //! Force mode
+            ForceMode getForceMode() const { return static_cast<ForceMode>(m_force); }
+
+            //! Force mode
+            void setForceMode(ForceMode fm) { m_force = static_cast<int>(fm); }
+
+            //! Force mode as string
+            QString getForceModeAsString() const { return forceToString(this->getForceMode()); }
 
             //! Reverse lookup @{
             bool isReverseLookupModelString() const;
@@ -228,22 +248,29 @@ namespace BlackMisc
             //! Enumeration as string
             static QString modeToString(MatchingMode mode);
 
+            //! Force flag to string
+            static const QString &forceFlagToString(ForceModeFlag forceFlag);
+
+            //! Force to string
+            static const QString forceToString(ForceMode force);
+
             //! Strategy to string
             static const QString &strategyToString(PickSimilarStrategy strategy);
 
             //! Mode by flags
-            static MatchingMode matchingMode(bool revModelString, bool revLiveryIds,
-                                             bool byModelString,  bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st,
-                                             bool byFamily, bool byLivery, bool byCombinedType,
+            static MatchingMode matchingMode(bool revModelString,  bool revLiveryIds,
+                                             bool byModelString,   bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st,
+                                             bool byFamily,        bool byLivery,              bool byCombinedType,
                                              bool byForceMilitary, bool byForceCivilian,
-                                             bool byVtol, bool byGliderCategory, bool byMilitaryCategory, bool bySmallAircraftCategory,
-                                             bool scoreIgnoreZeros,  bool scorePreferColorLiveries,   bool excludeNoDbData, bool excludeNoExcluded,
+                                             bool byVtol,            bool byGliderCategory,           bool byMilitaryCategory,        bool bySmallAircraftCategory,
+                                             bool scoreIgnoreZeros,  bool scorePreferColorLiveries,   bool excludeNoDbData,           bool excludeNoExcluded,
                                              bool modelVerification, bool modelVerificationWarnError, bool modelSetRemoveFailedModel, bool modelFailover);
 
         private:
             int m_algorithm = static_cast<int>(MatchingStepwiseReducePlusScoreBased);
             int m_mode      = static_cast<int>(ModeDefaultReducePlusScore);
             int m_strategy  = static_cast<int>(PickByOrder);
+            int m_force     = static_cast<int>(ForceNothing);
             QString m_msReverseLookupFile;    //!< network entry matching script file
             QString m_msMatchingStageFile;    //!< matching stage matching script file
             bool m_msReverseEnabled  = false; //!< enable network matching script
@@ -254,6 +281,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(algorithm),
                 BLACK_METAMEMBER(mode),
                 BLACK_METAMEMBER(strategy),
+                BLACK_METAMEMBER(force),
                 BLACK_METAMEMBER(msReverseLookupFile),
                 BLACK_METAMEMBER(msMatchingStageFile),
                 BLACK_METAMEMBER(msReverseEnabled),
@@ -267,6 +295,8 @@ Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftMatcherSetup)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftMatcherSetup::MatchingAlgorithm)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftMatcherSetup::MatchingMode)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftMatcherSetup::MatchingModeFlag)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftMatcherSetup::ForceMode)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftMatcherSetup::ForceModeFlag)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftMatcherSetup::PickSimilarStrategy)
 Q_DECLARE_OPERATORS_FOR_FLAGS(BlackMisc::Simulation::CAircraftMatcherSetup::MatchingMode)
 
