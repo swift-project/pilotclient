@@ -27,7 +27,7 @@ namespace XSwiftBus
     void CConfig::parse()
     {
         std::ifstream configFile(m_filePath);
-        if (! configFile.is_open()) { return; }
+        if (!configFile.is_open()) { return; }
 
         std::string line;
         for (int lineNo = 1; std::getline(configFile, line); ++lineNo)
@@ -42,7 +42,7 @@ namespace XSwiftBus
                 continue;
             }
 
-            std::string key = line.substr(0, delimiterPos);
+            std::string key   = line.substr(0, delimiterPos);
             std::string value = line.substr(delimiterPos + 1);
 
             if (key.empty() || value.empty())
@@ -54,9 +54,9 @@ namespace XSwiftBus
             bool valid = true;
             if (stringCompareCaseInsensitive(key, "dbusMode")) { valid = parseDBusMode(value); }
             else if (stringCompareCaseInsensitive(key, "dbusAddress")) { valid = parseDBusAddress(value); }
-            else if (stringCompareCaseInsensitive(key, "dbusPort")) { valid = parseDBusPort(value); }
+            else if (stringCompareCaseInsensitive(key, "dbusPort"))    { valid = parseDBusPort(value); }
             else if (stringCompareCaseInsensitive(key, "debug")) { valid = parseDebug(value); }
-            else if (stringCompareCaseInsensitive(key, "tcas")) { valid = parseTcas(value); }
+            else if (stringCompareCaseInsensitive(key, "tcas"))  { valid = parseTcas(value);  }
             else
             {
                 WARNING_LOG("xswiftbus.conf line " + std::to_string(lineNo) + ": Unknown variable " + key + "!");
@@ -81,8 +81,8 @@ namespace XSwiftBus
 
     bool CConfig::parseDBusMode(const std::string &value)
     {
-        if (stringCompareCaseInsensitive(value, "session")) { m_dbusMode = CConfig::DBusSession; return true; }
-        else if (stringCompareCaseInsensitive(value, "P2P")) { m_dbusMode = CConfig::DBusP2P; return true; }
+        if (stringCompareCaseInsensitive(value, "session"))  { m_dbusMode = CConfig::DBusSession; return true; }
+        else if (stringCompareCaseInsensitive(value, "P2P")) { m_dbusMode = CConfig::DBusP2P;     return true; }
         else { return false; }
     }
 
@@ -133,9 +133,8 @@ namespace XSwiftBus
         switch (mode)
         {
         case DBusSession: return "Session";
-        case DBusP2P: return "P2P";
+        case DBusP2P:     return "P2P";
         }
-
         return {};
     }
 } // ns

@@ -109,7 +109,7 @@ namespace XSwiftBus
 
             // FIXME: make listen address configurable
             std::string listenAddress = "tcp:host=" + m_pluginConfig.getDBusAddress() + ",port=" + std::to_string(m_pluginConfig.getDBusPort());
-            if (! m_dbusP2PServer->listen(listenAddress))
+            if (!m_dbusP2PServer->listen(listenAddress))
             {
                 m_service->addTextMessage("XSwiftBus startup failed!", 255, 0, 0);
                 return;
