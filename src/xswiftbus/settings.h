@@ -45,6 +45,9 @@ namespace XSwiftBus
         //! Get settings from xswiftbus.conf (needed during plugin initialization)
         virtual const CConfig &getConfig() const = 0;
 
+        //! Write a config file with these new values
+        virtual bool writeConfig(bool tcas, bool debug) = 0;
+
     protected:
         //! Destructor
         ~CSettingsProvider() = default;
@@ -72,6 +75,9 @@ namespace XSwiftBus
 
         //! \copydoc CSettingsProvider::getConfig
         const CConfig &getConfig() const;
+
+        //! \copydoc CSettingsProvider::writeConfig
+        bool writeConfig(bool tcas, bool debug);
 
     private:
         CSettingsProvider *m_provider = nullptr;

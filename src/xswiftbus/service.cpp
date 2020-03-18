@@ -258,8 +258,10 @@ namespace XSwiftBus
         CSettings s;
         s.parseXSwiftBusString(jsonString);
         this->setSettings(s);
+        const bool w = this->writeConfig(s.isTcasEnabled(), s.isLogRenderPhases());
         this->updateMessageBoxFromSettings();
         INFO_LOG("Received settings " + s.convertToString());
+        if (w) { INFO_LOG("Written new config file"); }
     }
 
     void CService::readAirportsDatabase()

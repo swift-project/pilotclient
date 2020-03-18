@@ -65,6 +65,9 @@ namespace XSwiftBus
         //! \copydoc XSwiftBus::CSettingsProvider::getConfig
         virtual const CConfig &getConfig() const override { return m_pluginConfig; }
 
+        //! \copydoc XSwiftBus::CSettingsProvider::writeConfig
+        virtual bool writeConfig(bool tcas, bool debug) override { return m_pluginConfig.writeConfig(tcas, debug); }
+
     private:
         CConfig         m_pluginConfig;
         CDBusDispatcher m_dbusDispatcher;
