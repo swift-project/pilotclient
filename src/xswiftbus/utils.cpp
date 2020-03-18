@@ -28,7 +28,7 @@ namespace XSwiftBus
     //! Init global xplane path
     void initXPlanePath()
     {
-        if (!g_xplanePath.empty() && !g_sep.empty()) {}
+        if (!g_xplanePath.empty() && !g_sep.empty()) { return; }
 
         char xplanePath[512];
         XPLMGetSystemPath(xplanePath);
