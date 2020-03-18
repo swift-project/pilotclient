@@ -46,7 +46,7 @@ namespace XSwiftBus
         m_provider->setSettings(settings);
     }
 
-    const CConfig& CSettingsAware::getConfig() const
+    const CConfig &CSettingsAware::getConfig() const
     {
         return m_provider->getConfig();
     }

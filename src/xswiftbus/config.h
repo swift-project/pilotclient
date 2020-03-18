@@ -57,20 +57,21 @@ namespace XSwiftBus
         bool getTcasEnabled() const { return m_tcas; }
 
     private:
-        bool parseDBusMode(const std::string &value);
+        bool parseDBusMode   (const std::string &value);
         bool parseDBusAddress(const std::string &value);
-        bool parseDBusPort(const std::string &value);
-        bool parseDebug(const std::string &value);
-        bool parseTcas(const std::string &value);
+        bool parseDBusPort   (const std::string &value);
+        bool parseDebug      (const std::string &value);
+        bool parseTcas       (const std::string &value);
+        bool writeConfigFile () const;
 
         static std::string dbusModeToString(DBusMode mode);
 
         std::string m_filePath;
-        DBusMode m_dbusMode = DBusP2P;
+        DBusMode    m_dbusMode    = DBusP2P;
         std::string m_dbusAddress = "127.0.0.1";
-        int m_dbusPort = 45001;
-        bool m_debug = false;
-        bool m_tcas = true;
+        int  m_dbusPort           = 45001;
+        bool m_debug              = false;
+        bool m_tcas               = true;
     };
 } // ns
 

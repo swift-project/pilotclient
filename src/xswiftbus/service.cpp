@@ -33,18 +33,18 @@ namespace XSwiftBus
 
         std::vector<float> m_samples;
         float m_total = 0;
-        float m_totalOverBudget = 0;
+        float m_totalOverBudget  = 0;
         float m_totalMetersShort = 0;
         float m_totalSecondsLate = 0;
         size_t m_lastSampleIndex = 0;
-        static constexpr size_t c_maxSampleCount = 500;
+        static constexpr size_t c_maxSampleCount   = 500;
         static constexpr float c_framePeriodBudget = 0.05f;
 
         FramePeriodSampler() : CDrawable(xplm_Phase_LastScene, false) {}
 
         std::tuple<float, float, float, float> getFrameStats()
         {
-            if (m_total == 0) { return {}; }
+            if (m_total < 0.001f) { return {}; } // no DIV by 0
             const float fps = m_samples.size() / m_total;
             const float ratio = 1 - m_totalOverBudget / m_total;
             const float miles = m_totalMetersShort / 1852.0f;
@@ -64,7 +64,7 @@ namespace XSwiftBus
             ++m_lastSampleIndex %= c_maxSampleCount;
             if (m_samples.size() == c_maxSampleCount)
             {
-                auto& oldSample = m_samples[m_lastSampleIndex];
+                auto &oldSample = m_samples[m_lastSampleIndex];
                 m_total -= oldSample;
                 if (oldSample > c_framePeriodBudget)
                 {
