@@ -53,8 +53,17 @@ namespace XSwiftBus
         //! Get debug on/off
         bool getDebugMode() const { return m_debug; }
 
-        //! Get tcas traffic on/off
+        //! Set debug mode
+        void setDebugMode(bool on) { m_debug = on; }
+
+        //! Get TCAS traffic on/off
         bool getTcasEnabled() const { return m_tcas; }
+
+        //! Set TCAS traffic on/off
+        void setTcasEnabled(bool on) { m_tcas = on; }
+
+        //! Update and write config file
+        bool writeConfig(bool tcas, bool debug);
 
     private:
         bool parseDBusMode   (const std::string &value);
@@ -65,6 +74,7 @@ namespace XSwiftBus
         bool writeConfigFile () const;
 
         static std::string dbusModeToString(DBusMode mode);
+        static std::string boolToOnOff(bool on);
 
         std::string m_filePath;
         DBusMode    m_dbusMode    = DBusP2P;

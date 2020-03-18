@@ -14,6 +14,8 @@
 #include <string>
 #include <cctype>
 #include <algorithm>
+#include <chrono>
+#include <iomanip>
 
 using namespace BlackMisc::Simulation::XPlane::QtFreeUtils;
 
@@ -79,6 +81,50 @@ namespace XSwiftBus
         DEBUG_LOG("DBus server port: " + std::to_string(m_dbusPort));
     }
 
+    bool CConfig::writeConfig(bool tcas, bool debug)
+    {
+        setTcasEnabled(tcas);
+        setDebugMode(debug);
+        return writeConfigFile();
+    }
+
+    bool CConfig::writeConfigFile() const
+    {
+        std::ofstream configFile(m_filePath, std::ofstream::out | std::ofstream::trunc);
+        if (!configFile.is_open()) { return false; }
+
+        // this code should be similar to CXSwiftBusConfigWriter
+        configFile << "# DBus Mode - Options: p2p, session" << std::endl;
+        configFile << "dbusMode = " << m_dbusMode << std::endl;
+        configFile << std::endl;
+        configFile << "# DBus server address - relevant for P2P mode only" << std::endl;
+        configFile << "dbusAddress = " << m_dbusAddress << std::endl;
+        configFile << std::endl;
+        configFile << "# DBus server port - relevant for P2P mode only" << std::endl;
+        configFile << "dbusPort = " << m_dbusPort << std::endl;
+        configFile << std::endl;
+        configFile << "# Render phase debugging - to help diagnose crashes" << std::endl;
+        configFile << "debug = " << boolToOnOff(m_debug) << std::endl;
+        configFile << std::endl;
+        configFile << "# TCAS traffic - to disable in case of crashes" << std::endl;
+        configFile << "tcas = " << boolToOnOff(m_tcas) << std::endl;
+
+        // for info
+        const auto clockNow = std::chrono::system_clock::now();
+        const time_t now    = std::chrono::system_clock::to_time_t(clockNow);
+        struct tm tms;
+#if defined (IBM)
+        localtime_s(&tms, &now);
+#else
+        localtime_r(&now, &tms);
+#endif
+        configFile << std::endl;
+        configFile << "# Updated by XSwiftBus plugin " << std::put_time(&tms, "%T");
+        configFile << std::endl;
+        configFile.close();
+        return true;
+    }
+
     bool CConfig::parseDBusMode(const std::string &value)
     {
         if (stringCompareCaseInsensitive(value, "session"))  { m_dbusMode = CConfig::DBusSession; return true; }
@@ -136,5 +182,11 @@ namespace XSwiftBus
         case DBusP2P:     return "P2P";
         }
         return {};
+    }
+
+    std::string CConfig::boolToOnOff(bool on)
+    {
+        if (on) { return "on"; }
+        return "off";
     }
 } // ns

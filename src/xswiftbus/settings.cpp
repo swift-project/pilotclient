@@ -50,5 +50,11 @@ namespace XSwiftBus
     {
         return m_provider->getConfig();
     }
+
+    bool CSettingsAware::writeConfig(bool tcas, bool debug)
+    {
+        return m_provider->writeConfig(tcas, debug);
+    }
+
 } // ns
 
