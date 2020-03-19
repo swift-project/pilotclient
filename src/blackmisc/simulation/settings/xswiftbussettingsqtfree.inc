@@ -121,8 +121,8 @@ namespace BlackMisc
                 document.AddMember(JsonDrawingLabels,     m_drawingLabels, a);
                 document.AddMember(JsonBundleTaxiLandingLights, m_bundleTaxiLandingLights, a);
                 document.AddMember(JsonFollowAircraftDistanceM, m_followAircraftDistanceM, a);
-                document.AddMember(JsonLogRenderPhases,   m_logRenderPhases,   a);
-                document.AddMember(JsonTcas,              m_tcasEnabled, a);
+                document.AddMember(JsonLogRenderPhases,   m_logRenderPhases,     a);
+                document.AddMember(JsonTcas,              m_tcasEnabled,         a);
                 document.AddMember(JsonTerrainProbe,      m_terrainProbeEnabled, a);
 
                 // document[CXSwiftBusSettingsQtFree::JsonDBusServerAddress].SetString(StringRef(m_dBusServerAddress.c_str(), m_dBusServerAddress.size()));
