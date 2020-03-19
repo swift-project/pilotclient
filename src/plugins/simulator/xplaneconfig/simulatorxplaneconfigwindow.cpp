@@ -6,9 +6,10 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "simulatorxplaneconfigwindow.h"
-#include "blackcore/application.h"
 #include "ui_simulatorxplaneconfigwindow.h"
+#include "simulatorxplaneconfigwindow.h"
+#include "blackcore/context/contextsimulator.h"
+#include "blackgui/guiapplication.h"
 #include "blackmisc/simulation/xplane/xswiftbusconfigwriter.h"
 
 #include <QComboBox>
@@ -16,6 +17,7 @@
 #include <vector>
 
 using namespace BlackGui;
+using namespace BlackCore::Context;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::Simulation::XPlane;
@@ -48,16 +50,25 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlaneConfigWindow::onSettingsAccepted()
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
+
             const CXSwiftBusSettings s = m_xSwiftBusServerSettings.getThreadLocal();
             const CXSwiftBusSettings changed = this->getSettingsFromUI();
             if (s != changed)
             {
                 m_xSwiftBusServerSettings.set(changed);
-                CXSwiftBusConfigWriter xswiftbusConfigWriter;
-                xswiftbusConfigWriter.setDBusAddress(changed.getDBusServerAddressQt());
-                xswiftbusConfigWriter.setDebugMode(s.isLogRenderPhases());
-                xswiftbusConfigWriter.setTcasEnabled(s.isTcasEnabled());
-                xswiftbusConfigWriter.updateInAllXPlaneVersions();
+
+                // this writes to a local XPlane directory
+                // if swift runs distributed it does nothing
+                // if XPlane is connected the settings will be written from config.cpp
+                if (!sGui->getIContextSimulator() || !sGui->getIContextSimulator()->isSimulatorSimulating())
+                {
+                    CXSwiftBusConfigWriter xswiftbusConfigWriter;
+                    xswiftbusConfigWriter.setDBusAddress(changed.getDBusServerAddressQt());
+                    xswiftbusConfigWriter.setDebugMode(changed.isLogRenderPhases());
+                    xswiftbusConfigWriter.setTcasEnabled(changed.isTcasEnabled());
+                    xswiftbusConfigWriter.updateInAllXPlaneVersions();
+                }
             }
             this->close();
         }

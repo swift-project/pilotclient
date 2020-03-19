@@ -73,11 +73,15 @@ namespace BlackMisc
 
             void CXSwiftBusConfigWriter::writeTo(const QString &filePath)
             {
+                // writing the file here (UI side) allows to overwrite the values
+                // before XPlane is started
+                // TCAS/log values MUST be changed before startup of the plugin
                 QString configFilePath = filePath + "/xswiftbus.conf";
                 QFile configFile(configFilePath);
                 configFile.remove();
                 if (configFile.open(QIODevice::WriteOnly))
                 {
+                    // this code should be similar to XSwiftBus config.cpp
                     QTextStream ts(&configFile);
                     ts << "# DBus Mode - Options: p2p, session" << endl;
                     ts << "dbusMode = " << m_dbusMode << endl;
@@ -92,7 +96,12 @@ namespace BlackMisc
                     ts << "debug = " << boolToOnOff(m_debug) << endl;
                     ts << endl;
                     ts << "# TCAS traffic - to disable in case of crashes" << endl;
-                    ts << "tcas = " << boolToOnOff(m_debug) << endl;
+                    ts << "tcas = " << boolToOnOff(m_tcas) << endl;
+
+                    // add comment as information
+                    ts << endl;
+                    ts << "# Updated by CXSwiftBusConfigWriter " << QDateTime::currentDateTimeUtc().toString("yyyyMMddHHmmss") << " ";
+                    ts << endl;
                 }
             }
         } // ns
