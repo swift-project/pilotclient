@@ -53,6 +53,9 @@ namespace BlackSound
         //! \copydoc BlackMisc::CContinuousWorker::initialize
         virtual void initialize() override;
 
+        //! \copydoc BlackMisc::CContinuousWorker::beforeQuit
+        virtual void beforeQuit() noexcept override;
+
     private:
         void handleStateChanged(QAudio::State newState);
         void playBuffer();
@@ -61,8 +64,8 @@ namespace BlackSound
 
         //! Write audio amplitude to data buffer
         //! This method assumes that
-        //! \li sampleSize == 16
-        //! \li byte order == little endian
+        //! \li sampleSize  == 16
+        //! \li byte order  == little endian
         //! \li sample type == signed int
         void writeAmplitudeToBuffer(double amplitude, unsigned char *bufferPointer);
 

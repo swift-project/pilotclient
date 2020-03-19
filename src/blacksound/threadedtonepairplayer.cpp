@@ -77,6 +77,20 @@ namespace BlackSound
         connect(m_audioOutput, &QAudioOutput::stateChanged, this, &CThreadedTonePairPlayer::handleStateChanged);
     }
 
+    void CThreadedTonePairPlayer::beforeQuit() noexcept
+    {
+        QMutexLocker ml(&m_mutex);
+        CLogMessage(this).info(u"CThreadedTonePairPlayer quit for '%1'") << m_deviceInfo.getName();
+
+        if (m_audioOutput)
+        {
+            m_audioOutput->stop();
+            m_audioOutput->disconnect();
+        }
+
+        m_buffer.close();
+    }
+
     void CThreadedTonePairPlayer::handleStateChanged(QAudio::State newState)
     {
         QMutexLocker ml(&m_mutex);
@@ -175,7 +189,7 @@ namespace BlackSound
             bufferPointer -= last0AmplitudeSample;
             while (last0AmplitudeSample)
             {
-                double amplitude = 0.0; // amplitude -1 -> +1 , 0 is silence
+                const double amplitude = 0.0; // amplitude -1 -> +1 , 0 is silence
 
                 // generate this for all channels, usually 1 channel
                 for (int i = 0; i < this->m_audioFormat.channelCount(); ++i)
@@ -195,7 +209,7 @@ namespace BlackSound
         Q_ASSERT(this->m_audioFormat.sampleType() == QAudioFormat::SignedInt);
         Q_ASSERT(this->m_audioFormat.byteOrder()  == QAudioFormat::LittleEndian);
 
-        qint16 value = static_cast<qint16>(amplitude * 32767);
+        const qint16 value = static_cast<qint16>(amplitude * 32767);
         qToLittleEndian<qint16>(value, bufferPointer);
     }
 }
