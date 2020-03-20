@@ -193,6 +193,10 @@ namespace BlackSimPlugin
             if (this->isShuttingDownOrDisconnected()) { return false; }
             if (reference.isNull()) { return false; }
 
+            // avoid requests for NON exising aircraft (based on LINUX crashes)
+            if (callsign.isEmpty()) { return false; }
+            if (!this->isAircraftInRange(callsign)) { return false; }
+
             CCoordinateGeodetic pos(reference);
             if (!pos.hasMSLGeodeticHeight())
             {
@@ -304,7 +308,7 @@ namespace BlackSimPlugin
                         {
                             m_lastWeatherPosition = currentPosition;
                             const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
-                            requestWeatherGrid(weatherGrid, { this, &CSimulatorXPlane::injectWeatherGrid });
+                            this->requestWeatherGrid(weatherGrid, { this, &CSimulatorXPlane::injectWeatherGrid });
                         }
                     }
                 } // weather
@@ -327,7 +331,7 @@ namespace BlackSimPlugin
                 {
                     // Engine number start counting at 1
                     // We consider the engine running when N1 is bigger than 5 %
-                    CAircraftEngine engine {engineNumber + 1, m_xplaneData.enginesN1Percentage.at(engineNumber) > 5.0};
+                    const CAircraftEngine engine {engineNumber + 1, m_xplaneData.enginesN1Percentage.at(engineNumber) > 5.0};
                     engines.push_back(engine);
                 }
 
@@ -635,7 +639,7 @@ namespace BlackSimPlugin
             // comment KB 2019-06
             // a package is one xsb_aircraft.txt file BB has 9, X-CSL has 76
             QSet<QString> superpackages;
-            for (const Prefix& package : as_const(packages))
+            for (const Prefix &package : as_const(packages))
             {
                 superpackages.insert(package.parent());
             }
@@ -866,8 +870,8 @@ namespace BlackSimPlugin
                 switch (cloudLayer.getClouds())
                 {
                 case CCloudLayer::NoClouds: type = 0; break;
-                case CCloudLayer::Cirrus: type = 1; break;
-                case CCloudLayer::Stratus: type = 5; break;
+                case CCloudLayer::Cirrus:   type = 1; break;
+                case CCloudLayer::Stratus:  type = 5; break;
                 default: type = 0; break;
                 }
 

@@ -251,10 +251,11 @@ namespace BlackSimPlugin
             unsigned int m_slowTimerCalls = 0; //!< how often called
 
             BlackMisc::Aviation::CAirportList m_airportsInRange; //!< aiports in range of own aircraft
+            CXPlaneMPAircraftObjects m_xplaneAircraftObjects;    //!< XPlane multiplayer aircraft
+
             BlackMisc::Simulation::CSimulatedAircraftList m_pendingToBeAddedAircraft; //!< aircraft to be added
             QHash<BlackMisc::Aviation::CCallsign, qint64> m_addingInProgressAircraft; //!< aircraft just adding
-            BlackMisc::Simulation::CSimulatedAircraftList m_aircraftAddedFailed; //! aircraft for which adding failed
-            CXPlaneMPAircraftObjects m_xplaneAircraftObjects; //!< XPlane multiplayer aircraft
+            BlackMisc::Simulation::CSimulatedAircraftList m_aircraftAddedFailed;      //!< aircraft for which adding failed
             XPlaneData m_xplaneData; //!< XPlane data
 
             // statistics
