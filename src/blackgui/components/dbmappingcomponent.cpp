@@ -383,7 +383,7 @@ namespace BlackGui
             }
             if (msgs.hasErrorMessages())
             {
-                this->showOverlayMessages(msgs);
+                this->showOverlayMessagesOrHTMLMessage(msgs);
             }
         }
 
@@ -423,7 +423,7 @@ namespace BlackGui
             const CStatusMessageList msgs = ui->editor_AircraftModel->validateLivery(true);
             if (msgs.hasErrorMessages())
             {
-                this->showOverlayMessages(msgs);
+                this->showOverlayMessagesOrHTMLMessage(msgs);
             }
             else
             {
@@ -437,7 +437,7 @@ namespace BlackGui
             const CStatusMessageList msgs = ui->editor_AircraftModel->validateAircraftIcao(true);
             if (msgs.hasErrorMessages())
             {
-                this->showOverlayMessages(msgs);
+                this->showOverlayMessagesOrHTMLMessage(msgs);
             }
             else
             {
@@ -451,7 +451,7 @@ namespace BlackGui
             const CStatusMessageList msgs = ui->editor_AircraftModel->validateDistributor(true);
             if (msgs.hasErrorMessages())
             {
-                this->showOverlayMessages(msgs);
+                this->showOverlayMessagesOrHTMLMessage(msgs);
             }
             else
             {
@@ -752,7 +752,7 @@ namespace BlackGui
                 );
             if (msgs.hasWarningOrErrorMessages())
             {
-                this->showOverlayMessages(msgs);
+                this->showOverlayMessagesOrHTMLMessage(msgs);
             }
         }
 
