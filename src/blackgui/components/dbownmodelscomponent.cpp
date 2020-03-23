@@ -710,7 +710,7 @@ namespace BlackGui
             if (statusMessages.hasErrorMessages())
             {
                 this->setOverlayMessagesSorting(CStatusMessage::IndexSeverityAsIcon, Qt::DescendingOrder);
-                this->showOverlayMessages(statusMessages, false, -1);
+                this->showOverlayMessagesOrHTMLMessage(statusMessages, false, -1);
             }
             else
             {
@@ -719,7 +719,7 @@ namespace BlackGui
                 if (statusMessages.size() < 50)
                 {
                     // small number of messages
-                    this->showOverlayMessages(statusMessages, false, timeoutMs);
+                    this->showOverlayMessagesOrHTMLMessage(statusMessages, false, timeoutMs);
                 }
                 else
                 {
@@ -728,7 +728,7 @@ namespace BlackGui
                     this->showOverlayMessagesWithConfirmation(summaryMsg, false, confirmMessage, [ = ]
                     {
                         if (!myself) { return; }
-                        myself->showOverlayMessages(statusMessages);
+                        myself->showOverlayMessagesOrHTMLMessage(statusMessages);
                     });
                 }
             }
