@@ -430,7 +430,7 @@ namespace BlackCore
             return msgs;
         }
 
-        // getting here can means no "real" read success, and NO available cache
+        // getting here means no "real" read success, and NO available cache
         msgs.push_back(CStatusMessage(this).error(u"Setup not available, setup reading failed or timed out."));
         if (m_setupReader->getLastSetupReadErrorMessages().hasErrorMessages())
         {
@@ -451,7 +451,7 @@ namespace BlackCore
 
     CStatusMessageList CApplication::requestReloadOfSetupAndVersion()
     {
-        if (m_shutdown) { return CStatusMessage(this).warning(u"Shutting down, not reading"); }
+        if (m_shutdown)     { return CStatusMessage(this).warning(u"Shutting down, not reading"); }
         if (!m_setupReader) { return CStatusMessage(this).error(u"No reader for setup/version"); }
         Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Not yet parsed");
         return m_setupReader->asyncLoad();
