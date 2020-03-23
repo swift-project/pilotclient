@@ -285,6 +285,9 @@ namespace BlackGui
             //! Row has been selected
             void onModelRowSelected(const QModelIndex &index);
 
+            //! Simulator for own model has changed
+            void onOwnModelsSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo simulator);
+
             //! User object changed
             void onUserChanged();
 

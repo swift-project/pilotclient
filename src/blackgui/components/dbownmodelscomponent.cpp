@@ -150,7 +150,11 @@ namespace BlackGui
         bool CDbOwnModelsComponent::setSimulator(const CSimulatorInfo &simulator, bool forced)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            if (!forced && m_simulator == simulator) { return false; }
+
+            const bool simUnchanged = (m_simulator == simulator);
+
+            if (!simUnchanged) { emit this->ownModelsSimulatorChanged(simulator); }
+            if (!forced && simUnchanged) { return false; }
 
             // changed simulator
             m_simulator = simulator;
@@ -198,6 +202,11 @@ namespace BlackGui
                 ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models);
             }
             return m;
+        }
+
+        void CDbOwnModelsComponent::clearView()
+        {
+            ui->tvp_OwnAircraftModels->clear();
         }
 
         void CDbOwnModelsComponent::gracefulShutdown()
@@ -531,7 +540,7 @@ namespace BlackGui
                         connect(m_loadActions[0], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             if (!ownModelsComp) { return; }
-                            Q_UNUSED(checked);
+                            Q_UNUSED(checked)
                             ownModelsComp->clearSimulatorCache(CSimulatorInfo::fsx());
                         });
                     }
@@ -545,7 +554,7 @@ namespace BlackGui
                         connect(m_clearCacheActions[1], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             if (!ownModelsComp) { return; }
-                            Q_UNUSED(checked);
+                            Q_UNUSED(checked)
                             ownModelsComp->clearSimulatorCache(CSimulatorInfo::p3d());
                         });
                     }
@@ -559,7 +568,7 @@ namespace BlackGui
                         connect(m_clearCacheActions[2], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             if (!ownModelsComp) { return; }
-                            Q_UNUSED(checked);
+                            Q_UNUSED(checked)
                             ownModelsComp->clearSimulatorCache(CSimulatorInfo::fs9());
                         });
                     }
@@ -587,7 +596,7 @@ namespace BlackGui
                         connect(m_clearCacheActions[3], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             if (!ownModelsComp) { return; }
-                            Q_UNUSED(checked);
+                            Q_UNUSED(checked)
                             ownModelsComp->clearSimulatorCache(CSimulatorInfo::fg());
                         });
                     }

@@ -105,24 +105,25 @@ namespace BlackGui
             // connects
             connect(ui->editor_ModelMapping, &CModelMappingForm::requestStash, this, &CDbMappingComponent::stashCurrentModel);
 
-            connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::onModelRowSelected);
-            connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::modelDataChangedDigest, this, &CDbMappingComponent::onOwnModelsChangedDigest, Qt::QueuedConnection);
-            connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
+            connect(ui->comp_OwnAircraftModels,         &CDbOwnModelsComponent::ownModelsSimulatorChanged,  this, &CDbMappingComponent::onOwnModelsSimulatorChanged, Qt::QueuedConnection);
+            connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::doubleClicked,                 this, &CDbMappingComponent::onModelRowSelected);
+            connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::modelDataChangedDigest,        this, &CDbMappingComponent::onOwnModelsChangedDigest, Qt::QueuedConnection);
+            connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::requestStash,                  this, &CDbMappingComponent::stashSelectedModels);
             connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
 
-            connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::onModelRowSelected);
-            connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::modelDataChangedDigest, this, &CDbMappingComponent::onWorkbenchDataChanged, Qt::QueuedConnection);
-            connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
+            connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::doubleClicked,                 this, &CDbMappingComponent::onModelRowSelected);
+            connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::modelDataChangedDigest,        this, &CDbMappingComponent::onWorkbenchDataChanged, Qt::QueuedConnection);
+            connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::requestStash,                  this, &CDbMappingComponent::stashSelectedModels);
             connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
 
-            connect(ui->comp_StashAircraft->view(), &CAircraftModelView::modelDataChangedDigest, this, &CDbMappingComponent::onStashedModelsDataChangedDigest);
-            connect(ui->comp_StashAircraft->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::onModelRowSelected);
+            connect(ui->comp_StashAircraft->view(), &CAircraftModelView::modelDataChangedDigest,     this, &CDbMappingComponent::onStashedModelsDataChangedDigest);
+            connect(ui->comp_StashAircraft->view(), &CAircraftModelView::doubleClicked,              this, &CDbMappingComponent::onModelRowSelected);
             connect(ui->comp_StashAircraft->view(), &CAircraftModelView::requestHandlingOfStashDrop, this, &CDbMappingComponent::handleStashDropRequest);
-            connect(ui->comp_StashAircraft, &CDbStashComponent::stashedModelsChanged, this, &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
-            connect(ui->comp_StashAircraft, &CDbStashComponent::modelsSuccessfullyPublished, this, &CDbMappingComponent::onModelsSuccessfullyPublished, Qt::QueuedConnection);
+            connect(ui->comp_StashAircraft,         &CDbStashComponent::stashedModelsChanged,        this, &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
+            connect(ui->comp_StashAircraft,         &CDbStashComponent::modelsSuccessfullyPublished, this, &CDbMappingComponent::onModelsSuccessfullyPublished, Qt::QueuedConnection);
 
             connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::modelDataChangedDigest, this, &CDbMappingComponent::onModelSetChangedDigest, Qt::QueuedConnection);
-            connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
+            connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::requestStash,           this, &CDbMappingComponent::stashSelectedModels);
 
             connect(ui->tw_ModelsToBeMapped, &QTabWidget::currentChanged, this, &CDbMappingComponent::onTabIndexChanged);
             connect(ui->tw_ModelsToBeMapped, &QTabWidget::currentChanged, ui->comp_ModelMatcher, &CModelMatcherComponent::tabIndexChanged);
@@ -481,7 +482,7 @@ namespace BlackGui
         {
             const int h = this->height(); // total height
             int h2 = ui->qw_EditorsScrollArea->minimumHeight();
-            h2 *= 1.10; // desired height of inner widget + some space for scrollarea
+            h2 = qRound(h2 * 1.10); // desired height of inner widget + some space for scrollarea
             int currentSize = ui->sp_MappingComponent->sizes().last(); // current size
             if (h2 <= currentSize) { return; }
 
@@ -503,8 +504,8 @@ namespace BlackGui
         void CDbMappingComponent::maxTableView()
         {
             const int h = this->height();
-            int h1 = h;
-            int h2 = 0;
+            const int h1 = h;
+            const int h2 = 0;
             const QList<int> sizes({h1, h2});
             ui->sp_MappingComponent->setSizes(sizes);
         }
@@ -636,15 +637,15 @@ namespace BlackGui
 
         void CDbMappingComponent::onVPilotDataChanged(int count, bool withFilter)
         {
-            Q_UNUSED(count);
-            Q_UNUSED(withFilter);
+            Q_UNUSED(count)
+            Q_UNUSED(withFilter)
             ui->tvp_AircraftModelsForVPilot->setTabWidgetViewText(ui->tw_ModelsToBeMapped, ui->tw_ModelsToBeMapped->indexOf(ui->tab_VPilot));
         }
 
         void CDbMappingComponent::onWorkbenchDataChanged(int count, bool withFilter)
         {
-            Q_UNUSED(count);
-            Q_UNUSED(withFilter);
+            Q_UNUSED(count)
+            Q_UNUSED(withFilter)
             ui->comp_ModelWorkbench->view()->setTabWidgetViewText(ui->tw_ModelsToBeMapped, ui->tw_ModelsToBeMapped->indexOf(ui->tab_Workbench));
         }
 
@@ -695,13 +696,13 @@ namespace BlackGui
             contextMenu->addAction("Max.data area", this, &CDbMappingComponent::resizeForSelect, QKeySequence(Qt::CTRL + Qt::Key_M, Qt::Key_D));
             contextMenu->addAction("Max.mapping area", this, &CDbMappingComponent::resizeForMapping, QKeySequence(Qt::CTRL + Qt::Key_M, Qt::Key_M));
             QAction *selectedItem = contextMenu.data()->exec(globalPos);
-            Q_UNUSED(selectedItem);
+            Q_UNUSED(selectedItem)
         }
 
         void CDbMappingComponent::onStashedModelsDataChangedDigest(int count, bool withFilter)
         {
-            Q_UNUSED(count);
-            Q_UNUSED(withFilter);
+            Q_UNUSED(count)
+            Q_UNUSED(withFilter)
             ui->comp_StashAircraft->view()->setTabWidgetViewText(ui->tw_ModelsToBeMapped, ui->tw_ModelsToBeMapped->indexOf(ui->tab_StashAircraftModels));
 
             // update editors
@@ -710,8 +711,8 @@ namespace BlackGui
 
         void CDbMappingComponent::onModelSetChangedDigest(int count, bool withFilter)
         {
-            Q_UNUSED(count);
-            Q_UNUSED(withFilter);
+            Q_UNUSED(count)
+            Q_UNUSED(withFilter)
 
             // none standard with simulator
             int i = ui->tw_ModelsToBeMapped->indexOf(ui->tab_OwnModelSet);
@@ -723,8 +724,8 @@ namespace BlackGui
 
         void CDbMappingComponent::onOwnModelsChangedDigest(int count, bool withFilter)
         {
-            Q_UNUSED(count);
-            Q_UNUSED(withFilter);
+            Q_UNUSED(count)
+            Q_UNUSED(withFilter)
 
             // non standard with sim
             const int i = ui->tw_ModelsToBeMapped->indexOf(ui->tab_OwnModels);
@@ -802,6 +803,15 @@ namespace BlackGui
                 emit filterByAircraftIcao(model.getAircraftIcaoCode());
                 emit filterByDistributor(model.getDistributor());
             }
+        }
+
+        void CDbMappingComponent::onOwnModelsSimulatorChanged(const CSimulatorInfo simulator)
+        {
+            // loading of models can fail, so we clean the tab text
+            Q_UNUSED(simulator)
+
+            ui->comp_OwnAircraftModels->clearView();
+            this->onOwnModelsChangedDigest(0, false);
         }
 
         CAircraftModel CDbMappingComponent::getEditorAircraftModel() const

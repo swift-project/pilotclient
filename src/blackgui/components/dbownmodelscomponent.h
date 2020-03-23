@@ -101,6 +101,9 @@ namespace BlackGui
             //! Update view and cache
             BlackMisc::CStatusMessage updateViewAndCache(const BlackMisc::Simulation::CAircraftModelList &models);
 
+            //! Clear the view
+            void clearView();
+
             //! Models view
             BlackGui::Views::CAircraftModelView *view() const;
 
@@ -127,6 +130,9 @@ namespace BlackGui
         signals:
             //! Models have been successfully loaded
             void successfullyLoadedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, int count);
+
+            //! Own models simulator has changed
+            void ownModelsSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
         private:
             QScopedPointer<Ui::CDbOwnModelsComponent> ui;
