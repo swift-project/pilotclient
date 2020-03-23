@@ -379,15 +379,25 @@ namespace BlackGui
         if (this->isFloating())
         {
             this->toggleFloating();
+
+            /**
+             * since update to Qt 5.14.1 this kills the window
+             * https://discordapp.com/channels/539048679160676382/539846348275449887/691667651285483564
+             * \todo code can be removed AFTER 8-2020
+
             QPointer<CDockWidget> myself(this);
             QTimer::singleShot(500, this, [ = ]
             {
-                if (myself) { myself->close(); }
+                // if (myself) { myself->close(); }
             });
+            **/
+
             event->setAccepted(false); // refuse -> do not close
-            return;
         }
-        QDockWidget::closeEvent(event);
+        else
+        {
+            QDockWidget::closeEvent(event);
+        }
     }
 
     void CDockWidget::paintEvent(QPaintEvent *event)
