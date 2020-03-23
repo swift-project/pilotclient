@@ -168,7 +168,7 @@ namespace BlackWxPlugin
             {
                 CLogMessage(this).debug() << "Using cached data";
                 Q_ASSERT_X(!m_parseGribFileWorker, Q_FUNC_INFO, "Worker already running");
-                m_parseGribFileWorker = BlackMisc::CWorker::fromTask(this, "parseGribFile", [this]()
+                m_parseGribFileWorker = CWorker::fromTask(this, "parseGribFile", [this]()
                 {
                     parseGfsFileImpl(m_gribData);
                 });
