@@ -14,6 +14,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/fileutils.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QProcess>
 #include <QMessageBox>
@@ -23,6 +24,7 @@
 #include <QPointer>
 #include <QDesktopServices>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;
@@ -276,9 +278,19 @@ namespace BlackGui
             const QDir dir(ui->le_DownloadDir->text());
             if (!dir.exists()) { return; }
 
-            const QString msg = ui->cb_Shutdown->isChecked() ?
-                                QString("Start '%1' and close swift?") :
-                                QString("Start '%1'?");
+            QString msg;
+            if (CBuildConfig::isRunningOnMacOSPlatform())
+            {
+                msg = "To install close swift, "
+                      "mount the disk image '%1' and run the installer inside "
+                      "to proceed with the update.";
+            }
+            else
+            {
+                msg = ui->cb_Shutdown->isChecked() ?
+                      QString("Start '%1' and close swift?") :
+                      QString("Start '%1'?");
+            }
 
             for (const CRemoteFile &rf : executables)
             {
