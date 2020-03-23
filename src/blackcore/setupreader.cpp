@@ -79,7 +79,7 @@ namespace BlackCore
         {
             m_updateInfoUrls = cachedSetup.getSwiftUpdateInfoFileUrls(); // we use the info URLs from cached setup
             msgs.push_back(cacheAvailable ?
-                           CStatusMessage(this, CStatusMessage::SeverityInfo, u"Cache only setup, using it as it is") :
+                           CStatusMessage(this, CStatusMessage::SeverityInfo,  u"Cache only setup, using it as it is") :
                            CStatusMessage(this, CStatusMessage::SeverityError, u"Cache only setup, but cache is empty"));
             msgs.push_back(this->manageSetupAvailability(false, false)); // treat cache as local read
             return msgs;
@@ -116,7 +116,7 @@ namespace BlackCore
         if (m_bootstrapUrls.isEmpty())
         {
             // after all still empty
-            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, u"Your log files are here: " % CDirectoryUtils::logDirectory()));
+            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo,  u"Your log files are here: " % CDirectoryUtils::logDirectory()));
             msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, u"No bootstrap URLs, cannot load setup"));
         }
         else

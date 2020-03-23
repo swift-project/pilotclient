@@ -65,6 +65,9 @@ namespace BlackCore
         Q_ASSERT_X(sApp->isSetupAvailable(), Q_FUNC_INFO, "Setup not synchronized");
         this->setObjectName("CWebDataServices");
 
+        // SSL INFOs
+        CLogMessage(this).info(u"SSL supported: %1 Version: %2 (build version) %3 (library version)") << boolToYesNo(QSslSocket::supportsSsl()) << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
+
         // check if I need info objects
         const bool readFromSwiftDb = dbReaderConfig.possiblyReadsFromSwiftDb(); // DB read access
         const bool writeToSwiftDb  = dbReaderConfig.possiblyWritesToSwiftDb();  // DB write access
