@@ -129,6 +129,10 @@ namespace BlackCore
                 void restartAudio();
                 //! @}
 
+                //! Is integrated with COM unit
+                //! \threadsafe
+                bool isComUnitIntegrated() const { return m_integratedComUnit; }
+
                 //! The device's volume 0..1 @{
                 double getDeviceInputVolume() const;
                 bool   setDeviceInputVolume(double volume);

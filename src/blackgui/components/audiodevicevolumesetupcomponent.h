@@ -118,10 +118,11 @@ namespace BlackGui
             BlackMisc::Audio::CAudioDeviceInfo getSelectedOutputDevice() const;
 
             //! Transmit and receive state @{
-            void setTransmitReceiveInUi(bool tx1, bool rec1, bool tx2, bool rec2);
+            void setTransmitReceiveInUi(bool tx1, bool rec1, bool tx2, bool rec2, bool integrated);
             void setTransmitReceiveInUiFromVoiceClient();
             //! @}
 
+            //! Direct access to client
             static BlackCore::Afv::Clients::CAfvClient *afvClient();
 
             bool m_init = false;

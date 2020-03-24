@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>243</width>
-    <height>267</height>
+    <width>340</width>
+    <height>272</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Audio setup</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="gl_AudioDeviceVolumeSetupComponent">
    <item row="9" column="0">
     <widget class="QToolButton" name="tb_ResetInVolume">
      <property name="text">
@@ -93,7 +93,7 @@
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="../../blackmisc/blackmisc.qrc">
           <normaloff>:/diagona/icons/diagona/icons/arrow-circle-135.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-135.png</iconset>
         </property>
        </widget>
@@ -190,6 +190,16 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QCheckBox" name="cb_IntegratedWithCom">
+        <property name="toolTip">
+         <string>integrated with sim. cockpit</string>
+        </property>
+        <property name="text">
+         <string>sync.</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -221,7 +231,7 @@
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="../../blackmisc/blackmisc.qrc">
           <normaloff>:/diagona/icons/diagona/icons/arrow-circle-135.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-135.png</iconset>
         </property>
        </widget>
@@ -313,6 +323,7 @@
   <tabstop>cb_1Rec</tabstop>
   <tabstop>cb_2Tx</tabstop>
   <tabstop>cb_2Rec</tabstop>
+  <tabstop>cb_IntegratedWithCom</tabstop>
   <tabstop>cb_SetupAudioInputDevice</tabstop>
   <tabstop>tb_RefreshInDevice</tabstop>
   <tabstop>cb_SetupAudioOutputDevice</tabstop>
@@ -324,6 +335,8 @@
   <tabstop>hs_VolumeOut</tabstop>
   <tabstop>tb_ResetOutVolume</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../../blackmisc/blackmisc.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -305,6 +305,11 @@ namespace BlackCore
             return m_voiceClient && m_voiceClient->isStarted();
         }
 
+        bool CContextAudioBase::isComUnitIntegrated() const
+        {
+            return m_voiceClient && m_voiceClient->isComUnitIntegrated();
+        }
+
         const QList<QCommandLineOption> &CContextAudioBase::getCmdLineOptions()
         {
             static const QList<QCommandLineOption> opts
