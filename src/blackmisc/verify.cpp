@@ -63,9 +63,6 @@ namespace BlackMisc
 #endif
 
 #if defined(QT_NO_DEBUG) || defined(Q_CC_MSVC)
-#   if defined(BLACK_USE_CRASHPAD)
-            CRASHPAD_SIMULATE_CRASH();
-#   endif
             if (context && message)
             {
                 CLogMessage(CLogCategory::verification()).warning(u"Failed to verify: %1 (%2 in %3) in %4 line %5") << condition << message << context << filename << line;
@@ -74,6 +71,9 @@ namespace BlackMisc
             {
                 CLogMessage(CLogCategory::verification()).warning(u"Failed to verify: %1 in %2 line %3") << condition << filename << line;
             }
+#   if defined(BLACK_USE_CRASHPAD)
+            CRASHPAD_SIMULATE_CRASH();
+#   endif
 #endif
         }
     }
