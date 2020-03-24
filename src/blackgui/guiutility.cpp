@@ -47,7 +47,6 @@
 
 #ifdef Q_OS_WINDOWS
 #include "wtypes.h"
-#include "ShellScalingApi.h"
 #include <iostream>
 #endif
 
