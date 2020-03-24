@@ -139,7 +139,7 @@ namespace BlackCore
             if (m_validator)
             {
                 disconnect(m_validator);
-                m_validator->abandonAndWait();
+                m_validator->quitAndWait();
             }
             this->disconnect();
             this->unloadSimulatorPlugin();
