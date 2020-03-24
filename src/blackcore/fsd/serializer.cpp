@@ -128,6 +128,12 @@ namespace BlackCore
             case SimType::P3Dv2:        return "30";
             case SimType::P3Dv3:        return "30";
             case SimType::P3Dv4:        return "30";
+
+            // future versions
+            case SimType::XPLANE12:
+            case SimType::P3Dv5:
+            case SimType::MSFS2020:
+                return "0";
             }
 
             Q_UNREACHABLE();
@@ -142,15 +148,15 @@ namespace BlackCore
 
             // valid types
             if (str == "0") return SimType::Unknown;
-            else if (str == "1") return SimType::MSFS95;
-            else if (str == "2") return SimType::MSFS98;
-            else if (str == "3") return SimType::MSCFS;
-            else if (str == "4") return SimType::MSFS2000;
-            else if (str == "5") return SimType::MSCFS2;
-            else if (str == "6") return SimType::MSFS2002;
-            else if (str == "7") return SimType::MSCFS3;
-            else if (str == "8") return SimType::MSFS2004;
-            else if (str == "9") return SimType::MSFSX;
+            else if (str == "1")  return SimType::MSFS95;
+            else if (str == "2")  return SimType::MSFS98;
+            else if (str == "3")  return SimType::MSCFS;
+            else if (str == "4")  return SimType::MSFS2000;
+            else if (str == "5")  return SimType::MSCFS2;
+            else if (str == "6")  return SimType::MSFS2002;
+            else if (str == "7")  return SimType::MSCFS3;
+            else if (str == "8")  return SimType::MSFS2004;
+            else if (str == "9")  return SimType::MSFSX;
             else if (str == "12") return SimType::XPLANE8;
             else if (str == "13") return SimType::XPLANE9;
             else if (str == "14") return SimType::XPLANE10;
