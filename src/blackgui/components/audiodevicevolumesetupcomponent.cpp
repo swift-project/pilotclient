@@ -154,6 +154,7 @@ namespace BlackGui
             {
                 if (!myself || !sGui || sGui->isShuttingDown()) { return; }
                 myself->setTransmitReceiveInUiFromVoiceClient();
+
             }, ct);
             Q_ASSERT(c);
             m_afvConnections.append(c);
@@ -216,12 +217,14 @@ namespace BlackGui
             ui->le_Info->setToolTip(info);
         }
 
-        void CAudioDeviceVolumeSetupComponent::setTransmitReceiveInUi(bool tx1, bool rec1, bool tx2, bool rec2)
+        void CAudioDeviceVolumeSetupComponent::setTransmitReceiveInUi(bool tx1, bool rec1, bool tx2, bool rec2, bool integrated)
         {
             ui->cb_1Tx->setChecked(tx1);
             ui->cb_2Tx->setChecked(tx2);
             ui->cb_1Rec->setChecked(rec1);
             ui->cb_2Rec->setChecked(rec2);
+
+            ui->cb_IntegratedWithCom->setChecked(integrated);
         }
 
         void CAudioDeviceVolumeSetupComponent::setTransmitReceiveInUiFromVoiceClient()
@@ -245,7 +248,8 @@ namespace BlackGui
             const bool com1Rx = com1Enabled;
             const bool com2Rx = com2Enabled;
 
-            this->setTransmitReceiveInUi(com1Tx, com1Rx, com2Tx, com2Rx);
+            const bool integrated = sGui->getCContextAudioBase()->isComUnitIntegrated();
+            this->setTransmitReceiveInUi(com1Tx, com1Rx, com2Tx, com2Rx, integrated);
         }
 
         CAfvClient *CAudioDeviceVolumeSetupComponent::afvClient()

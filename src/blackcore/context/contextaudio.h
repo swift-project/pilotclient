@@ -218,6 +218,9 @@ namespace BlackCore
             //! Is audio enabled?
             bool isAudioEnabled() const { return m_voiceClient; }
 
+            //! Integrated with COM unit?
+            bool isComUnitIntegrated() const;
+
             //! \todo WORKAROUND to hide the "local signals"
             Afv::Clients::CAfvClient *afvClient() const { return m_voiceClient; }
 
@@ -280,7 +283,7 @@ namespace BlackCore
             /** Workaround those must be invisible for DBus
 
             //! VU levels @{
-            void inputVolumePeakVU(double value);
+            void inputVolumePeakVU (double value);
             void outputVolumePeakVU(double value);
             //! @}
 
@@ -290,7 +293,7 @@ namespace BlackCore
             //! Client updated from own aicraft data
             void updatedFromOwnAircraftCockpit();
 
-            Workaround **/
+            ** Workaround **/
 
             // ------------ local signals -------
 

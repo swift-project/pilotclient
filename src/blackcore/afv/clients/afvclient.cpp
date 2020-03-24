@@ -144,7 +144,13 @@ namespace BlackCore
                 }
 
                 const bool integrated = sApp->getIContextSimulator()->getSimulatorSettings().isComIntegrated();
+                const bool changed = integrated != m_integratedComUnit;
+
                 m_integratedComUnit = integrated;
+                if (changed)
+                {
+                    emit this->updatedFromOwnAircraftCockpit();
+                }
             }
 
             void CAfvClient::connectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client)
