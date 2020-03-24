@@ -59,14 +59,17 @@ namespace BlackCore
             MSCFS3,       /*!< MS Combat Flight Simulator 3 */
             MSFS2004,     /*!< MS Flight Simulator 2004 */
             MSFSX,        /*!< MS Flight Simulator X */
+            MSFS2020,     /*!< MS Flight Simulator 2020 */
             XPLANE8,      /*!< X-Plane 8 */
             XPLANE9,      /*!< X-Plane 9 */
             XPLANE10,     /*!< X-Plane 10 */
             XPLANE11,     /*!< X-Plane 11 */
+            XPLANE12,     /*!< X-Plane 12 */
             P3Dv1,        /*!< Prepar3D V1 */
             P3Dv2,        /*!< Prepar3D V2 */
             P3Dv3,        /*!< Prepar3D V3 */
             P3Dv4,        /*!< Prepar3D V4 */
+            P3Dv5,        /*!< Prepar3D V5 */
             FlightGear    /*!< Flight Gear */
         };
 
