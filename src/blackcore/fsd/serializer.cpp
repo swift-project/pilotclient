@@ -62,7 +62,7 @@ namespace BlackCore
             else if (str == "12") return AtcRating::Administrator;
 
             // we should NOT get here
-            const QByteArray msg = QStringLiteral("Unknown ATC rating '%1'").arg(str).toLatin1();
+            const QByteArray msg = QStringLiteral("FSD unknown ATC rating '%1'").arg(str).toLatin1();
             BLACK_AUDIT_X(false, Q_FUNC_INFO, msg.constData());
             return AtcRating::Unknown;
         }
@@ -99,7 +99,7 @@ namespace BlackCore
             else if (str == "5") return PilotRating::Supervisor;
 
             // we should NOT get here
-            const QByteArray msg = QStringLiteral("Unknown Pilot rating '%1'").arg(str).toLatin1();
+            const QByteArray msg = QStringLiteral("FSD Unknown Pilot rating '%1'").arg(str).toLatin1();
             BLACK_AUDIT_X(false, Q_FUNC_INFO, msg.constData());
             return PilotRating::Unknown;
         }
@@ -166,7 +166,7 @@ namespace BlackCore
             else if (str == "30") return SimType::P3Dv4;
 
             // we should NOT get here
-            const QByteArray msg = QStringLiteral("Unknown SimType '%1'").arg(str).toLatin1();
+            const QByteArray msg = QStringLiteral("FSD unknown SimType '%1'").arg(str).toLatin1();
             BLACK_AUDIT_X(false, Q_FUNC_INFO, msg.constData());
 
             return SimType::Unknown;
@@ -209,7 +209,7 @@ namespace BlackCore
             else if (str == "6") return CFacilityType::CTR;
 
             // we should NOT get here
-            const QByteArray msg = QStringLiteral("Unknown CFacilityType '%1'").arg(str).toLatin1();
+            const QByteArray msg = QStringLiteral("FSD unknown CFacilityType '%1'").arg(str).toLatin1();
             BLACK_AUDIT_X(false, Q_FUNC_INFO, msg.constData());
 
             return CFacilityType::Unknown;
@@ -281,11 +281,11 @@ namespace BlackCore
 
             // Query types from customized FSD servers
             if (str == "NEWATIS")   return ClientQueryType::Unknown;
+            if (str == "NEWINFO")   return ClientQueryType::Unknown; // probably causing the Linux crash
 
             // we should NOT get here
-            const QByteArray msg = QStringLiteral("Unknown ClientQueryType '%1'").arg(str).toLatin1();
+            const QByteArray msg = QStringLiteral("FSD unknown ClientQueryType '%1'").arg(str).toLatin1();
             BLACK_AUDIT_X(false, Q_FUNC_INFO, msg.constData());
-            // networkLog(vatSeverityDebug, "ClientQueryType fromString(str)", "Unknown client query type");
             return ClientQueryType::Unknown;
         }
 
