@@ -291,8 +291,13 @@ namespace BlackGui
 
         QString t(title.trimmed().toLower().simplified());
         QString c(comparison.trimmed().toLower().simplified());
-        Q_ASSERT_X(!t.isEmpty(), Q_FUNC_INFO, "missing title");
-        Q_ASSERT_X(!c.isEmpty(), Q_FUNC_INFO, "missing value");
+
+        // we should not have empty titles
+        BLACK_VERIFY_X(!t.isEmpty(), Q_FUNC_INFO, "missing title");
+        BLACK_VERIFY_X(!c.isEmpty(), Q_FUNC_INFO, "missing comparison value");
+        if (t.isEmpty() || c.isEmpty()) { return false; }
+
+        // same?
         if (t == c) { return true; }
 
         // further unify
