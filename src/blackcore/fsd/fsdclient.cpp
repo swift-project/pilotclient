@@ -1808,11 +1808,15 @@ namespace BlackCore
                 const QString data = m_fsdTextCodec->toUnicode(dataEncoded);
                 this->parseMessage(data);
                 lines++;
-                if (lines > 30)
+
+                static constexpr int MaxLines = 50;
+                if (lines > MaxLines)
                 {
-                    CLogMessage(this).debug(u"ReadDataFromSocket has too many lines");
+                    static constexpr int DelayMs  = 10;
+
+                    CLogMessage(this).debug(u"ReadDataFromSocket has too many lines (>%1), will read again in %2ms") << MaxLines << DelayMs;
                     QPointer<CFSDClient> myself(this);
-                    QTimer::singleShot(10, this, [ = ]
+                    QTimer::singleShot(DelayMs, this, [ = ]
                     {
                         if (myself) { myself->readDataFromSocket(); }
                     });
