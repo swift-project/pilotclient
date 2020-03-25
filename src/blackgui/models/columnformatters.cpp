@@ -372,7 +372,7 @@ namespace BlackGui
 
         CVariant CBoolIconFormatter::displayRole(const CVariant &dataCVariant) const
         {
-            Q_UNUSED(dataCVariant);
+            Q_UNUSED(dataCVariant)
             Q_ASSERT_X(false, "CBoolIconFormatter", "this role should be disabled with icon boolean");
             return CVariant();
         }
@@ -396,7 +396,14 @@ namespace BlackGui
         CVariant CAltitudeFormatter::displayRole(const CVariant &altitude) const
         {
             CAltitude alt(altitude.to<CAltitude>());
-            if (m_flightLevel) { alt.toFlightLevel(); }
+            if (m_flightLevel)
+            {
+                alt.toFlightLevel();
+            }
+            else
+            {
+                alt.switchUnit(m_unit);
+            }
             return alt.toQString(m_useI18n);
         }
 
@@ -405,7 +412,7 @@ namespace BlackGui
 
         CVariant CColorFormatter::displayRole(const CVariant &dataCVariant) const
         {
-            Q_UNUSED(dataCVariant);
+            Q_UNUSED(dataCVariant)
             Q_ASSERT_X(false, Q_FUNC_INFO, "this role should be disabled with RGB color");
             return CVariant();
         }
