@@ -749,13 +749,17 @@ namespace BlackGui
 
     int CInfoArea::getTabBarIndexByTitle(const QString &title) const
     {
-        Q_ASSERT_X(!title.isEmpty(), Q_FUNC_INFO, "No title");
+        BLACK_VERIFY_X(!title.isEmpty(), Q_FUNC_INFO, "No title");
+        if (title.isEmpty()) { return -1; }
+
         if (m_tabBar->count() < 1) { return -1;}
         for (int i = 0; i < m_tabBar->count(); i++)
         {
-            if (CGuiUtility::lenientTitleComparison(m_tabBar->tabText(i), title)) { return i; }
+            QString tt = m_tabBar->tabText(i);
+            if (tt.isEmpty()) { tt = m_tabBar->tabToolTip(i); }
+            if (tt.isEmpty()) { continue; } // cannot find by empty text
+            if (CGuiUtility::lenientTitleComparison(tt, title)) { return i; }
         }
-        Q_ASSERT_X(!title.isEmpty(), Q_FUNC_INFO, "Wrong title");
         return -1;
     }
 
@@ -763,7 +767,27 @@ namespace BlackGui
     {
         if (!dockWidgetInfoArea) { return -1; }
         if (dockWidgetInfoArea->isFloating()) { return -1; }
-        return getTabBarIndexByTitle(dockWidgetInfoArea->windowTitleOrBackup());
+        int index = this->getTabBarIndexByTitle(dockWidgetInfoArea->windowTitleOrBackup());
+        if (index < 0)
+        {
+            // fallback if the tab has no name and cannot be found
+            int i = 0;
+            for (const CDockWidgetInfoArea *a : m_dockWidgetInfoAreas)
+            {
+                if (a == dockWidgetInfoArea)
+                {
+                    index = i;
+                    break;
+                }
+                ++i;
+            }
+        }
+
+        // sanity check
+        if (index >= m_tabBar->count()) { index = -1; }
+
+        // bye
+        return index;
     }
 
     void CInfoArea::selectArea(const CDockWidgetInfoArea *dockWidgetInfoArea)
@@ -792,6 +816,7 @@ namespace BlackGui
             const QString t(m_tabBar->tabText(i));
             const int areaIndex = t.isEmpty() ? i : this->getAreaIndexByWindowTitle(t);
             m_tabBar->setTabIcon(i, indexToPixmap(areaIndex));
+            m_tabBar->setTabToolTip(i, t);
         }
     }
 
