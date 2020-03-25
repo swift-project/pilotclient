@@ -119,4 +119,5 @@ defineTest(CheckOptionalDependency) {
 
 swiftConfig(static) { DEFINES *= WITH_STATIC }
 swiftConfig(assertsInRelease) { DEFINES *= QT_FORCE_ASSERTS }
-!mingw { DEFINES *= BLACK_USE_CRASHPAD }
+msvc { DEFINES *= BLACK_USE_CRASHPAD }
+macos { DEFINES *= BLACK_USE_CRASHPAD }
