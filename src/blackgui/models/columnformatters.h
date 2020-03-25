@@ -350,10 +350,17 @@ namespace BlackGui
             //! Constructor
             CAltitudeFormatter(bool flightlevel = false, int alignment = alignRightVCenter(), bool i18n = true) : CDefaultFormatter(alignment, i18n), m_flightLevel(flightlevel) {}
 
+            //! Constructor
+            CAltitudeFormatter(const BlackMisc::PhysicalQuantities::CLengthUnit &unit, bool flightlevel = false, int alignment = alignRightVCenter(), bool i18n = true) : CDefaultFormatter(alignment, i18n), m_unit(unit), m_flightLevel(flightlevel) {}
+
+            //! Set the unit, normally ft/m
+            void setUnit(const BlackMisc::PhysicalQuantities::CLengthUnit &unit);
+
             //! \copydoc CDefaultFormatter::displayRole
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &altitude) const override;
 
         private:
+            BlackMisc::PhysicalQuantities::CLengthUnit m_unit = BlackMisc::PhysicalQuantities::CLengthUnit::ft();
             const bool m_flightLevel = false;
         };
 
