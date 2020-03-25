@@ -95,7 +95,7 @@ namespace XSwiftBus
 
         // this code should be similar to CXSwiftBusConfigWriter
         configFile << "# DBus Mode - Options: p2p, session" << std::endl;
-        configFile << "dbusMode = " << m_dbusMode << std::endl;
+        configFile << "dbusMode = " << toLower(dbusModeToString(m_dbusMode)) << std::endl;
         configFile << std::endl;
         configFile << "# DBus server address - relevant for P2P mode only" << std::endl;
         configFile << "dbusAddress = " << m_dbusAddress << std::endl;
