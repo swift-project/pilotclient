@@ -11,7 +11,7 @@ SUBDIRS += sampleblackmiscsim
 SUBDIRS += samplehotkey
 SUBDIRS += sampleweatherdata
 SUBDIRS += samplefsd
-SUBDIRS += afvclient
+# SUBDIRS += afvclient
 
 samplecliclient.file = cliclient/samplecliclient.pro
 sampleblackmiscquantities.file = blackmiscquantities/sampleblackmiscquantities.pro
@@ -21,6 +21,6 @@ sampleblackmiscsim.file = blackmiscsim/sampleblackmiscsim.pro
 samplehotkey.file = hotkey/samplehotkey.pro
 sampleweatherdata.file = weatherdata/sampleweatherdata.pro
 samplefsd.file = fsd/samplefsd.pro
-afvclient.file = afvclient/afvclient.pro
+# afvclient.file = afvclient/afvclient.pro
 
 load(common_post)
