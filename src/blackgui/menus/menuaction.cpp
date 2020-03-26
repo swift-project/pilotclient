@@ -102,7 +102,13 @@ namespace BlackGui
 
         const CMenuAction &CMenuAction::subMenuDisplayModels()
         {
-            static const CMenuAction subdir(CIcons::appAircraft16(), "Display and render models", CMenuAction::pathClientSimulationDisplay());
+            static const CMenuAction subdir(CIcons::appAircraft16(), "Render models", CMenuAction::pathClientSimulationRender());
+            return subdir;
+        }
+
+        const CMenuAction &CMenuAction::subMenuRenderModels()
+        {
+            static const CMenuAction subdir(CIcons::appAircraft16(), "Display models", CMenuAction::pathClientSimulationDisplay());
             return subdir;
         }
 
@@ -492,6 +498,12 @@ namespace BlackGui
         {
             if (this->containsMenu(CMenuAction::subMenuDisplayModels().getPath())) { return CMenuAction(); }
             return this->addAction(CMenuAction::subMenuDisplayModels());
+        }
+
+        CMenuAction CMenuActions::addMenuRenderModels()
+        {
+            if (this->containsMenu(CMenuAction::subMenuRenderModels().getPath())) { return CMenuAction(); }
+            return this->addAction(CMenuAction::subMenuRenderModels());
         }
 
         CMenuAction CMenuActions::addMenuDataTransfer()
