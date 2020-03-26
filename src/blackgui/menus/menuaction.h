@@ -166,6 +166,9 @@ namespace BlackGui
             static const QString &pathClientSimulationDisplay() { static const QString p("ClientSimulation.Display/Display"); return p; }
 
             //! Client simulation/display related
+            static const QString &pathClientSimulationRender() { static const QString p("ClientSimulation.Display/Render"); return p; }
+
+            //! Client simulation/display related
             static const QString &pathClientSimulationTransfer() { static const QString p("ClientSimulation.Transfer/Transfer"); return p; }
 
             //! Client model set related
@@ -222,6 +225,7 @@ namespace BlackGui
             static const CMenuAction &subMenuConsolidateModels();
             static const CMenuAction &subMenuCom();
             static const CMenuAction &subMenuDisplayModels();
+            static const CMenuAction &subMenuRenderModels();
             static const CMenuAction &subMenuDataTransfer();
             //! @}
 
@@ -371,6 +375,9 @@ namespace BlackGui
 
             //! Add display model menu
             CMenuAction addMenuDisplayModels();
+
+            //! Add render model menu
+            CMenuAction addMenuRenderModels();
 
             //! Add data transfer menu
             CMenuAction addMenuDataTransfer();

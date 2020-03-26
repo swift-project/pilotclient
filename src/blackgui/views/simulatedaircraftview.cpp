@@ -67,28 +67,29 @@ namespace BlackGui
             // sub menus, only adding the path, the content will be added below
             // => configureMenu
             menuActions.addMenuDisplayModels();
+            menuActions.addMenuRenderModels();
             menuActions.addMenuDataTransfer();
 
             if (m_menus.testFlag(MenuDisableModelsTemp) && this->hasSelection())
             {
-                menuActions.addAction(CIcons::delete16(), "Temp.disable model from set", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::requestTempDisable });
+                menuActions.addAction(CIcons::delete16(), "Temp.disable model from set", CMenuAction::pathClientSimulationRender(), { this, &CSimulatedAircraftView::requestTempDisable });
             }
 
             if (m_withRecalculate)
             {
-                menuActions.addAction(CIcons::appInterpolation16(), "Re-calculate all aircraft", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::recalculateAllAircraft });
-                menuActions.addAction(CIcons::appInterpolation16(), "Re-matching all aircraft", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::doMatchingsAgain });
+                menuActions.addAction(CIcons::appInterpolation16(), "Re-calculate all aircraft", CMenuAction::pathClientSimulationRender(), { this, &CSimulatedAircraftView::recalculateAllAircraft });
+                menuActions.addAction(CIcons::appInterpolation16(), "Re-matching all aircraft",  CMenuAction::pathClientSimulationRender(), { this, &CSimulatedAircraftView::doMatchingsAgain });
                 if (this->hasSelection())
                 {
-                    menuActions.addAction(CIcons::appInterpolation16(), "Re-matching selected", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::doMatchingsAgainForSelected });
+                    menuActions.addAction(CIcons::appInterpolation16(), "Re-matching selected", CMenuAction::pathClientSimulationRender(), { this, &CSimulatedAircraftView::doMatchingsAgainForSelected });
                 }
             }
 
             if (m_withMenuEnableAircraft && !this->isEmpty())
             {
-                menuActions.addAction(CIcons::appAircraft16(), "Enable all aircraft", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::enableAllDisabledAircraft });
-                menuActions.addAction(CIcons::appAircraft16(), "Re-enable unrendered aircraft", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::reEnableAllUnrenderedAircraft });
-                menuActions.addAction(CIcons::appAircraft16(), "Disable all aircraft", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::disableAllEnabledAircraft });
+                menuActions.addAction(CIcons::appAircraft16(), "Enable all aircraft",           CMenuAction::pathClientSimulationRender(), { this, &CSimulatedAircraftView::enableAllDisabledAircraft });
+                menuActions.addAction(CIcons::appAircraft16(), "Re-enable unrendered aircraft", CMenuAction::pathClientSimulationRender(), { this, &CSimulatedAircraftView::reEnableAllUnrenderedAircraft });
+                menuActions.addAction(CIcons::appAircraft16(), "Disable all aircraft",          CMenuAction::pathClientSimulationRender(), { this, &CSimulatedAircraftView::disableAllEnabledAircraft });
             }
 
             if (this->hasSelection())
@@ -107,11 +108,11 @@ namespace BlackGui
                     }
                     if (m_withMenuEnableAircraft)
                     {
-                        menuActions.addAction(CIcons::appAircraft16(), aircraft.isEnabled() ? "Disable aircraft" : "Enabled aircraft", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::toggleEnabledAircraft });
+                        menuActions.addAction(CIcons::appAircraft16(), aircraft.isEnabled() ? "Disable aircraft" : "Enabled aircraft", CMenuAction::pathClientSimulationRender(), { this, &CSimulatedAircraftView::toggleEnabledAircraft });
                     }
                     if (m_withMenuHighlightAndFollow)
                     {
-                        menuActions.addAction(CIcons::appAircraft16(), "Follow in simulator", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::requestFollowInSimulator });
+                        menuActions.addAction(CIcons::appAircraft16(), "Follow in simulator",     CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::requestFollowInSimulator });
                         menuActions.addAction(CIcons::appSimulator16(), "Highlight in simulator", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::requestHighlightInSimulator });
                     }
                     if (m_withMenuEnableGndFlag)
