@@ -32,6 +32,9 @@ namespace BlackSound
         //! Destructor
         virtual ~CSelcalPlayer() override;
 
+        //! Stop the player thread
+        void gracefulShutdown();
+
         //! Play SELCAL
         //! \return Time of the played tone
         BlackMisc::PhysicalQuantities::CTime play(int volume, const BlackMisc::Aviation::CSelcal &selcal);

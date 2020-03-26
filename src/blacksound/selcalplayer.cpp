@@ -25,6 +25,11 @@ namespace BlackSound
 
     CSelcalPlayer::~CSelcalPlayer()
     {
+        this->gracefulShutdown();
+    }
+
+    void CSelcalPlayer::gracefulShutdown()
+    {
         m_threadedPlayer.quitAndWait();
     }
 

@@ -231,6 +231,7 @@ namespace BlackCore
         void CContextAudioBase::gracefulShutdown()
         {
             this->terminateVoiceClient();
+            m_selcalPlayer->gracefulShutdown();
             QObject::disconnect(this);
         }
 
