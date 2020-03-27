@@ -1370,112 +1370,128 @@ namespace BlackCore
         if (callsign.isEmpty()) { return situation; }
 
         CAircraftSituation correctedSituation(allowTestOffset ? this->addTestAltitudeOffsetToSituation(situation) : situation);
-        bool canLikelySkipNearGround = correctedSituation.canLikelySkipNearGroundInterpolation();
         bool needToRequestElevation  = false;
-
-        if (!correctedSituation.hasGroundElevation())
+        bool canLikelySkipNearGround = correctedSituation.canLikelySkipNearGroundInterpolation();
+        do
         {
+            if (canLikelySkipNearGround || correctedSituation.hasGroundElevation()) { break; }
+
             // set a defined state
             correctedSituation.resetGroundElevation();
 
-            if (!canLikelySkipNearGround)
-            {
-                // fetch from cache or request
-                const CAircraftSituationChange changesBeforeStoring = this->remoteAircraftSituationChanges(callsign).frontOrDefault();
+            // Check if we can bail out and ignore all elevation handling
+            //
+            // rational:
+            // a) elevation handling is expensive, and might even requests elevation from sim.
+            // b) elevations not needed pollute the cache with "useless" values
+            //
+            if (canLikelySkipNearGround) { break; }
 
-                // Check if we can bail out and ignore all elevation handling
-                //
-                // rational:
-                // a) elevation handling is expensive, and might even requests elevation from sim.
-                // b) elevations not needed pollute the cache with "useless" values
-                //
-                if (!changesBeforeStoring.isNull())
+            // Guessing gives better values, also for smaller planes
+            // and avoids unnecessary elevation fetching for low flying smaller GA aircraft
+            const CAircraftIcaoCode icao = this->getAircraftInRangeModelForCallsign(callsign).getAircraftIcaoCode();
+            if (!icao.hasDesignator()) { break; } // what is that?
+            if (!icao.isVtol())
+            {
+                // Not for VTOLs
+                CLength cg(nullptr);
+                CSpeed rotateSpeed(nullptr);
+                icao.guessModelParameters(cg, rotateSpeed);
+                if (!rotateSpeed.isNull())
                 {
-                    canLikelySkipNearGround = changesBeforeStoring.isConstAscending();
+                    rotateSpeed *= 1.2; // some margin
+                    if (situation.getGroundSpeed() > rotateSpeed) { break; }
+                }
+            }
+
+            // fetch from cache or request
+            const CAircraftSituationChange changesBeforeStoring = this->remoteAircraftSituationChanges(callsign).frontOrDefault();
+
+            if (!changesBeforeStoring.isNull())
+            {
+                canLikelySkipNearGround = changesBeforeStoring.isConstAscending();
+                if (canLikelySkipNearGround) { break; }
+            }
+
+            // we NEED elevation
+            const CLength dpt = correctedSituation.getDistancePerTime(100, CElevationPlane::singlePointRadius());
+            const CAircraftSituationList situationsBeforeStoring   = this->remoteAircraftSituations(callsign);
+            const CAircraftSituation situationWithElvBeforeStoring = situationsBeforeStoring.findClosestElevationWithinRange(correctedSituation, dpt);
+            if (situationWithElvBeforeStoring.transferGroundElevationFromMe(correctedSituation, dpt))
+            {
+                // from nearby situations of own aircraft, data was transferred above
+                // we use transfer first as it is slightly faster as cache
+            }
+            else
+            {
+                // from cache
+                const CLength distance(correctedSituation.getDistancePerTime250ms(CElevationPlane::singlePointRadius())); // distance per ms
+                const CElevationPlane ep = this->findClosestElevationWithinRange(correctedSituation, distance);
+                needToRequestElevation   = ep.isNull();
+                Q_ASSERT_X(needToRequestElevation || !ep.getRadius().isNull(), Q_FUNC_INFO, "null radius");
+
+                // also can handle NULL elevations
+                correctedSituation.setGroundElevation(ep, CAircraftSituation::FromCache);
+            }
+
+            // we have a new situation, so we try to get the elevation
+            // so far we have requested it, but we set it upfront either by
+            //
+            // a) average value from other planes in the vicinity (cache, not moving) or
+            // b) by extrapolating
+            //
+            // if we would NOT preset it, we could end up with oscillation
+            //
+            if (!correctedSituation.hasGroundElevation())
+            {
+                // average elevation
+                // 1) from cache
+                // 2) from planes on ground not moving
+                bool fromNonMoving = false;
+                bool triedExtrapolation  = false;
+                bool couldNotExtrapolate = false;
+
+                CElevationPlane averagePlane = this->averageElevationOfOnGroundAircraft(situation, CElevationPlane::majorAirportRadius(), 2, 3);
+                if (averagePlane.isNull())
+                {
+                    averagePlane = this->averageElevationOfNonMovingAircraft(situation, CElevationPlane::majorAirportRadius(), 2, 3);
+                    fromNonMoving = true;
                 }
 
-                if (!canLikelySkipNearGround)
+                // do we have an elevation yet?
+                if (!averagePlane.isNull())
                 {
-                    const CLength dpt = correctedSituation.getDistancePerTime(100, CElevationPlane::singlePointRadius());
-                    const CAircraftSituationList situationsBeforeStoring    = this->remoteAircraftSituations(callsign);
-                    const CAircraftSituation situationWithElvBeforeStoring  = situationsBeforeStoring.findClosestElevationWithinRange(correctedSituation, dpt);
-                    if (situationWithElvBeforeStoring.transferGroundElevationFromMe(correctedSituation, dpt))
+                    correctedSituation.setGroundElevation(averagePlane, CAircraftSituation::Average);
+                    if (fromNonMoving) { m_foundInNonMovingAircraft++; }
+                    else { m_foundInElevationsOnGnd++; }
+                }
+                else
+                {
+                    // values before updating (i.e. "storing") so the new situation is not yet considered
+                    if (situationsBeforeStoring.size() > 1)
                     {
-                        // from nearby situations of own aircraft, data was transferred above
-                        // we use transfer first as it is slightly faster as cache
+                        const bool extrapolated = correctedSituation.extrapolateElevation(situationsBeforeStoring[0], situationsBeforeStoring[1], changesBeforeStoring);
+                        triedExtrapolation  = true;
+                        couldNotExtrapolate = !extrapolated;
                     }
-                    else
-                    {
-                        // from cache
-                        const CLength distance(correctedSituation.getDistancePerTime250ms(CElevationPlane::singlePointRadius())); // distance per ms
-                        const CElevationPlane ep = this->findClosestElevationWithinRange(correctedSituation, distance);
-                        needToRequestElevation   = ep.isNull();
-                        Q_ASSERT_X(needToRequestElevation || !ep.getRadius().isNull(), Q_FUNC_INFO, "null radius");
+                }
 
-                        // also can handle NULL elevations
-                        correctedSituation.setGroundElevation(ep, CAircraftSituation::FromCache);
+                // still no elevation
+                if (!correctedSituation.hasGroundElevation())
+                {
+                    if (CBuildConfig::isLocalDeveloperDebugBuild())
+                    {
+                        // experimental, could become ASSERT
+                        BLACK_VERIFY_X(needToRequestElevation, Q_FUNC_INFO, "Request should already be set");
                     }
+                    needToRequestElevation = true; // should be the true already
 
-                    // we have a new situation, so we try to get the elevation
-                    // so far we have requested it, but we set it upfront either by
-                    //
-                    // a) average value from other planes in the vicinity (cache, not moving) or
-                    // b) by extrapolating
-                    //
-                    // if we would NOT preset it, we could end up with oscillation
-                    //
-                    if (!correctedSituation.hasGroundElevation())
-                    {
-                        // average elevation
-                        // 1) from cache
-                        // 2) from planes on ground not moving
-                        bool fromNonMoving = false;
-                        bool triedExtrapolation  = false;
-                        bool couldNotExtrapolate = false;
-
-                        CElevationPlane averagePlane = this->averageElevationOfOnGroundAircraft(situation, CElevationPlane::majorAirportRadius(), 2, 3);
-                        if (averagePlane.isNull())
-                        {
-                            averagePlane = this->averageElevationOfNonMovingAircraft(situation, CElevationPlane::majorAirportRadius(), 2, 3);
-                            fromNonMoving = true;
-                        }
-
-                        // do we have an elevation yet?
-                        if (!averagePlane.isNull())
-                        {
-                            correctedSituation.setGroundElevation(averagePlane, CAircraftSituation::Average);
-                            if (fromNonMoving) { m_foundInNonMovingAircraft++; }
-                            else { m_foundInElevationsOnGnd++; }
-                        }
-                        else
-                        {
-                            // values before updating (i.e. "storing") so the new situation is not yet considered
-                            if (situationsBeforeStoring.size() > 1)
-                            {
-                                const bool extrapolated = correctedSituation.extrapolateElevation(situationsBeforeStoring[0], situationsBeforeStoring[1], changesBeforeStoring);
-                                triedExtrapolation  = true;
-                                couldNotExtrapolate = !extrapolated;
-                            }
-                        }
-
-                        // still no elevation
-                        if (!correctedSituation.hasGroundElevation())
-                        {
-                            if (CBuildConfig::isLocalDeveloperDebugBuild())
-                            {
-                                // experimental, could become ASSERT
-                                BLACK_VERIFY_X(needToRequestElevation, Q_FUNC_INFO, "Request should already be set");
-                            }
-                            needToRequestElevation = true; // should be the true already
-
-                            Q_UNUSED(triedExtrapolation)
-                            Q_UNUSED(couldNotExtrapolate)
-                        }
-                    } // gnd. elevation
-
-                } // can skip?
-            } // can skip?
-        } // have already elevation?
+                    Q_UNUSED(triedExtrapolation)
+                    Q_UNUSED(couldNotExtrapolate)
+                }
+            } // gnd. elevation
+        }
+        while (false);  // do we need elevation, find on
 
         // do we already have ground details?
         if (situation.getOnGroundDetails() == CAircraftSituation::NotSetGroundDetails)
