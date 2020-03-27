@@ -33,6 +33,9 @@ namespace BlackGui
             virtual BlackMisc::Simulation::CDistributorList filter(const BlackMisc::Simulation::CDistributorList &inDistributors) const override;
 
         private:
+            //! Ignore simulator filtering?
+            bool ignoreSimulator() const;
+
             BlackMisc::Simulation::CSimulatorInfo m_simulator;
         };
     } // namespace

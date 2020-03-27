@@ -144,15 +144,21 @@ namespace BlackMisc
             return (m_simulator & otherInfo.m_simulator) > 0;
         }
 
+        bool CSimulatorInfo::matchesAnyOrNone(const CSimulatorInfo &otherInfo) const
+        {
+            if (this->isNoSimulator()) { return true; }
+            return this->matchesAny(otherInfo);
+        }
+
         int CSimulatorInfo::comparePropertyByIndex(const CPropertyIndex &index, const CSimulatorInfo &compareValue) const
         {
-            Q_UNUSED(index);
+            Q_UNUSED(index)
             return Compare::compare(m_simulator, compareValue.m_simulator);
         }
 
         QString CSimulatorInfo::convertToQString(bool i18n) const
         {
-            Q_UNUSED(i18n);
+            Q_UNUSED(i18n)
             const Simulator s = getSimulator();
             const QString str =
                 (s.testFlag(FSX)    ? QStringLiteral("FSX ") : QString()) %
