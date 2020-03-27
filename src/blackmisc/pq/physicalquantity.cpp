@@ -455,6 +455,14 @@ namespace BlackMisc
             *this = CPqString::parse<PQ>(value, CPqString::SeparatorQtDefault);
         }
 
+        template<class MU, class PQ>
+        PQ CPhysicalQuantity<MU, PQ>::parsedFromString(const QString &value, CPqString::SeparatorMode mode)
+        {
+            PQ pq;
+            pq.parseFromString(value, mode);
+            return pq;
+        }
+
         template <class MU, class PQ>
         CVariant CPhysicalQuantity<MU, PQ>::propertyByIndex(const CPropertyIndex &index) const
         {
