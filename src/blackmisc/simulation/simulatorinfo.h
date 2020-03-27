@@ -132,6 +132,10 @@ namespace BlackMisc
             //! Matches any simulator
             bool matchesAny(const CSimulatorInfo &otherInfo) const;
 
+            //! Matches any simulator or None (NULL)
+            //! \remark for cases where no specified sim. also matches
+            bool matchesAnyOrNone(const CSimulatorInfo &otherInfo) const;
+
             //! Simulator
             Simulator getSimulator() const { return static_cast<Simulator>(m_simulator); }
 

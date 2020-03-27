@@ -24,14 +24,21 @@ namespace BlackGui
 
         CDistributorList CDistributorFilter::filter(const CDistributorList &inDistributors) const
         {
-            if (!this->isValid()) { return inDistributors; }
+            if (!this->isValid())        { return inDistributors; }
+            if (this->ignoreSimulator()) { return inDistributors; }
+
             CDistributorList outContainer;
             for (const CDistributor &distributor : inDistributors)
             {
-                if (!distributor.getSimulator().matchesAny(m_simulator)) { continue; }
+                if (!distributor.getSimulator().matchesAnyOrNone(m_simulator)) { continue; }
                 outContainer.push_back(distributor);
             }
             return outContainer;
+        }
+
+        bool CDistributorFilter::ignoreSimulator() const
+        {
+            return (m_simulator.isNoSimulator() || m_simulator.isAllSimulators());
         }
     } // namespace
 } // namespace
