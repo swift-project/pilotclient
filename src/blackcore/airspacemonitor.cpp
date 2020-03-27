@@ -411,8 +411,7 @@ namespace BlackCore
             if (parser.matchesPart(1, "range") && parser.countParts() > 2)
             {
                 const QString r = parser.part(2);
-                CLength d;
-                d.parseFromString(r);
+                const CLength d = CLength::parsedFromString(r);
                 this->setMaxRange(d);
             }
         }
