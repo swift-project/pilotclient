@@ -247,8 +247,8 @@ namespace BlackMisc
             if (!guessedCGOut.isNull() && !guessedVRotateOut.isNull()) { return; }
 
             // init to defaults
-            CLength guessedCG = CLength(1.5, CLengthUnit::m());
-            CSpeed guessedVRotate = this->isVtol() ? CSpeed::null() : CSpeed(70, CSpeedUnit::km_h());
+            CLength guessedCG      = CLength(1.5, CLengthUnit::m());
+            CSpeed  guessedVRotate = CSpeed(70,   CSpeedUnit::km_h());
 
             const int engines = this->getEnginesCount();
             const QChar engineType = this->getEngineTypeChar().toUpper();
@@ -267,26 +267,36 @@ namespace BlackMisc
                     {
                         // a B737 has VR 105-160kts
                         guessedVRotate = CSpeed(120, CSpeedUnit::kts());
-                        guessedCG = CLength(2.5, CLengthUnit::m());
+                        guessedCG      = CLength(2.5, CLengthUnit::m());
                         break;
                     }
                 }
                 else if (engines > 2)
                 {
-                    guessedCG = CLength(4.0, CLengthUnit::m());
+                    guessedCG      = CLength(4.0, CLengthUnit::m());
                     guessedVRotate = CSpeed(70, CSpeedUnit::kts());
                     if (engineType == 'J')
                     {
                         // A typical B747 has VR around 160kts
-                        guessedCG = CLength(6.0, CLengthUnit::m());
+                        guessedCG      = CLength(6.0, CLengthUnit::m());
                         guessedVRotate = CSpeed(140, CSpeedUnit::kts());
                         break;
                     }
                 }
+
+                if (engineType == 'J')
+                {
+                    // MIL Jets a bit faster
+                    if (this->isMilitary()) { guessedVRotate *= 1.20; }
+                    else if (this->matchesDesignator("CONC")) { guessedVRotate = CSpeed(199, CSpeedUnit::kts()); }
+                }
+
+                // VTOL
+                if (this->isVtol()) { guessedVRotate = CSpeed(0, CSpeedUnit::kts()); }
             }
             while (false);
 
-            if (guessedCGOut.isNull()) { guessedCGOut = guessedCG; }
+            if (guessedCGOut.isNull())      { guessedCGOut = guessedCG; }
             if (guessedVRotateOut.isNull()) { guessedVRotateOut = guessedVRotate; }
         }
 
