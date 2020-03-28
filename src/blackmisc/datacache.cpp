@@ -68,7 +68,7 @@ namespace BlackMisc
         CDataCacheRevision *m_rev = nullptr;
     };
 
-    CDataCache::CDataCache() : CValueCache(1)
+    CDataCache::CDataCache() : CValueCache(1), m_serializer(new CDataCacheSerializer { this, revisionFileName() })
     {
         if (! QDir::root().mkpath(persistentStore()))
         {
@@ -82,16 +82,21 @@ namespace BlackMisc
             changeValuesFromRemote(values, CIdentifier());
         });
         connect(&m_watcher, &QFileSystemWatcher::fileChanged, this, &CDataCache::loadFromStoreAsync);
-        connect(&m_serializer, &CDataCacheSerializer::valuesLoadedFromStore, this, &CDataCache::changeValuesFromRemote, Qt::DirectConnection);
+        connect(m_serializer, &CDataCacheSerializer::valuesLoadedFromStore, this, &CDataCache::changeValuesFromRemote, Qt::DirectConnection);
 
         if (! QFile::exists(revisionFileName())) { QFile(revisionFileName()).open(QFile::WriteOnly); }
-        m_serializer.loadFromStore({}, false, true); // load pinned values
+        m_serializer->loadFromStore({}, false, true); // load pinned values
         singleShot(0, this, [this] // only start the serializer if the main thread event loop runs
         {
-            m_serializer.start();
+            m_serializer->start();
             m_watcher.addPath(revisionFileName());
             loadFromStoreAsync();
         });
+    }
+
+    CDataCache::~CDataCache()
+    {
+        m_serializer->quitAndWait();
     }
 
     CDataCache *CDataCache::instance()
@@ -149,12 +154,12 @@ namespace BlackMisc
 
     void CDataCache::setTimeToLive(const QString &key, int ttl)
     {
-        singleShot(0, &m_serializer, [this, key, ttl] { m_revision.setTimeToLive(key, ttl); });
+        singleShot(0, m_serializer, [this, key, ttl] { m_revision.setTimeToLive(key, ttl); });
     }
 
     void CDataCache::renewTimestamp(const QString &key, qint64 timestamp)
     {
-        singleShot(0, &m_serializer, [this, key, timestamp] { m_revision.overrideTimestamp(key, timestamp); });
+        singleShot(0, m_serializer, [this, key, timestamp] { m_revision.overrideTimestamp(key, timestamp); });
     }
 
     qint64 CDataCache::getTimestampOnDisk(const QString &key)
@@ -164,12 +169,12 @@ namespace BlackMisc
 
     void CDataCache::pinValue(const QString &key)
     {
-        singleShot(0, &m_serializer, [this, key] { m_revision.pinValue(key); });
+        singleShot(0, m_serializer, [this, key] { m_revision.pinValue(key); });
     }
 
     void CDataCache::deferValue(const QString &key)
     {
-        singleShot(0, &m_serializer, [this, key] { m_revision.deferValue(key); });
+        singleShot(0, m_serializer, [this, key] { m_revision.deferValue(key); });
     }
 
     void CDataCache::admitValue(const QString &key, bool triggerLoad)
@@ -180,7 +185,7 @@ namespace BlackMisc
 
     void CDataCache::sessionValue(const QString &key)
     {
-        singleShot(0, &m_serializer, [this, key] { m_revision.sessionValue(key); });
+        singleShot(0, m_serializer, [this, key] { m_revision.sessionValue(key); });
     }
 
     const QString CDataCache::relativeFilePath()
@@ -191,17 +196,17 @@ namespace BlackMisc
 
     void CDataCache::saveToStoreAsync(const BlackMisc::CValueCachePacket &values)
     {
-        singleShot(0, &m_serializer, [this, values]
+        singleShot(0, m_serializer, [this, values]
         {
-            m_serializer.saveToStore(values.toVariantMap(), getAllValuesWithTimestamps());
+            m_serializer->saveToStore(values.toVariantMap(), getAllValuesWithTimestamps());
         });
     }
 
     void CDataCache::loadFromStoreAsync()
     {
-        singleShot(0, &m_serializer, [this]
+        singleShot(0, m_serializer, [this]
         {
-            m_serializer.loadFromStore(getAllValuesWithTimestamps());
+            m_serializer->loadFromStore(getAllValuesWithTimestamps());
         });
     }
 

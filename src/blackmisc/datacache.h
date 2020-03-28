@@ -250,6 +250,9 @@ namespace BlackMisc
         Q_OBJECT
 
     public:
+        //! Destructor.
+        virtual ~CDataCache() override;
+
         //! Return the singleton instance.
         static CDataCache *instance();
 
@@ -302,7 +305,7 @@ namespace BlackMisc
 
         QFileSystemWatcher m_watcher;
 
-        CDataCacheSerializer m_serializer { this, revisionFileName() };
+        CDataCacheSerializer *m_serializer = nullptr;
         CDataCacheRevision m_revision { persistentStore() + "/" };
         friend class CDataCacheSerializer; // to access m_revision and protected members of CValueCache
     };
