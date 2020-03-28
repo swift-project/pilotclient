@@ -101,8 +101,10 @@ namespace BlackMisc
 
     CDataCache *CDataCache::instance()
     {
-        static CDataCache cache;
-        return &cache;
+        static std::unique_ptr<CDataCache> cache(new CDataCache);
+        static auto dummy = (connect(qApp, &QObject::destroyed, cache.get(), [] { cache.reset(); }), nullptr);
+        Q_UNUSED(dummy) // declared as static to get thread-safe initialization
+        return cache.get();
     }
 
     const QString &CDataCache::persistentStore()
