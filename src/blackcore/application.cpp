@@ -173,6 +173,14 @@ namespace BlackCore
                 m_inputManager = new CInputManager(this);
                 m_inputManager->createDevices();
             }
+
+            connect(this, &QObject::destroyed, [cat = CLogCategoryList(this)]
+            {
+                for (CWorkerBase *worker : CWorkerBase::allWorkers())
+                {
+                    CLogMessage(cat).debug(u"Worker named '%1' still exists after application destroyed") << worker->objectName();
+                }
+            });
         }
     }
 

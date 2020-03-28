@@ -22,6 +22,8 @@
 
 namespace BlackMisc
 {
+    QSet<CWorkerBase *> CWorkerBase::s_allWorkers;
+
     void CRegularThread::run()
     {
 #ifdef Q_OS_WIN32
@@ -103,6 +105,16 @@ namespace BlackMisc
 
         this->moveToThread(workerThread->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
         // must not access the worker beyond this point, as it now lives in the owner's thread and could be deleted at any moment
+    }
+
+    CWorkerBase::CWorkerBase()
+    {
+        s_allWorkers.insert(this);
+    }
+
+    CWorkerBase::~CWorkerBase()
+    {
+        s_allWorkers.remove(this);
     }
 
     const CLogCategoryList &CWorkerBase::getLogCategories()

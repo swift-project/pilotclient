@@ -163,6 +163,9 @@ namespace BlackMisc
         //! Convenience to call abandon() followed by waitForFinished().
         void abandonAndWait() noexcept;
 
+        //! All workers currently existing.
+        static const QSet<CWorkerBase *> &allWorkers() { return s_allWorkers; }
+
     signals:
         //! Emitted when the task is about to start.
         void aboutToStart();
@@ -172,6 +175,12 @@ namespace BlackMisc
         void finished();
 
     protected:
+        //! Constructor.
+        CWorkerBase();
+
+        //! Destructor.
+        virtual ~CWorkerBase() override;
+
         //! For the task to check whether it can finish early.
         //! \threadsafe
         bool isAbandoned() const;
@@ -197,6 +206,7 @@ namespace BlackMisc
         bool m_started = false;
         bool m_finished = false;
         mutable QMutex m_finishedMutex { QMutex::Recursive };
+        static QSet<CWorkerBase *> s_allWorkers;
     };
 
     /*!
