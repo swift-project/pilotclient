@@ -112,15 +112,16 @@ namespace BlackMisc
         static const CLogCategoryList &fromClass()
         {
             static_assert(sizeof(T) > 0, "T must be a complete type, not forward declared");
-            static QThreadStorage<CLogCategoryList> list; //! \todo C++17: make list an inline static member variable template
-            if (! list.hasLocalData())
+            static const auto list = []
             {
-                list.localData().appendCategoriesFromMemberFunction(tag<T>(), THasGetLogCategories<T>());
-                list.localData().appendCategoriesFromMetaType(tag<T>(), std::integral_constant<bool, QMetaTypeId<T>::Defined>());
-                list.localData().appendCategoriesFromMetaObject(tag<T>(), std::is_base_of<QObject, T>());
-                if (list.localData().isEmpty()) { list.localData().push_back(CLogCategory::uncategorized()); }
-            }
-            return list.localData();
+                CLogCategoryList list;
+                list.appendCategoriesFromMemberFunction(tag<T>(), THasGetLogCategories<T>());
+                list.appendCategoriesFromMetaType(tag<T>(), std::integral_constant<bool, QMetaTypeId<T>::Defined>());
+                list.appendCategoriesFromMetaObject(tag<T>(), std::is_base_of<QObject, T>());
+                if (list.isEmpty()) { list.push_back(CLogCategory::uncategorized()); }
+                return list;
+            }();
+            return list;
         }
 
         template <typename T>
