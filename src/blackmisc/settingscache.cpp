@@ -19,8 +19,10 @@ namespace BlackMisc
 
     CSettingsCache *CSettingsCache::instance()
     {
-        static CSettingsCache cache;
-        return &cache;
+        static std::unique_ptr<CSettingsCache> cache(new CSettingsCache);
+        static auto dummy = (connect(qApp, &QObject::destroyed, cache.get(), [] { cache.reset(); }), nullptr);
+        Q_UNUSED(dummy) // declared as static to get thread-safe initialization
+        return cache.get();
     }
 
     const QString &CSettingsCache::persistentStore()
