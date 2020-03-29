@@ -1325,8 +1325,10 @@ namespace BlackGui
     {
         if (m_shutdownInProgress) { return; }
         CApplication::gracefulShutdown();
+        CLogMessage(this).info(u"Graceful shutdown of GUI application started");
         if (m_saveMainWidgetState)
         {
+            CLogMessage(this).info(u"Graceful shutdown, saving geometry");
             this->saveWindowGeometryAndState();
         }
     }
