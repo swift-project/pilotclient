@@ -34,6 +34,10 @@ namespace BlackGui
         //! Force an reload
         void reloadStyleSheet() { this->onStyleSheetsChanged(); }
 
+        //! \copydoc CDockWidget::initialFloating
+        //! \remark special case to allow init
+        virtual void initialFloating() override { CDockWidget::initialFloating(); }
+
     protected:
         //! Contribute to menu
         virtual void addToContextMenu(QMenu *contextMenu) const override;

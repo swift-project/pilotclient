@@ -19,7 +19,7 @@ using namespace BlackGui::Components;
 
 namespace BlackGui
 {
-    CDockWidgetInfoBar::CDockWidgetInfoBar(QWidget *parent) : CDockWidget(parent)
+    CDockWidgetInfoBar::CDockWidgetInfoBar(QWidget *parent) : CDockWidget(false, parent)
     {
         this->setWindowTitle("Info status bar");
         this->setWindowIcon(CIcons::swift24());

@@ -149,7 +149,7 @@ namespace BlackGui
 
     signals:
         //! Top level has changed for given widget
-        void widgetTopLevelChanged(BlackGui::CDockWidget *, bool topLevel);
+        void widgetTopLevelChanged(CDockWidget *, bool topLevel);
 
         //! Font size signals @{
         void fontSizePlus();
@@ -242,6 +242,7 @@ namespace BlackGui
         QSize m_lastFloatingSize;                     //!< last floating position
         QPoint m_offsetWhenFloating;                  //!< initial offset to main window when floating first time
         QPoint m_lastFloatingPosition;                //!< last floating position
+        Qt::DockWidgetAreas m_originalAreas;          //!< areas before floating
 
         BlackMisc::CSetting<BlackGui::Settings::TDockWidget> m_settings { this, &CDockWidget::settingsChanged };
 
