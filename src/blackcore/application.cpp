@@ -1046,12 +1046,18 @@ namespace BlackCore
         if (m_shutdownInProgress) { return; }
         m_shutdownInProgress = true;
 
+        CLogMessage(this).info(u"Graceful shutdown of CApplication started");
+
         // info that we will shutdown
         emit this->aboutToShutdown();
 
         // Release all input devices to not cause any accidental hotkey triggers anymore.
         // This is also necessary to properly free platform specific instances at a defined point in time.
-        if (m_inputManager) { m_inputManager->releaseDevices(); }
+        if (m_inputManager)
+        {
+            CLogMessage(this).info(u"Graceful shutdown of CApplication, released devices");
+            m_inputManager->releaseDevices();
+        }
 
         // mark as shutdown
         if (m_networkWatchDog) { m_networkWatchDog->gracefulShutdown(); }
@@ -1071,6 +1077,8 @@ namespace BlackCore
 
         if (this->supportsContexts())
         {
+            CLogMessage(this).info(u"Graceful shutdown of CApplication, shutdown of contexts");
+
             // clean up facade
             m_coreFacade->gracefulShutdown();
             m_coreFacade.reset();
@@ -1078,6 +1086,8 @@ namespace BlackCore
 
         if (m_webDataServices)
         {
+            CLogMessage(this).info(u"Graceful shutdown of CApplication, shutdown of web services");
+
             m_webDataServices->gracefulShutdown();
             m_webDataServices.reset();
         }
@@ -1094,8 +1104,10 @@ namespace BlackCore
             m_networkWatchDog = nullptr;
         }
 
+        CLogMessage(this).info(u"Graceful shutdown of CApplication, shutdown of logger");
         m_fileLogger->close();
 
+        // clean up all in "deferred delete state"
         qApp->sendPostedEvents(nullptr, QEvent::DeferredDelete);
 
         sApp = nullptr;

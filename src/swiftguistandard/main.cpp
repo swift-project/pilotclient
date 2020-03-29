@@ -17,6 +17,7 @@
 
 #include <stdlib.h>
 #include <QApplication>
+#include <QTextStream>
 
 using namespace BlackGui;
 using namespace BlackMisc;
@@ -49,6 +50,13 @@ int main(int argc, char *argv[])
     SwiftGuiStd w(windowMode);
     w.show();
 
-    int r = a.exec();
+    const int r = a.exec();
+
+    // log we are really closing
+    QTextStream ts(stdout);
+    ts << "swift is closing now ......\n";
+    ts.flush();
+
+    // bye
     return r;
 }
