@@ -53,6 +53,7 @@ namespace BlackGui
         // init settings
         this->onStyleSheetsChanged();
         this->initTitleBarWidgets();
+        m_originalAreas = this->allowedAreas();
 
         // context menu
         m_input = new CMarginsInput(this);
@@ -257,24 +258,29 @@ namespace BlackGui
 
     void CDockWidget::toggleFloating()
     {
-        const bool floating = !this->isFloating();
-        if (!floating) { this->setFrameless(false); } // remove frameless if not floating
+        const bool changeToFloating = !this->isFloating();
+        if (!changeToFloating) { this->setFrameless(false); } // remove frameless if not floating
+
+        // disable the interactive docking
+        if (changeToFloating)
+        {
+            m_originalAreas = this->allowedAreas();
+            this->setAllowedAreas(Qt::NoDockWidgetArea);
+        }
+        else
+        {
+            this->setAllowedAreas(m_originalAreas);
+        }
+
+        this->setAlwaysOnTop(m_alwaysOnTop && changeToFloating);
+        this->setFloating(changeToFloating);
 
         const Qt::KeyboardModifiers km = QGuiApplication::queryKeyboardModifiers();
         const bool shift = km.testFlag(Qt::ShiftModifier);
 
-        this->setFloating(floating);
-        this->setAlwaysOnTop(m_alwaysOnTop && floating);
-
-        // disable the interactive docking
-        if (floating)
-        {
-            this->setAllowedAreas(Qt::NoDockWidgetArea);
-        }
-
         // with shift ALWAYS reset
-        if (shift && floating) { this->resetPosition(); }
-        if (floating)
+        if (shift && changeToFloating) { this->resetPosition(); }
+        if (changeToFloating)
         {
             // check where we are, otherwise reset if NOT appropriate
             const QPoint p = this->rect().topLeft();
@@ -392,7 +398,7 @@ namespace BlackGui
             });
             **/
 
-            event->setAccepted(false); // refuse -> do not close
+            event->setAccepted(false); // refuse -> do not close (otherwise crash)
         }
         else
         {

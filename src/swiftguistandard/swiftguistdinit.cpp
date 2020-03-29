@@ -69,6 +69,8 @@ void SwiftGuiStd::init()
 
     if (m_init) { return; }
 
+    ui->dw_InfoBarStatus->initialFloating();
+
     this->setVisible(false); // hide all, so no flashing windows during init
     m_mwaStatusBar = &m_statusBar;
     m_mwaOverlayFrame = ui->fr_CentralFrameInside;
