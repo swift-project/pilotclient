@@ -167,7 +167,7 @@ namespace BlackMisc
             void setSimulationProviderEnabled(bool elvEnabled, bool cgEnabled);
             //! @}
 
-            //! All remembered coordiantes plus max.remembered situations
+            //! All remembered coordiantes plus max.remembered ground situations
             //! \threadsafe
             Geo::CCoordinateGeodeticList getAllElevationCoordinates(int &maxRemembered) const;
 
