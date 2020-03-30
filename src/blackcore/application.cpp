@@ -250,7 +250,7 @@ namespace BlackCore
 
     bool CApplication::isShuttingDown() const
     {
-        return m_shutdown;
+        return m_shutdown || m_shutdownInProgress;
     }
 
     bool CApplication::isIncognito() const
@@ -1069,7 +1069,6 @@ namespace BlackCore
 
         // mark as shutdown
         if (m_networkWatchDog) { m_networkWatchDog->gracefulShutdown(); }
-        m_shutdown = true;
 
         // save settings (but only when application was really alive)
         if (m_parsed && m_saveSettingsOnShutdown)
@@ -1083,7 +1082,7 @@ namespace BlackCore
         // from here on we really rip apart the application object
         // and it should no longer be used
 
-        if (this->supportsContexts())
+        if (this->supportsContexts(true))
         {
             CLogMessage(this).info(u"Graceful shutdown of CApplication, shutdown of contexts");
 
@@ -1117,8 +1116,12 @@ namespace BlackCore
 
         // clean up all in "deferred delete state"
         qApp->sendPostedEvents(nullptr, QEvent::DeferredDelete);
+        sApp->processEventsFor(500);
 
+        // completed
+        m_shutdown = true;
         sApp = nullptr;
+
         disconnect(this);
     }
 
@@ -1548,9 +1551,9 @@ namespace BlackCore
     // Contexts
     // ---------------------------------------------------------------------------------
 
-    bool CApplication::supportsContexts() const
+    bool CApplication::supportsContexts(bool ignoreShutdownTest) const
     {
-        if (m_shutdown) { return false; }
+        if (!ignoreShutdownTest && m_shutdown) { return false; }
         if (m_coreFacade.isNull()) { return false; }
         if (!m_coreFacade->getIContextApplication()) { return false; }
         return (!m_coreFacade->getIContextApplication()->isEmptyObject());

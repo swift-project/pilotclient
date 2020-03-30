@@ -346,7 +346,7 @@ namespace BlackCore
         //! Supports contexts
         //! \remark checks the real availability of the contexts, so it can happen that we want to use contexts, and they are not yet initialized (false here)
         //! \sa m_useContexts we use or we will use contexts
-        bool supportsContexts() const;
+        bool supportsContexts(bool ignoreShutdownTest = false) const;
 
         //! The core facade config
         const CCoreFacadeConfig &getCoreFacadeConfig() const { return m_coreFacadeConfig; }
