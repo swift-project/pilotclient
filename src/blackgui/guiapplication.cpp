@@ -1323,13 +1323,34 @@ namespace BlackGui
 
     void CGuiApplication::gracefulShutdown()
     {
+        if (m_shutdown) { return; }
         if (m_shutdownInProgress) { return; }
-        CApplication::gracefulShutdown();
+
         CLogMessage(this).info(u"Graceful shutdown of GUI application started");
         if (m_saveMainWidgetState)
         {
             CLogMessage(this).info(u"Graceful shutdown, saving geometry");
             this->saveWindowGeometryAndState();
+        }
+
+        // shut down whole infrastructure
+        CApplication::gracefulShutdown();
+
+        // precautions to avoid hanging closing swift
+        const QStringList modals = CGuiUtility::closeAllModalWidgetsGetTitles();
+        if (modals.count() > 0)
+        {
+            // that is a pretty normal situation
+            CLogMessage(this).info(u"Graceful shutdown, still %1 modal widget(s), closed: %2") << modals.count() << modals.join(", ");
+        }
+
+        //! \todo KB 3-2020 remove as soon as the info status bar blocks shutdown bug is fixed
+        //! ref: https://discordapp.com/channels/539048679160676382/539846348275449887/693848134811517029
+        const QStringList docks = CGuiUtility::deleteLaterAllDockWidgetsGetTitles(this->mainApplicationWidget(), true);
+        if (docks.count() > 0)
+        {
+            // that should not happen
+            CLogMessage(this).warning(u"Graceful shutdown, still %1 floating dock widget(s), closed: %2") << docks.count() << docks.join(", ");
         }
     }
 
