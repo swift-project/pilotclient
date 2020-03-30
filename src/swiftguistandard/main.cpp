@@ -6,16 +6,20 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
+#include "swiftguistd.h"
+#include "swiftguistdapplication.h"
+
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
 #include "blackmisc/audio/audioutils.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/crashhandler.h"
 #include "blackmisc/appstarttime.h"
-#include "swiftguistd.h"
-#include "swiftguistdapplication.h"
 
 #include <stdlib.h>
+#include <iostream>
+
 #include <QApplication>
 #include <QTextStream>
 
@@ -33,29 +37,28 @@ int main(int argc, char *argv[])
 
     // initWindowsAudioDevices();
     CCrashHandler::instance()->init();
-    CSwiftGuiStdApplication a; // application with contexts
-    a.setSignalStartupAutomatically(false); // application will signal startup on its own
-    a.splashScreen(CIcons::swift256());
-    a.setMinimumSizeInCharacters(60, 42); // experimental
-    if (!a.parseAndSynchronizeSetup()) { return EXIT_FAILURE; }
-    if (!a.hasSetupReader() || !a.start())
+
+    // at shutdown the whole application will be "deleted" outside the block
+    // that should already delete all widgets
+    int r = 0;
     {
-        a.gracefulShutdown();
-        return EXIT_FAILURE;
+        CSwiftGuiStdApplication a; // application with contexts
+        a.setSignalStartupAutomatically(false); // application will signal startup on its own
+        a.splashScreen(CIcons::swift256());
+        a.setMinimumSizeInCharacters(60, 42); // experimental
+        if (!a.parseAndSynchronizeSetup()) { return EXIT_FAILURE; }
+        if (!a.hasSetupReader() || !a.start())
+        {
+            a.gracefulShutdown();
+            return EXIT_FAILURE;
+        }
+        //! [SwiftApplicationDemo]
+
+        // show window
+        CEnableForFramelessWindow::WindowMode windowMode = a.getWindowMode();
+        SwiftGuiStd w(windowMode);
+        r = a.exec();
     }
-    //! [SwiftApplicationDemo]
-
-    // show window
-    CEnableForFramelessWindow::WindowMode windowMode = a.getWindowMode();
-    SwiftGuiStd w(windowMode);
-    w.show();
-
-    const int r = a.exec();
-
-    // log we are really closing
-    QTextStream ts(stdout);
-    ts << "swift is closing now ......\n";
-    ts.flush();
 
     // bye
     return r;
