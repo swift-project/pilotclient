@@ -315,17 +315,14 @@ namespace BlackCore
         if (m_dbusServer) { m_dbusServer->removeAllObjects(); }
 
         // handle contexts
-        if (this->getIContextSimulator())
+
+        if (this->getCContextAudioBase())
         {
-            disconnect(this->getIContextSimulator());
-            if (this->getIContextSimulator()->isUsingImplementingObject())
-            {
-                // shutdown the plugins
-                this->getCContextSimulator()->gracefulShutdown();
-            }
-            this->getIContextSimulator()->deleteLater();
-            QDBusConnection defaultConnection("default");
-            m_contextSimulator = IContextSimulator::create(this, CCoreFacadeConfig::NotUsed, nullptr, defaultConnection);
+            // there is no empty audio context since AFV
+            disconnect(this->getCContextAudioBase());
+            this->getCContextAudioBase()->gracefulShutdown();
+            this->getIContextAudio()->deleteLater();
+            m_contextAudio = nullptr;
         }
 
         // log off from network, if connected
@@ -343,13 +340,17 @@ namespace BlackCore
             m_contextNetwork = IContextNetwork::create(this, CCoreFacadeConfig::NotUsed, nullptr, defaultConnection);
         }
 
-        if (this->getCContextAudioBase())
+        if (this->getIContextSimulator())
         {
-            // there is no empty audio context since AFV
-            disconnect(this->getCContextAudioBase());
-            this->getCContextAudioBase()->gracefulShutdown();
-            this->getIContextAudio()->deleteLater();
-            m_contextAudio = nullptr;
+            disconnect(this->getIContextSimulator());
+            if (this->getIContextSimulator()->isUsingImplementingObject())
+            {
+                // shutdown the plugins
+                this->getCContextSimulator()->gracefulShutdown();
+            }
+            this->getIContextSimulator()->deleteLater();
+            QDBusConnection defaultConnection("default");
+            m_contextSimulator = IContextSimulator::create(this, CCoreFacadeConfig::NotUsed, nullptr, defaultConnection);
         }
 
         if (this->getIContextOwnAircraft())
