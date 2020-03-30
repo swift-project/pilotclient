@@ -140,6 +140,8 @@ namespace BlackCore
             {
                 disconnect(m_validator);
                 m_validator->quitAndWait();
+                m_validator->deleteLater();
+                m_validator = nullptr;
             }
             this->disconnect();
             this->unloadSimulatorPlugin();
@@ -147,6 +149,7 @@ namespace BlackCore
 
         CSimulatorPluginInfoList CContextSimulator::getAvailableSimulatorPlugins() const
         {
+            if (!m_plugins) { return {}; }
             return m_plugins->getAvailableSimulatorPlugins();
         }
 
