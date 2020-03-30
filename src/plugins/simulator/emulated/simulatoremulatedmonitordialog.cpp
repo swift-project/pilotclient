@@ -10,6 +10,7 @@
 #include "ui_simulatoremulatedmonitordialog.h"
 #include "simulatoremulated.h"
 #include "blackgui/components/cockpitcomtransmissioncomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackmisc/logmessage.h"
 
 #include <QIntValidator>
@@ -165,7 +166,7 @@ namespace BlackSimPlugin
 
         void CSimulatorEmulatedMonitorDialog::onSavedComTransmissionValues(CComSystem::ComUnit unit)
         {
-            if (!m_simulator) { return; }
+            if (!this->canUseSimulator()) { return; }
             const CSimulatedAircraft ownAircraft = m_simulator->getOwnAircraft();
             CComSystem com = ownAircraft.getComSystem(unit);
             ui->comp_ComTransmissions->updateComSystem(com, unit);
@@ -174,26 +175,26 @@ namespace BlackSimPlugin
 
         void CSimulatorEmulatedMonitorDialog::changeComFromUi(const CSimulatedAircraft &aircraft)
         {
-            if (!m_simulator) { return; }
+            if (!this->canUseSimulator()) { return; }
             m_simulator->changeInternalCom(aircraft);
         }
 
         void CSimulatorEmulatedMonitorDialog::changeSelcalFromUi(const CSelcal &selcal)
         {
-            if (!m_simulator) { return; }
+            if (!this->canUseSimulator()) { return; }
             m_simulator->changeInternalSelcal(selcal);
         }
 
         void CSimulatorEmulatedMonitorDialog::changeSituationFromUi()
         {
-            if (!m_simulator) { return; }
+            if (!this->canUseSimulator()) { return; }
             const CAircraftSituation s(ui->editor_Situation->getSituation());
             m_simulator->changeInternalSituation(s);
         }
 
         void CSimulatorEmulatedMonitorDialog::changePartsFromUi()
         {
-            if (!m_simulator) { return; }
+            if (!this->canUseSimulator()) { return; }
             const CAircraftParts p(ui->editor_AircraftParts->getAircraftPartsFromGui());
             m_simulator->changeInternalParts(p);
         }
@@ -219,7 +220,8 @@ namespace BlackSimPlugin
 
         void CSimulatorEmulatedMonitorDialog::timerBasedUiUpdates()
         {
-            if (!m_simulator) { return; }
+            if (!this->canUseSimulator()) { return; }
+
             ui->le_PhysicallyAddedAircraft->setText(QString::number(m_simulator->getStatisticsPhysicallyAddedAircraft()));
             ui->le_PhysicallyRemovedAircraft->setText(QString::number(m_simulator->aircraftSituationsAdded()));
             ui->le_SituationAdded->setText(QString::number(m_simulator->aircraftSituationsAdded()));
@@ -230,7 +232,9 @@ namespace BlackSimPlugin
 
         void CSimulatorEmulatedMonitorDialog::resetStatistics()
         {
-            if (!m_simulator) { m_simulator->resetAircraftStatistics(); }
+            if (!this->canUseSimulator()) { return; }
+
+            m_simulator->resetAircraftStatistics();
             ui->le_PhysicallyAddedAircraft->clear();
             ui->le_PhysicallyRemovedAircraft->clear();
             ui->le_SituationAdded->clear();
@@ -298,7 +302,7 @@ namespace BlackSimPlugin
 
         void CSimulatorEmulatedMonitorDialog::emitSignal()
         {
-            if (!m_simulator) { return; }
+            if (!this->canUseSimulator()) { return; }
 
             const CCallsign cs = ui->comp_CallsignCompleter->getCallsign();
             const QObject *sender = QObject::sender();
@@ -312,7 +316,13 @@ namespace BlackSimPlugin
 
         void CSimulatorEmulatedMonitorDialog::addAutoPublishTestData()
         {
+            if (!this->canUseSimulator()) { return; }
             m_simulator->m_autoPublishing.testData();
+        }
+
+        bool CSimulatorEmulatedMonitorDialog::canUseSimulator() const
+        {
+            return (m_simulator && sGui && !sGui->isShuttingDown());
         }
     } // ns
 } // ns
