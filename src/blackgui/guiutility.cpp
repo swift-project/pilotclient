@@ -11,6 +11,7 @@
 #include "blackgui/overlaymessagesframe.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/verify.h"
+#include "guiutility.h"
 
 #include <QApplication>
 #include <QCheckBox>
@@ -948,4 +949,166 @@ namespace BlackGui
         if (wizard->button(QWizard::CustomButton2)) { wizard->button(QWizard::CustomButton2)->setMinimumWidth(minW); }
         if (wizard->button(QWizard::CustomButton3)) { wizard->button(QWizard::CustomButton3)->setMinimumWidth(minW); }
     }
+
+    QWidgetList CGuiUtility::getAllModallWidgets()
+    {
+        const QWidgetList widgets = QApplication::topLevelWidgets();
+        QWidgetList openWidgets;
+        for (QWidget *w : widgets)
+        {
+            if (w->isModal()) { openWidgets.push_back(w); }
+        }
+        return openWidgets;
+    }
+
+    QStringList CGuiUtility::getAllWidgetTitles(const QWidgetList widgets)
+    {
+        QStringList titles;
+        for (const QWidget *w : widgets)
+        {
+            if (!w) { continue; }
+            if (!w->windowTitle().isEmpty())
+            {
+                titles.push_back(w->windowTitle());
+            }
+            else
+            {
+                titles.push_back(QStringLiteral("name: ") % w->objectName());
+            }
+        }
+        return titles;
+    }
+
+    QStringList CGuiUtility::getAllWidgetNames(const QWidgetList widgets)
+    {
+        QStringList titles;
+        for (const QWidget *w : widgets)
+        {
+            if (!w) { continue; }
+            titles.push_back(QStringLiteral("name: ") % w->objectName());
+        }
+        return titles;
+    }
+
+    QList<QDockWidget *> CGuiUtility::getAllDockWidgets(QWidget *parent, bool floatingOnly)
+    {
+        QList<QDockWidget *> docks;
+        if (parent)
+        {
+            const auto children = parent->findChildren<QDockWidget *>();
+            for (QDockWidget *w : children)
+            {
+                if (!w) { continue; }
+                if (!floatingOnly || w->isFloating())
+                {
+                    docks.push_back(w);
+                }
+            }
+        }
+        return docks;
+    }
+
+    QList<QDockWidget *> CGuiUtility::getAllDockWidgets(QWindow *parent, bool floatingOnly)
+    {
+        QList<QDockWidget *> docks;
+        if (parent)
+        {
+            const auto children = parent->findChildren<QDockWidget *>();
+            for (QDockWidget *w : children)
+            {
+                if (!w) { continue; }
+                if (!floatingOnly || w->isFloating())
+                {
+                    docks.push_back(w);
+                }
+            }
+        }
+        return docks;
+    }
+
+    QWidgetList CGuiUtility::closeAllModalWidgets()
+    {
+        QWidgetList modals = getAllModallWidgets();
+        for (QWidget *w : modals)
+        {
+            if (!w) { continue; }
+            w->close();
+        }
+        return modals;
+    }
+
+    QStringList CGuiUtility::closeAllModalWidgetsGetTitles()
+    {
+        const QWidgetList modals = getAllModallWidgets();
+        QStringList titles;
+        for (QWidget *w : modals)
+        {
+            if (!w) { continue; }
+            titles << w->windowTitle();
+            w->close();
+        }
+        return titles;
+    }
+
+    QList<QDockWidget *> CGuiUtility::closeAllDockWidgets(QWidget *parent, bool floatingOnly)
+    {
+        QList<QDockWidget *> dws = getAllDockWidgets(parent, floatingOnly);
+        for (QWidget *w : dws)
+        {
+            if (!w) { continue; }
+            w->close();
+        }
+        return dws;
+    }
+
+    QList<QDockWidget *> CGuiUtility::closeAllDockWidgets(QWindow *parent, bool floatingOnly)
+    {
+        QList<QDockWidget *> dws = getAllDockWidgets(parent, floatingOnly);
+        for (QWidget *w : dws)
+        {
+            if (!w) { continue; }
+            w->close();
+        }
+        return dws;
+    }
+
+    QStringList CGuiUtility::closeAllDockWidgetsGetTitles(QWidget *parent, bool floatingOnly)
+    {
+        const QList<QDockWidget *> dws = getAllDockWidgets(parent, floatingOnly);
+        QStringList titles;
+        for (QWidget *w : dws)
+        {
+            if (!w) { continue; }
+            titles << w->windowTitle();
+            w->close();
+        }
+        return titles;
+    }
+
+    QStringList CGuiUtility::closeAllDockWidgetsGetTitles(QWindow *parent, bool floatingOnly)
+    {
+        const QList<QDockWidget *> dws = getAllDockWidgets(parent, floatingOnly);
+        QStringList titles;
+        for (QWidget *w : dws)
+        {
+            if (!w) { continue; }
+            titles << w->windowTitle();
+            w->close();
+        }
+        return titles;
+    }
+
+    QStringList CGuiUtility::deleteLaterAllDockWidgetsGetTitles(QWidget *parent, bool floatingOnly)
+    {
+        const QList<QDockWidget *> dws = getAllDockWidgets(parent, floatingOnly);
+        QStringList titles;
+        for (QWidget *w : dws)
+        {
+            if (!w) { continue; }
+            titles << w->windowTitle();
+            w->deleteLater(); // DANGEROUS
+        }
+        return titles;
+    }
+
 } // ns

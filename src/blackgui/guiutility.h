@@ -18,9 +18,11 @@
 #include <QSize>
 #include <QPoint>
 #include <QString>
+#include <QWindow>
 #include <QWidget>
 #include <QWidgetList>
 #include <QFont>
+#include <QDockWidget>
 #include <QFontMetrics>
 #include <QFontMetricsF>
 #include <QModelIndexList>
@@ -280,6 +282,43 @@ namespace BlackGui
 
         //! Set button widths for a wizard
         static void setWizardButtonWidths(QWizard *wizard);
+
+        //! All modal widgets
+        static QWidgetList getAllModallWidgets();
+
+        //! All titles
+        static QStringList getAllWidgetTitles(const QWidgetList widgets);
+
+        //! All names
+        static QStringList getAllWidgetNames(const QWidgetList widgets);
+
+        //! Get all dock widgets
+        static QList<QDockWidget *> getAllDockWidgets(QWidget *parent, bool floatingOnly);
+
+        //! Get all dock widgets
+        static QList<QDockWidget *> getAllDockWidgets(QWindow *parent, bool floatingOnly);
+
+        //! Close all modal widgets
+        static QWidgetList closeAllModalWidgets();
+
+        //! Close all modal widgets and get titles
+        static QStringList closeAllModalWidgetsGetTitles();
+
+        //! Close all dock widgets
+        static QList<QDockWidget *> closeAllDockWidgets(QWidget *parent, bool floatingOnly);
+
+        //! Close all dock widgets
+        static QList<QDockWidget *> closeAllDockWidgets(QWindow *parent, bool floatingOnly);
+
+        //! Close all dock widgets
+        static QStringList closeAllDockWidgetsGetTitles(QWidget *parent, bool floatingOnly);
+
+        //! close all dock widgets
+        static QStringList closeAllDockWidgetsGetTitles(QWindow *parent, bool floatingOnly);
+
+        //! "deleteLater" all dock widgets
+        //! \remark do NOT use unless you know what you are doing
+        static QStringList deleteLaterAllDockWidgetsGetTitles(QWidget *parent, bool floatingOnly);
 
     private:
         //! No constructor, use static functions only
