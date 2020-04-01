@@ -12,6 +12,7 @@
 
 #include "blackmisc/logmessage.h"
 
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 
 namespace BlackCore
@@ -61,7 +62,7 @@ namespace BlackCore
         {
             if (tokens.size() < 10)
             {
-                BlackMisc::CLogMessage(static_cast<PilotDataUpdate *>(nullptr)).debug(u"Wrong number of arguments.");
+                CLogMessage(static_cast<PilotDataUpdate *>(nullptr)).debug(u"Wrong number of arguments.");
                 return {};
             }
 

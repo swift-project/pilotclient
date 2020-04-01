@@ -48,8 +48,8 @@ namespace BlackCore
                 return {};
             }
 
-            AtcRating rating = static_cast<AtcRating>(tokens[5].toInt());
-            int protocolRevision = tokens[6].toInt();
+            const AtcRating rating = fromQString<AtcRating>(tokens[5]);
+            const int protocolRevision = tokens[6].toInt();
             return AddAtc(tokens[0], tokens[2], tokens[3], tokens[4], rating, protocolRevision);
         }
     }
