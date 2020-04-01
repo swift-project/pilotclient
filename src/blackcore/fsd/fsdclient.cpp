@@ -882,6 +882,10 @@ namespace BlackCore
             m_messageTypeMapping["#DL"] = MessageType::ServerHeartbeat;
             m_messageTypeMapping["#TM"] = MessageType::TextMessage;
             m_messageTypeMapping["#SB"] = MessageType::PilotClientCom;
+
+            // IVAO only
+            // Ref: https://github.com/DemonRem/X-IvAP/blob/1b0a14880532a0f5c8fe84be44e462c6892a5596/src/XIvAp/FSDprotocol.h
+            m_messageTypeMapping["!R"]  = MessageType::RegistrationInfo;
         }
 
         void CFSDClient::handleAtcDataUpdate(const QStringList &tokens)
@@ -1873,7 +1877,9 @@ namespace BlackCore
                 case MessageType::ServerHeartbeat:
                 case MessageType::ProController:
                 case MessageType::ClientIdentification:
+                case MessageType::RegistrationInfo:
                     break;
+
                 // handled ones
                 case MessageType::AtcDataUpdate:     handleAtcDataUpdate(tokens);     break;
                 case MessageType::AuthChallenge:     handleAuthChallenge(tokens);     break;

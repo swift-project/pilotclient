@@ -42,6 +42,7 @@ enum class MessageType
     Pong,
     ServerError,
     ServerHeartbeat,
+    RegistrationInfo, // IVAO only
     TextMessage,
     PilotClientCom,
 };
