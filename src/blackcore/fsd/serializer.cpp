@@ -8,14 +8,43 @@
 
 #include "serializer.h"
 #include "blackmisc/verify.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/logcategory.h"
+#include "blackconfig/buildconfig.h"
 
+using namespace BlackConfig;
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
 
 namespace BlackCore
 {
     namespace Fsd
     {
         //! private @{
+
+        namespace Private
+        {
+            // log each issue only once
+            static QStringList s_invalidAtcRatings;
+            static QStringList s_invalidPilotRatings;
+            static QStringList s_invalidSimType;
+            static QStringList s_invalidFacilityType;
+            static QStringList s_invalidQueryType;
+
+            //! Log unknown message types or ratings
+            void logUnknownType(const QString &message)
+            {
+                if (CBuildConfig::isLocalDeveloperDebugBuild())
+                {
+                    // developers should record these types and EXPLICITLY exclude them
+                    const QByteArray msg = message.toLatin1();
+                    BLACK_VERIFY_X(false, Q_FUNC_INFO, msg);
+                }
+
+                CLogMessage(CLogCategory::fsd()).info(u"%1. Please report this to the DEVELOPERS!") << message;
+            }
+        }
 
         template<>
         QString toQString(const AtcRating &value)
@@ -62,8 +91,12 @@ namespace BlackCore
             else if (str == "12") return AtcRating::Administrator;
 
             // we should NOT get here
-            const QByteArray msg = QStringLiteral("FSD unknown ATC rating '%1'").arg(str).toLatin1();
-            BLACK_AUDIT_X(false, Q_FUNC_INFO, msg.constData());
+            if (!Private::s_invalidAtcRatings.contains(str))
+            {
+                Private::s_invalidAtcRatings.push_back(str);
+                const QString msg = QStringLiteral("FSD unknown ATC rating '%1'").arg(str);
+                Private::logUnknownType(msg);
+            }
             return AtcRating::Unknown;
         }
 
@@ -99,8 +132,12 @@ namespace BlackCore
             else if (str == "5") return PilotRating::Supervisor;
 
             // we should NOT get here
-            const QByteArray msg = QStringLiteral("FSD Unknown Pilot rating '%1'").arg(str).toLatin1();
-            BLACK_AUDIT_X(false, Q_FUNC_INFO, msg.constData());
+            if (!Private::s_invalidPilotRatings.contains(str))
+            {
+                Private::s_invalidPilotRatings.push_back(str);
+                const QString msg = QStringLiteral("FSD Unknown Pilot rating '%1'").arg(str);
+                Private::logUnknownType(msg);
+            }
             return PilotRating::Unknown;
         }
 
@@ -166,16 +203,18 @@ namespace BlackCore
             else if (str == "30") return SimType::P3Dv4;
 
             // we should NOT get here
-            const QByteArray msg = QStringLiteral("FSD unknown SimType '%1'").arg(str).toLatin1();
-            BLACK_AUDIT_X(false, Q_FUNC_INFO, msg.constData());
-
+            if (!Private::s_invalidSimType.contains(str))
+            {
+                Private::s_invalidSimType.push_back(str);
+                const QString msg = QStringLiteral("FSD unknown SimType '%1'").arg(str);
+                Private::logUnknownType(msg);
+            }
             return SimType::Unknown;
         }
 
         template<>
-        QString toQString(const BlackMisc::Network::CFacilityType &value)
+        QString toQString(const CFacilityType &value)
         {
-            using namespace BlackMisc::Network;
             switch (value.getFacilityType())
             {
             case CFacilityType::OBS: return "0";
@@ -193,10 +232,8 @@ namespace BlackCore
         }
 
         template<>
-        BlackMisc::Network::CFacilityType fromQString(const QString &str)
+        CFacilityType fromQString(const QString &str)
         {
-            using namespace BlackMisc::Network;
-
             // empty string intentionally ignored, also for UNIT test and 3rd parth networks
             if (str.isEmpty()) return CFacilityType::Unknown;
 
@@ -209,8 +246,12 @@ namespace BlackCore
             else if (str == "6") return CFacilityType::CTR;
 
             // we should NOT get here
-            const QByteArray msg = QStringLiteral("FSD unknown CFacilityType '%1'").arg(str).toLatin1();
-            BLACK_AUDIT_X(false, Q_FUNC_INFO, msg.constData());
+            if (!Private::s_invalidFacilityType.contains(str))
+            {
+                Private::s_invalidFacilityType.push_back(str);
+                const QString msg = QStringLiteral("FSD unknown CFacilityType '%1'");
+                Private::logUnknownType(msg);
+            }
 
             return CFacilityType::Unknown;
         }
@@ -232,6 +273,7 @@ namespace BlackCore
             case ClientQueryType::AircraftConfig: return "ACC";
             case ClientQueryType::Unknown:        return "Unknown query type";
             }
+
             Q_UNREACHABLE();
             return "Unknown query type";
         }
@@ -284,8 +326,13 @@ namespace BlackCore
             if (str == "NEWINFO")   return ClientQueryType::Unknown; // probably causing the Linux crash
 
             // we should NOT get here
-            const QByteArray msg = QStringLiteral("FSD unknown ClientQueryType '%1'").arg(str).toLatin1();
-            BLACK_AUDIT_X(false, Q_FUNC_INFO, msg.constData());
+            if (!Private::s_invalidQueryType.contains(str))
+            {
+                Private::s_invalidQueryType.push_back(str);
+                const QString msg = QStringLiteral("FSD unknown ClientQueryType '%1'").arg(str);
+                Private::logUnknownType(msg);
+            }
+
             return ClientQueryType::Unknown;
         }
 
