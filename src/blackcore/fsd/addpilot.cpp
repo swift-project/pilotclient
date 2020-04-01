@@ -46,10 +46,10 @@ namespace BlackCore
                 return {};
             }
 
-            PilotRating rating = static_cast<PilotRating>(tokens[4].toInt());
-            int protocolRevision = tokens[5].toInt();
-            SimType simType = static_cast<SimType>(tokens[6].toInt());
-            AddPilot packet(tokens[0], tokens[2], tokens[3], rating, protocolRevision, simType, tokens[7]);
+            const PilotRating rating = fromQString<PilotRating>(tokens[4]);
+            const int protocolRevision = tokens[5].toInt();
+            const SimType simType = fromQString<SimType>(tokens[6]);
+            const AddPilot packet(tokens[0], tokens[2], tokens[3], rating, protocolRevision, simType, tokens[7]);
             return packet;
         }
     }
