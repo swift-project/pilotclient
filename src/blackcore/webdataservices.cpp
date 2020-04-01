@@ -1155,7 +1155,7 @@ namespace BlackCore
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             m_airportDataReader->start(QThread::LowPriority);
         }
-        Q_UNUSED(c); // signal connect flag
+        Q_UNUSED(c) // signal connect flag
 
         const QDateTime threshold = QDateTime::currentDateTimeUtc().addDays(-365); // country and airports are "semi static"
         const CEntityFlags::Entity cachedDbEntities = this->getDbEntitiesWithCachedData(); // those caches are already read
@@ -1196,7 +1196,7 @@ namespace BlackCore
             c = connect(m_dbInfoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Info reader connect failed");
             c = connect(m_dbInfoDataReader, &CInfoDataReader::databaseReaderMessages, this, &CWebDataServices::databaseReaderMessages);
-            Q_UNUSED(c);
+            Q_UNUSED(c)
 
             // start in own thread
             m_dbInfoDataReader->start(QThread::LowPriority);

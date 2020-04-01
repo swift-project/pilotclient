@@ -163,7 +163,7 @@ namespace BlackCore
 
             //! Split line and assign values to their corresponding attribute names
             //! \remark attributes expected as lower case
-            static const QMap<QString, QString> clientPartsToMap(const QString &currentLine, const QStringList &clientSectionAttributes);
+            static const QMap<QString, QString> clientPartsToMap(const QString &currentLine, const QStringList &clientSectionAttributes, bool logInconsistency);
 
             //! Get current section
             static Section currentLineToSection(const QString &currentLine);

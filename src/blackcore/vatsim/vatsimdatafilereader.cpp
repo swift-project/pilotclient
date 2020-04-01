@@ -245,6 +245,7 @@ namespace BlackCore
 
                 QStringList clientSectionAttributes;
                 Section section = SectionNone;
+                int invalidSections = 0;
 
                 QString currentLine; // declared outside of the for loop, to amortize the cost of allocation
                 for (const QStringRef &clRef : lines)
@@ -267,6 +268,15 @@ namespace BlackCore
                             const QVector<QStringRef> attributes = currentLine.midRef(i).trimmed().split(':', QString::SkipEmptyParts);
                             for (const QStringRef &attr : attributes) { clientSectionAttributes.push_back(attr.toString().trimmed().toLower()); }
                             section = SectionNone; // reset
+
+                            // consistency check to avoid tons of parsing errors afterwards
+                            // normally we have 40 attributes
+                            if (attributes.size() < 10)
+                            {
+                                CLogMessage(this).warning(u"Too few (%1) attributes in VATSIM file, CANCEL parsing. Line: '%2'") << attributes.size() << currentLine;
+                                return;
+                            }
+
                         }
                         continue;
                     }
@@ -280,9 +290,14 @@ namespace BlackCore
                     {
                     case SectionClients:
                         {
-                            const QMap<QString, QString> clientPartsMap = clientPartsToMap(currentLine, clientSectionAttributes);
+                            const bool logInconsistencies = invalidSections < 5; // flood protection
+                            const QMap<QString, QString> clientPartsMap = clientPartsToMap(currentLine, clientSectionAttributes, logInconsistencies);
                             const CCallsign callsign = CCallsign(clientPartsMap["callsign"]);
-                            if (callsign.isEmpty()) { break; }
+                            if (callsign.isEmpty())
+                            {
+                                invalidSections++;
+                                break;
+                            }
                             const CUser user(clientPartsMap["cid"], clientPartsMap["realname"], callsign);
                             const QString clientType = clientPartsMap["clienttype"].toLower();
                             if (clientType.isEmpty()) { break; } // sometimes type is empty
@@ -458,7 +473,7 @@ namespace BlackCore
             setInitialAndPeriodicTime(s.getInitialTime().toMs(), s.getPeriodicTime().toMs());
         }
 
-        const QMap<QString, QString> CVatsimDataFileReader::clientPartsToMap(const QString &currentLine, const QStringList &clientSectionAttributes)
+        const QMap<QString, QString> CVatsimDataFileReader::clientPartsToMap(const QString &currentLine, const QStringList &clientSectionAttributes, bool logInconsistency)
         {
             QMap<QString, QString> parts;
             if (currentLine.isEmpty()) { return parts; }
@@ -466,10 +481,18 @@ namespace BlackCore
 
             // remove last empty item if required
             if (currentLine.endsWith(':')) { clientParts.removeLast(); }
-            if (clientParts.size() != clientSectionAttributes.size())
+            const int noParts = clientParts.size();
+            const int noAttributes = clientSectionAttributes.size();
+            const bool valid = (noParts == noAttributes);
+
+            // valid data?
+            if (!valid)
             {
-                logInconsistentData(
-                    CStatusMessage(static_cast<CVatsimDataFileReader *>(nullptr), CStatusMessage::SeverityInfo, u"VATSIM data file client parts: %1 attributes: %2 line: '%3'") << clientParts.size() << clientSectionAttributes.size() << currentLine);
+                if (logInconsistency)
+                {
+                    logInconsistentData(
+                        CStatusMessage(static_cast<CVatsimDataFileReader *>(nullptr), CStatusMessage::SeverityInfo, u"VATSIM data file client parts: %1 attributes: %2 line: '%3'") << clientParts.size() << clientSectionAttributes.size() << currentLine);
+                }
                 return parts;
             }
 
