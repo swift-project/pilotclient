@@ -35,8 +35,8 @@ namespace BlackSample
         BlackMisc::registerMetadata();
         QScopedPointer<CVPilotRulesReader> vPilotReader(new CVPilotRulesReader());
         bool s = vPilotReader->read(false);
-        streamOut << "Read success: " << BlackMisc::boolToYesNo(s) << endl;
-        streamOut << "Read " << vPilotReader->countRulesLoaded() << " rules from " << vPilotReader->countFilesLoaded() << " files" << endl;
+        streamOut << "Read success: " << BlackMisc::boolToYesNo(s) << Qt::endl;
+        streamOut << "Read " << vPilotReader->countRulesLoaded() << " rules from " << vPilotReader->countFilesLoaded() << " files" << Qt::endl;
         streamOut << "Distributors: " << vPilotReader->getRules().getSortedDistributors().join(", ");
 
         Q_UNUSED(streamIn);

@@ -57,8 +57,8 @@ void CLineReader::run()
         else
         {
             QTextStream qtout(stdout);
-            qtout << "Invalid command." << endl;
-            qtout << "Usage: <lat> <lon>" << endl;
+            qtout << "Invalid command." << Qt::endl;
+            qtout << "Usage: <lat> <lon>" << Qt::endl;
         }
     }
 }

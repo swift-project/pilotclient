@@ -1971,7 +1971,7 @@ namespace BlackCore
             if (m_rawFsdMessageLogFile.isOpen())
             {
                 QTextStream stream(&m_rawFsdMessageLogFile);
-                stream << rawMessage.toQString().trimmed() << endl;
+                stream << rawMessage.toQString().trimmed() << Qt::endl;
             }
             emit rawFsdMessage(rawMessage);
         }

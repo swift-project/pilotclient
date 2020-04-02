@@ -47,68 +47,68 @@ namespace BlackSample
         CHeading h1(180, CHeading::Magnetic, CAngleUnit::deg());
         CHeading h2(180, CHeading::True, CAngleUnit::deg());
 
-        out << h1 << endl;
-        out << h1 << " " << h2 << " " << (h1 == h2) << " " << (h1 != h2) << " " << (h1 == h1) << endl;
+        out << h1 << Qt::endl;
+        out << h1 << " " << h2 << " " << (h1 == h2) << " " << (h1 != h2) << " " << (h1 == h1) << Qt::endl;
 
         // COM system
         CComSystem c1 = CComSystem::getCom1System(125.3);
-        out << c1 << endl;
+        out << c1 << Qt::endl;
         c1.setActiveUnicom();
-        out << c1 << endl;
+        out << c1 << Qt::endl;
 
         // NAV system
         CNavSystem nav1 = CNavSystem::getNav1System(110.0);
-        out << nav1 << endl;
+        out << nav1 << Qt::endl;
 
         // Transponder tests
         CTransponder tr1(7000, CTransponder::StateStandby);
         CTransponder tr2("4532", CTransponder::ModeMil3);
-        out << tr1 << " " << tr2 << endl;
+        out << tr1 << " " << tr2 << Qt::endl;
 
         // Callsign and ATC station
         CCallsign callsign1("d-ambz");
         CCallsign callsign2("DAmbz");
-        out << callsign1 << " " << callsign2 << " " << (callsign1 == callsign2) << endl;
+        out << callsign1 << " " << callsign2 << " " << (callsign1 == callsign2) << Qt::endl;
 
         CAtcStation station1 = CTestData::getFrankfurtTower();
         CAtcStation station2(station1);
         CAtcStation station3(station1);
         station3.setController(CTestData::getRandomController());
 
-        out << station1 << " " << station2 << " " << (station1.getCallsign() == station2.getCallsign()) << endl;
+        out << station1 << " " << station2 << " " << (station1.getCallsign() == station2.getCallsign()) << Qt::endl;
 
         // User parsing
         CUser user("12345", "Joe KING KGLC");
-        out << user.getRealName() << user.getHomeBase() << endl;
+        out << user.getRealName() << user.getHomeBase() << Qt::endl;
 
         // ATC List
         CAtcStationList atcList = CTestData::getAtcStations();
         atcList.push_back(CTestData::getAtcStations());
         atcList = atcList.findBy(&CAtcStation::getCallsign, "eddm_twr", &CAtcStation::getFrequency, CFrequency(118.7, CFrequencyUnit::MHz()));
         atcList = atcList.sortedBy(&CAtcStation::getBookedFromUtc, &CAtcStation::getCallsign, &CAtcStation::getControllerRealName);
-        out << atcList << endl;
-        out << "-----------------------------------------------" << endl;
+        out << atcList << Qt::endl;
+        out << "-----------------------------------------------" << Qt::endl;
 
         // flight plan
         CAltitude alt("FL110");
         CAltitude altMsl(alt);
         altMsl.toMeanSeaLevel();
 
-        out << alt << " " << altMsl << endl;
+        out << alt << " " << altMsl << Qt::endl;
         CAirportIcaoCode frankfurt("eddf");
-        out << frankfurt << endl;
-        out << "-----------------------------------------------" << endl;
+        out << frankfurt << Qt::endl;
+        out << "-----------------------------------------------" << Qt::endl;
 
         CMetaMemberComparator cmp;
         QList<QPair<QString, bool>> list = cmp(station1, station3);
-        for (const auto &member : as_const(list)) { out << member.first << (member.second ? " equal" : " NOT equal") << endl; }
-        out << endl;
+        for (const auto &member : as_const(list)) { out << member.first << (member.second ? " equal" : " NOT equal") << Qt::endl; }
+        out << Qt::endl;
         list = cmp(station1, station3, { "controller" });
-        for (const auto &member : as_const(list)) { out << member.first << (member.second ? " equal" : " NOT equal") << endl; }
-        out << endl;
+        for (const auto &member : as_const(list)) { out << member.first << (member.second ? " equal" : " NOT equal") << Qt::endl; }
+        out << Qt::endl;
         list = cmp(station1, station3, { "controller", "homebase" });
-        for (const auto &member : as_const(list)) { out << member.first << (member.second ? " equal" : " NOT equal") << endl; }
-        out << "-----------------------------------------------" << endl;
+        for (const auto &member : as_const(list)) { out << member.first << (member.second ? " equal" : " NOT equal") << Qt::endl; }
+        out << "-----------------------------------------------" << Qt::endl;
 
         return 0;
     }

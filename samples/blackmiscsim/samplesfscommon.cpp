@@ -55,26 +55,26 @@ namespace BlackSample
         multiSettings.setSettings(newSettings, sim); // set, but do NOT(!) save
 
         CAircraftCfgParser parser(sim);
-        streamOut << "start reading, press RETURN" << endl;
+        streamOut << "start reading, press RETURN" << Qt::endl;
         QString input = streamIn.readLine();
         Q_UNUSED(input);
 
-        streamOut << "reading directly" << endl;
+        streamOut << "reading directly" << Qt::endl;
         QElapsedTimer time;
         time.start();
-        streamOut << "reading " << parser.getFirstModelDirectoryOrDefault() << endl;
+        streamOut << "reading " << parser.getFirstModelDirectoryOrDefault() << Qt::endl;
         parser.startLoading();
-        streamOut << "read entries: " << parser.getAircraftCfgEntriesList().size() << " in " << time.restart() << "ms" << endl;
+        streamOut << "read entries: " << parser.getAircraftCfgEntriesList().size() << " in " << time.restart() << "ms" << Qt::endl;
 
         CAircraftCfgEntriesList entriesList = parser.getAircraftCfgEntriesList();
         QJsonDocument doc(entriesList.toJson());
         QByteArray jsonArray(doc.toJson());
-        streamOut << "write JSON array with size " << jsonArray.size() << endl;
+        streamOut << "write JSON array with size " << jsonArray.size() << Qt::endl;
         QTemporaryFile tempFile;
         tempFile.open();
         tempFile.write(jsonArray);
         tempFile.close();
-        streamOut << "written to " << tempFile.fileName() << " in " << time.restart() << "ms" <<  endl;
+        streamOut << "written to " << tempFile.fileName() << " in " << time.restart() << "ms" <<  Qt::endl;
 
         // re-read
         tempFile.open();
@@ -82,8 +82,8 @@ namespace BlackSample
         doc = QJsonDocument::fromJson(jsonArray);
         entriesList.clear();
         entriesList.convertFromJson(doc.object());
-        streamOut << "read JSON array with size " << jsonArray.size() << endl;
-        streamOut << "read entries from disk: " << entriesList.size() << " in " << time.restart() << "ms" << endl;
+        streamOut << "read JSON array with size " << jsonArray.size() << Qt::endl;
+        streamOut << "read entries from disk: " << entriesList.size() << " in " << time.restart() << "ms" << Qt::endl;
         tempFile.close();
 
         // restore settings: DO NOT SAVE !!!

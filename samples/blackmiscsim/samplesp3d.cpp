@@ -21,12 +21,12 @@ namespace BlackSample
     void CSamplesP3D::samplesMisc(QTextStream &streamOut)
     {
         const QSet<QString> configFiles = CFsCommonUtil::findP3dAddOnConfigFiles("v4");
-        streamOut << BlackMisc::joinStringSet(configFiles, ", ") << endl;
+        streamOut << BlackMisc::joinStringSet(configFiles, ", ") << Qt::endl;
 
         const QSet<QString> addOnPaths = CFsCommonUtil::allConfigFilesPathValues(configFiles.values(), false, {});
-        streamOut << BlackMisc::joinStringSet(addOnPaths, ", ") << endl;
+        streamOut << BlackMisc::joinStringSet(addOnPaths, ", ") << Qt::endl;
 
         const QSet<QString> simObjectPaths = CFsCommonUtil::fsxSimObjectsPaths("B:/fsx.cfg", false);
-        streamOut << BlackMisc::joinStringSet(simObjectPaths, ", ") << endl;
+        streamOut << BlackMisc::joinStringSet(simObjectPaths, ", ") << Qt::endl;
     }
 } // namespace

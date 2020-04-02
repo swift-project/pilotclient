@@ -29,23 +29,23 @@ namespace BlackSample
 
         BlackMisc::registerMetadata();
         QScopedPointer<CFsuipc> fsuipc(new CFsuipc());
-        streamOut << "FSUIPC initialized" << endl;
+        streamOut << "FSUIPC initialized" << Qt::endl;
 
         if (fsuipc->open())
         {
-            streamOut << "FSUIPC connected" << endl;
+            streamOut << "FSUIPC connected" << Qt::endl;
         }
         else
         {
-            streamOut << "FSUIPC NOT(!) connected" << endl;
-            streamOut << "Need FS WideClient?" << endl;
+            streamOut << "FSUIPC NOT(!) connected" << Qt::endl;
+            streamOut << "Need FS WideClient?" << Qt::endl;
             return;
         }
 
         CSimulatedAircraft aircraft;
         if (fsuipc->read(aircraft, true, true, true))
         {
-            streamOut << "Aircraft read: " << aircraft.toQString(true) << endl;
+            streamOut << "Aircraft read: " << aircraft.toQString(true) << Qt::endl;
         }
 
         fsuipc->close();

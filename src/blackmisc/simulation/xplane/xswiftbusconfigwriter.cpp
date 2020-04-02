@@ -83,25 +83,25 @@ namespace BlackMisc
                 {
                     // this code should be similar to XSwiftBus config.cpp
                     QTextStream ts(&configFile);
-                    ts << "# DBus Mode - Options: p2p, session" << endl;
-                    ts << "dbusMode = " << m_dbusMode << endl;
-                    ts << endl;
-                    ts << "# DBus server address - relevant for P2P mode only" << endl;
-                    ts << "dbusAddress = " << m_dbusAddress << endl;
-                    ts << endl;
-                    ts << "# DBus server port - relevant for P2P mode only" << endl;
-                    ts << "dbusPort = " << m_dbusPort << endl;
-                    ts << endl;
-                    ts << "# Render phase debugging - to help diagnose crashes" << endl;
-                    ts << "debug = " << boolToOnOff(m_debug) << endl;
-                    ts << endl;
-                    ts << "# TCAS traffic - to disable in case of crashes" << endl;
-                    ts << "tcas = " << boolToOnOff(m_tcas) << endl;
+                    ts << "# DBus Mode - Options: p2p, session" << Qt::endl;
+                    ts << "dbusMode = " << m_dbusMode << Qt::endl;
+                    ts << Qt::endl;
+                    ts << "# DBus server address - relevant for P2P mode only" << Qt::endl;
+                    ts << "dbusAddress = " << m_dbusAddress << Qt::endl;
+                    ts << Qt::endl;
+                    ts << "# DBus server port - relevant for P2P mode only" << Qt::endl;
+                    ts << "dbusPort = " << m_dbusPort << Qt::endl;
+                    ts << Qt::endl;
+                    ts << "# Render phase debugging - to help diagnose crashes" << Qt::endl;
+                    ts << "debug = " << boolToOnOff(m_debug) << Qt::endl;
+                    ts << Qt::endl;
+                    ts << "# TCAS traffic - to disable in case of crashes" << Qt::endl;
+                    ts << "tcas = " << boolToOnOff(m_tcas) << Qt::endl;
 
                     // add comment as information
-                    ts << endl;
+                    ts << Qt::endl;
                     ts << "# Updated by CXSwiftBusConfigWriter " << QDateTime::currentDateTimeUtc().toString("yyyyMMddHHmmss") << " ";
-                    ts << endl;
+                    ts << Qt::endl;
                 }
             }
         } // ns

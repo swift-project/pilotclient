@@ -42,23 +42,23 @@ int main(int argc, char *argv[])
 
     do
     {
-        qtout << endl;
-        qtout << "1 .. JSON" << endl;
-        qtout << "2 .. Change object" << endl;
-        qtout << "3a .. Containers" << endl;
-        qtout << "3b .. Callsign QMap vs QHash" << endl;
-        qtout << "4 .. Metadata" << endl;
-        qtout << "6a .. Performance create / copy / ..." << endl;
-        qtout << "6b .. 40/20 Interpolator scenario" << endl;
-        qtout << "6c .. JSON performance" << endl;
-        qtout << "6d .. JSON model performance (database vs. own JSON)" << endl;
-        qtout << "6e .. string utils vs.regex" << endl;
-        qtout << "6f .. string concatenation (+=, arg, ..)" << endl;
-        qtout << "6g .. const &QString vs. QStringLiteral" << endl;
-        qtout << "7 .. Algorithms" << endl;
-        qtout << "8 .. File/Directory" << endl;
-        qtout << "-----" << endl;
-        qtout << "x .. Bye" << endl;
+        qtout << Qt::endl;
+        qtout << "1 .. JSON" << Qt::endl;
+        qtout << "2 .. Change object" << Qt::endl;
+        qtout << "3a .. Containers" << Qt::endl;
+        qtout << "3b .. Callsign QMap vs QHash" << Qt::endl;
+        qtout << "4 .. Metadata" << Qt::endl;
+        qtout << "6a .. Performance create / copy / ..." << Qt::endl;
+        qtout << "6b .. 40/20 Interpolator scenario" << Qt::endl;
+        qtout << "6c .. JSON performance" << Qt::endl;
+        qtout << "6d .. JSON model performance (database vs. own JSON)" << Qt::endl;
+        qtout << "6e .. string utils vs.regex" << Qt::endl;
+        qtout << "6f .. string concatenation (+=, arg, ..)" << Qt::endl;
+        qtout << "6g .. const &QString vs. QStringLiteral" << Qt::endl;
+        qtout << "7 .. Algorithms" << Qt::endl;
+        qtout << "8 .. File/Directory" << Qt::endl;
+        qtout << "-----" << Qt::endl;
+        qtout << "x .. Bye" << Qt::endl;
         const QString s = qtin.readLine().toLower().trimmed();
 
         if (s.startsWith("1")) { CSamplesJson::samples(); }
