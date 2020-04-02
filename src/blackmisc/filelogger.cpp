@@ -130,22 +130,22 @@ namespace BlackMisc
         m_stream << "This is " << applicationName();
         m_stream << " version " << CBuildConfig::getVersionString();
         m_stream << " running on " << QSysInfo::prettyProductName();
-        m_stream << " " << QSysInfo::currentCpuArchitecture() << endl;
+        m_stream << " " << QSysInfo::currentCpuArchitecture() << Qt::endl;
 
         m_stream << "Built from revision " << CBuildConfig::gitHeadSha1();
-        m_stream << " on " << CBuildConfig::buildDateAndTime() << endl;
+        m_stream << " on " << CBuildConfig::buildDateAndTime() << Qt::endl;
 
         m_stream << "Built with Qt " << QT_VERSION_STR;
         m_stream << " and running with Qt " << qVersion();
-        m_stream << " " << QSysInfo::buildAbi() << endl;
+        m_stream << " " << QSysInfo::buildAbi() << Qt::endl;
 
-        m_stream << "Program is going to expire on " + CBuildConfig::getEol().toString() << "." << endl;
+        m_stream << "Program is going to expire on " + CBuildConfig::getEol().toString() << "." << Qt::endl;
 
-        m_stream << "Application started." << endl;
+        m_stream << "Application started." << Qt::endl;
     }
 
     void CFileLogger::writeContentToFile(const QString &content)
     {
-        m_stream << content << endl;
+        m_stream << content << Qt::endl;
     }
 }

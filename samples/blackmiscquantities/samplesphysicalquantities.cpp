@@ -40,28 +40,28 @@ namespace BlackSample
         CLengthUnit lu2(CLengthUnit::ft());
         QString lu1s = lu1.toQString(true);
         QString lu2s = lu2.toQString(true);
-        out << "units: " << lu1 << " " << lu2 << " " << lu1s << " " << lu2s << " " << lu1.getName(true) << " " << lu2.getName(true) << endl;
+        out << "units: " << lu1 << " " << lu2 << " " << lu1s << " " << lu2s << " " << lu1.getName(true) << " " << lu2.getName(true) << Qt::endl;
         const CLength l1(5.0, CLengthUnit::ft()); // 5 ft
         CLength l2(1, CLengthUnit::NM()); // 1NM
         CLength l3(1, CLengthUnit::km());
         CLength l4(l3);
 
-        out << CLengthUnit::ft() << endl;
-        out << l1 << " " << l2 << " " << l3 << " " << l4 << endl;
-        out << l1.valueRoundedWithUnit(CLengthUnit::ft(), 5) << " " << l2.valueRoundedWithUnit(CLengthUnit::km()) << endl;
-        out << l3.getUnit() << endl;
+        out << CLengthUnit::ft() << Qt::endl;
+        out << l1 << " " << l2 << " " << l3 << " " << l4 << Qt::endl;
+        out << l1.valueRoundedWithUnit(CLengthUnit::ft(), 5) << " " << l2.valueRoundedWithUnit(CLengthUnit::km()) << Qt::endl;
+        out << l3.getUnit() << Qt::endl;
 
         l2.switchUnit(CLengthUnit::ft()); // now in ft
         l3 += l3; // 2km now
         l3 *= 1.5;// 3km now
-        out << l2 << " " << l3 << endl;
+        out << l2 << " " << l3 << Qt::endl;
 
         l3 = l3 * 2;
-        out << "doubled l3: " << l3 << endl;
+        out << "doubled l3: " << l3 << Qt::endl;
 
         // null test
         CLength nullLength(0, CLengthUnit::nullUnit());
-        out << "Null PQ: " << nullLength << " converted " << nullLength.valueRoundedWithUnit(CLengthUnit::m(), 2) << endl;
+        out << "Null PQ: " << nullLength << " converted " << nullLength.valueRoundedWithUnit(CLengthUnit::m(), 2) << Qt::endl;
 
         // more tests
         CFrequency f1(1E6, CFrequencyUnit::Hz()); // 1MHz
@@ -72,7 +72,7 @@ namespace BlackSample
         CSpeed s3 = CSpeed(s2);
         s3.switchUnit(CSpeedUnit::m_s());
         out << s1 << " " << s1.valueRoundedWithUnit(CSpeedUnit::defaultUnit()) << " " << s1.valueRoundedWithUnit(CSpeedUnit::NM_h());
-        out << s2 << " " << s3 << endl;
+        out << s2 << " " << s3 << Qt::endl;
 
         CAngle a1(180, CAngleUnit::deg());
         CAngle a2(1.5 * CAngle::PI(), CAngleUnit::rad());
@@ -86,30 +86,30 @@ namespace BlackSample
         a2 = a1 + a1;
 
         a2.switchUnit(CAngleUnit::deg());
-        out << a1.valueRoundedWithUnit() << " " << a1.piFactor() << endl;
-        out << a2 << endl;
+        out << a1.valueRoundedWithUnit() << " " << a1.piFactor() << Qt::endl;
+        out << a2 << Qt::endl;
         a3.switchUnit(CAngleUnit::sexagesimalDeg());
         a4.switchUnit(CAngleUnit::deg());
-        out << a3 << " " << a4 << endl;
+        out << a3 << " " << a4 << Qt::endl;
 
         CMass w1(1, CMassUnit::tonne());
         CMass w2(w1);
         w2.switchUnit(CMassUnit::lb());
-        out << w1 << " " << w1.valueRoundedWithUnit(CMassUnit::kg()) << " " << w2 << endl;
+        out << w1 << " " << w1.valueRoundedWithUnit(CMassUnit::kg()) << " " << w2 << Qt::endl;
 
         CPressure p1(CAltitude::standardISASeaLevelPressure());
-        out << p1 << " " << p1.valueRoundedWithUnit(CPressureUnit::psi()) << " " << p1.valueRoundedWithUnit(CPressureUnit::inHg()) << endl;
+        out << p1 << " " << p1.valueRoundedWithUnit(CPressureUnit::psi()) << " " << p1.valueRoundedWithUnit(CPressureUnit::inHg()) << Qt::endl;
 
         CTemperature t1;
         CTemperature t2(20, CTemperatureUnit::C());
         CTemperature t3(1, CTemperatureUnit::F());
         out << t1 << " " << t2 << " " << t2.valueRoundedWithUnit(CTemperatureUnit::defaultUnit(), -1, true);
-        out << t3.valueRoundedWithUnit(CTemperatureUnit::F(), -1, true)  << " " << t3.valueRoundedWithUnit(CTemperatureUnit::C(), -1, true) << " " << "I18N/UTF" << endl;
+        out << t3.valueRoundedWithUnit(CTemperatureUnit::F(), -1, true)  << " " << t3.valueRoundedWithUnit(CTemperatureUnit::C(), -1, true) << " " << "I18N/UTF" << Qt::endl;
 
         (t1 - t2).switchUnit(CTemperatureUnit::F()); // was not working since wrong return type const
         // CLengthUnit duA(CSpeedUnit::ft_min()); // no longer possible
         CLengthUnit duB(CLengthUnit::cm());
-        out << duB << endl;
+        out << duB << Qt::endl;
 
         CTime ti1(1, CTimeUnit::h());
         CTime ti2(ti1);
@@ -121,14 +121,14 @@ namespace BlackSample
         CTime ti7("20s");
         CTime ti8("12:30:40");
 
-        out << ti1 << " " << ti2 << " " << ti3 << " " << ti4 << " " << ti5 << endl;
-        out << ti6 << " " << ti7 << " " << ti8 << endl;
+        out << ti1 << " " << ti2 << " " << ti3 << " " << ti4 << " " << ti5 << Qt::endl;
+        out << ti6 << " " << ti7 << " " << ti8 << Qt::endl;
 
         CAcceleration ac1(10, CAccelerationUnit::m_s2());
-        out << ac1 << " " << ac1.toQString(true) << " " << ac1.valueRoundedWithUnit(-1, true) << " " << "I18N/UTF" << endl;
+        out << ac1 << " " << ac1.toQString(true) << " " << ac1.valueRoundedWithUnit(-1, true) << " " << "I18N/UTF" << Qt::endl;
 
         // bye
-        out << "-----------------------------------------------" << endl;
+        out << "-----------------------------------------------" << Qt::endl;
         return 0;
     }
 } // namespace

@@ -394,7 +394,7 @@ namespace BlackMisc
                 if (!equal)
                 {
                     errors++;
-                    if (verbose) { ts << "I: " << in.toQString() << endl << "O: " << out.toQString() << endl; }
+                    if (verbose) { ts << "I: " << in.toQString() << endl << "O: " << out.toQString() << Qt::endl; }
                 }
                 return equal;
             }

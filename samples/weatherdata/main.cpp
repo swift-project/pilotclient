@@ -41,9 +41,9 @@ int main(int argc, char *argv[])
     QObject::connect(&lineReader, &CLineReader::finished, &a, &QCoreApplication::quit);
 
     QTextStream qtout(stdout);
-    qtout << "Usage: <lat> <lon>" << endl;
-    qtout << "Example: 48.5 11.5" << endl;
-    qtout << "Type x to quit" << endl;
+    qtout << "Usage: <lat> <lon>" << Qt::endl;
+    qtout << "Example: 48.5 11.5" << Qt::endl;
+    qtout << "Type x to quit" << Qt::endl;
 
     lineReader.start();
     return a.exec();

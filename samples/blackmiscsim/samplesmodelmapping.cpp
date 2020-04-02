@@ -41,8 +41,8 @@ namespace BlackSample
     {
         CVPilotRulesReader vpRulesReader;
         const bool s = vpRulesReader.read(true);
-        streamOut << "directory: " << CVPilotRulesReader::standardMappingsDirectory() << endl;
-        streamOut << "loaded: " << BlackMisc::boolToYesNo(s) << " size: " << vpRulesReader.getAsModelsFromCache().size() << endl;
+        streamOut << "directory: " << CVPilotRulesReader::standardMappingsDirectory() << Qt::endl;
+        streamOut << "loaded: " << BlackMisc::boolToYesNo(s) << " size: " << vpRulesReader.getAsModelsFromCache().size() << Qt::endl;
 
         // mapper with rule set, handing over ownership
         const QString fsDir = CSampleUtils::selectDirectory(
@@ -60,18 +60,18 @@ namespace BlackSample
         multiSettings.setSettings(newSettings, sim); // set, but do NOT(!) save
 
         CAircraftCfgParser cfgParser(sim);
-        streamOut << "Start reading models" << endl;
+        streamOut << "Start reading models" << Qt::endl;
         cfgParser.startLoading(CAircraftCfgParser::CacheSkipped | CAircraftCfgParser::LoadDirectly);
-        streamOut << "Read models: " << cfgParser.getAircraftCfgEntriesList().size() << endl;
-        streamOut << "Ambigious models: " << cfgParser.getAircraftCfgEntriesList().detectAmbiguousTitles().join(", ") << endl;
+        streamOut << "Read models: " << cfgParser.getAircraftCfgEntriesList().size() << Qt::endl;
+        streamOut << "Ambigious models: " << cfgParser.getAircraftCfgEntriesList().detectAmbiguousTitles().join(", ") << Qt::endl;
 
         // sync definitions, remove redundant ones
         CAircraftMatcher matcher;
         matcher.setModelSet(vpRulesReader.getAsModelsFromCache(), CSimulatorInfo::FSX, true);
 
         const CAircraftIcaoCode icao("C172");
-        streamOut << "Searching for " << icao << endl;
-        streamOut << matcher.getModelSetRef().findByIcaoDesignators(icao, CAirlineIcaoCode()) << endl;
+        streamOut << "Searching for " << icao << Qt::endl;
+        streamOut << matcher.getModelSetRef().findByIcaoDesignators(icao, CAirlineIcaoCode()) << Qt::endl;
 
         // restore settings: DO NOT SAVE !!!
         multiSettings.setSettings(originalSettings, sim);

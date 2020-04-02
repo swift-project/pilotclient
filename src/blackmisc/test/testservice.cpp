@@ -73,8 +73,8 @@ namespace BlackMisc
             {
                 QDBusError error = connection.lastError();
                 err() << error.message();
-                err() << "Started dbus-daemon.exe --session (Windows)?" << endl;
-                err() << "Created directory session.d (e.g. ../Qt/5.8.0/qtbase/etc/dbus-1/session.d)?" << endl;
+                err() << "Started dbus-daemon.exe --session (Windows)?" << Qt::endl;
+                err() << "Created directory session.d (e.g. ../Qt/5.8.0/qtbase/etc/dbus-1/session.d)?" << Qt::endl;
                 qFatal("Could not register service!");
             }
 
@@ -83,14 +83,14 @@ namespace BlackMisc
                 qFatal("Could not register service object!");
             }
 
-            out() << "Registration running as pid: " << CTestService::getPid() << endl;
-            if (pTestService) { out() << "Service registered" << endl; }
+            out() << "Registration running as pid: " << CTestService::getPid() << Qt::endl;
+            if (pTestService) { out() << "Service registered" << Qt::endl; }
 
             QString service; // service not needed
             if (connection.connect(service, CTestService::ObjectPath(), CTestService::InterfaceName(),
                                    "sendStringMessage", pTestService, SLOT(receiveStringMessage(const QString &))))
             {
-                out() << "Connected object with DBus 'sendStringMessage'" << endl;
+                out() << "Connected object with DBus 'sendStringMessage'" << Qt::endl;
             }
             else
             {
@@ -118,236 +118,236 @@ namespace BlackMisc
 
         void CTestService::receiveStringMessage(const QString &message) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received message: " << message << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received message: " << message << Qt::endl;
         }
 
         void CTestService::receiveVariant(const CVariant &variant) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received variant: " << variant << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received variant: " << variant << Qt::endl;
         }
 
         void CTestService::receiveSpeed(const BlackMisc::PhysicalQuantities::CSpeed &speed) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received speed: " << speed << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received speed: " << speed << Qt::endl;
         }
 
         void CTestService::receiveComUnit(const CComSystem &comUnit) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received COM: " << comUnit << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received COM: " << comUnit << Qt::endl;
         }
 
         void CTestService::receiveAltitude(const CAltitude &altitude) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received altitude: " << altitude << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received altitude: " << altitude << Qt::endl;
         }
 
         void CTestService::receiveList(const QList<double> &list) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received list: " << list.size() << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received list: " << list.size() << Qt::endl;
         }
 
         void CTestService::receiveGeoPosition(const BlackMisc::Geo::CCoordinateGeodetic &geo) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received geo data: " << geo << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received geo data: " << geo << Qt::endl;
         }
 
         void CTestService::receiveTransponder(const CTransponder &transponder) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received transponder: " << transponder << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received transponder: " << transponder << Qt::endl;
         }
 
         void CTestService::receiveTrack(const CTrack &track) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received track: " << track << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received track: " << track << Qt::endl;
         }
 
         void CTestService::receiveLength(const BlackMisc::PhysicalQuantities::CLength &length) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received length: " << length << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received length: " << length << Qt::endl;
         }
 
         void CTestService::receiveVariantList(const CVariantList &variantList) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " " << variantList.size() << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " " << variantList.size() << Qt::endl;
             for (const CVariant &lv : variantList)
             {
-                if (m_verbose) out() << "    Received variant: " << lv.toQString() << endl;
+                if (m_verbose) out() << "    Received variant: " << lv.toQString() << Qt::endl;
             }
         }
 
         void CTestService::receiveCallsign(const CCallsign &callsign) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received callsign: " << callsign << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received callsign: " << callsign << Qt::endl;
         }
 
         void CTestService::receiveAtcStationList(const CAtcStationList &atcStationList) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received ATC list: " << atcStationList << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received ATC list: " << atcStationList << Qt::endl;
         }
 
         void CTestService::receiveValueMap(const BlackMisc::CPropertyIndexVariantMap &valueMap) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received value map: " << valueMap << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received value map: " << valueMap << Qt::endl;
         }
 
         void CTestService::receiveAtcStation(const CAtcStation &station) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received ATC station: " << station << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received ATC station: " << station << Qt::endl;
         }
 
         CAtcStationList CTestService::pingAtcStationList(const CAtcStationList &atcStationList) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping ATCs: " << atcStationList << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping ATCs: " << atcStationList << Qt::endl;
             return atcStationList;
         }
 
         CSimulatedAircraftList CTestService::pingAircraftList(const CSimulatedAircraftList &aircraftList) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping aircraft: " << aircraftList << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping aircraft: " << aircraftList << Qt::endl;
             return aircraftList;
         }
 
         CAircraftParts CTestService::pingAircraftParts(const CAircraftParts &aircraftParts) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping aircraft parts: " << aircraftParts << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping aircraft parts: " << aircraftParts << Qt::endl;
             return aircraftParts;
         }
 
         CAircraftEngine CTestService::pingAircraftEngine(const CAircraftEngine &aircraftEngine) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping aircraft engine: " << aircraftEngine << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping aircraft engine: " << aircraftEngine << Qt::endl;
             return aircraftEngine;
         }
 
         CAircraftModel CTestService::pingAircraftModel(const CAircraftModel &aircraftModel) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping aircraft model: " << aircraftModel << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping aircraft model: " << aircraftModel << Qt::endl;
             return aircraftModel;
         }
 
         CAircraftModelList CTestService::pingAircraftModelList(const CAircraftModelList &aircraftModels) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping aircraft modellist: " << aircraftModels << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping aircraft modellist: " << aircraftModels << Qt::endl;
             return aircraftModels;
         }
 
         CAircraftLights CTestService::pingAircraftLights(const CAircraftLights &aircraftLights) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping aircraft lights: " << aircraftLights << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping aircraft lights: " << aircraftLights << Qt::endl;
             return aircraftLights;
         }
 
         CSimulatedAircraft CTestService::pingSimulatedAircraft(const CSimulatedAircraft &aircraft) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping simulated aircraft: " << aircraft << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping simulated aircraft: " << aircraft << Qt::endl;
             return aircraft;
         }
 
         CAirportList CTestService::pingAirportList(const CAirportList &airportList) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping airports: " << airportList << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping airports: " << airportList << Qt::endl;
             return airportList;
         }
 
         CPropertyIndex CTestService::pingPropertyIndex(const CPropertyIndex &properties) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping properties: " << properties << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping properties: " << properties << Qt::endl;
             return properties;
         }
 
         CPropertyIndexVariantMap CTestService::pingIndexVariantMap(const CPropertyIndexVariantMap &indexVariantMap) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping properties: " << indexVariantMap << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping properties: " << indexVariantMap << Qt::endl;
             return indexVariantMap;
         }
 
         CClient CTestService::pingClient(const CClient &client) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping client: " << client << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping client: " << client << Qt::endl;
             return client;
         }
 
         CClientList CTestService::pingClientList(const CClientList &clientList) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping clients: " << clientList << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping clients: " << clientList << Qt::endl;
             return clientList;
         }
 
         CSpeed CTestService::pingSpeed(const CSpeed &speed) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping speed: " << speed << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping speed: " << speed << Qt::endl;
             return speed;
         }
 
         CAltitude CTestService::pingAltitude(const CAltitude &altitude) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping alt: " << altitude << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping alt: " << altitude << Qt::endl;
             return altitude;
         }
 
         CUser CTestService::pingUser(const CUser &user) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping user: " << user << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping user: " << user << Qt::endl;
             return user;
         }
 
         CAircraftSituation CTestService::pingSituation(const CAircraftSituation &situation) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping situation: " << situation << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping situation: " << situation << Qt::endl;
             return situation;
         }
 
         CTransponder CTestService::pingTransponder(const CTransponder &transponder) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping transponder: " << transponder << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping transponder: " << transponder << Qt::endl;
             return transponder;
         }
 
         CAtcStation CTestService::pingAtcStation(const CAtcStation &station) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping ATC: " << station << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping ATC: " << station << Qt::endl;
             return station;
         }
 
         CAircraftIcaoCode CTestService::pingAircraftIcaoData(const CAircraftIcaoCode &icao) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping ICAO data: " << icao << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping ICAO data: " << icao << Qt::endl;
             return icao;
         }
 
         CSimulatorPluginInfo CTestService::pingPluginInfo(const CSimulatorPluginInfo &info) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " info: " << info << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " info: " << info << Qt::endl;
             return info;
         }
 
         BlackMisc::CVariant CTestService::pingCVariant(const CVariant &variant) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " client sent back as CVariant: " << variant.toQString() << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " client sent back as CVariant: " << variant.toQString() << Qt::endl;
             return variant;
         }
 
         BlackMisc::Aviation::CFlightPlan CTestService::pingFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " info: " << flightPlan << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " info: " << flightPlan << Qt::endl;
             return flightPlan;
         }
 
         CAtcStationList CTestService::getAtcStationList(int n) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " getAtcStationList" << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " getAtcStationList" << Qt::endl;
             return CTesting::createAtcStations(n, false);
         }
 
         CAircraftCfgEntriesList CTestService::getAircraftCfgEntriesList(int n) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " getAircraftCfgEntriesList" << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " getAircraftCfgEntriesList" << Qt::endl;
             return CTesting::getAircraftCfgEntries(n);
         }
 
         QList<QDBusObjectPath> CTestService::getObjectPaths(int n) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " getObjectPaths" << endl;
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " getObjectPaths" << Qt::endl;
             QList<QDBusObjectPath> paths;
             paths.reserve(n);
             for (int i = 0; i < n; i++)

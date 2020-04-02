@@ -26,7 +26,7 @@ namespace BlackSample
         BlackMisc::displayAllUserMetatypesTypes(cout);
 
         cin.readLine();
-        cout << "------- Enter --------" << endl;
+        cout << "------- Enter --------" << Qt::endl;
         return 0;
     }
 

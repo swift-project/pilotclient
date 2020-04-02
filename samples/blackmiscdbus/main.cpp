@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
     {
         // 2nd Process !!! Running on the client's side
         // This runs in a second process, hence cannot be directly debugged within Qt Creator
-        out << "Running client side " << QCoreApplication::applicationPid() << endl;
+        out << "Running client side " << QCoreApplication::applicationPid() << Qt::endl;
 
         // run tests
         if (cmdlineArgs.contains("testservice", Qt::CaseInsensitive))
@@ -95,16 +95,16 @@ int main(int argc, char *argv[])
     else
     {
     Menu:
-        out << "Pid: " << QCoreApplication::applicationPid() << endl;
-        out << "1 .. Run testservice to test data transfer" << addressTcp << endl;
-        out << "1sb. Run testservice via session bus" << endl;
-        out << "2 .. Show signatures" << endl;
-        out << "----- Change address / port (no validation, do before starting server)" << endl;
-        out << "loop Address to loopback, 127.0.0.1" << endl;
-        out << "ip   some IP address, e.g " << ip << endl;
-        out << "port some port, e.g 12345" << endl;
-        out << "-----" << endl;
-        out << "x .. Bye" << endl;
+        out << "Pid: " << QCoreApplication::applicationPid() << Qt::endl;
+        out << "1 .. Run testservice to test data transfer" << addressTcp << Qt::endl;
+        out << "1sb. Run testservice via session bus" << Qt::endl;
+        out << "2 .. Show signatures" << Qt::endl;
+        out << "----- Change address / port (no validation, do before starting server)" << Qt::endl;
+        out << "loop Address to loopback, 127.0.0.1" << Qt::endl;
+        out << "ip   some IP address, e.g " << ip << Qt::endl;
+        out << "port some port, e.g 12345" << Qt::endl;
+        out << "-----" << Qt::endl;
+        out << "x .. Bye" << Qt::endl;
         QString mode = qtin.readLine().toLower().trimmed();
 
         if (mode.startsWith("l"))
@@ -135,9 +135,9 @@ int main(int argc, char *argv[])
         }
         if (mode.startsWith("2"))
         {
-            out << "---------------------------------" << endl;
+            out << "---------------------------------" << Qt::endl;
             BlackMisc::CDBusUtils::showDBusSignatures(out);
-            out << "---------------------------------" << endl;
+            out << "---------------------------------" << Qt::endl;
             goto Menu;
         }
 
@@ -155,13 +155,13 @@ int main(int argc, char *argv[])
 
         // I know I am in the "server process here", so I can safely create a CDBusServer
         // this runs in the original process and can be directly debugged
-        out << "--------------------------------------------------------" << endl;
+        out << "--------------------------------------------------------" << Qt::endl;
 
         CDBusServer *dBusServer = new CDBusServer(useSessionBusForServer ? "session" : address);
         if (dBusServer->hasQDBusServer())
         {
             out << "server" << dBusServer->qDBusServer()->address()
-                << " connected:" << dBusServer->qDBusServer()->isConnected() << endl;
+                << " connected:" << dBusServer->qDBusServer()->isConnected() << Qt::endl;
         }
         // start client process
         QStringList args;

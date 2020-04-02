@@ -20,9 +20,9 @@ namespace BlackSample
     int CSamplesFile::samples(QTextStream &out)
     {
         const QString dir = "R:/temp";
-        out << "Testing directory search " << dir << endl;
+        out << "Testing directory search " << dir << Qt::endl;
         const bool f = CDirectoryUtils::containsFileInDir(dir, "*.air", true);
-        out << "Found " << boolToYesNo(f) << endl;
+        out << "Found " << boolToYesNo(f) << Qt::endl;
         return 0;
     }
 
