@@ -68,8 +68,9 @@ namespace BlackMisc
             const CElevationPlane &elevationPlane, CAircraftSituation::GndElevationInfo info, const CAircraftModel &model,
             CAircraftSituationChange *changeOut, bool *setForOnGroundPosition)
         {
+            if (setForOnGroundPosition)  { *setForOnGroundPosition = false; } // set a default
             if (elevationPlane.isNull()) { return 0; }
-            if (this->isEmpty()) { return 0; }
+            if (this->isEmpty())         { return 0; }
 
             // the change has the timestamps of the latest situation
             Q_ASSERT_X(m_tsAdjustedSortHint == CAircraftSituationList::AdjustedTimestampLatestFirst || this->isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Need sorted situations without NULL positions");

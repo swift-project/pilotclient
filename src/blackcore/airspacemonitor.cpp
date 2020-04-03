@@ -1391,15 +1391,21 @@ namespace BlackCore
             // and avoids unnecessary elevation fetching for low flying smaller GA aircraft
             const CAircraftIcaoCode icao = this->getAircraftInRangeModelForCallsign(callsign).getAircraftIcaoCode();
             if (!icao.hasDesignator()) { break; } // what is that?
-            if (!icao.isVtol())
+            if (icao.isVtol())
             {
-                // Not for VTOLs
+                // VTOLs over 60kts likely not on ground
+                // it could be that a low flying helicopter near ground
+                if (situation.getGroundSpeed().value(CSpeedUnit::kts()) > 60) { break; }
+            }
+            else
+            {
+                // NO VTOL
                 CLength cg(nullptr);
                 CSpeed rotateSpeed(nullptr);
                 icao.guessModelParameters(cg, rotateSpeed);
                 if (!rotateSpeed.isNull())
                 {
-                    rotateSpeed *= 1.2; // some margin
+                    rotateSpeed *= 1.25; // some margin
                     if (situation.getGroundSpeed() > rotateSpeed) { break; }
                 }
             }
@@ -1414,6 +1420,7 @@ namespace BlackCore
             }
 
             // we NEED elevation
+            // actually distance of 200k/h 100ms is just 6.1 meters
             const CLength dpt = correctedSituation.getDistancePerTime(100, CElevationPlane::singlePointRadius());
             const CAircraftSituationList situationsBeforeStoring   = this->remoteAircraftSituations(callsign);
             const CAircraftSituation situationWithElvBeforeStoring = situationsBeforeStoring.findClosestElevationWithinRange(correctedSituation, dpt);
@@ -1435,7 +1442,7 @@ namespace BlackCore
             }
 
             // we have a new situation, so we try to get the elevation
-            // so far we have requested it, but we set it upfront either by
+            // we will requested it, but we set it upfront either by
             //
             // a) average value from other planes in the vicinity (cache, not moving) or
             // b) by extrapolating
@@ -1450,11 +1457,12 @@ namespace BlackCore
                 bool fromNonMoving = false;
                 bool triedExtrapolation  = false;
                 bool couldNotExtrapolate = false;
+                int fromWhere = -1; // debugging
 
-                CElevationPlane averagePlane = this->averageElevationOfOnGroundAircraft(situation, CElevationPlane::majorAirportRadius(), 2, 3);
+                CElevationPlane averagePlane = this->averageElevationOfOnGroundAircraft(situation, CElevationPlane::minorAirportRadius(), 2, 3);
                 if (averagePlane.isNull())
                 {
-                    averagePlane = this->averageElevationOfNonMovingAircraft(situation, CElevationPlane::majorAirportRadius(), 2, 3);
+                    averagePlane = this->averageElevationOfNonMovingAircraft(situation, CElevationPlane::minorAirportRadius(), 2, 3);
                     fromNonMoving = true;
                 }
 
@@ -1464,6 +1472,7 @@ namespace BlackCore
                     correctedSituation.setGroundElevation(averagePlane, CAircraftSituation::Average);
                     if (fromNonMoving) { m_foundInNonMovingAircraft++; }
                     else { m_foundInElevationsOnGnd++; }
+                    fromWhere = 10;
                 }
                 else
                 {
@@ -1473,6 +1482,7 @@ namespace BlackCore
                         const bool extrapolated = correctedSituation.extrapolateElevation(situationsBeforeStoring[0], situationsBeforeStoring[1], changesBeforeStoring);
                         triedExtrapolation  = true;
                         couldNotExtrapolate = !extrapolated;
+                        fromWhere = 20;
                     }
                 }
 
@@ -1484,10 +1494,18 @@ namespace BlackCore
                         // experimental, could become ASSERT
                         BLACK_VERIFY_X(needToRequestElevation, Q_FUNC_INFO, "Request should already be set");
                     }
-                    needToRequestElevation = true; // should be the true already
+                    needToRequestElevation = true; // should be "true" already
 
                     Q_UNUSED(triedExtrapolation)
                     Q_UNUSED(couldNotExtrapolate)
+                }
+                else
+                {
+                    // sanity check on the situation
+                    if (CBuildConfig::isLocalDeveloperDebugBuild())
+                    {
+                        BLACK_VERIFY_X(!correctedSituation.getGroundElevation().isZeroEpsilonConsidered(), Q_FUNC_INFO, "Suspicious elevation");
+                    }
                 }
             } // gnd. elevation
         }
