@@ -98,7 +98,7 @@ namespace BlackMisc
 
                 if (CBuildConfig::isLocalDeveloperDebugBuild())
                 {
-                    BLACK_VERIFY_X(t >= 0, Q_FUNC_INFO, "Expect t >= 0");
+                    BLACK_VERIFY_X(t >= 0,   Q_FUNC_INFO, "Expect t >= 0");
                     BLACK_VERIFY_X(t <= 1.0, Q_FUNC_INFO, "Expect t <= 1");
                 }
                 return y;
@@ -225,9 +225,9 @@ namespace BlackMisc
                 const double a0 = m_s[0].getCorrectedAltitude(cg).value(altUnit); // oldest
                 const double a1 = m_s[1].getCorrectedAltitude(cg).value(altUnit);
                 const double a2 = m_s[2].getCorrectedAltitude(cg).value(altUnit); // latest
-                pa.a = {{ a0, a1, a2 }};
-                pa.gnd = {{ m_s[0].getOnGroundFactor(), m_s[1].getOnGroundFactor(), m_s[2].getOnGroundFactor() }};
-                pa.da = getDerivatives(pa.t, pa.a);
+                pa.a    = {{ a0, a1, a2 }};
+                pa.gnd  = {{ m_s[0].getOnGroundFactor(), m_s[1].getOnGroundFactor(), m_s[2].getOnGroundFactor() }};
+                pa.da   = getDerivatives(pa.t, pa.a);
                 pa.dgnd = getDerivatives(pa.t, pa.gnd);
 
                 m_prevSampleAdjustedTime = m_s[1].getAdjustedMSecsSinceEpoch();
@@ -257,7 +257,7 @@ namespace BlackMisc
             if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
                 BLACK_VERIFY_X(dt1 >= 0, Q_FUNC_INFO, "Expect postive dt1");
-                BLACK_VERIFY_X(dt2 > 0, Q_FUNC_INFO, "Expect postive dt2");
+                BLACK_VERIFY_X(dt2 >  0, Q_FUNC_INFO, "Expect postive dt2");
                 BLACK_VERIFY_X(isAcceptableTimeFraction(timeFraction), Q_FUNC_INFO, "Expect fraction 0-1");
             }
             timeFraction = clampValidTimeFraction(timeFraction);
@@ -334,7 +334,7 @@ namespace BlackMisc
             {
                 Q_ASSERT_X(t1 < t2, Q_FUNC_INFO, "Expect sorted times, latest first"); // that means a bug in our code init the values
                 BLACK_VERIFY_X(m_currentTimeMsSinceEpoc >= t1, Q_FUNC_INFO, "invalid timestamp t1");
-                BLACK_VERIFY_X(m_currentTimeMsSinceEpoc < t2, Q_FUNC_INFO, "invalid timestamp t2"); // t1==t2 results in div/0
+                BLACK_VERIFY_X(m_currentTimeMsSinceEpoc <  t2, Q_FUNC_INFO, "invalid timestamp t2"); // t1==t2 results in div/0
             }
             if (!valid) { return CAircraftSituation::null(); }
 

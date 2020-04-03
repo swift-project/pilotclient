@@ -9,9 +9,12 @@
 #include "simulationenvironmentprovider.h"
 #include "blackmisc/aviation/aircraftsituationchange.h"
 
-#include "verify.h"
+#include "blackmisc/verify.h"
+#include "blackconfig/buildconfig.h"
+
 #include <QStringBuilder>
 
+using namespace BlackConfig;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
@@ -50,6 +53,12 @@ namespace BlackMisc
                 {
                     if (m_elvCoordinatesGnd.size() > m_maxElevationsGnd) { m_elvCoordinatesGnd.pop_back(); }
                     m_elvCoordinatesGnd.push_front(elevationCoordinate);
+
+                    if (CBuildConfig::isLocalDeveloperDebugBuild())
+                    {
+                        BLACK_VERIFY_X(!elevationCoordinate.geodeticHeight().isNull(), Q_FUNC_INFO, "NULL value");
+                        BLACK_VERIFY_X(!elevationCoordinate.geodeticHeight().isZeroEpsilonConsidered(), Q_FUNC_INFO, "Suspicous 0 value");
+                    }
                 }
                 else
                 {

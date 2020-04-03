@@ -369,7 +369,7 @@ namespace BlackCore
         bool updatedForOnGroundPosition = false;
         const int updated = CRemoteAircraftAware::updateAircraftGroundElevation(callsign, plane, CAircraftSituation::FromProvider, &updatedForOnGroundPosition);
 
-        // update in simulator
+        // update in simulator and cache
         const bool likelyOnGroundElevation = updated > 0 && updatedForOnGroundPosition;
         ISimulationEnvironmentProvider::rememberGroundElevation(callsign, likelyOnGroundElevation, plane); // in simulator
 
@@ -1220,16 +1220,24 @@ namespace BlackCore
                 CAltitude elevation = situation.getGroundElevation();
                 if (elevation.isNull())
                 {
+                    // calculate elevation
                     const CLength cg = ownAircraft.getModel().getCG();
                     elevation = (cg.isNull() || situation.getAltitude().isNull()) ? CAltitude::null() : (situation.getAltitude().withOffset(cg * -1.0));
                 }
 
+                // own ground elevations
                 if (elevation.hasMeanSeaLevelValue())
                 {
-                    const CCallsign cs = situation.hasCallsign() ? situation.getCallsign() : ownAircraft.getCallsign();
-                    const CLength radius = settings.getRecordedGndRadius().isNull() ? CElevationPlane::singlePointRadius() : settings.getRecordedGndRadius();
+                    const CCallsign cs    = situation.hasCallsign() ? situation.getCallsign() : ownAircraft.getCallsign();
+                    const CLength radius  = settings.getRecordedGndRadius().isNull() ? CElevationPlane::singlePointRadius() : settings.getRecordedGndRadius();
                     const CElevationPlane ep(situation, radius);
                     const bool remembered = this->rememberGroundElevation(cs, situation.isOnGround(), ep, radius);
+
+                    if (CBuildConfig::isLocalDeveloperDebugBuild())
+                    {
+                        const bool invalid = situation.isOnGround() && elevation.isZeroEpsilonConsidered();
+                        BLACK_AUDIT_X(!invalid, Q_FUNC_INFO, "On ground in water");
+                    }
                     Q_UNUSED(remembered) // false means it was already in that cache, or something else is wrong
                 }
             }

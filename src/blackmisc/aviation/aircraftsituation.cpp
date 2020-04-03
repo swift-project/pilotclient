@@ -302,7 +302,12 @@ namespace BlackMisc
             if (situationToBeUpdated.hasGroundElevation()) { return false; }
 
             // if acceptable transfer
-            if (oldSituation.transferGroundElevationFromMe(situationToBeUpdated)) { return true; }
+            if (oldSituation.transferGroundElevationFromMe(situationToBeUpdated))
+            {
+                // change or keep type is the question
+                // situationToBeUpdated.setGroundElevationInfo(Extrapolated);
+                return true;
+            }
             if (oldSituation.isNull() || olderSituation.isNull()) { return false; }
 
             if (oldChange.isNull()) { return false; }
@@ -575,7 +580,7 @@ namespace BlackMisc
 
             CLength cg = m_cg.isNull() ? model.getCG() : m_cg;
             CSpeed guessedRotateSpeed = CSpeed::null();
-            CSpeed sureRotateSpeed = CSpeed(130, CSpeedUnit::kts());
+            CSpeed sureRotateSpeed    = CSpeed(130, CSpeedUnit::kts());
             model.getAircraftIcaoCode().guessModelParameters(cg, guessedRotateSpeed);
             if (!guessedRotateSpeed.isNull())
             {

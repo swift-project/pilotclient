@@ -29,7 +29,7 @@ namespace BlackMisc
 
         CElevationPlane CCoordinateGeodeticList::averageGeodeticHeight(const CCoordinateGeodetic &reference, const CLength &range, const CLength &maxDeviation, int minValues, int sufficentValues) const
         {
-            if (this->size() < minValues) { return CElevationPlane::null(); } // no change to succeed
+            if (this->size() < minValues) { return CElevationPlane::null(); } // no chance to succeed
 
             QList<double> valuesInFt;
             const CCoordinateGeodeticList sorted = this->findWithGeodeticMSLHeight().findWithinRange(reference, range).sortedByEuclideanDistanceSquared(reference);

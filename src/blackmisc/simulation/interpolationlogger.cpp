@@ -426,9 +426,9 @@ namespace BlackMisc
                 if (!situationNew.hasGroundElevation()) { continue; }
                 newPosTs = situationNew.getMSecsSinceEpoch();
                 kml += CKmlUtils::asPlacemark(
-                           QStringLiteral("%1: %2 %3 %4 alt.cor: %5").arg(n++).arg(
+                           QStringLiteral("%1: %2 %3 info: %4 alt.cor: %5").arg(n++).arg(
                                situationNew.getFormattedUtcTimestampHmsz(),
-                               situationNew.getGroundElevationPlane().getAltitude().toQString(true),
+                               situationNew.getGroundElevationAndInfo(),
                                log.elevationInfo, log.altCorrection),
                            situationNew.getGroundElevationPlane().toQString(true),
                            situationNew.getGroundElevationPlane(), s) % u"\n";

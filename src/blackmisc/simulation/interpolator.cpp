@@ -145,6 +145,16 @@ namespace BlackMisc
                 BLACK_VERIFY_X(details, Q_FUNC_INFO, "Once gnd.from parts -> always gnd. from parts");
             }
 
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                for (const CAircraftSituation &s : situations)
+                {
+                    if (!s.hasGroundElevation()) { continue; }
+                    BLACK_VERIFY_X(!s.getGroundElevation().isZeroEpsilonConsidered(), Q_FUNC_INFO, "Suspicous 0 gnd. value");
+                }
+            }
+
+
             // result
             return sorted && details;
         }
