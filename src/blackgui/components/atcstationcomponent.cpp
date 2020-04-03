@@ -138,9 +138,14 @@ namespace BlackGui
             ui->tvp_AtcStationsOnline->acceptClickSelection(true);
             ui->tvp_AtcStationsOnline->acceptRowSelection(true);
 
-            QVBoxLayout *layout = this->vLayout();
-            m_stretch.push_back(layout->stretch(0));
-            m_stretch.push_back(layout->stretch(1));
+            // before splitter
+            // QVBoxLayout *layout = this->vLayout();
+            // m_stretch.push_back(layout->stretch(0));
+            // m_stretch.push_back(layout->stretch(1));
+
+            // no effect
+            ui->sp_AtcSplitter->setStretchFactor(0, 3);
+            ui->sp_AtcSplitter->setStretchFactor(1, 1);
 
             // web readers
             if (sGui && sGui->hasWebDataServices())
