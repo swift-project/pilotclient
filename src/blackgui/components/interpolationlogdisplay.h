@@ -177,6 +177,12 @@ namespace BlackGui
             //! Request arbitrary elevation
             void requestElevationAtPosition();
 
+            //! Do a full interpolation cycle for a while
+            void requestRecalculateAll();
+
+            //! Can use the log. display?
+            bool canLog() const;
+
             //! Pseudo callsign for CInterpolationLogDisplay::requestElevationAtPosition
             static const BlackMisc::Aviation::CCallsign &pseudoCallsignElevation();
 
