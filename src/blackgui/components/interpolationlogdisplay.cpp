@@ -83,6 +83,7 @@ namespace BlackGui
             connect(ui->pb_GetLastInterpolation, &QPushButton::released, this, &CInterpolationLogDisplay::getLogAmdDisplayLastInterpolation);
             connect(ui->pb_InjectElevation,      &QPushButton::released, this, &CInterpolationLogDisplay::onInjectElevation);
             connect(ui->pb_ElvClear,             &QPushButton::released, this, &CInterpolationLogDisplay::clearElevationResults);
+            connect(ui->pb_RecalcAllAircraft,    &QPushButton::released, this, &CInterpolationLogDisplay::requestRecalculateAll);
             connect(ui->pb_ClearLog,             &QPushButton::released, this, &CInterpolationLogDisplay::clearLogCommand);
             connect(ui->pb_ClearLog2,            &QPushButton::released, this, &CInterpolationLogDisplay::clearLogCommand);
             connect(ui->pb_WriteLogToFile,       &QPushButton::released, this, &CInterpolationLogDisplay::writeLogCommand);
@@ -184,7 +185,7 @@ namespace BlackGui
 
         void CInterpolationLogDisplay::getLogAmdDisplayLastInterpolation()
         {
-            if (!m_simulator) { return; }
+            if (!this->canLog()) { return; }
             const SituationLog sLog = m_simulator->interpolationLogger().getLastSituationLog();
             this->displayLastInterpolation(sLog);
         }
@@ -218,7 +219,7 @@ namespace BlackGui
 
         void CInterpolationLogDisplay::onCallsignEntered()
         {
-            if (!m_simulator)
+            if (!this->canLog())
             {
                 this->stop();
                 CLogMessage(this).warning(u"Stopping logging (log.display), no simulator");
@@ -256,7 +257,7 @@ namespace BlackGui
 
         void CInterpolationLogDisplay::onPseudoElevationToggled(bool checked)
         {
-            if (!m_simulator) { return; }
+            if (!this->canLog()) { return; }
             m_simulator->setTestEnablePseudoElevation(checked);
 
             CAltitude elvTest = CAltitude::null();
@@ -291,7 +292,7 @@ namespace BlackGui
         void CInterpolationLogDisplay::followInSimulator()
         {
             if (m_callsign.isEmpty()) { return; }
-            if (!m_simulator) { return; }
+            if (!this->canLog()) { return; }
             m_simulator->followAircraft(m_callsign);
         }
 
@@ -416,7 +417,7 @@ namespace BlackGui
 
         void CInterpolationLogDisplay::onInjectElevation()
         {
-            if (!m_simulator)  { return; }
+            if (!this->canLog())  { return; }
             const QString elv = ui->le_InjectElevation->text().trimmed();
             if (elv.isEmpty()) { return; }
 
@@ -584,13 +585,13 @@ namespace BlackGui
 
         void CInterpolationLogDisplay::requestElevation(const CAircraftSituation &situation)
         {
-            if (!m_simulator) { return; }
+            if (!this->canLog()) { return; }
             m_simulator->requestElevationBySituation(situation);
         }
 
         void CInterpolationLogDisplay::requestElevationAtPosition()
         {
-            if (!m_simulator) { return; }
+            if (!this->canLog()) { return; }
             const CCoordinateGeodetic coordinate = ui->editor_ElevationCoordinate->getCoordinate();
             const bool ok = m_simulator->requestElevation(coordinate, CInterpolationLogDisplay::pseudoCallsignElevation());
             if (ok)
@@ -603,6 +604,17 @@ namespace BlackGui
                 static const QString info("Cannot request elevation");
                 ui->pte_ElevationAtPosition->setPlainText(info);
             }
+        }
+
+        void CInterpolationLogDisplay::requestRecalculateAll()
+        {
+            if (!this->canLog()) { return; }
+            sApp->getIContextSimulator()->recalculateAllAircraft();
+        }
+
+        bool CInterpolationLogDisplay::canLog() const
+        {
+            return (sApp && !sApp->isShuttingDown() && sApp->getIContextSimulator() && m_simulator);
         }
 
         const CCallsign &CInterpolationLogDisplay::pseudoCallsignElevation()

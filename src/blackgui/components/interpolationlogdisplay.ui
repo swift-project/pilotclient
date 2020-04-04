@@ -351,16 +351,6 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="1" colspan="11">
-           <widget class="QLineEdit" name="le_SimulatorSpecific">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="placeholderText">
-             <string>simulator specific information</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="0">
            <widget class="QLabel" name="lbl_CG">
             <property name="toolTip">
@@ -520,6 +510,23 @@
             </property>
             <property name="placeholderText">
              <string>parts?</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1" colspan="10">
+           <widget class="QLineEdit" name="le_SimulatorSpecific">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>simulator specific information</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="11">
+           <widget class="QPushButton" name="pb_RecalcAllAircraft">
+            <property name="text">
+             <string>re-calc</string>
             </property>
            </widget>
           </item>
