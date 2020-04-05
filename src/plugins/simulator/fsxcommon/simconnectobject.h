@@ -251,7 +251,7 @@ namespace BlackSimPlugin
             void increaseAddingExceptions() { m_addingExceptions++; }
 
             //! Decrease adding exception
-            void decreaseAddingExceptions() { if (m_addingExceptions > 0) { m_addingExceptions--; } ; }
+            void decreaseAddingExceptions() { if (m_addingExceptions > 0) { m_addingExceptions--; } }
 
             //! Adding and directly removed
             int getAddingDirectlyRemoved() const { return m_addingDirectlyRemoved; }
