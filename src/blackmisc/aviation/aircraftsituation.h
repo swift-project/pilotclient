@@ -186,7 +186,7 @@ namespace BlackMisc
             //! \sa Geo::ICoordinateGeodetic::equalNormalVectorDouble
             bool equalPbhAndVector(const CAircraftSituation &other) const;
 
-            //! Equal PBH and vector
+            //! Equal PBH and vecto, plus altitude
             //! \sa Geo::ICoordinateGeodetic::equalNormalVectorDouble
             bool equalPbhVectorAltitude(const CAircraftSituation &other) const;
 

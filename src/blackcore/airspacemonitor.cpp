@@ -1454,10 +1454,10 @@ namespace BlackCore
                 // average elevation
                 // 1) from cache
                 // 2) from planes on ground not moving
-                bool fromNonMoving = false;
+                bool fromNonMoving       = false;
                 bool triedExtrapolation  = false;
                 bool couldNotExtrapolate = false;
-                int fromWhere = -1; // debugging
+                int fromWhere            = -1; // debugging
 
                 CElevationPlane averagePlane = this->averageElevationOfOnGroundAircraft(situation, CElevationPlane::minorAirportRadius(), 2, 3);
                 if (averagePlane.isNull())
@@ -1485,6 +1485,7 @@ namespace BlackCore
                         fromWhere = 20;
                     }
                 }
+                Q_UNUSED(fromWhere)
 
                 // still no elevation
                 if (!correctedSituation.hasGroundElevation())
@@ -1668,4 +1669,5 @@ namespace BlackCore
     CAirspaceMonitor::FsInnPacket::FsInnPacket(const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &combinedCode, const QString &modelString) :
         aircraftIcaoDesignator(aircraftIcaoDesignator.trimmed().toUpper()), airlineIcaoDesignator(airlineIcaoDesignator.trimmed().toUpper()), combinedCode(combinedCode.trimmed().toUpper()), modelString(modelString.trimmed())
     { }
+
 } // namespace

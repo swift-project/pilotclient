@@ -187,6 +187,7 @@ namespace BlackMisc
         CInterpolatorSpline::CInterpolant CInterpolatorSpline::getInterpolant(SituationLog &log)
         {
             // recalculate derivatives only if they changed
+            // m_situationsLastModified updated in initIniterpolationStepData
             const bool recalculate = (m_currentTimeMsSinceEpoch >= m_nextSampleAdjustedTime) || // new step
                                      (m_situationsLastModified  >  m_situationsLastModifiedUsed); // modified
 

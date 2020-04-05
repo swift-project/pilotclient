@@ -366,6 +366,7 @@ namespace BlackCore
         if (plane.isNull()) { return; } // this happens if requested for a coordinate where scenery is not available
 
         // Update in remote aircraft for given callsign
+        // this will trigger also a position update, new interpolant etc.
         bool updatedForOnGroundPosition = false;
         const int updated = CRemoteAircraftAware::updateAircraftGroundElevation(callsign, plane, CAircraftSituation::FromProvider, &updatedForOnGroundPosition);
 

@@ -523,7 +523,7 @@ namespace BlackMisc
         {
             Q_ASSERT_X(!m_callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
 
-            const qint64 lastModifed = this->situationsLastModified(m_callsign);
+            const qint64 lastModifed  = this->situationsLastModified(m_callsign);
             const bool slowUpdateStep = (((m_interpolatedSituationsCounter + aircraftNumber) % 25) == 0); // flag when parts are updated, which need not to be updated every time
             const bool changedSituations = lastModifed > m_situationsLastModified;
 
