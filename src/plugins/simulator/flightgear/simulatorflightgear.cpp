@@ -220,7 +220,7 @@ namespace BlackSimPlugin
                 situation.setPitch({ m_flightgearData.pitchDeg, CAngleUnit::deg() });
                 situation.setBank({ m_flightgearData.rollDeg, CAngleUnit::deg() });
                 situation.setGroundSpeed({ m_flightgearData.groundspeedKts, CSpeedUnit::kts() });
-                situation.setGroundElevation(CAltitude(m_flightgearData.groundElevation,CAltitude::MeanSeaLevel,CLengthUnit::m()),CAircraftSituation::FromProvider);
+                situation.setGroundElevation(CAltitude(m_flightgearData.groundElevation, CAltitude::MeanSeaLevel, CLengthUnit::m()), CAircraftSituation::FromProvider);
 
                 // Updates
                 // Do not update ICAO codes, as this overrides reverse lookups
@@ -750,13 +750,20 @@ namespace BlackSimPlugin
                 BLACK_VERIFY_X(fgAircraft.hasCallsign(), Q_FUNC_INFO, "Need callsign");
                 if (!fgAircraft.hasCallsign()) { continue; }
 
-                const double cgValue = verticalOffsetsMeters[i]; // FG offset is swift CG
-                const CAltitude elevationAlt = std::isnan(elevationsMeters[i]) ? CAltitude::null() : CAltitude(elevationsMeters[i], CLengthUnit::m(), CLengthUnit::ft());
-                const CElevationPlane elevation(CLatitude(latitudesDeg[i], CAngleUnit::deg()), CLongitude(longitudesDeg[i], CAngleUnit::deg()), elevationAlt, CElevationPlane::singlePointRadius());
+                CElevationPlane elevation = CElevationPlane::null();
+                if (!std::isnan(elevationsMeters[i]))
+                {
+                    const CAltitude elevationAlt = CAltitude(elevationsMeters[i], CLengthUnit::m(), CLengthUnit::ft());
+                    elevation = CElevationPlane(CLatitude(latitudesDeg[i], CAngleUnit::deg()), CLongitude(longitudesDeg[i], CAngleUnit::deg()), elevationAlt, CElevationPlane::singlePointRadius());
+                }
+
+                const double cgValue = verticalOffsetsMeters[i]; // XP offset is swift CG
                 const CLength cg = std::isnan(cgValue) ?
                                    CLength::null() :
                                    CLength(cgValue, CLengthUnit::m(), CLengthUnit::ft());
-                this->rememberElevationAndSimulatorCG(cs, fgAircraft.getAircraftModel(), elevation, cg);
+
+                // if we knew "on ground" here we could set it as parameter of rememberElevationAndSimulatorCG
+                this->rememberElevationAndSimulatorCG(cs, fgAircraft.getAircraftModel(), false, elevation, cg);
 
                 // loopback
                 if (logCallsigns.contains(cs))
@@ -827,10 +834,11 @@ namespace BlackSimPlugin
         bool CSimulatorFlightgear::requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign)
         {
             if (this->isShuttingDownOrDisconnected()) { return false; }
-            if(reference.isNull()) { return false; }
+            if (reference.isNull()) { return false; }
 
             CCoordinateGeodetic pos(reference);
-            if(!pos.hasMSLGeodeticHeight()){
+            if (!pos.hasMSLGeodeticHeight())
+            {
                 // testing showed: height has an influence on the returned result
                 // - the most accurate value seems to be returned if the height is close to the elevation
                 // - in normal scenarios there is no much difference of the results if 0 is used

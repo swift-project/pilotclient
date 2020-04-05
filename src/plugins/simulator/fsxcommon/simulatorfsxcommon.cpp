@@ -836,25 +836,21 @@ namespace BlackSimPlugin
             // Near ground we use faster updates
             const CCallsign cs(simObject.getCallsign());
             CAircraftSituation lastSituation = m_lastSentSituations[cs];
-            const bool moving = lastSituation.isMoving();
+            const bool moving   = lastSituation.isMoving();
+            const bool onGround = remoteAircraftData.isOnGround();
 
             // CElevationPlane: deg, deg, feet
             // we only remember near ground
-            CElevationPlane elevation;
+            const CElevationPlane elevation = CElevationPlane(remoteAircraftData.latitudeDeg, remoteAircraftData.longitudeDeg, remoteAircraftData.elevationFt, CElevationPlane::singlePointRadius());
             if (remoteAircraftData.aboveGroundFt() < 250)
             {
                 const CLength cg(remoteAircraftData.cgToGroundFt, CLengthUnit::ft());
-                this->rememberElevationAndSimulatorCG(cs, simObject.getAircraftModel(), elevation, cg);
+                this->rememberElevationAndSimulatorCG(cs, simObject.getAircraftModel(), onGround, elevation, cg);
             }
 
             const bool log = this->isLogCallsign(cs);
             if (log)
             {
-                if (elevation.isNull())
-                {
-                    elevation = CElevationPlane(remoteAircraftData.latitudeDeg, remoteAircraftData.longitudeDeg, remoteAircraftData.elevationFt, CElevationPlane::singlePointRadius());
-                }
-
                 // update lat/lng/alt with real data from sim
                 const CAltitude alt(remoteAircraftData.altitudeFt, CAltitude::MeanSeaLevel, CAltitude::TrueAltitude, CLengthUnit::ft());
                 lastSituation.setPosition(elevation);
@@ -894,7 +890,7 @@ namespace BlackSimPlugin
             so.setAircraftModelString(modelString);
 
             // update in 2 providers
-            this->rememberElevationAndSimulatorCG(cs, simObject.getAircraftModel(), CElevationPlane::null(), cg); // env. provider
+            this->rememberElevationAndSimulatorCG(cs, simObject.getAircraftModel(), false, CElevationPlane::null(), cg); // env. provider
             this->updateCGAndModelString(cs, cg, modelString); // remote aircraft provider
         }
 

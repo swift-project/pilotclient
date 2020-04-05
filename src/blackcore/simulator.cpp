@@ -904,14 +904,14 @@ namespace BlackCore
         m_simulatorInternals.setSimulatorInstallationDirectory(s.getSimulatorDirectoryOrDefault());
     }
 
-    void ISimulator::rememberElevationAndSimulatorCG(const CCallsign &callsign, const CAircraftModel &model, const CElevationPlane &elevation, const CLength &simulatorCG)
+    void ISimulator::rememberElevationAndSimulatorCG(const CCallsign &callsign, const CAircraftModel &model, bool likelyOnGroundElevation, const CElevationPlane &elevation, const CLength &simulatorCG)
     {
         if (callsign.isEmpty()) { return; }
         if (elevation.hasMSLGeodeticHeight())
         {
             const int aircraftCount = this->getAircraftInRangeCount();
             this->setMaxElevationsRemembered(aircraftCount * 3); // at least 3 elevations per aircraft, even better as not all are requesting elevations
-            this->rememberGroundElevation(callsign, false, elevation);
+            this->rememberGroundElevation(callsign, likelyOnGroundElevation, elevation);
         }
 
         const QString modelString = model.getModelString();
