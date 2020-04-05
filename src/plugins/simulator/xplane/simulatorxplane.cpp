@@ -1064,13 +1064,20 @@ namespace BlackSimPlugin
                 BLACK_VERIFY_X(xpAircraft.hasCallsign(), Q_FUNC_INFO, "Need callsign");
                 if (!xpAircraft.hasCallsign()) { continue; }
 
+                CElevationPlane elevation = CElevationPlane::null();
+                if (!std::isnan(elevationsMeters[i]))
+                {
+                    const CAltitude elevationAlt = CAltitude(elevationsMeters[i], CLengthUnit::m(), CLengthUnit::ft());
+                    elevation = CElevationPlane(CLatitude(latitudesDeg[i], CAngleUnit::deg()), CLongitude(longitudesDeg[i], CAngleUnit::deg()), elevationAlt, CElevationPlane::singlePointRadius());
+                }
+
                 const double cgValue = verticalOffsetsMeters[i]; // XP offset is swift CG
-                const CAltitude elevationAlt = std::isnan(elevationsMeters[i]) ? CAltitude::null() : CAltitude(elevationsMeters[i], CLengthUnit::m(), CLengthUnit::ft());
-                const CElevationPlane elevation(CLatitude(latitudesDeg[i], CAngleUnit::deg()), CLongitude(longitudesDeg[i], CAngleUnit::deg()), elevationAlt, CElevationPlane::singlePointRadius());
                 const CLength cg = std::isnan(cgValue) ?
                                    CLength::null() :
                                    CLength(cgValue, CLengthUnit::m(), CLengthUnit::ft());
-                this->rememberElevationAndSimulatorCG(cs, xpAircraft.getAircraftModel(), elevation, cg);
+
+                // if we knew "on ground" here we could set it as parameter of rememberElevationAndSimulatorCG
+                this->rememberElevationAndSimulatorCG(cs, xpAircraft.getAircraftModel(), false, elevation, cg);
 
                 // loopback
                 if (logCallsigns.contains(cs))
