@@ -190,6 +190,10 @@ namespace BlackMisc
             //! \sa Geo::ICoordinateGeodetic::equalNormalVectorDouble
             bool equalPbhVectorAltitude(const CAircraftSituation &other) const;
 
+            //! Equal PBH and vecto, plus altitude/elevation
+            //! \sa Geo::ICoordinateGeodetic::equalNormalVectorDouble
+            bool equalPbhVectorAltitudeElevation(const CAircraftSituation &other) const;
+
             //! Set to null
             void setNull();
 

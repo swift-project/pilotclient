@@ -656,7 +656,8 @@ namespace BlackCore
         Q_ASSERT_X(compare.hasCallsign(), Q_FUNC_INFO, "Need callsign");
         if (!m_lastSentSituations.contains(compare.getCallsign())) { return false; }
         if (compare.isNull()) { return false; }
-        return compare.equalPbhVectorAltitude(m_lastSentSituations.value(compare.getCallsign()));
+        return compare.equalPbhVectorAltitudeElevation(m_lastSentSituations.value(compare.getCallsign()));
+        // return compare.equalPbhVectorAltitude(m_lastSentSituations.value(compare.getCallsign()));
     }
 
     bool ISimulator::isEqualLastSent(const CAircraftParts &compare, const CCallsign &callsign) const

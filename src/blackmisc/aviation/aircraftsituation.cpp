@@ -467,6 +467,13 @@ namespace BlackMisc
             return c == 0;
         }
 
+        bool CAircraftSituation::equalPbhVectorAltitudeElevation(const CAircraftSituation &other) const
+        {
+            if (!this->equalPbhVectorAltitude(other)) { return false; }
+            const int c = this->getGroundElevation().compare(other.getGroundElevation());
+            return c == 0;
+        }
+
         void CAircraftSituation::setNull()
         {
             m_position.setNull();
