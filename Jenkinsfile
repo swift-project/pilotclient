@@ -429,6 +429,8 @@ def notifyDiscord(nodeName, buildStatus = 'UNSTABLE') {
 }
 
 def getEolInMonth() {
+    return 120;
+    /*
     if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexDevBranch) {
         // 6 month for dev builds
         return 6
@@ -442,6 +444,7 @@ def getEolInMonth() {
         // 3 month for everything else
         return 3
     }
+    */
 }
 
 def shouldUploadSymbols() {
