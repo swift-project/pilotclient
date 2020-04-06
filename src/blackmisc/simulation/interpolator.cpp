@@ -145,15 +145,17 @@ namespace BlackMisc
                 BLACK_VERIFY_X(details, Q_FUNC_INFO, "Once gnd.from parts -> always gnd. from parts");
             }
 
-            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            for (const CAircraftSituation &s : situations)
             {
-                for (const CAircraftSituation &s : situations)
-                {
-                    if (!s.hasGroundElevation()) { continue; }
-                    BLACK_VERIFY_X(!s.getGroundElevation().isZeroEpsilonConsidered(), Q_FUNC_INFO, "Suspicous 0 gnd. value");
-                }
+                if (!s.hasGroundElevation()) { continue; }
+                BLACK_VERIFY_X(!s.getGroundElevation().isZeroEpsilonConsidered(), Q_FUNC_INFO, "Suspicous 0 gnd. value");
             }
 
+            // check if middle situation is missing
+            if (latest.hasGroundElevation() && oldest.hasGroundElevation())
+            {
+                BLACK_VERIFY_X(newer.hasGroundElevation(), Q_FUNC_INFO, "Middle ground elevation is missing");
+            }
 
             // result
             return sorted && details;
