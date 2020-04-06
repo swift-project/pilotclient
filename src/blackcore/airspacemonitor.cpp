@@ -698,7 +698,7 @@ namespace BlackCore
         if (readiness.wasMatchingSent()) { return; }
         if (readiness.wasVerified())
         {
-            CLogMessage(this).warning(u"Verfied '%1' again, using it as it is!") << callsign;
+            CLogMessage(this).warning(u"Verfied ICAO data of '%1' again, using it as it is! Most likely incomplete data from the other client") << callsign;
             this->sendReadyForModelMatching(callsign, Verified);
             return;
         }
