@@ -9,12 +9,14 @@
 #include "simulationenvironmentprovider.h"
 #include "blackmisc/aviation/aircraftsituationchange.h"
 
+#include "blackmisc/logmessage.h"
 #include "blackmisc/verify.h"
 #include "blackconfig/buildconfig.h"
 
 #include <QStringBuilder>
 
 using namespace BlackConfig;
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
@@ -38,8 +40,35 @@ namespace BlackMisc
                 if (!m_enableElevation) { return false; }
 
                 // check if we have already an elevation within range
-                if (m_elvCoordinatesGnd.containsObjectInRange(elevationCoordinate, minRange)) { return false; }
-                if (m_elvCoordinates.containsObjectInRange(elevationCoordinate,    minRange)) { return false; }
+                CCoordinateGeodetic alreadyInRange = m_elvCoordinatesGnd.findFirstWithinRangeOrDefault(elevationCoordinate, minRange);
+                constexpr double maxDistFt = 30.0;
+
+                if (!alreadyInRange.isNull())
+                {
+                    // found
+                    const double distFt = qAbs(alreadyInRange.geodeticHeight().value(CLengthUnit::ft()) - elevationCoordinate.geodeticHeight().value(CLengthUnit::ft()));
+                    if (distFt > maxDistFt)
+                    {
+                        // we such a huge distance to existing value
+                        CLogMessage(this).debug(u"Suspicious gnd. elevation distance '%1': %2ft") << requestedForCallsign.asString() << distFt;
+                        BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Suspicious gnd. elevation distance");
+                    }
+                    return false;
+                }
+
+                alreadyInRange = m_elvCoordinates.findFirstWithinRangeOrDefault(elevationCoordinate, minRange);
+                if (!alreadyInRange.isNull())
+                {
+                    // found
+                    const double distFt = qAbs(alreadyInRange.geodeticHeight().value(CLengthUnit::ft()) - elevationCoordinate.geodeticHeight().value(CLengthUnit::ft()));
+                    if (distFt > maxDistFt)
+                    {
+                        // we such a huge distance to existing value
+                        CLogMessage(this).debug(u"Suspicious elevation distance '%1': %2ft") << requestedForCallsign.asString() << distFt;
+                        BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Suspicious elevation distance");
+                    }
+                    return false;
+                }
             }
 
             {
@@ -54,10 +83,11 @@ namespace BlackMisc
                     if (m_elvCoordinatesGnd.size() > m_maxElevationsGnd) { m_elvCoordinatesGnd.pop_back(); }
                     m_elvCoordinatesGnd.push_front(elevationCoordinate);
 
-                    if (CBuildConfig::isLocalDeveloperDebugBuild())
+                    const bool valid = !elevationCoordinate.geodeticHeight().isNull() && !elevationCoordinate.geodeticHeight().isZeroEpsilonConsidered();
+                    if (!valid)
                     {
-                        BLACK_VERIFY_X(!elevationCoordinate.geodeticHeight().isNull(), Q_FUNC_INFO, "NULL value");
-                        BLACK_VERIFY_X(!elevationCoordinate.geodeticHeight().isZeroEpsilonConsidered(), Q_FUNC_INFO, "Suspicous 0 value");
+                        BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Suspicious value");
+                        CLogMessage(this).debug(u"Suspicious gnd.cache value: %1") << elevationCoordinate.convertToQString();
                     }
                 }
                 else
