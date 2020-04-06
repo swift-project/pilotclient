@@ -305,10 +305,10 @@ namespace BlackMisc
             mutable int m_elvFound  = 0;   //!< statistics only
             mutable int m_elvMissed = 0;   //!< statistics only
 
-            mutable QReadWriteLock m_lockElvCoordinates; //!< lock m_coordinates, m_pendingElevationRequests
-            mutable QReadWriteLock m_lockCG;      //!< lock CGs
-            mutable QReadWriteLock m_lockModel;   //!< lock models
-            mutable QReadWriteLock m_lockSimInfo; //!< lock plugin info
+            mutable QReadWriteLock m_lockElvCoordinates { QReadWriteLock::Recursive }; //!< lock m_coordinates, m_pendingElevationRequests
+            mutable QReadWriteLock m_lockCG             { QReadWriteLock::Recursive }; //!< lock CGs
+            mutable QReadWriteLock m_lockModel          { QReadWriteLock::Recursive }; //!< lock models
+            mutable QReadWriteLock m_lockSimInfo        { QReadWriteLock::Recursive }; //!< lock plugin info
         };
 
         //! Class which can be directly used to access an \sa ISimulationEnvironmentProvider object
