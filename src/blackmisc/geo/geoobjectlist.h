@@ -62,6 +62,11 @@ namespace BlackMisc
             //! \param range      within range of other position
             CONTAINER findWithinRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const;
 
+            //! Find 0..n objects outside range of given coordinate
+            //! \param coordinate other position
+            //! \param range      outside range of other position
+            CONTAINER findOutsideRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const;
+
             //! Find first in range
             OBJ findFirstWithinRangeOrDefault(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const;
 
@@ -85,6 +90,9 @@ namespace BlackMisc
 
             //! Find min/max/average height
             Aviation::CAltitude findMaxHeight() const;
+
+            //! Remove inside range
+            int removeInsideRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range);
 
             //! Remove outside range
             int removeOutsideRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range);

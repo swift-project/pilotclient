@@ -52,6 +52,15 @@ namespace BlackMisc
             });
         }
 
+        template <class OBJ, class CONTAINER>
+        CONTAINER IGeoObjectList<OBJ, CONTAINER>::findOutsideRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const
+        {
+            return this->container().findBy([&](const OBJ & geoObj)
+            {
+                return calculateGreatCircleDistance(geoObj, coordinate) > range;
+            });
+        }
+
         template<class OBJ, class CONTAINER>
         OBJ IGeoObjectList<OBJ, CONTAINER>::findFirstWithinRangeOrDefault(const ICoordinateGeodetic &coordinate, const CLength &range) const
         {
@@ -145,6 +154,16 @@ namespace BlackMisc
                 if (max.isNull() || alt > max) { max = alt; }
             }
             return max;
+        }
+
+        template <class OBJ, class CONTAINER>
+        int IGeoObjectList<OBJ, CONTAINER>::removeInsideRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range)
+        {
+            const int size = this->container().size();
+            const CONTAINER copy = this->container().findOutsideRange(coordinate, range);
+            const int d = size - copy.size();
+            if (d > 0) { *this = copy; }
+            return d;
         }
 
         template <class OBJ, class CONTAINER>
