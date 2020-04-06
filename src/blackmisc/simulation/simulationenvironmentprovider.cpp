@@ -515,54 +515,52 @@ namespace BlackMisc
             m_elvFound = m_elvMissed        =  0;
         }
 
-        bool ISimulationEnvironmentProvider::cleanElevationValues(const CAircraftSituation &reference, const CLength &range, bool forced)
+        int ISimulationEnvironmentProvider::removeElevationValues(const CAircraftSituation &reference, const CLength &removeRange)
         {
-            if (reference.isNull() || range.isNull()) { return false; }
-            const CLength r = minRange(range);
+            QWriteLocker l(&m_lockElvCoordinates);
+            const int r = m_elvCoordinatesGnd.removeInsideRange(reference, removeRange);
+            return r;
+        }
 
-            CCoordinateGeodeticList elvs;
-            CCoordinateGeodeticList cleanedElvs;
+        bool ISimulationEnvironmentProvider::cleanElevationValues(const CAircraftSituation &reference, const CLength &keptRange, bool forced)
+        {
+            if (reference.isNull() || keptRange.isNull()) { return false; }
+            const CLength r = minRange(keptRange);
+
+            CCoordinateGeodeticList cleanedKeptElvs;
             bool maxReached = false;
             bool cleaned    = false;
 
             {
                 QReadLocker l(&m_lockElvCoordinates);
-                elvs = m_elvCoordinates;
+                cleanedKeptElvs = m_elvCoordinates;
                 maxReached = m_elvCoordinates.size() >= m_maxElevations;
             }
-            if (!elvs.isEmpty() && (forced || maxReached))
+            if (!cleanedKeptElvs.isEmpty() && (forced || maxReached))
             {
-                for (const CAircraftSituation &s : elvs)
-                {
-                    if (s.isWithinRange(reference, r)) { cleanedElvs.push_back(s); }
-                }
-
-                if (cleanedElvs.size() < elvs.size())
+                const int removed = cleanedKeptElvs.removeOutsideRange(reference, r);
+                if (removed > 0)
                 {
                     cleaned = true;
                     QWriteLocker l(&m_lockElvCoordinates);
-                    m_elvCoordinates = cleanedElvs;
+                    m_elvCoordinates = cleanedKeptElvs;
                 }
             }
 
-            cleanedElvs.clear();
+            cleanedKeptElvs.clear();
             {
                 QReadLocker l(&m_lockElvCoordinates);
-                elvs = m_elvCoordinatesGnd;
+                cleanedKeptElvs = m_elvCoordinatesGnd;
                 maxReached = m_elvCoordinatesGnd.size() >= m_maxElevationsGnd;
             }
-            if (!elvs.isEmpty() && (forced || maxReached))
+            if (!cleanedKeptElvs.isEmpty() && (forced || maxReached))
             {
-                for (const CAircraftSituation &s : elvs)
-                {
-                    if (s.isWithinRange(reference, r)) { cleanedElvs.push_back(s); }
-                }
-
-                if (cleanedElvs.size() < elvs.size())
+                const int removed = cleanedKeptElvs.removeOutsideRange(reference, r);
+                if (removed > 0)
                 {
                     cleaned = true;
                     QWriteLocker l(&m_lockElvCoordinates);
-                    m_elvCoordinatesGnd = cleanedElvs;
+                    m_elvCoordinatesGnd = cleanedKeptElvs;
                 }
             }
 

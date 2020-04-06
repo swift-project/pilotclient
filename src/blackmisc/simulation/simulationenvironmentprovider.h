@@ -146,9 +146,15 @@ namespace BlackMisc
             //! \threadsafe
             void resetSimulationEnvironmentStatistics();
 
-            //! Average elevation of "on ground" cached values
+            //! Remove cached elevations outside range,
+            //! "forced" cleans always, otherwise only if max.values are reached
             //! \threadsafe
-            bool cleanElevationValues(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, bool forced = false);
+            bool cleanElevationValues(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &keptRange, bool forced = false);
+
+            //! Remove cached elevations inside range,
+            //! \remark this removes inside range, cleanElevationValues outside the range
+            //! \threadsafe
+            int removeElevationValues(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &removeRange);
 
         protected:
             //! Ctor
