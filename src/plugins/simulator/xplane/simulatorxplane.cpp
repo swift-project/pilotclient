@@ -182,10 +182,66 @@ namespace BlackSimPlugin
             return u > 0;
         }
 
+        bool CSimulatorXPlane::handleProbeValue(const CElevationPlane &plane, const CCallsign &callsign, const QString &hint, bool ignoreOutsideRange)
+        {
+            // XPlane specific checks for T778
+            // https://discordapp.com/channels/539048679160676382/577213275184562176/696780159969132626
+            if (!plane.hasMSLGeodeticHeight()) { return false; }
+            if (isSuspiciousTerrainValue(plane))
+            {
+                // ignore values up to +- 1.0meters, those most likely mean no scenery
+                const CLength distance = this->getDistanceToOwnAircraft(plane);
+                if (ignoreOutsideRange && distance > maxTerrainRequestDistance()) { return false; }
+
+                static const CLength threshold = maxTerrainRequestDistance() * 0.50;
+                if (distance > threshold)
+                {
+                    // we expect scenery to be loaded within threshold range
+                    // outside that range we assue a suspicous value "represents no scenery"
+                    // of course this can be wrong, but in that case we would geth those values
+                    // once we get inside range
+                    this->setMinTerrainProbeDistance(distance);
+                    CLogMessage(this).debug(u"Suspicous XPlane probe [%1] value %2 for '%3' ignored, distance: %4 min.disance: %5")
+                            << hint
+                            << plane.getAltitude().valueRoundedAsString(CLengthUnit::m(), 4)
+                            << callsign.asString()
+                            << distance.valueRoundedAsString(CLengthUnit::NM(), 2)
+                            << m_minSuspicousTerrainProbe.valueRoundedAsString(CLengthUnit::NM(), 2);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        void CSimulatorXPlane::callbackReceivedRequestedElevation(const CElevationPlane &plane, const CCallsign &callsign)
+        {
+            static const QString hint("probe callback");
+            if (!this->handleProbeValue(plane, callsign, hint, false))
+            {
+                this->removePendingElevationRequest(callsign);
+                return;
+            }
+            CSimulatorPluginCommon::callbackReceivedRequestedElevation(plane, callsign);
+        }
+
+        bool CSimulatorXPlane::isSuspiciousTerrainValue(const CElevationPlane &elevation)
+        {
+            if (!elevation.hasMSLGeodeticHeight()) { return true; }
+            const double valueFt = qAbs(elevation.getAltitudeValue(CLengthUnit::ft()));
+            return valueFt < 1.0;
+        }
+
+        const CLength &CSimulatorXPlane::maxTerrainRequestDistance()
+        {
+            static const CLength d(70.0, CLengthUnit::NM());
+            return d;
+        }
+
         void CSimulatorXPlane::clearAllRemoteAircraftData()
         {
             m_aircraftAddedFailed.clear();
             CSimulatorPluginCommon::clearAllRemoteAircraftData();
+            m_minSuspicousTerrainProbe.setNull();
         }
 
         bool CSimulatorXPlane::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
@@ -196,6 +252,13 @@ namespace BlackSimPlugin
             // avoid requests for NON exising aircraft (based on LINUX crashes)
             if (callsign.isEmpty()) { return false; }
             if (!this->isAircraftInRange(callsign)) { return false; }
+
+            const CLength d = this->getDistanceToOwnAircraft(reference);
+            if (!d.isNull() && d > maxTerrainRequestDistance())
+            {
+                // no request, too far away
+                return false;
+            }
 
             CCoordinateGeodetic pos(reference);
             if (!pos.hasMSLGeodeticHeight())
@@ -344,7 +407,6 @@ namespace BlackSimPlugin
                 };
 
                 this->updateOwnParts(parts);
-                this->requestRemoteAircraftDataFromXPlane();
 
                 CCallsignSet invalid;
                 for (CXPlaneMPAircraft &xplaneAircraft : m_xplaneAircraftObjects)
@@ -367,6 +429,14 @@ namespace BlackSimPlugin
                 for (const CCallsign &cs : invalid)
                 {
                     this->triggerRemoveAircraft(cs, ++i * 100);
+                }
+
+
+                // KB: IMHO those data are pretty useless for XPlane
+                // no need to request them all the times
+                if ((m_slowTimerCalls % 3u) == 0u)
+                {
+                    this->requestRemoteAircraftDataFromXPlane();
                 }
 
                 // FPS
@@ -494,10 +564,10 @@ namespace BlackSimPlugin
             QColor color = "cyan";
             /* switch (message.getSeverity())
             {
-            case CStatusMessage::SeverityDebug: color = "teal"; break;
-            case CStatusMessage::SeverityInfo: color = "cyan"; break;
+            case CStatusMessage::SeverityDebug:   color = "teal";   break;
+            case CStatusMessage::SeverityInfo:    color = "cyan";   break;
             case CStatusMessage::SeverityWarning: color = "orange"; break;
-            case CStatusMessage::SeverityError: color = "red"; break;
+            case CStatusMessage::SeverityError:   color = "red";    break;
             } */
 
             m_serviceProxy->addTextMessage("swift: " + message.getMessage(), color.redF(), color.greenF(), color.blueF());
@@ -1052,6 +1122,7 @@ namespace BlackSimPlugin
             }
 
             const CCallsignSet logCallsigns = this->getLogCallsigns();
+            static const QString hint("remote acft.");
             for (int i = 0; i < size; i++)
             {
                 const bool emptyCs = callsigns[i].isEmpty();
@@ -1077,7 +1148,10 @@ namespace BlackSimPlugin
                                    CLength(cgValue, CLengthUnit::m(), CLengthUnit::ft());
 
                 // if we knew "on ground" here we could set it as parameter of rememberElevationAndSimulatorCG
-                this->rememberElevationAndSimulatorCG(cs, xpAircraft.getAircraftModel(), false, elevation, cg);
+                // this->rememberElevationAndSimulatorCG(cs, xpAircraft.getAircraftModel(), false, elevation, cg);
+                // with T778 we do NOT use this function for elevation here if "isSuspicious"
+                const bool useElevation = this->handleProbeValue(elevation, cs, hint, true);
+                this->rememberElevationAndSimulatorCG(cs, xpAircraft.getAircraftModel(), false, useElevation ? elevation : CElevationPlane::null(), cg);
 
                 // loopback
                 if (logCallsigns.contains(cs))
@@ -1137,6 +1211,15 @@ namespace BlackSimPlugin
                 {
                     this->sendXSwiftBusSettings();
                 }
+            }
+        }
+
+        void CSimulatorXPlane::setMinTerrainProbeDistance(const CLength &distance)
+        {
+            if (distance.isNull()) { return; }
+            if (m_minSuspicousTerrainProbe.isNull() || distance < m_minSuspicousTerrainProbe)
+            {
+                m_minSuspicousTerrainProbe = distance;
             }
         }
 

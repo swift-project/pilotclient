@@ -144,6 +144,7 @@ namespace BlackSimPlugin
             virtual void resetAircraftStatistics() override;
             virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool testSendSituationAndParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) override;
+            virtual void callbackReceivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign) override;
             //! @}
 
             //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
@@ -235,6 +236,15 @@ namespace BlackSimPlugin
             //! Settings have changed
             void onXSwiftBusSettingsChanged();
 
+            //! Min.distance of "failed" (suspicious) terrain probe requests
+            void setMinTerrainProbeDistance(const BlackMisc::PhysicalQuantities::CLength &distance);
+
+            //! Handle a probe value
+            bool handleProbeValue(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign, const QString &hint, bool ignoreOutsideRange);
+
+            static bool isSuspiciousTerrainValue(const BlackMisc::Geo::CElevationPlane &elevation);
+            static const BlackMisc::PhysicalQuantities::CLength &maxTerrainRequestDistance();
+
             DBusMode m_dbusMode;
             BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusSettings> m_xSwiftBusServerSettings { this, &CSimulatorXPlane::onXSwiftBusSettingsChanged };
             static constexpr qint64 TimeoutAdding = 10000;
@@ -253,9 +263,10 @@ namespace BlackSimPlugin
             BlackMisc::Aviation::CAirportList m_airportsInRange; //!< aiports in range of own aircraft
             CXPlaneMPAircraftObjects m_xplaneAircraftObjects;    //!< XPlane multiplayer aircraft
 
-            BlackMisc::Simulation::CSimulatedAircraftList m_pendingToBeAddedAircraft; //!< aircraft to be added
-            QHash<BlackMisc::Aviation::CCallsign, qint64> m_addingInProgressAircraft; //!< aircraft just adding
-            BlackMisc::Simulation::CSimulatedAircraftList m_aircraftAddedFailed;      //!< aircraft for which adding failed
+            BlackMisc::Simulation::CSimulatedAircraftList m_pendingToBeAddedAircraft;      //!< aircraft to be added
+            QHash<BlackMisc::Aviation::CCallsign, qint64> m_addingInProgressAircraft;      //!< aircraft just adding
+            BlackMisc::Simulation::CSimulatedAircraftList m_aircraftAddedFailed;           //!< aircraft for which adding failed
+            BlackMisc::PhysicalQuantities::CLength m_minSuspicousTerrainProbe { nullptr }; //!< min. distance of "failed" (suspicious) terrain probe requests
             XPlaneData m_xplaneData; //!< XPlane data
 
             // statistics
