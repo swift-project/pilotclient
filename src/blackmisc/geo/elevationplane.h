@@ -94,6 +94,9 @@ namespace BlackMisc
             //! Altitude (synonym for geodetic height)
             Aviation::CAltitude getAltitudeInUnit(const PhysicalQuantities::CLengthUnit &unit) const;
 
+            //! Altitude (synonym for geodetic height)
+            double getAltitudeValue(const PhysicalQuantities::CLengthUnit &unit) const;
+
             //! Existing value?
             virtual bool isNull() const override;
 
