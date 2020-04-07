@@ -257,6 +257,12 @@ namespace BlackMisc
             return m_cgsPerCallsign.remove(cs);
         }
 
+        void ISimulationEnvironmentProvider::removePendingElevationRequest(const CCallsign &cs)
+        {
+            QWriteLocker l(&m_lockElvCoordinates);
+            m_pendingElevationRequests.remove(cs);
+        }
+
         CLength ISimulationEnvironmentProvider::minRange(const CLength &range)
         {
             return (range.isNull() || range < CElevationPlane::singlePointRadius()) ?

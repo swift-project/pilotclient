@@ -274,6 +274,11 @@ namespace BlackMisc
             //! \threadsafe
             int removeSimulatorCG(const Aviation::CCallsign &cs);
 
+            //! Remove pending timestamp
+            //! \threadsafe
+            //! \remark useful if we ignore the probe response on sim. side
+            void removePendingElevationRequest(const Aviation::CCallsign &cs);
+
             //! Min.range considered as single point
             static PhysicalQuantities::CLength minRange(const PhysicalQuantities::CLength &range);
 

@@ -103,6 +103,11 @@ namespace BlackMisc
             return a;
         }
 
+        double CElevationPlane::getAltitudeValue(const CLengthUnit &unit) const
+        {
+            return this->getAltitude().value(unit);
+        }
+
         bool CElevationPlane::isNull() const
         {
             return m_radius.isNull() || CCoordinateGeodetic::isNull();
