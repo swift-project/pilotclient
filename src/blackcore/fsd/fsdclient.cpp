@@ -689,17 +689,23 @@ namespace BlackCore
             const int s = m_queuedFsdMessages.size();
             this->sendMessageString(m_queuedFsdMessages.dequeue());
 
-            // send up to 4 at once
+            // send up to 6 at once
             if (s > 5)  { this->sendMessageString(m_queuedFsdMessages.dequeue()); }
             if (s > 10) { this->sendMessageString(m_queuedFsdMessages.dequeue()); }
             if (s > 20) { this->sendMessageString(m_queuedFsdMessages.dequeue()); }
+            if (s > 30) { this->sendMessageString(m_queuedFsdMessages.dequeue()); }
 
             // overload
             // no idea, if we ever get here
             if (s > 50)
             {
-                CLogMessage(this).warning(u"Too many queued messages (%1), bulk send!") << s;
-                for (int i = 0; i < 10; i++)
+                const StatusSeverity severity = s > 75 ? SeverityWarning : SeverityInfo;
+                CLogMessage(this).log(severity, u"Too many queued messages (%1), bulk send!") << s;
+                int sendNo = 10;
+                if (s > 75)  { sendNo = 20; }
+                if (s > 100) { sendNo = 30; }
+
+                for (int i = 0; i < sendNo; i++)
                 {
                     this->sendMessageString(m_queuedFsdMessages.dequeue());
                 }
@@ -1800,11 +1806,13 @@ namespace BlackCore
             quitAndWait();
         }
 
-        void CFSDClient::readDataFromSocket()
+        void CFSDClient::readDataFromSocketMaxLines(int maxLines)
         {
             if (m_socket.bytesAvailable() < 1) { return; }
 
             int lines = 0;
+
+            // reads at least one line if available
             while (m_socket.canReadLine())
             {
                 const QByteArray dataEncoded = m_socket.readLine();
@@ -1813,19 +1821,23 @@ namespace BlackCore
                 this->parseMessage(data);
                 lines++;
 
-                static constexpr int MaxLines = 50;
-                if (lines > MaxLines)
+                static constexpr int MaxLines = 75 - 1;
+                if (maxLines < 0) { maxLines = MaxLines; }
+
+                if (lines > maxLines)
                 {
                     static constexpr int DelayMs  = 10;
+                    const int newMax = qRound(1.2 * lines); // 20% more
 
                     CLogMessage(this).debug(u"ReadDataFromSocket has too many lines (>%1), will read again in %2ms") << MaxLines << DelayMs;
                     QPointer<CFSDClient> myself(this);
                     QTimer::singleShot(DelayMs, this, [ = ]
                     {
-                        if (myself) { myself->readDataFromSocket(); }
+                        if (myself) { myself->readDataFromSocketMaxLines(newMax); }
                     });
                     break;
                 }
+
             }
         }
 
