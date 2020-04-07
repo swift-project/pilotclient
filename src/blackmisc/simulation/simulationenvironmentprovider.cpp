@@ -35,60 +35,60 @@ namespace BlackMisc
             }
 
             const CLength minRange = ISimulationEnvironmentProvider::minRange(epsilon);
+            const double elvFt = elevationCoordinate.geodeticHeight().value(CLengthUnit::ft());
+
+            CCoordinateGeodetic alreadyInRange;
+            CCoordinateGeodetic alreadyInRangeGnd;
             {
                 QReadLocker l(&m_lockElvCoordinates);
                 if (!m_enableElevation) { return false; }
 
                 // check if we have already an elevation within range
-                CCoordinateGeodetic alreadyInRange = m_elvCoordinatesGnd.findFirstWithinRangeOrDefault(elevationCoordinate, minRange);
-                constexpr double maxDistFt = 30.0;
-
-                if (!alreadyInRange.isNull())
-                {
-                    // found
-                    const double distFt = qAbs(alreadyInRange.geodeticHeight().value(CLengthUnit::ft()) - elevationCoordinate.geodeticHeight().value(CLengthUnit::ft()));
-                    if (distFt > maxDistFt)
-                    {
-                        // we such a huge distance to existing value
-                        CLogMessage(this).debug(u"Suspicious gnd. elevation distance '%1': %2ft") << requestedForCallsign.asString() << distFt;
-                        BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Suspicious gnd. elevation distance");
-                    }
-                    return false;
-                }
-
-                alreadyInRange = m_elvCoordinates.findFirstWithinRangeOrDefault(elevationCoordinate, minRange);
-                if (!alreadyInRange.isNull())
-                {
-                    // found
-                    const double distFt = qAbs(alreadyInRange.geodeticHeight().value(CLengthUnit::ft()) - elevationCoordinate.geodeticHeight().value(CLengthUnit::ft()));
-                    if (distFt > maxDistFt)
-                    {
-                        // we such a huge distance to existing value
-                        CLogMessage(this).debug(u"Suspicious elevation distance '%1': %2ft") << requestedForCallsign.asString() << distFt;
-                        BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Suspicious elevation distance");
-                    }
-                    return false;
-                }
+                alreadyInRangeGnd = m_elvCoordinatesGnd.findFirstWithinRangeOrDefault(elevationCoordinate, minRange);
+                alreadyInRange    = m_elvCoordinates.findFirstWithinRangeOrDefault(elevationCoordinate, minRange);
             }
 
+            constexpr double maxDistFt = 30.0;
+
+            // here we deal with gnd situation and do not expect a lot of variance
+            if (!alreadyInRangeGnd.isNull())
+            {
+                // found
+                const double distFt = qAbs(alreadyInRangeGnd.geodeticHeight().value(CLengthUnit::ft()) - elvFt);
+                if (distFt > maxDistFt)
+                {
+                    // such a huge distance to existing value
+                    CLogMessage(this).debug(u"Suspicious GND elevation distance '%1': %2ft at %3") << requestedForCallsign.asString() << distFt << elevationCoordinate.geodeticHeight().valueRoundedAsString(CLengthUnit::ft(), 1);
+                    BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Suspicious gnd. elevation distance");
+                }
+                return false;
+            }
+
+            // here we deal with all kind of values, so it can be that
+            // values vary in a much larger range
+            if (!alreadyInRange.isNull())
+            {
+                // found
+                const double distFt = qAbs(alreadyInRange.geodeticHeight().value(CLengthUnit::ft()) - elvFt);
+                if (distFt > maxDistFt)
+                {
+                    // such a huge distance to existing value
+                    CLogMessage(this).debug(u"Suspicious NON GND elevation distance for '%1': %2ft at %3") << requestedForCallsign.asString() << distFt << elevationCoordinate.geodeticHeight().valueRoundedAsString(CLengthUnit::ft(), 1);
+                    // BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Suspicious elevation distance");
+                }
+                return false;
+            }
+
+            const qint64 now = QDateTime::currentMSecsSinceEpoch();
             {
                 // we keep latest at front
                 // * we assume we find them faster
                 // * and need them more frequently (the recent ones)
-                const qint64 now = QDateTime::currentMSecsSinceEpoch();
-
                 QWriteLocker l(&m_lockElvCoordinates);
                 if (likelyOnGroundElevation)
                 {
                     if (m_elvCoordinatesGnd.size() > m_maxElevationsGnd) { m_elvCoordinatesGnd.pop_back(); }
                     m_elvCoordinatesGnd.push_front(elevationCoordinate);
-
-                    const bool valid = !elevationCoordinate.geodeticHeight().isNull() && !elevationCoordinate.geodeticHeight().isZeroEpsilonConsidered();
-                    if (!valid)
-                    {
-                        BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Suspicious value");
-                        CLogMessage(this).debug(u"Suspicious gnd.cache value: %1") << elevationCoordinate.convertToQString();
-                    }
                 }
                 else
                 {
