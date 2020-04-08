@@ -112,7 +112,8 @@ namespace BlackGui
                     }
                     if (m_withMenuHighlightAndFollow)
                     {
-                        menuActions.addAction(CIcons::appAircraft16(), "Follow in simulator",     CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::requestFollowInSimulator });
+                        menuActions.addAction(CIcons::appAircraft16(),  "Follow in simulator",    CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::requestFollowInSimulator });
+                        if (!menuActions.isEmpty()) { menuActions.addSeparator(CMenuAction::pathClientSimulationDisplay()); }
                         menuActions.addAction(CIcons::appSimulator16(), "Highlight in simulator", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::requestHighlightInSimulator });
                     }
                     if (m_withMenuEnableGndFlag)
