@@ -59,6 +59,9 @@ namespace XSwiftBus
         //! Called by XPluginReceiveMessage when the model changes.
         void onAircraftModelChanged();
 
+        //! Called by XPluginReceiveMessage when some scenery is loaded.
+        void onSceneryLoaded();
+
         //! Returns the XSwiftBus version number
         std::string getVersionNumber() const;
 
@@ -307,6 +310,8 @@ namespace XSwiftBus
         void emitAirportsInRangeUpdated(const std::vector<std::string> &icaoCodes, const std::vector<std::string> &names,
                                         const std::vector<double> &lats, const std::vector<double> &lons, const std::vector<double> &alts);
 
+        void emitSceneryLoaded();
+
         CMessageBoxControl m_messages { 16, 16, 16 };
         bool m_popupMessageWindow     = true;
         bool m_disappearMessageWindow = true;
@@ -322,6 +327,9 @@ namespace XSwiftBus
 
         struct FramePeriodSampler;
         std::unique_ptr<FramePeriodSampler> m_framePeriodSampler;
+
+        DataRef<xplane::data::sim::graphics::scenery::async_scenery_load_in_progress> m_sceneryIsLoading;
+        int m_sceneryWasLoading = 0;
 
         StringDataRef<xplane::data::sim::aircraft::view::acf_livery_path> m_liveryPath;
         StringDataRef<xplane::data::sim::aircraft::view::acf_ICAO> m_icao;

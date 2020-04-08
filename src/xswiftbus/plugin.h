@@ -56,6 +56,9 @@ namespace XSwiftBus
         //! Called by XPluginReceiveMessage when the aircraft is positioned at an airport
         void onAircraftRepositioned();
 
+        //! Called by XPluginReceiveMessage when some scenery is loaded
+        void onSceneryLoaded();
+
         //! Is running
         bool isRunning() const { return m_isRunning; }
 

@@ -77,6 +77,10 @@ PLUGIN_API void XPluginReceiveMessage(XPLMPluginID from, long msg, void *param)
         case XPLM_MSG_AIRPORT_LOADED:
             g_plugin->onAircraftRepositioned();
             break;
+
+        case XPLM_MSG_SCENERY_LOADED:
+            g_plugin->onSceneryLoaded();
+            break;
         }
     }
 }

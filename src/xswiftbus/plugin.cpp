@@ -174,6 +174,14 @@ namespace XSwiftBus
         }
     }
 
+    void CPlugin::onSceneryLoaded()
+    {
+        if (m_service)
+        {
+            m_service->onSceneryLoaded();
+        }
+    }
+
     float CPlugin::startServerDeferred(float, float, int, void *refcon)
     {
         auto *plugin = static_cast<CPlugin *>(refcon);
