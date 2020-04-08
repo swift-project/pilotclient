@@ -897,7 +897,7 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::updateProbeFromSimulator(const CCallsign &callsign, const DataDefinitionPosData &remoteAircraftData)
         {
             const CElevationPlane elevation(remoteAircraftData.latitudeDeg, remoteAircraftData.longitudeDeg, remoteAircraftData.elevationFt, CElevationPlane::singlePointRadius());
-            this->callbackReceivedRequestedElevation(elevation, callsign);
+            this->callbackReceivedRequestedElevation(elevation, callsign, false);
         }
 
         void CSimulatorFsxCommon::updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea)

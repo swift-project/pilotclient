@@ -18,7 +18,7 @@ namespace XSwiftBus
 
     CTerrainProbe::~CTerrainProbe() { XPLMDestroyProbe(m_ref); }
 
-    std::array<double, 3> CTerrainProbe::getElevation(double degreesLatitude, double degreesLongitude, double metersAltitude, const std::string &callsign) const
+    std::array<double, 3> CTerrainProbe::getElevation(double degreesLatitude, double degreesLongitude, double metersAltitude, const std::string &callsign, bool &o_isWater) const
     {
         double x, y, z;
         XPLMWorldToLocal(degreesLatitude, degreesLongitude, metersAltitude, &x, &y, &z);
@@ -38,6 +38,7 @@ namespace XSwiftBus
                 WARNING_LOG(callsign + " " + error + " at " + std::to_string(degreesLatitude) + ", " + std::to_string(degreesLongitude) + ", " + std::to_string(metersAltitude));
             }
 
+            o_isWater = false;
             return {{ std::numeric_limits<double>::quiet_NaN(), degreesLatitude, degreesLongitude }};
         }
         XPLMLocalToWorld(probe.locationX, probe.locationY, probe.locationZ, &degreesLatitude, &degreesLongitude, &metersAltitude);
@@ -52,6 +53,7 @@ namespace XSwiftBus
             m_logMessageCount++;
             DEBUG_LOG(callsign + " probe returned NaN at " + std::to_string(degreesLatitude) + ", " + std::to_string(degreesLongitude) + ", " + std::to_string(metersAltitude));
         }
+        o_isWater = probe.is_wet;
         return {{ metersAltitude, degreesLatitude, degreesLongitude }};
     }
 } // ns

@@ -79,6 +79,7 @@ R"XML(<node>
       <arg name="latitudesDeg" type="ad" direction="out"/>
       <arg name="longitudesDeg" type="ad" direction="out"/>
       <arg name="elevationsM" type="ad" direction="out"/>
+      <arg name="waterFlags" type="ab" direction="out"/>
       <arg name="verticalOffsets" type="ad" direction="out"/>
     </method>
     <method name="getElevationAtPosition">
@@ -90,6 +91,7 @@ R"XML(<node>
       <arg type="d" direction="out"/>
       <arg type="d" direction="out"/>
       <arg type="d" direction="out"/>
+      <arg type="b" direction="out"/>
     </method>
     <method name="setFollowedAircraft">
        <arg name="callsign" type="s" direction="in"/>

@@ -245,7 +245,7 @@ namespace BlackSimPlugin
                 if (!myself) { return; }
 
                 // updates in providers and emits signal
-                ISimulator::callbackReceivedRequestedElevation(elv, callsign);
+                ISimulator::callbackReceivedRequestedElevation(elv, callsign, false);
             });
 
             emit this->requestedElevation(callsign);

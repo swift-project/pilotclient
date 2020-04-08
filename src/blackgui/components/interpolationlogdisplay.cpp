@@ -429,7 +429,7 @@ namespace BlackGui
             const CElevationPlane ep(situations.latestAdjustedObject(), alt, CElevationPlane::singlePointRadius());
 
             // inject as received from simulator
-            m_simulator->callbackReceivedRequestedElevation(ep, m_callsign);
+            m_simulator->callbackReceivedRequestedElevation(ep, m_callsign, false);
         }
 
         void CInterpolationLogDisplay::onElevationHistoryCountFinished()

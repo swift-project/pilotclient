@@ -144,7 +144,7 @@ namespace BlackSimPlugin
             virtual void resetAircraftStatistics() override;
             virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool testSendSituationAndParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) override;
-            virtual void callbackReceivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual void callbackReceivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign, bool isWater) override;
             //! @}
 
             //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
@@ -178,6 +178,7 @@ namespace BlackSimPlugin
             };
 
             using QDoubleList = QList<double>;
+            using QBoolList = QList<bool>;
 
             void setAirportsInRange(const QStringList &icaoCodes, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts);
             void emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao,
@@ -222,7 +223,7 @@ namespace BlackSimPlugin
             void onRemoteAircraftAdded(const QString &callsign);
             void onRemoteAircraftAddingFailed(const QString &callsign);
             void updateRemoteAircraftFromSimulator(const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
-                                                   const QDoubleList &elevationsMeters, const QDoubleList &verticalOffsetsMeters);
+                                                   const QDoubleList &elevationsMeters, const QBoolList &waterFlags, const QDoubleList &verticalOffsetsMeters);
             //! @}
 
             //! Disconnect from DBus
