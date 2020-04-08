@@ -38,6 +38,9 @@ namespace BlackSimPlugin
         //! List of doubles
         using QDoubleList = QList<double>;
 
+        //! List of bools
+        using QBoolList = QList<bool>;
+
         //! Planes positions
         struct PlanesPositions
         {
@@ -155,10 +158,10 @@ namespace BlackSimPlugin
 
         public:
             //! Elevation callback
-            using ElevationCallback = std::function<void (const BlackMisc::Geo::CElevationPlane &, const BlackMisc::Aviation::CCallsign &)>;
+            using ElevationCallback = std::function<void (const BlackMisc::Geo::CElevationPlane &, const BlackMisc::Aviation::CCallsign &, bool)>;
 
             //! Remote aircrafts data callback
-            using RemoteAircraftDataCallback = std::function<void (const QStringList &, const QDoubleList &, const QDoubleList &, const QDoubleList &, const QDoubleList &)>;
+            using RemoteAircraftDataCallback = std::function<void (const QStringList &, const QDoubleList &, const QDoubleList &, const QDoubleList &, const QBoolList &, const QDoubleList &)>;
 
             //! Service name
             static const QString &InterfaceName()

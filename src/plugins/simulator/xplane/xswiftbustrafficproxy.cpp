@@ -155,15 +155,16 @@ namespace BlackSimPlugin
         {
             std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
             {
-                QDBusPendingReply<QStringList, QList<double>, QList<double>, QList<double>, QList<double>> reply = *watcher;
+                QDBusPendingReply<QStringList, QList<double>, QList<double>, QList<double>, QList<bool>, QList<double>> reply = *watcher;
                 if (!reply.isError())
                 {
                     const QStringList callsigns = reply.argumentAt<0>();
                     const QList<double> latitudesDeg = reply.argumentAt<1>();
                     const QList<double> longitudesDeg = reply.argumentAt<2>();
                     const QList<double> elevationsM = reply.argumentAt<3>();
-                    const QList<double> verticalOffsets = reply.argumentAt<4>();
-                    setter(callsigns, latitudesDeg, longitudesDeg, elevationsM, verticalOffsets);
+                    const QList<bool> waterFlags = reply.argumentAt<4>();
+                    const QList<double> verticalOffsets = reply.argumentAt<5>();
+                    setter(callsigns, latitudesDeg, longitudesDeg, elevationsM, waterFlags, verticalOffsets);
                 }
                 watcher->deleteLater();
             };
@@ -175,7 +176,7 @@ namespace BlackSimPlugin
         {
             std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
             {
-                QDBusPendingReply<QString, double, double, double> reply = *watcher;
+                QDBusPendingReply<QString, double, double, double, bool> reply = *watcher;
                 if (!reply.isError())
                 {
                     const CCallsign cs(reply.argumentAt<0>());
@@ -186,8 +187,9 @@ namespace BlackSimPlugin
                     const CElevationPlane elevation(CLatitude(latitudeDegrees, CAngleUnit::deg()),
                                                     CLongitude(longitudeDegrees, CAngleUnit::deg()),
                                                     elevationAlt, CElevationPlane::singlePointRadius());
-                    setter(elevation, cs);
-                    // CLogMessage(this).debug(u"XPlane elv. response: '%1' %2 %3 %4") << cs.asString() << latitudeDeg << longitudeDeg << elevationMeters;
+                    const bool isWater = reply.argumentAt<4>();
+                    setter(elevation, cs, isWater);
+                    // CLogMessage(this).debug(u"XPlane elv. response: '%1' %2 %3 %4 %5") << cs.asString() << latitudeDeg << longitudeDeg << elevationMeters << isWater;
                 }
                 watcher->deleteLater();
             };

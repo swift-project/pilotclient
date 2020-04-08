@@ -360,7 +360,7 @@ namespace BlackCore
         return false;
     }
 
-    void ISimulator::callbackReceivedRequestedElevation(const CElevationPlane &plane, const CCallsign &callsign)
+    void ISimulator::callbackReceivedRequestedElevation(const CElevationPlane &plane, const CCallsign &callsign, bool isWater)
     {
         if (this->isShuttingDown()) { return; }
         if (plane.isNull()) { return; } // this happens if requested for a coordinate where scenery is not available
@@ -377,6 +377,7 @@ namespace BlackCore
         // signal we have received the elevation
         // used by log display
         emit this->receivedRequestedElevation(plane, callsign);
+        Q_UNUSED(isWater)
     }
 
     void ISimulator::resetAircraftStatistics()

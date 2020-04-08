@@ -268,7 +268,7 @@ namespace BlackCore
 
         //! A requested elevation has been received
         //! \remark public for testing purposes
-        virtual void callbackReceivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign);
+        virtual void callbackReceivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign, bool isWater);
 
         //! Allows to print out simulator specific statistics
         virtual QString getStatisticsSimulatorSpecific() const { return QString(); }

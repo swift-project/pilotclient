@@ -92,7 +92,7 @@ namespace BlackSimPlugin
                     const CElevationPlane ep(coordinate, CElevationPlane::singlePointRadius());
 
                     const CCallsign cs(simulatorP3D->getCallsignForPendingProbeRequests(requestId, true));
-                    simulatorP3D->callbackReceivedRequestedElevation(ep, cs);
+                    simulatorP3D->callbackReceivedRequestedElevation(ep, cs, false);
                 }
                 break;
             default:

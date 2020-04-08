@@ -488,7 +488,7 @@ namespace XSwiftBus
     }
 
     void CTraffic::getRemoteAircraftData(std::vector<std::string> &callsigns, std::vector<double> &latitudesDeg, std::vector<double> &longitudesDeg,
-                                         std::vector<double> &elevationsM, std::vector<double> &verticalOffsets) const
+                                         std::vector<double> &elevationsM, std::vector<bool> &waterFlags, std::vector<double> &verticalOffsets) const
     {
         if (callsigns.empty() || m_planesByCallsign.empty()) { return; }
 
@@ -510,10 +510,11 @@ namespace XSwiftBus
             const double latDeg = plane->position.lat;
             const double lonDeg = plane->position.lon;
             double groundElevation = 0.0;
+            bool isWater = false;
             if (getSettings().isTerrainProbeEnabled())
             {
                 // we expect elevation in meters
-                groundElevation = plane->terrainProbe.getElevation(latDeg, lonDeg, plane->position.elevation, requestedCallsign).front();
+                groundElevation = plane->terrainProbe.getElevation(latDeg, lonDeg, plane->position.elevation, requestedCallsign, isWater).front();
                 if (std::isnan(groundElevation)) { groundElevation = 0.0; }
             }
             double fudgeFactor = 3.0;
@@ -523,11 +524,12 @@ namespace XSwiftBus
             latitudesDeg.push_back(latDeg);
             longitudesDeg.push_back(lonDeg);
             elevationsM.push_back(groundElevation);
+            waterFlags.push_back(isWater);
             verticalOffsets.push_back(hasOffset ? fudgeFactor : std::numeric_limits<decltype(fudgeFactor)>::quiet_NaN());
         }
     }
 
-    std::array<double, 3> CTraffic::getElevationAtPosition(const std::string &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters) const
+    std::array<double, 3> CTraffic::getElevationAtPosition(const std::string &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters, bool &o_isWater) const
     {
         if (!getSettings().isTerrainProbeEnabled()) { return {{ std::numeric_limits<double>::quiet_NaN(), latitudeDeg, longitudeDeg }}; }
 
@@ -535,11 +537,11 @@ namespace XSwiftBus
         if (planeIt != m_planesByCallsign.end())
         {
             const Plane *plane = planeIt->second;
-            return plane->terrainProbe.getElevation(latitudeDeg, longitudeDeg, altitudeMeters, callsign);
+            return plane->terrainProbe.getElevation(latitudeDeg, longitudeDeg, altitudeMeters, callsign, o_isWater);
         }
         else
         {
-            return m_terrainProbe.getElevation(latitudeDeg, longitudeDeg, altitudeMeters, callsign + " (plane not found)");
+            return m_terrainProbe.getElevation(latitudeDeg, longitudeDeg, altitudeMeters, callsign + " (plane not found)", o_isWater);
         }
     }
 
@@ -798,8 +800,9 @@ namespace XSwiftBus
                     std::vector<double> latitudesDeg;
                     std::vector<double> longitudesDeg;
                     std::vector<double> elevationsM;
+                    std::vector<bool> waterFlags;
                     std::vector<double> verticalOffsets;
-                    getRemoteAircraftData(callsigns, latitudesDeg, longitudesDeg, elevationsM, verticalOffsets);
+                    getRemoteAircraftData(callsigns, latitudesDeg, longitudesDeg, elevationsM, waterFlags, verticalOffsets);
                     CDBusMessage reply = CDBusMessage::createReply(sender, serial);
                     reply.beginArgumentWrite();
                     reply.appendArgument(callsigns);
@@ -823,13 +826,15 @@ namespace XSwiftBus
                 message.getArgument(altitudeMeters);
                 queueDBusCall([ = ]()
                 {
-                    const auto elevation = getElevationAtPosition(callsign, latitudeDeg, longitudeDeg, altitudeMeters);
+                    bool isWater = false;
+                    const auto elevation = getElevationAtPosition(callsign, latitudeDeg, longitudeDeg, altitudeMeters, isWater);
                     CDBusMessage reply = CDBusMessage::createReply(sender, serial);
                     reply.beginArgumentWrite();
                     reply.appendArgument(callsign);
                     reply.appendArgument(elevation[0]);
                     reply.appendArgument(elevation[1]);
                     reply.appendArgument(elevation[2]);
+                    reply.appendArgument(isWater);
                     sendDBusMessage(reply);
                 });
             }

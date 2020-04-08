@@ -213,7 +213,7 @@ namespace BlackSimPlugin
             return true;
         }
 
-        void CSimulatorXPlane::callbackReceivedRequestedElevation(const CElevationPlane &plane, const CCallsign &callsign)
+        void CSimulatorXPlane::callbackReceivedRequestedElevation(const CElevationPlane &plane, const CCallsign &callsign, bool isWater)
         {
             static const QString hint("probe callback");
             if (!this->handleProbeValue(plane, callsign, hint, false))
@@ -221,7 +221,7 @@ namespace BlackSimPlugin
                 this->removePendingElevationRequest(callsign);
                 return;
             }
-            CSimulatorPluginCommon::callbackReceivedRequestedElevation(plane, callsign);
+            CSimulatorPluginCommon::callbackReceivedRequestedElevation(plane, callsign, isWater);
         }
 
         bool CSimulatorXPlane::isSuspiciousTerrainValue(const CElevationPlane &elevation)
@@ -273,7 +273,7 @@ namespace BlackSimPlugin
             }
 
             using namespace std::placeholders;
-            auto callback = std::bind(&CSimulatorXPlane::callbackReceivedRequestedElevation, this, _1, _2);
+            auto callback = std::bind(&CSimulatorXPlane::callbackReceivedRequestedElevation, this, _1, _2, _3);
 
             // Request
             m_trafficProxy->getElevationAtPosition(callsign,
@@ -1088,10 +1088,10 @@ namespace BlackSimPlugin
             if (!m_trafficProxy || this->isShuttingDown()) { return; }
             const QStringList csStrings = callsigns.getCallsignStrings();
             QPointer<CSimulatorXPlane> myself(this);
-            m_trafficProxy->getRemoteAircraftData(csStrings, [ = ](const QStringList & callsigns, const QDoubleList & latitudesDeg, const QDoubleList & longitudesDeg, const QDoubleList & elevationsMeters, const QDoubleList & verticalOffsetsMeters)
+            m_trafficProxy->getRemoteAircraftData(csStrings, [ = ](const QStringList & callsigns, const QDoubleList & latitudesDeg, const QDoubleList & longitudesDeg, const QDoubleList & elevationsMeters, const QBoolList &waterFlags, const QDoubleList & verticalOffsetsMeters)
             {
                 if (!myself) { return; }
-                this->updateRemoteAircraftFromSimulator(callsigns, latitudesDeg, longitudesDeg, elevationsMeters, verticalOffsetsMeters);
+                this->updateRemoteAircraftFromSimulator(callsigns, latitudesDeg, longitudesDeg, elevationsMeters, waterFlags, verticalOffsetsMeters);
             });
         }
 
@@ -1108,7 +1108,7 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::updateRemoteAircraftFromSimulator(
             const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
-            const QDoubleList &elevationsMeters, const QDoubleList &verticalOffsetsMeters)
+            const QDoubleList &elevationsMeters, const QBoolList &waterFlags, const QDoubleList &verticalOffsetsMeters)
         {
             const int size = callsigns.size();
 
@@ -1116,6 +1116,7 @@ namespace BlackSimPlugin
             if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
                 Q_ASSERT_X(elevationsMeters.size() == size, Q_FUNC_INFO, "Wrong elevations");
+                Q_ASSERT_X(waterFlags.size()       == size, Q_FUNC_INFO, "Wrong waterFlags");
                 Q_ASSERT_X(latitudesDeg.size()     == size, Q_FUNC_INFO, "Wrong latitudesDeg");
                 Q_ASSERT_X(longitudesDeg.size()    == size, Q_FUNC_INFO, "Wrong longitudesDeg");
                 Q_ASSERT_X(verticalOffsetsMeters.size() == size, Q_FUNC_INFO, "Wrong CG");
@@ -1152,6 +1153,7 @@ namespace BlackSimPlugin
                 // with T778 we do NOT use this function for elevation here if "isSuspicious"
                 const bool useElevation = this->handleProbeValue(elevation, cs, hint, true);
                 this->rememberElevationAndSimulatorCG(cs, xpAircraft.getAircraftModel(), false, useElevation ? elevation : CElevationPlane::null(), cg);
+                Q_UNUSED(waterFlags)
 
                 // loopback
                 if (logCallsigns.contains(cs))

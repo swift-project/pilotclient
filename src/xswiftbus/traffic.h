@@ -115,10 +115,10 @@ namespace XSwiftBus
 
         //! Get remote aircrafts data (lat, lon, elevation and CG)
         void getRemoteAircraftData(std::vector<std::string> &callsigns, std::vector<double> &latitudesDeg, std::vector<double> &longitudesDeg,
-                                   std::vector<double> &elevationsM, std::vector<double> &verticalOffsets) const;
+                                   std::vector<double> &elevationsM, std::vector<bool> &waterFlags, std::vector<double> &verticalOffsets) const;
 
         //! Get the ground elevation at an arbitrary position
-        std::array<double, 3> getElevationAtPosition(const std::string &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters) const;
+        std::array<double, 3> getElevationAtPosition(const std::string &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters, bool &o_isWater) const;
 
         //! Sets the aircraft with callsign to be followed in plane view
         void setFollowedAircraft(const std::string &callsign);

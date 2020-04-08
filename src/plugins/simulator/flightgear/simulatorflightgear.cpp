@@ -849,7 +849,7 @@ namespace BlackSimPlugin
             }
 
             using namespace std::placeholders;
-            auto callback = std::bind(&CSimulatorFlightgear::callbackReceivedRequestedElevation, this, _1, _2);
+            auto callback = std::bind(&CSimulatorFlightgear::callbackReceivedRequestedElevation, this, _1, _2, false);
 
             // Request
             m_trafficProxy->getElevationAtPosition(callsign,
