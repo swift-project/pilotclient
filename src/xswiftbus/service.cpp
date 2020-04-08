@@ -111,6 +111,11 @@ namespace XSwiftBus
         emitAircraftModelChanged(path, filename, getAircraftLivery(), getAircraftIcaoCode(), acfProperties.modelString, acfProperties.modelName, getAircraftDescription());
     }
 
+    void CService::onSceneryLoaded()
+    {
+        emitSceneryLoaded();
+    }
+
     std::string CService::getVersionNumber() const
     {
         return XSWIFTBUS_VERSION;
@@ -955,6 +960,12 @@ namespace XSwiftBus
 
     int CService::process()
     {
+        if (m_sceneryIsLoading.get() != m_sceneryWasLoading)
+        {
+            if (!m_sceneryIsLoading.get()) { onSceneryLoaded(); }
+            m_sceneryWasLoading = m_sceneryIsLoading.get();
+        }
+
         invokeQueuedDBusCalls();
 
         if (m_disappearMessageWindowTime != std::chrono::system_clock::time_point()
@@ -995,6 +1006,12 @@ namespace XSwiftBus
         signalAirportsInRangeUpdated.appendArgument(lons);
         signalAirportsInRangeUpdated.appendArgument(alts);
         sendDBusMessage(signalAirportsInRangeUpdated);
+    }
+
+    void CService::emitSceneryLoaded()
+    {
+        CDBusMessage signal = CDBusMessage::createSignal(XSWIFTBUS_SERVICE_OBJECTPATH, XSWIFTBUS_SERVICE_INTERFACENAME, "sceneryLoaded");
+        sendDBusMessage(signal);
     }
 
     std::vector<CNavDataReference> CService::findClosestAirports(int number, double latitude, double longitude)

@@ -96,6 +96,9 @@ namespace BlackSimPlugin
             //! Airports in range are updated
             void airportsInRangeUpdated(const QStringList &icaoCodes, const QStringList &names, const QList<double> &lats, const QList<double> &lons, const QList<double> &alts);
 
+            //! Scenery was loaded
+            void sceneryLoaded();
+
         public slots:
             //! Get XSwiftBus version number
             QString getVersionNumber();

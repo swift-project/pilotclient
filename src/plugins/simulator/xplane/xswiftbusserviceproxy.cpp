@@ -35,6 +35,11 @@ namespace BlackSimPlugin
                                        "airportsInRangeUpdated", this,
                                        SIGNAL(airportsInRangeUpdated(QStringList, QStringList, QList<double>, QList<double>, QList<double>)));
                 Q_ASSERT(s);
+
+                s = connection.connect(QString(), "/xswiftbus/service", "org.swift_project.xswiftbus.service",
+                                       "sceneryLoaded", this,
+                                       SIGNAL(sceneryLoaded()));
+                Q_ASSERT(s);
             }
         }
 
