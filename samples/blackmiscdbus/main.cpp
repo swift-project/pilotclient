@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
         // this runs in the original process and can be directly debugged
         out << "--------------------------------------------------------" << endl;
 
-        BlackMisc::CDBusServer *dBusServer = new BlackMisc::CDBusServer(useSessionBusForServer ? "session" : address);
+        CDBusServer *dBusServer = new CDBusServer(useSessionBusForServer ? "session" : address);
         if (dBusServer->hasQDBusServer())
         {
             out << "server" << dBusServer->qDBusServer()->address()
@@ -184,7 +184,7 @@ int main(int argc, char *argv[])
         }
 
         // testing in new process
-        BlackMisc::CProcessCtrl::startDetached(executable, args, true);
+        CProcessCtrl::startDetached(executable, args, true);
 
         // testing in same process
         // BlackSample::ServiceTool::dataTransferTestClient(address);
