@@ -18,11 +18,11 @@
 #include <mutex>
 
 #if defined(Q_CC_MSVC)
-#   include <windows.h>
+#   include <Windows.h>
 
 #   pragma warning(push)
 #   pragma warning(disable:4091)
-#   include <dbghelp.h>
+#   include <DbgHelp.h>
 
 #   pragma warning(pop)
 #elif defined(Q_OS_WIN) && defined (Q_CC_GNU)
@@ -65,7 +65,8 @@ namespace BlackMisc
         auto process = GetCurrentProcess();
         SymRefreshModuleList(process);
 
-        std::array<void*, 100> stack;
+        using stackarray = std::array<void*, 100>;
+        stackarray stack;
         auto frames = CaptureStackBackTrace(1, static_cast<DWORD>(stack.size()), stack.data(), nullptr);
 
         struct
@@ -77,7 +78,7 @@ namespace BlackMisc
         symbol.info.SizeOfStruct = sizeof(symbol.info);
 
         QStringList result;
-        for (int i = 0; i < frames; ++i)
+        for (stackarray::size_type i = 0; i < frames; ++i)
         {
             DWORD displacement = 0;
             IMAGEHLP_LINE64 line;
