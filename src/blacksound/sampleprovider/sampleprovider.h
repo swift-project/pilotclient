@@ -11,6 +11,7 @@
 #ifndef BLACKSOUND_SAMPLEPROVIDER_H
 #define BLACKSOUND_SAMPLEPROVIDER_H
 
+#include "blackconfig/buildconfig.h"
 #include "blacksound/blacksoundexport.h"
 #include <QObject>
 #include <QVector>
@@ -36,7 +37,12 @@ namespace BlackSound
 
             //! Finished?
             virtual bool isFinished() const { return false; }
+
+        protected:
+            //! Verbose logs?
+            bool static verbose() { return BlackConfig::CBuildConfig::isLocalDeveloperDebugBuild(); }
         };
+
     } // ns
 } // ns
 

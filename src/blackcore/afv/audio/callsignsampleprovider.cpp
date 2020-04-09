@@ -83,7 +83,7 @@ namespace BlackCore
 
                 if (m_inUse && !m_underflow && m_audioInput->getBufferedBytes() == 0)
                 {
-                    CLogMessage(this).debug(u"[%1] [Delay++]") << m_callsign;
+                    if (verbose()) { CLogMessage(this).debug(u"[%1] [Delay++]") << m_callsign; }
                     CallsignDelayCache::instance().underflow(m_callsign);
                     m_underflow = true;
                 }
@@ -110,7 +110,7 @@ namespace BlackCore
                 m_underflow = false;
 
                 int delayMs = CallsignDelayCache::instance().get(callsign);
-                CLogMessage(this).debug(u"[%1] [Delay %2]") << m_callsign << delayMs;
+                if (verbose()) { CLogMessage(this).debug(u"[%1] [Delay %2ms]") << m_callsign << delayMs; }
                 if (delayMs > 0)
                 {
                     int phaseDelayLength = (m_audioFormat.sampleRate() / 1000) * delayMs;
@@ -228,10 +228,6 @@ namespace BlackCore
                 setEffects();
             }
 
-            bool CallsignSampleProvider::inUse() const
-            {
-                return m_inUse;
-            }
         } // ns
     } // ns
 } // ns
