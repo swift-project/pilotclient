@@ -159,8 +159,8 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::testSendSituationAndParts(const CCallsign &callsign, const CAircraftSituation &situation, const CAircraftParts &parts)
         {
-            if (!this->isConnected()) { return false; }
-            if (!m_trafficProxy)      { return false; }
+            if (this->isShuttingDownOrDisconnected()) { return false; }
+            if (!m_trafficProxy) { return false; }
             if (!m_xplaneAircraftObjects.contains(callsign)) { return false; }
 
             int u = 0;
@@ -301,7 +301,7 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::fastTimerTimeout()
         {
-            if (this->isConnected())
+            if (!this->isShuttingDownOrDisconnected())
             {
                 m_fastTimerCalls++;
 
@@ -380,7 +380,7 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::slowTimerTimeout()
         {
-            if (isConnected())
+            if (!this->isShuttingDownOrDisconnected())
             {
                 m_slowTimerCalls++;
 
@@ -455,7 +455,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::connectTo()
         {
-            if (isConnected()) { return true; }
+            if (this->isConnected()) { return true; }
             const QString dBusServerAddress = m_xSwiftBusServerSettings.getThreadLocal().getDBusServerAddressQt();
 
             if (CDBusServer::isSessionOrSystemAddress(dBusServerAddress))
@@ -553,8 +553,8 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::displayStatusMessage(const CStatusMessage &message) const
         {
-            // No assert here as status message may come because of network problems
-            if (!isConnected()) { return; }
+            // No assert here, as status message may come in because of network problems
+            if (this->isShuttingDownOrDisconnected()) { return; }
 
             // avoid infinite recursion in case this function is called due to a message caused by this very function
             static bool isInFunction = false;
@@ -576,7 +576,8 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::displayTextMessage(const Network::CTextMessage &message) const
         {
-            Q_ASSERT(isConnected());
+            // avoid issues during shutdown
+            if (this->isShuttingDownOrDisconnected()) { return; }
 
             QColor color;
             if (message.isServerMessage())          { color = "orchid"; }
@@ -627,8 +628,9 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::updateOwnSimulatorCockpit(const Simulation::CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
-            Q_ASSERT(this->isConnected());
             if (originator == this->identifier()) { return false; }
+            if (this->isShuttingDownOrDisconnected()) { return false; } // could happen during shutdown
+
             auto com1 = CComSystem::getCom1System({ m_xplaneData.com1ActiveKhz, CFrequencyUnit::kHz() }, { m_xplaneData.com1StandbyKhz, CFrequencyUnit::kHz() });
             auto com2 = CComSystem::getCom2System({ m_xplaneData.com2ActiveKhz, CFrequencyUnit::kHz() }, { m_xplaneData.com2StandbyKhz, CFrequencyUnit::kHz() });
             auto xpdr = CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent));
@@ -655,11 +657,11 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::updateOwnSimulatorSelcal(const CSelcal &selcal, const CIdentifier &originator)
         {
-            Q_ASSERT(this->isConnected());
             if (originator == this->identifier()) { return false; }
-            Q_UNUSED(selcal)
+            if (this->isShuttingDownOrDisconnected()) { return false; } // could happen during shutdown
 
             //! \fixme KB 8/2017 use SELCAL??
+            Q_UNUSED(selcal)
             return false;
         }
 
@@ -687,7 +689,7 @@ namespace BlackSimPlugin
             // The list of packages discovered so far.
             QList<Prefix> packages;
 
-            Q_ASSERT(isConnected());
+            Q_ASSERT(this->isConnected());
             const CAircraftModelList models = this->getModelSet();
 
             // Find the CSL packages for all models in the list
@@ -866,7 +868,7 @@ namespace BlackSimPlugin
 
         int CSimulatorXPlane::physicallyRemoveAllRemoteAircraft()
         {
-            if (!this->isConnected()) { return 0; }
+            if (this->isShuttingDownOrDisconnected()) { return 0; }
             m_pendingToBeAddedAircraft.clear();
             m_addingInProgressAircraft.clear();
             return CSimulatorPluginCommon::physicallyRemoveAllRemoteAircraft();
@@ -887,7 +889,7 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::injectWeatherGrid(const Weather::CWeatherGrid &weatherGrid)
         {
-            Q_ASSERT(isConnected());
+            if (this->isShuttingDownOrDisconnected()) { return; }
             m_weatherProxy->setUseRealWeather(false);
 
             //! TODO: find the closest
@@ -1071,7 +1073,7 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::requestRemoteAircraftDataFromXPlane()
         {
-            if (!isConnected()) { return; }
+            if (this->isShuttingDownOrDisconnected()) { return; }
 
             // It is not required to request all elevations and CGs, but only for aircraft "near ground relevant"
             // - we could use the elevation cache and CG cache to decide if we need to request
@@ -1177,7 +1179,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::sendXSwiftBusSettings()
         {
-            if (!this->isConnected()) { return false; }
+            if (this->isShuttingDownOrDisconnected()) { return false; }
             if (!m_serviceProxy) { return false; }
             CXSwiftBusSettings s = m_xSwiftBusServerSettings.get();
             s.setCurrentUtcTime();
@@ -1191,8 +1193,8 @@ namespace BlackSimPlugin
             ok = false;
             CXSwiftBusSettings s;
 
-            if (!this->isConnected()) { return s; }
-            if (!m_serviceProxy)      { return s; }
+            if (this->isShuttingDownOrDisconnected()) { return s; }
+            if (!m_serviceProxy) { return s; }
 
             const QString json = m_serviceProxy->getSettingsJson();
             s.parseXSwiftBusStringQt(json);
@@ -1227,7 +1229,8 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::updateAirportsInRange()
         {
-            if (this->isConnected()) { m_serviceProxy->updateAirportsInRange(); }
+            if (this->isShuttingDownOrDisconnected()) { return; }
+            m_serviceProxy->updateAirportsInRange();
         }
 
         void CSimulatorXPlane::onRemoteAircraftAdded(const QString &callsign)
