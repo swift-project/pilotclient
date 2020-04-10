@@ -251,12 +251,24 @@ namespace BlackCore
                 mode.setLoginMode(CLoginMode::Observer);
             }
 
-            const QString l = extraLiveryString.isEmpty() ?  ownAircraft.getModel().getSwiftLiveryString() : extraLiveryString;
+            const CSimulatorInfo sim = this->getIContextSimulator() ? this->getIContextSimulator()->getSimulatorPluginInfo().getSimulatorInfo() : CSimulatorInfo();
+            const QString l = extraLiveryString.isEmpty() ?  ownAircraft.getModel().getSwiftLiveryString(sim) : extraLiveryString;
             const QString m = extraModelString.isEmpty()  ?  ownAircraft.getModelString() : extraModelString;
+
+            // FG fix, do not send livery and model ids for FlightGear
+            // https://discordapp.com/channels/539048679160676382/567091362030419981/698124094482415616
+            if (sim.isFG() && extraModelString.isEmpty())
+            {
+                sendModelString = false;
+            }
 
             m_currentMode = mode;
             m_fsdClient->setLoginMode(mode);
             m_fsdClient->setCallsign(ownAircraft.getCallsign());
+
+            // set this BEFORE model string as FG has different handling
+            m_fsdClient->setSimType(sim);
+
             m_fsdClient->setIcaoCodes(ownAircraft);
             m_fsdClient->setLiveryAndModelString(l, sendLivery, m, sendModelString);
             m_fsdClient->setClientName(sApp->swiftVersionChar());
@@ -266,7 +278,7 @@ namespace BlackCore
             QString clientKey;
             if (!getCmdLineClientIdAndKey(clientId, clientKey))
             {
-                clientId = CBuildConfig::vatsimClientId();
+                clientId  = CBuildConfig::vatsimClientId();
                 clientKey = CBuildConfig::vatsimPrivateKey();
             }
 
@@ -274,8 +286,6 @@ namespace BlackCore
             m_fsdClient->setClientCapabilities(Capabilities::AircraftInfo | Capabilities::FastPos | Capabilities::AtcInfo | Capabilities::AircraftConfig);
             m_fsdClient->setServer(server);
 
-            const CSimulatorPluginInfo sim = this->getIContextSimulator() ? this->getIContextSimulator()->getSimulatorPluginInfo() : CSimulatorPluginInfo();
-            m_fsdClient->setSimType(sim);
             m_fsdClient->setPilotRating(PilotRating::Student);
             m_fsdClient->setAtcRating(AtcRating::Observer);
 
@@ -693,8 +703,12 @@ namespace BlackCore
             const ISimulator::SimulatorStatus simStatus = static_cast<ISimulator::SimulatorStatus>(status);
             if (ISimulator::isAnyConnectedStatus(simStatus))
             {
-                const CContextSimulator *sim = this->getRuntime()->getCContextSimulator();
+                const QPointer<CContextSimulator> sim = this->getRuntime()->getCContextSimulator();
                 this->setSimulationEnvironmentProvider(sim ? sim->simulator() : nullptr);
+                const CSimulatorInfo simInfo = sim ? sim->getSimulatorPluginInfo().getSimulatorInfo() : CSimulatorInfo();
+
+                m_simulatorConnected++;
+                m_lastConnectedSim = simInfo;
             }
             else
             {
@@ -803,10 +817,11 @@ namespace BlackCore
             emit this->textMessageSent(message);
         }
 
-        const CSimulatedAircraft CContextNetwork::ownAircraft() const
+        CSimulatedAircraft CContextNetwork::ownAircraft() const
         {
-            Q_ASSERT(this->getRuntime());
-            Q_ASSERT(this->getRuntime()->getCContextOwnAircraft());
+            Q_ASSERT(this->getRuntime()); // must never be null
+
+            if (!this->getRuntime()->getIContextOwnAircraft()) { return {}; }
             return this->getRuntime()->getCContextOwnAircraft()->getOwnAircraft();
         }
 

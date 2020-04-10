@@ -367,7 +367,10 @@ namespace BlackMisc
 
             //! swift livery string (to be sent via network)
             //! \sa parseNetworkLiveryString
-            QString getSwiftLiveryString() const;
+            QString getSwiftLiveryString(bool aircraftIcao = true, bool livery = true, bool model = true) const;
+
+            //! swift livery string (to be sent via network) for simulator
+            QString getSwiftLiveryString(const CSimulatorInfo &sim) const;
 
             //! Update missing parts from another model
             void updateMissingParts(const CAircraftModel &otherModel, bool dbModelPriority = true);

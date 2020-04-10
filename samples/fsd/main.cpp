@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     CServer server("fsd.swift-project.org", 6809, user);
     server.setServerType(CServer::FSDServerVatsim);
     client.setServer(server);
-    client.setSimType(SimType::XPLANE10);
+    client.setSimType(CSimulatorInfo::xplane());
     client.setPilotRating(PilotRating::Student);
     client.printToConsole(true);
 

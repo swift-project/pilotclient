@@ -143,7 +143,7 @@ namespace BlackFsdTest
         client->setLoginMode(BlackMisc::Network::CLoginMode::Pilot);
         client->setServer(server);
         client->setPilotRating(PilotRating::Student);
-        client->setSimType(SimType::XPLANE10);
+        client->setSimType(CSimulatorInfo::xplane());
         client->setPilotRating(PilotRating::Student);
         QString key("727d1efd5cb9f8d2c28372469d922bb4");
         client->setClientIdAndKey(0xb9ba, key.toLocal8Bit());

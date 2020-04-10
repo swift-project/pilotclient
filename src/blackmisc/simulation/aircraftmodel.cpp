@@ -586,14 +586,22 @@ namespace BlackMisc
             return (liveryString.length() > liveryStringPrefix().length() && liveryString.startsWith(liveryStringPrefix(), Qt::CaseInsensitive));
         }
 
-        QString CAircraftModel::getSwiftLiveryString() const
+        QString CAircraftModel::getSwiftLiveryString(bool aircraftIcao, bool livery, bool model) const
         {
+            if (!aircraftIcao && !livery && !model) { return QString(); }
             const QString l =
-                (this->getLivery().hasValidDbKey() ? u'l' % this->getLivery().getDbKeyAsString() : QString()) %
-                (this->getAircraftIcaoCode().hasValidDbKey() ? QStringLiteral("a") % this->getAircraftIcaoCode().getDbKeyAsString() : QString()) %
-                (this->hasValidDbKey() ? u'm' % this->getDbKeyAsString() : QString());
+                (livery       && this->getLivery().hasValidDbKey() ? u'l' % this->getLivery().getDbKeyAsString() : QString()) %
+                (aircraftIcao && this->getAircraftIcaoCode().hasValidDbKey() ? QStringLiteral("a") % this->getAircraftIcaoCode().getDbKeyAsString() : QString()) %
+                (model        && this->hasValidDbKey() ? u'm' % this->getDbKeyAsString() : QString());
 
             return l.isEmpty() ? QString() : liveryStringPrefix() % l;
+        }
+
+        QString CAircraftModel::getSwiftLiveryString(const CSimulatorInfo &sim) const
+        {
+            return (sim.isFG()) ?
+                   this->getSwiftLiveryString(true, false, false) :
+                   this->getSwiftLiveryString();
         }
 
         DBTripleIds CAircraftModel::parseNetworkLiveryString(const QString &liveryString)
