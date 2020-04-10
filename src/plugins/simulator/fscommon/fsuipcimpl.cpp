@@ -199,6 +199,7 @@ namespace BlackSimPlugin
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Open not threadsafe");
             if (!this->isOpened()) { return false; }
 
+            if (weatherGrid.isEmpty()) { return false; }
             this->clearAllWeather();
             CGridPoint gridPoint = weatherGrid.front();
 

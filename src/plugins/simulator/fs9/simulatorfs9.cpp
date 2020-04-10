@@ -461,10 +461,15 @@ namespace BlackSimPlugin
             m_fsuipc->setSimulatorTime(h, m);
         }
 
-        void CSimulatorFs9::injectWeatherGrid(const Weather::CWeatherGrid &weatherGrid)
+        void CSimulatorFs9::injectWeatherGrid(const CWeatherGrid &weatherGrid)
         {
             if (!m_useFsuipc || !m_fsuipc) { return; }
             if (!m_fsuipc->isOpened()) { return; }
+            if (weatherGrid.isEmpty())
+            {
+                CLogMessage(this).info(u"Empty FS9 weather grid");
+                return;
+            }
             m_fsuipc->write(weatherGrid);
         }
 
