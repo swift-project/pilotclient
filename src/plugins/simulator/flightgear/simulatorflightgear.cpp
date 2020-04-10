@@ -100,7 +100,7 @@ namespace BlackSimPlugin
             m_watcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
             m_watcher->addWatchedService(fgswiftbusServiceName());
             m_watcher->setObjectName("QDBusServiceWatcher");
-            connect(m_watcher, &QDBusServiceWatcher::serviceUnregistered, this, &CSimulatorFlightgear::serviceUnregistered);
+            connect(m_watcher, &QDBusServiceWatcher::serviceUnregistered, this, &CSimulatorFlightgear::onDBusServiceUnregistered, Qt::QueuedConnection);
 
             m_fastTimer.setObjectName(this->objectName().append(":m_fastTimer"));
             m_slowTimer.setObjectName(this->objectName().append(":m_slowTimer"));
@@ -153,8 +153,8 @@ namespace BlackSimPlugin
 
         bool CSimulatorFlightgear::testSendSituationAndParts(const CCallsign &callsign, const CAircraftSituation &situation, const CAircraftParts &parts)
         {
-            if (!this->isConnected()) { return false; }
-            if (!m_trafficProxy)      { return false; }
+            if (this->isShuttingDownOrDisconnected()) { return false; }
+            if (!m_trafficProxy) { return false; }
             if (!m_flightgearAircraftObjects.contains(callsign)) { return false; }
 
             int u = 0;
@@ -199,7 +199,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFlightgear::fastTimerTimeout()
         {
-            if (this->isConnected())
+            if (!this->isShuttingDownOrDisconnected())
             {
                 m_serviceProxy->getOwnAircraftSituationData(&m_flightgearData);
                 m_serviceProxy->getCom1ActiveKhzAsync(&m_flightgearData.com1ActiveKhz);
@@ -254,7 +254,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFlightgear::slowTimerTimeout()
         {
-            if (isConnected())
+            if (!this->isShuttingDownOrDisconnected())
             {
                 m_serviceProxy->getAircraftModelPathAsync(&m_flightgearData.aircraftModelPath); // this is NOT the model string
                 m_serviceProxy->getAircraftIcaoCodeAsync(&m_flightgearData.aircraftIcaoCode);
@@ -336,8 +336,8 @@ namespace BlackSimPlugin
             m_serviceProxy = new CFGSwiftBusServiceProxy(m_dBusConnection, this);
             m_trafficProxy = new CFGSwiftBusTrafficProxy(m_dBusConnection, this);
 
-            bool s = m_dBusConnection.connect(QString(), DBUS_PATH_LOCAL, DBUS_INTERFACE_LOCAL,
-                                              "Disconnected", this, SLOT(serviceUnregistered()));
+            const bool s = m_dBusConnection.connect(QString(), DBUS_PATH_LOCAL, DBUS_INTERFACE_LOCAL,
+                                                    "Disconnected", this, SLOT(onDBusServiceUnregistered()));
             Q_ASSERT(s);
             if (!m_serviceProxy->isValid() || !m_trafficProxy->isValid())
             {
@@ -374,8 +374,11 @@ namespace BlackSimPlugin
             return true;
         }
 
-        void CSimulatorFlightgear::serviceUnregistered()
+        void CSimulatorFlightgear::onDBusServiceUnregistered()
         {
+            if (!m_serviceProxy) { return; }
+            CLogMessage(this).info(u"FG DBus service unregistered");
+
             if (m_dbusMode == P2P) { m_dBusConnection.disconnectFromPeer(m_dBusConnection.name()); }
             m_dBusConnection = QDBusConnection { "default" };
             if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
@@ -399,7 +402,7 @@ namespace BlackSimPlugin
         void CSimulatorFlightgear::displayStatusMessage(const CStatusMessage &message) const
         {
             // No assert here as status message may come because of network problems
-            if (!isConnected()) { return; }
+            if (this->isShuttingDownOrDisconnected()) { return; }
 
             // avoid infinite recursion in case this function is called due to a message caused by this very function
             static bool isInFunction = false;
@@ -412,8 +415,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFlightgear::displayTextMessage(const Network::CTextMessage &message) const
         {
-            Q_ASSERT(isConnected());
-
+            if (this->isShuttingDownOrDisconnected()) { return; }
             m_serviceProxy->addTextMessage(message.getSenderCallsign().toQString() + ": " + message.getMessage());
         }
 
@@ -442,7 +444,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFlightgear::setTimeSynchronization(bool enable, const PhysicalQuantities::CTime &offset)
         {
-            Q_UNUSED(offset);
+            Q_UNUSED(offset)
             if (enable)
             {
                 CLogMessage(this).info(u"Flightgear provides real time synchronization, use this one");
@@ -457,8 +459,9 @@ namespace BlackSimPlugin
 
         bool CSimulatorFlightgear::updateOwnSimulatorCockpit(const Simulation::CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
-            Q_ASSERT(this->isConnected());
-            if (originator == this->identifier()) { return false; }
+            if (originator == this->identifier())     { return false; }
+            if (this->isShuttingDownOrDisconnected()) { return false; }
+
             auto com1 = CComSystem::getCom1System({ m_flightgearData.com1ActiveKhz, CFrequencyUnit::kHz() }, { m_flightgearData.com1StandbyKhz, CFrequencyUnit::kHz() });
             auto com2 = CComSystem::getCom2System({ m_flightgearData.com2ActiveKhz, CFrequencyUnit::kHz() }, { m_flightgearData.com2StandbyKhz, CFrequencyUnit::kHz() });
             auto xpdr = CTransponder::getStandardTransponder(m_flightgearData.xpdrCode, xpdrMode(m_flightgearData.xpdrMode, m_flightgearData.xpdrIdent));
@@ -485,17 +488,19 @@ namespace BlackSimPlugin
 
         bool CSimulatorFlightgear::updateOwnSimulatorSelcal(const CSelcal &selcal, const CIdentifier &originator)
         {
-            Q_ASSERT(this->isConnected());
             if (originator == this->identifier()) { return false; }
-            Q_UNUSED(selcal);
+            if (this->isShuttingDownOrDisconnected()) { return false; }
 
             //! \fixme KB 8/2017 use SELCAL??
+            Q_UNUSED(selcal)
+
             return false;
         }
 
         bool CSimulatorFlightgear::physicallyAddRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
         {
-            Q_ASSERT(isConnected());
+            if (this->isShuttingDownOrDisconnected()) { return false; }
+
             // entry checks
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
             Q_ASSERT_X(!newRemoteAircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "empty callsign");
@@ -539,7 +544,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFlightgear::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
-            Q_ASSERT(isConnected());
+            if (this->isShuttingDownOrDisconnected()) { return false; }
 
             // only remove from sim
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thread");
@@ -688,7 +693,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFlightgear::requestRemoteAircraftDataFromFlightgear()
         {
-            if (!isConnected()) { return; }
+            if (this->isShuttingDownOrDisconnected()) { return; }
 
             // It is not required to request all elevations and CGs, but only for aircraft "near ground relevant"
             // - we could use the elevation cache and CG cache to decide if we need to request
