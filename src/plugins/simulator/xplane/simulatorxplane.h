@@ -167,7 +167,8 @@ namespace BlackSimPlugin
             //! @}
 
         private slots:
-            void serviceUnregistered();
+            //! Unregister
+            void onDBusServiceUnregistered();
 
         private:
             //! Mode
@@ -241,7 +242,7 @@ namespace BlackSimPlugin
             void setMinTerrainProbeDistance(const BlackMisc::PhysicalQuantities::CLength &distance);
 
             //! Handle a probe value
-            bool handleProbeValue(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign, const QString &hint, bool ignoreOutsideRange);
+            bool handleProbeValue(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign, bool waterFlag, const QString &hint, bool ignoreOutsideRange);
 
             static bool isSuspiciousTerrainValue(const BlackMisc::Geo::CElevationPlane &elevation);
             static const BlackMisc::PhysicalQuantities::CLength &maxTerrainRequestDistance();
