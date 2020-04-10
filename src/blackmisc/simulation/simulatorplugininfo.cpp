@@ -43,7 +43,10 @@ namespace BlackMisc
             // set info if it wasn't set already
             if (m_info.isNoSimulator() && !m_simulator.isEmpty())
             {
-                m_info = CSimulatorInfo(m_simulator);
+                if (!this->isEmulatedPlugin())
+                {
+                    m_info = CSimulatorInfo(m_simulator);
+                }
             }
         }
 

@@ -101,14 +101,14 @@ namespace BlackCore
             void setClientIdAndKey(quint16 id, const QByteArray &key);
             void setClientCapabilities(Capabilities capabilities) { QWriteLocker l(&m_lockUserClientBuffered); m_capabilities = capabilities; }
             void setServer(const BlackMisc::Network::CServer &server);
-            void setSimulatorInfo(const BlackMisc::Simulation::CSimulatorPluginInfo &simInfo);
             void setLoginMode(const BlackMisc::Network::CLoginMode &mode) { QWriteLocker l(&m_lockUserClientBuffered); m_loginMode = mode; }
             void setCallsign(const BlackMisc::Aviation::CCallsign &callsign);
             void setPartnerCallsign(const BlackMisc::Aviation::CCallsign &callsign) { QWriteLocker l(&m_lockUserClientBuffered); m_partnerCallsign = callsign; }
             void setIcaoCodes(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
             void setLiveryAndModelString(const QString &livery, bool sendLiveryString, const QString &modelString, bool sendModelString);
-            void setSimType(SimType type) { QWriteLocker l(&m_lockUserClientBuffered); m_simType = type; }
             void setSimType(const BlackMisc::Simulation::CSimulatorPluginInfo &simInfo);
+            void setSimType(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
+            void setSimType(const BlackMisc::Simulation::CSimulatorInfo::Simulator simulator);
             void setPilotRating(PilotRating rating) { QWriteLocker l(&m_lockUserClientBuffered); m_pilotRating = rating; }
             void setAtcRating(AtcRating rating)     { QWriteLocker l(&m_lockUserClientBuffered); m_atcRating = rating; }
             //! @}
@@ -301,6 +301,12 @@ namespace BlackCore
                 return noms;
             }
 
+            //! Model string as configured, also dependent from simulator
+            QString getConfiguredModelString(const BlackMisc::Simulation::CSimulatedAircraft &myAircraft) const;
+
+            //! Livery string, also dependent from simulator
+            QString getConfiguredLiveryString(const BlackMisc::Simulation::CSimulatedAircraft &myAircraft) const;
+
             //! JSON packets
             struct JsonPackets
             {
@@ -474,12 +480,12 @@ namespace BlackCore
             std::atomic_bool m_filterPasswordFromLogin { false };
 
             // timer parents are needed as we move to thread
-            QTimer m_scheduledConfigUpdate { this };  //!< config updates
-            QTimer m_positionUpdateTimer   { this };  //!< sending positions
+            QTimer m_scheduledConfigUpdate      { this }; //!< config updates
+            QTimer m_positionUpdateTimer        { this }; //!< sending positions
             QTimer m_interimPositionUpdateTimer { this }; //!< sending interim positions
             QTimer m_fsdSendMessageTimer        { this }; //!< FSD message sending
 
-            qint64 m_additionalOffsetTime = 0;   //!< additional offset time
+            qint64 m_additionalOffsetTime = 0; //!< additional offset time
 
             std::atomic_bool m_statistics { false };
             QMap <QString, int> m_callStatistics;          //!< how many calls?
@@ -493,6 +499,7 @@ namespace BlackCore
             SimType      m_simType      = SimType::Unknown;
             PilotRating  m_pilotRating  = PilotRating::Unknown;
             AtcRating    m_atcRating    = AtcRating::Unknown;
+            BlackMisc::Simulation::CSimulatorInfo m_simTypeInfo; // same as m_simType
 
             // Client data
             QString m_clientName;
@@ -504,7 +511,6 @@ namespace BlackCore
             Capabilities m_capabilities = Capabilities::None;
 
             // buffered data for FSD
-            BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorInfo;        //!< used simulator
             BlackMisc::Aviation::CCallsign              m_ownCallsign;          //!< "buffered callsign", as this must not change when connected
             BlackMisc::Aviation::CCallsign              m_partnerCallsign;      //!< "buffered"callsign", of partner flying in shared cockpit
             BlackMisc::Aviation::CAircraftIcaoCode      m_ownAircraftIcaoCode;  //!< "buffered icao", as this must not change when connected
@@ -512,7 +518,7 @@ namespace BlackCore
             QString                                     m_ownLivery;            //!< "buffered livery", as this must not change when connected
             QString                                     m_ownModelString;       //!< "buffered model string", as this must not change when connected
             std::atomic_bool m_sendLiveryString { true };
-            std::atomic_bool m_sendMModelString { true };
+            std::atomic_bool m_sendModelString  { true };
 
             mutable QReadWriteLock m_lockUserClientBuffered { QReadWriteLock::Recursive }; //!< for user, client and buffered data
             QString getOwnCallsignAsString() const { QReadLocker l(&m_lockUserClientBuffered); return m_ownCallsign.asString(); }

@@ -304,6 +304,8 @@ namespace BlackCore
             QTimer            *m_requestAircraftDataTimer = nullptr;  //!< general updates such as frequencies, see requestAircraftDataUpdates()
             QTimer            *m_requestAtisTimer         = nullptr;  //!< general updates such as ATIS
             QTimer            *m_staggeredMatchingTimer   = nullptr;  //!< staggered update
+            int                m_simulatorConnected = 0;              //!< how often a simulator has been connected
+            BlackMisc::Simulation::CSimulatorInfo m_lastConnectedSim; //!< last connected sim.
 
             // Digest signals, only sending after some time
             BlackMisc::CDigestSignal m_dsAtcStationsBookedChanged { this, &IContextNetwork::changedAtcStationsBooked, &IContextNetwork::changedAtcStationsBookedDigest, 1000, 2 };
@@ -313,7 +315,7 @@ namespace BlackCore
             QQueue<BlackMisc::Simulation::CSimulatedAircraft> m_readyForModelMatching;  //!< ready for matching
 
             //! Own aircraft from \sa CContextOwnAircraft
-            const BlackMisc::Simulation::CSimulatedAircraft ownAircraft() const;
+            BlackMisc::Simulation::CSimulatedAircraft ownAircraft() const;
 
             //! Check if a callsign is a valid partner callsign
             bool isValidPartnerCallsign(const BlackMisc::Aviation::CCallsign &ownCallsign, const BlackMisc::Aviation::CCallsign &partnerCallsign);

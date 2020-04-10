@@ -151,14 +151,6 @@ namespace BlackCore
             m_fsdTextCodec     = textCodec;
         }
 
-        void CFSDClient::setSimulatorInfo(const CSimulatorPluginInfo &simInfo)
-        {
-            Q_ASSERT_X(this->getConnectionStatus().isDisconnected(), Q_FUNC_INFO, "Can't change server details while still connected");
-
-            QWriteLocker l(&m_lockUserClientBuffered);
-            m_simulatorInfo = simInfo;
-        }
-
         void CFSDClient::setCallsign(const CCallsign &callsign)
         {
             Q_ASSERT_X(this->getConnectionStatus().isDisconnected(), Q_FUNC_INFO, "Can't change callsign while still connected");
@@ -176,10 +168,13 @@ namespace BlackCore
             QWriteLocker l(&m_lockUserClientBuffered);
             m_ownAircraftIcaoCode = ownAircraft.getAircraftIcaoCode();
             m_ownAirlineIcaoCode  = ownAircraft.getAirlineIcaoCode();
-            m_ownLivery           = ownAircraft.getModel().getSwiftLiveryString();
+
+            /* use setLiveryAndModelString
+            m_ownLivery           = ownAircraft.getModel().getSwiftLiveryString(m_simTypeInfo);
             m_ownModelString      = ownAircraft.getModelString();
             m_sendLiveryString    = true;
-            m_sendMModelString    = true;
+            m_sendModelString     = true;
+            */
         }
 
         void CFSDClient::setLiveryAndModelString(const QString &livery, bool sendLiveryString, const QString &modelString, bool sendModelString)
@@ -188,16 +183,18 @@ namespace BlackCore
             m_ownLivery        = livery;
             m_ownModelString   = modelString;
             m_sendLiveryString = sendLiveryString;
-            m_sendMModelString = sendModelString;
+            m_sendModelString  = sendModelString;
         }
 
-        void CFSDClient::setSimType(const CSimulatorPluginInfo &simInfo)
+        void CFSDClient::setSimType(const CSimulatorInfo &simInfo)
         {
-            //! \fixme Define recognized simulators somewhere */
-            const CSimulatorInfo::Simulator sim = simInfo.getSimulatorInfo().getSimulator();
+            this->setSimType(simInfo.getSimulator());
+        }
 
+        void CFSDClient::setSimType(const CSimulatorInfo::Simulator simulator)
+        {
             QWriteLocker l(&m_lockUserClientBuffered);
-            switch (sim)
+            switch (simulator)
             {
             case CSimulatorInfo::FSX:    m_simType = SimType::MSFSX;       break;
             case CSimulatorInfo::P3D:    m_simType = SimType::P3Dv4;       break;
@@ -206,6 +203,7 @@ namespace BlackCore
             case CSimulatorInfo::XPLANE: m_simType = SimType::XPLANE11;    break;
             default:                     m_simType = SimType::Unknown;     break;
             }
+            m_simTypeInfo = CSimulatorInfo(simulator);
         }
 
         QStringList CFSDClient::getPresetValues() const
@@ -284,11 +282,13 @@ namespace BlackCore
             {
                 const AddPilot pilotLogin(callsign, cid, password, m_pilotRating, m_protocolRevision, m_simType, name);
                 sendQueudedMessage(pilotLogin);
+                CStatusMessage(this).info(u"Sending login as '%1' '%2' '%3' '%4' '%5' '%6'") << callsign << cid << toQString(m_pilotRating) << m_protocolRevision << toQString(m_simType) << name;
             }
             else if (m_loginMode.isObserver())
             {
                 const AddAtc addAtc(callsign, name, cid, password, m_atcRating, m_protocolRevision);
                 sendQueudedMessage(addAtc);
+                CStatusMessage(this).info(u"Sending OBS login as '%1' '%2' '%3' '%4' '%5'") << callsign << cid << toQString(m_atcRating) << m_protocolRevision << name;
             }
         }
 
@@ -627,18 +627,12 @@ namespace BlackCore
             if (!connected) { return; }
 
             const CSimulatedAircraft myAircraft(getOwnAircraft());
-            QString modelString;
-            {
-                QReadLocker l(&m_lockUserClientBuffered);
-                modelString = m_ownModelString.isEmpty() ? myAircraft.getModelString() : m_ownModelString;
-            }
-            if (modelString.isEmpty()) { modelString = noModelString(); }
-
+            const QString modelString = this->getConfiguredModelString(myAircraft);
             const PlaneInfoRequestFsinn planeInfoRequestFsinn(getOwnCallsignAsString(), callsign.toQString(),
                     myAircraft.getAirlineIcaoCodeDesignator(),
                     myAircraft.getAircraftIcaoCodeDesignator(),
                     myAircraft.getAircraftIcaoCombinedType(),
-                    m_sendMModelString ? modelString : QString());
+                    modelString);
             sendQueudedMessage(planeInfoRequestFsinn);
             increaseStatisticsValue(QStringLiteral("sendPlaneInfoRequestFsinn"));
         }
@@ -654,13 +648,12 @@ namespace BlackCore
         {
             if (this->getConnectionStatus().isDisconnected() && ! m_unitTestMode) { return; }
             const CSimulatedAircraft myAircraft(getOwnAircraft());
-            QString modelString = m_ownModelString.isEmpty() ? myAircraft.getModelString() : m_ownModelString;
-            if (modelString.isEmpty()) { modelString = noModelString(); }
+            const QString modelString = this->getConfiguredModelString(myAircraft);
             const PlaneInformationFsinn planeInformationFsinn(getOwnCallsignAsString(), callsign.toQString(),
                     myAircraft.getAirlineIcaoCodeDesignator(),
                     myAircraft.getAircraftIcaoCodeDesignator(),
                     myAircraft.getAircraftIcaoCombinedType(),
-                    m_sendMModelString ? modelString : QString());
+                    modelString);
             sendQueudedMessage(planeInformationFsinn);
             increaseStatisticsValue(QStringLiteral("sendPlaneInformationFsinn"));
         }
@@ -716,6 +709,22 @@ namespace BlackCore
         {
             // UNIT tests
             parseMessage(message);
+        }
+
+        QString CFSDClient::getConfiguredModelString(const CSimulatedAircraft &myAircraft) const
+        {
+            if (!m_sendModelString) { return noModelString(); }
+            QReadLocker l(&m_lockUserClientBuffered);
+            const QString ms = m_ownModelString.isEmpty() ? myAircraft.getModelString() : m_ownModelString;
+            return ms.isEmpty() ? noModelString() : ms;
+        }
+
+        QString CFSDClient::getConfiguredLiveryString(const CSimulatedAircraft &myAircraft) const
+        {
+            if (!m_sendLiveryString) { return QString(); }
+            QReadLocker l(&m_lockUserClientBuffered);
+            const QString livery = m_ownLivery.isEmpty() ? myAircraft.getModel().getSwiftLiveryString() : m_ownLivery;
+            return livery;
         }
 
         void CFSDClient::sendAuthChallenge(const QString &challenge)
@@ -1348,10 +1357,11 @@ namespace BlackCore
             {
                 PlaneInfoRequest planeInfoRequest = PlaneInfoRequest::fromTokens(tokens);
 
-                const QString airlineIcao = m_server.getFsdSetup().force3LetterAirlineCodes() ? getOwnAircraft().getAirlineIcaoCode().getDesignator()
-                                            : getOwnAircraft().getAirlineIcaoCode().getVDesignator();
-                const QString acTypeICAO    = getOwnAircraft().getAircraftIcaoCode().getDesignator();
-                const QString livery        = getOwnAircraft().getModel().getSwiftLiveryString();
+                const CSimulatedAircraft myAircraft = this->getOwnAircraft();
+                const QString airlineIcao = m_server.getFsdSetup().force3LetterAirlineCodes() ? myAircraft.getAirlineIcaoCode().getDesignator()
+                                            : myAircraft.getAirlineIcaoCode().getVDesignator();
+                const QString acTypeICAO    = myAircraft.getAircraftIcaoCode().getDesignator();
+                const QString livery        = this->getConfiguredLiveryString(myAircraft);
 
                 sendPlaneInformation(planeInfoRequest.sender(), acTypeICAO, airlineIcao, livery);
             }
