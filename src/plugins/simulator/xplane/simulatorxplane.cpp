@@ -105,7 +105,7 @@ namespace BlackSimPlugin
             m_watcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
             m_watcher->addWatchedService(xswiftbusServiceName());
             m_watcher->setObjectName("QDBusServiceWatcher");
-            connect(m_watcher, &QDBusServiceWatcher::serviceUnregistered, this, &CSimulatorXPlane::serviceUnregistered);
+            connect(m_watcher, &QDBusServiceWatcher::serviceUnregistered, this, &CSimulatorXPlane::onDBusServiceUnregistered, Qt::QueuedConnection);
 
             m_fastTimer.setObjectName(this->objectName().append(":m_fastTimer"));
             m_slowTimer.setObjectName(this->objectName().append(":m_slowTimer"));
@@ -182,7 +182,7 @@ namespace BlackSimPlugin
             return u > 0;
         }
 
-        bool CSimulatorXPlane::handleProbeValue(const CElevationPlane &plane, const CCallsign &callsign, const QString &hint, bool ignoreOutsideRange)
+        bool CSimulatorXPlane::handleProbeValue(const CElevationPlane &plane, const CCallsign &callsign, bool waterFlag, const QString &hint, bool ignoreOutsideRange)
         {
             // XPlane specific checks for T778
             // https://discordapp.com/channels/539048679160676382/577213275184562176/696780159969132626
@@ -201,12 +201,13 @@ namespace BlackSimPlugin
                     // of course this can be wrong, but in that case we would geth those values
                     // once we get inside range
                     this->setMinTerrainProbeDistance(distance);
-                    CLogMessage(this).debug(u"Suspicous XPlane probe [%1] value %2 for '%3' ignored, distance: %4 min.disance: %5")
+                    CLogMessage(this).debug(u"Suspicous XPlane probe [%1] value %2 for '%3' ignored, distance: %4 min.disance: %5 water: %6")
                             << hint
                             << plane.getAltitude().valueRoundedAsString(CLengthUnit::m(), 4)
                             << callsign.asString()
                             << distance.valueRoundedAsString(CLengthUnit::NM(), 2)
-                            << m_minSuspicousTerrainProbe.valueRoundedAsString(CLengthUnit::NM(), 2);
+                            << m_minSuspicousTerrainProbe.valueRoundedAsString(CLengthUnit::NM(), 2)
+                            << boolToYesNo(waterFlag);
                     return false;
                 }
             }
@@ -216,7 +217,7 @@ namespace BlackSimPlugin
         void CSimulatorXPlane::callbackReceivedRequestedElevation(const CElevationPlane &plane, const CCallsign &callsign, bool isWater)
         {
             static const QString hint("probe callback");
-            if (!this->handleProbeValue(plane, callsign, hint, false))
+            if (!this->handleProbeValue(plane, callsign, isWater, hint, false))
             {
                 this->removePendingElevationRequest(callsign);
                 return;
@@ -474,8 +475,9 @@ namespace BlackSimPlugin
             m_trafficProxy = new CXSwiftBusTrafficProxy(m_dBusConnection, this);
             m_weatherProxy = new CXSwiftBusWeatherProxy(m_dBusConnection, this);
 
+            // hook up disconnected slot of connection
             bool s = m_dBusConnection.connect(QString(), DBUS_PATH_LOCAL, DBUS_INTERFACE_LOCAL,
-                                              "Disconnected", this, SLOT(serviceUnregistered()));
+                                              "Disconnected", this, SLOT(onDBusServiceUnregistered()));
             Q_ASSERT(s);
             if (!m_serviceProxy->isValid() || !m_trafficProxy->isValid() || !m_weatherProxy->isValid())
             {
@@ -527,8 +529,11 @@ namespace BlackSimPlugin
             return true;
         }
 
-        void CSimulatorXPlane::serviceUnregistered()
+        void CSimulatorXPlane::onDBusServiceUnregistered()
         {
+            if (!m_serviceProxy) { return; }
+            CLogMessage(this).info(u"XPlane xSwiftBus service unregistered");
+
             if (m_dbusMode == P2P) { m_dBusConnection.disconnectFromPeer(m_dBusConnection.name()); }
             m_dBusConnection = QDBusConnection { "default" };
             if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
@@ -1057,7 +1062,7 @@ namespace BlackSimPlugin
             {
                 if (CBuildConfig::isLocalDeveloperDebugBuild())
                 {
-                    Q_ASSERT_X(planesPositions.hasSameSizes(), Q_FUNC_INFO, "Mismatching sizes");
+                    BLACK_VERIFY_X(planesPositions.hasSameSizes(), Q_FUNC_INFO, "Mismatching sizes");
                 }
                 m_trafficProxy->setPlanesPositions(planesPositions);
             }
@@ -1090,7 +1095,7 @@ namespace BlackSimPlugin
             if (!m_trafficProxy || this->isShuttingDown()) { return; }
             const QStringList csStrings = callsigns.getCallsignStrings();
             QPointer<CSimulatorXPlane> myself(this);
-            m_trafficProxy->getRemoteAircraftData(csStrings, [ = ](const QStringList & callsigns, const QDoubleList & latitudesDeg, const QDoubleList & longitudesDeg, const QDoubleList & elevationsMeters, const QBoolList &waterFlags, const QDoubleList & verticalOffsetsMeters)
+            m_trafficProxy->getRemoteAircraftData(csStrings, [ = ](const QStringList & callsigns, const QDoubleList & latitudesDeg, const QDoubleList & longitudesDeg, const QDoubleList & elevationsMeters, const QBoolList & waterFlags, const QDoubleList & verticalOffsetsMeters)
             {
                 if (!myself) { return; }
                 this->updateRemoteAircraftFromSimulator(callsigns, latitudesDeg, longitudesDeg, elevationsMeters, waterFlags, verticalOffsetsMeters);
@@ -1109,8 +1114,8 @@ namespace BlackSimPlugin
         }
 
         void CSimulatorXPlane::updateRemoteAircraftFromSimulator(
-            const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
-            const QDoubleList &elevationsMeters, const QBoolList &waterFlags, const QDoubleList &verticalOffsetsMeters)
+            const QStringList &callsigns,        const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
+            const QDoubleList &elevationsMeters, const QBoolList &waterFlags,     const QDoubleList &verticalOffsetsMeters)
         {
             const int size = callsigns.size();
 
@@ -1153,9 +1158,9 @@ namespace BlackSimPlugin
                 // if we knew "on ground" here we could set it as parameter of rememberElevationAndSimulatorCG
                 // this->rememberElevationAndSimulatorCG(cs, xpAircraft.getAircraftModel(), false, elevation, cg);
                 // with T778 we do NOT use this function for elevation here if "isSuspicious"
-                const bool useElevation = this->handleProbeValue(elevation, cs, hint, true);
+                const bool waterFlag    = waterFlags[i];
+                const bool useElevation = this->handleProbeValue(elevation, cs, waterFlag, hint, true);
                 this->rememberElevationAndSimulatorCG(cs, xpAircraft.getAircraftModel(), false, useElevation ? elevation : CElevationPlane::null(), cg);
-                Q_UNUSED(waterFlags)
 
                 // loopback
                 if (logCallsigns.contains(cs))
