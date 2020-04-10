@@ -49,8 +49,8 @@ namespace BlackSimPlugin
 
         MPPositionVelocity aircraftSituationToFS9(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, double updateInterval)
         {
-            Q_UNUSED(oldSituation);
-            Q_UNUSED(updateInterval);
+            Q_UNUSED(oldSituation)
+            Q_UNUSED(updateInterval)
             MPPositionVelocity positionVelocity;
 
             // Latitude - integer and decimal places

@@ -167,7 +167,7 @@ namespace BlackSimPlugin
             DWORD dwResult = 0;
             bool ok =
                 FSUIPC_Write(0x034e, 2, &com1ActiveRaw,  &dwResult) &&
-                FSUIPC_Write(0x3118, 2, &com2ActiveRaw, &dwResult) &&
+                FSUIPC_Write(0x3118, 2, &com2ActiveRaw,  &dwResult) &&
                 FSUIPC_Write(0x311a, 2, &com1StandbyRaw, &dwResult) &&
                 FSUIPC_Write(0x311c, 2, &com2StandbyRaw, &dwResult) &&
                 FSUIPC_Write(0x0354, 2, &transponderCodeRaw, &dwResult);
