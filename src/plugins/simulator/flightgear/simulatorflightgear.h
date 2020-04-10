@@ -155,7 +155,8 @@ namespace BlackSimPlugin
             //! @}
 
         private slots:
-            void serviceUnregistered();
+            //! Unregister
+            void onDBusServiceUnregistered();
 
         private:
             enum DBusMode
