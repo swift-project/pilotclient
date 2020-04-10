@@ -311,7 +311,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFs9::timerEvent(QTimerEvent *event)
         {
-            Q_UNUSED(event);
+            Q_UNUSED(event)
             dispatch();
         }
 
