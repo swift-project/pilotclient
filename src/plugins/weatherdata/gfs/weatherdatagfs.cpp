@@ -214,7 +214,7 @@ namespace BlackWxPlugin
 
             m_gribData = nwReply->readAll();
             Q_ASSERT_X(!m_parseGribFileWorker, Q_FUNC_INFO, "Worker already running");
-            m_parseGribFileWorker = BlackMisc::CWorker::fromTask(this, "parseGribFile", [this]()
+            m_parseGribFileWorker = CWorker::fromTask(this, "parseGribFile", [this]()
             {
                 parseGfsFileImpl(m_gribData);
             });
@@ -286,8 +286,8 @@ namespace BlackWxPlugin
             if (forecast == 0) { forecast = 1; }
 
             const QString filename = u"gfs." % QStringLiteral("t%1z").arg(hourLastPublishedCycle, 2, 10, QLatin1Char('0'))
-                                             % u".pgrb2.0p25."
-                                             % QStringLiteral("f%2").arg(forecast, 3, 10, QLatin1Char('0'));
+                                     % u".pgrb2.0p25."
+                                     % QStringLiteral("f%2").arg(forecast, 3, 10, QLatin1Char('0'));
             const QString directory = u"/gfs." % cnow.toString("yyyyMMdd") % u"/" % QStringLiteral("%1").arg(hourLastPublishedCycle, 2, 10, QLatin1Char('0'));
 
             downloadUrl.appendQuery("file", filename);
@@ -404,7 +404,7 @@ namespace BlackWxPlugin
                     double topLevelFt = calculateAltitudeFt(gfsGridPoint.pressureAtMsl, gfsCloudLayer.topLevelPressure, gfsCloudLayer.topLevelTemperature);
                     cloudLayer.setBase(CAltitude(bottomLevelFt, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
                     cloudLayer.setTop(CAltitude(topLevelFt, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
-                    cloudLayer.setCoveragePercent(gfsCloudLayer.totalCoverage);
+                    cloudLayer.setCoveragePercent(qRound(gfsCloudLayer.totalCoverage));
                     if (gfsGridPoint.surfaceSnow > 0.0) { cloudLayer.setPrecipitation(CCloudLayer::Snow); }
                     if (gfsGridPoint.surfaceRain > 0.0) { cloudLayer.setPrecipitation(CCloudLayer::Rain); }
 
@@ -420,7 +420,7 @@ namespace BlackWxPlugin
                 CLatitude latitude(gfsGridPoint.latitude, CAngleUnit::deg());
                 CLongitude longitude(gfsGridPoint.longitude, CAngleUnit::deg());
                 auto position = CCoordinateGeodetic { latitude, longitude };
-                CGridPoint gridPoint({}, position, cloudLayers, temperatureLayers, {}, windLayers, pressureAtMsl);
+                const CGridPoint gridPoint({}, position, cloudLayers, temperatureLayers, {}, windLayers, pressureAtMsl);
                 m_weatherGrid.push_back(gridPoint);
             }
         }
@@ -474,12 +474,12 @@ namespace BlackWxPlugin
             int nx = gfld->igdtmpl[7];
             int ny = gfld->igdtmpl[8];
             float units = 0.000001f;
-            float latitude1 = gfld->igdtmpl[11] * units;
+            float latitude1  = gfld->igdtmpl[11] * units;
             float longitude1 = gfld->igdtmpl[12] * units;
             int nres = gfld->igdtmpl[13];
-            float latitude2 = gfld->igdtmpl[14] * units;
+            float latitude2  = gfld->igdtmpl[14] * units;
             float longitude2 = gfld->igdtmpl[15] * units;
-            float dlatitude = gfld->igdtmpl[16] * units;
+            float dlatitude  = gfld->igdtmpl[16] * units;
             float dlongitude = gfld->igdtmpl[17] * units;
 
             if (latitude1 < -90.0f || latitude2 < -90.0f || latitude1 > 90.0f || latitude2 > 90.0f)
@@ -568,9 +568,9 @@ namespace BlackWxPlugin
                         gridPoint.latitude = latitude1 - iy * dy;
                         gridPoint.longitude = longitude1 + ix * dx;
                         if (gridPoint.longitude >= 360.0f) { gridPoint.longitude -= 360.0f; }
-                        if (gridPoint.longitude < 0.0f) { gridPoint.longitude += 360.0f; }
+                        if (gridPoint.longitude  <   0.0f) { gridPoint.longitude += 360.0f; }
                         gridPoint.fieldPosition = ix + i;
-                        CCoordinateGeodetic gridPointPosition(gridPoint.latitude, gridPoint.longitude, 0);
+                        const CCoordinateGeodetic gridPointPosition(gridPoint.latitude, gridPoint.longitude, 0);
                         if (m_maxRange == CLength())
                         {
                             m_gfsWeatherGrid.append(gridPoint);
@@ -579,8 +579,8 @@ namespace BlackWxPlugin
                         {
                             for (const CGridPoint &fixedGridPoint : as_const(m_grid))
                             {
-                                auto distance = calculateGreatCircleDistance(gridPointPosition, fixedGridPoint.getPosition()).value(CLengthUnit::m());
-                                auto maxRange = m_maxRange.value(CLengthUnit::m());
+                                const auto distance = calculateGreatCircleDistance(gridPointPosition, fixedGridPoint.getPosition()).value(CLengthUnit::m());
+                                const auto maxRange = m_maxRange.value(CLengthUnit::m());
                                 if (distance < maxRange)
                                 {
                                     m_gfsWeatherGrid.append(gridPoint);
@@ -588,9 +588,9 @@ namespace BlackWxPlugin
                                 }
                             }
                         }
-                    }
-                }
-            }
+                    } // for
+                } // for
+            } // if
         }
 
         void CWeatherDataGfs::handleProductDefinitionTemplate40(const gribfield *gfld)
