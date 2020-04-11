@@ -81,7 +81,7 @@ namespace BlackMisc
 
     int IOrderable::comparePropertyByIndex(const CPropertyIndex &index, const IOrderable &compareValue) const
     {
-        Q_UNUSED(index);
+        Q_UNUSED(index)
         static const int max = std::numeric_limits<int>::max();
         const int o1 = this->hasValidOrder() ? this->getOrder() : max;
         const int o2 = compareValue.hasValidOrder() ? compareValue.getOrder() : max;

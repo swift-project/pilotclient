@@ -791,12 +791,12 @@ namespace XSwiftBus
             }
             else if (message.getMethodName() == "getRemoteAircraftData")
             {
-                std::vector<std::string> requestedcallsigns;
+                std::vector<std::string> requestedCallsigns;
                 message.beginArgumentRead();
-                message.getArgument(requestedcallsigns);
+                message.getArgument(requestedCallsigns);
                 queueDBusCall([ = ]()
                 {
-                    std::vector<std::string> callsigns = requestedcallsigns;
+                    std::vector<std::string> callsigns = requestedCallsigns;
                     std::vector<double> latitudesDeg;
                     std::vector<double> longitudesDeg;
                     std::vector<double> elevationsM;
