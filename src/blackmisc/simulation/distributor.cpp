@@ -10,6 +10,7 @@
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/simulation/distributor.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/stringutils.h"
 
 #include <QJsonValue>
 #include <Qt>
@@ -24,13 +25,13 @@ namespace BlackMisc
 
         CDistributor::CDistributor(const QString &key)
         {
-            this->setDbKey(key);
+            this->setDbKey(unifyKeyOrAlias(key));
         }
 
         CDistributor::CDistributor(const QString &id, const QString &description, const QString &alias1, const QString &alias2, const CSimulatorInfo &simulator) :
-            m_description(description), m_alias1(alias1.trimmed().toUpper()), m_alias2(alias2.trimmed().toUpper()), m_simulator(simulator)
+            m_description(description), m_alias1(alias1), m_alias2(alias2), m_simulator(simulator)
         {
-            this->setDbKey(id);
+            this->setDbKey(unifyKeyOrAlias(id));
         }
 
         const QString CDistributor::getIdAndDescription() const
@@ -53,7 +54,7 @@ namespace BlackMisc
         bool CDistributor::matchesKeyOrAlias(const CDistributor &distributor) const
         {
             if (distributor.hasValidDbKey() && this->matchesKeyOrAlias(distributor.getDbKey())) { return true; }
-            if (distributor.hasAlias1() && this->matchesKeyOrAlias(distributor.getAlias1())) { return true; }
+            if (distributor.hasAlias1()     && this->matchesKeyOrAlias(distributor.getAlias1())) { return true; }
             return (distributor.hasAlias2() && this->matchesKeyOrAlias(distributor.getAlias2()));
         }
 
@@ -92,7 +93,7 @@ namespace BlackMisc
             case IndexAlias1: m_alias1 = variant.value<QString>(); break;
             case IndexAlias2: m_alias2 = variant.value<QString>(); break;
             case IndexDescription: m_description = variant.value<QString>(); break;
-            case IndexSimulator: m_simulator.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexSimulator:   m_simulator.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
@@ -108,7 +109,7 @@ namespace BlackMisc
             case IndexAlias1: return m_alias1.compare(compareValue.m_alias1, Qt::CaseInsensitive);
             case IndexAlias2: return m_alias2.compare(compareValue.m_alias2, Qt::CaseInsensitive);
             case IndexDescription: return m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
-            case IndexSimulator: return m_simulator.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_simulator);
+            case IndexSimulator:   return m_simulator.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_simulator);
             default:
                 break;
             }
@@ -118,7 +119,7 @@ namespace BlackMisc
 
         QString CDistributor::convertToQString(bool i18n) const
         {
-            Q_UNUSED(i18n);
+            Q_UNUSED(i18n)
             QString s = QStringLiteral("Id: '%1'").arg(m_dbKey);
             if (this->hasAlias1()) { s.append(" ").append(m_alias1); }
             if (this->hasAlias2()) { s.append(" ").append(m_alias2); }
@@ -235,6 +236,11 @@ namespace BlackMisc
         {
             static const QString k("XCSL");
             return k;
+        }
+
+        QString CDistributor::unifyKeyOrAlias(const QString &value)
+        {
+            return removeChars(value.trimmed().toUpper(), [](QChar c) { return !c.isLetterOrNumber(); });
         }
 
     } // namespace
