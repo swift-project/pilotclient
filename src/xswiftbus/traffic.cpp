@@ -498,6 +498,7 @@ namespace XSwiftBus
         longitudesDeg.clear();
         elevationsM.clear();
         verticalOffsets.clear();
+        waterFlags.clear();
 
         for (const auto &requestedCallsign : requestedCallsigns)
         {
@@ -800,7 +801,7 @@ namespace XSwiftBus
                     std::vector<double> latitudesDeg;
                     std::vector<double> longitudesDeg;
                     std::vector<double> elevationsM;
-                    std::vector<bool> waterFlags;
+                    std::vector<bool>   waterFlags;
                     std::vector<double> verticalOffsets;
                     getRemoteAircraftData(callsigns, latitudesDeg, longitudesDeg, elevationsM, waterFlags, verticalOffsets);
                     CDBusMessage reply = CDBusMessage::createReply(sender, serial);
@@ -809,6 +810,7 @@ namespace XSwiftBus
                     reply.appendArgument(latitudesDeg);
                     reply.appendArgument(longitudesDeg);
                     reply.appendArgument(elevationsM);
+                    reply.appendArgument(waterFlags);
                     reply.appendArgument(verticalOffsets);
                     sendDBusMessage(reply);
                 });

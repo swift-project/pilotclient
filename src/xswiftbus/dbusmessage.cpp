@@ -109,6 +109,24 @@ namespace XSwiftBus
         dbus_message_iter_append_basic(&m_messageIterator, DBUS_TYPE_DOUBLE, &value);
     }
 
+    void CDBusMessage::appendArgument(const std::vector<bool> &array)
+    {
+        // array.data() not existing for bool
+        // changing dbus_message_iter_open_container here affects DBus signature
+        // using int16 creates signature "n", mismatch on swift side
+        // using int32 creates signature "i"
+        // there are also xml files for the signature: src/xswiftbus/org.swift_project.xswiftbus.traffic.xml
+        // discussion: https://discordapp.com/channels/539048679160676382/539925070550794240/698552502831939676
+
+        DBusMessageIter arrayIterator;
+        dbus_message_iter_open_container(&m_messageIterator, DBUS_TYPE_ARRAY, DBUS_TYPE_BOOLEAN_AS_STRING, &arrayIterator);
+
+        const std::vector<unsigned> ints(array.begin(), array.end());
+        const unsigned *ptr = ints.data();
+        dbus_message_iter_append_fixed_array(&arrayIterator, DBUS_TYPE_BOOLEAN, &ptr, static_cast<int>(array.size()));
+        dbus_message_iter_close_container(&m_messageIterator, &arrayIterator);
+    }
+
     void CDBusMessage::appendArgument(const std::vector<double> &array)
     {
         DBusMessageIter arrayIterator;
