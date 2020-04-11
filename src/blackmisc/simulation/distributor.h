@@ -75,10 +75,10 @@ namespace BlackMisc
             const QString &getAlias2() const { return m_alias2;}
 
             //! Set alias1
-            void setAlias1(const QString &alias) { m_alias1 = alias.trimmed().toUpper(); }
+            void setAlias1(const QString &alias) { m_alias1 = alias; }
 
             //! Set alias2
-            void setAlias2(const QString &alias) { m_alias2 = alias.trimmed().toUpper(); }
+            void setAlias2(const QString &alias) { m_alias2 = alias; }
 
             //! Alias 1?
             bool hasAlias1() const { return !m_alias1.isEmpty(); }
@@ -107,7 +107,7 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
-            //! Compare for index
+            //! \copydoc Mixin::Index::comparePropertyByIndex
             int comparePropertyByIndex(const CPropertyIndex &index, const CDistributor &compareValue) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString
@@ -142,6 +142,9 @@ namespace BlackMisc
             QString m_alias1;                                  //!< alias name
             QString m_alias2;                                  //!< alias name
             BlackMisc::Simulation::CSimulatorInfo m_simulator; //!< simulator
+
+            //! "Clean up" the keys, like X-CSL => XCSL
+            static QString unifyKeyOrAlias(const QString &value);
 
             BLACK_METACLASS(
                 CDistributor,
