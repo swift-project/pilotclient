@@ -247,6 +247,8 @@ namespace BlackSimPlugin
             static bool isSuspiciousTerrainValue(const BlackMisc::Geo::CElevationPlane &elevation);
             static const BlackMisc::PhysicalQuantities::CLength &maxTerrainRequestDistance();
 
+            static BlackMisc::PhysicalQuantities::CLength fixSimulatorCg(const BlackMisc::PhysicalQuantities::CLength &cg, const BlackMisc::Simulation::CAircraftModel &model);
+
             DBusMode m_dbusMode;
             BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusSettings> m_xSwiftBusServerSettings { this, &CSimulatorXPlane::onXSwiftBusSettingsChanged };
             static constexpr qint64 TimeoutAdding = 10000;

@@ -1151,12 +1151,12 @@ namespace BlackSimPlugin
                 }
 
                 const double cgValue = verticalOffsetsMeters[i]; // XP offset is swift CG
-                const CLength cg = std::isnan(cgValue) ?
-                                   CLength::null() :
-                                   CLength(cgValue, CLengthUnit::m(), CLengthUnit::ft());
+                CLength cg = std::isnan(cgValue) ?
+                             CLength::null() :
+                             CLength(cgValue, CLengthUnit::m(), CLengthUnit::ft());
+                cg = fixSimulatorCg(cg, xpAircraft.getAircraftModel());
 
                 // if we knew "on ground" here we could set it as parameter of rememberElevationAndSimulatorCG
-                // this->rememberElevationAndSimulatorCG(cs, xpAircraft.getAircraftModel(), false, elevation, cg);
                 // with T778 we do NOT use this function for elevation here if "isSuspicious"
                 const bool waterFlag    = waterFlags[i];
                 const bool useElevation = this->handleProbeValue(elevation, cs, waterFlag, hint, true);
@@ -1168,6 +1168,18 @@ namespace BlackSimPlugin
                     this->addLoopbackSituation(cs, elevation, cg);
                 }
             }
+        }
+
+        CLength CSimulatorXPlane::fixSimulatorCg(const CLength &cg, const CAircraftModel &model)
+        {
+            //! \todo KB 2020-04 hardcoded fix for XCSL
+            // For XCSL null means no offset => 0
+            // so not to override it with some DB value in X mode, we set it to "0"
+            if (model.getDistributor().matchesKeyOrAlias(CDistributor::xplaneXcsl()) && cg.isNull())
+            {
+                return CLength(0.0, CLengthUnit::ft());
+            }
+            return cg;
         }
 
         void CSimulatorXPlane::disconnectFromDBus()
