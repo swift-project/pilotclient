@@ -56,7 +56,7 @@ namespace BlackSimPlugin
             reply.waitForFinished();
             if (reply.isError())
             {
-                BlackMisc::CLogMessage(this).debug(u"CXSwiftBusTrafficProxy::acquireMultiplayerPlanes returned: %1") << reply.error().message();
+                CLogMessage(this).debug(u"CXSwiftBusTrafficProxy::acquireMultiplayerPlanes returned: %1") << reply.error().message();
             }
             MultiplayerAcquireInfo info;
             info.hasAcquired = reply.argumentAt<0>();
@@ -180,10 +180,10 @@ namespace BlackSimPlugin
                 if (!reply.isError())
                 {
                     const CCallsign cs(reply.argumentAt<0>());
-                    const double elevationMeters = reply.argumentAt<1>();
-                    const double latitudeDegrees = reply.argumentAt<2>();
+                    const double elevationMeters  = reply.argumentAt<1>();
+                    const double latitudeDegrees  = reply.argumentAt<2>();
                     const double longitudeDegrees = reply.argumentAt<3>();
-                    const CAltitude elevationAlt = std::isnan(elevationMeters) ? CAltitude::null() : CAltitude(elevationMeters, CLengthUnit::m(), CLengthUnit::ft());
+                    const CAltitude elevationAlt  = std::isnan(elevationMeters) ? CAltitude::null() : CAltitude(elevationMeters, CLengthUnit::m(), CLengthUnit::ft());
                     const CElevationPlane elevation(CLatitude(latitudeDegrees, CAngleUnit::deg()),
                                                     CLongitude(longitudeDegrees, CAngleUnit::deg()),
                                                     elevationAlt, CElevationPlane::singlePointRadius());
