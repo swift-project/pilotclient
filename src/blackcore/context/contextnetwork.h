@@ -64,7 +64,7 @@ namespace BlackMisc
         class CAircraftParts;
         class CCallsign;
     }
-    namespace Network { class CTextMessage; }
+    namespace Network    { class CTextMessage; }
     namespace Simulation { class CAircraftModel; }
 }
 namespace BlackCore

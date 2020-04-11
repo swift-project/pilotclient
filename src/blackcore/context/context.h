@@ -42,7 +42,7 @@ namespace BlackCore
 
         public:
             //! Destructor
-            virtual ~IContext() {}
+            virtual ~IContext() override {}
 
             //! Log categories
             static const BlackMisc::CLogCategoryList &getLogCategories();

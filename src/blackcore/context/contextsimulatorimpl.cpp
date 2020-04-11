@@ -813,7 +813,7 @@ namespace BlackCore
 
         void CContextSimulator::xCtxNetworkConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
-            Q_UNUSED(from);
+            Q_UNUSED(from)
             BLACK_VERIFY_X(this->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
             if (to.isConnected() && this->getIContextNetwork())
             {

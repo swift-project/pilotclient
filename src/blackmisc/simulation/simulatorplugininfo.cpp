@@ -11,6 +11,7 @@
 #include <QJsonValue>
 #include <QtGlobal>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 
 namespace BlackMisc
@@ -31,7 +32,7 @@ namespace BlackMisc
 
                 // json data is already validated by CPluginManagerSimulator
                 CJsonScope scope("MetaData");
-                Q_UNUSED(scope);
+                Q_UNUSED(scope)
                 CValueObject::convertFromJson(json["MetaData"].toObject());
                 m_valid = true;
             }
@@ -62,7 +63,7 @@ namespace BlackMisc
 
         QString CSimulatorPluginInfo::convertToQString(bool i18n) const
         {
-            Q_UNUSED(i18n);
+            Q_UNUSED(i18n)
             return QStringLiteral("%1 (%2)").arg(m_name, m_identifier);
         }
 
@@ -118,7 +119,7 @@ namespace BlackMisc
 
         QStringList CSimulatorPluginInfo::guessDefaultPlugins()
         {
-            if (BlackConfig::CBuildConfig::isRunningOnUnixPlatform())
+            if (CBuildConfig::isRunningOnUnixPlatform())
             {
                 // On UNIX we likely run XP
                 return QStringList { xplanePluginIdentifier(), fgPluginIdentifier() };
@@ -129,7 +130,7 @@ namespace BlackMisc
                 fsxPluginIdentifier(),
                 p3dPluginIdentifier(),
                 xplanePluginIdentifier(),
-				fgPluginIdentifier()
+                fgPluginIdentifier()
             };
         }
     } // ns
