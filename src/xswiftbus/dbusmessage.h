@@ -76,6 +76,7 @@ namespace XSwiftBus
         void appendArgument(const std::string &value);
         void appendArgument(int value);
         void appendArgument(double value);
+        void appendArgument(const std::vector<bool> &array);
         void appendArgument(const std::vector<double> &array);
         void appendArgument(const std::vector<std::string> &array);
         //! @}

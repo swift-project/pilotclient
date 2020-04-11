@@ -159,12 +159,18 @@ namespace BlackSimPlugin
                 if (!reply.isError())
                 {
                     const QStringList callsigns = reply.argumentAt<0>();
-                    const QList<double> latitudesDeg = reply.argumentAt<1>();
+                    const QList<double> latitudesDeg  = reply.argumentAt<1>();
                     const QList<double> longitudesDeg = reply.argumentAt<2>();
-                    const QList<double> elevationsM = reply.argumentAt<3>();
-                    const QList<bool> waterFlags = reply.argumentAt<4>();
+                    const QList<double> elevationsM   = reply.argumentAt<3>();
+                    const QList<bool>   waterFlags    = reply.argumentAt<4>();
                     const QList<double> verticalOffsets = reply.argumentAt<5>();
+
                     setter(callsigns, latitudesDeg, longitudesDeg, elevationsM, waterFlags, verticalOffsets);
+                }
+                else
+                {
+                    const QString errorMsg = reply.error().message();
+                    CLogMessage(this).warning(u"XSwiftBus DBus error getRemoteAircraftData: %1") << errorMsg;
                 }
                 watcher->deleteLater();
             };
