@@ -79,6 +79,9 @@ namespace BlackMisc
         if (c == '1' || c == 't' || c == 'y' || c == 'x') { return true; }
         if (c == '0' || c == 'f' || c == 'n' || c == '_') { return false; }
 
+        if (c == 'e') { return true;  } // enabled
+        if (c == 'd') { return false; } // disabled
+
         // full words
         if (s == "on") { return true; }
         return false;
