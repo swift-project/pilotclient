@@ -190,13 +190,13 @@ namespace BlackMisc
         return removeChars(string, [](QChar c) { return !is09(c); });
     }
 
-    //! String only with 0-9
+    //! String only with 0-9, or separator
     inline QString char09OrSeparatorOnlyString(const QString &string)
     {
         return removeChars(string, [](QChar c) { return !is09OrSeparator(c); });
     }
 
-    //! String only with 0-9
+    //! String only with ASCII values
     inline QString asciiOnlyString(const QString &string)
     {
         return removeChars(string.simplified(), [](QChar c) { return c.unicode() > 127; });
