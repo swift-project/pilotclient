@@ -55,10 +55,23 @@ namespace BlackSimPlugin
                     return address;
                 }
 
+                if (dwNumAddresses < 1) { return {}; }
                 char url[250];
+
+                /*
                 DWORD size = 250;
                 addresses[0]->GetURLA(url, &size);
                 address = QString(url);
+                */
+
+                // try to find URL address in any address
+                for (uint ii = 0; ii < dwNumAddresses; ++ii)
+                {
+                    DWORD size = 250;
+                    addresses[static_cast<int>(ii)]->GetURLA(url, &size);
+                    address = QString(url);
+                    if (!address.isEmpty()) { break; }
+                }
 
                 for (uint ii = 0; ii < dwNumAddresses; ++ii)
                 {
