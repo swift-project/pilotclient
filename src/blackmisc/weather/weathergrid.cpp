@@ -6,14 +6,6 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackmisc/aviation/altitude.h"
-#include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/pq/angle.h"
-#include "blackmisc/pq/physicalquantity.h"
-#include "blackmisc/pq/speed.h"
-#include "blackmisc/pq/temperature.h"
-#include "blackmisc/pq/units.h"
-#include "blackmisc/range.h"
 #include "blackmisc/weather/cloudlayer.h"
 #include "blackmisc/weather/cloudlayerlist.h"
 #include "blackmisc/weather/temperaturelayer.h"
@@ -24,6 +16,19 @@
 #include "blackmisc/weather/windlayer.h"
 #include "blackmisc/weather/windlayerlist.h"
 
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/temperature.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/range.h"
+#include "blackmisc/verify.h"
+
+#include "blackconfig/buildconfig.h"
+
+using namespace BlackConfig;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
@@ -70,9 +75,12 @@ namespace BlackMisc
             static const CWeatherGrid emptyGrid {};
             switch (scenario.getIndex())
             {
-            case CWeatherScenario::ClearSky: return getClearWeatherGrid();
+            case CWeatherScenario::ClearSky:     return getClearWeatherGrid();
             case CWeatherScenario::Thunderstorm: return getThunderStormGrid();
-            default: Q_ASSERT_X(false, Q_FUNC_INFO, "Unknown fixed scenario index requested."); return emptyGrid;
+            default:
+                // in release versions just return, no need to ASSERT
+                BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Unknown fixed scenario index requested.");
+                return emptyGrid;
             }
         }
 
@@ -85,8 +93,8 @@ namespace BlackMisc
 
             static const CTemperatureLayer temperatureLayer(
                 CAltitude(0, CAltitude::MeanSeaLevel, CLengthUnit::m()),
-                CTemperature(20, CTemperatureUnit::C()),
-                CTemperature(18, CTemperatureUnit::C()),
+                CTemperature(22, CTemperatureUnit::C()),
+                CTemperature(7, CTemperatureUnit::C()),
                 0);
 
             static const CCloudLayer cloudLayer(
@@ -107,8 +115,8 @@ namespace BlackMisc
                 {},
                 CCloudLayerList { cloudLayer },
                 CTemperatureLayerList { temperatureLayer },
-                CVisibilityLayerList { visibilityLayer },
-                CWindLayerList { windLayer },
+                CVisibilityLayerList  { visibilityLayer },
+                CWindLayerList        { windLayer },
                 { CAltitude::standardISASeaLevelPressure() }
             };
 
@@ -126,11 +134,11 @@ namespace BlackMisc
             static const CTemperatureLayer temperatureLayer(
                 CAltitude(0, CAltitude::MeanSeaLevel, CLengthUnit::m()),
                 CTemperature(20, CTemperatureUnit::C()),
-                CTemperature(18, CTemperatureUnit::C()),
-                0);
+                CTemperature(18, CTemperatureUnit::C()), // min 55 Fahrenheit, 13 Celsius for thunderstorm
+                83.1); // Dampness: a moist air layer at ground level with a larger extension and relative humidity above 80%;
 
             static const CCloudLayer cloudLayer1(
-                CAltitude(630, CAltitude::MeanSeaLevel, CLengthUnit::m()),
+                CAltitude(630,  CAltitude::MeanSeaLevel, CLengthUnit::m()),
                 CAltitude(4630, CAltitude::MeanSeaLevel, CLengthUnit::m()),
                 5, CCloudLayer::Rain, CCloudLayer::Thunderstorm,
                 CCloudLayer::Overcast);

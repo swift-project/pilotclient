@@ -59,7 +59,7 @@ namespace BlackMisc
 
         QString CWeatherScenario::convertToQString(bool i18n) const
         {
-            Q_UNUSED(i18n);
+            Q_UNUSED(i18n)
             return m_scenarioName;
         }
 
