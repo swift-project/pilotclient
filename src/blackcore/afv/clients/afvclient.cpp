@@ -581,6 +581,60 @@ namespace BlackCore
                 return this->isTransmittingTransceiver(comUnitToTransceiverId(comUnit));
             }
 
+            void CAfvClient::setRxTx(bool rx1, bool tx1, bool rx2, bool tx2)
+            {
+                QVector<TxTransceiverDto> txs;
+                if (tx1)
+                {
+                    const TxTransceiverDto tx = { comUnitToTransceiverId(CComSystem::Com1) };
+                    txs.push_back(tx);
+                }
+                if (tx2)
+                {
+                    const TxTransceiverDto tx = { comUnitToTransceiverId(CComSystem::Com2) };
+                    txs.push_back(tx);
+                }
+                this->setTransmittingTransceivers(txs);
+
+                QSet<quint16> enabledTransceivers;
+                if (rx1 || tx1)
+                {
+                    enabledTransceivers.insert(comUnitToTransceiverId(CComSystem::Com1));
+                }
+
+                if (rx2 || tx2)
+                {
+                    enabledTransceivers.insert(comUnitToTransceiverId(CComSystem::Com2));
+                }
+
+                {
+                    QMutexLocker lock(&m_mutexTransceivers);
+                    m_enabledTransceivers = enabledTransceivers;
+                }
+
+                // force update
+                this->onTimerUpdate();
+            }
+
+            void CAfvClient::getRxTx(bool &rx1, bool &tx1, bool &rx2, bool &tx2) const
+            {
+                rx1 = false;
+                rx2 = false;
+                tx1 = false;
+                tx2 = false;
+
+                const QSet<quint16> enabled = getEnabledTransceivers();
+                rx1 = enabled.contains(comUnitToTransceiverId(CComSystem::Com1));
+                rx2 = enabled.contains(comUnitToTransceiverId(CComSystem::Com2));
+
+                const QVector<TxTransceiverDto> transmits = getTransmittingTransceivers();
+                for (const TxTransceiverDto &dto : transmits)
+                {
+                    if (dto.id == comUnitToTransceiverId(CComSystem::Com1)) { tx1 = true; }
+                    if (dto.id == comUnitToTransceiverId(CComSystem::Com2)) { tx2 = true; }
+                }
+            }
+
             QVector<TransceiverDto> CAfvClient::getTransceivers() const
             {
                 QMutexLocker lock(&m_mutexTransceivers);
@@ -873,7 +927,7 @@ namespace BlackCore
             {
                 QStringList coms;
                 QMutexLocker lock(&m_mutexSampleProviders);
-                if (!m_soundcardSampleProvider) { return {{ QString(), QString()}}; }
+                if (!m_soundcardSampleProvider) { return {{ QString(), QString() }}; }
                 coms << m_soundcardSampleProvider->getReceivingCallsignsString(comUnitToTransceiverId(CComSystem::Com1));
                 coms << m_soundcardSampleProvider->getReceivingCallsignsString(comUnitToTransceiverId(CComSystem::Com2));
                 return coms;
@@ -1000,43 +1054,52 @@ namespace BlackCore
                 transceiverCom1.frequencyHz = this->getAliasFrequencyHz(f1);
                 transceiverCom2.frequencyHz = this->getAliasFrequencyHz(f2);
 
-                bool tx1 = true;
-                bool rx1 = true;
-                bool tx2 = false;
-                bool rx2 = true;
-
+                QVector<TransceiverDto> newEnabledTransceivers;
                 if (m_integratedComUnit)
                 {
-                    tx1 = com1.isTransmitEnabled();
-                    rx1 = com1.isReceiveEnabled();
-                    tx2 = com2.isTransmitEnabled(); // we only allow one (1) transmit
-                    rx2 = com2.isReceiveEnabled();
+                    const bool tx1 = com1.isTransmitEnabled();
+                    const bool rx1 = com1.isReceiveEnabled();
+                    const bool tx2 = com2.isTransmitEnabled(); // we only allow one (1) transmit
+                    const bool rx2 = com2.isReceiveEnabled();
+
+                    // enable, we currently treat receive as enable
+                    // flight sim cockpits normally use rx and tx
+                    // AFV uses tx and enable
+                    const bool e1 = rx1;
+                    const bool e2 = rx2;
+
+                    // transceivers
+                    const QVector<TransceiverDto> newTransceivers { transceiverCom1, transceiverCom2 };
+                    QSet<quint16> newEnabledTransceiverIds;
+                    QVector<TxTransceiverDto> newTransmittingTransceivers;
+                    if (e1) { newEnabledTransceivers.push_back(transceiverCom1); newEnabledTransceiverIds.insert(transceiverCom1.id); }
+                    if (e2) { newEnabledTransceivers.push_back(transceiverCom2); newEnabledTransceiverIds.insert(transceiverCom2.id); }
+
+                    // Transmitting transceivers, currently ALLOW ONLY ONE
+                    if (tx1 && e1) { newTransmittingTransceivers.push_back(transceiverCom1); }
+                    else if (tx2 && e2) { newTransmittingTransceivers.push_back(transceiverCom2); }
+
+                    // lock and update
+                    {
+                        QMutexLocker lock(&m_mutexTransceivers);
+                        m_transceivers = newTransceivers;
+                        m_enabledTransceivers = newEnabledTransceiverIds;
+                        m_transmittingTransceivers = newTransmittingTransceivers;
+                    }
                 }
-
-                // enable, we currently treat receive as enable
-                // flight sim cockpits normally use rx and tx
-                // AFV uses tx and enable
-                const bool e1 = rx1;
-                const bool e2 = rx2;
-
-                // transceivers
-                QSet<quint16> newEnabledTransceiverIds;
-                QVector<TransceiverDto> newTransceivers { transceiverCom1, transceiverCom2 };
-                QVector<TransceiverDto> newEnabledTransceivers;
-                QVector<TxTransceiverDto> newTransmittingTransceivers;
-                if (e1) { newEnabledTransceivers.push_back(transceiverCom1); newEnabledTransceiverIds.insert(transceiverCom1.id); }
-                if (e2) { newEnabledTransceivers.push_back(transceiverCom2); newEnabledTransceiverIds.insert(transceiverCom2.id); }
-
-                // Transmitting transceivers, currently ALLOW ONLY ONE
-                if (tx1 && e1) { newTransmittingTransceivers.push_back(transceiverCom1); }
-                else if (tx2 && e2) { newTransmittingTransceivers.push_back(transceiverCom2); }
-
-                // lock and update
+                else
                 {
-                    QMutexLocker lock(&m_mutexTransceivers);
-                    m_transceivers = newTransceivers;
-                    m_enabledTransceivers = newEnabledTransceiverIds;
-                    m_transmittingTransceivers = newTransmittingTransceivers;
+                    // update position and frequencies, but keep enabled as it was
+                    const QSet<quint16> ids = getEnabledTransceivers();
+                    if (ids.contains(comUnitToTransceiverId(CComSystem::Com1)))
+                    {
+                        newEnabledTransceivers.push_back(transceiverCom1);
+                    }
+
+                    if (ids.contains(comUnitToTransceiverId(CComSystem::Com2)))
+                    {
+                        newEnabledTransceivers.push_back(transceiverCom2);
+                    }
                 }
 
                 // in connection and soundcard only use the enabled tarnsceivers
@@ -1112,12 +1175,12 @@ namespace BlackCore
                 // change to aliased frequency if needed
                 {
                     QMutexLocker lock(&m_mutex);
-                    auto it = std::find_if(m_aliasedStations.begin(), m_aliasedStations.end(), [roundedFrequencyHz](const StationDto & d)
+                    const auto it = std::find_if(m_aliasedStations.constBegin(), m_aliasedStations.constEnd(), [roundedFrequencyHz](const StationDto & d)
                     {
                         return d.frequencyAliasHz == roundedFrequencyHz;
                     });
 
-                    if (it != m_aliasedStations.end())
+                    if (it != m_aliasedStations.constEnd())
                     {
                         if (sApp && sApp->getIContextNetwork())
                         {

@@ -252,6 +252,22 @@ namespace BlackCore
             }
         }
 
+        void CContextAudioBase::setRxTx(bool rx1, bool tx1, bool rx2, bool tx2)
+        {
+            if (m_voiceClient)
+            {
+                m_voiceClient->setRxTx(rx1, tx1, rx2, tx2);
+            }
+        }
+
+        void CContextAudioBase::getRxTx(bool &rx1, bool &tx1, bool &rx2, bool &tx2) const
+        {
+            if (m_voiceClient)
+            {
+                m_voiceClient->setRxTx(rx1, tx1, rx2, tx2);
+            }
+        }
+
         const CIdentifier &CContextAudioBase::audioRunsWhere() const
         {
             static const CIdentifier i("CContextAudioBaseImpl");
