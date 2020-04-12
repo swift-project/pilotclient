@@ -19,7 +19,9 @@
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/propertyindexallclasses.h"
+
 #include <QTimer>
+#include <QPointer>
 #include <algorithm>
 
 using namespace BlackMisc;
@@ -490,8 +492,10 @@ namespace BlackSimPlugin
             const bool canLobbyConnect = m_lobbyClient->canLobbyConnect();
 
             // check connection
+            QPointer<CSimulatorFs9Listener> myself(this);
             connect(m_timer, &QTimer::timeout, [ = ]()
             {
+                if (!myself) { return; }
                 this->checkConnection(canLobbyConnect);
             });
         }
@@ -513,7 +517,7 @@ namespace BlackSimPlugin
             if (this->isShuttingDown()) { return; }
 
             QPointer<CSimulatorFs9Listener> myself(this);
-            QTimer::singleShot(0, this, [ = ]
+            QTimer::singleShot(10, this, [ = ]
             {
                 if (!myself) { return; }
                 const bool canLobbyConnect = m_lobbyClient->canLobbyConnect();
@@ -524,7 +528,7 @@ namespace BlackSimPlugin
         bool CSimulatorFs9Listener::checkConnection(bool canLobbyConnect)
         {
             m_fsuipc->open();
-            if (! m_fsuipc->isOpen()) { return false; }
+            if (!m_fsuipc->isOpen()) { return false; }
             m_fsuipc->close();
 
             if (m_fs9Host->getHostAddress().isEmpty()) { return false; } // host not yet set up
