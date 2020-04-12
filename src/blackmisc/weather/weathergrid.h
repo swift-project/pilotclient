@@ -31,7 +31,7 @@ namespace BlackMisc
          */
         class BLACKMISC_EXPORT CWeatherGrid :
             public CSequence<CGridPoint>,
-            public BlackMisc::Mixin::MetaType<CWeatherGrid>
+            public Mixin::MetaType<CWeatherGrid>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CWeatherGrid)
