@@ -91,6 +91,17 @@ namespace BlackCore
             //! \fixme To be removed with Qt 5.5 when getSimualtorStatus directly provides the enum
             BlackCore::ISimulator::SimulatorStatus getSimulatorStatusEnum() const;
 
+            // ---- some convenienc functions implemented on interface level
+
+            //! Current simulator
+            BlackMisc::Simulation::CSimulatorInfo getSimulatorInfo() const;
+
+            //! Update current settings
+            bool updateCurrentSettings(const BlackMisc::Simulation::Settings::CSimulatorSettings &settings);
+
+            //! Update current setting for COM integration (aka "synced")
+            bool updateCurrentSettingComIntegration(bool comIntegration);
+
         signals:
             //! Simulator combined status
             //! \sa ISimulator::SimulatorStatus

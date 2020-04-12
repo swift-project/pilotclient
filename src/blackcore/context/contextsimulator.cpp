@@ -17,6 +17,7 @@
 
 using namespace BlackConfig;
 using namespace BlackMisc;
+using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackCore
@@ -59,6 +60,25 @@ namespace BlackCore
         ISimulator::SimulatorStatus IContextSimulator::getSimulatorStatusEnum() const
         {
             return static_cast<ISimulator::SimulatorStatus>(this->getSimulatorStatus());
+        }
+
+        CSimulatorInfo IContextSimulator::getSimulatorInfo() const
+        {
+            return this->getSimulatorPluginInfo().getSimulatorInfo();
+        }
+
+        bool IContextSimulator::updateCurrentSettings(const Simulation::Settings::CSimulatorSettings &settings)
+        {
+            const CSimulatorInfo sim = this->getSimulatorInfo();
+            if (!sim.isSingleSimulator()) { return false; }
+            return this->setSimulatorSettings(settings, sim);
+        }
+
+        bool IContextSimulator::updateCurrentSettingComIntegration(bool comIntegration)
+        {
+            Simulation::Settings::CSimulatorSettings settings = this->getSimulatorSettings();
+            settings.setComIntegrated(comIntegration);
+            return this->updateCurrentSettings(settings);
         }
 
         bool IContextSimulator::isSimulatorAvailable() const
