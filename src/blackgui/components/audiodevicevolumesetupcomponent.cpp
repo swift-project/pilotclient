@@ -10,8 +10,10 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackcore/afv/clients/afvclient.h"
+#include "blackcore/context/contextsimulator.h"
 #include "blackcore/context/contextaudioimpl.h"
 
+#include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/audio/audiosettings.h"
@@ -34,6 +36,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Simulation;
 
 namespace BlackGui
 {
@@ -50,6 +53,12 @@ namespace BlackGui
             connect(ui->tb_RefreshOutDevice, &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onReloadDevices,  Qt::QueuedConnection);
             connect(ui->tb_ResetInVolume,    &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onResetVolumeIn,  Qt::QueuedConnection);
             connect(ui->tb_ResetOutVolume,   &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onResetVolumeOut, Qt::QueuedConnection);
+
+            connect(ui->cb_1Tx,  &QCheckBox::toggled, this, &CAudioDeviceVolumeSetupComponent::onRxTxChanged, Qt::QueuedConnection);
+            connect(ui->cb_2Tx,  &QCheckBox::toggled, this, &CAudioDeviceVolumeSetupComponent::onRxTxChanged, Qt::QueuedConnection);
+            connect(ui->cb_1Rec, &QCheckBox::toggled, this, &CAudioDeviceVolumeSetupComponent::onRxTxChanged, Qt::QueuedConnection);
+            connect(ui->cb_2Rec, &QCheckBox::toggled, this, &CAudioDeviceVolumeSetupComponent::onRxTxChanged, Qt::QueuedConnection);
+            connect(ui->cb_IntegratedWithCom, &QCheckBox::toggled, this, &CAudioDeviceVolumeSetupComponent::onIntegratedFlagChanged, Qt::QueuedConnection);
 
             ui->hs_VolumeIn->setMaximum(CSettings::InMax);
             ui->hs_VolumeIn->setMinimum(CSettings::InMin);
@@ -81,8 +90,7 @@ namespace BlackGui
                 this->init();
             });
 
-            // all tx/rec checkboxes
-            CGuiUtility::checkBoxesReadOnly(ui->fr_TxRx, true);
+            this->setCheckBoxesReadOnly(this->isComIntegrated());
         }
 
         void CAudioDeviceVolumeSetupComponent::init()
@@ -149,6 +157,9 @@ namespace BlackGui
             Q_ASSERT(c);
             m_afvConnections.append(c);
 
+            // default values for RX/TX
+            afv->setRxTx(true, true, true, false);
+
             QPointer<CAudioDeviceVolumeSetupComponent> myself(this);
             c = connect(afv, &CAfvClient::connectionStatusChanged, this, [ = ]
             {
@@ -174,23 +185,23 @@ namespace BlackGui
 
         int CAudioDeviceVolumeSetupComponent::getOutValue(int from, int to) const
         {
-            const double r = ui->hs_VolumeOut->maximum() - ui->hs_VolumeOut->minimum();
+            const double r  = ui->hs_VolumeOut->maximum() - ui->hs_VolumeOut->minimum();
             const double tr = to - from;
             return qRound(ui->hs_VolumeOut->value() / r * tr);
         }
 
         void CAudioDeviceVolumeSetupComponent::setInValue(int value, int from, int to)
         {
-            if (value > to)   { value = to; }
+            if (value > to)        { value = to; }
             else if (value < from) { value = from; }
-            const double r = ui->hs_VolumeIn->maximum() - ui->hs_VolumeIn->minimum();
+            const double r  = ui->hs_VolumeIn->maximum() - ui->hs_VolumeIn->minimum();
             const double tr = to - from;
             ui->hs_VolumeIn->setValue(qRound(value / tr * r));
         }
 
         void CAudioDeviceVolumeSetupComponent::setOutValue(int value, int from, int to)
         {
-            if (value > to)   { value = to; }
+            if (value > to) { value = to; }
             else if (value < from) { value = from; }
             const double r = ui->hs_VolumeOut->maximum() - ui->hs_VolumeOut->minimum();
             const double tr = to - from;
@@ -219,12 +230,9 @@ namespace BlackGui
 
         void CAudioDeviceVolumeSetupComponent::setTransmitReceiveInUi(bool tx1, bool rec1, bool tx2, bool rec2, bool integrated)
         {
-            ui->cb_1Tx->setChecked(tx1);
-            ui->cb_2Tx->setChecked(tx2);
-            ui->cb_1Rec->setChecked(rec1);
-            ui->cb_2Rec->setChecked(rec2);
-
+            this->setRxTxCheckboxes(rec1, tx1, rec2, tx2);
             ui->cb_IntegratedWithCom->setChecked(integrated);
+            this->setCheckBoxesReadOnly(integrated);
         }
 
         void CAudioDeviceVolumeSetupComponent::setTransmitReceiveInUiFromVoiceClient()
@@ -248,8 +256,17 @@ namespace BlackGui
             const bool com1Rx = com1Enabled;
             const bool com2Rx = com2Enabled;
 
-            const bool integrated = sGui->getCContextAudioBase()->isComUnitIntegrated();
+            const bool integrated = this->isComIntegrated();
             this->setTransmitReceiveInUi(com1Tx, com1Rx, com2Tx, com2Rx, integrated);
+        }
+
+        void CAudioDeviceVolumeSetupComponent::setCheckBoxesReadOnly(bool readonly)
+        {
+            // all tx/rec checkboxes
+            CGuiUtility::checkBoxReadOnly(ui->cb_1Tx,  readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_2Tx,  readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_1Rec, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_2Rec, readonly);
         }
 
         CAfvClient *CAudioDeviceVolumeSetupComponent::afvClient()
@@ -278,6 +295,11 @@ namespace BlackGui
         bool CAudioDeviceVolumeSetupComponent::hasAudio() const
         {
             return sGui && sGui->getCContextAudioBase();
+        }
+
+        bool CAudioDeviceVolumeSetupComponent::hasSimulator() const
+        {
+            return sGui && sGui->getIContextSimulator();
         }
 
         void CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged(int v)
@@ -328,8 +350,75 @@ namespace BlackGui
 
         void CAudioDeviceVolumeSetupComponent::setAudioRunsWhere()
         {
+            if (!this->hasAudio()) { return; }
             const QString ai = sGui->getCContextAudioBase()->audioRunsWhereInfo();
             ui->le_Info->setPlaceholderText(ai);
+        }
+
+        bool CAudioDeviceVolumeSetupComponent::updateIntegrateWithComFlagUi()
+        {
+            const bool integrate = this->isComIntegrated();
+            if (ui->cb_IntegratedWithCom->isChecked() == integrate) { return integrate; }
+            ui->cb_IntegratedWithCom->setChecked(integrate);
+            this->setCheckBoxesReadOnly(integrate);
+            return integrate;
+        }
+
+        bool CAudioDeviceVolumeSetupComponent::isComIntegrated() const
+        {
+            if (!this->hasSimulator()) { return false; }
+            const Simulation::Settings::CSimulatorSettings settings = sGui->getIContextSimulator()->getSimulatorSettings();
+            const bool integrate = settings.isComIntegrated();
+            return integrate;
+
+            /*
+            if (!this->hasAudio()) { return false; }
+            const bool integrated = sGui->getCContextAudioBase()->isComUnitIntegrated();
+            */
+        }
+
+        void CAudioDeviceVolumeSetupComponent::onRxTxChanged(bool checked)
+        {
+            if (!this->hasAudio())       { return; }
+            if (this->isComIntegrated()) { return; }
+
+            Q_UNUSED(checked)
+            const bool rx1 = ui->cb_1Rec->isChecked();
+            const bool rx2 = ui->cb_2Rec->isChecked();
+
+            // no transmit without receiving
+            const bool tx1 = rx1 && ui->cb_1Tx->isChecked();
+            const bool tx2 = rx2 && ui->cb_2Tx->isChecked();
+
+            sGui->getCContextAudioBase()->setRxTx(rx1, tx1, rx2, tx2);
+
+            QPointer<CAudioDeviceVolumeSetupComponent> myself(this);
+            QTimer::singleShot(25, this, [ = ]
+            {
+                // in case UI values are not correct
+                if (!myself) { return; }
+                this->setRxTxCheckboxes(rx1, tx1, rx2, tx2);
+            });
+        }
+
+        void CAudioDeviceVolumeSetupComponent::onIntegratedFlagChanged(bool checked)
+        {
+            if (!this->hasAudio()) { return; }
+            this->setCheckBoxesReadOnly(checked);
+
+            if (!this->hasSimulator()) { return; }
+            if (!sGui->getIContextSimulator()->isSimulatorAvailable()) { return; }
+
+            const bool s = sGui->getIContextSimulator()->updateCurrentSettingComIntegration(checked);
+            Q_UNUSED(s)
+        }
+
+        void CAudioDeviceVolumeSetupComponent::setRxTxCheckboxes(bool rx1, bool tx1, bool rx2, bool tx2)
+        {
+            if (ui->cb_1Tx->isChecked()  != tx1) { ui->cb_1Tx->setChecked(tx1);  }
+            if (ui->cb_2Tx->isChecked()  != tx2) { ui->cb_2Tx->setChecked(tx2);  }
+            if (ui->cb_1Rec->isChecked() != rx1) { ui->cb_1Rec->setChecked(rx1); }
+            if (ui->cb_2Rec->isChecked() != rx2) { ui->cb_2Rec->setChecked(rx2); }
         }
 
         void CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged(const CCallsignSet &com1Callsigns, const CCallsignSet &com2Callsigns)

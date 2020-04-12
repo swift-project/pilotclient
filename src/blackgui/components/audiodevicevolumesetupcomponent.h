@@ -95,6 +95,9 @@ namespace BlackGui
             //! Audio is optional, check if available
             bool hasAudio() const;
 
+            //! Check if simulator is available
+            bool hasSimulator() const;
+
             //! Volume slider has been changed
             void onVolumeSliderChanged(int v);
 
@@ -110,6 +113,13 @@ namespace BlackGui
 
             void setAudioRunsWhere();
 
+            bool updateIntegrateWithComFlagUi();
+            bool isComIntegrated() const;
+
+            void onIntegratedFlagChanged(bool checked);
+            void onRxTxChanged(bool checked);
+            void setRxTxCheckboxes(bool rx1, bool tx1, bool rx2, bool tx2);
+
             // TODO: Move TransceiverReceivingCallsignsChangedArgs to Blackmisc
             void onReceivingCallsignsChanged(const BlackMisc::Aviation::CCallsignSet &com1Callsigns, const BlackMisc::Aviation::CCallsignSet &com2Callsigns);
             void onUpdatedClientWithCockpitData();
@@ -121,6 +131,9 @@ namespace BlackGui
             void setTransmitReceiveInUi(bool tx1, bool rec1, bool tx2, bool rec2, bool integrated);
             void setTransmitReceiveInUiFromVoiceClient();
             //! @}
+
+            //! Checkboxes readonly?
+            void setCheckBoxesReadOnly(bool readonly);
 
             //! Direct access to client
             static BlackCore::Afv::Clients::CAfvClient *afvClient();
