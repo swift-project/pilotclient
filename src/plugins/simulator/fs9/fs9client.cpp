@@ -352,6 +352,11 @@ namespace BlackSimPlugin
             sendMessage(positionMessage);
         }
 
+        void CFs9Client::sendMultiplayerParts(const CAircraftParts &parts)
+        {
+            Q_UNUSED(parts)
+        }
+
         void CFs9Client::sendMultiplayerParamaters()
         {
             QByteArray paramMessage;

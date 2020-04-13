@@ -60,8 +60,11 @@ namespace BlackSimPlugin
             //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolationMessages
             BlackMisc::CStatusMessageList getInterpolationMessages(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
-            //! Send a situtaion (position)
+            //! Send a situation (position)
             void sendMultiplayerPosition(const BlackMisc::Aviation::CAircraftSituation &situation);
+
+            //! Send parts (lights, gear ...)
+            void sendMultiplayerParts(const BlackMisc::Aviation::CAircraftParts &parts);
 
             //! Send new text message
             void sendTextMessage(const QString &textMessage);
