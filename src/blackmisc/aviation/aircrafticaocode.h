@@ -145,6 +145,9 @@ namespace BlackMisc
             //! Aircraft type, such a L(andplane), S(eaplane), H(elicopter)
             QString getAircraftType() const;
 
+            //! Aircraft type, such a L(andplane), S(eaplane), H(elicopter)
+            QChar getAircraftTypeChar() const;
+
             //! Set type
             void setCombinedType(const QString &type) { m_combinedType = type.trimmed().toUpper(); }
 
