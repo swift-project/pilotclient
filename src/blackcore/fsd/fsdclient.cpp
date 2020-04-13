@@ -191,7 +191,7 @@ namespace BlackCore
             this->setSimType(simInfo.getSimulator());
         }
 
-        void CFSDClient::setSimType(const CSimulatorInfo::Simulator simulator)
+        void CFSDClient::setSimType(BlackMisc::Simulation::CSimulatorInfo::Simulator simulator)
         {
             QWriteLocker l(&m_lockUserClientBuffered);
             switch (simulator)
@@ -2124,5 +2124,6 @@ namespace BlackCore
             static const QJsonObject jsonObject{ { "request", "full" } };
             return jsonObject;
         }
-    }
-}
+
+    } // ns
+} // ns

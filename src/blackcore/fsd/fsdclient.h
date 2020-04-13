@@ -108,7 +108,7 @@ namespace BlackCore
             void setLiveryAndModelString(const QString &livery, bool sendLiveryString, const QString &modelString, bool sendModelString);
             void setSimType(const BlackMisc::Simulation::CSimulatorPluginInfo &simInfo);
             void setSimType(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
-            void setSimType(const BlackMisc::Simulation::CSimulatorInfo::Simulator simulator);
+            void setSimType(BlackMisc::Simulation::CSimulatorInfo::Simulator simulator);
             void setPilotRating(PilotRating rating) { QWriteLocker l(&m_lockUserClientBuffered); m_pilotRating = rating; }
             void setAtcRating(AtcRating rating)     { QWriteLocker l(&m_lockUserClientBuffered); m_atcRating = rating; }
             //! @}
