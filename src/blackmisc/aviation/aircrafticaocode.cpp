@@ -385,6 +385,14 @@ namespace BlackMisc
             return c;
         }
 
+        QChar CAircraftIcaoCode::getAircraftTypeChar() const
+        {
+            if (m_combinedType.length() < 1) { return {}; }
+            QChar c(m_combinedType.at(0));
+            if (c == "-") { return {}; }
+            return c;
+        }
+
         QString CAircraftIcaoCode::getCombinedModelDescription() const
         {
             // Shortcut for most cases

@@ -215,7 +215,7 @@ namespace BlackSimPlugin
             dpAppDesc.guidApplication = CFs9Sdk::guid();
 
             // We now have the host address so lets enum
-            if (isFailure(hr = m_directPlayPeer->EnumHosts(&dpAppDesc,             // pApplicationDesc
+            if (isFailure(hr = m_directPlayPeer->EnumHosts(&dpAppDesc, // pApplicationDesc
                                m_hostAddress,                  // pdpaddrHost
                                m_deviceAddress,                // pdpaddrDeviceInfo
                                nullptr, 0,                     // pvUserEnumData, size
@@ -364,10 +364,23 @@ namespace BlackSimPlugin
             sendMessage(paramMessage);
         }
 
+        CFs9Sdk::EngineType aircraftToFS9EngineType(const CSimulatedAircraft &aircraft)
+        {
+            const QChar engine = aircraft.getAircraftIcaoCode().getEngineTypeChar();
+            const QChar type   = aircraft.getAircraftIcaoCode().getAircraftTypeChar();
+
+            if (type   == 'H') return CFs9Sdk::ENGINE_TYPE_HELO_TURBINE;
+            if (engine == 'J') return CFs9Sdk::ENGINE_TYPE_JET;
+            if (engine == 'P') return CFs9Sdk::ENGINE_TYPE_PISTON;
+            if (engine == 'T') return CFs9Sdk::ENGINE_TYPE_TURBOPROP;
+
+            return CFs9Sdk::ENGINE_TYPE_JET;
+        }
+
         void CFs9Client::sendMultiplayerChangePlayerPlane()
         {
             MPChangePlayerPlane mpChangePlayerPlane;
-            mpChangePlayerPlane.engine = CFs9Sdk::ENGINE_TYPE_JET;
+            mpChangePlayerPlane.engine = aircraftToFS9EngineType(m_remoteAircraft);
             mpChangePlayerPlane.aircraft_name = m_modelName;
             QByteArray message;
             MultiPlayerPacketParser::writeType(message, CFs9Sdk::MULTIPLAYER_PACKET_ID_CHANGE_PLAYER_PLANE);
