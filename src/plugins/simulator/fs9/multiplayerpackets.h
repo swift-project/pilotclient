@@ -42,7 +42,7 @@ namespace BlackSimPlugin
             }
 
             //! Struct size
-            qint32 size() { return 28; }
+            qint32 size() const { return 28; }
         };
 
         //! Multiplayer packet - change player plane
@@ -61,7 +61,7 @@ namespace BlackSimPlugin
             }
 
             //! Struct size
-            qint32 size() { return sizeof(CFs9Sdk::EngineType) + aircraft_name.size() + 1; }
+            qint32 size() const { return sizeof(CFs9Sdk::EngineType) + aircraft_name.size() + 1; }
         };
 
         //! Multiplayer packet - chat text
@@ -80,7 +80,7 @@ namespace BlackSimPlugin
             }
 
             //! Struct size
-            qint32 size() { return chat_data.size() + 1; }
+            qint32 size() const { return chat_data.size() + 1; }
         };
 
         //! Multiplayer packet in slew mode
@@ -105,7 +105,7 @@ namespace BlackSimPlugin
              }
 
              //! Struct size
-             qint32 size() { return 36; }
+             qint32 size() const { return 36; }
          };
 
         //! Multiplayer packet - position and velocity
@@ -130,7 +130,7 @@ namespace BlackSimPlugin
             }
 
             //! Struct size
-            qint32 size() { return 52; }
+            qint32 size() const { return 52; }
         };
     }
 }
