@@ -194,9 +194,7 @@ namespace BlackSimPlugin
         void CFs9Client::timerEvent(QTimerEvent *event)
         {
             Q_UNUSED(event)
-
-            sendMultiplayerPosition();
-            sendMultiplayerParamaters();
+            sendMultiplayerPositionAndPartsFromInterpolation();
         }
 
         HRESULT CFs9Client::enumDirectPlayHosts()
@@ -325,7 +323,7 @@ namespace BlackSimPlugin
             return hr;
         }
 
-        void CFs9Client::sendMultiplayerPosition()
+        void CFs9Client::sendMultiplayerPositionAndPartsFromInterpolation()
         {
             // remark: in FS9 there is no central updateRemoteAircraft() function, each FS9 client updates itself
             if (m_clientStatus == Disconnected) { return; }
@@ -336,6 +334,7 @@ namespace BlackSimPlugin
             // Test only for successful position. FS9 requires constant positions
             if (!result.getInterpolationStatus().hasValidSituation()) { return; }
             this->sendMultiplayerPosition(result.getInterpolatedSituation());
+            this->sendMultiplayerParts(result.getInterpolatedParts());
         }
 
         void CFs9Client::sendMultiplayerPosition(const CAircraftSituation &situation)
@@ -352,15 +351,20 @@ namespace BlackSimPlugin
             sendMessage(positionMessage);
         }
 
+        MPParam aircraftPartsToFS9(const CAircraftParts &parts)
+        {
+            //! todo THAT PART IS MISSING HERE, see https://discordapp.com/channels/539048679160676382/539925070550794240/699234172849618975
+            Q_UNUSED(parts)
+            MPParam param;
+            return param;
+        }
+
         void CFs9Client::sendMultiplayerParts(const CAircraftParts &parts)
         {
             Q_UNUSED(parts)
-        }
-
-        void CFs9Client::sendMultiplayerParamaters()
-        {
             QByteArray paramMessage;
-            MPParam param;
+            MPParam param = aircraftPartsToFS9(parts);
+
             MultiPlayerPacketParser::writeType(paramMessage, CFs9Sdk::MULTIPLAYER_PACKET_ID_PARAMS);
             MultiPlayerPacketParser::writeSize(paramMessage, param.size());
             param.packet_index = m_packetIndex;
@@ -397,12 +401,11 @@ namespace BlackSimPlugin
         void CFs9Client::handleConnectionCompleted()
         {
             CLogMessage(this).info(u"Callsign '%1' connected to session.") << m_callsign;
-            sendMultiplayerChangePlayerPlane();
-            sendMultiplayerPosition();
-            sendMultiplayerParamaters();
-            m_timerId = startTimer(m_updateInterval.valueInteger(CTimeUnit::ms()));
 
-            m_clientStatus = Connected;
+            m_clientStatus = Connected; // will not send position in disconnected mode
+            sendMultiplayerChangePlayerPlane();
+            sendMultiplayerPositionAndPartsFromInterpolation();
+
             emit statusChanged(m_remoteAircraft, m_clientStatus);
         }
 

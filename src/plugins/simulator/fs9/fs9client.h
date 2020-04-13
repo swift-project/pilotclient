@@ -92,8 +92,7 @@ namespace BlackSimPlugin
 
             //! Send functions
             //! @{
-            void sendMultiplayerPosition();
-            void sendMultiplayerParamaters();
+            void sendMultiplayerPositionAndPartsFromInterpolation();
             void sendMultiplayerChangePlayerPlane();
             //! @}
 
