@@ -375,7 +375,7 @@ namespace BlackFsdTest
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
         CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
-        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#APABCD:SERVER:1234567:123456:1:100:14:Test User");
+        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#APABCD:SERVER:1234567:123456:1:100:16:Test User");
     }
 
     void CTestFSDClient::testSendAtcLogin()
