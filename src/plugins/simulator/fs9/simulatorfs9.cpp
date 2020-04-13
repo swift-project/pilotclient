@@ -267,6 +267,8 @@ namespace BlackSimPlugin
 
         void CSimulatorFs9::displayStatusMessage(const CStatusMessage &message) const
         {
+            if (!m_fs9Host.data()) { return; }
+
             // Avoid errors from CDirectPlayPeer as it may end in infinite loop
             if (message.getSeverity() == CStatusMessage::SeverityError && message.isFromClass<CDirectPlayPeer>())
             {
@@ -281,6 +283,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFs9::displayTextMessage(const CTextMessage &message) const
         {
+            if (!m_fs9Host.data()) { return; }
             QMetaObject::invokeMethod(m_fs9Host.data(), "sendTextMessage", Q_ARG(QString, message.asString(true, true)));
         }
 
@@ -301,10 +304,11 @@ namespace BlackSimPlugin
 
             Q_UNUSED(parts)
             int u = 0;
-            if (situation.isNull())
+            if (!situation.isNull())
             {
                 u++;
                 client->sendMultiplayerPosition(situation);
+                if (!parts.isNull()) { client->sendMultiplayerParts(parts); }
             }
             return u > 0;
         }
@@ -529,8 +533,8 @@ namespace BlackSimPlugin
 
         void CSimulatorFs9Listener::checkImpl()
         {
-            if (m_timer) { m_timer->start(); }
             if (this->isShuttingDown()) { return; }
+            if (m_timer) { m_timer->start(); }
 
             QPointer<CSimulatorFs9Listener> myself(this);
             QTimer::singleShot(10, this, [ = ]
@@ -590,7 +594,7 @@ namespace BlackSimPlugin
         CSimulatorFs9Factory::~CSimulatorFs9Factory()
         { }
 
-        BlackCore::ISimulator *CSimulatorFs9Factory::create(const CSimulatorPluginInfo &info,
+        ISimulator *CSimulatorFs9Factory::create(const CSimulatorPluginInfo &info,
                 IOwnAircraftProvider    *ownAircraftProvider,
                 IRemoteAircraftProvider *remoteAircraftProvider,
                 IWeatherGridProvider    *weatherGridProvider,
@@ -599,7 +603,7 @@ namespace BlackSimPlugin
             return new CSimulatorFs9(info, m_fs9Host, m_lobbyClient, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, this);
         }
 
-        BlackCore::ISimulatorListener *CSimulatorFs9Factory::createListener(const CSimulatorPluginInfo &info)
+        ISimulatorListener *CSimulatorFs9Factory::createListener(const CSimulatorPluginInfo &info)
         {
             return new CSimulatorFs9Listener(info, m_fs9Host, m_lobbyClient);
         }
