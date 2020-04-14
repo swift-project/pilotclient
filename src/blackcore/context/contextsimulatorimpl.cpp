@@ -169,6 +169,7 @@ namespace BlackCore
             if (simSettings == settings) { return false; }
             const CStatusMessage msg = m_multiSimulatorSettings.setSettings(settings, simulator);
             CLogMessage::preformatted(msg);
+            emit this->simulatorSettingsChanged();
             return true;
         }
 

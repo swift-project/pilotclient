@@ -73,6 +73,7 @@ namespace BlackGui
             connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginDetailsRequested, this, &CSettingsSimulatorComponent::showPluginDetails);
             connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginConfigRequested,  this, &CSettingsSimulatorComponent::showPluginConfig);
 
+            connect(ui->pb_Reload,           &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onReload,                   Qt::QueuedConnection);
             connect(ui->pb_ApplyMaxAircraft, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft, Qt::QueuedConnection);
             connect(ui->pb_ApplyTimeSync,    &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyTimeSync,            Qt::QueuedConnection);
             connect(ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance, Qt::QueuedConnection);
@@ -102,6 +103,7 @@ namespace BlackGui
             if (sGui && sGui->getIContextSimulator())
             {
                 this->simulatorPluginChanged(sGui->getIContextSimulator()->getSimulatorPluginInfo());
+                connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorSettingsChanged, this, &CSettingsSimulatorComponent::onReload, Qt::QueuedConnection);
             }
         }
 
@@ -319,7 +321,7 @@ namespace BlackGui
         void CSettingsSimulatorComponent::onApplyComSync()
         {
             bool ok = false;
-            CSimulatorSettings settings = this->getSimulatorSettings(ok);
+            CSimulatorSettings settings = CSettingsSimulatorComponent::getSimulatorSettings(ok);
             if (!ok || !settings.setComIntegrated(ui->cb_ComSync->isChecked())) { return; }
             this->setSimulatorSettings(settings);
         }
@@ -328,7 +330,7 @@ namespace BlackGui
         {
             bool ok = false;
             const CSimulatorSettings::CGSource source = ui->comp_CGSourceSelector->getValue();
-            CSimulatorSettings settings = getSimulatorSettings(ok);
+            CSimulatorSettings settings = CSettingsSimulatorComponent::getSimulatorSettings(ok);
             if (!ok || !settings.setCGSource(source)) { return; }
             this->setSimulatorSettings(settings);
         }
@@ -336,7 +338,7 @@ namespace BlackGui
         void CSettingsSimulatorComponent::onApplyRecordGnd()
         {
             bool ok = false;
-            CSimulatorSettings settings = this->getSimulatorSettings(ok);
+            CSimulatorSettings settings = CSettingsSimulatorComponent::getSimulatorSettings(ok);
             if (!ok) { return; }
 
             // get value, automatically add default unit if unit is missing
@@ -353,6 +355,11 @@ namespace BlackGui
             const bool c2 = settings.setRecordedGndRadius(radius);
             if (!c1 && !c2) { return; }
             this->setSimulatorSettings(settings);
+        }
+
+        void CSettingsSimulatorComponent::onReload()
+        {
+            this->setGuiValues();
         }
 
         void CSettingsSimulatorComponent::clearRestricedRendering()
