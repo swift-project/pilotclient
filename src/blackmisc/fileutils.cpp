@@ -506,6 +506,31 @@ namespace BlackMisc
         return f.left(i);
     }
 
+    QSet<QString> CFileUtils::windowsUncMachines(const QSet<QString> &paths)
+    {
+        if (paths.isEmpty()) { return {}; }
+
+        const Qt::CaseSensitivity cs = osFileNameCaseSensitivity();
+        const bool isCs = isFileNameCaseSensitive();
+
+        QSet<QString> machines;
+        QString lastMachine;
+
+        for (const QString &p : paths)
+        {
+            if (!lastMachine.isEmpty() && p.contains(lastMachine, cs))
+            {
+                // shortcut
+                continue;
+            }
+            const QString m = isCs ? windowsUncMachine(p) : windowsUncMachine(p).toLower();
+            if (m.isEmpty()) { continue; }
+            lastMachine = m;
+            machines.insert(m);
+        }
+        return machines;
+    }
+
     bool CFileUtils::canPingUncMachine(const QString &machine)
     {
         static QMap<QString, qint64> good;

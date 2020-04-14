@@ -181,6 +181,9 @@ namespace BlackMisc
         //! Machine in Windows UNC path
         static QString windowsUncMachine(const QString &filePath);
 
+        //! All UNC machines from the paths
+        static QSet<QString> windowsUncMachines(const QSet<QString> &paths);
+
         //! Can connect the UNC machine
         static bool canPingUncMachine(const QString &machine);
 
