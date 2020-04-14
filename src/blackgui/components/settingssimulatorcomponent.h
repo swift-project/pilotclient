@@ -69,6 +69,9 @@ namespace BlackGui
             //! Reload settings
             void onReload();
 
+            //! Simulators changed
+            void onEnabledSimulatorsChanged();
+
             //! Clear restricted rendering
             void clearRestricedRendering();
 
@@ -82,7 +85,7 @@ namespace BlackGui
             void showPluginConfig(const QString &identifier);
 
             //! Select/deselect enabled/disabled plugins
-            void reloadPluginConfig();
+            void reloadPluginConfig(const BlackMisc::Simulation::CSimulatorPluginInfoList &plugins);
 
             //! Check plugins again
             void checkSimulatorPlugins();
@@ -91,7 +94,7 @@ namespace BlackGui
             void setGuiValues();
 
             //! Available plugins, auto pseudo plugin added
-            BlackMisc::Simulation::CSimulatorPluginInfoList getAvailablePlugins() const;
+            static BlackMisc::Simulation::CSimulatorPluginInfoList getAvailablePlugins();
 
             //! Get the simulator settings
             static BlackMisc::Simulation::Settings::CSimulatorSettings getSimulatorSettings(bool &ok);
@@ -102,7 +105,7 @@ namespace BlackGui
             QScopedPointer<Ui::CSettingsSimulatorComponent> ui; //!< UI
             bool m_pluginLoaded = false; //!< plugin loaded?
             BlackCore::CPluginManagerSimulator *m_plugins = nullptr;
-            BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CSettingsSimulatorComponent::reloadPluginConfig };
+            BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CSettingsSimulatorComponent::onEnabledSimulatorsChanged };
         };
     } // namespace
 } // namespace
