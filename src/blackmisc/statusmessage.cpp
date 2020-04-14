@@ -102,21 +102,19 @@ namespace BlackMisc
 
     CStatusMessage &CStatusMessage::operator =(const CStatusMessage &other)
     {
-        // locks because of mutable members
         if (this == &other) { return *this; }
 
         static_cast<CMessageBase &>(*this) = other;
+        static_cast<ITimestampBased &>(*this) = other;
+        static_cast<IOrderable &>(*this) = other;
 
+        // locks because of mutable member
         QReadLocker readLock(&other.m_lock);
         const auto handledBy = other.m_handledByObjects;
-        const qint64 ts = other.m_timestampMSecsSinceEpoch;
-        const int order = other.m_order;
         readLock.unlock(); // avoid deadlock
 
         QWriteLocker writeLock(&m_lock);
         m_handledByObjects = handledBy;
-        m_timestampMSecsSinceEpoch = ts;
-        m_order = order;
         return *this;
     }
 

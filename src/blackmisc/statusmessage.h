@@ -518,7 +518,7 @@ namespace BlackMisc
         CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, QStringView message, bool validation);
 
         mutable QVector<quintptr> m_handledByObjects;
-        mutable QReadWriteLock    m_lock;  //!< lock (because of mutable members)
+        mutable QReadWriteLock    m_lock;  //!< lock (because of mutable member)
 
         //! \fixme KB 2019-01 order and timestamp "disabled" for Ref T184 token bucket. Would it be better to enable those and use a special comparison function for that (e.g. "equalMessageAndSeverity")?
         BLACK_METACLASS(
