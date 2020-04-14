@@ -8,16 +8,18 @@
 
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/matchingutils.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/logutils.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/iterator.h"
 #include "blackmisc/range.h"
-#include "fileutils.h"
-#include "directoryutils.h"
+#include "blackmisc/fileutils.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QStringBuilder>
 #include <QJsonValue>
@@ -27,6 +29,7 @@
 #include <QDir>
 #include <tuple>
 
+using namespace BlackConfig;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Math;
 using namespace BlackMisc::Aviation;
@@ -1352,6 +1355,22 @@ namespace BlackMisc
             return files;
         }
 
+        QSet<QString> CAircraftModelList::getAllUNCFileNames() const
+        {
+            const bool cs = CFileUtils::isFileNameCaseSensitive();
+            QSet<QString> files;
+            for (const CAircraftModel &model : as_const(*this))
+            {
+                if (!model.hasFileName()) { continue; }
+                const QString fn = (cs ? model.getFileName() : model.getFileNameLowerCase());
+                if (CFileUtils::isWindowsUncPath(fn))
+                {
+                    files.insert(fn);
+                }
+            }
+            return files;
+        }
+
         QString CAircraftModelList::getCombinedTypesAsString(const QString &separator) const
         {
             if (this->isEmpty()) { return {}; }
@@ -1540,6 +1559,13 @@ namespace BlackMisc
             CAircraftModelList sorted(*this);
             if (!alreadySortedByFn) { sorted.sortByFileName(); }
 
+            // avoid hanging if UNC paths are not available
+            if (CBuildConfig::isRunningOnWindowsNtPlatform())
+            {
+                const CStatusMessageList uncMsgs = this->validateUncFiles(sorted.getAllUNCFileNames());
+                if (uncMsgs.hasErrorMessages()) { return uncMsgs; }
+            }
+
             const bool caseSensitive = CFileUtils::isFileNameCaseSensitive();
             const QString simRootDir = CFileUtils::normalizeFilePathToQtStandard(
                                            CFileUtils::stripLeadingSlashOrDriveLetter(
@@ -1612,6 +1638,35 @@ namespace BlackMisc
             if (!invalidModels.isEmpty()) { msgs.push_back(CStatusMessage(this).validationWarning(u"File validation, invalid models: %1") << invalidModels.size()); }
 
             // done
+            return msgs;
+        }
+
+        CStatusMessageList CAircraftModelList::validateUncFiles(const QSet<QString> uncFiles) const
+        {
+            // check if UNC paths can be reached
+            CStatusMessageList msgs;
+            if (!CBuildConfig::isRunningOnWindowsNtPlatform()) { return msgs; }
+            if (uncFiles.isEmpty()) { return msgs; }
+
+            const QSet<QString> uncMachines = CFileUtils::windowsUncMachines(uncFiles);
+            if (uncMachines.isEmpty())
+            {
+                msgs.push_back(CStatusMessage(this).validationInfo(u"Found NO UNC machines for %1 files, odd...?") << uncFiles.size());
+            }
+            else
+            {
+                const QString machines = joinStringSet(uncMachines, ", ");
+                msgs.push_back(CStatusMessage(this).validationInfo(u"Found %1 UNC files on machines: %2") << uncFiles.size() << machines);
+            }
+
+            for (const QString &m : uncMachines)
+            {
+                const bool ping = CNetworkUtils::canPing(m);
+                if (!ping)
+                {
+                    msgs.push_back(CStatusMessage(this).validationError(u"Cannot ping UNC machine(s): %1. UNC files: %2") << m << uncFiles.size());
+                }
+            }
             return msgs;
         }
 

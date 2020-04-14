@@ -473,6 +473,10 @@ namespace BlackMisc
             //! All file names
             QSet<QString> getAllFileNames() const;
 
+            //! All UNC file names
+            //! \remark Windows on a "shared drive" paths
+            QSet<QString> getAllUNCFileNames() const;
+
             //! All combined types as string
             QString getCombinedTypesAsString(const QString &separator = ", ") const;
 
@@ -555,6 +559,10 @@ namespace BlackMisc
                     const Aviation::CAircraftCategoryList &aircraftCategories = {},
                     const Aviation::CLiveryList &liveries = {},
                     const CDistributorList &distributors = {});
+
+        private:
+            //! Validate UNC paths (Windows)
+            CStatusMessageList validateUncFiles(const QSet<QString> uncFiles) const;
         };
 
         //! Model per callsign
