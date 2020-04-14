@@ -63,8 +63,8 @@ namespace BlackGui
         void CAircraftModelValidationComponent::validatedModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &valid, const CAircraftModelList &invalid, bool stopped, const CStatusMessageList &msgs)
         {
             // BlackMisc::Simulation::CBackgroundValidation
-            Q_UNUSED(simulator);
-            Q_UNUSED(valid);
+            Q_UNUSED(simulator)
+            Q_UNUSED(valid)
 
             constexpr int MsgTimeout = 15000;
             m_lastResults = QDateTime::currentMSecsSinceEpoch();
@@ -124,7 +124,7 @@ namespace BlackGui
             if (setup.doVerificationAtStartup() == checked) { return; }
             setup.setVerificationAtStartup(checked);
             const CStatusMessage msg = m_matchingSettings.setAndSave(setup);
-            Q_UNUSED(msg);
+            Q_UNUSED(msg)
         }
 
         void CAircraftModelValidationComponent::onOnlyErrorWarningChanged(bool checked)
@@ -133,7 +133,7 @@ namespace BlackGui
             if (setup.onlyShowVerificationWarningsAndErrors() == checked) { return; }
             setup.setOnlyShowVerificationWarningsAndErrors(checked);
             const CStatusMessage msg = m_matchingSettings.setAndSave(setup);
-            Q_UNUSED(msg);
+            Q_UNUSED(msg)
         }
 
         void CAircraftModelValidationComponent::triggerValidation()
@@ -225,7 +225,7 @@ namespace BlackGui
         void CAircraftModelValidationComponent::saveInvalidModels(const CAircraftModelList &models) const
         {
             const CStatusMessage m = models.saveInvalidModels();
-            Q_UNUSED(m);
+            Q_UNUSED(m)
         }
     } // ns
 } // ns

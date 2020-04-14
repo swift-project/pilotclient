@@ -75,7 +75,7 @@ namespace BlackMisc
                 m_simDirectory = simDirectory;
                 m_checkedSimulatorMsgs.remove(simulator);
             }
-            QTimer::singleShot(0, this, [ = ]
+            QTimer::singleShot(5, this, [ = ]
             {
                 if (!myself) { return; }
                 myself->doWork();
