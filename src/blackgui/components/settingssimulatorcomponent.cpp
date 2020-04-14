@@ -68,7 +68,6 @@ namespace BlackGui
             ui->le_MaxDistance->setValidator(new QIntValidator(ui->le_MaxDistance));
 
             // connects
-            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged,       this, &CSettingsSimulatorComponent::simulatorPluginChanged);
             connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginStateChanged,     this, &CSettingsSimulatorComponent::pluginStateChanged);
             connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginDetailsRequested, this, &CSettingsSimulatorComponent::showPluginDetails);
             connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginConfigRequested,  this, &CSettingsSimulatorComponent::showPluginConfig);
@@ -82,27 +81,32 @@ namespace BlackGui
             connect(ui->pb_ApplyRecordOwnAircraftGnd, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyRecordGnd,  Qt::QueuedConnection);
 
             connect(ui->pb_ClearRestrictedRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::clearRestricedRendering);
-            connect(ui->pb_DisableRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyDisableRendering);
-            connect(ui->pb_Check, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::checkSimulatorPlugins);
+            connect(ui->pb_DisableRendering,         &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyDisableRendering);
+            connect(ui->pb_Check,                    &QCheckBox::pressed, this, &CSettingsSimulatorComponent::checkSimulatorPlugins);
             connect(ui->le_MaxAircraft, &QLineEdit::editingFinished, this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft);
             connect(ui->le_MaxDistance, &QLineEdit::editingFinished, this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance);
             connect(ui->le_MaxAircraft, &QLineEdit::returnPressed,   this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft);
             connect(ui->le_MaxDistance, &QLineEdit::returnPressed,   this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance);
 
             // list all available simulators
-            for (const auto &p : getAvailablePlugins())
+            const CSimulatorPluginInfoList plugins = CSettingsSimulatorComponent::getAvailablePlugins();
+            for (const auto &p : plugins)
             {
                 const QString config = m_plugins->getPluginConfigId(p.getIdentifier());
                 ui->pluginSelector_EnabledSimulators->addPlugin(p.getIdentifier(), p.getName(), !config.isEmpty(), false);
             }
 
+            const int h = qRound(1.3 * plugins.size() * CGuiUtility::fontMetricsLazyDog43Chars().height());
+            ui->pluginSelector_EnabledSimulators->setMinimumHeight(h);
+
             // config
-            this->reloadPluginConfig();
+            this->reloadPluginConfig(plugins);
 
             // init
             if (sGui && sGui->getIContextSimulator())
             {
                 this->simulatorPluginChanged(sGui->getIContextSimulator()->getSimulatorPluginInfo());
+                connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged,   this, &CSettingsSimulatorComponent::simulatorPluginChanged, Qt::QueuedConnection);
                 connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorSettingsChanged, this, &CSettingsSimulatorComponent::onReload, Qt::QueuedConnection);
             }
         }
@@ -178,7 +182,7 @@ namespace BlackGui
             }
         }
 
-        CSimulatorPluginInfoList CSettingsSimulatorComponent::getAvailablePlugins() const
+        CSimulatorPluginInfoList CSettingsSimulatorComponent::getAvailablePlugins()
         {
             if (!sGui || !sGui->getIContextSimulator()) { return {}; }
             return sGui->getIContextSimulator()->getAvailableSimulatorPlugins();
@@ -362,6 +366,11 @@ namespace BlackGui
             this->setGuiValues();
         }
 
+        void CSettingsSimulatorComponent::onEnabledSimulatorsChanged()
+        {
+            this->reloadPluginConfig(CSettingsSimulatorComponent::getAvailablePlugins());
+        }
+
         void CSettingsSimulatorComponent::clearRestricedRendering()
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
@@ -429,11 +438,11 @@ namespace BlackGui
             window->show();
         }
 
-        void CSettingsSimulatorComponent::reloadPluginConfig()
+        void CSettingsSimulatorComponent::reloadPluginConfig(const CSimulatorPluginInfoList &plugins)
         {
             // list all available simulators
             const auto enabledSimulators = m_enabledSimulators.getThreadLocal();
-            for (const auto &p : this->getAvailablePlugins())
+            for (const auto &p : plugins)
             {
                 ui->pluginSelector_EnabledSimulators->setEnabled(p.getIdentifier(), enabledSimulators.contains(p.getIdentifier()));
             }
