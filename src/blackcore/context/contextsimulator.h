@@ -114,6 +114,9 @@ namespace BlackCore
             //! Same as simulatorPluginChanged, only with simulator signature
             void simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
+            //! Simulator settings have been changed
+            void simulatorSettingsChanged();
+
             //! A formerly vital driver is no longer vital/responding
             void vitalityLost();
 

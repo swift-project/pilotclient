@@ -59,6 +59,9 @@ namespace BlackCore
                                    "simulatorChanged", this, SIGNAL(simulatorChanged(BlackMisc::Simulation::CSimulatorInfo)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                                   "simulatorSettingsChanged", this, SIGNAL(simulatorSettingsChanged()));
+            Q_ASSERT(s);
+            s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                    "vitalityLost", this, SIGNAL(vitalityLost()));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),

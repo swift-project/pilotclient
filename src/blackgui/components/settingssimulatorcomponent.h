@@ -66,6 +66,9 @@ namespace BlackGui
             //! Record GND
             void onApplyRecordGnd();
 
+            //! Reload settings
+            void onReload();
+
             //! Clear restricted rendering
             void clearRestricedRendering();
 
@@ -93,7 +96,7 @@ namespace BlackGui
             //! Get the simulator settings
             static BlackMisc::Simulation::Settings::CSimulatorSettings getSimulatorSettings(bool &ok);
 
-            //! Get the simulator settings
+            //! Set the simulator settings
             static void setSimulatorSettings(BlackMisc::Simulation::Settings::CSimulatorSettings &settings);
 
             QScopedPointer<Ui::CSettingsSimulatorComponent> ui; //!< UI
