@@ -15,6 +15,8 @@
 #include "blackgui/models/simulatedaircraftlistmodel.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/pq/angle.h"
+
 #include <QObject>
 
 namespace BlackMisc
@@ -87,6 +89,16 @@ namespace BlackGui
             //! Follow in simulator
             void requestFollowInSimulator();
 
+            //! Enable/disable parts @{
+            void requestEnableParts();
+            void requestDisableParts();
+            //! @}
+
+            //! Enable/disable parts @{
+            void request0PitchOnGround();
+            void requestNullPitchOnGround();
+            //! @}
+
             //! Request temp disabling of matching models
             void requestTempDisable();
 
@@ -107,6 +119,15 @@ namespace BlackGui
 
             //! Follow aircraft in simulator
             void followAircraftInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! Enable aircraft parts
+            void enableParts(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool enabled);
+
+            //! Set pitch
+            void setPitchOnGround(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::PhysicalQuantities::CAngle &pitch);
+
+            //! Aircraft supporting parts?
+            bool isSupportingAircraftParts(const BlackMisc::Aviation::CCallsign &cs) const;
 
             //! Highlight in simulator
             void highlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
