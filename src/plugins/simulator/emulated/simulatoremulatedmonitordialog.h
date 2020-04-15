@@ -12,6 +12,7 @@
 #define BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDMONITORDIALOG_H
 
 #include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/identifiable.h"
@@ -64,6 +65,9 @@ namespace BlackSimPlugin
 
             //! The title
             void updateWindowTitleAndUiValues(const BlackMisc::Simulation::CSimulatorInfo &info);
+
+            //! Display weather grid
+            void receivedWeather(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
 
         private:
             static int constexpr MaxLogMessages = 500; //!< desired log message number
