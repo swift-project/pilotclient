@@ -34,15 +34,15 @@ namespace BlackGui
             ui->tvp_InterpolationSetup->menuAddItems(CInterpolationSetupView::MenuRemoveSelectedRows);
 
             connect(ui->pb_RenderingSetup, &QPushButton::clicked, this, &CInterpolationSetupComponent::requestRenderingRestrictionsWidget);
-            connect(ui->pb_Save, &QPushButton::clicked, this, &CInterpolationSetupComponent::saveSetup);
-            connect(ui->pb_DeleteOrReset, &QPushButton::clicked, this, &CInterpolationSetupComponent::removeOrResetSetup);
-            connect(ui->pb_Reload, &QPushButton::clicked, this, &CInterpolationSetupComponent::reloadSetup);
-            connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::doubleClicked, this, &CInterpolationSetupComponent::onRowDoubleClicked);
-            connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::modelChanged, this, &CInterpolationSetupComponent::onModelChanged, Qt::QueuedConnection);
+            connect(ui->pb_Save, &QPushButton::clicked,           this, &CInterpolationSetupComponent::saveSetup);
+            connect(ui->pb_DeleteOrReset, &QPushButton::clicked,  this, &CInterpolationSetupComponent::removeOrResetSetup);
+            connect(ui->pb_Reload, &QPushButton::clicked,         this, &CInterpolationSetupComponent::reloadSetup, Qt::QueuedConnection);
+            connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::doubleClicked,    this, &CInterpolationSetupComponent::onRowDoubleClicked);
+            connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::modelChanged,     this, &CInterpolationSetupComponent::onModelChanged, Qt::QueuedConnection);
             connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::modelDataChanged, this, &CInterpolationSetupComponent::onModelChanged, Qt::QueuedConnection);
-            connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::objectsDeleted, this, &CInterpolationSetupComponent::onObjectsDeleted, Qt::QueuedConnection);
+            connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::objectsDeleted,   this, &CInterpolationSetupComponent::onObjectsDeleted, Qt::QueuedConnection);
             connect(ui->rb_Callsign, &QRadioButton::released, this, &CInterpolationSetupComponent::onModeChanged);
-            connect(ui->rb_Global, &QRadioButton::released, this, &CInterpolationSetupComponent::onModeChanged);
+            connect(ui->rb_Global, &QRadioButton::released,   this, &CInterpolationSetupComponent::onModeChanged);
             if (sGui &&  sGui->getIContextSimulator())
             {
                 connect(sGui->getIContextSimulator(), &IContextSimulator::interpolationAndRenderingSetupChanged, this, &CInterpolationSetupComponent::onSetupChanged, Qt::QueuedConnection);
@@ -106,9 +106,15 @@ namespace BlackGui
             // void
         }
 
+        void CInterpolationSetupComponent::onReloadSetup()
+        {
+            this->reloadSetup();
+            this->displaySetupsPerCallsign();
+        }
+
         void CInterpolationSetupComponent::reloadSetup()
         {
-            const bool global = (this->getSetupMode() == CInterpolationSetupComponent::SetupGlobal);
+            const bool global  = (this->getSetupMode() == CInterpolationSetupComponent::SetupGlobal);
             const bool overlay = QObject::sender() == ui->pb_Reload;
             if (!this->checkPrerequisites(!global, overlay)) { return; }
             if (global)
@@ -268,7 +274,7 @@ namespace BlackGui
                 CInterpolationSetupList setups = ui->tvp_InterpolationSetup->container();
                 setups.removeByCallsigns(deletedSetups.getCallsigns());
                 const bool set = this->setSetupsToContext(setups, true);
-                Q_UNUSED(set);
+                Q_UNUSED(set)
             }
         }
     } // ns

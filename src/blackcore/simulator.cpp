@@ -969,7 +969,7 @@ namespace BlackCore
     void ISimulator::emitInterpolationSetupChanged()
     {
         QPointer<ISimulator> myself(this);
-        QTimer::singleShot(0, this, [ = ]
+        QTimer::singleShot(5, this, [ = ]
         {
             if (!myself) { return; }
             emit this->interpolationAndRenderingSetupChanged();

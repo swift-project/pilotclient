@@ -82,13 +82,13 @@ namespace BlackGui
 
         CStatusMessageList CInterpolationSetupForm::validate(bool nested) const
         {
-            Q_UNUSED(nested);
+            Q_UNUSED(nested)
             return CStatusMessageList();
         }
 
         void CInterpolationSetupForm::onCheckboxChanged(int state)
         {
-            Q_UNUSED(state);
+            Q_UNUSED(state)
             emit this->valueChanged();
         }
 
@@ -112,7 +112,7 @@ namespace BlackGui
 
         void CInterpolationSetupForm::onInterpolatorModeChanged(bool checked)
         {
-            Q_UNUSED(checked);
+            Q_UNUSED(checked)
             emit this->valueChanged();
         }
 
@@ -126,7 +126,7 @@ namespace BlackGui
         {
             CAngle pitch;
             const QString p = ui->le_PitchOnGround->text().trimmed();
-            pitch.parseFromString(p, CPqString::SeparatorBestGuess);
+            pitch.parseFromString(p, CPqString::SeparatorBestGuess, CAngleUnit::deg());
             return pitch;
         }
 

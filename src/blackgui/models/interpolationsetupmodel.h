@@ -31,7 +31,7 @@ namespace BlackGui
             explicit CInterpolationSetupListModel(QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CInterpolationSetupListModel() {}
+            virtual ~CInterpolationSetupListModel() override {}
         };
     } // ns
 } // ns

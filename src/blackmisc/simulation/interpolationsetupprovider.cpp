@@ -17,8 +17,8 @@ namespace BlackMisc
         CInterpolationAndRenderingSetupPerCallsign IInterpolationSetupProvider::getInterpolationSetupPerCallsignOrDefault(const CCallsign &callsign) const
         {
             QReadLocker l(&m_lockSetup);
-            if (!m_setups.contains(callsign)) { return CInterpolationAndRenderingSetupPerCallsign(callsign, m_globalSetup); }
-            return m_setups.value(callsign);
+            if (!m_setupsPerCallsign.contains(callsign)) { return CInterpolationAndRenderingSetupPerCallsign(callsign, m_globalSetup); }
+            return m_setupsPerCallsign.value(callsign);
         }
 
         CInterpolationSetupList IInterpolationSetupProvider::getInterpolationSetupsPerCallsign() const
@@ -30,7 +30,7 @@ namespace BlackMisc
         bool IInterpolationSetupProvider::hasSetupsPerCallsign() const
         {
             QReadLocker l(&m_lockSetup);
-            return !m_setups.isEmpty();
+            return !m_setupsPerCallsign.isEmpty();
         }
 
         bool IInterpolationSetupProvider::setInterpolationSetupsPerCallsign(const CInterpolationSetupList &setups, bool ignoreSameAsGlobal)
@@ -42,12 +42,12 @@ namespace BlackMisc
                 if (ignoreSameAsGlobal && setup.isEqualToGlobal(gs)) { continue; }
                 setupsPerCs.insert(setup.getCallsign(), setup);
             }
-
             {
                 QWriteLocker l(&m_lockSetup);
-                if (m_setups.isEmpty() && setupsPerCs.isEmpty()) { return false; }
-                m_setups = setupsPerCs;
+                if (m_setupsPerCallsign.isEmpty() && setupsPerCs.isEmpty()) { return false; }
+                m_setupsPerCallsign = setupsPerCs;
             }
+            this->emitInterpolationSetupChanged();
             return true;
         }
 
@@ -61,7 +61,7 @@ namespace BlackMisc
         {
             const SetupsPerCallsign setups = this->getSetupsPerCallsign();
             CCallsignSet callsigns;
-            for (const auto &pair : makePairsRange(setups))
+            for (const auto pair : makePairsRange(setups))
             {
                 if (pair.second.logInterpolation()) { callsigns.insert(pair.first); }
             }
@@ -71,8 +71,8 @@ namespace BlackMisc
         bool IInterpolationSetupProvider::isLogCallsign(const CCallsign &callsign) const
         {
             QReadLocker l(&m_lockSetup);
-            if (!m_setups.contains(callsign)) { return false; }
-            return m_setups[callsign].logInterpolation();
+            if (!m_setupsPerCallsign.contains(callsign)) { return false; }
+            return m_setupsPerCallsign[callsign].logInterpolation();
         }
 
         bool IInterpolationSetupProvider::setInterpolationMode(const QString &modeAsString, const CCallsign &callsign)
@@ -112,13 +112,13 @@ namespace BlackMisc
                 if (setup.isEqualToGlobal(gs))
                 {
                     QWriteLocker l(&m_lockSetup);
-                    m_setups.remove(callsign);
+                    m_setupsPerCallsign.remove(callsign);
                     return false;
                 }
             }
             {
                 QWriteLocker l(&m_lockSetup);
-                m_setups[callsign] = setup;
+                m_setupsPerCallsign[callsign] = setup;
             }
             this->emitInterpolationSetupChanged();
             return true;
@@ -129,7 +129,7 @@ namespace BlackMisc
             bool removed = false;
             {
                 QWriteLocker l(&m_lockSetup);
-                removed = m_setups.remove(callsign) > 0;
+                removed = m_setupsPerCallsign.remove(callsign) > 0;
             }
             if (removed) { this->emitInterpolationSetupChanged(); }
             return removed;
@@ -152,7 +152,7 @@ namespace BlackMisc
             // on the other side, we keep locks for a minimal time frame
             SetupsPerCallsign setupsToKeep;
             CInterpolationAndRenderingSetupGlobal global = this->getInterpolationSetupGlobal();
-            for (const auto &pair : makePairsRange(setupsCopy))
+            for (const auto pair : makePairsRange(setupsCopy))
             {
                 CInterpolationAndRenderingSetupPerCallsign setup = pair.second;
                 setup.setLogInterpolation(false);
@@ -161,7 +161,7 @@ namespace BlackMisc
             }
             {
                 QWriteLocker l(&m_lockSetup);
-                m_setups = setupsToKeep;
+                m_setupsPerCallsign = setupsToKeep;
             }
             this->emitInterpolationSetupChanged();
         }
@@ -171,8 +171,8 @@ namespace BlackMisc
             int r = 0;
             {
                 QWriteLocker l(&m_lockSetup);
-                r = m_setups.size();
-                m_setups.clear();
+                r = m_setupsPerCallsign.size();
+                m_setupsPerCallsign.clear();
             }
 
             if (r > 0) { this->emitInterpolationSetupChanged(); }
@@ -193,7 +193,7 @@ namespace BlackMisc
         IInterpolationSetupProvider::SetupsPerCallsign IInterpolationSetupProvider::getSetupsPerCallsign() const
         {
             QReadLocker l(&m_lockSetup);
-            return m_setups;
+            return m_setupsPerCallsign;
         }
 
         // pin vtables to this file

@@ -39,7 +39,7 @@ namespace BlackGui
             explicit CInterpolationSetupComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CInterpolationSetupComponent();
+            virtual ~CInterpolationSetupComponent() override;
 
             //! Setup mode
             Mode getSetupMode() const;
@@ -59,6 +59,9 @@ namespace BlackGui
 
             //! View has been changed
             void onModelChanged();
+
+            //! Requested reload
+            void onReloadSetup();
 
             //! Reload
             void reloadSetup();
