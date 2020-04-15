@@ -24,6 +24,7 @@
 
 using namespace BlackConfig;
 using namespace BlackMisc;
+using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore::Context;
@@ -112,9 +113,18 @@ namespace BlackGui
                     }
                     if (m_withMenuHighlightAndFollow)
                     {
-                        menuActions.addAction(CIcons::appAircraft16(),  "Follow in simulator",    CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::requestFollowInSimulator });
+                        menuActions.addAction(CIcons::appAircraft16(),  "Follow in simulator", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::requestFollowInSimulator });
                         if (!menuActions.isEmpty()) { menuActions.addSeparator(CMenuAction::pathClientSimulationDisplay()); }
-                        menuActions.addAction(CIcons::appSimulator16(), "Highlight in simulator", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::requestHighlightInSimulator });
+                        if (aircraft.isPartsSynchronized())
+                        {
+                            menuActions.addAction(CIcons::appAircraft16(), "Temp.disable parts", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::requestDisableParts });
+                            menuActions.addAction(CIcons::appAircraft16(), "Re/enabled parts", CMenuAction::pathClientSimulationDisplay(),   { this, &CSimulatedAircraftView::requestEnableParts });
+                        }
+                        menuActions.addAction(CIcons::appAircraft16(),  "Zero 0 pitch on ground",    CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::request0PitchOnGround });
+                        menuActions.addAction(CIcons::appAircraft16(),  "Remove pitch manipulation", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::requestNullPitchOnGround });
+
+                        if (!menuActions.isEmpty()) { menuActions.addSeparator(CMenuAction::pathClientSimulationDisplay()); }
+                        menuActions.addAction(CIcons::appSimulator16(), "Highlight in simulator",    CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::requestHighlightInSimulator });
                     }
                     if (m_withMenuEnableGndFlag)
                     {
@@ -178,6 +188,34 @@ namespace BlackGui
             const CSimulatedAircraft aircraft(this->selectedObject());
             if (aircraft.getCallsign().isEmpty()) { return; }
             this->followAircraftInSimulator(aircraft);
+        }
+
+        void CSimulatedAircraftView::requestEnableParts()
+        {
+            const CSimulatedAircraft aircraft(this->selectedObject());
+            if (aircraft.getCallsign().isEmpty()) { return; }
+            this->enableParts(aircraft, true);
+        }
+
+        void CSimulatedAircraftView::requestDisableParts()
+        {
+            const CSimulatedAircraft aircraft(this->selectedObject());
+            if (aircraft.getCallsign().isEmpty()) { return; }
+            this->enableParts(aircraft, false);
+        }
+
+        void CSimulatedAircraftView::request0PitchOnGround()
+        {
+            const CSimulatedAircraft aircraft(this->selectedObject());
+            if (aircraft.getCallsign().isEmpty()) { return; }
+            this->setPitchOnGround(aircraft, CAngle(0, CAngleUnit::deg()));
+        }
+
+        void CSimulatedAircraftView::requestNullPitchOnGround()
+        {
+            const CSimulatedAircraft aircraft(this->selectedObject());
+            if (aircraft.getCallsign().isEmpty()) { return; }
+            this->setPitchOnGround(aircraft, CAngle::null());
         }
 
         void CSimulatedAircraftView::requestTempDisable()
@@ -245,6 +283,35 @@ namespace BlackGui
             IContextSimulator *simContext = simulatorContext();
             if (!simContext) { return; }
             simContext->followAircraft(aircraft.getCallsign());
+        }
+
+        void CSimulatedAircraftView::enableParts(const CSimulatedAircraft &aircraft, bool enabled)
+        {
+            IContextSimulator *simContext = simulatorContext();
+            if (!simContext || !aircraft.hasCallsign()) { return; }
+            CInterpolationAndRenderingSetupPerCallsign setup = simContext->getInterpolationAndRenderingSetupPerCallsignOrDefault(aircraft.getCallsign());
+            if (setup.isAircraftPartsEnabled() == enabled) { return; }
+            setup.setEnabledAircraftParts(enabled);
+            setup.setCallsign(aircraft.getCallsign());
+            simContext->setInterpolationAndRenderingSetupsPerCallsign(setup, true);
+        }
+
+        void CSimulatedAircraftView::setPitchOnGround(const CSimulatedAircraft &aircraft, const PhysicalQuantities::CAngle &pitch)
+        {
+            IContextSimulator *simContext = simulatorContext();
+            if (!simContext || !aircraft.hasCallsign()) { return; }
+            CInterpolationAndRenderingSetupPerCallsign setup = simContext->getInterpolationAndRenderingSetupPerCallsignOrDefault(aircraft.getCallsign());
+            if (setup.getPitchOnGround() == pitch) { return; }
+            setup.setPitchOnGround(pitch);
+            setup.setCallsign(aircraft.getCallsign());
+            simContext->setInterpolationAndRenderingSetupsPerCallsign(setup, true);
+        }
+
+        bool CSimulatedAircraftView::isSupportingAircraftParts(const CCallsign &cs) const
+        {
+            const IContextNetwork *netContext = networkContext();
+            if (!netContext) { return false; }
+            return netContext->isRemoteAircraftSupportingParts(cs);
         }
 
         void CSimulatedAircraftView::highlightInSimulator(const CSimulatedAircraft &aircraft)
