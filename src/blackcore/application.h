@@ -52,6 +52,10 @@ namespace BlackMisc
 {
     class CFileLogger;
     class CLogCategoryList;
+    namespace SharedState
+    {
+        class CDataLinkDBus;
+    }
 }
 
 namespace BlackCore
@@ -345,6 +349,9 @@ namespace BlackCore
         bool hasSimulator() const;
 
         // ----------------------- contexts ----------------------------------------
+
+        //! Transport mechanism for sharing state between applications
+        BlackMisc::SharedState::CDataLinkDBus *getDataLinkDBus();
 
         //! \name Context / core facade related
         //! @{

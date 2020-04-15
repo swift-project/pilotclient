@@ -6,6 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
+#include "blackcore/corefacade.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextapplicationproxy.h"
 #include "blackcore/context/contextapplicationimpl.h"
@@ -16,9 +17,9 @@
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/context/contextownaircraftimpl.h"
 #include "blackcore/context/contextsimulator.h"
+#include "blackmisc/sharedstate/datalinkdbus.h"
 #include "blackcore/context/contextsimulatorimpl.h"
 #include "blackcore/data/launchersetup.h"
-#include "blackcore/corefacade.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/registermetadata.h"
 #include "blackcore/airspacemonitor.h"
@@ -104,6 +105,23 @@ namespace BlackCore
             }
         }
         times.insert("DBus", time.restart());
+
+        // shared state infrastructure
+        m_dataLinkDBus = new SharedState::CDataLinkDBus(this);
+        switch (m_config.getModeApplication())
+        {
+        case CCoreFacadeConfig::Local:
+            m_dataLinkDBus->initializeLocal(nullptr);
+            break;
+        case CCoreFacadeConfig::LocalInDBusServer:
+            m_dataLinkDBus->initializeLocal(m_dbusServer);
+            break;
+        case CCoreFacadeConfig::Remote:
+            m_dataLinkDBus->initializeRemote(m_dbusConnection, CDBusServer::coreServiceName(m_dbusConnection));
+            break;
+        default:
+            qFatal("Invalid application context mode");
+        }
 
         // contexts
         if (m_contextApplication) { m_contextApplication->deleteLater(); }
@@ -311,6 +329,10 @@ namespace BlackCore
 
         // disable all signals towards runtime
         disconnect(this);
+
+        // tear down shared state infrastructure
+        delete m_dataLinkDBus;
+        m_dataLinkDBus = nullptr;
 
         // unregister all from DBus
         if (m_dbusServer) { m_dbusServer->removeAllObjects(); }

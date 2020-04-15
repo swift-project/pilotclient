@@ -23,7 +23,15 @@
 #include <QObject>
 #include <QString>
 
-namespace BlackMisc { class CDBusServer; }
+namespace BlackMisc
+{
+    class CDBusServer;
+
+    namespace SharedState
+    {
+        class CDataLinkDBus;
+    }
+}
 namespace BlackCore
 {
     namespace Context
@@ -180,6 +188,9 @@ namespace BlackCore
         BlackMisc::CDBusServer *m_dbusServer = nullptr;
         bool                    m_initDBusConnection = false;
         QDBusConnection         m_dbusConnection { "default" };
+
+        // shared state infrastructure
+        BlackMisc::SharedState::CDataLinkDBus *m_dataLinkDBus = nullptr;
 
         // contexts:
         // There is a reason why we do not use smart pointers here. When the context is deleted

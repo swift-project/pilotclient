@@ -1577,6 +1577,11 @@ namespace BlackCore
     // Contexts
     // ---------------------------------------------------------------------------------
 
+    SharedState::CDataLinkDBus *CApplication::getDataLinkDBus()
+    {
+        return getCoreFacade()->getDataLinkDBus();
+    }
+
     bool CApplication::supportsContexts(bool ignoreShutdownTest) const
     {
         if (!ignoreShutdownTest && m_shutdown) { return false; }
