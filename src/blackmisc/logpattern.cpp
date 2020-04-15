@@ -328,7 +328,7 @@ namespace BlackMisc
         QString categories = m_strings.values().join("|"); // clazy:exclude=container-anti-pattern
         switch (m_strategy)
         {
-        case Everything: strategy = "none"; break;
+        case Everything: strategy = "all"; break;
         case ExactMatch: strategy = "exact match:" + categories; break;
         case AnyOf: strategy = "any of:" + categories; break;
         case AllOf: strategy = "all of:" + categories; break;

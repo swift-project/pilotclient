@@ -26,6 +26,8 @@
 namespace BlackMisc
 {
     class CDBusServer;
+    class CLogHistory;
+    class CLogHistorySource;
 
     namespace SharedState
     {
@@ -67,6 +69,9 @@ namespace BlackCore
 
         //! Destructor
         virtual ~CCoreFacade() override { this->gracefulShutdown(); }
+
+        //! Transport mechanism for sharing state between applications
+        BlackMisc::SharedState::CDataLinkDBus *getDataLinkDBus() { return this->m_dataLinkDBus; }
 
         //! DBus server (if applicable)
         const BlackMisc::CDBusServer *getDBusServer() const { return this->m_dbusServer; }
@@ -191,6 +196,8 @@ namespace BlackCore
 
         // shared state infrastructure
         BlackMisc::SharedState::CDataLinkDBus *m_dataLinkDBus = nullptr;
+        BlackMisc::CLogHistory *m_logHistory = nullptr;
+        BlackMisc::CLogHistorySource *m_logHistorySource = nullptr;
 
         // contexts:
         // There is a reason why we do not use smart pointers here. When the context is deleted

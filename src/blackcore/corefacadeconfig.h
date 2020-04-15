@@ -73,6 +73,9 @@ namespace BlackCore
         //! Local settings?
         bool hasLocalSettings() const { return m_settings == Local || m_settings == LocalInDBusServer; }
 
+        //! Local core?
+        bool hasLocalCore() const { return m_application == Local || m_application == LocalInDBusServer; }
+
         //! Requires server (at least one in server)?
         bool requiresDBusSever() const;
 

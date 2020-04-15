@@ -93,6 +93,9 @@ namespace BlackMisc
         //! Returns true if the given message matches this pattern.
         bool match(const CStatusMessage &message) const;
 
+        //! This class acts as a SharedState filter when stored in a CVariant.
+        bool matches(const CVariant &message) const { return match(message.to<CStatusMessage>()); }
+
         //! Returns true if this pattern is a proper subset of the other pattern.
         //! \see     https://en.wikipedia.org/wiki/Proper_subset
         //! \details Pattern A is a proper subset of pattern B iff pattern B would match every category which pattern A matches,

@@ -18,6 +18,7 @@
 #include "blackcore/context/contextownaircraftimpl.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackmisc/sharedstate/datalinkdbus.h"
+#include "blackmisc/loghistory.h"
 #include "blackcore/context/contextsimulatorimpl.h"
 #include "blackcore/data/launchersetup.h"
 #include "blackcore/corefacadeconfig.h"
@@ -121,6 +122,15 @@ namespace BlackCore
             break;
         default:
             qFatal("Invalid application context mode");
+        }
+
+        // shared log history
+        m_logHistorySource = new CLogHistorySource(this);
+        m_logHistorySource->initialize(m_dataLinkDBus);
+        if (m_config.hasLocalCore())
+        {
+            m_logHistory = new CLogHistory(this);
+            m_logHistory->initialize(m_dataLinkDBus);
         }
 
         // contexts
@@ -331,6 +341,10 @@ namespace BlackCore
         disconnect(this);
 
         // tear down shared state infrastructure
+        delete m_logHistory;
+        m_logHistory = nullptr;
+        delete m_logHistorySource;
+        m_logHistorySource = nullptr;
         delete m_dataLinkDBus;
         m_dataLinkDBus = nullptr;
 
