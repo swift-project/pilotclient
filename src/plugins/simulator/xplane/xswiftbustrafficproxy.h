@@ -93,7 +93,7 @@ namespace BlackSimPlugin
             void push_back(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts)
             {
                 this->callsigns.push_back(callsign.asString());
-                this->gears.push_back(parts.isGearDown() ? 1 : 0);
+                this->gears.push_back(parts.isFixedGearDown() ? 1 : 0);
                 this->flaps.push_back(parts.getFlapsPercent() / 100.0);
                 this->spoilers.push_back(parts.isSpoilersOut() ? 1 : 0);
                 this->speedBrakes.push_back(parts.isSpoilersOut() ? 1 : 0);

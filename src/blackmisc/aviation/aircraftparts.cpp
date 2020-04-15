@@ -315,6 +315,11 @@ namespace BlackMisc
             m_lights.setAllOff();
         }
 
+        bool CAircraftParts::isFixedGearDown() const
+        {
+            return this->isGearDown() || this->isOnGround();
+        }
+
         CAircraftEngine CAircraftParts::getEngine(int number) const
         {
             return m_engines.getEngine(number);

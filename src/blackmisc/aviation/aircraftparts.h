@@ -101,6 +101,10 @@ namespace BlackMisc
             //! Is gear down?
             bool isGearDown() const { return m_gearDown; }
 
+            //! Is fixed gear down?
+            //! \remark using also other attributes to decide if gear is down
+            bool isFixedGearDown() const;
+
             //! Set gear down
             void setGearDown(bool down) { m_gearDown = down; }
 

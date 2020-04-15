@@ -356,7 +356,7 @@ namespace BlackSimPlugin
 
         void DataDefinitionRemoteAircraftPartsWithoutLights::initFromParts(const CAircraftParts &parts)
         {
-            gearHandlePosition = parts.isGearDown() ? 1.0 : 0.0;
+            gearHandlePosition = parts.isFixedGearDown() ? 1.0 : 0.0;
             const double trail = parts.getFlapsPercent() / 100.0;
             const double lead  = trail;
             flapsTrailingEdgeLeftPercent  = trail;
