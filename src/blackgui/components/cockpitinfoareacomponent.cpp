@@ -35,13 +35,14 @@ namespace BlackGui
 
         QSize CCockpitInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
         {
+            // see also CMainInfoAreaComponent::getPreferredSizeWhenFloating
             Q_UNUSED(areaIndex)
             return QSize(600, 400);
         }
 
         const QPixmap &CCockpitInfoAreaComponent::indexToPixmap(int areaIndex) const
         {
-            InfoArea area = static_cast<InfoArea>(areaIndex);
+            const InfoArea area = static_cast<InfoArea>(areaIndex);
             switch (area)
             {
             case InfoAreaAudio:         return CIcons::appAudio16();

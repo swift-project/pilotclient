@@ -133,7 +133,7 @@ namespace BlackGui
             {
                 const bool r = widgetsWithDockWidgetInfoAreaComponent.removeOne(iac);
                 Q_ASSERT(r); // why is the nested component not in the child list?
-                Q_UNUSED(r);
+                Q_UNUSED(r)
             }
         }
         return widgetsWithDockWidgetInfoAreaComponent;

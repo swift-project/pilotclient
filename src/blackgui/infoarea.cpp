@@ -94,7 +94,8 @@ namespace BlackGui
         {
             menu->addAction(CIcons::dockTop16(),  "Dock all",  this, &CInfoArea::dockAllWidgets);
             menu->addAction(CIcons::floatAll16(), "Float all", this, &CInfoArea::floatAllWidgets);
-            menu->addAction(CIcons::refresh16(),  "Reset all to defaults", this, &CInfoArea::resetAllWidgetSettings);
+            menu->addAction(CIcons::refresh16(),  "Reset all floating to defaults", this, &CInfoArea::resetAllFloatingWidgetSettings);
+            menu->addAction(CIcons::refresh16(),  "Reset all to defaults",          this, &CInfoArea::resetAllWidgetSettings);
 
             menu->addAction(CIcons::floatOne16(), QStringLiteral("Dock / float '%1'").arg(this->windowTitle()), this, &CInfoArea::toggleFloatingWholeInfoArea);
             QAction *lockTabBarMenuAction = new QAction(menu);
@@ -354,11 +355,20 @@ namespace BlackGui
         }
     }
 
+    void CInfoArea::resetAllFloatingWidgetSettings()
+    {
+        for (CDockWidgetInfoArea *dw : as_const(m_dockWidgetInfoAreas))
+        {
+            if (!dw || !dw->isFloating()) { continue; }
+            dw->resetSettings();
+        }
+    }
+
     void CInfoArea::resetAllWidgetSettings()
     {
         for (CDockWidgetInfoArea *dw : as_const(m_dockWidgetInfoAreas))
         {
-            if (!dw->isFloating()) { continue; }
+            if (!dw || !dw->isFloating()) { continue; }
             dw->resetSettings();
         }
     }
@@ -573,7 +583,7 @@ namespace BlackGui
     {
         if (!sGui || sGui->isShuttingDown()) { return; }
         this->setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::East);
-        bool init = m_tabBar ? false : true;
+        const bool init = m_tabBar ? false : true;
 
         for (int i = 0; i < m_dockWidgetInfoAreas.size(); i++)
         {
@@ -605,7 +615,10 @@ namespace BlackGui
             {
                 after->setFloating(false);
             }
+
+            // we can not tabify first
             if (!first) { continue; }
+
             this->tabifyDockWidget(first, after);
         }
 
@@ -834,6 +847,7 @@ namespace BlackGui
         QPointer<CInfoArea> myself(this);
         QTimer::singleShot(1000, this, [ = ]
         {
+            if (!myself) { return; }
             myself->emitInfoAreaStatus();
         });
     }

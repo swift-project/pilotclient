@@ -75,7 +75,7 @@ namespace BlackGui
             if (!this->isParentDockWidgetFloating()) { return; }
 
             // manually setting size, all other approaches failed
-            static const QSize defaultSizeShown(300, 400);
+            static const QSize defaultSizeShown(500, 600);
             static const QSize defaultSizeHidden(300, 150);
 
             // keep old size

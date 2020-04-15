@@ -156,7 +156,6 @@ namespace BlackGui
             case InfoAreaUsers:
             case InfoAreaLog:
             case InfoAreaSimulator:
-                return QSize(400, 300);
             case InfoAreaMapping:
             case InfoAreaInterpolation:
             case InfoAreaSettings:
@@ -165,9 +164,9 @@ namespace BlackGui
             case InfoAreaRadar:
                 return QSize(600, 400);
             case InfoAreaFlightPlan:
-                return QSize(625, 500);
+                return QSize(800, 600);
             default:
-                return QSize(400, 300);
+                return QSize(600, 400);
             }
         }
 
