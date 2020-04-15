@@ -19,6 +19,7 @@ using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Weather;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 using namespace BlackGui::Editors;
@@ -153,6 +154,11 @@ namespace BlackSimPlugin
             if (!info.isSingleSimulator()) { return; }
             this->setWindowTitle("Emulated driver : " + info.toQString());
             this->setSimulatorUiValues();
+        }
+
+        void CSimulatorEmulatedMonitorDialog::receivedWeather(const CWeatherGrid &weatherGrid)
+        {
+            Q_UNUSED(weatherGrid)
         }
 
         void CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged()

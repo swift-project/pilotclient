@@ -120,6 +120,15 @@ namespace BlackSimPlugin
             return ISimulator::physicallyRemoveMultipleRemoteAircraft(callsigns);
         }
 
+        void CSimulatorEmulated::injectWeatherGrid(const CWeatherGrid &weatherGrid)
+        {
+            const QString wg = QStringLiteral("Weather grid with %1 entries").arg(weatherGrid.size());
+            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, wg);
+            m_monitorWidget->receivedWeather(weatherGrid);
+
+            // remark see CWeatherDataPrinter
+        }
+
         bool CSimulatorEmulated::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
         {
             if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraft.toQString()); }
@@ -568,6 +577,17 @@ namespace BlackSimPlugin
             }
 
             this->finishUpdateRemoteAircraftAndSetStatistics(now);
+        }
+
+        void CSimulatorEmulated::requestWeather()
+        {
+            if (!m_isWeatherActivated) { return; }
+
+            const CWeatherScenario s = m_weatherScenarioSettings.get();
+            this->getOwnAircraftPosition();
+            const CCoordinateGeodetic currentPosition = this->getOwnAircraftPosition();
+            const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
+            this->requestWeatherGrid(weatherGrid, { this, &CSimulatorEmulated::injectWeatherGrid });
         }
 
         CSimulatorEmulatedListener::CSimulatorEmulatedListener(const CSimulatorPluginInfo &info)

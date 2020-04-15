@@ -80,6 +80,7 @@ namespace BlackSimPlugin
             virtual bool logicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
             virtual bool logicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
+            virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
 
             // functions logged and used
             //! \addtogroup swiftdotcommands
@@ -168,6 +169,9 @@ namespace BlackSimPlugin
             //! Fetch data from interpolator
             //! \remarks basically does the same as a real driver, obtains data from the interpolator
             void updateRemoteAircraft();
+
+            //! Request weather
+            void requestWeather();
 
             bool m_log        = false; //!< from settings
             bool m_paused     = false;
