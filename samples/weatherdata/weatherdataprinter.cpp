@@ -45,16 +45,16 @@ using namespace BlackCore;
 CWeatherDataPrinter::CWeatherDataPrinter(QObject *parent) : QObject(parent)
 { }
 
-void CWeatherDataPrinter::fetchAndPrintWetherData(const CCoordinateGeodetic &position)
+void CWeatherDataPrinter::fetchAndPrintWeatherData(const CCoordinateGeodetic &position)
 {
     QTextStream qtout(stdout);
     qtout << "Fetching weather data. This may take a while..." << endl;
 
     CWeatherGrid weatherGrid { { "", position } };
-    m_weatherManger.requestWeatherGrid(weatherGrid, { this, &CWeatherDataPrinter::ps_printWeatherData });
+    m_weatherManger.requestWeatherGrid(weatherGrid, { this, &CWeatherDataPrinter::printWeatherData });
 }
 
-void CWeatherDataPrinter::ps_printWeatherData(const BlackMisc::Weather::CWeatherGrid &weatherGrid)
+void CWeatherDataPrinter::printWeatherData(const BlackMisc::Weather::CWeatherGrid &weatherGrid)
 {
     QTextStream qtout(stdout);
     qtout << "... finished." << endl;
@@ -65,7 +65,7 @@ void CWeatherDataPrinter::ps_printWeatherData(const BlackMisc::Weather::CWeather
         qtout << "    MSL Pressure: " << gridPoint.getPressureAtMsl().toQString() << endl;
 
         CTemperatureLayerList temperatureLayers = gridPoint.getTemperatureLayers();
-        temperatureLayers.sort([](const CTemperatureLayer &a, const CTemperatureLayer &b) { return a.getLevel() < b.getLevel(); });
+        temperatureLayers.sort([](const CTemperatureLayer & a, const CTemperatureLayer & b) { return a.getLevel() < b.getLevel(); });
         qtout << "    Temperature Layers: " << endl;
         for (const auto &temperatureLayer : as_const(temperatureLayers))
         {
@@ -76,7 +76,7 @@ void CWeatherDataPrinter::ps_printWeatherData(const BlackMisc::Weather::CWeather
         qtout << endl;
 
         CWindLayerList windLayers = gridPoint.getWindLayers();
-        windLayers.sort([](const CWindLayer &a, const CWindLayer &b) { return a.getLevel() < b.getLevel(); });
+        windLayers.sort([](const CWindLayer & a, const CWindLayer & b) { return a.getLevel() < b.getLevel(); });
         qtout << "    Wind Layers: " << endl;
         for (const auto &windLayer : as_const(windLayers))
         {
@@ -87,7 +87,7 @@ void CWeatherDataPrinter::ps_printWeatherData(const BlackMisc::Weather::CWeather
 
         qtout << "    Cloud Layers: " << endl;
         CCloudLayerList cloudLayers = gridPoint.getCloudLayers();
-        cloudLayers.sort([](const CCloudLayer &a, const CCloudLayer &b) { return a.getBase() < b.getBase(); });
+        cloudLayers.sort([](const CCloudLayer & a, const CCloudLayer & b) { return a.getBase() < b.getBase(); });
         for (int i = 0; i < cloudLayers.size(); i++)
         {
             const CCloudLayer &cloudLayer = cloudLayers[i];

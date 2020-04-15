@@ -29,15 +29,13 @@ public:
     //! Constructor
     CWeatherDataPrinter(QObject *parent = nullptr);
 
-public slots:
     //! Fetch new weather data for given position and print it once received
-    void fetchAndPrintWetherData(const BlackMisc::Geo::CCoordinateGeodetic &position);
-
-private slots:
-    //! Print weather data to stdout
-    void ps_printWeatherData(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
+    void fetchAndPrintWeatherData(const BlackMisc::Geo::CCoordinateGeodetic &position);
 
 private:
+    //! Print weather data to stdout
+    void printWeatherData(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
+
     BlackCore::CWeatherManager m_weatherManger { this };
 };
 
