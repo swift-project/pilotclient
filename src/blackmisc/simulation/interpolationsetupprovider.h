@@ -102,7 +102,7 @@ namespace BlackMisc
 
         private:
             CInterpolationAndRenderingSetupGlobal m_globalSetup;
-            SetupsPerCallsign m_setups;
+            SetupsPerCallsign      m_setupsPerCallsign;
             mutable QReadWriteLock m_lockSetup; //!< lock clients
         };
 

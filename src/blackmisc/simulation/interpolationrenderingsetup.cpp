@@ -100,15 +100,15 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexLogInterpolation: return CVariant::fromValue(m_logInterpolation);
+            case IndexLogInterpolation:       return CVariant::fromValue(m_logInterpolation);
             case IndexSimulatorDebugMessages: return CVariant::fromValue(m_simulatorDebugMessages);
             case IndexForceFullInterpolation: return CVariant::fromValue(m_forceFullInterpolation);
-            case IndexEnabledAircraftParts: return CVariant::fromValue(m_enabledAircraftParts);
+            case IndexEnabledAircraftParts:   return CVariant::fromValue(m_enabledAircraftParts);
             case IndexSendGndFlagToSimulator: return CVariant::fromValue(m_sendGndToSim);
-            case IndexInterpolatorMode: return CVariant::fromValue(m_interpolatorMode);
+            case IndexInterpolatorMode:       return CVariant::fromValue(m_interpolatorMode);
             case IndexInterpolatorModeAsString: return CVariant::fromValue(this->getInterpolatorModeAsString());
             case IndexFixSceneryOffset: return CVariant::fromValue(m_fixSceneryOffset);
-            case IndexPitchOnGround: return CVariant::fromValue(m_pitchOnGround);
+            case IndexPitchOnGround:    return CVariant::fromValue(m_pitchOnGround);
             default: break;
             }
             BLACK_VERIFY_X(false, Q_FUNC_INFO, "Cannot handle index");
@@ -120,15 +120,15 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexLogInterpolation: m_logInterpolation = variant.toBool(); return;
+            case IndexLogInterpolation:       m_logInterpolation = variant.toBool(); return;
             case IndexSimulatorDebugMessages: m_simulatorDebugMessages = variant.toBool(); return;
             case IndexForceFullInterpolation: m_forceFullInterpolation = variant.toBool(); return;
-            case IndexEnabledAircraftParts: m_enabledAircraftParts = variant.toBool(); return;
+            case IndexEnabledAircraftParts:   m_enabledAircraftParts = variant.toBool(); return;
             case IndexSendGndFlagToSimulator: m_sendGndToSim = variant.toBool(); return;
-            case IndexInterpolatorMode: m_interpolatorMode = variant.toInt(); return;
+            case IndexInterpolatorMode:       m_interpolatorMode = variant.toInt(); return;
             case IndexInterpolatorModeAsString: this->setInterpolatorMode(variant.toQString()); return;
             case IndexFixSceneryOffset: m_fixSceneryOffset = variant.toBool(); return;
-            case IndexPitchOnGround: m_pitchOnGround.setPropertyByIndex(index.copyFrontRemoved(), variant); return;
+            case IndexPitchOnGround:    m_pitchOnGround.setPropertyByIndex(index.copyFrontRemoved(), variant); return;
             default: break;
             }
             BLACK_VERIFY_X(false, Q_FUNC_INFO, "Cannot handle index");
@@ -136,7 +136,7 @@ namespace BlackMisc
 
         QString CInterpolationAndRenderingSetupBase::convertToQString(bool i18n) const
         {
-            Q_UNUSED(i18n);
+            Q_UNUSED(i18n)
             return
                 QStringLiteral("Interpolator: ") % this->getInterpolatorModeAsString() %
                 QStringLiteral(" | Dbg.sim.msgs: ") % boolToYesNo(m_simulatorDebugMessages) %
@@ -276,7 +276,7 @@ namespace BlackMisc
 
         QString CInterpolationAndRenderingSetupGlobal::convertToQString(bool i18n) const
         {
-            Q_UNUSED(i18n);
+            Q_UNUSED(i18n)
             return
                 CInterpolationAndRenderingSetupBase::convertToQString(i18n) %
                 QStringLiteral(" max.aircraft:") % QString::number(m_maxRenderedAircraft) %
@@ -329,12 +329,13 @@ namespace BlackMisc
         CPropertyIndexList CInterpolationAndRenderingSetupPerCallsign::unequalToGlobal(const CInterpolationAndRenderingSetupGlobal &globalSetup) const
         {
             CPropertyIndexList diff;
-            if (this->logInterpolation() != globalSetup.logInterpolation()) { diff.push_back(IndexLogInterpolation); }
-            if (this->showSimulatorDebugMessages() != globalSetup.showSimulatorDebugMessages()) { diff.push_back(IndexSimulatorDebugMessages); }
-            if (this->isForcingFullInterpolation() != globalSetup.isForcingFullInterpolation()) { diff.push_back(IndexForceFullInterpolation); }
-            if (this->isAircraftPartsEnabled() != globalSetup.isAircraftPartsEnabled()) { diff.push_back(IndexEnabledAircraftParts); }
+            if (this->logInterpolation()            != globalSetup.logInterpolation())            { diff.push_back(IndexLogInterpolation); }
+            if (this->showSimulatorDebugMessages()  != globalSetup.showSimulatorDebugMessages())  { diff.push_back(IndexSimulatorDebugMessages); }
+            if (this->isForcingFullInterpolation()  != globalSetup.isForcingFullInterpolation())  { diff.push_back(IndexForceFullInterpolation); }
+            if (this->isAircraftPartsEnabled()      != globalSetup.isAircraftPartsEnabled())      { diff.push_back(IndexEnabledAircraftParts); }
             if (this->isSendingGndFlagToSimulator() != globalSetup.isSendingGndFlagToSimulator()) { diff.push_back(IndexSendGndFlagToSimulator); }
-            if (this->isFixingSceneryOffset() != globalSetup.isFixingSceneryOffset()) { diff.push_back(IndexFixSceneryOffset); }
+            if (this->isFixingSceneryOffset()       != globalSetup.isFixingSceneryOffset())       { diff.push_back(IndexFixSceneryOffset); }
+            if (this->getPitchOnGround()            != globalSetup.getPitchOnGround())            { diff.push_back(IndexPitchOnGround); }
             return diff;
         }
 

@@ -35,6 +35,9 @@ namespace BlackMisc
             //! Default constructor.
             CInterpolationSetupList();
 
+            //! Single object
+            CInterpolationSetupList(const CInterpolationAndRenderingSetupPerCallsign &setup);
+
             //! Construct from a base class object.
             CInterpolationSetupList(const CSequence<CInterpolationAndRenderingSetupPerCallsign> &other);
         };
