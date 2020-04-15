@@ -323,6 +323,9 @@ namespace BlackCore
             //! Get remote aircraft parts
             virtual BlackMisc::Aviation::CAircraftPartsList getRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
+            //! Parts supported?
+            virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+
             //! Is storing the aircraft parts history enabled?
             virtual bool isAircraftPartsHistoryEnabled() const = 0;
 

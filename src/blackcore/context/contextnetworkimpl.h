@@ -105,7 +105,6 @@ namespace BlackCore
             virtual int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual int remoteAircraftPartsCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
-            virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
             virtual BlackMisc::Aviation::CAircraftSituationChangeList remoteAircraftSituationChanges(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual int remoteAircraftSituationChangesCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
@@ -162,7 +161,7 @@ namespace BlackCore
             //! @}
 
         public slots:
-            // from context and provider interface
+            // ------------ from context and provider interface -------------
             //! \ingroup remoteaircraftprovider
             //! @{
 
@@ -193,6 +192,7 @@ namespace BlackCore
             virtual BlackMisc::Aviation::CAircraftPartsList getRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual int getRemoteAircraftSupportingPartsCount() const override;
             virtual bool isAircraftPartsHistoryEnabled() const override;
+            virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual void enableAircraftPartsHistory(bool enabled) override;
             virtual int aircraftSituationsAdded() const override;
             virtual int aircraftPartsAdded() const override;
