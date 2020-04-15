@@ -47,7 +47,7 @@ namespace BlackMisc
          */
         template <class MU, class PQ> class CPhysicalQuantity :
             public Mixin::DBusOperators<CPhysicalQuantity<MU, PQ>>,
-            public Mixin::DataStreamOperators<CPhysicalQuantity<MU, PQ>>,
+                    public Mixin::DataStreamOperators<CPhysicalQuantity<MU, PQ>>,
                     public Mixin::JsonOperators<CPhysicalQuantity<MU, PQ>>,
                     public Mixin::Index<PQ>,
                     public Mixin::MetaType<PQ>,
@@ -255,11 +255,14 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
+            //! Parse value from string
+            void parseFromString(const QString &value);
+
             //! Parse to string, with specified separator
             void parseFromString(const QString &value, CPqString::SeparatorMode mode);
 
-            //! Parse value from string
-            void parseFromString(const QString &value);
+            //! Parse to string, with specified separator
+            void parseFromString(const QString &value, CPqString::SeparatorMode mode, const MU &defaultUnitIfMissing);
 
             //! Compare with other PQ
             int compare(const PQ &other) const { return compareImpl(*this->derived(), other); }
