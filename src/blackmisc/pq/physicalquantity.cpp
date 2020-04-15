@@ -21,6 +21,7 @@
 #include "blackmisc/pq/acceleration.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/comparefunctions.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
@@ -419,7 +420,7 @@ namespace BlackMisc
             // there is no double qHash
             // also unit and rounding has to be considered
             hashs << qHash(this->valueRoundedWithUnit(MU::defaultUnit()));
-            return BlackMisc::calculateHash(hashs, "PQ");
+            return calculateHash(hashs, "PQ");
         }
 
         template <class MU, class PQ>
@@ -447,6 +448,20 @@ namespace BlackMisc
         void CPhysicalQuantity<MU, PQ>::parseFromString(const QString &value, CPqString::SeparatorMode mode)
         {
             *this = CPqString::parse<PQ>(value, mode);
+        }
+
+        template<class MU, class PQ>
+        void CPhysicalQuantity<MU, PQ>::parseFromString(const QString &value, CPqString::SeparatorMode mode, const MU &defaultUnitIfMissing)
+        {
+            if (is09OnlyString(value))
+            {
+                const QString v = value + defaultUnitIfMissing.getName();
+                this->parseFromString(v, mode);
+            }
+            else
+            {
+                this->parseFromString(value, mode);
+            }
         }
 
         template <class MU, class PQ>
