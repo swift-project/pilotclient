@@ -297,6 +297,11 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<bool>(QLatin1String("isAircraftPartsHistoryEnabled"));
         }
 
+        bool CContextNetworkProxy::isRemoteAircraftSupportingParts(const CCallsign &callsign) const
+        {
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("isRemoteAircraftSupportingParts"), callsign);
+        }
+
         void CContextNetworkProxy::enableAircraftPartsHistory(bool enabled)
         {
             m_dBusInterface->callDBus(QLatin1String("enableAircraftPartsHistory"), enabled);

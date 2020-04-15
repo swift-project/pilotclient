@@ -124,6 +124,7 @@ namespace BlackCore
             virtual BlackMisc::Aviation::CAircraftPartsList getRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual QString getLibraryInfo(bool detailed) const override;
             virtual bool isAircraftPartsHistoryEnabled() const override;
+            virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual void enableAircraftPartsHistory(bool enabled) override;
             virtual QString getNetworkStatistics(bool reset, const QString &separator) override;
             virtual bool setNetworkStatisticsEnable(bool enabled) override;

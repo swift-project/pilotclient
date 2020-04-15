@@ -475,6 +475,14 @@ namespace BlackCore
                 return false;
             }
 
+            //! \copydoc IContextNetwork::isRemoteAircraftSupportingParts
+            virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                Q_UNUSED(callsign)
+                return false;
+            }
+
             //! \copydoc IContextNetwork::enableAircraftPartsHistory
             virtual void enableAircraftPartsHistory(bool enabled) override
             {
