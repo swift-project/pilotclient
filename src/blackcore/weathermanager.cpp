@@ -55,7 +55,7 @@ namespace BlackCore
             return;
         }
 
-        WeatherRequest weatherRequest { {}, CIdentifier::null(), weatherGrid, callback };
+        const WeatherRequest weatherRequest { {}, CIdentifier::null(), weatherGrid, callback };
         m_pendingRequests.append(weatherRequest);
 
         // Serialize the requests, since plugins can handle only one at a time
@@ -113,7 +113,7 @@ namespace BlackCore
     void CWeatherManager::fetchNextWeatherData()
     {
         const WeatherRequest weatherRequest = m_pendingRequests.constFirst();
-        PhysicalQuantities::CLength maxDistance(100.0, CLengthUnit::km());
+        const CLength maxDistance(100.0, CLengthUnit::km());
 
         for (IWeatherData *plugin : as_const(m_weatherDataPlugins))
         {
@@ -128,7 +128,7 @@ namespace BlackCore
 
         IWeatherData *weatherDataPlugin = qobject_cast<IWeatherData *>(sender());
         Q_ASSERT(weatherDataPlugin);
-        auto fetchedWeatherGrid = weatherDataPlugin->getWeatherData();
+        const auto fetchedWeatherGrid = weatherDataPlugin->getWeatherData();
 
         const WeatherRequest weatherRequest = m_pendingRequests.constFirst();
         CWeatherGrid requestedWeatherGrid = weatherRequest.weatherGrid;
