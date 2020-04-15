@@ -55,9 +55,6 @@ namespace BlackMisc
         //! Constructor
         IOrderable(int order);
 
-        //! Constructor
-        IOrderable(const IOrderable &orderable) : IOrderable(orderable.m_order) {}
-
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
         CVariant propertyByIndex(const CPropertyIndex &index) const;
 

@@ -31,7 +31,7 @@ namespace BlackGui
 
     protected:
         //! Filter
-        bool eventFilter(QObject *object, QEvent *event);
+        virtual bool eventFilter(QObject *object, QEvent *event) override;
 
     private:
         QString m_illegalChars;
