@@ -57,7 +57,10 @@ namespace BlackMisc
                 static QStringList fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir = "");
 
                 //! P3D's simObject dir and the add on dirs
-                static QStringList p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir = "", const QString &versionHint = "v4");
+                static QStringList p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir, const QString &versionHint);
+
+                //! Guess the P3D version such as v4, v5
+                static QString guessP3DVersion(const QString &candidate);
 
                 //! P3D directory obtained from registry
                 static const QString &p3dDirFromRegistry();

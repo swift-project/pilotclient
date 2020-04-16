@@ -279,7 +279,7 @@ namespace BlackMisc
 
             protected:
                 CSimulatorSettings m_genericSettings; //!< the generic settings
-                CSimulatorInfo m_simulator; //!< represented simulator
+                CSimulatorInfo     m_simulator;       //!< represented simulator
             };
 
             //! XPlane specific settings

@@ -664,9 +664,10 @@ void CSwiftLauncher::showSimulatorConfigDirs()
 
     if (s == ui->pb_P3DConfigDirs)
     {
-        dirs      = CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths();
         simDir    = CFsCommonUtil::p3dDir();
         simObjDir = CFsCommonUtil::p3dSimObjectsDir();
+        const QString versionHint = CFsCommonUtil::guessP3DVersion(simDir);
+        dirs      = CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(simObjDir, versionHint);
     }
     else if (s == ui->pb_FSXConfigDirs)
     {

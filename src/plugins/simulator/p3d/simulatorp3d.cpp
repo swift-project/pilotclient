@@ -31,10 +31,10 @@ namespace BlackSimPlugin
     namespace P3D
     {
         CSimulatorP3D::CSimulatorP3D(const CSimulatorPluginInfo &info,
-                                     IOwnAircraftProvider *ownAircraftProvider,
+                                     IOwnAircraftProvider    *ownAircraftProvider,
                                      IRemoteAircraftProvider *remoteAircraftProvider,
-                                     IWeatherGridProvider *weatherGridProvider,
-                                     IClientProvider *clientProvider,
+                                     IWeatherGridProvider    *weatherGridProvider,
+                                     IClientProvider         *clientProvider,
                                      QObject *parent) :
             CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
         {
@@ -104,9 +104,9 @@ namespace BlackSimPlugin
         // P3D version with new P3D simconnect functions
         bool CSimulatorP3D::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
         {
-            if (reference.isNull()) { return false; }
+            if (reference.isNull())     { return false; }
             if (this->isShuttingDown()) { return false; }
-            if (!this->isConnected()) { return false; }
+            if (!this->isConnected())   { return false; }
 
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
             const bool hasHeight = reference.hasMSLGeodeticHeight();
