@@ -193,16 +193,20 @@ namespace BlackCore
 
             // using copy to minimize lock time
             // 500km/h => 1sec: 0.1388 km
+            // we check if there are situation for own aircraft outside the max.distance
             static const CLength maxDistance(25, CLengthUnit::km());
+            const CAircraftSituation latest = situations.front();
             const bool jumpDetected = situations.containsObjectOutsideRange(situations.front(), maxDistance);
 
             if (jumpDetected)
             {
+                const CAircraftSituationList ownDistances = situations.findFarthest(1, latest);
+                const CLength distance = ownDistances.front().calculateGreatCircleDistance(latest);
                 {
                     QWriteLocker wl(&m_lockAircraft);
                     m_situationHistory.clear();
                 }
-                emit this->movedAircraft();
+                emit this->movedAircraft(distance);
             }
             else
             {

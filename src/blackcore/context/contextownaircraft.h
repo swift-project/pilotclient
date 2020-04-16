@@ -104,7 +104,7 @@ namespace BlackCore
             void changedPilot(const BlackMisc::Network::CUser &pilot);
 
             //! Aircraft has been moved from one location to another (changed scenery)
-            void movedAircraft();
+            void movedAircraft(const BlackMisc::PhysicalQuantities::CLength &distance);
 
             //! Just airborne
             void isTakingOff();

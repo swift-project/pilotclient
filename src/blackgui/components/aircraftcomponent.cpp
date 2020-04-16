@@ -57,11 +57,11 @@ namespace BlackGui
             ui->tvp_AircraftInRange->setAircraftMode(CSimulatedAircraftListModel::NetworkMode);
             ui->tvp_AircraftInRange->configureMenu(true, true, false, true, true, true);
 
-            connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::modelDataChangedDigest, this, &CAircraftComponent::onRowCountChanged);
+            connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::modelDataChangedDigest,   this, &CAircraftComponent::onRowCountChanged);
             connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestTextMessageWidget, this, &CAircraftComponent::requestTextMessageWidget);
-            connect(ui->tvp_AirportsInRange, &CSimulatedAircraftView::modelDataChangedDigest, this, &CAircraftComponent::onRowCountChanged);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAircraftComponent::onConnectionStatusChanged, Qt::QueuedConnection);
-            connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::movedAircraft, this, &CAircraftComponent::onOwnAircraftMoved, Qt::QueuedConnection);
+            connect(ui->tvp_AirportsInRange, &CSimulatedAircraftView::modelDataChangedDigest,   this, &CAircraftComponent::onRowCountChanged);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged,      this, &CAircraftComponent::onConnectionStatusChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::movedAircraft,        this, &CAircraftComponent::onOwnAircraftMoved,        Qt::QueuedConnection);
             connect(&m_updateTimer, &QTimer::timeout, this, &CAircraftComponent::update);
 
             this->onSettingsChanged();
@@ -187,8 +187,9 @@ namespace BlackGui
             m_updateTimer.setInterval(ms);
         }
 
-        void CAircraftComponent::onOwnAircraftMoved()
+        void CAircraftComponent::onOwnAircraftMoved(const CLength &distance)
         {
+            Q_UNUSED(distance)
             this->updateViews();
         }
     } // namespace
