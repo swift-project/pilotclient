@@ -399,11 +399,15 @@ namespace BlackSimPlugin
                     engines.push_back(engine);
                 }
 
-                const CAircraftParts parts { {
-                        m_xplaneData.strobeLightsOn, m_xplaneData.landingLightsOn, m_xplaneData.taxiLightsOn,
-                        m_xplaneData.beaconLightsOn, m_xplaneData.navLightsOn, false
-                    },
-                    m_xplaneData.gearReployRatio > 0, static_cast<int>(m_xplaneData.flapsReployRatio * 100),
+                const CAircraftLights lights(
+                    m_xplaneData.strobeLightsOn, m_xplaneData.landingLightsOn, m_xplaneData.taxiLightsOn,
+                    m_xplaneData.beaconLightsOn, m_xplaneData.navLightsOn, false
+                );
+
+                const CAircraftParts parts
+                {
+                    lights,
+                    m_xplaneData.gearDeployRatio > 0, qRound(m_xplaneData.flapsDeployRatio * 100.0),
                     m_xplaneData.speedBrakeRatio > 0.5, engines, m_xplaneData.onGroundAll
                 };
 
