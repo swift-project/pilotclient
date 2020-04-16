@@ -39,13 +39,13 @@ namespace BlackSimPlugin
         {
             ui->setupUi(this);
 
-            connect(ui->pb_OpenSwiftSimConnectCfg, &QPushButton::clicked, this, &CSimConnectSettingsComponent::openSwiftSimConnectCfgFile);
+            connect(ui->pb_OpenSwiftSimConnectCfg,   &QPushButton::clicked, this, &CSimConnectSettingsComponent::openSwiftSimConnectCfgFile);
             connect(ui->pb_DeleteSwiftSimConnectCfg, &QPushButton::clicked, this, &CSimConnectSettingsComponent::deleteSwiftSimConnectCfgFile);
-            connect(ui->pb_ExistsSimConnectCfg, &QPushButton::clicked, this, &CSimConnectSettingsComponent::checkSwiftSimConnectCfgFile);
-            connect(ui->pb_SaveSwiftSimConnectCfg, &QPushButton::clicked, this, &CSimConnectSettingsComponent::saveSimConnectCfgFile);
-            connect(ui->pb_OpenUserCfgFile, &QPushButton::clicked, this, &CSimConnectSettingsComponent::openUserSimConnectCfgFile);
-            connect(ui->pb_TestConnection, &QPushButton::clicked, this, &CSimConnectSettingsComponent::testSwiftSimConnectConnection);
-            connect(ui->pb_SaveAsSimConnectIni, &QPushButton::clicked, this, &CSimConnectSettingsComponent::saveSimConnectIniFileDialog);
+            connect(ui->pb_ExistsSimConnectCfg,      &QPushButton::clicked, this, &CSimConnectSettingsComponent::checkSwiftSimConnectCfgFile);
+            connect(ui->pb_SaveSwiftSimConnectCfg,   &QPushButton::clicked, this, &CSimConnectSettingsComponent::saveSimConnectCfgFile);
+            connect(ui->pb_OpenUserCfgFile,          &QPushButton::clicked, this, &CSimConnectSettingsComponent::openUserSimConnectCfgFile);
+            connect(ui->pb_TestConnection,           &QPushButton::clicked, this, &CSimConnectSettingsComponent::testSwiftSimConnectConnection);
+            connect(ui->pb_SaveAsSimConnectIni,      &QPushButton::clicked, this, &CSimConnectSettingsComponent::saveSimConnectIniFileDialog);
             this->setSimConnectInfo();
 
             if (m_p3d64bit)
@@ -252,7 +252,7 @@ namespace BlackSimPlugin
             ui->cb_P3DVersion->setCurrentText(found ? v : "");
         }
 
-        void BlackSimPlugin::FsxCommon::CSimConnectSettingsComponent::onP3DVersionChanged(const QString &version)
+        void CSimConnectSettingsComponent::onP3DVersionChanged(const QString &version)
         {
             if (m_p3dVersion.get() == version) { return; }
             const CStatusMessage saveMsg = m_p3dVersion.setAndSave(version);

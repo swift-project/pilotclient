@@ -148,6 +148,7 @@ namespace BlackGui
             ui->pb_DisableRendering->setEnabled(m_pluginLoaded);
             ui->pb_Check->setEnabled(!m_pluginLoaded);
             ui->pb_ApplyCGSource->setEnabled(m_pluginLoaded);
+            ui->pb_Reload->setEnabled(m_pluginLoaded);
 
             if (m_pluginLoaded)
             {

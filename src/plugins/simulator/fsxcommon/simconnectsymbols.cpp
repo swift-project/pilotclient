@@ -191,6 +191,11 @@ P3DSimConnectVersion stringToP3DVersion(const QString &p3d)
         if (p.contains("43")) { return P3DSimConnectv43; }
         if (p.contains("44")) { return P3DSimConnectv44; }
         if (p.contains("45")) { return P3DSimConnectv45; }
+
+        if (p.contains("50")) { return P3DSimConnectv45; }
+        if (p.contains("51")) { return P3DSimConnectv45; }
+        if (p.contains("52")) { return P3DSimConnectv45; }
+
     }
     return P3DSimConnectv44; // default
 }

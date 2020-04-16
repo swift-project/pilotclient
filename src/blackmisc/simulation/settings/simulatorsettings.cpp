@@ -588,12 +588,15 @@ namespace BlackMisc
                 switch (m_simulator.getSimulator())
                 {
                 case CSimulatorInfo::FG:  dirs = QStringList(CFlightgearUtil::modelDirectoriesFromSimDir(s)); break;
-                case CSimulatorInfo::FS9: dirs = QStringList({CFsCommonUtil::fs9AircraftDirFromSimDir(s)}); break;
+                case CSimulatorInfo::FS9: dirs = QStringList({ CFsCommonUtil::fs9AircraftDirFromSimDir(s) }); break;
                 case CSimulatorInfo::FSX:
                     dirs = CFsCommonUtil::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths(CFsCommonUtil::fsxSimObjectsDirFromSimDir(s));
                     break;
                 case CSimulatorInfo::P3D:
-                    dirs = CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(CFsCommonUtil::p3dSimObjectsDirFromSimDir(s));
+                    {
+                        const QString versionHint = CFsCommonUtil::guessP3DVersion(s);
+                        dirs = CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(CFsCommonUtil::p3dSimObjectsDirFromSimDir(s), versionHint);
+                    }
                     break;
                 case CSimulatorInfo::XPLANE: dirs = QStringList({CXPlaneUtil::modelDirectoriesFromSimDir(s)}); break;
                 default: break;
@@ -678,8 +681,10 @@ namespace BlackMisc
                     }
                 case CSimulatorInfo::P3D:
                     {
-                        if (CFsCommonUtil::p3dSimObjectsDir().isEmpty()) { return e; }
-                        static const QStringList md = CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths();
+                        static const QString p3d = CFsCommonUtil::p3dSimObjectsDir();
+                        if (p3d.isEmpty()) { return e; }
+                        static const QString versionHint = CFsCommonUtil::guessP3DVersion(p3d);
+                        static const QStringList md = CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(p3d, versionHint);
                         return  md;
                     }
                 case CSimulatorInfo::XPLANE:

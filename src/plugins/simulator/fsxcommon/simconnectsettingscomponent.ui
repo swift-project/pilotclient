@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>410</width>
-    <height>466</height>
+    <height>481</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -156,11 +156,31 @@ console=1
       <item row="0" column="1">
        <widget class="QComboBox" name="cb_P3DVersion">
         <property name="currentText">
-         <string>4.5 64bit</string>
+         <string>6.0 64bit</string>
         </property>
         <property name="currentIndex">
          <number>0</number>
         </property>
+        <item>
+         <property name="text">
+          <string>6.0 64bit</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>5.2 64bit</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>5.1 64bit</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>5.0 64bit</string>
+         </property>
+        </item>
         <item>
          <property name="text">
           <string>4.5 64bit</string>

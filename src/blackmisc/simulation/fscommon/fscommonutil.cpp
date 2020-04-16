@@ -243,7 +243,7 @@ namespace BlackMisc
             {
                 // finding the user settings only works on P3D machine
                 QStringList allPaths = CFsCommonUtil::allP3dAddOnXmlSimObjectPaths(versionHint).values();
-                const QString sod = CFileUtils::normalizeFilePathToQtStandard(simObjectsDir.isEmpty() ? CFsCommonUtil::p3dSimObjectsDir() : simObjectsDir);
+                const QString sod    = CFileUtils::normalizeFilePathToQtStandard(simObjectsDir.isEmpty() ? CFsCommonUtil::p3dSimObjectsDir() : simObjectsDir);
                 if (!sod.isEmpty() && !allPaths.contains(sod, Qt::CaseInsensitive))
                 {
                     // case insensitive is important here
@@ -254,6 +254,18 @@ namespace BlackMisc
                 allPaths.removeDuplicates();
                 allPaths.sort(Qt::CaseInsensitive);
                 return allPaths;
+            }
+
+            QString CFsCommonUtil::guessP3DVersion(const QString &candidate)
+            {
+                if (candidate.isEmpty()) { return "v4"; }
+                if (candidate.contains("v5", Qt::CaseInsensitive)) { return QStringLiteral("v5"); }
+                if (candidate.contains("v4", Qt::CaseInsensitive)) { return QStringLiteral("v4"); }
+
+                if (candidate.contains("5", Qt::CaseInsensitive)) { return QStringLiteral("v5"); }
+                if (candidate.contains("4", Qt::CaseInsensitive)) { return QStringLiteral("v4"); }
+
+                return "v5"; // that is the future (in 2020)
             }
 
             QString CFsCommonUtil::p3dSimObjectsDirFromSimDir(const QString &simDir)
