@@ -89,8 +89,8 @@ namespace BlackGui
 
             this->setLogoffCountdown();
             connect(&m_logoffCountdownTimer, &QTimer::timeout, this, &CLoginComponent::logoffCountdown);
-            connect(ui->comp_OtherServers,  &CServerListSelector::serverChanged, this, &CLoginComponent::onSelectedServerChanged);
-            connect(ui->comp_VatsimServers, &CServerListSelector::serverChanged, this, &CLoginComponent::onSelectedServerChanged);
+            connect(ui->comp_OtherServers,   &CServerListSelector::serverChanged, this, &CLoginComponent::onSelectedServerChanged);
+            connect(ui->comp_VatsimServers,  &CServerListSelector::serverChanged, this, &CLoginComponent::onSelectedServerChanged);
             connect(ui->pb_RefreshOtherServers, &QToolButton::clicked, this, &CLoginComponent::reloadOtherServersSetup);
             connect(ui->tw_Network, &QTabWidget::currentChanged,       this, &CLoginComponent::onServerTabWidgetChanged);
             connect(ui->pb_Cancel,  &QPushButton::clicked, this, &CLoginComponent::loginCancelled,          Qt::QueuedConnection);

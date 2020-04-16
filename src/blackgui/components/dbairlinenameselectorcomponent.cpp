@@ -66,7 +66,8 @@ namespace BlackGui
             c->setCaseSensitivity(Qt::CaseInsensitive);
             c->setCompletionMode(QCompleter::PopupCompletion);
             c->setMaxVisibleItems(10);
-            c->popup()->setMinimumWidth(175);
+            const int w5chars = c->popup()->fontMetrics().size(Qt::TextSingleLine, "FooBa").width();
+            c->popup()->setMinimumWidth(w5chars * 10);
             ui->le_AirlineName->setCompleter(c);
             return c;
         }

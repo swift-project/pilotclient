@@ -1133,7 +1133,8 @@ namespace BlackGui
             const QStringList aircraft(sGui->getWebDataServices()->getAircraftIcaoCodes().allDesignators().values());
             QCompleter *aircraftCompleter = new QCompleter(aircraft, this);
             aircraftCompleter->setMaxVisibleItems(10);
-            aircraftCompleter->popup()->setMinimumWidth(75);
+            const int w5chars1 = aircraftCompleter->popup()->fontMetrics().size(Qt::TextSingleLine, "FooBa").width();
+            aircraftCompleter->popup()->setMinimumWidth(w5chars1 * 5);
             aircraftCompleter->setCaseSensitivity(Qt::CaseInsensitive);
             aircraftCompleter->setCompletionMode(QCompleter::PopupCompletion);
             ui->le_AircraftType->setCompleter(aircraftCompleter);
@@ -1141,7 +1142,8 @@ namespace BlackGui
             const QStringList airports = sGui->getWebDataServices()->getAirports().allIcaoCodes(true);
             QCompleter *airportCompleter = new QCompleter(airports, this);
             airportCompleter->setMaxVisibleItems(10);
-            airportCompleter->popup()->setMinimumWidth(75);
+            const int w5chars2 = airportCompleter->popup()->fontMetrics().size(Qt::TextSingleLine, "FooBa").width();
+            airportCompleter->popup()->setMinimumWidth(w5chars2 * 5);
             airportCompleter->setCaseSensitivity(Qt::CaseInsensitive);
             airportCompleter->setCompletionMode(QCompleter::PopupCompletion);
             ui->le_AlternateAirport->setCompleter(airportCompleter);
