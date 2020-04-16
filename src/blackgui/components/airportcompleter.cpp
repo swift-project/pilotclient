@@ -104,19 +104,22 @@ namespace BlackGui
             {
                 ui->le_Icao->completer()->setCaseSensitivity(Qt::CaseInsensitive);
                 ui->le_Icao->completer()->popup()->setObjectName("AirportCompleter.Icao");
-                ui->le_Icao->completer()->popup()->setMinimumWidth(75);
+                const int w5chars = ui->le_Icao->completer()->popup()->fontMetrics().size(Qt::TextSingleLine, "FooBa").width();
+                ui->le_Icao->completer()->popup()->setMinimumWidth(w5chars * 5);
             }
             if (ui->le_Name->completer()->popup())
             {
                 ui->le_Name->completer()->setCaseSensitivity(Qt::CaseInsensitive);
                 ui->le_Name->completer()->popup()->setObjectName("AirportCompleter.Name");
-                ui->le_Name->completer()->popup()->setMinimumWidth(150);
+                const int w5chars = ui->le_Name->completer()->popup()->fontMetrics().size(Qt::TextSingleLine, "FooBa").width();
+                ui->le_Name->completer()->popup()->setMinimumWidth(w5chars * 10);
             }
             if (ui->le_Location->completer()->popup())
             {
                 ui->le_Location->completer()->setCaseSensitivity(Qt::CaseInsensitive);
                 ui->le_Location->completer()->popup()->setObjectName("AirportCompleter.Location");
-                ui->le_Location->completer()->popup()->setMinimumWidth(150);
+                const int w5chars = ui->le_Location->completer()->popup()->fontMetrics().size(Qt::TextSingleLine, "FooBa").width();
+                ui->le_Location->completer()->popup()->setMinimumWidth(w5chars * 10);
             }
 
             // turn into airport when it was not possible before

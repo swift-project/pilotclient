@@ -457,7 +457,8 @@ namespace BlackGui
             if (!airports.isEmpty())
             {
                 QCompleter *airportCompleter = new QCompleter(airports, this);
-                airportCompleter->popup()->setMinimumWidth(75);
+                const int w5chars = airportCompleter->popup()->fontMetrics().size(Qt::TextSingleLine, "FooBa").width();
+                airportCompleter->popup()->setMinimumWidth(w5chars * 5);
                 ui->le_AtcStationsOnlineMetar->setCompleter(airportCompleter);
             }
         }
