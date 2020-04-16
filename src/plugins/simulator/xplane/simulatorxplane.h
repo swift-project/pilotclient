@@ -100,8 +100,8 @@ namespace BlackSimPlugin
             bool navLightsOn;                   //!< NAV lights on?
             bool strobeLightsOn;                //!< Strobe lights on?
             bool taxiLightsOn;                  //!< Taxi lights on?
-            double flapsReployRatio;            //!< Flaps deployment ratio [%]
-            double gearReployRatio;             //!< Gear deployment ratio  [%]
+            double flapsDeployRatio;            //!< Flaps deployment ratio [%]
+            double gearDeployRatio;             //!< Gear deployment ratio  [%]
             QList<double> enginesN1Percentage;  //!< N1 per engine [%]
             double speedBrakeRatio;             //!< Speed break ratio [%]
             double seaLevelPressureInHg;        //!< Sea level pressure [inhg]

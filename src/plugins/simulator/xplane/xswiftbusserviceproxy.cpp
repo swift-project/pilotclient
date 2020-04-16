@@ -169,8 +169,8 @@ namespace BlackSimPlugin
                 QDBusPendingReply<double, double, double, QList<double> > reply = *watcher;
                 if (!reply.isError())
                 {
-                    o_xplaneData->flapsReployRatio = reply.argumentAt<0>();
-                    o_xplaneData->gearReployRatio  = reply.argumentAt<1>();
+                    o_xplaneData->flapsDeployRatio = reply.argumentAt<0>();
+                    o_xplaneData->gearDeployRatio  = reply.argumentAt<1>();
                     o_xplaneData->speedBrakeRatio  = reply.argumentAt<2>();
                     o_xplaneData->enginesN1Percentage = reply.argumentAt<3>();
                 }
