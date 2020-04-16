@@ -191,6 +191,9 @@ namespace BlackMisc
             //! Attribute name
             static const QString &attributeNameIsFullJson();
 
+            //! Number of attributes for full JSON
+            static constexpr int attributesCountFullJson = 7;
+
         private:
             CAircraftLights m_lights;
             CAircraftEngineList m_engines;

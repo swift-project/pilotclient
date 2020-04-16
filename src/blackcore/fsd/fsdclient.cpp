@@ -170,6 +170,7 @@ namespace BlackCore
             m_ownAirlineIcaoCode  = ownAircraft.getAirlineIcaoCode();
 
             /* use setLiveryAndModelString
+            No longer do it here, use setLiveryAndModelString
             m_ownLivery           = ownAircraft.getModel().getSwiftLiveryString(m_simTypeInfo);
             m_ownModelString      = ownAircraft.getModelString();
             m_sendLiveryString    = true;
@@ -1207,6 +1208,7 @@ namespace BlackCore
                 if (packet == JsonPackets::aircraftConfigRequest())
                 {
                     // this MUST work for NOT IN RANGE aircraft as well
+                    // Here we send our OWN parts
                     QJsonObject config = this->getOwnAircraftParts().toJson();
                     config.insert(CAircraftParts::attributeNameIsFullJson(), true);
                     QString data = QJsonDocument(QJsonObject { { "config", config } }).toJson(QJsonDocument::Compact);
@@ -1253,7 +1255,7 @@ namespace BlackCore
                 Capabilities capabilities = Capabilities::None;
                 for (int i = 0; i < clientResponse.m_responseData.size(); ++i)
                 {
-                    QString keyValuePair = clientResponse.m_responseData.at(i);
+                    const QString keyValuePair = clientResponse.m_responseData.at(i);
                     if (keyValuePair.count('=') != 1) { continue; }
 
                     const QStringList split = keyValuePair.split('=');
