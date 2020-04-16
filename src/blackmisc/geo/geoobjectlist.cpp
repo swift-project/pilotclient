@@ -198,6 +198,17 @@ namespace BlackMisc
         }
 
         template<class OBJ, class CONTAINER>
+        CONTAINER IGeoObjectList<OBJ, CONTAINER>::findFarthest(int number, const ICoordinateGeodetic &coordinate) const
+        {
+            CONTAINER farthest = this->container().partiallySorted(number, [ & ](const OBJ & a, const OBJ & b)
+            {
+                return calculateEuclideanDistanceSquared(a, coordinate) > calculateEuclideanDistanceSquared(b, coordinate);
+            });
+            farthest.truncate(number);
+            return farthest;
+        }
+
+        template<class OBJ, class CONTAINER>
         OBJ IGeoObjectList<OBJ, CONTAINER>::findClosestWithinRange(const ICoordinateGeodetic &coordinate, const CLength &range) const
         {
             OBJ closest;
@@ -225,7 +236,7 @@ namespace BlackMisc
         }
 
         template<class OBJ, class CONTAINER>
-        CONTAINER IGeoObjectList<OBJ, CONTAINER>::sortedByEuclideanDistanceSquared(const ICoordinateGeodetic &coordinate)
+        CONTAINER IGeoObjectList<OBJ, CONTAINER>::sortedByEuclideanDistanceSquared(const ICoordinateGeodetic &coordinate) const
         {
             CONTAINER copy(this->container());
             copy.sortByEuclideanDistanceSquared(coordinate);

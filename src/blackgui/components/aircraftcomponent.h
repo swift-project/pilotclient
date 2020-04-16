@@ -92,7 +92,7 @@ namespace BlackGui
             void onSettingsChanged();
 
             //! Own aircraft has been moved
-            void onOwnAircraftMoved();
+            void onOwnAircraftMoved(const BlackMisc::PhysicalQuantities::CLength &distance);
 
             QScopedPointer<Ui::CAircraftComponent> ui;
             BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CAircraftComponent::onSettingsChanged }; //!< settings changed

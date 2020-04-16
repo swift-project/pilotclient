@@ -103,6 +103,9 @@ namespace BlackMisc
             //! Find 0..n objects closest to the given coordinate.
             CONTAINER findClosest(int number, const ICoordinateGeodetic &coordinate) const;
 
+            //! Find 0..n objects farthest to the given coordinate.
+            CONTAINER findFarthest(int number, const ICoordinateGeodetic &coordinate) const;
+
             //! Find closest within range to the given coordinate
             OBJ findClosestWithinRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const;
 
@@ -110,7 +113,7 @@ namespace BlackMisc
             void sortByEuclideanDistanceSquared(const ICoordinateGeodetic &coordinate);
 
             //! Sorted by distance
-            CONTAINER sortedByEuclideanDistanceSquared(const ICoordinateGeodetic &coordinate);
+            CONTAINER sortedByEuclideanDistanceSquared(const ICoordinateGeodetic &coordinate) const;
 
         protected:
             //! Constructor

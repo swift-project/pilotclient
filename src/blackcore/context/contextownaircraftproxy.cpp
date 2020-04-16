@@ -51,7 +51,7 @@ namespace BlackCore
                                    "changedPilot", this, SIGNAL(changedPilot(BlackMisc::Network::CUser)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-                                   "movedAircraft", this, SIGNAL(movedAircraft()));
+                                   "movedAircraft", this, SIGNAL(movedAircraft(BlackMisc::PhysicalQuantities::CLength)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
                                    "isTakingOff", this, SIGNAL(isTakingOff()));
@@ -61,7 +61,7 @@ namespace BlackCore
             Q_ASSERT(s);
 
             this->relayBaseClassSignals(serviceName, connection, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName());
-            Q_UNUSED(s);
+            Q_UNUSED(s)
         }
 
         void CContextOwnAircraftProxy::unitTestRelaySignals()
@@ -69,7 +69,7 @@ namespace BlackCore
             // connect signals, asserts when failures
             QDBusConnection con = QDBusConnection::sessionBus();
             CContextOwnAircraftProxy c(CDBusServer::coreServiceName(), con, CCoreFacadeConfig::Remote, nullptr);
-            Q_UNUSED(c);
+            Q_UNUSED(c)
         }
 
         BlackMisc::Simulation::CSimulatedAircraft CContextOwnAircraftProxy::getOwnAircraft() const
