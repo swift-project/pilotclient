@@ -351,7 +351,7 @@ namespace BlackCore
 
                 if (!m_isStarted)
                 {
-                    CLogMessage(this).info(u"Client NOT started");
+                    CLogMessage(this).info(u"Client was NOT started, not stopping!");
                     return;
                 }
 
@@ -364,7 +364,7 @@ namespace BlackCore
                     m_input->stop();
                     m_output->stop();
                 }
-                CLogMessage(this).info(u"Client stopped");
+                CLogMessage(this).info(u"AFV Client stopped");
 
                 emit this->inputVolumePeakVU(0.0);
                 emit this->outputVolumePeakVU(0.0);
