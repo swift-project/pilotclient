@@ -422,6 +422,13 @@ namespace BlackMisc
             {
                 if (isFull)
                 {
+                    if (CBuildConfig::isLocalDeveloperDebugBuild())
+                    {
+                        // validation in dev.env.
+                        const int  attributes = jsonObject.size();
+                        const bool correctCount = (attributes == CAircraftParts::attributesCountFullJson);
+                        BLACK_VERIFY_X(correctCount, Q_FUNC_INFO, "Wrong full aircraft parts");
+                    }
                     parts.convertFromJson(jsonObject);
                 }
                 else
