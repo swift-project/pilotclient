@@ -30,6 +30,8 @@ namespace BlackGui
     namespace Components
     {
         //! Select a remote aircraft
+        //! \deprecated list gets too long with many aircraft
+        //! \remark CCallsignCompleter as a better alternative
         class BLACKGUI_EXPORT CRemoteAircraftSelector : public QFrame
         {
             Q_OBJECT
@@ -39,7 +41,7 @@ namespace BlackGui
             explicit CRemoteAircraftSelector(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CRemoteAircraftSelector();
+            virtual ~CRemoteAircraftSelector() override;
 
             //! Selected callsign
             BlackMisc::Aviation::CCallsign getSelectedCallsign() const;
