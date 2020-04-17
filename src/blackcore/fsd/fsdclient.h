@@ -113,20 +113,31 @@ namespace BlackCore
             void setAtcRating(AtcRating rating)     { QWriteLocker l(&m_lockUserClientBuffered); m_atcRating = rating; }
             //! @}
 
+            // ------ thread safe access to preset values -----
+
             //! Get the server
+            //! \threadsafe
             const BlackMisc::Network::CServer &getServer() const { QReadLocker l(&m_lockUserClientBuffered); return m_server; }
 
             //! List of all preset values
+            //! \threadsafe
             QStringList getPresetValues() const;
 
             //! Callsign if any
+            //! \threadsafe
             BlackMisc::Aviation::CCallsign getPresetCallsign() const { QReadLocker l(&m_lockUserClientBuffered); return m_ownCallsign; }
 
             //! Partner callsign if any
+            //! \threadsafe
             BlackMisc::Aviation::CCallsign getPresetPartnerCallsign() const { QReadLocker l(&m_lockUserClientBuffered); return m_partnerCallsign; }
 
             //! Mode
+            //! \threadsafe
             BlackMisc::Network::CLoginMode getLoginMode() const { QReadLocker l(&m_lockUserClientBuffered); return m_loginMode; }
+
+            //! Rating
+            //! \threadsafe
+            PilotRating getPilotRating() const { QReadLocker l(&m_lockUserClientBuffered); return m_pilotRating; }
 
             //! Connenct/disconnect @{
             void connectToServer();
