@@ -11,14 +11,17 @@
 #ifndef BLACKMISC_SLOT_H
 #define BLACKMISC_SLOT_H
 
+#include "blackmisc/invoke.h"
+
 #include <QPointer>
 #include <QObject>
 #include <QtGlobal>
+#include <QTimer>
+
 #include <atomic>
 #include <functional>
 #include <future>
 #include <memory>
-#include "blackmisc/invoke.h"
 
 namespace BlackMisc
 {
@@ -98,6 +101,19 @@ namespace BlackMisc
         {
             Q_ASSERT_X(m_function, Q_FUNC_INFO, "Empty CSlot was called");
             return m_function(args...);
+        }
+
+        //! Call function "de-coupled" in original thread
+        bool singleShot(Args... args) const
+        {
+            // does NOT return the values of m_function!
+            if (!m_object || !m_function) { return false; }
+            QTimer::singleShot(0, m_object.data(), [ = ]
+            {
+                if (!m_object || !m_function) { return; }
+                m_function(args...);
+            });
+            return true;
         }
 
         //! Returns the object which the slot belongs to.
