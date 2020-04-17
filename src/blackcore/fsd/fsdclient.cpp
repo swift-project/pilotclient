@@ -247,8 +247,9 @@ namespace BlackCore
 
             this->updateConnectionStatus(CConnectionStatus::Connecting);
 
-            const QString host = m_server.getAddress();
-            const quint16 port = static_cast<quint16>(m_server.getPort());
+            const CServer s = this->getServer();
+            const QString host = s.getAddress();
+            const quint16 port = static_cast<quint16>(s.getPort());
             m_socket.connectToHost(host, port);
             this->startPositionTimers();
         }
@@ -261,10 +262,11 @@ namespace BlackCore
             this->updateConnectionStatus(CConnectionStatus::Disconnecting);
 
             // allow also to close if broken
+            CLoginMode mode = this->getLoginMode();
             if (m_socket.isOpen())
             {
-                if (m_loginMode.isPilot()) { this->sendDeletePilot(); }
-                else if (m_loginMode.isObserver()) { this->sendDeleteAtc(); }
+                if (mode.isPilot()) { this->sendDeletePilot(); }
+                else if (mode.isObserver()) { this->sendDeleteAtc(); }
             }
             m_socket.close();
 
@@ -274,18 +276,20 @@ namespace BlackCore
 
         void CFSDClient::sendLogin()
         {
-            const QString cid      = m_server.getUser().getId();
-            const QString password = m_server.getUser().getPassword();
-            const QString name     = m_server.getUser().getRealNameAndHomeBase(); // m_server.getUser().getRealName();
+            const CServer s = this->getServer();
+            const QString cid      = s.getUser().getId();
+            const QString password = s.getUser().getPassword();
+            const QString name     = s.getUser().getRealNameAndHomeBase(); // m_server.getUser().getRealName();
             const QString callsign = m_ownCallsign.asString();
 
-            if (m_loginMode.isPilot())
+            const CLoginMode m = this->getLoginMode();
+            if (m.isPilot())
             {
                 const AddPilot pilotLogin(callsign, cid, password, m_pilotRating, m_protocolRevision, m_simType, name);
                 sendQueudedMessage(pilotLogin);
                 CStatusMessage(this).info(u"Sending login as '%1' '%2' '%3' '%4' '%5' '%6'") << callsign << cid << toQString(m_pilotRating) << m_protocolRevision << toQString(m_simType) << name;
             }
-            else if (m_loginMode.isObserver())
+            else if (m.isObserver())
             {
                 const AddAtc addAtc(callsign, name, cid, password, m_atcRating, m_protocolRevision);
                 sendQueudedMessage(addAtc);
@@ -295,14 +299,14 @@ namespace BlackCore
 
         void CFSDClient::sendDeletePilot()
         {
-            const QString cid = m_server.getUser().getId();
+            const QString cid = this->getServer().getUser().getId();
             const DeletePilot deletePilot(m_ownCallsign.getFsdCallsignString(), cid);
             sendQueudedMessage(deletePilot);
         }
 
         void CFSDClient::sendDeleteAtc()
         {
-            const QString cid = m_server.getUser().getId();
+            const QString cid = this->getServer().getUser().getId();
             const DeleteAtc deleteAtc(getOwnCallsignAsString(), cid);
             sendQueudedMessage(deleteAtc);
         }
@@ -317,10 +321,11 @@ namespace BlackCore
             }
             else
             {
+                PilotRating r = this->getPilotRating();
                 PilotDataUpdate pilotDataUpdate(myAircraft.getTransponderMode(),
                                                 getOwnCallsignAsString(),
                                                 static_cast<qint16>(myAircraft.getTransponderCode()),
-                                                PilotRating::Unknown,
+                                                r,
                                                 myAircraft.latitude().value(CAngleUnit::deg()),
                                                 myAircraft.longitude().value(CAngleUnit::deg()),
                                                 myAircraft.getAltitude().valueInteger(CLengthUnit::ft()),
