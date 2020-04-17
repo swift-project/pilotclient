@@ -55,6 +55,12 @@ namespace BlackGui
             //! Set read only
             void setReadOnly(bool readOnly);
 
+            //! Add own callsign
+            void addOwnCallsign(bool add) { m_addOwnCallsign = add; }
+
+            //! Only with parts
+            void onlyWithParts(bool partsOnly) { m_onlyWithParts = partsOnly; }
+
         signals:
             //! Changed callsign entered
             void validChangedCallsignEntered();
@@ -80,6 +86,9 @@ namespace BlackGui
             BlackMisc::CDigestSignal m_dsEditingFinished { this, &CCallsignCompleter::editingFinishedDigest, 500, 3 };
             BlackMisc::CDigestSignal m_dsValidCallsignEntered { this, &CCallsignCompleter::validCallsignEnteredDigest, 500, 3 };
             QString m_lastValue;
+
+            bool m_addOwnCallsign  = false;
+            bool m_onlyWithParts   = false;
         };
     } // ns
 } // ns

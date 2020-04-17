@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>306</width>
+    <width>326</width>
     <height>690</height>
    </rect>
   </property>
@@ -476,7 +476,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="BlackGui::Components::CRemoteAircraftSelector" name="comp_RemoteAircraftSelector">
+           <widget class="BlackGui::Components::CCallsignCompleter" name="comp_RemoteAircraftCompleter">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -500,6 +500,13 @@
              <property name="bottomMargin">
               <number>0</number>
              </property>
+             <item>
+              <widget class="QPushButton" name="pb_OwnParts">
+               <property name="text">
+                <string>own parts</string>
+               </property>
+              </widget>
+             </item>
              <item>
               <spacer name="hs_Parts">
                <property name="orientation">
@@ -723,15 +730,15 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CRemoteAircraftSelector</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/remoteaircraftselector.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Components::CRawFsdMessagesComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/rawfsdmessagescomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CCallsignCompleter</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/callsigncompleter.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

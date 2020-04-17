@@ -8,15 +8,19 @@
 
 #include "callsigncompleter.h"
 #include "ui_callsigncompleter.h"
-#include "blackcore/context/contextnetwork.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/led.h"
 #include "blackgui/uppercasevalidator.h"
+#include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextownaircraft.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+
 #include <QStringListModel>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Simulation;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 
@@ -83,7 +87,26 @@ namespace BlackGui
             if (!sGui || sGui->isShuttingDown()) { return; }
             if (!sGui->getIContextNetwork()) { return; }
             if (completer()->wasUpdatedWithinTime(1500)) { return; } // avoid context call via DBus
-            const CCallsignSet validCallsigns = sGui->getIContextNetwork()->getAircraftInRangeCallsigns();
+            CCallsignSet validCallsigns;
+            if (m_onlyWithParts)
+            {
+                //! \todo KB 2020-04 transfers allaircraft via DBus
+                validCallsigns = sGui->getIContextNetwork()->getAircraftInRange().getCallsignsWithSynchronizedParts();
+            }
+            else
+            {
+                validCallsigns = sGui->getIContextNetwork()->getAircraftInRangeCallsigns();
+            }
+
+            if (m_addOwnCallsign && sGui->getIContextOwnAircraft())
+            {
+                const CCallsign ownCs = sGui->getIContextOwnAircraft()->getOwnAircraft().getCallsign();
+                if (!ownCs.isEmpty())
+                {
+                    validCallsigns.insert(ownCs);
+                }
+            }
+
             const QStringList modelData = validCallsigns.getCallsignStrings(true);
             completer()->updateData(modelData, 2000);
             ui->led_Status->setTriState(500);
@@ -109,7 +132,7 @@ namespace BlackGui
 
         void CCallsignCompleter::onChangedConnectionStatus(const CConnectionStatus &from, const CConnectionStatus &to)
         {
-            Q_UNUSED(from);
+            Q_UNUSED(from)
             const bool connected = to.isConnected();
             ui->led_Status->setOn(connected);
             ui->le_Callsign->clear();

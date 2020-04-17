@@ -66,8 +66,11 @@ namespace BlackGui
             //! Request parts (aka aircraft config) from network
             void requestPartsFromNetwork();
 
-            //! Selector has been changed
-            void selectorChanged();
+            //! Completer has been changed
+            void onCallsignChanged();
+
+            //! Display own parts
+            void displayOwnParts();
 
             //! Log in simulator
             void displayLogInSimulator();
