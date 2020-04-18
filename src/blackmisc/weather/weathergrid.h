@@ -49,6 +49,9 @@ namespace BlackMisc
             //! \copydoc Geo::IGeoObjectList::findClosest
             CWeatherGrid findClosest(int number, const BlackMisc::Geo::ICoordinateGeodetic &coordinate) const;
 
+            //! Allow to describe myself
+            QString getDescription(const QString sep = "\n") const;
+
             //! Get all available weather scenarios
             static const QVector<CWeatherScenario> &getAllScenarios();
 

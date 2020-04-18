@@ -59,6 +59,12 @@ namespace BlackMisc
             return closest;
         }
 
+        QString CWeatherGrid::getDescription(const QString sep) const
+        {
+            Q_UNUSED(sep)
+            return QStringLiteral("Weather grid with %1 entries").arg(this->size());
+        }
+
         const QVector<CWeatherScenario> &CWeatherGrid::getAllScenarios()
         {
             static const QVector<CWeatherScenario> scenarios =
