@@ -63,6 +63,7 @@ namespace BlackCore
         void weatherGridReceived(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier);
 
     private:
+        //! Pending weather request
         struct WeatherRequest
         {
             QString filePath;
@@ -72,7 +73,6 @@ namespace BlackCore
         };
 
         bool loadWeatherDataPlugins();
-
         void fetchNextWeatherData();
         void handleNextRequest();
 

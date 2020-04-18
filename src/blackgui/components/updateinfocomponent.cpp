@@ -52,9 +52,9 @@ namespace BlackGui
         CArtifact CUpdateInfoComponent::getLatestAvailablePilotClientArtifactForSelection() const
         {
             const CUpdateInfo info = m_updateInfo.get();
-            const CPlatform p = this->getSelectedOrDefaultPlatform();
-            const CDistribution d = this->getSelectedOrDefaultDistribution();
-            const CArtifact a = info.getArtifactsPilotClient().findByDistributionAndPlatform(d, p, true).getLatestArtifactOrDefault();
+            const CPlatform p      = this->getSelectedOrDefaultPlatform();
+            const CDistribution d  = this->getSelectedOrDefaultDistribution();
+            const CArtifact a      = info.getArtifactsPilotClient().findByDistributionAndPlatform(d, p, true).getLatestArtifactOrDefault();
             return a;
         }
 

@@ -757,7 +757,7 @@ namespace BlackMisc
 
                 // info
                 const QString simObjDirs = joinStringSet(simObjectDirs, ", ");
-                msgs.push_back(CStatusMessage(getLogCategories()).validationInfo(u"Validating %1 models against %2 SimObject paths: '%3'") << models.size() << simObjectDirs.size() << simObjDirs);
+                msgs.push_back(CStatusMessage(getLogCategories()).validationInfo(u"Validating %1 models against %2 SimObjects path(s): '%3'") << models.size() << simObjectDirs.size() << simObjDirs);
 
                 // validate
                 int failed = 0;
@@ -781,7 +781,7 @@ namespace BlackMisc
                     CAircraftModelList::addAsValidOrInvalidModel(model, ok, validModels, invalidModels);
                     if (!ok)
                     {
-                        msgs.push_back(CStatusMessage(getLogCategories()).validationWarning(u"Model '%1' '%2' in none of the %3 paths") << model.getModelString() << model.getFileName() << simObjectDirs.size());
+                        msgs.push_back(CStatusMessage(getLogCategories()).validationWarning(u"Model '%1' '%2' in none of the %3 SimObjects path(s)") << model.getModelString() << model.getFileName() << simObjectDirs.size());
                         failed++;
                     }
 
