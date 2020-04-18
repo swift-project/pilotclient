@@ -104,7 +104,7 @@ namespace BlackGui
 
             // here I know I am the selected widget, update, but keep GUI responsive (-> timer)
             //QTimer::singleShot(1000, this, &CWeatherComponent::update);
-            Q_UNUSED(index);
+            Q_UNUSED(index)
         }
 
         void CWeatherComponent::toggleUseOwnAircraftPosition(bool useOwnAircraftPosition)
@@ -243,7 +243,7 @@ namespace BlackGui
 
             // Context connections
             Q_ASSERT(sGui->getIContextSimulator());
-            connect(sGui->getIContextSimulator(), &IContextSimulator::weatherGridReceived, this, &CWeatherComponent::weatherGridReceived);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::weatherGridReceived, this, &CWeatherComponent::weatherGridReceived, Qt::QueuedConnection);
         }
 
         void CWeatherComponent::setWeatherGrid(const CWeatherGrid &weatherGrid)

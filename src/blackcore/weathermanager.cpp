@@ -8,14 +8,16 @@
 
 #include "blackcore/weatherdata.h"
 #include "blackcore/weathermanager.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/pq/length.h"
-#include "blackmisc/pq/units.h"
-#include "blackmisc/range.h"
-#include "blackmisc/statusmessage.h"
+
 #include "blackmisc/weather/gridpoint.h"
 #include "blackmisc/weather/weatherdataplugininfo.h"
 #include "blackmisc/weather/weatherdataplugininfolist.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/range.h"
+#include "blackmisc/verify.h"
+#include "blackmisc/statusmessage.h"
 
 #include <QtGlobal>
 
@@ -42,6 +44,7 @@ namespace BlackCore
     {
         WeatherRequest request { {}, identifier, weatherGrid, {} };
         m_pendingRequests.append(request);
+
         // Serialize the requests, since plugins can handle only one at a time
         if (m_pendingRequests.size() == 1) { fetchNextWeatherData(); }
     }
@@ -49,9 +52,12 @@ namespace BlackCore
     void CWeatherManager::requestWeatherGrid(const CWeatherGrid &weatherGrid,
             const CSlot<void(const CWeatherGrid &)> &callback)
     {
+        BLACK_VERIFY_X(callback, Q_FUNC_INFO, "Missing callback");
+        if (!callback) { return; }
+
         if (m_isWeatherClear)
         {
-            callback(CWeatherGrid::getClearWeatherGrid());
+            callback.singleShot(CWeatherGrid::getClearWeatherGrid());
             return;
         }
 
@@ -65,9 +71,9 @@ namespace BlackCore
     void CWeatherManager::requestWeatherGridFromFile(const QString &filePath, const CWeatherGrid &weatherGrid,
             const CSlot<void(const CWeatherGrid &)> &callback)
     {
-        if (m_isWeatherClear)
+        if (m_isWeatherClear && callback)
         {
-            callback(CWeatherGrid::getClearWeatherGrid());
+            callback.singleShot(CWeatherGrid::getClearWeatherGrid());
             return;
         }
 
@@ -103,7 +109,7 @@ namespace BlackCore
                 return false;
             }
 
-            connect(weatherData, &IWeatherData::fetchingFinished, this, &CWeatherManager::handleNextRequest);
+            connect(weatherData, &IWeatherData::fetchingFinished, this, &CWeatherManager::handleNextRequest, Qt::QueuedConnection);
             m_weatherDataPlugins.append(weatherData);
             delete factory;
         }
@@ -131,7 +137,7 @@ namespace BlackCore
         const auto fetchedWeatherGrid = weatherDataPlugin->getWeatherData();
 
         const WeatherRequest weatherRequest = m_pendingRequests.constFirst();
-        CWeatherGrid requestedWeatherGrid = weatherRequest.weatherGrid;
+        CWeatherGrid requestedWeatherGrid   = weatherRequest.weatherGrid;
 
         // Interpolation. So far it just picks the closest point without interpolation.
         for (CGridPoint &gridPoint : requestedWeatherGrid)
@@ -141,7 +147,7 @@ namespace BlackCore
             gridPoint.setPosition(nearestGridPoint.getPosition());
         }
 
-        if (weatherRequest.callback) { weatherRequest.callback(requestedWeatherGrid); }
+        if (weatherRequest.callback) { weatherRequest.callback.singleShot(requestedWeatherGrid); }
         if (!weatherRequest.identifier.isAnonymous()) { emit weatherGridReceived(requestedWeatherGrid, weatherRequest.identifier); }
         m_pendingRequests.pop_front();
 

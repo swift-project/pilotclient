@@ -149,6 +149,7 @@ namespace BlackWxPlugin
 
         void CWeatherDataGfs::fetchWeatherData(const CWeatherGrid &grid, const CLength &range)
         {
+            if (!sApp || sApp->isShuttingDown()) { return; }
             m_grid = grid;
             m_maxRange = range;
             if (m_gribData.isEmpty())
@@ -202,8 +203,20 @@ namespace BlackWxPlugin
         void CWeatherDataGfs::fetchingWeatherDataFinished()
         {
             // If the worker is not destroyed yet, try again in 10 ms.
-            if (m_parseGribFileWorker) { QTimer::singleShot(10, this, &CWeatherDataGfs::fetchingWeatherDataFinished); }
-            else { emit fetchingFinished(); }
+            if (m_parseGribFileWorker)
+            {
+                QPointer<CWeatherDataGfs> myself(this);
+                QTimer::singleShot(25, this, [ = ]
+                {
+                    // try again until finished
+                    if (!myself) { return; }
+                    myself->fetchingWeatherDataFinished();
+                });
+            }
+            else
+            {
+                emit fetchingFinished();
+            }
         }
 
         void CWeatherDataGfs::parseGfsFile(QNetworkReply *nwReplyPtr)

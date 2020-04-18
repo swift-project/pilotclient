@@ -77,8 +77,8 @@ namespace BlackCore
         void handleNextRequest();
 
         CPluginManagerWeatherData m_pluginManagerWeatherData { this };
-        QVector<IWeatherData *> m_weatherDataPlugins;
-        QVector<WeatherRequest> m_pendingRequests;
+        QVector<IWeatherData *>   m_weatherDataPlugins;
+        QVector<WeatherRequest>   m_pendingRequests;
         BlackMisc::Weather::CWeatherGrid m_weatherGrid;
         bool m_isWeatherClear = false;
     };

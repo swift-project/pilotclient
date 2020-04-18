@@ -77,7 +77,7 @@ namespace BlackCore
             m_plugins->collectPlugins();
             this->restoreSimulatorPlugins();
 
-            connect(&m_weatherManager,  &CWeatherManager::weatherGridReceived, this, &CContextSimulator::weatherGridReceived);
+            connect(&m_weatherManager,  &CWeatherManager::weatherGridReceived, this, &CContextSimulator::weatherGridReceived, Qt::QueuedConnection);
             connect(&m_aircraftMatcher, &CAircraftMatcher::setupChanged,       this, &CContextSimulator::matchingSetupChanged);
             connect(&CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance(), &CCentralMultiSimulatorModelSetCachesProvider::cacheChanged, this, &CContextSimulator::modelSetChanged);
 
