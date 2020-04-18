@@ -364,14 +364,13 @@ namespace BlackSimPlugin
 
                 if (m_isWeatherActivated)
                 {
-                    const auto currentPosition = CCoordinateGeodetic { situation.latitude(), situation.longitude() };
                     if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()))
                     {
                         if (m_lastWeatherPosition.isNull() ||
-                                calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
+                                calculateGreatCircleDistance(m_lastWeatherPosition, situation).value(CLengthUnit::mi()) > 20)
                         {
-                            m_lastWeatherPosition = currentPosition;
-                            const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
+                            m_lastWeatherPosition = situation;
+                            const auto weatherGrid = CWeatherGrid { { "GLOB", situation } };
                             this->requestWeatherGrid(weatherGrid, { this, &CSimulatorXPlane::injectWeatherGrid });
                         }
                     }
@@ -896,9 +895,22 @@ namespace BlackSimPlugin
             return true;
         }
 
-        void CSimulatorXPlane::injectWeatherGrid(const Weather::CWeatherGrid &weatherGrid)
+        void CSimulatorXPlane::injectWeatherGrid(const CWeatherGrid &weatherGrid)
         {
             if (this->isShuttingDownOrDisconnected()) { return; }
+            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            {
+                BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Wrong thread");
+                QPointer<CSimulatorXPlane> myself(this);
+                QTimer::singleShot(0, this, [ = ]
+                {
+                    if (!myself) { return; }
+                    myself->injectWeatherGrid(weatherGrid);
+                });
+                return;
+            }
+
+            // XPlane weather off
             m_weatherProxy->setUseRealWeather(false);
 
             //! TODO: find the closest
