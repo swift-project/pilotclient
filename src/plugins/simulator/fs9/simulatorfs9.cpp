@@ -19,6 +19,8 @@
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/propertyindexallclasses.h"
+#include "blackmisc/verify.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QTimer>
 #include <QPointer>
@@ -35,6 +37,7 @@ using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Weather;
 using namespace BlackCore;
 using namespace BlackSimPlugin::FsCommon;
+using namespace BlackConfig;
 
 namespace BlackSimPlugin
 {
@@ -397,14 +400,13 @@ namespace BlackSimPlugin
 
             if (m_isWeatherActivated)
             {
-                const auto currentPosition = CCoordinateGeodetic { aircraftSituation.latitude(), aircraftSituation.longitude() };
                 if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()))
                 {
                     if (m_lastWeatherPosition.isNull() ||
-                            calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
+                            calculateGreatCircleDistance(m_lastWeatherPosition, aircraftSituation).value(CLengthUnit::mi()) > 20)
                     {
-                        m_lastWeatherPosition = currentPosition;
-                        const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
+                        m_lastWeatherPosition = aircraftSituation;
+                        const auto weatherGrid = CWeatherGrid { { "GLOB", aircraftSituation } };
                         requestWeatherGrid(weatherGrid, { this, &CSimulatorFs9::injectWeatherGrid });
                     }
                 }
@@ -465,6 +467,19 @@ namespace BlackSimPlugin
 
         void CSimulatorFs9::injectWeatherGrid(const CWeatherGrid &weatherGrid)
         {
+            if (this->isShuttingDownOrDisconnected()) { return; }
+            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            {
+                BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Wrong thread");
+                QPointer<CSimulatorFs9> myself(this);
+                QTimer::singleShot(0, this, [ = ]
+                {
+                    if (!myself) { return; }
+                    myself->injectWeatherGrid(weatherGrid);
+                });
+                return;
+            }
+
             if (!m_useFsuipc || !m_fsuipc) { return; }
             if (!m_fsuipc->isOpened()) { return; }
             if (weatherGrid.isEmpty())

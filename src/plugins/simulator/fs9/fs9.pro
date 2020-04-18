@@ -6,7 +6,7 @@ TARGET = simulatorfs9
 TEMPLATE = lib
 
 CONFIG += plugin shared
-CONFIG += blackmisc blackcore blackgui
+CONFIG += blackmisc blackcore blackgui blackconfig
 CONFIG += simulatorfscommon simulatorplugincommon
 
 DEPENDPATH += . $$SourceRoot/src

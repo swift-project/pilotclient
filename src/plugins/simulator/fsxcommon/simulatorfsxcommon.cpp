@@ -685,7 +685,7 @@ namespace BlackSimPlugin
             aircraftSituation.setOnGround(dtb(simulatorOwnAircraft.simOnGround) ? CAircraftSituation::OnGround : CAircraftSituation::NotOnGround, CAircraftSituation::OutOnGroundOwnAircraft);
 
             const CAircraftLights lights(dtb(simulatorOwnAircraft.lightStrobe), dtb(simulatorOwnAircraft.lightLanding), dtb(simulatorOwnAircraft.lightTaxi),
-                                         dtb(simulatorOwnAircraft.lightBeacon), dtb(simulatorOwnAircraft.lightNav), dtb(simulatorOwnAircraft.lightLogo));
+                                         dtb(simulatorOwnAircraft.lightBeacon), dtb(simulatorOwnAircraft.lightNav),     dtb(simulatorOwnAircraft.lightLogo));
 
             CAircraftEngineList engines;
             const QList<bool> helperList
@@ -2393,8 +2393,21 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorFsxCommon::injectWeatherGrid(const Weather::CWeatherGrid &weatherGrid)
+        void CSimulatorFsxCommon::injectWeatherGrid(const CWeatherGrid &weatherGrid)
         {
+            if (this->isShuttingDownOrDisconnected()) { return; }
+            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            {
+                BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Wrong thread");
+                QPointer<CSimulatorFsxCommon> myself(this);
+                QTimer::singleShot(0, this, [ = ]
+                {
+                    if (!myself) { return; }
+                    myself->injectWeatherGrid(weatherGrid);
+                });
+                return;
+            }
+
             // So far, there is only global weather
             auto glob = weatherGrid.frontOrDefault();
             glob.setIdentifier("GLOB");
