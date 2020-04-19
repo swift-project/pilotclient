@@ -61,8 +61,52 @@ namespace BlackMisc
 
         QString CWeatherGrid::getDescription(const QString sep) const
         {
-            Q_UNUSED(sep)
-            return QStringLiteral("Weather grid with %1 entries").arg(this->size());
+            QString s;
+            QTextStream qtout(&s);
+            for (const CGridPoint &gridPoint : *this)
+            {
+                qtout << "Latitude: "  << gridPoint.getPosition().latitude().toQString()    << sep;
+                qtout << "Longitude: " << gridPoint.getPosition().longitude().toQString()  << sep;
+                qtout << "    MSL Pressure: " << gridPoint.getPressureAtMsl().toQString() << sep;
+
+                CTemperatureLayerList temperatureLayers = gridPoint.getTemperatureLayers();
+                temperatureLayers.sort([](const CTemperatureLayer & a, const CTemperatureLayer & b) { return a.getLevel() < b.getLevel(); });
+                qtout << "    Temperature Layers: " << sep;
+                for (const auto &temperatureLayer : as_const(temperatureLayers))
+                {
+                    qtout << "        Level: " << temperatureLayer.getLevel().toQString() << sep;
+                    qtout << "            Temperature: " << temperatureLayer.getTemperature().toQString() << sep;
+                    qtout << "            Relative Humidity: " << temperatureLayer.getRelativeHumidity() << " %" << sep;
+                }
+                qtout << sep;
+
+                CWindLayerList windLayers = gridPoint.getWindLayers();
+                windLayers.sort([](const CWindLayer & a, const CWindLayer & b) { return a.getLevel() < b.getLevel(); });
+                qtout << "    Wind Layers: " << sep;
+                for (const auto &windLayer : as_const(windLayers))
+                {
+                    qtout << "        Level: " << windLayer.getLevel().toQString() << sep;
+                    qtout << "            Wind: " << windLayer.getDirection().toQString() << " at " << windLayer.getSpeed().toQString() << sep;
+                }
+                qtout << sep;
+
+                qtout << "    Cloud Layers: " << sep;
+                CCloudLayerList cloudLayers = gridPoint.getCloudLayers();
+                cloudLayers.sort([](const CCloudLayer & a, const CCloudLayer & b) { return a.getBase() < b.getBase(); });
+                for (int i = 0; i < cloudLayers.size(); i++)
+                {
+                    const CCloudLayer &cloudLayer = cloudLayers[i];
+                    qtout << "        Top: " << cloudLayer.getTop().toQString() << sep;
+                    qtout << "            Coverage: " << cloudLayer.getCoveragePercent() << " %"     << sep;
+                    qtout << "            Precipitation type: " << cloudLayer.getPrecipitation()     << sep;
+                    qtout << "            Precipitation rate: " << cloudLayer.getPrecipitationRate() << sep;
+                    qtout << "        Base: " << cloudLayer.getBase().toQString() << sep;
+                }
+                qtout << sep << sep;
+            }
+
+            qtout.flush();
+            return s;
         }
 
         const QVector<CWeatherScenario> &CWeatherGrid::getAllScenarios()

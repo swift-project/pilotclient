@@ -125,8 +125,6 @@ namespace BlackSimPlugin
             const QString wg = QStringLiteral("Weather grid with %1 entries").arg(weatherGrid.size());
             if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, wg);
             m_monitorWidget->receivedWeather(weatherGrid);
-
-            // remark see CWeatherDataPrinter
         }
 
         bool CSimulatorEmulated::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
