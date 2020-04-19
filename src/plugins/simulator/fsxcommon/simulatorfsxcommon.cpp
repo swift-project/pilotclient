@@ -2410,13 +2410,21 @@ namespace BlackSimPlugin
             }
 
             // So far, there is only global weather
-            auto glob = weatherGrid.frontOrDefault();
+            const bool isFSX = this->getSimulatorPluginInfo().getSimulatorInfo().isFSX();
+            CGridPoint glob = weatherGrid.frontOrDefault();
             glob.setIdentifier("GLOB");
-            const QString metar = CSimConnectUtilities::convertToSimConnectMetar(glob);
+            const QString metar = CSimConnectUtilities::convertToSimConnectMetar(glob, isFSX);
             const QByteArray metarBa = toFsxChar(metar);
+
+            // send
             SimConnect_WeatherSetModeCustom(m_hSimConnect);
             SimConnect_WeatherSetModeGlobal(m_hSimConnect);
-            SimConnect_WeatherSetObservation(m_hSimConnect, 0, metarBa.constData());
+
+            if (!metarBa.isEmpty())
+            {
+                // Q_ASSERT_X(metarBa.back() == 0, Q_FUNC_INFO, "Need 0 terminated string");
+                SimConnect_WeatherSetObservation(m_hSimConnect, 0, metarBa.constData());
+            }
         }
 
         bool CSimulatorFsxCommon::requestPositionDataForSimObject(const CSimConnectObject &simObject, SIMCONNECT_PERIOD period)
