@@ -325,7 +325,11 @@ namespace BlackGui
         {
             this->displayExcludeDirectoryPatterns(m_settings.getModelExcludeDirectoryPatternsIfNotDefault(simulator));
             this->displayModelDirectories(m_settings.getModelDirectoriesIfNotDefault(simulator));
-            ui->le_SimulatorDirectory->setText(m_settings.getSimulatorDirectoryIfNotDefault(simulator));
+
+            // ui->le_SimulatorDirectory->setText(m_settings.getSimulatorDirectoryIfNotDefault(simulator));
+            // based on discussion here, always display: https://discordapp.com/channels/539048679160676382/594962359441948682/700483609361907842
+            const CSimulatorSettings s = m_settings.getSettings(simulator);
+            ui->le_SimulatorDirectory->setText(s.getSimulatorDirectory());
         }
 
         void CSettingsSimulatorBasicsComponent::displayDefaultValuesAsPlaceholder(const CSimulatorInfo &simulator)
