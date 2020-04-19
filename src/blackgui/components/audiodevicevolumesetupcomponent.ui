@@ -163,13 +163,6 @@
        </spacer>
       </item>
       <item>
-       <widget class="QCheckBox" name="cb_1Tx">
-        <property name="text">
-         <string>Tx1</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QCheckBox" name="cb_1Rec">
         <property name="text">
          <string>Rx1</string>
@@ -177,9 +170,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="cb_2Tx">
+       <widget class="QCheckBox" name="cb_1Tx">
         <property name="text">
-         <string>Tx2</string>
+         <string>Tx1</string>
         </property>
        </widget>
       </item>
@@ -187,6 +180,13 @@
        <widget class="QCheckBox" name="cb_2Rec">
         <property name="text">
          <string>Rx2</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="cb_2Tx">
+        <property name="text">
+         <string>Tx2</string>
         </property>
        </widget>
       </item>
@@ -319,10 +319,10 @@
  </customwidgets>
  <tabstops>
   <tabstop>le_Info</tabstop>
-  <tabstop>cb_1Tx</tabstop>
   <tabstop>cb_1Rec</tabstop>
-  <tabstop>cb_2Tx</tabstop>
+  <tabstop>cb_1Tx</tabstop>
   <tabstop>cb_2Rec</tabstop>
+  <tabstop>cb_2Tx</tabstop>
   <tabstop>cb_IntegratedWithCom</tabstop>
   <tabstop>cb_SetupAudioInputDevice</tabstop>
   <tabstop>tb_RefreshInDevice</tabstop>
