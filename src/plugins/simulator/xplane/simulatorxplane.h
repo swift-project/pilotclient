@@ -144,6 +144,7 @@ namespace BlackSimPlugin
             virtual void resetAircraftStatistics() override;
             virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool testSendSituationAndParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) override;
+            virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
             virtual void callbackReceivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign, bool isWater) override;
             //! @}
 
@@ -158,7 +159,6 @@ namespace BlackSimPlugin
             virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual int physicallyRemoveAllRemoteAircraft() override;
             virtual void clearAllRemoteAircraftData() override;
-            virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
             virtual bool isPaused() const override
             {
                 //! \todo XP: provide correct pause state

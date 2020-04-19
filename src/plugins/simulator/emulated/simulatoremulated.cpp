@@ -337,8 +337,7 @@ namespace BlackSimPlugin
                             calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
                     {
                         m_lastWeatherPosition = currentPosition;
-                        const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
-                        requestWeatherGrid(weatherGrid, { this, &CSimulatorEmulated::injectWeatherGrid });
+                        requestWeatherGrid(currentPosition, this->identifier());
                     }
                 }
             }
@@ -579,15 +578,15 @@ namespace BlackSimPlugin
             this->finishUpdateRemoteAircraftAndSetStatistics(now);
         }
 
-        void CSimulatorEmulated::requestWeather()
+        bool CSimulatorEmulated::requestWeather()
         {
-            if (!m_isWeatherActivated) { return; }
+            if (!m_isWeatherActivated) { return false; }
 
             const CWeatherScenario s = m_weatherScenarioSettings.get();
             this->getOwnAircraftPosition();
             const CCoordinateGeodetic currentPosition = this->getOwnAircraftPosition();
-            const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
-            this->requestWeatherGrid(weatherGrid, { this, &CSimulatorEmulated::injectWeatherGrid });
+            this->requestWeatherGrid(currentPosition, this->identifier());
+            return true;
         }
 
         CSimulatorEmulatedListener::CSimulatorEmulatedListener(const CSimulatorPluginInfo &info)

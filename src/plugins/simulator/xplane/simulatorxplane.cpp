@@ -370,8 +370,7 @@ namespace BlackSimPlugin
                                 calculateGreatCircleDistance(m_lastWeatherPosition, situation).value(CLengthUnit::mi()) > 20)
                         {
                             m_lastWeatherPosition = situation;
-                            const auto weatherGrid = CWeatherGrid { { "GLOB", situation } };
-                            this->requestWeatherGrid(weatherGrid, { this, &CSimulatorXPlane::injectWeatherGrid });
+                            requestWeatherGrid(situation, this->identifier());
                         }
                     }
                 } // weather
