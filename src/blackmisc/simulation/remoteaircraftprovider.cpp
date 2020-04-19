@@ -427,7 +427,23 @@ namespace BlackMisc
                         // validation in dev.env.
                         const int  attributes = jsonObject.size();
                         const bool correctCount = (attributes == CAircraftParts::attributesCountFullJson);
-                        BLACK_VERIFY_X(correctCount, Q_FUNC_INFO, "Wrong full aircraft parts");
+                        BLACK_VERIFY_X(correctCount || !CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Wrong full aircraft parts");
+                        if (!correctCount)
+                        {
+                            CLogMessage(this).warning(u"Wrong full parts attributes, %1 (expected %2)") << attributes << CAircraftParts::attributesCountFullJson;
+                            //! \todo KB 2020-04 ignore? make incremental?
+                            if (attributes < 3)
+                            {
+                                // EXPERIMENTAL
+                                if (attributes < 1) { return; }
+
+                                // treat as incremental
+                                CLogMessage(this).warning(u"Treating %1 attributes as incremental") << attributes;
+                                parts = this->remoteAircraftParts(callsign).frontOrDefault(); // latest
+                                const QJsonObject config = applyIncrementalObject(parts.toJson(), jsonObject);
+                                parts.convertFromJson(config);
+                            }
+                        }
                     }
                     parts.convertFromJson(jsonObject);
                 }
