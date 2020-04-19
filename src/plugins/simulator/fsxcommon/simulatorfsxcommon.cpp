@@ -2395,6 +2395,8 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::injectWeatherGrid(const CWeatherGrid &weatherGrid)
         {
             if (this->isShuttingDownOrDisconnected()) { return; }
+            if (weatherGrid.isEmpty()) { return; }
+
             if (!CThreadUtils::isCurrentThreadObjectThread(this))
             {
                 BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Wrong thread");
@@ -2817,7 +2819,7 @@ namespace BlackSimPlugin
             QPointer<CSimulatorFsxCommonListener> myself(this);
             QTimer::singleShot(0, this, [ = ]
             {
-                if (!myself) { return; }
+                if (!myself || !sApp || sApp->isShuttingDown()) { return; }
                 this->checkConnection();
             });
         }
@@ -2837,13 +2839,15 @@ namespace BlackSimPlugin
             bool check = false;
             if (isOk(result))
             {
+                // if we can connect, but not dispatch, it can mean a previously started FSX/P3D
+                // blocks remote calls -> RESTART
                 for (int i = 0; !check && i < 3 && !this->isShuttingDown(); i++)
                 {
                     // result not always in first dispatch as we first have to obtain simulator name
                     result = SimConnect_CallDispatch(hSimConnect, CSimulatorFsxCommonListener::SimConnectProc, this);
                     if (isFailure(result)) { break; } // means serious failure
                     check = this->checkVersionAndSimulator();
-                    if (!check) { sApp->processEventsFor(500); }
+                    if (!check && sApp) { sApp->processEventsFor(500); }
                 }
             }
             SimConnect_Close(hSimConnect);

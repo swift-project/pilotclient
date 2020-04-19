@@ -467,6 +467,8 @@ namespace BlackSimPlugin
         void CSimulatorFs9::injectWeatherGrid(const CWeatherGrid &weatherGrid)
         {
             if (this->isShuttingDownOrDisconnected()) { return; }
+            if (weatherGrid.isEmpty()) { return; }
+
             if (!CThreadUtils::isCurrentThreadObjectThread(this))
             {
                 BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Wrong thread");

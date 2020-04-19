@@ -897,8 +897,11 @@ namespace BlackSimPlugin
         void CSimulatorXPlane::injectWeatherGrid(const CWeatherGrid &weatherGrid)
         {
             if (this->isShuttingDownOrDisconnected()) { return; }
+            if (weatherGrid.isEmpty()) { return; }
+
             if (!CThreadUtils::isCurrentThreadObjectThread(this))
             {
+
                 BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Wrong thread");
                 QPointer<CSimulatorXPlane> myself(this);
                 QTimer::singleShot(0, this, [ = ]

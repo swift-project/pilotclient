@@ -174,7 +174,7 @@ namespace BlackCore
     void ISimulator::reloadWeatherSettings()
     {
         // log crash info about weather
-        if (sApp && !sApp->isShuttingDown()) { CCrashHandler::instance()->crashAndLogAppendInfo(u"Simulator weather: " % boolToYesNo(m_isWeatherActivated)); }
+        if (this->isShuttingDown()) { CCrashHandler::instance()->crashAndLogAppendInfo(u"Simulator weather: " % boolToYesNo(m_isWeatherActivated)); }
         if (!m_isWeatherActivated) { return; }
         m_lastWeatherPosition.setNull();
         const CWeatherScenario selectedWeatherScenario = m_weatherScenarioSettings.get();
@@ -196,7 +196,7 @@ namespace BlackCore
         }
 
         // log crash info about weather
-        if (sApp && !sApp->isShuttingDown()) { CCrashHandler::instance()->crashAndLogAppendInfo(selectedWeatherScenario.toQString(true)); }
+        if (this->isShuttingDown()) { CCrashHandler::instance()->crashAndLogAppendInfo(selectedWeatherScenario.toQString(true)); }
     }
 
     void ISimulator::clearAllRemoteAircraftData()
@@ -1384,7 +1384,7 @@ namespace BlackCore
         const QPointer<ISimulator> myself(this);
         QTimer::singleShot(t, this, [ = ]
         {
-            if (myself.isNull() || myself->isShuttingDown()) { return; }
+            if (!myself || myself->isShuttingDown()) { return; }
             this->displayLoggedSituationInSimulator(cs, stopLogging, times - 1);
         });
     }
