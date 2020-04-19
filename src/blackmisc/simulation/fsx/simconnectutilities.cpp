@@ -7,6 +7,7 @@
  */
 
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
+#include "blackmisc/stringutils.h"
 
 #include <QCoreApplication>
 #include <QFile>
@@ -19,6 +20,7 @@
 #include <QStandardPaths>
 #include <QStringBuilder>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Weather;
@@ -205,20 +207,18 @@ namespace BlackMisc
                 return lightMask;
             }
 
-            QString CSimConnectUtilities::convertToSimConnectMetar(const CGridPoint &gridPoint)
+            QString CSimConnectUtilities::convertToSimConnectMetar(const CGridPoint &gridPoint, bool isFSX, bool useWindLayers, bool useVisibilityLayers, bool useCloudLayers, bool useTempLayers)
             {
                 // STATION ID
                 Q_ASSERT(!gridPoint.getIdentifier().isEmpty());
                 QString simconnectMetar = gridPoint.getIdentifier();
 
                 // SURFACE WINDS/WINDS ALOFT
-                CWindLayerList windLayers = gridPoint.getWindLayers();
-                windLayers.sortBy(&CWindLayer::getLevel);
-                simconnectMetar += windsToSimConnectMetar(windLayers);
+                const CWindLayerList windLayers = useWindLayers ? gridPoint.getWindLayers().sortedBy(&CWindLayer::getLevel) : CWindLayerList();
+                simconnectMetar += windsToSimConnectMetar(windLayers, isFSX);
 
                 // VISIBILITY
-                CVisibilityLayerList visibilityLayers = gridPoint.getVisibilityLayers();
-                visibilityLayers.sortBy(&CVisibilityLayer::getBase);
+                const CVisibilityLayerList visibilityLayers = useVisibilityLayers ? gridPoint.getVisibilityLayers().sortedBy(&CVisibilityLayer::getBase) : CVisibilityLayerList();
                 simconnectMetar += visibilitiesToSimConnectMetar(visibilityLayers);
 
                 // PRESENT CONDITIONS
@@ -228,27 +228,25 @@ namespace BlackMisc
                 // todo
 
                 // SKY CONDITIONS
-                CCloudLayerList cloudLayers = gridPoint.getCloudLayers();
-                cloudLayers.sortBy(&CCloudLayer::getBase);
+                const CCloudLayerList cloudLayers = useCloudLayers ? gridPoint.getCloudLayers().sortedBy(&CCloudLayer::getBase) : CCloudLayerList();
                 simconnectMetar += cloudsToSimConnectMetar(cloudLayers);
 
                 // TEMPERATURE
-
-                CTemperatureLayerList temperatureLayers = gridPoint.getTemperatureLayers();
-                temperatureLayers.sortBy(&CTemperatureLayer::getLevel);
+                const CTemperatureLayerList temperatureLayers = useTempLayers ? gridPoint.getTemperatureLayers().sortedBy(&CTemperatureLayer::getLevel) : CTemperatureLayerList();
                 simconnectMetar += temperaturesToSimConnectMetar(temperatureLayers);
 
                 // ALTIMETER
                 // Format:
                 // QNNNN
                 // Q = specifier for altimeter in millibars
-                simconnectMetar += QLatin1String(" Q");
                 // NNNN = altimeter in millibars
-                static const QString arg1s("%1");
-                const auto altimeter = gridPoint.getPressureAtMsl().valueInteger(CPressureUnit::mbar());
-                simconnectMetar += arg1s.arg(altimeter, 4, 10, QLatin1Char('0'));
-
-                return simconnectMetar;
+                if (!gridPoint.getPressureAtMsl().isNull())
+                {
+                    static const QString arg1s(" Q%1");
+                    const int altimeter = gridPoint.getPressureAtMsl().valueInteger(CPressureUnit::mbar());
+                    simconnectMetar += arg1s.arg(altimeter, 4, 10, QLatin1Char('0'));
+                }
+                return simconnectMetar.simplified();
             }
 
             void CSimConnectUtilities::registerMetadata()
@@ -257,14 +255,15 @@ namespace BlackMisc
                 qRegisterMetaType<CSimConnectUtilities::SIMCONNECT_SURFACE>();
             }
 
-            QString CSimConnectUtilities::windsToSimConnectMetar(const CWindLayerList &windLayers)
+            QString CSimConnectUtilities::windsToSimConnectMetar(const CWindLayerList &windLayers, bool isFSX)
             {
                 static const QString arg1s("%1");
-                QString simconnectWinds;
+
+                QString simConnectWinds;
                 bool surface = true;
                 for (const CWindLayer &windLayer : windLayers)
                 {
-                    simconnectWinds += QLatin1Char(' ');
+                    simConnectWinds += QLatin1Char(' ');
 
                     // Format:
                     // DDDSSSUUU (steady)
@@ -272,22 +271,25 @@ namespace BlackMisc
                     if (windLayer.isDirectionVariable())
                     {
                         // DDD = VRB for variable
-                        simconnectWinds += QLatin1String("VRB");
+                        simConnectWinds += QLatin1String("VRB");
                     }
                     else
                     {
-                        const int speed = windLayer.getSpeed().valueInteger(CSpeedUnit::kts());
-                        const int direction = windLayer.getDirection().valueInteger(CAngleUnit::deg());
+                        if (!windLayer.getSpeed().isNull() && !windLayer.getDirection().isNull())
+                        {
+                            const int speedKts     = windLayer.getSpeed().valueInteger(CSpeedUnit::kts());
+                            const int directionDeg = windLayer.getDirection().valueInteger(CAngleUnit::deg());
 
-                        simconnectWinds += arg1s.arg(direction, 3, 10, QLatin1Char('0')) % // DDD = Direction (0-360 degrees)
-                                           arg1s.arg(speed, 3, 10, QLatin1Char('0')); // SSS = Speed
+                            simConnectWinds += arg1s.arg(directionDeg, 3, 10, QLatin1Char('0')) % // DDD = Direction (0-360 degrees)
+                                               arg1s.arg(speedKts, 3, 10, QLatin1Char('0')); // SSS = Speed
+                        }
                     }
                     // XX = Gust speed
-                    const int gustSpeed = windLayer.getGustSpeed().valueInteger(CSpeedUnit::kts());
-                    if (gustSpeed > 0) { simconnectWinds += u'G' % arg1s.arg(gustSpeed, 2, 10, QLatin1Char('0')); }
+                    const int gustSpeedKts = windLayer.getGustSpeed().valueInteger(CSpeedUnit::kts());
+                    if (gustSpeedKts > 0) { simConnectWinds += u'G' % arg1s.arg(gustSpeedKts, 2, 10, QLatin1Char('0')); }
 
                     // UUU = Speed units
-                    simconnectWinds += QStringLiteral("KT");
+                    simConnectWinds += QStringLiteral("KT");
 
                     if (surface)
                     {
@@ -297,24 +299,31 @@ namespace BlackMisc
                             "&D" // D = specifier for surface layer
                             "305" // Surface default depth is 1000 feet or 305m
                             "NG"; // We don't have turbulence or wind shear information, hence we use the defaults
-                        simconnectWinds += surfaceWinds;
+                        simConnectWinds += surfaceWinds;
                         surface = false;
                     }
                     else
                     {
-                        auto altitude = windLayer.getLevel();
-                        altitude.toMeanSeaLevel();
-                        int altitudeValue = altitude.valueInteger(CLengthUnit::m());
+                        CAltitude altitude = windLayer.getLevel();
 
-                        // Winds aloft extension:
-                        // &ANNNNTS
-                        simconnectWinds +=
-                            u"&A" % // A = specifier for altitude above mean sea-level (MSL)
-                            arg1s.arg(altitudeValue, 4, 10, QLatin1Char('0')) % // NNNN = depth (height) in meters.
-                            u"NG"; // We don't have turbulence or wind shear information, hence we use the defaults
+                        // this seems to crash FSX, P3D works
+                        // https://www.fsdeveloper.com/forum/threads/setting-winds-aloft.18862/
+                        if (!altitude.isNull() && !isFSX)
+                        {
+                            altitude.toMeanSeaLevel();
+                            int altitudeValueMeters = altitude.valueInteger(CLengthUnit::m());
+
+                            // Winds aloft extension:
+                            // &ANNNNTS
+                            simConnectWinds +=
+                                u"&A" % // A = specifier for altitude above mean sea-level (MSL)
+                                arg1s.arg(altitudeValueMeters, 4, 10, QLatin1Char('0')) % // NNNN = depth (height) in meters.
+                                u"NG"; // We don't have turbulence or wind shear information, hence we use the defaults
+                        }
                     }
                 }
-                return simconnectWinds;
+
+                return QStringLiteral(" ") % simConnectWinds.simplified();
             }
 
             QString CSimConnectUtilities::visibilitiesToSimConnectMetar(const CVisibilityLayerList &visibilityLayers)
