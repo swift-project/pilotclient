@@ -65,6 +65,7 @@ namespace BlackSimPlugin
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
             virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool testSendSituationAndParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) override;
+            virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
             //! \@}
 
         protected:
@@ -78,11 +79,6 @@ namespace BlackSimPlugin
             //! \sa m_timerId
             //! \sa CSimulatorFsxCommon::dispatch
             virtual void timerEvent(QTimerEvent *event) override;
-
-            //! \name Base class overrides
-            //! @{
-            virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
-            //! @}
 
             // remark: in FS9 there is no central updateRemoteAircraft() function, each FS9 client updates itself
             // updateRemoteAircraft()

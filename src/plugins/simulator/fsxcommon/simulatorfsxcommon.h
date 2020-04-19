@@ -156,6 +156,7 @@ namespace BlackSimPlugin
             virtual void setFlightNetworkConnected(bool connected) override;
             virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool testSendSituationAndParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) override;
+            virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
             //! @}
 
             //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
@@ -232,7 +233,6 @@ namespace BlackSimPlugin
             //! @{
             virtual void reset() override;
             virtual void initSimulatorInternals() override;
-            virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
             virtual void clearAllRemoteAircraftData() override;
             virtual void onOwnModelChanged(const BlackMisc::Simulation::CAircraftModel &newModel) override;
             //! @}
