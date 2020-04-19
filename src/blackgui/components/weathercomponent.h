@@ -67,7 +67,7 @@ namespace BlackGui
 
             void updateWeatherInfoLine();
             void updateWeatherInformation();
-            void weatherGridReceived(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier);
+            void onWeatherGridReceived(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier);
 
             void setupConnections();
 

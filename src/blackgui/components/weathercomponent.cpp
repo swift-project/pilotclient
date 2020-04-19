@@ -192,7 +192,7 @@ namespace BlackGui
             const bool useOwnAcftPosition = ui->cb_UseOwnAcftPosition->isChecked();
             CCoordinateGeodetic position;
             Q_ASSERT(ui->cb_weatherScenario->currentData().canConvert<CWeatherScenario>());
-            CWeatherScenario scenario = ui->cb_weatherScenario->currentData().value<CWeatherScenario>();
+            const CWeatherScenario scenario = ui->cb_weatherScenario->currentData().value<CWeatherScenario>();
 
             if (useOwnAcftPosition)
             {
@@ -225,9 +225,16 @@ namespace BlackGui
             }
         }
 
-        void CWeatherComponent::weatherGridReceived(const CWeatherGrid &weatherGrid, const CIdentifier &identifier)
+        void CWeatherComponent::onWeatherGridReceived(const CWeatherGrid &weatherGrid, const CIdentifier &identifier)
         {
-            if (!isMyIdentifier(identifier)) { return; }
+            if (!isMyIdentifier(identifier))
+            {
+                // not from myself
+                const CWeatherScenario scenario = ui->cb_weatherScenario->currentData().value<CWeatherScenario>();
+                if (!CWeatherScenario::isRealWeatherScenario(scenario)) { return; }
+
+                // we have received weather grid data and assume those are real weather updates
+            }
             ui->lbl_Status->setText({});
             setWeatherGrid(weatherGrid);
         }
@@ -243,7 +250,7 @@ namespace BlackGui
 
             // Context connections
             Q_ASSERT(sGui->getIContextSimulator());
-            connect(sGui->getIContextSimulator(), &IContextSimulator::weatherGridReceived, this, &CWeatherComponent::weatherGridReceived, Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::weatherGridReceived, this, &CWeatherComponent::onWeatherGridReceived, Qt::QueuedConnection);
         }
 
         void CWeatherComponent::setWeatherGrid(const CWeatherGrid &weatherGrid)
@@ -262,9 +269,7 @@ namespace BlackGui
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
             ui->lbl_Status->setText(QStringLiteral("Loading around %1 %2").arg(position.latitude().toWgs84(), position.longitude().toWgs84()));
-            const CWeatherGrid weatherGrid { { {}, position } };
-            const auto ident = identifier();
-            sGui->getIContextSimulator()->requestWeatherGrid(weatherGrid, ident);
+            sGui->getIContextSimulator()->requestWeatherGrid(position, this->identifier());
         }
 
         void CWeatherComponent::onScenarioChanged()
