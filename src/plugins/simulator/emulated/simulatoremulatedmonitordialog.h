@@ -120,6 +120,9 @@ namespace BlackSimPlugin
             //! Can use the emulated simulator
             bool canUseSimulator() const;
 
+            //! Request weather
+            void requestWeather();
+
             QScopedPointer<Ui::CSimulatorEmulatedMonitorDialog> ui;
             CSimulatorEmulated *m_simulator = nullptr;
             QTimer m_uiUpdateTimer;

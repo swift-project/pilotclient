@@ -9,6 +9,7 @@
 #include "simulatoremulatedmonitordialog.h"
 #include "ui_simulatoremulatedmonitordialog.h"
 #include "simulatoremulated.h"
+#include "blackcore/context/contextsimulator.h"
 #include "blackgui/components/cockpitcomtransmissioncomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/logmessage.h"
@@ -72,6 +73,7 @@ namespace BlackSimPlugin
             connect(ui->pb_InterpolatorFetch,    &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
             connect(ui->pb_EmitAddedFailed,      &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::emitSignal);
             connect(ui->pb_AddAutoPublishData,   &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::addAutoPublishTestData);
+            connect(ui->pb_RequestWeather,       &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::requestWeather);
 
             ui->led_Receiving->setToolTips("receiving", "idle");
             ui->led_Receiving->setShape(CLedWidget::Rounded);
@@ -158,7 +160,7 @@ namespace BlackSimPlugin
 
         void CSimulatorEmulatedMonitorDialog::receivedWeather(const CWeatherGrid &weatherGrid)
         {
-            Q_UNUSED(weatherGrid)
+            ui->te_Weather->setText(weatherGrid.getDescription());
         }
 
         void CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged()
@@ -329,6 +331,29 @@ namespace BlackSimPlugin
         bool CSimulatorEmulatedMonitorDialog::canUseSimulator() const
         {
             return (m_simulator && sGui && !sGui->isShuttingDown());
+        }
+
+        void CSimulatorEmulatedMonitorDialog::requestWeather()
+        {
+            if (!this->canUseSimulator()) { return; }
+
+            /**
+            if (sGui && sGui->getIContextSimulator())
+            {
+                const CSimulatedAircraft ownAircraft = m_simulator->getOwnAircraft();
+                const CWeatherGrid grid{ { "GLOB", ownAircraft.getSituation() } };
+                sGui->getIContextSimulator()->requestWeatherGrid(grid, m_simulator->identifier());
+            }
+            **/
+
+            if (m_simulator->requestWeather())
+            {
+                ui->te_Weather->setText("Requested weather");
+            }
+            else
+            {
+                ui->te_Weather->setText("Cannot requested weather, weather activated?");
+            }
         }
     } // ns
 } // ns
