@@ -11,12 +11,13 @@
 #ifndef BLACKCORE_WEATHERMANAGER_H
 #define BLACKCORE_WEATHERMANAGER_H
 
-#include "blackcore/blackcoreexport.h"
 #include "blackcore/pluginmanagerweatherdata.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/slot.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/weather/weathergridprovider.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/slot.h"
 
 #include <QObject>
 #include <QVector>
@@ -29,8 +30,8 @@ namespace BlackCore
      * CWeatherManager
      */
     class BLACKCORE_EXPORT CWeatherManager :
-            public QObject,
-            public BlackMisc::Weather::IWeatherGridProvider
+        public QObject,
+        public BlackMisc::Weather::IWeatherGridProvider
     {
         Q_OBJECT
         Q_INTERFACES(BlackMisc::Weather::IWeatherGridProvider)
@@ -45,18 +46,17 @@ namespace BlackCore
         //! Is weather overwritten to clear?
         bool isWeatherClear() const { return m_isWeatherClear; }
 
-        //! Request weather grid
-        void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier);
+        //! \copydoc BlackMisc::Weather::IWeatherGridProvider::requestWeatherGrid
+        virtual void requestWeatherGrid(const BlackMisc::Geo::ICoordinateGeodetic &position, const BlackMisc::CIdentifier &identifier) override;
 
         //! \copydoc BlackMisc::Weather::IWeatherGridProvider::requestWeatherGrid
-        virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid,
+        virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &initialWeatherGrid,
                                         const BlackMisc::CSlot<void(const BlackMisc::Weather::CWeatherGrid &)> &callback) override;
 
         //! \copydoc BlackMisc::Weather::IWeatherGridProvider::requestWeatherGrid
         virtual void requestWeatherGridFromFile(const QString &filePath,
-                                                const BlackMisc::Weather::CWeatherGrid &weatherGrid,
+                                                const BlackMisc::Weather::CWeatherGrid &initialWeatherGrid,
                                                 const BlackMisc::CSlot<void(const BlackMisc::Weather::CWeatherGrid &)> &callback) override;
-
 
     signals:
         //! The weather grid, requested from identified, is available
@@ -72,8 +72,10 @@ namespace BlackCore
             BlackMisc::CSlot<void(const BlackMisc::Weather::CWeatherGrid &)> callback;
         };
 
+        void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &initialWeatherGrid, const BlackMisc::CIdentifier &identifier);
         bool loadWeatherDataPlugins();
         void fetchNextWeatherData();
+        void fetchNextWeatherDataDeferred();
         void handleNextRequest();
 
         CPluginManagerWeatherData m_pluginManagerWeatherData { this };
