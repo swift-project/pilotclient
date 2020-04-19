@@ -270,6 +270,9 @@ namespace BlackCore
         //! \remark public for testing purposes
         virtual void callbackReceivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign, bool isWater);
 
+        //! Inject weather grid to simulator
+        virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
+
         //! Allows to print out simulator specific statistics
         virtual QString getStatisticsSimulatorSpecific() const { return QString(); }
 
@@ -523,9 +526,6 @@ namespace BlackCore
 
         //! Kill timer if id is valid
         void safeKillTimer();
-
-        //! Inject weather grid to simulator
-        virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
 
         //! Blink the highlighted aircraft
         void blinkHighlightedAircraft();

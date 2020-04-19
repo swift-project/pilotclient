@@ -55,8 +55,8 @@ namespace BlackCore
             //! \copydoc IContextSimulator::setSimulatorSettings
             virtual bool setSimulatorSettings(const BlackMisc::Simulation::Settings::CSimulatorSettings &settings, const BlackMisc::Simulation::CSimulatorInfo &simulatorInfo) override
             {
-                Q_UNUSED(settings);
-                Q_UNUSED(simulatorInfo);
+                Q_UNUSED(settings)
+                Q_UNUSED(simulatorInfo)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
@@ -64,7 +64,7 @@ namespace BlackCore
             //! \copydoc IContextSimulator::startSimulatorPlugin
             virtual bool startSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override
             {
-                Q_UNUSED(simulatorInfo);
+                Q_UNUSED(simulatorInfo)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
@@ -85,14 +85,14 @@ namespace BlackCore
             //! \copydoc IContextSimulator::stopSimulatorPlugin
             virtual void stopSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override
             {
-                Q_UNUSED(simulatorInfo);
+                Q_UNUSED(simulatorInfo)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextSimulator::getAirportsInRange
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange(bool recalculatePosition) const override
             {
-                Q_UNUSED(recalculatePosition);
+                Q_UNUSED(recalculatePosition)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Aviation::CAirportList();
             }
@@ -224,8 +224,8 @@ namespace BlackCore
             //! \copydoc IContextSimulator::setTimeSynchronization
             virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override
             {
-                Q_UNUSED(enable);
-                Q_UNUSED(offset);
+                Q_UNUSED(enable)
+                Q_UNUSED(offset)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
@@ -254,7 +254,7 @@ namespace BlackCore
             //! \copydoc ISimulator::getInterpolationSetupPerCallsignOrDefault
             virtual BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign getInterpolationAndRenderingSetupPerCallsignOrDefault(const BlackMisc::Aviation::CCallsign &callsign) const override
             {
-                Q_UNUSED(callsign);
+                Q_UNUSED(callsign)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign();
             }
@@ -262,15 +262,15 @@ namespace BlackCore
             //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::setInterpolationSetupGlobal
             virtual void setInterpolationAndRenderingSetupGlobal(const BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal &setup) override
             {
-                Q_UNUSED(setup);
+                Q_UNUSED(setup)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::setInterpolationSetupsPerCallsign
             virtual bool setInterpolationAndRenderingSetupsPerCallsign(const BlackMisc::Simulation::CInterpolationSetupList &setups, bool ignoreSameAsGlobal) override
             {
-                Q_UNUSED(setups);
-                Q_UNUSED(ignoreSameAsGlobal);
+                Q_UNUSED(setups)
+                Q_UNUSED(ignoreSameAsGlobal)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
@@ -278,7 +278,7 @@ namespace BlackCore
             //! \copydoc IContextSimulator::getInterpolationMessages
             virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const override
             {
-                Q_UNUSED(callsign);
+                Q_UNUSED(callsign)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::CStatusMessageList();
             }
@@ -293,7 +293,7 @@ namespace BlackCore
             //! \copydoc IContextSimulator::iconForModel
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override
             {
-                Q_UNUSED(modelString);
+                Q_UNUSED(modelString)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::CPixmap();
             }
@@ -301,16 +301,16 @@ namespace BlackCore
             //! \copydoc IContextSimulator::highlightAircraft
             virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override
             {
-                Q_UNUSED(aircraftToHighlight);
-                Q_UNUSED(enableHighlight);
-                Q_UNUSED(displayTime);
+                Q_UNUSED(aircraftToHighlight)
+                Q_UNUSED(enableHighlight)
+                Q_UNUSED(displayTime)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextSimulator::followAircraft
             virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign) override
             {
-                Q_UNUSED(callsign);
+                Q_UNUSED(callsign)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
@@ -324,7 +324,7 @@ namespace BlackCore
             //! \copydoc IContextSimulator::resetToModelMatchingAircraft
             virtual bool resetToModelMatchingAircraft(const BlackMisc::Aviation::CCallsign &callsign) override
             {
-                Q_UNUSED(callsign);
+                Q_UNUSED(callsign)
                 return false;
             }
 
@@ -338,7 +338,7 @@ namespace BlackCore
             //! \copydoc IContextSimulator::doMatchingAgain
             virtual bool doMatchingAgain(const BlackMisc::Aviation::CCallsign &callsign) override
             {
-                Q_UNUSED(callsign);
+                Q_UNUSED(callsign)
                 return false;
             }
 
@@ -352,22 +352,22 @@ namespace BlackCore
             //! \copydoc IContextSimulator::setWeatherActivated
             virtual void setWeatherActivated(bool activated) override
             {
-                Q_UNUSED(activated);
+                Q_UNUSED(activated)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextSimulator::requestWeatherGrid
-            virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) override
+            virtual void requestWeatherGrid(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::CIdentifier &identifier) override
             {
-                Q_UNUSED(weatherGrid);
-                Q_UNUSED(identifier);
+                Q_UNUSED(position)
+                Q_UNUSED(identifier)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextSimulator::requestWeatherGrid
             virtual bool requestElevationBySituation(const BlackMisc::Aviation::CAircraftSituation &situation) override
             {
-                Q_UNUSED(situation);
+                Q_UNUSED(situation)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
@@ -375,8 +375,8 @@ namespace BlackCore
             //! \copydoc IContextSimulator::findClosestElevationWithinRange
             virtual BlackMisc::Geo::CElevationPlane findClosestElevationWithinRange(const BlackMisc::Geo::CCoordinateGeodetic &reference, const BlackMisc::PhysicalQuantities::CLength &range) const override
             {
-                Q_UNUSED(reference);
-                Q_UNUSED(range);
+                Q_UNUSED(reference)
+                Q_UNUSED(range)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Geo::CElevationPlane::null();
             }
@@ -392,7 +392,7 @@ namespace BlackCore
             //! \copydoc IContextSimulator::enableMatchingMessages
             virtual void enableMatchingMessages(BlackMisc::Simulation::MatchingLog enable) override
             {
-                Q_UNUSED(enable);
+                Q_UNUSED(enable)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
@@ -406,8 +406,8 @@ namespace BlackCore
             //! \copydoc IContextSimulator::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override
             {
-                Q_UNUSED(commandLine);
-                Q_UNUSED(originator);
+                Q_UNUSED(commandLine)
+                Q_UNUSED(originator)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
@@ -415,7 +415,7 @@ namespace BlackCore
             //! \copydoc IContextSimulator::getCurrentMatchingStatistics
             virtual BlackMisc::Simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const override
             {
-                Q_UNUSED(missingOnly);
+                Q_UNUSED(missingOnly)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Simulation::CMatchingStatistics();
             }
@@ -423,15 +423,15 @@ namespace BlackCore
             //! \copydoc IContextSimulator::setMatchingSetup
             virtual void setMatchingSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup) override
             {
-                Q_UNUSED(setup);
+                Q_UNUSED(setup)
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextSimulator::testRemoteAircraft
             virtual bool testRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool add) override
             {
-                Q_UNUSED(aircraft);
-                Q_UNUSED(add);
+                Q_UNUSED(aircraft)
+                Q_UNUSED(add)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
@@ -439,9 +439,9 @@ namespace BlackCore
             //! \copydoc IContextSimulator::testUpdateRemoteAircraft
             virtual bool testUpdateRemoteAircraft(const BlackMisc::Aviation::CCallsign cs, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) override
             {
-                Q_UNUSED(cs);
-                Q_UNUSED(situation);
-                Q_UNUSED(parts);
+                Q_UNUSED(cs)
+                Q_UNUSED(situation)
+                Q_UNUSED(parts)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
@@ -456,7 +456,7 @@ namespace BlackCore
             //! \copydoc IContextSimulator::copyFsxTerrainProbe
             virtual BlackMisc::CStatusMessageList copyFsxTerrainProbe(const BlackMisc::Simulation::CSimulatorInfo &simulator) override
             {
-                Q_UNUSED(simulator);
+                Q_UNUSED(simulator)
                 return BlackMisc::CStatusMessageList();
             }
 

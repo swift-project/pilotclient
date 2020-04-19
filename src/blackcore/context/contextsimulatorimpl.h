@@ -117,7 +117,7 @@ namespace BlackCore
             virtual bool resetToModelMatchingAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual bool isWeatherActivated() const override;
             virtual void setWeatherActivated(bool activated) override;
-            virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) override;
+            virtual void requestWeatherGrid(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::CIdentifier &identifier) override;
             virtual bool requestElevationBySituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
             virtual BlackMisc::Geo::CElevationPlane findClosestElevationWithinRange(const BlackMisc::Geo::CCoordinateGeodetic &reference, const BlackMisc::PhysicalQuantities::CLength &range) const override;
             virtual int  doMatchingsAgain() override;
@@ -235,6 +235,9 @@ namespace BlackCore
 
             //! Failed adding remote aircraft
             void onAddingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, bool disabled, bool requestFailover, const BlackMisc::CStatusMessage &message);
+
+            //! Weather request was received
+            void onWeatherGridReceived(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier);
 
             //! Relay status message to simulator under consideration of settings
             void relayStatusMessageToSimulator(const BlackMisc::CStatusMessage &message);

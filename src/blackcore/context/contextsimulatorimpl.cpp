@@ -77,7 +77,8 @@ namespace BlackCore
             m_plugins->collectPlugins();
             this->restoreSimulatorPlugins();
 
-            connect(&m_weatherManager,  &CWeatherManager::weatherGridReceived, this, &CContextSimulator::weatherGridReceived, Qt::QueuedConnection);
+            connect(&m_weatherManager,  &CWeatherManager::weatherGridReceived, this, &CContextSimulator::weatherGridReceived,   Qt::QueuedConnection);
+            connect(&m_weatherManager,  &CWeatherManager::weatherGridReceived, this, &CContextSimulator::onWeatherGridReceived, Qt::QueuedConnection);
             connect(&m_aircraftMatcher, &CAircraftMatcher::setupChanged,       this, &CContextSimulator::matchingSetupChanged);
             connect(&CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance(), &CCentralMultiSimulatorModelSetCachesProvider::cacheChanged, this, &CContextSimulator::modelSetChanged);
 
@@ -870,6 +871,16 @@ namespace BlackCore
             emit this->addingRemoteModelFailed(remoteAircraft, disabled, failover, message);
         }
 
+        void CContextSimulator::onWeatherGridReceived(const CWeatherGrid &weatherGrid, const CIdentifier &identifier)
+        {
+            if (!this->isSimulatorPluginAvailable()) { return; }
+            if (!m_simulatorPlugin.second) { return; }
+            if (m_simulatorPlugin.second->identifier() == identifier)
+            {
+                m_simulatorPlugin.second->injectWeatherGrid(weatherGrid);
+            }
+        }
+
         void CContextSimulator::xCtxUpdateSimulatorCockpitFromContext(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
         {
             if (!this->isSimulatorAvailable()) { return; }
@@ -1141,10 +1152,10 @@ namespace BlackCore
             m_simulatorPlugin.second->setWeatherActivated(activated);
         }
 
-        void CContextSimulator::requestWeatherGrid(const CWeatherGrid &weatherGrid, const CIdentifier &identifier)
+        void CContextSimulator::requestWeatherGrid(const CCoordinateGeodetic &position, const CIdentifier &identifier)
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << identifier; }
-            m_weatherManager.requestWeatherGrid(weatherGrid, identifier);
+            m_weatherManager.requestWeatherGrid(position, identifier);
         }
 
         bool CContextSimulator::requestElevationBySituation(const CAircraftSituation &situation)
@@ -1240,7 +1251,7 @@ namespace BlackCore
                 {
                     const bool s = QMetaObject::invokeMethod(listener, &ISimulatorListener::stop);
                     Q_ASSERT_X(s, Q_FUNC_INFO, "Cannot invoke stop");
-                    Q_UNUSED(s);
+                    Q_UNUSED(s)
                 }
             }
         }

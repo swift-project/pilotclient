@@ -314,7 +314,7 @@ namespace BlackCore
             virtual void setWeatherActivated(bool activated) = 0;
 
             //! Request weather grid. Argument identifier is past in the signal to identify the requestor
-            virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) = 0;
+            virtual void requestWeatherGrid(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::CIdentifier &identifier) = 0;
 
             //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevationBySituation
             virtual bool requestElevationBySituation(const BlackMisc::Aviation::CAircraftSituation &situation) = 0;

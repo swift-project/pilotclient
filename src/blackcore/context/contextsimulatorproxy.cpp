@@ -42,7 +42,7 @@ namespace BlackCore
             // connect signals, asserts when failures
             QDBusConnection con = QDBusConnection::sessionBus();
             CContextSimulatorProxy c(CDBusServer::coreServiceName(), con, CCoreFacadeConfig::Remote, nullptr);
-            Q_UNUSED(c);
+            Q_UNUSED(c)
         }
 
         void CContextSimulatorProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
@@ -104,7 +104,7 @@ namespace BlackCore
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                    "validatedModelSet", this, SIGNAL(validatedModelSet(BlackMisc::Simulation::CSimulatorInfo, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModelList, bool, BlackMisc::CStatusMessageList)));
             Q_ASSERT(s);
-            Q_UNUSED(s);
+            Q_UNUSED(s)
             this->relayBaseClassSignals(serviceName, connection, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName());
         }
 
@@ -318,9 +318,9 @@ namespace BlackCore
             m_dBusInterface->callDBus(QLatin1String("setWeatherActivated"), activated);
         }
 
-        void CContextSimulatorProxy::requestWeatherGrid(const Weather::CWeatherGrid &weatherGrid, const CIdentifier &identifier)
+        void CContextSimulatorProxy::requestWeatherGrid(const CCoordinateGeodetic &position, const CIdentifier &identifier)
         {
-            m_dBusInterface->callDBus(QLatin1String("requestWeatherGrid"), weatherGrid, identifier);
+            m_dBusInterface->callDBus(QLatin1String("requestWeatherGrid"), position, identifier);
         }
 
         bool CContextSimulatorProxy::requestElevationBySituation(const CAircraftSituation &situation)
