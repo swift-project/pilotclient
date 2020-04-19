@@ -142,15 +142,27 @@ namespace BlackCore
         if (m_isWeatherActivated)
         {
             const auto selectedWeatherScenario = m_weatherScenarioSettings.get();
-            if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
+            if (CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
             {
-                m_lastWeatherPosition = {};
+                if (m_lastWeatherPosition.isNull())
+                {
+                    const CCoordinateGeodetic p = this->getOwnAircraftPosition();
+                    if (!p.isNull())
+                    {
+                        m_lastWeatherPosition = p;
+                        this->requestWeatherGrid(p, this->identifier());
+                    }
+                }
+            }
+            else
+            {
+                m_lastWeatherPosition.setNull();
                 this->injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
             }
         }
         else
         {
-            m_lastWeatherPosition = {}; // clean up so next time we fetch weather again
+            m_lastWeatherPosition.setNull(); // clean up so next time we fetch weather again
         }
     }
 
@@ -164,10 +176,22 @@ namespace BlackCore
         // log crash info about weather
         if (sApp && !sApp->isShuttingDown()) { CCrashHandler::instance()->crashAndLogAppendInfo(u"Simulator weather: " % boolToYesNo(m_isWeatherActivated)); }
         if (!m_isWeatherActivated) { return; }
+        m_lastWeatherPosition.setNull();
         const CWeatherScenario selectedWeatherScenario = m_weatherScenarioSettings.get();
-        if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
+        if (CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
         {
-            m_lastWeatherPosition = {};
+            if (m_lastWeatherPosition.isNull())
+            {
+                const CCoordinateGeodetic p = this->getOwnAircraftPosition();
+                if (!p.isNull())
+                {
+                    m_lastWeatherPosition = p;
+                    this->requestWeatherGrid(p, this->identifier());
+                }
+            }
+        }
+        else
+        {
             this->injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
         }
 
