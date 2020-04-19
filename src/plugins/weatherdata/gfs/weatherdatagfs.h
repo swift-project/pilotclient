@@ -68,7 +68,7 @@ namespace BlackWxPlugin
 
             void parseGfsFile(QNetworkReply *nwReplyPtr);
             BlackMisc::Network::CUrl getDownloadUrl() const;
-            void parseGfsFileImpl(const QByteArray &gribData);
+            bool parseGfsFileImpl(const QByteArray &gribData);
             void findNextGribMessage(unsigned char *buffer, g2int size, g2int iseek, g2int *lskip, g2int *lgrib);
             void createWeatherGrid(const gribfield *gfld);
             void handleProductDefinitionTemplate40(const gribfield *gfld);

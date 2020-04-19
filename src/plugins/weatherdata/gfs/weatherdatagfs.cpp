@@ -187,7 +187,7 @@ namespace BlackWxPlugin
             m_gribData = file.readAll();
 
             Q_ASSERT_X(!m_parseGribFileWorker, Q_FUNC_INFO, "Worker already running");
-            m_parseGribFileWorker = BlackMisc::CWorker::fromTask(this, "parseGribFile", [this]()
+            m_parseGribFileWorker = CWorker::fromTask(this, "parseGribFile", [this]()
             {
                 parseGfsFileImpl(m_gribData);
             });
@@ -320,8 +320,15 @@ namespace BlackWxPlugin
             return downloadUrl;
         }
 
-        void CWeatherDataGfs::parseGfsFileImpl(const QByteArray &gribData)
+        bool CWeatherDataGfs::parseGfsFileImpl(const QByteArray &gribData)
         {
+            if (!m_lockData.tryLockForWrite(1000))
+            {
+                CLogMessage(this).warning(u"Cannot log CWeatherDataGfs data");
+                return false;
+            }
+
+            m_lockData.unlock();
             QWriteLocker lock(&m_lockData);
 
             m_gfsWeatherGrid.clear();
@@ -331,7 +338,7 @@ namespace BlackWxPlugin
             g2int iseek = 0;
             for (;;)
             {
-                if (QThread::currentThread()->isInterruptionRequested()) { return; }
+                if (QThread::currentThread()->isInterruptionRequested()) { return false; }
 
                 // Search next grib field
                 g2int lskip = 0;
@@ -376,15 +383,16 @@ namespace BlackWxPlugin
                 }
                 messageNo++;
             }
-            CLogMessage(this).debug() << "Parsed" << messageNo << "GRIB messages.";
+
+            CLogMessage(this).debug() << "Parsed"   << messageNo << "GRIB messages.";
+            CLogMessage(this).debug() << "Obtained" << m_gfsWeatherGrid.size() << "grid points.";
 
             for (const GfsGridPoint &gfsGridPoint : as_const(m_gfsWeatherGrid))
             {
-                if (QThread::currentThread()->isInterruptionRequested()) { return; }
+                if (QThread::currentThread()->isInterruptionRequested()) { return false; }
 
                 CTemperatureLayerList temperatureLayers;
                 CWindLayerList windLayers;
-
                 for (const GfsIsobaricLayer &isobaricLayer : gfsGridPoint.isobaricLayers)
                 {
                     float level = gfsGridPoint.isobaricLayers.key(isobaricLayer);
@@ -408,7 +416,7 @@ namespace BlackWxPlugin
                 }
 
                 CCloudLayerList cloudLayers;
-                for (const GfsCloudLayer &gfsCloudLayer : gfsGridPoint.cloudLayers)
+                for (const GfsCloudLayer &gfsCloudLayer : as_const(gfsGridPoint.cloudLayers))
                 {
                     if (std::isnan(gfsCloudLayer.bottomLevelPressure) || std::isnan(gfsCloudLayer.topLevelPressure) || std::isnan(gfsCloudLayer.topLevelTemperature)) { continue; }
 
@@ -436,6 +444,8 @@ namespace BlackWxPlugin
                 const CGridPoint gridPoint({}, position, cloudLayers, temperatureLayers, {}, windLayers, pressureAtMsl);
                 m_weatherGrid.push_back(gridPoint);
             }
+
+            return true;
         }
 
         void CWeatherDataGfs::findNextGribMessage(unsigned char *buffer, g2int size, g2int iseek, g2int *lskip, g2int *lgrib)
