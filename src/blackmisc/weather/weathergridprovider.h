@@ -13,8 +13,8 @@
 
 #include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/provider.h"
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/slot.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QObject>
 #include <QtGlobal>
@@ -39,9 +39,12 @@ namespace BlackMisc
             //! Destructor
             virtual ~IWeatherGridProvider() {}
 
+            //! Request weather grid with identifier
+            virtual void requestWeatherGrid(const BlackMisc::Geo::ICoordinateGeodetic &position, const BlackMisc::CIdentifier &identifier) = 0;
+
             //! Request weather grid
-            virtual void requestWeatherGrid(const CWeatherGrid &weatherGrid,
-                                            const CSlot<void(const CWeatherGrid &)> &callback) = 0;
+            //! \deprecated Use the position/identifier based version if possible. It will inject the result "in the simulator"
+            virtual void requestWeatherGrid(const CWeatherGrid &weatherGrid, const CSlot<void(const CWeatherGrid &)> &callback) = 0;
 
             //! Request weather grid from file
             virtual void requestWeatherGridFromFile(const QString &filePath,
@@ -54,8 +57,12 @@ namespace BlackMisc
         {
         public:
             //! \copydoc IWeatherGridProvider::requestWeatherGrid
-            virtual void requestWeatherGrid(const CWeatherGrid &weatherGrid,
-                                            const CSlot<void(const CWeatherGrid &)> &callback);
+            void requestWeatherGrid(const BlackMisc::Geo::ICoordinateGeodetic &position, const BlackMisc::CIdentifier &identifier);
+
+            //! \copydoc IWeatherGridProvider::requestWeatherGrid
+            //! \deprecated Use the position/identifier based version if possible. It will inject the result "in the simulator"
+            void requestWeatherGrid(const CWeatherGrid &weatherGrid, const CSlot<void(const CWeatherGrid &)> &callback);
+
         protected:
             //! Constructor
             CWeatherGridAware(IWeatherGridProvider *weatherGridProvider) : IProviderAware(weatherGridProvider) { Q_ASSERT(weatherGridProvider); }
