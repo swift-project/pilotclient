@@ -147,10 +147,10 @@ namespace BlackWxPlugin
             if (m_parseGribFileWorker && !m_parseGribFileWorker->isFinished()) { m_parseGribFileWorker->abandonAndWait(); }
         }
 
-        void CWeatherDataGfs::fetchWeatherData(const CWeatherGrid &grid, const CLength &range)
+        void CWeatherDataGfs::fetchWeatherData(const CWeatherGrid &initialGrid, const CLength &range)
         {
             if (!sApp || sApp->isShuttingDown()) { return; }
-            m_grid = grid;
+            m_grid = initialGrid;
             m_maxRange = range;
             if (m_gribData.isEmpty())
             {

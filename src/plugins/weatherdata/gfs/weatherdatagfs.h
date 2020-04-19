@@ -50,7 +50,7 @@ namespace BlackWxPlugin
             virtual ~CWeatherDataGfs() override;
 
             //! \copydoc BlackCore::IWeatherData::fetchWeatherData
-            virtual void fetchWeatherData(const BlackMisc::Weather::CWeatherGrid &grid,
+            virtual void fetchWeatherData(const BlackMisc::Weather::CWeatherGrid &initialGrid,
                                           const BlackMisc::PhysicalQuantities::CLength &range) override;
 
             //! \copydoc BlackCore::IWeatherData::fetchWeatherDataFromFile
