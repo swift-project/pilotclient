@@ -438,15 +438,32 @@ namespace BlackCore
         }
         else
         {
-            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Matching script: No matching stage script used"));
+            if (log) CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Matching script: No matching stage script used"));
         }
 
-        // copy over callsign validate (again, just in case it was changed in mathcing script)
+        // copy over callsign validate (again, just in case it was changed in matching script)
         matchedModel.setCallsign(remoteAircraft.getCallsign());
         matchedModel.setModelType(CAircraftModel::TypeModelMatching);
 
-        Q_ASSERT_X(!matchedModel.getCallsign().isEmpty(), Q_FUNC_INFO, "Missing callsign");
-        Q_ASSERT_X(matchedModel.hasModelString(), Q_FUNC_INFO, "Missing model string");
+        // reported here by LT: https://discordapp.com/channels/539048679160676382/539925070550794240/701439918815051846
+        if (!matchedModel.hasModelString())
+        {
+            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("All matching yielded no result, VERY odd...")); }
+            CAircraftModel defaultModel = this->getDefaultModel();
+            if (defaultModel.hasModelString())
+            {
+                matchedModel = defaultModel;
+                matchedModel.setCallsign(remoteAircraft.getCallsign());
+                if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Using default model '%1'").arg(matchedModel.getModelString())); }
+            }
+            else
+            {
+                if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Not even a default model. Giving up").arg(matchedModel.getModelString())); }
+            }
+        }
+
+        Q_ASSERT_X(!matchedModel.getCallsign().isEmpty(), Q_FUNC_INFO, "Missing callsign for matched model");
+        // Q_ASSERT_X(matchedModel.hasModelString(), Q_FUNC_INFO, "Missing model string for matched model");
 
         if (log)
         {
