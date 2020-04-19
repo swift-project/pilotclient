@@ -148,6 +148,10 @@ namespace BlackCore
                 this->injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
             }
         }
+        else
+        {
+            m_lastWeatherPosition = {}; // clean up so next time we fetch weather again
+        }
     }
 
     void ISimulator::setFlightNetworkConnected(bool connected)
