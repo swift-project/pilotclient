@@ -19,9 +19,12 @@
 #include "blackmisc/range.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/statusmessage.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QtGlobal>
+#include <QDateTime>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Weather;
@@ -47,10 +50,29 @@ namespace BlackCore
         this->requestWeatherGrid(weatherGrid, identifier);
     }
 
+    void CWeatherManager::appendRequest(const WeatherRequest &request)
+    {
+        const qint64 now = QDateTime::currentMSecsSinceEpoch();
+        if (m_pendingRequests.size() > 0 && m_lastPendingRequestTs > 0)
+        {
+            const qint64 pendingMs = now - m_lastPendingRequestTs;
+            if (pendingMs > 30 * 1000)
+            {
+                BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Time out of pending weather request");
+                CLogMessage(this).warning(u"Time out of pending weather request, cleaning all requests!");
+                m_pendingRequests.clear();
+            }
+        }
+
+        m_pendingRequests.append(request);
+        m_lastPendingRequestTs = now;
+    }
+
+
     void CWeatherManager::requestWeatherGrid(const CWeatherGrid &initialWeatherGrid, const CIdentifier &identifier)
     {
-        const WeatherRequest request { {}, identifier, initialWeatherGrid, {} };
-        m_pendingRequests.append(request);
+        const WeatherRequest weatherRequest { {}, identifier, initialWeatherGrid, {} };
+        this->appendRequest(weatherRequest);
 
         // Serialize the requests, since plugins can handle only one at a time
         if (m_pendingRequests.size() == 1) { fetchNextWeatherDataDeferred(); }
@@ -69,7 +91,7 @@ namespace BlackCore
         }
 
         const WeatherRequest weatherRequest { {}, CIdentifier::null(), initialWeatherGrid, callback };
-        m_pendingRequests.append(weatherRequest);
+        this->appendRequest(weatherRequest);
 
         // Serialize the requests, since plugins can handle only one at a time
         if (m_pendingRequests.size() == 1) { fetchNextWeatherDataDeferred(); }
@@ -85,7 +107,7 @@ namespace BlackCore
         }
 
         WeatherRequest weatherRequest { filePath, CIdentifier::null(), initialWeatherGrid, callback };
-        m_pendingRequests.append(weatherRequest);
+        this->appendRequest(weatherRequest);
 
         // Serialize the requests, since plugins can handle only one at a time
         if (m_pendingRequests.size() == 1) { fetchNextWeatherDataDeferred(); }
@@ -154,7 +176,13 @@ namespace BlackCore
 
     void CWeatherManager::handleNextRequest()
     {
-        Q_ASSERT(!m_pendingRequests.isEmpty());
+        if (m_pendingRequests.isEmpty())
+        {
+            // we should normally never get here, only if a request timedout
+            CLogMessage(this).warning(u"No pending weather request, ignoring ....");
+            BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "No pending weather request, ignoring ....");
+            return;
+        }
 
         IWeatherData *weatherDataPlugin = qobject_cast<IWeatherData *>(sender());
         Q_ASSERT(weatherDataPlugin);
@@ -180,6 +208,13 @@ namespace BlackCore
         m_pendingRequests.pop_front();
 
         // In case there are pending requests, start over again
-        if (m_pendingRequests.size() > 0) { fetchNextWeatherData(); }
+        if (m_pendingRequests.size() > 0)
+        {
+            fetchNextWeatherData();
+        }
+        else
+        {
+            m_lastPendingRequestTs = -1;
+        }
     }
 }
