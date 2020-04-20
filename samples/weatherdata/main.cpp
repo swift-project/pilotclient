@@ -33,7 +33,6 @@ int main(int argc, char *argv[])
     BlackMisc::registerMetadata();
     CLogHandler::instance()->install(true);
     CLogHandler::instance()->enableConsoleOutput(false); // default disable
-    BlackMisc::registerMetadata();
 
     CLineReader lineReader(&a);
     CWeatherDataPrinter printer(&a);
