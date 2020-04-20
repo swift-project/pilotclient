@@ -40,8 +40,7 @@ namespace BlackGui
     {
         //! Weather component
         class BLACKGUI_EXPORT CWeatherComponent :
-            public QWidget,
-            public CEnableForDockWidgetInfoArea,
+            public COverlayMessagesFrameEnableForDockWidgetInfoArea,
             public BlackMisc::CIdentifiable
         {
             Q_OBJECT
