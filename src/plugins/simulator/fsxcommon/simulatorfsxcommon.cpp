@@ -33,6 +33,7 @@
 #include <QPointer>
 #include <QStringBuilder>
 #include <type_traits>
+#include <QElapsedTimer>
 
 using namespace BlackConfig;
 using namespace BlackMisc;
@@ -2823,13 +2824,15 @@ namespace BlackSimPlugin
             if (!m_timer.isActive()) { return; }
             if (this->isShuttingDown()) { return; }
 
-            m_timer.start(); // restart because we will check just now
             QPointer<CSimulatorFsxCommonListener> myself(this);
             QTimer::singleShot(0, this, [ = ]
             {
                 if (!myself || !sApp || sApp->isShuttingDown()) { return; }
                 this->checkConnection();
             });
+
+            // restart because we have just checked now
+            m_timer.start();
         }
 
         QString CSimulatorFsxCommonListener::backendInfo() const
@@ -2841,6 +2844,7 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommonListener::checkConnection()
         {
             if (this->isShuttingDown()) { return; }
+            QElapsedTimer t; t.start();
             Q_ASSERT_X(!CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background");
             HANDLE hSimConnect;
             HRESULT result = SimConnect_Open(&hSimConnect, sApp->swiftVersionChar(), nullptr, 0, nullptr, 0);
@@ -2851,11 +2855,18 @@ namespace BlackSimPlugin
                 // blocks remote calls -> RESTART
                 for (int i = 0; !check && i < 3 && !this->isShuttingDown(); i++)
                 {
+                    if (this->thread()->isInterruptionRequested())
+                    {
+                        m_timer.stop();
+                        check = false;
+                        break;
+                    }
+
                     // result not always in first dispatch as we first have to obtain simulator name
                     result = SimConnect_CallDispatch(hSimConnect, CSimulatorFsxCommonListener::SimConnectProc, this);
                     if (isFailure(result)) { break; } // means serious failure
                     check = this->checkVersionAndSimulator();
-                    if (!check && sApp) { sApp->processEventsFor(500); }
+                    if (!check && sApp) { CApplication::processEventsFor(500); }
                 }
             }
             SimConnect_Close(hSimConnect);
@@ -2864,6 +2875,8 @@ namespace BlackSimPlugin
             {
                 emit this->simulatorStarted(this->getPluginInfo());
             }
+
+            CLogMessage(this).debug(u"Checked sim connection in %1ms") << t.elapsed();
         }
 
         bool CSimulatorFsxCommonListener::checkVersionAndSimulator() const

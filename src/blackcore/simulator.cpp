@@ -1430,8 +1430,15 @@ namespace BlackCore
         this->setObjectName("ISimulatorListener:" + info.toQString());
 
         // stop listener after it reports simulator ready
-        const bool s = connect(this, &ISimulatorListener::simulatorStarted, this, &ISimulatorListener::stop, Qt::QueuedConnection);
+        bool s = connect(this, &ISimulatorListener::simulatorStarted, this, &ISimulatorListener::stop, Qt::QueuedConnection);
         Q_ASSERT_X(s, Q_FUNC_INFO, "connect failed");
+
+        if (sApp)
+        {
+            s = connect(sApp, &CApplication::aboutToShutdown, this, &ISimulatorListener::onAboutToShutdown, Qt::QueuedConnection);
+            Q_ASSERT_X(s, Q_FUNC_INFO, "connect failed");
+        }
+
         Q_UNUSED(s)
     }
 
@@ -1442,7 +1449,14 @@ namespace BlackCore
 
     bool ISimulatorListener::isShuttingDown() const
     {
-        return (!sApp || sApp->isShuttingDown());
+        return (!sApp || sApp->isShuttingDown() || m_aboutToShutdown);
+    }
+
+    void ISimulatorListener::onAboutToShutdown()
+    {
+        if (!m_aboutToShutdown) { return; }
+        m_aboutToShutdown = true;
+        this->stop();
     }
 
     void ISimulatorListener::start()
