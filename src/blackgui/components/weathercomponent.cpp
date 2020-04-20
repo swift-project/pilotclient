@@ -42,7 +42,7 @@ namespace BlackGui
     namespace Components
     {
         CWeatherComponent::CWeatherComponent(QWidget *parent) :
-            QWidget(parent),
+            COverlayMessagesFrameEnableForDockWidgetInfoArea(parent),
             CIdentifiable(this),
             ui(new Ui::CWeatherComponent)
         {
@@ -215,8 +215,9 @@ namespace BlackGui
                 if (m_lastOwnAircraftPosition.isNull() ||
                         calculateGreatCircleDistance(position, m_lastOwnAircraftPosition).value(CLengthUnit::km()) > 20)
                 {
-                    requestWeatherGrid(position);
+                    this->requestWeatherGrid(position);
                     m_lastOwnAircraftPosition = position;
+                    showOverlayHTMLMessage("Weather loading,<br>this may take a while", 7500);
                 }
             }
             else
@@ -234,6 +235,7 @@ namespace BlackGui
                 if (!CWeatherScenario::isRealWeatherScenario(scenario)) { return; }
 
                 // we have received weather grid data and assume those are real weather updates
+                closeOverlay();
             }
             ui->lbl_Status->setText({});
             setWeatherGrid(weatherGrid);
