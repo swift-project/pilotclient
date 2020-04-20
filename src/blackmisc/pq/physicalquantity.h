@@ -282,6 +282,9 @@ namespace BlackMisc
             //! Parsed from given string
             static PQ parsedFromString(const QString &value, CPqString::SeparatorMode mode = CPqString::SeparatorBestGuess);
 
+            //! Parsed from given string
+            static PQ parsedFromString(const QString &value, CPqString::SeparatorMode mode, const MU &defaultUnitIfMissing);
+
         protected:
             //! Constructor with double
             CPhysicalQuantity(double value, MU unit);

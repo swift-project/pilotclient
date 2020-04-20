@@ -453,9 +453,9 @@ namespace BlackMisc
         template<class MU, class PQ>
         void CPhysicalQuantity<MU, PQ>::parseFromString(const QString &value, CPqString::SeparatorMode mode, const MU &defaultUnitIfMissing)
         {
-            if (is09OnlyString(value))
+            if (is09OrSeparatorOnlyString(value))
             {
-                const QString v = value + defaultUnitIfMissing.getName();
+                const QString v = value + defaultUnitIfMissing.getSymbol();
                 this->parseFromString(v, mode);
             }
             else
@@ -468,6 +468,21 @@ namespace BlackMisc
         void CPhysicalQuantity<MU, PQ>::parseFromString(const QString &value)
         {
             *this = CPqString::parse<PQ>(value, CPqString::SeparatorQtDefault);
+        }
+
+        template<class MU, class PQ>
+        PQ CPhysicalQuantity<MU, PQ>::parsedFromString(const QString &value, CPqString::SeparatorMode mode, const MU &defaultUnitIfMissing)
+        {
+            QString v = value;
+            if (is09OrSeparatorOnlyString(value))
+            {
+                v = value + defaultUnitIfMissing.getSymbol();
+            }
+
+            // no idea why I cannot call pq.parseFromString(v, mode, defaultUnitIfMissing);
+            PQ pq;
+            pq.parseFromString(v, mode);
+            return pq;
         }
 
         template<class MU, class PQ>
