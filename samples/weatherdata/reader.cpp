@@ -26,16 +26,17 @@
 #include <QtGlobal>
 
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 
 void CLineReader::run()
 {
     QFile file;
     file.open(stdin, QIODevice::ReadOnly | QIODevice::Text);
-    QRegularExpression re("^(-?\\d+).([0,5])\\s(-?\\d+).([0,5])$");
+
     forever
     {
-        QString line = file.readLine().trimmed();
+        QString line = file.readLine().simplified();
 
         if (line == "x")
         {
@@ -43,19 +44,14 @@ void CLineReader::run()
             continue;
         }
 
-        QRegularExpressionMatch match = re.match(line);
-        if (match.hasMatch())
+        const QStringList parts = line.split(' ');
+        if (parts.size() == 2)
         {
-            double latitudeValue = match.captured(1).toDouble();
-            if (latitudeValue > 0) { latitudeValue += match.captured(2).toDouble() / 10; }
-            else { { latitudeValue -= match.captured(2).toDouble() / 10; } }
-            double longitudeValue = match.captured(3).toDouble();
-            if (longitudeValue > 0) { longitudeValue += match.captured(4).toDouble() / 10; }
-            else { longitudeValue -= match.captured(4).toDouble() / 10; }
-            longitudeValue += match.captured(4).toDouble() / 10;
-            const CLatitude latitude(latitudeValue, CAngleUnit::deg());
-            const CLongitude longitude(longitudeValue, CAngleUnit::deg());
-            const CCoordinateGeodetic position { latitude, longitude, {0} };
+            const CLatitude  latitude(CAngle::parsedFromString(parts.front(), CPqString::SeparatorBestGuess, CAngleUnit::deg()));
+            const CLongitude longitude(CAngle::parsedFromString(parts.back(), CPqString::SeparatorBestGuess, CAngleUnit::deg()));
+            const CAltitude  alt(600, CLengthUnit::m());
+
+            const CCoordinateGeodetic position { latitude, longitude, alt};
             emit weatherDataRequest(position);
         }
         else

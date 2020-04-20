@@ -48,6 +48,7 @@ CWeatherDataPrinter::CWeatherDataPrinter(QObject *parent) : QObject(parent)
 void CWeatherDataPrinter::fetchAndPrintWeatherData(const CCoordinateGeodetic &position)
 {
     QTextStream qtout(stdout);
+    qtout << "Position:" << position.toQString(true) << endl;
     qtout << "Fetching weather data. This may take a while..." << endl;
 
     CWeatherGrid weatherGrid { { "", position } };
