@@ -6,7 +6,7 @@ TARGET = weatherdatagfs
 TEMPLATE = lib
 
 CONFIG += plugin shared
-CONFIG += blackmisc blackcore
+CONFIG += blackmisc blackcore blackconfig
 
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src

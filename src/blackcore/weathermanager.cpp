@@ -71,6 +71,17 @@ namespace BlackCore
 
     void CWeatherManager::requestWeatherGrid(const CWeatherGrid &initialWeatherGrid, const CIdentifier &identifier)
     {
+        if (identifier.isNull() || initialWeatherGrid.isEmpty() || initialWeatherGrid.frontOrDefault().getPosition().isNull())
+        {
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                BLACK_VERIFY_X(!identifier.isNull(), Q_FUNC_INFO, "Missing callback");
+                BLACK_VERIFY_X(!initialWeatherGrid.isEmpty(), Q_FUNC_INFO, "Empty grid, need position");
+                BLACK_VERIFY_X(!initialWeatherGrid.frontOrDefault().getPosition().isNull(), Q_FUNC_INFO, "NULL position");
+            }
+            return;
+        }
+
         const WeatherRequest weatherRequest { {}, identifier, initialWeatherGrid, {} };
         this->appendRequest(weatherRequest);
 
@@ -81,8 +92,16 @@ namespace BlackCore
     void CWeatherManager::requestWeatherGrid(const CWeatherGrid &initialWeatherGrid,
             const CSlot<void(const CWeatherGrid &)> &callback)
     {
-        BLACK_VERIFY_X(callback, Q_FUNC_INFO, "Missing callback");
-        if (!callback) { return; }
+        if (!callback || initialWeatherGrid.isEmpty() || initialWeatherGrid.frontOrDefault().getPosition().isNull())
+        {
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                BLACK_VERIFY_X(callback, Q_FUNC_INFO, "Missing callback");
+                BLACK_VERIFY_X(!initialWeatherGrid.isEmpty(), Q_FUNC_INFO, "Empty grid, need position");
+                BLACK_VERIFY_X(!initialWeatherGrid.frontOrDefault().getPosition().isNull(), Q_FUNC_INFO, "NULL position");
+            }
+            return;
+        }
 
         if (m_isWeatherClear)
         {

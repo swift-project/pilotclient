@@ -8,10 +8,12 @@
 
 #include "weatherdatagfs.h"
 #include "blackcore/application.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/math/mathutils.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pq/temperature.h"
+#include "blackmisc/math/mathutils.h"
+#include "blackmisc/verify.h"
+#include "blackmisc/logmessage.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -19,6 +21,7 @@
 #include <QStringBuilder>
 #include <cmath>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
@@ -334,6 +337,9 @@ namespace BlackWxPlugin
             m_gfsWeatherGrid.clear();
             m_weatherGrid.clear();
 
+            // Messages should be 76. This is a combination
+            // of requested values (e.g. temperature, clouds etc) at specific layers (2 mbar, 10 mbar, surface).
+            constexpr int maxMessages = 76;
             int messageNo = 0;
             g2int iseek = 0;
             for (;;)
@@ -384,9 +390,18 @@ namespace BlackWxPlugin
                 messageNo++;
             }
 
-            CLogMessage(this).debug() << "Parsed"   << messageNo << "GRIB messages.";
-            CLogMessage(this).debug() << "Obtained" << m_gfsWeatherGrid.size() << "grid points.";
+            // validate
+            if (messageNo > maxMessages && CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                // as discussed this means a format change
+                BLACK_VERIFY_X(false, Q_FUNC_INFO, "Format change in GRIB, too many messages");
+            }
 
+            const int weatherGridPointsNo = m_gfsWeatherGrid.size();
+            CLogMessage(this).debug() << "Parsed"   << messageNo << "GRIB messages.";
+            CLogMessage(this).debug() << "Obtained" << weatherGridPointsNo << "grid points.";
+
+            constexpr int maxPoints = 200;
             for (const GfsGridPoint &gfsGridPoint : as_const(m_gfsWeatherGrid))
             {
                 if (QThread::currentThread()->isInterruptionRequested()) { return false; }
@@ -438,11 +453,19 @@ namespace BlackWxPlugin
 
                 auto pressureAtMsl = PhysicalQuantities::CPressure { gfsGridPoint.pressureAtMsl, PhysicalQuantities::CPressureUnit::Pa() };
 
-                CLatitude latitude(gfsGridPoint.latitude, CAngleUnit::deg());
-                CLongitude longitude(gfsGridPoint.longitude, CAngleUnit::deg());
-                auto position = CCoordinateGeodetic { latitude, longitude };
+                const CLatitude latitude(gfsGridPoint.latitude, CAngleUnit::deg());
+                const CLongitude longitude(gfsGridPoint.longitude, CAngleUnit::deg());
+                const auto position = CCoordinateGeodetic { latitude, longitude };
                 const CGridPoint gridPoint({}, position, cloudLayers, temperatureLayers, {}, windLayers, pressureAtMsl);
                 m_weatherGrid.push_back(gridPoint);
+                if (m_weatherGrid.size() >= maxPoints)
+                {
+                    // too many points lead to extreme memory consumption and CPU usage
+                    // we stop here, no use case so far in swift where we need that
+                    BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Too many grid points");
+                    CLogMessage(this).warning(u"Too many weather grid points: %1") << m_weatherGrid.size();
+                    break;
+                }
             }
 
             return true;
@@ -602,12 +625,18 @@ namespace BlackWxPlugin
                         {
                             for (const CGridPoint &fixedGridPoint : as_const(m_grid))
                             {
-                                const auto distance = calculateGreatCircleDistance(gridPointPosition, fixedGridPoint.getPosition()).value(CLengthUnit::m());
-                                const auto maxRange = m_maxRange.value(CLengthUnit::m());
-                                if (distance < maxRange)
+                                const CLength distance = calculateGreatCircleDistance(gridPointPosition, fixedGridPoint.getPosition());
+                                if (distance.isNull())
                                 {
-                                    m_gfsWeatherGrid.append(gridPoint);
-                                    break;
+                                    BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Suspicious value, why is that?");
+                                }
+                                else
+                                {
+                                    if (distance < m_maxRange)
+                                    {
+                                        m_gfsWeatherGrid.append(gridPoint);
+                                        break;
+                                    }
                                 }
                             }
                         }
