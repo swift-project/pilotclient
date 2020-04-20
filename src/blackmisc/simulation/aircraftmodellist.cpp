@@ -1047,7 +1047,7 @@ namespace BlackMisc
         QStringList CAircraftModelList::getModelStringList(bool sort) const
         {
             QStringList ms;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 if (!model.hasModelString()) { continue; }
                 ms.append(model.getModelString());
@@ -1059,7 +1059,7 @@ namespace BlackMisc
         QSet<QString> CAircraftModelList::getModelStringSet() const
         {
             QSet<QString> ms;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 if (!model.hasModelString()) { continue; }
                 ms.insert(model.getModelString());
@@ -1070,7 +1070,7 @@ namespace BlackMisc
         CCountPerSimulator CAircraftModelList::countPerSimulator() const
         {
             CCountPerSimulator count;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 count.increaseSimulatorCounts(model.getSimulator());
             }
@@ -1103,7 +1103,7 @@ namespace BlackMisc
         int CAircraftModelList::countModelsWithColorLivery() const
         {
             int count = 0;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 if (model.getLivery().isColorLivery()) { count++; }
             }
@@ -1113,7 +1113,7 @@ namespace BlackMisc
         int CAircraftModelList::countModelsWithAirlineLivery() const
         {
             int count = 0;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 if (model.getLivery().isAirlineLivery()) { count++; }
             }
@@ -1123,7 +1123,7 @@ namespace BlackMisc
         int CAircraftModelList::countVtolAircraft() const
         {
             int count = 0;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 if (model.isVtol()) { count++; }
             }
@@ -1133,7 +1133,7 @@ namespace BlackMisc
         int CAircraftModelList::countByMode(CAircraftModel::ModelMode mode) const
         {
             int count = 0;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 if (model.matchesMode(mode)) { count++; }
             }
@@ -1143,7 +1143,7 @@ namespace BlackMisc
         int CAircraftModelList::countMilitaryAircraft() const
         {
             int count = 0;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 if (model.isMilitary()) { count++; }
             }
@@ -1204,7 +1204,7 @@ namespace BlackMisc
         {
             if (this->isEmpty()) { return CDistributorList(); }
             CDistributorList distributors;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 const CDistributor d(model.getDistributor());
                 if (onlyDbDistributors && !d.hasValidDbKey()) { continue; }
@@ -1219,7 +1219,7 @@ namespace BlackMisc
             if (this->isEmpty()) { return CAircraftIcaoCodeList(); }
             QSet<int> keys;
             CAircraftIcaoCodeList icaos;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 const CAircraftIcaoCode icao = model.getAircraftIcaoCode();
                 if (!icao.hasValidDbKey()) { continue; }
@@ -1235,7 +1235,7 @@ namespace BlackMisc
         QSet<QString> CAircraftModelList::getAircraftDesignators() const
         {
             QSet<QString> designators;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 if (!model.hasAircraftDesignator()) { continue; }
                 designators.insert(model.getAircraftIcaoCodeDesignator());
@@ -1247,7 +1247,7 @@ namespace BlackMisc
         {
             QSet<QString> designators;
             if (!airlineCode.hasValidDesignator()) { return designators; }
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 if (model.getAirlineIcaoCode() != airlineCode) { continue; }
                 designators.insert(model.getAircraftIcaoCodeDesignator());
@@ -1259,7 +1259,7 @@ namespace BlackMisc
         {
             CAircraftIcaoCodeList icaos;
             if (!airlineCode.hasValidDesignator()) { return icaos; }
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 if (model.getAirlineIcaoCode() != airlineCode) { continue; }
                 icaos.push_back(model.getAircraftIcaoCode());
@@ -1272,7 +1272,7 @@ namespace BlackMisc
             if (this->isEmpty()) { return CAirlineIcaoCodeList(); }
             QSet<int> keys;
             CAirlineIcaoCodeList icaos;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 const CAirlineIcaoCode icao = model.getAirlineIcaoCode();
                 if (!icao.hasValidDbKey()) { continue; }
@@ -1288,7 +1288,7 @@ namespace BlackMisc
         QSet<QString> CAircraftModelList::getAirlineDesignators() const
         {
             QSet<QString> designators;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 if (!model.hasAirlineDesignator()) { continue; }
                 designators.insert(model.getAirlineIcaoCodeDesignator());
@@ -1299,7 +1299,7 @@ namespace BlackMisc
         QSet<QString> CAircraftModelList::getAirlineVDesignators() const
         {
             QSet<QString> designators;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 if (!model.hasAirlineDesignator()) { continue; }
                 designators.insert(model.getAirlineIcaoCodeVDesignator());
@@ -1311,7 +1311,7 @@ namespace BlackMisc
         {
             if (groupId < 0) { return {}; }
             CAirlineIcaoCodeList icaos;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 if (model.getAirlineIcaoCode().getGroupId() == groupId)
                 {
@@ -1334,7 +1334,7 @@ namespace BlackMisc
         QSet<QString> CAircraftModelList::getCombinedTypes() const
         {
             QSet<QString> combinedCodes;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 const QString ct = model.getAircraftIcaoCode().getCombinedType();
                 if (ct.isEmpty()) { continue; }
@@ -1347,7 +1347,7 @@ namespace BlackMisc
         {
             const bool cs = CFileUtils::isFileNameCaseSensitive();
             QSet<QString> files;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 if (!model.hasFileName()) { continue; }
                 files.insert(cs ? model.getFileName() : model.getFileNameLowerCase());
@@ -1359,7 +1359,7 @@ namespace BlackMisc
         {
             const bool cs = CFileUtils::isFileNameCaseSensitive();
             QSet<QString> files;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 if (!model.hasFileName()) { continue; }
                 const QString fn = (cs ? model.getFileName() : model.getFileNameLowerCase());
@@ -1380,7 +1380,7 @@ namespace BlackMisc
         QSet<QString> CAircraftModelList::getAicraftAndAirlineDesignators(bool withDbId) const
         {
             QSet<QString> str;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 const QString s = (model.hasAircraftDesignator() ?
                                    (withDbId ? model.getAircraftIcaoCode().getDesignatorDbKey() : model.getAircraftIcaoCodeDesignator()) :
@@ -1445,7 +1445,7 @@ namespace BlackMisc
             CLogUtilities::addLogDetailsToList(log, remoteModel.getCallsign(), this->coverageSummaryForModel(remoteModel));
 
             int c = 1;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 CStatusMessageList subMsgs;
                 const int score = model.calculateScore(remoteModel, preferColorLiveries, log ? &subMsgs : nullptr);
@@ -1464,7 +1464,7 @@ namespace BlackMisc
         QStringList CAircraftModelList::toCompleterStrings(bool sorted, const CSimulatorInfo &simulator) const
         {
             QStringList c;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 if (model.getSimulator().matchesAny(simulator))
                 {
@@ -1486,7 +1486,7 @@ namespace BlackMisc
         {
             if (this->isEmpty()) { return CStatusMessageList(); }
             CStatusMessageList msgs;
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 const CStatusMessageList msgsModel(model.validate(false));
                 const CStatusMessage msgModel(msgsModel.toSingleMessage());
@@ -1533,7 +1533,7 @@ namespace BlackMisc
                 return msgs;
             }
 
-            for (const CAircraftModel &model : as_const(*this))
+            for (const CAircraftModel &model : *this)
             {
                 const bool valid = (model.hasDbDistributor() || model.matchesAnyDbDistributor(distributorsFromDb));
                 CAircraftModelList::addAsValidOrInvalidModel(model, valid, validModels, invalidModels);
