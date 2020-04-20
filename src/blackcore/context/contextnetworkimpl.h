@@ -352,6 +352,12 @@ namespace BlackCore
             //! Status of simulator changed
             //! \ingroup crosscontextfunction
             void xCtxSimulatorStatusChanged(int status);
+
+            //! Can FSD be used?
+            bool canUseFsd() const;
+
+            //! Can the airspace monitor be used be used?
+            bool canUseAirspaceMonitor() const;
         };
     } // ns
 } // ns

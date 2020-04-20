@@ -126,8 +126,8 @@ namespace BlackCore
 
         void CContextNetwork::setSimulationEnvironmentProvider(ISimulationEnvironmentProvider *provider)
         {
-            if (m_airspace)  { m_airspace->setSimulationEnvironmentProvider(provider);  }
-            if (m_fsdClient) { m_fsdClient->setSimulationEnvironmentProvider(provider); }
+            if (this->canUseAirspaceMonitor()) { m_airspace->setSimulationEnvironmentProvider(provider);  }
+            if (this->canUseFsd())             { m_fsdClient->setSimulationEnvironmentProvider(provider); }
         }
 
         CContextNetwork::~CContextNetwork()
@@ -137,25 +137,25 @@ namespace BlackCore
 
         CAircraftSituationList CContextNetwork::remoteAircraftSituations(const CCallsign &callsign) const
         {
-            Q_ASSERT(m_airspace);
+            if (!this->canUseAirspaceMonitor()) { return {}; }
             return m_airspace->remoteAircraftSituations(callsign);
         }
 
         CAircraftSituation CContextNetwork::remoteAircraftSituation(const Aviation::CCallsign &callsign, int index) const
         {
-            Q_ASSERT(m_airspace);
+            if (!this->canUseAirspaceMonitor()) { return {}; }
             return m_airspace->remoteAircraftSituation(callsign, index);
         }
 
         MillisecondsMinMaxMean CContextNetwork::remoteAircraftSituationsTimestampDifferenceMinMaxMean(const CCallsign &callsign) const
         {
-            Q_ASSERT(m_airspace);
+            if (!this->canUseAirspaceMonitor()) { return {}; }
             return m_airspace->remoteAircraftSituationsTimestampDifferenceMinMaxMean(callsign);
         }
 
         CAircraftSituationList CContextNetwork::latestRemoteAircraftSituations() const
         {
-            Q_ASSERT(m_airspace);
+            if (!this->canUseAirspaceMonitor()) { return {}; }
             return m_airspace->latestRemoteAircraftSituations();
         }
 
@@ -167,43 +167,43 @@ namespace BlackCore
 
         CAircraftPartsList CContextNetwork::remoteAircraftParts(const CCallsign &callsign) const
         {
-            Q_ASSERT(m_airspace);
+            if (!this->canUseAirspaceMonitor()) { return {}; }
             return m_airspace->remoteAircraftParts(callsign);
         }
 
         int CContextNetwork::remoteAircraftPartsCount(const CCallsign &callsign) const
         {
-            Q_ASSERT(m_airspace);
+            if (!this->canUseAirspaceMonitor()) { return 0; }
             return m_airspace->remoteAircraftPartsCount(callsign);
         }
 
         int CContextNetwork::remoteAircraftSituationsCount(const CCallsign &callsign) const
         {
-            Q_ASSERT(m_airspace);
+            if (!this->canUseAirspaceMonitor()) { return 0; }
             return m_airspace->remoteAircraftSituationsCount(callsign);
         }
 
         bool CContextNetwork::isRemoteAircraftSupportingParts(const CCallsign &callsign) const
         {
-            Q_ASSERT(m_airspace);
+            if (!this->canUseAirspaceMonitor()) { return false; }
             return m_airspace->isRemoteAircraftSupportingParts(callsign);
         }
 
         CCallsignSet CContextNetwork::remoteAircraftSupportingParts() const
         {
-            Q_ASSERT(m_airspace);
+            if (!this->canUseAirspaceMonitor()) { return {}; }
             return m_airspace->remoteAircraftSupportingParts();
         }
 
-        Aviation::CAircraftSituationChangeList CContextNetwork::remoteAircraftSituationChanges(const CCallsign &callsign) const
+        CAircraftSituationChangeList CContextNetwork::remoteAircraftSituationChanges(const CCallsign &callsign) const
         {
-            Q_ASSERT(m_airspace);
+            if (!this->canUseAirspaceMonitor()) { return {}; }
             return m_airspace->remoteAircraftSituationChanges(callsign);
         }
 
         int CContextNetwork::remoteAircraftSituationChangesCount(const CCallsign &callsign) const
         {
-            Q_ASSERT(m_airspace);
+            if (!this->canUseAirspaceMonitor()) { return {}; }
             return m_airspace->remoteAircraftSituationChangesCount(callsign);
         }
 
@@ -222,17 +222,27 @@ namespace BlackCore
         {
             this->disconnect(); // all signals
             if (this->isConnected()) { this->disconnectFromNetwork(); }
-            if (m_airspace)  { m_airspace->gracefulShutdown(); }
             if (m_fsdClient)
             {
                 m_fsdClient->gracefulShutdown();
                 m_fsdClient->setClientProvider(nullptr);
+                m_fsdClient->deleteLater();
+                m_fsdClient = nullptr;
+            }
+
+            if (m_airspace)
+            {
+                m_airspace->gracefulShutdown();
+                m_airspace->deleteLater();
+                m_airspace = nullptr;
             }
         }
 
         CStatusMessage CContextNetwork::connectToNetwork(const CServer &server, const QString &extraLiveryString, bool sendLivery, const QString &extraModelString, bool sendModelString, const CCallsign &partnerCallsign, CLoginMode mode)
         {
+            if (!this->canUseFsd()) { return { CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, u"Invalid FSD state (shutdown)") }; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+
             QString msg;
             if (!server.getUser().hasCredentials()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, u"Invalid user credentials"); }
             if (!this->ownAircraft().getAircraftIcaoCode().hasDesignator()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, u"Invalid ICAO data for own aircraft"); }
@@ -295,17 +305,20 @@ namespace BlackCore
 
         CServer CContextNetwork::getConnectedServer() const
         {
+            if (!this->canUseFsd()) { return {}; }
             return this->isConnected() ? m_fsdClient->getServer() : CServer();
         }
 
         CLoginMode CContextNetwork::getLoginMode() const
         {
+            if (!this->canUseFsd()) { return {}; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             return m_fsdClient->getLoginMode();
         }
 
         CStatusMessage CContextNetwork::disconnectFromNetwork()
         {
+            if (!this->canUseFsd()) { return { CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, u"Invalid FSD state (shutdown)") }; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             if (m_fsdClient->isConnected() || m_fsdClient->isPendingConnection())
             {
@@ -320,19 +333,25 @@ namespace BlackCore
 
         bool CContextNetwork::isConnected() const
         {
+            if (!this->canUseFsd()) { return false; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             return m_fsdClient->isConnected();
         }
 
         bool CContextNetwork::isPendingConnection() const
         {
+            if (!this->canUseFsd()) { return false; }
             return m_fsdClient->isPendingConnection();
         }
 
         bool CContextNetwork::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
         {
             Q_UNUSED(originator;)
-            if (commandLine.isEmpty()) { return false; }
+
+            if (!this->canUseAirspaceMonitor()) { return false; }
+            if (!this->canUseFsd())             { return false; }
+            if (commandLine.isEmpty())          { return false; }
+
             static const QStringList cmds({ ".msg", ".m", ".chat", ".altos", ".altoffset", ".addtimeos", ".addtimeoffset", ".wallop", ".watchdog", ".reinit", ".reinitialize", ".enable", ".disable", ".ignore", ".unignore", ".fsd" });
             CSimpleCommandParser parser(cmds);
             parser.parse(commandLine);
@@ -548,21 +567,22 @@ namespace BlackCore
 
         CFlightPlan CContextNetwork::loadFlightPlanFromNetwork(const CCallsign &callsign) const
         {
+            if (!this->canUseFsd()) { return {}; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             return m_airspace->loadFlightPlanFromNetwork(callsign);
         }
 
         CUserList CContextNetwork::getUsers() const
         {
+            if (!this->canUseAirspaceMonitor()) { return {}; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             return m_airspace->getUsers();
         }
 
         CUserList CContextNetwork::getUsersForCallsigns(const CCallsignSet &callsigns) const
         {
+            if (!this->canUseAirspaceMonitor() || callsigns.isEmpty()) { return {}; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            CUserList users;
-            if (callsigns.isEmpty()) return users;
             return m_airspace->getUsersForCallsigns(callsigns);
         }
 
@@ -578,39 +598,46 @@ namespace BlackCore
 
         CClientList CContextNetwork::getClients() const
         {
+            if (!this->canUseAirspaceMonitor()) { return {}; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             return m_airspace->getClients();
         }
 
         CClientList CContextNetwork::getClientsForCallsigns(const CCallsignSet &callsigns) const
         {
+            if (!this->canUseAirspaceMonitor()) { return {}; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             return m_airspace->getClientsForCallsigns(callsigns);
         }
 
         bool CContextNetwork::setOtherClient(const CClient &client)
         {
+            if (!this->canUseAirspaceMonitor()) { return false; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             return m_airspace->setOtherClient(client);
         }
 
         int CContextNetwork::removeClient(const Aviation::CCallsign &callsign)
         {
+            if (!this->canUseAirspaceMonitor()) { return 0; }
             return m_airspace->removeClient(callsign);
         }
 
         bool CContextNetwork::autoAdjustCientGndCapability(const Aviation::CAircraftSituation &situation)
         {
+            if (!this->canUseAirspaceMonitor()) { return false; }
             return m_airspace->autoAdjustCientGndCapability(situation);
         }
 
         bool CContextNetwork::addClientGndCapability(const CCallsign &callsign)
         {
+            if (!this->canUseAirspaceMonitor()) { return false; }
             return m_airspace->addClientGndCapability(callsign);
         }
 
         bool CContextNetwork::setClientGndCapability(const Aviation::CCallsign &callsign, bool supportGndFlag)
         {
+            if (!this->canUseAirspaceMonitor()) { return false; }
             return m_airspace->setClientGndCapability(callsign, supportGndFlag);
         }
 
@@ -714,6 +741,16 @@ namespace BlackCore
             {
                 this->setSimulationEnvironmentProvider(nullptr);
             }
+        }
+
+        bool CContextNetwork::canUseFsd() const
+        {
+            return sApp && !sApp->isShuttingDown() && m_fsdClient;
+        }
+
+        bool CContextNetwork::canUseAirspaceMonitor() const
+        {
+            return sApp && !sApp->isShuttingDown() && m_airspace;
         }
 
         void CContextNetwork::updateMetars(const CMetarList &metars)
@@ -1027,7 +1064,7 @@ namespace BlackCore
 
         void CContextNetwork::requestAircraftDataUpdates()
         {
-            Q_ASSERT(m_airspace);
+            if (!canUseAirspaceMonitor()) { return; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             if (!this->isConnected()) { return; }
 
@@ -1037,7 +1074,7 @@ namespace BlackCore
 
         void CContextNetwork::requestAtisUpdates()
         {
-            Q_ASSERT(m_airspace);
+            if (!canUseAirspaceMonitor()) { return; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             if (!this->isConnected()) { return; }
 
@@ -1047,7 +1084,7 @@ namespace BlackCore
 
         bool CContextNetwork::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering)
         {
-            Q_ASSERT(m_airspace);
+            if (!canUseAirspaceMonitor()) { return false; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << enabledForRendering; }
             const bool c = m_airspace->updateAircraftEnabled(callsign, enabledForRendering);
             if (c)
@@ -1061,13 +1098,14 @@ namespace BlackCore
 
         bool CContextNetwork::setAircraftEnabledFlag(const CCallsign &callsign, bool enabledForRendering)
         {
+            if (!canUseAirspaceMonitor()) { return false; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
             return m_airspace->setAircraftEnabledFlag(callsign, enabledForRendering);
         }
 
         bool CContextNetwork::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
         {
-            Q_ASSERT(m_airspace);
+            if (!canUseAirspaceMonitor()) { return false; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << model; }
             const bool c = m_airspace->updateAircraftModel(callsign, model, originator);
             if (c)
@@ -1081,6 +1119,7 @@ namespace BlackCore
 
         bool CContextNetwork::updateAircraftNetworkModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
         {
+            if (!canUseAirspaceMonitor()) { return false; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << model; }
             const bool c = m_airspace->updateAircraftNetworkModel(callsign, model, originator);
             if (c)
@@ -1093,6 +1132,7 @@ namespace BlackCore
 
         bool CContextNetwork::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositonUpdates)
         {
+            if (!canUseAirspaceMonitor()) { return false; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << enableFastPositonUpdates; }
             const bool c = m_airspace->updateFastPositionEnabled(callsign, enableFastPositonUpdates);
             if (c)
@@ -1119,6 +1159,7 @@ namespace BlackCore
 
         bool CContextNetwork::updateCG(const Aviation::CCallsign &callsign, const CLength &cg)
         {
+            if (!canUseAirspaceMonitor()) { return false; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << cg.valueRoundedWithUnit(1); }
             const bool c = m_airspace->updateCG(callsign, cg);
             return c;
@@ -1126,6 +1167,7 @@ namespace BlackCore
 
         CCallsignSet CContextNetwork::updateCGForModel(const QString &modelString, const CLength &cg)
         {
+            if (!canUseAirspaceMonitor()) { return {}; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << modelString << cg.valueRoundedWithUnit(1); }
             const CCallsignSet set = m_airspace->updateCGForModel(modelString, cg);
             return set;
@@ -1133,6 +1175,7 @@ namespace BlackCore
 
         bool CContextNetwork::updateCGAndModelString(const CCallsign &callsign, const CLength &cg, const QString &modelString)
         {
+            if (!canUseAirspaceMonitor()) { return false; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << cg.valueRoundedWithUnit(1) << modelString; }
             const bool c = m_airspace->updateCGAndModelString(callsign, cg, modelString);
             return c;
@@ -1140,71 +1183,84 @@ namespace BlackCore
 
         void CContextNetwork::requestAtcBookingsUpdate() const
         {
+            if (!canUseAirspaceMonitor()) { return; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             m_airspace->requestAtcBookingsUpdate();
         }
 
         bool CContextNetwork::updateAircraftRendered(const CCallsign &callsign, bool rendered)
         {
+            if (!canUseAirspaceMonitor()) { return false; }
             const bool c = m_airspace->updateAircraftRendered(callsign, rendered);
             return c;
         }
 
         int CContextNetwork::updateMultipleAircraftRendered(const CCallsignSet &callsigns, bool rendered)
         {
+            if (!canUseAirspaceMonitor()) { return 0; }
             const int c = m_airspace->updateMultipleAircraftRendered(callsigns, rendered);
             return c;
         }
 
         int CContextNetwork::updateMultipleAircraftEnabled(const CCallsignSet &callsigns, bool enabled)
         {
+            if (!canUseAirspaceMonitor()) { return 0; }
             const int c = m_airspace->updateMultipleAircraftEnabled(callsigns, enabled);
             return c;
         }
 
         int CContextNetwork::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation, CAircraftSituation::GndElevationInfo info, bool *setForOnGroundPosition)
         {
+            if (!canUseAirspaceMonitor()) { return 0; }
             return m_airspace->updateAircraftGroundElevation(callsign, elevation, info, setForOnGroundPosition);
         }
 
         void CContextNetwork::updateMarkAllAsNotRendered()
         {
+            if (!canUseAirspaceMonitor()) { return; }
             m_airspace->updateMarkAllAsNotRendered();
         }
 
         CLength CContextNetwork::getCGFromDB(const CCallsign &callsign) const
         {
+            if (!canUseAirspaceMonitor()) { return {}; }
             return m_airspace->getCGFromDB(callsign);
         }
 
         CLength CContextNetwork::getCGFromDB(const QString &modelString) const
         {
+            if (!canUseAirspaceMonitor()) { return {}; }
             return m_airspace->getCGFromDB(modelString);
         }
 
         void CContextNetwork::rememberCGFromDB(const CLength &cgFromDB, const CCallsign &callsign)
         {
+            if (!canUseAirspaceMonitor()) { return; }
             m_airspace->rememberCGFromDB(cgFromDB, callsign);
         }
 
         void CContextNetwork::rememberCGFromDB(const CLength &cgFromDB, const QString &modelString)
         {
+            if (!canUseAirspaceMonitor()) { return; }
             m_airspace->rememberCGFromDB(cgFromDB, modelString);
         }
 
         int CContextNetwork::reInitializeAllAircraft()
         {
+            if (!canUseAirspaceMonitor()) { return 0; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             return m_airspace->reInitializeAllAircraft();
         }
 
         CAirspaceAircraftSnapshot CContextNetwork::getLatestAirspaceAircraftSnapshot() const
         {
+            if (!canUseAirspaceMonitor()) { return {}; }
             return m_airspace->getLatestAirspaceAircraftSnapshot();
         }
 
         CElevationPlane CContextNetwork::averageElevationOfNonMovingAircraft(const CAircraftSituation &reference, const CLength &range, int minValues, int sufficientValues) const
         {
+            if (!canUseAirspaceMonitor()) { return {}; }
             return m_airspace->averageElevationOfNonMovingAircraft(reference, range, minValues, sufficientValues);
         }
 
@@ -1220,21 +1276,25 @@ namespace BlackCore
 
         CClient CContextNetwork::getClientOrDefaultForCallsign(const Aviation::CCallsign &callsign) const
         {
+            if (!canUseAirspaceMonitor()) { return {}; }
             return m_airspace->getClientOrDefaultForCallsign(callsign);
         }
 
         bool CContextNetwork::hasClientInfo(const Aviation::CCallsign &callsign) const
         {
+            if (!canUseAirspaceMonitor()) { return false; }
             return m_airspace->hasClientInfo(callsign);
         }
 
         bool CContextNetwork::addNewClient(const CClient &client)
         {
+            if (!canUseAirspaceMonitor()) { return false; }
             return m_airspace->addNewClient(client);
         }
 
         int CContextNetwork::updateOrAddClient(const Aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues)
         {
+            if (!canUseAirspaceMonitor()) { return 0; }
             return m_airspace->updateOrAddClient(callsign, vm, skipEqualValues);
         }
 
@@ -1254,46 +1314,44 @@ namespace BlackCore
 
         QString CContextNetwork::getLibraryInfo(bool detailed) const
         {
+            if (!this->canUseFsd()) { return QString(); }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << detailed; }
-            Q_ASSERT(m_fsdClient);
             return "";
         }
 
         void CContextNetwork::testRequestAircraftConfig(const CCallsign &callsign)
         {
+            if (!this->canUseFsd()) { return; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
-            Q_ASSERT(m_fsdClient);
             m_fsdClient->sendClientQueryAircraftConfig(callsign);
         }
 
         void CContextNetwork::testCreateDummyOnlineAtcStations(int number)
         {
+            if (!this->canUseAirspaceMonitor()) { return; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << number; }
             m_airspace->testCreateDummyOnlineAtcStations(number);
         }
 
         void CContextNetwork::testAddAircraftParts(const CCallsign &callsign, const CAircraftParts &parts, bool incremental)
         {
+            if (!this->canUseAirspaceMonitor()) { return; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << parts << incremental; }
             m_airspace->testAddAircraftParts(callsign, parts, incremental);
         }
 
         void CContextNetwork::testReceivedAtisMessage(const CCallsign &callsign, const CInformationMessage &msg)
         {
+            if (!this->canUseFsd()) { return; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign.asString(); }
-            if (this->fsdClient())
-            {
-                emit this->fsdClient()->atisReplyReceived(callsign, msg);
-            }
+            emit this->fsdClient()->atisReplyReceived(callsign, msg);
         }
 
         void CContextNetwork::testReceivedTextMessages(const CTextMessageList &textMessages)
         {
+            if (!this->canUseFsd()) { return; }
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << textMessages.toQString(); }
-            if (this->fsdClient())
-            {
-                emit this->fsdClient()->textMessagesReceived(textMessages);
-            }
+            emit this->fsdClient()->textMessagesReceived(textMessages);
         }
 
         CMetar CContextNetwork::getMetarForAirport(const CAirportIcaoCode &airportIcaoCode) const

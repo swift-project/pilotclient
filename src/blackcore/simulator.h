@@ -720,8 +720,12 @@ namespace BlackCore
         virtual void checkImpl() = 0;
 
     private:
+        //! swift will shutdown
+        void onAboutToShutdown();
+
         BlackMisc::Simulation::CSimulatorPluginInfo m_info;
-        std::atomic_bool m_isRunning { false };
+        std::atomic_bool m_isRunning       { false };
+        std::atomic_bool m_aboutToShutdown { false }; // swift will shutdown
     };
 
     //! Factory pattern class to create instances of ISimulator

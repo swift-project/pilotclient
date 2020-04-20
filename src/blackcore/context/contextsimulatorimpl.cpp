@@ -144,8 +144,14 @@ namespace BlackCore
                 m_validator->deleteLater();
                 m_validator = nullptr;
             }
+            this->stopSimulatorListeners();
             this->disconnect();
             this->unloadSimulatorPlugin();
+
+            // give listeners a head start
+            // if simconnect is running remotely it can take a while until it shutdowns
+            m_listenersThread.quit();
+            m_listenersThread.wait(10 * 1000);
         }
 
         CSimulatorPluginInfoList CContextSimulator::getAvailableSimulatorPlugins() const
@@ -934,7 +940,7 @@ namespace BlackCore
         {
             if (!m_simulatorPlugin.first.isUnspecified()) { return; }
 
-            stopSimulatorListeners();
+            this->stopSimulatorListeners();
             const QStringList enabledSimulators = m_enabledSimulators.getThreadLocal();
             const CSimulatorPluginInfoList allSimulators = m_plugins->getAvailableSimulatorPlugins();
             for (const CSimulatorPluginInfo &s : allSimulators)
