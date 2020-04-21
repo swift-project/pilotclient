@@ -566,20 +566,23 @@ namespace BlackCore
 
             // Emit signal after this function completes completely decoupled
             QPointer<CContextSimulator> myself(this);
-            QTimer::singleShot(0, this, [ = ]
+            QTimer::singleShot(25, this, [ = ]
             {
-                if (!myself) { return; }
+                if (!myself || !sApp || sApp->isShuttingDown()) { return; }
                 if (m_simulatorPlugin.second)
                 {
+                    CLogMessage(this).info(u"Simulator plugin loaded: '%1' connected: %2")
+                            << simulatorPluginInfo.toQString(true)
+                            << boolToYesNo(connected);
+
+                    // weather in sim.
+                    this->setWeatherActivated(m_isWeatherActivated);
+
                     // use the real driver as this will also work eith emulated driver
                     emit this->simulatorPluginChanged(m_simulatorPlugin.second->getSimulatorPluginInfo());
                     emit this->simulatorChanged(m_simulatorPlugin.second->getSimulatorInfo());
                 }
             });
-
-            CLogMessage(this).info(u"Simulator plugin loaded: '%1' connected: %2")
-                    << simulatorPluginInfo.toQString(true)
-                    << boolToYesNo(connected);
 
             return true;
         }
