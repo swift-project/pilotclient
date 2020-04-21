@@ -62,6 +62,7 @@
 #include <QTimer>
 #include <QtGlobal>
 #include <QPointer>
+#include <QElapsedTimer>
 #include <math.h>
 
 using namespace BlackConfig;
@@ -1364,7 +1365,7 @@ namespace BlackSimPlugin
             QPointer<CSimulatorXPlane> myself(this);
             QTimer::singleShot(100, this, [ = ]
             {
-                if (!myself) { return; }
+                if (!myself || !sApp || sApp->isShuttingDown()) { return; }
                 this->addNextPendingAircraft();
             });
         }
@@ -1466,16 +1467,22 @@ namespace BlackSimPlugin
         {
             if (this->isShuttingDown()) { return; }
             Q_ASSERT_X(!CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background");
+            QElapsedTimer t; t.start();
 
+            QString via;
             m_dBusServerAddress = m_xSwiftBusServerSettings.getThreadLocal().getDBusServerAddressQt();
             if (CDBusServer::isSessionOrSystemAddress(m_dBusServerAddress))
             {
                 checkConnectionViaSessionBus();
+                via = "SessionBus";
             }
             else if (CDBusServer::isQtDBusAddress(m_dBusServerAddress))
             {
                 checkConnectionViaPeer(m_dBusServerAddress);
+                via = "P2P";
             }
+
+            CLogMessage(this).debug(u"Checked sim. 'XPLANE' via '%2' connection in %1ms") << via << t.elapsed();
         }
 
         void CSimulatorXPlaneListener::checkConnectionViaSessionBus()
