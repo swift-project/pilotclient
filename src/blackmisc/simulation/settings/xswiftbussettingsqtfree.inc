@@ -14,6 +14,11 @@
 #include <string>
 #include <chrono>
 
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#endif
+
 using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::Simulation::XPlane;
 
@@ -177,3 +182,6 @@ namespace BlackMisc
     } // ns
 } // ns
 
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
