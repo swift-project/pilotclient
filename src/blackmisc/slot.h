@@ -108,11 +108,7 @@ namespace BlackMisc
         {
             // does NOT return the values of m_function!
             if (!m_object || !m_function) { return false; }
-            QTimer::singleShot(0, m_object.data(), [ = ]
-            {
-                if (!m_object || !m_function) { return; }
-                m_function(args...);
-            });
+            QTimer::singleShot(0, m_object.data(), std::bind(*this, std::forward<Args>(args)...));
             return true;
         }
 
