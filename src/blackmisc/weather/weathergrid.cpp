@@ -41,6 +41,12 @@ namespace BlackMisc
             CSequence<CGridPoint>(other)
         { }
 
+        CWeatherGrid::CWeatherGrid(const ICoordinateGeodetic &coordinate)
+        {
+            const CGridPoint p("GLOB", coordinate);
+            this->push_back(p);
+        }
+
         CWeatherGrid CWeatherGrid::findWithinRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const
         {
             return findBy([&](const CGridPoint & gridPoint)
@@ -162,7 +168,7 @@ namespace BlackMisc
             static const CGridPoint gridPointGLOB =
             {
                 "GLOB",
-                {},
+                CCoordinateGeodetic::null(),
                 CCloudLayerList { cloudLayer },
                 CTemperatureLayerList { temperatureLayer },
                 CVisibilityLayerList  { visibilityLayer },
@@ -214,7 +220,7 @@ namespace BlackMisc
             static const CGridPoint gridPointGLOB
             {
                 "GLOB",
-                {},
+                CCoordinateGeodetic::null(),
                 CCloudLayerList { cloudLayer1, cloudLayer2 },
                 CTemperatureLayerList { temperatureLayer },
                 CVisibilityLayerList { visibilityLayer },

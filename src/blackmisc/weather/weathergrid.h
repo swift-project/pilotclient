@@ -43,6 +43,9 @@ namespace BlackMisc
             //! Construct from a base class object.
             CWeatherGrid(const CSequence<CGridPoint> &other);
 
+            //! Grid with an initial point at coordinates given
+            CWeatherGrid(const BlackMisc::Geo::ICoordinateGeodetic &coordinate);
+
             //! \copydoc Geo::IGeoObjectList::findWithinRange
             CWeatherGrid findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const BlackMisc::PhysicalQuantities::CLength &range) const;
 
