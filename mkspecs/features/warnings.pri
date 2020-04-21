@@ -6,13 +6,16 @@ msvc:QMAKE_CXXFLAGS_WARN_ON -= -w44996
 clang_cl:QMAKE_CXXFLAGS_WARN_ON *= /W4 -Wno-unknown-pragmas -Wno-undefined-inline -Wno-self-assign-overloaded
 gcc:QMAKE_CXXFLAGS_WARN_ON *= -Woverloaded-virtual
 gcc:QMAKE_CXXFLAGS_USE_PRECOMPILE = -Winvalid-pch $$QMAKE_CXXFLAGS_USE_PRECOMPILE
+gcc|llvm:QMAKE_CXXFLAGS_WARN_ON *= -Wzero-as-null-pointer-constant
+gcc:QMAKE_CXXFLAGS_WARN_ON += -isystem $$[QT_INSTALL_HEADERS]/QtCore
+llvm:QMAKE_CXXFLAGS_WARN_ON *= -Wno-system-headers
 
 # elevated warnings
 swiftConfig(allowNoisyWarnings) {
     llvm {
         QMAKE_CXXFLAGS_WARN_ON -= -Wno-self-assign-overloaded
-        QMAKE_CXXFLAGS_WARN_ON *= -Weverything --system-header-prefix=$$[QT_INSTALL_HEADERS]
-        QMAKE_CXXFLAGS_WARN_ON += -Wno-system-headers -Wno-c++98-compat-pedantic -Wno-class-varargs -Wno-covered-switch-default
+        QMAKE_CXXFLAGS_WARN_ON *= -Weverything $$clangArg(--system-header-prefix=$$[QT_INSTALL_HEADERS])
+        QMAKE_CXXFLAGS_WARN_ON += -Wno-c++98-compat-pedantic -Wno-class-varargs -Wno-covered-switch-default
         QMAKE_CXXFLAGS_WARN_ON += -Wno-documentation -Wno-documentation-unknown-command -Wno-double-promotion -Wno-exit-time-destructors
         QMAKE_CXXFLAGS_WARN_ON += -Wno-gnu -Wno-missing-prototypes -Wno-newline-eof -Wno-padded -Wno-undefined-reinterpret-cast
         QMAKE_CXXFLAGS_WARN_ON += -Wno-unused-macros -Wno-used-but-marked-unused -Wno-weak-template-vtables

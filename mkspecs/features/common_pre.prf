@@ -131,12 +131,6 @@ equals(WORD_SIZE,64)|!win32: disableSwiftConfig(sims.fsx, sims.fs9)
 linux-g++: QMAKE_LFLAGS_DEBUG *= -rdynamic
 
 ################################
-# Suppress stupid warnings
-################################
-
-include(warnings.pri)
-
-################################
 # Handle addresses larger than 2GB
 ################################
 
@@ -145,10 +139,25 @@ equals(WORD_SIZE,32) {
 }
 
 ################################
+# Support different clang drivers
+################################
+
+defineReplace(clangArg) {
+    clang_cl: return(/clang:$$1)
+    else: return($$1)
+}
+
+################################
 # Externals
 ################################
 
 include(externals.pri)
+
+################################
+# Enable useful warnings, disable stupid ones
+################################
+
+include(warnings.pri)
 
 ################################
 # Includes

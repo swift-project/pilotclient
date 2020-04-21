@@ -39,6 +39,10 @@ else {
     QMAKE_CXXFLAGS += -idirafter $$EXTERNALSROOT/common/include
 }
 
+llvm {
+    QMAKE_CXXFLAGS_WARN_ON *= $$clangArg(-isystem$$system_path($$EXTERNALSROOT/common/include))
+}
+
 equals(WORD_SIZE,64) {
     EXTERNALS_BIN_DIR = $$EXTERNALSROOT/$$EXTERNALS_SPEC/64/bin
     EXTERNALS_LIB_DIR = $$EXTERNALSROOT/$$EXTERNALS_SPEC/64/lib
