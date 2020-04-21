@@ -2798,8 +2798,7 @@ namespace BlackSimPlugin
         CSimulatorFsxCommonListener::CSimulatorFsxCommonListener(const CSimulatorPluginInfo &info) :
             ISimulatorListener(info)
         {
-            constexpr int QueryInterval = 5 * 1000; // 5 seconds
-            m_timer.setInterval(QueryInterval);
+            m_timer.setInterval(MinQueryIntervalMs);
             m_timer.setObjectName(this->objectName().append(":m_timer"));
             connect(&m_timer, &QTimer::timeout, this, &CSimulatorFsxCommonListener::checkConnection);
         }
@@ -2876,7 +2875,20 @@ namespace BlackSimPlugin
                 emit this->simulatorStarted(this->getPluginInfo());
             }
 
-            CLogMessage(this).debug(u"Checked sim connection in %1ms") << t.elapsed();
+            const qint64 elapsed = t.elapsed();
+            const QString sim = this->getPluginInfo().getSimulatorInfo().toQString(true);
+            CLogMessage(this).debug(u"Checked sim.'%1' connection in %1ms") << elapsed;
+
+            if (elapsed > qRound(1.25 * MinQueryIntervalMs))
+            {
+                const int newIntervalMs = qRound(1.5 * elapsed);
+                CLogMessage(this).debug(u"Check for simulator sim.'%1' connection in %2ms, too slow. Setting %3ms") << sim << elapsed << newIntervalMs;
+                if (m_timer.interval() != newIntervalMs) { m_timer.setInterval(newIntervalMs); }
+            }
+            else
+            {
+                if (m_timer.interval() != MinQueryIntervalMs) { m_timer.setInterval(MinQueryIntervalMs); }
+            }
         }
 
         bool CSimulatorFsxCommonListener::checkVersionAndSimulator() const
