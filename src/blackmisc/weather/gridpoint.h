@@ -54,11 +54,11 @@ namespace BlackMisc
 
             //! Constructor
             CGridPoint(const QString &identifier,
-                       const Geo::CCoordinateGeodetic &position);
+                       const Geo::ICoordinateGeodetic &position);
 
             //! Constructor
             CGridPoint(const QString &identifier,
-                       const Geo::CCoordinateGeodetic &position,
+                       const Geo::ICoordinateGeodetic &position,
                        const CCloudLayerList &cloudLayers,
                        const CTemperatureLayerList &temperatureLayers,
                        const CVisibilityLayerList &visibilityLayers,

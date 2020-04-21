@@ -51,7 +51,7 @@ void CWeatherDataPrinter::fetchAndPrintWeatherData(const CCoordinateGeodetic &po
     qtout << "Position:" << position.toQString(true) << endl;
     qtout << "Fetching weather data. This may take a while..." << endl;
 
-    CWeatherGrid weatherGrid { { "", position } };
+    const CWeatherGrid weatherGrid { { "", position } };
     m_weatherManger.requestWeatherGrid(weatherGrid, { this, &CWeatherDataPrinter::printWeatherData });
 }
 

@@ -21,13 +21,13 @@ namespace BlackMisc
     namespace Weather
     {
         CGridPoint::CGridPoint(const QString &identifier,
-                               const Geo::CCoordinateGeodetic &position) :
+                               const ICoordinateGeodetic &position) :
             m_identifier(identifier),
             m_position(position)
         { }
 
         CGridPoint::CGridPoint(const QString &identifier,
-                               const Geo::CCoordinateGeodetic &position,
+                               const Geo::ICoordinateGeodetic &position,
                                const CCloudLayerList &cloudLayers,
                                const CTemperatureLayerList &temperatureLayers,
                                const CVisibilityLayerList &visibilityLayers,
