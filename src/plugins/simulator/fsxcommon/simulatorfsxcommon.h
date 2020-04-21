@@ -667,6 +667,8 @@ namespace BlackSimPlugin
             bool checkSimConnectDll() const;
 
         private:
+            static constexpr int MinQueryIntervalMs = 5 * 1000; // 5 seconds
+
             QTimer  m_timer { this }; //!< timer, "this" is needed otherwise I get warnings when move to new thread
             QString m_simulatorVersion;
             QString m_simConnectVersion;
