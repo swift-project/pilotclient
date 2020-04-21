@@ -336,6 +336,7 @@ namespace BlackSimPlugin
                     {
                         m_lastWeatherPosition = currentPosition;
                         requestWeatherGrid(currentPosition, this->identifier());
+
                     }
                 }
             }
@@ -584,6 +585,12 @@ namespace BlackSimPlugin
             this->getOwnAircraftPosition();
             const CCoordinateGeodetic currentPosition = this->getOwnAircraftPosition();
             this->requestWeatherGrid(currentPosition, this->identifier());
+
+            // crashing version
+            // kept for testing purposes
+            // CWeatherGrid g(currentPosition);
+            // this->requestWeatherGrid(g, { this, &CSimulatorEmulated::injectWeatherGrid});
+
             return true;
         }
 
