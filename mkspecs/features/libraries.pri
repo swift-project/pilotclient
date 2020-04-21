@@ -29,12 +29,15 @@ fsuipc {
 simconnect {
     DEFINES += SIMCONNECT_H_NOMANIFEST
     equals(WORD_SIZE,64) {
-        INCLUDEPATH *= $$EXTERNALSROOT/common/include/simconnect/P3D-v4
+        SIMCONNECT_INCLUDE += $$EXTERNALSROOT/common/include/simconnect/P3D-v4
         DEFINES += P3D_SDK_VERSION=400
     }
     equals(WORD_SIZE,32) {
-        INCLUDEPATH *= $$EXTERNALSROOT/common/include/simconnect/FSX-XPack
+        SIMCONNECT_INCLUDE += $$EXTERNALSROOT/common/include/simconnect/FSX-XPack
     }
+    INCLUDEPATH *= $$SIMCONNECT_INCLUDE
+    gcc:QMAKE_CXXFLAGS_WARN_ON += -isystem $$SIMCONNECT_INCLUDE
+    llvm:QMAKE_CXXFLAGS_WARN_ON *= $$clangArg(-isystem$$system_path($$SIMCONNECT_INCLUDE))
 }
 
 blackgui {

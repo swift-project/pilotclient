@@ -25,6 +25,10 @@ else {
     QMAKE_CXXFLAGS += -idirafter $$EXTERNALSROOT/common/include/qwt
 }
 
+llvm {
+    QMAKE_CXXFLAGS_WARN_ON *= $$clangArg(-isystem$$system_path($$EXTERNALSROOT/common/include/qwt))
+}
+
 # needed for "ShellScalingApi.h" only
 # win32 { LIBS *= -lSHCore }
 
