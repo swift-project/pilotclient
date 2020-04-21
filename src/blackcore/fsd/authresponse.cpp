@@ -36,7 +36,7 @@ namespace BlackCore
             {
                 BlackMisc::CLogMessage(static_cast<AuthResponse *>(nullptr)).warning(u"Wrong number of arguments.");
                 return {};
-            };
+            }
             return AuthResponse(tokens[0], tokens[1], tokens[2]);
         }
     }
