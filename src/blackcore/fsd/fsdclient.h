@@ -333,7 +333,8 @@ namespace BlackCore
 
             void readDataFromSocket() { this->readDataFromSocketMaxLines(); }
             void readDataFromSocketMaxLines(int maxLines = -1);
-            QString socketErrorToQString(QAbstractSocket::SocketError error);
+            QString socketErrorString(QAbstractSocket::SocketError error) const;
+            static QString socketErrorToQString(QAbstractSocket::SocketError error);
             void parseMessage(const QString &lineRaw);
 
             //! Init. the message types
