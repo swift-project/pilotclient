@@ -205,28 +205,27 @@ namespace BlackSimPlugin
 
             NewWeather nw;
             // Clear new weather
-            nw.uCommand = NW_SET;
-            nw.uFlags = 0;
+            nw.uCommand    = NW_SET;
+            nw.uFlags      = 0;
             nw.ulSignature = 0;
-            nw.uDynamics = 0;
+            nw.uDynamics   = 0;
             for (std::size_t i = 0; i < sizeof(nw.uSpare) / sizeof(nw.uSpare[0]); i++) { nw.uSpare[i] = 0; }
 
-            nw.dLatitude = 0.0;
-            nw.dLongitude = 0.0;
-            nw.nElevation = 0;
-            nw.ulTimeStamp = 0;
-            nw.nTempCtr = 0;
-            nw.nWindsCtr = 0;
-            nw.nCloudsCtr = 0;
-            nw.nElevation = 0; // metres * 65536;
+            nw.dLatitude    = 0.0;
+            nw.dLongitude   = 0.0;
+            nw.nElevation   = 0;
+            nw.ulTimeStamp  = 0;
+            nw.nTempCtr     = 0;
+            nw.nWindsCtr    = 0;
+            nw.nCloudsCtr   = 0;
+            nw.nElevation   = 0; // meters * 65536;
             nw.nUpperVisCtr = 0;
 
             // todo: Take station from weather grid
             memcpy(nw.chICAO, "GLOB", 4);
 
-            CVisibilityLayerList visibilityLayers = gridPoint.getVisibilityLayers();
-            visibilityLayers.sortBy(&CVisibilityLayer::getBase);
-            auto surfaceVisibility = visibilityLayers.frontOrDefault();
+            const CVisibilityLayerList visibilityLayers = gridPoint.getVisibilityLayers().sortedBy(&CVisibilityLayer::getBase);
+            const auto surfaceVisibility = visibilityLayers.frontOrDefault();
             NewVis vis;
             vis.LowerAlt = static_cast<short>(surfaceVisibility.getBase().valueInteger(CLengthUnit::m()));
             vis.UpperAlt = static_cast<ushort>(surfaceVisibility.getTop().valueInteger(CLengthUnit::m()));
@@ -244,8 +243,7 @@ namespace BlackSimPlugin
                 nw.UpperVis[nw.nUpperVisCtr++] = vis;
             }
 
-            CTemperatureLayerList temperatureLayers = gridPoint.getTemperatureLayers();
-            temperatureLayers.sortBy(&CTemperatureLayer::getLevel);
+            const CTemperatureLayerList temperatureLayers = gridPoint.getTemperatureLayers().sortedBy(&CTemperatureLayer::getLevel);
             for (const auto &temperatureLayer : temperatureLayers)
             {
                 NewTemp temp;
@@ -256,8 +254,7 @@ namespace BlackSimPlugin
                 nw.Temp[nw.nTempCtr++] = temp;
             }
 
-            CCloudLayerList cloudLayers = gridPoint.getCloudLayers();
-            cloudLayers.sortBy(&CCloudLayer::getBase);
+            const CCloudLayerList cloudLayers = gridPoint.getCloudLayers().sortedBy(&CCloudLayer::getBase);
             for (const auto &cloudLayer : cloudLayers)
             {
                 NewCloud cloud;
@@ -283,15 +280,15 @@ namespace BlackSimPlugin
 
                 cloud.PrecipRate = 2 * static_cast<unsigned char>(cloudLayer.getPrecipitationRate());
                 cloud.PrecipType = static_cast<unsigned char>(cloudLayer.getPrecipitation());
-                cloud.TopShape = 0;
+                cloud.TopShape   = 0;
                 cloud.Turbulence = 0;
 
                 switch (cloudLayer.getClouds())
                 {
                 case CCloudLayer::NoClouds: cloud.Type = 0; break;
-                case CCloudLayer::Cirrus: cloud.Type = 1; break;
-                case CCloudLayer::Stratus: cloud.Type = 8; break;
-                case CCloudLayer::Cumulus: cloud.Type = 9; break;
+                case CCloudLayer::Cirrus:   cloud.Type = 1; break;
+                case CCloudLayer::Stratus:  cloud.Type = 8; break;
+                case CCloudLayer::Cumulus:  cloud.Type = 9; break;
                 case CCloudLayer::Thunderstorm: cloud.Type = 10; break;
                 default: cloud.Type = 0;
                 }
@@ -300,9 +297,8 @@ namespace BlackSimPlugin
                 nw.Cloud[nw.nCloudsCtr++] = cloud;
             }
 
-            CWindLayerList windLayers = gridPoint.getWindLayers();
-            windLayers.sortBy(&CWindLayer::getLevel);
-            for (const auto &windLayer : as_const(windLayers))
+            const CWindLayerList windLayers = gridPoint.getWindLayers().sortedBy(&CWindLayer::getLevel);
+            for (const auto &windLayer : windLayers)
             {
                 NewWind wind;
                 wind.Direction = static_cast<ushort>(windLayer.getDirection().value(CAngleUnit::deg()) * 65536 / 360.0);
@@ -522,7 +518,7 @@ namespace BlackSimPlugin
                     situation.setAltitude(altitude);
                     situation.setPressureAltitude(pressureAltitude);
                     aircraft.setSituation(situation);
-                    aircraft.setCG(altitude-groundAltitude); // calculate the CG
+                    aircraft.setCG(altitude - groundAltitude); // calculate the CG
                 } // situation
 
                 // model
@@ -580,20 +576,20 @@ namespace BlackSimPlugin
             NewWeather nw;
 
             // Clear new weather
-            nw.uCommand = NW_CLEAR;
-            nw.uFlags = 0;
+            nw.uCommand    = NW_CLEAR;
+            nw.uFlags      = 0;
             nw.ulSignature = 0;
-            nw.uDynamics = 0;
+            nw.uDynamics   = 0;
             for (std::size_t i = 0; i < sizeof(nw.uSpare) / sizeof(nw.uSpare[0]); i++) { nw.uSpare[i] = 0; }
 
-            nw.dLatitude = 0.;
-            nw.dLongitude = 0.;
-            nw.nElevation = 0;
+            nw.dLatitude   = 0.0;
+            nw.dLongitude  = 0.0;
+            nw.nElevation  = 0;
             nw.ulTimeStamp = 0;
-            nw.nTempCtr = 0;
-            nw.nWindsCtr = 0;
-            nw.nCloudsCtr = 0;
-            QByteArray clearWeather(reinterpret_cast<const char *>(&nw), sizeof(NewWeather));
+            nw.nTempCtr    = 0;
+            nw.nWindsCtr   = 0;
+            nw.nCloudsCtr  = 0;
+            const QByteArray clearWeather(reinterpret_cast<const char *>(&nw), sizeof(NewWeather));
             m_weatherMessageQueue.append(FsuipcWeatherMessage(0xC800, clearWeather, 1));
         }
 
@@ -617,7 +613,7 @@ namespace BlackSimPlugin
                 return;
             }
 
-            if (weatherMessage.m_leftTrials == 0)
+            if (weatherMessage.m_leftTrials < 1)
             {
                 CLogMessage(this).debug() << "Number of trials reached for weather message. Dropping it.";
                 m_weatherMessageQueue.removeFirst();
@@ -626,8 +622,8 @@ namespace BlackSimPlugin
 
         double CFsuipc::intToFractional(double fractional)
         {
-            double f = fractional / 10.0;
-            if (f < 1.0) return f;
+            const double f = fractional / 10.0;
+            if (f < 1.0) { return f; }
             return intToFractional(f);
         }
     } // namespace
