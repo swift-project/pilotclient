@@ -1471,12 +1471,12 @@ namespace BlackCore
 
         void CFSDClient::printSocketError(QAbstractSocket::SocketError socketError)
         {
-            CLogMessage(this).error(u"FSD socket error: %1") << socketErrorToQString(socketError);
+            CLogMessage(this).error(u"FSD socket error: %1") << this->socketErrorString(socketError);
         }
 
         void CFSDClient::handleSocketError(QAbstractSocket::SocketError socketError)
         {
-            const QString error = socketErrorToQString(socketError);
+            const QString error = this->socketErrorString(socketError);
             switch (socketError)
             {
             // all named here need a logoff
@@ -1850,12 +1850,23 @@ namespace BlackCore
                     QPointer<CFSDClient> myself(this);
                     QTimer::singleShot(DelayMs, this, [ = ]
                     {
+                        if (!sApp || sApp->isShuttingDown()) { return; }
                         if (myself) { myself->readDataFromSocketMaxLines(newMax); }
                     });
                     break;
                 }
 
             }
+        }
+
+        QString CFSDClient::socketErrorString(QAbstractSocket::SocketError error) const
+        {
+            QString e = CFSDClient::socketErrorToQString(error);
+            if (!m_socket.errorString().isEmpty())
+            {
+                e += QStringLiteral(": ") % m_socket.errorString();
+            }
+            return e;
         }
 
         QString CFSDClient::socketErrorToQString(QAbstractSocket::SocketError error)
