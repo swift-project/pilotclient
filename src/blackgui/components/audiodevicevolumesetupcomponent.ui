@@ -6,14 +6,26 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>340</width>
-    <height>272</height>
+    <width>320</width>
+    <height>266</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Audio setup</string>
   </property>
   <layout class="QGridLayout" name="gl_AudioDeviceVolumeSetupComponent">
+   <property name="leftMargin">
+    <number>4</number>
+   </property>
+   <property name="topMargin">
+    <number>4</number>
+   </property>
+   <property name="rightMargin">
+    <number>4</number>
+   </property>
+   <property name="bottomMargin">
+    <number>4</number>
+   </property>
    <item row="9" column="0">
     <widget class="QToolButton" name="tb_ResetInVolume">
      <property name="text">
@@ -124,7 +136,7 @@
    </item>
    <item row="1" column="0" colspan="2">
     <widget class="QFrame" name="fr_TxRx">
-     <layout class="QHBoxLayout" name="hl_TxRec">
+     <layout class="QHBoxLayout" name="hl_TxRx">
       <property name="leftMargin">
        <number>0</number>
       </property>
@@ -135,7 +147,7 @@
        <number>0</number>
       </property>
       <property name="bottomMargin">
-       <number>0</number>
+       <number>4</number>
       </property>
       <item>
        <widget class="BlackGui::CLedWidget" name="led_AudioConnected" native="true"/>
@@ -156,7 +168,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>20</width>
+          <width>10</width>
           <height>20</height>
          </size>
         </property>
