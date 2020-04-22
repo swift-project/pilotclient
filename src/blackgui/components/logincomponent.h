@@ -239,7 +239,7 @@ namespace BlackGui
             //! Tab index changed
             void onDetailsTabChanged(int index);
 
-            static constexpr int OverlayMessageMs = 5000;
+            static constexpr int OverlayMessageMs      = 5000;
             static constexpr int LogoffIntervalSeconds = 20; //!< time before logoff
 
             QScopedPointer<Ui::CLoginComponent> ui;

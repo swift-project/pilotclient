@@ -331,7 +331,9 @@ namespace BlackGui
                     CCrashHandler::instance()->crashAndLogInfoFlightNetwork(currentServer.getEcosystem().toQString(true));
                     CCrashHandler::instance()->crashAndLogAppendInfo(currentServer.getServerSessionId(false));
                     m_networkSetup.setLastServer(currentServer);
-                    m_lastAircraftModel.set(ownAircraft.getModel());
+
+                    const CAircraftModel ownModel = ownAircraft.getModel();
+                    m_lastAircraftModel.set(ownModel);
                     ui->le_LoginCallsign->setText(ownAircraft.getCallsignAsString());
                     ui->le_LoginHomeBase->setText(currentServer.getUser().getHomeBase().asString());
                     if (vatsimLogin) { m_networkSetup.setLastVatsimServer(currentServer); }
@@ -550,6 +552,8 @@ namespace BlackGui
             CAircraftModel model = ownModel;
             const bool simulating = sGui->getIContextSimulator() &&
                                     (sGui->getIContextSimulator()->getSimulatorStatus() & ISimulator::Simulating);
+
+            // fill simulator related values
             if (simulating)
             {
                 if (!model.hasModelString())
@@ -568,16 +572,14 @@ namespace BlackGui
             }
             else
             {
-                if (!model.hasModelString())
-                {
-                    model = this->getPrefillModel();
-                }
                 ui->le_SimulatorModel->clear();
                 this->highlightModelField();
             }
             ui->le_SimulatorModel->setToolTip(model.asHtmlSummary());
 
             // reset the model
+            bool changedOwnAircraftIcaoValues = false;
+
             if (model.isLoadedFromDb() || (model.getAircraftIcaoCode().isLoadedFromDb() && model.getLivery().isLoadedFromDb()))
             {
                 // full model from DB, take all values
@@ -585,20 +587,19 @@ namespace BlackGui
             }
             else
             {
-                if (sGui->getIContextSimulator()->isSimulatorAvailable())
+                // we have a model, which is not from DB
+                model = this->getPrefillModel(); // manually entered values
+                if (model.getLivery().hasValidDbKey() && model.getLivery().isColorLivery())
                 {
-                    // sim. attached, but no model data from DB
-
-                    /** for NOW, keep the values as they were
-                    ui->le_AircraftCombinedType->clear();
-                    ui->selector_AircraftIcao->clear();
+                    // special case for color liveries/NO airline
                     ui->selector_AirlineIcao->clear();
-                    **/
                 }
+
+                this->setGuiIcaoValues(model, true);
+                changedOwnAircraftIcaoValues = this->updateOwnAircaftIcaoValuesFromGuiValues();
             }
 
             const bool changedOwnAircraftCallsignPilot = this->updateOwnAircraftCallsignAndPilotFromGuiValues();
-            const bool changedOwnAircraftIcaoValues = this->updateOwnAircaftIcaoValuesFromGuiValues();
             if (changedOwnAircraftIcaoValues || changedOwnAircraftCallsignPilot)
             {
                 m_changedLoginDataDigestSignal.inputSignal();
