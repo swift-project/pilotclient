@@ -79,10 +79,10 @@ namespace BlackCore
                 m_encoder.setBitRate(16 * 1024);
             }
 
-            bool CInput::setVolume(double volume)
+            bool CInput::setGainRatio(double gainRatio)
             {
-                if (qFuzzyCompare(m_volume, volume)) { return false; }
-                m_volume = volume;
+                if (qFuzzyCompare(m_gainRatio, gainRatio)) { return false; }
+                m_gainRatio = gainRatio;
                 return true;
             }
 
@@ -176,9 +176,10 @@ namespace BlackCore
                     samples = convertFromStereoToMono(samples);
                 }
 
+                const double volume = m_gainRatio;
                 for (qint16 &sample : samples)
                 {
-                    int value = qRound(sample * m_volume);
+                    int value = qRound(sample * volume);
                     if (value > std::numeric_limits<qint16>::max()) value = std::numeric_limits<qint16>::max();
                     if (value < std::numeric_limits<qint16>::min()) value = std::numeric_limits<qint16>::min();
                     sample = static_cast<qint16>(value);

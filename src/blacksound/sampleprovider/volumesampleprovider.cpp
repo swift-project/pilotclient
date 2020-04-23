@@ -29,20 +29,20 @@ namespace BlackSound
         int CVolumeSampleProvider::readSamples(QVector<float> &samples, qint64 count)
         {
             const int samplesRead = m_sourceProvider->readSamples(samples, count);
-            if (!qFuzzyCompare(m_volume, 1.0))
+            if (!qFuzzyCompare(m_gainRatio, 1.0))
             {
                 for (int n = 0; n < samplesRead; n++)
                 {
-                    samples[n] = static_cast<float>(m_volume * samples[n]);
+                    samples[n] = static_cast<float>(m_gainRatio * samples[n]);
                 }
             }
             return samplesRead;
         }
 
-        bool CVolumeSampleProvider::setVolume(double volume)
+        bool CVolumeSampleProvider::setGainRatio(double volume)
         {
-            const bool changed = !qFuzzyCompare(m_volume, volume);
-            if (changed) { m_volume = volume; }
+            const bool changed = !qFuzzyCompare(m_gainRatio, volume);
+            if (changed) { m_gainRatio = volume; }
             return changed;
         }
     } // ns
