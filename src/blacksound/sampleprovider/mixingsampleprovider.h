@@ -25,10 +25,10 @@ namespace BlackSound
         {
         public:
             //! Ctor mixing provider
-            CMixingSampleProvider(QObject *parent = nullptr) : ISampleProvider(parent) {}
+            CMixingSampleProvider(QObject *parent = nullptr);
 
             //! Add a provider
-            void addMixerInput(ISampleProvider *provider) { m_sources.append(provider); }
+            void addMixerInput(ISampleProvider *provider);
 
             //! \copydoc ISampleProvider::readSamples
             virtual int readSamples(QVector<float> &samples, qint64 count) override;

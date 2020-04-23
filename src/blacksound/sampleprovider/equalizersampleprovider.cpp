@@ -11,13 +11,17 @@ namespace BlackSound
         CEqualizerSampleProvider::CEqualizerSampleProvider(ISampleProvider *sourceProvider, EqualizerPresets preset, QObject *parent) :
             ISampleProvider(parent)
         {
+            Q_ASSERT_X(sourceProvider, Q_FUNC_INFO, "Need provider");
+            const QString on = QStringLiteral("%1 of %2").arg(this->metaObject()->className(), sourceProvider->objectName());
+            this->setObjectName(on);
+
             m_sourceProvider = sourceProvider;
             setupPreset(preset);
         }
 
         int CEqualizerSampleProvider::readSamples(QVector<float> &samples, qint64 count)
         {
-            int samplesRead = m_sourceProvider->readSamples(samples, count);
+            const int samplesRead = m_sourceProvider->readSamples(samples, count);
             if (m_bypass) return samplesRead;
 
             for (int n = 0; n < samplesRead; n++)
@@ -26,7 +30,7 @@ namespace BlackSound
                 {
                     samples[n] = m_filters[band].transform(samples[n]);
                 }
-                samples[n] *= m_outputGain;
+                samples[n] *= static_cast<float>(m_outputGain);
             }
             return samplesRead;
         }

@@ -7,11 +7,29 @@
  */
 
 #include "mixingsampleprovider.h"
+#include "blackmisc/metadatautils.h"
+
+using namespace BlackMisc;
 
 namespace BlackSound
 {
     namespace SampleProvider
     {
+        CMixingSampleProvider::CMixingSampleProvider(QObject *parent) : ISampleProvider(parent)
+        {
+            const QString on = QStringLiteral("%1").arg(classNameShort(this));
+            this->setObjectName(on);
+        }
+
+        void CMixingSampleProvider::addMixerInput(ISampleProvider *provider)
+        {
+            Q_ASSERT(provider);
+            m_sources.append(provider);
+
+            const QString on = QStringLiteral("%1 sources: %2").arg(classNameShort(this)).arg(m_sources.size());
+            this->setObjectName(on);
+        }
+
         int CMixingSampleProvider::readSamples(QVector<float> &samples, qint64 count)
         {
             samples.clear();
@@ -23,15 +41,14 @@ namespace BlackSound
             {
                 ISampleProvider *sampleProvider = m_sources.at(i);
                 QVector<float> sourceBuffer;
-                int len = sampleProvider->readSamples(sourceBuffer, count);
 
+                const int len = sampleProvider->readSamples(sourceBuffer, count);
                 for (int n = 0; n < len; n++)
                 {
                     samples[n] += sourceBuffer[n];
                 }
 
                 outputLen = qMax(len, outputLen);
-
                 if (sampleProvider->isFinished())
                 {
                     finishedProviders.push_back(sampleProvider);

@@ -149,7 +149,7 @@ namespace BlackCore
         info.m_index = index;
         ++index;
         info.m_function = function;
-        info.m_action = action;
+        info.m_action   = action;
         info.m_receiver = receiver;
         m_boundActions.push_back(info);
         return info.m_index;

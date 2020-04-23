@@ -6,10 +6,9 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-//! \file
-
 #include "output.h"
 #include "blacksound/audioutilities.h"
+#include "blackmisc/metadatautils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/verify.h"
 
@@ -32,7 +31,9 @@ namespace BlackCore
                 QIODevice(parent),
                 m_sampleProvider(sampleProvider)
             {
-                this->setObjectName("CAudioOutputBuffer");
+                Q_ASSERT_X(sampleProvider, Q_FUNC_INFO, "need sample provide");
+                const QString on = QStringLiteral("%1 for %2").arg(classNameShort(this), sampleProvider->objectName());
+                this->setObjectName(on);
             }
 
             qint64 CAudioOutputBuffer::readData(char *data, qint64 maxlen)
@@ -43,7 +44,7 @@ namespace BlackCore
                 QVector<float> buffer;
                 m_sampleProvider->readSamples(buffer, count);
 
-                for (float sample : buffer)
+                for (float sample : as_const(buffer))
                 {
                     const float absSample = qAbs(sample);
                     if (absSample > m_maxSampleOutput) { m_maxSampleOutput = absSample; }
@@ -54,14 +55,14 @@ namespace BlackCore
                 {
                     OutputVolumeStreamArgs outputVolumeStreamArgs;
                     outputVolumeStreamArgs.PeakRaw = m_maxSampleOutput / 1.0;
-                    outputVolumeStreamArgs.PeakDb = static_cast<float>(20 * std::log10(outputVolumeStreamArgs.PeakRaw));
+                    outputVolumeStreamArgs.PeakDb  = static_cast<float>(20 * std::log10(outputVolumeStreamArgs.PeakRaw));
                     const double db = qBound(m_minDb, outputVolumeStreamArgs.PeakDb, m_maxDb);
                     double ratio = (db - m_minDb) / (m_maxDb - m_minDb);
                     if (ratio < 0.30) { ratio = 0.0; }
                     if (ratio > 1.0)  { ratio = 1.0; }
                     outputVolumeStreamArgs.PeakVU = ratio;
                     emit outputVolumeStream(outputVolumeStreamArgs);
-                    m_sampleCount = 0;
+                    m_sampleCount     = 0;
                     m_maxSampleOutput = 0;
                 }
 
@@ -83,7 +84,7 @@ namespace BlackCore
 
             COutput::COutput(QObject *parent) : QObject(parent)
             {
-                this->setObjectName("COutput");
+                this->setObjectName(classNameShort(this));
             }
 
             void COutput::start(const CAudioDeviceInfo &outputDevice, ISampleProvider *sampleProvider)

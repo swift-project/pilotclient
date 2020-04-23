@@ -103,7 +103,7 @@ namespace BlackCore
                 BlackSound::SampleProvider::CVolumeSampleProvider *m_volume = nullptr;
                 BlackSound::SampleProvider::CMixingSampleProvider *m_mixer = nullptr;
                 BlackSound::SampleProvider::CSinusGenerator       *m_blockTone = nullptr;
-                QVector<CallsignSampleProvider *> m_voiceInputs;
+                QVector<CCallsignSampleProvider *> m_voiceInputs;
 
                 QString m_receivingCallsignsString;
                 BlackMisc::Aviation::CCallsignSet m_receivingCallsigns;

@@ -35,14 +35,14 @@ namespace BlackCore
         {
             class CReceiverSampleProvider;
 
-            //! Callsign provide
-            class CallsignSampleProvider : public BlackSound::SampleProvider::ISampleProvider
+            //! Callsign provider
+            class CCallsignSampleProvider : public BlackSound::SampleProvider::ISampleProvider
             {
                 Q_OBJECT
 
             public:
                 //! Ctor
-                CallsignSampleProvider(const QAudioFormat &audioFormat, const BlackCore::Afv::Audio::CReceiverSampleProvider *receiver, QObject *parent = nullptr);
+                CCallsignSampleProvider(const QAudioFormat &audioFormat, const BlackCore::Afv::Audio::CReceiverSampleProvider *receiver, QObject *parent = nullptr);
 
                 //! Read samples
                 int readSamples(QVector<float> &samples, qint64 count) override;
@@ -93,15 +93,15 @@ namespace BlackCore
 
                 bool m_bypassEffects  = false;
                 float m_distanceRatio = 1.0;
-                const CReceiverSampleProvider                            *m_receiver = nullptr;
-                BlackSound::SampleProvider::CMixingSampleProvider        *m_mixer    = nullptr;
-                BlackSound::SampleProvider::CResourceSoundSampleProvider *m_crackleSoundProvider = nullptr;
-                BlackSound::SampleProvider::CResourceSoundSampleProvider *m_whiteNoise   = nullptr;
-                BlackSound::SampleProvider::CResourceSoundSampleProvider *m_hfWhiteNoise = nullptr;
-                BlackSound::SampleProvider::CSawToothGenerator           *m_acBusNoise   = nullptr;
+                const CReceiverSampleProvider                            *m_receiver               = nullptr;
+                BlackSound::SampleProvider::CMixingSampleProvider        *m_mixer                  = nullptr;
+                BlackSound::SampleProvider::CResourceSoundSampleProvider *m_crackleSoundProvider   = nullptr;
+                BlackSound::SampleProvider::CResourceSoundSampleProvider *m_whiteNoise             = nullptr;
+                BlackSound::SampleProvider::CResourceSoundSampleProvider *m_hfWhiteNoise           = nullptr;
+                BlackSound::SampleProvider::CSawToothGenerator           *m_acBusNoise             = nullptr;
                 BlackSound::SampleProvider::CSimpleCompressorEffect      *m_simpleCompressorEffect = nullptr;
-                BlackSound::SampleProvider::CEqualizerSampleProvider     *m_voiceEq    = nullptr;
-                BlackSound::SampleProvider::CBufferedWaveProvider        *m_audioInput = nullptr;
+                BlackSound::SampleProvider::CEqualizerSampleProvider     *m_voiceEqualizer         = nullptr;
+                BlackSound::SampleProvider::CBufferedWaveProvider        *m_audioInput             = nullptr;
                 QTimer *m_timer = nullptr;
 
                 BlackSound::Codecs::COpusDecoder m_decoder;

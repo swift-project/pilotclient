@@ -7,16 +7,22 @@
  */
 
 #include "sinusgenerator.h"
+#include "blackmisc/metadatautils.h"
 #include <cmath>
+
+using namespace BlackMisc;
 
 namespace BlackSound
 {
     namespace SampleProvider
     {
-        CSinusGenerator::CSinusGenerator(double frequency, QObject *parent) :
+        CSinusGenerator::CSinusGenerator(double frequencyHz, QObject *parent) :
             ISampleProvider(parent),
-            m_frequency(frequency)
-        {}
+            m_frequencyHz(frequencyHz)
+        {
+            const QString on = QStringLiteral("%1 frequency: %2Hz").arg(classNameShort(this)).arg(frequencyHz);
+            this->setObjectName(on);
+        }
 
         int CSinusGenerator::readSamples(QVector<float> &samples, qint64 count)
         {
@@ -25,17 +31,17 @@ namespace BlackSound
 
             for (int sampleCount = 0; sampleCount < count; sampleCount++)
             {
-                double multiple = m_twoPi * m_frequency / m_sampleRate;
-                double sampleValue = m_gain * qSin(m_nSample * multiple);
-                samples[sampleCount] = static_cast<float>(sampleValue);
+                const double multiple    = s_twoPi * m_frequencyHz / m_sampleRate;
+                const double sampleValue = m_gain * qSin(m_nSample * multiple);
+                samples[sampleCount]     = static_cast<float>(sampleValue);
                 m_nSample++;
             }
             return static_cast<int>(count);
         }
 
-        void CSinusGenerator::setFrequency(double frequency)
+        void CSinusGenerator::setFrequency(double frequencyHz)
         {
-            m_frequency = frequency;
+            m_frequencyHz = frequencyHz;
         }
     } // ns
 } // ns

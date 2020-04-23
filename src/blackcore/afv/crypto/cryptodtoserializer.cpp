@@ -8,7 +8,6 @@
 
 #include "cryptodtoserializer.h"
 
-
 namespace BlackCore
 {
     namespace Afv

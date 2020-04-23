@@ -10,6 +10,7 @@
 
 #include "receiversampleprovider.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/metadatautils.h"
 #include "blacksound/sampleprovider/resourcesoundsampleprovider.h"
 #include "blacksound/sampleprovider/samples.h"
 
@@ -36,11 +37,13 @@ namespace BlackCore
                 ISampleProvider(parent),
                 m_id(id)
             {
-                m_mixer = new CMixingSampleProvider(this);
+                const QString on = QStringLiteral("%1 id: %2").arg(classNameShort(this)).arg(id);
+                this->setObjectName(on);
 
+                m_mixer = new CMixingSampleProvider(this);
                 for (int i = 0; i < voiceInputNumber; i++)
                 {
-                    const auto voiceInput = new CallsignSampleProvider(audioFormat, this, m_mixer);
+                    const auto voiceInput = new CCallsignSampleProvider(audioFormat, this, m_mixer);
                     m_voiceInputs.push_back(voiceInput);
                     m_mixer->addMixerInput(voiceInput);
                 }
@@ -52,7 +55,7 @@ namespace BlackCore
 
             void CReceiverSampleProvider::setBypassEffects(bool value)
             {
-                for (CallsignSampleProvider *voiceInput : m_voiceInputs)
+                for (CCallsignSampleProvider *voiceInput : m_voiceInputs)
                 {
                     voiceInput->setBypassEffects(value);
                 }
@@ -62,7 +65,7 @@ namespace BlackCore
             {
                 if (frequencyHz != m_frequencyHz)
                 {
-                    for (CallsignSampleProvider *voiceInput : m_voiceInputs)
+                    for (CCallsignSampleProvider *voiceInput : m_voiceInputs)
                     {
                         voiceInput->clear();
                     }
@@ -72,7 +75,7 @@ namespace BlackCore
 
             int CReceiverSampleProvider::activeCallsigns() const
             {
-                const int numberOfCallsigns = static_cast<int>(std::count_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CallsignSampleProvider * p)
+                const int numberOfCallsigns = static_cast<int>(std::count_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CCallsignSampleProvider * p)
                 {
                     return p->inUse() == true;
                 }));
@@ -84,7 +87,7 @@ namespace BlackCore
                 m_mute = value;
                 if (value)
                 {
-                    for (CallsignSampleProvider *voiceInput : m_voiceInputs)
+                    for (CCallsignSampleProvider *voiceInput : m_voiceInputs)
                     {
                         voiceInput->clear();
                     }
@@ -108,14 +111,14 @@ namespace BlackCore
                 {
                     CResourceSoundSampleProvider *resourceSound = new CResourceSoundSampleProvider(Samples::instance().click(), m_mixer);
                     m_mixer->addMixerInput(resourceSound);
-                    // CLogMessage(this).debug(u"AFV Click...");
                     m_doClickWhenAppropriate = false;
+                    // CLogMessage(this).debug(u"AFV Click...");
                 }
 
                 if (numberOfInUseInputs != m_lastNumberOfInUseInputs)
                 {
                     QStringList receivingCallsigns;
-                    for (const CallsignSampleProvider *voiceInput : m_voiceInputs)
+                    for (const CCallsignSampleProvider *voiceInput : m_voiceInputs)
                     {
                         const QString callsign = voiceInput->callsign();
                         if (! callsign.isEmpty())
@@ -136,9 +139,9 @@ namespace BlackCore
             void CReceiverSampleProvider::addOpusSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio)
             {
                 if (m_frequencyHz != frequency) { return; } // Lag in the backend means we get the tail end of a transmission
-                CallsignSampleProvider *voiceInput = nullptr;
+                CCallsignSampleProvider *voiceInput = nullptr;
 
-                auto it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [audioDto](const CallsignSampleProvider * p)
+                auto it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [audioDto](const CCallsignSampleProvider * p)
                 {
                     return p->callsign() == audioDto.callsign;
                 });
@@ -150,7 +153,7 @@ namespace BlackCore
 
                 if (! voiceInput)
                 {
-                    it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CallsignSampleProvider * p) { return p->inUse() == false; });
+                    it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CCallsignSampleProvider * p) { return p->inUse() == false; });
                     if (it != m_voiceInputs.end())
                     {
                         voiceInput = *it;
@@ -173,8 +176,8 @@ namespace BlackCore
                 Q_UNUSED(distanceRatio)
                 if (m_frequencyHz != frequency) { return; } // Lag in the backend means we get the tail end of a transmission
 
-                CallsignSampleProvider *voiceInput = nullptr;
-                auto it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [audioDto](const CallsignSampleProvider * p)
+                CCallsignSampleProvider *voiceInput = nullptr;
+                auto it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [audioDto](const CCallsignSampleProvider * p)
                 {
                     return p->callsign() == audioDto.callsign;
                 });
@@ -186,7 +189,7 @@ namespace BlackCore
 
                 if (!voiceInput)
                 {
-                    it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CallsignSampleProvider * p) { return p->inUse() == false; });
+                    it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CCallsignSampleProvider * p) { return p->inUse() == false; });
                     if (it != m_voiceInputs.end())
                     {
                         voiceInput = *it;
