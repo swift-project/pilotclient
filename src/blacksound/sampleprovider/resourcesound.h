@@ -52,7 +52,7 @@ namespace BlackSound
             const QVector<float> &audioData() const { return m_data->samples; }
 
             //! Corresponding file
-            const QString &getFileName() { return m_data->fileName; }
+            const QString &getFileName() const;
 
             //! Is same file?
             bool isSameFileName(const QString &fn) const;

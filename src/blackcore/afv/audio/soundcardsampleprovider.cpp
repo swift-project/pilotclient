@@ -6,10 +6,10 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-//! \file
-
 #include "soundcardsampleprovider.h"
+#include "blackmisc/metadatautils.h"
 
+using namespace BlackMisc;
 using namespace BlackSound::SampleProvider;
 
 namespace BlackCore
@@ -22,6 +22,9 @@ namespace BlackCore
                 ISampleProvider(parent),
                 m_mixer(new CMixingSampleProvider())
             {
+                const QString on = QStringLiteral("%1 sample rate: %2, transceivers: %3").arg(classNameShort(this)).arg(sampleRate).arg(transceiverIDs.size());
+                this->setObjectName(on);
+
                 m_waveFormat.setSampleRate(sampleRate);
                 m_waveFormat.setChannelCount(1);
                 m_waveFormat.setSampleSize(16);
@@ -32,9 +35,10 @@ namespace BlackCore
                 m_mixer = new CMixingSampleProvider(this);
                 m_receiverIDs = transceiverIDs;
 
+                constexpr int voiceInputNumber = 4; // number of CallsignSampleProviders
                 for (quint16 transceiverID : transceiverIDs)
                 {
-                    CReceiverSampleProvider *transceiverInput = new CReceiverSampleProvider(m_waveFormat, transceiverID, 4, m_mixer);
+                    CReceiverSampleProvider *transceiverInput = new CReceiverSampleProvider(m_waveFormat, transceiverID, voiceInputNumber, m_mixer);
                     connect(transceiverInput, &CReceiverSampleProvider::receivingCallsignsChanged, this, &CSoundcardSampleProvider::receivingCallsignsChanged);
                     m_receiverInputs.push_back(transceiverInput);
                     m_receiverIDs.push_back(transceiverID);
@@ -111,7 +115,7 @@ namespace BlackCore
                     QVector<quint16> handledTransceiverIDs;
                     for (int i = 0; i < rxTransceiversFilteredAndSorted.size(); i++)
                     {
-                        RxTransceiverDto rxTransceiver = rxTransceiversFilteredAndSorted[i];
+                        const RxTransceiverDto rxTransceiver = rxTransceiversFilteredAndSorted[i];
                         if (!handledTransceiverIDs.contains(rxTransceiver.id))
                         {
                             handledTransceiverIDs.push_back(rxTransceiver.id);
@@ -121,12 +125,13 @@ namespace BlackCore
                             {
                                 return p->getId() == rxTransceiver.id;
                             });
+
                             if (it != m_receiverInputs.end())
                             {
                                 receiverInput = *it;
                             }
 
-                            if (! receiverInput) { continue; }
+                            if (!receiverInput) { continue; }
                             if (receiverInput->getMute()) { continue; }
 
                             if (!audioPlayed)
@@ -160,9 +165,9 @@ namespace BlackCore
 
                 for (CReceiverSampleProvider *receiverInput : m_receiverInputs)
                 {
-                    quint16 transceiverID = receiverInput->getId();
-                    bool contains = std::any_of(radioTransceivers.begin(), radioTransceivers.end(), [&](const auto & tx) { return transceiverID == tx.id; });
-                    if (! contains)
+                    const quint16 transceiverID = receiverInput->getId();
+                    const bool contains = std::any_of(radioTransceivers.cbegin(), radioTransceivers.cend(), [ transceiverID ](const auto &tx) { return transceiverID == tx.id; });
+                    if (!contains)
                     {
                         receiverInput->setFrequency(0);
                     }

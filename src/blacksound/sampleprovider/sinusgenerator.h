@@ -27,7 +27,7 @@ namespace BlackSound
 
         public:
             //! Ctor
-            CSinusGenerator(double frequency, QObject *parent = nullptr);
+            CSinusGenerator(double frequencyHz, QObject *parent = nullptr);
 
             //! \copydoc ISampleProvider::readSamples
             virtual int readSamples(QVector<float> &samples, qint64 count) override;
@@ -36,14 +36,14 @@ namespace BlackSound
             void setGain(double gain) { m_gain = gain; }
 
             //! Set frequency in Hz
-            void setFrequency(double frequency);
+            void setFrequency(double frequencyHz);
 
         private:
-            double m_gain = 0.0;
-            double m_frequency = 0.0;
-            double m_sampleRate = 48000;
-            int m_nSample = 0;
-            const double m_twoPi = 2 * M_PI;
+            double m_gain        = 0.0;
+            double m_frequencyHz = 0.0;
+            double m_sampleRate  = 48000;
+            int m_nSample        = 0;
+            static constexpr double s_twoPi = 2 * M_PI;
         };
     } // ns
 } // ns

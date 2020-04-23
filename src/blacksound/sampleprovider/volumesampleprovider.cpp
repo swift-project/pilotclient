@@ -9,7 +9,9 @@
 //! \file
 
 #include "volumesampleprovider.h"
-#include "volumesampleprovider.h"
+#include "blackmisc/metadatautils.h"
+
+using namespace BlackMisc;
 
 namespace BlackSound
 {
@@ -18,17 +20,20 @@ namespace BlackSound
         CVolumeSampleProvider::CVolumeSampleProvider(ISampleProvider *sourceProvider, QObject *parent) :
             ISampleProvider(parent),
             m_sourceProvider(sourceProvider)
-        { }
+        {
+            Q_ASSERT_X(sourceProvider, Q_FUNC_INFO, "Need source provider");
+            const QString on = QStringLiteral("%1 with source: %2").arg(classNameShort(this), sourceProvider->objectName());
+            this->setObjectName(on);
+        }
 
         int CVolumeSampleProvider::readSamples(QVector<float> &samples, qint64 count)
         {
-            int samplesRead = m_sourceProvider->readSamples(samples, count);
-
+            const int samplesRead = m_sourceProvider->readSamples(samples, count);
             if (!qFuzzyCompare(m_volume, 1.0))
             {
                 for (int n = 0; n < samplesRead; n++)
                 {
-                    samples[n] *= static_cast<float>(m_volume);
+                    samples[n] = static_cast<float>(m_volume * samples[n]);
                 }
             }
             return samplesRead;

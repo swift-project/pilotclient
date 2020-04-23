@@ -1,4 +1,5 @@
 #include "bufferedwaveprovider.h"
+#include "blacksound/audioutilities.h"
 
 #include <QDebug>
 
@@ -9,6 +10,9 @@ namespace BlackSound
         CBufferedWaveProvider::CBufferedWaveProvider(const QAudioFormat &format, QObject *parent) :
             ISampleProvider(parent)
         {
+            const QString on = QStringLiteral("%1 format: ").arg(this->metaObject()->className(), BlackSound::toQString(format));
+            this->setObjectName(on);
+
             // Set buffer size to 10 secs
             m_maxBufferSize = format.bytesForDuration(10 * 1000 * 1000);
         }

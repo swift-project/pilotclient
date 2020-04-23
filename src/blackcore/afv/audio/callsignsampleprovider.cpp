@@ -6,8 +6,6 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-//! \file
-
 #include "callsignsampleprovider.h"
 #include "callsigndelaycache.h"
 
@@ -15,6 +13,7 @@
 #include "blacksound/sampleprovider/samples.h"
 #include "blacksound/audioutilities.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/metadatautils.h"
 #include "blackconfig/buildconfig.h"
 
 #include <QtMath>
@@ -30,15 +29,18 @@ namespace BlackCore
     {
         namespace Audio
         {
-            CallsignSampleProvider::CallsignSampleProvider(const QAudioFormat &audioFormat, const CReceiverSampleProvider *receiver, QObject *parent) :
+            CCallsignSampleProvider::CCallsignSampleProvider(const QAudioFormat &audioFormat, const CReceiverSampleProvider *receiver, QObject *parent) :
                 ISampleProvider(parent),
                 m_audioFormat(audioFormat),
                 m_receiver(receiver),
                 m_decoder(audioFormat.sampleRate(), 1)
             {
                 Q_ASSERT(audioFormat.channelCount() == 1);
+                Q_ASSERT(receiver);
 
-                this->setObjectName("CallsignSampleProvider");
+                const QString on = QStringLiteral("%1").arg(classNameShort(this));
+                this->setObjectName(on);
+
                 m_mixer = new CMixingSampleProvider(this);
                 m_crackleSoundProvider = new CResourceSoundSampleProvider(Samples::instance().crackle(), m_mixer);
                 m_crackleSoundProvider->setLooping(true);
@@ -57,23 +59,23 @@ namespace BlackCore
                 m_simpleCompressorEffect->setMakeUpGain(-5.5);
 
                 // Create the voice EQ
-                m_voiceEq = new CEqualizerSampleProvider(m_simpleCompressorEffect, EqualizerPresets::VHFEmulation, m_mixer);
+                m_voiceEqualizer = new CEqualizerSampleProvider(m_simpleCompressorEffect, EqualizerPresets::VHFEmulation, m_mixer);
 
                 m_mixer->addMixerInput(m_whiteNoise);
                 m_mixer->addMixerInput(m_acBusNoise);
                 m_mixer->addMixerInput(m_hfWhiteNoise);
-                m_mixer->addMixerInput(m_voiceEq);
+                m_mixer->addMixerInput(m_voiceEqualizer);
 
                 m_timer = new QTimer(this);
-                m_timer->setObjectName(this->objectName() +  "m_timer");
+                m_timer->setObjectName(this->objectName() +  ":m_timer");
 
                 m_timer->setInterval(100);
-                connect(m_timer, &QTimer::timeout, this, &CallsignSampleProvider::timerElapsed);
+                connect(m_timer, &QTimer::timeout, this, &CCallsignSampleProvider::timerElapsed);
             }
 
-            int CallsignSampleProvider::readSamples(QVector<float> &samples, qint64 count)
+            int CCallsignSampleProvider::readSamples(QVector<float> &samples, qint64 count)
             {
-                int noOfSamples = m_mixer->readSamples(samples, count);
+                const int noOfSamples = m_mixer->readSamples(samples, count);
 
                 if (m_inUse && m_lastPacketLatch && m_audioInput->getBufferedBytes() == 0)
                 {
@@ -91,7 +93,7 @@ namespace BlackCore
                 return noOfSamples;
             }
 
-            void CallsignSampleProvider::timerElapsed()
+            void CCallsignSampleProvider::timerElapsed()
             {
                 if (m_inUse && m_audioInput->getBufferedBytes() == 0 && m_lastSamplesAddedUtc.msecsTo(QDateTime::currentDateTimeUtc()) > m_idleTimeoutMs)
                 {
@@ -99,7 +101,7 @@ namespace BlackCore
                 }
             }
 
-            void CallsignSampleProvider::active(const QString &callsign, const QString &aircraftType)
+            void CCallsignSampleProvider::active(const QString &callsign, const QString &aircraftType)
             {
                 m_callsign = callsign;
                 CallsignDelayCache::instance().initialise(callsign);
@@ -109,17 +111,17 @@ namespace BlackCore
                 setEffects();
                 m_underflow = false;
 
-                int delayMs = CallsignDelayCache::instance().get(callsign);
+                const int delayMs = CallsignDelayCache::instance().get(callsign);
                 if (verbose()) { CLogMessage(this).debug(u"[%1] [Delay %2ms]") << m_callsign << delayMs; }
                 if (delayMs > 0)
                 {
-                    int phaseDelayLength = (m_audioFormat.sampleRate() / 1000) * delayMs;
-                    QVector<float> phaseDelay(phaseDelayLength * 2, 0);
+                    const int phaseDelayLength = (m_audioFormat.sampleRate() / 1000) * delayMs;
+                    const QVector<float> phaseDelay(phaseDelayLength * 2, 0);
                     m_audioInput->addSamples(phaseDelay);
                 }
             }
 
-            void CallsignSampleProvider::activeSilent(const QString &callsign, const QString &aircraftType)
+            void CCallsignSampleProvider::activeSilent(const QString &callsign, const QString &aircraftType)
             {
                 m_callsign = callsign;
                 CallsignDelayCache::instance().initialise(callsign);
@@ -130,18 +132,18 @@ namespace BlackCore
                 m_underflow = true;
             }
 
-            void CallsignSampleProvider::clear()
+            void CCallsignSampleProvider::clear()
             {
                 idle();
                 m_audioInput->clearBuffer();
             }
 
-            void CallsignSampleProvider::addOpusSamples(const IAudioDto &audioDto, float distanceRatio)
+            void CCallsignSampleProvider::addOpusSamples(const IAudioDto &audioDto, float distanceRatio)
             {
                 m_distanceRatio = distanceRatio;
                 setEffects();
 
-                QVector<qint16> audio = decodeOpus(audioDto.audio);
+                const QVector<qint16> audio = decodeOpus(audioDto.audio);
                 m_audioInput->addSamples(BlackSound::convertFromShortToFloat(audio));
                 m_lastPacketLatch = audioDto.lastPacket;
                 if (audioDto.lastPacket && !m_underflow) { CallsignDelayCache::instance().success(m_callsign); }
@@ -149,7 +151,7 @@ namespace BlackCore
                 if (!m_timer->isActive()) { m_timer->start(); }
             }
 
-            void CallsignSampleProvider::addSilentSamples(const IAudioDto &audioDto)
+            void CCallsignSampleProvider::addSilentSamples(const IAudioDto &audioDto)
             {
                 // Disable all audio effects
                 setEffects(true);
@@ -161,7 +163,7 @@ namespace BlackCore
                 if (!m_timer->isActive()) { m_timer->start(); }
             }
 
-            void CallsignSampleProvider::idle()
+            void CCallsignSampleProvider::idle()
             {
                 m_timer->stop();
                 m_inUse = false;
@@ -170,14 +172,14 @@ namespace BlackCore
                 m_type.clear();
             }
 
-            QVector<qint16> CallsignSampleProvider::decodeOpus(const QByteArray &opusData)
+            QVector<qint16> CCallsignSampleProvider::decodeOpus(const QByteArray &opusData)
             {
                 int decodedLength = 0;
-                QVector<qint16> decoded = m_decoder.decode(opusData, opusData.size(), &decodedLength);
+                const QVector<qint16> decoded = m_decoder.decode(opusData, opusData.size(), &decodedLength);
                 return decoded;
             }
 
-            void CallsignSampleProvider::setEffects(bool noEffects)
+            void CCallsignSampleProvider::setEffects(bool noEffects)
             {
                 if (noEffects || m_bypassEffects || !m_inUse)
                 {
@@ -186,7 +188,7 @@ namespace BlackCore
                     m_hfWhiteNoise->setGain(0.0);
                     m_acBusNoise->setGain(0.0);
                     m_simpleCompressorEffect->setEnabled(false);
-                    m_voiceEq->setBypassEffects(true);
+                    m_voiceEqualizer->setBypassEffects(true);
                 }
                 else
                 {
@@ -201,8 +203,8 @@ namespace BlackCore
                         m_hfWhiteNoise->setGain(m_hfWhiteNoiseGainMin);
                         m_acBusNoise->setGain(m_acBusGainMin + 0.001f);
                         m_simpleCompressorEffect->setEnabled(true);
-                        m_voiceEq->setBypassEffects(false);
-                        m_voiceEq->setOutputGain(0.38);
+                        m_voiceEqualizer->setBypassEffects(false);
+                        m_voiceEqualizer->setOutputGain(0.38);
                         m_whiteNoise->setGain(0.0);
                     }
                     else
@@ -216,13 +218,13 @@ namespace BlackCore
                         m_whiteNoise->setGain(m_whiteNoiseGainMin);
                         m_acBusNoise->setGain(m_acBusGainMin);
                         m_simpleCompressorEffect->setEnabled(true);
-                        m_voiceEq->setBypassEffects(false);
-                        m_voiceEq->setOutputGain(1.0 - crackleFactor * 3.7);
+                        m_voiceEqualizer->setBypassEffects(false);
+                        m_voiceEqualizer->setOutputGain(1.0 - crackleFactor * 3.7);
                     }
                 }
             }
 
-            void CallsignSampleProvider::setBypassEffects(bool bypassEffects)
+            void CCallsignSampleProvider::setBypassEffects(bool bypassEffects)
             {
                 m_bypassEffects = bypassEffects;
                 setEffects();
