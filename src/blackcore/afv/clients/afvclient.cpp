@@ -290,7 +290,7 @@ namespace BlackCore
                 this->initTransceivers();
 
                 // threadsafe block
-                const double outputVolume = this->getOutputVolume();
+                const double outputVolume = this->getOutputGainRatio();
                 {
                     // lock block 1
                     {
@@ -305,7 +305,7 @@ namespace BlackCore
 
                         if (m_outputSampleProvider) { m_outputSampleProvider->deleteLater(); }
                         m_outputSampleProvider = new CVolumeSampleProvider(m_soundcardSampleProvider, this);
-                        m_outputSampleProvider->setVolume(outputVolume);
+                        m_outputSampleProvider->setGainRatio(outputVolume);
                     }
 
                     // lock block 2
@@ -726,7 +726,8 @@ namespace BlackCore
                     m_inputVolumeDb = valueDb;
                     if (m_input)
                     {
-                        changed = m_input->setVolume(qPow(10, valueDb / 20.0));
+                        const double gainRatio = qPow(10, valueDb / 20.0);
+                        changed = m_input->setGainRatio(gainRatio);
                     }
                 }
                 return changed;
@@ -738,10 +739,10 @@ namespace BlackCore
                 return m_outputVolumeDb;
             }
 
-            double CAfvClient::getOutputVolume() const
+            double CAfvClient::getOutputGainRatio() const
             {
                 QMutexLocker lock(&m_mutexVolume);
-                return m_outputVolume;
+                return m_outputGainRatio;
             }
 
             int CAfvClient::getNormalizedInputVolume() const
@@ -773,6 +774,8 @@ namespace BlackCore
                 else if (volume > 100) { volume = 100; }
                 const double range = MaxDbIn - MinDbIn;
                 const double dB = MinDbIn + (volume * range / 100.0);
+
+                // converted to MinDbIn-MaxDbIn
                 return this->setInputVolumeDb(dB);
             }
 
@@ -794,6 +797,8 @@ namespace BlackCore
                     range = qAbs(MinDbOut);
                 }
                 dB += (volume * range / 50.0);
+
+                // converted to MinDbOut-MaxDbOut
                 this->setOutputVolumeDb(dB);
             }
 
@@ -1291,17 +1296,16 @@ namespace BlackCore
                 if (valueDb > MaxDbOut)      { valueDb = MaxDbOut; }
                 else if (valueDb < MinDbOut) { valueDb = MinDbOut; }
 
-                double outputVolume = 0;
+                const double gainRatio = qPow(10, valueDb / 20.0);
                 bool changed = false;
                 {
                     QMutexLocker lock(&m_mutexVolume);
                     changed = !qFuzzyCompare(m_outputVolumeDb, valueDb);
                     if (changed)
                     {
-                        m_outputVolumeDb = valueDb;
-                        m_outputVolume   = qPow(10, m_outputVolumeDb / 20.0);
+                        m_outputVolumeDb  = valueDb;
+                        m_outputGainRatio = gainRatio;
                     }
-                    outputVolume = m_outputVolume; // outside changed if needed for m_outputSampleProvider !!
                 }
 
                 // do NOT check on "changed", can be false, but "m_outputSampleProvider" is initialized
@@ -1314,7 +1318,7 @@ namespace BlackCore
 
                 if (m_outputSampleProvider)
                 {
-                    changed = m_outputSampleProvider->setVolume(outputVolume);
+                    changed = m_outputSampleProvider->setGainRatio(gainRatio);
                 }
                 m_mutexSampleProviders.unlock();
                 return changed;

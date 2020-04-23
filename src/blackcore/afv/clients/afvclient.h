@@ -223,20 +223,23 @@ namespace BlackCore
                 Q_INVOKABLE bool isLoopback() const   { return m_loopbackOn; }
                 //! @}
 
-                //! Input volume in dB, +-18dB
+                //! Input volume in dB, [MinDbIn, MaxDbIn]dB
                 //! \threadsafe
                 //! @{
                 double getInputVolumeDb() const;
                 Q_INVOKABLE bool setInputVolumeDb(double valueDb);
                 //! @}
 
-                //! Output volume in dB, +-18dB
+                //! Output volume in dB, [MinDbOut, MaxDbOut]dB
                 //! \threadsafe
                 //! @{
                 double getOutputVolumeDb() const;
-                double getOutputVolume()  const;
                 Q_INVOKABLE bool setOutputVolumeDb(double valueDb);
                 //! @}
+
+                //! Gain ratio
+                //! \threadsafe
+                double getOutputGainRatio() const;
 
                 //! Normalized volumes 0..100
                 //! \threadsafe
@@ -381,9 +384,9 @@ namespace BlackCore
 
                 QDateTime m_startDateTimeUtc;
 
-                double m_inputVolumeDb  = 0.0;
-                double m_outputVolumeDb = 0.0;
-                double m_outputVolume   = 1.0;
+                double m_inputVolumeDb   = 0.0;
+                double m_outputVolumeDb  = 0.0;
+                double m_outputGainRatio = 1.0; //!< 0dB
                 double m_maxDbReadingInPTTInterval = -100;
 
                 QTimer             *m_voiceServerTimer = nullptr;

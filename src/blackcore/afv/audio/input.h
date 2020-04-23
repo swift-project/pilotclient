@@ -101,10 +101,16 @@ namespace BlackCore
                 void setOpusBytesEncoded(int opusBytesEncoded) { m_opusBytesEncoded = opusBytesEncoded; }
                 //! @}
 
-                //! Volume 0..1 @{
-                double volume() const { return m_volume; }
-                bool setVolume(double volume);
+                //! Gain ratio, value a amplitude need to be multiplied with
+                //! \see http://www.sengpielaudio.com/calculator-amplification.htm
+                //! \remark gain ratio is voltage ratio/or amplitude ratio, something between 0.001-7.95 for -60dB to 80dB
+                //! @{
+                double getGainRatio() const { return m_gainRatio; }
+                bool setGainRatio(double gainRatio);
                 //! @}
+                // those used to be the original function names
+                // double volume() const { return m_volume; }
+                // bool setVolume(double volume);
 
                 /* disabled as not needed
                 //! The device's volume 0..1 @{
@@ -146,7 +152,7 @@ namespace BlackCore
                 bool m_started = false;
                 int m_opusBytesEncoded  = 0;
                 int m_sampleCount       = 0;
-                double m_volume         = 1.0;
+                double m_gainRatio         = 1.0;
                 qint16 m_maxSampleInput = 0.0;
 
                 const int SampleCountPerEvent = 4800;
