@@ -13,11 +13,12 @@
 
 #include "blackmisc/blackmiscexport.h"
 
-#include <stddef.h>
 #include <QString>
+#include <stddef.h>
 
 class QMetaType;
 class QTextStream;
+class QObject;
 struct QMetaObject;
 
 //! Metadata util functions
@@ -35,6 +36,12 @@ namespace BlackMisc
 
     //! Real heap size of an object
     BLACKMISC_EXPORT size_t heapSizeOf(const QMetaObject &objectType);
+
+    //! Class name as from QMetaObject::className with namespace
+    BLACKMISC_EXPORT QString className(const QObject *object);
+
+    //! Class name as from QMetaObject::className without namespace
+    BLACKMISC_EXPORT QString classNameShort(const QObject *object);
 
 } // ns
 
