@@ -9,8 +9,9 @@
 #include "metadatautils.h"
 
 #include <QMetaType>
-#include <QTextStream>
 #include <QMetaObject>
+#include <QTextStream>
+#include <QObject>
 
 namespace BlackMisc
 {
@@ -41,6 +42,27 @@ namespace BlackMisc
                    append(separator);
         }
         return meta;
+    }
+
+    QString className(const QObject *object)
+    {
+        if (!object) { return "nullptr"; }
+        return object->metaObject()->className();
+    }
+
+    QString classNameShort(const QObject *object)
+    {
+        if (!object) { return "nullptr"; }
+        const QString fn = object->metaObject()->className();
+        if (fn.contains("::"))
+        {
+            const int index = fn.lastIndexOf("::");
+            if (fn.length() > index + 3)
+            {
+                return fn.mid(index + 2);
+            }
+        }
+        return fn;
     }
 
 #ifdef Q_CC_MSVC
