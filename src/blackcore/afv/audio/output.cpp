@@ -132,6 +132,7 @@ namespace BlackCore
                 }
             }
 
+            /*
             double COutput::getDeviceOutputVolume() const
             {
                 if (m_audioOutput && m_started) { return static_cast<double>(m_audioOutput->volume()); }
@@ -145,6 +146,7 @@ namespace BlackCore
                 m_audioOutput->setVolume(v);
                 return true;
             }
+            */
 
         } // ns
     } // ns

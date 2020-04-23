@@ -388,6 +388,7 @@ namespace BlackCore
                 });
             }
 
+            /*
             double CAfvClient::getDeviceInputVolume() const
             {
                 if (m_input) { return m_input->getDeviceInputVolume(); }
@@ -411,6 +412,7 @@ namespace BlackCore
                 if (m_output) { return m_output->setDeviceOutputVolume(volume); }
                 return false;
             }
+            */
 
             void CAfvClient::setReceiveAudio(bool receive)
             {

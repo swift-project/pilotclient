@@ -133,12 +133,14 @@ namespace BlackCore
                 //! \threadsafe
                 bool isComUnitIntegrated() const { return m_integratedComUnit; }
 
+                /*
                 //! The device's volume 0..1 @{
                 double getDeviceInputVolume() const;
                 bool   setDeviceInputVolume(double volume);
                 double getDeviceOutputVolume() const;
                 bool   setDeviceOutputVolume(double volume);
                 //! @}
+                */
 
                 //! Receive audio
                 //! \threadsafe
