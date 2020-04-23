@@ -106,10 +106,12 @@ namespace BlackCore
                 bool setVolume(double volume);
                 //! @}
 
+                /* disabled as not needed
                 //! The device's volume 0..1 @{
                 double getDeviceInputVolume() const;
                 bool setDeviceInputVolume(double volume);
                 //! @}
+                */
 
                 //! Started?
                 bool started() const { return m_started; }
