@@ -140,6 +140,31 @@ namespace BlackSimPlugin
             return positionSlewMode;
         }
 
+        MPParam aircraftPartsToFS9(const CAircraftParts &parts)
+        {
+            MPParam param;
+            if (parts.isAnyEngineOn())
+            {
+                param.engine_1 = 140;
+                param.engine_2 = 140;
+                param.unknown14 = 60;
+            }
+
+            if (parts.getFlapsPercent() > 50.0)
+            {
+                param.flaps_left = 228;
+                param.flaps_right = 228;
+            }
+
+            if (parts.isFixedGearDown())
+            {
+                param.gear_center = 0xA1;
+                param.gear_left = 0xA1;
+                param.gear_right = 0xA1;
+            }
+            return param;
+        }
+
         CFs9Client::~CFs9Client()
         {
             closeConnection();
@@ -351,14 +376,6 @@ namespace BlackSimPlugin
             sendMessage(positionMessage);
         }
 
-        MPParam aircraftPartsToFS9(const CAircraftParts &parts)
-        {
-            //! todo THAT PART IS MISSING HERE, see https://discordapp.com/channels/539048679160676382/539925070550794240/699234172849618975
-            Q_UNUSED(parts)
-            MPParam param;
-            return param;
-        }
-
         void CFs9Client::sendMultiplayerParts(const CAircraftParts &parts)
         {
             Q_UNUSED(parts)
@@ -405,6 +422,7 @@ namespace BlackSimPlugin
             m_clientStatus = Connected; // will not send position in disconnected mode
             sendMultiplayerChangePlayerPlane();
             sendMultiplayerPositionAndPartsFromInterpolation();
+            startTimer(m_updateInterval.valueInteger(CTimeUnit::ms()));
 
             emit statusChanged(m_remoteAircraft, m_clientStatus);
         }
