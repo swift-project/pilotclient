@@ -33,6 +33,7 @@
 #include "blackmisc/identifiable.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/loghandler.h"
+#include "blackmisc/loghistory.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/icons.h"
 
@@ -127,7 +128,8 @@ private:
     BlackCore::CActionBind m_actionPtt2 { BlackMisc::Input::pttCom2HotkeyAction(), BlackMisc::CIcons::StandardIconRadio16, this, &SwiftGuiStd::onPttChanged };
     BlackCore::CActionBindings  m_menuHotkeyHandlers;
     BlackGui::CManagedStatusBar m_statusBar;
-    BlackMisc::CLogSubscriber   m_logSubscriber { this, &SwiftGuiStd::displayStatusMessageInGui };
+    BlackMisc::CLogHistoryReplica m_logHistoryForStatus { this };
+    BlackMisc::CLogHistoryReplica m_logHistoryForOverlay { this };
 
     // contexts
     static constexpr int MaxCoreFailures = 5;  //!< Failures counted before reconnecting
@@ -206,9 +208,6 @@ private:
 
     //! Reload own aircraft
     bool reloadOwnAircraft();
-
-    //! Display status message
-    void displayStatusMessageInGui(const BlackMisc::CStatusMessage &statusMessage);
 
     //! Connection status changed
     //! \param from old status

@@ -91,6 +91,9 @@ namespace BlackCore
         //! Any context in given mode
         bool any(ContextMode mode) const;
 
+        //! All contexts in given mode
+        bool all(ContextMode mode) const;
+
         //! Any remote context?
         bool anyRemote() const;
 

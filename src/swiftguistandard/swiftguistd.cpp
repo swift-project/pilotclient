@@ -272,27 +272,6 @@ void SwiftGuiStd::loginRequested()
     }
 }
 
-void SwiftGuiStd::displayStatusMessageInGui(const CStatusMessage &statusMessage)
-{
-    if (!m_init) { return; }
-    // used with log subscriber
-    if (statusMessage.wasHandledBy(this)) { return; }
-    statusMessage.markAsHandledBy(this);
-    m_statusBar.displayStatusMessage(statusMessage);
-
-    // main info areas
-    ui->comp_MainInfoArea->displayStatusMessage(statusMessage);
-
-    // list
-    ui->comp_MainInfoArea->getLogComponent()->appendStatusMessageToList(statusMessage);
-
-    // display overlay for errors, but not for validation
-    if (statusMessage.getSeverity() == CStatusMessage::SeverityError && ! statusMessage.getCategories().contains(CLogCategory::validation()))
-    {
-        ui->fr_CentralFrameInside->showOverlayMessage(statusMessage);
-    }
-}
-
 void SwiftGuiStd::onKickedFromNetwork(const QString &kickMessage)
 {
     this->updateGuiStatusInformation();
@@ -363,7 +342,6 @@ void SwiftGuiStd::setContextAvailability()
         {
             // core has just become available (startup)
             // this HERE is called with and without DBus
-            sGui->getIContextApplication()->synchronizeLogSubscriptions();
             sGui->getIContextApplication()->synchronizeLocalSettings();
         }
     }

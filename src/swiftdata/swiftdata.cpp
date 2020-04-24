@@ -17,6 +17,7 @@
 #include "blackcore/data/globalsetup.h"
 #include "blackmisc/simulation/autopublishdata.h"
 #include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/sharedstate/datalinkdbus.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/logmessage.h"
@@ -80,17 +81,6 @@ void CSwiftData::closeEvent(QCloseEvent *event)
     this->performGracefulShutdown();
 }
 
-void CSwiftData::appendLogMessage(const CStatusMessage &message)
-{
-    if (!ui->comp_MainInfoArea) { return; } // not initialized yet
-    CLogComponent *logComponent = ui->comp_MainInfoArea->getLogComponent();
-    Q_ASSERT_X(logComponent, Q_FUNC_INFO, "missing log component");
-    logComponent->appendStatusMessageToList(message);
-
-    // status bar
-    m_statusBar.displayStatusMessage(message);
-}
-
 void CSwiftData::onStyleSheetsChanged()
 {
     this->initStyleSheet();
@@ -134,12 +124,15 @@ void CSwiftData::initLogDisplay()
     m_statusBar.initStatusBar(ui->sb_SwiftData);
     // m_statusBar.setSizeGripEnabled(false);
 
+    connect(&m_logHistory, &CLogHistoryReplica::elementAdded, this, [this](const CStatusMessage &message)
+    {
+        m_statusBar.displayStatusMessage(message);
+    });
+    m_logHistory.setFilter(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
+    m_logHistory.initialize(sApp->getDataLinkDBus());
+
     CLogHandler::instance()->install(true);
     CLogHandler::instance()->enableConsoleOutput(false); // default disable
-    auto logHandler = CLogHandler::instance()->handlerForPattern(
-                          CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo)
-                      );
-    logHandler->subscribe(this, &CSwiftData::appendLogMessage);
 }
 
 void CSwiftData::initMenu()

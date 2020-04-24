@@ -61,9 +61,6 @@ private:
     void initMenus();
     //! @}
 
-    //! Add a message to log UI
-    void appendLogMessage(const BlackMisc::CStatusMessage &message);
-
     //! Toggled P2P mode
     void p2pModeToggled(bool checked);
 

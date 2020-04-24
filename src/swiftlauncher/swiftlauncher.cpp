@@ -24,6 +24,7 @@
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"
+#include "blackmisc/sharedstate/datalinkdbus.h"
 #include "blackconfig/buildconfig.h"
 
 #include <QMessageBox>
@@ -311,13 +312,13 @@ void CSwiftLauncher::initLogDisplay()
 {
     CLogHandler::instance()->install(true);
     CLogHandler::instance()->enableConsoleOutput(false); // default disable
-    auto logHandler = CLogHandler::instance()->handlerForPattern(
-                          CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo)
-                      );
-    logHandler->subscribe(this, &CSwiftLauncher::appendLogMessage);
 
     ui->comp_SwiftLauncherLog->showFilterBar();
     ui->comp_SwiftLauncherLog->filterUseRadioButtonDescriptiveIcons(false);
+
+    m_logHistory.setFilter(CLogPattern().withSeverity(CStatusMessage::SeverityError));
+    connect(&m_logHistory, &CLogHistoryReplica::elementAdded, this, qOverload<const CStatusMessage &>(&CSwiftLauncher::showStatusMessage));
+    m_logHistory.initialize(sApp->getDataLinkDBus());
 }
 
 void CSwiftLauncher::setHeaderInfo(const CArtifact &latestArtifact)
@@ -557,24 +558,6 @@ void CSwiftLauncher::showStatusMessage(const CStatusMessage &msg)
 void CSwiftLauncher::showStatusMessage(const QString &htmlMsg)
 {
     ui->fr_SwiftLauncherMain->showOverlayMessage(htmlMsg, 5000);
-}
-
-void CSwiftLauncher::appendLogMessage(const CStatusMessage &message)
-{
-    ui->comp_SwiftLauncherLog->appendStatusMessageToList(message);
-    if (message.getSeverity() == CStatusMessage::SeverityError)
-    {
-        this->showStatusMessage(message);
-    }
-}
-
-void CSwiftLauncher::appendLogMessages(const CStatusMessageList &messages)
-{
-    ui->comp_SwiftLauncherLog->appendStatusMessagesToList(messages);
-    if (messages.hasErrorMessages())
-    {
-        this->showStatusMessage(messages.getErrorMessages().toSingleMessage());
-    }
 }
 
 void CSwiftLauncher::showMainPage()

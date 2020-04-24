@@ -37,6 +37,15 @@ namespace BlackCore
                 m_simulator   == mode);
     }
 
+    bool CCoreFacadeConfig::all(CCoreFacadeConfig::ContextMode mode) const
+    {
+        return (m_application == mode &&
+                m_audio       == mode &&
+                m_network     == mode &&
+                m_ownAircraft == mode &&
+                m_simulator   == mode);
+    }
+
     bool CCoreFacadeConfig::anyRemote() const
     {
         return this->any(Remote);

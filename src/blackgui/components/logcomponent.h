@@ -12,6 +12,7 @@
 #define BLACKGUI_LOGCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackmisc/loghistory.h"
 #include "blackmisc/statusmessagelist.h"
 
 #include <QFrame>
@@ -94,17 +95,8 @@ namespace BlackGui
             //! Clear
             void clearMessages();
 
-            //! Append status message to console
-            void appendStatusMessageToConsole(const BlackMisc::CStatusMessage &statusMessage);
-
             //! Append plain text to console
             void appendPlainTextToConsole(const QString &text);
-
-            //! Append status message to list
-            void appendStatusMessageToList(const BlackMisc::CStatusMessage &statusMessage);
-
-            //! Append status messages to list
-            void appendStatusMessagesToList(const BlackMisc::CStatusMessageList &statusMessages);
 
         signals:
             //! Make me visible
@@ -112,6 +104,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CLogComponent> ui;
+            BlackMisc::CLogHistoryReplica m_history;
 
             //! Status messages changed
             void onStatusMessageDataChanged(int count, bool withFilter);

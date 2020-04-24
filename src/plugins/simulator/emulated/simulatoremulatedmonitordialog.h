@@ -45,10 +45,10 @@ namespace BlackSimPlugin
             //! Dtor
             virtual ~CSimulatorEmulatedMonitorDialog() override;
 
-            //! \copydoc BlackGui::Components::CLogComponent::appendStatusMessageToList
+            //! Append status message
             void appendStatusMessageToList(const BlackMisc::CStatusMessage &statusMessage);
 
-            //! \copydoc BlackGui::Components::CLogComponent::appendStatusMessagesToList
+            //! Append status messages
             void appendStatusMessagesToList(const BlackMisc::CStatusMessageList &statusMessages);
 
             //! Receiving call to be written in log widget

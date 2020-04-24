@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
     a.splashScreen(CIcons::swiftDatabase256());
     if (!a.parseAndSynchronizeSetup()) { return EXIT_FAILURE; }
     a.useWebDataServices(BlackCore::CWebReaderFlags::AllSwiftDbReaders, CDatabaseReaderConfigList::forMappingTool());
+    a.useFacadeNoContexts();
     if (!a.start())
     {
         a.gracefulShutdown();

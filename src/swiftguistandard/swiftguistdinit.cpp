@@ -33,6 +33,7 @@
 #include "blackcore/context/contextaudio.h"
 #include "blacksound/audioutilities.h"
 #include "blackmisc/network/networkutils.h"
+#include "blackmisc/sharedstate/datalinkdbus.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/logpattern.h"
@@ -83,7 +84,20 @@ void SwiftGuiStd::init()
     // if (CBuildConfig::isLocalDeveloperDebugBuild()) { BlackSound::occupyAudioInputDevice(); }
 
     // log messages
-    m_logSubscriber.changeSubscription(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
+    m_logHistoryForStatus.setFilter(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
+    m_logHistoryForOverlay.setFilter(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityError));
+    connect(&m_logHistoryForStatus, &CLogHistoryReplica::elementAdded, this, [this](const CStatusMessage& message)
+    {
+        m_statusBar.displayStatusMessage(message);
+        ui->comp_MainInfoArea->displayStatusMessage(message);
+    });
+    connect(&m_logHistoryForOverlay, &CLogHistoryReplica::elementAdded, this, [this](const CStatusMessage& message)
+    {
+        //! \todo filter out validation messages at CLogPattern level
+        if (!message.getCategories().contains(CLogCategory::validation())) { ui->fr_CentralFrameInside->showOverlayMessage(message); }
+    });
+    m_logHistoryForStatus.initialize(sApp->getDataLinkDBus());
+    m_logHistoryForOverlay.initialize(sApp->getDataLinkDBus());
 
     // style
     this->initStyleSheet();

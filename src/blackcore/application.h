@@ -369,6 +369,11 @@ namespace BlackCore
         //! \remark requires setup loaded
         BlackMisc::CStatusMessageList useContexts(const CCoreFacadeConfig &coreConfig);
 
+        //! Init the core facade without any contexts
+        //! \sa coreFacadeStarted
+        //! \remark requires setup loaded
+        BlackMisc::CStatusMessageList useFacadeNoContexts();
+
         //! Init web data services and start them
         //! \sa webDataServicesStarted
         //! \remark requires setup loaded

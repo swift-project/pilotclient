@@ -111,6 +111,7 @@ namespace BlackCore
         m_dataLinkDBus = new SharedState::CDataLinkDBus(this);
         switch (m_config.getModeApplication())
         {
+        case CCoreFacadeConfig::NotUsed:
         case CCoreFacadeConfig::Local:
             m_dataLinkDBus->initializeLocal(nullptr);
             break;
@@ -131,6 +132,12 @@ namespace BlackCore
         {
             m_logHistory = new CLogHistory(this);
             m_logHistory->initialize(m_dataLinkDBus);
+        }
+
+        if (m_config.all(CCoreFacadeConfig::NotUsed))
+        {
+            m_initalized = true;
+            return;
         }
 
         // contexts

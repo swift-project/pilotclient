@@ -37,6 +37,7 @@ int main(int argc, char *argv[])
     a.addParserOption({{"i", "installer"}, QCoreApplication::translate("main", "Installer setup.")});
     if (!a.parseAndSynchronizeSetup()) { return EXIT_FAILURE; }
     a.useWebDataServices(BlackCore::CWebReaderFlags::AllSwiftDbReaders, CDatabaseReaderConfigList::forLauncher());
+    a.useFacadeNoContexts();
     if (!a.start())
     {
         a.gracefulShutdown();

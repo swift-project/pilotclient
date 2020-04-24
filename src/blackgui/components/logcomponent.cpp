@@ -12,7 +12,10 @@
 #include "blackgui/views/statusmessageview.h"
 #include "blackgui/views/viewbase.h"
 #include "blackgui/guiutility.h"
+#include "blackcore/application.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/logpattern.h"
+#include "blackmisc/sharedstate/datalinkdbus.h"
 #include "ui_logcomponent.h"
 
 #include <QAction>
@@ -22,6 +25,7 @@
 #include <QtGlobal>
 
 using namespace BlackMisc;
+using namespace BlackCore;
 using namespace BlackGui;
 using namespace BlackGui::Views;
 using namespace BlackGui::Menus;
@@ -46,10 +50,21 @@ namespace BlackGui
         }
 
         CLogComponent::CLogComponent(QWidget *parent) :
-            QFrame(parent), ui(new Ui::CLogComponent)
+            QFrame(parent), ui(new Ui::CLogComponent), m_history(this)
         {
             ui->setupUi(this);
             connect(ui->comp_StatusMessages, &CStatusMessagesDetail::modelDataChangedDigest, this, &CLogComponent::onStatusMessageDataChanged);
+
+            connect(&m_history, &CLogHistoryReplica::elementAdded, this, [this](const CStatusMessage &message)
+            {
+                ui->comp_StatusMessages->appendStatusMessageToList(message);
+            });
+            connect(&m_history, &CLogHistoryReplica::elementsReplaced, this, [this](const CStatusMessageList &messages)
+            {
+                ui->comp_StatusMessages->appendStatusMessagesToList(messages);
+            });
+            m_history.setFilter(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
+            m_history.initialize(sApp->getDataLinkDBus());
         }
 
         CLogComponent::~CLogComponent()
@@ -123,25 +138,9 @@ namespace BlackGui
             ui->comp_StatusMessages->clear();
         }
 
-        void CLogComponent::appendStatusMessageToConsole(const CStatusMessage &statusMessage)
-        {
-            if (statusMessage.isEmpty()) return;
-            ui->tep_StatusPageConsole->appendHtml(statusMessage.toHtml(false, true));
-        }
-
         void CLogComponent::appendPlainTextToConsole(const QString &text)
         {
             ui->tep_StatusPageConsole->appendPlainText(text);
-        }
-
-        void CLogComponent::appendStatusMessageToList(const CStatusMessage &statusMessage)
-        {
-            ui->comp_StatusMessages->appendStatusMessageToList(statusMessage);
-        }
-
-        void CLogComponent::appendStatusMessagesToList(const CStatusMessageList &statusMessages)
-        {
-            ui->comp_StatusMessages->appendStatusMessagesToList(statusMessages);
         }
 
         void CLogComponent::onStatusMessageDataChanged(int count, bool withFilter)

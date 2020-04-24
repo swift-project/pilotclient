@@ -20,6 +20,7 @@
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/db/artifact.h"
 #include "blackmisc/identifiable.h"
+#include "blackmisc/loghistory.h"
 
 #ifdef Q_OS_MAC
 #include "blackmisc/macos/microphoneaccess.h"
@@ -102,6 +103,7 @@ private:
     QScopedPointer<BlackGui::Components::CConfigurationWizard> m_wizard;
     QScopedPointer<BlackGui::Components::CTextEditDialog>      m_textEditDialog;
     BlackMisc::CData<BlackCore::Data::TLauncherSetup>          m_setup { this }; //!< setup, i.e. last user selection
+    BlackMisc::CLogHistoryReplica                              m_logHistory { this }; //!< for the overlay
 #ifdef Q_OS_MAC
     BlackMisc::CMacOSMicrophoneAccess m_micAccess;
 #endif
@@ -176,12 +178,6 @@ private:
 
     //! Display status message as overlay
     void showStatusMessage(const QString &htmlMsg);
-
-    //! Append status message
-    void appendLogMessage(const BlackMisc::CStatusMessage &message);
-
-    //! Append status messages
-    void appendLogMessages(const BlackMisc::CStatusMessageList &messages);
 
     //! Show set main page
     void showMainPage();

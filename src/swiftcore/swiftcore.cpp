@@ -68,8 +68,7 @@ CSwiftCore::CSwiftCore(QWidget *parent) :
     this->initMenus();
 
     // log
-    CStatusMessage m = CStatusMessage(this).info(u"Cmd: %1") << CGuiApplication::arguments().join(" ");
-    this->appendLogMessage(m);
+    CLogMessage(this).info(u"Cmd: %1") << CGuiApplication::arguments().join(" ");
 
     // command line
     ui->lep_CommandLineInput->setIdentifier(this->identifier());
@@ -90,11 +89,6 @@ void CSwiftCore::initStyleSheet()
     });
     this->setStyleSheet(""); // avoid crash, need to reset before
     this->setStyleSheet(s);
-}
-
-void CSwiftCore::appendLogMessage(const CStatusMessage &message)
-{
-    ui->comp_InfoArea->getLogComponent()->appendStatusMessageToList(message);
 }
 
 void CSwiftCore::showSettingsDialog()
@@ -125,10 +119,6 @@ void CSwiftCore::initLogDisplay()
     m_mwaLogComponent->showDetails(false);
     CLogHandler::instance()->install(true);
     CLogHandler::instance()->enableConsoleOutput(false); // default disable
-    auto logHandler = CLogHandler::instance()->handlerForPattern(
-                          CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo)
-                      );
-    logHandler->subscribe(this, &CSwiftCore::appendLogMessage);
     ui->comp_InfoArea->getLogComponent()->showFilterDialog(); // add a filter dialog
 }
 

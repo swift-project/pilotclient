@@ -906,6 +906,18 @@ namespace BlackCore
         return this->startCoreFacadeAndWebDataServices(); // will do nothing if setup is not yet loaded
     }
 
+    CStatusMessageList CApplication::useFacadeNoContexts()
+    {
+        Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Call this function after parsing");
+
+        m_useContexts = true; // otherwise startCoreFacadeAndWebDataServices will early-return
+        m_coreFacadeConfig = CCoreFacadeConfig::allEmpty();
+        const CStatusMessage msg = this->initLocalSettings();
+        if (msg.isFailure()) { return msg; }
+
+        return this->startCoreFacadeAndWebDataServices(); // will do nothing if setup is not yet loaded
+    }
+
     CStatusMessageList CApplication::useWebDataServices(const CWebReaderFlags::WebReader webReaders, const CDatabaseReaderConfigList &dbReaderConfig)
     {
         Q_ASSERT_X(m_webDataServices.isNull(), Q_FUNC_INFO, "Services already started");

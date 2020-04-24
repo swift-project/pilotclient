@@ -15,6 +15,7 @@
 #include "blackgui/mainwindowaccess.h"
 #include "blackgui/managedstatusbar.h"
 #include "blackcore/db/backgrounddataupdater.h"
+#include "blackmisc/loghistory.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/statusmessage.h"
 
@@ -50,9 +51,6 @@ protected:
     //! @}
 
 private:
-    //! Append log message
-    void appendLogMessage(const BlackMisc::CStatusMessage &message);
-
     //! Style sheet has changed
     void onStyleSheetsChanged();
 
@@ -83,6 +81,7 @@ private:
     BlackGui::CManagedStatusBar m_statusBar;
     BlackCore::Db::CBackgroundDataUpdater *m_updater = nullptr; //!< consolidate with DB data
     BlackMisc::CSettingReadOnly<BlackGui::Settings::TBackgroundConsolidation> m_consolidationSettings { this, &CSwiftData::consolidationSettingChanged }; //!< consolidation time
+    BlackMisc::CLogHistoryReplica m_logHistory { this };
 
     // auto update
     BlackGui::Components::CAutoPublishDialog *m_autoPublishDialog = nullptr; //!< auto publishing dialog
