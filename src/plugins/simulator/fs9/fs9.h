@@ -93,6 +93,7 @@ namespace BlackSimPlugin
          *
          * Data most likely to be part of it:
          * \li Wing animation
+         * \li Flaps 0 == up, extending flaps starts from 255 and is decreasing. Cessna FULL(228), BOEING 747 Full (242)
          *
          * Max value for fully extended gear seems to be 0xA1
          */
@@ -102,21 +103,21 @@ namespace BlackSimPlugin
             quint32 packet_index = 0; //!< Packet index
             quint8 unknown8 = 0; //!< Unknown data
             quint8 unknown9 = 0; //!< Unknown data
-            quint8 flaps_left = 0xDF; //!< Flaps left
-            quint8 flaps_right = 0xDF; //!< Flaps right
+            quint8 flaps_left = 0; //!< Flaps left
+            quint8 flaps_right = 0; //!< Flaps right
             quint8 unknown12 = 0; //!< Unknown data
             quint8 unknown13 = 0; //!< Unknown data
-            quint8 unknown14 = 0xFF; //!< Unknown data
+            quint8 unknown14 = 0; //!< Engine RPM?
             quint8 unknown15 = 0; //!< Unknown data
             quint8 unknown16 = 0; //!< Unknown data
             quint8 unknown17 = 0; //!< Unknown data
             quint8 unknown18 = 0; //!< Unknown data
             quint8 unknown19 = 0; //!< Unknown data
-            quint8 gear_center = 0xA1; //!< Gear center
-            quint8 gear_left = 0xA1; //!< Gear left
-            quint8 gear_right = 0xA1; //!< Gear right
-            quint8 engine_1 = 0xFF; //!< Engine 1 N1 in %
-            quint8 engine_2 = 0xFF; //!< Engine 2 N1 in %
+            quint8 gear_center = 0; //!< Gear center
+            quint8 gear_left = 0; //!< Gear left
+            quint8 gear_right = 0; //!< Gear right
+            quint8 engine_1 = 0; //!< Engine 1 N1 in %
+            quint8 engine_2 = 0; //!< Engine 2 N1 in %
             quint8 unknown25 = 0; //!< Unknown data
             quint8 unknown26 = 0; //!< Unknown data
             quint8 unknown27 = 0; //!< Unknown data
