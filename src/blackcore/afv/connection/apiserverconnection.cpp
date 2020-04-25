@@ -51,8 +51,8 @@ namespace BlackCore
 
                 m_username = username;
                 m_password = password;
+                m_client   = client;
                 m_networkVersion  = networkVersion;
-                m_client = client;
                 m_isAuthenticated = false;
 
                 QUrl url(m_addressUrl);
@@ -254,7 +254,7 @@ namespace BlackCore
                 // posted in QAM thread, reply is nullptr if called from another thread
                 sApp->postToNetwork(request, CApplication::NoLogRequestId, json.toJson(),
                 {
-                    this, [ = ](QNetworkReply * nwReply)
+                    this, [ = ](QNetworkReply *nwReply)
                     {
                         // called in "this" thread
                         const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);

@@ -8,7 +8,9 @@
 
 #include "soundcardsampleprovider.h"
 #include "blackmisc/metadatautils.h"
+#include "blackconfig/buildconfig.h"
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackSound::SampleProvider;
 
@@ -143,9 +145,15 @@ namespace BlackCore
                             {
                                 receiverInput->addSilentSamples(audioDto, rxTransceiver.frequency, rxTransceiver.distanceRatio);
                             }
+
+                            // debug ONLY
+                            if (CBuildConfig::isLocalDeveloperDebugBuild())
+                            {
+                                receiverInput->logVoiceInputs(QStringLiteral("Transceiver %1 ").arg(rxTransceiver.id), 1500);
+                            }
                         }
-                    }
-                }
+                    } // each transceiver
+                } // filtered rx transceivers
             }
 
             void CSoundcardSampleProvider::updateRadioTransceivers(const QVector<TransceiverDto> &radioTransceivers)
