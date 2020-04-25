@@ -123,9 +123,9 @@ namespace BlackSimPlugin
         bool CSimulatorFsxCommon::disconnectFrom()
         {
             if (!m_simConnected) { return true; }
-            m_simSimulating = false; // thread as stopped, just setting the flag here avoids overhead of on onSimStopped
+            m_simSimulating    = false; // thread as stopped, just setting the flag here avoids overhead of on onSimStopped
             m_traceAutoUntilTs = -1;
-            m_traceSendId = false;
+            m_traceSendId      = false;
             this->reset(); // mark as disconnected and reset all values
 
             if (m_hSimConnect)
@@ -2816,11 +2816,12 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommonListener::stopImpl()
         {
             m_timer.stop();
+            this->disconnectFromSimulator();
         }
 
         void CSimulatorFsxCommonListener::checkImpl()
         {
-            if (!m_timer.isActive()) { return; }
+            if (!m_timer.isActive())    { return; }
             if (this->isShuttingDown()) { return; }
 
             QPointer<CSimulatorFsxCommonListener> myself(this);
@@ -2842,53 +2843,64 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommonListener::checkConnection()
         {
-            if (this->isShuttingDown()) { return; }
-            QElapsedTimer t; t.start();
             Q_ASSERT_X(!CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background");
-            HANDLE hSimConnect;
-            HRESULT result = SimConnect_Open(&hSimConnect, sApp->swiftVersionChar(), nullptr, 0, nullptr, 0);
+
+            // check before we access the sim. connection
+            if (this->isShuttingDown() || this->thread()->isInterruptionRequested())
+            {
+                this->stopImpl();
+                return;
+            }
+
+            QElapsedTimer t; t.start();
             bool check = false;
-            if (isOk(result))
+            do
             {
                 // if we can connect, but not dispatch, it can mean a previously started FSX/P3D
                 // blocks remote calls -> RESTART
-                for (int i = 0; !check && i < 3 && !this->isShuttingDown(); i++)
+                if (!this->connectToSimulator()) { break; }
+
+                // check if we have the right sim.
+                // this check on a remote FSX/P3D not running/existing might TAKE LONG!
+                const HRESULT result = SimConnect_CallDispatch(m_hSimConnect, CSimulatorFsxCommonListener::SimConnectProc, this);
+
+                // make sure we did not stop in meantime
+                if (this->isShuttingDown() || this->thread()->isInterruptionRequested())
                 {
-                    if (this->thread()->isInterruptionRequested())
-                    {
-                        m_timer.stop();
-                        check = false;
-                        break;
-                    }
-
-                    // result not always in first dispatch as we first have to obtain simulator name
-                    result = SimConnect_CallDispatch(hSimConnect, CSimulatorFsxCommonListener::SimConnectProc, this);
-                    if (isFailure(result)) { break; } // means serious failure
-                    check = this->checkVersionAndSimulator();
-                    if (!check && sApp) { CApplication::processEventsFor(500); }
+                    this->stopImpl();
+                    return;
                 }
-            }
-            SimConnect_Close(hSimConnect);
 
+                if (isFailure(result)) { break; } // means serious failure
+                check = this->checkVersionAndSimulator();
+
+            }
+            while (false);
+
+            this->adjustTimerInterval(t.elapsed());
             if (check)
             {
                 emit this->simulatorStarted(this->getPluginInfo());
             }
+        }
 
-            const qint64 elapsed = t.elapsed();
+        void CSimulatorFsxCommonListener::adjustTimerInterval(qint64 checkTimeMs)
+        {
             const QString sim = this->getPluginInfo().getSimulatorInfo().toQString(true);
-            CLogMessage(this).debug(u"Checked sim.'%1' connection in %1ms") << elapsed;
-
-            if (elapsed > qRound(1.25 * MinQueryIntervalMs))
+            CLogMessage(this).debug(u"Checked sim.'%1' connection in %2ms") << sim << checkTimeMs;
+            if (checkTimeMs > qRound(1.25 * MinQueryIntervalMs))
             {
-                const int newIntervalMs = qRound(1.5 * elapsed);
-                CLogMessage(this).debug(u"Check for simulator sim.'%1' connection in %2ms, too slow. Setting %3ms") << sim << elapsed << newIntervalMs;
+                const int newIntervalMs = qRound(1.2 * checkTimeMs / 1000.0) * 1000;
+                CLogMessage(this).debug(u"Check for simulator sim.'%1' connection in %2ms, too slow. Setting %3ms") << sim << checkTimeMs << newIntervalMs;
                 if (m_timer.interval() != newIntervalMs) { m_timer.setInterval(newIntervalMs); }
             }
             else
             {
                 if (m_timer.interval() != MinQueryIntervalMs) { m_timer.setInterval(MinQueryIntervalMs); }
             }
+
+            // restart
+            m_timer.start();
         }
 
         bool CSimulatorFsxCommonListener::checkVersionAndSimulator() const
@@ -2914,6 +2926,24 @@ namespace BlackSimPlugin
         {
             static const CWinDllUtils::DLLInfo simConnectInfo = CSimConnectUtilities::simConnectDllInfo();
             if (!simConnectInfo.errorMsg.isEmpty()) { return false; }
+            return true;
+        }
+
+        bool CSimulatorFsxCommonListener::connectToSimulator()
+        {
+            if (m_simConnected) { return true; }
+            const HRESULT result = SimConnect_Open(&m_hSimConnect, sApp->swiftVersionChar(), nullptr, 0, nullptr, 0);
+            const bool ok = isOk(result);
+            m_simConnected = ok;
+            return ok;
+        }
+
+        bool CSimulatorFsxCommonListener::disconnectFromSimulator()
+        {
+            if (!m_simConnected) { return false; }
+            SimConnect_Close(m_hSimConnect);
+            m_hSimConnect = nullptr;
+            m_simConnected   = false;
             return true;
         }
 

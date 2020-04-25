@@ -657,6 +657,7 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulatorListener::checkImpl
             virtual void checkImpl() override;
 
+        private:
             //! Test if connection can be established
             void checkConnection();
 
@@ -666,7 +667,15 @@ namespace BlackSimPlugin
             //! Check the simconnect.dll
             bool checkSimConnectDll() const;
 
-        private:
+            //! Connect to simulator (if not already)
+            bool connectToSimulator();
+
+            //! Disconnect from simulator
+            bool disconnectFromSimulator();
+
+            //! Adjust the timer interval
+            void adjustTimerInterval(qint64 checkTimeMs);
+
             static constexpr int MinQueryIntervalMs = 5 * 1000; // 5 seconds
 
             QTimer  m_timer { this }; //!< timer, "this" is needed otherwise I get warnings when move to new thread
@@ -674,6 +683,8 @@ namespace BlackSimPlugin
             QString m_simConnectVersion;
             QString m_simulatorName;
             QString m_simulatorDetails;
+            HANDLE  m_hSimConnect;
+            bool    m_simConnected = false; //!< SimConnect is connected, does not mean to the correct sim.
             BlackMisc::CStatusMessage m_lastMessage; //!< last listener message
 
             //! SimConnect Callback (simplified version for listener)

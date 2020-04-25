@@ -1482,7 +1482,7 @@ namespace BlackSimPlugin
                 via = "P2P";
             }
 
-            CLogMessage(this).debug(u"Checked sim. 'XPLANE' via '%2' connection in %1ms") << via << t.elapsed();
+            CLogMessage(this).debug(u"Checked sim. 'XPLANE' via '%1' connection in %2ms") << via << t.elapsed();
         }
 
         void CSimulatorXPlaneListener::checkConnectionViaSessionBus()
