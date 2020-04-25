@@ -406,7 +406,7 @@ namespace BlackMisc
         void CRemoteAircraftProvider::storeAircraftParts(const CCallsign &callsign, const QJsonObject &jsonObject, qint64 currentOffsetMs)
         {
             const CSimulatedAircraft remoteAircraft(this->getAircraftInRangeForCallsign(callsign));
-            const bool isFull = jsonObject.value(CAircraftParts::attributeNameIsFullJson()).toBool();
+            const bool isFull  = jsonObject.value(CAircraftParts::attributeNameIsFullJson()).toBool();
             const bool validCs = remoteAircraft.hasValidCallsign();
             if (!validCs)
             {

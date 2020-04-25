@@ -88,10 +88,10 @@ namespace BlackGui
             connect(ui->pb_ClearLog2,            &QPushButton::released, this, &CInterpolationLogDisplay::clearLogCommand);
             connect(ui->pb_WriteLogToFile,       &QPushButton::released, this, &CInterpolationLogDisplay::writeLogCommand);
             connect(ui->pb_WriteLogToFile2,      &QPushButton::released, this, &CInterpolationLogDisplay::writeLogCommand);
+            connect(ui->le_InjectElevation,      &QLineEdit::returnPressed,   this, &CInterpolationLogDisplay::onInjectElevation);
+            connect(ui->le_ElvHistoryCount,      &QLineEdit::editingFinished, this, &CInterpolationLogDisplay::onElevationHistoryCountFinished);
+            connect(ui->cb_ElvAllowPseudo,       &QCheckBox::toggled,         this, &CInterpolationLogDisplay::onPseudoElevationToggled);
             connect(ui->tvp_InboundAircraftSituations, &CAircraftSituationView::requestElevation, this, &CInterpolationLogDisplay::requestElevation);
-            connect(ui->le_InjectElevation, &QLineEdit::returnPressed,   this, &CInterpolationLogDisplay::onInjectElevation);
-            connect(ui->le_ElvHistoryCount, &QLineEdit::editingFinished, this, &CInterpolationLogDisplay::onElevationHistoryCountFinished);
-            connect(ui->cb_ElvAllowPseudo,  &QCheckBox::toggled, this, &CInterpolationLogDisplay::onPseudoElevationToggled);
             connect(ui->editor_ElevationCoordinate, &CCoordinateForm::changedCoordinate, this, &CInterpolationLogDisplay::requestElevationAtPosition);
             connect(sGui, &CGuiApplication::aboutToShutdown, this, &CInterpolationLogDisplay::onAboutToShutdown, Qt::QueuedConnection);
         }
@@ -248,6 +248,7 @@ namespace BlackGui
             // set new callsign or stop
             m_callsign = cs;
             m_simulator->setLogInterpolation(true, cs);
+            ui->comp_Parts->setCallsign(cs);
             if (!this->start())
             {
                 this->initPartsView();

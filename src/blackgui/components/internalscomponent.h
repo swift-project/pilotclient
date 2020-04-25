@@ -42,12 +42,6 @@ namespace BlackGui
             virtual void showEvent(QShowEvent *event) override;
 
         private:
-            //! Send aircraft parts
-            void sendAircraftParts();
-
-            //! Current parts in UI
-            void setCurrentParts();
-
             //! Enable / disable debugging
             void enableDebug(int state);
 
@@ -62,12 +56,6 @@ namespace BlackGui
 
             //! Show log files
             void showLogFiles();
-
-            //! Request parts (aka aircraft config) from network
-            void requestPartsFromNetwork();
-
-            //! Completer has been changed
-            void onCallsignChanged();
 
             //! Display own parts
             void displayOwnParts();

@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CAircraftPartsComponent</class>
+ <widget class="QFrame" name="CAircraftPartsComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_AircraftPartsComponent">
+   <property name="leftMargin">
+    <number>4</number>
+   </property>
+   <property name="topMargin">
+    <number>4</number>
+   </property>
+   <property name="rightMargin">
+    <number>4</number>
+   </property>
+   <property name="bottomMargin">
+    <number>4</number>
+   </property>
+   <item>
+    <widget class="QFrame" name="fr_Aircraft">
+     <layout class="QFormLayout" name="fl_Aircraft">
+      <property name="horizontalSpacing">
+       <number>4</number>
+      </property>
+      <property name="verticalSpacing">
+       <number>4</number>
+      </property>
+      <property name="leftMargin">
+       <number>2</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>2</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_Aircraft">
+        <property name="text">
+         <string>Aircraft:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="BlackGui::Components::CCallsignCompleter" name="comp_RemoteAircraftCompleter">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2">
+       <widget class="QWidget" name="wi_Parts" native="true">
+        <layout class="QHBoxLayout" name="hl_PartsNetwork">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="pb_OwnParts">
+           <property name="text">
+            <string>own parts</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="hs_Parts">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pb_DisplayLog">
+           <property name="text">
+            <string>display log.</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pb_RequestFromNetwork">
+           <property name="toolTip">
+            <string>Request from network</string>
+           </property>
+           <property name="text">
+            <string> request (network) </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="tb_History">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="../../blackmisc/blackmisc.qrc">
+             <normaloff>:/diagona/icons/diagona/icons/table-sheet.png</normaloff>:/diagona/icons/diagona/icons/table-sheet.png</iconset>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="fr_AircraftParts">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QVBoxLayout" name="vl_AircraftPartsSplitterFrame">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QSplitter" name="sp_AircraftParts">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <widget class="QGroupBox" name="gb_AircraftParts">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Parts</string>
+         </property>
+         <layout class="QVBoxLayout" name="vl_GroupParts">
+          <property name="spacing">
+           <number>4</number>
+          </property>
+          <property name="leftMargin">
+           <number>4</number>
+          </property>
+          <property name="topMargin">
+           <number>4</number>
+          </property>
+          <property name="rightMargin">
+           <number>4</number>
+          </property>
+          <property name="bottomMargin">
+           <number>2</number>
+          </property>
+          <item>
+           <widget class="BlackGui::Editors::CAircraftPartsForm" name="editor_AircraftParts">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="qw_AircraftPartsSendButtons" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <layout class="QHBoxLayout" name="hl_AircraftPartsSendButtons">
+      <property name="spacing">
+       <number>6</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QCheckBox" name="cb_AircraftPartsIncremental">
+        <property name="toolTip">
+         <string>incremental</string>
+        </property>
+        <property name="text">
+         <string>Incr.</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_CurrentParts">
+        <property name="toolTip">
+         <string>set current parts values</string>
+        </property>
+        <property name="text">
+         <string>current</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_SendAircraftPartsJson">
+        <property name="text">
+         <string>Send JSON</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_SendAircraftPartsGui">
+        <property name="text">
+         <string>Send GUI</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::Components::CCallsignCompleter</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/callsigncompleter.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Editors::CAircraftPartsForm</class>
+   <extends>QFrame</extends>
+   <header>blackgui/editors/aircraftpartsform.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../../blackmisc/blackmisc.qrc"/>
+ </resources>
+ <connections/>
+</ui>

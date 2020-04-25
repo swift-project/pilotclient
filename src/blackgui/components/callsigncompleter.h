@@ -83,8 +83,8 @@ namespace BlackGui
 
             QScopedPointer <Ui::CCallsignCompleter> ui;
             BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged { this, &CCallsignCompleter::onChangedAircraftInRange, 5000, 5 };
-            BlackMisc::CDigestSignal m_dsEditingFinished { this, &CCallsignCompleter::editingFinishedDigest, 500, 3 };
-            BlackMisc::CDigestSignal m_dsValidCallsignEntered { this, &CCallsignCompleter::validCallsignEnteredDigest, 500, 3 };
+            BlackMisc::CDigestSignal m_dsEditingFinished         { this, &CCallsignCompleter::editingFinishedDigest, 500, 3 };
+            BlackMisc::CDigestSignal m_dsValidCallsignEntered    { this, &CCallsignCompleter::validCallsignEnteredDigest, 500, 3 };
             QString m_lastValue;
 
             bool m_addOwnCallsign  = false;
