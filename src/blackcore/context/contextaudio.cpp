@@ -590,14 +590,14 @@ namespace BlackCore
         void CContextAudioBase::audioIncreaseVolume(bool enabled)
         {
             if (!enabled) { return; }
-            const int v = qRound(this->getVoiceOutputVolume() * 1.2);
+            const int v = qRound(this->getVoiceOutputVolume() * 1.05);
             this->setVoiceOutputVolume(v);
         }
 
         void CContextAudioBase::audioDecreaseVolume(bool enabled)
         {
             if (!enabled) { return; }
-            const int v = qRound(this->getVoiceOutputVolume() / 1.2);
+            const int v = qRound(this->getVoiceOutputVolume() / 1.05);
             this->setVoiceOutputVolume(v);
         }
 
