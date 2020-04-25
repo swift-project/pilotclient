@@ -18,6 +18,8 @@
 
 #include <QtMath>
 #include <QDebug>
+#include <QStringLiteral>
+#include <QStringBuilder>
 
 using namespace BlackMisc;
 using namespace BlackSound::SampleProvider;
@@ -105,7 +107,7 @@ namespace BlackCore
             {
                 m_callsign = callsign;
                 CallsignDelayCache::instance().initialise(callsign);
-                m_type = aircraftType;
+                m_aircraftType = aircraftType;
                 m_decoder.resetState();
                 m_inUse = true;
                 setEffects();
@@ -125,7 +127,7 @@ namespace BlackCore
             {
                 m_callsign = callsign;
                 CallsignDelayCache::instance().initialise(callsign);
-                m_type = aircraftType;
+                m_aircraftType = aircraftType;
                 m_decoder.resetState();
                 m_inUse = true;
                 setEffects(true);
@@ -169,7 +171,7 @@ namespace BlackCore
                 m_inUse = false;
                 setEffects();
                 m_callsign.clear();
-                m_type.clear();
+                m_aircraftType.clear();
             }
 
             QVector<qint16> CCallsignSampleProvider::decodeOpus(const QByteArray &opusData)
@@ -228,6 +230,13 @@ namespace BlackCore
             {
                 m_bypassEffects = bypassEffects;
                 setEffects();
+            }
+
+            QString CCallsignSampleProvider::toQString() const
+            {
+                return QStringLiteral("In use: ") % boolToYesNo(m_inUse) %
+                       QStringLiteral(" cs: ")    % m_callsign %
+                       QStringLiteral(" type: ")  % m_aircraftType;
             }
 
         } // ns

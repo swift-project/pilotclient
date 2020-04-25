@@ -87,6 +87,10 @@ namespace BlackCore
                 //! Get frequency in Hz
                 uint getFrequencyHz() const;
 
+                //! Log all inputs
+                //! \private DEBUG only
+                void logVoiceInputs(const QString &prefix = {}, qint64 timeCheckOffsetMs = -1);
+
             signals:
                 //! Receving callsigns have changed
                 void receivingCallsignsChanged(const TransceiverReceivingCallsignsChangedArgs &args);
@@ -100,10 +104,11 @@ namespace BlackCore
                 quint16 m_id;
                 BlackMisc::CSettingReadOnly<BlackMisc::Audio::TSettings> m_audioSettings { this };
 
-                BlackSound::SampleProvider::CVolumeSampleProvider *m_volume = nullptr;
-                BlackSound::SampleProvider::CMixingSampleProvider *m_mixer = nullptr;
+                BlackSound::SampleProvider::CVolumeSampleProvider *m_volume    = nullptr;
+                BlackSound::SampleProvider::CMixingSampleProvider *m_mixer     = nullptr;
                 BlackSound::SampleProvider::CSinusGenerator       *m_blockTone = nullptr;
                 QVector<CCallsignSampleProvider *> m_voiceInputs;
+                qint64 m_lastLogMessage = -1;
 
                 QString m_receivingCallsignsString;
                 BlackMisc::Aviation::CCallsignSet m_receivingCallsigns;

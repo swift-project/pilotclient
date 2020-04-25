@@ -51,7 +51,7 @@ namespace BlackCore
                 const QString &callsign() const { return m_callsign; }
 
                 //! Type
-                const QString &type() const { return m_type; }
+                const QString &type() const { return m_aircraftType; }
 
                 //! Is active?
                 //! @{
@@ -73,6 +73,9 @@ namespace BlackCore
                 //! Bypass effects
                 void setBypassEffects(bool bypassEffects);
 
+                //! Info
+                QString toQString() const;
+
             private:
                 void timerElapsed();
                 void idle();
@@ -88,7 +91,7 @@ namespace BlackCore
                 const int m_idleTimeoutMs = 500;
 
                 QString m_callsign;
-                QString m_type;
+                QString m_aircraftType;
                 bool m_inUse = false;
 
                 bool m_bypassEffects  = false;

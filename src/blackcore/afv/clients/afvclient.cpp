@@ -62,7 +62,7 @@ namespace BlackCore
                 m_output(new COutput(this)),
                 m_voiceServerTimer(new QTimer(this))
             {
-                this->setObjectName("AFV client");
+                this->setObjectName("AFV client: " + apiServer  );
                 m_connection->setReceiveAudio(false);
 
                 connect(m_input, &CInput::opusDataAvailable, this, &CAfvClient::opusDataAvailable);
@@ -123,7 +123,7 @@ namespace BlackCore
             void CAfvClient::connectWithContexts()
             {
                 if (m_connectedWithContext) { return; }
-                if (!hasContexts()) { return; }
+                if (!hasContexts())         { return; }
                 this->disconnect(sApp->getIContextOwnAircraft());
                 sApp->getIContextOwnAircraft()->disconnect(this);
                 connect(sApp->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CAfvClient::onUpdateTransceiversFromContext, Qt::QueuedConnection);
@@ -169,14 +169,16 @@ namespace BlackCore
 
                 // thread safe connect
                 {
+                    QPointer<CAfvClient> myself(this);
                     QMutexLocker lock(&m_mutexConnection);
 
                     // async connection
                     m_connection->connectTo(cid, password, callsign, client,
                     {
+                        // this is the callback when the connection has been established
                         this, [ = ](bool authenticated)
                         {
-                            // this is the callback when the connection has been established
+                            if (!myself) { return; }
 
                             // HF stations aliased
                             const QVector<StationDto> aliasedStations = m_connection->getAllAliasedStations();
@@ -388,7 +390,7 @@ namespace BlackCore
                 });
             }
 
-            /*
+            /* disabled because NOT used
             double CAfvClient::getDeviceInputVolume() const
             {
                 if (m_input) { return m_input->getDeviceInputVolume(); }

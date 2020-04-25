@@ -15,6 +15,7 @@
 #include "blacksound/sampleprovider/samples.h"
 
 #include <QDebug>
+#include <QStringBuilder>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;
@@ -115,13 +116,14 @@ namespace BlackCore
                     // CLogMessage(this).debug(u"AFV Click...");
                 }
 
+                //! \todo KB 2020-04 not entirely correct, as it can be the number is the same, but changed callsign
                 if (numberOfInUseInputs != m_lastNumberOfInUseInputs)
                 {
                     QStringList receivingCallsigns;
                     for (const CCallsignSampleProvider *voiceInput : m_voiceInputs)
                     {
                         const QString callsign = voiceInput->callsign();
-                        if (! callsign.isEmpty())
+                        if (!callsign.isEmpty())
                         {
                             receivingCallsigns.push_back(callsign);
                         }
@@ -151,7 +153,7 @@ namespace BlackCore
                     voiceInput = *it;
                 }
 
-                if (! voiceInput)
+                if (!voiceInput)
                 {
                     it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CCallsignSampleProvider * p) { return p->inUse() == false; });
                     if (it != m_voiceInputs.end())
@@ -206,6 +208,29 @@ namespace BlackCore
             uint CReceiverSampleProvider::getFrequencyHz() const
             {
                 return m_frequencyHz;
+            }
+
+            void CReceiverSampleProvider::logVoiceInputs(const QString &prefix, qint64 timeCheckOffsetMs)
+            {
+                if (timeCheckOffsetMs > 100)
+                {
+                    const qint64 now = QDateTime::currentMSecsSinceEpoch();
+                    if (m_lastLogMessage + timeCheckOffsetMs > now) { return; }
+                    m_lastLogMessage = now;
+                }
+
+                QString l;
+                int no = 0;
+                for (const CCallsignSampleProvider *sp : m_voiceInputs)
+                {
+                    if (!sp || !sp->inUse()) { continue; } // only log the ones in use
+                    l += (l.isEmpty() ? QStringLiteral("") : QStringLiteral("\n")) %
+                         prefix %
+                         QString::number(no++) % QStringLiteral(": ") % sp->toQString();
+                }
+
+                if (l.isEmpty()) { return; }
+                CLogMessage(this).debug(l);
             }
 
         } // ns
