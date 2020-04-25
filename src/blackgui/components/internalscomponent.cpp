@@ -17,8 +17,6 @@
 #include "blackcore/context/contextsimulator.h"
 #include "blackmisc/simulation/interpolationlogger.h"
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
-#include "blackmisc/aviation/aircraftenginelist.h"
-#include "blackmisc/aviation/aircraftlights.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/network/client.h"
 #include "blackmisc/network/textmessage.h"
@@ -48,8 +46,6 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Math;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
-using namespace BlackCore;
-using namespace BlackCore::Context;
 
 namespace BlackGui
 {
@@ -61,16 +57,10 @@ namespace BlackGui
         {
             ui->setupUi(this);
             ui->tw_Internals->setCurrentIndex(0);
-            ui->editor_AircraftParts->showSetButton(false);
 
             ui->le_TxtMsgFrom->setValidator(new CUpperCaseValidator(ui->le_TxtMsgFrom));
             ui->le_TxtMsgTo->setValidator(new CUpperCaseValidator(ui->le_TxtMsgFrom));
             ui->le_AtisCallsign->setValidator(new CUpperCaseValidator(ui->le_AtisCallsign));
-
-            connect(ui->pb_SendAircraftPartsGui,    &QPushButton::released, this, &CInternalsComponent::sendAircraftParts);
-            connect(ui->pb_SendAircraftPartsJson,   &QPushButton::released, this, &CInternalsComponent::sendAircraftParts);
-            connect(ui->pb_CurrentParts,            &QPushButton::released, this, &CInternalsComponent::setCurrentParts);
-            connect(ui->pb_OwnParts,                &QPushButton::released, this, &CInternalsComponent::displayOwnParts);
 
             connect(ui->cb_DebugContextAudio,       &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
             connect(ui->cb_DebugContextApplication, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
@@ -86,15 +76,11 @@ namespace BlackGui
 
             connect(ui->pb_LatestInterpolationLog,  &QPushButton::released, this, &CInternalsComponent::showLogFiles);
             connect(ui->pb_LatestPartsLog,          &QPushButton::released, this, &CInternalsComponent::showLogFiles);
-            connect(ui->pb_RequestFromNetwork,      &QPushButton::released, this, &CInternalsComponent::requestPartsFromNetwork);
-            connect(ui->pb_DisplayLog,              &QPushButton::released, this, &CInternalsComponent::displayLogInSimulator);
             connect(ui->pb_SendAtis,                &QPushButton::released, this, &CInternalsComponent::sendAtis);
 
             connect(ui->pb_NetworkUpdateAndReset,   &QPushButton::released, this, &CInternalsComponent::networkStatistics);
             connect(ui->pb_NetworkUpdate,           &QPushButton::released, this, &CInternalsComponent::networkStatistics);
             connect(ui->cb_NetworkStatistics,       &QCheckBox::stateChanged, this, &CInternalsComponent::onNetworkStatisticsToggled);
-
-            connect(ui->comp_RemoteAircraftCompleter, &CCallsignCompleter::validCallsignEnteredDigest, this, &CInternalsComponent::onCallsignChanged);
 
             if (sGui && sGui->isSupportingCrashpad())
             {
@@ -109,7 +95,6 @@ namespace BlackGui
                 ui->cb_CrashDumpUpload->setEnabled(false);
             }
 
-            ui->comp_RemoteAircraftCompleter->addOwnCallsign(true);
             this->contextFlagsToGui();
         }
 
@@ -120,68 +105,6 @@ namespace BlackGui
             // force new data when visible
             this->contextFlagsToGui();
             QWidget::showEvent(event);
-        }
-
-        void CInternalsComponent::sendAircraftParts()
-        {
-            if (!sGui || sGui->isShuttingDown()) { return; }
-
-            Q_ASSERT(sGui->getIContextNetwork());
-            if (!sGui->getIContextNetwork()->isConnected())
-            {
-                CLogMessage(this).validationError(u"Cannot send aircraft parts, network not connected");
-                return;
-            }
-            const CCallsign callsign(ui->comp_RemoteAircraftCompleter->getCallsign(true));
-            if (callsign.isEmpty())
-            {
-                CLogMessage(this).validationError(u"No valid callsign selected");
-                return;
-            }
-
-            CClient client = sGui->getIContextNetwork()->getClientsForCallsigns(callsign).frontOrDefault();
-            if (client.getCallsign().isEmpty() || client.getCallsign() != callsign)
-            {
-                CLogMessage(this).validationError(u"No valid client for '%1'") << callsign.asString();
-                return;
-            }
-
-            if (!client.hasAircraftPartsCapability())
-            {
-                static const QString question("'%1' does not support parts, enable parts for it?");
-                const QMessageBox::StandardButton reply = QMessageBox::question(this, "No parts supported", question.arg(callsign.asString()), QMessageBox::Yes | QMessageBox::No);
-                if (reply != QMessageBox::Yes) { return; }
-                client.addCapability(CClient::FsdWithAircraftConfig);
-                const bool enabled = sGui->getIContextNetwork()->setOtherClient(client);
-                Q_UNUSED(enabled)
-            }
-
-            const bool json = (QObject::sender() == ui->pb_SendAircraftPartsJson);
-            const CAircraftParts parts = json ? ui->editor_AircraftParts->getAircraftPartsFromJson() : ui->editor_AircraftParts->getAircraftPartsFromGui();
-            ui->editor_AircraftParts->setAircraftParts(parts); // display in UI as GUI and JSON
-
-            ui->tb_History->setToolTip("");
-            const bool incremental = ui->cb_AircraftPartsIncremental->isChecked();
-            sGui->getIContextNetwork()->testAddAircraftParts(callsign, parts, incremental);
-            CLogMessage(this).info(u"Added parts for %1") << callsign.toQString();
-        }
-
-        void CInternalsComponent::setCurrentParts()
-        {
-            if (!sGui->getIContextNetwork()->isConnected()) { return; }
-            const CCallsign callsign(ui->comp_RemoteAircraftCompleter->getCallsign());
-            if (callsign.isEmpty()) { return; }
-
-            const CAircraftPartsList partsList = sGui->getIContextNetwork()->getRemoteAircraftParts(callsign);
-            if (partsList.isEmpty())
-            {
-                CStatusMessage(this).info(u"No parts for '%1'") << callsign.asString();
-                return;
-            }
-            const CAircraftParts parts = partsList.latestObject();
-            const CStatusMessageList history = sGui->getIContextNetwork()->getAircraftPartsHistory(callsign);
-            ui->editor_AircraftParts->setAircraftParts(parts);
-            ui->tb_History->setToolTip(history.toHtml());
         }
 
         void CInternalsComponent::enableDebug(int state)
@@ -285,64 +208,6 @@ namespace BlackGui
 
             if (file.isEmpty()) { return; }
             QDesktopServices::openUrl(QUrl::fromLocalFile(file));
-        }
-
-        void CInternalsComponent::requestPartsFromNetwork()
-        {
-            if (!sGui || sGui->isShuttingDown())  { return; }
-            if (!sGui->getIContextNetwork())      { return; }
-
-            const CCallsign callsign(ui->comp_RemoteAircraftCompleter->getCallsign(true));
-            if (callsign.isEmpty())
-            {
-                CLogMessage(this).validationError(u"No valid callsign selected");
-                return;
-            }
-            ui->pb_RequestFromNetwork->setEnabled(false);
-            sGui->getIContextNetwork()->testRequestAircraftConfig(callsign);
-            CLogMessage(this).info(u"Request aircraft config for '%1'") << callsign.asString();
-
-            // simple approach to update UI when parts are received
-            const QPointer<CInternalsComponent> myself(this);
-            QTimer::singleShot(3000, this, [ = ]
-            {
-                if (!myself) { return; }
-                ui->pb_CurrentParts->click();
-                ui->pb_RequestFromNetwork->setEnabled(true);
-            });
-        }
-
-        void CInternalsComponent::onCallsignChanged()
-        {
-            this->setCurrentParts();
-        }
-
-        void CInternalsComponent::displayOwnParts()
-        {
-            if (!sGui || sGui->isShuttingDown())  { return; }
-            if (!sGui->getIContextOwnAircraft())  { return; }
-
-            const CSimulatedAircraft myAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
-            const CCallsign cs = myAircraft.getCallsign();
-            const CAircraftParts parts = myAircraft.getParts();
-            ui->comp_RemoteAircraftCompleter->setCallsign(cs);
-            ui->editor_AircraftParts->setAircraftParts(parts);
-        }
-
-        void CInternalsComponent::displayLogInSimulator()
-        {
-            if (!sGui || sGui->isShuttingDown())  { return; }
-            if (!sGui->getIContextSimulator())    { return; }
-            const CCallsign callsign(ui->comp_RemoteAircraftCompleter->getCallsign(true));
-            if (callsign.isEmpty())
-            {
-                CLogMessage(this).validationError(u"No valid callsign selected");
-                return;
-            }
-
-            const CIdentifier i(this->objectName());
-            const QString dotCmd(".drv pos " + callsign.asString());
-            sGui->getIContextSimulator()->parseCommandLine(dotCmd, i);
         }
 
         void CInternalsComponent::contextFlagsToGui()
