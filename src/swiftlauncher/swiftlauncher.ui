@@ -103,7 +103,7 @@
               </rect>
              </property>
              <attribute name="label">
-              <string>Latest &amp;news and &amp;about</string>
+              <string>Latest &amp;news and about</string>
              </attribute>
              <layout class="QVBoxLayout" name="vl_LatestNewsAndAbout">
               <item>
