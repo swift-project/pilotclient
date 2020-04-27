@@ -233,9 +233,9 @@ namespace BlackMisc
         {
             const QString s(str.trimmed().toLower());
             if (s.contains("installer")) return CArtifact::PilotClientInstaller;
-            if (s.contains("client")) return CArtifact::PilotClientInstaller;
-            if (s.contains("symb")) return CArtifact::Symbols;
-            if (s.contains("bus")) return CArtifact::XSwiftBus;
+            if (s.contains("client"))    return CArtifact::PilotClientInstaller;
+            if (s.contains("symb"))      return CArtifact::Symbols;
+            if (s.contains("bus"))       return CArtifact::XSwiftBus;
             return CArtifact::UnknownArtifact;
         }
 
