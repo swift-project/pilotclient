@@ -293,6 +293,9 @@ namespace BlackCore
                 //! Connection status has been changed
                 void connectionStatusChanged(ConnectionStatus status);
 
+                //! Authentication has failed with AFV server
+                void afvConnectionFailure(const BlackMisc::CStatusMessage &msg);
+
                 //! Client updated from own aicraft data
                 void updatedFromOwnAircraftCockpit();
 
@@ -331,6 +334,12 @@ namespace BlackCore
                 void updateTransceivers(bool updateFrequencies = true);
                 void onUpdateTransceiversFromContext(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
                 void onReceivingCallsignsChanged(const BlackCore::Afv::Audio::TransceiverReceivingCallsignsChangedArgs &args);
+
+                //! Re-try connection to server
+                void retryConnectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client, const QString &reason);
+
+                //! Connect again in given ms
+                void reconnectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client, int delayMs, const BlackMisc::CStatusMessage &msg);
 
                 //! All aliased stations
                 //! \threadsafe
@@ -375,7 +384,8 @@ namespace BlackCore
                 QSet<quint16>             m_enabledTransceivers;
                 static const QVector<quint16> &allTransceiverIds() { static const QVector<quint16> transceiverIds{0, 1}; return transceiverIds; }
 
-                std::atomic_int  m_connectMismatches { 0 };
+                std::atomic_int  m_fsdConnectMismatches { 0 }; //!< FSD no longer connected?
+                std::atomic_int  m_retryConnectAttempt  { 0 }; //!< Try to connect the n-th time
                 std::atomic_bool m_isStarted     { false };
                 std::atomic_bool m_loopbackOn    { false };
                 std::atomic_bool m_enableAliased { true  };

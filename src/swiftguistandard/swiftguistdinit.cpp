@@ -30,6 +30,7 @@
 #include "blackcore/webdataservices.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulator.h"
+#include "blackcore/context/contextaudio.h"
 #include "blacksound/audioutilities.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/loghandler.h"
@@ -65,14 +66,14 @@ void SwiftGuiStd::init()
     // POST(!) GUI init
     Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
     Q_ASSERT_X(sGui->getWebDataServices(), Q_FUNC_INFO, "Missing web services");
-    Q_ASSERT_X(sGui->supportsContexts(), Q_FUNC_INFO, "Missing contexts");
+    Q_ASSERT_X(sGui->supportsContexts(),   Q_FUNC_INFO, "Missing contexts");
 
     if (m_init) { return; }
 
     ui->dw_InfoBarStatus->initialFloating();
 
     this->setVisible(false); // hide all, so no flashing windows during init
-    m_mwaStatusBar = &m_statusBar;
+    m_mwaStatusBar    = &m_statusBar;
     m_mwaOverlayFrame = ui->fr_CentralFrameInside;
     m_mwaLogComponent = ui->comp_MainInfoArea->getLogComponent();
     sGui->initMainApplicationWidget(this);
@@ -140,6 +141,12 @@ void SwiftGuiStd::init()
     Q_ASSERT(s);
     s = connect(&m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::handleTimerBasedUpdates);
     Q_ASSERT(s);
+
+    if (sGui->getIContextAudio())
+    {
+        s = connect(sGui->getIContextAudio(), &IContextAudio::voiceClientFailure, this, &SwiftGuiStd::onAudioClientFailure, Qt::QueuedConnection);
+        Q_ASSERT(s);
+    }
     Q_UNUSED(s)
 
     // check if DB data have been loaded

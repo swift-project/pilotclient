@@ -161,11 +161,11 @@ namespace BlackGui
             afv->setRxTx(true, true, true, false);
 
             QPointer<CAudioDeviceVolumeSetupComponent> myself(this);
-            c = connect(afv, &CAfvClient::connectionStatusChanged, this, [ = ]
+            c = connect(afv, &CAfvClient::connectionStatusChanged, this, [ = ](CAfvClient::ConnectionStatus status)
             {
                 if (!myself || !sGui || sGui->isShuttingDown()) { return; }
                 myself->setTransmitReceiveInUiFromVoiceClient();
-
+                Q_UNUSED(status)
             }, ct);
             Q_ASSERT(c);
             m_afvConnections.append(c);

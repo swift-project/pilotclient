@@ -62,7 +62,7 @@ namespace BlackCore
                 m_output(new COutput(this)),
                 m_voiceServerTimer(new QTimer(this))
             {
-                this->setObjectName("AFV client: " + apiServer  );
+                this->setObjectName("AFV client: " + apiServer);
                 m_connection->setReceiveAudio(false);
 
                 connect(m_input, &CInput::opusDataAvailable, this, &CAfvClient::opusDataAvailable);
@@ -144,7 +144,7 @@ namespace BlackCore
                 }
 
                 const bool integrated = sApp->getIContextSimulator()->getSimulatorSettings().isComIntegrated();
-                const bool changed = integrated != m_integratedComUnit;
+                const bool changed    = integrated != m_integratedComUnit;
 
                 m_integratedComUnit = integrated;
                 if (changed)
@@ -167,9 +167,21 @@ namespace BlackCore
                 this->connectWithContexts();
                 this->setCallsign(callsign);
 
+                QPointer<CAfvClient> myself(this);
+                if (!this->isConnected() && m_retryConnectAttempt == 0)
+                {
+                    // check if connect simply did NOT receive an answer
+                    QTimer::singleShot(20 * 1000, this, [ = ]
+                    {
+                        if (!myself) { return; }
+                        if (m_retryConnectAttempt > 0) { return; } // already handled
+
+                        // this will reconnect ONLY if not already connected
+                        this->retryConnectTo(cid, password, callsign, client, QStringLiteral("No connection afer 20secs"));
+                    });
+                }
                 // thread safe connect
                 {
-                    QPointer<CAfvClient> myself(this);
                     QMutexLocker lock(&m_mutexConnection);
 
                     // async connection
@@ -194,10 +206,12 @@ namespace BlackCore
                                     QMutexLocker lock(&m_mutex);
                                     if (m_voiceServerTimer) { m_voiceServerTimer->start(PositionUpdatesMs); }
                                 }
+                                m_retryConnectAttempt = 0;
                                 emit this->connectionStatusChanged(Connected);
                             }
                             else
                             {
+                                myself->retryConnectTo(cid, password, callsign, client, QStringLiteral("AFV authentication failed for '%1' callsign '%2'").arg(cid, callsign));
                                 emit this->connectionStatusChanged(Disconnected);
                             }
                         }
@@ -1024,12 +1038,12 @@ namespace BlackCore
 
             void CAfvClient::autoLogoffWithoutFsdNetwork()
             {
-                if (!hasContexts())        { return; }
-                if (!this->isConnected()) { m_connectMismatches = 0; return; }
+                if (!hasContexts())       { return; }
+                if (!this->isConnected()) { m_fsdConnectMismatches = 0; return; }
 
                 // AFV is connected
-                if (sApp->getIContextNetwork()->isConnected()) { m_connectMismatches = 0; return; }
-                if (++m_connectMismatches < 2) { return; } // avoid a single issue causing logoff
+                if (sApp->getIContextNetwork()->isConnected()) { m_fsdConnectMismatches = 0; return; }
+                if (++m_fsdConnectMismatches < 2) { return; } // avoid a single issue causing logoff
 
                 CLogMessage(this).warning(u"Auto logoff AFV client because FSD no longer connected");
                 this->disconnectFrom();
@@ -1159,6 +1173,32 @@ namespace BlackCore
 
                 emit this->receivedCallsignsChanged(callsignsCom1, callsignsCom2);
                 emit this->receivingCallsignsChanged(args);
+            }
+
+            void CAfvClient::retryConnectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client, const QString &reason)
+            {
+                if (this->isConnected()) { return; }
+                m_retryConnectAttempt++;
+
+                const int retrySecs = qMin(3 * 60, m_retryConnectAttempt * 30);
+                const CStatusMessage msg = CStatusMessage(this).validationError(reason + ". Retry in %1secs. Attempt %2.") << retrySecs << m_retryConnectAttempt;
+                this->reconnectTo(cid, password, callsign, client, retrySecs * 1000, msg);
+            }
+
+            void CAfvClient::reconnectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client, int delayMs, const CStatusMessage &msg)
+            {
+                if (msg.isFailure())
+                {
+                    emit this->afvConnectionFailure(msg);
+                }
+
+                QPointer<CAfvClient> myself(this);
+                QTimer::singleShot(delayMs, this, [ = ]
+                {
+                    if (!myself) { return; }
+                    if (myself->isConnected()) { return; }
+                    this->connectTo(cid, password, callsign, client);
+                });
             }
 
             QVector<StationDto> CAfvClient::getAliasedStations() const

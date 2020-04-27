@@ -107,9 +107,9 @@ namespace BlackCore
                             const qint64 validFromSecs = doc.object().value("nbf").toInt(-1);
                             if (validFromSecs < 0) { break; }
                             const qint64 localSecsSinceEpoch = QDateTime::currentSecsSinceEpoch();
-                            serverToUserOffsetSecs = validFromSecs - localSecsSinceEpoch;
+                            serverToUserOffsetSecs        = validFromSecs - localSecsSinceEpoch;
                             const qint64 serverExpirySecs = doc.object().value("exp").toInt();
-                            const qint64 expiryLocalUtc = serverExpirySecs - serverToUserOffsetSecs;
+                            const qint64 expiryLocalUtc   = serverExpirySecs - serverToUserOffsetSecs;
                             lifeTimeSecs = expiryLocalUtc - localSecsSinceEpoch;
                         }
                         while (false);
@@ -117,7 +117,7 @@ namespace BlackCore
                         if (lifeTimeSecs > 0)
                         {
                             m_serverToUserOffsetMs = serverToUserOffsetSecs * 1000;
-                            m_expiryLocalUtc = QDateTime::currentDateTimeUtc().addSecs(lifeTimeSecs);
+                            m_expiryLocalUtc  = QDateTime::currentDateTimeUtc().addSecs(lifeTimeSecs);
                             m_isAuthenticated = true;
                         }
 
@@ -254,7 +254,7 @@ namespace BlackCore
                 // posted in QAM thread, reply is nullptr if called from another thread
                 sApp->postToNetwork(request, CApplication::NoLogRequestId, json.toJson(),
                 {
-                    this, [ = ](QNetworkReply *nwReply)
+                    this, [ = ](QNetworkReply * nwReply)
                     {
                         // called in "this" thread
                         const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
@@ -297,7 +297,7 @@ namespace BlackCore
 
             void CApiServerConnection::checkExpiry()
             {
-                if (QDateTime::currentDateTimeUtc() > m_expiryLocalUtc.addSecs(-5 * 60))
+                if (!m_expiryLocalUtc.isValid() || QDateTime::currentDateTimeUtc() > m_expiryLocalUtc.addSecs(-5 * 60))
                 {
                     QPointer<CApiServerConnection> myself(this);
                     this->connectTo(m_username, m_password, m_client, m_networkVersion,

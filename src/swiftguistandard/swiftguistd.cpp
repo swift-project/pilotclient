@@ -444,6 +444,14 @@ void SwiftGuiStd::onRequestedConsoleMessage(const QString &logMsg, bool clear)
     log->appendPlainTextToConsole(logMsg);
 }
 
+void SwiftGuiStd::onAudioClientFailure(const CStatusMessage &msg)
+{
+    if (msg.isEmpty()) { return; }
+    if (!sGui || sGui->isShuttingDown()) { return; }
+
+    ui->fr_CentralFrameInside->showOverlayHTMLMessage(msg);
+}
+
 void SwiftGuiStd::focusInMainEntryField()
 {
     ui->comp_MainKeypadArea->focusInEntryField();

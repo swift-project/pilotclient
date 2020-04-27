@@ -31,10 +31,10 @@ namespace BlackCore
                 CLogMessage(this).debug(u"ClientConnection instantiated");
 
                 // connect(&m_apiServerConnection, &ApiServerConnection::authenticationFinished, this, &ClientConnection::apiConnectionFinished);
-                // connect(&m_apiServerConnection, &ApiServerConnection::addCallsignFinished, this, &ClientConnection::addCallsignFinished);
+                // connect(&m_apiServerConnection, &ApiServerConnection::addCallsignFinished,    this, &ClientConnection::addCallsignFinished);
                 // connect(&m_apiServerConnection, &ApiServerConnection::removeCallsignFinished, this, &ClientConnection::removeCallsignFinished);
 
-                connect(m_voiceServerTimer, &QTimer::timeout, this, &CClientConnection::voiceServerHeartbeat);
+                connect(m_voiceServerTimer, &QTimer::timeout, this, &CClientConnection::voiceServerHeartbeat); // sends heartbeat to server
                 connect(m_udpSocket, &QUdpSocket::readyRead,  this, &CClientConnection::readPendingDatagrams);
                 connect(m_udpSocket, qOverload<QAbstractSocket::SocketError>(&QUdpSocket::error), this, &CClientConnection::handleSocketError);
             }
@@ -57,7 +57,7 @@ namespace BlackCore
                     this, [ = ](bool authenticated)
                     {
                         // callback when connection has been established
-                        if (!myself)  { return; }
+                        if (!myself) { return; }
 
                         if (authenticated)
                         {
@@ -69,6 +69,10 @@ namespace BlackCore
                             // taskServerConnectionCheck.Start();
 
                             CLogMessage(this).info(u"Connected: '%1' to voice server, socket open: %2") << callsign << boolToYesNo(m_udpSocket->isOpen());
+                        }
+                        else
+                        {
+                            m_connection.reset();
                         }
 
                         // Make sure crypto channels etc. are created
@@ -92,15 +96,15 @@ namespace BlackCore
                 // TODO emit disconnected(reason)
                 CLogMessage(this).debug(u"Disconnected client: %1") << reason;
 
-                if (! m_connection.getCallsign().isEmpty())
+                if (!m_connection.getCallsign().isEmpty())
                 {
                     m_apiServerConnection->removeCallsign(m_connection.getCallsign());
                 }
 
-                // TODO connectionCheckCancelTokenSource.Cancel(); //Stops connection check loop
+                // TODO connectionCheckCancelTokenSource.Cancel(); // Stops connection check loop
                 disconnectFromVoiceServer();
                 m_apiServerConnection->forceDisconnect();
-                m_connection.setTokens({});
+                m_connection.reset();
 
                 CLogMessage(this).debug(u"Disconnection complete");
             }
