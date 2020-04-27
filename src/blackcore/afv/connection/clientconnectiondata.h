@@ -78,11 +78,14 @@ namespace BlackCore
                 void setTsHeartbeatToNow();
                 //! @}
 
+                //! Reset all login related data
+                void reset();
+
                 /* TODO
-                public long VoiceServerBytesSent { get; set; }
+                public long VoiceServerBytesSent     { get; set; }
                 public long VoiceServerBytesReceived { get; set; }
-                public long DataServerBytesSent { get; set; }
-                public long DataServerBytesReceived { get; set; }
+                public long DataServerBytesSent      { get; set; }
+                public long DataServerBytesReceived  { get; set; }
                 */
 
                 QScopedPointer<Crypto::CCryptoDtoChannel> m_voiceCryptoChannel; //!< used crypto channel
@@ -101,6 +104,7 @@ namespace BlackCore
 
                 QDateTime m_authenticatedDateTimeUtc;
                 QDateTime m_lastVoiceServerHeartbeatAckUtc;
+                QDateTime m_lastDataServerHeartbeatAckUtc;
 
                 bool m_receiveAudio = true;  //!< audio?
                 bool m_connected    = false; //!< connected?

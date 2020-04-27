@@ -83,8 +83,12 @@ namespace BlackCore
 
         void CContextAudioProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
         {
-            /**
             bool s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
+                                        "voiceClientFailure", this, SIGNAL(voiceClientFailure(BlackMisc::CStatusMessage)));
+            Q_ASSERT(s);
+
+            /**
+            s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
                                         "changedAudioVolume", this, SIGNAL(changedAudioVolume(int)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),

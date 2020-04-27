@@ -281,6 +281,9 @@ private:
     //! UI Console message has been recevied
     void onRequestedConsoleMessage(const QString &logMsg, bool clear);
 
+    //! Reported issue with the client
+    void onAudioClientFailure(const BlackMisc::CStatusMessage &msg);
+
     //! Focus in main entry window
     void focusInMainEntryField();
 

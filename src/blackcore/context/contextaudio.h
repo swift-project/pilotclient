@@ -83,8 +83,10 @@ namespace BlackCore
             //! Factory method
             static IContextAudio *create(CCoreFacade *runtime, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &connection);
 
+            // ------------- only use DBus signals here -------------
         signals:
-            // only use DBus signals here
+            //! Authentication failed, ....
+            void voiceClientFailure(const BlackMisc::CStatusMessage &msg);
 
         public slots:
             // ------------- DBus ---------------
@@ -285,7 +287,9 @@ namespace BlackCore
             //! PTT in voice client received
             void ptt(bool active, BlackMisc::Audio::PTTCOM pttcom, const BlackMisc::CIdentifier &identifier);
 
-            /** Workaround those must be invisible for DBus
+            /*
+             * Workaround those must be invisible for DBus
+             *
 
             //! VU levels @{
             void inputVolumePeakVU (double value);
@@ -298,7 +302,7 @@ namespace BlackCore
             //! Client updated from own aicraft data
             void updatedFromOwnAircraftCockpit();
 
-            ** Workaround **/
+            * end workaround */
 
             // ------------ local signals -------
 
@@ -337,6 +341,9 @@ namespace BlackCore
 
             //! AFV client connection status changed
             void onAfvConnectionStatusChanged(int status);
+
+            //! AFV client authentication failed
+            void onAfvConnectionFailure(const BlackMisc::CStatusMessage &msg);
 
             CActionBind m_actionPtt     { BlackMisc::Input::pttHotkeyAction(),     BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudioBase::setVoiceTransmissionComActive };
             CActionBind m_actionPttCom1 { BlackMisc::Input::pttCom1HotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudioBase::setVoiceTransmissionCom1 };

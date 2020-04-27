@@ -32,7 +32,14 @@ namespace BlackCore
 
             bool CClientConnectionData::isVoiceServerAlive() const
             {
-                return m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) > ServerTimeoutSecs;
+                return m_lastVoiceServerHeartbeatAckUtc.isValid() &&
+                       m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) > ServerTimeoutSecs;
+            }
+
+            bool CClientConnectionData::isDataServerAlive() const
+            {
+                return m_lastDataServerHeartbeatAckUtc.isValid() &&
+                       m_lastDataServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) > ServerTimeoutSecs;
             }
 
             void CClientConnectionData::createCryptoChannels()
@@ -52,13 +59,24 @@ namespace BlackCore
 
             void CClientConnectionData::setTsHeartbeatToNow()
             {
-                m_lastVoiceServerHeartbeatAckUtc = QDateTime::currentDateTimeUtc();
+                const QDateTime now = QDateTime::currentDateTimeUtc();
+                m_lastVoiceServerHeartbeatAckUtc = now;
+                m_lastDataServerHeartbeatAckUtc  = now;
+            }
+
+            void CClientConnectionData::reset()
+            {
+                m_userName.clear();
+                m_callsign.clear();
+                m_authenticatedDateTimeUtc = QDateTime();
+                m_lastVoiceServerHeartbeatAckUtc = QDateTime();
+                this->setTokens({});
             }
 
             bool CClientConnectionData::voiceServerAlive() const
             {
-                return timeSinceAuthenticationSecs() < ServerTimeoutSecs ||
-                       m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) < ServerTimeoutSecs;
+                return (m_authenticatedDateTimeUtc.isValid() && timeSinceAuthenticationSecs() < ServerTimeoutSecs) ||
+                       (m_lastVoiceServerHeartbeatAckUtc.isValid() && m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) < ServerTimeoutSecs);
             }
         } // ns
     } // ns

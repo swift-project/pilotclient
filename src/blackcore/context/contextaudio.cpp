@@ -208,6 +208,7 @@ namespace BlackCore
             connect(m_voiceClient, &CAfvClient::stoppedAudio, this, &CContextAudioBase::stoppedAudio, Qt::QueuedConnection);
             connect(m_voiceClient, &CAfvClient::ptt,          this, &CContextAudioBase::ptt,          Qt::QueuedConnection);
             connect(m_voiceClient, &CAfvClient::connectionStatusChanged, this, &CContextAudioBase::onAfvConnectionStatusChanged, Qt::QueuedConnection);
+            connect(m_voiceClient, &CAfvClient::afvConnectionFailure,    this, &CContextAudioBase::onAfvConnectionFailure,       Qt::QueuedConnection);
         }
 
         void CContextAudioBase::terminateVoiceClient()
@@ -638,6 +639,12 @@ namespace BlackCore
                 this->unRegisterAudioCallsign(cs, this->identifier());
                 break;
             }
+        }
+
+        void CContextAudioBase::onAfvConnectionFailure(const CStatusMessage &msg)
+        {
+            if (!m_voiceClient) { return; }
+            emit this->voiceClientFailure(msg);
         }
 
         bool CContextAudioBase::isRunningWithLocalCore()
