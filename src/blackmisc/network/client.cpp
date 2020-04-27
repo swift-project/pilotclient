@@ -13,6 +13,7 @@
 
 #include <QPixmap>
 #include <QString>
+#include <QStringBuilder>
 #include <QStringList>
 #include <tuple>
 
@@ -22,11 +23,10 @@ namespace BlackMisc
     {
         QString CClient::convertToQString(bool i18n) const
         {
-            QString s = m_user.toQString(i18n);
-            s.append(" capabilites: ").append(this->getCapabilitiesAsString());
-            s.append(" model: ").append(m_modelString);
-            if (!m_server.isEmpty()) { s.append(" server:").append(m_server); }
-            return s;
+            return m_user.toQString(i18n) %
+                   QStringLiteral(" capabilites: ") % this->getCapabilitiesAsString() %
+                   QStringLiteral(" model: ") % m_modelString %
+                   (m_server.isEmpty() ? QString() : QStringLiteral("server: ") % m_server);
         }
 
         CClient::CClient(const Aviation::CCallsign &callsign, const QString &modelString) :
@@ -60,12 +60,12 @@ namespace BlackMisc
         {
             QStringList sl;
             const Capabilities cap = this->getCapabilities();
-            if (cap.testFlag(FsdAtisCanBeReceived)) sl << "ATIS";
+            if (cap.testFlag(FsdAtisCanBeReceived))    sl << "ATIS";
             if (cap.testFlag(FsdWithInterimPositions)) sl << "interim pos.";
-            if (cap.testFlag(FsdWithIcaoCodes)) sl << "ICAO";
-            if (cap.testFlag(FsdWithAircraftConfig)) sl << "aircraft config";
-            if (cap.testFlag(FsdWithGroundFlag)) sl << "gnd.flag";
-            if (cap.testFlag(FsdModelString)) sl << "modelstring";
+            if (cap.testFlag(FsdWithIcaoCodes))        sl << "ICAO";
+            if (cap.testFlag(FsdWithAircraftConfig))   sl << "aircraft config";
+            if (cap.testFlag(FsdWithGroundFlag))       sl << "gnd.flag";
+            if (cap.testFlag(FsdModelString))          sl << "modelstring";
             if (sl.isEmpty()) { return {}; }
             return sl.join(", ");
         }
