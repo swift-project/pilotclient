@@ -174,8 +174,9 @@ namespace BlackCore
     void ISimulator::reloadWeatherSettings()
     {
         // log crash info about weather
-        if (this->isShuttingDown()) { CCrashHandler::instance()->crashAndLogAppendInfo(u"Simulator weather: " % boolToYesNo(m_isWeatherActivated)); }
+        if (!this->isShuttingDown()) { CCrashHandler::instance()->crashAndLogAppendInfo(u"Simulator weather: " % boolToYesNo(m_isWeatherActivated)); }
         if (!m_isWeatherActivated) { return; }
+
         m_lastWeatherPosition.setNull();
         const CWeatherScenario selectedWeatherScenario = m_weatherScenarioSettings.get();
         if (CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
@@ -196,7 +197,7 @@ namespace BlackCore
         }
 
         // log crash info about weather
-        if (this->isShuttingDown()) { CCrashHandler::instance()->crashAndLogAppendInfo(selectedWeatherScenario.toQString(true)); }
+        if (!this->isShuttingDown()) { CCrashHandler::instance()->crashAndLogAppendInfo(selectedWeatherScenario.toQString(true)); }
     }
 
     void ISimulator::clearAllRemoteAircraftData()
@@ -1010,7 +1011,7 @@ namespace BlackCore
         const bool r = setup.isRenderingRestricted();
         const bool e = setup.isRenderingEnabled();
 
-        if (sApp && !sApp->isShuttingDown()) { CCrashHandler::instance()->crashAndLogAppendInfo(u"Rendering setup: " % setup.toQString(true)); }
+        if (!this->isShuttingDown()) { CCrashHandler::instance()->crashAndLogAppendInfo(u"Rendering setup: " % setup.toQString(true)); }
         emit this->renderRestrictionsChanged(r, e, setup.getMaxRenderedAircraft(), setup.getMaxRenderedDistance());
         return true;
     }
@@ -1115,17 +1116,18 @@ namespace BlackCore
 
     bool ISimulator::disconnectFrom()
     {
-        m_averageFps = -1.0;
-        m_simTimeRatio = 1.0;
-        m_trackMilesShort = 0.0;
-        m_minutesLate = 0.0;
+        m_averageFps      = -1.0;
+        m_simTimeRatio    =  1.0;
+        m_trackMilesShort =  0.0;
+        m_minutesLate     =  0.0;
         return true;
     }
 
     bool ISimulator::logicallyReAddRemoteAircraft(const CCallsign &callsign)
     {
         if (this->isShuttingDown()) { return false; }
-        if (callsign.isEmpty()) { return false; }
+        if (callsign.isEmpty())     { return false; }
+
         this->stopHighlighting();
         this->logicallyRemoveRemoteAircraft(callsign);
         if (!this->isAircraftInRange(callsign)) { return false; }
@@ -1214,7 +1216,7 @@ namespace BlackCore
     void ISimulator::finishUpdateRemoteAircraftAndSetStatistics(qint64 startTime, bool limited)
     {
         const qint64 now = QDateTime::currentMSecsSinceEpoch();
-        const qint64 dt = now - startTime;
+        const qint64 dt  = now - startTime;
         m_statsCurrentUpdateTimeMs = dt;
         m_statsUpdateAircraftTimeTotalMs += dt;
         m_statsUpdateAircraftRuns++;
