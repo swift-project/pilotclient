@@ -883,10 +883,15 @@ namespace BlackCore
         void CContextSimulator::onWeatherGridReceived(const CWeatherGrid &weatherGrid, const CIdentifier &identifier)
         {
             if (!this->isSimulatorPluginAvailable()) { return; }
-            if (!m_simulatorPlugin.second) { return; }
-            if (m_simulatorPlugin.second->identifier() == identifier)
+            if (!m_simulatorPlugin.second)           { return; }
+
+            if (m_simulatorPlugin.second && m_simulatorPlugin.second->identifier() == identifier)
             {
-                m_simulatorPlugin.second->injectWeatherGrid(weatherGrid);
+                // ONLY send if WEATHER is ON
+                if (m_simulatorPlugin.second->isWeatherActivated())
+                {
+                    m_simulatorPlugin.second->injectWeatherGrid(weatherGrid);
+                }
             }
         }
 

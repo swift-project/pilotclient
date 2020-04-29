@@ -898,7 +898,8 @@ namespace BlackSimPlugin
         void CSimulatorXPlane::injectWeatherGrid(const CWeatherGrid &weatherGrid)
         {
             if (this->isShuttingDownOrDisconnected()) { return; }
-            if (weatherGrid.isEmpty()) { return; }
+            if (weatherGrid.isEmpty())                { return; }
+            if (!this->isWeatherActivated())          { return; }
 
             if (!CThreadUtils::isCurrentThreadObjectThread(this))
             {
