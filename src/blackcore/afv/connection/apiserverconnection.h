@@ -80,6 +80,16 @@ namespace BlackCore
                 //! Set the URL
                 bool setUrl(const QString &url);
 
+                //! Get the URL
+                const QString &getUrl() const { return m_addressUrl; }
+
+                //! User data @{
+                const QString &getUserName() const { return m_username; }
+                const QString &getPassword() const { return m_password; }
+                const QString &getClient()   const { return m_client; }
+                const QUuid   &getNetworkVersion() const { return m_networkVersion; }
+                //! @}
+
             private:
                 //! Post to resource
                 template<typename TResponse>

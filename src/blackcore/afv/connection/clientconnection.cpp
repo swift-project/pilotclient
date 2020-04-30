@@ -65,6 +65,7 @@ namespace BlackCore
                             m_connection.setTokens(m_apiServerConnection->addCallsign(callsign));
                             m_connection.setTsAuthenticatedToNow();
                             m_connection.createCryptoChannels();
+                            m_connection.setTsHeartbeatToNow();
                             this->connectToVoiceServer();
                             // taskServerConnectionCheck.Start();
 
@@ -123,6 +124,13 @@ namespace BlackCore
             {
                 if (!m_apiServerConnection) { return false; }
                 return m_apiServerConnection->setUrl(url);
+            }
+
+            const QString &CClientConnection::getVoiceServerUrl() const
+            {
+                static const QString e;
+                if (!m_apiServerConnection) { return e; }
+                return m_apiServerConnection->getUrl();
             }
 
             void CClientConnection::connectToVoiceServer()

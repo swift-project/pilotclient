@@ -133,7 +133,7 @@ namespace BlackCore
                 //! \threadsafe
                 bool isComUnitIntegrated() const { return m_integratedComUnit; }
 
-                /*
+                /* NOT used
                 //! The device's volume 0..1 @{
                 double getDeviceInputVolume() const;
                 bool   setDeviceInputVolume(double volume);
@@ -180,7 +180,7 @@ namespace BlackCore
                 //! Get transceivers
                 //! \threadsafe
                 //! @{
-                QVector<TransceiverDto> getTransceivers() const;
+                QVector<TransceiverDto>   getTransceivers() const;
                 QVector<TxTransceiverDto> getTransmittingTransceivers() const;
                 QSet<quint16> getEnabledTransceivers() const;
                 //! @}
@@ -352,6 +352,14 @@ namespace BlackCore
                 //! \threadsafe
                 quint32 getAliasFrequencyHz(quint32 frequencyHz) const;
 
+                //! Voice server alive
+                //! \threadsafe
+                bool isVoiceServerAlive() const;
+
+                //! Get voice server URL
+                //! \threadsafe
+                const QString &getVoiceServerUrl() const;
+
                 bool fuzzyMatchCallsign(const QString &callsign, const QString &compareTo) const;
                 void getPrefixSuffix(const QString &callsign, QString &prefix, QString &suffix) const;
 
@@ -385,10 +393,11 @@ namespace BlackCore
                 static const QVector<quint16> &allTransceiverIds() { static const QVector<quint16> transceiverIds{0, 1}; return transceiverIds; }
 
                 std::atomic_int  m_fsdConnectMismatches { 0 }; //!< FSD no longer connected?
-                std::atomic_int  m_retryConnectAttempt  { 0 }; //!< Try to connect the n-th time
-                std::atomic_bool m_isStarted     { false };
-                std::atomic_bool m_loopbackOn    { false };
-                std::atomic_bool m_enableAliased { true  };
+                std::atomic_int  m_retryConnectAttempt  { 0 }; //!< try to connect the n-th time
+                std::atomic_int  m_heartBeatFailures    { 0 }; //!< voice server heartbeat failures
+                std::atomic_bool m_isStarted          { false };
+                std::atomic_bool m_loopbackOn         { false };
+                std::atomic_bool m_enableAliased      { true  };
                 std::atomic_bool m_winCoInitialized   { false }; //!< Windows only CoInitializeEx
                 std::atomic_bool m_integratedComUnit  { false }; //!< is COM unit sychronized, integrated?
 
@@ -405,6 +414,7 @@ namespace BlackCore
                 Audio::InputVolumeStreamArgs  m_inputVolumeStream;
                 Audio::OutputVolumeStreamArgs m_outputVolumeStream;
 
+                void checkServerHeartbeat();
                 void deferredInit();
                 void initTransceivers();
                 void connectWithContexts();
