@@ -88,12 +88,12 @@ namespace BlackSimPlugin
                 {
                     const int simIndex = static_cast<int>(FSUIPC_FS_Version);
                     const QString sim = CFsuipc::simulator(simIndex);
-                    QString ver = QStringLiteral("%1.%2.%3.%4%5")
-                                  .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 28))))
-                                  .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 24))))
-                                  .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 20))))
-                                  .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 16))))
-                                  .arg((FSUIPC_Version & 0xffff) ? QString(QLatin1Char('a' + static_cast<char>(FSUIPC_Version & 0xff) - 1)) : "");
+                    const QString ver = QStringLiteral("%1.%2.%3.%4%5")
+                                        .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 28))))
+                                        .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 24))))
+                                        .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 20))))
+                                        .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 16))))
+                                        .arg((FSUIPC_Version & 0xffff) ? QString(QLatin1Char('a' + static_cast<char>(FSUIPC_Version & 0xff) - 1)) : "");
                     m_fsuipcVersion = QStringLiteral("FSUIPC %1 (%2)").arg(ver, sim);
                     CLogMessage(this).info(u"FSUIPC connected: %1") << m_fsuipcVersion;
                 }
@@ -201,9 +201,11 @@ namespace BlackSimPlugin
 
             if (weatherGrid.isEmpty()) { return false; }
             this->clearAllWeather();
-            CGridPoint gridPoint = weatherGrid.front();
+            CLogMessage(this).debug(u"FSUIPC cleared weather");
 
+            const CGridPoint gridPoint = weatherGrid.front();
             NewWeather nw;
+
             // Clear new weather
             nw.uCommand    = NW_SET;
             nw.uFlags      = 0;
@@ -242,6 +244,7 @@ namespace BlackSimPlugin
                 vis.Spare = 0;
                 nw.UpperVis[nw.nUpperVisCtr++] = vis;
             }
+            CLogMessage(this).debug(u"FSUIPC updated %1 visibility layers") << visibilityLayers.size();
 
             const CTemperatureLayerList temperatureLayers = gridPoint.getTemperatureLayers().sortedBy(&CTemperatureLayer::getLevel);
             for (const auto &temperatureLayer : temperatureLayers)
@@ -253,6 +256,7 @@ namespace BlackSimPlugin
                 temp.DewPoint = static_cast<short>(temperatureLayer.getDewPoint().value(CTemperatureUnit::C()));
                 nw.Temp[nw.nTempCtr++] = temp;
             }
+            CLogMessage(this).debug(u"FSUIPC updated %1 temperature layers") << temperatureLayers.size();
 
             const CCloudLayerList cloudLayers = gridPoint.getCloudLayers().sortedBy(&CCloudLayer::getBase);
             for (const auto &cloudLayer : cloudLayers)
@@ -296,6 +300,7 @@ namespace BlackSimPlugin
                 cloud.UpperAlt = static_cast<ushort>(cloudLayer.getTop().valueInteger(CLengthUnit::m()));
                 nw.Cloud[nw.nCloudsCtr++] = cloud;
             }
+            CLogMessage(this).debug(u"FSUIPC updated %1 cloud layers") << cloudLayers.size();
 
             const CWindLayerList windLayers = gridPoint.getWindLayers().sortedBy(&CWindLayer::getLevel);
             for (const auto &windLayer : windLayers)
@@ -312,6 +317,7 @@ namespace BlackSimPlugin
                 wind.Variance = 0;
                 nw.Wind[nw.nWindsCtr++] = wind;
             }
+            CLogMessage(this).debug(u"FSUIPC updated %1 wind layers") << windLayers.size();
 
             NewPress press;
             press.Drift = 0;
