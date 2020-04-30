@@ -32,14 +32,16 @@ namespace BlackCore
 
             bool CClientConnectionData::isVoiceServerAlive() const
             {
-                return m_lastVoiceServerHeartbeatAckUtc.isValid() &&
-                       m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) > ServerTimeoutSecs;
+                if (!m_lastVoiceServerHeartbeatAckUtc.isValid()) { return false; }
+                const qint64 d = qAbs(m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()));
+                return d < ServerTimeoutSecs;
             }
 
             bool CClientConnectionData::isDataServerAlive() const
             {
-                return m_lastDataServerHeartbeatAckUtc.isValid() &&
-                       m_lastDataServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) > ServerTimeoutSecs;
+                if (!m_lastDataServerHeartbeatAckUtc.isValid()) { return false; }
+                const qint64 d = qAbs(m_lastDataServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()));
+                return d < ServerTimeoutSecs;
             }
 
             void CClientConnectionData::createCryptoChannels()

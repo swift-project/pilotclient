@@ -42,7 +42,7 @@ namespace BlackCore
 
                 //!  Servers alive @{
                 bool isVoiceServerAlive() const;
-                bool isDataServerAlive() const;
+                bool isDataServerAlive()  const;
                 //! @}
 
                 //! Is connected? @{

@@ -180,6 +180,7 @@ namespace BlackCore
                         this->retryConnectTo(cid, password, callsign, client, QStringLiteral("No connection afer 20secs"));
                     });
                 }
+
                 // thread safe connect
                 {
                     QMutexLocker lock(&m_mutexConnection);
@@ -235,6 +236,11 @@ namespace BlackCore
                     QMutexLocker lock(&m_mutexConnection);
                     m_connection->disconnectFrom();
                 }
+
+                m_heartBeatFailures    = 0;
+                m_retryConnectAttempt  = 0;
+                m_fsdConnectMismatches = 0;
+
                 emit connectionStatusChanged(Disconnected);
 
                 if (stop) { this->stopAudio(); }
@@ -840,8 +846,8 @@ namespace BlackCore
                 if (loopback && transmit)
                 {
                     IAudioDto audioData;
-                    audioData.audio = QByteArray(args.audio.data(), args.audio.size());
-                    audioData.callsign = QStringLiteral("loopback");
+                    audioData.audio      = QByteArray(args.audio.data(), args.audio.size());
+                    audioData.callsign   = QStringLiteral("loopback");
                     audioData.lastPacket = false;
                     audioData.sequenceCounter = 0;
 
@@ -1023,6 +1029,47 @@ namespace BlackCore
                     // for AFV sample client
                     this->updateTransceivers();
                 }
+
+                // connection check
+                this->checkServerHeartbeat();
+            }
+
+            void CAfvClient::checkServerHeartbeat()
+            {
+                if (!this->isStarted())   { return; }
+                if (!this->isConnected()) { return; }
+
+                if (this->isVoiceServerAlive())
+                {
+                    m_heartBeatFailures = 0;
+                    return;
+                }
+
+                // Heartbeat failure
+                // it can happen that after connect we see an initial timeout
+                const int failures = ++m_heartBeatFailures;
+                if (failures < 2) { return; }
+
+                QString un, pw, cs, client;
+                {
+                    QMutexLocker lock(&m_mutexConnection);
+                    un     = m_connection->getUserName();
+                    pw     = m_connection->getPassword();
+                    cs     = m_connection->getCallsign();
+                    client = m_connection->getClient();
+                }
+                if (un.isEmpty() || pw.isEmpty()) { return; }
+
+                // make sure we are disconnected
+                if (this->isConnected()) { this->disconnectFrom(false); }
+
+                QPointer<CAfvClient> myself(this);
+                QTimer::singleShot(5 * 1000, this, [ = ]
+                {
+                    if (!myself) { return; }
+                    const QString reason = QStringLiteral("Heartbeat failed %1 times").arg(failures);
+                    this->retryConnectTo(un, pw, cs, client, reason);
+                });
             }
 
             void CAfvClient::onSettingsChanged()
@@ -1261,6 +1308,21 @@ namespace BlackCore
                     }
                 }
                 return roundedFrequencyHz;
+            }
+
+            bool CAfvClient::isVoiceServerAlive() const
+            {
+                QMutexLocker lock(&m_mutexConnection);
+                return m_connection && m_connection->isVoiceServerAlive();
+            }
+
+            const QString &CAfvClient::getVoiceServerUrl() const
+            {
+                QMutexLocker lock(&m_mutexConnection);
+
+                static const QString e;
+                if (!m_connection) { return e; }
+                return m_connection->getVoiceServerUrl();
             }
 
             bool CAfvClient::fuzzyMatchCallsign(const QString &callsign, const QString &compareTo) const

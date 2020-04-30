@@ -52,9 +52,11 @@ namespace BlackCore
                 //! Disconnect
                 void disconnectFrom(const QString &reason = {});
 
-                //! Is connected
+                //! Is connected?
                 bool isConnected() const { return m_connection.isConnected(); }
-                //! @}
+
+                //! Is alive?
+                bool isVoiceServerAlive() const { return m_connection.isVoiceServerAlive(); }
 
                 //! Receiving audio? @{
                 void setReceiveAudio(bool value) { m_connection.setReceiveAudio(value); }
@@ -89,8 +91,19 @@ namespace BlackCore
                 //! Update the voice server URL
                 bool updateVoiceServerUrl(const QString &url);
 
+                //! Get the voice server URL
+                const QString &getVoiceServerUrl() const;
+
                 //! Authenticated since when
                 qint64 secondsSinceAuthentication() const { return m_connection.secondsSinceAuthentication(); }
+
+                //! User data @{
+                const QString &getUserName() const { return m_connection.getUserName(); }
+                const QString &getCallsign() const { return m_connection.getCallsign(); }
+                const QString &getPassword() const { static const QString e; return m_apiServerConnection ? m_apiServerConnection->getPassword() : e; }
+                const QString &getClient()   const { static const QString e; return m_apiServerConnection ? m_apiServerConnection->getClient()   : e; }
+                const QUuid   &getNetworkVersion() const { return m_networkVersion; }
+                //! @}
 
             signals:
                 //! Audio has been received
