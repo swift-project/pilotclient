@@ -632,7 +632,7 @@
              </property>
              <layout class="QVBoxLayout" name="vl_LogMessagesScrollArea">
               <item>
-               <widget class="BlackGui::Components::CLogComponent" name="comp_LogComponent">
+               <widget class="BlackGui::Components::CStatusMessagesDetail" name="comp_LogComponent">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -691,9 +691,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CLogComponent</class>
+   <class>BlackGui::Components::CStatusMessagesDetail</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/logcomponent.h</header>
+   <header>blackgui/components/statusmessagesdetail.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

@@ -173,7 +173,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="vl_Messages">
        <item>
-        <widget class="BlackGui::Components::CLogComponent" name="comp_Messages">
+        <widget class="BlackGui::Components::CStatusMessagesDetail" name="comp_Messages">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
@@ -190,9 +190,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Components::CLogComponent</class>
+   <class>BlackGui::Components::CStatusMessagesDetail</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/logcomponent.h</header>
+   <header>blackgui/components/statusmessagesdetail.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

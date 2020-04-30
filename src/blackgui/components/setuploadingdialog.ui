@@ -212,7 +212,7 @@
      </property>
      <layout class="QVBoxLayout" name="vl_LogMessages">
       <item>
-       <widget class="BlackGui::Components::CLogComponent" name="comp_Messages">
+       <widget class="BlackGui::Components::CStatusMessagesDetail" name="comp_Messages">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -244,9 +244,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Components::CLogComponent</class>
+   <class>BlackGui::Components::CStatusMessagesDetail</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/logcomponent.h</header>
+   <header>blackgui/components/statusmessagesdetail.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

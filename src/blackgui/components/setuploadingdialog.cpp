@@ -121,7 +121,9 @@ namespace BlackGui
         void CSetupLoadingDialog::displayGlobalSetup()
         {
             const QString gs = sApp->getGlobalSetup().convertToQString("\n", true);
-            ui->comp_Messages->appendPlainTextToConsole(gs);
+            Q_UNUSED(gs)
+            //ui->comp_Messages->appendPlainTextToConsole(gs);
+            //! \fixme create plain text console for this (used to be part of the log component, changed by issue T36)
         }
 
         void CSetupLoadingDialog::openHelpPage()
