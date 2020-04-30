@@ -16,6 +16,8 @@
 #include "blackmisc/statusmessagelist.h"
 #include <QString>
 
+namespace BlackMisc { class CLogPattern; }
+
 namespace BlackGui
 {
     namespace Models
@@ -29,6 +31,9 @@ namespace BlackGui
 
             //! \copydoc IModelFilter::filter
             virtual BlackMisc::CStatusMessageList filter(const BlackMisc::CStatusMessageList &inContainer) const override;
+
+            //! \copydoc IModelFilter::getAsValueObject
+            virtual BlackMisc::CVariant getAsValueObject() const override;
 
         private:
             BlackMisc::CStatusMessage::StatusSeverity m_severity = BlackMisc::CStatusMessage::SeverityError;

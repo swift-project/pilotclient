@@ -7,6 +7,7 @@
  */
 
 #include "blackgui/models/statusmessagefilter.h"
+#include "blackmisc/logpattern.h"
 
 using namespace BlackMisc;
 
@@ -45,6 +46,30 @@ namespace BlackGui
                 outContainer.push_back(msg);
             }
             return outContainer;
+        }
+
+        CVariant CStatusMessageFilter::getAsValueObject() const
+        {
+            if (!m_category.contains('*'))
+            {
+                if (CLogPattern::allHumanReadableNames().contains(m_category))
+                {
+                    return CVariant::from(CLogPattern::fromHumanReadableName(m_category).withSeverityAtOrAbove(m_severity));
+                }
+                return CVariant::from(CLogPattern::exactMatch(m_category).withSeverityAtOrAbove(m_severity));
+            }
+
+            CLogCategoryList categories = CLogCategory::allSpecialCategories();
+            categories.removeIf([this](const CLogCategory &cat) { return this->stringMatchesFilterExpression(cat.toQString(), this->m_category); });
+            CSequence<QString> humanNames = CLogPattern::allHumanReadableNames();
+            humanNames.removeIf([this](const QString &name) { return this->stringMatchesFilterExpression(name, this->m_category); });
+            auto humanCats = humanNames.transform([](const QString &name)
+            {
+                const auto strings = CLogPattern::fromHumanReadableName(name).getCategoryStrings();
+                return strings.isEmpty() ? QString{} : *strings.begin();
+            });
+
+            return CVariant::from(CLogPattern::anyOf(categories.join(humanCats)).withSeverityAtOrAbove(m_severity));
         }
     } // namespace
 } // namespace

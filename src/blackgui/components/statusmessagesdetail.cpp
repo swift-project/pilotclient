@@ -8,10 +8,13 @@
 
 #include "statusmessagesdetail.h"
 #include "ui_statusmessagesdetail.h"
+#include "blackgui/filters/statusmessagefilterbar.h"
+#include "blackgui/filters/statusmessagefilterdialog.h"
 
 using namespace BlackMisc;
 using namespace BlackGui::Menus;
 using namespace BlackGui::Views;
+using namespace BlackGui::Filters;
 
 namespace BlackGui
 {
@@ -29,6 +32,11 @@ namespace BlackGui
             ui->tvp_StatusMessages->setCustomMenu(new CMessageMenu(this));
             ui->tvp_StatusMessages->menuAddItems(CStatusMessageView::MenuSave);
             this->showFilterBar(); // default
+
+            connect(ui->filter_LogMessages, &CStatusMessageFilterBar::changeFilter, this, [this](bool enable)
+            {
+                emit filterChanged(enable ? ui->filter_LogMessages->createModelFilter()->getAsValueObject() : CVariant{});
+            });
         }
 
         CStatusMessagesDetail::~CStatusMessagesDetail()
@@ -57,6 +65,11 @@ namespace BlackGui
         {
             ui->tvp_StatusMessages->addFilterDialog();
             ui->filter_LogMessages->hide();
+
+            connect(ui->tvp_StatusMessages->getFilterDialog(), &QDialog::accepted, [this]
+            {
+                emit filterChanged(ui->tvp_StatusMessages->getFilterDialog()->createModelFilter()->getAsValueObject());
+            });
         }
 
         void CStatusMessagesDetail::showFilterBar()

@@ -78,6 +78,9 @@ namespace BlackGui
             //! \copydoc BlackGui::Views::CStatusMessageView::modelDataChangedDigest
             void modelDataChangedDigest(int count, bool withFilter);
 
+            //! The user changed their message filter
+            void filterChanged(const BlackMisc::CVariant &filter);
+
         private:
             QScopedPointer<Ui::CStatusMessagesDetail> ui;
             int m_maxLogMessages = -1;

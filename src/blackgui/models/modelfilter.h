@@ -27,6 +27,7 @@
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/variant.h"
 
 #include <QString>
 #include <Qt>
@@ -57,6 +58,9 @@ namespace BlackGui
 
             //! Enabled?
             void setEnabled(bool enable);
+
+            //! Return an implementation-specific value object representing the filter
+            virtual BlackMisc::CVariant getAsValueObject() const { return {}; }
 
         protected:
             //! Standard string search supporting wildcard at begin and end: "*xyz", "abc*"

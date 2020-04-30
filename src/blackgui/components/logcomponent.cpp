@@ -63,6 +63,11 @@ namespace BlackGui
             {
                 ui->comp_StatusMessages->appendStatusMessagesToList(messages);
             });
+            connect(ui->comp_StatusMessages, &CStatusMessagesDetail::filterChanged, this, [this](const CVariant &filter)
+            {
+                clearMessages();
+                m_history.setFilter(filter.to<CLogPattern>());
+            });
             m_history.setFilter(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
             m_history.initialize(sApp->getDataLinkDBus());
         }
