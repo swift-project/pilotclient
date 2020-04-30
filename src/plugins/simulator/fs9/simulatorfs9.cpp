@@ -344,29 +344,30 @@ namespace BlackSimPlugin
             }
         }
 
-        QString getChangedParamsAsString(const MPParam old, const MPParam &newParam)
+        QString getChangedParamsAsString(const MPParam &old, const MPParam &newParam)
         {
+            // for debugging
             QString str;
-            if (old.unknown8 != newParam.unknown8) str += "unknown8 " + QString::number(newParam.unknown8) + "\n";
-            if (old.unknown9 != newParam.unknown9) str += "unknown9 " + QString::number(newParam.unknown9) + "\n";
-            if (old.flaps_left != newParam.flaps_left) str += "flaps_left " + QString::number(newParam.flaps_left) + "\n";
+            if (old.unknown8    != newParam.unknown8)    str += "unknown8 "    + QString::number(newParam.unknown8)    + "\n";
+            if (old.unknown9    != newParam.unknown9)    str += "unknown9 "    + QString::number(newParam.unknown9)    + "\n";
+            if (old.flaps_left  != newParam.flaps_left)  str  += "flaps_left " + QString::number(newParam.flaps_left)  + "\n";
             if (old.flaps_right != newParam.flaps_right) str += "flaps_right " + QString::number(newParam.flaps_right) + "\n";
-            if (old.unknown12 != newParam.unknown12) str += "unknown12 " + QString::number(newParam.unknown12) + "\n";
-            if (old.unknown13 != newParam.unknown13) str += "unknown13 " + QString::number(newParam.unknown13) + "\n";
-            if (old.unknown14 != newParam.unknown14) str += "unknown14 " + QString::number(newParam.unknown14) + "\n";
-            if (old.unknown15 != newParam.unknown15) str += "unknown15 " + QString::number(newParam.unknown15) + "\n";
-            if (old.unknown16 != newParam.unknown16) str += "unknown16 " + QString::number(newParam.unknown16) + "\n";
-            if (old.unknown17 != newParam.unknown17) str += "unknown17 " + QString::number(newParam.unknown17) + "\n";
-            if (old.unknown18 != newParam.unknown18) str += "unknown18 " + QString::number(newParam.unknown18) + "\n";
-            if (old.unknown19 != newParam.unknown19) str += "unknown19 " + QString::number(newParam.unknown19) + "\n";
+            if (old.unknown12   != newParam.unknown12)   str += "unknown12 "   + QString::number(newParam.unknown12)   + "\n";
+            if (old.unknown13   != newParam.unknown13)   str += "unknown13 "   + QString::number(newParam.unknown13)   + "\n";
+            if (old.unknown14   != newParam.unknown14)   str += "unknown14 "   + QString::number(newParam.unknown14)   + "\n";
+            if (old.unknown15   != newParam.unknown15)   str += "unknown15 "   + QString::number(newParam.unknown15)   + "\n";
+            if (old.unknown16   != newParam.unknown16)   str += "unknown16 "   + QString::number(newParam.unknown16)   + "\n";
+            if (old.unknown17   != newParam.unknown17)   str += "unknown17 "   + QString::number(newParam.unknown17)   + "\n";
+            if (old.unknown18   != newParam.unknown18)   str += "unknown18 "   + QString::number(newParam.unknown18)   + "\n";
+            if (old.unknown19   != newParam.unknown19)   str += "unknown19 "   + QString::number(newParam.unknown19)   + "\n";
             if (old.gear_center != newParam.gear_center) str += "gear_center " + QString::number(newParam.gear_center) + "\n";
-            if (old.gear_left != newParam.gear_left) str += "gear_left " + QString::number(newParam.gear_left) + "\n";
-            if (old.gear_right != newParam.gear_right) str += "gear_right " + QString::number(newParam.gear_right) + "\n";
-            if (old.engine_1 != newParam.engine_1) str += "engine_1 " + QString::number(newParam.engine_1) + "\n";
-            if (old.engine_2 != newParam.engine_2) str += "engine_2 " + QString::number(newParam.engine_2) + "\n";
-            if (old.unknown25 != newParam.unknown25) str += "unknown25 " + QString::number(newParam.unknown25) + "\n";
-            if (old.unknown26 != newParam.unknown26) str += "unknown26 " + QString::number(newParam.unknown26) + "\n";
-            if (old.unknown27 != newParam.unknown27) str += "unknown27 " + QString::number(newParam.unknown27) + "\n";
+            if (old.gear_left   != newParam.gear_left)   str += "gear_left "   + QString::number(newParam.gear_left)   + "\n";
+            if (old.gear_right  != newParam.gear_right)  str += "gear_right "  + QString::number(newParam.gear_right)  + "\n";
+            if (old.engine_1    != newParam.engine_1)    str += "engine_1 "    + QString::number(newParam.engine_1)    + "\n";
+            if (old.engine_2    != newParam.engine_2)    str += "engine_2 "    + QString::number(newParam.engine_2)    + "\n";
+            if (old.unknown25   != newParam.unknown25)   str += "unknown25 "   + QString::number(newParam.unknown25)   + "\n";
+            if (old.unknown26   != newParam.unknown26)   str += "unknown26 "   + QString::number(newParam.unknown26)   + "\n";
+            if (old.unknown27   != newParam.unknown27)   str += "unknown27 "   + QString::number(newParam.unknown27)   + "\n";
             return str;
         }
 
