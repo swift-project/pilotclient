@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>CSimConnectSettingsComponent</class>
  <widget class="QWidget" name="CSimConnectSettingsComponent">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>410</width>
-    <height>481</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>FSX/P3D SimConnect config</string>
   </property>
@@ -74,12 +66,6 @@
       </item>
       <item row="3" column="1">
        <widget class="QPlainTextEdit" name="pte_SimConnectIni">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>75</height>
-         </size>
-        </property>
         <property name="plainText">
          <string>[SimConnect] 
 level=verbose 
@@ -129,6 +115,12 @@ console=1
          </item>
          <item alignment="Qt::AlignRight">
           <widget class="QPushButton" name="pb_SaveAsSimConnectIni">
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="text">
             <string>save as</string>
            </property>
