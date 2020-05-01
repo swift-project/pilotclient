@@ -109,13 +109,13 @@ namespace BlackMisc
 
                 //! Find the config files (add-ons.cfg)
                 //! \note "C:/Users/Joe Doe/AppData/Roaming/Lockheed Martin/Prepar3D v4"
-                //! \param versionHint like "v4"
-                static QSet<QString> findP3dAddOnConfigFiles(const QString &versionHint = "v4");
+                //! \param versionHint like "v5"
+                static QSet<QString> findP3dAddOnConfigFiles(const QString &versionHint = "v5");
 
                 //! Find the config files (simobjects.cfg)
                 //! \note "C:/Users/Joe Doe/AppData/Roaming/Lockheed Martin/Prepar3D v4"
-                //! \param versionHint like "v4"
-                static QSet<QString> findP3dSimObjectsConfigFiles(const QString &versionHint = "v4");
+                //! \param versionHint like "v5"
+                static QSet<QString> findP3dSimObjectsConfigFiles(const QString &versionHint = "v5");
 
                 //! All PATH values from the config files
                 static QSet<QString> allConfigFilesPathValues(const QStringList &configFiles, bool checked, const QString &pathPrefix);
@@ -158,7 +158,7 @@ namespace BlackMisc
 
             private:
                 //! Utility functions @{
-                static QSet<QString> findP3dConfigFiles(const QString &configFile, const QString &versionHint = "v4");
+                static QSet<QString> findP3dConfigFiles(const QString &configFile, const QString &versionHint = "v5");
                 //! @}
 
                 //! Validate if known SimObjects path are used

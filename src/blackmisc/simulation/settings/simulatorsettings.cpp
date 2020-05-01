@@ -671,21 +671,21 @@ namespace BlackMisc
                     {
                         if (CFsCommonUtil::fs9AircraftDir().isEmpty()) { return e; }
                         static const QStringList md({ CFsCommonUtil::fs9AircraftDir() });
-                        return  md;
+                        return md;
                     }
                 case CSimulatorInfo::FSX:
                     {
                         if (CFsCommonUtil::fsxSimObjectsDir().isEmpty()) { return e; }
                         static const QStringList md = CFsCommonUtil::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths();
-                        return  md;
+                        return md;
                     }
                 case CSimulatorInfo::P3D:
                     {
                         static const QString p3d = CFsCommonUtil::p3dSimObjectsDir();
                         if (p3d.isEmpty()) { return e; }
                         static const QString versionHint = CFsCommonUtil::guessP3DVersion(p3d);
-                        static const QStringList md = CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(p3d, versionHint);
-                        return  md;
+                        static const QStringList md      = CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(p3d, versionHint);
+                        return md;
                     }
                 case CSimulatorInfo::XPLANE:
                     {
@@ -704,10 +704,10 @@ namespace BlackMisc
                 static const QString empty;
                 switch (simulator.getSimulator())
                 {
-                case CSimulatorInfo::FG:  return CFlightgearUtil::flightgearRootDir();
-                case CSimulatorInfo::FS9: return CFsCommonUtil::fs9Dir();
-                case CSimulatorInfo::FSX: return CFsCommonUtil::fsxDir();
-                case CSimulatorInfo::P3D: return CFsCommonUtil::p3dDir();
+                case CSimulatorInfo::FG:     return CFlightgearUtil::flightgearRootDir();
+                case CSimulatorInfo::FS9:    return CFsCommonUtil::fs9Dir();
+                case CSimulatorInfo::FSX:    return CFsCommonUtil::fsxDir();
+                case CSimulatorInfo::P3D:    return CFsCommonUtil::p3dDir();
                 case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneRootDir();
                 default:
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
@@ -722,10 +722,10 @@ namespace BlackMisc
                 static const QStringList empty;
                 switch (simulator.getSimulator())
                 {
-                case CSimulatorInfo::FG:  return CFlightgearUtil::flightgearModelExcludeDirectoryPatterns();
-                case CSimulatorInfo::FS9: return CFsCommonUtil::fs9AircraftObjectsExcludeDirectoryPatterns();
-                case CSimulatorInfo::FSX: return CFsCommonUtil::fsxSimObjectsExcludeDirectoryPatterns();
-                case CSimulatorInfo::P3D: return CFsCommonUtil::p3dSimObjectsExcludeDirectoryPatterns();
+                case CSimulatorInfo::FG:     return CFlightgearUtil::flightgearModelExcludeDirectoryPatterns();
+                case CSimulatorInfo::FS9:    return CFsCommonUtil::fs9AircraftObjectsExcludeDirectoryPatterns();
+                case CSimulatorInfo::FSX:    return CFsCommonUtil::fsxSimObjectsExcludeDirectoryPatterns();
+                case CSimulatorInfo::P3D:    return CFsCommonUtil::p3dSimObjectsExcludeDirectoryPatterns();
                 case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneModelExcludeDirectoryPatterns();
                 default:
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
@@ -781,7 +781,8 @@ namespace BlackMisc
 
             bool TSimulatorXP::isValid(const CSimulatorSettings &value, QString &reason)
             {
-                const QString simDir = value.hasSimulatorDirectory() ? value.getSimulatorDirectory()
+                const QString simDir = value.hasSimulatorDirectory()
+                                       ? value.getSimulatorDirectory()
                                        : CSpecializedSimulatorSettings::defaultSimulatorDirectory(CSimulatorInfo::XPLANE);
                 const CStatusMessageList msgs = CXPlaneUtil::validateModelDirectories(simDir, value.getModelDirectories());
                 if (msgs.isSuccess()) { return true; }
