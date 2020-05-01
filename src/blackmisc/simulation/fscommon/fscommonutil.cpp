@@ -149,6 +149,9 @@ namespace BlackMisc
                 QString p3dPath;
                 FsRegistryPathPair p3dRegistryPathPairs =
                 {
+                    // latest versions first
+                    { QStringLiteral("HKEY_CURRENT_USER\\Software\\Lockheed Martin\\Prepar3d v6"), QStringLiteral("AppPath") },
+                    { QStringLiteral("HKEY_CURRENT_USER\\Software\\Lockheed Martin\\Prepar3d v5"), QStringLiteral("AppPath") },
                     { QStringLiteral("HKEY_CURRENT_USER\\Software\\Lockheed Martin\\Prepar3d v4"), QStringLiteral("AppPath") },
                     { QStringLiteral("HKEY_CURRENT_USER\\Software\\Lockheed Martin\\Prepar3d v3"), QStringLiteral("AppPath") },
                     { QStringLiteral("HKEY_CURRENT_USER\\Software\\Lockheed Martin\\Prepar3d v2"), QStringLiteral("AppPath") },
@@ -258,12 +261,12 @@ namespace BlackMisc
 
             QString CFsCommonUtil::guessP3DVersion(const QString &candidate)
             {
-                if (candidate.isEmpty()) { return "v4"; }
+                if (candidate.isEmpty()) { return "v5"; }
                 if (candidate.contains("v5", Qt::CaseInsensitive)) { return QStringLiteral("v5"); }
                 if (candidate.contains("v4", Qt::CaseInsensitive)) { return QStringLiteral("v4"); }
 
-                if (candidate.contains("5", Qt::CaseInsensitive)) { return QStringLiteral("v5"); }
-                if (candidate.contains("4", Qt::CaseInsensitive)) { return QStringLiteral("v4"); }
+                if (candidate.contains("5", Qt::CaseInsensitive))  { return QStringLiteral("v5"); }
+                if (candidate.contains("4", Qt::CaseInsensitive))  { return QStringLiteral("v4"); }
 
                 return "v5"; // that is the future (in 2020)
             }
@@ -718,7 +721,7 @@ namespace BlackMisc
             CStatusMessageList CFsCommonUtil::validateP3DSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simulatorDir)
             {
                 const QString simObjectsDir = simulatorDir.isEmpty() ? CFsCommonUtil::p3dSimObjectsDir() : CFsCommonUtil::p3dSimObjectsDirFromSimDir(simulatorDir);
-                const QStringList simObjectPaths = CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(simObjectsDir, "v4");
+                const QStringList simObjectPaths = CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(simObjectsDir, guessP3DVersion(simObjectsDir));
                 return CFsCommonUtil::validateSimObjectsPath(QSet<QString>(simObjectPaths.begin(), simObjectPaths.end()), models, validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, wasStopped);
             }
 
@@ -737,7 +740,7 @@ namespace BlackMisc
 
             CStatusMessageList CFsCommonUtil::validateSimObjectsPath(
                 const QSet<QString> &simObjectDirs, const CAircraftModelList &models,
-                CAircraftModelList &validModels, CAircraftModelList &invalidModels,
+                CAircraftModelList  &validModels,         CAircraftModelList &invalidModels,
                 bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &stopped)
             {
                 CStatusMessageList msgs;
