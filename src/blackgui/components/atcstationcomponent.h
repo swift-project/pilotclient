@@ -169,8 +169,8 @@ namespace BlackGui
             QVBoxLayout *vLayout() const;
 
             QScopedPointer<Ui::CAtcStationComponent> ui;
-            QTimer m_updateTimer;
-            QList<int> m_stretch;
+            QTimer     m_updateTimer;
+            QList<int> m_splitterSizes;
             BlackMisc::Aviation::CCallsign m_selectedCallsign;
             QDateTime m_timestampLastReadOnlineStations; //!< stations read
             QDateTime m_timestampOnlineStationsChanged;  //!< stations marked as changed

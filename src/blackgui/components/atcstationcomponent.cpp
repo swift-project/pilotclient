@@ -123,7 +123,7 @@ namespace BlackGui
             connect(&m_updateTimer, &QTimer::timeout, this, &CAtcStationComponent::update);
 
             // Group box
-            connect(ui->gb_Details, &QGroupBox::toggled, this, &CAtcStationComponent::onDetailsToggled);
+            connect(ui->gb_Details, &QGroupBox::toggled, this, &CAtcStationComponent::onDetailsToggled, Qt::QueuedConnection);
 
             // runtime based connects
             if (sGui)
@@ -546,13 +546,36 @@ namespace BlackGui
             {
                 if (checked)
                 {
-                    layout->setStretchFactor(ui->tw_Atc, m_stretch.at(0));
-                    layout->setStretchFactor(ui->gb_Details, m_stretch.at(1));
+                    if (!m_splitterSizes.isEmpty())
+                    {
+                        ui->sp_AtcSplitter->setSizes(m_splitterSizes);
+                    }
+
+                    /* before splitter
+                    if (m_stretch.size() > 1)
+                    {
+                        layout->setStretchFactor(ui->tw_Atc,     m_stretch.at(0));
+                        layout->setStretchFactor(ui->gb_Details, m_stretch.at(1));
+                    }
+                    */
                 }
                 else
                 {
-                    layout->setStretchFactor(ui->tw_Atc, 0);
+                    m_splitterSizes = ui->sp_AtcSplitter->sizes();
+                    if (m_splitterSizes.size() > 1)
+                    {
+                        int min, max;
+                        ui->sp_AtcSplitter->getRange(1, &min, &max);
+                        QList<int> newSizes;
+                        newSizes.push_back(qMax(0, m_splitterSizes.first() + m_splitterSizes.last() - min));
+                        newSizes.push_back(min);
+                        ui->sp_AtcSplitter->setSizes(newSizes);
+                    }
+
+                    /* before splitter
+                    layout->setStretchFactor(ui->tw_Atc,     0);
                     layout->setStretchFactor(ui->gb_Details, 0);
+                    */
                 }
             }
 
