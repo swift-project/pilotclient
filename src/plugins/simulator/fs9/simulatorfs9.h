@@ -94,6 +94,7 @@ namespace BlackSimPlugin
             //! Called when data about our own aircraft are received
             void updateOwnAircraftFromSimulator(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
 
+            //! Render status
             void updateRenderStatus(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, BlackSimPlugin::Fs9::CFs9Client::ClientStatus);
 
             //! Disconnect all clients

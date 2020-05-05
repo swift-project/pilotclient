@@ -43,10 +43,13 @@ namespace BlackSimPlugin
 {
     namespace Fs9
     {
+        /* DOES NOT SEEM to be used,
+         * see https://discordapp.com/channels/539048679160676382/539925070550794240/707203002951270455
+
         CAircraftSituation aircraftSituationFromFS9(const MPPositionVelocity &positionVelocity)
         {
             double dHigh = positionVelocity.lat_i;
-            double dLow = positionVelocity.lat_f;
+            double dLow  = positionVelocity.lat_f;
 
             dLow = dLow / 65536.0;
             if (dHigh > 0)
@@ -62,7 +65,7 @@ namespace BlackSimPlugin
             position.setLatitude(CLatitude(dHigh * 90.0 / 10001750.0, CAngleUnit::deg()));
 
             dHigh = positionVelocity.lon_hi;
-            dLow = positionVelocity.lon_lo;
+            dLow  = positionVelocity.lon_lo;
 
             dLow = dLow / 65536.0;
             if (dHigh > 0)
@@ -104,6 +107,7 @@ namespace BlackSimPlugin
 
             return situation;
         }
+        */
 
         CSimulatorFs9::CSimulatorFs9(const CSimulatorPluginInfo &info,
                                      const QSharedPointer<CFs9Host>     &fs9Host,
