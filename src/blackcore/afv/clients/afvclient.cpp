@@ -1236,6 +1236,7 @@ namespace BlackCore
             {
                 if (msg.isFailure())
                 {
+                    CLogMessage::preformatted(msg);
                     emit this->afvConnectionFailure(msg);
                 }
 
