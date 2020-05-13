@@ -62,7 +62,7 @@
 #include <QPointer>
 #include <math.h>
 
-#define FGSWIFTBUS_API_VERSION 1
+#define FGSWIFTBUS_API_VERSION 2
 
 using namespace BlackConfig;
 using namespace BlackMisc;
@@ -170,8 +170,7 @@ namespace BlackSimPlugin
             {
                 PlanesSurfaces surfaces;
                 surfaces.push_back(callsign, parts);
-                //! \todo KB 2091-09 FG parts sending missing
-                // m_trafficProxy->setPlanesSurfaces(surfaces);
+                m_trafficProxy->setPlanesSurfaces(surfaces);
                 u++;
             }
             return u > 0;
@@ -533,6 +532,15 @@ namespace BlackSimPlugin
                                          newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
                                          newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
                                          livery);
+
+                PlanesPositions pos;
+                pos.push_back(newRemoteAircraft.getSituation());
+                m_trafficProxy->setPlanesPositions(pos);
+
+                PlanesSurfaces surfaces;
+                surfaces.push_back(newRemoteAircraft.getCallsign(), newRemoteAircraft.getParts());
+                m_trafficProxy->setPlanesSurfaces(surfaces);
+
             }
             else
             {
@@ -623,23 +631,25 @@ namespace BlackSimPlugin
 
             // interpolation for all remote aircraft
             PlanesPositions planesPositions;
+            PlanesSurfaces planesSurfaces;
             PlanesTransponders planesTransponders;
 
             int aircraftNumber = 0;
             const bool updateAllAircraft = this->isUpdateAllRemoteAircraft(currentTimestamp);
-            const CCallsignSet callsingsInRange = this->getAircraftInRangeCallsigns();
+            const CCallsignSet callsignsInRange = this->getAircraftInRangeCallsigns();
             for (const CFlightgearMPAircraft &flightgearAircraft : m_flightgearAircraftObjects)
             {
                 const CCallsign callsign(flightgearAircraft.getCallsign());
                 const bool hasCallsign = !callsign.isEmpty();
                 if (!hasCallsign)
                 {
+                    // does not make sense to continue here
                     BLACK_VERIFY_X(false, Q_FUNC_INFO, "missing callsign");
                     continue;
                 }
 
                 // skip no longer in range
-                if (!callsingsInRange.contains(callsign)) { continue; }
+                if (!callsignsInRange.contains(callsign)) { continue; }
 
                 planesTransponders.callsigns.push_back(callsign.asString());
                 planesTransponders.codes.push_back(flightgearAircraft.getAircraft().getTransponderCode());
@@ -660,15 +670,7 @@ namespace BlackSimPlugin
                     if (updateAllAircraft || !this->isEqualLastSent(interpolatedSituation))
                     {
                         this->rememberLastSent(interpolatedSituation);
-                        planesPositions.callsigns.push_back(interpolatedSituation.getCallsign().asString());
-                        planesPositions.latitudesDeg.push_back(interpolatedSituation.latitude().value(CAngleUnit::deg()));
-                        planesPositions.longitudesDeg.push_back(interpolatedSituation.longitude().value(CAngleUnit::deg()));
-                        planesPositions.altitudesFt.push_back(interpolatedSituation.getAltitude().value(CLengthUnit::ft()));
-                        planesPositions.pitchesDeg.push_back(interpolatedSituation.getPitch().value(CAngleUnit::deg()));
-                        planesPositions.rollsDeg.push_back(interpolatedSituation.getBank().value(CAngleUnit::deg()));
-                        planesPositions.headingsDeg.push_back(interpolatedSituation.getHeading().value(CAngleUnit::deg()));
-                        planesPositions.groundSpeedKts.push_back(interpolatedSituation.getGroundSpeed().value(CSpeedUnit::kts()));
-                        planesPositions.onGrounds.push_back(interpolatedSituation.getOnGround() == CAircraftSituation::OnGround);
+                        planesPositions.push_back(interpolatedSituation);
                     }
                 }
                 else
@@ -676,15 +678,35 @@ namespace BlackSimPlugin
                     CLogMessage(this).warning(this->getInvalidSituationLogMessage(callsign, result.getInterpolationStatus()));
                 }
 
+                const CAircraftParts parts(result);
+                if (result.getPartsStatus().isSupportingParts() || parts.getPartsDetails() == CAircraftParts::GuessedParts)
+                {
+                    if (updateAllAircraft || !this->isEqualLastSent(parts, callsign))
+                    {
+                        this->rememberLastSent(parts, callsign);
+                        planesSurfaces.push_back(flightgearAircraft.getCallsign(), parts);
+                    }
+                }
+
             } // all callsigns
+
+            if (!planesTransponders.isEmpty())
+            {
+                m_trafficProxy->setPlanesTransponders(planesTransponders);
+            }
 
             if (!planesPositions.isEmpty())
             {
                 if (CBuildConfig::isLocalDeveloperDebugBuild())
                 {
-                    Q_ASSERT_X(planesPositions.hasSameSizes(), Q_FUNC_INFO, "Mismatching sizes");
+                    BLACK_VERIFY_X(planesPositions.hasSameSizes(), Q_FUNC_INFO, "Mismatching sizes");
                 }
                 m_trafficProxy->setPlanesPositions(planesPositions);
+            }
+
+            if (! planesSurfaces.isEmpty())
+            {
+                m_trafficProxy->setPlanesSurfaces(planesSurfaces);
             }
 
             // stats
