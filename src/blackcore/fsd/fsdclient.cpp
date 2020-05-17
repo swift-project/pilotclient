@@ -907,6 +907,10 @@ namespace BlackCore
             // IVAO only
             // Ref: https://github.com/DemonRem/X-IvAP/blob/1b0a14880532a0f5c8fe84be44e462c6892a5596/src/XIvAp/FSDprotocol.h
             m_messageTypeMapping["!R"]  = MessageType::RegistrationInfo;
+
+            // IVAO parts
+            // https://discordapp.com/channels/539048679160676382/695961646992195644/707915838845485187
+            // https://dev.swift-project.org/w/knowhow/simandinterpolation/ivaoparts/
         }
 
         void CFSDClient::handleAtcDataUpdate(const QStringList &tokens)
