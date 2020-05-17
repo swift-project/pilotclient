@@ -40,7 +40,7 @@ namespace BlackCore
             {
                 BlackMisc::CLogMessage(static_cast<ClientResponse *>(nullptr)).warning(u"Wrong number of arguments.");
                 return {};
-            };
+            }
 
             QStringList responseData;
             if (tokens.size() > 3) { responseData = tokens.mid(3); }

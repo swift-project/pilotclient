@@ -285,6 +285,7 @@ namespace BlackCore
             if (str.isEmpty()) return ClientQueryType::Unknown;
 
             // valid queries
+            // second part of a $CQ:, e.g. $CQ:DI, $CQ:ATC
             if (str == "ATC")  return ClientQueryType::IsValidATC;
             if (str == "CAPS") return ClientQueryType::Capabilities;
             if (str == "C?")   return ClientQueryType::Com1Freq;
