@@ -26,7 +26,8 @@ namespace BlackMisc
             const QString s =
                 m_identifier.getMachineName() %
                 u' ' %
-                m_combination.toQString() %
+                m_combination.asStringWithDeviceNames() %
+                // m_combination.toQString() %
                 u' ' %
                 m_action;
             return s;

@@ -8,6 +8,8 @@
 
 #include "joystickwindows.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/metadatautils.h"
+
 #include "comdef.h"
 #include "Dbt.h"
 
@@ -25,11 +27,11 @@ namespace BlackInput
         QObject(parent),
         m_guidDevice(pdidInstance->guidInstance),
         m_guidProduct(pdidInstance->guidProduct),
-        m_deviceName(QString::fromWCharArray(pdidInstance->tszInstanceName)),
-        m_productName(QString::fromWCharArray(pdidInstance->tszProductName)),
+        m_deviceName(QString::fromWCharArray(pdidInstance->tszInstanceName).simplified()),
+        m_productName(QString::fromWCharArray(pdidInstance->tszProductName).simplified()),
         m_directInput(directInputPtr)
     {
-        this->setObjectName("CJoystickDevice");
+        this->setObjectName(classNameShort(this));
     }
 
     bool CJoystickDevice::init(HWND helperWindow)
@@ -98,7 +100,7 @@ namespace BlackInput
 
     void CJoystickDevice::timerEvent(QTimerEvent *event)
     {
-        Q_UNUSED(event);
+        Q_UNUSED(event)
         pollDeviceState();
     }
 
@@ -126,11 +128,8 @@ namespace BlackInput
         for (const CJoystickDeviceInput &input : as_const(m_joystickDeviceInputs))
         {
             const qint32 buttonIndex = input.m_offset - DIJOFS_BUTTON0;
-            bool isPressed = state.rgbButtons[buttonIndex] & 0x80;
-
-            if (isPressed) { emit buttonChanged(input.m_button, true); }
-            else { emit buttonChanged(input.m_button, false); }
-
+            const bool isPressed = state.rgbButtons[buttonIndex] & 0x80;
+            emit this->buttonChanged(input.m_button, isPressed);
         }
         return hr;
     }
@@ -151,12 +150,12 @@ namespace BlackInput
         if (dev->guidType != GUID_Button) return DIENUM_CONTINUE;
 
         CJoystickDeviceInput deviceInput;
-        int number = joystickDevice->m_joystickDeviceInputs.size();
+        const int number = joystickDevice->m_joystickDeviceInputs.size();
         deviceInput.m_offset = DIJOFS_BUTTON(number);
         deviceInput.m_button = CJoystickButton(joystickDevice->m_deviceName, DIJOFS_BUTTON(number) - DIJOFS_BUTTON0);
 
         joystickDevice->m_joystickDeviceInputs.append(deviceInput);
-        CLogMessage(static_cast<CJoystickWindows *>(nullptr)).debug() << "Found joystick button" << QString::fromWCharArray(dev->tszName);
+        CLogMessage(static_cast<CJoystickWindows *>(nullptr)).debug() << "Found joystick button" << QString::fromWCharArray(dev->tszName) << joystickDevice->m_deviceName;
 
         return DIENUM_CONTINUE;
     }
@@ -273,7 +272,7 @@ namespace BlackInput
         ZeroMemory(&wce, sizeof(wce));
         wce.cbSize = sizeof(wce);
         wce.lpfnWndProc = windowProc;
-        wce.lpszClassName = (LPCWSTR) helperWindowClassName;
+        wce.lpszClassName = static_cast<LPCWSTR>(helperWindowClassName);
         wce.hInstance = hInstance;
 
         /* Register the class. */
@@ -376,6 +375,7 @@ namespace BlackInput
         }
     }
 
+    //
     // Window callback function (handles window messages)
     //
     LRESULT CALLBACK CJoystickWindows::windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -390,8 +390,8 @@ namespace BlackInput
                 {
                     if (wParam == DBT_DEVICEARRIVAL)
                     {
-                        // DEV_BROADCAST_HDR *dbh = reinterpret_cast<DEV_BROADCAST_HDR *>(lParam); ???
-                        DEV_BROADCAST_HDR *dbh = (DEV_BROADCAST_HDR *) lParam;
+                        DEV_BROADCAST_HDR *dbh = reinterpret_cast<DEV_BROADCAST_HDR *>(lParam);
+                        // DEV_BROADCAST_HDR *dbh = (DEV_BROADCAST_HDR *) lParam;
                         if (dbh && dbh->dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE)
                         {
                             joystickWindows->enumJoystickDevices();
