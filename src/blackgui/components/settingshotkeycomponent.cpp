@@ -14,6 +14,7 @@
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/inputmanager.h"
 #include "blackmisc/input/actionhotkeydefs.h"
+#include "blackmisc/metadatautils.h"
 #include "ui_settingshotkeycomponent.h"
 
 #include <QAbstractItemModel>
@@ -81,6 +82,9 @@ namespace BlackGui
                 m_model.insertRows(position, 1, QModelIndex());
                 const QModelIndex index = m_model.index(position, 0, QModelIndex());
                 m_model.setData(index, QVariant::fromValue(selectedActionHotkey), CActionHotkeyListModel::ActionHotkeyRole);
+
+                // T784, further info about the "key"/button
+                CLogMessage(this).debug(u"%1, added key: '%2'") << classNameShort(this) << selectedActionHotkey.toQString(true);
             }
             this->resizeView();
         }
@@ -88,18 +92,20 @@ namespace BlackGui
         void CSettingsHotkeyComponent::editEntry()
         {
             const auto index = ui->tv_Hotkeys->selectionModel()->currentIndex();
-            if (!index.isValid()) return;
+            if (!index.isValid()) { return; }
 
             const auto model = ui->tv_Hotkeys->model();
             const QModelIndex indexHotkey = model->index(index.row(), 0, QModelIndex());
             Q_ASSERT_X(indexHotkey.data(CActionHotkeyListModel::ActionHotkeyRole).canConvert<CActionHotkey>(), Q_FUNC_INFO, "No action hotkey");
-            CActionHotkey actionHotkey = indexHotkey.data(CActionHotkeyListModel::ActionHotkeyRole).value<CActionHotkey>();
-
+            const CActionHotkey actionHotkey = indexHotkey.data(CActionHotkeyListModel::ActionHotkeyRole).value<CActionHotkey>();
             const CActionHotkey selectedActionHotkey = CHotkeyDialog::getActionHotkey(actionHotkey, getAllIdentifiers(), this);
             if (selectedActionHotkey.isValid() && checkAndConfirmConflicts(selectedActionHotkey, { actionHotkey }))
             {
                 updateHotkeyInSettings(actionHotkey, selectedActionHotkey);
                 m_model.setData(indexHotkey, QVariant::fromValue(selectedActionHotkey), CActionHotkeyListModel::ActionHotkeyRole);
+
+                // T784, further info about the "key"/button
+                CLogMessage(this).debug(u"%1, edited key: '%2'") << classNameShort(this) << selectedActionHotkey.toQString(true);
             }
             this->resizeView();
         }
@@ -109,7 +115,7 @@ namespace BlackGui
             const QModelIndexList indexes = ui->tv_Hotkeys->selectionModel()->selectedRows();
             for (const auto &index : indexes)
             {
-                CActionHotkey actionHotkey = index.data(CActionHotkeyListModel::ActionHotkeyRole).value<CActionHotkey>();
+                const CActionHotkey actionHotkey = index.data(CActionHotkeyListModel::ActionHotkeyRole).value<CActionHotkey>();
                 removeHotkeyFromSettings(actionHotkey);
                 m_model.removeRows(index.row(), 1, QModelIndex());
             }
