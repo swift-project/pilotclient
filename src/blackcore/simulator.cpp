@@ -1084,7 +1084,7 @@ namespace BlackCore
     QString ISimulator::updateAircraftLimitationInfo() const
     {
         if (!m_limitUpdateAircraft) { return QStringLiteral("not limited"); }
-        static const QString limInfo("Limited %1 times with %2/secs.");
+        static const QString limInfo("Limited %1 time(s) with %2/secs.");
         return limInfo.arg(m_statsUpdateAircraftLimited).arg(m_limitUpdateAircraftBucket.getTokensPerSecond());
     }
 

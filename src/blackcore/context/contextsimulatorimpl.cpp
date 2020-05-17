@@ -873,7 +873,7 @@ namespace BlackCore
                     else
                     {
                         failover = false;
-                        CLogMessage(this).warning(u"Model for '%1' failed adding, tried %2 times to resolve, giving up") << cs.toQString(true) << (trial + 1);
+                        CLogMessage(this).warning(u"Model for '%1' failed adding, tried %2 time(s) to resolve, giving up") << cs.toQString(true) << (trial + 1);
                     }
                 }
             }
