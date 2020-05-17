@@ -2425,6 +2425,7 @@ namespace BlackSimPlugin
             {
                 // Q_ASSERT_X(metarBa.back() == 0, Q_FUNC_INFO, "Need 0 terminated string");
                 SimConnect_WeatherSetObservation(m_hSimConnect, 0, metarBa.constData());
+                CLogMessage(this).debug(u"Injecting weather: %1") << metar;
             }
         }
 
