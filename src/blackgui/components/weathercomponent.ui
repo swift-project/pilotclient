@@ -34,24 +34,49 @@
    </property>
    <item>
     <widget class="QGroupBox" name="gb_weatherControl">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>100</height>
+      </size>
+     </property>
      <property name="title">
       <string>Weather Control</string>
      </property>
      <layout class="QGridLayout" name="gl_WeatherComponent">
+      <property name="leftMargin">
+       <number>4</number>
+      </property>
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="rightMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
       <item row="0" column="0" colspan="2">
        <widget class="QComboBox" name="cb_weatherScenario"/>
       </item>
       <item row="0" column="2">
        <widget class="QPushButton" name="pb_ActivateWeather">
         <property name="text">
-         <string>Activate</string>
+         <string>activate</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" colspan="3">
+      <item row="1" column="0" colspan="2">
        <widget class="QLabel" name="lbl_WeatherEngineInfo">
         <property name="text">
          <string>info goes here</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="pb_Update">
+        <property name="text">
+         <string>update</string>
         </property>
        </widget>
       </item>
@@ -100,7 +125,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>Show Position</string>
+            <string>show Position</string>
            </property>
           </widget>
          </item>
@@ -267,6 +292,17 @@
    <header>blackgui/views/windlayerview.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>cb_weatherScenario</tabstop>
+  <tabstop>pb_ActivateWeather</tabstop>
+  <tabstop>pb_Update</tabstop>
+  <tabstop>cb_UseOwnAcftPosition</tabstop>
+  <tabstop>pb_SetPosition</tabstop>
+  <tabstop>tw_weatherGrid</tabstop>
+  <tabstop>tvp_TemperatureLayers</tabstop>
+  <tabstop>tvp_CloudLayers</tabstop>
+  <tabstop>tvp_WindLayers</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -77,7 +77,6 @@ namespace BlackCore
             m_plugins->collectPlugins();
             this->restoreSimulatorPlugins();
 
-            connect(&m_weatherManager,  &CWeatherManager::weatherGridReceived, this, &CContextSimulator::weatherGridReceived,   Qt::QueuedConnection);
             connect(&m_weatherManager,  &CWeatherManager::weatherGridReceived, this, &CContextSimulator::onWeatherGridReceived, Qt::QueuedConnection);
             connect(&m_aircraftMatcher, &CAircraftMatcher::setupChanged,       this, &CContextSimulator::matchingSetupChanged);
             connect(&CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance(), &CCentralMultiSimulatorModelSetCachesProvider::cacheChanged, this, &CContextSimulator::modelSetChanged);
@@ -882,6 +881,9 @@ namespace BlackCore
 
         void CContextSimulator::onWeatherGridReceived(const CWeatherGrid &weatherGrid, const CIdentifier &identifier)
         {
+            if (!sApp || sApp->isShuttingDown()) { return; }
+            emit this->weatherGridReceived(weatherGrid, identifier);
+
             if (!this->isSimulatorPluginAvailable()) { return; }
             if (!m_simulatorPlugin.second)           { return; }
 
