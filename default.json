@@ -24,6 +24,7 @@
         "p3d": true,
         "fsuipc": true,
         "xplane": true,
+        "xswiftbus": true,
         "fg": true
     },
     "releaseWithDebugInfo": true,

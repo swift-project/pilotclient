@@ -33,7 +33,7 @@ swiftConfig(apps.swiftdata) {
 swiftConfig(apps.swiftlauncher) {
     SUBDIRS += swiftlauncher
 }
-swiftConfig(sims.xplane) {
+swiftConfig(sims.xswiftbus) {
     SUBDIRS += xswiftbus
 }
 SUBDIRS += plugins

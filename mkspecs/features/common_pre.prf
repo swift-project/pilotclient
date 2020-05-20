@@ -108,6 +108,11 @@ equals(WORD_SIZE,64)|!win32: disableSwiftConfig(sims.fsx, sims.fs9)
 # equals(WORD_SIZE,64):win32-g++: disableSwiftConfig(sims.p3d)
 
 ################################
+# xswiftbus on 64bit only
+################################
+equals(WORD_SIZE,32): disableSwiftConfig(sims.xswiftbus)
+
+################################
 # For BlackMisc::getStackTrace
 ################################
 

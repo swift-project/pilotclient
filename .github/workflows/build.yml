@@ -298,11 +298,6 @@ jobs:
         with:
           name: swiftsymbols-allos-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
-      - name: Upload xswiftbus
-        uses: actions/upload-artifact@v2
-        with:
-          name: xswiftbus-thin-allos-${{ needs.preBuild.outputs.version }}
-          path: ${{ github.workspace }}/xswiftbus-*
 
   buildMacOS:
     runs-on: macos-10.15
@@ -394,7 +389,6 @@ jobs:
           name: xswiftbus-thin-allos-${{ needs.preBuild.outputs.version }}
       - name: Repackage xswiftbus
         run: |
-          7z x -y xswiftbus-windows-32-*.7z
           7z x -y xswiftbus-windows-64-*.7z
           7z x -y xswiftbus-linux-64-*.7z
           7z x -y xswiftbus-macos-64-*.7z
