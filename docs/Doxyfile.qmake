@@ -802,7 +802,7 @@ RECURSIVE              = YES
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE                 = $(DOXY_SRC_ROOT)/src/xswiftbus/libxplanemp \
+EXCLUDE                 = $(DOXY_SRC_ROOT)/src/xswiftbus/xplanemp2 \
                           $(DOXY_SRC_ROOT)/src/plugins/simulator/fsuipc32 \
                           $(DOXY_SRC_ROOT)/src/plugins/simulator/fsuipc64 \
                           $(DOXY_SRC_ROOT)/src/plugins/weatherdata/gfs/g2clib

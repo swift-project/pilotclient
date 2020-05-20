@@ -36,9 +36,9 @@ SOURCES += $$files($$PWD/*.cpp)
 HEADERS += $$files($$PWD/*.h)
 
 # Using the $$files function so we can remove some with -= below
-SOURCES += $$files(libxplanemp/src/*.cpp)
-HEADERS += $$files(libxplanemp/src/*.h) $$files(libxplanemp/include/*.h)
-INCLUDEPATH += ./libxplanemp ./libxplanemp/include ./libxplanemp/src
+SOURCES += $$files(xplanemp2/src/*.cpp)
+HEADERS += $$files(xplanemp2/src/*.h) $$files(xplanemp2/include/*.h)
+INCLUDEPATH += ./xplanemp2 ./xplanemp2/include ./xplanemp2/src
 
 unix:!macx {
     INCLUDEPATH *= /usr/include/dbus-1.0
@@ -50,10 +50,10 @@ unix:!macx {
 }
 
 # PlatformUtils also not used
-SOURCES -= $$files(libxplanemp/src/PlatformUtils.*.cpp)
-HEADERS -= libxplanemp/src/PlatformUtils.h
+SOURCES -= $$files(xplanemp2/src/PlatformUtils.*.cpp)
+HEADERS -= xplanemp2/src/PlatformUtils.h
 
-# Externals required by libxplanemp
+# Externals required by xplanemp2
 CONFIG += opengl
 msvc {
     CONFIG(debug, debug|release): LIBS += -lpngd -lzd -lopengl32 -lglu32
@@ -64,17 +64,15 @@ else: LIBS += -lpng -lz
 
 msvc: DEFINES += _CRT_SECURE_NO_WARNINGS
 
-# Required by X-Plane SDK and libxplanemp
+# Required by X-Plane SDK and xplanemp2
 win32:DEFINES += IBM=1
 linux:DEFINES += LIN=1
 macx:DEFINES += APL=1
 DEFINES += XPLM200=1
-# XPLM210 is required for new features in libxplanemp,
-# but means we lose support for X-Plane 9 and earlier versions.
-# TODO add config option to select minimum X-Plane version when building
 DEFINES += XPLM210=1
+DEFINES += XPLM300=1
 
-# Name will be used in libxplanemp log messages
+# Name will be used in xplanemp2 log messages
 DEFINES += XPMP_CLIENT_NAME=\\\"xswiftbus\\\"
 DEFINES += XPMP_CLIENT_LONGNAME=\\\"xswiftbus\\\"
 
