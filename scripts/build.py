@@ -426,7 +426,8 @@ def main(argv):
     builder.checks()
     builder.install()
     builder.publish()
-    builder.package_xswiftbus()
+    if word_size == '64':
+        builder.package_xswiftbus()
     builder.symbols(upload_symbols)
 
 
