@@ -40,15 +40,11 @@ namespace BlackCore
         qRegisterMetaType<BlackCore::Afv::Audio::TransceiverReceivingCallsignsChangedArgs>();
         qRegisterMetaType<BlackCore::Afv::Audio::TransceiverReceivingCallsignsChangedArgs>("TransceiverReceivingCallsignsChangedArgs");
 
-        qDBusRegisterMetaType<Context::CLogSubscriptionHash>();
-        qDBusRegisterMetaType<Context::CLogSubscriptionPair>();
         qDBusRegisterMetaType<Context::CSettingsDictionary>();
         qDBusRegisterMetaType<BlackMisc::Network::CLoginMode>();
         qDBusRegisterMetaType<BlackCore::ISimulator::SimulatorStatusFlag>();
         qDBusRegisterMetaType<BlackCore::ISimulator::SimulatorStatus>();
 
-        qRegisterMetaTypeStreamOperators<Context::CLogSubscriptionHash>();
-        qRegisterMetaTypeStreamOperators<Context::CLogSubscriptionPair>();
         qRegisterMetaTypeStreamOperators<Context::CSettingsDictionary>();
         qRegisterMetaTypeStreamOperators<BlackMisc::Network::CLoginMode>();
 

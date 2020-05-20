@@ -16,7 +16,6 @@
 #include "blackmisc/dbus.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/logcategory.h"
-#include "blackmisc/loghandler.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/statusmessage.h"
@@ -52,32 +51,6 @@ namespace BlackCore
         {
             if (mode == CCoreFacadeConfig::NotUsed) { return; }
             QPointer<IContextApplication> myself(this);
-
-            connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, this, [ = ](const CStatusMessage & message)
-            {
-                if (!myself) { return; }
-                this->logMessage(message, {});
-            });
-            connect(CLogHandler::instance(), &CLogHandler::subscriptionAdded, this, [ = ](const CLogPattern & pattern)
-            {
-                if (!myself) { return; }
-                this->addLogSubscription({}, pattern);
-            });
-            connect(CLogHandler::instance(), &CLogHandler::subscriptionRemoved, this, [ = ](const CLogPattern & pattern)
-            {
-                if (!myself) { return; }
-                this->removeLogSubscription({}, pattern);
-            });
-            connect(this, &IContextApplication::logSubscriptionAdded, this, [ = ](const CIdentifier & subscriber, const CLogPattern & pattern)
-            {
-                if (!myself) { return; }
-                m_logSubscriptions[subscriber].push_back(pattern);
-            });
-            connect(this, &IContextApplication::logSubscriptionRemoved, this, [ = ](const CIdentifier & subscriber, const CLogPattern & pattern)
-            {
-                if (!myself) { return; }
-                m_logSubscriptions[subscriber].removeAll(pattern);
-            });
 
             connect(CSettingsCache::instance(), &CSettingsCache::valuesChangedByLocal, this, [ = ](const CValueCachePacket & settings)
             {
@@ -122,17 +95,6 @@ namespace BlackCore
             sApp->getInputManager()->setForwarding(true);
         }
 
-        CIdentifierList IContextApplication::subscribersOf(const CStatusMessage &message) const
-        {
-            CIdentifierList result;
-            for (auto it = m_logSubscriptions.begin(); it != m_logSubscriptions.end(); ++it)
-            {
-                bool match = std::any_of(it->begin(), it->end(), [&message](const CLogPattern & pattern) { return pattern.match(message); });
-                if (match) { result.push_back(it.key()); }
-            }
-            return result;
-        }
-
         void IContextApplication::changeSettings(const CValueCachePacket &settings, const CIdentifier &origin)
         {
             Q_UNUSED(settings);
@@ -161,18 +123,3 @@ namespace BlackCore
         }
     } // ns
 } // ns
-
-QDBusArgument &operator <<(QDBusArgument &arg, const BlackCore::Context::CLogSubscriptionHash &hash)
-{
-    QList<CLogSubscriptionPair> listOfPairs;
-    for (auto it = hash.begin(); it != hash.end(); ++it) { listOfPairs.push_back({ it.key(), it.value() }); }
-    return arg << listOfPairs;
-}
-
-const QDBusArgument &operator >>(const QDBusArgument &arg, BlackCore::Context::CLogSubscriptionHash &hash)
-{
-    QList<CLogSubscriptionPair> listOfPairs;
-    arg >> listOfPairs;
-    for (const auto &pair : as_const(listOfPairs)) { hash.insert(pair.first, pair.second); }
-    return arg;
-}

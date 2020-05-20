@@ -33,44 +33,6 @@ namespace BlackCore
             CContextApplicationEmpty(CCoreFacade *runtime) : IContextApplication(CCoreFacadeConfig::NotUsed, runtime) {}
 
         public slots:
-            //! \copydoc IContextApplication::logMessage
-            virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::CIdentifier &origin) override
-            {
-                Q_UNUSED(message);
-                Q_UNUSED(origin);
-                logEmptyContextWarning(Q_FUNC_INFO);
-            }
-
-            //! \copydoc IContextApplication::addLogSubscription
-            virtual void addLogSubscription(const BlackMisc::CIdentifier &subscriber, const BlackMisc::CLogPattern &pattern) override
-            {
-                Q_UNUSED(subscriber);
-                Q_UNUSED(pattern);
-                logEmptyContextWarning(Q_FUNC_INFO);
-            }
-
-            //! \copydoc IContextApplication::removeLogSubscription
-            virtual void removeLogSubscription(const BlackMisc::CIdentifier &subscriber, const BlackMisc::CLogPattern &pattern) override
-            {
-                Q_UNUSED(subscriber);
-                Q_UNUSED(pattern);
-                logEmptyContextWarning(Q_FUNC_INFO);
-
-            }
-
-            //! \copydoc IContextApplication::getAllLogSubscriptions
-            virtual BlackCore::Context::CLogSubscriptionHash getAllLogSubscriptions() const override
-            {
-                logEmptyContextWarning(Q_FUNC_INFO);
-                return CLogSubscriptionHash();
-            }
-
-            //! \copydoc IContextApplication::synchronizeLogSubscriptions
-            virtual void synchronizeLogSubscriptions() override
-            {
-                logEmptyContextWarning(Q_FUNC_INFO);
-            }
-
             //! \copydoc IContextApplication::changeSettings
             virtual void changeSettings(const BlackMisc::CValueCachePacket &settings, const BlackMisc::CIdentifier &origin) override
             {

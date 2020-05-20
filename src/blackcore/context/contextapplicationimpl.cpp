@@ -11,7 +11,6 @@
 #include "blackcore/inputmanager.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/logcategory.h"
-#include "blackmisc/loghandler.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/simplecommandparser.h"
@@ -37,41 +36,6 @@ namespace BlackCore
             if (!server || m_mode != CCoreFacadeConfig::LocalInDBusServer) { return this; }
             server->addObject(IContextApplication::ObjectPath(), this);
             return this;
-        }
-
-        void CContextApplication::logMessage(const CStatusMessage &message, const CIdentifier &origin)
-        {
-            if (!origin.hasApplicationProcessId())
-            {
-                CLogHandler::instance()->logRemoteMessage(message);
-            }
-            if (subscribersOf(message).containsAnyNotIn(CIdentifierList({ origin, {} })))
-            {
-                emit this->messageLogged(message, origin);
-            }
-        }
-
-        void CContextApplication::addLogSubscription(const CIdentifier &subscriber, const CLogPattern &pattern)
-        {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            emit this->logSubscriptionAdded(subscriber, pattern);
-        }
-
-        void CContextApplication::removeLogSubscription(const CIdentifier &subscriber, const CLogPattern &pattern)
-        {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            emit this->logSubscriptionRemoved(subscriber, pattern);
-        }
-
-        CLogSubscriptionHash CContextApplication::getAllLogSubscriptions() const
-        {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return m_logSubscriptions;
-        }
-
-        void CContextApplication::synchronizeLogSubscriptions()
-        {
-            // no-op: proxy implements this method by calling getAllLogSubscriptions
         }
 
         void CContextApplication::changeSettings(const CValueCachePacket &settings, const CIdentifier &origin)
