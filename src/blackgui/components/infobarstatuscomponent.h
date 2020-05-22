@@ -15,6 +15,7 @@
 #include "blackgui/blackguiexport.h"
 
 #include "blackmisc/audio/ptt.h"
+#include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/input/actionhotkeydefs.h"
 #include "blackmisc/network/connectionstatus.h"
 
@@ -87,6 +88,12 @@ namespace BlackGui
 
             //! Mute changed
             void onMuteChanged(bool muted);
+
+            //! Audio started
+            void onAudioStarted(const BlackMisc::Audio::CAudioDeviceInfo &input, const BlackMisc::Audio::CAudioDeviceInfo &output);
+
+            //! Audio stopped
+            void onAudioStopped();
 
             //! Mapper is ready
             void onMapperReady();

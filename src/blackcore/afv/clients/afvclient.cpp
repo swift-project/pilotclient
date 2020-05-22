@@ -273,7 +273,10 @@ namespace BlackCore
 
             void CAfvClient::setMuted(bool mute)
             {
+                if (this->isMuted() == mute) { return; }
                 this->setNormalizedOutputVolume(mute ? 0 : 50);
+
+                emit this->changedMute(mute);
             }
 
             void CAfvClient::startAudio()
@@ -352,6 +355,13 @@ namespace BlackCore
                 this->onTimerUpdate(); // update values
 
                 emit this->startedAudio(useInputDevice, useOutputDevice);
+
+                if (this->isMuted())
+                {
+                    // un-mute after startup
+                    this->setMuted(false);
+                }
+
             }
 
             void CAfvClient::startAudio(const QString &inputDeviceName, const QString &outputDeviceName)
@@ -387,6 +397,8 @@ namespace BlackCore
                     m_output->stop();
                 }
                 CLogMessage(this).info(u"AFV Client stopped");
+
+                if (this->isMuted()) { this->setMuted(false); }
 
                 emit this->inputVolumePeakVU(0.0);
                 emit this->outputVolumePeakVU(0.0);

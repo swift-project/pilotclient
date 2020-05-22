@@ -207,6 +207,7 @@ namespace BlackCore
             connect(m_voiceClient, &CAfvClient::startedAudio, this, &CContextAudioBase::startedAudio, Qt::QueuedConnection);
             connect(m_voiceClient, &CAfvClient::stoppedAudio, this, &CContextAudioBase::stoppedAudio, Qt::QueuedConnection);
             connect(m_voiceClient, &CAfvClient::ptt,          this, &CContextAudioBase::ptt,          Qt::QueuedConnection);
+            connect(m_voiceClient, &CAfvClient::changedMute,  this, &CContextAudioBase::changedMute,  Qt::QueuedConnection);
             connect(m_voiceClient, &CAfvClient::connectionStatusChanged, this, &CContextAudioBase::onAfvConnectionStatusChanged, Qt::QueuedConnection);
             connect(m_voiceClient, &CAfvClient::afvConnectionFailure,    this, &CContextAudioBase::onAfvConnectionFailure,       Qt::QueuedConnection);
         }
@@ -429,6 +430,7 @@ namespace BlackCore
             const bool changedVoiceOutput = (currentVolume != volume);
             if (changedVoiceOutput)
             {
+                // TODO: KB 2020-05 the mute handling should entirely go to AFV client!
                 m_voiceClient->setNormalizedOutputVolume(volume);
                 m_outVolumeBeforeMute = volume;
 
@@ -468,8 +470,8 @@ namespace BlackCore
             m_voiceClient->setMuted(muted);
             if (!muted) { m_voiceClient->setNormalizedOutputVolume(m_outVolumeBeforeMute); }
 
-            // signal
-            emit this->changedMute(muted);
+            // signal no longer need, signaled by m_voiceClient->setMuted
+            // emit this->changedMute(muted);
         }
 
         bool CContextAudioBase::isMuted() const
@@ -503,13 +505,13 @@ namespace BlackCore
             if (!play) { return; }
             if (notification == CNotificationSounds::PTTClickKeyDown && (considerSettings && settings.noAudioTransmission()))
             {
-                /**
+                /*
                 if (!this->canTalk())
                 {
                     // warning sound
                     notification = CNotificationSounds::NotificationNoAudioTransmission;
                 }
-                **/
+                */
             }
 
             if (volume < 0 || volume > 100)
