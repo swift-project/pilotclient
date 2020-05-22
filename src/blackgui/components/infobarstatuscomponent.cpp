@@ -53,14 +53,14 @@ namespace BlackGui
             this->adjustTextSize();
 
             ui->lbl_Audio->setContextMenuPolicy(Qt::CustomContextMenu);
-            connect(ui->lbl_Audio, &QLabel::customContextMenuRequested,     this, &CInfoBarStatusComponent::onCustomAudioContextMenuRequested);
+            connect(ui->lbl_Audio,     &QLabel::customContextMenuRequested, this, &CInfoBarStatusComponent::onCustomAudioContextMenuRequested);
             connect(ui->comp_XpdrMode, &CTransponderModeComponent::changed, this, &CInfoBarStatusComponent::transponderModeChanged);
 
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
             if (sGui->getIContextSimulator())
             {
                 connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CInfoBarStatusComponent::onSimulatorStatusChanged, Qt::QueuedConnection);
-                connect(sGui->getIContextSimulator(), &IContextSimulator::modelSetChanged, this, &CInfoBarStatusComponent::onMapperReady);
+                connect(sGui->getIContextSimulator(), &IContextSimulator::modelSetChanged,        this, &CInfoBarStatusComponent::onMapperReady);
                 connect(sGui, &CGuiApplication::changedInternetAccessibility, this, &CInfoBarStatusComponent::onInternetAccessibleChanged);
 
                 // initial values
@@ -70,7 +70,7 @@ namespace BlackGui
 
             if (sGui->getIContextNetwork())
             {
-                connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CInfoBarStatusComponent::onNetworkConnectionChanged);
+                connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CInfoBarStatusComponent::onNetworkConnectionChanged, Qt::QueuedConnection);
             }
 
             if (sGui->getIContextApplication())
@@ -81,7 +81,9 @@ namespace BlackGui
             ui->led_Audio->setOn(CInfoBarStatusComponent::isAudioAvailableAndNotMuted());
             if (sGui->getCContextAudioBase())
             {
-                connect(sGui->getCContextAudioBase(), &CContextAudioBase::changedMute, this, &CInfoBarStatusComponent::onMuteChanged);
+                connect(sGui->getCContextAudioBase(), &CContextAudioBase::changedMute,  this, &CInfoBarStatusComponent::onMuteChanged,  Qt::QueuedConnection);
+                connect(sGui->getCContextAudioBase(), &CContextAudioBase::startedAudio, this, &CInfoBarStatusComponent::onAudioStarted, Qt::QueuedConnection);
+                connect(sGui->getCContextAudioBase(), &CContextAudioBase::stoppedAudio, this, &CInfoBarStatusComponent::onAudioStopped, Qt::QueuedConnection);
 
                 // PTT as received on audio
                 // that also would need to be reconnected if audio is disabled/enabled
@@ -91,7 +93,7 @@ namespace BlackGui
             QPointer<CInfoBarStatusComponent> myself(this);
             QTimer::singleShot(5000, this, [ = ]
             {
-                if (!myself) { return; }
+                if (!sGui || sGui->isShuttingDown() || !myself) { return; }
                 this->updateValues();
             });
         }
@@ -103,14 +105,14 @@ namespace BlackGui
         {
             this->updateSpacing();
             CLedWidget::LedShape shape = CLedWidget::Circle;
-            ui->led_DBus->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "DBus connected", "DBus disconnected", 14);
-            ui->led_Network->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Network connected", "Network disconnected", 14);
-            ui->led_Simulator->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Blue, shape, "Simulator running", "Simulator disconnected", "Simulator connected", 14);
+            ui->led_DBus->setValues(CLedWidget::Yellow,        CLedWidget::Black, shape, "DBus connected", "DBus disconnected", 14);
+            ui->led_Network->setValues(CLedWidget::Yellow,     CLedWidget::Black, shape, "Network connected", "Network disconnected", 14);
+            ui->led_Simulator->setValues(CLedWidget::Yellow,   CLedWidget::Black, CLedWidget::Blue, shape, "Simulator running", "Simulator disconnected", "Simulator connected", 14);
             ui->led_MapperReady->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Blue, shape, "Mapper ready", "Mappings not yet loaded", "Mappings not yet loaded", 14);
 
             shape = CLedWidget::Rounded;
-            ui->led_Ptt->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Ptt", "Silence", 18);
-            ui->led_Audio->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "On", "Muted", 18);
+            ui->led_Ptt->setValues(CLedWidget::Yellow,   CLedWidget::Black, shape, "Ptt", "Silence", 18);
+            ui->led_Audio->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "On",  "Muted",   18);
             this->onInternetAccessibleChanged(sGui->isInternetAccessible());
         }
 
@@ -240,7 +242,20 @@ namespace BlackGui
 
         void CInfoBarStatusComponent::onMuteChanged(bool muted)
         {
-            ui->led_Audio->setOn(!muted);
+            const bool on = !muted && isAudioAvailableAndNotMuted(); // make sure audio is started
+            ui->led_Audio->setOn(on);
+        }
+
+        void CInfoBarStatusComponent::onAudioStarted(const CAudioDeviceInfo &input, const CAudioDeviceInfo &output)
+        {
+            Q_UNUSED(input)
+            Q_UNUSED(output)
+            this->updateValues();
+        }
+
+        void CInfoBarStatusComponent::onAudioStopped()
+        {
+            this->updateValues();
         }
 
         void CInfoBarStatusComponent::onMapperReady()
@@ -276,12 +291,12 @@ namespace BlackGui
             Q_UNUSED(active)
             Q_UNUSED(pttcom)
 
-            /**
+            /*
             if (pttcom == COM1 || pttcom == COM2)
             {
                 this->onPttChanged(active);
             }
-            **/
+            */
         }
 
         void CInfoBarStatusComponent::onInternetAccessibleChanged(bool access)

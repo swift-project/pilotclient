@@ -313,6 +313,9 @@ namespace BlackCore
                 //! Audio has been stopped
                 void stoppedAudio();
 
+                //! Mute changed
+                void changedMute(bool muted);
+
             protected:
                 //! \copydoc BlackMisc::CContinuousWorker::initialize
                 virtual void initialize() override;
