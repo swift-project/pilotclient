@@ -59,9 +59,6 @@ namespace XSwiftBus
         //! Set plane view submenu
         void setPlaneViewMenu(const CMenu &planeViewSubMenu);
 
-        //! Called by XPluginStart
-        static void initLegacyData();
-
         //! Initialize the multiplayer planes rendering and return true if successful
         bool initialize();
 
@@ -155,11 +152,10 @@ namespace XSwiftBus
         bool containsCallsign(const std::string &callsign) const;
 
         static CTraffic *s_instance;
-        static int preferences(const char *section, const char *name, int def);
-        static float preferences(const char *section, const char *name, float def);
+        XPMPConfiguration_t m_configuration = {};
+        void updateConfiguration();
 
         static int orbitPlaneFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon);
-        static int drawCallback(XPLMDrawingPhase phase, int isBefore, void *refcon);
         static int followAircraftKeySniffer(char character, XPLMKeyFlags flags, char virtualKey, void *refcon);
 
         //! Remote aircraft
@@ -173,15 +169,14 @@ namespace XSwiftBus
             std::string modelName;
             std::string nightTextureMode;
             bool hasSurfaces = false;
-            bool hasXpdr     = false;
             bool isOnGround  = false;
             char label[32] {};
             CTerrainProbe terrainProbe;
             XPMPPlaneSurfaces_t surfaces;
             float targetGearPosition = 0;
             std::chrono::system_clock::time_point prevSurfacesLerpTime;
-            XPMPPlaneRadar_t xpdr;
             XPMPPlanePosition_t position;
+            XPMPPlaneSurveillance_t surveillance;
             Plane(void *id_, const std::string &callsign_, const std::string &aircraftIcao_, const std::string &airlineIcao_,
                   const std::string &livery_, const std::string &modelName_);
         };
@@ -237,21 +232,9 @@ namespace XSwiftBus
         bool m_emitSimFrame = true;
         int m_countFrame    = 0; //!< allows to do something every n-th frame
 
-        int getPlaneData(void *id, int dataType, void *io_data);
-        static int getPlaneData(void *id, int dataType, void *io_data, void *self)
-        {
-            return static_cast<CTraffic *>(self)->getPlaneData(id, dataType, io_data);
-        }
-
-        static void planeLoaded(void *id, bool succeeded, void *self)
-        {
-            auto *traffic = static_cast<CTraffic *>(self);
-            auto  planeIt = traffic->m_planesById.find(id);
-            if (planeIt == traffic->m_planesById.end()) { return; }
-
-            if (succeeded) { traffic->emitPlaneAdded(planeIt->second->callsign); }
-            else { traffic->emitPlaneAddingFailed(planeIt->second->callsign); }
-        }
+        std::vector<XPMPUpdate_t> m_updates;
+        void doPlaneUpdates();
+        void interpolateGear(Plane *);
     };
 } // ns
 

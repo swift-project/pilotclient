@@ -33,8 +33,6 @@ PLUGIN_API int XPluginStart(char *o_name, char *o_sig, char *o_desc)
     std::strcpy(o_name, "XSwiftBus");
     std::strcpy(o_sig,  "org.swift-project.xswiftbus");
     std::strcpy(o_desc, "Allows swift to connect to X-Plane via D-Bus IPC");
-
-    XSwiftBus::CTraffic::initLegacyData();
     return 1;
 }
 

@@ -15,7 +15,6 @@
 #include "traffic.h"
 #include "utils.h"
 #include "XPMPMultiplayer.h"
-#include "XPMPPlaneRenderer.h"
 #include <XPLM/XPLMGraphics.h>
 #include <XPLM/XPLMProcessing.h>
 #include <XPLM/XPLMUtilities.h>
@@ -38,13 +37,16 @@ namespace XSwiftBus
     CTraffic::Plane::Plane(void *id_, const std::string &callsign_, const std::string &aircraftIcao_, const std::string &airlineIcao_, const std::string &livery_, const std::string &modelName_)
         : id(id_), callsign(callsign_), aircraftIcao(aircraftIcao_), airlineIcao(airlineIcao_), livery(livery_), modelName(modelName_)
     {
+        std::memset(static_cast<void *>(&position), 0, sizeof(position));
+        position.size = sizeof(position);
+        std::memset(static_cast<void *>(&surveillance), 0, sizeof(surveillance));
+        surveillance.size = sizeof(surveillance);
         std::memset(static_cast<void *>(&surfaces), 0, sizeof(surfaces));
+        surfaces.size = sizeof(surfaces);
         surfaces.lights.bcnLights = surfaces.lights.landLights = surfaces.lights.navLights = surfaces.lights.strbLights = 1;
 
-        surfaces.size = sizeof(surfaces);
-        xpdr.size = sizeof(xpdr);
-
         std::strncpy(label, callsign.c_str(), sizeof(label));
+
         std::srand(static_cast<unsigned int>(std::time(nullptr)));
         surfaces.lights.timeOffset = static_cast<uint16_t>(std::rand() % 0xffff);
     }
@@ -59,49 +61,34 @@ namespace XSwiftBus
     {
         assert(!s_instance);
         s_instance = this;
-        XPLMRegisterDrawCallback(drawCallback, xplm_Phase_Airplanes, 1, this);
         XPLMRegisterKeySniffer(followAircraftKeySniffer, 1, this);
     }
     // *INDENT-ON*
 
     CTraffic::~CTraffic()
     {
-        XPLMUnregisterDrawCallback(drawCallback, xplm_Phase_Airplanes, 1, this);
         cleanup();
         assert(s_instance == this);
         s_instance = nullptr;
     }
-
-    static bool s_legacyDataOK = true;
 
     void CTraffic::setPlaneViewMenu(const CMenu &planeViewSubMenu)
     {
         m_followPlaneViewSubMenu = planeViewSubMenu;
     }
 
-    void CTraffic::initLegacyData()
-    {
-        initXPlanePath();
-        auto dir = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xswiftbus" + g_sep + "LegacyData" + g_sep;
-
-        std::string csl = dir + "CSL";
-        std::string related = dir + "related.txt";
-        std::string doc8643 = dir + "Doc8643.txt";
-        std::string lights  = dir + "lights.png";
-
-        auto err = XPMPMultiplayerInitLegacyData(csl.c_str(), related.c_str(), lights.c_str(), doc8643.c_str(),
-                   "C172", preferences, preferences);
-        if (*err) { s_legacyDataOK = false; }
-    }
-
     bool CTraffic::initialize()
     {
-        if (! s_legacyDataOK) { return false; }
-
         if (! m_initialized)
         {
-            auto err = XPMPMultiplayerInit(preferences, preferences);
-            if (*err) { cleanup(); }
+            initXPlanePath();
+            auto dir = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xswiftbus" + g_sep + "LegacyData" + g_sep;
+            std::string related = dir + "related.txt";
+            std::string doc8643 = dir + "Doc8643.txt";
+
+            updateConfiguration();
+            auto err = XPMPMultiplayerInit(&m_configuration, related.c_str(), doc8643.c_str());
+            if (err && *err) { cleanup(); }
             else { m_initialized = true; }
         }
 
@@ -120,7 +107,6 @@ namespace XSwiftBus
             else
             {
                 m_enabledMultiplayer = true;
-                XPMPLoadPlanesIfNecessary();
             }
         }
 
@@ -234,50 +220,18 @@ namespace XSwiftBus
     // static int g_maxPlanes = 100;
     // static float g_drawDistance = 50.0f;
 
-    int CTraffic::preferences(const char *section, const char *name, int def)
+    void CTraffic::updateConfiguration()
     {
-        if (!s_instance) { return def; }
-
-        if (strcmp(section, "planes") == 0 && strcmp(name, "max_full_count") == 0)
-        {
-            return s_instance->getSettings().getMaxPlanes(); // preferences
-        }
-        else if (strcmp(section, "debug") == 0 && strcmp(name, "allow_obj8_async_load") == 0)
-        {
-            // the setting allow_obj8_async_load (in the debug section) controls
-            // whether or not async loading is enabled: 1 means enabled, 0 means disabled
-            return 1;
-        }
-        else if (strcmp(section, "debug") == 0 && strcmp(name, "render_phases") == 0)
-        {
-            return s_instance->getConfig().getDebugMode() ? 1 : 0;
-        }
-        else if (strcmp(section, "debug") == 0 && strcmp(name, "tcas_traffic") == 0)
-        {
-            return s_instance->getConfig().getTcasEnabled() ? 1 : 0;
-        }
-        return def;
-    }
-
-    float CTraffic::preferences(const char *section, const char *name, float def)
-    {
-        if (!s_instance) { return def; }
-
-        if (strcmp(section, "planes") == 0 && strcmp(name, "full_distance") == 0)
-        {
-            return static_cast<float>(s_instance->getSettings().getMaxDrawDistanceNM()); // preferences
-        }
-        return def;
+        m_configuration.maxFullAircraftRenderingDistance = static_cast<float>(s_instance->getSettings().getMaxDrawDistanceNM());
+        m_configuration.enableSurfaceClamping = true;
+        m_configuration.debug.modelMatching = false;
     }
 
     std::string CTraffic::loadPlanesPackage(const std::string &path)
     {
         initXPlanePath();
-        auto dir = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xswiftbus" + g_sep + "LegacyData" + g_sep;
 
-        std::string related = dir + "related.txt";
-        std::string doc8643 = dir + "Doc8643.txt";
-        auto err = XPMPLoadCSLPackage(path.c_str(), related.c_str(), doc8643.c_str());
+        auto err = XPMPMultiplayerLoadCSLPackages(path.c_str());
         if (*err) { return err; }
         return {};
     }
@@ -307,12 +261,11 @@ namespace XSwiftBus
         XPMPPlaneID id = nullptr;
         if (modelName.empty())
         {
-            id = XPMPCreatePlane(aircraftIcao.c_str(), airlineIcao.c_str(), livery.c_str(), getPlaneData, planeLoaded, static_cast<void *>(this));
+            id = XPMPCreatePlane(aircraftIcao.c_str(), airlineIcao.c_str(), livery.c_str());
         }
         else
         {
-            const std::string nt = this->getSettings().getNightTextureMode();
-            id = XPMPCreatePlaneWithModelName(modelName.c_str(), aircraftIcao.c_str(), airlineIcao.c_str(), livery.c_str(), nt.c_str(), getPlaneData, planeLoaded, static_cast<void *>(this));
+            id = XPMPCreatePlaneWithModelName(modelName.c_str(), aircraftIcao.c_str(), airlineIcao.c_str(), livery.c_str());
         }
 
         if (!id)
@@ -329,6 +282,8 @@ namespace XSwiftBus
         CMenuItem planeViewMenuItem = m_followPlaneViewSubMenu.item(callsign, [this, callsign] { switchToFollowPlaneView(callsign); });
         m_followPlaneViewMenuItems[callsign] = planeViewMenuItem;
         m_followPlaneViewSequence.push_back(callsign);
+
+        emitPlaneAdded(callsign);
     }
 
     void CTraffic::removePlane(const std::string &callsign)
@@ -392,6 +347,8 @@ namespace XSwiftBus
             plane->position.pitch   = static_cast<float>(pitchesDeg.at(i));
             plane->position.roll    = static_cast<float>(rollsDeg.at(i));
             plane->position.heading = static_cast<float>(headingsDeg.at(i));
+            plane->position.offsetScale = 1.0f;
+            plane->position.clampToGround = true;
 
             if (setOnGround) { plane->isOnGround = onGrounds.at(i); }
         }
@@ -452,11 +409,10 @@ namespace XSwiftBus
             Plane *plane = planeIt->second;
             if (!plane) { continue; }
 
-            plane->hasXpdr = true;
-            plane->xpdr.code = codes.at(i);
-            if (idents.at(i)) { plane->xpdr.mode = xpmpTransponderMode_ModeC_Ident; }
-            else if (modeCs.at(i)) { plane->xpdr.mode = xpmpTransponderMode_ModeC; }
-            else { plane->xpdr.mode = xpmpTransponderMode_Standby; }
+            plane->surveillance.code = codes.at(i);
+            if (idents.at(i)) { plane->surveillance.mode = xpmpTransponderMode_ModeC_Ident; }
+            else if (modeCs.at(i)) { plane->surveillance.mode = xpmpTransponderMode_ModeC; }
+            else { plane->surveillance.mode = xpmpTransponderMode_Standby; }
         }
     }
 
@@ -491,15 +447,13 @@ namespace XSwiftBus
                 groundElevation = plane->terrainProbe.getElevation(latDeg, lonDeg, plane->position.elevation, requestedCallsign, isWater).front();
                 if (std::isnan(groundElevation)) { groundElevation = 0.0; }
             }
-            double fudgeFactor = 3.0;
-            bool hasOffset = XPMPGetVerticalOffset(plane->id, &fudgeFactor);
 
             callsigns.push_back(requestedCallsign);
             latitudesDeg.push_back(latDeg);
             longitudesDeg.push_back(lonDeg);
             elevationsM.push_back(groundElevation);
             waterFlags.push_back(isWater);
-            verticalOffsets.push_back(hasOffset ? fudgeFactor : std::numeric_limits<decltype(fudgeFactor)>::quiet_NaN());
+            verticalOffsets.push_back(0); // xpmp2 adjusts the offset for us, so effectively always zero
         }
     }
 
@@ -830,6 +784,9 @@ namespace XSwiftBus
     int CTraffic::process()
     {
         invokeQueuedDBusCalls();
+        doPlaneUpdates();
+        emitSimFrame();
+        m_countFrame++;
         return 1;
     }
 
@@ -842,73 +799,34 @@ namespace XSwiftBus
                            sizeof(*dst) - sizeof(dst->size));
     }
 
-    int CTraffic::getPlaneData(void *id, int dataType, void *io_data)
+    void CTraffic::doPlaneUpdates()
     {
-        const auto planeIt = m_planesById.find(id);
-        // assert(planeIt != m_planesById.end());
-        if (planeIt == m_planesById.end()) { return xpmpData_Unavailable; } // less drastic version
-        Plane *plane = planeIt->second;
-        if (!plane) { return xpmpData_Unavailable; }
-
-        switch (dataType)
+        m_updates.clear();
+        for (const auto pair : m_planesById)
         {
-        case xpmpDataType_Position:
-            {
-                const auto io_position = static_cast<XPMPPlanePosition_t *>(io_data);
-                io_position->lat = plane->position.lat;
-                io_position->lon = plane->position.lon;
-                io_position->elevation = plane->position.elevation;
-                io_position->pitch = plane->position.pitch;
-                io_position->roll = plane->position.roll;
-                io_position->heading = plane->position.heading;
-                std::strncpy(io_position->label, plane->label, sizeof(plane->label)); // fixme don't need to copy on every frame
-                return xpmpData_NewData;
-            }
-
-        case xpmpDataType_Surfaces:
-            if (plane->hasSurfaces)
-            {
-                const auto now = std::chrono::system_clock::now();
-
-                static const float epsilon = std::numeric_limits<float>::epsilon();
-                const float f = plane->surfaces.gearPosition - plane->targetGearPosition;
-                if (std::abs(f) > epsilon)
-                {
-                    // interpolate gear position
-                    constexpr float gearMoveTimeMs = 5000;
-                    const auto gearPositionDiffRemaining = plane->targetGearPosition - plane->surfaces.gearPosition;
-
-                    const auto diffMs = std::chrono::duration_cast<std::chrono::milliseconds>(now - plane->prevSurfacesLerpTime);
-                    const auto gearPositionDiffThisFrame = (diffMs.count()) / gearMoveTimeMs;
-                    plane->surfaces.gearPosition += std::copysign(gearPositionDiffThisFrame, gearPositionDiffRemaining);
-                    plane->surfaces.gearPosition = std::max(0.0f, std::min(plane->surfaces.gearPosition, 1.0f));
-                }
-                plane->prevSurfacesLerpTime = now;
-                const auto io_surfaces = static_cast<XPMPPlaneSurfaces_t *>(io_data);
-
-                if (memcmpPayload(io_surfaces, &plane->surfaces))
-                {
-                    std::memcpy(io_surfaces, &plane->surfaces, sizeof(*io_surfaces));
-                    return xpmpData_NewData;
-                }
-                else { return xpmpData_Unchanged; }
-            }
-            break;
-
-        case xpmpDataType_Radar:
-            if (plane->hasXpdr)
-            {
-                const auto io_xpdr = static_cast<XPMPPlaneRadar_t *>(io_data);
-
-                if (memcmpPayload(io_xpdr, &plane->xpdr))
-                {
-                    std::memcpy(io_xpdr, &plane->xpdr, sizeof(*io_xpdr));
-                    return xpmpData_NewData;
-                }
-                else { return xpmpData_Unchanged; }
-            }
+            Plane *plane = pair.second;
+            interpolateGear(plane);
+            m_updates.push_back({ plane->id, &plane->position, &plane->surfaces, &plane->surveillance });
         }
-        return xpmpData_Unavailable;
+        XPMPUpdatePlanes(m_updates.data(), sizeof(XPMPUpdate_t), m_updates.size());
+    }
+
+    void CTraffic::interpolateGear(Plane* plane)
+    {
+        const auto now = std::chrono::system_clock::now();
+        static const float epsilon = std::numeric_limits<float>::epsilon();
+        const float f = plane->surfaces.gearPosition - plane->targetGearPosition;
+        if (std::abs(f) > epsilon)
+        {
+            constexpr float gearMoveTimeMs = 5000;
+            const auto gearPositionDiffRemaining = plane->targetGearPosition - plane->surfaces.gearPosition;
+
+            const auto diffMs = std::chrono::duration_cast<std::chrono::milliseconds>(now - plane->prevSurfacesLerpTime);
+            const auto gearPositionDiffThisFrame = (diffMs.count()) / gearMoveTimeMs;
+            plane->surfaces.gearPosition += std::copysign(gearPositionDiffThisFrame, gearPositionDiffRemaining);
+            plane->surfaces.gearPosition = std::max(0.0f, std::min(plane->surfaces.gearPosition, 1.0f));
+        }
+        plane->prevSurfacesLerpTime = now;
     }
 
     int CTraffic::orbitPlaneFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon)
@@ -1079,23 +997,6 @@ namespace XSwiftBus
             DEBUG_LOG("Follow aircraft " + traffic->m_followPlaneViewCallsign + " " + modelName);
         }
         // Return 1 to indicate we want to keep controlling the camera.
-        return 1;
-    }
-
-    int CTraffic::drawCallback(XPLMDrawingPhase phase, int isBefore, void *refcon)
-    {
-        (void)phase;
-        (void)isBefore;
-        CTraffic *traffic = static_cast<CTraffic *>(refcon);
-
-        // The draw callback is called several times per frame. We need this only once.
-        if (traffic->m_worldRenderType.get() == 0)
-        {
-            traffic->emitSimFrame();
-        }
-
-        traffic->m_countFrame++;
-
         return 1;
     }
 
