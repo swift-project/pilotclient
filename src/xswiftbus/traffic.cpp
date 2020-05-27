@@ -61,9 +61,6 @@ namespace XSwiftBus
         s_instance = this;
         XPLMRegisterDrawCallback(drawCallback, xplm_Phase_Airplanes, 1, this);
         XPLMRegisterKeySniffer(followAircraftKeySniffer, 1, this);
-
-        // init labels
-        this->setDrawingLabels(this->getSettings().isDrawingLabels());
     }
     // *INDENT-ON*
 
@@ -288,30 +285,6 @@ namespace XSwiftBus
     void CTraffic::setDefaultIcao(const std::string &defaultIcao)
     {
         XPMPSetDefaultPlaneICAO(defaultIcao.c_str());
-    }
-
-    void CTraffic::setDrawingLabels(bool drawing)
-    {
-        CSettings s = this->getSettings();
-        if (s.isDrawingLabels() != drawing)
-        {
-            s.setDrawingLabels(drawing);
-            this->setSettings(s);
-        }
-
-        if (drawing)
-        {
-            XPMPEnableAircraftLabels();
-        }
-        else
-        {
-            XPMPDisableAircraftLabels();
-        }
-    }
-
-    bool CTraffic::isDrawingLabels() const
-    {
-        return XPMPDrawingAircraftLabels();
     }
 
     void CTraffic::setMaxPlanes(int planes)
@@ -628,19 +601,13 @@ namespace XSwiftBus
             else if (message.getMethodName() == "setDrawingLabels")
             {
                 maybeSendEmptyDBusReply(wantsReply, sender, serial);
-                bool drawing = true;
-                message.beginArgumentRead();
-                message.getArgument(drawing);
-                queueDBusCall([ = ]()
-                {
-                    setDrawingLabels(drawing);
-                });
+                // removed in xpmp2
             }
             else if (message.getMethodName() == "isDrawingLabels")
             {
                 queueDBusCall([ = ]()
                 {
-                    sendDBusReply(sender, serial, isDrawingLabels());
+                    sendDBusReply(sender, serial, false); // always false in xpmp2
                 });
             }
             else if (message.getMethodName() == "setMaxPlanes")
@@ -1128,17 +1095,6 @@ namespace XSwiftBus
         }
 
         traffic->m_countFrame++;
-
-        // slow updates by modulo
-        if (traffic->m_countFrame % 250 == 0)
-        {
-            // update labels
-            const CSettings s = traffic->getSettings();
-            if (traffic->isDrawingLabels() != s.isDrawingLabels())
-            {
-                traffic->setDrawingLabels(s.isDrawingLabels());
-            }
-        }
 
         return 1;
     }

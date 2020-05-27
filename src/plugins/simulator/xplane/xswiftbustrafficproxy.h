@@ -213,10 +213,10 @@ namespace BlackSimPlugin
             //! \copydoc XSwiftBus::CTraffic::setDefaultIcao
             void setDefaultIcao(const QString &defaultIcao);
 
-            //! \copydoc XSwiftBus::CTraffic::setDrawingLabels
+            //! deprecated
             void setDrawingLabels(bool drawing);
 
-            //! \copydoc XSwiftBus::CTraffic::isDrawingLabels
+            //! deprecated
             bool isDrawingLabels() const;
 
             //! \copydoc XSwiftBus::CTraffic::setMaxPlanes
