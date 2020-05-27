@@ -14,16 +14,24 @@
 
 #include "utils.h"
 #include <XPMPMultiplayer.h>
-#include <XPMPMultiplayerCSL.h>
 #include <XPLM/XPLMUtilities.h>
 #include <XPLM/XPLMPlugin.h>
 #include <string>
 #include <sstream>
+#include <cassert>
+
+#ifdef APL
+#include <Carbon/Carbon.h>
+#endif
 
 namespace XSwiftBus
 {
     std::string g_xplanePath;
     std::string g_sep;
+
+#ifdef APL
+    int HFS2PosixPath(const char *path, char *result, int resultLen);
+#endif
 
     //! Init global xplane path
     void initXPlanePath()
@@ -52,7 +60,7 @@ namespace XSwiftBus
 
         assert(!filePath.empty());
         std::ostringstream ss;
-        ss << XPMPTimestamp() << "xswiftbus: ";
+        ss << "xswiftbus: ";
 
 #if defined(XSWIFTBUS_ENABLE_TRACE_LOG)
         switch (type)
@@ -86,7 +94,7 @@ namespace XSwiftBus
 
         ss << line;
         ss << " : ";
-#endif
+#endif //XSWIFTBUS_ENABLE_TRACE_LOG
 
         ss << message;
         ss << "\n";
@@ -94,6 +102,47 @@ namespace XSwiftBus
         const std::string buffer = ss.str();
         XPLMDebugString(buffer.c_str());
     }
+
+#ifdef APL
+    template <typename T>
+    struct CFSmartPtr
+    {
+	    CFSmartPtr(T p) : p_(p) {}
+	    ~CFSmartPtr() { if (p_) CFRelease(p_); }
+	    operator T () { return p_; }
+	    T p_;
+    };
+
+    #ifdef __clang__
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    #endif
+
+    int HFS2PosixPath(const char *path, char *result, int resultLen)
+    {
+        bool is_dir = (path[strlen(path)-1] == ':');
+
+        CFSmartPtr<CFStringRef>		inStr(CFStringCreateWithCString(kCFAllocatorDefault, path ,kCFStringEncodingMacRoman));
+        if (inStr == nullptr) return -1;
+
+        CFSmartPtr<CFURLRef>		url(CFURLCreateWithFileSystemPath(kCFAllocatorDefault, inStr, kCFURLHFSPathStyle,0));
+        if (url == nullptr) return -1;
+
+        CFSmartPtr<CFStringRef>		outStr(CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle));
+        if (outStr == nullptr) return -1;
+
+        if (!CFStringGetCString(outStr, result, resultLen, kCFStringEncodingMacRoman))
+            return -1;
+
+        if(is_dir) strcat(result, "/");
+
+        return 0;
+    }
+
+    #ifdef __clang__
+    #pragma clang diagnostic pop
+    #endif
+#endif //APL
 }
 
 //! \endcond

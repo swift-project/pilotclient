@@ -37,8 +37,16 @@ HEADERS += $$files($$PWD/*.h)
 
 # Using the $$files function so we can remove some with -= below
 SOURCES += $$files(xplanemp2/src/*.cpp)
-HEADERS += $$files(xplanemp2/src/*.h) $$files(xplanemp2/include/*.h)
-INCLUDEPATH += ./xplanemp2 ./xplanemp2/include ./xplanemp2/src
+SOURCES += $$files(xplanemp2/src/*.c)
+HEADERS += $$files(xplanemp2/src/*.h)
+
+SOURCES += $$files(xplanemp2/src/obj8/*.cpp)
+HEADERS += $$files(xplanemp2/src/obj8/*.h)
+
+HEADERS += $$files(xplanemp2/include/*.h)
+INCLUDEPATH += ./xplanemp2 ./xplanemp2/include ./xplanemp2/src ./xplanemp2/obj8
+
+!macx: SOURCES -= xplanemp2/src/AplFSUtil.cpp
 
 unix:!macx {
     INCLUDEPATH *= /usr/include/dbus-1.0
@@ -64,6 +72,10 @@ else: LIBS += -lpng -lz
 
 msvc: DEFINES += _CRT_SECURE_NO_WARNINGS
 
+!swiftConfig(allowNoisyWarnings) {
+    gcc|llvm:QMAKE_CXXFLAGS_WARN_ON *= -Wno-missing-field-initializers
+}
+
 # Required by X-Plane SDK and xplanemp2
 win32:DEFINES += IBM=1
 linux:DEFINES += LIN=1
@@ -71,6 +83,7 @@ macx:DEFINES += APL=1
 DEFINES += XPLM200=1
 DEFINES += XPLM210=1
 DEFINES += XPLM300=1
+DEFINES += XPLM_DEPRECATED=1
 
 # Name will be used in xplanemp2 log messages
 DEFINES += XPMP_CLIENT_NAME=\\\"xswiftbus\\\"
