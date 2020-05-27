@@ -77,12 +77,6 @@ namespace XSwiftBus
         //! Set the ICAO code to use for aircraft without a model match
         void setDefaultIcao(const std::string &defaultIcao);
 
-        //! Set whether the plugin draws type and callsign labels above aircraft
-        void setDrawingLabels(bool drawing);
-
-        //! Get whether the plugin draws type and callsign labels above aircraft
-        bool isDrawingLabels() const;
-
         //! Set the maximum number of aircraft.
         void setMaxPlanes(int planes);
 

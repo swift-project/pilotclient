@@ -31,10 +31,6 @@ namespace XSwiftBus
     {
         // m_startServerMenuItem = m_menu.item("Start XSwiftBus", [this]{ startServer(CDBusConnection::SessionBus); });
 
-        m_showHideLabelsMenuItem = m_menu.item("Show/Hide Aircraft Labels", [this]
-        {
-            m_traffic->setDrawingLabels(!m_traffic->isDrawingLabels());
-        });
         m_messageWindowSubMenu = m_menu.subMenu("Message Window");
         m_toggleMessageWindowMenuItem = m_messageWindowSubMenu.item("Show/Hide", [this]
         {
