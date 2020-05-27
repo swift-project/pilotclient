@@ -18,7 +18,7 @@
 #include "terrainprobe.h"
 #include "menus.h"
 #include "XPMPMultiplayer.h"
-#include "XPLMCamera.h"
+#include <XPLM/XPLMCamera.h>
 #include <XPLM/XPLMDisplay.h>
 #include <functional>
 #include <utility>
@@ -158,7 +158,6 @@ namespace XSwiftBus
         static int preferences(const char *section, const char *name, int def);
         static float preferences(const char *section, const char *name, float def);
 
-        static int orbitOwnAircraftFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon);
         static int orbitPlaneFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon);
         static int drawCallback(XPLMDrawingPhase phase, int isBefore, void *refcon);
         static int followAircraftKeySniffer(char character, XPLMKeyFlags flags, char virtualKey, void *refcon);
@@ -189,10 +188,8 @@ namespace XSwiftBus
 
         //! Check functions
         //! @{
-        static bool isPlusMinusOne(float v);
         static bool isPlusMinus180(float v);
         static bool isPlusMinus180(double v);
-        static bool isZeroTo360(double v);
         //! @}
 
         //! Normalize to (-180, 180] or [0, 360) degrees

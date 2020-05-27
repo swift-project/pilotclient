@@ -16,7 +16,7 @@
 #include "utils.h"
 #include "XPMPMultiplayer.h"
 #include "XPMPPlaneRenderer.h"
-#include "XPLMGraphics.h"
+#include <XPLM/XPLMGraphics.h>
 #include <XPLM/XPLMProcessing.h>
 #include <XPLM/XPLMUtilities.h>
 #include <XPLM/XPLMPlanes.h>
@@ -1122,13 +1122,6 @@ namespace XSwiftBus
         return 1;
     }
 
-    bool CTraffic::isPlusMinusOne(float v)
-    {
-        if (std::isnan(v)) { return false; }
-        if (v > 1.00001f || v < -1.00001f) { return false; }
-        return true;
-    }
-
     bool CTraffic::isPlusMinus180(float v)
     {
         if (std::isnan(v)) { return false; }
@@ -1140,13 +1133,6 @@ namespace XSwiftBus
     {
         if (std::isnan(v)) { return false; }
         if (v > 180.00001 || v < -180.00001) { return false; }
-        return true;
-    }
-
-    bool CTraffic::isZeroTo360(double v)
-    {
-        if (std::isnan(v)) { return false; }
-        if (v < 0 || v >= 360.0) { return false; }
         return true;
     }
 
