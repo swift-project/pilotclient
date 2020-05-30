@@ -117,7 +117,7 @@
    <item row="0" column="1" colspan="7">
     <widget class="QFontComboBox" name="cb_SettingsGuiFont">
      <property name="sizeAdjustPolicy">
-      <enum>QComboBox::AdjustToMinimumContentsLength</enum>
+      <enum>QComboBox::AdjustToContents</enum>
      </property>
     </widget>
    </item>

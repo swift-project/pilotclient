@@ -435,7 +435,7 @@ namespace BlackMisc
                 QFileInfo fileInfo(fullPath);
 
                 QStringList dirNames;
-                dirNames.append(relativePath.split('/', QString::SkipEmptyParts));
+                dirNames.append(relativePath.split('/', Qt::SkipEmptyParts));
                 // Replace the first one being the package name with the package root dir
                 QString packageRootDir = package.path.mid(package.path.lastIndexOf('/') + 1);
                 dirNames.replace(0, packageRootDir);
@@ -540,7 +540,7 @@ namespace BlackMisc
                 }
 
                 QStringList dirNames;
-                dirNames.append(relativePath.split('/', QString::SkipEmptyParts));
+                dirNames.append(relativePath.split('/', Qt::SkipEmptyParts));
                 // Replace the first one being the package name with the package root dir
                 QString packageRootDir = package.path.mid(package.path.lastIndexOf('/') + 1);
                 dirNames.replace(0, packageRootDir);

@@ -304,7 +304,7 @@
   </widget>
   <widget class="BlackGui::CDockWidgetInfoBar" name="dw_InfoBarStatus">
    <property name="features">
-    <set>QDockWidget::AllDockWidgetFeatures</set>
+    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetFloatable</set>
    </property>
    <property name="allowedAreas">
     <set>Qt::TopDockWidgetArea</set>
