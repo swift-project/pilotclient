@@ -286,6 +286,10 @@ namespace BlackMisc
     //! \remark potentially slow, so only to be used when format is unknown
     BLACKMISC_EXPORT QDateTime fromStringUtc(const QString &dateTimeString, Qt::DateFormat format = Qt::TextDate);
 
+    //! Same as QDateTime::fromString but QDateTime will be set to UTC
+    //! \remark potentially slow, so only to be used when format is unknown
+    BLACKMISC_EXPORT QDateTime fromStringUtc(const QString &dateTimeString, const QLocale &locale, QLocale::FormatType format);
+
     //! Parse multiple date time formats
     //! \remark potentially slow, so only to be used when format is unknown
     //! \remark TZ is UTC

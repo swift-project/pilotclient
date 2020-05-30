@@ -388,7 +388,7 @@ namespace BlackGui
         void CHotkeyDialog::selectAction()
         {
             if (m_actionHotkey.getAction().isEmpty()) { return; }
-            const QStringList tokens = m_actionHotkey.getAction().split("/", QString::SkipEmptyParts);
+            const QStringList tokens = m_actionHotkey.getAction().split("/", Qt::SkipEmptyParts);
             QModelIndex parentIndex = QModelIndex();
 
             for (const QString &token : tokens)

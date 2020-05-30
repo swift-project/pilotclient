@@ -28,6 +28,9 @@ swiftConfig(allowNoisyWarnings) {
         QMAKE_CXXFLAGS_WARN_ON *= /wd4251 /wd4275 /wd4514 /wd4800 /wd4097 /wd4706 /wd4710 /wd4530
     }
 }
+else {
+    DEFINES *= QT_NO_DEPRECATED_WARNINGS
+}
 
 # gcc 5 can warn about missing override keyword,
 # gcc 6 can do it without thousands of warnings in qt headers

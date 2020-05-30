@@ -109,7 +109,7 @@ namespace BlackGui
             for (const QString &actionPath : as_const(keys))
             {
                 QString currentPath;
-                const QStringList tokens = actionPath.split("/", QString::SkipEmptyParts);
+                const QStringList tokens = actionPath.split("/", Qt::SkipEmptyParts);
                 CActionItem *parentItem = m_rootItem.data();
                 for (const auto &token : tokens)
                 {

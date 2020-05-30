@@ -295,6 +295,15 @@ namespace BlackMisc
         return dt;
     }
 
+    QDateTime fromStringUtc(const QString& dateTimeString, const QLocale& locale, QLocale::FormatType format)
+    {
+        if (dateTimeString.isEmpty()) { return QDateTime(); }
+        QDateTime dt = locale.toDateTime(dateTimeString, format);
+        if (!dt.isValid()) { return dt; }
+        dt.setOffsetFromUtc(0); // must only be applied to valid timestamps
+        return dt;
+    }
+
     QDateTime parseMultipleDateTimeFormats(const QString &dateTimeString)
     {
         if (dateTimeString.isEmpty()) { return QDateTime(); }
@@ -325,10 +334,10 @@ namespace BlackMisc
         ts = fromStringUtc(dateTimeString, Qt::TextDate);
         if (ts.isValid()) return ts;
 
-        ts = fromStringUtc(dateTimeString, Qt::DefaultLocaleLongDate);
+        ts = fromStringUtc(dateTimeString, QLocale(), QLocale::LongFormat);
         if (ts.isValid()) return ts;
 
-        ts = fromStringUtc(dateTimeString, Qt::DefaultLocaleShortDate);
+        ts = fromStringUtc(dateTimeString, QLocale(), QLocale::ShortFormat);
         if (ts.isValid()) return ts;
 
         // SystemLocaleShortDate,
