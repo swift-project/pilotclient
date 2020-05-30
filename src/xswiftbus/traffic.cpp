@@ -233,6 +233,16 @@ namespace XSwiftBus
 
         auto err = XPMPMultiplayerLoadCSLPackages(path.c_str());
         if (*err) { return err; }
+
+        for (int i = 0, end = XPMPGetNumberOfInstalledModels(); i < end; ++i)
+        {
+            const char *mixedcase;
+            XPMPGetModelInfo(i, &mixedcase, nullptr, nullptr, nullptr);
+            std::string uppercase(mixedcase);
+            std::transform(uppercase.begin(), uppercase.end(), uppercase.begin(), [](char c) { return static_cast<char>(std::toupper(c)); });
+            m_modelStrings[uppercase] = mixedcase;
+        }
+
         return {};
     }
 
@@ -259,13 +269,13 @@ namespace XSwiftBus
         if (planeIt != m_planesByCallsign.end()) { return; }
 
         XPMPPlaneID id = nullptr;
-        if (modelName.empty())
+        if (modelName.empty() || m_modelStrings.count(modelName) == 0)
         {
             id = XPMPCreatePlane(aircraftIcao.c_str(), airlineIcao.c_str(), livery.c_str());
         }
         else
         {
-            id = XPMPCreatePlaneWithModelName(modelName.c_str(), aircraftIcao.c_str(), airlineIcao.c_str(), livery.c_str());
+            id = XPMPCreatePlaneWithModelName(m_modelStrings[modelName].c_str(), aircraftIcao.c_str(), airlineIcao.c_str(), livery.c_str());
         }
 
         if (!id)

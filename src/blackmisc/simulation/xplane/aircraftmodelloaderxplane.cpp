@@ -158,8 +158,8 @@ namespace BlackMisc
             {
                 QString modelName =
                     dirNames.join(' ') %
-                    u' ' % objectName %
-                    u' ' % textureName;
+                    u' ' % objectName;
+                if (objectVersion == OBJ7) { modelName += u' ' % textureName; }
                 return std::move(modelName).trimmed();
             }
 
@@ -514,6 +514,9 @@ namespace BlackMisc
                         return false;
                     }
                 }
+
+                package.planes.back().objectName = tokens[1];
+                package.planes.back().objectVersion = CSLPlane::OBJ8;
                 return true;
             }
 
@@ -547,17 +550,8 @@ namespace BlackMisc
                 // Remove the last one being the obj itself
                 dirNames.removeLast();
 
-                QFileInfo fileInfo(fullPath);
-                if (! fileInfo.exists())
-                {
-                    const CStatusMessage m = CStatusMessage(this).error(u"XPlane object '%1' does not exist.") << fullPath;
-                    m_loadingMessages.push_back(m);
-                    return false;
-                }
                 package.planes.back().dirNames = dirNames;
-                package.planes.back().objectName = fileInfo.completeBaseName();
                 package.planes.back().filePath = fullPath;
-                package.planes.back().objectVersion = CSLPlane::OBJ8;
 
                 if (tokens.size() >= 5)
                 {
