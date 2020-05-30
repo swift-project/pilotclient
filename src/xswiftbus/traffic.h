@@ -207,6 +207,7 @@ namespace XSwiftBus
         static std::string pos2String(const XPLMCameraPosition_t *camPos);
         //! @}
 
+        std::unordered_map<std::string, std::string> m_modelStrings; // mapping uppercase to mixedcase
         std::unordered_map<std::string, Plane *> m_planesByCallsign;
         std::unordered_map<void *, Plane *> m_planesById;
         std::vector<std::string> m_followPlaneViewSequence;
