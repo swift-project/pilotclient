@@ -75,6 +75,9 @@ namespace BlackMisc
             //! All combined codes plus more info
             QStringList getCombinedCodesPlusInfo(bool sort = false) const;
 
+            //! All combined codes plus more info
+            QStringList getCombinedCodesPlusInfoAndId(bool sort = false) const;
+
             //! All aircraft codes
             CAirlineIcaoCodeList getAirlines() const;
 

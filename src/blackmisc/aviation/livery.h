@@ -77,6 +77,9 @@ namespace BlackMisc
             //! Combined code plus info
             QString getCombinedCodePlusInfo() const;
 
+            //! Combined code plus id
+            QString getCombinedCodePlusId() const;
+
             //! Combined code, info, plus id
             QString getCombinedCodePlusInfoAndId() const;
 

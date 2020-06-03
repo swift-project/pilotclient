@@ -141,6 +141,14 @@ namespace BlackMisc
             return codes;
         }
 
+        QStringList CLiveryList::getCombinedCodesPlusInfoAndId(bool sort) const
+        {
+            if (this->isEmpty()) { return QStringList(); }
+            QStringList codes = this->transform(Predicates::MemberTransform(&CLivery::getCombinedCodePlusInfoAndId));
+            if (sort) { codes.sort(); }
+            return codes;
+        }
+
         CAirlineIcaoCodeList CLiveryList::getAirlines() const
         {
             CAirlineIcaoCodeList icaos;
