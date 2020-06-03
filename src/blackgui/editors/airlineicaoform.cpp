@@ -96,7 +96,20 @@ namespace BlackGui
 
         CAirlineIcaoCode CAirlineIcaoForm::getValue() const
         {
-            CAirlineIcaoCode code(m_currentCode);
+            CAirlineIcaoCode code;
+            const QString id = ui->le_Id->text();
+            if (sGui && !sGui->isShuttingDown() && sGui->hasWebDataServices())
+            {
+                bool ok;
+                const int dbKey = id.toInt(&ok);
+                if (ok)
+                {
+                    code = sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(dbKey);
+                }
+            }
+
+            if (code.hasValidDbKey()) { return code; }
+            code = m_currentCode;
             code.setVirtualAirline(ui->cb_Va->isChecked());
             code.setMilitary(ui->cb_Military->isChecked());
             code.setCountry(ui->country_Selector->getCountry());
@@ -210,9 +223,10 @@ namespace BlackGui
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
 
-            const int id = ui->le_Id->text().toInt();
+            bool ok;
+            const int id = ui->le_Id->text().toInt(&ok);
             const CAirlineIcaoCode icao = sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(id);
-            if (!icao.isLoadedFromDb())
+            if (ok && !icao.isLoadedFromDb())
             {
                 ui->le_Id->undo();
                 return;

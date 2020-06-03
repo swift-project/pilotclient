@@ -65,10 +65,10 @@ namespace BlackGui
 
             // copy over buttons
             connect(ui->pb_AircraftIcao, &QPushButton::pressed, this, &CDbStashComponent::copyOverValuesToSelectedModels);
-            connect(ui->pb_AirlineIcao, &QPushButton::pressed, this, &CDbStashComponent::copyOverValuesToSelectedModels);
-            connect(ui->pb_Livery, &QPushButton::pressed, this, &CDbStashComponent::copyOverValuesToSelectedModels);
-            connect(ui->pb_Distributor, &QPushButton::pressed, this, &CDbStashComponent::copyOverValuesToSelectedModels);
-            connect(ui->pb_Model, &QPushButton::pressed, this, &CDbStashComponent::modifyModelDialog);
+            connect(ui->pb_AirlineIcao,  &QPushButton::pressed, this, &CDbStashComponent::copyOverValuesToSelectedModels);
+            connect(ui->pb_Livery,       &QPushButton::pressed, this, &CDbStashComponent::copyOverValuesToSelectedModels);
+            connect(ui->pb_Distributor,  &QPushButton::pressed, this, &CDbStashComponent::copyOverValuesToSelectedModels);
+            connect(ui->pb_Model,        &QPushButton::pressed, this, &CDbStashComponent::modifyModelDialog);
 
             ui->tvp_StashAircraftModels->setAircraftModelMode(CAircraftModelListModel::StashModel);
             ui->tvp_StashAircraftModels->allowDragDrop(false, true, true);
