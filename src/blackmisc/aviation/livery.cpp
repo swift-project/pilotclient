@@ -71,8 +71,13 @@ namespace BlackMisc
             return this->getCombinedCode() % (
                        this->getDescription().isEmpty() ?
                        QString() :
-                       (u' ' % this->getDescription())
-                   );
+                       (u' ' % this->getDescription()));
+        }
+
+        QString CLivery::getCombinedCodePlusId() const
+        {
+            return this->getCombinedCode() %
+                   this->getDbKeyAsStringInParentheses(" ");
         }
 
         QString CLivery::getCombinedCodePlusInfoAndId() const
