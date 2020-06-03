@@ -69,7 +69,24 @@ namespace BlackGui
 
         CLivery CLiveryForm::getValue() const
         {
-            CLivery livery(ui->comp_LiverySelector->getLivery());
+            CLivery livery;
+            const QString id = ui->le_Id->text();
+            if (!id.isEmpty() && sGui && !sGui->isShuttingDown() && sGui->hasWebDataServices())
+            {
+                bool ok;
+                const int dbKey = id.toInt(&ok);
+                if (ok)
+                {
+                    livery = sGui->getWebDataServices()->getLiveryForDbKey(dbKey);
+                }
+            }
+
+            // fallback
+            if (!livery.hasValidDbKey())
+            {
+                livery = ui->comp_LiverySelector->getLivery();
+            }
+
             if (livery.hasCompleteData() && livery.hasValidDbKey())
             {
                 // already complete data from selector
@@ -229,7 +246,11 @@ namespace BlackGui
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
             if (!code.hasCompleteData()) { return; }
-            if (!code.hasValidDbKey()) { return; }
+            if (!code.hasValidDbKey())   { return; }
+
+            // only replace with STD livery if airline does not match
+            const CLivery currentLivery = this->getValue();
+            if (currentLivery.getAirlineIcaoCode() == code) { return; }
 
             const CLivery stdLivery(sGui->getWebDataServices()->getLiveries().findStdLiveryByAirlineIcaoVDesignator(code));
             if (stdLivery.hasValidDbKey())

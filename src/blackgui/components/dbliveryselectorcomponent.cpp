@@ -12,6 +12,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackmisc/aviation/liverylist.h"
+#include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/variant.h"
@@ -34,6 +35,7 @@ using namespace BlackGui;
 using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;
 
 namespace BlackGui
@@ -50,8 +52,8 @@ namespace BlackGui
 
             ui->le_Livery->setValidator(new CUpperCaseValidator(this));
 
-            connect(ui->le_Livery, &QLineEdit::returnPressed, this, &CDbLiverySelectorComponent::onDataChanged);
-            connect(ui->le_Livery, &QLineEdit::returnPressed, this, &CDbLiverySelectorComponent::onDataChanged);
+            connect(ui->le_Livery, &QLineEdit::returnPressed,   this, &CDbLiverySelectorComponent::onDataChanged);
+            connect(ui->le_Livery, &QLineEdit::editingFinished, this, &CDbLiverySelectorComponent::onDataChanged);
 
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLiverySelectorComponent::onLiveriesRead, Qt::QueuedConnection);
             this->onLiveriesRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getLiveriesCount(), {});
@@ -64,33 +66,41 @@ namespace BlackGui
 
         void CDbLiverySelectorComponent::setLivery(const CLivery &livery)
         {
-            QString code(livery.getCombinedCode());
-            if (code.isEmpty())
+            if (!livery.hasCombinedCode())
             {
                 ui->le_Livery->clear();
                 return;
             }
+
             if (livery != m_currentLivery)
             {
-                ui->le_Livery->setText(code);
+                ui->le_Livery->setText(livery.getCombinedCodePlusId());
                 m_currentLivery = livery;
                 emit changedLivery(livery);
             }
         }
 
-        void CDbLiverySelectorComponent::setlivery(const QString &code)
+        void CDbLiverySelectorComponent::setLivery(const QString &code)
         {
-            QString liveryCode(code.toUpper().trimmed());
-            int s = liveryCode.indexOf(' ');
-            if (s >= 1) { liveryCode = liveryCode.left(s); }
-            s = liveryCode.indexOf('(');
-            if (s >= 1) { liveryCode = liveryCode.left(s).trimmed(); }
+            if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
+            const int dbKey = CDatastoreUtility::extractIntegerKey(code);
+            CLivery livery;
 
-            if (m_currentLivery.matchesCombinedCode(liveryCode)) { return; }
-            CLivery d(sApp->getWebDataServices()->getLiveries().findByCombinedCode(liveryCode));
-            if (d.hasCompleteData())
+            if (dbKey >= 0)
             {
-                this->setLivery(d);
+                livery = sGui->getWebDataServices()->getLiveryForDbKey(dbKey);
+            }
+
+            if (!livery.hasValidDbKey())
+            {
+                const QString liveryCode = this->stripExtraInfo(code.toUpper().trimmed());
+                if (m_currentLivery.matchesCombinedCode(liveryCode)) { return; }
+                livery = sGui->getWebDataServices()->getLiveries().findByCombinedCode(liveryCode);
+            }
+
+            if (livery.hasCompleteData())
+            {
+                this->setLivery(livery);
             }
             else
             {
@@ -101,20 +111,29 @@ namespace BlackGui
 
         CLivery CDbLiverySelectorComponent::getLivery() const
         {
-            if (!sApp) { return CLivery(); }
-            const QString liveryCode(
-                this->stripExtraInfo(ui->le_Livery->text())
-            );
-            const CLivery liv(sApp->getWebDataServices()->getLiveries().findByCombinedCode(liveryCode));
-            if (liv.hasCompleteData() && liv.hasValidDbKey())
+            if (!sGui || sGui->isShuttingDown()) { return CLivery(); }
+
+            const QString raw = ui->le_Livery->text();
+            const int dbKey = CDatastoreUtility::extractIntegerKey(raw);
+
+            CLivery livery;
+            if (dbKey >= 0)
             {
-                // full data fetched
-                return liv;
+                livery = sGui->getWebDataServices()->getLiveryForDbKey(dbKey);
             }
             else
             {
-                return m_currentLivery;
+                const QString liveryCode(this->stripExtraInfo(ui->le_Livery->text()));
+                livery = sGui->getWebDataServices()->getLiveries().findByCombinedCode(liveryCode);
             }
+
+            if (livery.hasCompleteData() && livery.hasValidDbKey())
+            {
+                // full data fetched
+                return livery;
+            }
+
+            return m_currentLivery;
         }
 
         QString CDbLiverySelectorComponent::getRawCombinedCode() const
@@ -192,7 +211,7 @@ namespace BlackGui
             {
                 if (count > 0)
                 {
-                    const QStringList codes(sApp->getWebDataServices()->getLiveries().getCombinedCodesPlusInfo(true));
+                    const QStringList codes(sGui->getWebDataServices()->getLiveries().getCombinedCodesPlusInfoAndId(true));
                     QCompleter *c = new QCompleter(codes, this);
                     c->setCaseSensitivity(Qt::CaseInsensitive);
                     c->setCompletionMode(QCompleter::PopupCompletion);
@@ -212,17 +231,13 @@ namespace BlackGui
         void CDbLiverySelectorComponent::onDataChanged()
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
-            const QString code(
-                this->stripExtraInfo(ui->le_Livery->text())
-            );
-            if (code.isEmpty()) { return; }
-            const CLivery livery(sApp->getWebDataServices()->getLiveries().findByCombinedCode(code));
-            this->setLivery(livery);
+            const QString raw = ui->le_Livery->text();
+            this->setLivery(raw);
         }
 
         void CDbLiverySelectorComponent::onCompleterActivated(const QString &liveryCode)
         {
-            this->setlivery(liveryCode);
+            this->setLivery(liveryCode);
         }
 
         QString CDbLiverySelectorComponent::stripExtraInfo(const QString &liveryCode) const

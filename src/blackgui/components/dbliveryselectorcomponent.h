@@ -55,7 +55,7 @@ namespace BlackGui
             void setLivery(const BlackMisc::Aviation::CLivery &livery);
 
             //! Current livery
-            void setlivery(const QString &code);
+            void setLivery(const QString &code);
 
             //! Livery
             BlackMisc::Aviation::CLivery getLivery() const;
