@@ -45,6 +45,8 @@ enum class MessageType
     RegistrationInfo, // IVAO only
     TextMessage,
     PilotClientCom,
+    RevBClientParts,    // IVAO only
+    RevBPilotDescription, // -PD IVAO only not handled in swift
 };
 
 namespace BlackCore

@@ -219,6 +219,8 @@ namespace BlackCore
             void interimPilotDataUpdatedReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
             void rawFsdMessage(const BlackMisc::Network::CRawFsdMessage &rawFsdMessage);
             void planeInformationFsinnReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &modelString);
+            void revbAircraftConfigReceived(const QString &sender, const QString &config, qint64 currentOffsetTimeMs);
+
             //! @}
 
             //! We received a reply to one of our ATIS queries.
@@ -361,6 +363,8 @@ namespace BlackCore
             void handleServerError(const QStringList &tokens);
             void handleCustomPilotPacket(const QStringList &tokens);
             void handleFsdIdentification(const QStringList &tokens);
+            void handleRevBClientPartsPacket(const QStringList &tokens);
+
             //
             void handleUnknownPacket(const QString &line);
             void handleUnknownPacket(const QStringList &tokens);
