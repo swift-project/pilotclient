@@ -92,6 +92,7 @@ namespace BlackCore
         connect(m_fsdClient, &CFSDClient::serverResponseReceived,          this, &CAirspaceMonitor::onServerReplyReceived);
         connect(m_fsdClient, &CFSDClient::aircraftConfigReceived,          this, &CAirspaceMonitor::onAircraftConfigReceived);
         connect(m_fsdClient, &CFSDClient::connectionStatusChanged,         this, &CAirspaceMonitor::onConnectionStatusChanged);
+        connect(m_fsdClient, &CFSDClient::revbAircraftConfigReceived,      this, &CAirspaceMonitor::onRevBAircraftConfigReceived);
 
         // AutoConnection: this should also avoid race conditions by updating the bookings
         Q_ASSERT_X(sApp && sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing data reader");
@@ -1344,6 +1345,67 @@ namespace BlackCore
         // update
         const CPropertyIndexVariantMap vm({CSimulatedAircraft::IndexCom1System, CComSystem::IndexActiveFrequency}, CVariant::from(frequency));
         this->updateAircraftInRange(callsign, vm);
+    }
+
+    void CAirspaceMonitor::onRevBAircraftConfigReceived(const CCallsign &callsign, const QString &config, qint64 currentOffsetMs)
+    {
+
+        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
+        BLACK_AUDIT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
+        if (callsign.isEmpty()) { return; }
+
+        unsigned long pp = 0;
+        bool ok;
+        pp = config.toULong(&ok, 10);
+
+        bool gear              = (pp & 1u);
+        bool landLight         = (pp & 2u);
+        bool navLight          = (pp & 4u);
+        bool strobeLight       = (pp & 8u);
+        bool beaconLight       = (pp & 16u);
+        bool taxiLight         = (pp & 32u);
+        bool engine1Running    = (pp & 64u);
+        bool engine2Running    = (pp & 128u);
+        bool engine3Running    = (pp & 256u);
+        bool engine4Running    = (pp & 512u);
+
+        //CLogMessage(this).info(u"taxiLight %1 landLight %2 beaconLight %3 strobeLight %4 gear %5") << taxiLight << landLight << beaconLight << strobeLight << gear;
+        //CLogMessage(this).info(u"engine1Running %1 engine2Running %2 engine3Running %3 engine4Running %4") << engine1Running << engine2Running << engine3Running << engine4Running;
+
+        CAircraftParts aircraftparts;
+        aircraftparts.setGearDown(gear);
+
+        CAircraftLights lights;
+        lights.setStrobeOn(strobeLight);
+        lights.setLandingOn(landLight);
+        lights.setTaxiOn(taxiLight);
+        lights.setBeaconOn(beaconLight);
+        lights.setNavOn(navLight);
+        aircraftparts.setLights(lights);
+
+        CAircraftEngineList engines;
+        engines.initEngines(4, false);
+        engines.setEngineOn(1, engine1Running);
+        engines.setEngineOn(2, engine2Running);
+        engines.setEngineOn(3, engine3Running);
+        engines.setEngineOn(4, engine4Running);
+        aircraftparts.setEngines(engines);
+
+        // make sure in any case right time and correct details
+        aircraftparts.setCurrentUtcTime();
+        aircraftparts.setTimeOffsetMs(currentOffsetMs);
+        aircraftparts.setPartsDetails(CAircraftParts::FSDAircraftParts);
+
+        // store parts
+        this->storeAircraftParts(callsign, aircraftparts, true);
+
+        // update client capability
+        CClient client = this->getClientOrDefaultForCallsign(callsign);
+        client.setUserCallsign(callsign); // make valid by setting a callsign
+        if (client.hasCapability(CClient::FsdWithAircraftConfig)) { return; }
+        client.addCapability(CClient::FsdWithAircraftConfig);
+        this->setOtherClient(client);
+
     }
 
     void CAirspaceMonitor::onAircraftConfigReceived(const CCallsign &callsign, const QJsonObject &jsonObject, qint64 currentOffsetMs)

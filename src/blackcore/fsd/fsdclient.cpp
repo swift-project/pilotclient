@@ -34,6 +34,7 @@
 #include "blackcore/fsd/planeinformation.h"
 #include "blackcore/fsd/planeinforequestfsinn.h"
 #include "blackcore/fsd/planeinformationfsinn.h"
+#include "blackcore/fsd/revbclientparts.h"
 
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/network/rawfsdmessage.h"
@@ -907,6 +908,8 @@ namespace BlackCore
             // IVAO only
             // Ref: https://github.com/DemonRem/X-IvAP/blob/1b0a14880532a0f5c8fe84be44e462c6892a5596/src/XIvAp/FSDprotocol.h
             m_messageTypeMapping["!R"]  = MessageType::RegistrationInfo;
+            m_messageTypeMapping["-MD"] = MessageType::RevBClientParts;
+            m_messageTypeMapping["-PD"] = MessageType::RevBPilotDescription; // not handled, to avoid error messages
 
             // IVAO parts
             // https://discordapp.com/channels/539048679160676382/695961646992195644/707915838845485187
@@ -1358,6 +1361,23 @@ namespace BlackCore
             case ServerErrorCode::AuthTimeout:           CLogMessage(this).warning(u"Client did not authenticate in time"); break;
             }
             if (serverError.isFatalError()) { disconnectFromServer(); }
+        }
+
+        void CFSDClient::handleRevBClientPartsPacket(const QStringList &tokens)
+        {
+            CLogMessage(this).debug(u"handleRevBClientPartsPacket");
+
+            const RevBClientParts RevBClientParts = RevBClientParts::fromTokens(tokens);
+            const CCallsign callsign(RevBClientParts.sender(), CCallsign::Aircraft);
+
+            const bool inRange = isAircraftInRange(callsign);
+
+            if (!inRange) { return; } // sort out all broadcasted we DO NOT NEED
+            if (!getSetupForServer().receiveAircraftParts()) { return; }
+
+            const qint64 offsetTimeMs = currentOffsetTime(callsign);
+            emit revbAircraftConfigReceived(RevBClientParts.sender(), RevBClientParts.m_partsval1, offsetTimeMs);
+            CLogMessage(this).debug(u"Set Config at %1  ") << offsetTimeMs ;
         }
 
         void CFSDClient::handleCustomPilotPacket(const QStringList &tokens)
@@ -1922,6 +1942,8 @@ namespace BlackCore
                 case MessageType::ProController:
                 case MessageType::ClientIdentification:
                 case MessageType::RegistrationInfo:
+                case MessageType::RevBPilotDescription:
+
                     break;
 
                 // handled ones
@@ -1941,6 +1963,10 @@ namespace BlackCore
                 case MessageType::ServerError:       handleServerError(tokens);       break;
                 case MessageType::TextMessage:       handleTextMessage(tokens);       break;
                 case MessageType::PilotClientCom:    handleCustomPilotPacket(tokens); break;
+                case MessageType::RevBClientParts:   handleRevBClientPartsPacket(tokens); break;
+
+
+
 
                 // normally we should not get here
                 default:
