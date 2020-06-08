@@ -66,8 +66,11 @@ namespace BlackMisc
             const CIdentifier comparison("comparison for local machine");
             for (CActionHotkey &actionHotkey : *this)
             {
-                const bool sameMachine = actionHotkey.getIdentifier().hasSameMachineNameOrId(comparison);
-                if (sameMachine) { actionHotkey.updateToCurrentMachine(); }
+                // to avoid issue we always update
+                actionHotkey.updateToCurrentMachine();
+
+                // const bool sameMachine = actionHotkey.getIdentifier().hasSameMachineNameOrId(comparison);
+                // if (sameMachine) { actionHotkey.updateToCurrentMachine(); }
             }
         }
     } // ns
