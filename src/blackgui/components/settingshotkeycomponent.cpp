@@ -131,9 +131,13 @@ namespace BlackGui
 
         void CSettingsHotkeyComponent::updateHotkeyInSettings(const CActionHotkey &oldValue, const CActionHotkey &newValue)
         {
-            CActionHotkeyList actionHotkeyList(m_actionHotkeys.getThreadLocal());
-            actionHotkeyList.replace(oldValue, newValue);
-            m_actionHotkeys.set(actionHotkeyList);
+            //! \todo KB 2020-06 since there are many users reporting issues with replacing hotkey we use remove/add
+            this->removeHotkeyFromSettings(oldValue);
+            this->addHotkeyToSettings(newValue);
+
+            // CActionHotkeyList actionHotkeyList(m_actionHotkeys.getThreadLocal());
+            // actionHotkeyList.replace(oldValue, newValue);
+            // m_actionHotkeys.set(actionHotkeyList);
         }
 
         void CSettingsHotkeyComponent::removeHotkeyFromSettings(const CActionHotkey &actionHotkey)

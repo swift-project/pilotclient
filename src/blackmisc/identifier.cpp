@@ -196,14 +196,14 @@ namespace BlackMisc
 
     void CIdentifier::updateToCurrentMachine()
     {
-        m_machineIdBase64 =  cachedMachineUniqueId().toBase64();
-        m_machineName = cachedLocalHostName();
+        m_machineIdBase64 = cachedMachineUniqueId().toBase64();
+        m_machineName     = cachedLocalHostName();
     }
 
     void CIdentifier::updateToCurrentProcess()
     {
         m_processName = QCoreApplication::applicationName();
-        m_processId = QCoreApplication::applicationPid();
+        m_processId   = QCoreApplication::applicationPid();
     }
 
     QString CIdentifier::convertToQString(bool i18n) const
