@@ -82,6 +82,7 @@ defineTest(swiftConfig) {
 }
 defineReplace(swiftConfig) {
     eval(value = \$\${SWIFT_CONFIG.$$1})
+    eval(value = $$value)
     return($$value)
 }
 
