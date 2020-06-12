@@ -256,7 +256,7 @@ class Builder:
         self.word_size = word_size
 
         if not config_file:
-            config_file = path.abspath(path.join(self._get_swift_source_path(), 'scripts', 'jenkins.cfg'))
+            config_file = path.abspath(path.join(self._get_swift_source_path(), 'scripts', 'build.cfg'))
         self.__config = configparser.SafeConfigParser()
         self.__config.read(config_file)
         self.qt_version = self.__config.get('General', 'qt_version')
@@ -423,7 +423,7 @@ def print_help():
                            'Windows': ['msvc', 'mingw']
                            }
     compiler_help = '|'.join(supported_compilers[platform.system()])
-    print('jenkins.py -c <config file> -w <32|64> -t <' + compiler_help + '> [-d] [-e <end of life in month>] [-q <extra qmake argument>]')
+    print('build.py -c <config file> -w <32|64> -t <' + compiler_help + '> [-d] [-e <end of life in month>] [-q <extra qmake argument>]')
 
 
 # Entry point if called as a standalone program
