@@ -1,0 +1,278 @@
+name: Build swift
+
+on:
+  push:
+    branches-ignore:
+      - master
+      - nobuild/**
+
+env:
+  do_symbols:    ${{ startsWith(github.ref, 'refs/heads/develop/') }}
+  eol_months:    12
+  BASH_KEY_ARGS:     -q 'SWIFT_CONFIG.vatsim.id=$$(VATSIM_ID)' -q 'SWIFT_CONFIG.vatsim.key=$$(VATSIM_KEY)'
+  PWSH_KEY_ARGS: --% -q "SWIFT_CONFIG.vatsim.id=$$(VATSIM_ID)" -q "SWIFT_CONFIG.vatsim.key=$$(VATSIM_KEY)"
+
+jobs:
+
+  buildLinux:
+    runs-on: ubuntu-16.04
+    env:
+      BITROCK_BUILDER: ~/installbuilder/bin/builder
+
+    steps:
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: 5.15.0
+      - name: Download InstallBuilder
+        run: |
+          wget -O ~/installbuilder.run https://installbuilder.com/installbuilder-qt-professional-20.4.0-linux-x64-installer.run
+          chmod 700 ~/installbuilder.run
+          ~/installbuilder.run --mode unattended --prefix ~/installbuilder
+      - name: Install dependencies
+        run: |
+          sudo apt install doxygen graphviz libglu1-mesa-dev libopus-dev libsodium-dev libpulse-dev libdbus-1-dev libevent-dev
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 0
+      - name: Build swift (without symbols)
+        if: ${{ ! env.do_symbols }}
+        run: |
+          python3 -u scripts/build.py -w 64 -t gcc -d -j2 -e $eol_months $BASH_KEY_ARGS
+        env:
+          VATSIM_ID: ${{ secrets.VATSIM_ID }}
+          VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
+      - name: Build swift (with symbols)
+        if: ${{ env.do_symbols }}
+        run: |
+          python3 -u scripts/build.py -w 64 -t gcc -d -j2 -e $eol_months $BASH_KEY_ARGS --upload
+        env:
+          VATSIM_ID: ${{ secrets.VATSIM_ID }}
+          VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
+      - name: Upload installer
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux64
+          path: ${{ github.workspace }}/swiftinstaller-*
+      - name: Upload symbols
+        uses: actions/upload-artifact@v2
+        if: ${{ env.do_symbols }}
+        with:
+          name: linux64
+          path: ${{ github.workspace }}/swiftsymbols-*
+      - name: Upload xswiftbus
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux64
+          path: ${{ github.workspace }}/xswiftbus-*
+
+  buildWin64:
+    runs-on: windows-2019
+    env:
+      BITROCK_BUILDER: "$(USERPROFILE)/installbuilder/bin/builder-cli.exe"
+
+    steps:
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: 5.15.0
+          arch: "win64_msvc2019_64"
+          aqtversion: ">=0.9.0"
+      - name: Install InstallBuilder
+        run: |
+          curl.exe --output "$HOME\installbuilder.exe" -L --url https://installbuilder.com/installbuilder-qt-professional-20.4.0-windows-x64-installer.exe
+          &"$HOME\installbuilder.exe" --mode unattended --prefix "$HOME\installbuilder"
+      - name: Install jom
+        run: |
+          choco install jom --yes
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 0
+      - name: Build swift (without symbols)
+        if: ${{ ! env.do_symbols }}
+        run: |
+          python.exe -u scripts\build.py -w 64 -t msvc -d -e $env:eol_months ${{ env.PWSH_KEY_ARGS }}
+        env:
+          VATSIM_ID: ${{ secrets.VATSIM_ID }}
+          VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
+      - name: Build swift (with symbols)
+        if: ${{ env.do_symbols }}
+        run: |
+          python.exe -u scripts\build.py -w 64 -t msvc -d -e $env:eol_months ${{ env.PWSH_KEY_ARGS }} --upload
+        env:
+          VATSIM_ID: ${{ secrets.VATSIM_ID }}
+          VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
+      - name: Upload installer
+        uses: actions/upload-artifact@v2
+        with:
+          name: win64
+          path: ${{ github.workspace }}/swiftinstaller-*
+      - name: Upload symbols
+        uses: actions/upload-artifact@v2
+        if: ${{ env.do_symbols }}
+        with:
+          name: win64
+          path: ${{ github.workspace }}/swiftsymbols-*
+      - name: Upload xswiftbus
+        uses: actions/upload-artifact@v2
+        with:
+          name: win64
+          path: ${{ github.workspace }}/xswiftbus-*
+
+  buildWin32:
+    runs-on: windows-2019
+    env:
+      BITROCK_BUILDER: "$(USERPROFILE)/installbuilder/bin/builder-cli.exe"
+
+    steps:
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: 5.15.0
+          arch: "win32_msvc2019"
+          aqtversion: ">=0.9.0"
+      - name: Install InstallBuilder
+        run: |
+          curl.exe --output "$HOME\installbuilder.exe" -L --url https://installbuilder.com/installbuilder-qt-professional-20.4.0-windows-installer.exe
+          &"$HOME\installbuilder.exe" --mode unattended --prefix "$HOME\installbuilder"
+      - name: Install jom
+        run: |
+          choco install jom --yes
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 0
+      - name: Build swift (without symbols)
+        if: ${{ ! env.do_symbols }}
+        run: |
+          python.exe -u scripts\build.py -w 32 -t msvc -d -e $env:eol_months ${{ env.PWSH_KEY_ARGS }}
+        env:
+          VATSIM_ID: ${{ secrets.VATSIM_ID }}
+          VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
+      - name: Build swift (with symbols)
+        if: ${{ env.do_symbols }}
+        run: |
+          python.exe -u scripts\build.py -w 32 -t msvc -d -e $env:eol_months ${{ env.PWSH_KEY_ARGS }} --upload
+        env:
+          VATSIM_ID: ${{ secrets.VATSIM_ID }}
+          VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
+      - name: Upload installer
+        uses: actions/upload-artifact@v2
+        with:
+          name: win32
+          path: ${{ github.workspace }}/swiftinstaller-*
+      - name: Upload symbols
+        uses: actions/upload-artifact@v2
+        if: ${{ env.do_symbols }}
+        with:
+          name: win32
+          path: ${{ github.workspace }}/swiftsymbols-*
+      - name: Upload xswiftbus
+        uses: actions/upload-artifact@v2
+        with:
+          name: win32
+          path: ${{ github.workspace }}/xswiftbus-*
+
+  buildMacOS:
+    runs-on: macos-10.15
+    env:
+      BITROCK_BUILDER: /Applications/installbuilder/bin/Builder.app/Contents/MacOS/installbuilder.sh
+
+    steps:
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: 5.15.0
+      - name: Download InstallBuilder
+        run: |
+          wget -O $HOME/installbuilder.dmg https://installbuilder.com/installbuilder-qt-professional-20.4.0-osx-installer.dmg
+          chmod 700 $HOME/installbuilder.dmg
+          sudo hdiutil attach $HOME/installbuilder.dmg
+          sudo cp -rf "/Volumes/InstallBuilder Qt/installbuilder-qt-professional-20.4.0-osx-installer.app" /Applications
+          sudo hdiutil detach "/Volumes/InstallBuilder Qt"
+          sudo spctl --master-disable
+          sudo chmod -R +x /Applications/installbuilder-qt-professional-20.4.0-osx-installer.app
+          sudo xattr -r -d com.apple.quarantine /Applications/installbuilder-qt-professional-20.4.0-osx-installer.app
+          sudo /Applications/installbuilder-qt-professional-20.4.0-osx-installer.app/Contents/MacOs/installbuilder.sh --mode unattended --prefix /Applications/installbuilder
+      - name: Install dependencies
+        run: |
+          pip3 install requests
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 0
+      - name: Build swift (without symbols)
+        if: ${{ ! env.do_symbols }}
+        run: |
+          python3 -u scripts/build.py -w 64 -t clang -d -j2 -e $eol_months $BASH_KEY_ARGS
+        env:
+          VATSIM_ID: ${{ secrets.VATSIM_ID }}
+          VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
+      - name: Build swift (with symbols)
+        if: ${{ env.do_symbols }}
+        run: |
+          python3 -u scripts/build.py -w 64 -t clang -d -j2 -e $eol_months $BASH_KEY_ARGS --upload
+        env:
+          VATSIM_ID: ${{ secrets.VATSIM_ID }}
+          VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
+      - name: Upload installer
+        uses: actions/upload-artifact@v2
+        with:
+          name: macos64
+          path: ${{ github.workspace }}/swiftinstaller-*
+      - name: Upload symbols
+        uses: actions/upload-artifact@v2
+        if: ${{ env.do_symbols }}
+        with:
+          name: macos64
+          path: ${{ github.workspace }}/swiftsymbols-*
+      - name: Upload xswiftbus
+        uses: actions/upload-artifact@v2
+        with:
+          name: macos64
+          path: ${{ github.workspace }}/xswiftbus-*
+
+  packageXSwiftBus:
+    runs-on: ubuntu-16.04
+    needs: [buildLinux, buildWin64, buildWin32, buildMacOS]
+
+    steps:
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: linux64
+      - name: Download Win64 artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: win64
+      - name: Download Win32 artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: win32
+      - name: Download MacOS artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: macos64
+      - name: Pack 7z
+        run: |
+          mv win32/xswiftbus-windows-32-*.7z .
+          mv win64/xswiftbus-windows-64-*.7z .
+          mv linux64/xswiftbus-linux-64-*.7z .
+          mv macos64/xswiftbus-macos-64-*.7z .
+          7z x -y xswiftbus-windows-32-*.7z
+          7z x -y xswiftbus-windows-64-*.7z
+          7z x -y xswiftbus-linux-64-*.7z
+          7z x -y xswiftbus-macos-64-*.7z
+          SWIFT_VERSION=$(ls xswiftbus-windows-32-*.7z | grep -o -P '(?<=xswiftbus-windows-32-).*(?=.7z)')
+          7z a -y -mx=9 xswiftbus-allos-${SWIFT_VERSION}.7z xswiftbus
+      - name: Upload xswiftbus-allos
+        uses: actions/upload-artifact@v2
+        with:
+          name: xswiftbus-allos
+          path: xswiftbus-allos-*

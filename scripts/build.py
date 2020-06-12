@@ -245,7 +245,7 @@ class Builder:
 
         if not config_file:
             config_file = path.abspath(path.join(self._get_swift_source_path(), 'scripts', 'build.cfg'))
-        self.__config = configparser.SafeConfigParser()
+        self.__config = configparser.ConfigParser()
         self.__config.read(config_file)
         self.qt_version = self.__config.get('General', 'qt_version')
         self.qt_path = path.abspath(self.__config.get(platform.system(), 'qt_path'))
@@ -321,7 +321,7 @@ class MSVCBuilder(Builder):
         return 'win32-msvc'
 
     def _get_make_cmd(self):
-        return path.abspath(path.join(self._get_qtcreator_path(), 'jom.exe'))
+        return "C:/ProgramData/chocolatey/lib/jom/tools/jom.exe"
 
     def _get_qt_component(self):
         return 'msvc2017'
