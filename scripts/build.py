@@ -37,7 +37,6 @@ class Builder:
         """
         print('Preparing environment ...')
         os.environ['PATH'] += os.pathsep + self._get_qt_binary_path()
-        self._ccache_prepare()
         self._specific_prepare()
 
         print('Updating from datastore ...')
@@ -46,16 +45,6 @@ class Builder:
         source_path = self._get_swift_source_path()
         shared_path = os.path.abspath(os.path.join(source_path, 'resources', 'share'))
         datastore.update_shared(host, datastore_version, shared_path)
-
-    def _ccache_prepare(self):
-        os.environ['CCACHE_NODIRECT'] = '1'
-        os.environ['CLCACHE_NODIRECT'] = '1'
-        os.environ['CLCACHE_COMPRESS'] = '1'
-        os.environ['CLCACHE_OBJECT_CACHE_TIMEOUT_MS'] = str(10 * 60 * 1000)
-        os.environ['CLCACHE_DIR'] = 'C:\\clcache' # workaround https://github.com/frerich/clcache/issues/342
-        os.environ['CLCACHE_BASEDIR'] = os.environ['WORKSPACE']
-        os.environ['CCACHE_BASEDIR'] = os.environ['WORKSPACE']
-        os.environ['CCACHE_NOHASHDIR'] = '1'
 
     def build(self, jobs, qmake_args, dev_build, eolInMonth):
         """
@@ -80,7 +69,6 @@ class Builder:
             print('Setting EOL date to ' + eolDate.strftime('%Y%m%d'))
             qmake_call += ['SWIFT_CONFIG.endOfLife=' + eolDate.strftime('%Y%m%d')]
 
-        qmake_call += ['SWIFT_CONFIG.ccache=true']
         qmake_call += ['-r', os.pardir]
         subprocess.check_call(qmake_call, env=dict(os.environ))
 
