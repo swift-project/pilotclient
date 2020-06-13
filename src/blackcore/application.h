@@ -299,8 +299,11 @@ namespace BlackCore
         //! \see synchronizeSetup
         virtual bool parseAndSynchronizeSetup(int timeoutMs = BlackMisc::Network::CNetworkUtils::getLongTimeoutMs());
 
+        //! Display warning message
+        virtual bool cmdLineWarningMessage(const QString &text, const QString &informativeText = "") const;
+
         //! Display error message
-        virtual bool cmdLineErrorMessage(const QString &cmdLineErrorMessage, bool retry = false) const;
+        virtual bool cmdLineErrorMessage(const QString &text, const QString &informativeText = "", bool retry = false) const;
 
         //! Display error message
         virtual bool cmdLineErrorMessage(const BlackMisc::CStatusMessageList &msgs, bool retry = false) const;

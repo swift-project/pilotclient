@@ -125,9 +125,14 @@ namespace BlackGui
         //! Set window title
         QString setExtraWindowTitle(const QString &extraInfo, QWidget *mainWindowWidget = mainApplicationWidget()) const;
 
+        //! \name print warning message
+        //! @{
+        virtual bool cmdLineWarningMessage(const QString &text, const QString &informativeText) const override;
+        //! @}
+
         //! \name print messages generated during parsing / cmd handling
         //! @{
-        virtual bool cmdLineErrorMessage(const QString &cmdLineErrorMessage, bool retry = false) const override;
+        virtual bool cmdLineErrorMessage(const QString &text, const QString &informativeText = "", bool retry = false) const override;
         virtual bool cmdLineErrorMessage(const BlackMisc::CStatusMessageList &msgs, bool retry = false) const override;
         //! @}
 
