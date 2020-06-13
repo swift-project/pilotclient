@@ -14,8 +14,19 @@ env:
 
 jobs:
 
+  preBuild:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Remove artifacts
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: xswiftbus-thin-allos-${{ github.run_id }}
+          failOnError: false
+
   buildLinux:
     runs-on: ubuntu-16.04
+    needs: preBuild
     env:
       BITROCK_BUILDER: ~/installbuilder/bin/builder
 
@@ -51,25 +62,30 @@ jobs:
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
+      - name: Get version number
+        run: |
+          SWIFT_VERSION=$(ls swiftinstaller-* | grep -o -E '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
+          echo "::set-env name=swift_version::$SWIFT_VERSION"
       - name: Upload installer
         uses: actions/upload-artifact@v2
         with:
-          name: linux64
+          name: swiftinstaller-linux-64-${{ env.swift_version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
         uses: actions/upload-artifact@v2
         if: ${{ env.do_symbols }}
         with:
-          name: linux64
+          name: swiftsymbols-allos-${{ env.swift_version }}
           path: ${{ github.workspace }}/swiftsymbols-*
       - name: Upload xswiftbus
         uses: actions/upload-artifact@v2
         with:
-          name: linux64
+          name: xswiftbus-thin-allos-${{ github.run_id }}
           path: ${{ github.workspace }}/xswiftbus-*
 
   buildWin64:
     runs-on: windows-2019
+    needs: preBuild
     env:
       BITROCK_BUILDER: "$(USERPROFILE)/installbuilder/bin/builder-cli.exe"
 
@@ -106,25 +122,31 @@ jobs:
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
+      - name: Get version number
+        shell: bash
+        run: |
+          SWIFT_VERSION=$(ls swiftinstaller-* | grep -o -E '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
+          echo "::set-env name=swift_version::$SWIFT_VERSION"
       - name: Upload installer
         uses: actions/upload-artifact@v2
         with:
-          name: win64
+          name: swiftinstaller-windows-64-${{ env.swift_version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
         uses: actions/upload-artifact@v2
         if: ${{ env.do_symbols }}
         with:
-          name: win64
+          name: swiftsymbols-allos-${{ env.swift_version }}
           path: ${{ github.workspace }}/swiftsymbols-*
       - name: Upload xswiftbus
         uses: actions/upload-artifact@v2
         with:
-          name: win64
+          name: xswiftbus-thin-allos-${{ github.run_id }}
           path: ${{ github.workspace }}/xswiftbus-*
 
   buildWin32:
     runs-on: windows-2019
+    needs: preBuild
     env:
       BITROCK_BUILDER: "$(USERPROFILE)/installbuilder/bin/builder-cli.exe"
 
@@ -161,25 +183,31 @@ jobs:
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
+      - name: Get version number
+        shell: bash
+        run: |
+          SWIFT_VERSION=$(ls swiftinstaller-* | grep -o -E '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
+          echo "::set-env name=swift_version::$SWIFT_VERSION"
       - name: Upload installer
         uses: actions/upload-artifact@v2
         with:
-          name: win32
+          name: swiftinstaller-windows-32-${{ env.swift_version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
         uses: actions/upload-artifact@v2
         if: ${{ env.do_symbols }}
         with:
-          name: win32
+          name: swiftsymbols-allos-${{ env.swift_version }}
           path: ${{ github.workspace }}/swiftsymbols-*
       - name: Upload xswiftbus
         uses: actions/upload-artifact@v2
         with:
-          name: win32
+          name: xswiftbus-thin-allos-${{ github.run_id }}
           path: ${{ github.workspace }}/xswiftbus-*
 
   buildMacOS:
     runs-on: macos-10.15
+    needs: preBuild
     env:
       BITROCK_BUILDER: /Applications/installbuilder/bin/Builder.app/Contents/MacOS/installbuilder.sh
 
@@ -221,58 +249,51 @@ jobs:
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
+      - name: Get version number
+        run: |
+          SWIFT_VERSION=$(ls swiftinstaller-* | grep -o -E '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
+          echo "::set-env name=swift_version::$SWIFT_VERSION"
       - name: Upload installer
         uses: actions/upload-artifact@v2
         with:
-          name: macos64
+          name: swiftinstaller-macos-64-${{ env.swift_version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
         uses: actions/upload-artifact@v2
         if: ${{ env.do_symbols }}
         with:
-          name: macos64
+          name: swiftsymbols-allos-${{ env.swift_version }}
           path: ${{ github.workspace }}/swiftsymbols-*
       - name: Upload xswiftbus
         uses: actions/upload-artifact@v2
         with:
-          name: macos64
+          name: xswiftbus-thin-allos-${{ github.run_id }}
           path: ${{ github.workspace }}/xswiftbus-*
 
-  packageXSwiftBus:
-    runs-on: ubuntu-16.04
+  postBuild:
+    runs-on: ubuntu-latest
     needs: [buildLinux, buildWin64, buildWin32, buildMacOS]
 
     steps:
-      - name: Download Linux artifact
-        uses: actions/download-artifact@v1
+      - name: Download xswiftbus-thin
+        uses: actions/download-artifact@v2
         with:
-          name: linux64
-      - name: Download Win64 artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: win64
-      - name: Download Win32 artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: win32
-      - name: Download MacOS artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: macos64
-      - name: Pack 7z
+          name: xswiftbus-thin-allos-${{ github.run_id }}
+      - name: Repackage xswiftbus
         run: |
-          mv win32/xswiftbus-windows-32-*.7z .
-          mv win64/xswiftbus-windows-64-*.7z .
-          mv linux64/xswiftbus-linux-64-*.7z .
-          mv macos64/xswiftbus-macos-64-*.7z .
           7z x -y xswiftbus-windows-32-*.7z
           7z x -y xswiftbus-windows-64-*.7z
           7z x -y xswiftbus-linux-64-*.7z
           7z x -y xswiftbus-macos-64-*.7z
-          SWIFT_VERSION=$(ls xswiftbus-windows-32-*.7z | grep -o -P '(?<=xswiftbus-windows-32-).*(?=.7z)')
-          7z a -y -mx=9 xswiftbus-allos-${SWIFT_VERSION}.7z xswiftbus
-      - name: Upload xswiftbus-allos
+          SWIFT_VERSION=$(ls xswiftbus-windows-32-*.7z | grep -o -E '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
+          echo "::set-env name=swift_version::$SWIFT_VERSION"
+          7z a -y -mx=9 xswiftbus-fat-allos-${SWIFT_VERSION}.7z xswiftbus
+      - name: Upload xswiftbus-fat
         uses: actions/upload-artifact@v2
         with:
-          name: xswiftbus-allos
-          path: xswiftbus-allos-*
+          name: xswiftbus-fat-allos-${{ env.swift_version }}
+          path: xswiftbus-fat-allos-*
+      - name: Remove xswiftbus-thin
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: xswiftbus-thin-allos-${{ github.run_id }}
