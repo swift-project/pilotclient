@@ -1,6 +1,6 @@
 [submodule "externals"]
 	path = externals
-	url = ssh://git@dev.swift-project.org/source/externals.git
+	url = git@github.com:swift-project/externals.git
 [submodule "src/xswiftbus/libxplanemp"]
 	path = src/xswiftbus/libxplanemp
-	url = ssh://git@dev.swift-project.org/source/libxplanemp.git
+	url = git@github.com:swift-project/libxplanemp.git
