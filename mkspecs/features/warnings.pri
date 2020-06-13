@@ -34,7 +34,7 @@ else {
 
 # gcc 5 can warn about missing override keyword,
 # gcc 6 can do it without thousands of warnings in qt headers
-gcc {
+gcc: !clang {
     GCC_VERSION = $$system($$QMAKE_CXX -dumpversion)
     GCC_MAJOR = $$section(GCC_VERSION, ., 0, 0)
     greaterThan(GCC_MAJOR, 5) {
