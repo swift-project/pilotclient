@@ -28,6 +28,9 @@ swiftConfig(unitTests) {
     SUBDIRS += tests
 }
 
+clang|gcc: system($$QMAKE_CXX --version)
+else:msvc: system($$QMAKE_CXX)
+
 include(install.pri)
 
 include(src/xswiftbus/version.pri)
