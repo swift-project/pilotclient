@@ -590,26 +590,27 @@ namespace BlackGui
         return "1.0";
     }
 
-    bool CGuiApplication::cmdLineErrorMessage(const QString &errorMessage, bool retry) const
+    bool CGuiApplication::cmdLineWarningMessage(const QString &text, const QString &informativeText) const
     {
-        const QString helpText(beautifyHelpMessage(m_parser.helpText()));
-        constexpr int MaxLength = 60;
+        QMessageBox warningBox(QMessageBox::Warning, QGuiApplication::applicationDisplayName(), "<b>" +text + "</b>");
+        warningBox.setInformativeText(informativeText);
+        return warningBox.exec();
+    }
 
-        QString htmlMsg;
-        if (errorMessage.length() > MaxLength)
-        {
-            htmlMsg = "<html><head/><body><h4>" + errorMessage.left(MaxLength) + "..." + "</h4>" +
-                      "Details: " + errorMessage + "<br><br>";
-        }
+    bool CGuiApplication::cmdLineErrorMessage(const QString &text, const QString &informativeText, bool retry) const
+    {
+        QMessageBox errorBox(QMessageBox::Critical, QGuiApplication::applicationDisplayName(), "<b>" +text + "</b>");
+        if(informativeText.length() < 300)
+            errorBox.setInformativeText(informativeText);
         else
-        {
-            htmlMsg = "<html><head/><body><h4>" + errorMessage + "</h4>";
-        }
-        htmlMsg += helpText + "</body></html>";
+            errorBox.setDetailedText(informativeText);
 
-        const int r = QMessageBox::warning(nullptr,
-                                           QGuiApplication::applicationDisplayName(),
-                                           htmlMsg, QMessageBox::Abort, retry ? QMessageBox::Retry : QMessageBox::NoButton);
+        errorBox.addButton(QMessageBox::Abort);
+        if(retry)
+            errorBox.addButton(QMessageBox::Retry);
+
+        const int r = errorBox.exec();
+
         return (r == QMessageBox::Retry);
     }
 
@@ -619,11 +620,10 @@ namespace BlackGui
         if (!msgs.hasErrorMessages()) { return false; }
         static const CPropertyIndexList propertiesSingle({ CStatusMessage::IndexMessage });
         static const CPropertyIndexList propertiesMulti({ CStatusMessage::IndexSeverityAsString, CStatusMessage::IndexMessage });
-        const QString helpText(CGuiApplication::beautifyHelpMessage(m_parser.helpText()));
         const QString msgsHtml = msgs.toHtml(msgs.size() > 1 ? propertiesMulti : propertiesSingle);
         const int r = QMessageBox::critical(nullptr,
                                             QGuiApplication::applicationDisplayName(),
-                                            "<html><head><body>" + msgsHtml + "<br><br>" + helpText + "</body></html>", QMessageBox::Abort, retry ? QMessageBox::Retry : QMessageBox::NoButton);
+                                            "<html><head><body>" + msgsHtml + "</body></html>", QMessageBox::Abort, retry ? QMessageBox::Retry : QMessageBox::NoButton);
         return (r == QMessageBox::Retry);
     }
 

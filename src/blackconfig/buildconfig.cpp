@@ -97,6 +97,11 @@ namespace BlackConfig
         return QDateTime::currentDateTime() > getEol();
     }
 
+    int CBuildConfig::daysTillLifetimeExpiry()
+    {
+        return QDateTime::currentDateTime().daysTo(getEol());
+    }
+
     const QString boolToYesNo(bool v)
     {
         return v ? QStringLiteral("yes") : QStringLiteral("no");

@@ -184,7 +184,7 @@ namespace BlackCore
                             ok = true;
                             break;
                         }
-                        retry = sApp->cmdLineErrorMessage(QStringLiteral("URL '%1' not reachable").arg(urlString), true);
+                        retry = sApp->cmdLineErrorMessage(QStringLiteral("URL '%1' not reachable").arg(urlString), "", true);
                     }
                     while (retry);
                 }

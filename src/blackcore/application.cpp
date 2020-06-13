@@ -1404,14 +1404,21 @@ namespace BlackCore
         // checks
         if (CBuildConfig::isLifetimeExpired())
         {
-            this->cmdLineErrorMessage("Program expired " + CBuildConfig::getEol().toString());
+            this->cmdLineErrorMessage("Program expired since " + CBuildConfig::getEol().date().toString(),
+                                      "This version is no longer supported and usable. You have to install a newer version.");
             return false;
+        }
+
+        if(CBuildConfig::daysTillLifetimeExpiry() <= 30)
+        {
+            this->cmdLineWarningMessage("This version will expire in " + QString::number(CBuildConfig::daysTillLifetimeExpiry()) + " days!",
+                                            "You'll need to update swift in order to use it thereafter.");
         }
 
         const QStringList verifyErrors = CDirectoryUtils::verifyRuntimeDirectoriesAndFiles();
         if (!verifyErrors.isEmpty() && !m_applicationInfo.isUnitTest())
         {
-            this->cmdLineErrorMessage("Missing runtime directories/files: " + verifyErrors.join(", "));
+            this->cmdLineErrorMessage("Missing runtime directories/files:", verifyErrors.join(", "));
             return false;
         }
 
@@ -1419,13 +1426,13 @@ namespace BlackCore
         const QStringList args(QCoreApplication::instance()->arguments());
         if (!m_parser.parse(args))
         {
-            this->cmdLineErrorMessage(m_parser.errorText());
+            this->cmdLineErrorMessage("Parser error:", m_parser.errorText());
             return false;
         }
 
         if (m_singleApplication && m_alreadyRunning && !this->skipSingleApplicationCheck())
         {
-            this->cmdLineErrorMessage("Program must only run once");
+            this->cmdLineErrorMessage("Program must only run once", "You cannot run two or more instances side-by-side.");
             return false;
         }
 
@@ -1461,12 +1468,16 @@ namespace BlackCore
         return !this->synchronizeSetup(timeoutMs).hasErrorMessages();
     }
 
-    bool CApplication::cmdLineErrorMessage(const QString &errorMessage, bool retry) const
+    bool CApplication::cmdLineWarningMessage(const QString &text, const QString &informativeText) const
+    {
+        fputs(qPrintable(text + informativeText), stderr);
+        return false;
+    }
+
+    bool CApplication::cmdLineErrorMessage(const QString &text, const QString &informativeText, bool retry) const
     {
         Q_UNUSED(retry) // only works with UI version
-        fputs(qPrintable(errorMessage), stderr);
-        fputs("\n\n", stderr);
-        fputs(qPrintable(m_parser.helpText()), stderr);
+        fputs(qPrintable(text + informativeText), stderr);
         return false;
     }
 
