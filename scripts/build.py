@@ -21,6 +21,7 @@ import sys
 import datastore
 import tarfile
 from lib.util import get_vs_env
+from tee import StderrTee
 
 if sys.version_info < (3, 0):
     import ConfigParser as configparser
@@ -477,15 +478,15 @@ def main(argv):
         print('Unknown or unsupported tool chain!')
         sys.exit(2)
 
-    builder = builders[platform.system()][tool_chain](config_file, word_size)
-
-    builder.prepare()
-    builder.build(jobs, qmake_args, dev_build, eolInMonth)
-    builder.checks()
-    builder.install()
-    builder.publish()
-    builder.package_xswiftbus()
-    builder.symbols(upload_symbols)
+    with StderrTee('error.log', buff=-1):
+        builder = builders[platform.system()][tool_chain](config_file, word_size)
+        builder.prepare()
+        builder.build(jobs, qmake_args, dev_build, eolInMonth)
+        builder.checks()
+        builder.install()
+        builder.publish()
+        builder.package_xswiftbus()
+        builder.symbols(upload_symbols)
 
 
 # run main if run directly
