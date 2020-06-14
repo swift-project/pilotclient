@@ -43,6 +43,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt install doxygen graphviz libglu1-mesa-dev libopus-dev libsodium-dev libpulse-dev libdbus-1-dev libevent-dev
+          pip3 install tee
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
@@ -52,6 +53,7 @@ jobs:
         if: ${{ ! env.do_symbols }}
         run: |
           python3 -u scripts/build.py -w 64 -t gcc -d -j2 -e $eol_months $BASH_KEY_ARGS
+          ls -l error.log
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
@@ -59,6 +61,7 @@ jobs:
         if: ${{ env.do_symbols }}
         run: |
           python3 -u scripts/build.py -w 64 -t gcc -d -j2 -e $eol_months $BASH_KEY_ARGS --upload
+          ls -l error.log
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
@@ -100,9 +103,10 @@ jobs:
         run: |
           curl.exe --output "$HOME\installbuilder.exe" -L --url https://installbuilder.com/installbuilder-qt-professional-20.4.0-windows-x64-installer.exe
           &"$HOME\installbuilder.exe" --mode unattended --prefix "$HOME\installbuilder"
-      - name: Install jom
+      - name: Install dependencies
         run: |
           choco install jom --yes
+          pip install tee
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
@@ -112,6 +116,7 @@ jobs:
         if: ${{ ! env.do_symbols }}
         run: |
           python.exe -u scripts\build.py -w 64 -t msvc -d -e $env:eol_months ${{ env.PWSH_KEY_ARGS }}
+          dir error.log
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
@@ -119,6 +124,7 @@ jobs:
         if: ${{ env.do_symbols }}
         run: |
           python.exe -u scripts\build.py -w 64 -t msvc -d -e $env:eol_months ${{ env.PWSH_KEY_ARGS }} --upload
+          dir error.log
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
@@ -161,9 +167,10 @@ jobs:
         run: |
           curl.exe --output "$HOME\installbuilder.exe" -L --url https://installbuilder.com/installbuilder-qt-professional-20.4.0-windows-installer.exe
           &"$HOME\installbuilder.exe" --mode unattended --prefix "$HOME\installbuilder"
-      - name: Install jom
+      - name: Install dependencies
         run: |
           choco install jom --yes
+          pip install tee
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
@@ -173,6 +180,7 @@ jobs:
         if: ${{ ! env.do_symbols }}
         run: |
           python.exe -u scripts\build.py -w 32 -t msvc -d -e $env:eol_months ${{ env.PWSH_KEY_ARGS }}
+          dir error.log
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
@@ -180,6 +188,7 @@ jobs:
         if: ${{ env.do_symbols }}
         run: |
           python.exe -u scripts\build.py -w 32 -t msvc -d -e $env:eol_months ${{ env.PWSH_KEY_ARGS }} --upload
+          dir error.log
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
@@ -230,6 +239,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip3 install requests
+          pip3 install tee
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
@@ -239,6 +249,7 @@ jobs:
         if: ${{ ! env.do_symbols }}
         run: |
           python3 -u scripts/build.py -w 64 -t clang -d -j2 -e $eol_months $BASH_KEY_ARGS
+          ls -l error.log
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
@@ -246,6 +257,7 @@ jobs:
         if: ${{ env.do_symbols }}
         run: |
           python3 -u scripts/build.py -w 64 -t clang -d -j2 -e $eol_months $BASH_KEY_ARGS --upload
+          ls -l error.log
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
