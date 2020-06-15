@@ -250,7 +250,7 @@ namespace BlackGui
 
             // only replace with STD livery if airline does not match
             const CLivery currentLivery = this->getValue();
-            if (currentLivery.getAirlineIcaoCode() == code) { return; }
+            if (currentLivery.hasValidDbKey() && currentLivery.getAirlineIcaoCode() == code) { return; }
 
             const CLivery stdLivery(sGui->getWebDataServices()->getLiveries().findStdLiveryByAirlineIcaoVDesignator(code));
             if (stdLivery.hasValidDbKey())
