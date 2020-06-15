@@ -35,6 +35,7 @@ jobs:
         uses: jurplel/install-qt-action@v2
         with:
           version: 5.15.0
+          aqtversion: ==0.8
       - name: Download InstallBuilder
         run: |
           wget -O ~/installbuilder.run https://installbuilder.com/installbuilder-qt-professional-20.4.0-linux-x64-installer.run
