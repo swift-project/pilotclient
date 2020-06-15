@@ -103,7 +103,7 @@ jobs:
       - name: Install InstallBuilder
         run: |
           curl.exe --output "$HOME\installbuilder.exe" -L --url https://installbuilder.com/installbuilder-qt-professional-20.4.0-windows-x64-installer.exe
-          &"$HOME\installbuilder.exe" --mode unattended --prefix "$HOME\installbuilder"
+          start -wait "$HOME\installbuilder.exe" @("--mode", "unattended", "--prefix", "$HOME\installbuilder")
       - name: Install dependencies
         run: |
           choco install jom --yes
@@ -167,7 +167,7 @@ jobs:
       - name: Install InstallBuilder
         run: |
           curl.exe --output "$HOME\installbuilder.exe" -L --url https://installbuilder.com/installbuilder-qt-professional-20.4.0-windows-installer.exe
-          &"$HOME\installbuilder.exe" --mode unattended --prefix "$HOME\installbuilder"
+          start -wait "$HOME\installbuilder.exe" @("--mode", "unattended", "--prefix", "$HOME\installbuilder")
       - name: Install dependencies
         run: |
           choco install jom --yes
