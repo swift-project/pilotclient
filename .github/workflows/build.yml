@@ -5,9 +5,11 @@ on:
     branches-ignore:
       - master
       - nobuild/**
+  pull_request:
 
 env:
   do_symbols:    ${{ startsWith(github.ref, 'refs/heads/develop/') }}
+  do_vatsim_key: ${{ github.event_name == 'push' }}
   eol_months:    12
   BASH_KEY_ARGS:     -q 'SWIFT_CONFIG.vatsim.id=$$(VATSIM_ID)' -q 'SWIFT_CONFIG.vatsim.key=$$(VATSIM_KEY)'
   PWSH_KEY_ARGS: --% -q "SWIFT_CONFIG.vatsim.id=$$(VATSIM_ID)" -q "SWIFT_CONFIG.vatsim.key=$$(VATSIM_KEY)"
@@ -69,16 +71,21 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
-      - name: Build swift (without symbols)
-        if: ${{ ! env.do_symbols }}
+      - name: Build swift (without vatsim key, without symbols)
+        if: ${{ ! env.do_vatsim_key }}
+        run: |
+          python3 -u scripts/build.py -w 64 -t gcc -d -j2 -e $eol_months
+          ls -l error.log
+      - name: Build swift (with vatsim key, without symbols)
+        if: ${{ env.do_vatsim_key && ! env.do_symbols }}
         run: |
           python3 -u scripts/build.py -w 64 -t gcc -d -j2 -e $eol_months $BASH_KEY_ARGS
           ls -l error.log
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
-      - name: Build swift (with symbols)
-        if: ${{ env.do_symbols }}
+      - name: Build swift (with vatsim key, with symbols)
+        if: ${{ env.do_vatsim_key && env.do_symbols }}
         run: |
           python3 -u scripts/build.py -w 64 -t gcc -d -j2 -e $eol_months $BASH_KEY_ARGS --upload
           ls -l error.log
@@ -128,16 +135,21 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
-      - name: Build swift (without symbols)
-        if: ${{ ! env.do_symbols }}
+      - name: Build swift (without vatsim key, without symbols)
+        if: ${{ ! env.do_vatsim_key }}
+        run: |
+          python.exe -u scripts\build.py -w 64 -t msvc -d -e $env:eol_months
+          dir error.log
+      - name: Build swift (with vatsim key, without symbols)
+        if: ${{ env.do_vatsim_key && ! env.do_symbols }}
         run: |
           python.exe -u scripts\build.py -w 64 -t msvc -d -e $env:eol_months ${{ env.PWSH_KEY_ARGS }}
           dir error.log
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
-      - name: Build swift (with symbols)
-        if: ${{ env.do_symbols }}
+      - name: Build swift (with vatsim key, with symbols)
+        if: ${{ env.do_vatsim_key && env.do_symbols }}
         run: |
           python.exe -u scripts\build.py -w 64 -t msvc -d -e $env:eol_months ${{ env.PWSH_KEY_ARGS }} --upload
           dir error.log
@@ -187,16 +199,21 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
-      - name: Build swift (without symbols)
-        if: ${{ ! env.do_symbols }}
+      - name: Build swift (without vatsim key, without symbols)
+        if: ${{ ! env.do_vatsim_key }}
+        run: |
+          python.exe -u scripts\build.py -w 32 -t msvc -d -e $env:eol_months
+          dir error.log
+      - name: Build swift (with vatsim key, without symbols)
+        if: ${{ env.do_vatsim_key && ! env.do_symbols }}
         run: |
           python.exe -u scripts\build.py -w 32 -t msvc -d -e $env:eol_months ${{ env.PWSH_KEY_ARGS }}
           dir error.log
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
-      - name: Build swift (with symbols)
-        if: ${{ env.do_symbols }}
+      - name: Build swift (with vatsim key, with symbols)
+        if: ${{ env.do_vatsim_key && env.do_symbols }}
         run: |
           python.exe -u scripts\build.py -w 32 -t msvc -d -e $env:eol_months ${{ env.PWSH_KEY_ARGS }} --upload
           dir error.log
@@ -251,16 +268,21 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
-      - name: Build swift (without symbols)
-        if: ${{ ! env.do_symbols }}
+      - name: Build swift (without vatsim key, without symbols)
+        if: ${{ ! env.do_vatsim_key }}
+        run: |
+          python3 -u scripts/build.py -w 64 -t clang -d -j2 -e $eol_months
+          ls -l error.log
+      - name: Build swift (with vatsim key, without symbols)
+        if: ${{ env.do_vatsim_key && ! env.do_symbols }}
         run: |
           python3 -u scripts/build.py -w 64 -t clang -d -j2 -e $eol_months $BASH_KEY_ARGS
           ls -l error.log
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
-      - name: Build swift (with symbols)
-        if: ${{ env.do_symbols }}
+      - name: Build swift (with vatsim key, with symbols)
+        if: ${{ env.do_vatsim_key && env.do_symbols }}
         run: |
           python3 -u scripts/build.py -w 64 -t clang -d -j2 -e $eol_months $BASH_KEY_ARGS --upload
           ls -l error.log
