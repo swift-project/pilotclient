@@ -23,6 +23,16 @@ jobs:
         with:
           name: xswiftbus-thin-allos-${{ github.run_id }}
           failOnError: false
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Run cppcheck
+        run: |
+          sudo apt install cppcheck
+          cppcheck --template=gcc --inline-suppr --std=c++14 --enable=style,unusedFunction -i externals \
+                   --suppressions-list=cppcheck.supp --library=qt.cfg --library=posix.cfg . | tee error.log
+          ls -l error.log
 
   buildLinux:
     runs-on: ubuntu-16.04
