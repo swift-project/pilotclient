@@ -320,3 +320,29 @@ jobs:
         uses: geekyeggo/delete-artifact@v1
         with:
           name: xswiftbus-thin-allos-${{ github.run_id }}
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: [preBuild, buildLinux, buildWin64, buildWin32, buildMacOS, postBuild]
+    if: always()
+
+    steps:
+      - name: Prepare Discord message
+        run: |
+          result=SUCCESS
+          echo ${{ join(needs.*.result, ' ') }} | grep -q cancel && result=CANCELLED
+          echo ${{ join(needs.*.result, ' ') }} | grep -q fail   && result=FAILED
+          [[ $result = SUCCESS   ]] && emoji=white_check_mark
+          [[ $result = CANCELLED ]] && emoji=grey_question
+          [[ $result = FAILED    ]] && emoji=x
+          echo "::set-env name=result::$result"
+          echo "::set-env name=emoji::$emoji"
+      - name: Send Discord message
+        uses: appleboy/discord-action@0.0.3
+        with:
+          webhook_id: ${{ secrets.DISCORD_ID }}
+          webhook_token: ${{ secrets.DISCORD_TOKEN }}
+          message: |
+            > `${{ github.ref }}`
+            > :${{ env.emoji }}: **${{ env.result }}** (triggered by ${{ github.event_name }})
+            > <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}>
