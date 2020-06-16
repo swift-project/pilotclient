@@ -37,10 +37,11 @@ jobs:
                    --suppressions-list=cppcheck.supp --library=qt.cfg --library=posix.cfg . | tee error.log
           ls -l error.log
       - name: Remove artifacts
-        uses: geekyeggo/delete-artifact@v1
+        uses: swift-project/delete-artifact@swift
         with:
           name: xswiftbus-thin-allos-${{ steps.version.outputs.value }}
           failOnError: false
+          warnIfNotFound: false
 
   buildLinux:
     runs-on: ubuntu-16.04
@@ -305,7 +306,7 @@ jobs:
           name: xswiftbus-fat-allos-${{ needs.preBuild.outputs.version }}
           path: xswiftbus-fat-allos-*
       - name: Remove xswiftbus-thin
-        uses: geekyeggo/delete-artifact@v1
+        uses: swift-project/delete-artifact@swift
         with:
           name: xswiftbus-thin-allos-${{ needs.preBuild.outputs.version }}
 
