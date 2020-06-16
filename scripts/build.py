@@ -37,6 +37,7 @@ class Builder:
         Build processes will be called with the environment modified by this function.
         """
         print('Preparing environment ...')
+        self.make_cmd = self._get_make_cmd()
         os.environ['PATH'] += os.pathsep + self._get_qt_binary_path()
         self._specific_prepare()
 
@@ -252,7 +253,6 @@ class Builder:
         self.qt_path = path.abspath(self.__config.get(platform.system(), 'qt_path'))
         self.dump_syms = path.abspath(self.__config.get(platform.system(), 'dump_syms'))
 
-        self.make_cmd = self._get_make_cmd()
         self.version = self.__get_swift_version()
 
     def __get_config_file(self):
@@ -412,7 +412,7 @@ def print_help():
                            'Windows': ['msvc', 'mingw']
                            }
     compiler_help = '|'.join(supported_compilers[platform.system()])
-    print('build.py -c <config file> -w <32|64> -t <' + compiler_help + '> [-d] [-e <end of life in month>] [-q <extra qmake argument>]')
+    print('build.py -c <config file> -w <32|64> -t <' + compiler_help + '> [-v] [-d] [-e <end of life in month>] [-q <extra qmake argument>]')
 
 
 # Entry point if called as a standalone program
@@ -427,18 +427,21 @@ def main(argv):
     qmake_args = []
 
     try:
-        opts, args = getopt.getopt(argv, 'hc:w:t:j:due:q:', ['config=', 'wordsize=', 'toolchain=', 'jobs=', 'dev', 'upload', 'eol', 'qmake-arg='])
+        opts, args = getopt.getopt(argv, 'hc:w:t:j:due:q:v', ['config=', 'wordsize=', 'toolchain=', 'jobs=', 'dev', 'upload', 'eol', 'qmake-arg=', 'version'])
     except getopt.GetoptError:
         print_help()
         sys.exit(2)
 
-    if len(opts) < 2:
+    if len(opts) == 0:
         print_help()
         sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-h':
             print_help()
+            sys.exit()
+        elif opt in ('-v', '--version'):
+            print(Builder(None, None).version)
             sys.exit()
         elif opt in ('-c', '--config'):
             config_file = path.abspath(arg)
