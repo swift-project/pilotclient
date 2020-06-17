@@ -20,6 +20,10 @@ jobs:
       version: ${{ steps.version.outputs.value }}
 
     steps:
+      - name: Print environment
+        run: |
+          echo event_name is ${{ github.event_name }}
+          echo do_vatsim_key is ${{ env.do_vatsim_key }}
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
