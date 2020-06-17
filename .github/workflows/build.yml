@@ -23,25 +23,34 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          submodules: true
           fetch-depth: 0
       - name: Get version number
         id: version
         run: |
           pip3 install tee
           echo "::set-output name=value::$(python3 -u scripts/build.py --version)"
-      - name: Run cppcheck
-        run: |
-          sudo apt install cppcheck
-          cppcheck --template=gcc --inline-suppr --std=c++14 --enable=style,unusedFunction -i externals \
-                   --suppressions-list=cppcheck.supp --library=qt.cfg --library=posix.cfg . | tee error.log
-          ls -l error.log
       - name: Remove artifacts
         uses: swift-project/delete-artifact@swift
         with:
           name: xswiftbus-thin-allos-${{ steps.version.outputs.value }}
           failOnError: false
           warnIfNotFound: false
+
+  checks:
+    runs-on: ubuntu-20.04
+    needs: preBuild
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Run cppcheck
+        run: |
+          sudo apt install cppcheck
+          cppcheck --template=gcc --inline-suppr --std=c++14 --enable=style,unusedFunction -i externals \
+                   --suppressions-list=cppcheck.supp --library=qt.cfg --library=posix.cfg . | tee error.log
+          ls -l error.log
 
   buildLinux:
     runs-on: ubuntu-16.04
@@ -304,7 +313,7 @@ jobs:
 
   postBuild:
     runs-on: ubuntu-20.04
-    needs: [preBuild, buildLinux, buildWin64, buildWin32, buildMacOS]
+    needs: [preBuild, checks, buildLinux, buildWin64, buildWin32, buildMacOS]
 
     steps:
       - name: Download xswiftbus-thin
@@ -330,7 +339,7 @@ jobs:
 
   notify:
     runs-on: ubuntu-20.04
-    needs: [preBuild, buildLinux, buildWin64, buildWin32, buildMacOS, postBuild]
+    needs: [preBuild, checks, buildLinux, buildWin64, buildWin32, buildMacOS, postBuild]
     if: always()
 
     steps:
