@@ -14,8 +14,35 @@ useStlAlgorithm
 // Internal errors
 cppcheckError
 
-// Ignore style issues in g2clib
+// g2clib
 variableScope:src/plugins/weatherdata/gfs/g2clib/*.c
+knownConditionTrueFalse:src/plugins/weatherdata/gfs/g2clib/*.c
+redundantAssignment:src/plugins/weatherdata/gfs/g2clib/*.c
+unreadVariable:src/plugins/weatherdata/gfs/g2clib/*.c
+invalidFunctionArg:src/plugins/weatherdata/gfs/g2clib/*.c
 
 // Ignore unusedFunction as it has too many false positives (especially in tests)
 unusedFunction
+
+// Conflicts with CppCoreGuidelines ES.20 Always initialize an object
+redundantInitialization
+
+// Perf samples
+redundantAssignment:samples/blackmisc/samplesperformance.*
+unreadVariable:samples/blackmisc/samplesperformance.*
+
+// Benign
+duplicateCondition:src/xswiftbus/libxplanemp/src/XPMPPlaneRenderer.cpp
+
+// Unused file
+unknownMacro:src/xswiftbus/libxplanemp/src/BitmapUtils.cpp
+
+// False positives
+returnDanglingLifetime:src/blackmisc/iterator.h
+unreadVariable:tests/blackcore/testreaders/testreaders.cpp
+unknownMacro:src/blackmisc/aviation/altitude.h
+unknownMacro:src/blackmisc/geo/elevationplane.h
+ctuArrayIndex:src/xswiftbus/libxplanemp/src/XPMPPlaneRenderer.cpp
+
+// False positive memory leaks due to Qt parent/child relationship
+unsafeClassCanLeak

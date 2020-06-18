@@ -38,7 +38,7 @@ namespace BlackCore
             static QString pdu() { return "$FP"; }
 
             //! Properties @{
-            FlightType m_flightType;
+            FlightType m_flightType {};
             QString m_aircraftIcaoType;
             int m_trueCruisingSpeed = 0;
             QString m_depAirport;

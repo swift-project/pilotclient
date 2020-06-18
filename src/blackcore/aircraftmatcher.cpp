@@ -523,7 +523,7 @@ namespace BlackCore
         return rv;
     }
 
-    MatchingScriptReturnValues CAircraftMatcher::matchingScript(const QString &js, const CAircraftModel &inModel, const CAircraftModel &matchedModel, const CAircraftMatcherSetup &setup, const CAircraftModelList &modelSet, MatchingScript ms, CStatusMessageList *log)
+    MatchingScriptReturnValues CAircraftMatcher::matchingScript(const QString &js, const CAircraftModel &inModel, const CAircraftModel &matchedModel, const CAircraftMatcherSetup &setup, const CAircraftModelList &modelSet, MatchingScript script, CStatusMessageList *log)
     {
         MatchingScriptReturnValues rv(inModel);
         QString logMessage;
@@ -536,14 +536,14 @@ namespace BlackCore
             rv.runScript = true;
 
             // matching script
-            const bool msReverse = (ms == ReverseLookup);
+            const bool msReverse = (script == ReverseLookup);
             const QString lf = msReverse ? setup.getMsReverseLookupFile() : setup.getMsMatchingStageFile();
             static const QString logFileR = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), "logMatchingScriptReverseLookup.log");
             static const QString logFileM = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), "logMatchingScriptMatchingStage.log");
 
             if (log)
             {
-                CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Matching script (%1): '%2'").arg(msToString(ms), lf));
+                CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Matching script (%1): '%2'").arg(msToString(script), lf));
                 CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Matching script input model (%1): '%2'").arg(inModel.toQString(true)));
                 CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Matching script models: %1").arg(modelSet.coverageSummary()));
             }

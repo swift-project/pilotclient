@@ -310,11 +310,7 @@ namespace BlackGui
 
         void CLoginAdvComponent::setGuiLoginAsValues(const CSimulatedAircraft &ownAircraft)
         {
-            const QString ac(
-                ownAircraft.getAircraftIcaoCodeDesignator() %
-                (ownAircraft.hasAirlineDesignator() ? (u' ' % ownAircraft.getAirlineIcaoCodeDesignator()) : QString()) %
-                (ownAircraft.hasModelString() ? (u' ' % ownAircraft.getModelString()) : QString())
-            );
+            Q_UNUSED(ownAircraft)
         }
 
         CServer CLoginAdvComponent::getCurrentVatsimServer() const
@@ -382,7 +378,6 @@ namespace BlackGui
 
             // in any case override if connected
             ui->comp_OwnAircraft->setOwnModelAndIcaoValues();
-            const CServer server = nwc->getConnectedServer();
             ui->comp_NetworkDetails->setLoginMode(nwc->getLoginMode());
             const CSimulatedAircraft ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
             this->setGuiLoginAsValues(ownAircraft);

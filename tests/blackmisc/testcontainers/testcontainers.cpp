@@ -375,7 +375,6 @@ namespace BlackMiscTest
         qint64 ts = 1000000;
         int no = 10;
         const int max = 6;
-        int dt = 0;
 
         for (int i = 0; i < no; ++i)
         {
@@ -386,16 +385,15 @@ namespace BlackMiscTest
 
             if (CMathUtils::randomBool())
             {
-                dt = CMathUtils::randomInteger(4500, 5500);
+                ts += CMathUtils::randomInteger(4500, 5500);
                 s.setTimeOffsetMs(6000);
             }
             else
             {
-                dt = CMathUtils::randomInteger(900, 1100);
+                ts += CMathUtils::randomInteger(900, 1100);
                 s.setTimeOffsetMs(2000);
             }
 
-            ts += dt;
             situations.push_frontKeepLatestFirstAdjustOffset(s, true, max);
 
             QVERIFY2(situations.size() <= max, "Wrong size");

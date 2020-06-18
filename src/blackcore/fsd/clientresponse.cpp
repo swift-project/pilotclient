@@ -15,7 +15,7 @@ namespace BlackCore
 {
     namespace Fsd
     {
-        ClientResponse::ClientResponse() : MessageBase()
+        ClientResponse::ClientResponse()
         { }
 
         ClientResponse::ClientResponse(const QString &sender, const QString &receiver, ClientQueryType queryType, const QStringList &responseData)

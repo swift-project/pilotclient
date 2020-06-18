@@ -1106,7 +1106,6 @@ namespace BlackSimPlugin
             CAircraftModel model = simObject.getAircraftModel();
 
             const CSpecializedSimulatorSettings settings = this->getSimulatorSettings();
-            const QStringList modelDirectories = settings.getModelDirectoriesFromSimulatorDirectoryOrDefault();
             const bool fileExists = CFsCommonUtil::adjustFileDirectory(model, settings.getModelDirectoriesOrDefault());
             bool canBeUsed = true;
 
@@ -1586,7 +1585,6 @@ namespace BlackSimPlugin
                 if (situations.isEmpty())
                 {
                     CLogMessage(this).warning(u"No valid situations for '%1', will be added as pending") << callsign.asString();
-                    canAdd = false;
                 }
                 else
                 {
@@ -1596,11 +1594,10 @@ namespace BlackSimPlugin
                 }
 
                 // still invalid?
-                const bool invalidSituation = situation.isPositionOrAltitudeNull();
-                canAdd = invalidSituation;
+                canAdd = situation.isPositionOrAltitudeNull();
                 if (CBuildConfig::isLocalDeveloperDebugBuild())
                 {
-                    BLACK_VERIFY_X(invalidSituation, Q_FUNC_INFO, "Expect valid situation");
+                    BLACK_VERIFY_X(canAdd, Q_FUNC_INFO, "Expect valid situation");
                     CLogMessage(this).warning(u"Invalid situation for '%1'") << callsign;
                 }
             }

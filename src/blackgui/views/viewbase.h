@@ -706,10 +706,10 @@ namespace BlackGui
             int removeIf(K0 k0, V0 v0, KeysValues... keysValues)
             {
                 if (this->rowCount() < 1) { return 0; }
-                ContainerType copy(container());
-                int r = copy.removeIf(k0, v0, keysValues...);
+                ContainerType cp(container());
+                int r = cp.removeIf(k0, v0, keysValues...);
                 if (r < 1) { return 0; }
-                this->updateContainerMaybeAsync(copy);
+                this->updateContainerMaybeAsync(cp);
                 return r;
             }
 
@@ -717,9 +717,9 @@ namespace BlackGui
             template <class K1, class V1>
             void replaceOrAdd(K1 key1, V1 value1, const ObjectType &replacement)
             {
-                ContainerType copy(container());
-                copy.replaceOrAdd(key1, value1, replacement);
-                this->updateContainerMaybeAsync(copy);
+                ContainerType cp(container());
+                cp.replaceOrAdd(key1, value1, replacement);
+                this->updateContainerMaybeAsync(cp);
             }
 
             //! \name Slot overrides from base class

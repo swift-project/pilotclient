@@ -61,7 +61,7 @@ namespace BlackSimPlugin
             struct Serializer<MsgTuple, 0>
             {
                 static const QByteArray &read(const QByteArray &data, MsgTuple &) { return data; }
-                static QByteArray write(QByteArray &data, const MsgTuple &)      { return data; }
+                static QByteArray write(const QByteArray &data, const MsgTuple &) { return data; }
             };
 
             template< typename MessageTuple, quint32 Size >

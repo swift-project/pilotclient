@@ -52,7 +52,6 @@ namespace BlackCore
                     headerBuffer.close();
                     const quint16 headerLength = static_cast<quint16>(headerBuffer.buffer().size());
 
-                    const QByteArray dtoNameBuffer = T::getDtoName();
                     const QByteArray dtoShortName = T::getShortDtoName();
                     const quint16 dtoNameLength = static_cast<quint16>(dtoShortName.size());
 

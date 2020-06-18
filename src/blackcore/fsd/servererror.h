@@ -43,7 +43,7 @@ namespace BlackCore
             //! @}
 
             //! Properties @{
-            ServerErrorCode m_errorNumber;
+            ServerErrorCode m_errorNumber {};
             QString m_causingParameter;
             QString m_description;
             //! @}

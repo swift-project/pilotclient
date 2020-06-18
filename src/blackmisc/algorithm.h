@@ -175,6 +175,7 @@ namespace BlackMisc
             static_cast<void>(std::initializer_list<int>
             {
                 //! \fixme C-style cast is needed due to a clang bug: https://bugs.llvm.org/show_bug.cgi?id=39375
+                // cppcheck-suppress accessForwarded
                 ((void)(std::forward<F>(visitor)(std::get<Is * 2>(std::forward<T>(tuple)), std::get<Is * 2 + 1>(std::forward<T>(tuple)))), 0)...
             });
         }

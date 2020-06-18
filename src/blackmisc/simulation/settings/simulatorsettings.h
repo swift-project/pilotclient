@@ -124,7 +124,7 @@ namespace BlackMisc
                 BlackMisc::PhysicalQuantities::CLength getRecordedGndRadius() const { return m_recordedGndRadius; }
 
                 //! Record GND values with radius
-                bool setRecordedGndRadius(BlackMisc::PhysicalQuantities::CLength &radius);
+                bool setRecordedGndRadius(const BlackMisc::PhysicalQuantities::CLength &radius);
 
                 //! Reset the paths
                 void resetPaths();

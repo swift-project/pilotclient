@@ -431,8 +431,8 @@ namespace BlackCore
                     {
                         // no issue with cache
                         m_updateInfoUrls = loadedSetup.getSwiftUpdateInfoFileUrls();
-                        const CStatusMessage m = CLogMessage(this).info(u"Loaded setup from '%1'") << urlString;
-                        emit this->setupLoadingMessages(m);
+                        const CStatusMessage m2 = CLogMessage(this).info(u"Loaded setup from '%1'") << urlString;
+                        emit this->setupLoadingMessages(m2);
                         CLogMessage(this).info(u"Setup: Updated data cache in '%1'") << m_setup.getFilename();
                         {
                             QWriteLocker l(&m_lockSetup);

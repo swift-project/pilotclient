@@ -633,15 +633,15 @@ namespace BlackMisc
                     // make absolute
                     if (!soPath.left(3).contains(':')) { soPath = CFileUtils::appendFilePaths(relPath, soPath); }
 
-                    const QDir p(soPath); // always absolute path now
-                    if (checked && !p.exists())
+                    const QDir dir(soPath); // always absolute path now
+                    if (checked && !dir.exists())
                     {
                         // skip, not existing
-                        if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"FSX SimObjects path skipped, not existing: '%1' in '%2'") << p.absolutePath() << fsxFile; }
+                        if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"FSX SimObjects path skipped, not existing: '%1' in '%2'") << dir.absolutePath() << fsxFile; }
                         continue;
                     }
 
-                    const QString afp = p.absolutePath().toLower();
+                    const QString afp = dir.absolutePath().toLower();
                     if (!CDirectoryUtils::containsFileInDir(afp, airFileFilter(), true))
                     {
                         if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"FSX SimObjects path: Skipping '%1' from '%2', no '%3' file") << afp << fsxFile << airFileFilter(); }

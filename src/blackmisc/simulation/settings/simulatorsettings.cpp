@@ -126,7 +126,7 @@ namespace BlackMisc
                 return true;
             }
 
-            bool CSimulatorSettings::setRecordedGndRadius(CLength &radius)
+            bool CSimulatorSettings::setRecordedGndRadius(const CLength &radius)
             {
                 if (radius == m_recordedGndRadius) { return false; }
                 m_recordedGndRadius = radius;

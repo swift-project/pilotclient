@@ -61,7 +61,7 @@ namespace BlackGui
             void onWorkbenchToggled(bool checked);
 
             //! Cache changed
-            void onCacheChanged(BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void onCacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Web data have been read
             void onWebDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);

@@ -40,20 +40,11 @@ namespace BlackSound
             //! Bit rate
             void setBitRate(int bitRate);
 
-            //! \param frameCount Number of audio samples per frame
-            //! \returns the size of an audio frame in bytes
-            int frameByteCount(int frameCount);
-
-            //! Frame count
-            int frameCount(const QVector<qint16> pcmSamples);
-
             //! Encode
-            QByteArray encode(const QVector<qint16> pcmSamples, int samplesLength, int *encodedLength);
+            QByteArray encode(const QVector<qint16> &pcmSamples, int samplesLength, int *encodedLength);
 
         private:
             OpusEncoder *opusEncoder = nullptr;
-            int m_sampleRate;
-            int m_channels;
 
             static constexpr int maxDataBytes = 4000;
         };

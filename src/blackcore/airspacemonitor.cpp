@@ -1436,18 +1436,16 @@ namespace BlackCore
         bool canLikelySkipNearGround = correctedSituation.canLikelySkipNearGroundInterpolation();
         do
         {
-            if (canLikelySkipNearGround || correctedSituation.hasGroundElevation()) { break; }
-
-            // set a defined state
-            correctedSituation.resetGroundElevation();
-
             // Check if we can bail out and ignore all elevation handling
             //
             // rational:
             // a) elevation handling is expensive, and might even requests elevation from sim.
             // b) elevations not needed pollute the cache with "useless" values
             //
-            if (canLikelySkipNearGround) { break; }
+            if (canLikelySkipNearGround || correctedSituation.hasGroundElevation()) { break; }
+
+            // set a defined state
+            correctedSituation.resetGroundElevation();
 
             // Guessing gives better values, also for smaller planes
             // and avoids unnecessary elevation fetching for low flying smaller GA aircraft

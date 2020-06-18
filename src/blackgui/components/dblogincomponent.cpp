@@ -49,8 +49,7 @@ namespace BlackGui
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
             ui->setupUi(this);
             this->setModeLogin(true);
-            const CUrl url(sGui->getGlobalSetup().getDbHomePageUrl());
-            const QString urlString = asHyperlink(url.getFullUrl());
+            const QString urlString = asHyperlink(sGui->getGlobalSetup().getDbHomePageUrl().getFullUrl());
             QString html = ui->tbr_InfoAndHints->toHtml();
             html = html.replace("##swiftDB##", urlString, Qt::CaseInsensitive);
             html = html.replace("##swiftEnableSSO##", urlString, Qt::CaseInsensitive);

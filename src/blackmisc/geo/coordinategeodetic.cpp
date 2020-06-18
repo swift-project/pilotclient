@@ -474,6 +474,7 @@ namespace BlackMisc
                 default:
                     const QString m = QString("no property, index ").append(index.toQString());
                     Q_ASSERT_X(false, Q_FUNC_INFO, m.toLocal8Bit().constData());
+                    Q_UNUSED(m)
                     break;
                 }
             }

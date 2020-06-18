@@ -862,7 +862,6 @@ namespace BlackCore
                 const CAircraftMatcherSetup setup = m_aircraftMatcher.getSetup();
                 if (setup.doModelAddFailover())
                 {
-                    const CCallsign cs = remoteAircraft.getCallsign();
                     const int trial = m_failoverAddingCounts.value(cs, 0);
                     if (trial < MaxModelAddedFailoverTrials)
                     {

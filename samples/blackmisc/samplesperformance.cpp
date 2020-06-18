@@ -797,17 +797,6 @@ namespace BlackSample
         return set;
     }
 
-    const CAircraftSituationList CSamplesPerformance::situations(const CCallsignSet &callsigns)
-    {
-        CAircraftSituationList situations;
-        for (const CCallsign &cs : callsigns)
-        {
-            const CAircraftSituation s(cs);
-            situations.push_back(s);
-        }
-        return situations;
-    }
-
     const QMap<CCallsign, CAircraftSituation> CSamplesPerformance::situationsMap(const CCallsignSet &callsigns)
     {
         QMap<CCallsign, CAircraftSituation> situations;

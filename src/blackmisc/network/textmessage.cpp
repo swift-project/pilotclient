@@ -252,7 +252,7 @@ namespace BlackMisc
 
         void CTextMessage::toggleSenderRecipient()
         {
-            qSwap(m_senderCallsign, m_recipientCallsign);
+            std::swap(m_senderCallsign, m_recipientCallsign);
         }
 
         bool CTextMessage::isSelcalMessage() const

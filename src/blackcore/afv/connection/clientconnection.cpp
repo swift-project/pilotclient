@@ -61,15 +61,15 @@ namespace BlackCore
 
                         if (authenticated)
                         {
-                            const QString callsign = m_connection.getCallsign();
-                            m_connection.setTokens(m_apiServerConnection->addCallsign(callsign));
+                            const QString cs = m_connection.getCallsign();
+                            m_connection.setTokens(m_apiServerConnection->addCallsign(cs));
                             m_connection.setTsAuthenticatedToNow();
                             m_connection.createCryptoChannels();
                             m_connection.setTsHeartbeatToNow();
                             this->connectToVoiceServer();
                             // taskServerConnectionCheck.Start();
 
-                            CLogMessage(this).info(u"Connected: '%1' to voice server, socket open: %2") << callsign << boolToYesNo(m_udpSocket->isOpen());
+                            CLogMessage(this).info(u"Connected: '%1' to voice server, socket open: %2") << cs << boolToYesNo(m_udpSocket->isOpen());
                         }
                         else
                         {

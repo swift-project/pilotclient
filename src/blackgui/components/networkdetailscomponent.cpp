@@ -179,8 +179,6 @@ namespace BlackGui
         void CNetworkDetailsComponent::onSelectedServerChanged(const CServer &server)
         {
             if (!m_updatePilotOnServerChanges) { return; }
-            const bool vatsim = this->isVatsimServerSelected();
-            const CUser user = vatsim ? this->getCurrentVatsimServer().getUser() : server.getUser();
             emit this->overridePilot(server.getUser());
         }
 

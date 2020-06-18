@@ -21,9 +21,9 @@
 namespace BlackSound
 {
     //! Conversion functions @{
-    BLACKSOUND_EXPORT QVector<float>  convertBytesTo32BitFloatPCM(const QByteArray input);
-    BLACKSOUND_EXPORT QVector<qint16> convertBytesTo16BitPCM(const QByteArray input);
-    BLACKSOUND_EXPORT QVector<qint16> convertFloatBytesTo16BitPCM(const QByteArray input);
+    BLACKSOUND_EXPORT QVector<float>  convertBytesTo32BitFloatPCM(const QByteArray &input);
+    BLACKSOUND_EXPORT QVector<qint16> convertBytesTo16BitPCM(const QByteArray &input);
+    BLACKSOUND_EXPORT QVector<qint16> convertFloatBytesTo16BitPCM(const QByteArray &input);
     BLACKSOUND_EXPORT QVector<float>  convertFromMonoToStereo(const QVector<float> &mono);
     BLACKSOUND_EXPORT QVector<qint16> convertFromStereoToMono(const QVector<qint16> &stereo);
     BLACKSOUND_EXPORT QVector<float>  convertFromShortToFloat(const QVector<qint16> &input);

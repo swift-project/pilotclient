@@ -233,7 +233,7 @@ namespace BlackMisc
     {
         QMutexLocker lock(&m_mutex);
         decltype(m_queue) queue;
-        qSwap(m_queue, queue);
+        std::swap(m_queue, queue);
         lock.unlock();
 
         for (const auto &pair : BlackMisc::as_const(queue))
@@ -391,13 +391,13 @@ namespace BlackMisc
             {
                 m_originalTimestamps = fromJson(json.value("timestamps").toObject());
 
-                QUuid uuid(json.value("uuid").toString());
-                if (uuid == m_uuid && m_admittedQueue.isEmpty())
+                QUuid id(json.value("uuid").toString());
+                if (id == m_uuid && m_admittedQueue.isEmpty())
                 {
                     if (m_pendingWrite) { return guard; }
                     return {};
                 }
-                if (updateUuid) { m_uuid = uuid; }
+                if (updateUuid) { m_uuid = id; }
 
                 auto timesToLive = fromJson(json.value("ttl").toObject());
                 for (auto it = m_originalTimestamps.cbegin(); it != m_originalTimestamps.cend(); ++it)
@@ -807,19 +807,19 @@ namespace BlackMisc
             return;
         }
         auto json = QJsonDocument::fromJson(file.readAll()).object();
-        QUuid uuid(json.value("uuid").toString());
+        QUuid id(json.value("uuid").toString());
         CSequence<CProcessInfo> apps;
         auto status = apps.convertFromJsonNoThrow(json.value("apps").toObject(), this, QStringLiteral("Error in %1 apps object").arg(m_filename));
         apps.removeIf([](const CProcessInfo & pi) { return ! pi.exists(); });
 
-        if (apps.isEmpty()) { uuid = CIdentifier().toUuid(); }
-        m_uuid = uuid;
+        if (apps.isEmpty()) { id = CIdentifier().toUuid(); }
+        m_uuid = id;
 
         CProcessInfo currentProcess = CProcessInfo::currentProcess();
         Q_ASSERT(currentProcess.exists());
         apps.replaceOrAdd(currentProcess);
         json.insert("apps", apps.toJson());
-        json.insert("uuid", uuid.toString());
+        json.insert("uuid", m_uuid.toString());
         if (file.seek(0) && file.resize(0) && file.write(QJsonDocument(json).toJson()))
         {
             if (!file.checkedClose())

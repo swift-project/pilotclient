@@ -52,9 +52,8 @@ namespace BlackSample
     }
 
 #else
-    void CSamplesFsuipc::samplesFsuipc(QTextStream &streamOut)
+    void CSamplesFsuipc::samplesFsuipc(QTextStream &)
     {
-        Q_UNUSED(streamOut);
     }
 #endif
 

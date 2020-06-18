@@ -15,7 +15,7 @@ namespace BlackCore
 {
     namespace Fsd
     {
-        ServerError::ServerError() : MessageBase()
+        ServerError::ServerError()
         { }
 
         ServerError::ServerError(const QString &sender, const QString &receiver, ServerErrorCode errorCode, const QString &causingParameter, const QString &description)

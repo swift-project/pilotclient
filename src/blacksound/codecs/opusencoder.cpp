@@ -12,9 +12,7 @@ namespace BlackSound
 {
     namespace Codecs
     {
-        COpusEncoder::COpusEncoder(int sampleRate, int channels, int application) :
-            m_sampleRate(sampleRate),
-            m_channels(channels)
+        COpusEncoder::COpusEncoder(int sampleRate, int channels, int application)
         {
             int error;
             opusEncoder = opus_encoder_create(sampleRate, channels, application, &error);
@@ -30,7 +28,7 @@ namespace BlackSound
             opus_encoder_ctl(opusEncoder, OPUS_SET_BITRATE(bitRate));
         }
 
-        QByteArray COpusEncoder::encode(const QVector<qint16> pcmSamples, int samplesLength, int *encodedLength)
+        QByteArray COpusEncoder::encode(const QVector<qint16> &pcmSamples, int samplesLength, int *encodedLength)
         {
             QByteArray encoded(maxDataBytes, 0);
             int length = opus_encode(opusEncoder, reinterpret_cast<const opus_int16 *>(pcmSamples.data()), samplesLength, reinterpret_cast<unsigned char *>(encoded.data()), maxDataBytes);

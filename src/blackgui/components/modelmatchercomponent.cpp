@@ -133,8 +133,8 @@ namespace BlackGui
                     ui->tvp_ResultMessages->insert(m);
                     return;
                 }
-                CSimulatorInfo simulator = models.simulatorsWithMaxEntries();
-                m_matcher.setModelSet(models, simulator, true);
+                CSimulatorInfo si = models.simulatorsWithMaxEntries();
+                m_matcher.setModelSet(models, si, true);
             }
             else
             {
@@ -150,7 +150,7 @@ namespace BlackGui
             this->onSimulatorChanged(ui->comp_SimulatorSelector->getValue());
         }
 
-        void CModelMatcherComponent::onCacheChanged(CSimulatorInfo &simulator)
+        void CModelMatcherComponent::onCacheChanged(const CSimulatorInfo &simulator)
         {
             Q_UNUSED(simulator);
             this->redisplay();

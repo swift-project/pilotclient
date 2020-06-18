@@ -78,6 +78,7 @@ namespace BlackSimPlugin
             return QStringLiteral("N/A");
         }
 
+        // cppcheck-suppress constParameter
         bool CFsuipc::read(CSimulatedAircraft &aircraft, bool cockpit, bool situation, bool aircraftParts)
         {
             Q_UNUSED(aircraft);

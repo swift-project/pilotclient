@@ -39,7 +39,7 @@ namespace BlackSound
             int frameCount(int bufferSize);
 
             //! Decode
-            QVector<qint16> decode(const QByteArray opusData, int dataLength, int *decodedLength);
+            QVector<qint16> decode(const QByteArray &opusData, int dataLength, int *decodedLength);
 
             //! Reset
             void resetState();

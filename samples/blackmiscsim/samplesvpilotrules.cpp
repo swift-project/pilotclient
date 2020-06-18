@@ -30,7 +30,7 @@ namespace BlackSample
     /*
      * Samples
      */
-    void CSamplesVPilotRules::samples(QTextStream &streamOut, QTextStream &streamIn)
+    void CSamplesVPilotRules::samples(QTextStream &streamOut, const QTextStream &streamIn)
     {
         BlackMisc::registerMetadata();
         QScopedPointer<CVPilotRulesReader> vPilotReader(new CVPilotRulesReader());

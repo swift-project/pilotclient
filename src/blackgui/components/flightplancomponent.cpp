@@ -1015,7 +1015,6 @@ namespace BlackGui
         void CFlightPlanComponent::setRemarksUIValues(const QString &remarks)
         {
             if (remarks.isEmpty()) { return; }
-            const QString r = remarks.toUpper();
 
             if (remarks.contains("/V"))
             {

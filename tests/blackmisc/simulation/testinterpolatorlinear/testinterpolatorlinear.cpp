@@ -192,12 +192,11 @@ namespace BlackMiscTest
         const int steps = 10;
         const double tfStep = 1.0 / steps;
 
-        double timeFraction = 0;
         double lastDeg = 0;
 
         for (int i = 0; i < steps; i++)
         {
-            timeFraction = tfStep * i;
+            double timeFraction = tfStep * i;
             pbh.setTimeFraction(timeFraction);
             const CHeading heading = pbh.getHeading();
             const double h = heading.value(CAngleUnit::deg());
@@ -215,7 +214,7 @@ namespace BlackMiscTest
 
         for (int i = 0; i < steps; i++)
         {
-            timeFraction = tfStep * i;
+            double timeFraction = tfStep * i;
             pbh.setTimeFraction(timeFraction);
             const CHeading heading = pbh.getHeading();
             const double h = heading.value(CAngleUnit::deg());
@@ -233,7 +232,7 @@ namespace BlackMiscTest
 
         for (int i = 0; i < steps; i++)
         {
-            timeFraction = tfStep * i;
+            double timeFraction = tfStep * i;
             pbh.setTimeFraction(timeFraction);
             const CHeading heading = pbh.getHeading();
             const double h = CAngle::normalizeDegrees360(heading.value(CAngleUnit::deg()));
@@ -253,7 +252,7 @@ namespace BlackMiscTest
 
         for (int i = 0; i < steps; i++)
         {
-            timeFraction = tfStep * i;
+            double timeFraction = tfStep * i;
             pbh.setTimeFraction(timeFraction);
             const CAngle bank = pbh.getBank();
             const double b = bank.value(CAngleUnit::deg());
@@ -271,7 +270,7 @@ namespace BlackMiscTest
 
         for (int i = 0; i < steps; i++)
         {
-            timeFraction = tfStep * i;
+            double timeFraction = tfStep * i;
             pbh.setTimeFraction(timeFraction);
             const CAngle bank = pbh.getBank();
             const double b = CAngle::normalizeDegrees360(bank.value(CAngleUnit::deg()));
@@ -291,7 +290,7 @@ namespace BlackMiscTest
 
         for (int i = 0; i < steps; i++)
         {
-            timeFraction = tfStep * i;
+            double timeFraction = tfStep * i;
             pbh.setTimeFraction(timeFraction);
             const CAngle pitch = pbh.getPitch();
             const double p = pitch.value(CAngleUnit::deg());
@@ -311,7 +310,7 @@ namespace BlackMiscTest
 
         for (int i = 0; i < steps; i++)
         {
-            timeFraction = tfStep * i;
+            double timeFraction = tfStep * i;
             pbh.setTimeFraction(timeFraction);
             const CAngle pitch = pbh.getPitch();
             const double p = pitch.value(CAngleUnit::deg());

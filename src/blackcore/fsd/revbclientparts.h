@@ -25,7 +25,7 @@ namespace BlackCore
         {
         public:
             //! Constructor
-            RevBClientParts(const QString &sender, const QString &partsval1, const QString &partsval3, const QString &partsval2);
+            RevBClientParts(const QString &sender, const QString &partsval1, const QString &partsval2, const QString &partsval3);
 
 
             //! Message converted to tokens

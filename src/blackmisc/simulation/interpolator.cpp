@@ -302,7 +302,7 @@ namespace BlackMisc
                     }
                     else
                     {
-                        const qint64 diff = noSituation ? -1 : m_currentTimeMsSinceEpoch - currentSituation.getAdjustedMSecsSinceEpoch();
+                        const qint64 diff = m_currentTimeMsSinceEpoch - currentSituation.getAdjustedMSecsSinceEpoch();
                         m = CStatusMessage(this).warning(u"Invalid situation, diff. %1ms #%2 for interpolation reported for '%3' (Interpolant: %4 interpolation: %5)") <<
                             diff << m_invalidSituations << m_callsign.asString() << boolToTrueFalse(isValidInterpolant) << boolToTrueFalse(isValidInterpolation);
                     }
@@ -609,10 +609,10 @@ namespace BlackMisc
             }
             else
             {
-                CAircraftModel model = this->getAircraftInRangeForCallsign(m_callsign).getModel();
-                if (model.hasModelString())
+                CAircraftModel foundModel = this->getAircraftInRangeForCallsign(m_callsign).getModel();
+                if (foundModel.hasModelString())
                 {
-                    m_model = model;
+                    m_model = foundModel;
                 }
             }
             this->getAndFetchModelCG(model.getCG());

@@ -50,13 +50,13 @@ namespace BlackMisc
             CTextMessageList(const QString &message, const Aviation::CCallsign &senderCallsign, const Aviation::CCallsign &recipientCallsign);
 
             //! Constructor, single radio message
-            CTextMessageList(const QString &message, const PhysicalQuantities::CFrequency &frequency, const Aviation::CCallsign &senderCallsign = Aviation::CCallsign());
+            CTextMessageList(const QString &message, const PhysicalQuantities::CFrequency &frequency, const Aviation::CCallsign &senderCallsign = {});
 
             //! Constructor, single message
             CTextMessageList(const CTextMessage &message);
 
             //! Constructor, multi-frequency radio messages
-            CTextMessageList(const QString &message, const QList<PhysicalQuantities::CFrequency> &frequencies, const Aviation::CCallsign &sender = Aviation::CCallsign());
+            CTextMessageList(const QString &message, const QList<PhysicalQuantities::CFrequency> &frequencies, const Aviation::CCallsign &fromCallsign = {});
 
             //! Construct from a base class object.
             CTextMessageList(const CSequence<CTextMessage> &other);

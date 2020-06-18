@@ -71,7 +71,7 @@ namespace BlackCore
                 request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
                 // posted in QAM thread, reply is nullptr if called from another thread
-                QNetworkReply *reply = sApp->postToNetwork(request, CApplication::NoLogRequestId, QJsonDocument(obj).toJson(),
+                sApp->postToNetwork(request, CApplication::NoLogRequestId, QJsonDocument(obj).toJson(),
                 {
                     this, [ = ](QNetworkReply * nwReply)
                     {
@@ -125,7 +125,6 @@ namespace BlackCore
                         callback(m_isAuthenticated);
                     }
                 });
-                Q_UNUSED(reply)
             }
 
             PostCallsignResponseDto CApiServerConnection::addCallsign(const QString &callsign)
@@ -176,7 +175,7 @@ namespace BlackCore
                 QByteArray receivedData;
 
                 // posted in QAM thread, reply is nullptr if called from another thread
-                QNetworkReply *reply = sApp->getFromNetwork(request,
+                sApp->getFromNetwork(request,
                 {
                     this, [ =, &receivedData ](QNetworkReply * nwReply)
                     {
@@ -198,7 +197,6 @@ namespace BlackCore
                         if (loop) { loop->exit(); }
                     }
                 });
-                Q_UNUSED(reply)
 
                 if (loop) { loop->exec(); }
                 return receivedData;
@@ -212,7 +210,7 @@ namespace BlackCore
                 QByteArray receivedData;
 
                 // posted in QAM thread, reply is nullptr if called from another thread
-                QNetworkReply *reply = sApp->postToNetwork(request, CApplication::NoLogRequestId, data,
+                sApp->postToNetwork(request, CApplication::NoLogRequestId, data,
                 {
                     this, [ =, &receivedData ](QNetworkReply * nwReply)
                     {
@@ -234,7 +232,6 @@ namespace BlackCore
                         if (loop) { loop->exit(); }
                     }
                 });
-                Q_UNUSED(reply)
 
                 if (loop) { loop->exec(); }
                 return receivedData;

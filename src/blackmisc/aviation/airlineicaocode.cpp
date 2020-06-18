@@ -495,11 +495,10 @@ namespace BlackMisc
             QSet<int> ids;
             dir.setFilter(QDir::Files | QDir::NoSymLinks);
             dir.setSorting(QDir::Name);
-            bool ok = false;
             for (const QFileInfo &fileInfo : dir.entryInfoList())
             {
                 const QString fn(fileInfo.fileName());
-                ok = fn.size() > 5;
+                bool ok = fn.size() > 5;
                 if (!ok) { continue; }
                 BLACK_VERIFY_X(ok, Q_FUNC_INFO, "wrong file name");
                 const int id = fn.leftRef(5).toInt(&ok);

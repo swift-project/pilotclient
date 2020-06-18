@@ -101,6 +101,7 @@ namespace BlackGui
             else
             {
                 qFatal("Wrong sender");
+                // cppcheck-suppress duplicateBreak
                 return;
             }
 

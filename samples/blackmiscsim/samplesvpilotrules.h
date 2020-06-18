@@ -21,7 +21,7 @@ namespace BlackSample
     {
     public:
         //! Run the samples
-        static void samples(QTextStream &streamOut, QTextStream &streamIn);
+        static void samples(QTextStream &streamOut, const QTextStream &streamIn);
     };
 } // namespace
 

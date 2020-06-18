@@ -204,7 +204,7 @@ namespace BlackCore
                                 // restart timer, normally it should be started already, paranoia
                                 // as I run in "my thread" starting timer should be OK
                                 {
-                                    QMutexLocker lock(&m_mutex);
+                                    QMutexLocker lock2(&m_mutex);
                                     if (m_voiceServerTimer) { m_voiceServerTimer->start(PositionUpdatesMs); }
                                 }
                                 m_retryConnectAttempt = 0;
@@ -498,21 +498,21 @@ namespace BlackCore
                 quint32 roundedFrequencyHz = static_cast<quint32>(qRound(frequencyHz / 1000.0)) * 1000;
                 roundedFrequencyHz = this->getAliasFrequencyHz(roundedFrequencyHz);
 
-                bool updateTransceivers = false;
+                bool update = false;
                 {
                     QMutexLocker lockTransceivers(&m_mutexTransceivers);
                     if (m_transceivers.size() >= id + 1)
                     {
                         if (m_transceivers[id].frequencyHz != roundedFrequencyHz)
                         {
-                            updateTransceivers = true;
+                            update = true;
                             m_transceivers[id].frequencyHz = roundedFrequencyHz;
                         }
                     }
                 }
 
                 // outside lock to avoid deadlock
-                if (updateTransceivers)
+                if (update)
                 {
                     this->updateTransceivers(false); // no frequency update
                 }

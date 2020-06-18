@@ -88,8 +88,6 @@ namespace BlackGui
 
         CAircraftCategory CAircraftCategoryTreeView::selectedObject() const
         {
-            const QModelIndex index = this->currentIndex();
-            const QVariant data = this->model()->data(index.siblingAtColumn(0));
             const CAircraftCategoryTreeModel *model = this->categoryModel();
             if (!model) { return CAircraftCategory(); }
             return model->container().frontOrDefault();

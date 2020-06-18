@@ -544,7 +544,6 @@ namespace BlackMisc
         QJsonObject unwrapCache(const QJsonObject &object)
         {
             if (object.size() != 1) { return object; } // no cache format
-            const QString key = object.constBegin().key();
             const QJsonObject cacheObject = object.constBegin()->toObject();
             if (cacheObject.contains("type") && cacheObject.contains("value"))
             {

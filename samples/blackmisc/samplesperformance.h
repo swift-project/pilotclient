@@ -94,9 +94,6 @@ namespace BlackSample
         //! Get n callsigns
         static BlackMisc::Aviation::CCallsignSet callsigns(int number);
 
-        //! Situations
-        static const BlackMisc::Aviation::CAircraftSituationList situations(const BlackMisc::Aviation::CCallsignSet &callsigns);
-
         //! Situations map
         static const QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituation> situationsMap(const BlackMisc::Aviation::CCallsignSet &callsigns);
 

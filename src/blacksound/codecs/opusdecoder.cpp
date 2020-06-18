@@ -31,7 +31,7 @@ namespace BlackSound
             return bufferSize / bytesPerSample;
         }
 
-        QVector<qint16> COpusDecoder::decode(const QByteArray opusData, int dataLength, int *decodedLength)
+        QVector<qint16> COpusDecoder::decode(const QByteArray &opusData, int dataLength, int *decodedLength)
         {
             QVector<qint16> decoded(MaxDataBytes, 0);
             int count = frameCount(MaxDataBytes);

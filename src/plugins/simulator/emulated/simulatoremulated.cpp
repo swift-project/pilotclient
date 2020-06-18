@@ -581,7 +581,6 @@ namespace BlackSimPlugin
         {
             if (!m_isWeatherActivated) { return false; }
 
-            const CWeatherScenario s = m_weatherScenarioSettings.get();
             this->getOwnAircraftPosition();
             const CCoordinateGeodetic currentPosition = this->getOwnAircraftPosition();
             this->requestWeatherGrid(currentPosition, this->identifier());

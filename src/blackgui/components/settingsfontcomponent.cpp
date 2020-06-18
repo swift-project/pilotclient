@@ -98,7 +98,6 @@ namespace BlackGui
             const QString fontFamily = ui->cb_SettingsGuiFont->currentFont().family();
             const QString fontStyleCombined = ui->cb_SettingsGuiFontStyle->currentText();
 
-            const QStringList familySizeStyle = this->getFamilySizeStyle();
             QString fontColor = m_selectedColor.name();
             if (!m_selectedColor.isValid() || m_selectedColor.name().isEmpty())
             {

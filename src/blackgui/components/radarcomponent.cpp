@@ -295,7 +295,7 @@ namespace BlackGui
             // in which North=(1,0) and East=(-1,0)
             // but we want North=(0,-1) and East=(0,1)
             // (QGraphicsView y axis increases downwards)
-            qSwap(p.rx(), p.ry());
+            std::swap(p.rx(), p.ry());
             p.setX(-p.x());
             p.setY(-p.y());
             return p;

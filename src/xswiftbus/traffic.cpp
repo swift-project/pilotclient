@@ -980,6 +980,7 @@ namespace XSwiftBus
             // fixme: In a future update, change the orbit only while right mouse button is pressed.
             XPLMGetScreenSize(&w, &h);
             XPLMGetMouseLocation(&x, &y);
+            // cppcheck-suppress knownConditionTrueFalse
             if (DEBUG) { DEBUG_LOG("Follow aircraft coordinates w,h,x,y: " + std::to_string(w) + " " + std::to_string(h) + " " + std::to_string(x) + " " + std::to_string(y)); }
             if (traffic->m_lastMouseX == x && traffic->m_lastMouseY == y && traffic->m_lastMouseX >= 0 && traffic->m_lastMouseY >= 0)
             {
@@ -1104,12 +1105,13 @@ namespace XSwiftBus
             return 0;
         }
 
-        // Return 1 to indicate we want to keep controlling the camera.
+        // cppcheck-suppress knownConditionTrueFalse
         if (DEBUG)
         {
             DEBUG_LOG("Camera: " + pos2String(cameraPosition));
             DEBUG_LOG("Follow aircraft " + traffic->m_followPlaneViewCallsign + " " + modelName);
         }
+        // Return 1 to indicate we want to keep controlling the camera.
         return 1;
     }
 

@@ -575,15 +575,15 @@ namespace BlackMisc
                         return false;
                     }
 
-                    QFileInfo fileInfo(absoluteTexPath);
-                    if (!fileInfo.exists())
+                    QFileInfo texFileInfo(absoluteTexPath);
+                    if (!texFileInfo.exists())
                     {
                         const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Texture '%3' does not exist.") << path << lineNum << absoluteTexPath;
                         m_loadingMessages.push_back(m);
                         return false;
                     }
 
-                    package.planes.back().textureName = fileInfo.completeBaseName();
+                    package.planes.back().textureName = texFileInfo.completeBaseName();
                 }
                 return true;
             }
