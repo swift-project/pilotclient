@@ -46,6 +46,8 @@ jobs:
   checks:
     runs-on: ubuntu-20.04
     needs: preBuild
+    outputs:
+      warnings: ${{ steps.cppcheck.outputs.warnings }}
 
     steps:
       - name: Checkout repository
@@ -53,17 +55,21 @@ jobs:
         with:
           submodules: true
       - name: Run cppcheck
+        id: cppcheck
         run: |
           sudo apt install cppcheck
+          sudo cpan Path::Class
           cppcheck --template=gcc --inline-suppr --std=c++14 --enable=style,unusedFunction -i externals \
                    --suppressions-list=cppcheck.supp --library=qt.cfg --library=posix.cfg . | tee error.log
-          ls -l error.log
+          perl scripts/warnings.pl error.log
 
   buildLinux:
     runs-on: ubuntu-16.04
     needs: preBuild
     env:
       BITROCK_BUILDER: ~/installbuilder/bin/builder
+    outputs:
+      warnings: ${{ steps.warnings.outputs.warnings }}
 
     steps:
       - name: Install Qt
@@ -80,6 +86,7 @@ jobs:
         run: |
           sudo apt install doxygen graphviz libglu1-mesa-dev libopus-dev libsodium-dev libpulse-dev libdbus-1-dev libevent-dev
           pip3 install tee
+          sudo cpan Path::Class
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
@@ -99,12 +106,14 @@ jobs:
         if: ${{ ! (env.do_symbols == 'true' && env.do_vatsim_key == 'true') }}
         run: |
           python3 -u scripts/build.py -w 64 -t gcc -d -j2 -e $eol_months -q "SWIFT_CONFIG_JSON+=$vatsim_key_file"
-          ls -l error.log
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' && env.do_vatsim_key == 'true' }}
         run: |
           python3 -u scripts/build.py -w 64 -t gcc -d -j2 -e $eol_months -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" --upload
-          ls -l error.log
+      - name: Check warnings
+        id: warnings
+        run: |
+          perl scripts/warnings.pl error.log
       - name: Upload installer
         uses: actions/upload-artifact@v2
         with:
@@ -127,6 +136,8 @@ jobs:
     needs: preBuild
     env:
       BITROCK_BUILDER: "$(USERPROFILE)/installbuilder/bin/builder-cli.exe"
+    outputs:
+      warnings: ${{ steps.warnings.outputs.warnings }}
 
     steps:
       - name: Install Qt
@@ -162,12 +173,14 @@ jobs:
         if: ${{ ! (env.do_symbols == 'true' && env.do_vatsim_key == 'true') }}
         run: |
           python.exe -u scripts\build.py -w 64 -t msvc -d -e $env:eol_months -q "SWIFT_CONFIG_JSON+=$env:vatsim_key_file"
-          dir error.log
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' && env.do_vatsim_key == 'true' }}
         run: |
           python.exe -u scripts\build.py -w 64 -t msvc -d -e $env:eol_months -q "SWIFT_CONFIG_JSON+=$env:vatsim_key_file" --upload
-          dir error.log
+      - name: Check warnings
+        id: warnings
+        run: |
+          perl scripts/warnings.pl error.log
       - name: Upload installer
         uses: actions/upload-artifact@v2
         with:
@@ -190,6 +203,8 @@ jobs:
     needs: preBuild
     env:
       BITROCK_BUILDER: "$(USERPROFILE)/installbuilder/bin/builder-cli.exe"
+    outputs:
+      warnings: ${{ steps.warnings.outputs.warnings }}
 
     steps:
       - name: Install Qt
@@ -225,12 +240,14 @@ jobs:
         if: ${{ ! (env.do_symbols == 'true' && env.do_vatsim_key == 'true') }}
         run: |
           python.exe -u scripts\build.py -w 32 -t msvc -d -e $env:eol_months -q "SWIFT_CONFIG_JSON+=$env:vatsim_key_file"
-          dir error.log
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' && env.do_vatsim_key == 'true' }}
         run: |
           python.exe -u scripts\build.py -w 32 -t msvc -d -e $env:eol_months -q "SWIFT_CONFIG_JSON+=$env:vatsim_key_file" --upload
-          dir error.log
+      - name: Check warnings
+        id: warnings
+        run: |
+          perl scripts/warnings.pl error.log
       - name: Upload installer
         uses: actions/upload-artifact@v2
         with:
@@ -253,6 +270,8 @@ jobs:
     needs: preBuild
     env:
       BITROCK_BUILDER: /Applications/installbuilder/bin/Builder.app/Contents/MacOS/installbuilder.sh
+    outputs:
+      warnings: ${{ steps.warnings.outputs.warnings }}
 
     steps:
       - name: Install Qt
@@ -274,6 +293,7 @@ jobs:
         run: |
           pip3 install requests
           pip3 install tee
+          cpan Path::Class
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
@@ -293,12 +313,14 @@ jobs:
         if: ${{ ! (env.do_symbols == 'true' && env.do_vatsim_key == 'true') }}
         run: |
           python3 -u scripts/build.py -w 64 -t clang -d -j2 -e $eol_months -q "SWIFT_CONFIG_JSON+=$vatsim_key_file"
-          ls -l error.log
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' && env.do_vatsim_key == 'true' }}
         run: |
           python3 -u scripts/build.py -w 64 -t clang -d -j2 -e $eol_months -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" --upload
-          ls -l error.log
+      - name: Check warnings
+        id: warnings
+        run: |
+          perl scripts/warnings.pl error.log
       - name: Upload installer
         uses: actions/upload-artifact@v2
         with:
@@ -351,11 +373,13 @@ jobs:
       - name: Prepare Discord message
         run: |
           result=SUCCESS
-          echo ${{ join(needs.*.result, ' ') }} | grep -q cancel && result=CANCELLED
+          expr ${{ join(needs.*.outputs.warnings, ' + ') }}      && result=WARNING
           echo ${{ join(needs.*.result, ' ') }} | grep -q fail   && result=FAILED
+          echo ${{ join(needs.*.result, ' ') }} | grep -q cancel && result=CANCELLED
           [[ $result = SUCCESS   ]] && emoji=white_check_mark
-          [[ $result = CANCELLED ]] && emoji=grey_question
+          [[ $result = WARNING   ]] && emoji=warning
           [[ $result = FAILED    ]] && emoji=x
+          [[ $result = CANCELLED ]] && emoji=grey_question
           echo "::set-env name=result::$result"
           echo "::set-env name=emoji::$emoji"
       - name: Send Discord message
