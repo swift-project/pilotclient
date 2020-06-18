@@ -32,7 +32,14 @@ jobs:
       - name: Remove artifacts
         uses: swift-project/delete-artifact@swift
         with:
-          name: xswiftbus-thin-allos-${{ steps.version.outputs.value }}
+          name: |
+            xswiftbus-thin-allos-${{ steps.version.outputs.value }}
+            xswiftbus-fat-allos-${{ steps.version.outputs.value }}
+            swiftsymbols-allos-${{ steps.version.outputs.value }}
+            swiftinstaller-linux-64-${{ steps.version.outputs.value }}
+            swiftinstaller-windows-64-${{ steps.version.outputs.value }}
+            swiftinstaller-windows-32-${{ steps.version.outputs.value }}
+            swiftinstaller-macos-64-${{ steps.version.outputs.value }}
           failOnError: false
           warnIfNotFound: false
 
