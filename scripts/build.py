@@ -22,11 +22,6 @@ import datastore
 import tarfile
 from lib.util import get_vs_env
 
-if sys.version_info < (3, 0):
-    import ConfigParser as configparser
-else:
-    import configparser
-
 
 class Builder:
 
@@ -37,12 +32,11 @@ class Builder:
         """
         print('Preparing environment ...')
         self.make_cmd = self._get_make_cmd()
-        os.environ['PATH'] += os.pathsep + self._get_qt_binary_path()
         self._specific_prepare()
 
         print('Updating from datastore ...')
         host = 'https://datastore.swift-project.org'
-        datastore_version = self.__config.get('General', 'datastore_version')
+        datastore_version = '0.7.0'
         source_path = self._get_swift_source_path()
         shared_path = os.path.abspath(os.path.join(source_path, 'resources', 'share'))
         datastore.update_shared(host, datastore_version, shared_path)
@@ -199,9 +193,6 @@ class Builder:
     def _get_make_cmd(self):
         raise NotImplementedError()
 
-    def _get_qt_component(self):
-        raise NotImplementedError()
-
     def _should_run_checks(self):
         return True
 
@@ -211,30 +202,12 @@ class Builder:
     def _should_create_symbols(self):
         return True
 
-    def _get_qtcreator_path(self):
-        qtcreator_path = path.abspath(path.join(self.qt_path, 'Tools', 'QtCreator', 'bin'))
-        return qtcreator_path
-
     def _get_externals_path(self):
         qmake_spec = self._get_qmake_spec()
         lib_path = 'lib' + self.word_size
         return path.abspath(path.join(self._get_swift_source_path(), 'externals', qmake_spec, lib_path))
 
-    def _get_qt_binary_path(self):
-        component = self._get_qt_component()
-        if self.word_size == '64':
-            component += '_64'
-        else:
-            # special case for MSVC 32 bit component (most likely all versions). Those don't have the 32 bit suffix
-            if "msvc" not in component:
-                component += '_32'
-        qt_binary_path = path.abspath(path.join(self.qt_path, self.qt_version, '{0}'.format(component), 'bin'))
-        return qt_binary_path
-
-    def _get_config(self):
-        return self.__config
-
-    def __init__(self, config_file, word_size):
+    def __init__(self, word_size):
         self.__source_path = path.abspath(path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
         self.__build_path = path.abspath(path.join(self.__source_path, 'build'))
 
@@ -243,15 +216,6 @@ class Builder:
             raise RuntimeError('Cannot find swift.pro! Are we in the right directory?')
 
         self.word_size = word_size
-
-        if not config_file:
-            config_file = path.abspath(path.join(self._get_swift_source_path(), 'scripts', 'build.cfg'))
-        self.__config = configparser.ConfigParser()
-        self.__config.read(config_file)
-        self.qt_version = self.__config.get('General', 'qt_version')
-        self.qt_path = path.abspath(self.__config.get(platform.system(), 'qt_path'))
-        self.dump_syms = path.abspath(self.__config.get(platform.system(), 'dump_syms'))
-
         self.version = self.__get_swift_version()
 
     def __get_config_file(self):
@@ -302,8 +266,6 @@ class Builder:
 class MSVCBuilder(Builder):
 
     def _specific_prepare(self):
-        os.environ['PATH'] += os.pathsep + self._get_externals_path() #TODO still needed? we copy externals anyway
-        os.environ['PATH'] += os.pathsep + 'C:/Program Files/7-Zip'
         if self.word_size == '32':
             vs_env = get_vs_env('x86')
         else:
@@ -323,21 +285,13 @@ class MSVCBuilder(Builder):
     def _get_make_cmd(self):
         return "C:/ProgramData/chocolatey/lib/jom/tools/jom.exe"
 
-    def _get_qt_component(self):
-        return 'msvc2017'
-
-    def __init__(self, config_file, word_size):
-        Builder.__init__(self, config_file, word_size)
+    def __init__(self, word_size):
+        Builder.__init__(self, word_size)
 
 
 class MinGWBuilder(Builder):
 
     def _specific_prepare(self):
-        os.environ['PATH'] += os.pathsep + self._get_externals_path()
-        gcc_path = path.abspath(self._get_config().get(platform.system(), 'mingw_path'))
-        os.environ['PATH'] += os.pathsep + gcc_path
-        os.environ['PATH'] += os.pathsep + path.abspath(path.join('c:', os.sep, 'Program Files', '7-Zip'))
-
         # See comment in MSVCBuilder.
         os.environ['QT_FORCE_STDERR_LOGGING'] = '1'
 
@@ -346,9 +300,6 @@ class MinGWBuilder(Builder):
 
     def _get_make_cmd(self):
         return 'mingw32-make'
-
-    def _get_qt_component(self):
-        return 'mingw53'
 
     def _should_run_checks(self):
         return False
@@ -359,8 +310,8 @@ class MinGWBuilder(Builder):
     def _should_create_symbols(self):
         return False
 
-    def __init__(self, config_file, word_size):
-        Builder.__init__(self, config_file, word_size)
+    def __init__(self, word_size):
+        Builder.__init__(self, word_size)
 
 
 class LinuxBuilder(Builder):
@@ -376,11 +327,8 @@ class LinuxBuilder(Builder):
     def _get_make_cmd(self):
         return 'make'
 
-    def _get_qt_component(self):
-        return 'gcc'
-
-    def __init__(self, config_file, word_size):
-        Builder.__init__(self, config_file, word_size)
+    def __init__(self, word_size):
+        Builder.__init__(self, word_size)
 
 
 class MacOSBuilder(Builder):
@@ -395,14 +343,11 @@ class MacOSBuilder(Builder):
     def _get_make_cmd(self):
         return 'make'
 
-    def _get_qt_component(self):
-        return 'clang'
-
     def _should_create_symbols(self):
         return True
 
-    def __init__(self, config_file, word_size):
-        Builder.__init__(self, config_file, word_size)
+    def __init__(self, word_size):
+        Builder.__init__(self, word_size)
 
 
 def print_help():
@@ -411,12 +356,11 @@ def print_help():
                            'Windows': ['msvc', 'mingw']
                            }
     compiler_help = '|'.join(supported_compilers[platform.system()])
-    print('build.py -c <config file> -w <32|64> -t <' + compiler_help + '> [-v] [-d] [-e <end of life in month>] [-q <extra qmake argument>]')
+    print('build.py -w <32|64> -t <' + compiler_help + '> [-v] [-d] [-e <end of life in month>] [-q <extra qmake argument>]')
 
 
 # Entry point if called as a standalone program
 def main(argv):
-    config_file = ''
     word_size = ''
     tool_chain = ''
     dev_build = False
@@ -426,7 +370,7 @@ def main(argv):
     qmake_args = []
 
     try:
-        opts, args = getopt.getopt(argv, 'hc:w:t:j:due:q:v', ['config=', 'wordsize=', 'toolchain=', 'jobs=', 'dev', 'upload', 'eol', 'qmake-arg=', 'version'])
+        opts, args = getopt.getopt(argv, 'hw:t:j:due:q:v', ['wordsize=', 'toolchain=', 'jobs=', 'dev', 'upload', 'eol', 'qmake-arg=', 'version'])
     except getopt.GetoptError:
         print_help()
         sys.exit(2)
@@ -440,13 +384,8 @@ def main(argv):
             print_help()
             sys.exit()
         elif opt in ('-v', '--version'):
-            print(Builder(None, None).version)
+            print(Builder(None).version)
             sys.exit()
-        elif opt in ('-c', '--config'):
-            config_file = path.abspath(arg)
-            if not os.path.exists(config_file):
-                print('Specified config file does not exist')
-                sys.exit(2)
         elif opt in ('-w', '--wordsize'):
             word_size = arg
         elif opt in ('-t', '--toolchain'):
@@ -480,7 +419,7 @@ def main(argv):
         print('Unknown or unsupported tool chain!')
         sys.exit(2)
 
-    builder = builders[platform.system()][tool_chain](config_file, word_size)
+    builder = builders[platform.system()][tool_chain](word_size)
 
     builder.prepare()
     builder.build(jobs, qmake_args, dev_build, eolInMonth)
