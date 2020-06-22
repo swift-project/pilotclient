@@ -288,7 +288,7 @@ class Builder:
     def __upload_symbol_files(self, symbols_package):
         print('Uploading symbols')
         url = 'https://swift-project.sp.backtrace.io:6098/post'
-        token = '44166372034af002070a1f0ae3c8dfd8632e0210b36577c5269626fe5b87b2f6'
+        token = os.environ['BACKTRACE_TOKEN']
 
         data = open(symbols_package, 'rb').read()
         params = (

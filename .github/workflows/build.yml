@@ -66,6 +66,7 @@ jobs:
     runs-on: ubuntu-16.04
     needs: preBuild
     env:
+      BACKTRACE_TOKEN: ${{ secrets.BACKTRACE_TOKEN }}
       BITROCK_BUILDER: ~/installbuilder/bin/builder
       QDOC_PATH: $(GITHUB_WORKSPACE)/../Qt/Docs/Qt-5.15.0
     outputs:
@@ -135,6 +136,7 @@ jobs:
     runs-on: windows-2019
     needs: preBuild
     env:
+      BACKTRACE_TOKEN: ${{ secrets.BACKTRACE_TOKEN }}
       BITROCK_BUILDER: "$(USERPROFILE)/installbuilder/bin/builder-cli.exe"
     outputs:
       warnings: ${{ steps.warnings.outputs.warnings }}
@@ -211,6 +213,7 @@ jobs:
     runs-on: windows-2019
     needs: preBuild
     env:
+      BACKTRACE_TOKEN: ${{ secrets.BACKTRACE_TOKEN }}
       BITROCK_BUILDER: "$(USERPROFILE)/installbuilder/bin/builder-cli.exe"
     outputs:
       warnings: ${{ steps.warnings.outputs.warnings }}
@@ -287,6 +290,7 @@ jobs:
     runs-on: macos-10.15
     needs: preBuild
     env:
+      BACKTRACE_TOKEN: ${{ secrets.BACKTRACE_TOKEN }}
       BITROCK_BUILDER: /Applications/installbuilder/bin/Builder.app/Contents/MacOS/installbuilder.sh
     outputs:
       warnings: ${{ steps.warnings.outputs.warnings }}
