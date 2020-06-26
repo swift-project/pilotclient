@@ -1,43 +1,31 @@
-swift is an independent (private and non-commercial)
-software project creating open source software for flight simulation.
+_swift_ is a pilot client for virtual air traffic simulation networks,
+such as VATSIM, supporting the following simulators and operating systems:
 
-Legal
-=================
+- Prepar3D (Windows)
+- Flight Simulator X (Windows)
+- Flight Simulator 2004 (Windows)
+- X-Plane 11 (Windows, Linux, macOS)
+- FlightGear (Windows, Linux, macOS)
 
-See https://datastore.swift-project.org/page/legal.php
-
-Environment Setup
-=================
-
-TBW
-
-Getting Sources
-===============
-
-All swift sources are available here:
-https://dev.swift-project.org/diffusion/
-
-Qmake Configuration
-===================
-
-TBW
-
-Compiling
+Resources
 =========
 
-TBW
+[Website](https://swift-project.org/)
 
-Testing
-=======
+[User documentation](https://docs.swift-project.org/)
 
-TBW
+[Discord](https://discord.gg/R7Atd9A)
 
-Installing
-==========
+Contributing
+============
 
-TBW
+_swift_ is written in modern C++14 using the Qt framework.
 
-DLLs vs. static linking
-=======================
+![Development version](https://img.shields.io/badge/version-0.9.5-blue)
 
-TBW
+![Build status](https://img.shields.io/github/workflow/status/swift-project/pilotclient/Build%20swift/develop/0.9.5)
+
+Pull requests should be made against the current active development branch,
+which is `develop/0.9.5`.
+
+[Developer documentation](https://docs.swift-project.org/dev/)
