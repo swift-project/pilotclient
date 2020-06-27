@@ -421,7 +421,7 @@ namespace BlackGui
     bool CGuiApplication::restoreWindowGeometryAndState(QMainWindow *window)
     {
         if (!window) { return false; }
-        const QSettings settings("swift-project.org", this->getApplicationName());
+        const QSettings settings(settingsOrganization(), this->getApplicationName());
         const QString location = settings.fileName();
         CLogMessage(this).info(u"GUI settings are here: '%1'") << location;
 
