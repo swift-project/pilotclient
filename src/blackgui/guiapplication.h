@@ -399,6 +399,9 @@ namespace BlackGui
 
         //! Settings ini filename
         static const QString &fileForWindowGeometryAndStateSettings();
+
+        //! Hash of names of toolbars and dockwidgets
+        static int hashForStateSettingsSchema(const QMainWindow *window);
     };
 } // ns
 

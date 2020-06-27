@@ -59,6 +59,7 @@
 #include <QStringBuilder>
 #include <QStyle>
 #include <QSysInfo>
+#include <QToolBar>
 #include <QUrl>
 #include <QWidget>
 #include <QWindow>
@@ -411,12 +412,26 @@ namespace BlackGui
         return filename;
     }
 
+    int CGuiApplication::hashForStateSettingsSchema(const QMainWindow *window)
+    {
+        unsigned int hash = 0;
+        for (auto obj : window->findChildren<QToolBar *>(QString(), Qt::FindDirectChildrenOnly))
+        {
+            hash ^= qHash(obj->objectName());
+        }
+        for (auto obj : window->findChildren<QDockWidget *>(QString(), Qt::FindDirectChildrenOnly))
+        {
+            hash ^= qHash(obj->objectName());
+        }
+        return static_cast<int>((hash & 0xffff) ^ (hash >> 16));
+    }
+
     bool CGuiApplication::saveWindowGeometryAndState(const QMainWindow *window) const
     {
         if (!window) { return false; }
         QSettings settings(fileForWindowGeometryAndStateSettings(), QSettings::IniFormat);
         settings.setValue("geometry", window->saveGeometry());
-        settings.setValue("windowState", window->saveState());
+        settings.setValue("windowState", window->saveState(hashForStateSettingsSchema(window)));
         return true;
     }
 
@@ -466,7 +481,7 @@ namespace BlackGui
             logSub.changeSubscription(pattern);
 
             window->restoreGeometry(g);
-            window->restoreState(s);
+            window->restoreState(s, hashForStateSettingsSchema(window));
         }
         return true;
     }
