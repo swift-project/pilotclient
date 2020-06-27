@@ -401,10 +401,20 @@ namespace BlackGui
         QGuiApplication::modalWindow()->raise();
     }
 
+    const QString& CGuiApplication::fileForWindowGeometryAndStateSettings()
+    {
+        static const QString filename = []
+        {
+            QString dir = CFileUtils::appendFilePaths(CDirectoryUtils::normalizedApplicationDataDirectory(), "settings/qgeom");
+            return CFileUtils::appendFilePaths(dir, QFileInfo(QCoreApplication::applicationFilePath()).completeBaseName() + ".ini");
+        }();
+        return filename;
+    }
+
     bool CGuiApplication::saveWindowGeometryAndState(const QMainWindow *window) const
     {
         if (!window) { return false; }
-        QSettings settings(settingsOrganization(), this->getApplicationName());
+        QSettings settings(fileForWindowGeometryAndStateSettings(), QSettings::IniFormat);
         settings.setValue("geometry", window->saveGeometry());
         settings.setValue("windowState", window->saveState());
         return true;
@@ -413,7 +423,7 @@ namespace BlackGui
     void CGuiApplication::resetWindowGeometryAndState()
     {
         QByteArray ba;
-        QSettings settings(settingsOrganization(), this->getApplicationName());
+        QSettings settings(fileForWindowGeometryAndStateSettings(), QSettings::IniFormat);
         settings.setValue("geometry", ba);
         settings.setValue("windowState", ba);
     }
@@ -421,7 +431,7 @@ namespace BlackGui
     bool CGuiApplication::restoreWindowGeometryAndState(QMainWindow *window)
     {
         if (!window) { return false; }
-        const QSettings settings(settingsOrganization(), this->getApplicationName());
+        const QSettings settings(fileForWindowGeometryAndStateSettings(), QSettings::IniFormat);
         const QString location = settings.fileName();
         CLogMessage(this).info(u"GUI settings are here: '%1'") << location;
 
