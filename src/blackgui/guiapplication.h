@@ -396,6 +396,9 @@ namespace BlackGui
 
         //! \copydoc BlackGui::CGuiUtility::superviseMainWindowMinSizes
         void superviseWindowMinSizes();
+
+        //! Settings ini filename
+        static const QString &fileForWindowGeometryAndStateSettings();
     };
 } // ns
 
