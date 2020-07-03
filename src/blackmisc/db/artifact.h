@@ -147,10 +147,10 @@ namespace BlackMisc
             static CPlatform artifactNameToPlatform(const QString &name);
 
         private:
-            QString m_name;    //!< channel the files belong to
+            QString m_name;    //!< filename
             QString m_md5;     //!< MD5 checksum
             int  m_type = static_cast<int>(UnknownArtifact); //!< artifact type
-            int  m_size = -1;        //!< size
+            int  m_size = -1;        //!< size in bytes
             bool m_existing = false; //!< existing artifact for download
             CPlatform m_platform;    //!< platform (i.e. OS)
             CDistributionList m_distributions; //!< related distributions
