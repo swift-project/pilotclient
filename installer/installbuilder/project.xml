@@ -322,6 +322,10 @@ It must be closed before the installation can proceed</progressText>
                     <mustExist>0</mustExist>
                     <width>40</width>
                 </directoryParameter>
+                <stringParameter name="versionFull" value="" ask="0">
+                    <default></default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                </stringParameter>
                 <stringParameter name="architecture" value="64" ask="0">
                     <description></description>
                     <explanation></explanation>

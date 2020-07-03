@@ -1,6 +1,7 @@
 <componentGroup>
     <name>swift</name>
-    <description>swift</description>
+    <description>swift ${versionFull}</description>
+    <detailedDescription>swift ${versionFull}</detailedDescription>
     <canBeEdited>1</canBeEdited>
     <selected>1</selected>
     <show>1</show>

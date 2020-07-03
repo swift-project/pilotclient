@@ -246,6 +246,7 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
                                     --setvars project.outputDirectory=$$shell_path($${PREFIX}/..) \
                                               project.installerFilename=$${INSTALLER_BASENAME}.$${INSTALLER_EXT} \
                                               project.version=$$swiftConfig(version.full) \
+                                              versionFull=$$swiftConfig(version.full).$${VER_REV} \
                                               project.windows64bitMode=$${WINDOWS64BITMODE} \
                                               project.enableDebugger=$${INSTALLER_DEBUG} \
                                               architecture=$${ARCHITECTURE}
