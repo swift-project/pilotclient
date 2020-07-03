@@ -8,8 +8,8 @@ on:
   pull_request:
 
 env:
-  do_symbols:    ${{ startsWith(github.ref, 'refs/heads/develop/') }}
   do_vatsim_key: ${{ github.event_name == 'push' }}
+  do_symbols:    ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/heads/develop/') }}
   eol_months:    12
   qt_version:    5.15.0
 
@@ -105,11 +105,11 @@ jobs:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
       - name: Build swift (without symbols)
-        if: ${{ ! (env.do_symbols == 'true' && env.do_vatsim_key == 'true') }}
+        if: ${{ env.do_symbols != 'true' }}
         run: |
           python3 -u scripts/build.py -w 64 -t gcc -d -j2 -e $eol_months -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" 2> >(tee error.log >&2)
       - name: Build swift (with symbols)
-        if: ${{ env.do_symbols == 'true' && env.do_vatsim_key == 'true' }}
+        if: ${{ env.do_symbols == 'true' }}
         run: |
           python3 -u scripts/build.py -w 64 -t gcc -d -j2 -e $eol_months -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" --upload 2> >(tee error.log >&2)
       - name: Check warnings
@@ -123,7 +123,7 @@ jobs:
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
         uses: actions/upload-artifact@v2
-        if: ${{ env.do_symbols == 'true' && env.do_vatsim_key == 'true' }}
+        if: ${{ env.do_symbols == 'true' }}
         with:
           name: swiftsymbols-allos-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
@@ -180,12 +180,12 @@ jobs:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
       - name: Build swift (without symbols)
-        if: ${{ ! (env.do_symbols == 'true' && env.do_vatsim_key == 'true') }}
+        if: ${{ env.do_symbols != 'true' }}
         shell: bash
         run: |
           python -u scripts/build.py -w 64 -t msvc -d -e $eol_months -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" 2>&1 | tee error.log
       - name: Build swift (with symbols)
-        if: ${{ env.do_symbols == 'true' && env.do_vatsim_key == 'true' }}
+        if: ${{ env.do_symbols == 'true' }}
         shell: bash
         run: |
           python -u scripts/build.py -w 64 -t msvc -d -e $eol_months -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" --upload 2>&1 | tee error.log
@@ -200,7 +200,7 @@ jobs:
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
         uses: actions/upload-artifact@v2
-        if: ${{ env.do_symbols == 'true' && env.do_vatsim_key == 'true' }}
+        if: ${{ env.do_symbols == 'true' }}
         with:
           name: swiftsymbols-allos-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
@@ -257,12 +257,12 @@ jobs:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
       - name: Build swift (without symbols)
-        if: ${{ ! (env.do_symbols == 'true' && env.do_vatsim_key == 'true') }}
+        if: ${{ env.do_symbols != 'true' }}
         shell: bash
         run: |
           python -u scripts/build.py -w 32 -t msvc -d -e $eol_months -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" 2>&1 | tee error.log
       - name: Build swift (with symbols)
-        if: ${{ env.do_symbols == 'true' && env.do_vatsim_key == 'true' }}
+        if: ${{ env.do_symbols == 'true' }}
         shell: bash
         run: |
           python -u scripts/build.py -w 32 -t msvc -d -e $eol_months -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" --upload 2>&1 | tee error.log
@@ -277,7 +277,7 @@ jobs:
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
         uses: actions/upload-artifact@v2
-        if: ${{ env.do_symbols == 'true' && env.do_vatsim_key == 'true' }}
+        if: ${{ env.do_symbols == 'true' }}
         with:
           name: swiftsymbols-allos-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
@@ -333,11 +333,11 @@ jobs:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
       - name: Build swift (without symbols)
-        if: ${{ ! (env.do_symbols == 'true' && env.do_vatsim_key == 'true') }}
+        if: ${{ env.do_symbols != 'true' }}
         run: |
           python3 -u scripts/build.py -w 64 -t clang -d -j2 -e $eol_months -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" 2> >(tee error.log >&2)
       - name: Build swift (with symbols)
-        if: ${{ env.do_symbols == 'true' && env.do_vatsim_key == 'true' }}
+        if: ${{ env.do_symbols == 'true' }}
         run: |
           python3 -u scripts/build.py -w 64 -t clang -d -j2 -e $eol_months -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" --upload 2> >(tee error.log >&2)
       - name: Check warnings
@@ -351,7 +351,7 @@ jobs:
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
         uses: actions/upload-artifact@v2
-        if: ${{ env.do_symbols == 'true' && env.do_vatsim_key == 'true' }}
+        if: ${{ env.do_symbols == 'true' }}
         with:
           name: swiftsymbols-allos-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
