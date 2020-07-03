@@ -59,6 +59,9 @@ namespace BlackMisc
             //! Name
             const QString &getName() const { return m_name; }
 
+            //! Name with directory stripped
+            QString getBaseName() const { return m_name.section('/', -1); }
+
             //! Has name?
             bool hasName() const { return !m_name.isEmpty(); }
 

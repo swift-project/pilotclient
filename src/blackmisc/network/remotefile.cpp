@@ -36,9 +36,9 @@ namespace BlackMisc
         bool CRemoteFile::matchesName(const QString &name) const
         {
             if (name.isEmpty()) { return false; }
-            if (caseInsensitiveStringCompare(name, this->getName())) { return true; }
-            if (name.startsWith(this->getName(), Qt::CaseInsensitive)) { return true; }
-            if (this->getName().startsWith(name, Qt::CaseInsensitive)) { return true; }
+            if (caseInsensitiveStringCompare(name, this->getBaseName())) { return true; }
+            if (name.startsWith(this->getBaseName(), Qt::CaseInsensitive)) { return true; }
+            if (this->getBaseName().startsWith(name, Qt::CaseInsensitive)) { return true; }
             return false;
         }
 

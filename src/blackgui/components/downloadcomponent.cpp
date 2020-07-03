@@ -197,7 +197,7 @@ namespace BlackGui
 
             this->showStartedFileMessage(remoteFile);
             m_fileInProgress = remoteFile;
-            const QString saveAsFile = CFileUtils::appendFilePaths(ui->le_DownloadDir->text(), remoteFile.getName());
+            const QString saveAsFile = CFileUtils::appendFilePaths(ui->le_DownloadDir->text(), remoteFile.getBaseName());
             const QFileInfo fiSaveAs(saveAsFile);
             if (fiSaveAs.exists())
             {
@@ -294,7 +294,7 @@ namespace BlackGui
 
             for (const CRemoteFile &rf : executables)
             {
-                const QString executable = CFileUtils::appendFilePaths(dir.absolutePath(), rf.getName());
+                const QString executable = CFileUtils::appendFilePaths(dir.absolutePath(), rf.getBaseName());
                 const QFile executableFile(executable);
                 if (!executableFile.exists()) { continue; }
 
@@ -360,7 +360,7 @@ namespace BlackGui
         void CDownloadComponent::showStartedFileMessage(const CRemoteFile &rf)
         {
             const int current = m_remoteFiles.size() - m_waitingForDownload.size();
-            ui->le_Started->setText(rf.getName());
+            ui->le_Started->setText(rf.getBaseName());
             ui->le_StartedNumber->setText(QStringLiteral("%1/%2").arg(current).arg(m_remoteFiles.size()));
             ui->le_StartedUrl->setText(rf.getUrl().getFullUrl());
             ui->prb_Total->setMaximum(m_remoteFiles.size());
@@ -370,7 +370,7 @@ namespace BlackGui
         void CDownloadComponent::showCompletedFileMessage(const CRemoteFile &rf)
         {
             const int current = m_remoteFiles.size() - m_waitingForDownload.size();
-            ui->le_Completed->setText(rf.getName());
+            ui->le_Completed->setText(rf.getBaseName());
             ui->le_CompletedNumber->setText(QStringLiteral("%1/%2").arg(current).arg(m_remoteFiles.size()));
             ui->le_CompletedUrl->setText(rf.getUrl().getFullUrl());
             ui->prb_Total->setMaximum(m_remoteFiles.size());
