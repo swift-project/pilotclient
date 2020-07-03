@@ -398,10 +398,6 @@ namespace BlackCore
         //! \threadsafe
         QString getLastSuccesfulSetupUrl() const;
 
-        //! Last distribution URL (successfully read)
-        //! \threadsafe
-        QString getLastSuccesfulDistributionUrl() const;
-
         //! Reload setup and version
         BlackMisc::CStatusMessageList requestReloadOfSetupAndVersion();
 

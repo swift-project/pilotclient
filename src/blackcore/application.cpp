@@ -1667,12 +1667,6 @@ namespace BlackCore
         return m_setupReader->getLastSuccessfulSetupUrl();
     }
 
-    QString CApplication::getLastSuccesfulDistributionUrl() const
-    {
-        if (!this->hasSetupReader()) { return {}; }
-        return m_setupReader->getLastSuccessfulUpdateInfoUrl();
-    }
-
     CStatusMessageList CApplication::synchronizeSetup(int timeoutMs)
     {
         const CStatusMessageList requestMsgs = this->requestReloadOfSetupAndVersion();
