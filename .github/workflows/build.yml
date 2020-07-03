@@ -12,6 +12,7 @@ env:
   do_symbols:    ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/heads/develop/') }}
   eol_months:    12
   qt_version:    5.15.0
+  bitrock_version: qt-professional-20.4.0
 
 jobs:
 
@@ -82,7 +83,7 @@ jobs:
           doc: true
       - name: Download InstallBuilder
         run: |
-          wget -O ~/installbuilder.run https://installbuilder.com/installbuilder-qt-professional-20.4.0-linux-x64-installer.run
+          wget -O ~/installbuilder.run https://installbuilder.com/installbuilder-${{ env.bitrock_version }}-linux-x64-installer.run
           chmod 700 ~/installbuilder.run
           ~/installbuilder.run --mode unattended --prefix ~/installbuilder
       - name: Install dependencies
@@ -159,7 +160,7 @@ jobs:
           extra: --archives qtbase
       - name: Download InstallBuilder
         run: |
-          curl.exe --output "$HOME\installbuilder.exe" -L --url https://installbuilder.com/installbuilder-qt-professional-20.4.0-windows-x64-installer.exe
+          curl.exe --output "$HOME\installbuilder.exe" -L --url https://installbuilder.com/installbuilder-${{ env.bitrock_version }}-windows-x64-installer.exe
           start -wait "$HOME\installbuilder.exe" @("--mode", "unattended", "--prefix", "$HOME\installbuilder")
       - name: Install dependencies
         run: |
@@ -236,7 +237,7 @@ jobs:
           extra: --archives qtbase
       - name: Download InstallBuilder
         run: |
-          curl.exe --output "$HOME\installbuilder.exe" -L --url https://installbuilder.com/installbuilder-qt-professional-20.4.0-windows-installer.exe
+          curl.exe --output "$HOME\installbuilder.exe" -L --url https://installbuilder.com/installbuilder-${{ env.bitrock_version }}-windows-installer.exe
           start -wait "$HOME\installbuilder.exe" @("--mode", "unattended", "--prefix", "$HOME\installbuilder")
       - name: Install dependencies
         run: |
@@ -304,15 +305,15 @@ jobs:
           aqtversion: ==0.9.2
       - name: Download InstallBuilder
         run: |
-          wget -O $HOME/installbuilder.dmg https://installbuilder.com/installbuilder-qt-professional-20.4.0-osx-installer.dmg
+          wget -O $HOME/installbuilder.dmg https://installbuilder.com/installbuilder-${{ env.bitrock_version }}-osx-installer.dmg
           chmod 700 $HOME/installbuilder.dmg
           sudo hdiutil attach $HOME/installbuilder.dmg
-          sudo cp -rf "/Volumes/InstallBuilder Qt/installbuilder-qt-professional-20.4.0-osx-installer.app" /Applications
+          sudo cp -rf "/Volumes/InstallBuilder Qt/installbuilder-${{ env.bitrock_version }}-osx-installer.app" /Applications
           sudo hdiutil detach "/Volumes/InstallBuilder Qt"
           sudo spctl --master-disable
-          sudo chmod -R +x /Applications/installbuilder-qt-professional-20.4.0-osx-installer.app
-          sudo xattr -r -d com.apple.quarantine /Applications/installbuilder-qt-professional-20.4.0-osx-installer.app
-          sudo /Applications/installbuilder-qt-professional-20.4.0-osx-installer.app/Contents/MacOs/installbuilder.sh --mode unattended --prefix /Applications/installbuilder
+          sudo chmod -R +x /Applications/installbuilder-${{ env.bitrock_version }}-osx-installer.app
+          sudo xattr -r -d com.apple.quarantine /Applications/installbuilder-${{ env.bitrock_version }}-osx-installer.app
+          sudo /Applications/installbuilder-${{ env.bitrock_version }}-osx-installer.app/Contents/MacOs/installbuilder.sh --mode unattended --prefix /Applications/installbuilder
       - name: Install dependencies
         run: |
           pip3 install requests
