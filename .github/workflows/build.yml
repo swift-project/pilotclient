@@ -462,6 +462,6 @@ jobs:
           webhook_id: ${{ secrets.DISCORD_ID }}
           webhook_token: ${{ secrets.DISCORD_TOKEN }}
           message: |
-            > `${{ github.ref }}`
-            > :${{ env.emoji }}: **${{ env.result }}** (triggered by ${{ github.event_name }})
+            > :${{ env.emoji }}: `${{ github.ref }}`
+            > **${{ env.result }}** (triggered by ${{ github.event_name }})
             > <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}>
