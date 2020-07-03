@@ -77,7 +77,6 @@ namespace BlackCore
 
         if (m_bootstrapMode == CacheOnly)
         {
-            m_updateInfoUrls = cachedSetup.getSwiftUpdateInfoFileUrls(); // we use the info URLs from cached setup
             msgs.push_back(cacheAvailable ?
                            CStatusMessage(this, CStatusMessage::SeverityInfo,  u"Cache only setup, using it as it is") :
                            CStatusMessage(this, CStatusMessage::SeverityError, u"Cache only setup, but cache is empty"));
@@ -281,43 +280,6 @@ namespace BlackCore
         return msgs;
     }
 
-    void CSetupReader::readUpdateInfo()
-    {
-        const CUrlList randomUrls = m_updateInfoUrls.randomElements(2);
-        if (randomUrls.isEmpty())
-        {
-            CLogMessage(this).warning(u"Cannot read update info, no URLs");
-            this->manageUpdateInfoAvailability(false);
-            return;
-        }
-
-        if (m_updateInfo.lastUpdatedAge() < 5000)
-        {
-            CLogMessage(this).info(u"Update info just updated, skip read");
-            return;
-        }
-
-        if (!sApp || m_shutdown) { return; }
-        CUrl url = randomUrls.front();
-        const CStatusMessage m1(this, CStatusMessage::SeverityInfo, u"Start reading update info 1st URL: " % url.toQString());
-        sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseUpdateInfoFile }, { this, &CSetupReader::networkReplyProgress });
-
-        url = randomUrls.back();
-        const CStatusMessage m2(this, CStatusMessage::SeverityInfo, u"Will also trigger deferred update info reading 2nd URL: " % url.toQString());
-        QPointer<CSetupReader> myself(this);
-        QTimer::singleShot(2000, this, [ = ]
-        {
-            if (!myself || !sApp || sApp->isShuttingDown()) { return; }
-            if (!m_lastSuccessfulUpdateInfoUrl.isEmpty())
-            {
-                // already read
-                CLogMessage(this).info(u"Cancel second update info read ('%1'), as there was a 1st read '%2'") << url.toQString() << m_lastSuccessfulUpdateInfoUrl;
-                return;
-            }
-            sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseUpdateInfoFile }, { this, &CSetupReader::networkReplyProgress });
-        });
-    }
-
     CSetupReader::BootstrapMode CSetupReader::stringToEnum(const QString &s)
     {
         const QString bsm(s.toLower().trimmed());
@@ -417,7 +379,6 @@ namespace BlackCore
                     bool sameVersionLoaded = (loadedSetup == currentSetup);
                     if (sameVersionLoaded)
                     {
-                        m_updateInfoUrls = currentSetup.getSwiftUpdateInfoFileUrls(); // defaults
                         CLogMessage(this).info(u"Same setup version loaded from '%1' as already in data cache '%2'") << urlString << m_setup.getFilename();
                         CLogMessage::preformatted(this->manageSetupAvailability(true));
                         return; // success
@@ -430,7 +391,6 @@ namespace BlackCore
                     if (m.isSeverityInfoOrLess())
                     {
                         // no issue with cache
-                        m_updateInfoUrls = loadedSetup.getSwiftUpdateInfoFileUrls();
                         const CStatusMessage m2 = CLogMessage(this).info(u"Loaded setup from '%1'") << urlString;
                         emit this->setupLoadingMessages(m2);
                         CLogMessage(this).info(u"Setup: Updated data cache in '%1'") << m_setup.getFilename();
@@ -468,80 +428,6 @@ namespace BlackCore
                 // getting here means at least 2 URLs failes
                 this->manageSetupAvailability(false); // this updates also the cache availability so we can contine with cache only
             }
-        }
-    }
-
-    void CSetupReader::parseUpdateInfoFile(QNetworkReply *nwReplyPtr)
-    {
-        // wrap pointer, make sure any exit cleans up reply
-        // required to use delete later as object is created in a different thread
-        QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-        if (m_shutdown) { return; }
-
-        const QUrl url(nwReply->url());
-        const QString urlString(url.toString());
-
-        if (nwReply->error() == QNetworkReply::NoError)
-        {
-            const qint64 lastModified = CNetworkUtils::lastModifiedMsSinceEpoch(nwReply.data());
-            const QString updateInfoJsonString(nwReplyPtr->readAll());
-            nwReplyPtr->close();
-            if (updateInfoJsonString.isEmpty())
-            {
-                CLogMessage(this).info(u"No update info file content");
-                // try next URL
-            }
-            else
-            {
-                try
-                {
-                    const CUpdateInfo updateInfo = CUpdateInfo::fromDatabaseJson(updateInfoJsonString);
-                    if (updateInfo.isEmpty())
-                    {
-                        CLogMessage(this).error(u"Loading of update info yielded no data, '%1'") << urlString;
-                        this->manageUpdateInfoAvailability(false);
-                    }
-                    else
-                    {
-                        CStatusMessage m = m_updateInfo.set(updateInfo, lastModified);
-                        if (m.isFailure())
-                        {
-                            m.addCategories(this);
-                            CLogMessage::preformatted(m);
-                            this->manageUpdateInfoAvailability(false);
-                        }
-                        else
-                        {
-                            {
-                                QWriteLocker l(&m_lockUpdateInfo);
-                                m_lastSuccessfulUpdateInfoUrl = urlString;
-                            }
-                            CLogMessage(this).info(u"Update info loaded from '%1") << urlString;
-                            CLogMessage(this).info(u"Update info: Updated data cache in '%1', artifacts: %2, distributions: %3") << m_updateInfo.getFilename() << updateInfo.getArtifactsPilotClient().size() << updateInfo.getDistributions().size();
-                            this->manageUpdateInfoAvailability(true);
-                        } // cache
-                    }
-                    return;
-                }
-                catch (const CJsonException &ex)
-                {
-                    // we downloaded an unparsable JSON file.
-                    // as we control those files something is wrong
-                    const QString errorMsg = QStringLiteral("Update info file loaded from '%1' cannot be parsed").arg(urlString);
-                    const CStatusMessage msg = ex.toStatusMessage(this, errorMsg);
-                    CLogMessage::preformatted(msg);
-
-                    // in dev. I get notified, in productive code I try next URL by falling thru
-                    BLACK_VERIFY_X(false, Q_FUNC_INFO, errorMsg.toLocal8Bit().constData());
-                    m_updateInfoReadErrors++;
-                }
-            } // json empty
-        } // no error
-        else
-        {
-            // network error, try next URL
-            nwReply->abort();
-            m_updateInfoReadErrors++;
         }
     }
 
@@ -608,32 +494,9 @@ namespace BlackCore
         return m_lastSuccessfulSetupUrl;
     }
 
-    CUpdateInfo CSetupReader::getUpdateInfo() const
-    {
-        return m_updateInfo.get();
-    }
-
-    bool CSetupReader::hasCachedUpdateInfo() const
-    {
-        const CUpdateInfo updateInfo = m_updateInfo.get();
-        return !updateInfo.isEmpty();
-    }
-
-    QDateTime CSetupReader::getUpdateInfoCacheTimestamp() const
-    {
-        return m_updateInfo.getTimestamp();
-    }
-
-    QString CSetupReader::getLastSuccessfulUpdateInfoUrl() const
-    {
-        QReadLocker l(&m_lockUpdateInfo);
-        return m_lastSuccessfulUpdateInfoUrl;
-    }
-
     void CSetupReader::synchronize()
     {
         m_setup.synchronize();
-        m_updateInfo.synchronize();
     }
 
     CStatusMessageList CSetupReader::getLastSetupReadErrorMessages() const
@@ -680,26 +543,6 @@ namespace BlackCore
         CStatusMessageList msgs;
         QPointer<CSetupReader> myself(this);
 
-        if (webRead)
-        {
-            msgs.push_back(CStatusMessage(this).info(u"Setup loaded from web, will trigger read of update information"));
-            QTimer::singleShot(500, this, [ = ]
-            {
-                if (!myself) { return; }
-                this->readUpdateInfo();
-            });
-        }
-
-        if (localRead)
-        {
-            msgs.push_back(CStatusMessage(this).info(u"Setup loaded locally, will trigger read of update information"));
-            QTimer::singleShot(500, this, [ = ]
-            {
-                if (!myself) { return; }
-                this->readUpdateInfo();
-            });
-        }
-
         bool available = false;
         if (webRead || localRead)
         {
@@ -725,27 +568,6 @@ namespace BlackCore
         }
         m_setupAvailable = available;
         emit this->setupHandlingCompleted(available);
-
-        if (!webRead && !localRead)
-        {
-            msgs.push_back(CStatusMessage(this).warning(u"Since setup was not updated this time, will not start loading of update information"));
-            this->manageUpdateInfoAvailability(false);
-        }
         return msgs;
-    }
-
-    void CSetupReader::manageUpdateInfoAvailability(bool webRead)
-    {
-        if (webRead)
-        {
-            m_updateInfoAvailable = true;
-            emit updateInfoAvailable(true);
-        }
-        else
-        {
-            const bool cached = m_updateInfo.isSaved();
-            m_updateInfoAvailable = cached;
-            emit updateInfoAvailable(cached);
-        }
     }
 } // namespace
