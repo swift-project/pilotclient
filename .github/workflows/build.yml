@@ -387,9 +387,39 @@ jobs:
         with:
           name: xswiftbus-thin-allos-${{ needs.preBuild.outputs.version }}
 
+  release:
+    runs-on: ubuntu-20.04
+    needs: [preBuild, postBuild]
+    if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/heads/develop/') }}
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+      - name: Flatten directories
+        run: |
+          mv swiftinstaller-*/* .
+          mv xswiftbus-*/* .
+      - name: Create release
+        uses: meeDamian/github-release@2.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: v${{ needs.preBuild.outputs.version }}
+          commitish: ${{ github.sha }}
+          body: Version ${{ needs.preBuild.outputs.version }}
+          draft: true
+          prerelease: true
+          gzip: false
+          allow_override: true
+          files: >
+            swiftinstaller-linux-64-${{ needs.preBuild.outputs.version }}.run
+            swiftinstaller-windows-64-${{ needs.preBuild.outputs.version }}.exe
+            swiftinstaller-windows-32-${{ needs.preBuild.outputs.version }}.exe
+            swiftinstaller-macos-64-${{ needs.preBuild.outputs.version }}.dmg
+            xswiftbus-fat-allos-${{ needs.preBuild.outputs.version }}.7z
+
   notify:
     runs-on: ubuntu-20.04
-    needs: [preBuild, checks, buildLinux, buildWin64, buildWin32, buildMacOS, postBuild]
+    needs: [preBuild, checks, buildLinux, buildWin64, buildWin32, buildMacOS, postBuild, release]
     if: always()
 
     steps:
