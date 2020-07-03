@@ -118,6 +118,12 @@ namespace BlackConfig
         //! Vatsim client key
         static const QString &vatsimPrivateKey(); // defined in buildconfig_gen.cpp.in
 
+        //! GitHub repository URL
+        static const QString &gitHubRepoUrl();
+
+        //! GitHub Packages REST API URL
+        static const QString &gitHubRepoApiUrl();
+
         //! Returns SHA-1 of git HEAD at build time
         static const QString &gitHeadSha1();
 

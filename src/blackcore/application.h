@@ -15,6 +15,7 @@
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/db/databasereaderconfig.h"
 #include "blackcore/data/globalsetup.h"
+#include "blackcore/githubpackagesreader.h"
 #include "blackcore/application/applicationsettings.h"
 #include "blackcore/inputmanager.h"
 #include "blackcore/webreaderflags.h"
@@ -166,8 +167,10 @@ namespace BlackCore
         Data::CGlobalSetup getGlobalSetup() const;
 
         //! Update info
-        //! \threadsafe
         BlackMisc::Db::CUpdateInfo getUpdateInfo() const;
+
+        //! Reload update info
+        void reloadUpdateInfo();
 
         //! Own distribution
         //! \threadsafe
@@ -714,6 +717,7 @@ namespace BlackCore
         BlackMisc::CApplicationInfo            m_applicationInfo;         //!< Application if specified
         QScopedPointer<CCoreFacade>            m_coreFacade;              //!< core facade if any
         QScopedPointer<CSetupReader>           m_setupReader;             //!< setup reader
+        QScopedPointer<CGitHubPackagesReader>  m_gitHubPackagesReader;    //!< github packages reader
         QScopedPointer<CWebDataServices>       m_webDataServices;         //!< web data services
         QScopedPointer<BlackMisc::CFileLogger> m_fileLogger;              //!< file logger
         QPointer<CCookieManager>               m_cookieManager;           //!< single cookie manager for our access manager

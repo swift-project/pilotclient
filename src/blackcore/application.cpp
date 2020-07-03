@@ -159,10 +159,14 @@ namespace BlackCore
             m_setupReader.reset(new CSetupReader(this));
             connect(m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::onSetupHandlingCompleted, Qt::QueuedConnection);
             connect(m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::setupHandlingCompleted, Qt::QueuedConnection); // hand thru
-            connect(m_setupReader.data(), &CSetupReader::updateInfoAvailable, this, &CApplication::updateInfoAvailable, Qt::QueuedConnection);
             connect(m_setupReader.data(), &CSetupReader::successfullyReadSharedUrl, m_networkWatchDog, &CNetworkWatchdog::setWorkingSharedUrl, Qt::QueuedConnection);
 
             this->addParserOptions(m_setupReader->getCmdLineOptions()); // add options from reader
+
+            // check for updates
+            m_gitHubPackagesReader.reset(new CGitHubPackagesReader(this));
+            connect(m_gitHubPackagesReader.data(), &CGitHubPackagesReader::updateInfoAvailable, this, &CApplication::updateInfoAvailable, Qt::QueuedConnection);
+            reloadUpdateInfo();
 
             // startup done
             connect(this, &CApplication::startUpCompleted, this, &CApplication::onStartUpCompleted, Qt::QueuedConnection);
@@ -336,9 +340,15 @@ namespace BlackCore
     CUpdateInfo CApplication::getUpdateInfo() const
     {
         if (m_shutdown) { return CUpdateInfo(); }
-        const CSetupReader *r = m_setupReader.data();
-        if (!r) { return CUpdateInfo(); }
-        return r->getUpdateInfo();
+        if (!m_gitHubPackagesReader) { return CUpdateInfo(); }
+        return m_gitHubPackagesReader->getUpdateInfo();
+    }
+
+    void CApplication::reloadUpdateInfo()
+    {
+        if (m_shutdown) { return; }
+        if (!m_gitHubPackagesReader) { return; }
+        m_gitHubPackagesReader->readUpdateInfo();
     }
 
     CDistribution CApplication::getOwnDistribution() const
@@ -1097,6 +1107,11 @@ namespace BlackCore
 
             m_webDataServices->gracefulShutdown();
             m_webDataServices.reset();
+        }
+
+        if (m_gitHubPackagesReader)
+        {
+            m_gitHubPackagesReader.reset();
         }
 
         if (m_setupReader)

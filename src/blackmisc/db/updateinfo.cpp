@@ -7,8 +7,12 @@
  */
 
 #include "updateinfo.h"
+#include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
 #include <QStringBuilder>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 using namespace BlackConfig;
 
@@ -147,6 +151,57 @@ namespace BlackMisc
         {
             if (jsonString.isEmpty()) { return CUpdateInfo(); }
             return CUpdateInfo::fromDatabaseJson(Json::jsonObjectFromString(jsonString));
+        }
+
+        CUpdateInfo CUpdateInfo::fromGitHubReleasesJson(const QByteArray &jsonData)
+        {
+            // https://docs.github.com/en/rest/reference/repos#releases
+
+            const QString url = CBuildConfig::gitHubRepoUrl() + QStringLiteral("releases/download");
+            CDistribution alphaDistribution("ALPHA", 5, false);
+            CDistribution betaDistribution("BETA", 10, false);
+            alphaDistribution.addDownloadUrl(url);
+            betaDistribution.addDownloadUrl(url);
+
+            CUpdateInfo result;
+            result.m_distributions = { alphaDistribution, betaDistribution };
+
+            for (const QJsonValue &release : QJsonDocument::fromJson(jsonData).array())
+            {
+                QString version = release[QLatin1String("tag_name")].toString();
+                if (version.isEmpty() || version[0] != 'v') { continue; }
+                version.remove(0, 1);
+                if (containsChar(version, [](QChar c) { return c != '.' && !is09(c); })) { continue; }
+
+                bool existing = !release[QLatin1String("draft")].toBool();
+                bool alpha = release[QLatin1String("prerelease")].toBool();
+
+                for (const QJsonValue &asset : release[QLatin1String("assets")].toArray())
+                {
+                    QString name = asset[QLatin1String("name")].toString();
+                    QString filename = QStringLiteral("v%1/%2").arg(version, name);
+                    int size = asset[QLatin1String("size")].toInt();
+
+                    CArtifact::ArtifactType type = CArtifact::UnknownArtifact;
+                    if      (name.startsWith(QStringLiteral("swiftinstaller"))) { type = CArtifact::PilotClientInstaller; }
+                    else if (name.startsWith(QStringLiteral("swiftsymbols")))   { type = CArtifact::Symbols; }
+                    else if (name.startsWith(QStringLiteral("xswiftbus")))      { type = CArtifact::XSwiftBus; }
+
+                    CPlatform platform;
+                    if      (name.contains(QStringLiteral("windows-32"))) { platform = CPlatform::win32Platform(); }
+                    else if (name.contains(QStringLiteral("windows-64"))) { platform = CPlatform::win64Platform(); }
+                    else if (name.contains(QStringLiteral("linux-64")))   { platform = CPlatform::linuxPlatform(); }
+                    else if (name.contains(QStringLiteral("macos-64")))   { platform = CPlatform::macOSPlatform(); }
+                    else if (name.contains(QStringLiteral("allos")))      { platform = CPlatform::allOs(); }
+
+                    CArtifact artifact(filename, version, {}, type, size, existing, platform);
+                    artifact.setDistributions({ alpha ? alphaDistribution : betaDistribution });
+
+                    if (type == CArtifact::PilotClientInstaller) { result.m_artifactsPilotClient.push_back(artifact); }
+                    else if (type == CArtifact::XSwiftBus) { result.m_artifactsXSwiftBus.push_back(artifact); }
+                }
+            }
+            return result;
         }
     } // ns
 } // ns

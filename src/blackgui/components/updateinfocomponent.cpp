@@ -86,8 +86,7 @@ namespace BlackGui
         void CUpdateInfoComponent::requestLoadOfSetup()
         {
             if (!sGui || sGui->isShuttingDown()) { return; }
-            const CStatusMessageList msgs(sGui->requestReloadOfSetupAndVersion());
-            CLogMessage::preformatted(msgs);
+            sGui->reloadUpdateInfo();
         }
 
         void CUpdateInfoComponent::changedUpdateInfo()

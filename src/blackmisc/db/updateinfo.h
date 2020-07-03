@@ -97,6 +97,9 @@ namespace BlackMisc
             //! Object from database JSOn format
             static CUpdateInfo fromDatabaseJson(const QString &jsonString);
 
+            //! Object from GitHub Releases REST API JSON format
+            static CUpdateInfo fromGitHubReleasesJson(const QByteArray &jsonData);
+
         private:
             CArtifactList m_artifactsPilotClient; //!< artifacts pilot client
             CArtifactList m_artifactsXSwiftBus;   //!< artifacts XSwiftBus

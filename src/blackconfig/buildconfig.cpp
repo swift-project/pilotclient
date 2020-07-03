@@ -149,6 +149,18 @@ namespace BlackConfig
         }
     }
 
+    const QString& CBuildConfig::gitHubRepoUrl()
+    {
+        static const QString url = "https://github.com/swift-project/pilotclient/";
+        return url;
+    }
+
+    const QString& CBuildConfig::gitHubRepoApiUrl()
+    {
+        static const QString url = "https://api.github.com/repos/swift-project/pilotclient/";
+        return url;
+    }
+
     const QString &CBuildConfig::buildDateAndTime()
     {
         // http://en.cppreference.com/w/cpp/preprocessor/replace#Predefined_macros
