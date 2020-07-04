@@ -86,6 +86,11 @@ jobs:
           wget -O ~/installbuilder.run https://installbuilder.com/installbuilder-${{ env.bitrock_version }}-linux-x64-installer.run
           chmod 700 ~/installbuilder.run
           ~/installbuilder.run --mode unattended --prefix ~/installbuilder
+          cat >~/license.xml <<EOF
+          $BITROCK_LICENSE
+          EOF
+        env:
+          BITROCK_LICENSE: ${{ secrets.BITROCK_LICENSE }}
       - name: Install dependencies
         run: |
           sudo apt install doxygen graphviz libglu1-mesa-dev libopus-dev libsodium-dev libpulse-dev libdbus-1-dev libevent-dev
@@ -162,6 +167,11 @@ jobs:
         run: |
           curl.exe --output "$HOME\installbuilder.exe" -L --url https://installbuilder.com/installbuilder-${{ env.bitrock_version }}-windows-x64-installer.exe
           start -wait "$HOME\installbuilder.exe" @("--mode", "unattended", "--prefix", "$HOME\installbuilder")
+          echo >$HOME\license.xml @"
+          $env:BITROCK_LICENSE
+          "@
+        env:
+          BITROCK_LICENSE: ${{ secrets.BITROCK_LICENSE }}
       - name: Install dependencies
         run: |
           choco install jom --yes
@@ -239,6 +249,11 @@ jobs:
         run: |
           curl.exe --output "$HOME\installbuilder.exe" -L --url https://installbuilder.com/installbuilder-${{ env.bitrock_version }}-windows-installer.exe
           start -wait "$HOME\installbuilder.exe" @("--mode", "unattended", "--prefix", "$HOME\installbuilder")
+          echo >$HOME\license.xml @"
+          $env:BITROCK_LICENSE
+          "@
+        env:
+          BITROCK_LICENSE: ${{ secrets.BITROCK_LICENSE }}
       - name: Install dependencies
         run: |
           choco install jom --yes
@@ -314,6 +329,11 @@ jobs:
           sudo chmod -R +x /Applications/installbuilder-${{ env.bitrock_version }}-osx-installer.app
           sudo xattr -r -d com.apple.quarantine /Applications/installbuilder-${{ env.bitrock_version }}-osx-installer.app
           sudo /Applications/installbuilder-${{ env.bitrock_version }}-osx-installer.app/Contents/MacOs/installbuilder.sh --mode unattended --prefix /Applications/installbuilder
+          cat >~/license.xml <<EOF
+          $BITROCK_LICENSE
+          EOF
+        env:
+          BITROCK_LICENSE: ${{ secrets.BITROCK_LICENSE }}
       - name: Install dependencies
         run: |
           pip3 install requests
