@@ -7,6 +7,15 @@ such as VATSIM, supporting the following simulators and operating systems:
 - X-Plane 11 (Windows, Linux, macOS)
 - FlightGear (Windows, Linux, macOS)
 
+Downloads
+=========
+
+[![Beta version](https://img.shields.io/endpoint?url=https%3A%2F%2Frunkit.io%2Foktal3700%2Flatest-swift%2Fbranches%2Fmaster)][1]
+[![Alpha version](https://img.shields.io/endpoint?url=https%3A%2F%2Frunkit.io%2Foktal3700%2Flatest-swift%2Fbranches%2Fmaster%2F%3Fprerelease%3Dtrue)][2]
+
+[1]: https://github.com/swift-project/pilotclient/releases/latest
+[2]: https://github.com/swift-project/pilotclient/releases
+
 Resources
 =========
 
@@ -21,9 +30,10 @@ Contributing
 
 _swift_ is written in modern C++14 using the Qt framework.
 
-![Development version](https://img.shields.io/badge/version-0.9.5-blue)
+[![Development version](https://img.shields.io/badge/version-0.9.5-blue)](.)
+[![Build status](https://img.shields.io/github/workflow/status/swift-project/pilotclient/Build%20swift/develop/0.9.5)][3]
 
-![Build status](https://img.shields.io/github/workflow/status/swift-project/pilotclient/Build%20swift/develop/0.9.5)
+[3]: https://github.com/swift-project/pilotclient/actions
 
 Pull requests should be made against the current active development branch,
 which is `develop/0.9.5`.
