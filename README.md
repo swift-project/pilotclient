@@ -1,3 +1,6 @@
+About
+=====
+
 _swift_ is a pilot client for virtual air traffic simulation networks,
 such as VATSIM, supporting the following simulators and operating systems:
 
@@ -19,11 +22,11 @@ Downloads
 Resources
 =========
 
-[Website](https://swift-project.org/)
+[:globe_with_meridians: Website](https://swift-project.org/)
 
-[User documentation](https://docs.swift-project.org/)
+[:blue_book: User documentation](https://docs.swift-project.org/)
 
-[Discord](https://discord.gg/R7Atd9A)
+[:wave: Discord](https://discord.gg/R7Atd9A)
 
 Contributing
 ============
@@ -38,4 +41,4 @@ _swift_ is written in modern C++14 using the Qt framework.
 Pull requests should be made against the current active development branch,
 which is `develop/0.9.5`.
 
-[Developer documentation](https://docs.swift-project.org/dev/)
+[:blue_book: Developer documentation](https://docs.swift-project.org/dev/)
