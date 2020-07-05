@@ -25,6 +25,20 @@
     </componentList>
     <functionDefinitionList>
         <actionDefinition>
+            <name>checkExpiryDate</name>
+            <actionList>
+                <createTimeStamp>
+                    <variable>installDate</variable>
+                </createTimeStamp>
+                <throwError>
+                    <ruleList>
+                        <compareValues value1="${installDate}" logic="greater_or_equal" value2="${endOfLife}" />
+                    </ruleList>
+                    <customErrorMessage>This version has expired. Please download a more recent version.</customErrorMessage>
+                </throwError>
+            </actionList>
+        </actionDefinition>
+        <actionDefinition>
             <name>checkForRunningSwift</name>
             <actionList>
                 <showProgressDialog>
@@ -86,6 +100,7 @@ It must be closed before the installation can proceed</progressText>
         </actionDefinition>
     </functionDefinitionList>
     <preInstallationActionList>
+        <checkExpiryDate />
         <checkForRunningSwift />
         <killDBusDaemon />
         <!-- TODO Linux/MacOS: Save and load last install dir -->
@@ -325,6 +340,9 @@ It must be closed before the installation can proceed</progressText>
                 <stringParameter name="versionFull" value="" ask="0">
                     <default></default>
                     <allowEmptyValue>1</allowEmptyValue>
+                </stringParameter>
+                <stringParameter name="endOfLife" value="21000101" ask="0">
+                    <default>21000101</default>
                 </stringParameter>
                 <stringParameter name="architecture" value="64" ask="0">
                     <description></description>
