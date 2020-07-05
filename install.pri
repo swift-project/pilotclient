@@ -248,6 +248,7 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
                                               project.installerFilename=$${INSTALLER_BASENAME}.$${INSTALLER_EXT} \
                                               project.version=$$swiftConfig(version.full) \
                                               versionFull=$$swiftConfig(version.full).$${VER_REV} \
+                                              endOfLife=$$swiftConfig(endOfLife) \
                                               project.windows64bitMode=$${WINDOWS64BITMODE} \
                                               project.enableDebugger=$${INSTALLER_DEBUG} \
                                               architecture=$${ARCHITECTURE}
