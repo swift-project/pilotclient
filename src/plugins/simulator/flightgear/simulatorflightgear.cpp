@@ -62,8 +62,6 @@
 #include <QPointer>
 #include <math.h>
 
-#define FGSWIFTBUS_API_VERSION 1
-
 using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -88,6 +86,8 @@ namespace BlackSimPlugin
 {
     namespace Flightgear
     {
+        int FGSWIFTBUS_API_VERSION = -1;
+        QList<int> incompatibleVersions = {};
         CSimulatorFlightgear::CSimulatorFlightgear(const CSimulatorPluginInfo &info,
                 IOwnAircraftProvider *ownAircraftProvider,
                 IRemoteAircraftProvider *remoteAircraftProvider,
@@ -166,7 +166,7 @@ namespace BlackSimPlugin
                 u++;
             }
 
-            if (!parts.isNull())
+            if (parts.isNull() && Flightgear::FGSWIFTBUS_API_VERSION >= 2)
             {
                 PlanesSurfaces surfaces;
                 surfaces.push_back(callsign, parts);
@@ -536,10 +536,12 @@ namespace BlackSimPlugin
                 PlanesPositions pos;
                 pos.push_back(newRemoteAircraft.getSituation());
                 m_trafficProxy->setPlanesPositions(pos);
-
-                PlanesSurfaces surfaces;
-                surfaces.push_back(newRemoteAircraft.getCallsign(), newRemoteAircraft.getParts());
-                m_trafficProxy->setPlanesSurfaces(surfaces);
+                if(Flightgear::FGSWIFTBUS_API_VERSION >= 2)
+                {
+                    PlanesSurfaces surfaces;
+                    surfaces.push_back(newRemoteAircraft.getCallsign(), newRemoteAircraft.getParts());
+                    m_trafficProxy->setPlanesSurfaces(surfaces);
+                }
 
             }
             else
@@ -690,7 +692,7 @@ namespace BlackSimPlugin
 
             } // all callsigns
 
-            if (!planesTransponders.isEmpty())
+            if (!planesTransponders.isEmpty() && Flightgear::FGSWIFTBUS_API_VERSION >= 2)
             {
                 m_trafficProxy->setPlanesTransponders(planesTransponders);
             }
@@ -704,7 +706,7 @@ namespace BlackSimPlugin
                 m_trafficProxy->setPlanesPositions(planesPositions);
             }
 
-            if (! planesSurfaces.isEmpty())
+            if (! planesSurfaces.isEmpty() && Flightgear::FGSWIFTBUS_API_VERSION >= 2)
             {
                 m_trafficProxy->setPlanesSurfaces(planesSurfaces);
             }
@@ -1086,7 +1088,9 @@ namespace BlackSimPlugin
             bool result = service.isValid() && traffic.isValid();
             if (! result) { return; }
 
-            if (service.getVersionNumber() != FGSWIFTBUS_API_VERSION)
+            Flightgear::FGSWIFTBUS_API_VERSION = service.getVersionNumber();
+
+            if (Flightgear::incompatibleVersions.contains(Flightgear::FGSWIFTBUS_API_VERSION))
             {
                 CLogMessage(this).error(u"This version of swift is not compatible with this Flightgear version. For further information check http://wiki.flightgear.org/Swift.");
                 return;

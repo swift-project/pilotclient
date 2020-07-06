@@ -65,6 +65,8 @@ namespace BlackSimPlugin
 {
     namespace Flightgear
     {
+        extern int FGSWIFTBUS_API_VERSION;
+        extern QList<int> incompatibleVersions;
         class CFGSwiftBusServiceProxy;
         class CFGSwiftBusTrafficProxy;
 
