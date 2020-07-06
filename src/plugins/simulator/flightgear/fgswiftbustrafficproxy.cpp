@@ -87,6 +87,26 @@ namespace BlackSimPlugin
                                       planesPositions.headingsDeg, planesPositions.groundSpeedKts, planesPositions.onGrounds);
         }
 
+        void CFGSwiftBusTrafficProxy::setPlanesSurfaces(const PlanesSurfaces &planesSurfaces)
+        {
+            m_dbusInterface->callDBus(QLatin1String("setPlanesSurfaces"),
+                                      planesSurfaces.callsigns, planesSurfaces.gears, planesSurfaces.flaps,
+                                      planesSurfaces.spoilers, planesSurfaces.speedBrakes, planesSurfaces.slats,
+                                      planesSurfaces.wingSweeps, planesSurfaces.thrusts, planesSurfaces.elevators,
+                                      planesSurfaces.rudders, planesSurfaces.ailerons,
+                                      planesSurfaces.landLights, planesSurfaces.taxiLights,
+                                      planesSurfaces.beaconLights, planesSurfaces.strobeLights,
+                                      planesSurfaces.navLights, planesSurfaces.lightPatterns);
+        }
+
+        void CFGSwiftBusTrafficProxy::setPlanesTransponders(const PlanesTransponders &planesTransponders)
+        {
+            m_dbusInterface->callDBus(QLatin1String("setPlanesTransponders"),
+                                      planesTransponders.callsigns, planesTransponders.codes,
+                                      planesTransponders.modeCs, planesTransponders.idents);
+        }
+
+
         void CFGSwiftBusTrafficProxy::getRemoteAircraftData(const QStringList &callsigns, const RemoteAircraftDataCallback &setter) const
         {
             std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)

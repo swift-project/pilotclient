@@ -67,6 +67,7 @@ namespace BlackSimPlugin
                 this->rollsDeg.push_back(situation.getBank().value(BlackMisc::PhysicalQuantities::CAngleUnit::deg()));
                 this->headingsDeg.push_back(situation.getHeading().value(BlackMisc::PhysicalQuantities::CAngleUnit::deg()));
                 this->onGrounds.push_back(situation.getOnGround() == BlackMisc::Aviation::CAircraftSituation::OnGround);
+                this->groundSpeedKts.push_back(situation.getGroundSpeed().value(BlackMisc::PhysicalQuantities::CSpeedUnit::kts()));
             }
 
             QStringList   callsigns;       //!< List of callsigns
@@ -101,12 +102,11 @@ namespace BlackSimPlugin
                 this->rudders.push_back(0.0);
                 this->ailerons.push_back(0.0);
                 this->landLights.push_back(parts.getLights().isLandingOn());
-                //! \todo KB 2019-09 Missing taxi lights in FG
-                // this->taxiLights.push_back(parts.getLights().isTaxiOn());
                 this->beaconLights.push_back(parts.getLights().isBeaconOn());
                 this->strobeLights.push_back(parts.getLights().isStrobeOn());
                 this->navLights.push_back(parts.getLights().isNavOn());
                 this->lightPatterns.push_back(0);
+                this->taxiLights.push_back(parts.getLights().isTaxiOn());
             }
 
             QStringList callsigns;      //!< List of callsigns
@@ -125,6 +125,7 @@ namespace BlackSimPlugin
             QList<bool> strobeLights;   //!< List of strobeLights
             QList<bool> navLights;      //!< List of navLights
             QList<int> lightPatterns;   //!< List of lightPatterns
+            QList<bool> taxiLights;     //!< List of taxi lights
         };
 
         //! Plane Transponders
@@ -212,6 +213,12 @@ namespace BlackSimPlugin
 
             //! Set the position of multiple traffic aircrafts
             void setPlanesPositions(const BlackSimPlugin::Flightgear::PlanesPositions &planesPositions);
+
+            //! Set the surfaces of multiple traffic aircrafts
+            void setPlanesSurfaces(const BlackSimPlugin::Flightgear::PlanesSurfaces &planesSurfaces);
+
+            //! Set the transponders of multiple traffic aircrafts
+            void setPlanesTransponders(const BlackSimPlugin::Flightgear::PlanesTransponders &planesTransponders);
 
             //! Get remote aircrafts data (lat, lon, elevation and CG)
             void getRemoteAircraftData(const QStringList &callsigns, const RemoteAircraftDataCallback &setter) const;
