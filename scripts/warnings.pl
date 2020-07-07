@@ -31,10 +31,9 @@ while (<<>>)
         ++$cmds{"::warning file=$result{file}::$result{msg}"};
     }
 }
-my @cmds = sort keys %cmds;
-my $count = scalar @cmds;
-print "$_\n" for @cmds;
-print "::set-output name=warnings::$count\n";
+my $bool = %cmds ? 'true' : 'false';
+print "$_\n" for sort keys %cmds;
+print "::set-output name=warnings::$bool\n";
 
 sub extractWarning
 {

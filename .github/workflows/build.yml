@@ -18,6 +18,7 @@ jobs:
 
   preBuild:
     runs-on: ubuntu-20.04
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository }}
     outputs:
       version: ${{ steps.version.outputs.value }}
 
@@ -446,14 +447,16 @@ jobs:
     steps:
       - name: Prepare Discord message
         run: |
-          result=SUCCESS
-          expr ${{ join(needs.*.outputs.warnings, ' + ') }}      && result=WARNING
-          echo ${{ join(needs.*.result, ' ') }} | grep -q fail   && result=FAILED
-          echo ${{ join(needs.*.result, ' ') }} | grep -q cancel && result=CANCELLED
+          result=SKIPPED
+          ${{ contains(needs.*.result,           'success')   }} && result=SUCCESS
+          ${{ contains(needs.*.outputs.warnings, 'true')      }} && result=WARNING
+          ${{ contains(needs.*.result,           'cancelled') }} && result=CANCELLED
+          ${{ contains(needs.*.result,           'failure')   }} && result=FAILED
+          [[ $result = SKIPPED   ]] && emoji=repeat
           [[ $result = SUCCESS   ]] && emoji=white_check_mark
           [[ $result = WARNING   ]] && emoji=warning
-          [[ $result = FAILED    ]] && emoji=x
           [[ $result = CANCELLED ]] && emoji=grey_question
+          [[ $result = FAILED    ]] && emoji=x
           echo "::set-env name=result::$result"
           echo "::set-env name=emoji::$emoji"
       - name: Send Discord message
