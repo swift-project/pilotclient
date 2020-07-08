@@ -32,9 +32,9 @@ while (<<>>)
     }
 }
 my @cmds = sort keys %cmds;
-my $count = scalar @cmds;
+my $bool = @cmds ? 'true' : 'false';
 print "$_\n" for @cmds;
-print "::set-output name=warnings::$count\n";
+print "::set-output name=warnings::$bool\n";
 
 sub extractWarning
 {

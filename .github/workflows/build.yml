@@ -18,9 +18,9 @@ jobs:
 
   preBuild:
     runs-on: ubuntu-20.04
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository }}
     outputs:
       version: ${{ steps.version.outputs.value }}
-      do_skip: ${{ steps.is_dupe.outputs.value }}
 
     steps:
       - name: Checkout repository
@@ -44,36 +44,10 @@ jobs:
             swiftinstaller-macos-64-${{ steps.version.outputs.value }}
           failOnError: false
           warnIfNotFound: false
-      - name: Check for existing build with same SHA
-        uses: satackey/action-js-inline@v0.0.2
-        if: ${{ github.event_name == 'pull_request' }}
-        id: is_dupe
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          script: |
-            const github = require('@actions/github');
-            const core = require('@actions/core');
-            const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
-            const query = { owner: 'swift-project', repo: 'pilotclient', workflow_id: 'build.yml' };
-            var result = 'false';
-            for await (const page of octokit.paginate.iterator(octokit.actions.listWorkflowRuns, query)) {
-                for (const run of page.data) {
-                    if (run.id !== ${{ github.run_id }} && run.head_sha === '${{ github.event.pull_request.head.sha }}') {
-                        if (run.status !== 'completed' || run.conclusion === 'success') {
-                            core.info('Found an existing build of this commit at ' + run.html_url);
-                            result = 'true';
-                            break;
-                        }
-                    }
-                }
-            }
-            core.setOutput('value', result);
 
   checks:
     runs-on: ubuntu-20.04
     needs: preBuild
-    if: ${{ needs.preBuild.outputs.do_skip != 'true' }}
     outputs:
       warnings: ${{ steps.cppcheck.outputs.warnings }}
 
@@ -94,7 +68,6 @@ jobs:
   buildLinux:
     runs-on: ubuntu-16.04
     needs: preBuild
-    if: ${{ needs.preBuild.outputs.do_skip != 'true' }}
     env:
       BACKTRACE_TOKEN: ${{ secrets.BACKTRACE_TOKEN }}
       BITROCK_BUILDER: ~/installbuilder/bin/builder
@@ -170,7 +143,6 @@ jobs:
   buildWin64:
     runs-on: windows-2019
     needs: preBuild
-    if: ${{ needs.preBuild.outputs.do_skip != 'true' }}
     env:
       BACKTRACE_TOKEN: ${{ secrets.BACKTRACE_TOKEN }}
       BITROCK_BUILDER: "$(USERPROFILE)/installbuilder/bin/builder-cli.exe"
@@ -253,7 +225,6 @@ jobs:
   buildWin32:
     runs-on: windows-2019
     needs: preBuild
-    if: ${{ needs.preBuild.outputs.do_skip != 'true' }}
     env:
       BACKTRACE_TOKEN: ${{ secrets.BACKTRACE_TOKEN }}
       BITROCK_BUILDER: "$(USERPROFILE)/installbuilder/bin/builder-cli.exe"
@@ -336,7 +307,6 @@ jobs:
   buildMacOS:
     runs-on: macos-10.15
     needs: preBuild
-    if: ${{ needs.preBuild.outputs.do_skip != 'true' }}
     env:
       BACKTRACE_TOKEN: ${{ secrets.BACKTRACE_TOKEN }}
       BITROCK_BUILDER: /Applications/installbuilder/bin/Builder.app/Contents/MacOS/installbuilder.sh
@@ -416,7 +386,6 @@ jobs:
   postBuild:
     runs-on: ubuntu-20.04
     needs: [preBuild, checks, buildLinux, buildWin64, buildWin32, buildMacOS]
-    if: ${{ needs.preBuild.outputs.do_skip != 'true' }}
 
     steps:
       - name: Download xswiftbus-thin
@@ -443,7 +412,7 @@ jobs:
   release:
     runs-on: ubuntu-20.04
     needs: [preBuild, postBuild]
-    if: ${{ needs.preBuild.outputs.do_skip != 'true' && github.event_name == 'push' && startsWith(github.ref, 'refs/heads/develop/') }}
+    if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/heads/develop/') }}
 
     steps:
       - name: Download artifacts
@@ -478,16 +447,16 @@ jobs:
     steps:
       - name: Prepare Discord message
         run: |
-          result=SUCCESS
-          [[  x${{ needs.preBuild.outputs.do_skip }} = xtrue ]]  && result=SKIPPED
-          expr ${{ join(needs.*.outputs.warnings, ' + ') }}      && result=WARNING
-          echo ${{ join(needs.*.result, ' ') }} | grep -q fail   && result=FAILED
-          echo ${{ join(needs.*.result, ' ') }} | grep -q cancel && result=CANCELLED
+          result=SKIPPED
+          ${{ contains(needs.*.result,           'success')   }} && result=SUCCESS
+          ${{ contains(needs.*.outputs.warnings, 'true')      }} && result=WARNING
+          ${{ contains(needs.*.result,           'cancelled') }} && result=CANCELLED
+          ${{ contains(needs.*.result,           'failure')   }} && result=FAILED
+          [[ $result = SKIPPED   ]] && emoji=repeat
           [[ $result = SUCCESS   ]] && emoji=white_check_mark
-          [[ $result = SKIPPED   ]] && emoji=repeat_one
           [[ $result = WARNING   ]] && emoji=warning
-          [[ $result = FAILED    ]] && emoji=x
           [[ $result = CANCELLED ]] && emoji=grey_question
+          [[ $result = FAILED    ]] && emoji=x
           echo "::set-env name=result::$result"
           echo "::set-env name=emoji::$emoji"
       - name: Send Discord message
