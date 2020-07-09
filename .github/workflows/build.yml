@@ -413,6 +413,8 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [preBuild, postBuild]
     if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/heads/develop/') }}
+    outputs:
+      id: ${{ steps.create.outputs.release_id }}
 
     steps:
       - name: Download artifacts
@@ -423,6 +425,7 @@ jobs:
           mv xswiftbus-*/* .
       - name: Create release
         uses: meeDamian/github-release@2.0
+        id: create
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: v${{ needs.preBuild.outputs.version }}
@@ -444,7 +447,7 @@ jobs:
     if: always()
 
     steps:
-      - name: Prepare Discord message
+      - name: Prepare Discord build message
         run: |
           result=SKIPPED
           ${{ contains(needs.*.result,           'success')   }} && result=SUCCESS
@@ -458,7 +461,20 @@ jobs:
           [[ $result = FAILED    ]] && emoji=x
           echo "::set-env name=result::$result"
           echo "::set-env name=emoji::$emoji"
-      - name: Send Discord message
+      - name: Prepare Discord release message
+        uses: satackey/action-js-inline@v0.0.2
+        if: ${{ needs.release.result == 'success' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          script: |
+            const core = require('@actions/core');
+            const github = require('@actions/github');
+            const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+            const query = { owner: 'swift-project', repo: 'pilotclient', release_id: ${{ needs.release.outputs.id }} };
+            const release = await octokit.repos.getRelease(query);
+            core.exportVariable('url', release.data.html_url);
+      - name: Send Discord build message
         uses: appleboy/discord-action@0.0.3
         with:
           webhook_id: ${{ secrets.DISCORD_ID }}
@@ -467,3 +483,12 @@ jobs:
             > :${{ env.emoji }}: `${{ github.ref }}`
             > **${{ env.result }}** (triggered by ${{ github.event_name }})
             > <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}>
+      - name: Send Discord release message
+        uses: appleboy/discord-action@0.0.3
+        if: ${{ needs.release.result == 'success' }}
+        with:
+          webhook_id: ${{ secrets.DISCORD_ID }}
+          webhook_token: ${{ secrets.DISCORD_TOKEN }}
+          message: |
+            > :package: Created draft release `v${{ needs.preBuild.outputs.version }}`
+            > <${{ env.url }}>
