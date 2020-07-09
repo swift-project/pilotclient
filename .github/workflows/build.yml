@@ -431,7 +431,6 @@ jobs:
           draft: true
           prerelease: true
           gzip: false
-          allow_override: true
           files: >
             swiftinstaller-linux-64-${{ needs.preBuild.outputs.version }}.run
             swiftinstaller-windows-64-${{ needs.preBuild.outputs.version }}.exe
