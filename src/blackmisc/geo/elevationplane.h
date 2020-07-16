@@ -23,12 +23,14 @@ namespace BlackMisc
         //! \remark 100km/h 1sec => 28m
         class BLACKMISC_EXPORT CElevationPlane :
             public CCoordinateGeodetic,
+            public Mixin::MetaType<CElevationPlane>,
             public Mixin::String<CElevationPlane>
         {
         public:
             //! Base type
             using base_type = CCoordinateGeodetic;
 
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CElevationPlane)
             BLACKMISC_DECLARE_USING_MIXIN_STRING(CElevationPlane)
 
             //! Properties by index
