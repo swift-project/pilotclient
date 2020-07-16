@@ -90,6 +90,7 @@ namespace BlackCore
         m_launcherSetup.setProperty(CLauncherSetup::IndexDBusAddress, dbusAddress);
 
         // DBus
+        time.start();
         if (m_config.requiresDBusSever()) { this->initDBusServer(dbusAddress); }
         if (m_config.requiresDBusConnection())
         {
