@@ -238,6 +238,14 @@ namespace BlackMisc
         }
 
         template <class MU, class PQ>
+        PQ CPhysicalQuantity<MU, PQ>::operator -() const
+        {
+            PQ copy = *derived();
+            copy *= -1;
+            return copy;
+        }
+
+        template <class MU, class PQ>
         bool CPhysicalQuantity<MU, PQ>::lessThan(const CPhysicalQuantity<MU, PQ> &other) const
         {
             if (*this == other) return false;
