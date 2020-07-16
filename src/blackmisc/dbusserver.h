@@ -38,7 +38,6 @@ namespace BlackMisc
     class BLACKMISC_EXPORT CDBusServer : public QObject
     {
         Q_OBJECT
-        Q_CLASSINFO("D-Bus Interface", SWIFT_SERVICENAME)
 
     public:
         //! Default service name
