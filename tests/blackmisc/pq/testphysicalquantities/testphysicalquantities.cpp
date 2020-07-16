@@ -16,6 +16,7 @@
 #include "blackmisc/pq/constants.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/length.h"
+#include "blackmisc/pq/literals.h"
 #include "blackmisc/pq/mass.h"
 #include "blackmisc/pq/measurementunit.h"
 #include "blackmisc/pq/physicalquantity.h"
@@ -81,6 +82,9 @@ namespace BlackMiscTest
 
         //! Basic arithmetic such as +/-
         void basicArithmetic();
+
+        //! Test user-defined literals
+        void literalsTest();
     };
 
     void CTestPhysicalQuantities::unitsBasics()
@@ -333,6 +337,117 @@ namespace BlackMiscTest
         a1 += a2;
         QVERIFY2(a1.valueInteger(CAngleUnit::deg()) == 450, "Expect 450 degrees");
 
+    }
+
+    void CTestPhysicalQuantities::literalsTest()
+    {
+        using namespace BlackMisc::PhysicalQuantities::Literals;
+
+        // Acceleration
+        QVERIFY2(12.5_ft_s2 == CAcceleration(12.5, CAccelerationUnit::ft_s2()), "Acceleration needs to be the same");
+        QVERIFY2(5.7_m_s2 == CAcceleration(5.7, CAccelerationUnit::m_s2()), "Acceleration needs to be the same");
+        QVERIFY2(48_ft_s2 == CAcceleration(48, CAccelerationUnit::ft_s2()), "Acceleration needs to be the same");
+        QVERIFY2(39_m_s2 == CAcceleration(39, CAccelerationUnit::m_s2()), "Acceleration needs to be the same");
+
+        // Angle
+        QVERIFY2(179.7_deg == CAngle(179.7, CAngleUnit::deg()), "Angle needs to be the same");
+        QVERIFY2(1.1_rad == CAngle(1.1, CAngleUnit::rad()), "Angle needs to be the same");
+        QVERIFY2(180_deg == CAngle(180, CAngleUnit::deg()), "Angle needs to be the same");
+        QVERIFY2(1_rad == CAngle(1, CAngleUnit::rad()), "Angle needs to be the same");
+
+        // Frequency
+        QVERIFY2(500.7_Hz == CFrequency(500.7, CFrequencyUnit::Hz()), "Frequency needs to be the same");
+        QVERIFY2(99.7_kHz == CFrequency(99.7, CFrequencyUnit::kHz()), "Frequency needs to be the same");
+        QVERIFY2(122.8_MHz == CFrequency(122.8, CFrequencyUnit::MHz()), "Frequency needs to be the same");
+        QVERIFY2(4.1_GHz == CFrequency(4.1, CFrequencyUnit::GHz()), "Frequency needs to be the same");
+        QVERIFY2(3000_Hz == CFrequency(3000, CFrequencyUnit::Hz()), "Frequency needs to be the same");
+        QVERIFY2(122_kHz == CFrequency(122, CFrequencyUnit::kHz()), "Frequency needs to be the same");
+        QVERIFY2(1333_MHz == CFrequency(1333, CFrequencyUnit::MHz()), "Frequency needs to be the same");
+        QVERIFY2(5_GHz == CFrequency(5, CFrequencyUnit::GHz()), "Frequency needs to be the same");
+
+        // Length
+        QVERIFY2(79.24_m == CLength(79.24, CLengthUnit::m()), "Length needs to be the same");
+        QVERIFY2(1024.2_NM == CLength(1024.2, CLengthUnit::NM()), "Length needs to be the same");
+        QVERIFY2(78.1_SM == CLength(78.1, CLengthUnit::SM()), "Length needs to be the same");
+        QVERIFY2(99.9_cm == CLength(99.9, CLengthUnit::cm()), "Length needs to be the same");
+        QVERIFY2(147.2_ft == CLength(147.2, CLengthUnit::ft()), "Length needs to be the same");
+        QVERIFY2(450.4_km == CLength(450.4, CLengthUnit::km()), "Length needs to be the same");
+        QVERIFY2(136.2_mi == CLength(136.2, CLengthUnit::mi()), "Length needs to be the same");
+        QVERIFY2(100_m == CLength(100, CLengthUnit::m()), "Length needs to be the same");
+        QVERIFY2(320_NM == CLength(320, CLengthUnit::NM()), "Length needs to be the same");
+        QVERIFY2(145_SM == CLength(145, CLengthUnit::SM()), "Length needs to be the same");
+        QVERIFY2(200_cm == CLength(200, CLengthUnit::cm()), "Length needs to be the same");
+        QVERIFY2(38000_ft == CLength(38000, CLengthUnit::ft()), "Length needs to be the same");
+        QVERIFY2(100_km == CLength(100, CLengthUnit::km()), "Length needs to be the same");
+        QVERIFY2(78_mi == CLength(78, CLengthUnit::mi()), "Length needs to be the same");
+
+        // Mass
+        QVERIFY2(142.1_g == CMass(142.1, CMassUnit::g()), "Mass needs to be the same");
+        QVERIFY2(2048.123_kg == CMass(2048.123, CMassUnit::kg()), "Mass needs to be the same");
+        QVERIFY2(8.2_lb == CMass(8.2, CMassUnit::lb()), "Mass needs to be the same");
+        QVERIFY2(60.5_tonne == CMass(60.5, CMassUnit::tonne()), "Mass needs to be the same");
+        QVERIFY2(45.3_shortTon == CMass(45.3, CMassUnit::shortTon()), "Mass needs to be the same");
+        QVERIFY2(100_g == CMass(100, CMassUnit::g()), "Mass needs to be the same");
+        QVERIFY2(2048_kg == CMass(2048, CMassUnit::kg()), "Mass needs to be the same");
+        QVERIFY2(100_lb == CMass(100, CMassUnit::lb()), "Mass needs to be the same");
+        QVERIFY2(30_tonne == CMass(30, CMassUnit::tonne()), "Mass needs to be the same");
+        QVERIFY2(10_shortTon == CMass(10, CMassUnit::shortTon()), "Mass needs to be the same");
+
+        // Pressure
+        QVERIFY2(36.111_Pa == CPressure(36.111, CPressureUnit::Pa()), "Pressure needs to be the same");
+        QVERIFY2(45.4_bar == CPressure(45.4, CPressureUnit::bar()), "Pressure needs to be the same");
+        QVERIFY2(67.8_hPa == CPressure(67.8, CPressureUnit::hPa()), "Pressure needs to be the same");
+        QVERIFY2(129.2_psi == CPressure(129.2, CPressureUnit::psi()), "Pressure needs to be the same");
+        QVERIFY2(20.2_inHg == CPressure(20.2, CPressureUnit::inHg()), "Pressure needs to be the same");
+        QVERIFY2(1013.13_mbar == CPressure(1013.13, CPressureUnit::mbar()), "Pressure needs to be the same");
+        QVERIFY2(22.92_mmHg == CPressure(22.92, CPressureUnit::mmHg()), "Pressure needs to be the same");
+        QVERIFY2(40_Pa == CPressure(40, CPressureUnit::Pa()), "Pressure needs to be the same");
+        QVERIFY2(16_bar == CPressure(16, CPressureUnit::bar()), "Pressure needs to be the same");
+        QVERIFY2(67_hPa == CPressure(67, CPressureUnit::hPa()), "Pressure needs to be the same");
+        QVERIFY2(129_psi == CPressure(129, CPressureUnit::psi()), "Pressure needs to be the same");
+        QVERIFY2(20_inHg == CPressure(20, CPressureUnit::inHg()), "Pressure needs to be the same");
+        QVERIFY2(1013_mbar == CPressure(1013, CPressureUnit::mbar()), "Pressure needs to be the same");
+        QVERIFY2(22_mmHg == CPressure(22, CPressureUnit::mmHg()), "Pressure needs to be the same");
+
+        // Speed
+        QVERIFY2(450.2_kts == CSpeed(450.2, CSpeedUnit::kts()), "Speed needs to be the same");
+        QVERIFY2(5.7_m_s == CSpeed(5.7, CSpeedUnit::m_s()), "Speed needs to be the same");
+        QVERIFY2(470.1_NM_h == CSpeed(470.1, CSpeedUnit::NM_h()), "Speed needs to be the same");
+        QVERIFY2(20.45_ft_s == CSpeed(20.45, CSpeedUnit::ft_s()), "Speed needs to be the same");
+        QVERIFY2(115.16_km_h == CSpeed(115.16, CSpeedUnit::km_h()), "Speed needs to be the same");
+        QVERIFY2(160.5_ft_min == CSpeed(160.5, CSpeedUnit::ft_min()), "Speed needs to be the same");
+        QVERIFY2(1020_kts == CSpeed(1020, CSpeedUnit::kts()), "Speed needs to be the same");
+        QVERIFY2(20_m_s == CSpeed(20, CSpeedUnit::m_s()), "Speed needs to be the same");
+        QVERIFY2(500_NM_h == CSpeed(500, CSpeedUnit::NM_h()), "Speed needs to be the same");
+        QVERIFY2(400_ft_s == CSpeed(400, CSpeedUnit::ft_s()), "Speed needs to be the same");
+        QVERIFY2(161_km_h == CSpeed(161, CSpeedUnit::km_h()), "Speed needs to be the same");
+        QVERIFY2(4000_ft_min == CSpeed(4000, CSpeedUnit::ft_min()), "Speed needs to be the same");
+
+        // Temperature
+        QVERIFY2(-15.2_degC == CTemperature(-15.2, CTemperatureUnit::C()), "Temperature needs to be the same");
+        QVERIFY2(68.1_degF == CTemperature(68.1, CTemperatureUnit::F()), "Temperature needs to be the same");
+        QVERIFY2(232.2_degK == CTemperature(232.2, CTemperatureUnit::K()), "Temperature needs to be the same");
+        QVERIFY2(35_degC == CTemperature(35, CTemperatureUnit::C()), "Temperature needs to be the same");
+        QVERIFY2(-20_degF == CTemperature(-20, CTemperatureUnit::F()), "Temperature needs to be the same");
+        QVERIFY2(140_degK == CTemperature(140, CTemperatureUnit::K()), "Temperature needs to be the same");
+
+        // Time
+        QVERIFY2(24.5_d == CTime(24.5, CTimeUnit::d()), "Time needs to be the same");
+        QVERIFY2(23.99_h == CTime(23.99, CTimeUnit::h()), "Time needs to be the same");
+        QVERIFY2(30.1_s == CTime(30.1, CTimeUnit::s()), "Time needs to be the same");
+        QVERIFY2(20.0_ms == CTime(20.0, CTimeUnit::ms()), "Time needs to be the same");
+        QVERIFY2(65.7_min == CTime(65.7, CTimeUnit::min()), "Time needs to be the same");
+        QVERIFY2(53215.0_hms == CTime(53215, CTimeUnit::hms()), "Time needs to be the same");
+        QVERIFY2(236.0_hrmin == CTime(236, CTimeUnit::hrmin()), "Time needs to be the same");
+        QVERIFY2(3030.0_minsec == CTime(3030, CTimeUnit::minsec()), "Time needs to be the same");
+        QVERIFY2(31_d == CTime(31, CTimeUnit::d()), "Time needs to be the same");
+        QVERIFY2(24_h == CTime(24, CTimeUnit::h()), "Time needs to be the same");
+        QVERIFY2(60_s == CTime(60, CTimeUnit::s()), "Time needs to be the same");
+        QVERIFY2(40_ms == CTime(40, CTimeUnit::ms()), "Time needs to be the same");
+        QVERIFY2(36_min == CTime(36, CTimeUnit::min()), "Time needs to be the same");
+        QVERIFY2(102010_hms == CTime(102010, CTimeUnit::hms()), "Time needs to be the same");
+        QVERIFY2(510_hrmin == CTime(510, CTimeUnit::hrmin()), "Time needs to be the same");
+        QVERIFY2(2637_minsec == CTime(2637, CTimeUnit::minsec()), "Time needs to be the same");
     }
 } // namespace
 
