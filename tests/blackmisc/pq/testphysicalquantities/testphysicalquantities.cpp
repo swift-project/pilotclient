@@ -97,6 +97,12 @@ namespace BlackMiscTest
         CFrequencyUnit fu1 = CFrequencyUnit::Hz();
         QVERIFY2(fu1 != du1, "Hz must not be meter");
 
+        // Unary expressions
+        CTemperature temp1(5, CTemperatureUnit::C());
+        QVERIFY2(-temp1 == CTemperature(-5, CTemperatureUnit::C()), "Temperatures must be the same");
+        CTemperature temp2(-8.7, CTemperatureUnit::K());
+        QVERIFY2(-temp2 == CTemperature(8.7, CTemperatureUnit::K()), "Temperatures must be the same");
+
         // null comparisons
         const CLength null(CLength::null());
         const CLength nonNull(1, CLengthUnit::m());

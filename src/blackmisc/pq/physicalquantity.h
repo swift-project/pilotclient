@@ -165,6 +165,9 @@ namespace BlackMisc
             //! Operator /
             PQ operator /(double divide) const;
 
+            //! Unary operator -
+            PQ operator -() const;
+
             //! Equal operator ==
             friend bool operator==(const CPhysicalQuantity &a, const CPhysicalQuantity &b) { return a.equals(b); }
 
