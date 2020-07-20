@@ -91,29 +91,6 @@ namespace BlackMisc
     }
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-/*!
- * Operator for marshalling enums with QDataStream.
- */
-template <typename E, typename = std::enable_if_t<std::is_enum<E>::value>>
-QDataStream &operator <<(QDataStream &stream, E value)
-{
-    return stream << static_cast<int>(value);
-}
-
-/*!
- * Operator for unmarshalling enums with QDataStream.
- */
-template <typename E, typename = std::enable_if_t<std::is_enum<E>::value>>
-QDataStream &operator >>(QDataStream &stream, E &value)
-{
-    int temp;
-    stream >> temp;
-    value = static_cast<E>(temp);
-    return stream;
-}
-#endif // Qt < 5.14.0
-
 /*!
  * Operator for marshalling pairs with QDataStream.
  */

@@ -226,12 +226,6 @@ const QDBusArgument &operator >>(const QDBusArgument &arg, std::pair<A, B> &pair
 }
 // *INDENT-ON*
 
-/*!
- * Non member non-friend streaming for QPixmap
- */
-// const QDBusArgument &operator>>(const QDBusArgument &argument, QPixmap &pixmap);
-// QDBusArgument &operator<<(QDBusArgument &argument, const QPixmap &pixmap);
-
 //! Windows: prevents unloading of QtDBus shared library until the process is terminated.
 //! QtDBus must have been loaded already by the calling process.
 //! Does nothing on non-Windows platforms.
