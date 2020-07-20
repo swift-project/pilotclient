@@ -2208,6 +2208,7 @@ SKIP_FUNCTION_MACROS   = YES
 
 TAGFILES               = $(QDOC_PATH)/qtcore/qtcore.tags=http://doc.qt.io/qt-5/ \
                          $(QDOC_PATH)/qtgui/qtgui.tags=http://doc.qt.io/qt-5/ \
+                         $(QDOC_PATH)/qtdbus/qtdbus.tags=http://doc.qt.io/qt-5/ \
                          $(QDOC_PATH)/qtwidgets/qtwidgets.tags=http://doc.qt.io/qt-5/ \
                          $(QDOC_PATH)/qtxml/qtxml.tags=http://doc.qt.io/qt-5/ \
                          $(QDOC_PATH)/qtnetwork/qtnetwork.tags=http://doc.qt.io/qt-5/
