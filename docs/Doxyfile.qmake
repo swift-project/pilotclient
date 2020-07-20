@@ -2206,12 +2206,12 @@ SKIP_FUNCTION_MACROS   = YES
 # http://stackoverflow.com/questions/22244779/doxygen-generated-documentation-with-auto-generated-links-to-qt-project
 # https://blog.qt.io/blog/2014/08/13/qt-weekly-17-linking-qt-classes-in-documentation-generated-with-doxygen/
 
-TAGFILES               = $(QDOC_PATH)/qtcore/qtcore.tags=http://doc.qt.io/qt-5/ \
-                         $(QDOC_PATH)/qtgui/qtgui.tags=http://doc.qt.io/qt-5/ \
-                         $(QDOC_PATH)/qtdbus/qtdbus.tags=http://doc.qt.io/qt-5/ \
-                         $(QDOC_PATH)/qtwidgets/qtwidgets.tags=http://doc.qt.io/qt-5/ \
-                         $(QDOC_PATH)/qtxml/qtxml.tags=http://doc.qt.io/qt-5/ \
-                         $(QDOC_PATH)/qtnetwork/qtnetwork.tags=http://doc.qt.io/qt-5/
+TAGFILES               = $(DOXY_SRC_ROOT)/docs/tags/qtcore.tags=http://doc.qt.io/qt-5/ \
+                         $(DOXY_SRC_ROOT)/docs/tags/qtgui.tags=http://doc.qt.io/qt-5/ \
+                         $(DOXY_SRC_ROOT)/docs/tags/qtdbus.tags=http://doc.qt.io/qt-5/ \
+                         $(DOXY_SRC_ROOT)/docs/tags/qtwidgets.tags=http://doc.qt.io/qt-5/ \
+                         $(DOXY_SRC_ROOT)/docs/tags/qtxml.tags=http://doc.qt.io/qt-5/ \
+                         $(DOXY_SRC_ROOT)/docs/tags/qtnetwork.tags=http://doc.qt.io/qt-5/
 
 # When a file name is specified after GENERATE_TAGFILE, doxygen will create a
 # tag file that is based on the input files it reads. See section "Linking to

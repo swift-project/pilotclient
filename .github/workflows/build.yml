@@ -72,17 +72,15 @@ jobs:
     env:
       BACKTRACE_TOKEN: ${{ secrets.BACKTRACE_TOKEN }}
       BITROCK_BUILDER: ~/installbuilder/bin/builder
-      QDOC_PATH: $(GITHUB_WORKSPACE)/../Qt/Docs/Qt-$(qt_version)
     outputs:
       warnings: ${{ steps.warnings.outputs.warnings }}
 
     steps:
       - name: Install Qt
-        uses: swift-project/install-qt-action@swift
+        uses: jurplel/install-qt-action@v2
         with:
           version: ${{ env.qt_version }}
           aqtversion: ==0.9.2
-          doc: true
       - name: Download InstallBuilder
         run: |
           wget -O ~/installbuilder.run ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-linux-x64-installer.run
