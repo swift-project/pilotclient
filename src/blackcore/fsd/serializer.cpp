@@ -21,8 +21,7 @@ namespace BlackCore
 {
     namespace Fsd
     {
-        //! private
-        //! @{
+        //! \cond
 
         namespace Private
         {
@@ -443,7 +442,7 @@ namespace BlackCore
             return AtisLineType::Unknown;
         }
 
-        //! @}
+        //! \endcond
 
     } // ns
 } // ns
