@@ -8,25 +8,11 @@
 \a swift is a cross-platform, open source client application for virtual air traffic simulation written in C++/Qt.
 The application allows users of flight simulation software to connect to online networks as pilots and interact with virtual air traffic controllers.
 
-\section starthere Start here
+\section links Links
 
-- \ref developersguide "Developers’ Guide"<br>
-Guide and design documentation
-
-- \ref samples "Samples"<br>
-Simple sample programs demonstrating swift library usage
-
-\if PRIVATE_TESTS
-- \ref tests "Tests"<br>
-Unit and integration tests
-\endif
-
-- \ref license "swift license"<br>
-\a swift is licenced under the GPLv3 with exceptions.
-
-\section resources Resources
-
-- <a href="http://www.swift-project.org">swift BLOG website</a>
-- <a href="https://dev.swift-project.org/">swift developer website</a>
+- <a href="http://www.swift-project.org/">swift website</a>
+- <a href="http://docs.swift-project.org/">user guide</a>
+- <a href="https://docs.swift-project.org/doku.php?id=developer_documentation">developer guide</a>
+- <a href="https://github.com/swift-project/pilotclient">github repository</a>
 
 */

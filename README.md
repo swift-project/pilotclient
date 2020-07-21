@@ -41,4 +41,4 @@ _swift_ is written in modern C++14 using the Qt framework.
 Pull requests should be made against the current active development branch,
 which is `develop/0.9.5`.
 
-[:blue_book: Developer documentation](https://docs.swift-project.org/dev/)
+[:blue_book: Developer guide](https://docs.swift-project.org/doku.php?id=developer_documentation)
