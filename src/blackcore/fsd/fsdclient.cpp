@@ -546,6 +546,14 @@ namespace BlackCore
             else { return; }
             const TextMessage textMessage(getOwnCallsignAsString(), receiver, message);
             sendQueudedMessage(textMessage);
+            if(receiver == QStringLiteral("*S"))
+            {
+                const CCallsign sender(getOwnCallsignAsString());
+                const CCallsign recipient(receiver);
+                CTextMessage t(message, sender, recipient);
+                t.markAsSent();
+                emit textMessageSent(t);
+            }
             increaseStatisticsValue(QStringLiteral("sendTextMessages"));
         }
 

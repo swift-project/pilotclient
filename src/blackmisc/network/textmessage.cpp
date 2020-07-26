@@ -208,6 +208,12 @@ namespace BlackMisc
             return cs.isBroadcastCallsign();
         }
 
+        bool CTextMessage::isWallopMessage() const
+        {
+            const CCallsign cs = this->getRecipientCallsign();
+            return cs.getStringAsSet() == "*S";
+        }
+
         QString CTextMessage::asString(bool withSender, bool withRecipient, const QString &separator) const
         {
             QString s(this->getFormattedUtcTimestampHms());

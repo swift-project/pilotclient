@@ -117,6 +117,9 @@ namespace BlackMisc
             //! Is this a broadcast message
             bool isBroadcastMessage() const;
 
+            //! Is this a message send via .wallop
+            bool isWallopMessage() const;
+
             //! Whole message as formatted string. Used to display message in a console window.
             //! \param withSender        include sender information in string?
             //! \param withRecipient     include recipient information in string?
