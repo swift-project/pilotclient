@@ -145,6 +145,12 @@ namespace BlackMisc
             m_callsign = "BROADCAST";
         }
 
+        void CCallsign::markAsWallopCallsign()
+        {
+            m_callsignAsSet = "SUP";
+            m_callsign = "SUP";
+        }
+
         bool CCallsign::isMaybeCopilotCallsign(const CCallsign &pilotCallsign) const
         {
             return  m_callsign.startsWith(pilotCallsign.asString()) &&

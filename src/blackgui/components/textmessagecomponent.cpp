@@ -550,6 +550,9 @@ namespace BlackGui
             const bool isBroadcast = textMessage.isBroadcastMessage();
             if (isBroadcast) { cs.markAsBroadcastCallsign(); }
 
+            const bool isWallopMessage = textMessage.isWallopMessage();
+            if(isWallopMessage) { cs.markAsWallopCallsign(); }
+
             const QWidget *tab = this->findTextMessageTabByCallsign(cs);
             if (!tab) { tab = this->addNewTextMessageTab(cs); }
             Q_ASSERT_X(tab, Q_FUNC_INFO, "Missing tab");
@@ -725,6 +728,10 @@ namespace BlackGui
             {
                 CLogMessage(this).validationError(u"Incorrect message channel");
                 return {};
+            } else if (ui->tw_TextMessages->tabText(index) == "SUP")
+            {
+                CLogMessage(this).validationError(u"Message cannot be send to SUP channel. To send another wallop message use .wallop instead");
+                return{};
             }
             else
             {
