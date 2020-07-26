@@ -32,6 +32,7 @@
 #include "blackmisc/sequence.h"
 #include "blackmisc/verify.h"
 
+#include <QApplication>
 #include <QLayout>
 #include <QLineEdit>
 #include <QPushButton>
@@ -243,6 +244,8 @@ namespace BlackGui
                     if (relevantForMe && audioCsMentioned && ownAircraft.hasCallsign() && message.mentionsCallsign(ownAircraft.getCallsign()))
                     {
                         sGui->getCContextAudioBase()->playNotification(CNotificationSounds::NotificationTextCallsignMentioned, false);
+                        // Flash taskbar icon
+                        QApplication::alert(QWidget::topLevelWidget());
                     }
                 }
                 else if (message.isPrivateMessage())
@@ -250,6 +253,8 @@ namespace BlackGui
                     // private message
                     this->addPrivateChannelTextMessage(message);
                     relevantForMe = true;
+                    // Flash taskbar icon
+                    QApplication::alert(QWidget::topLevelWidget());
                 }
                 else
                 {
