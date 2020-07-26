@@ -518,7 +518,11 @@ namespace BlackCore
             {
                 if (parser.countParts() < 2) { return false; }
                 if (!m_fsdClient)            { return false; }
-                if (!this->isConnected())    { return false; }
+                if (!this->isConnected())
+                {
+                    CLogMessage(this).validationError(u"Network needs to be connected");
+                    return false;
+                }
                 const QString wallopMsg = parser.partAndRemainingStringAfter(1);
                 if (wallopMsg.isEmpty())
                 {
