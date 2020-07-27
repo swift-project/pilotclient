@@ -82,6 +82,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAirportList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Aviation::CAirport>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Aviation::CAirport>)
 
 #endif //guard

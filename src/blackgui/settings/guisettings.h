@@ -108,6 +108,5 @@ namespace BlackGui
 
 Q_DECLARE_METATYPE(BlackGui::Settings::CGeneralGuiSettings)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackGui::Settings::CGeneralGuiSettings>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackGui::Settings::CGeneralGuiSettings>)
 
 #endif // guard

@@ -54,7 +54,6 @@ namespace BlackMisc
 } //namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CIdentifierList)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::CIdentifier>)
 // in set: Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::CIdentifier>)
 
 #endif //guard

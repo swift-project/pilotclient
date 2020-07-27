@@ -46,6 +46,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CInterpolationSetupList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign>)
 
 #endif //guard

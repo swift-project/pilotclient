@@ -133,6 +133,5 @@ namespace BlackMisc
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatedAircraftList)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatedAircraftPerCallsign)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::CSimulatedAircraft>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Simulation::CSimulatedAircraft>)
 
 #endif //guard

@@ -574,6 +574,5 @@ namespace BlackMisc
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftModelList)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftModelPerCallsign)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::CAircraftModel>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Simulation::CAircraftModel>)
 
 #endif //guard

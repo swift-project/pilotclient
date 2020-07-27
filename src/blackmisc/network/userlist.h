@@ -45,6 +45,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Network::CUserList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Network::CUser>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Network::CUser>)
 
 #endif //guard

@@ -76,6 +76,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Network::CRemoteFileList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Network::CRemoteFile>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Network::CRemoteFile>)
 
 #endif //guard

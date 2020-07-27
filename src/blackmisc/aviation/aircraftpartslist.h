@@ -56,7 +56,6 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftPartsList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Aviation::CAircraftParts>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Aviation::CAircraftParts>)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftPartsPerCallsign)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftPartsListPerCallsign)
 

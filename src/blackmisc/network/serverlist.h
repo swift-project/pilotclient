@@ -68,6 +68,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Network::CServerList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Network::CServer>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Network::CServer>)
 
 #endif //guard

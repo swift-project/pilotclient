@@ -74,6 +74,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::CCountryList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::CCountry>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::CCountry>)
 
 #endif //guard

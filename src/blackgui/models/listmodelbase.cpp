@@ -401,7 +401,7 @@ namespace BlackGui
         {
             if (container.isEmpty()) { return; }
             beginInsertRows(QModelIndex(), 0, 0);
-            m_container.insert(container);
+            m_container.push_back(container);
             endInsertRows();
 
             if (this->hasFilter())

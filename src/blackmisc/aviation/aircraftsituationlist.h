@@ -222,7 +222,6 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituationList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Aviation::CAircraftSituation>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Aviation::CAircraftSituation>)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituationPerCallsign)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituationListPerCallsign)
 

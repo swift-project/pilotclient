@@ -45,6 +45,5 @@ namespace BlackMisc
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CPresentWeatherList)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Weather::CPresentWeather>)
 
 #endif //guard

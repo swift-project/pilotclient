@@ -55,6 +55,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::CPlatformSet)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::CPlatform>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::CPlatform>)
 
 #endif //guard

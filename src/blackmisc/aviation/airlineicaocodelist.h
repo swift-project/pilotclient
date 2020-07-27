@@ -139,6 +139,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAirlineIcaoCodeList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Aviation::CAirlineIcaoCode>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Aviation::CAirlineIcaoCode>)
 
 #endif //guard

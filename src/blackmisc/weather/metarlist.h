@@ -50,6 +50,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CMetarList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Weather::CMetar>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Weather::CMetar>)
 
 #endif //guard

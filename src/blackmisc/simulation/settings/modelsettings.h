@@ -84,6 +84,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::Settings::CModelSettings)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::Settings::CModelSettings>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Simulation::Settings::CModelSettings>)
 
 #endif // guard

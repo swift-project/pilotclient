@@ -137,7 +137,7 @@ namespace BlackMisc
                 QJsonValueRef ref = (*i);
                 typename Derived::value_type val;
                 ref >> val;
-                derived().insert(std::move(val));
+                derived().push_back(std::move(val));
             }
         }
 
@@ -227,7 +227,7 @@ namespace BlackMisc
         {
             derived().clear();
             argument.beginArray();
-            while (!argument.atEnd()) { typename Derived::value_type value; argument >> value; derived().insert(value); }
+            while (!argument.atEnd()) { typename Derived::value_type value; argument >> value; derived().push_back(value); }
             argument.endArray();
         }
 

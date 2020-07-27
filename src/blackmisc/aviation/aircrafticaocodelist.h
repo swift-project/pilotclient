@@ -148,6 +148,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftIcaoCodeList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Aviation::CAircraftIcaoCode>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Aviation::CAircraftIcaoCode>)
 
 #endif //guard

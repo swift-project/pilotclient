@@ -43,6 +43,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::CPropertyIndexList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::CPropertyIndex>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::CPropertyIndex>)
 
 #endif //guard

@@ -83,6 +83,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::FsCommon::CAircraftCfgEntries>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Simulation::FsCommon::CAircraftCfgEntries>)
 
 #endif // guard

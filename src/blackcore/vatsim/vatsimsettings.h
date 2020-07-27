@@ -220,7 +220,6 @@ namespace BlackCore
 
 Q_DECLARE_METATYPE(BlackCore::Vatsim::CReaderSettings)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackCore::Vatsim::CReaderSettings>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackCore::Vatsim::CReaderSettings>)
 Q_DECLARE_METATYPE(BlackCore::Vatsim::CRawFsdMessageSettings)
 Q_DECLARE_METATYPE(BlackCore::Vatsim::CRawFsdMessageSettings::FileWriteMode)
 

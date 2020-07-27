@@ -1211,7 +1211,7 @@ namespace BlackSimPlugin
                 if (!pendingSimObj.hasCallsign()) { continue; }
                 if (pendingSimObj.isTerrainProbe() || aircraftCallsignsInRange.contains(pendingSimObj.getCallsign()))
                 {
-                    toBeAddedAircraft.insert(pendingSimObj.getAircraft());
+                    toBeAddedAircraft.push_back(pendingSimObj.getAircraft());
                 }
                 else
                 {

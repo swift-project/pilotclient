@@ -65,6 +65,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CMatchingStatistics)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::CMatchingStatisticsEntry>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Simulation::CMatchingStatisticsEntry>)
 
 #endif // guard

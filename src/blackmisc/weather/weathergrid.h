@@ -72,6 +72,5 @@ namespace BlackMisc
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CWeatherGrid)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Weather::CGridPoint>)
 
 #endif //guard

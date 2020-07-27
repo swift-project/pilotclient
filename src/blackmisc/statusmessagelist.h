@@ -146,6 +146,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::CStatusMessageList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::CStatusMessage>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::CStatusMessage>)
 
 #endif // guard

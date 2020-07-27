@@ -63,6 +63,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Input::CActionHotkeyList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Input::CActionHotkey>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Input::CActionHotkey>)
 
 #endif // guard

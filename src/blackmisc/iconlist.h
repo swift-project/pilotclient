@@ -53,6 +53,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::CIconList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::CIcon>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::CIcon>)
 
 #endif // guard

@@ -49,6 +49,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Network::CEcosystemList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Network::CEcosystem>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Network::CEcosystem>)
 
 #endif //guard

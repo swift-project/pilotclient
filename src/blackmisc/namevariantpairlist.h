@@ -65,6 +65,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::CNameVariantPairList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::CNameVariantPair>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::CNameVariantPair>)
 
 #endif //guard

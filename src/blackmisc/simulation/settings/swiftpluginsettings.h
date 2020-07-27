@@ -105,6 +105,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::Settings::CSwiftPluginSettings)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::Settings::CSwiftPluginSettings>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Simulation::Settings::CSwiftPluginSettings>)
 
 #endif // guard

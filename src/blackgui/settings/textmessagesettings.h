@@ -163,6 +163,5 @@ namespace BlackGui
 
 Q_DECLARE_METATYPE(BlackGui::Settings::CTextMessageSettings)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackGui::Settings::CTextMessageSettings>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackGui::Settings::CTextMessageSettings>)
 
 #endif // guard

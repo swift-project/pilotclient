@@ -229,22 +229,6 @@ namespace BlackMisc
         template <typename I>
         void push_back(const CRange<I> &range) { std::copy(range.begin(), range.end(), std::back_inserter(*this)); }
 
-        //! Synonym for push_back.
-        void insert(const T &value) { push_back(value); }
-
-        //! Synonym for push_back.
-        void insert(T &&value) { push_back(std::move(value)); }
-
-        //! Synonym for push_back.
-        void insert(const CSequence &other) { push_back(other); }
-
-        //! Synonym for push_back.
-        void insert(CSequence &&other) { push_back(std::move(other)); }
-
-        //! Synonym for push_back.
-        template <typename I>
-        void insert(const CRange<I> &range) { std::copy(range.begin(), range.end(), std::back_inserter(*this)); }
-
         //! Concatenates two sequences and returns the result.
         CSequence join(const CSequence &other) const { CSequence copy(*this); copy.push_back(other); return copy; }
 
@@ -585,10 +569,6 @@ namespace BlackMisc
     };
 } //namespace BlackMisc
 
-Q_DECLARE_METATYPE(BlackMisc::CSequence<int>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<uint>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<qlonglong>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<qulonglong>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<double>)
+Q_DECLARE_SEQUENTIAL_CONTAINER_METATYPE(BlackMisc::CSequence)
 
 #endif // guard

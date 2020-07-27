@@ -54,6 +54,5 @@ namespace BlackMisc
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CVisibilityLayerList)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Weather::CVisibilityLayer>)
 
 #endif //guard

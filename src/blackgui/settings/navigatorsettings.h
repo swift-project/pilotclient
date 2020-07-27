@@ -111,6 +111,5 @@ namespace BlackGui
 
 Q_DECLARE_METATYPE(BlackGui::Settings::CNavigatorSettings)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackGui::Settings::CNavigatorSettings>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackGui::Settings::CNavigatorSettings>)
 
 #endif // guard

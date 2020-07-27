@@ -54,6 +54,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Geo::CCoordinateGeodeticList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Geo::CCoordinateGeodetic>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Geo::CCoordinateGeodetic>)
 
 #endif //guard

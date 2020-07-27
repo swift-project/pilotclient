@@ -46,6 +46,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Input::CJoystickButtonList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Input::CJoystickButton>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Input::CJoystickButton>)
 
 #endif //guard

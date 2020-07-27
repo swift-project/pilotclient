@@ -54,6 +54,5 @@ namespace BlackMisc
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CWindLayerList)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Weather::CWindLayer>)
 
 #endif //guard

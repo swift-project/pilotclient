@@ -51,6 +51,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Db::CDbInfoList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Db::CDbInfo>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Db::CDbInfo>)
 
 #endif //guard

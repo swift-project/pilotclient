@@ -119,6 +119,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Db::CArtifactList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Db::CArtifact>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Db::CArtifact>)
 
 #endif //guard

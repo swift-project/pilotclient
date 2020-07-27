@@ -79,6 +79,5 @@ namespace BlackGui
 
 Q_DECLARE_METATYPE(BlackGui::Settings::CAtcStationsSettings)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackGui::Settings::CAtcStationsSettings>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackGui::Settings::CAtcStationsSettings>)
 
 #endif // guard

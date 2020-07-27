@@ -57,7 +57,6 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Network::CClientList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Network::CClient>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Network::CClient>)
 Q_DECLARE_METATYPE(BlackMisc::Network::CClientPerCallsign)
 
 #endif //guard

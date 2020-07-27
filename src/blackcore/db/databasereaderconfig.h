@@ -152,6 +152,5 @@ namespace BlackCore
 Q_DECLARE_METATYPE(BlackCore::Db::CDatabaseReaderConfig)
 Q_DECLARE_METATYPE(BlackCore::Db::CDatabaseReaderConfigList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackCore::Db::CDatabaseReaderConfig>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackCore::Db::CDatabaseReaderConfig>)
 
 #endif // guard

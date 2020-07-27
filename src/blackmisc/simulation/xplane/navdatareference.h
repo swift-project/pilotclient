@@ -104,7 +104,6 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::XPlane::CNavDataReference)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::XPlane::CNavDataReferenceList)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Simulation::XPlane::CNavDataReference>)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::XPlane::CNavDataReference>)
 
 #endif

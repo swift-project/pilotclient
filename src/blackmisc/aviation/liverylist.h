@@ -95,6 +95,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CLiveryList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Aviation::CLivery>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Aviation::CLivery>)
 
 #endif //guard

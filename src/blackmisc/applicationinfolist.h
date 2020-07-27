@@ -52,7 +52,6 @@ namespace BlackMisc
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::CApplicationInfoList)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::CApplicationInfo>)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::CApplicationInfo>)
 
 #endif

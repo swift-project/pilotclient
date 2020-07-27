@@ -142,6 +142,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::CLogCategoryList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::CLogCategory>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::CLogCategory>)
 
 #endif

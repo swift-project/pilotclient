@@ -132,6 +132,5 @@ namespace BlackGui
 
 Q_DECLARE_METATYPE(BlackGui::Settings::CDockWidgetSettings)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackGui::Settings::CDockWidgetSettings>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackGui::Settings::CDockWidgetSettings>)
 
 #endif // guard

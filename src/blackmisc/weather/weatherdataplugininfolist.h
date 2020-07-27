@@ -49,6 +49,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CWeatherDataPluginInfoList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Weather::CWeatherDataPluginInfo>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Weather::CWeatherDataPluginInfo>)
 
 #endif // guard

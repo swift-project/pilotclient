@@ -38,6 +38,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::CVariantList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::CVariant>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::CVariant>)
 
 #endif
