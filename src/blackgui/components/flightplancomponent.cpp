@@ -474,7 +474,7 @@ namespace BlackGui
             cruiseTAS.parseFromString(v, CPqString::SeparatorBestGuess);
             if (cruiseTAS.isNull())
             {
-                messages.push_back(CStatusMessage(this).validationError(u"Wrong TAS, %1. Try adding a unit like '100kts' or '150kmh'") << ui->lbl_CruiseTrueAirspeed->text());
+                messages.push_back(CStatusMessage(this).validationError(u"Wrong TAS, %1. Try adding a unit like '100kts' or '150km/h'") << ui->lbl_CruiseTrueAirspeed->text());
                 flightPlan.setDestinationAirportIcao(defaultIcao());
             }
             else
