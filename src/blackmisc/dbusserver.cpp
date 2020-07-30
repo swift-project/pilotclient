@@ -232,6 +232,8 @@ namespace BlackMisc
         if (! object) { return; }
         m_objects.insert(path, object); // will be registered when P2P connection is established
 
+        QObject::connect(object, &QObject::destroyed, this, [this, path] { m_objects.remove(path); });
+
         switch (m_serverMode)
         {
         case SERVERMODE_SESSIONBUS:
