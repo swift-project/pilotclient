@@ -14,6 +14,7 @@
 #include "blackmisc/sharedstate/datalink.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/variantlist.h"
+#include "blackmisc/identifier.h"
 #include <QSharedPointer>
 
 class QDBusConnection;
@@ -45,6 +46,9 @@ namespace BlackMisc
 
             //! Destructor.
             virtual ~CDataLinkDBus() override;
+
+            //! Override identifier for testing purposes.
+            void overrideIdentifier(const CIdentifier &);
 
             //! Initialize on server side.
             void initializeLocal(CDBusServer *server = nullptr);
@@ -83,6 +87,8 @@ namespace BlackMisc
             QTimer m_watchTimer;
             DBus::IHub *m_hub = nullptr;
             QSharedPointer<DBus::IDuplex> m_duplex;
+            CIdentifier m_identifier = CIdentifier::anonymous();
+
             QMap<QString, Channel> m_channels;
             mutable QMutex m_channelsMutex { QMutex::Recursive };
         };

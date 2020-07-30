@@ -53,7 +53,7 @@ namespace BlackMisc
                 virtual bool isConnected() const = 0;
 
                 //! Get a duplex object for the calling process.
-                virtual std::pair<QSharedPointer<IDuplex>, QFuture<void>> getDuplex() = 0;
+                virtual std::pair<QSharedPointer<IDuplex>, QFuture<void>> getDuplex(const CIdentifier &) = 0;
 
             public slots:
                 //! Create a duplex object for the identified process.

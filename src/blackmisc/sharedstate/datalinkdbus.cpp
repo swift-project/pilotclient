@@ -35,6 +35,11 @@ namespace BlackMisc
             setConnectionStatus(false);
         }
 
+        void CDataLinkDBus::overrideIdentifier(const CIdentifier &id)
+        {
+            m_identifier = id;
+        }
+
         void CDataLinkDBus::initializeLocal(CDBusServer *server)
         {
             Q_ASSERT_X(!m_hub, Q_FUNC_INFO, "Already initialized");
@@ -62,7 +67,7 @@ namespace BlackMisc
             if (m_duplex) { return; }
 
             QFuture<void> ready;
-            std::tie(m_duplex, ready) = m_hub->getDuplex();
+            std::tie(m_duplex, ready) = m_hub->getDuplex(m_identifier);
             connect(m_duplex.get(), &IDuplex::eventPosted, this, &CDataLinkDBus::handlePeerEvent);
             connect(m_duplex.get(), &IDuplex::peerSubscriptionsReceived, this, &CDataLinkDBus::setPeerSubscriptions);
             connect(m_duplex.get(), &IDuplex::requestReceived, this, &CDataLinkDBus::handlePeerRequest);

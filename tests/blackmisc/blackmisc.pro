@@ -16,6 +16,8 @@ SUBDIRS += \
     testlibrarypath \
     testprocess \
     testpropertyindex \
+    testsharedstate \
+    testsharedstate/sharedstatetestserver \
     testslot \
     teststatusmessage \
     teststringutils \

@@ -42,6 +42,7 @@ returnDanglingLifetime:src/blackmisc/iterator.h
 unreadVariable:tests/blackcore/testreaders/testreaders.cpp
 unknownMacro:src/blackmisc/aviation/altitude.h
 unknownMacro:src/blackmisc/geo/elevationplane.h
+unknownMacro:tests/blackmisc/testsharedstate/testsharedstate.h
 ctuArrayIndex:src/xswiftbus/libxplanemp/src/XPMPPlaneRenderer.cpp
 
 // False positive memory leaks due to Qt parent/child relationship

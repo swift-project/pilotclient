@@ -24,10 +24,10 @@ namespace BlackMisc
                 if (server) { server->addObject(BLACKMISC_HUB_PATH, this); }
             }
 
-            std::pair<QSharedPointer<IDuplex>, QFuture<void>> CHub::getDuplex()
+            std::pair<QSharedPointer<IDuplex>, QFuture<void>> CHub::getDuplex(const CIdentifier &identifier)
             {
-                auto future = openDuplexAsync(CIdentifier::anonymous());
-                return std::make_pair(m_clients.value(CIdentifier::anonymous()), future);
+                auto future = openDuplexAsync(identifier);
+                return std::make_pair(m_clients.value(identifier), future);
             }
 
             bool CHub::openDuplex(const BlackMisc::CIdentifier &client)

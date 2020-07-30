@@ -31,11 +31,11 @@ namespace BlackMisc
                 return m_interface->isValid();
             }
 
-            std::pair<QSharedPointer<IDuplex>, QFuture<void>> CHubProxy::getDuplex()
+            std::pair<QSharedPointer<IDuplex>, QFuture<void>> CHubProxy::getDuplex(const CIdentifier &identifier)
             {
                 auto duplex = QSharedPointer<CDuplexProxy>::create(m_interface->connection(), m_service, this);
-                connect(duplex.get(), &QObject::destroyed, this, [ = ] { closeDuplex(CIdentifier::anonymous()); });
-                return std::make_pair(duplex, openDuplexAsync(CIdentifier::anonymous()));
+                connect(duplex.get(), &QObject::destroyed, this, [ = ] { closeDuplex(identifier); });
+                return std::make_pair(duplex, openDuplexAsync(identifier));
             }
 
             bool CHubProxy::openDuplex(const CIdentifier& client)
