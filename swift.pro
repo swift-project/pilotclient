@@ -28,7 +28,7 @@ swiftConfig(unitTests) {
     SUBDIRS += tests
 }
 
-clang|gcc: system($$QMAKE_CXX --version)
+llvm|gcc:  system($$QMAKE_CXX --version)
 else:msvc: system($$QMAKE_CXX)
 
 include(install.pri)
