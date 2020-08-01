@@ -19,7 +19,8 @@ class CAfvClientBridge : public QObject
 {
     Q_OBJECT
 
-    //! Bridge properties @{
+    //! Bridge properties
+    //! @{
     Q_PROPERTY(double inputVolumePeakVU  READ getInputVolumePeakVU  NOTIFY inputVolumePeakVU)
     Q_PROPERTY(double outputVolumePeakVU READ getOutputVolumePeakVU NOTIFY outputVolumePeakVU)
     Q_PROPERTY(BlackCore::Afv::Clients::CAfvClient::ConnectionStatus connectionStatus READ getConnectionStatus NOTIFY connectionStatusChanged)
@@ -31,7 +32,8 @@ public:
     //! Ctor
     CAfvClientBridge(BlackCore::Afv::Clients::CAfvClient *afvClient, QObject *parent = nullptr);
 
-    //! VU values, 0..1 @{
+    //! VU values, 0..1
+    //! @{
     double getInputVolumePeakVU()  const { return m_afvClient->getInputVolumePeakVU(); }
     double getOutputVolumePeakVU() const { return m_afvClient->getOutputVolumePeakVU(); }
     //! @}
@@ -42,7 +44,8 @@ public:
         return m_afvClient->getConnectionStatus();
     }
 
-    //! Callsigns currently received @{
+    //! Callsigns currently received
+    //! @{
     QString getReceivingCallsignsCom1() { return m_afvClient->getReceivingCallsignsStringCom1(); }
     QString getReceivingCallsignsCom2() { return m_afvClient->getReceivingCallsignsStringCom2(); }
     //! @}
@@ -57,7 +60,8 @@ public:
     //! \copydoc BlackCore::Afv::Clients::CAfvClient::disconnectFrom
     Q_INVOKABLE void disconnectFrom() { m_afvClient->disconnectFrom(); }
 
-    //! Audio devices @{
+    //! Audio devices
+    //! @{
     Q_INVOKABLE QStringList availableInputDevices() const { return m_afvClient->availableInputDevices(); }
     Q_INVOKABLE QStringList availableOutputDevices() const { return m_afvClient->availableOutputDevices(); }
     //! @}
@@ -83,7 +87,8 @@ public:
     //! \copydoc BlackCore::Afv::Clients::CAfvClient::setPtt
     Q_INVOKABLE void setPtt(bool active) { m_afvClient->setPtt(active); }
 
-    //! Loopback @{
+    //! Loopback
+    //! @{
     Q_INVOKABLE void setLoopBack(bool on) { m_afvClient->setLoopBack(on); }
     Q_INVOKABLE bool isLoopback() const   { return m_afvClient->isLoopback(); }
     //! @}
@@ -108,7 +113,8 @@ signals:
     //! PTT status in this particular AFV client
     void ptt(bool active, BlackMisc::Audio::PTTCOM pttcom, const BlackMisc::CIdentifier &identifier);
 
-    //! VU levels @{
+    //! VU levels
+    //! @{
     void inputVolumePeakVU(double value);
     void outputVolumePeakVU(double value);
     //! @}

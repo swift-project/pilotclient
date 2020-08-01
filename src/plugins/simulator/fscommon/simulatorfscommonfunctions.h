@@ -18,7 +18,8 @@ namespace BlackSimPlugin
 {
     namespace FsCommon
     {
-        //! Correctly casted values/checks @{
+        //! Correctly casted values/checks
+        //! @{
         HRESULT inline  s_ok() { return S_OK; }
         HRESULT inline  s_false() { return S_FALSE; }
         static bool inline isOk(HRESULT result) { return result == s_ok(); }

@@ -160,7 +160,8 @@ namespace XSwiftBus
         //! Get whether all wheels are on the ground
         bool getAllWheelsOnGround() const { return m_onGroundAll.get(); }
 
-        //! COM Selection 6/7 @{
+        //! COM Selection 6/7
+        //! @{
         int getComSelection() const { return m_comAudioSelection.get(); }
         bool isCom1Selected() const { return this->getComSelection() == 6; }
         bool isCom2Selected() const { return this->getComSelection() == 7; }

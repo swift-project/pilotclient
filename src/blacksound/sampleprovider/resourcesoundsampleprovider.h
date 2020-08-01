@@ -32,12 +32,14 @@ namespace BlackSound
             //! copydoc ISampleProvider::isFinished
             virtual bool isFinished() const override { return m_isFinished; }
 
-            //! Looping @{
+            //! Looping
+            //! @{
             bool looping() const { return m_looping; }
             void setLooping(bool looping) { m_looping = looping; }
-            // @}
+            //! @}
 
-            //! Gain @{
+            //! Gain
+            //! @{
             double gain() const { return m_gain; }
             void setGain(double gain) { m_gain = gain; }
             //! @}

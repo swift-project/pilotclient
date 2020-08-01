@@ -100,7 +100,8 @@ namespace BlackSimPlugin
             char atcAirline[64];       //!< Airline used by ATC
             char atcFlightNumber[8];   //!< Flight Number used by ATC
 
-            //! Copy the strings, length from docu @{
+            //! Copy the strings, length from docu
+            //! @{
             void copyAtcId(const char *c)        { strncpy_s(atcId, c, 10);          atcId[9] = 0; }
             void copyAtcAirline(const char *c)   { strncpy_s(atcAirline, c, 50);     atcAirline[49] = 0; }
             void copyFlightNumber(const char *c) { strncpy_s(atcFlightNumber, c, 6); atcFlightNumber[5] = 0; }

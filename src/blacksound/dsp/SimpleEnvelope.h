@@ -91,17 +91,20 @@ namespace chunkware_simple
         //! Dtor
         virtual ~AttRelEnvelope() {}
 
-        //! Attack time constant @{
+        //! Attack time constant
+        //! @{
         virtual void   setAttack(double ms);
         virtual double getAttack(void) const { return att_.getTc(); }
         //! @}
 
-        //! Release time constant @{
+        //! Release time constant
+        //! @{
         virtual void   setRelease(double ms);
         virtual double getRelease(void) const { return rel_.getTc(); }
         //! @}
 
-        //! Sample rate dependencies @{
+        //! Sample rate dependencies
+        //! @{
         virtual void   setSampleRate(double sampleRate);
         virtual double getSampleRate(void) const { return att_.getSampleRate(); }
         //! @}

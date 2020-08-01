@@ -31,7 +31,8 @@ namespace BlackGui
     {
         Q_OBJECT
 
-        //! Properties @{
+        //! Properties
+        //! @{
         Q_PROPERTY(QColor lowColor  READ getLowColor  WRITE setLowColor)
         Q_PROPERTY(QColor highColor READ getHighColor WRITE setHighColor)
         Q_PROPERTY(QColor peakColor READ getPeakColor WRITE setPeakColor)
@@ -53,7 +54,8 @@ namespace BlackGui
         //! Values
         void levelChanged(double level);
 
-        //! Color properties @{
+        //! Color properties
+        //! @{
         const QColor &getLowColor()  const { return m_lowColor; }
         const QColor &getHighColor() const { return m_highColor; }
         const QColor &getPeakColor() const { return m_peakColor; }

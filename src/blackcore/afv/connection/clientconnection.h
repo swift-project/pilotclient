@@ -58,7 +58,8 @@ namespace BlackCore
                 //! Is alive?
                 bool isVoiceServerAlive() const { return m_connection.isVoiceServerAlive(); }
 
-                //! Receiving audio? @{
+                //! Receiving audio?
+                //! @{
                 void setReceiveAudio(bool value) { m_connection.setReceiveAudio(value); }
                 bool receiveAudio()    const { return m_connection.isReceivingAudio(); }
                 bool receiveAudioDto() const { return m_receiveAudioDto; }
@@ -97,7 +98,8 @@ namespace BlackCore
                 //! Authenticated since when
                 qint64 secondsSinceAuthentication() const { return m_connection.secondsSinceAuthentication(); }
 
-                //! User data @{
+                //! User data
+                //! @{
                 const QString &getUserName() const { return m_connection.getUserName(); }
                 const QString &getCallsign() const { return m_connection.getCallsign(); }
                 const QString &getPassword() const { static const QString e; return m_apiServerConnection ? m_apiServerConnection->getPassword() : e; }

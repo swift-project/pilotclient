@@ -532,7 +532,9 @@ namespace BlackCore
         // 1) simple signature
         // 2) fired directly after read, no need to wait for other entities
 
-        //! \name Simplified read signals @{
+        //! \name Simplified read signals
+        //! @{
+
         //! All swift DB data have been read
         void swiftDbAllDataRead();
 

@@ -283,7 +283,8 @@ namespace BlackMisc
                 IMultiSimulatorModelCaches(QObject *parent = nullptr) : QObject(parent)
                 { }
 
-                //! \name Cache has been changed. This will only detect changes elsewhere, owned caches will not signal local changes @{
+                //! Cache has been changed. This will only detect changes elsewhere, owned caches will not signal local changes
+                //! @{
                 void changedFsx() { this->emitCacheChanged(CSimulatorInfo::fsx()); }
                 void changedFs9() { this->emitCacheChanged(CSimulatorInfo::fs9()); }
                 void changedP3D() { this->emitCacheChanged(CSimulatorInfo::p3d()); }
@@ -298,7 +299,8 @@ namespace BlackMisc
                 //! Emit cacheChanged() utility function (allows breakpoint)
                 void emitCacheChanged(const CSimulatorInfo &simulator);
 
-                //! Cache synchronized flag @{
+                //! Cache synchronized flag
+                //! @{
                 std::atomic_bool m_syncFsx { false };
                 std::atomic_bool m_syncP3D { false };
                 std::atomic_bool m_syncFS9 { false };
@@ -456,7 +458,7 @@ namespace BlackMisc
                 public IModelsForSimulatorUpdatable
             {
             public:
-                //! \name Look like IMultiSimulatorModelCaches interface
+                //! Look like IMultiSimulatorModelCaches interface
                 //! @{
                 CAircraftModelList getCachedModels(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().getCachedModels(simulator); }
                 int getCachedModelsCount(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().getCachedModelsCount(simulator); }
@@ -509,7 +511,7 @@ namespace BlackMisc
                 public IModelsForSimulatorUpdatable
             {
             public:
-                //! \name Look like IMultiSimulatorModelCaches interface
+                //! Look like IMultiSimulatorModelCaches interface
                 //! @{
                 CAircraftModelList getCachedModels(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator); }
                 int getCachedModelsCount(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModelsCount(simulator); }

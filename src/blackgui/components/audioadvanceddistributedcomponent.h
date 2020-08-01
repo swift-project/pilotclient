@@ -45,7 +45,8 @@ namespace BlackGui
             //! Audio enable/disable
             void toggleAudioEnableDisable();
 
-            //! Start/stop button @{
+            //! Start/stop button
+            //! @{
             void setButtons();
             void setButtons(int delayMs);
             //! @}

@@ -48,13 +48,15 @@ namespace chunkware_simple
         //! Dtor
         virtual ~SimpleLimit() {}
 
-        //! @{ set parameters
+        //! set parameters
+        //! @{
         virtual void setThresh(double dB);
         virtual void setAttack(double ms) {  this->setAttackImpl(ms); } // used in ctor
         virtual void setRelease(double ms);
         //! @}
 
-        //! @{ get parameters
+        //! get parameters
+        //! @{
         virtual double getThresh(void)  const { return threshdB_; }
         virtual double getAttack(void)  const { return att_.getTc(); }
         virtual double getRelease(void) const { return rel_.getTc(); }
@@ -63,7 +65,8 @@ namespace chunkware_simple
         //! get latency
         virtual unsigned int getLatency(void) const { return peakHold_; }
 
-        //! @{ sample rate
+        //! sample rate
+        //! @{
         virtual void   setSampleRate(double sampleRate);
         virtual double getSampleRate(void) { return att_.getSampleRate(); }
         //! @}

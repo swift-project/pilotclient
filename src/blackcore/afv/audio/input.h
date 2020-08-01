@@ -96,7 +96,8 @@ namespace BlackCore
                     this->stop();
                 }
 
-                //! Number of encoded bytes @{
+                //! Number of encoded bytes
+                //! @{
                 int opusBytesEncoded() const { return m_opusBytesEncoded; }
                 void setOpusBytesEncoded(int opusBytesEncoded) { m_opusBytesEncoded = opusBytesEncoded; }
                 //! @}
@@ -113,7 +114,8 @@ namespace BlackCore
                 // bool setVolume(double volume);
 
                 /* disabled as not needed
-                //! The device's volume 0..1 @{
+                //! The device's volume 0..1
+                //! @{
                 double getDeviceInputVolume() const;
                 bool setDeviceInputVolume(double volume);
                 //! @}

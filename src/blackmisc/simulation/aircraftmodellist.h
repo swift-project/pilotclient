@@ -220,7 +220,8 @@ namespace BlackMisc
             //! Find color liveries
             CAircraftModelList findColorLiveries() const;
 
-            //! Find models with the closest color distance @{
+            //! Find models with the closest color distance
+            //! @{
             CAircraftModelList findClosestColorDistance(const CRgbColor &fuselage, const CRgbColor &tail) const;
             CAircraftModelList findClosestFuselageColorDistance(const CRgbColor &color) const;
             //! @}
@@ -264,19 +265,22 @@ namespace BlackMisc
             //! All models NOT of the FS (FSX, P3D, FS9) family
             CAircraftModelList findNonFsFamilyModels() const;
 
-            //! With/without DB key @{
+            //! With/without DB key
+            //! @{
             CAircraftModelList findWithValidDbKey() const;
             CAircraftModelList findWithoutValidDbKey() const;
             CAircraftModelList findWithoutValidDbKey(int maxElements) const;
             //! @}
 
-            //! Some finders for NON DB models, mostly for matching script results @{
+            //! Some finders for NON DB models, mostly for matching script results
+            //! @{
             CAircraftModelList findNonDbModelsForAirline(const QString &airline) const;
             CAircraftModelList findNonDbModelsForAircraft(const QString &airline) const;
             CAircraftModelList findNonDbModelsForModelString(const QString &modelString) const;
             //! @}
 
-            //! All included/excluded models @{
+            //! All included/excluded models
+            //! @{
             CAircraftModelList findAllIncludedModels() const;
             CAircraftModelList findAllIncludedModels(int maxElements) const;
             CAircraftModelList findAllExcludedModels() const;
@@ -541,14 +545,16 @@ namespace BlackMisc
             //! A HTML summary of the data in the list
             QString htmlStatistics(bool aircraftStats, bool airlineStats) const;
 
-            //! Save/load invalid models @{
+            //! Save/load invalid models
+            //! @{
             CStatusMessage saveInvalidModels() const;
             CStatusMessage loadInvalidModels();
             static const QString &invalidModelFileAndPath();
             static bool hasInvalidModelFile();
             //! @}
 
-            //! Add as valid or invalid model (mutual exclusive) @{
+            //! Add as valid or invalid model (mutual exclusive)
+            //! @{
             static void addAsValidOrInvalidModel(const CAircraftModel &model, bool valid, CAircraftModelList &validModels, CAircraftModelList &invalidModels);
             static void addAsValidOrInvalidModels(const CAircraftModelList &models, bool valid, CAircraftModelList &validModels, CAircraftModelList &invalidModels);
             //! @}

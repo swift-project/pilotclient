@@ -144,13 +144,15 @@ namespace BlackCore
             //! Graceful shutdown
             void gracefulShutdown();
 
-            //! Enable/disable @{
+            //! Enable/disable
+            //! @{
             void enableVoiceClient()  { this->initVoiceClient(); }
             void enableVoiceClientAndStart();
             void disableVoiceClient() { this->terminateVoiceClient(); }
             //! @}
 
-            //! Receive/transmit @{
+            //! Receive/transmit
+            //! @{
             void setRxTx(bool  rx1, bool  tx1, bool  rx2, bool  tx2);
             void getRxTx(bool &rx1, bool &tx1, bool &rx2, bool &tx2) const;
             //! @}
@@ -291,7 +293,8 @@ namespace BlackCore
              * Workaround those must be invisible for DBus
              *
 
-            //! VU levels @{
+            //! VU levels
+            //! @{
             void inputVolumePeakVU (double value);
             void outputVolumePeakVU(double value);
             //! @}

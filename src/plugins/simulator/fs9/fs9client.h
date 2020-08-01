@@ -52,7 +52,8 @@ namespace BlackSimPlugin
             //! Starts the FS9 client messaging
             void start();
 
-            //! Get interpolator @{
+            //! Get interpolator
+            //! @{
             BlackMisc::Simulation::CInterpolatorMulti       *getInterpolator() { return &m_interpolator; }
             const BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() const { return &m_interpolator; }
             //! @}

@@ -526,13 +526,15 @@ namespace BlackMisc
             //! A default CG if not other value is available
             static const PhysicalQuantities::CLength &defaultCG();
 
+            //! Ground flag comparisons
+            //! @{
+
             //! Both on ground
             static bool isGfEqualOnGround(double oldGroundFactor, double newGroundFactor)
             {
                 return isDoubleEpsilonEqual(1.0, oldGroundFactor) && isDoubleEpsilonEqual(1.0, newGroundFactor);
             }
 
-            //! Ground flag comparisons @{
             //! Both not on ground
             static bool isGfEqualAirborne(double oldGroundFactor, double newGroundFactor)
             {

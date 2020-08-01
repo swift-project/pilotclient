@@ -37,7 +37,8 @@ namespace BlackCore
             //! Construct from tokens
             static AtcDataUpdate fromTokens(const QStringList &tokens);
 
-            //! Properties @{
+            //! Properties
+            //! @{
             int m_frequencykHz = 0.0;
             BlackMisc::Network::CFacilityType m_facility;
             int m_visibleRange = 0.0;

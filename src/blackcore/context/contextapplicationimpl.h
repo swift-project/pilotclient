@@ -46,8 +46,8 @@ namespace BlackCore
             friend class IContextApplication;
 
         public slots:
-            //! @{
             //! \publicsection
+            //! @{
             virtual void changeSettings(const BlackMisc::CValueCachePacket &settings, const BlackMisc::CIdentifier &origin) override;
             virtual BlackMisc::CValueCachePacket getAllSettings() const override;
             virtual QStringList getUnsavedSettingsKeys() const override;

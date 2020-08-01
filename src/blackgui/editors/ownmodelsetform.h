@@ -81,9 +81,9 @@ namespace BlackGui
             bool hasDistributorPreferences() const;
 
             //! \name Form functions, here not used
-            //! \@{
+            //! @{
             virtual void setReadOnly(bool readOnly) override { Q_UNUSED(readOnly); }
-            //! \@}
+            //! @}
 
         signals:
             //! Simulator changed

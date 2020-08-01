@@ -29,7 +29,8 @@ namespace BlackMisc
         {
             Q_OBJECT
 
-            //! MSNetworkValues properties @{
+            //! MSNetworkValues properties
+            //! @{
             Q_PROPERTY(QString callsign           READ getCallsign           WRITE setCallsign           NOTIFY callsignChanged)
             Q_PROPERTY(QString callsignAsSet      READ getCallsignAsSet)
             Q_PROPERTY(QString flightNumber       READ getFlightNumber)
@@ -94,14 +95,16 @@ namespace BlackMisc
             //! Ctor
             MSInOutValues(const MSInOutValues &sv);
 
-            //! Callsign values @{
+            //! Callsign values
+            //! @{
             const QString &getCallsign()      const { return m_callsign; }
             const QString &getCallsignAsSet() const { return m_callsignAsSet; }
             const QString &getFlightNumber()  const { return m_flightNumber; }
             void setCallsign(const QString &callsign);
             //! @}
 
-            //! Values found in DB? @{
+            //! Values found in DB?
+            //! @{
             bool isFoundDbAircraftIcao() const { return m_dbAircraftIcaoId >= 0; }
             bool isFoundDbAirlineIcao()  const { return m_dbAirlineIcaoId  >= 0; }
             bool isFoundDbLivery()       const { return m_dbLiveryId       >= 0; }
@@ -116,7 +119,8 @@ namespace BlackMisc
             void setDbModelId(int id);
             //! @}
 
-            //! Livery, airline, aircraft, model string @{
+            //! Livery, airline, aircraft, model string
+            //! @{
             const QString &getAircraftIcao()       const { return m_aircraftIcao; }
             const QString &getAircraftFamily()     const { return m_aircraftFamily; }
             const QString &getAirlineIcao()        const { return m_airlineIcao; }
@@ -135,17 +139,20 @@ namespace BlackMisc
             bool hasAircraftFamily() const { return !m_aircraftFamily.isEmpty(); }
             //! @}
 
-            //! Log. message @{
+            //! Log. message
+            //! @{
             const QString &getLogMessage() const { return m_logMessage; }
             void setLogMessage(const QString &msg);
             //! @}
 
-            //! Modified flag @{
+            //! Modified flag
+            //! @{
             bool isModified() const { return m_modified; }
             void setModified(bool modified);
             //! @}
 
-            //! Request re-run @{
+            //! Request re-run
+            //! @{
             bool isRerun() const { return m_rerun; }
             void setRerun(bool rerun);
             //! @}
@@ -153,7 +160,8 @@ namespace BlackMisc
             //! Changed values such as modified values
             void evaluateChanges(const BlackMisc::Aviation::CAircraftIcaoCode &aircraft, const BlackMisc::Aviation::CAirlineIcaoCode &airline);
 
-            //! Changed values @{
+            //! Changed values
+            //! @{
             bool hasModifiedAircraftIcaoDesignator() const { return m_modifiedAircraftDesignator; }
             bool hasModifiedAirlineIcaoDesignator()  const { return m_modifiedAirlineDesignator;  }
             bool hasModifiedAircraftFamily() const { return m_modifiedAircraftFamily; }
@@ -172,7 +180,8 @@ namespace BlackMisc
             //! Callsign changed
             void callsignChanged();
 
-            //! Livery, airline, aircraft, or model changed @{
+            //! Livery, airline, aircraft, or model changed
+            //! @{
             void aircraftIcaoChanged();
             void airlineIcaoChanged();
             void virtualAirlineIcaoChanged();
@@ -181,7 +190,8 @@ namespace BlackMisc
             void combinedTypeChanged();
             //! @}
 
-            //! DB id changed @{
+            //! DB id changed
+            //! @{
             void dbAircraftIcaoIdChanged();
             void dbAirlineIcaoIdChanged();
             void dbLiveryIdChanged();
@@ -225,7 +235,8 @@ namespace BlackMisc
         {
             Q_OBJECT
 
-            //! MSModelSet properties @{
+            //! MSModelSet properties
+            //! @{
             Q_PROPERTY(QString simulator  READ getSimulator  WRITE setSimulator  NOTIFY simulatorChanged)
             Q_PROPERTY(bool available     READ isAvailable   WRITE setAvailable  NOTIFY availabilityChanged)
             Q_PROPERTY(int inputAircraftAndAirlineCount READ getInputAircraftAndAirlineCount WRITE setInputAircraftAndAirlineCount  NOTIFY inputAircraftAndAirlineCountChanged)
@@ -248,17 +259,20 @@ namespace BlackMisc
             //! Set callsign
             void setSimulator(const QString &simulator);
 
-            //! Availablity flag @{
+            //! Availablity flag
+            //! @{
             bool isAvailable() const { return m_available; }
             void setAvailable(bool available);
             //! @}
 
-            //! Input aircraft/airline available flag @{
+            //! Input aircraft/airline available flag
+            //! @{
             int getInputAircraftAndAirlineCount() const { return m_inputAircraftAndAirlineCount; }
             void setInputAircraftAndAirlineCount(int count);
             //! @}
 
-            //! Model set functions as properties @{
+            //! Model set functions as properties
+            //! @{
             int getModelSetSize() const { return m_modelSet.size(); }
             int countDifferentAirlines() const { return m_modelSet.countDifferentAirlines(); }
             int countVtolAircraft() const { return m_modelSet.countVtolAircraft(); }
@@ -268,7 +282,8 @@ namespace BlackMisc
             int countModelsWithAirlineLivery() const { return m_modelSet.countModelsWithAirlineLivery(); }
             //! @}
 
-            //! Invokable model set functions as properties @{
+            //! Invokable model set functions as properties
+            //! @{
             Q_INVOKABLE bool containsModelString(const QString &modelString) const { return m_modelSet.containsModelString(modelString, Qt::CaseInsensitive); }
             Q_INVOKABLE bool containsDbKey(int dbKey) const { return m_modelSet.containsDbKey(dbKey); }
             Q_INVOKABLE bool containsCombinedType(const QString &ct) const { return m_modelSet.containsCombinedType(ct); }

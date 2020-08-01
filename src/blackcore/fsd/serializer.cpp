@@ -21,7 +21,8 @@ namespace BlackCore
 {
     namespace Fsd
     {
-        //! private @{
+        //! private
+        //! @{
 
         namespace Private
         {

@@ -218,7 +218,7 @@ namespace BlackGui
             static const QString &pathDockWidgetNested() { static const QString p("DockWidget.Nested"); return p; }
             //! @}
 
-            //! \name Predefined sub sub menus
+            //! Predefined sub sub menus
             //! @{
             static const CMenuAction &subMenuDatabase();
             static const CMenuAction &subMenuSimulator();

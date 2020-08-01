@@ -20,7 +20,8 @@
 
 namespace BlackSound
 {
-    //! Conversion functions @{
+    //! Conversion functions
+    //! @{
     BLACKSOUND_EXPORT QVector<float>  convertBytesTo32BitFloatPCM(const QByteArray &input);
     BLACKSOUND_EXPORT QVector<qint16> convertBytesTo16BitPCM(const QByteArray &input);
     BLACKSOUND_EXPORT QVector<qint16> convertFloatBytesTo16BitPCM(const QByteArray &input);
@@ -36,7 +37,8 @@ namespace BlackSound
     BLACKSOUND_EXPORT const QString &toQString(QAudioFormat::SampleType s);
     //! @}
 
-    //! Normalize audio volume to 0..100 @{
+    //! Normalize audio volume to 0..100
+    //! @{
     BLACKSOUND_EXPORT double normalize0to100(double in);
     BLACKSOUND_EXPORT qreal  normalize0to100qr(double in);
     //! @}

@@ -47,7 +47,8 @@ namespace BlackGui
             QList<QShortcut *> getShortcuts() const;
 
         signals:
-            //! Font size signals @{
+            //! Font size signals
+            //! @{
             void fontSizePlus();
             void fontSizeMinus();
             //! @}

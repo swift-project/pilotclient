@@ -55,7 +55,8 @@ namespace BlackGui
             //! \remark takes the messages, turns it into a ".msg" command, and emits it
             bool handleGlobalCommandLineText(const QString &commandLine, const BlackMisc::CIdentifier &originator);
 
-            //! Font size @{
+            //! Font size
+            //! @{
             void fontSizeMinus();
             void fontSizePlus();
             //! @}
@@ -167,7 +168,8 @@ namespace BlackGui
             //! Network connected?
             bool isNetworkConnected() const;
 
-            //! Show current frequencies @{
+            //! Show current frequencies
+            //! @{
             void showCurrentFrequenciesFromCockpit();
             void showCurrentFrequenciesFromCockpit(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
             //! @}

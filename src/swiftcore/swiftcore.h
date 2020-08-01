@@ -54,7 +54,7 @@ public:
     virtual ~CSwiftCore() override;
 
 private:
-    //! \name Init
+    //! Init
     //! @{
     void initLogDisplay();
     void initStyleSheet();

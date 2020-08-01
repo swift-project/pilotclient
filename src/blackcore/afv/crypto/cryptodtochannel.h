@@ -36,7 +36,8 @@ namespace BlackCore
                 //! Ctor
                 CCryptoDtoChannel(const CryptoDtoChannelConfigDto &channelConfig, int receiveSequenceHistorySize = 10);
 
-                //! Transmit key @{
+                //! Transmit key
+                //! @{
                 QByteArray getTransmitKey(CryptoDtoMode mode);
                 QByteArray getTransmitKey(CryptoDtoMode mode, uint &sequenceToSend);
                 //! @}

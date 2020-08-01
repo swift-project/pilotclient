@@ -174,7 +174,8 @@ namespace BlackCore
             AircraftConfig   = (1 << 8)
         };
 
-        //! Operators @{
+        //! Operators
+        //! @{
         inline Capabilities operator | (Capabilities lhs, Capabilities rhs)
         {
             return static_cast<Capabilities>(static_cast<int>(lhs) | static_cast<int>(rhs));

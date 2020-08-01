@@ -88,7 +88,8 @@ public:
     bool startDetached();
 
 protected:
-    //! Mouse events for frameless window @{
+    //! Mouse events for frameless window
+    //! @{
     virtual void mousePressEvent(QMouseEvent *event) override;
     virtual void mouseMoveEvent(QMouseEvent *event) override;
     virtual void mouseReleaseEvent(QMouseEvent *event) override;

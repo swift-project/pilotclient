@@ -240,7 +240,8 @@ namespace BlackCore
             //! \ingroup crosscontextfunction
             void xCtxChangedSimulatorStatus(int status);
 
-            //! Actions @{
+            //! Actions
+            //! @{
             void actionToggleTransponder(bool keydown);
             void actionIdent(bool keydown);
             //! @}

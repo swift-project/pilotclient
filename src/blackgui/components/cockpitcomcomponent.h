@@ -57,7 +57,8 @@ namespace BlackGui
             //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderStateIdentEnded
             void transponderStateIdentEnded();
 
-            //! Request COM text messages @{
+            //! Request COM text messages
+            //! @{
             void requestCom1TextMessage();
             void requestCom2TextMessage();
             //! @}

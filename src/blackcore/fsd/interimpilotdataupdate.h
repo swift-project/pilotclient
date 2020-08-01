@@ -35,7 +35,8 @@ namespace BlackCore
             //! PDU identifier
             static QString pdu() { return "#SB"; }
 
-            //! Properties @{
+            //! Properties
+            //! @{
             double m_latitude  = 0.0;
             double m_longitude = 0.0;
             int m_altitudeTrue = 0.0;

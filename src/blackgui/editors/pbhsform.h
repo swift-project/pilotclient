@@ -88,7 +88,8 @@ namespace BlackGui
             //! Get heading angle
             double getHeadingAngleDegrees() const;
 
-            //! Values changed from UI @{
+            //! Values changed from UI
+            //! @{
             void bankSliderChanged(int value);
             void pitchSliderChanged(int value);
             void headingSliderChanged(int value);

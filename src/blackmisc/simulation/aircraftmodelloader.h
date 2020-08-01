@@ -127,7 +127,8 @@ namespace BlackMisc
             //! Supported simulator
             bool supportsSimulator(const CSimulatorInfo &simulator) const { return m_simulator == simulator; }
 
-            //! Interface implementations @{
+            //! Interface implementations
+            //! @{
             virtual void setModels(const CAircraftModelList &models) override;
             virtual int updateModels(const CAircraftModelList &models) override;
             //! @}
@@ -221,7 +222,8 @@ namespace BlackMisc
             //! Singleton
             static CMultiAircraftModelLoaderProvider &multiModelLoaderInstance();
 
-            //! Simulator specific loaders @{
+            //! Simulator specific loaders
+            //! @{
             IAircraftModelLoader *modelLoaderFsx() const { return m_loaderFsx; }
             IAircraftModelLoader *modelLoaderP3D() const { return m_loaderP3D; }
             IAircraftModelLoader *modelLoaderXP()  const { return m_loaderXP;  }

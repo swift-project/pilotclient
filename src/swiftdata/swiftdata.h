@@ -46,7 +46,8 @@ public:
     virtual ~CSwiftData() override;
 
 protected:
-    //! \name QMainWindow events @[
+    //! \name QMainWindow events
+    //! @{
     virtual void closeEvent(QCloseEvent *event) override;
     //! @}
 
@@ -57,7 +58,8 @@ private:
     //! Menu clicked
     void onMenuClicked();
 
-    //! Init functions @{
+    //! Init functions
+    //! @{
     void init();
     void initLogDisplay();
     void initStyleSheet();

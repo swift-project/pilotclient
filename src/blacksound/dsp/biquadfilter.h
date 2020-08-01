@@ -27,14 +27,16 @@ namespace BlackSound
             //! Transform
             float transform(float inSample);
 
-            //! Set filter parameters @{
+            //! Set filter parameters
+            //! @{
             void setCoefficients(double aa0, double aa1, double aa2, double b0, double b1, double b2);
             void setLowPassFilter(float sampleRate, float cutoffFrequency, float q);
             void setPeakingEq(float sampleRate, float centreFrequency, float q, float dbGain);
             void setHighPassFilter(float sampleRate, float cutoffFrequency, float q);
             //! @}
 
-            //! Get filters @{
+            //! Get filters
+            //! @{
             static BiQuadFilter lowPassFilter(float sampleRate, float cutoffFrequency, float q);
             static BiQuadFilter highPassFilter(float sampleRate, float cutoffFrequency, float q);
             static BiQuadFilter peakingEQ(float sampleRate, float centreFrequency, float q, float dbGain);

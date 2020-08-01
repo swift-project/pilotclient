@@ -37,12 +37,14 @@ namespace BlackCore
             //! PDU identifier
             static QString pdu() { return "$ER"; }
 
-            //! Getter @{
+            //! Getter
+            //! @{
             const QString &getCausingParameter() const { static const QString n("no details");     return m_causingParameter.isEmpty() ? n : m_causingParameter; }
             const QString &getDescription()      const { static const QString n("no description"); return m_description.isEmpty()      ? n : m_description; }
             //! @}
 
-            //! Properties @{
+            //! Properties
+            //! @{
             ServerErrorCode m_errorNumber {};
             QString m_causingParameter;
             QString m_description;

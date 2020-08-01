@@ -317,7 +317,6 @@ namespace BlackCore
 
         //! cmd line arguments as string
         virtual QString cmdLineArgumentsAsString(bool withExecutable = true);
-        //! @}
 
         //! Simulate a crash
         //! \private only for testing purposes
@@ -382,16 +381,18 @@ namespace BlackCore
         //! Get the facade
         CCoreFacade *getCoreFacade() { return m_coreFacade.data(); }
 
-        //! Local or DBus application? @{
+        //! Local or DBus application?
+        //! @{
         bool isLocalContext() const;
         bool isDBusContext()  const;
         //! @}
 
         //! Get the facade
+        //! @{
         const CCoreFacade *getCoreFacade() const { return m_coreFacade.data(); }
         //! @}
 
-        //! \name Direct access to contexts if a CCoreFacade has been initialized
+        //! Direct access to contexts if a CCoreFacade has been initialized
         //! @{
         const Context::IContextNetwork     *getIContextNetwork() const;
         const Context::IContextAudio       *getIContextAudio() const;

@@ -90,7 +90,8 @@ namespace BlackCore
                 const BlackMisc::Audio::CAudioDeviceInfo &device() const { return m_device; }
 
                 /* disabled as not used
-                //! The device's volume 0..1 @{
+                //! The device's volume 0..1
+                //! @{
                 double getDeviceOutputVolume() const;
                 bool setDeviceOutputVolume(double volume);
                 //! @}

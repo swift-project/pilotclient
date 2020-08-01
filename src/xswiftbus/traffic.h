@@ -193,26 +193,30 @@ namespace XSwiftBus
                   const std::string &livery_, const std::string &modelName_);
         };
 
-        //! Check functions @{
+        //! Check functions
+        //! @{
         static bool isPlusMinusOne(float v);
         static bool isPlusMinus180(float v);
         static bool isPlusMinus180(double v);
         static bool isZeroTo360(double v);
         //! @}
 
-        //! Normalize to (-180, 180] or [0, 360) degrees @{
+        //! Normalize to (-180, 180] or [0, 360) degrees
+        //! @{
         static float  normalizeToPlusMinus180Deg(float v);
         static double normalizeToPlusMinus180Deg(double v);
         static float  normalizeToZero360Deg(float v);
         static double normalizeToZero360Deg(double v);
         //! @}
 
-        //! Check the position if values are valid @{
+        //! Check the position if values are valid
+        //! @{
         static bool isValidPosition(const XPMPPlanePosition_t &position);
         static bool isValidPosition(const XPLMCameraPosition_t *camPos);
         //! @}
 
-        //! Pos as string @{
+        //! Pos as string
+        //! @{
         static std::string pos2String(const XPMPPlanePosition_t &position);
         static std::string pos2String(const XPLMCameraPosition_t *camPos);
         //! @}

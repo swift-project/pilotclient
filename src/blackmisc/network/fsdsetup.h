@@ -106,7 +106,8 @@ namespace BlackMisc
             bool receiveInterimPositions() const { return this->getSendReceiveDetails().testFlag(ReceiveInterimPositions); }
             //! @}
 
-            //! Airline codes @{
+            //! Airline codes
+            //! @{
             bool force3LetterAirlineCodes() const { return this->getSendReceiveDetails().testFlag(Force3LetterAirlineICAO); }
             void setForce3LetterAirlineCodes(bool force);
             //! @}

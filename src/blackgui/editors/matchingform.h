@@ -71,10 +71,11 @@ namespace BlackGui
             //! Airline group changed
             void onAirlineGroupChanged();
 
-            //! Reset @{
+            //! Reset
+            //! @{
             void resetByAlgorithm();
             void resetAll();
-            //! }
+            //! @}
 
             //! Directory browser
             void fileDialog();

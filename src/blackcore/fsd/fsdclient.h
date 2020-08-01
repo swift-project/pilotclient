@@ -47,7 +47,8 @@
 
 #include <atomic>
 
-//! Protocol version @{
+//! Protocol version
+//! @{
 #define PROTOCOL_REVISION_CLASSIC   9
 #define PROTOCOL_REVISION_VATSIM_ATC 10
 #define PROTOCOL_REVISION_VATSIM_AUTH 100
@@ -139,12 +140,14 @@ namespace BlackCore
             //! \threadsafe
             PilotRating getPilotRating() const { QReadLocker l(&m_lockUserClientBuffered); return m_pilotRating; }
 
-            //! Connenct/disconnect @{
+            //! Connenct/disconnect
+            //! @{
             void connectToServer();
             void disconnectFromServer();
             //! @}
 
-            //! Interim positions @{
+            //! Interim positions
+            //! @{
             void addInterimPositionReceiver(const BlackMisc::Aviation::CCallsign &receiver) { m_interimPositionReceivers.push_back(receiver); }
             void removeInterimPositionReceiver(const BlackMisc::Aviation::CCallsign &receiver) { m_interimPositionReceivers.remove(receiver); }
             //! @}
@@ -169,19 +172,22 @@ namespace BlackCore
             void sendPlaneInfoRequestFsinn(const BlackMisc::Aviation::CCallsign &callsign);
             //! @}
 
-            //! Interim pos.receivers @{
+            //! Interim pos.receivers
+            //! @{
             BlackMisc::Aviation::CCallsignSet getInterimPositionReceivers() const;
             void setInterimPositionReceivers(const BlackMisc::Aviation::CCallsignSet &interimPositionReceivers);
             //! @}
 
-            //! Connection status @{
+            //! Connection status
+            //! @{
             BlackMisc::Network::CConnectionStatus getConnectionStatus() const { QReadLocker l(&m_lockConnectionStatus); return m_connectionStatus; }
             bool isConnected()    const { return this->getConnectionStatus().isConnected(); }
             bool isDisconnected() const { return this->getConnectionStatus().isDisconnected(); }
             bool isPendingConnection() const;
             //! @}
 
-            //! Statistics enable functions @{
+            //! Statistics enable functions
+            //! @{
             bool setStatisticsEnable(bool enabled) { m_statistics = enabled; return enabled; }
             bool isStatisticsEnabled() const { return m_statistics; }
             //! @}
@@ -199,7 +205,8 @@ namespace BlackCore
             void gracefulShutdown();
 
         signals:
-            //! Client responses received @{
+            //! Client responses received
+            //! @{
             void atcDataUpdateReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq,
                                        const BlackMisc::Geo::CCoordinateGeodetic &pos, const BlackMisc::PhysicalQuantities::CLength    &range);
             void deleteAtcReceived(const QString &cid);
@@ -269,7 +276,8 @@ namespace BlackCore
             void sendQueuedMessage();
             //! @}
 
-            //! Increase the statistics value for given identifier @{
+            //! Increase the statistics value for given identifier
+            //! @{
             int increaseStatisticsValue(const QString &identifier, const QString &appendix = {});
             int increaseStatisticsValue(const QString &identifier, int value);
             //! @}
@@ -295,7 +303,8 @@ namespace BlackCore
                 this->sendMessageString(messageToFSDString(message));
             }
 
-            //! Unit test/debug functions @{
+            //! Unit test/debug functions
+            //! @{
             void sendFsdMessage(const QString &message);
             void setUnitTestMode(bool on) { m_unitTestMode = on; }
             //! @}
@@ -346,7 +355,8 @@ namespace BlackCore
             // Type to string
             const QString &messageTypeToString(MessageType mt) const;
 
-            //! Handle response tokens @{
+            //! Handle response tokens
+            //! @{
             void handleAtcDataUpdate(const QStringList &tokens);
             void handleAuthChallenge(const QStringList &tokens);
             void handleAuthResponse(const QStringList &tokens);
@@ -418,7 +428,8 @@ namespace BlackCore
             //! Emit raw FSD message (mostly for debugging)
             void emitRawFsdMessage(const QString &fsdMessage, bool isSent);
 
-            //! Additional offset time @{
+            //! Additional offset time
+            //! @{
             qint64 getAdditionalOffsetTime() const;
             void setAdditionalOffsetTime(qint64 addOffset);
             //! @}
@@ -426,7 +437,8 @@ namespace BlackCore
             //! Save the statistics
             bool saveNetworkStatistics(const QString &server);
 
-            //! Timers @{
+            //! Timers
+            //! @{
             void startPositionTimers();
             void stopPositionTimers();
             //! @}

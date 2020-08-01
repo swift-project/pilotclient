@@ -49,7 +49,8 @@ namespace BlackCore
             {
                 Q_OBJECT
 
-                //! AFV client properties @{
+                //! AFV client properties
+                //! @{
                 Q_PROPERTY(double inputVolumePeakVU  READ getInputVolumePeakVU  NOTIFY inputVolumePeakVU)
                 Q_PROPERTY(double outputVolumePeakVU READ getOutputVolumePeakVU NOTIFY outputVolumePeakVU)
                 Q_PROPERTY(BlackCore::Afv::Clients::CAfvClient::ConnectionStatus connectionStatus READ getConnectionStatus NOTIFY connectionStatusChanged)
@@ -100,7 +101,8 @@ namespace BlackCore
                 void disconnectFromAndStop()      { this->disconnectFrom(true); }
                 //! @}
 
-                //! Audio devices @{
+                //! Audio devices
+                //! @{
                 Q_INVOKABLE QStringList availableInputDevices() const;
                 Q_INVOKABLE QStringList availableOutputDevices() const;
                 //! @}
@@ -121,7 +123,8 @@ namespace BlackCore
                 void setMuted(bool mute);
                 //! @}
 
-                //! Start/stop client @{
+                //! Start/stop client
+                //! @{
                 void startAudio();
                 void startAudio(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
                 Q_INVOKABLE void startAudio(const QString &inputDeviceName, const QString &outputDeviceName);
@@ -134,7 +137,8 @@ namespace BlackCore
                 bool isComUnitIntegrated() const { return m_integratedComUnit; }
 
                 /* NOT used
-                //! The device's volume 0..1 @{
+                //! The device's volume 0..1
+                //! @{
                 double getDeviceInputVolume() const;
                 bool   setDeviceInputVolume(double volume);
                 double getDeviceOutputVolume() const;
@@ -302,7 +306,8 @@ namespace BlackCore
                 //! PTT status in this particular AFV client
                 void ptt(bool active, BlackMisc::Audio::PTTCOM pttcom, const BlackMisc::CIdentifier &identifier);
 
-                //! VU levels @{
+                //! VU levels
+                //! @{
                 void inputVolumePeakVU(double value);
                 void outputVolumePeakVU(double value);
                 //! @}

@@ -46,13 +46,15 @@ namespace chunkware_simple
         //! Dtor
         virtual ~SimpleComp() {}
 
-        //! @{ set parameters
+        //! set parameters
+        //! @{
         virtual void setThresh(double dB);
         virtual void setRatio(double dB);
         void setMakeUpGain(double gain);
         //! @}
 
-        //! @{ get parameters
+        //! get parameters
+        //! @{
         virtual double getThresh(void) const { return threshdB_; }
         virtual double getRatio(void)  const { return ratio_; }
         double getMakeUpGain(void) const     { return makeUpGain_; }

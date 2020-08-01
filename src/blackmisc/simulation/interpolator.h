@@ -165,7 +165,8 @@ namespace BlackMisc
             //! Reset values
             void reset();
 
-            //! Implicit conversion @{
+            //! Implicit conversion
+            //! @{
             operator const Aviation::CAircraftSituation &() const { return m_interpolatedSituation; }
             operator const Aviation::CAircraftParts &()     const { return m_interpolatedParts; }
             //! @}
@@ -324,7 +325,8 @@ namespace BlackMisc
             //! Return NULL parts and log
             const BlackMisc::Aviation::CAircraftParts &logAndReturnNullParts(const QString &info, bool log);
 
-            //! Derived class @{
+            //! Derived class
+            //! @{
             Derived *derived() { return static_cast<Derived *>(this); }
             const Derived *derived() const { return static_cast<const Derived *>(this); }
             //! @}

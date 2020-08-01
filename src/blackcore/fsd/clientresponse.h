@@ -37,7 +37,8 @@ namespace BlackCore
             //! PDU identifier
             static QString pdu() { return "$CR"; }
 
-            //! Properties @{
+            //! Properties
+            //! @{
             ClientQueryType m_queryType {};
             QStringList     m_responseData;
             //! @}

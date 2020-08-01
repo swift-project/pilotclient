@@ -300,7 +300,8 @@ namespace BlackSimPlugin
             //! Register help
             static void registerHelp();
 
-            //! Word size @{
+            //! Word size
+            //! @{
             static bool is32bit() { return (BlackConfig::CBuildConfig::buildWordSize() == 32); }
             static bool is64bit() { return (BlackConfig::CBuildConfig::buildWordSize() == 64); }
             //! @}
@@ -629,7 +630,8 @@ namespace BlackSimPlugin
             static QString requestIdToString(DWORD requestId);
 
         public:
-            //! Offsets @{
+            //! Offsets
+            //! @{
             static DWORD offsetSimObjAircraft(CSimConnectDefinitions::SimObjectRequest req) { return MaxSimObjAircraft * static_cast<DWORD>(req); }
             static DWORD offsetSimObjTerrainProbe(CSimConnectDefinitions::SimObjectRequest req) { return MaxSimObjProbes * static_cast<DWORD>(req); }
             //! @}

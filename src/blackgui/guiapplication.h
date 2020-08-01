@@ -155,7 +155,8 @@ namespace BlackGui
         //! Add a splash screen based on resource, empty means remove splash screen
         void splashScreen(const QPixmap &pixmap);
 
-        //! Display splash screen messages if screen is available and visible @{
+        //! Display splash screen messages if screen is available and visible
+        //! @{
         void displaySplashMessage(const BlackMisc::CStatusMessage &msg);
         void displaySplashMessages(const BlackMisc::CStatusMessageList &msgs);
         //! @}
@@ -244,7 +245,8 @@ namespace BlackGui
         //! Toggle stay on top
         bool toggleStayOnTop();
 
-        //! Window to front/back @{
+        //! Window to front/back
+        //! @{
         void windowToFront();
         void windowToBack();
         void windowToFrontBackToggle();

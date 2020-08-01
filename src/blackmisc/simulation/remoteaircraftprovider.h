@@ -204,8 +204,9 @@ namespace BlackMisc
             //! \threadsafe
             virtual bool updateCGAndModelString(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg, const QString &modelString) = 0;
 
-            //! CG values from DB @{
+            //! CG values from DB
             //! \threadsafe
+            //! @{
             virtual PhysicalQuantities::CLength getCGFromDB(const Aviation::CCallsign &callsign) const = 0;
             virtual PhysicalQuantities::CLength getCGFromDB(const QString &modelString) const = 0;
             virtual void rememberCGFromDB(const PhysicalQuantities::CLength &cgFromDB, const Aviation::CCallsign &callsign) = 0;

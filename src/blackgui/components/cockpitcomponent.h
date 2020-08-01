@@ -64,7 +64,8 @@ namespace BlackGui
             //! Toggle area on show/hide details
             void toggleShowHideDetails(bool show, bool considerCurrentSize);
 
-            //! Request text message COM1 @{
+            //! Request text message COM1
+            //! @{
             void onRequestTextMessageCom1();
             void onRequestTextMessageCom2();
             //! @}

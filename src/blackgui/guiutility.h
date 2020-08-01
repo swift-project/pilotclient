@@ -85,7 +85,8 @@ namespace BlackGui
         //! Orientation as string
         static const QString &orientationAsString(Qt::ScreenOrientation orientation);
 
-        //! QRect, QSize as string @{
+        //! QRect, QSize as string
+        //! @{
         static const QString rectAsString(const QRect &rect);
         static const QString rectAsString(const QRectF &rect);
         static const QString sizeAsString(const QSize &size);
@@ -215,7 +216,8 @@ namespace BlackGui
         //! Is top level window?
         static bool isTopLevelWindow(QWidget *widget);
 
-        //! Check window type @{
+        //! Check window type
+        //! @{
         static bool isQMainWindow(const QWidget *widget);
         static bool isDialog(const QWidget *widget);
         //! @}

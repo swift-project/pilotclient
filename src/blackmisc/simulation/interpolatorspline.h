@@ -44,7 +44,8 @@ namespace BlackMisc
                 //! Zero initialized position array
                 static const PosArray &zeroPosArray();
 
-                //! 3 coordinates for spline interpolation @{
+                //! 3 coordinates for spline interpolation
+                //! @{
                 std::array<double, 3> x, y, z, a, gnd, t, dx, dy, dz, da, dgnd;
 
                 //! Array size

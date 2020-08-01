@@ -43,7 +43,8 @@ namespace BlackSound
             //! Bypassing?
             void setBypassEffects(bool value) { m_bypass = value; }
 
-            //! Gain @{
+            //! Gain
+            //! @{
             double outputGain() const;
             void setOutputGain(double outputGain);
             //! @}

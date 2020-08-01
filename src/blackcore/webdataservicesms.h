@@ -30,7 +30,8 @@ namespace BlackCore
         //! Ctor
         Q_INVOKABLE MSWebServices() {}
 
-        //! Functions calling the web services @{
+        //! Functions calling the web services
+        //! @{
         Q_INVOKABLE int countAircraftIcaoCodesForDesignator(const QString &designator) const;
         Q_INVOKABLE int countAirlineIcaoCodesForDesignator(const QString &designator) const;
         //! @}

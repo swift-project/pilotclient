@@ -32,7 +32,8 @@ namespace BlackGui
             //! Dtor
             virtual ~CCGSourceSelector() override;
 
-            //! Get/set value @{
+            //! Get/set value
+            //! @{
             BlackMisc::Simulation::Settings::CSimulatorSettings::CGSource getValue() const;
             void setValue(const BlackMisc::Simulation::Settings::CSimulatorSettings &settings);
             void setValue(BlackMisc::Simulation::Settings::CSimulatorSettings::CGSource source);

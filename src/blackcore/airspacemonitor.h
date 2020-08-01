@@ -167,7 +167,8 @@ namespace BlackCore
         };
         Q_DECLARE_FLAGS(MatchingReadiness, MatchingReadinessFlag)
 
-        //! As string @{
+        //! As string
+        //! @{
         static const QString &enumFlagToString(MatchingReadinessFlag r);
         static QString enumToString(MatchingReadiness r);
         //! @}

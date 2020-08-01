@@ -27,7 +27,8 @@ namespace BlackCore
         //! Channel config DTO
         struct CryptoDtoChannelConfigDto
         {
-            //! Properties @{
+            //! Properties
+            //! @{
             QString channelTag;
             QByteArray aeadReceiveKey;
             QByteArray aeadTransmitKey;
@@ -61,7 +62,8 @@ namespace BlackCore
         //! Voice server DTO
         struct VoiceServerConnectionDataDto
         {
-            //! Properties @{
+            //! Properties
+            //! @{
             QString addressIpV4;    // Example: 123.123.123.123:50000
             QString addressIpV6;    // Example: 123.123.123.123:50000
             CryptoDtoChannelConfigDto channelConfig;
@@ -91,7 +93,8 @@ namespace BlackCore
         //! Callsign DTO
         struct PostCallsignResponseDto
         {
-            //! Properties @{
+            //! Properties
+            //! @{
             // DataServerConnectionDataDto DataServer;
             VoiceServerConnectionDataDto VoiceServer;
             bool isValid = false;
@@ -120,7 +123,8 @@ namespace BlackCore
         //! Transceiver DTO
         struct TransceiverDto
         {
-            //! Properties @{
+            //! Properties
+            //! @{
             quint16 id;
             quint32 frequencyHz;
             double LatDeg = 0.0;
@@ -160,7 +164,8 @@ namespace BlackCore
         //! Station DTO
         struct StationDto
         {
-            //! Properties @{
+            //! Properties
+            //! @{
             QUuid id;
             QString name;
             quint32 frequencyHz;
@@ -182,7 +187,8 @@ namespace BlackCore
         //! Heartbeat DTO
         struct HeartbeatDto
         {
-            //! Name @{
+            //! Name
+            //! @{
             static QByteArray getDtoName() { return "HeartbeatDto"; }
             static QByteArray getShortDtoName() { return "H"; }
             //! @}
@@ -194,7 +200,8 @@ namespace BlackCore
         //! Heartbeat DTO
         struct HeartbeatAckDto
         {
-            //! Name @{
+            //! Name
+            //! @{
             static QByteArray getDtoName() { return "HeartbeatAckDto"; }
             static QByteArray getShortDtoName() { return "HA"; }
             //! @}
@@ -205,7 +212,8 @@ namespace BlackCore
         //! Receive transceiver DTO
         struct RxTransceiverDto
         {
-            //! Properties @{
+            //! Properties
+            //! @{
             uint16_t id;
             uint32_t frequency;
             float distanceRatio;
@@ -240,12 +248,14 @@ namespace BlackCore
         //! AudioTxOnTransceiversDto
         struct AudioTxOnTransceiversDto
         {
-            //! Names @{
+            //! Names
+            //! @{
             static QByteArray getDtoName() { return "AudioTxOnTransceiversDto"; }
             static QByteArray getShortDtoName() { return "AT"; }
             //! @}
 
-            //! Properties @{
+            //! Properties
+            //! @{
             std::string callsign;
             uint sequenceCounter;
             std::vector<char> audio;
@@ -258,12 +268,14 @@ namespace BlackCore
         //! AudioRxOnTransceiversDto
         struct AudioRxOnTransceiversDto
         {
-            //! Names @{
+            //! Names
+            //! @{
             static QByteArray getDtoName() { return "AudioRxOnTransceiversDto"; }
             static QByteArray getShortDtoName() { return "AR"; }
             //! @}
 
-            //! Properties @{
+            //! Properties
+            //! @{
             std::string callsign;
             uint sequenceCounter;
             std::vector<char> audio;

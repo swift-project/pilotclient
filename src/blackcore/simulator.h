@@ -420,7 +420,7 @@ namespace BlackCore
                    BlackMisc::Network::IClientProvider *clientProvider,
                    QObject *parent = nullptr);
 
-        //! \name When swift DB data are read
+        //! When swift DB data are read
         //! @{
         virtual void onSwiftDbAllDataRead();
         virtual void onSwiftDbModelMatchingEntitiesRead();
@@ -442,7 +442,7 @@ namespace BlackCore
         //! Max.airports in range
         int maxAirportsInRange() const;
 
-        //! \name Connected with remote aircraft provider signals
+        //! Connected with remote aircraft provider signals
         //! @{
         //! Recalculate the rendered aircraft, this happens when restrictions are applied (max. aircraft, range)
         virtual void onRecalculatedRenderedAircraft(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
@@ -735,7 +735,8 @@ namespace BlackCore
         //! ISimulatorVirtual destructor
         virtual ~ISimulatorFactory() {}
 
-        //! Not copyable @{
+        //! Not copyable
+        //! @{
         ISimulatorFactory(const ISimulatorFactory &) = delete;
         ISimulatorFactory &operator=(const ISimulatorFactory &) = delete;
         //! @}

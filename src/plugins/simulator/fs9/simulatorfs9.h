@@ -51,7 +51,7 @@ namespace BlackSimPlugin
             virtual ~CSimulatorFs9() override = default;
 
             //! \name Interface implementations
-            //! \@{
+            //! @{
             virtual bool connectTo() override;
             virtual bool disconnectFrom() override;
             virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
@@ -66,14 +66,14 @@ namespace BlackSimPlugin
             virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool testSendSituationAndParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) override;
             virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
-            //! \@}
+            //! @}
 
         protected:
             //! \name Interface implementations
-            //! \@{
+            //! @{
             virtual bool isConnected() const override;
             virtual bool isSimulating() const override { return isConnected(); }
-            //! \@}
+            //! @}
 
             //! Timer event dispatching
             //! \sa m_timerId

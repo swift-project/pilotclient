@@ -36,7 +36,8 @@ namespace BlackMisc
                     withAltitude(withAltitude), extrude(extrude)
                 { }
 
-                //! Setting members @{
+                //! Setting members
+                //! @{
                 bool withAltitude = true;
                 bool extrude      = false;
                 bool tessellate   = true;

@@ -109,7 +109,8 @@ namespace BlackGui
             //! Restore state
             void restoreState();
 
-            //! Tune in/invoke @{
+            //! Tune in/invoke
+            //! @{
             void tuneInAtcCom1();
             void tuneInAtcCom2();
             void requestTextMessage();
