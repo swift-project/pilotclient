@@ -80,7 +80,7 @@ class Builder:
         build_path = self._get_swift_build_path()
         os.chdir(build_path)
         if self._should_run_checks():
-            subprocess.check_call([self.make_cmd, 'check'], env=dict(os.environ))
+            subprocess.check_call([self.make_cmd, 'check', '-j1'], env=dict(os.environ))
             pass
 
     def install(self):
