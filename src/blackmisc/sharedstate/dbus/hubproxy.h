@@ -24,7 +24,6 @@ namespace BlackMisc
         {
             /*!
              * Client side implementation of IHub.
-             * \ingroup SharedState
              */
             class BLACKMISC_EXPORT CHubProxy : public IHub
             {

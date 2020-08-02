@@ -24,6 +24,7 @@ namespace BlackMisc
 
         /*!
          * Endpoint which can emit events to subscribers.
+         * \ingroup SharedState
          */
         class BLACKMISC_EXPORT CPassiveMutator : public QObject, public QEnableSharedFromThis<CPassiveMutator>
         {

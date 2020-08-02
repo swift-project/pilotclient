@@ -38,7 +38,6 @@ namespace BlackMisc
 
             /*!
              * Abstract interface for the hub in a star topology. An implementation detail of CDataLinkDBus.
-             * \ingroup SharedState
              */
             class BLACKMISC_EXPORT IHub : public QObject
             {

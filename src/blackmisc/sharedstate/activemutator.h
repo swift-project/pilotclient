@@ -24,6 +24,7 @@ namespace BlackMisc
     {
         /*!
          * Extends CPassiveMutator with the ability to respond to requests.
+         * \ingroup SharedState
          */
         class BLACKMISC_EXPORT CActiveMutator final : public CPassiveMutator
         {

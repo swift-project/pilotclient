@@ -37,7 +37,6 @@ namespace BlackMisc
              * Abstract interface for the spoke in a star topology. An implementation detail of CDataLinkDBus.
              *
              * Signals send messages from server to client; slots send messages from client to server.
-             * \ingroup SharedState
              */
             class BLACKMISC_EXPORT IDuplex : public QObject
             {

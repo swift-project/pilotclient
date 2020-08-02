@@ -25,6 +25,7 @@ namespace BlackMisc
 
         /*!
          * Non-template base class for CScalarObserver.
+         * \ingroup SharedState
          */
         class BLACKMISC_EXPORT CGenericScalarObserver : public QObject
         {
@@ -54,6 +55,7 @@ namespace BlackMisc
         /*!
          * Base class for an object that shares state with a corresponding CScalarMutator subclass object.
          * \tparam T Datatype encapsulating the state to be shared.
+         * \ingroup SharedState
          */
         template <typename T>
         class CScalarObserver : public CGenericScalarObserver

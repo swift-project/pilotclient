@@ -30,11 +30,13 @@
 /*!
  * \namespace BlackMisc::SharedState
  * \brief Utilities for sharing state between multiple objects.
+ * \ingroup SharedState
  */
 
 /*!
  * \namespace BlackMisc::SharedState::DBus
  * \brief Implementation detail classes used by SharedState::CDataLinkDBus.
+ * \ingroup SharedState
  */
 
 /*!

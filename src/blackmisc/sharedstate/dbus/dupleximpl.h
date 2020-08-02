@@ -27,7 +27,6 @@ namespace BlackMisc
 
             /*!
              * Server side implementation of IDuplex. Receives messages from clients and forwards them to other clients via the CHub.
-             * \ingroup SharedState
              */
             class BLACKMISC_EXPORT CDuplex : public IDuplex
             {

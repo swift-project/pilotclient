@@ -28,7 +28,6 @@ namespace BlackMisc
 
             /*!
              * Server side implementation of IHub. Maintains a collection of CDuplex objects.
-             * \ingroup SharedState
              */
             class BLACKMISC_EXPORT CHub : public IHub
             {

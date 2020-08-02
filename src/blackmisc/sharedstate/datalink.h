@@ -20,7 +20,8 @@
 #include <QStringBuilder>
 
 /*!
- * \defgroup SharedState Utilities for sharing state between multiple objects
+ * \defgroup SharedState Shared state
+ * Utilities for sharing state between multiple objects
  */
 
 /*!
@@ -41,6 +42,7 @@ namespace BlackMisc
 
         /*!
          * Observe the connection state of an IDataLink.
+         * \ingroup SharedState
          */
         class CDataLinkConnectionWatcher : public QObject
         {

@@ -26,6 +26,7 @@ namespace BlackMisc
 
         /*!
          * Endpoint which can subscribe to events emitted by CPassiveMutator.
+         * \ingroup SharedState
          */
         class BLACKMISC_EXPORT CPassiveObserver : public QObject, public QEnableSharedFromThis<CPassiveObserver>
         {
@@ -69,6 +70,7 @@ namespace BlackMisc
 
         /*!
          * Dummy value class that matches any event.
+         * \ingroup SharedState
          */
         class BLACKMISC_EXPORT CAnyMatch : public CValueObject<CAnyMatch>
         {

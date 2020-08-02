@@ -26,6 +26,7 @@ namespace BlackMisc
 
         /*!
          * Non-template base class for CScalarJournal.
+         * \ingroup SharedState
          */
         class BLACKMISC_EXPORT CGenericScalarJournal : public QObject
         {
@@ -51,6 +52,7 @@ namespace BlackMisc
         /*!
          * Base class for an object that shares state with a corresponding CScalarObserver subclass object.
          * \tparam T Datatype encapsulating the state to be shared.
+         * \ingroup SharedState
          */
         template <typename T>
         class CScalarJournal : public CGenericScalarJournal

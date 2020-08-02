@@ -24,6 +24,7 @@ namespace BlackMisc
     {
         /*!
          * Non-template base class for CListObserver.
+         * \ingroup SharedState
          */
         class BLACKMISC_EXPORT CGenericListObserver : public QObject
         {
@@ -61,6 +62,7 @@ namespace BlackMisc
          * Base class for an object that shares state with a corresponding CListMutator subclass object.
          * \tparam T Datatype encapsulating the state to be shared.
          * \tparam U Datatype describing a filter to apply to the list.
+         * \ingroup SharedState
          */
         template <typename T, typename U = CAnyMatch>
         class CListObserver : public CGenericListObserver

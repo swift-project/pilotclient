@@ -24,6 +24,7 @@ namespace BlackMisc
     {
         /*!
          * Extends CPassiveObserver with the ability to send requests and receive replies.
+         * \ingroup SharedState
          */
         class BLACKMISC_EXPORT CActiveObserver final : public CPassiveObserver
         {

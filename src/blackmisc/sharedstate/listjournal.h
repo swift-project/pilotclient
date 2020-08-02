@@ -26,6 +26,7 @@ namespace BlackMisc
 
         /*!
          * Non-template base class for CListJournal.
+         * \ingroup SharedState
          */
         class BLACKMISC_EXPORT CGenericListJournal : public QObject
         {
@@ -51,6 +52,7 @@ namespace BlackMisc
         /*!
          * Base class for an object that shares state with a corresponding CListObserver subclass object.
          * \tparam T Datatype encapsulating the state to be shared.
+         * \ingroup SharedState
          */
         template <typename T>
         class CListJournal : public CGenericListJournal

@@ -23,7 +23,6 @@ namespace BlackMisc
         {
             /*!
              * Client side implementation of IDuplex, through which the client communicates with the server.
-             * \ingroup SharedState
              */
             class BLACKMISC_EXPORT CDuplexProxy : public IDuplex
             {
