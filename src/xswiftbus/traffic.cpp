@@ -30,6 +30,8 @@
 
 // clazy:excludeall=reserve-candidates
 
+float XPMP_PrepListHook(float, float, int, void *); // defined in xplanemp2/src/Renderer.cpp
+
 using namespace BlackMisc::Simulation::XPlane::QtFreeUtils;
 
 namespace XSwiftBus
@@ -107,6 +109,9 @@ namespace XSwiftBus
             else
             {
                 m_enabledMultiplayer = true;
+
+                // we will call xplanemp's callback from within our own callback
+                XPLMUnregisterFlightLoopCallback(XPMP_PrepListHook, nullptr);
             }
         }
 
@@ -819,6 +824,8 @@ namespace XSwiftBus
             m_updates.push_back({ plane->id, &plane->position, &plane->surfaces, &plane->surveillance });
         }
         XPMPUpdatePlanes(m_updates.data(), sizeof(XPMPUpdate_t), m_updates.size());
+
+        XPMP_PrepListHook(0, 0, 0, nullptr);
     }
 
     void CTraffic::interpolateGear(Plane* plane)
