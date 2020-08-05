@@ -59,7 +59,7 @@ namespace BlackMisc
                 {
                     // such a huge distance to existing value
                     CLogMessage(this).debug(u"Suspicious GND elevation distance '%1': %2ft at %3") << requestedForCallsign.asString() << distFt << elevationCoordinate.geodeticHeight().valueRoundedAsString(CLengthUnit::ft(), 1);
-                    BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Suspicious gnd. elevation distance");
+                    BLACK_AUDIT_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Suspicious gnd. elevation distance");
                 }
                 return false;
             }
@@ -74,7 +74,7 @@ namespace BlackMisc
                 {
                     // such a huge distance to existing value
                     CLogMessage(this).debug(u"Suspicious NON GND elevation distance for '%1': %2ft at %3") << requestedForCallsign.asString() << distFt << elevationCoordinate.geodeticHeight().valueRoundedAsString(CLengthUnit::ft(), 1);
-                    // BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Suspicious elevation distance");
+                    // BLACK_AUDIT_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Suspicious elevation distance");
                 }
                 return false;
             }

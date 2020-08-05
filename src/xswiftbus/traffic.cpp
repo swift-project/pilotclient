@@ -33,14 +33,15 @@
 float XPMP_PrepListHook(float, float, int, void *); // defined in xplanemp2/src/Renderer.cpp
 
 using namespace BlackMisc::Simulation::XPlane::QtFreeUtils;
+using namespace std::chrono_literals;
 
 namespace XSwiftBus
 {
     CTraffic::Plane::Plane(void *id_, const std::string &callsign_, const std::string &aircraftIcao_, const std::string &airlineIcao_, const std::string &livery_, const std::string &modelName_)
         : id(id_), callsign(callsign_), aircraftIcao(aircraftIcao_), airlineIcao(airlineIcao_), livery(livery_), modelName(modelName_)
     {
-        std::memset(static_cast<void *>(&position), 0, sizeof(position));
-        position.size = sizeof(position);
+        std::memset(static_cast<void *>(&positions), 0, sizeof(positions));
+        for (auto &position : positions) { position.size = sizeof(position); }
         std::memset(static_cast<void *>(&surveillance), 0, sizeof(surveillance));
         surveillance.size = sizeof(surveillance);
         std::memset(static_cast<void *>(&surfaces), 0, sizeof(surfaces));
@@ -356,14 +357,24 @@ namespace XSwiftBus
 
             Plane *plane = planeIt->second;
             if (!plane) { continue; }
-            plane->position.lat = latitudesDeg.at(i);
-            plane->position.lon = longitudesDeg.at(i);
-            plane->position.elevation = altitudesFt.at(i);
-            plane->position.pitch   = static_cast<float>(pitchesDeg.at(i));
-            plane->position.roll    = static_cast<float>(rollsDeg.at(i));
-            plane->position.heading = static_cast<float>(headingsDeg.at(i));
-            plane->position.offsetScale = 1.0f;
-            plane->position.clampToGround = true;
+            plane->positions[2].lat = latitudesDeg.at(i);
+            plane->positions[2].lon = longitudesDeg.at(i);
+            plane->positions[2].elevation = altitudesFt.at(i);
+            plane->positions[2].pitch   = static_cast<float>(pitchesDeg.at(i));
+            plane->positions[2].roll    = static_cast<float>(rollsDeg.at(i));
+            plane->positions[2].heading = static_cast<float>(headingsDeg.at(i));
+            plane->positions[2].offsetScale = 1.0f;
+            plane->positions[2].clampToGround = true;
+            plane->positionTimes[2] = std::chrono::steady_clock::now();
+
+            // save 2 positions at 1-second intervals for use in interpolation
+            if (plane->positionTimes[2] - plane->positionTimes[1] > 1s)
+            {
+                plane->positionTimes[0] = plane->positionTimes[1];
+                plane->positionTimes[1] = plane->positionTimes[2];
+                std::memcpy(&plane->positions[0], &plane->positions[1], sizeof(plane->positions[0]));
+                std::memcpy(&plane->positions[1], &plane->positions[2], sizeof(plane->positions[0]));
+            }
 
             if (setOnGround) { plane->isOnGround = onGrounds.at(i); }
         }
@@ -452,14 +463,14 @@ namespace XSwiftBus
             const Plane *plane = planeIt->second;
             assert(plane);
 
-            const double latDeg = plane->position.lat;
-            const double lonDeg = plane->position.lon;
+            const double latDeg = plane->positions[2].lat;
+            const double lonDeg = plane->positions[2].lon;
             double groundElevation = 0.0;
             bool isWater = false;
             if (getSettings().isTerrainProbeEnabled())
             {
                 // we expect elevation in meters
-                groundElevation = plane->terrainProbe.getElevation(latDeg, lonDeg, plane->position.elevation, requestedCallsign, isWater).front();
+                groundElevation = plane->terrainProbe.getElevation(latDeg, lonDeg, plane->positions[2].elevation, requestedCallsign, isWater).front();
                 if (std::isnan(groundElevation)) { groundElevation = 0.0; }
             }
 
@@ -820,17 +831,39 @@ namespace XSwiftBus
         for (const auto pair : m_planesById)
         {
             Plane *plane = pair.second;
+            interpolatePosition(plane);
             interpolateGear(plane);
-            m_updates.push_back({ plane->id, &plane->position, &plane->surfaces, &plane->surveillance });
+            m_updates.push_back({ plane->id, &plane->positions[3], &plane->surfaces, &plane->surveillance });
         }
         XPMPUpdatePlanes(m_updates.data(), sizeof(XPMPUpdate_t), m_updates.size());
 
         XPMP_PrepListHook(0, 0, 0, nullptr);
     }
 
-    void CTraffic::interpolateGear(Plane* plane)
+    void CTraffic::interpolatePosition(Plane *plane)
     {
-        const auto now = std::chrono::system_clock::now();
+        std::memcpy(&plane->positions[3], &plane->positions[2], sizeof(plane->positions[2]));
+
+        const auto now = std::chrono::steady_clock::now();
+        const auto t1 = plane->positionTimes[2] - plane->positionTimes[0];
+        const auto t2 = now - plane->positionTimes[0];
+
+        // This interpolation is only intended to smooth over
+        // small errors. Give up if the error is too large.
+        if (t1 > 3s || t2 > 3s) { return; }
+
+        const double dLat = plane->positions[2].lat - plane->positions[0].lat;
+        const double dLon = plane->positions[2].lon - plane->positions[0].lon;
+        const double dAlt = plane->positions[2].elevation - plane->positions[0].elevation;
+
+        plane->positions[3].lat = plane->positions[0].lat + dLat * t2 / t1;
+        plane->positions[3].lon = plane->positions[0].lon + dLon * t2 / t1;
+        plane->positions[3].elevation = plane->positions[0].elevation + dAlt * t2 / t1;
+    }
+
+    void CTraffic::interpolateGear(Plane *plane)
+    {
+        const auto now = std::chrono::steady_clock::now();
         static const float epsilon = std::numeric_limits<float>::epsilon();
         const float f = plane->surfaces.gearPosition - plane->targetGearPosition;
         if (std::abs(f) > epsilon)
@@ -974,10 +1007,10 @@ namespace XSwiftBus
             }
 
             modelName = plane->modelName;
-            if (!isValidPosition(plane->position))
+            if (!isValidPosition(plane->positions[3]))
             {
                 WARNING_LOG("Invalid follow aircraft position for " + plane->callsign);
-                WARNING_LOG("Pos: " + pos2String(plane->position));
+                WARNING_LOG("Pos: " + pos2String(plane->positions[3]));
                 return 0;
             }
 
@@ -987,7 +1020,7 @@ namespace XSwiftBus
                 if (traffic->m_deltaCameraPosition.dyMeters < 10) { traffic->m_deltaCameraPosition.dyMeters = 10; }
             }
 
-            XPLMWorldToLocal(plane->position.lat, plane->position.lon, plane->position.elevation * kFtToMeters, &lxMeters, &lyMeters, &lzMeters);
+            XPLMWorldToLocal(plane->positions[3].lat, plane->positions[3].lon, plane->positions[3].elevation * kFtToMeters, &lxMeters, &lyMeters, &lzMeters);
         }
 
         // Fill out the camera position info.

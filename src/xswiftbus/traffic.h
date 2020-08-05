@@ -174,8 +174,9 @@ namespace XSwiftBus
             CTerrainProbe terrainProbe;
             XPMPPlaneSurfaces_t surfaces;
             float targetGearPosition = 0;
-            std::chrono::system_clock::time_point prevSurfacesLerpTime;
-            XPMPPlanePosition_t position;
+            std::chrono::steady_clock::time_point prevSurfacesLerpTime;
+            std::chrono::steady_clock::time_point positionTimes[3];
+            XPMPPlanePosition_t positions[4]; // 1 as input for extrapolation, 1 as next input, 1 latest, 1 as output
             XPMPPlaneSurveillance_t surveillance;
             Plane(void *id_, const std::string &callsign_, const std::string &aircraftIcao_, const std::string &airlineIcao_,
                   const std::string &livery_, const std::string &modelName_);
@@ -235,6 +236,7 @@ namespace XSwiftBus
 
         std::vector<XPMPUpdate_t> m_updates;
         void doPlaneUpdates();
+        void interpolatePosition(Plane *);
         void interpolateGear(Plane *);
     };
 } // ns
