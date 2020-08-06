@@ -49,8 +49,8 @@ sub extractGccWarning
     $line =~ m(^\s*(?<loc>.*?): warning: (?<msg>.*)$) or return ();
     my ($loc, $msg) = @+{ qw(loc msg) };
     $loc =~ m(^(?<file>.*?):(?<loc>[0-9:]+)$) or return (file => $loc, msg => $msg);
-    my ($file, $loc) = ($+{file}, split ':', $+{loc});
-    return (file => $file, line => $loc, msg => $msg);
+    my ($file, $line) = ($+{file}, split ':', $+{loc});
+    return (file => $file, line => $line, msg => $msg);
 }
 
 sub extractMsvcWarning
@@ -59,8 +59,8 @@ sub extractMsvcWarning
     $line =~ m(^\s*(?<loc>.*?): warning (?<msg>[A-Z]+[0-9]+: .*)$) or return ();
     my ($loc, $msg) = @+{ qw(loc msg) };
     $loc =~ m(^(?<file>.*)\((?<loc>[0-9,]+)\)$) or return (file => $loc, msg => $msg);
-    my ($file, $loc) = ($+{file}, split ',', $+{loc});
-    return (file => $file, line => $loc, msg => $msg);
+    my ($file, $line) = ($+{file}, split ',', $+{loc});
+    return (file => $file, line => $line, msg => $msg);
 }
 
 sub toRelativePath
