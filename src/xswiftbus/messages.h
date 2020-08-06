@@ -17,6 +17,7 @@
 #include <vector>
 #include <string>
 #include <array>
+#include <iterator>
 #include <algorithm>
 
 namespace XSwiftBus
