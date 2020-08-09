@@ -386,20 +386,18 @@ parser.add_argument('--replaceDR', metavar="TEXT", help="Replace dataRef's root 
 
 args = parser.parse_args()
 
-# If called with no argument (e.g. by double-clicking the script) ask the user interactively
-# if (s)he likes to work on the current directory.
-UserWantsIt = None
+# ask the user interactively if (s)he likes to work on the current directory.
 if args.path == 'NULL':
     args.path = Path.cwd()
-    print (parser.description)
-    print ('Do you want to run CSL2XSB on the current directory "'+str(args.path)+'"?')
-    while True:
-        UserWantsIt = input ('Answer "y" or "n": ')
-        if UserWantsIt.upper() == 'N':
-            print ('You answered "N", so we exit without doing anything. Try "python CSL2XSBpy -h" for help.')
-            exit()
-        if UserWantsIt.upper() == 'Y':
-            break
+print (parser.description)
+print ('Do you want to run CSL2XSB on the current directory "'+str(args.path)+'"?')
+while True:
+    UserWantsIt = input ('Answer "y" or "n": ')
+    if UserWantsIt.upper() == 'N':
+        print ('You answered "N", so we exit without doing anything. Try "python CSL2XSBpy -h" for help.')
+        exit()
+    if UserWantsIt.upper() == 'Y':
+        break
 
 # normalize the path, resolves relative paths and makes nice directory delimiters
 basePath = Path(args.path)
@@ -413,9 +411,7 @@ if args.verbose:
 numConverted = ConvFolder(basePath)
 print ('Done. Converted ' + str(numConverted) + ' OBJ8 files in total. Produced ' + str(_warnings) + ' warning(s).')
 
-# Running interactively?
-if UserWantsIt is not None:
-    input ("Hit [Enter] to finish.")
+input ("Hit [Enter] to finish.")
 
 # --- Done ---
 exit(0)
