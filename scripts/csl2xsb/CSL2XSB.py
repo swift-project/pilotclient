@@ -395,7 +395,7 @@ while True:
     UserWantsIt = input ('Answer "y" or "n": ')
     if UserWantsIt.upper() == 'N':
         print ('You answered "N", so we exit without doing anything. Try "python CSL2XSBpy -h" for help.')
-        exit()
+        sys.exit()
     if UserWantsIt.upper() == 'Y':
         break
 
