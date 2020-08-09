@@ -33,10 +33,11 @@ namespace BlackMisc
         memset (&startupInfo, 0, sizeof (startupInfo));
         startupInfo.cb = sizeof (startupInfo);
 
-        QString command;
-        command += program;
-        command += ' ';
-        command += arguments.join(' ').replace('/', '\\');
+        QString command = '"' % QString(program).replace('/', '\\') % '"';
+        if (!arguments.isEmpty())
+        {
+            command += " \"" % arguments.join('" "').replace('/', '\\') % '"';
+        }
 
         DWORD flags = 0;
         flags |= NORMAL_PRIORITY_CLASS;

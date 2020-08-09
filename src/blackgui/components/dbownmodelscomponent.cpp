@@ -17,6 +17,7 @@
 #include "blackcore/db/databaseutils.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/processctrl.h"
 #include "blackmisc/statusmessage.h"
 #include "blackconfig/buildconfig.h"
 #include "ui_dbownmodelscomponent.h"
@@ -290,6 +291,16 @@ namespace BlackGui
             if (reply != QMessageBox::Ok) { return; }
 
             this->requestSimulatorModels(simulator, IAircraftModelLoader::InBackgroundNoCache);
+        }
+
+        void CDbOwnModelsComponent::runScriptCSL2XSB()
+        {
+            static const QString script = QDir(CDirectoryUtils::shareDirectory()).filePath("CSL2XSB/CSL2XSB.exe");
+            for (const QString &modelDir : m_simulatorSettings.getModelDirectoriesOrDefault(CSimulatorInfo::xplane()))
+            {
+                CLogMessage(this).info(u"Running CSL2XSB on model directory %1") << modelDir;
+                CProcessCtrl::startDetached(script, { QDir::cleanPath(modelDir) }, true);
+            }
         }
 
         void CDbOwnModelsComponent::CLoadModelsMenu::customMenu(CMenuActions &menuActions)
@@ -601,6 +612,21 @@ namespace BlackGui
                         });
                     }
                     menuActions.addAction(m_clearCacheActions[4], CMenuAction::pathSimulatorModelsClearCache());
+                }
+
+                if (sims.isXPlane() && CBuildConfig::isRunningOnWindowsNtPlatform() && CBuildConfig::buildWordSize() == 64)
+                {
+                    if (!m_csl2xsbAction)
+                    {
+                        m_csl2xsbAction = new QAction(CIcons::appTerminal16(), "XPlane: run CSL2XSB on all models", this);
+                        connect(m_csl2xsbAction, &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                        {
+                            if (!ownModelsComp) { return; }
+                            Q_UNUSED(checked)
+                            ownModelsComp->runScriptCSL2XSB();
+                        });
+                    }
+                    menuActions.addAction(m_csl2xsbAction, CMenuAction::pathSimulator());
                 }
             }
             this->nestedCustomMenu(menuActions);

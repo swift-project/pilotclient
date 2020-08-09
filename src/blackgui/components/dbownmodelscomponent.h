@@ -192,6 +192,9 @@ namespace BlackGui
             //! Confirmed forced reload
             void confirmedForcedReload(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
+            //! Run CSL2XSB script
+            void runScriptCSL2XSB();
+
             //! The menu for loading and handling own models for mapping tasks
             //! \note This is specific for that very component
             //! \fixme MS 2018-12 Move to namespace scope and add Q_OBJECT
@@ -210,6 +213,7 @@ namespace BlackGui
                 QList<QAction *> m_loadActions;       //!< load actions
                 QList<QAction *> m_reloadActions;     //!< reload actions
                 QList<QAction *> m_clearCacheActions; //!< clear own models cahce if ever needed
+                QAction *m_csl2xsbAction = nullptr;   //!< run csl2xsb script
             };
         };
     } // ns
