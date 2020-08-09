@@ -54,6 +54,7 @@ namespace BlackMisc
             ApplicationModels,
             ApplicationSettings,
             ApplicationSimulator,
+            ApplicationTerminal,
             ApplicationTextMessages,
             ApplicationWeather,
             ApplicationRadar,
@@ -594,6 +595,9 @@ namespace BlackMisc
 
         //! Application simulator
         static const QPixmap &appSimulator16();
+
+        //! Terminal application
+        static const QPixmap &appTerminal16();
 
         //! Application text messages
         static const QPixmap &appTextMessages16();

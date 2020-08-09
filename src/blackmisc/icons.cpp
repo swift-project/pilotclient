@@ -830,6 +830,12 @@ namespace BlackMisc
         return joystick16();
     }
 
+    const QPixmap &CIcons::appTerminal16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/monitor-terminal.png");
+        return pm;
+    }
+
     const QPixmap &CIcons::appTextMessages16()
     {
         return text16();

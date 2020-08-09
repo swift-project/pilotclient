@@ -62,6 +62,7 @@ namespace BlackMisc
             CIcon(CIcons::ApplicationModels, "models"),
             CIcon(CIcons::ApplicationSettings, "settings"),
             CIcon(CIcons::ApplicationSimulator, "simulator"),
+            CIcon(CIcons::ApplicationTerminal, "terminal"),
             CIcon(CIcons::ApplicationTextMessages, "text messages"),
             CIcon(CIcons::ApplicationWeather, "weather"),
             CIcon(CIcons::ApplicationRadar, "radar"),
