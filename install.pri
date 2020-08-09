@@ -190,6 +190,18 @@ win32-g++ {
     INSTALLS += vc_runtime_target
 }
 
+############### Install csl2xsb ###############
+
+win32:swiftConfig(sims.xswiftbus) {
+    PYINST_BIN = $$system($$(SYSTEMROOT)\system32\where pyinstaller 2> nul)
+    !isEmpty(PYINST_BIN) {
+        CSL2XSB = $$shell_path($$SourceRoot/scripts/csl2xsb/CSL2XSB.py)
+        csl2xsb.path = $${PREFIX}/share/CSL2XSB
+        csl2xsb.extra = $$PYINST_BIN -y --distpath $$shell_path($${PREFIX}/share) --workpath $$shell_path($$(TEMP)) $$CSL2XSB
+        INSTALLS += csl2xsb
+    }
+}
+
 ############### Install externals ##############
 
 win32: externals_lib_target.path = $${PREFIX}/bin

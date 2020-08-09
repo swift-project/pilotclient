@@ -1,0 +1,31 @@
+<component>
+    <name>csl2xsb</name>
+    <description>CSL2XSB script</description>
+    <canBeEdited>1</canBeEdited>
+    <detailedDescription>script needed to process X-CSL models for swift</detailedDescription>
+    <selected>1</selected>
+    <show>1</show>
+    <shouldPackRuleList>
+        <platformTest>
+            <type>windows</type>
+        </platformTest>
+        <compareText>
+            <logic>equals</logic>
+            <text>${architecture}</text>
+            <value>64</value>
+        </compareText>
+    </shouldPackRuleList>
+    <folderList>
+        <folder>
+            <description>share</description>
+            <destination>${installdir}/share</destination>
+            <name>share_windows</name>
+            <platforms>windows</platforms>
+            <distributionFileList>
+                <distributionFile>
+                    <origin>../../dist/share/CSL2XSB</origin>
+                </distributionFile>
+            </distributionFileList>
+        </folder>
+    </folderList>
+</component>

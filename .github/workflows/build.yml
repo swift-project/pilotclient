@@ -176,6 +176,7 @@ jobs:
       - name: Install dependencies
         run: |
           choco install jom --yes
+          pip install PyInstaller
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
