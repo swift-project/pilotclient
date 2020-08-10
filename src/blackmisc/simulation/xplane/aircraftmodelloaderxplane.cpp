@@ -383,121 +383,32 @@ namespace BlackMisc
                 return line;
             }
 
-            bool CAircraftModelLoaderXPlane::parseObjectCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)
+            bool CAircraftModelLoaderXPlane::parseObjectCommand(const QStringList &, CSLPackage &package, const QString &path, int lineNum)
             {
                 package.planes.push_back(CSLPlane());
 
-                if (tokens.size() != 2)
-                {
-                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : OBJECT command requires 1 argument.") << path << lineNum;
-                    m_loadingMessages.push_back(m);
-                    return false;
-                }
-
-                QString relativePath(tokens[1]);
-                normalizePath(relativePath);
-                QString fullPath(relativePath);
-                if (!doPackageSub(fullPath))
-                {
-                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : package not found.") << path << lineNum;
-                    m_loadingMessages.push_back(m);
-                    return false;
-                }
-
-                // Get obj header
-                QFile objFile(fullPath);
-                if (!objFile.open(QIODevice::ReadOnly | QIODevice::Text))
-                {
-                    const CStatusMessage m = CStatusMessage(this).error(u"XPlane object '%1' does not exist.") << fullPath;
-                    m_loadingMessages.push_back(m);
-                    return false;
-                }
-                QTextStream ts(&objFile);
-
-                // First line is about line endings. We don't need it.
-                readLineFrom(ts);
-
-                // Version number.
-                QString versionLine = readLineFrom(ts);
-                if (versionLine.isNull()) { return false; }
-                QString version = splitStringRefs(versionLine, [](QChar c) { return c.isSpace(); }).value(0).toString();
-
-                // For version 7, there is another line 'obj'
-                if (version == "700") { readLineFrom(ts); }
-
-                // Texture
-                QString textureLine = readLineFrom(ts);
-                if (textureLine.isNull()) { return false; }
-                QString texture = splitStringRefs(textureLine, [](QChar c) { return c.isSpace(); }).value(0).toString();
-
-                objFile.close();
-
-                QFileInfo fileInfo(fullPath);
-
-                QStringList dirNames;
-                dirNames.append(relativePath.split('/', Qt::SkipEmptyParts));
-                // Replace the first one being the package name with the package root dir
-                QString packageRootDir = package.path.mid(package.path.lastIndexOf('/') + 1);
-                dirNames.replace(0, packageRootDir);
-                // Remove the last one being the obj itself
-                dirNames.removeLast();
-
-                package.planes.back().dirNames = dirNames;
-                package.planes.back().objectName = fileInfo.completeBaseName();
-                package.planes.back().textureName = texture;
-                package.planes.back().filePath = fullPath;
-                package.planes.back().objectVersion = CSLPlane::OBJ7;
-                return true;
+                const auto m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Unsupported legacy CSL format.") << path << lineNum;
+                m_loadingMessages.push_back(m);
+                return false;
             }
 
-            bool CAircraftModelLoaderXPlane::parseTextureCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)
+            bool CAircraftModelLoaderXPlane::parseTextureCommand(const QStringList &, CSLPackage &package, const QString &path, int lineNum)
             {
-                if (tokens.size() != 2)
+                if (!package.planes.isEmpty() && !package.planes.back().hasErrors)
                 {
-                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : TEXTURE command requires 1 argument.") << path << lineNum;
+                    const auto m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Unsupported legacy CSL format.") << path << lineNum;
                     m_loadingMessages.push_back(m);
-                    return false;
                 }
-
-                // Load regular texture
-                QString relativeTexPath = tokens[1];
-                normalizePath(relativeTexPath);
-                QString absoluteTexPath(relativeTexPath);
-
-                if (!doPackageSub(absoluteTexPath))
-                {
-                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : package not found.") << path << lineNum;
-                    m_loadingMessages.push_back(m);
-                    return false;
-                }
-
-                QFileInfo fileInfo(absoluteTexPath);
-                if (!fileInfo.exists())
-                {
-                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Texture '%3' does not exist.") << path << lineNum << absoluteTexPath;
-                    m_loadingMessages.push_back(m);
-                    return false;
-                }
-
-                package.planes.back().textureName = fileInfo.completeBaseName();
-                return true;
+                return false;
             }
 
-            bool CAircraftModelLoaderXPlane::parseAircraftCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)
+            bool CAircraftModelLoaderXPlane::parseAircraftCommand(const QStringList &, CSLPackage &package, const QString &path, int lineNum)
             {
-                Q_UNUSED(package)
-                // AIRCAFT <min> <max> <path>
-                if (tokens.size() != 4)
-                {
-                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : AIRCRAFT command requires 3 arguments.") << path << lineNum;
-                    m_loadingMessages.push_back(m);
-                    return false;
-                }
+                package.planes.push_back(CSLPlane());
 
-                // Flyable aircrafts are parsed by a different method. We don't know any aircraft files in CSL packages.
-                // If there is one, implement this method here.
-                CLogMessage(this).warning(u"Not implemented yet.");
-                return true;
+                const auto m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Unsupported legacy CSL format.") << path << lineNum;
+                m_loadingMessages.push_back(m);
+                return false;
             }
 
             bool CAircraftModelLoaderXPlane::parseObj8AircraftCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)
@@ -522,11 +433,19 @@ namespace BlackMisc
 
             bool CAircraftModelLoaderXPlane::parseObj8Command(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)
             {
-                // OBJ8 <group> <animate YES|NO> <filename> {<texture filename> {<lit texture filename>}}
-                if (tokens.size() < 4 || tokens.size() > 6)
+                // OBJ8 <group> <animate YES|NO> <filename>
+                if (tokens.size() != 4)
                 {
-                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : OBJ8 command takes 3-5 arguments.") << path << lineNum;
-                    m_loadingMessages.push_back(m);
+                    if (tokens.size() == 5 || tokens.size() == 6)
+                    {
+                        const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Unsupported IVAO CSL format - consider using CSL2XSB.") << path << lineNum;
+                        m_loadingMessages.push_back(m);
+                    }
+                    else
+                    {
+                        const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : OBJ8 command takes 3 arguments.") << path << lineNum;
+                        m_loadingMessages.push_back(m);
+                    }
                     return false;
                 }
 
@@ -552,33 +471,6 @@ namespace BlackMisc
 
                 package.planes.back().dirNames = dirNames;
                 package.planes.back().filePath = fullPath;
-
-                if (tokens.size() >= 5)
-                {
-                    // Load regular texture
-                    // Replace package root dir again back to package name
-                    dirNames.replace(0, package.name);
-                    QString relativeTexPath = dirNames.join('/') + '/' + tokens[4];
-                    normalizePath(relativeTexPath);
-                    QString absoluteTexPath(relativeTexPath);
-
-                    if (!doPackageSub(absoluteTexPath))
-                    {
-                        const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : package not found.") << path << lineNum;
-                        m_loadingMessages.push_back(m);
-                        return false;
-                    }
-
-                    QFileInfo texFileInfo(absoluteTexPath);
-                    if (!texFileInfo.exists())
-                    {
-                        const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Texture '%3' does not exist.") << path << lineNum << absoluteTexPath;
-                        m_loadingMessages.push_back(m);
-                        return false;
-                    }
-
-                    package.planes.back().textureName = texFileInfo.completeBaseName();
-                }
                 return true;
             }
 
