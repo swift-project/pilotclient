@@ -668,7 +668,7 @@ namespace BlackCore
             else
             {
                 msgs.push_back(CStatusMessage(this).info(u"File '%1' is not newer than cache (%2)") << fileInfo.absoluteFilePath() << cacheDateTime.toUTC().toString());
-                return true;
+                return false;
             }
         }
 
