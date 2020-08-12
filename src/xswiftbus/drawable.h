@@ -28,15 +28,20 @@ namespace XSwiftBus
         //! Destructor.
         virtual ~CDrawable() { hide(); }
 
+        //! Is currently shown.
+        bool isVisible() const { return m_visible; }
+
         //! Register the draw callback.
         void show()
         {
+            m_visible = true;
             XPLMRegisterDrawCallback(callback, m_phase, m_before, static_cast<void*>(this));
         }
 
         //! Unregister the draw callback.
         void hide()
         {
+            m_visible = false;
             XPLMUnregisterDrawCallback(callback, m_phase, m_before, static_cast<void*>(this));
         }
 
@@ -51,8 +56,9 @@ namespace XSwiftBus
             return 1;
         }
 
-        const XPLMDrawingPhase m_phase;
-        const bool m_before;
+        XPLMDrawingPhase m_phase;
+        bool m_before = false;
+        bool m_visible = false;
     };
 
 }

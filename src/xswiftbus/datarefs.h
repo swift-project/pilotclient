@@ -13,7 +13,7 @@
 
 #include <XPLM/XPLMDataAccess.h>
 #include <XPLM/XPLMUtilities.h>
-#include <vector>
+#include <array>
 #include <string>
 #include <cassert>
 
@@ -65,10 +65,10 @@ namespace XSwiftBus
         bool isValid() const { return m_ref; }
 
         template <typename T>
-        void implSetAll(std::vector<T> const &);
+        void implSetAll(T* const);
 
         template <typename T>
-        std::vector<T> implGetAll() const;
+        void implGetAll(T*) const;
 
         template <typename T>
         void implSetAt(int index, T);
@@ -136,11 +136,14 @@ namespace XSwiftBus
         //! Dataref type
         using DataRefType = typename DataRefTraits::type;
 
+        //! Array dataref size
+        static constexpr auto DataRefSize = DataRefTraits::size;
+
         //! Set the value of the whole array (if it is writable)
-        void setAll(std::vector<DataRefType> const &a) { static_assert(DataRefTraits::writable, "read-only dataref"); ArrayDataRefImpl::implSetAll(a); }
+        void setAll(std::array<DataRefType, DataRefSize> const &a) { static_assert(DataRefTraits::writable, "read-only dataref"); ArrayDataRefImpl::implSetAll<DataRefType>(a.data()); }
 
         //! Get the value of the whole array
-        std::vector<DataRefType> getAll() const { return ArrayDataRefImpl::implGetAll<DataRefType>(); }
+        std::array<DataRefType, DataRefSize> getAll() const { std::array<DataRefType, DataRefSize> result; ArrayDataRefImpl::implGetAll<DataRefType>(result.data()); return result; }
 
         //! Set the value of a single element (if it is writable)
         void setAt(int index, DataRefType d) { static_assert(DataRefTraits::writable, "read-only dataref"); ArrayDataRefImpl::implSetAt(index, d); }
@@ -218,13 +221,13 @@ namespace XSwiftBus
     inline double DataRefImpl::implGet<double>() const { return XPLMGetDatad(m_ref); }
 
     template <>
-    inline void ArrayDataRefImpl::implSetAll<int>(std::vector<int> const &v) { assert((int)v.size() <= m_size); XPLMSetDatavi(m_ref, const_cast<int *>(&v[0]), 0, (int)v.size()); }
+    inline void ArrayDataRefImpl::implSetAll(int const *v) { XPLMSetDatavi(m_ref, const_cast<int *>(v), 0, m_size); }
     template <>
-    inline void ArrayDataRefImpl::implSetAll<float>(std::vector<float> const &v) { assert((int)v.size() <= m_size); XPLMSetDatavf(m_ref, const_cast<float *>(&v[0]), 0, (int)v.size()); }
+    inline void ArrayDataRefImpl::implSetAll(float const *v) { XPLMSetDatavf(m_ref, const_cast<float *>(v), 0, m_size); }
     template <>
-    inline std::vector<int> ArrayDataRefImpl::implGetAll<int>() const { std::vector<int> v(m_size); XPLMGetDatavi(m_ref, &v[0], 0, m_size); return v; }
+    inline void ArrayDataRefImpl::implGetAll(int *v) const { XPLMGetDatavi(m_ref, &v[0], 0, m_size); }
     template <>
-    inline std::vector<float> ArrayDataRefImpl::implGetAll<float>() const { std::vector<float> v(m_size); XPLMGetDatavf(m_ref, &v[0], 0, m_size); return v; }
+    inline void ArrayDataRefImpl::implGetAll(float *v) const { XPLMGetDatavf(m_ref, &v[0], 0, m_size); }
 
     template <>
     inline void ArrayDataRefImpl::implSetAt<int>(int i, int d) { assert(i <= m_size); XPLMSetDatavi(m_ref, &d, i, 1); }

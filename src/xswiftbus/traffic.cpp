@@ -65,6 +65,9 @@ namespace XSwiftBus
         assert(!s_instance);
         s_instance = this;
         XPLMRegisterKeySniffer(followAircraftKeySniffer, 1, this);
+
+        // init labels
+        this->setDrawingLabels(this->getSettings().isDrawingLabels());
     }
     // *INDENT-ON*
 
@@ -255,6 +258,30 @@ namespace XSwiftBus
     void CTraffic::setDefaultIcao(const std::string &defaultIcao)
     {
         XPMPSetDefaultPlaneICAO(defaultIcao.c_str());
+    }
+
+    void CTraffic::setDrawingLabels(bool drawing)
+    {
+        CSettings s = this->getSettings();
+        if (s.isDrawingLabels() != drawing)
+        {
+            s.setDrawingLabels(drawing);
+            this->setSettings(s);
+        }
+
+        if (drawing)
+        {
+            m_labels.show();
+        }
+        else
+        {
+            m_labels.hide();
+        }
+    }
+
+    bool CTraffic::isDrawingLabels() const
+    {
+        return m_labels.isVisible();
     }
 
     void CTraffic::setMaxPlanes(int planes)
@@ -581,13 +608,19 @@ namespace XSwiftBus
             else if (message.getMethodName() == "setDrawingLabels")
             {
                 maybeSendEmptyDBusReply(wantsReply, sender, serial);
-                // removed in xpmp2
+                bool drawing = true;
+                message.beginArgumentRead();
+                message.getArgument(drawing);
+                queueDBusCall([ = ]()
+                {
+                    setDrawingLabels(drawing);
+                });
             }
             else if (message.getMethodName() == "isDrawingLabels")
             {
                 queueDBusCall([ = ]()
                 {
-                    sendDBusReply(sender, serial, false); // always false in xpmp2
+                    sendDBusReply(sender, serial, isDrawingLabels());
                 });
             }
             else if (message.getMethodName() == "setMaxPlanes")
@@ -843,6 +876,7 @@ namespace XSwiftBus
     void CTraffic::interpolatePosition(Plane *plane)
     {
         std::memcpy(&plane->positions[3], &plane->positions[2], sizeof(plane->positions[2]));
+        return;
 
         const auto now = std::chrono::steady_clock::now();
         const auto t1 = plane->positionTimes[2] - plane->positionTimes[0];
@@ -877,6 +911,53 @@ namespace XSwiftBus
             plane->surfaces.gearPosition = std::max(0.0f, std::min(plane->surfaces.gearPosition, 1.0f));
         }
         plane->prevSurfacesLerpTime = now;
+    }
+
+    void CTraffic::Labels::draw()
+    {
+        static const double metersPerFt = 0.3048;
+        static float color[3]{ 1.0f, 0.75f, 0.0f };
+        std::array<float, 16> worldMat = m_worldMat.getAll();
+        std::array<float, 16> projMat = m_projMat.getAll();
+        double windowWidth = static_cast<double>(m_windowWidth.get());
+        double windowHeight = static_cast<double>(m_windowHeight.get());
+        XPLMCameraPosition_t camPos {};
+        XPLMReadCameraPosition(&camPos);
+
+        for (const auto pair : m_traffic->m_planesById)
+        {
+            char *text = const_cast<char *>(pair.second->label);
+            const XPMPPlanePosition_t &planePos = pair.second->positions[3];
+
+            double worldPos[4]{ 0, 0, 0, 1 };
+            double localPos[4]{};
+            double windowPos[4]{};
+            XPLMWorldToLocal(planePos.lat, planePos.lon, planePos.elevation * metersPerFt, &worldPos[0], &worldPos[1], &worldPos[2]);
+            matrixMultVec(localPos, worldMat.data(), worldPos);
+            matrixMultVec(windowPos, projMat.data(), localPos);
+
+            windowPos[3] = 1.0 / windowPos[3];
+            windowPos[0] *= windowPos[3];
+            windowPos[1] *= windowPos[3];
+            windowPos[2] *= windowPos[3];
+
+            if (windowPos[2] < 0.0 || windowPos[2] > 1.0)
+            {
+                continue; // plane is behind camera
+            }
+            XPLMDrawString(color,
+                static_cast<int>(std::lround(windowWidth  * (windowPos[0] * 0.5 + 0.5))),
+                static_cast<int>(std::lround(windowHeight * (windowPos[1] * 0.5 + 0.5))),
+                text, nullptr, xplmFont_Basic);
+        }
+    }
+
+    void CTraffic::Labels::matrixMultVec(double out[4], const float m[16], const double v[4])
+    {
+        out[0] = v[0] * m[0] + v[1] * m[4] + v[2] * m[8] + v[3] * m[12];
+        out[1] = v[0] * m[1] + v[1] * m[5] + v[2] * m[9] + v[3] * m[13];
+        out[2] = v[0] * m[2] + v[1] * m[6] + v[2] * m[10] + v[3] * m[14];
+        out[3] = v[0] * m[3] + v[1] * m[7] + v[2] * m[11] + v[3] * m[15];
     }
 
     int CTraffic::orbitPlaneFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon)

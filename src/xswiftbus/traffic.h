@@ -16,6 +16,7 @@
 #include "command.h"
 #include "datarefs.h"
 #include "terrainprobe.h"
+#include "drawable.h"
 #include "menus.h"
 #include "XPMPMultiplayer.h"
 #include <XPLM/XPLMCamera.h>
@@ -73,6 +74,12 @@ namespace XSwiftBus
 
         //! Set the ICAO code to use for aircraft without a model match
         void setDefaultIcao(const std::string &defaultIcao);
+
+        //! Set whether the plugin draws type and callsign labels above aircraft
+        void setDrawingLabels(bool drawing);
+
+        //! Get whether the plugin draws type and callsign labels above aircraft
+        bool isDrawingLabels() const;
 
         //! Set the maximum number of aircraft.
         void setMaxPlanes(int planes);
@@ -182,6 +189,24 @@ namespace XSwiftBus
                   const std::string &livery_, const std::string &modelName_);
         };
 
+        //! Label renderer
+        class Labels : public CDrawable
+        {
+        public:
+            Labels(CTraffic *traffic) : CDrawable(xplm_Phase_Window, false), m_traffic(traffic) {}
+        protected:
+            virtual void draw() override;
+        private:
+            static void matrixMultVec(double out[4], const float m[16], const double v[4]);
+            CTraffic *m_traffic = nullptr;
+            ArrayDataRef<xplane::data::sim::graphics::view::world_matrix> m_worldMat;
+            ArrayDataRef<xplane::data::sim::graphics::view::projection_matrix_3d> m_projMat;
+            DataRef<xplane::data::sim::graphics::view::window_width> m_windowWidth;
+            DataRef<xplane::data::sim::graphics::view::window_height> m_windowHeight;
+            DataRef<xplane::data::sim::graphics::view::visibility_effective_m> m_visibilityM;
+        };
+        Labels m_labels { this };
+
         //! Check functions
         //! @{
         static bool isPlusMinus180(float v);
@@ -220,7 +245,6 @@ namespace XSwiftBus
         CCommand m_followPlaneViewNextCommand;
         CCommand m_followPlaneViewPreviousCommand;
 
-        DataRef<xplane::data::sim::graphics::view::world_render_type> m_worldRenderType;
         DataRef<xplane::data::sim::flightmodel::position::local_x> m_ownAircraftPositionX;
         DataRef<xplane::data::sim::flightmodel::position::local_y> m_ownAircraftPositionY;
         DataRef<xplane::data::sim::flightmodel::position::local_z> m_ownAircraftPositionZ;
