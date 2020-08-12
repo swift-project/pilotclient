@@ -255,7 +255,7 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! 0=X-Plane custom, 1=Airliner, 2=GFC-700, 3=S-Tec 55, 4=S-Tec 55 with altitude preselect, 5=KAP-140 single axis, 6=KAP-140 dual axis, 7=KAP-140 dual axis with altitude preselect, 8=Piper Autocontrol (enum)
+                    //! 0=X-Plane custom, 1=Airliner, 2=GFC-700, 3=S-Tec 55, 4=S-Tec 55 with altitude preselect, 5=KAP-140 single axis, 6=KAP-140 dual axis, 7=KAP-140 dual axis with altitude preselect, 8=Piper Autocontrol, 9=Rockwell/Collins FCS-65 (enum)
                     struct preconfigured_ap_type
                     {
                         //! Dataref name
@@ -1334,6 +1334,97 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
+                    //! How fast the APU EGT cools down after use - influences how long the APU runs in cool down mode before it is shut down (seconds)
+                    struct acf_APU_cooldown_time
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/aircraft/engine/acf_APU_cooldown_time"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! How long the APU door takes to open or close (seconds)
+                    struct acf_APU_door_time
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/aircraft/engine/acf_APU_door_time"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! How long the APU takes to spool down to 10 percent (seconds)
+                    struct acf_APU_spooldn_time
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/aircraft/engine/acf_APU_spooldn_time"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! How long the APU takes to spool up to 100 percent (seconds)
+                    struct acf_APU_spoolup_time
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/aircraft/engine/acf_APU_spoolup_time"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! Cylinder head temperature dataref reads in Celsius (boolean)
+                    struct acf_CHT_is_C
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/aircraft/engine/acf_CHT_is_C"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! Exhaust gas temperature dataref reads in Celsius (boolean)
+                    struct acf_EGT_is_C
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/aircraft/engine/acf_EGT_is_C"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! Inter-turbine temperature dataref reads in Celsius (boolean)
+                    struct acf_ITT_is_C
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/aircraft/engine/acf_ITT_is_C"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
                     //! Engine idle speed radians/second. (rad/sec)
                     struct acf_RSC_idlespeed_eng
                     {
@@ -1503,6 +1594,19 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
+                    //! This is the number of seconds it takes for full idle fuel flow to be reached on engine start, for propeller engines (seconds)
+                    struct acf_fuel_intro_time_prop
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/aircraft/engine/acf_fuel_intro_time_prop"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
                     //! This is for backward compatibility, you can use acf_prop_gear_rat from v700 onwards
                     struct acf_gear_rat
                     {
@@ -1640,6 +1744,19 @@ namespace xplane
                         static constexpr const char *name() { return "sim/aircraft/engine/acf_num_engines"; }
                         //! Can be written to?
                         static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! Oil temperature dataref reads in Celsius (boolean)
+                    struct acf_oilT_is_C
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/aircraft/engine/acf_oilT_is_C"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
                         //! Dataref type
                         using type = int;
                         //! Not an array dataref
@@ -1794,6 +1911,19 @@ namespace xplane
                     {
                         //! Dataref name
                         static constexpr const char *name() { return "sim/aircraft/engine/boost_ratio"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! This is the number of seconds it takes for full idle fuel flow to be reached on engine start, for jet engines (seconds)
+                    struct fuel_intro_time_jet
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/aircraft/engine/fuel_intro_time_jet"; }
                         //! Can be written to?
                         static constexpr bool writable = true;
                         //! Dataref type
@@ -4358,7 +4488,7 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! fuel tank locations - was dim 3 in XP8 and earlier
+                    //! fuel tank locations when empty - was dim 3 in XP8 and earlier
                     struct acf_tank_X
                     {
                         //! Dataref name
@@ -4373,7 +4503,22 @@ namespace xplane
                         static constexpr size_t size = 9;
                     };
 
-                    //! fuel tank locations - was dim 3 in XP8 and earlier
+                    //! fuel tank locations when full - was dim 3 in XP8 and earlier
+                    struct acf_tank_X_full
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/aircraft/overflow/acf_tank_X_full"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = float;
+                        //! Is an array dataref
+                        static constexpr bool is_array = true;
+                        //! Size of array dataref
+                        static constexpr size_t size = 9;
+                    };
+
+                    //! fuel tank locations when empty - was dim 3 in XP8 and earlier
                     struct acf_tank_Y
                     {
                         //! Dataref name
@@ -4388,11 +4533,41 @@ namespace xplane
                         static constexpr size_t size = 9;
                     };
 
-                    //! fuel tank locations - was dim 3 in XP8 and earlier
+                    //! fuel tank locations when full - was dim 3 in XP8 and earlier
+                    struct acf_tank_Y_full
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/aircraft/overflow/acf_tank_Y_full"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = float;
+                        //! Is an array dataref
+                        static constexpr bool is_array = true;
+                        //! Size of array dataref
+                        static constexpr size_t size = 9;
+                    };
+
+                    //! fuel tank locations when empty - was dim 3 in XP8 and earlier
                     struct acf_tank_Z
                     {
                         //! Dataref name
                         static constexpr const char *name() { return "sim/aircraft/overflow/acf_tank_Z"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = float;
+                        //! Is an array dataref
+                        static constexpr bool is_array = true;
+                        //! Size of array dataref
+                        static constexpr size_t size = 9;
+                    };
+
+                    //! fuel tank locations when full - was dim 3 in XP8 and earlier
+                    struct acf_tank_Z_full
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/aircraft/overflow/acf_tank_Z_full"; }
                         //! Can be written to?
                         static constexpr bool writable = true;
                         //! Dataref type
@@ -4553,19 +4728,6 @@ namespace xplane
                     {
                         //! Dataref name
                         static constexpr const char *name() { return "sim/aircraft/overflow/has_hsi"; }
-                        //! Can be written to?
-                        static constexpr bool writable = true;
-                        //! Dataref type
-                        using type = int;
-                        //! Not an array dataref
-                        static constexpr bool is_array = false;
-                    };
-
-                    //! ???
-                    struct has_litemap_tex_2
-                    {
-                        //! Dataref name
-                        static constexpr const char *name() { return "sim/aircraft/overflow/has_litemap_tex_2"; }
                         //! Can be written to?
                         static constexpr bool writable = true;
                         //! Dataref type
@@ -6423,19 +6585,6 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! Do we have a lite map texture for this? (enum)
-                    struct acf_has_litemap_tex
-                    {
-                        //! Dataref name
-                        static constexpr const char *name() { return "sim/aircraft/view/acf_has_litemap_tex"; }
-                        //! Can be written to?
-                        static constexpr bool writable = true;
-                        //! Dataref type
-                        using type = int;
-                        //! Not an array dataref
-                        static constexpr bool is_array = false;
-                    };
-
                     //! has audio stall warning? (bool)
                     struct acf_has_stallwarn
                     {
@@ -6473,6 +6622,19 @@ namespace xplane
                         static constexpr bool is_array = true;
                         //! Size of array dataref
                         static constexpr size_t size = 1024;
+                    };
+
+                    //! 24bit (0-16777215 or 0-0xFFFFFF) unique ID of the airframe. This is also known as the ADS-B "hexcode". (integer)
+                    struct acf_modeS_id
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/aircraft/view/acf_modeS_id"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
                     };
 
                     //! Notes on the plane (string)
@@ -8334,6 +8496,24 @@ namespace xplane
 
                 }
 
+                //! g1000 datarefs
+                namespace g1000
+                {
+                    //! FMS=0 (enum)
+                    struct gcu478_input_sel
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit/g1000/gcu478_input_sel"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                }
+
                 //! g430 datarefs
                 namespace g430
                 {
@@ -9188,7 +9368,7 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! Bleeding air is on (legacy) (bool)
+                    //! Bleed air is on (legacy) (bool)
                     struct bleed_air_on
                     {
                         //! Dataref name
@@ -13903,6 +14083,32 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
+                    //! Writeable without override. Write 1 to trigger master caution. (boolean)
+                    struct plugin_master_caution
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/annunciators/plugin_master_caution"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! Writeable without override. Write 1 to trigger master warning. (boolean)
+                    struct plugin_master_warning
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/annunciators/plugin_master_warning"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
                     //! Propeller in beta mode    // x8 (bitfield)
                     struct prop_beta
                     {
@@ -14055,7 +14261,7 @@ namespace xplane
                 //! autopilot datarefs
                 namespace autopilot
                 {
-                    //! Autopilot Lateral TOGA mode: 0=off,1=armed,2=captured (enum)
+                    //! Autopilot Lateral TOGA mode: 0=off,2=captured (enum)
                     struct TOGA_lateral_status
                     {
                         //! Dataref name
@@ -14432,6 +14638,45 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
+                    //! climb mode adjust base speed knots (by default 150KIAS below 10.000ft) (knots)
+                    struct climb_adjust
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/autopilot/climb_adjust"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! Whether the autopilot is using dead-reckoning to fly over a VOR station (boolean)
+                    struct dead_reckoning
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/autopilot/dead_reckoning"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! descend mode adjust target vertical speed (by default -1500ft/min) (feet/minute)
+                    struct des_adjust
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/autopilot/des_adjust"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
                     //! Electric pitch trim on - if off, autopilot flies with pitch servo only, and can't trim! (boolean)
                     struct electric_trim_on
                     {
@@ -14562,6 +14807,32 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
+                    //! FPA commanded in degrees. (degrees)
+                    struct fpa
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/autopilot/fpa"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! Autopilot FPA Status. 0=off,2=captured (enum)
+                    struct fpa_status
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/autopilot/fpa_status"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
                     //! Glideslope is armed, 0 or 1. (boolean)
                     struct glideslope_armed
                     {
@@ -14627,7 +14898,7 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! Autopilot Heading Hold Status. 0=off,1=armed,2=captured (enum)
+                    //! Autopilot Heading Hold Status. 0=off,2=captured (enum)
                     struct heading_hold_status
                     {
                         //! Dataref name
@@ -14666,7 +14937,7 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! Autopilot Heading Select Status. 0=off,1=armed,2=captured (enum)
+                    //! Autopilot Heading Select Status. 0=off,2=captured (enum)
                     struct heading_status
                     {
                         //! Dataref name
@@ -14757,7 +15028,7 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! Autopilot Pitch-Hold Status. 0=off,1=armed,2=captured (enum)
+                    //! Autopilot Pitch-Hold Status. 0=off,2=captured (enum)
                     struct pitch_status
                     {
                         //! Dataref name
@@ -14783,7 +15054,7 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! Autopilot Roll-Hold Status. 0=off,1=armed,2=captured (enum)
+                    //! Autopilot Roll-Hold Status. 0=off,2=captured (enum)
                     struct roll_status
                     {
                         //! Dataref name
@@ -14848,7 +15119,20 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! Autopilot Speed-hold (via pitch) status. 0=off,1=armed,2=captured (enum)
+                    //! Roll-hold command in degrees right, turn knob that won't turn with other modes (degrees)
+                    struct set_roll_deg
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/autopilot/set_roll_deg"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! Autopilot Speed-hold (via pitch) status. 0=off,2=captured (enum)
                     struct speed_status
                     {
                         //! Dataref name
@@ -14883,6 +15167,32 @@ namespace xplane
                         static constexpr bool writable = true;
                         //! Dataref type
                         using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! Autopilot Track Select Status: 0=off,2=captured (enum)
+                    struct track_status
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/autopilot/track_status"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! 0 = HDG/VS, 1 = TRK/FPA (boolean)
+                    struct trk_fpa
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/autopilot/trk_fpa"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
                         //! Not an array dataref
                         static constexpr bool is_array = false;
                     };
@@ -14939,7 +15249,7 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! Autopilot VVI Status. 0=off,1=armed,2=captured (enum)
+                    //! Autopilot VVI Status. 0=off,2=captured (enum)
                     struct vvi_status
                     {
                         //! Dataref name
@@ -14951,6 +15261,194 @@ namespace xplane
                         //! Not an array dataref
                         static constexpr bool is_array = false;
                     };
+
+                }
+
+                //! bleedair datarefs
+                namespace bleedair
+                {
+                    //! actuators datarefs
+                    namespace actuators
+                    {
+                        //! APU bleed air valve, close or open. APU must be running at 100%N1 to provide bleed air (boolean)
+                        struct apu_bleed
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/bleedair/actuators/apu_bleed"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Engine bleed air shut off valve, close or open (boolean)
+                        struct engine_bleed_sov
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/bleedair/actuators/engine_bleed_sov"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 8;
+                        };
+
+                        //! GPU bleed air valve, close or open. A GPU is supposed to be always available. (boolean)
+                        struct gpu_bleed
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/bleedair/actuators/gpu_bleed"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Isolation Valve for left duct, close or open. This separates all engines on the left side of the plane, the left wing, and the left pack from the rest of the system (boolean)
+                        struct isol_valve_left
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/bleedair/actuators/isol_valve_left"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Isolation Valve for right duct, close or open. This separates all engines on the right side of the plane, the right wing, and the right pack from the rest of the system (boolean)
+                        struct isol_valve_right
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/bleedair/actuators/isol_valve_right"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Center pressurization pack, off or on. The center pack is supplied from center duct, which can be supplied from a center engine, APU, GPU, or, via the isolation valves, the left and/or right ducts. This pack is the only pack available for airplanes made for X-Plane 11.33 or older (boolean)
+                        struct pack_center
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/bleedair/actuators/pack_center"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Left pressurization pack, off or on. The left pack is supplied from the left side of the plane or through the left isolation valve and only available for airplanes made for 11.35 or newer (boolean)
+                        struct pack_left
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/bleedair/actuators/pack_left"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Right pressurization pack, off or on. The right pack is supplied from the right side of the plane or through the right isolation valve and only available for airplanes made for 11.35 or newer (boolean)
+                        struct pack_right
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/bleedair/actuators/pack_right"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                    }
+
+                    //! indicators datarefs
+                    namespace indicators
+                    {
+                        //! Bleed air being sapped from the APU, stealing efficiency from the compressor. Writeable only with override_pressurization set (ratio)
+                        struct APU_loss_from_bleed_air_ratio
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/bleedair/indicators/APU_loss_from_bleed_air_ratio"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = float;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Bleed air available in the center duct, which can come from a center engine, APU, GPU, or, via the isolation valves, the left and/or right ducts. (ratio)
+                        struct bleed_available_center
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/bleedair/indicators/bleed_available_center"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Dataref type
+                            using type = float;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Bleed air available in the left duct, which can come from left engines or through the left isolation valve.  (ratio)
+                        struct bleed_available_left
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/bleedair/indicators/bleed_available_left"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Dataref type
+                            using type = float;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Bleed air available in the right duct, which can come from right engines or through the right isolation valve.  (ratio)
+                        struct bleed_available_right
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/bleedair/indicators/bleed_available_right"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Dataref type
+                            using type = float;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Bleed air being sapped from the engine, stealing efficiency from the compressor. Writeable only with override_pressurization set (ratio)
+                        struct engine_loss_from_bleed_air_ratio
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/bleedair/indicators/engine_loss_from_bleed_air_ratio"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = float;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 8;
+                        };
+
+                    }
 
                 }
 
@@ -15583,11 +16081,37 @@ namespace xplane
                 //! electrical datarefs
                 namespace electrical
                 {
+                    //! EGT of the APU (celsius)
+                    struct APU_EGT_c
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/electrical/APU_EGT_c"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
                     //! N1 of the APU (percent)
                     struct APU_N1_percent
                     {
                         //! Dataref name
                         static constexpr const char *name() { return "sim/cockpit2/electrical/APU_N1_percent"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! APU door open ratio (ratio)
+                    struct APU_door
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/electrical/APU_door"; }
                         //! Can be written to?
                         static constexpr bool writable = false;
                         //! Dataref type
@@ -15635,7 +16159,7 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! APU power switch, 0 is off, 1 is on, 2 is start-er-up! (boolean)
+                    //! APU power switch, 0 is off, 1 is on, 2 is start-er-up! (enum)
                     struct APU_starter_switch
                     {
                         //! Dataref name
@@ -16064,7 +16588,7 @@ namespace xplane
                             static constexpr size_t size = 8;
                         };
 
-                        //! XP10: the on/off status of the clutch, either per engine or per prop, depending on voodoo, dim 8.  V11: there is only ONE clutch for the whle airplane. (boolean)
+                        //! XP10: the on/off status of the clutch, either per engine or per prop, depending on voodoo, dim 8. XP11: there is only ONE clutch for the whle airplane. (boolean)
                         struct clutch_engage
                         {
                             //! Dataref name
@@ -16079,7 +16603,7 @@ namespace xplane
                             static constexpr size_t size = 1;
                         };
 
-                        //! Undocumented dataref
+                        //! XP10: the ratio of the clutch, either per engine or per prop, depending on voodoo, dim 8. XP11: there is only ONE clutch for the whole airplane. (ratio)
                         struct clutch_ratio
                         {
                             //! Dataref name
@@ -16274,7 +16798,7 @@ namespace xplane
                             static constexpr size_t size = 8;
                         };
 
-                        //! XP10: the ratio of the clutch, either per engine or per prop, depending on voodoo, dim 8.  V11: there is only ONE clutch for the whle airplane. (ratio)
+                        //! override and activate the feather, no matter what any auto-feather logic does. (boolean)
                         struct manual_feather_prop
                         {
                             //! Dataref name
@@ -16730,7 +17254,22 @@ namespace xplane
                             static constexpr size_t size = 8;
                         };
 
-                        //! FF, kilograms per second. (kilograms/second)
+                        //! dry fuel flow, kilograms per second. (kilograms/second)
+                        struct fuel_flow_dry_kg_sec
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/engine/indicators/fuel_flow_dry_kg_sec"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Dataref type
+                            using type = float;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 8;
+                        };
+
+                        //! total fuel flow, kilograms per second. (kilograms/second)
                         struct fuel_flow_kg_sec
                         {
                             //! Dataref name
@@ -16750,6 +17289,36 @@ namespace xplane
                         {
                             //! Dataref name
                             static constexpr const char *name() { return "sim/cockpit2/engine/indicators/fuel_pressure_psi"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Dataref type
+                            using type = float;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 8;
+                        };
+
+                        //! Whether igniters are sparking, either because the pilot or system logic turned them on, power is available and they are not failed (boolean)
+                        struct igniter_sparking
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/engine/indicators/igniter_sparking"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Dataref type
+                            using type = int;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 8;
+                        };
+
+                        //! Voltage we have to charge the ignition, useful for sound effects (volt)
+                        struct igniter_volt
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/engine/indicators/igniter_volt"; }
                             //! Can be written to?
                             static constexpr bool writable = false;
                             //! Dataref type
@@ -16835,7 +17404,22 @@ namespace xplane
                             static constexpr size_t size = 8;
                         };
 
-                        //! Engine thrust in Newtons (newtons)
+                        //! Dry engine thrust in Newtons (newtons)
+                        struct thrust_dry_n
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/engine/indicators/thrust_dry_n"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Dataref type
+                            using type = float;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 8;
+                        };
+
+                        //! Total engine thrust in Newtons (newtons)
                         struct thrust_n
                         {
                             //! Dataref name
@@ -16872,6 +17456,71 @@ namespace xplane
                 //! fuel datarefs
                 namespace fuel
                 {
+                    //! 0=Off 1=Auto 2=On - If fuel pressure on one side is low, due to fuel pump failure for example, cross-feed is opened to allow one pump to supply pressure to both engines. (enum)
+                    struct auto_crossfeed
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/fuel/auto_crossfeed"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! Firewall valve closed, left (boolean)
+                    struct firewall_closed_left
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/fuel/firewall_closed_left"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! Firewall valve closed, right (boolean)
+                    struct firewall_closed_right
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/fuel/firewall_closed_right"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! Indicated fuel level left, shows total or only nacelle tanks depending if user is holding down the aux-tank button. (kg)
+                    struct fuel_level_indicated_left
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/fuel/fuel_level_indicated_left"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! Indicated fuel level right, shows total or only nacelle tanks depending if user is holding down the aux-tank button. (kg)
+                    struct fuel_level_indicated_right
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/fuel/fuel_level_indicated_right"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
                     //! Indicated fuel level per tank (kgs)
                     struct fuel_quantity
                     {
@@ -16941,7 +17590,7 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! 0=none,1=left,2=center,3=right (enum)
+                    //! 0=none,1=left,2=center,3=right,5=aft (enum)
                     struct fuel_tank_transfer_from
                     {
                         //! Dataref name
@@ -16954,7 +17603,7 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! 0=none,1=left,2=center,3=right (enum)
+                    //! 0=none,1=left,2=center,3=right,5=aft (enum)
                     struct fuel_tank_transfer_to
                     {
                         //! Dataref name
@@ -16993,6 +17642,32 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
+                    //! Warning light, will illuminate when transfer from aux to feeder is requested, but aux tank is empty (boolean)
+                    struct no_transfer_left
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/fuel/no_transfer_left"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! Warning light, will illuminate when transfer from aux to feeder is requested, but aux tank is empty (boolean)
+                    struct no_transfer_right
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/fuel/no_transfer_right"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
                     //! True if user is holding down the aux-tank button. (bool)
                     struct showing_aux
                     {
@@ -17000,6 +17675,73 @@ namespace xplane
                         static constexpr const char *name() { return "sim/cockpit2/fuel/showing_aux"; }
                         //! Can be written to?
                         static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! Pressure generated by the fuel pump per tank. If multiple tanks are accesible per the fuel selector, fuel will be consumed from the tanks in order of pump pressure (psi)
+                    struct tank_pump_pressure_psi
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/fuel/tank_pump_pressure_psi"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = float;
+                        //! Is an array dataref
+                        static constexpr bool is_array = true;
+                        //! Size of array dataref
+                        static constexpr size_t size = 9;
+                    };
+
+                    //! Automatically transfer from AUXes to FEEDers in auto mode when feeder has more than X kg left to full (kg)
+                    struct transfer_pump_activation
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/fuel/transfer_pump_activation"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! Transfer from left AUXes to left FEEDers: 0: Off, 1: Auto, 2: On/Override  (enum)
+                    struct transfer_pump_left
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/fuel/transfer_pump_left"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! Transfer from right AUXes to right FEEDers: 0: Off, 1: Auto, 2: On/Override (enum)
+                    struct transfer_pump_right
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/fuel/transfer_pump_right"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! Transfer test switch. 0 = normal, -1 = test left, +1 = test right (boolean)
+                    struct transfer_test
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/fuel/transfer_test"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
                         //! Dataref type
                         using type = int;
                         //! Not an array dataref
@@ -17188,39 +17930,39 @@ namespace xplane
                             static constexpr bool is_array = false;
                         };
 
-                        //! Indicated airspeed in knots, copilot. (knots)
+                        //! Indicated airspeed in knots, copilot. Writeable with override_IAS (knots)
                         struct airspeed_kts_copilot
                         {
                             //! Dataref name
                             static constexpr const char *name() { return "sim/cockpit2/gauges/indicators/airspeed_kts_copilot"; }
                             //! Can be written to?
-                            static constexpr bool writable = false;
+                            static constexpr bool writable = true;
                             //! Dataref type
                             using type = float;
                             //! Not an array dataref
                             static constexpr bool is_array = false;
                         };
 
-                        //! Indicated airspeed in knots, pilot. (knots)
+                        //! Indicated airspeed in knots, pilot. Writeable with override_IAS (knots)
                         struct airspeed_kts_pilot
                         {
                             //! Dataref name
                             static constexpr const char *name() { return "sim/cockpit2/gauges/indicators/airspeed_kts_pilot"; }
                             //! Can be written to?
-                            static constexpr bool writable = false;
+                            static constexpr bool writable = true;
                             //! Dataref type
                             using type = float;
                             //! Not an array dataref
                             static constexpr bool is_array = false;
                         };
 
-                        //! Indicated airspeed in knots, standby instrument  (knots)
+                        //! Indicated airspeed in knots, standby instrument. Writeable with override_IAS  (knots)
                         struct airspeed_kts_stby
                         {
                             //! Dataref name
                             static constexpr const char *name() { return "sim/cockpit2/gauges/indicators/airspeed_kts_stby"; }
                             //! Can be written to?
-                            static constexpr bool writable = false;
+                            static constexpr bool writable = true;
                             //! Dataref type
                             using type = float;
                             //! Not an array dataref
@@ -17314,6 +18056,45 @@ namespace xplane
                             static constexpr bool writable = false;
                             //! Dataref type
                             using type = int;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Calibrated airspeed in knots, copilot. (knots)
+                        struct calibrated_airspeed_kts_copilot
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/gauges/indicators/calibrated_airspeed_kts_copilot"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Dataref type
+                            using type = float;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Calibrated airspeed in knots, pilot. (knots)
+                        struct calibrated_airspeed_kts_pilot
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/gauges/indicators/calibrated_airspeed_kts_pilot"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Dataref type
+                            using type = float;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Calibrated airspeed in knots, standby instrument  (knots)
+                        struct calibrated_airspeed_kts_stby
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/gauges/indicators/calibrated_airspeed_kts_stby"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Dataref type
+                            using type = float;
                             //! Not an array dataref
                             static constexpr bool is_array = false;
                         };
@@ -18527,6 +19308,19 @@ namespace xplane
                     //! actuators datarefs
                     namespace actuators
                     {
+                        //! Electrical air conditioning compressor on, consuming all the amps of rel_HVAC - not needed on airplanes with air cycle machines that drive the air conditioner off the bleed air power itself. (boolean)
+                        struct air_cond_on
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/pressurization/actuators/air_cond_on"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
                         //! Bleed air mode, 0=of, 1=left,2=both,3=right,4=apu,5=auto (enum)
                         struct bleed_air_mode
                         {
@@ -18592,6 +19386,32 @@ namespace xplane
                             static constexpr bool is_array = false;
                         };
 
+                        //! Electric fan (vent blower) setting, consuming 0.1 of rel_HVAVC amps when running. 0 = Auto (Runs whenever air_cond_on or heater_on is on), 1 = Low, 2 = High (enum)
+                        struct fan_setting
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/pressurization/actuators/fan_setting"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Electrical heater grid on, 0 = off, 1 = flight max (consumes rel_HVAC amps), 2 = ground max (consumes 2x rel_HVAC amps, turned off by weight-off-wheels) - not needed on airplanes that are using hot bleed air and have no heaters (boolean)
+                        struct heater_on
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/pressurization/actuators/heater_on"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
                         //! Maximum allowable altitude for this airplane to maintain the requested cabin altitude. (feet)
                         struct max_allowable_altitude_ft
                         {
@@ -18630,6 +19450,32 @@ namespace xplane
                             static constexpr const char *name() { return "sim/cockpit2/pressurization/indicators/cabin_vvi_fpm"; }
                             //! Can be written to?
                             static constexpr bool writable = false;
+                            //! Dataref type
+                            using type = float;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Electric fan speed, will be 1.0 or 2.0 depending on fan setting or 0 when there's no power or the fan is turned off. Writeable with override_pressurization (ratio)
+                        struct fan_speed
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/pressurization/indicators/fan_speed"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = float;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Pressurization outflow valve ratio. 0 for fully closed, 1 for fully open. Writeable with override_pressurization (ratio)
+                        struct outflow_valve
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/pressurization/indicators/outflow_valve"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
                             //! Dataref type
                             using type = float;
                             //! Not an array dataref
@@ -19010,7 +19856,20 @@ namespace xplane
                             static constexpr bool is_array = false;
                         };
 
-                        //! Is DME audio enabled?  This only matters if the current selection has DME (boolean)
+                        //! 6=com1,7=com2 - this is for old audio panels that do not automatically select the listener as well (enum)
+                        struct audio_com_selection_man
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/actuators/audio_com_selection_man"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Is DME audio enabled?  This only listens to the dedicated DME receiver (boolean)
                         struct audio_dme_enabled
                         {
                             //! Dataref name
@@ -19101,6 +19960,45 @@ namespace xplane
                             static constexpr bool is_array = false;
                         };
 
+                        //! is com automatically selected for listening (selects the same as the transmit selector) (boolean)
+                        struct audio_selection_com_auto
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/actuators/audio_selection_com_auto"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Is DME portion on NAV1 selected for listening (boolean)
+                        struct audio_selection_dme1
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/actuators/audio_selection_dme1"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Is DME portion on NAV2 selected for listening (boolean)
+                        struct audio_selection_dme2
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/actuators/audio_selection_dme2"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
                         //! is nav1 selected for listening (boolean)
                         struct audio_selection_nav1
                         {
@@ -19179,11 +20077,37 @@ namespace xplane
                             static constexpr bool is_array = false;
                         };
 
-                        //! Audio level (0 is off, 1 is max) for dme audio ([0..1])
+                        //! Audio level (0 is off, 1 is max) for dme audio on standalone DME receiver ([0..1])
                         struct audio_volume_dme
                         {
                             //! Dataref name
                             static constexpr const char *name() { return "sim/cockpit2/radios/actuators/audio_volume_dme"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = float;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Audio level (0 is off, 1 is max) for dme audio on NAV1 receiver ([0..1])
+                        struct audio_volume_dme1
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/actuators/audio_volume_dme1"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = float;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! Audio level (0 is off, 1 is max) for dme audio on NAV2 receiver ([0..1])
+                        struct audio_volume_dme2
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/actuators/audio_volume_dme2"; }
                             //! Can be written to?
                             static constexpr bool writable = true;
                             //! Dataref type
@@ -19645,6 +20569,19 @@ namespace xplane
                             using type = int;
                             //! Not an array dataref
                             static constexpr bool is_array = false;
+                        };
+
+                        //! Flight ID, as transmitted in Mode-S. Up to 7 characters, like N844X or KLM511. This is NOT the Mode-S hexcode! (byte[8])
+                        struct flight_id
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/actuators/flight_id"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 8;
                         };
 
                         //! GPS 2 off or on, 0 or 1. (boolean)
@@ -20119,6 +21056,66 @@ namespace xplane
                             static constexpr size_t size = 12;
                         };
 
+                        //! DME radio N frequency, Mhz component only (Mhz)
+                        struct nav_dme_frequency_Mhz
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/actuators/nav_dme_frequency_Mhz"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 12;
+                        };
+
+                        //! DME radio N frequency, hz (10hertz)
+                        struct nav_dme_frequency_hz
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/actuators/nav_dme_frequency_hz"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 12;
+                        };
+
+                        //! DME radio N frequency, khz component only (khz)
+                        struct nav_dme_frequency_khz
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/actuators/nav_dme_frequency_khz"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 12;
+                        };
+
+                        //! Nav radio N in DME hold, stops slaving DME frequency to NAV frequency (boolean)
+                        struct nav_dme_hold
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/actuators/nav_dme_hold"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 12;
+                        };
+
                         //! Nav radio N frequency, Mhz component only (Mhz)
                         struct nav_frequency_Mhz
                         {
@@ -20530,6 +21527,838 @@ namespace xplane
                             static constexpr bool is_array = true;
                             //! Size of array dataref
                             static constexpr size_t size = 150;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_style_line0
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_style_line0"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_style_line1
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_style_line1"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_style_line10
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_style_line10"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_style_line11
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_style_line11"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_style_line12
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_style_line12"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_style_line13
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_style_line13"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_style_line14
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_style_line14"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_style_line15
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_style_line15"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_style_line2
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_style_line2"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_style_line3
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_style_line3"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_style_line4
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_style_line4"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_style_line5
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_style_line5"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_style_line6
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_style_line6"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_style_line7
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_style_line7"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_style_line8
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_style_line8"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_style_line9
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_style_line9"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_text_line0
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_text_line0"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_text_line1
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_text_line1"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_text_line10
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_text_line10"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_text_line11
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_text_line11"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_text_line12
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_text_line12"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_text_line13
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_text_line13"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_text_line14
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_text_line14"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_text_line15
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_text_line15"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_text_line2
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_text_line2"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_text_line3
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_text_line3"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_text_line4
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_text_line4"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_text_line5
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_text_line5"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_text_line6
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_text_line6"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_text_line7
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_text_line7"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_text_line8
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_text_line8"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu1_text_line9
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu1_text_line9"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_style_line0
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_style_line0"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_style_line1
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_style_line1"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_style_line10
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_style_line10"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_style_line11
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_style_line11"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_style_line12
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_style_line12"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_style_line13
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_style_line13"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_style_line14
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_style_line14"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_style_line15
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_style_line15"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_style_line2
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_style_line2"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_style_line3
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_style_line3"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_style_line4
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_style_line4"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_style_line5
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_style_line5"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_style_line6
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_style_line6"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_style_line7
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_style_line7"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_style_line8
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_style_line8"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_style_line9
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_style_line9"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 24;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_text_line0
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_text_line0"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_text_line1
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_text_line1"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_text_line10
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_text_line10"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_text_line11
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_text_line11"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_text_line12
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_text_line12"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_text_line13
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_text_line13"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_text_line14
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_text_line14"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_text_line15
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_text_line15"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_text_line2
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_text_line2"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_text_line3
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_text_line3"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_text_line4
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_text_line4"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_text_line5
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_text_line5"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_text_line6
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_text_line6"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_text_line7
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_text_line7"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_text_line8
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_text_line8"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
+                        };
+
+                        //! Undocumented dataref
+                        struct fms_cdu2_text_line9
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/fms_cdu2_text_line9"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 96;
                         };
 
                         //! FMS Distance to Top of Descent (nm)
@@ -21534,6 +23363,32 @@ namespace xplane
                         };
 
                         //! The morse-code id output for the tuned radio. Only if the audio is being monitored. 0 for silent. 1 for dot. 2 for dash. (enum)
+                        struct morse_id_tone_dme1
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/morse_id_tone_dme1"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Dataref type
+                            using type = int;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! The morse-code id output for the tuned radio. Only if the audio is being monitored. 0 for silent. 1 for dot. 2 for dash. (enum)
+                        struct morse_id_tone_dme2
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/morse_id_tone_dme2"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Dataref type
+                            using type = int;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! The morse-code id output for the tuned radio. Only if the audio is being monitored. 0 for silent. 1 for dot. 2 for dash. (enum)
                         struct morse_id_tone_nav1
                         {
                             //! Dataref name
@@ -21557,6 +23412,19 @@ namespace xplane
                             using type = int;
                             //! Not an array dataref
                             static constexpr bool is_array = false;
+                        };
+
+                        //! current selected dme ID - nav radio 10 (string)
+                        struct nav10_dme_id
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/nav10_dme_id"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 150;
                         };
 
                         //! current selected navID - nav radio 10 (string)
@@ -21648,6 +23516,19 @@ namespace xplane
                             using type = float;
                             //! Not an array dataref
                             static constexpr bool is_array = false;
+                        };
+
+                        //! current selected dme ID - nav radio 1 (string)
+                        struct nav1_dme_id
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/nav1_dme_id"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 150;
                         };
 
                         //! nav1 DME speed in knots. (knots)
@@ -21962,6 +23843,19 @@ namespace xplane
                             static constexpr bool is_array = false;
                         };
 
+                        //! current selected dme ID - nav radio 2 (string)
+                        struct nav2_dme_id
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/nav2_dme_id"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 150;
+                        };
+
                         //! nav2 DME speed in knots. (knots)
                         struct nav2_dme_speed_kts
                         {
@@ -22222,11 +24116,37 @@ namespace xplane
                             static constexpr bool is_array = false;
                         };
 
+                        //! current selected dme ID - nav radio 3 (string)
+                        struct nav3_dme_id
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/nav3_dme_id"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 150;
+                        };
+
                         //! current selected navID - nav radio 3 (string)
                         struct nav3_nav_id
                         {
                             //! Dataref name
                             static constexpr const char *name() { return "sim/cockpit2/radios/indicators/nav3_nav_id"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 150;
+                        };
+
+                        //! current selected dme ID - nav radio 4 (string)
+                        struct nav4_dme_id
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/nav4_dme_id"; }
                             //! Can be written to?
                             static constexpr bool writable = false;
                             //! Is an array dataref
@@ -22248,11 +24168,37 @@ namespace xplane
                             static constexpr size_t size = 150;
                         };
 
+                        //! current selected dme ID - nav radio 5 (string)
+                        struct nav5_dme_id
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/nav5_dme_id"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 150;
+                        };
+
                         //! current selected navID - nav radio 5 (string)
                         struct nav5_nav_id
                         {
                             //! Dataref name
                             static constexpr const char *name() { return "sim/cockpit2/radios/indicators/nav5_nav_id"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 150;
+                        };
+
+                        //! current selected dme ID - nav radio 6 (string)
+                        struct nav6_dme_id
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/nav6_dme_id"; }
                             //! Can be written to?
                             static constexpr bool writable = false;
                             //! Is an array dataref
@@ -22274,6 +24220,19 @@ namespace xplane
                             static constexpr size_t size = 150;
                         };
 
+                        //! current selected dme ID - nav radio 7 (string)
+                        struct nav7_dme_id
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/nav7_dme_id"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 150;
+                        };
+
                         //! current selected navID - nav radio 7 (string)
                         struct nav7_nav_id
                         {
@@ -22287,11 +24246,37 @@ namespace xplane
                             static constexpr size_t size = 150;
                         };
 
+                        //! current selected dme ID - nav radio 8 (string)
+                        struct nav8_dme_id
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/nav8_dme_id"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 150;
+                        };
+
                         //! current selected navID - nav radio 8 (string)
                         struct nav8_nav_id
                         {
                             //! Dataref name
                             static constexpr const char *name() { return "sim/cockpit2/radios/indicators/nav8_nav_id"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 150;
+                        };
+
+                        //! current selected dme ID - nav radio 9 (string)
+                        struct nav9_dme_id
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/radios/indicators/nav9_dme_id"; }
                             //! Can be written to?
                             static constexpr bool writable = false;
                             //! Is an array dataref
@@ -23061,6 +25046,32 @@ namespace xplane
                         static constexpr size_t size = 128;
                     };
 
+                    //! Switch, 0 or 1 - turns on hotel mode on free turbines. (boolean)
+                    struct hotel_mode
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/switches/hotel_mode"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! This is the relative strength of the hotel mode brake compared to X-Plane default. (ratio)
+                    struct hotel_mode_ratio
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/cockpit2/switches/hotel_mode_ratio"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
                     //! Rheostat controlling instruments brightnesss.  0 = default pilot, 1 = default copilot, 2-15 = custom - was [16] until 11.10 (ratio)
                     struct instrument_brightness_ratio
                     {
@@ -23432,28 +25443,28 @@ namespace xplane
                             //! Dataref name
                             static constexpr const char *name() { return "sim/cockpit2/tcas/indicators/relative_altitude_mtrs"; }
                             //! Can be written to?
-                            static constexpr bool writable = false;
+                            static constexpr bool writable = true;
                             //! Dataref type
                             using type = float;
                             //! Is an array dataref
                             static constexpr bool is_array = true;
                             //! Size of array dataref
-                            static constexpr size_t size = 20;
+                            static constexpr size_t size = 64;
                         };
 
-                        //! Relative bearing of each other plane in degrees for TCAS (degrees)
+                        //! Relative bearing of each other plane in degrees for TCAS - relative to sim/flightmodel/position/true_psi not ground track or anything else (degrees)
                         struct relative_bearing_degs
                         {
                             //! Dataref name
                             static constexpr const char *name() { return "sim/cockpit2/tcas/indicators/relative_bearing_degs"; }
                             //! Can be written to?
-                            static constexpr bool writable = false;
+                            static constexpr bool writable = true;
                             //! Dataref type
                             using type = float;
                             //! Is an array dataref
                             static constexpr bool is_array = true;
                             //! Size of array dataref
-                            static constexpr size_t size = 20;
+                            static constexpr size_t size = 64;
                         };
 
                         //! Distance to each other plane in meters for TCAS (meters)
@@ -23462,13 +25473,13 @@ namespace xplane
                             //! Dataref name
                             static constexpr const char *name() { return "sim/cockpit2/tcas/indicators/relative_distance_mtrs"; }
                             //! Can be written to?
-                            static constexpr bool writable = false;
+                            static constexpr bool writable = true;
                             //! Dataref type
                             using type = float;
                             //! Is an array dataref
                             static constexpr bool is_array = true;
                             //! Size of array dataref
-                            static constexpr size_t size = 20;
+                            static constexpr size_t size = 64;
                         };
 
                         //! True if a TCAS alert is currently issued. (boolean)
@@ -23477,12 +25488,2973 @@ namespace xplane
                             //! Dataref name
                             static constexpr const char *name() { return "sim/cockpit2/tcas/indicators/tcas_alert"; }
                             //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Not an array dataref
+                            static constexpr bool is_array = false;
+                        };
+
+                        //! If TCAS is not overriden by plgugin, returns the number of planes in X-Plane, which might be under plugin control or X-Plane control. If TCAS is overriden, returns how many targets are actually being written to with the override. These are not necessarily consecutive entries in the TCAS arrays.  (integer)
+                        struct tcas_num_acf
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/tcas/indicators/tcas_num_acf"; }
+                            //! Can be written to?
                             static constexpr bool writable = false;
                             //! Dataref type
                             using type = int;
                             //! Not an array dataref
                             static constexpr bool is_array = false;
                         };
+
+                    }
+
+                    //! targets datarefs
+                    namespace targets
+                    {
+                        //! 7 character Flight ID, terminated by 0 byte. ICAO flightplan item 7. (string)
+                        struct flight_id
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/tcas/targets/flight_id"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 512;
+                        };
+
+                        //! 7 character ICAO code, terminated by 0 byte. C172, B738, etc... see https://www.icao.int/publications/DOC8643/Pages/Search.aspx (string)
+                        struct icao_type
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/tcas/targets/icao_type"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 512;
+                        };
+
+                        //! Mode C transponder code 0000 to 7777. This is not really an integer, this is an octal number. (integer)
+                        struct modeC_code
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/tcas/targets/modeC_code"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 64;
+                        };
+
+                        //! 24bit (0-16777215 or 0 - 0xFFFFFF) unique ID of the airframe. This is also known as the ADS-B "hexcode". (integer)
+                        struct modeS_id
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/cockpit2/tcas/targets/modeS_id"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = int;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 64;
+                        };
+
+                        //! position datarefs
+                        namespace position
+                        {
+                            //! total true speed, norm of local velocity vector. That means it includes vertical speed! (meter/s)
+                            struct V_msc
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/V_msc"; }
+                                //! Can be written to?
+                                static constexpr bool writable = false;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! double_ datarefs
+                            namespace double_
+                            {
+                                //! global coordinate, meter.  (meter)
+                                struct plane10_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane10_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane10_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane10_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane10_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane10_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane11_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane11_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane11_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane11_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane11_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane11_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane12_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane12_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane12_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane12_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane12_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane12_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane13_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane13_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane13_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane13_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane13_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane13_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane14_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane14_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane14_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane14_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane14_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane14_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane15_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane15_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane15_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane15_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane15_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane15_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane16_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane16_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane16_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane16_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane16_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane16_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane17_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane17_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane17_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane17_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane17_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane17_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane18_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane18_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane18_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane18_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane18_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane18_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane19_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane19_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane19_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane19_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane19_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane19_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane1_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane1_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane1_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane1_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane1_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane1_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane20_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane20_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane20_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane20_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane20_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane20_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane21_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane21_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane21_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane21_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane21_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane21_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane22_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane22_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane22_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane22_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane22_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane22_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane23_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane23_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane23_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane23_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane23_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane23_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane24_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane24_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane24_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane24_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane24_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane24_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane25_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane25_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane25_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane25_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane25_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane25_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane26_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane26_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane26_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane26_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane26_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane26_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane27_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane27_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane27_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane27_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane27_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane27_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane28_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane28_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane28_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane28_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane28_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane28_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane29_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane29_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane29_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane29_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane29_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane29_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane2_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane2_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane2_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane2_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane2_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane2_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane30_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane30_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane30_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane30_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane30_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane30_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane31_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane31_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane31_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane31_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane31_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane31_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane32_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane32_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane32_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane32_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane32_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane32_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane33_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane33_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane33_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane33_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane33_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane33_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane34_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane34_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane34_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane34_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane34_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane34_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane35_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane35_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane35_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane35_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane35_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane35_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane36_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane36_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane36_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane36_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane36_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane36_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane37_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane37_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane37_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane37_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane37_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane37_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane38_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane38_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane38_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane38_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane38_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane38_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane39_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane39_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane39_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane39_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane39_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane39_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane3_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane3_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane3_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane3_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane3_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane3_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane40_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane40_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane40_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane40_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane40_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane40_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane41_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane41_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane41_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane41_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane41_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane41_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane42_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane42_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane42_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane42_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane42_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane42_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane43_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane43_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane43_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane43_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane43_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane43_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane44_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane44_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane44_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane44_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane44_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane44_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane45_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane45_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane45_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane45_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane45_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane45_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane46_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane46_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane46_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane46_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane46_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane46_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane47_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane47_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane47_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane47_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane47_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane47_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane48_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane48_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane48_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane48_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane48_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane48_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane49_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane49_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane49_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane49_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane49_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane49_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane4_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane4_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane4_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane4_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane4_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane4_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane50_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane50_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane50_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane50_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane50_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane50_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane51_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane51_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane51_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane51_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane51_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane51_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane52_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane52_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane52_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane52_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane52_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane52_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane53_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane53_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane53_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane53_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane53_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane53_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane54_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane54_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane54_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane54_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane54_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane54_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane55_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane55_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane55_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane55_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane55_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane55_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane56_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane56_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane56_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane56_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane56_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane56_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane57_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane57_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane57_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane57_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane57_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane57_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane58_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane58_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane58_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane58_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane58_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane58_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane59_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane59_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane59_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane59_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane59_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane59_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane5_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane5_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane5_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane5_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane5_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane5_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane60_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane60_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane60_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane60_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane60_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane60_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane61_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane61_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane61_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane61_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane61_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane61_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane62_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane62_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane62_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane62_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane62_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane62_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane63_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane63_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane63_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane63_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane63_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane63_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane6_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane6_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane6_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane6_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane6_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane6_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane7_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane7_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane7_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane7_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane7_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane7_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane8_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane8_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane8_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane8_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane8_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane8_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, meter.  (meter)
+                                struct plane9_ele
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane9_ele"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane9_lat
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane9_lat"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                                //! global coordinate, degrees (degrees)
+                                struct plane9_lon
+                                {
+                                    //! Dataref name
+                                    static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/double/plane9_lon"; }
+                                    //! Can be written to?
+                                    static constexpr bool writable = false;
+                                    //! Dataref type
+                                    using type = double;
+                                    //! Not an array dataref
+                                    static constexpr bool is_array = false;
+                                };
+
+                            }
+
+                            //! global coordinate, meter. (meter)
+                            struct ele
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/ele"; }
+                                //! Can be written to?
+                                static constexpr bool writable = false;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! mirror of sim/multiplayer/position/planeN_flap_ratio (ratio)
+                            struct flap_ratio
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/flap_ratio"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! mirror of sim/multiplayer/position/planeN_flap_ratio2 (ratio)
+                            struct flap_ratio2
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/flap_ratio2"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! mirror of sim/multiplayer/position/planeN_gear_deploy[0] (ratio)
+                            struct gear_deploy
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/gear_deploy"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! ground track in true degrees. Derived from velocity vector. (degrees)
+                            struct hpath
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/hpath"; }
+                                //! Can be written to?
+                                static constexpr bool writable = false;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! global coordinate, degrees. (degrees)
+                            struct lat
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/lat"; }
+                                //! Can be written to?
+                                static constexpr bool writable = false;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! beacon=1, land=2, nav=4, strobe=8, taxi=16 (bitfield)
+                            struct lights
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/lights"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = int;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! global coordinate, degrees. (degrees)
+                            struct lon
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/lon"; }
+                                //! Can be written to?
+                                static constexpr bool writable = false;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! bank angle. Writeable only when override_TCAS is set. (degrees)
+                            struct phi
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/phi"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! true heading orientation. Writeable only when override_TCAS is set. (degrees)
+                            struct psi
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/psi"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! mirror of sim/multiplayer/position/planeN_slat_ratio (ratio)
+                            struct slat_ratio
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/slat_ratio"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! mirror of sim/multiplayer/position/planeN_speedbrake_ratio (ratio)
+                            struct speedbrake_ratio
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/speedbrake_ratio"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! pitch angle. Writeable only when override_TCAS is set. (degrees)
+                            struct the
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/the"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! mirror of sim/multiplayer/position/planeN_throttle[0] (ratio)
+                            struct throttle
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/throttle"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! absolute vertical speed feet per minute. Writeable only when override_TCAS is set. (feet/min)
+                            struct vertical_speed
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/vertical_speed"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! flight path angle in degrees. Derived from velocity vector. (degrees)
+                            struct vpath
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/vpath"; }
+                                //! Can be written to?
+                                static constexpr bool writable = false;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! local X velocity. Writeable only when override_TCAS is set. (meter/s)
+                            struct vx
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/vx"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! local Y velocity. Writeable only when override_TCAS is set. (meter/s)
+                            struct vy
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/vy"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! local Z velocity. Writeable only when override_TCAS is set. (meter/s)
+                            struct vz
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/vz"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! ground/flight logic. Writeable only when override_TCAS is set. (boolean)
+                            struct weight_on_wheels
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/weight_on_wheels"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = int;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! mirror of sim/multiplayer/position/planeN_wing_sweep (ratio)
+                            struct wing_sweep
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/wing_sweep"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! local X coordinate, meter. Writeable only when override_TCAS is set. (meter)
+                            struct x
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/x"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! local Y coordinate, meter. Writeable only when override_TCAS is set. (meter)
+                            struct y
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/y"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! mirror of sim/multiplayer/position/planeN_yolk_pitch  (ratio)
+                            struct yolk_pitch
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/yolk_pitch"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! mirror of sim/multiplayer/position/planeN_yolk_roll (ratio)
+                            struct yolk_roll
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/yolk_roll"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! mirror of sim/multiplayer/position/planeN_yolk_yaw (ratio)
+                            struct yolk_yaw
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/yolk_yaw"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                            //! local Z coordinate, meter. Writeable only when override_TCAS is set. (meter)
+                            struct z
+                            {
+                                //! Dataref name
+                                static constexpr const char *name() { return "sim/cockpit2/tcas/targets/position/z"; }
+                                //! Can be written to?
+                                static constexpr bool writable = true;
+                                //! Dataref type
+                                using type = float;
+                                //! Is an array dataref
+                                static constexpr bool is_array = true;
+                                //! Size of array dataref
+                                static constexpr size_t size = 64;
+                            };
+
+                        }
 
                     }
 
@@ -29977,7 +34949,7 @@ namespace xplane
                         //! Dataref name
                         static constexpr const char *name() { return "sim/flightmodel/engine/ENGN_oil_temp"; }
                         //! Can be written to?
-                        static constexpr bool writable = false;
+                        static constexpr bool writable = true;
                         //! Dataref type
                         using type = float;
                         //! Is an array dataref
@@ -29992,7 +34964,7 @@ namespace xplane
                         //! Dataref name
                         static constexpr const char *name() { return "sim/flightmodel/engine/ENGN_oil_temp_c"; }
                         //! Can be written to?
-                        static constexpr bool writable = false;
+                        static constexpr bool writable = true;
                         //! Dataref type
                         using type = float;
                         //! Is an array dataref
@@ -30683,13 +35655,13 @@ namespace xplane
                 //! forces datarefs
                 namespace forces
                 {
-                    //! The roll moment due to aerodynamic forces - positive = right roll. (NM)
+                    //! The roll moment due to aerodynamic forces - positive = right roll.  Override with Override with override_wing_Forces (NM)
                     struct L_aero
                     {
                         //! Dataref name
                         static constexpr const char *name() { return "sim/flightmodel/forces/L_aero"; }
                         //! Can be written to?
-                        static constexpr bool writable = false;
+                        static constexpr bool writable = true;
                         //! Dataref type
                         using type = float;
                         //! Not an array dataref
@@ -30702,7 +35674,7 @@ namespace xplane
                         //! Dataref name
                         static constexpr const char *name() { return "sim/flightmodel/forces/L_gear"; }
                         //! Can be written to?
-                        static constexpr bool writable = false;
+                        static constexpr bool writable = true;
                         //! Dataref type
                         using type = float;
                         //! Not an array dataref
@@ -30735,7 +35707,7 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! The roll moment due to prop forces. Override with override_engines - positive = right roll. (NM)
+                    //! The roll moment due to prop forces. Override with override_engines or override_engine_forces - positive = right roll. (NM)
                     struct L_prop
                     {
                         //! Dataref name
@@ -30767,7 +35739,7 @@ namespace xplane
                         //! Dataref name
                         static constexpr const char *name() { return "sim/flightmodel/forces/M_aero"; }
                         //! Can be written to?
-                        static constexpr bool writable = false;
+                        static constexpr bool writable = true;
                         //! Dataref type
                         using type = float;
                         //! Not an array dataref
@@ -30780,7 +35752,7 @@ namespace xplane
                         //! Dataref name
                         static constexpr const char *name() { return "sim/flightmodel/forces/M_gear"; }
                         //! Can be written to?
-                        static constexpr bool writable = false;
+                        static constexpr bool writable = true;
                         //! Dataref type
                         using type = float;
                         //! Not an array dataref
@@ -30845,7 +35817,7 @@ namespace xplane
                         //! Dataref name
                         static constexpr const char *name() { return "sim/flightmodel/forces/N_aero"; }
                         //! Can be written to?
-                        static constexpr bool writable = false;
+                        static constexpr bool writable = true;
                         //! Dataref type
                         using type = float;
                         //! Not an array dataref
@@ -30858,7 +35830,7 @@ namespace xplane
                         //! Dataref name
                         static constexpr const char *name() { return "sim/flightmodel/forces/N_gear"; }
                         //! Can be written to?
-                        static constexpr bool writable = false;
+                        static constexpr bool writable = true;
                         //! Dataref type
                         using type = float;
                         //! Not an array dataref
@@ -30966,7 +35938,7 @@ namespace xplane
                         //! Dataref name
                         static constexpr const char *name() { return "sim/flightmodel/forces/faxil_aero"; }
                         //! Can be written to?
-                        static constexpr bool writable = false;
+                        static constexpr bool writable = true;
                         //! Dataref type
                         using type = float;
                         //! Not an array dataref
@@ -30979,7 +35951,7 @@ namespace xplane
                         //! Dataref name
                         static constexpr const char *name() { return "sim/flightmodel/forces/faxil_gear"; }
                         //! Can be written to?
-                        static constexpr bool writable = false;
+                        static constexpr bool writable = true;
                         //! Dataref type
                         using type = float;
                         //! Not an array dataref
@@ -31025,13 +35997,13 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! Aerodynamic forces - upward - ACF Y (Newtons)
+                    //! Aerodynamic forces - upward - ACF Y. (Newtons)
                     struct fnrml_aero
                     {
                         //! Dataref name
                         static constexpr const char *name() { return "sim/flightmodel/forces/fnrml_aero"; }
                         //! Can be written to?
-                        static constexpr bool writable = false;
+                        static constexpr bool writable = true;
                         //! Dataref type
                         using type = float;
                         //! Not an array dataref
@@ -31044,7 +36016,7 @@ namespace xplane
                         //! Dataref name
                         static constexpr const char *name() { return "sim/flightmodel/forces/fnrml_gear"; }
                         //! Can be written to?
-                        static constexpr bool writable = false;
+                        static constexpr bool writable = true;
                         //! Dataref type
                         using type = float;
                         //! Not an array dataref
@@ -31064,7 +36036,7 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! force upward by all engines on the ACF.  Override with override_engines  Writable in v10 only (Newtons)
+                    //! force upward by all engines on the ACF.  Override with override_engines  Writable in v10 only or v11 with override (Newtons)
                     struct fnrml_prop
                     {
                         //! Dataref name
@@ -31090,26 +36062,26 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! Aerodynamic forces - sideways - ACF X (Newtons)
+                    //! Aerodynamic forces - sideways - ACF X.  Override with override_wing_forces (Newtons)
                     struct fside_aero
                     {
                         //! Dataref name
                         static constexpr const char *name() { return "sim/flightmodel/forces/fside_aero"; }
                         //! Can be written to?
-                        static constexpr bool writable = false;
+                        static constexpr bool writable = true;
                         //! Dataref type
                         using type = float;
                         //! Not an array dataref
                         static constexpr bool is_array = false;
                     };
 
-                    //! Gear/ground forces - sideways - ACF X (Newtons)
+                    //! Gear/ground forces - sideways - ACF X.  Override with override_gear_forces (Newtons)
                     struct fside_gear
                     {
                         //! Dataref name
                         static constexpr const char *name() { return "sim/flightmodel/forces/fside_gear"; }
                         //! Can be written to?
-                        static constexpr bool writable = false;
+                        static constexpr bool writable = true;
                         //! Dataref type
                         using type = float;
                         //! Not an array dataref
@@ -31129,7 +36101,7 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! force sideways by all engines on the ACF.  Override with override_engines (Newtons)
+                    //! force sideways by all engines on the ACF.  Override with override_engines or override_engine_forces (Newtons)
                     struct fside_prop
                     {
                         //! Dataref name
@@ -31611,7 +36583,7 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! Indicated barometric altitude, quite probably in feet actually. (meters)
+                    //! Indicated barometric altitude (feet)
                     struct h_ind
                     {
                         //! Dataref name
@@ -31624,7 +36596,7 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! Indicated barometric altitude, quite probably in feet actually. (meters)
+                    //! Indicated barometric altitude (feet)
                     struct h_ind2
                     {
                         //! Dataref name
@@ -31637,7 +36609,7 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! Indicated barometric altitude, quite probably in feet actually. (meters)
+                    //! Indicated barometric altitude (feet)
                     struct h_ind_copilot
                     {
                         //! Dataref name
@@ -31650,7 +36622,7 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! Indicated barometric altitude, quite probably in feet actually. (meters)
+                    //! Indicated barometric altitude (feet)
                     struct h_ind_copilot2
                     {
                         //! Dataref name
@@ -33905,6 +38877,21 @@ namespace xplane
                             static constexpr size_t size = 8;
                         };
 
+                        //! Ratio to scale the length of the side image.  1.0 = the real length of the prop. (ratio)
+                        struct disc_length_ratio
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/flightmodel2/engines/prop_disc/disc_length_ratio"; }
+                            //! Can be written to?
+                            static constexpr bool writable = true;
+                            //! Dataref type
+                            using type = float;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 8;
+                        };
+
                         //! Offset from left (in "slots") for the prop disc texture.  Fractions blend horizontal images. (offset)
                         struct disc_s
                         {
@@ -35074,6 +40061,19 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
+                    //! True if the aircraft is in a crashed state (boolean)
+                    struct has_crashed
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/flightmodel2/misc/has_crashed"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
                     //! How far is the pressure-outflow valve open?  0=closed, 1=open (ratio)
                     struct pressure_outflow_ratio
                     {
@@ -35195,6 +40195,154 @@ namespace xplane
 
                 }
 
+                //! position datarefs
+                namespace position
+                {
+                    //! The pitch relative to the flown path (angle of attack) (degrees)
+                    struct alpha
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/flightmodel2/position/alpha"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! The heading relative to the flown path (yaw) (degrees)
+                    struct beta
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/flightmodel2/position/beta"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! The ground speed of the aircraft (meters/sec)
+                    struct groundspeed
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/flightmodel2/position/groundspeed"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! The heading the aircraft actually flies.  (hpath+beta=psi) (degrees)
+                    struct hpath
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/flightmodel2/position/hpath"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! The real magnetic heading of the aircraft - the old magpsi dataref was FUBAR (degrees)
+                    struct mag_psi
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/flightmodel2/position/mag_psi"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! Air speed true - this does not take into account air density at altitude! (meters/sec)
+                    struct true_airspeed
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/flightmodel2/position/true_airspeed"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! The roll of the aircraft relative to the earth precisely below the aircraft (degrees)
+                    struct true_phi
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/flightmodel2/position/true_phi"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! The heading of the aircraft relative to the earth precisely below the aircraft - true degrees north, always (degrees)
+                    struct true_psi
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/flightmodel2/position/true_psi"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! The pitch of the aircraft relative to the earth precisely below the aircraft (degrees)
+                    struct true_theta
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/flightmodel2/position/true_theta"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! The pitch the aircraft actually flies.  (vpath+alpha=theta) (degrees)
+                    struct vpath
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/flightmodel2/position/vpath"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! Undocumented dataref
+                    struct y_agl
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/flightmodel2/position/y_agl"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                }
+
                 //! wing datarefs
                 namespace wing
                 {
@@ -35251,6 +40399,21 @@ namespace xplane
                         {
                             //! Dataref name
                             static constexpr const char *name() { return "sim/flightmodel2/wing/elements/element_condensation_ratio"; }
+                            //! Can be written to?
+                            static constexpr bool writable = false;
+                            //! Dataref type
+                            using type = float;
+                            //! Is an array dataref
+                            static constexpr bool is_array = true;
+                            //! Size of array dataref
+                            static constexpr size_t size = 320;
+                        };
+
+                        //! Per element - is this element stalled? (boolean)
+                        struct element_is_stalled
+                        {
+                            //! Dataref name
+                            static constexpr const char *name() { return "sim/flightmodel2/wing/elements/element_is_stalled"; }
                             //! Can be written to?
                             static constexpr bool writable = false;
                             //! Dataref type
@@ -35626,11 +40789,24 @@ namespace xplane
                 //! animation datarefs
                 namespace animation
                 {
-                    //! angle this beacon is rotating (0-360) (degrees)
+                    //! angle this beacon is rotating (0-360). Civillian beacons rotate at 11-13 RPM, giving 22-26 flashes/min for an airport and 33-39/min flashes for a heliport.  (degrees)
                     struct airport_beacon_rotation
                     {
                         //! Dataref name
                         static constexpr const char *name() { return "sim/graphics/animation/airport_beacon_rotation"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = float;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! angle this military airport beacon is rotating (0-360). Military beacons rotate at 8-10 RPM, giving off 16-20 flashes/min where the double white counts as one flash.  (degrees)
+                    struct airport_beacon_rotation_military
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/graphics/animation/airport_beacon_rotation_military"; }
                         //! Can be written to?
                         static constexpr bool writable = false;
                         //! Dataref type
@@ -37498,6 +42674,19 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
+                    //! During drawing and FL callbacks, this is the correct GL_FRAMEBUFFER binding to restore if you need to render off-screen.  Will be 0 when no bridge FBO is provided (GLenum)
+                    struct current_gl_fbo
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/graphics/view/current_gl_fbo"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
                     //! This is the number of passes to render for a multi-dome setup.  This x-plane feature requires a level-3 USB KEY (count)
                     struct dome_number_of_passes
                     {
@@ -37650,6 +42839,19 @@ namespace xplane
                     {
                         //! Dataref name
                         static constexpr const char *name() { return "sim/graphics/view/is_reverse_float_z"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! True if current rendering is reversed-Y (+Y = down) - false for conventional +Y=up rendering.  This indicates how the framebuffer is set up - the transform stack will be set up to correctly flip Y if used. (Boolean)
+                    struct is_reverse_y
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/graphics/view/is_reverse_y"; }
                         //! Can be written to?
                         static constexpr bool writable = false;
                         //! Dataref type
@@ -38063,6 +43265,34 @@ namespace xplane
                         static constexpr bool is_array = true;
                         //! Size of array dataref
                         static constexpr size_t size = 16;
+                    };
+
+                    //! The current projection matrix during 3-d rendering - it keeps its value during 2-d rendering so youc can figure out how to apply text labels to 3-d stuff. (Matrix4x4)
+                    struct projection_matrix_3d
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/graphics/view/projection_matrix_3d"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = float;
+                        //! Is an array dataref
+                        static constexpr bool is_array = true;
+                        //! Size of array dataref
+                        static constexpr size_t size = 16;
+                    };
+
+                    //! True if current rendering is being done by a modern Vulkan/Metal driver.  False if we have the GL driver. (Boolean)
+                    struct using_modern_driver
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/graphics/view/using_modern_driver"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
                     };
 
                     //! vertical field of view in degrees, see sim/graphics/settings/non_proportional_vertical_FOV. (degrees)
@@ -38647,7 +43877,7 @@ namespace xplane
                     //! Is an array dataref
                     static constexpr bool is_array = true;
                     //! Size of array dataref
-                    static constexpr size_t size = 65;
+                    static constexpr size_t size = 67;
                 };
 
                 //! Fully processed ratio for each axis - either -1 to 1 or 0 to 1. (float)
@@ -38662,7 +43892,7 @@ namespace xplane
                     //! Is an array dataref
                     static constexpr bool is_array = true;
                     //! Size of array dataref
-                    static constexpr size_t size = 65;
+                    static constexpr size_t size = 67;
                 };
 
                 //! Assignments for the joystick axes - what does X-Plane think each one is? [Was 15 before 850][Was 24 before 860][was 32 before 900] (enums)
@@ -46548,6 +51778,21 @@ namespace xplane
                         static constexpr size_t size = 20;
                     };
 
+                    //! True if this remote visual tracks the master's view changes (boolean)
+                    struct exvis_tracks_view
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/network/dataout/exvis_tracks_view"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
+                        //! Is an array dataref
+                        static constexpr bool is_array = true;
+                        //! Size of array dataref
+                        static constexpr size_t size = 20;
+                    };
+
                     //! Is this machine running as an external visual for another X-Plane machine. (boolean)
                     struct is_external_visual
                     {
@@ -46602,7 +51847,7 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! True if this remote visual tracks the master's view changes (boolean)
+                    //! True if this remote visual exists (boolean)
                     struct track_external_visual
                     {
                         //! Dataref name
@@ -47356,6 +52601,32 @@ namespace xplane
                     {
                         //! Dataref name
                         static constexpr const char *name() { return "sim/operation/failures/rel_antice"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! APU failure to start or run (failure_enum)
+                    struct rel_apu
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/operation/failures/rel_apu"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! APU catastrophic failure with fire (failure_enum)
+                    struct rel_apu_fire
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/operation/failures/rel_apu_fire"; }
                         //! Can be written to?
                         static constexpr bool writable = true;
                         //! Dataref type
@@ -53907,7 +59178,7 @@ namespace xplane
                 //! override datarefs
                 namespace override
                 {
-                    //! this override lets third party add-ons write to the TCAS source data array (boolean)
+                    //! this override lets third party add-ons write to the TCAS source data array so you can have plugin controlled instances as TCAS targets. Only writeable by the plugin that has the AI planes acquired. (boolean)
                     struct override_TCAS
                     {
                         //! Dataref name
@@ -54013,6 +59284,19 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
+                    //! overrides engine temp vars sim/flightmodel/engine/ENGN_CHT_c and ENGN_oilT_c (boolean)
+                    struct override_cht_oilt
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/operation/override/override_cht_oilt"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
                     //! overrides building and drawing of clouds as well as white-out-in-cloud effects (boolean)
                     struct override_clouds
                     {
@@ -54044,6 +59328,19 @@ namespace xplane
                     {
                         //! Dataref name
                         static constexpr const char *name() { return "sim/operation/override/override_dme"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! overrides all engine calculations - write to prop LMN and g_nrml/side/axil. (boolean)
+                    struct override_engine_forces
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/operation/override/override_engine_forces"; }
                         //! Can be written to?
                         static constexpr bool writable = true;
                         //! Dataref type
@@ -54169,6 +59466,19 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
+                    //! overrides all gear calculations - write to gear LMN and g_nrml/side/axil. (boolean)
+                    struct override_gear_forces
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/operation/override/override_gear_forces"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
                     //! Override gear and brake status (boolean)
                     struct override_gearbrake
                     {
@@ -54213,6 +59523,19 @@ namespace xplane
                     {
                         //! Dataref name
                         static constexpr const char *name() { return "sim/operation/override/override_groundplane"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! overrides indicated airspeed dataref, so it is no longer update 1:1 from calibrated airspeed. Plugin can introduce installation error to indicated airspeed (boolean)
+                    struct override_ias
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/operation/override/override_ias"; }
                         //! Can be written to?
                         static constexpr bool writable = true;
                         //! Dataref type
@@ -54291,6 +59614,19 @@ namespace xplane
                     {
                         //! Dataref name
                         static constexpr const char *name() { return "sim/operation/override/override_mixture"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! this override lets third party add-ons turn off X-Plane's map layer that shows icons for other planes. This allows the plugin to supply their own custom map layer and not conflict with X-Plane. Only writeable by the plugin that has also set override_TCAS. (boolean)
+                    struct override_multiplayer_map_layer
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/operation/override/override_multiplayer_map_layer"; }
                         //! Can be written to?
                         static constexpr bool writable = true;
                         //! Dataref type
@@ -54459,7 +59795,7 @@ namespace xplane
                         static constexpr bool is_array = false;
                     };
 
-                    //! this override gives plguins control of sim/flightmodel2/controls/left_brake_ratio and right_brake_ratio (boolean)
+                    //! this override gives plugins control of sim/cockpit2/controls/left_brake_ratio and right_brake_ratio (boolean)
                     struct override_toe_brakes
                     {
                         //! Dataref name
@@ -54490,6 +59826,19 @@ namespace xplane
                     {
                         //! Dataref name
                         static constexpr const char *name() { return "sim/operation/override/override_wheel_steer"; }
+                        //! Can be written to?
+                        static constexpr bool writable = true;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! overrides all wing calculations - write to aero LMN and g_nrml/side/axil. (boolean)
+                    struct override_wing_forces
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/operation/override/override_wing_forces"; }
                         //! Can be written to?
                         static constexpr bool writable = true;
                         //! Dataref type
@@ -54778,6 +60127,19 @@ namespace xplane
                     {
                         //! Dataref name
                         static constexpr const char *name() { return "sim/operation/sound/has_speech_synth"; }
+                        //! Can be written to?
+                        static constexpr bool writable = false;
+                        //! Dataref type
+                        using type = int;
+                        //! Not an array dataref
+                        static constexpr bool is_array = false;
+                    };
+
+                    //! True if the camera is inside ANY of the defined sound volumes for the aircraft. (boolean)
+                    struct inside_any
+                    {
+                        //! Dataref name
+                        static constexpr const char *name() { return "sim/operation/sound/inside_any"; }
                         //! Can be written to?
                         static constexpr bool writable = false;
                         //! Dataref type
@@ -55131,6 +60493,19 @@ namespace xplane
                 {
                     //! Dataref name
                     static constexpr const char *name() { return "sim/time/framerate_period"; }
+                    //! Can be written to?
+                    static constexpr bool writable = false;
+                    //! Dataref type
+                    using type = float;
+                    //! Not an array dataref
+                    static constexpr bool is_array = false;
+                };
+
+                //! This is an approximate estimate of GPU time spent per each frame in seconds.  Note that it can be RADICALLY wrong if anything is done wrong by plugins or the driver is weird.  It's for entertainment value only!!! (seconds)
+                struct gpu_time_per_frame_sec_approx
+                {
+                    //! Dataref name
+                    static constexpr const char *name() { return "sim/time/gpu_time_per_frame_sec_approx"; }
                     //! Can be written to?
                     static constexpr bool writable = false;
                     //! Dataref type
@@ -56855,7 +62230,7 @@ namespace xplane
                     static constexpr bool is_array = false;
                 };
 
-                //! C (degrees)
+                //! The dew point at sea level. (degreesC)
                 struct dewpoi_sealevel_c
                 {
                     //! Dataref name
@@ -56927,6 +62302,19 @@ namespace xplane
                     static constexpr const char *name() { return "sim/weather/rain_percent"; }
                     //! Can be written to?
                     static constexpr bool writable = true;
+                    //! Dataref type
+                    using type = float;
+                    //! Not an array dataref
+                    static constexpr bool is_array = false;
+                };
+
+                //! Relative humidity at sea-level (percent)
+                struct relative_humidity_sealevel_percent
+                {
+                    //! Dataref name
+                    static constexpr const char *name() { return "sim/weather/relative_humidity_sealevel_percent"; }
+                    //! Can be written to?
+                    static constexpr bool writable = false;
                     //! Dataref type
                     using type = float;
                     //! Not an array dataref
@@ -57076,7 +62464,7 @@ namespace xplane
                     static constexpr bool is_array = false;
                 };
 
-                //! C (degrees)
+                //! The air temperature outside the aircraft (at altitude). (degreesC)
                 struct temperature_ambient_c
                 {
                     //! Dataref name
@@ -57089,7 +62477,7 @@ namespace xplane
                     static constexpr bool is_array = false;
                 };
 
-                //! C (degrees)
+                //! The air temperature at the leading edge of the wings in degrees C. (degreesC)
                 struct temperature_le_c
                 {
                     //! Dataref name
@@ -57141,7 +62529,7 @@ namespace xplane
                     static constexpr bool is_array = false;
                 };
 
-                //! - 1.0] ([0.0)
+                //! The percentage of thermal occurance in the area. ([0..1])
                 struct thermal_percent
                 {
                     //! Dataref name
