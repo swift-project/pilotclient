@@ -84,16 +84,6 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBus(QLatin1String("setDefaultIcao"), defaultIcao);
         }
 
-        void CXSwiftBusTrafficProxy::setDrawingLabels(bool drawing)
-        {
-            m_dbusInterface->callDBus(QLatin1String("setDrawingLabels"), drawing);
-        }
-
-        bool CXSwiftBusTrafficProxy::isDrawingLabels() const
-        {
-            return m_dbusInterface->callDBusRet<bool>(QLatin1String("isDrawingLabels"));
-        }
-
         void CXSwiftBusTrafficProxy::setMaxPlanes(int planes)
         {
             m_dbusInterface->callDBus(QLatin1String("setMaxPlanes"), planes);

@@ -605,24 +605,6 @@ namespace XSwiftBus
                     setDefaultIcao(defaultIcao);
                 });
             }
-            else if (message.getMethodName() == "setDrawingLabels")
-            {
-                maybeSendEmptyDBusReply(wantsReply, sender, serial);
-                bool drawing = true;
-                message.beginArgumentRead();
-                message.getArgument(drawing);
-                queueDBusCall([ = ]()
-                {
-                    setDrawingLabels(drawing);
-                });
-            }
-            else if (message.getMethodName() == "isDrawingLabels")
-            {
-                queueDBusCall([ = ]()
-                {
-                    sendDBusReply(sender, serial, isDrawingLabels());
-                });
-            }
             else if (message.getMethodName() == "setMaxPlanes")
             {
                 maybeSendEmptyDBusReply(wantsReply, sender, serial);
@@ -844,6 +826,7 @@ namespace XSwiftBus
     {
         invokeQueuedDBusCalls();
         doPlaneUpdates();
+        setDrawingLabels(getSettings().isDrawingLabels());
         emitSimFrame();
         m_countFrame++;
         return 1;
@@ -876,7 +859,6 @@ namespace XSwiftBus
     void CTraffic::interpolatePosition(Plane *plane)
     {
         std::memcpy(&plane->positions[3], &plane->positions[2], sizeof(plane->positions[2]));
-        return;
 
         const auto now = std::chrono::steady_clock::now();
         const auto t1 = plane->positionTimes[2] - plane->positionTimes[0];

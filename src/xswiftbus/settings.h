@@ -36,10 +36,12 @@ namespace XSwiftBus
     public:
         //! Get settings
         //! \threadsafe
+        //! \fixme Does this really need to be threadsafe?
         CSettings getSettings() const;
 
         //! Set settings
         //! \threadsafe
+        //! \fixme Does this really need to be threadsafe?
         void setSettings(const CSettings &settings);
 
         //! Get settings from xswiftbus.conf (needed during plugin initialization)
