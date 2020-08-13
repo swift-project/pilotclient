@@ -25,6 +25,7 @@ namespace BlackSimPlugin
             ui->comp_FsxSettings->setSimulator(m_simulator);
             connect(ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &QWidget::close);
             this->setWindowTitle(m_simulator.toQString(true) + " plugin configuration");
+            CGuiUtility::disableMinMaxCloseButtons(this);
         }
 
         CSimulatorFsxConfigWindow::~CSimulatorFsxConfigWindow()

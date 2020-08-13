@@ -698,6 +698,17 @@ namespace BlackGui
         return mw;
     }
 
+    void CGuiUtility::disableMinMaxCloseButtons(QWidget *window)
+    {
+        if (!window->windowFlags().testFlag(Qt::CustomizeWindowHint))
+        {
+            window->setWindowFlag(Qt::CustomizeWindowHint);
+            window->setWindowFlag(Qt::WindowTitleHint);
+        }
+        window->setWindowFlag(Qt::WindowMinMaxButtonsHint, false);
+        window->setWindowFlag(Qt::WindowCloseButtonHint, false);
+    }
+
     QGraphicsOpacityEffect *CGuiUtility::fadeInWidget(int durationMs, QWidget *widget, double startValue, double endValue)
     {
         // http://stackoverflow.com/questions/19087822/how-to-make-qt-widgets-fade-in-or-fade-out#

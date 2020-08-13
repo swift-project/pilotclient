@@ -32,6 +32,7 @@ namespace BlackSimPlugin
         {
             ui->setupUi(this);
             ui->comp_SettingsXSwiftBus->setDefaultP2PAddress(m_xSwiftBusServerSettings.getDefault().getDBusServerAddressQt());
+            CGuiUtility::disableMinMaxCloseButtons(this);
 
             const CXSwiftBusSettings defaultSettings = TXSwiftBusSettings::defaultValue();
             ui->sb_MaxAircraft->setMaximum(defaultSettings.getMaxPlanes() * 2);

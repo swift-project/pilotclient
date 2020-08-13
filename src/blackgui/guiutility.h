@@ -222,6 +222,9 @@ namespace BlackGui
         static bool isDialog(const QWidget *widget);
         //! @}
 
+        //! Disable close button on window
+        static void disableMinMaxCloseButtons(QWidget *window);
+
         //! Fade in a widget
         static QGraphicsOpacityEffect *fadeInWidget(int durationMs, QWidget *widget, double startValue = 0.0, double endValue = 1.0);
 

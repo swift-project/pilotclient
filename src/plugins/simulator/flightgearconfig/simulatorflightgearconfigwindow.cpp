@@ -26,6 +26,7 @@ namespace BlackSimPlugin
             ui(new Ui::CSimulatorFlightgearConfigWindow)
         {
             ui->setupUi(this);
+            CGuiUtility::disableMinMaxCloseButtons(this);
             ui->comp_SettingsFGSwiftBus->setDefaultP2PAddress(m_fgswiftbusServerSetting.getDefault());
             ui->comp_SettingsFGSwiftBus->set(m_fgswiftbusServerSetting.getThreadLocal());
 

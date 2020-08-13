@@ -20,6 +20,7 @@ namespace BlackSimPlugin
             ui(new Ui::CSimulatorEmulatedConfigWidget)
         {
             ui->setupUi(this);
+            CGuiUtility::disableMinMaxCloseButtons(this);
         }
 
         CSimulatorEmulatedConfigWidget::~CSimulatorEmulatedConfigWidget()
