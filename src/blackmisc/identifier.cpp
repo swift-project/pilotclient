@@ -23,22 +23,36 @@
 #include <sys/sysctl.h>
 #endif
 
-//! \private Remove characters not allowed in dbus paths
-QString sanitizeForDBusPath(const QString &s)
+//! \private Escape characters not allowed in dbus paths
+QString toDBusPath(const QString &s)
 {
-    return BlackMisc::removeChars(s, [](QChar c) { return !c.isUpper() && !c.isLower() && !c.isDigit() && c != '_' && c != '/'; });
+    Q_ASSERT_X(!BlackMisc::containsChar(s, [](QChar c) { return c.unicode() > 0x7f; }), Q_FUNC_INFO, "7-bit ASCII only");
+    return s.toLatin1().toPercentEncoding("/", "-._~", '_');
 }
 
-//! \private Remove characters not allowed in dbus path elements
-QString sanitizeForDBusPathElement(const QString &s)
+//! \private Escape characters not allowed in dbus path elements
+QString toDBusPathElement(const QString &s)
 {
-    return BlackMisc::removeChars(s, [](QChar c) { return !c.isUpper() && !c.isLower() && !c.isDigit() && c != '_'; });
+    Q_ASSERT_X(!BlackMisc::containsChar(s, [](QChar c) { return c.unicode() > 0x7f; }), Q_FUNC_INFO, "7-bit ASCII only");
+    return s.toLatin1().toPercentEncoding({}, "-._~", '_');
+}
+
+//! \private Unescape characters not allowed in dbus paths
+QString fromDBusPath(const QString &s)
+{
+    return QByteArray::fromPercentEncoding(s.toLatin1(), '_');
+}
+
+//! \private Unescape characters not allowed in dbus path elements
+QString fromDBusPathElement(const QString &s)
+{
+    return QByteArray::fromPercentEncoding(s.toLatin1(), '_');
 }
 
 //! \private
-const QString &cachedSanitizedApplicationName()
+const QString &cachedEscapedApplicationName()
 {
-    static const QString appName = sanitizeForDBusPathElement(QCoreApplication::applicationName());
+    static const QString appName = toDBusPathElement(QCoreApplication::applicationName());
     return appName;
 }
 
@@ -98,7 +112,7 @@ namespace BlackMisc
           m_name(name.trimmed()),
           m_machineIdBase64(cachedMachineUniqueId().toBase64(QByteArray::OmitTrailingEquals)),
           m_machineName(cachedLocalHostName()),
-          m_processName(cachedSanitizedApplicationName()),
+          m_processName(cachedEscapedApplicationName()),
           m_processId(QCoreApplication::applicationPid())
     { }
 
@@ -176,10 +190,10 @@ namespace BlackMisc
     QString CIdentifier::toDBusObjectPath(const QString &root) const
     {
         QString path = root;
-        path += '/' % sanitizeForDBusPathElement(m_machineName) % '_' % m_machineIdBase64;
-        path += '/' % sanitizeForDBusPathElement(m_processName) % '_' % QString::number(m_processId);
+        path += '/' % toDBusPathElement(m_machineName) % "__" % toDBusPathElement(m_machineIdBase64);
+        path += '/' % toDBusPathElement(m_processName) % "__" % QString::number(m_processId);
 
-        const QString name = sanitizeForDBusPath(m_name);
+        const QString name = toDBusPath(m_name);
         Q_ASSERT_X(!name.contains("//") && !name.startsWith('/') && !name.endsWith('/'), Q_FUNC_INFO, "Invalid name");
         if (!name.isEmpty()) { path += '/' % name; }
         return path;
@@ -188,15 +202,15 @@ namespace BlackMisc
     CIdentifier CIdentifier::fromDBusObjectPath(const QString &path, const QString &root)
     {
         const QString relative = path.startsWith(root) ? path.mid(root.length()) : path;
-        const QString machine = relative.section('/', 0, 0);
-        const QString process = relative.section('/', 1, 1);
-        const QString name = relative.section('/', 2, -1);
+        const QString machine = relative.section('/', 1, 1);
+        const QString process = relative.section('/', 2, 2);
+        const QString name = relative.section('/', 3, -1);
 
-        CIdentifier result(name);
-        result.m_machineIdBase64 = machine.section('_', -1, -1);
-        result.m_machineName = machine.section('_', 0, -2);
-        result.m_processId = process.section('_', -1, -1).toInt();
-        result.m_processName = process.section('_', 0, -2);
+        CIdentifier result(fromDBusPath(name));
+        result.m_machineIdBase64 = fromDBusPathElement(machine.section("__", 1, 1));
+        result.m_machineName = fromDBusPathElement(machine.section("__", 0, 0));
+        result.m_processId = process.section("__", 1, 1).toInt();
+        result.m_processName = fromDBusPathElement(process.section("__", 0, 0));
         return result;
     }
 
@@ -228,7 +242,7 @@ namespace BlackMisc
 
     bool CIdentifier::hasApplicationProcessName() const
     {
-        return cachedSanitizedApplicationName() == sanitizeForDBusPathElement(getProcessName());
+        return cachedEscapedApplicationName() == toDBusPathElement(getProcessName());
     }
 
     bool CIdentifier::isAnonymous() const
