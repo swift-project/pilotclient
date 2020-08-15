@@ -96,7 +96,7 @@ namespace BlackMisc
     CIdentifier::CIdentifier(const QString &name)
         : ITimestampBased(QDateTime::currentMSecsSinceEpoch()),
           m_name(name.trimmed()),
-          m_machineIdBase64(cachedMachineUniqueId().toBase64()),
+          m_machineIdBase64(cachedMachineUniqueId().toBase64(QByteArray::OmitTrailingEquals)),
           m_machineName(cachedLocalHostName()),
           m_processName(cachedSanitizedApplicationName()),
           m_processId(QCoreApplication::applicationPid())
@@ -133,7 +133,7 @@ namespace BlackMisc
 
     const CIdentifier &CIdentifier::fake()
     {
-        static const CIdentifier id("fake", QByteArrayLiteral("00000000-0000-0000-0000-000000000000").toBase64(), "fake machine", "fake process", 0);
+        static const CIdentifier id("fake", QByteArrayLiteral("00000000-0000-0000-0000-000000000000").toBase64(QByteArray::OmitTrailingEquals), "fake machine", "fake process", 0);
         return id;
     }
 
@@ -170,7 +170,7 @@ namespace BlackMisc
 
     QByteArray CIdentifier::getMachineId() const
     {
-        return QByteArray::fromBase64(m_machineIdBase64.toLocal8Bit());
+        return *QByteArray::fromBase64Encoding(m_machineIdBase64.toLocal8Bit());
     }
 
     QString CIdentifier::toDBusObjectPath(const QString &root) const
@@ -243,7 +243,7 @@ namespace BlackMisc
 
     void CIdentifier::updateToCurrentMachine()
     {
-        m_machineIdBase64 = cachedMachineUniqueId().toBase64();
+        m_machineIdBase64 = cachedMachineUniqueId().toBase64(QByteArray::OmitTrailingEquals);
         m_machineName     = cachedLocalHostName();
     }
 
@@ -296,7 +296,7 @@ namespace BlackMisc
         switch (i)
         {
         case IndexName:               return m_name.compare(compareValue.m_name, Qt::CaseInsensitive);
-        case IndexMachineIdBase64:    return m_machineIdBase64.compare(compareValue.m_machineIdBase64, Qt::CaseInsensitive);
+        case IndexMachineIdBase64:    return m_machineIdBase64.compare(compareValue.m_machineIdBase64);
         case IndexMachineName:        return m_machineName.compare(compareValue.m_machineName, Qt::CaseInsensitive);
         case IndexMachineId:          return m_machineName.compare(compareValue.m_machineName, Qt::CaseInsensitive);
         case IndexProcessId:          return Compare::compare(m_processId, compareValue.m_processId);
