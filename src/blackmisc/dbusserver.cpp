@@ -245,7 +245,7 @@ namespace BlackMisc
                 }
                 else
                 {
-                    CLogMessage(this).error(u"Error, no success with session bus registration");
+                    CLogMessage(this).error(u"Error adding '%1' '%2' to session DBus: '%3'") << path << getDBusInterfaceFromClassInfo(object) << connection.lastError().message();
                 }
             }
             break;
@@ -258,7 +258,7 @@ namespace BlackMisc
                 }
                 else
                 {
-                    CLogMessage(this).error(u"Error, no success with system bus registration");
+                    CLogMessage(this).error(u"Error adding '%1' '%2' to system DBus: '%3'") << path << getDBusInterfaceFromClassInfo(object) << connection.lastError().message();
                 }
             }
             break;
@@ -272,7 +272,7 @@ namespace BlackMisc
                     }
                     else
                     {
-                        CLogMessage(this).error(u"Error, no success with %1 registration") << connection.name();
+                        CLogMessage(this).error(u"Error adding '%1' '%2' to P2P DBus '%3': '%4'") << path << getDBusInterfaceFromClassInfo(object) << connection.name() << connection.lastError().message();
                     }
                 }
             }
