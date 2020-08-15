@@ -34,6 +34,9 @@ namespace BlackMiscTest
 
         //! Machine unique id tests
         void machineUniqueId();
+
+        //! Conversion to dbus object path
+        void dbusObjectPath();
     };
 
     //! Test identifiable object
@@ -65,6 +68,15 @@ namespace BlackMiscTest
     {
         CIdentifier o;
         QVERIFY2(!o.getMachineId().isEmpty(), "Machine id shall never be empty! If this test failed on a supported platform, get a fallback solution!");
+    }
+
+    void CTestIdentifier::dbusObjectPath()
+    {
+        QObject q;
+        q.setObjectName("!@#$%^&*()_+");
+        CTestIdentifiable id(&q);
+        QString s(id.identifier().toDBusObjectPath());
+        QVERIFY2(id.identifier() == CIdentifier::fromDBusObjectPath(s), "Conversion from dbus object path and back compares equal");
     }
 
     CTestIdentifiable::CTestIdentifiable(QObject *nameObject) : CIdentifiable(nameObject)

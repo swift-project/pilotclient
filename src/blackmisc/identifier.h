@@ -80,7 +80,7 @@ namespace BlackMisc
         QString toDBusObjectPath(const QString &root = {}) const;
 
         //! Reconstruct an identifier from a DBus object path.
-        CIdentifier fromDBusObjectPath(const QString &path, const QString &root = {});
+        static CIdentifier fromDBusObjectPath(const QString &path, const QString &root = {});
 
         //! Name
         const QString &getName() const { return m_name; }
