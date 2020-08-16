@@ -897,6 +897,7 @@ namespace XSwiftBus
 
     void CTraffic::Labels::draw()
     {
+        static const double maxRangeM = 10000;
         static const double metersPerFt = 0.3048;
         static float color[3]{ 1.0f, 0.75f, 0.0f };
         std::array<float, 16> worldMat = m_worldMat.getAll();
@@ -915,6 +916,7 @@ namespace XSwiftBus
             double localPos[4]{};
             double windowPos[4]{};
             XPLMWorldToLocal(planePos.lat, planePos.lon, planePos.elevation * metersPerFt, &worldPos[0], &worldPos[1], &worldPos[2]);
+            if (distanceSquared(worldPos) > maxRangeM * maxRangeM) { continue; }
             matrixMultVec(localPos, worldMat.data(), worldPos);
             matrixMultVec(windowPos, projMat.data(), localPos);
 
@@ -940,6 +942,14 @@ namespace XSwiftBus
         out[1] = v[0] * m[1] + v[1] * m[5] + v[2] * m[9] + v[3] * m[13];
         out[2] = v[0] * m[2] + v[1] * m[6] + v[2] * m[10] + v[3] * m[14];
         out[3] = v[0] * m[3] + v[1] * m[7] + v[2] * m[11] + v[3] * m[15];
+    }
+
+    double CTraffic::Labels::distanceSquared(const double pos[3]) const
+    {
+        const double dx = m_viewX.get() - pos[0];
+        const double dy = m_viewY.get() - pos[1];
+        const double dz = m_viewZ.get() - pos[2];
+        return dx * dx + dy * dy + dz * dz;
     }
 
     int CTraffic::orbitPlaneFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon)
