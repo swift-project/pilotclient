@@ -198,12 +198,16 @@ namespace XSwiftBus
             virtual void draw() override;
         private:
             static void matrixMultVec(double out[4], const float m[16], const double v[4]);
+            double distanceSquared(const double pos[3]) const;
             CTraffic *m_traffic = nullptr;
             ArrayDataRef<xplane::data::sim::graphics::view::world_matrix> m_worldMat;
             ArrayDataRef<xplane::data::sim::graphics::view::projection_matrix_3d> m_projMat;
             DataRef<xplane::data::sim::graphics::view::window_width> m_windowWidth;
             DataRef<xplane::data::sim::graphics::view::window_height> m_windowHeight;
             DataRef<xplane::data::sim::graphics::view::visibility_effective_m> m_visibilityM;
+            DataRef<xplane::data::sim::graphics::view::view_x> m_viewX;
+            DataRef<xplane::data::sim::graphics::view::view_y> m_viewY;
+            DataRef<xplane::data::sim::graphics::view::view_z> m_viewZ;
         };
         Labels m_labels { this };
 
