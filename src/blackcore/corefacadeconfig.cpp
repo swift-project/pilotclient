@@ -58,25 +58,21 @@ namespace BlackCore
 
     CCoreFacadeConfig CCoreFacadeConfig::forCoreAllLocalInDBus(const QString &dbusBootstrapAddress)
     {
-        const CCoreFacadeConfig cfg(CCoreFacadeConfig::LocalInDBusServer, dbusBootstrapAddress);
-        return cfg;
+        return { LocalInDBusServer, dbusBootstrapAddress };
     }
 
     CCoreFacadeConfig CCoreFacadeConfig::local(const QString &dbusBootstrapAddress)
     {
-        const CCoreFacadeConfig cfg = CCoreFacadeConfig(CCoreFacadeConfig(CCoreFacadeConfig::Local, dbusBootstrapAddress));
-        return cfg;
+        return { Local, dbusBootstrapAddress };
     }
 
     CCoreFacadeConfig CCoreFacadeConfig::remote(const QString &dbusBootstrapAddress)
     {
-        CCoreFacadeConfig cfg = CCoreFacadeConfig(CCoreFacadeConfig(CCoreFacadeConfig::Remote, dbusBootstrapAddress));
-        return cfg;
+        return { Remote, dbusBootstrapAddress };
     }
 
     CCoreFacadeConfig CCoreFacadeConfig::allEmpty()
     {
-        CCoreFacadeConfig cfg = CCoreFacadeConfig();
-        return cfg;
+        return {};
     }
 } // namespace
