@@ -222,7 +222,7 @@ namespace BlackGui
             const CUrl download = rf.getSmartUrl();
             if (download.isEmpty())
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"No download URL for file name '%1'") << rf.getNameAndSize();
+                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"No download URL for file name '%1'") << rf.getBaseNameAndSize();
                 this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
                 return;
             }
@@ -287,10 +287,10 @@ namespace BlackGui
 
         CRemoteFile CInstallXSwiftBusComponent::getRemoteFileSelected() const
         {
-            const QString fileNameAndSize = ui->cb_DownloadFile->currentText();
+            const QString baseNameAndSize = ui->cb_DownloadFile->currentText();
             const CUpdateInfo update = m_updates.get();
             const CRemoteFileList remoteFiles = update.getArtifactsXSwiftBus().asRemoteFiles();
-            return remoteFiles.findFirstByMatchingNameOrDefault(fileNameAndSize);
+            return remoteFiles.findFirstByMatchingBaseNameOrDefault(baseNameAndSize);
         }
 
         QString CInstallXSwiftBusComponent::downloadDir() const
@@ -331,7 +331,7 @@ namespace BlackGui
             const CRemoteFileList remoteFiles = artifacts.asRemoteFiles();
             if (!remoteFiles.isEmpty())
             {
-                const QStringList xSwiftBusFiles(remoteFiles.getNamesPlusSize(false));
+                const QStringList xSwiftBusFiles(remoteFiles.getBaseNamesPlusSize(false));
                 m_xSwiftBusArtifacts = artifacts;
                 ui->cb_DownloadFile->addItems(xSwiftBusFiles);
 
@@ -340,17 +340,17 @@ namespace BlackGui
                 if (m_defaultDownloadName.isEmpty())
                 {
                     const CRemoteFile rf = remoteFiles.findFirstContainingNameOrDefault(CBuildConfig::getVersionString(), Qt::CaseInsensitive);
-                    if (rf.hasName()) { current = rf.getNameAndSize(); }
+                    if (rf.hasName()) { current = rf.getBaseNameAndSize(); }
                 }
                 else
                 {
-                    const CRemoteFile rf = remoteFiles.findFirstByMatchingNameOrDefault(m_defaultDownloadName);
-                    if (rf.hasName()) { current = rf.getNameAndSize(); }
+                    const CRemoteFile rf = remoteFiles.findFirstByMatchingBaseNameOrDefault(m_defaultDownloadName);
+                    if (rf.hasName()) { current = rf.getBaseNameAndSize(); }
                 }
 
                 ui->cb_DownloadFile->setCurrentText(
                     current.isEmpty() ?
-                    remoteFiles.frontOrDefault().getNameAndSize() :
+                    remoteFiles.frontOrDefault().getBaseNameAndSize() :
                     current
                 ); // latest version
             }

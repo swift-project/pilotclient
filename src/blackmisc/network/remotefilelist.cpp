@@ -35,12 +35,12 @@ namespace BlackMisc
             return fileNames;
         }
 
-        QStringList CRemoteFileList::getNamesPlusSize(bool sorted) const
+        QStringList CRemoteFileList::getBaseNamesPlusSize(bool sorted) const
         {
             QStringList fileNames;
             for (const CRemoteFile &rf : *this)
             {
-                fileNames.append(rf.getNameAndSize());
+                fileNames.append(rf.getBaseNameAndSize());
             }
             if (sorted) { fileNames.sort(); }
             return fileNames;
@@ -62,12 +62,12 @@ namespace BlackMisc
             return CRemoteFile();
         }
 
-        CRemoteFile CRemoteFileList::findFirstByMatchingNameOrDefault(const QString &name) const
+        CRemoteFile CRemoteFileList::findFirstByMatchingBaseNameOrDefault(const QString &baseName) const
         {
-            if (name.isEmpty()) { return CRemoteFile(); }
+            if (baseName.isEmpty()) { return CRemoteFile(); }
             for (const CRemoteFile &rf : *this)
             {
-                if (rf.matchesName(name)) { return rf; }
+                if (rf.matchesBaseName(baseName)) { return rf; }
             }
             return CRemoteFile();
         }

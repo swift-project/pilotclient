@@ -45,7 +45,7 @@ namespace BlackMisc
             QStringList getNames(bool sorted = true) const;
 
             //! All file names plus size
-            QStringList getNamesPlusSize(bool sorted = true) const;
+            QStringList getBaseNamesPlusSize(bool sorted = true) const;
 
             //! First by name of default
             CRemoteFile findFirstByNameOrDefault(const QString &name) const;
@@ -54,7 +54,7 @@ namespace BlackMisc
             CRemoteFile findFirstContainingNameOrDefault(const QString &name, Qt::CaseSensitivity cs) const;
 
             //! Find first matching name of default
-            CRemoteFile findFirstByMatchingNameOrDefault(const QString &name) const;
+            CRemoteFile findFirstByMatchingBaseNameOrDefault(const QString &name) const;
 
             //! Find all executable files (decided by appendix)
             CRemoteFileList findExecutableFiles() const;

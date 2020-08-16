@@ -190,7 +190,7 @@ namespace BlackGui
             const CUrl download = remoteFile.getSmartUrl();
             if (download.isEmpty())
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"No download URL for file name '%1'") << remoteFile.getNameAndSize();
+                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"No download URL for file name '%1'") << remoteFile.getBaseNameAndSize();
                 this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeoutMs);
                 return false;
             }
