@@ -66,13 +66,13 @@ namespace BlackMisc
             bool hasName() const { return !m_name.isEmpty(); }
 
             //! Name + human readable size
-            QString getNameAndSize() const;
+            QString getBaseNameAndSize() const;
 
             //! Name
             void setName(const QString &name) { m_name = name.trimmed(); }
 
             //! Matching name?
-            bool matchesName(const QString &name) const;
+            bool matchesBaseName(const QString &baseName) const;
 
             //! Description
             const QString &getDescription() const { return m_description; }

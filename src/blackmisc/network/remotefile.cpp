@@ -27,13 +27,13 @@ namespace BlackMisc
             : m_name(name), m_url(url), m_size(size)
         { }
 
-        QString CRemoteFile::getNameAndSize() const
+        QString CRemoteFile::getBaseNameAndSize() const
         {
             if (!this->hasName()) { return {}; }
-            return QStringLiteral("%1 (%2)").arg(this->getName(), this->getSizeHumanReadable());
+            return QStringLiteral("%1 (%2)").arg(this->getBaseName(), this->getSizeHumanReadable());
         }
 
-        bool CRemoteFile::matchesName(const QString &name) const
+        bool CRemoteFile::matchesBaseName(const QString &name) const
         {
             if (name.isEmpty()) { return false; }
             if (caseInsensitiveStringCompare(name, this->getBaseName())) { return true; }
