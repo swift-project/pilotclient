@@ -77,7 +77,6 @@ namespace BlackCore
     CCoreFacadeConfig CCoreFacadeConfig::allEmpty()
     {
         CCoreFacadeConfig cfg = CCoreFacadeConfig();
-        cfg.m_audio = CCoreFacadeConfig::Local;
         return cfg;
     }
 } // namespace
