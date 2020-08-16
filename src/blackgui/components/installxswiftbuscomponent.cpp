@@ -102,7 +102,7 @@ namespace BlackGui
         void CInstallXSwiftBusComponent::installXSwiftBus()
         {
             const CRemoteFile rf = this->getRemoteFileSelected();
-            const QString downloadFileName = CFileUtils::appendFilePathsAndFixUnc(this->downloadDir(), rf.getName());
+            const QString downloadFileName = CFileUtils::appendFilePathsAndFixUnc(this->downloadDir(), rf.getBaseName());
             QPointer<CInstallXSwiftBusComponent> myself(this);
             QFile downloadFile(downloadFileName);
 
@@ -129,7 +129,7 @@ namespace BlackGui
                 return;
             }
 
-            const QString destFileName = CFileUtils::appendFilePathsAndFixUnc(xSwiftBusDirectory, rf.getName());
+            const QString destFileName = CFileUtils::appendFilePathsAndFixUnc(xSwiftBusDirectory, rf.getBaseName());
             {
                 QFile destFile(destFileName);
                 if (destFile.exists())
@@ -199,7 +199,7 @@ namespace BlackGui
         {
             if (!sGui || !sGui->hasWebDataServices() || sGui->isShuttingDown()) { return; }
             const CRemoteFile rf = this->getRemoteFileSelected();
-            if (!rf.getName().contains(CBuildConfig::getVersionString()))
+            if (!rf.getBaseName().contains(CBuildConfig::getVersionString()))
             {
                 const QMessageBox::StandardButton reply = QMessageBox::question(this,
                         "Download XSwiftBus",
@@ -227,7 +227,7 @@ namespace BlackGui
                 return;
             }
 
-            const QString saveAsFile = CFileUtils::appendFilePathsAndFixUnc(ui->le_DownloadDir->text(), rf.getName());
+            const QString saveAsFile = CFileUtils::appendFilePathsAndFixUnc(ui->le_DownloadDir->text(), rf.getBaseName());
             const QFile saveFile(saveAsFile);
             if (saveFile.exists())
             {
