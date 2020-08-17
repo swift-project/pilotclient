@@ -49,6 +49,7 @@ namespace XSwiftBus
         surfaces.lights.bcnLights = surfaces.lights.landLights = surfaces.lights.navLights = surfaces.lights.strbLights = 1;
 
         std::strncpy(label, callsign.c_str(), sizeof(label));
+        for (auto &position : positions) { memcpy(position.label, label, sizeof(label)); }
 
         std::srand(static_cast<unsigned int>(std::time(nullptr)));
         surfaces.lights.timeOffset = static_cast<uint16_t>(std::rand() % 0xffff);
