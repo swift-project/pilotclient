@@ -2,7 +2,7 @@
     "version": {
         "major": 0,
         "minor": 9,
-        "micro": 5
+        "micro": 6
     },
     "libs": {
         "blackcore": true,
