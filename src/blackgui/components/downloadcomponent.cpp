@@ -295,7 +295,7 @@ namespace BlackGui
             for (const CRemoteFile &rf : executables)
             {
                 const QString executable = CFileUtils::appendFilePaths(dir.absolutePath(), rf.getBaseName());
-                const QFile executableFile(executable);
+                QFile executableFile(executable);
                 if (!executableFile.exists()) { continue; }
 
                 QMessageBox::StandardButton reply = QMessageBox::question(this, "Start?", msg.arg(rf.getName()), QMessageBox::Yes | QMessageBox::No);
@@ -308,6 +308,12 @@ namespace BlackGui
                     // do not close
                     ui->pb_OpenDownloadDir->click();
                     return;
+                }
+
+                if (CBuildConfig::isRunningOnLinuxPlatform() && !executableFile.permissions().testFlag(QFile::ExeOwner))
+                {
+                    executableFile.setPermissions(QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner
+                        | QFile::ReadGroup | QFile::ExeGroup | QFile::ReadOther | QFile::ExeOther);
                 }
 
                 const bool shutdown = ui->cb_Shutdown->isChecked();
