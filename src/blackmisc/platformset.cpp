@@ -8,7 +8,7 @@
 
 //! \cond PRIVATE
 
-#include "platformset.h"
+#include "blackmisc/platformset.h"
 #include "blackmisc/containerbase.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/variant.h"

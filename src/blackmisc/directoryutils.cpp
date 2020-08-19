@@ -8,10 +8,10 @@
 
 //! \cond PRIVATE
 
-#include "directoryutils.h"
-#include "fileutils.h"
-#include "stringutils.h"
-#include "range.h"
+#include "blackmisc/directoryutils.h"
+#include "blackmisc/fileutils.h"
+#include "blackmisc/stringutils.h"
+#include "blackmisc/range.h"
 #include "blackconfig/buildconfig.h"
 #include <QCoreApplication>
 #include <QDir>

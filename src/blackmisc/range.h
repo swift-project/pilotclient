@@ -11,11 +11,11 @@
 #ifndef BLACKMISC_RANGE_H
 #define BLACKMISC_RANGE_H
 
-#include "blackmiscexport.h"
-#include "iterator.h"
-#include "predicates.h"
-#include "algorithm.h"
-#include "typetraits.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/iterator.h"
+#include "blackmisc/predicates.h"
+#include "blackmisc/algorithm.h"
+#include "blackmisc/typetraits.h"
 #include <QtGlobal>
 #include <QDebug>
 #include <algorithm>

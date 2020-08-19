@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_LIBRARYPATH_H
 #define BLACKMISC_LIBRARYPATH_H
 
-#include "blackmiscexport.h"
+#include "blackmisc/blackmiscexport.h"
 
 namespace BlackMisc
 {

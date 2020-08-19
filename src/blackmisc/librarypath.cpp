@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "librarypath.h"
+#include "blackmisc/librarypath.h"
 #include <QtGlobal>
 #include <QString>
 #include <vector>

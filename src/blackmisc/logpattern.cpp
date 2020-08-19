@@ -6,9 +6,9 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
+#include "blackmisc/logpattern.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
-#include "blackmisc/logpattern.h"
 #include "blackmisc/sequence.h"
 
 #include <QHash>

@@ -8,8 +8,8 @@
 
 //! \cond PRIVATE
 
-#include "blackmisc/dictionary.h"
 #include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/dictionary.h"
 
 #include <QHash>
 #include <tuple>

@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_INHERITANCE_TRAITS_H
 #define BLACKMISC_INHERITANCE_TRAITS_H
 
-#include "typetraits.h"
+#include "blackmisc/typetraits.h"
 #include <QMetaType>
 #include <type_traits>
 

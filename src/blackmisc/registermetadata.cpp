@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "registermetadata.h"
+#include "blackmisc/registermetadata.h"
 #include "blackmisc/simulation/registermetadatasimulation.h"
 #include "blackmisc/weather/registermetadataweather.h"
 #include "blackmisc/network/registermetadatanetwork.h"

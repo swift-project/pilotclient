@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "dbus.h"
+#include "blackmisc/dbus.h"
 
 #ifdef Q_OS_WIN
 #include <QDBusConnection>

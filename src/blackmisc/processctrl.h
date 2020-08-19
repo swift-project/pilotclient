@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_PROCESS_H
 #define BLACKMISC_PROCESS_H
 
-#include "blackmiscexport.h"
+#include "blackmisc/blackmiscexport.h"
 #include <QProcess>
 
 namespace BlackMisc

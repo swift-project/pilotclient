@@ -6,13 +6,12 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "crashhandler.h"
-
-#include "blackconfig/buildconfig.h"
+#include "blackmisc/crashhandler.h"
 #include "blackmisc/appstarttime.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/filelogger.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QCoreApplication>
 #include <QFileInfo>

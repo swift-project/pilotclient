@@ -7,7 +7,7 @@
  */
 
 #include "blackmisc/directories.h"
-#include "directoryutils.h"
+#include "blackmisc/directoryutils.h"
 #include <QFileInfo>
 #include <QDir>
 

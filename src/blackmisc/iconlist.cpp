@@ -6,9 +6,9 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
+#include "blackmisc/iconlist.h"
 #include "blackmisc/containerbase.h"
 #include "blackmisc/dbus.h"
-#include "blackmisc/iconlist.h"
 #include "blackmisc/range.h"
 #include "blackmisc/variant.h"
 #include <QDBusMetaType>

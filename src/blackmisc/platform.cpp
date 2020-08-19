@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "platform.h"
+#include "blackmisc/platform.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/comparefunctions.h"

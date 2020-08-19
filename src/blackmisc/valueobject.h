@@ -11,17 +11,17 @@
 #ifndef BLACKMISC_VALUEOBJECT_H
 #define BLACKMISC_VALUEOBJECT_H
 
-#include "blackmiscexport.h"
-#include "dbus.h"
-#include "datastream.h"
-#include "metaclass.h"
-#include "json.h"
-#include "compare.h"
-#include "variant.h"
-#include "propertyindexvariantmap.h"
-#include "iconlist.h"
-#include "dictionary.h"
-#include "stringutils.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/dbus.h"
+#include "blackmisc/datastream.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/json.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/variant.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/iconlist.h"
+#include "blackmisc/dictionary.h"
+#include "blackmisc/stringutils.h"
 
 #include <QtDBus/QDBusMetaType>
 #include <QString>

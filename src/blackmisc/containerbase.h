@@ -11,11 +11,11 @@
 #ifndef BLACKMISC_CONTAINERBASE_H
 #define BLACKMISC_CONTAINERBASE_H
 
-#include "range.h"
-#include "predicates.h"
-#include "json.h"
-#include "variant.h"
-#include "dbus.h"
+#include "blackmisc/range.h"
+#include "blackmisc/predicates.h"
+#include "blackmisc/json.h"
+#include "blackmisc/variant.h"
+#include "blackmisc/dbus.h"
 
 #include <algorithm>
 #include <QStringList>

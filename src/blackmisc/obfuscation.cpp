@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "obfuscation.h"
+#include "blackmisc/obfuscation.h"
 #include "blackmisc/thirdparty/simplecrypt.h"
 #include <QStringBuilder>
 

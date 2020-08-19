@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "digestsignal.h"
-#include "threadutils.h"
+#include "blackmisc/digestsignal.h"
+#include "blackmisc/threadutils.h"
 #include <QPointer>
 
 namespace BlackMisc

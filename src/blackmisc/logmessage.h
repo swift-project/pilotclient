@@ -11,11 +11,11 @@
 
 //! \file
 
-#include "blackmiscexport.h"
-#include "statusmessagelist.h"
-#include "statusmessage.h"
-#include "logcategorylist.h"
-#include "integersequence.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/statusmessagelist.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/integersequence.h"
 #include <QDebug>
 #include <QLoggingCategory>
 #include <QList>

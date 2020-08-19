@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_PLATFORMSET_H
 #define BLACKMISC_PLATFORMSET_H
 
-#include "platform.h"
+#include "blackmisc/platform.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"

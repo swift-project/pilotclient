@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_WINDLLUTILS_H
 #define BLACKMISC_WINDLLUTILS_H
 
-#include "blackmiscexport.h"
+#include "blackmisc/blackmiscexport.h"
 #include <QString>
 
 namespace BlackMisc

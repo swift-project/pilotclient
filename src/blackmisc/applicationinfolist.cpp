@@ -7,7 +7,7 @@
 */
 
 #include "blackmisc/applicationinfolist.h"
-#include "directoryutils.h"
+#include "blackmisc/directoryutils.h"
 #include "blackconfig/buildconfig.h"
 
 using namespace BlackConfig;

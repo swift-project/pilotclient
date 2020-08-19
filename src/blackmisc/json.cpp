@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "json.h"
+#include "blackmisc/json.h"
 #include "blackmisc/imageutils.h"
 #include "blackmisc/stringutils.h"
 

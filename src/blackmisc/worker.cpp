@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackmisc/threadutils.h"
 #include "blackmisc/worker.h"
+#include "blackmisc/threadutils.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/logmessage.h"
 

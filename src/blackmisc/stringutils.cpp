@@ -8,7 +8,7 @@
 
 //! \cond PRIVATE
 
-#include "stringutils.h"
+#include "blackmisc/stringutils.h"
 #include <QChar>
 #include <QTextCodec>
 #include <QStringBuilder>

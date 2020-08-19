@@ -8,9 +8,9 @@
 
 //! \cond PRIVATE
 
+#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/range.h"
-#include "blackmisc/statusmessagelist.h"
 
 #include <QJsonObject>
 #include <QJsonValue>

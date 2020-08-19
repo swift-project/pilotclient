@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackmisc/compare.h"
 #include "blackmisc/identifierlist.h"
+#include "blackmisc/compare.h"
 
 #include <QString>
 #include <tuple>

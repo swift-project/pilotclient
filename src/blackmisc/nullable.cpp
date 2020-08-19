@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackmisc/comparefunctions.h"
 #include "blackmisc/nullable.h"
+#include "blackmisc/comparefunctions.h"
 #include "blackmisc/verify.h"
 
 namespace BlackMisc

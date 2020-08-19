@@ -8,7 +8,7 @@
 
 //! \cond PRIVATE
 
-#include "logmessage.h"
+#include "blackmisc/logmessage.h"
 
 namespace BlackMisc
 {

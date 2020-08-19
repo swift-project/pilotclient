@@ -6,15 +6,15 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "statusmessage.h"
-#include "statusexception.h"
-#include "propertyindex.h"
-#include "iconlist.h"
-#include "loghandler.h"
-#include "logmessage.h"
-#include "comparefunctions.h"
-#include "stringutils.h"
-#include "verify.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/statusexception.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/iconlist.h"
+#include "blackmisc/loghandler.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/comparefunctions.h"
+#include "blackmisc/stringutils.h"
+#include "blackmisc/verify.h"
 
 #include <QMetaEnum>
 #include <QStringBuilder>

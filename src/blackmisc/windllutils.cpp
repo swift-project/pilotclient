@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "windllutils.h"
+#include "blackmisc/windllutils.h"
 #include <QDir>
 #include <QtGlobal>
 #include <QCoreApplication>

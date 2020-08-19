@@ -7,14 +7,12 @@
  */
 
 #include "blackmisc/audio/audiosettings.h"
-
+#include "blackmisc/directoryutils.h"
+#include "blackmisc/fileutils.h"
 #include <QChar>
 #include <QtGlobal>
 #include <QStringBuilder>
 #include <QDir>
-
-#include "blackmisc/directoryutils.h"
-#include "blackmisc/fileutils.h"
 
 using namespace BlackMisc::Audio;
 

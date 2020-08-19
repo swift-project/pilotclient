@@ -6,10 +6,10 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
+#include "blackmisc/fileutils.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/worker.h"
-#include "blackmisc/fileutils.h"
 #include "blackmisc/directoryutils.h"
 #include "blackconfig/buildconfig.h"
 

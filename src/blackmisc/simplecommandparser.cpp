@@ -6,9 +6,9 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
+#include "blackmisc/simplecommandparser.h"
 #include "blackmisc/pq/pqstring.h"
 #include "blackmisc/stringutils.h"
-#include "blackmisc/simplecommandparser.h"
 
 #include <QList>
 #include <QSet>

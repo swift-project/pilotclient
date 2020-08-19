@@ -6,9 +6,9 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "cachesettingsutils.h"
-#include "settingscache.h"
-#include "datacache.h"
+#include "blackmisc/cachesettingsutils.h"
+#include "blackmisc/settingscache.h"
+#include "blackmisc/datacache.h"
 #include <QRegularExpression>
 
 namespace BlackMisc

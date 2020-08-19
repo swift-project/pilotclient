@@ -6,11 +6,11 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "compressutils.h"
+#include "blackmisc/compressutils.h"
+#include "blackmisc/fileutils.h"
+#include "blackmisc/directoryutils.h"
+#include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
-#include "fileutils.h"
-#include "directoryutils.h"
-#include "stringutils.h"
 
 #include <QFileInfo>
 #include <QProcess>

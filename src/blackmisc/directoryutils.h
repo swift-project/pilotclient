@@ -11,8 +11,8 @@
 #ifndef BLACKMISC_DIRECTORYUTILS_H
 #define BLACKMISC_DIRECTORYUTILS_H
 
-#include "applicationinfo.h"
-#include "blackmiscexport.h"
+#include "blackmisc/applicationinfo.h"
+#include "blackmisc/blackmiscexport.h"
 #include <QMap>
 #include <QSet>
 #include <QString>

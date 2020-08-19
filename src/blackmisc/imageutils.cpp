@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "imageutils.h"
+#include "blackmisc/imageutils.h"
 #include "blackmisc/stringutils.h"
 
 #include <QBuffer>

@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_GENERICDBUSINTERFACE_H
 #define BLACKMISC_GENERICDBUSINTERFACE_H
 
-#include "logmessage.h"
+#include "blackmisc/logmessage.h"
 #include "blackmisc/promise.h"
 #include <QDBusAbstractInterface>
 #include <QDBusPendingCall>

@@ -7,7 +7,7 @@
 */
 
 #include "blackmisc/crashinfo.h"
-#include "fileutils.h"
+#include "blackmisc/fileutils.h"
 
 #include <QFile>
 #include <QStringBuilder>

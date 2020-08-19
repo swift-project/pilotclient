@@ -11,9 +11,9 @@
 #ifndef BLACKMISC_SEQUENCE_H
 #define BLACKMISC_SEQUENCE_H
 
-#include "containerbase.h"
-#include "propertyindex.h"
-#include "icon.h"
+#include "blackmisc/containerbase.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/icon.h"
 #include <QVector>
 #include <algorithm>
 #include <type_traits>

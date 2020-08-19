@@ -6,11 +6,11 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackconfig/buildconfig.h"
-#include "blackmisc/appstarttime.h"
 #include "blackmisc/filelogger.h"
+#include "blackmisc/appstarttime.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/directoryutils.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QCoreApplication>
 #include <QDateTime>

@@ -12,7 +12,7 @@
 #define BLACKMISC_CACHESETTINGSUTILS_H
 
 #include "blackmisc/applicationinfo.h"
-#include "blackmiscexport.h"
+#include "blackmisc/blackmiscexport.h"
 #include <QString>
 
 namespace BlackMisc

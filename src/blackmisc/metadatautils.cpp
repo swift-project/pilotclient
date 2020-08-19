@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "metadatautils.h"
+#include "blackmisc/metadatautils.h"
 
 #include <QMetaType>
 #include <QMetaObject>

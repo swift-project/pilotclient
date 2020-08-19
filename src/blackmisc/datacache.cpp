@@ -8,8 +8,8 @@
 
 //! \cond PRIVATE
 
-#include "blackmisc/atomicfile.h"
 #include "blackmisc/datacache.h"
+#include "blackmisc/atomicfile.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/logmessage.h"

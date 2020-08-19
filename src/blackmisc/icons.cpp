@@ -8,9 +8,9 @@
 
 //! \cond PRIVATE
 
+#include "blackmisc/icons.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/fileutils.h"
-#include "blackmisc/icons.h"
 #include "blackmisc/threadutils.h"
 
 #include <QIcon>

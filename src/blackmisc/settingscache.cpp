@@ -6,9 +6,9 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
+#include "blackmisc/settingscache.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/settingscache.h"
 
 #include <QStandardPaths>
 

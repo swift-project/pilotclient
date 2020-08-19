@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "ecosystem.h"
+#include "blackmisc/network/ecosystem.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/comparefunctions.h"

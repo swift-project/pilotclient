@@ -11,8 +11,8 @@
 #ifndef BLACKMISC_ITERATOR_H
 #define BLACKMISC_ITERATOR_H
 
-#include "optional.h"
-#include "typetraits.h"
+#include "blackmisc/optional.h"
+#include "blackmisc/typetraits.h"
 #include <algorithm>
 #include <type_traits>
 #include <iterator>

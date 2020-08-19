@@ -8,6 +8,7 @@
 
 //! \cond PRIVATE
 
+#include "blackmisc/timestampobjectlist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituationchangelist.h"
@@ -27,7 +28,6 @@
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/simulation/matchingstatistics.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackmisc/timestampobjectlist.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/identifierlist.h"
 #include "blackmisc/countrylist.h"

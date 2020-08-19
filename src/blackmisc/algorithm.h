@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_ALGORITHM_H
 #define BLACKMISC_ALGORITHM_H
 
-#include "integersequence.h"
+#include "blackmisc/integersequence.h"
 
 #include <QThreadStorage>
 #include <QRandomGenerator>

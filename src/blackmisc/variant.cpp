@@ -8,6 +8,7 @@
 
 //! \cond PRIVATE
 
+#include "blackmisc/variant.h"
 #include "blackmisc/imageutils.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/icon.h"
@@ -15,7 +16,6 @@
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/variantlist.h"
-#include "blackmisc/variant.h"
 
 #include <QByteArray>
 #include <QChar>
