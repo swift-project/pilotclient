@@ -3,8 +3,7 @@ name: Build swift
 on:
   push:
     branches-ignore:
-      - master
-      - readthedocs
+      - stable/**
       - nobuild/**
   pull_request:
 
