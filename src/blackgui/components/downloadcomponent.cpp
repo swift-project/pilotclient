@@ -310,23 +310,8 @@ namespace BlackGui
                     return;
                 }
 
-                QStringList arguments;
-                if (rf.isSwiftInstaller())
-                {
-                    /** installer now remembers install dir
-                    QDir dir(QCoreApplication::applicationDirPath());
-                    dir.cdUp();
-                    if (dir.exists())
-                    {
-                        const QString d(dir.absolutePath());
-                        arguments << "--installdir";
-                        arguments << d;
-                    }
-                    **/
-                }
-
                 const bool shutdown = ui->cb_Shutdown->isChecked();
-                const bool started  = QProcess::startDetached(executable, arguments, dir.absolutePath());
+                const bool started  = QProcess::startDetached(executable, {}, dir.absolutePath());
                 if (started && shutdown && sGui)
                 {
                     QTimer::singleShot(250, sGui, []
