@@ -461,15 +461,10 @@ namespace BlackMisc
                     return false;
                 }
 
-                QStringList dirNames;
-                dirNames.append(relativePath.split('/', Qt::SkipEmptyParts));
-                // Replace the first one being the package name with the package root dir
+                // just the name of the dir containing xsbaircraft.txt
                 QString packageRootDir = package.path.mid(package.path.lastIndexOf('/') + 1);
-                dirNames.replace(0, packageRootDir);
-                // Remove the last one being the obj itself
-                dirNames.removeLast();
+                package.planes.back().dirNames = QStringList { packageRootDir };
 
-                package.planes.back().dirNames = dirNames;
                 package.planes.back().filePath = fullPath;
                 return true;
             }
