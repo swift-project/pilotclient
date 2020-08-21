@@ -305,6 +305,7 @@ namespace XSwiftBus
         XPMPPlaneID id = nullptr;
         if (modelName.empty() || m_modelStrings.count(modelName) == 0)
         {
+            DEBUG_LOG("Model " + modelName + " is unknown, falling back to basic xpmp2 model matching");
             id = XPMPCreatePlane(aircraftIcao.c_str(), airlineIcao.c_str(), livery.c_str());
         }
         else
