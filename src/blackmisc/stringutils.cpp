@@ -147,34 +147,6 @@ namespace BlackMisc
         return QString(d, '0') + hex;
     }
 
-    QString bytesToHexString(const QByteArray &bytes)
-    {
-        QString h;
-        for (int i = 0; i < bytes.size(); i++)
-        {
-            const int b = static_cast<int>(bytes.at(i));
-            h += intToHex(b, 2);
-        }
-        return h;
-    }
-
-    QByteArray byteArrayFromHexString(const QString &hexString)
-    {
-        QByteArray ba;
-        int pos = 0;
-        while (pos + 1 < hexString.length())
-        {
-            bool ok;
-            const QString h = hexString.mid(pos, 2);
-            int hex = h.toInt(&ok, 16);
-            Q_ASSERT_X(ok, Q_FUNC_INFO, "Invalid hex");
-            if (!ok) { return QByteArray(); }
-            ba.push_back(static_cast<char>(hex));
-            pos += 2;
-        }
-        return ba;
-    }
-
     QString stripDesignatorFromCompleterString(const QString &candidate)
     {
         const QString s(candidate.trimmed().toUpper());

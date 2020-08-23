@@ -53,12 +53,7 @@ namespace BlackMisc
         if (!object) { return false; }
         if (CThreadUtils::isCurrentThreadObjectThread(object)) {  return false; }
 
-        QPointer<QObject> myself(object);
-        QTimer::singleShot(0, object, [ = ]
-        {
-            if (!myself) { return; }
-            callFunct();
-        });
+        QMetaObject::invokeMethod(object, callFunct);
         return true;
     }
 } // ns

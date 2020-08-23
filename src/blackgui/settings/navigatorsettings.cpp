@@ -36,12 +36,12 @@ namespace BlackGui
 
         QByteArray CNavigatorSettings::getGeometry() const
         {
-            return byteArrayFromHexString(this->m_geometry);
+            return QByteArray::fromHex(this->m_geometry.toLatin1());
         }
 
         void CNavigatorSettings::setGeometry(const QByteArray &ba)
         {
-            this->m_geometry = bytesToHexString(ba);
+            this->m_geometry = ba.toHex();
         }
 
         QString CNavigatorSettings::convertToQString(bool i18n) const

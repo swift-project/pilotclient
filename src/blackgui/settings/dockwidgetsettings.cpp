@@ -69,12 +69,12 @@ namespace BlackGui
 
         QByteArray CDockWidgetSettings::getGeometry() const
         {
-            return byteArrayFromHexString(m_geometry);
+            return QByteArray::fromHex(m_geometry.toLatin1());
         }
 
         void CDockWidgetSettings::setGeometry(const QByteArray &ba)
         {
-            m_geometry = bytesToHexString(ba);
+            m_geometry = ba.toHex();
         }
 
         QString CDockWidgetSettings::convertToQString(bool i18n) const

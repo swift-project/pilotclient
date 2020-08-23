@@ -247,12 +247,6 @@ namespace BlackMisc
     //! Replace dot '.' by locale decimal point
     BLACKMISC_EXPORT QString dotToLocaleDecimalPoint(const QString &input);
 
-    //! Int to hex value (per byte, 2 digits)
-    BLACKMISC_EXPORT QString bytesToHexString(const QByteArray &bytes);
-
-    //! Byte array from hex value string per byte, 2 digits
-    BLACKMISC_EXPORT QByteArray byteArrayFromHexString(const QString &hexString);
-
     //! Strip a designator from a combined string
     BLACKMISC_EXPORT QString stripDesignatorFromCompleterString(const QString &candidate);
 

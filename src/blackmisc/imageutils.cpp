@@ -7,7 +7,6 @@
  */
 
 #include "blackmisc/imageutils.h"
-#include "blackmisc/stringutils.h"
 
 #include <QBuffer>
 #include <QIODevice>
@@ -41,20 +40,20 @@ QString BlackMisc::pixmapToPngHexString(const QPixmap &pixmap)
     QByteArray ba;
     bool s = pixmapToPngByteArray(pixmap, ba);
     if (!s) { return QString(); }
-    return bytesToHexString(ba);
+    return ba.toHex();
 }
 
 QPixmap BlackMisc::pngHexStringToPixmap(const QString &hexString)
 {
     if (hexString.isEmpty()) { return QPixmap(); }
-    QByteArray ba(byteArrayFromHexString(hexString));
+    QByteArray ba(QByteArray::fromHex(hexString.toLatin1()));
     return pngByteArrayToPixmap(ba);
 }
 
 bool BlackMisc::pngHexStringToPixmapRef(const QString &hexString, QPixmap &pixmap)
 {
     if (hexString.isEmpty()) { return false; }
-    QByteArray ba(byteArrayFromHexString(hexString));
+    QByteArray ba(QByteArray::fromHex(hexString.toLatin1()));
     return pngByteArrayToPixmapRef(ba, pixmap);
 }
 

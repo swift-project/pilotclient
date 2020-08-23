@@ -8,7 +8,6 @@
 
 #include "blackmisc/json.h"
 #include "blackmisc/imageutils.h"
-#include "blackmisc/stringutils.h"
 
 #include <QDateTime>
 #include <QJsonDocument>
@@ -95,7 +94,7 @@ const QJsonValue &operator >>(const QJsonValue &json, QPixmap &value)
 const QJsonValue &operator >>(const QJsonValue &json, QByteArray &value)
 {
     const QString hex(json.toString());
-    value = BlackMisc::byteArrayFromHexString(hex);
+    value = QByteArray::fromHex(hex.toLatin1());
     return json;
 }
 
@@ -175,7 +174,7 @@ QJsonValueRef operator >>(QJsonValueRef json, QPixmap &value)
 QJsonValueRef operator >>(QJsonValueRef json, QByteArray &value)
 {
     const QString hex(json.toString());
-    value = BlackMisc::byteArrayFromHexString(hex);
+    value = QByteArray::fromHex(hex.toLatin1());
     return json;
 }
 
@@ -248,7 +247,7 @@ QJsonArray &operator<<(QJsonArray &json, const QPixmap &value)
 
 QJsonArray &operator<<(QJsonArray &json, const QByteArray &value)
 {
-    QString pm(BlackMisc::byteArrayFromHexString(value));
+    QString pm(QByteArray::fromHex(value));
     json.append(QJsonValue(pm));
     return json;
 }
@@ -328,7 +327,7 @@ QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QPixma
 
 QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QByteArray &> &value)
 {
-    QString pm(BlackMisc::bytesToHexString(value.second));
+    QString pm(value.second.toHex());
     json.insert(value.first, pm);
     return json;
 }
@@ -408,8 +407,7 @@ QJsonObject &operator<<(QJsonObject &json, const std::pair<CExplicitLatin1String
 
 QJsonObject &operator<<(QJsonObject &json, const std::pair<CExplicitLatin1String, const QByteArray &> &value)
 {
-    QString pm(BlackMisc::bytesToHexString(value.second));
-    json[value.first] = pm;
+    json[value.first] = QString(value.second.toHex());
     return json;
 }
 
