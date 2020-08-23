@@ -11,31 +11,46 @@
 #ifndef BLACKMISC_COMPAREFUNCTIONS_H
 #define BLACKMISC_COMPAREFUNCTIONS_H
 
-#include "blackmisc/blackmiscexport.h"
 #include <QDateTime>
-#include <QtGlobal>
+#include <type_traits>
+
+template<typename Enum>
+class QFlags;
 
 namespace BlackMisc
 {
     namespace Compare
     {
-        //! Compare bool
-        BLACKMISC_EXPORT int compare(bool a, bool b);
+        //! Compare arithmetic values
+        template <typename T, std::enable_if_t<std::is_arithmetic<T>::value, int> = 0>
+        int compare(T a, T b)
+        {
+            if (a < b) { return -1; }
+            if (b < a) { return 1; }
+            return 0;
+        }
 
-        //! Compare int
-        BLACKMISC_EXPORT int compare(int a, int b);
+        //! Compare enumerators
+        template <typename T, std::enable_if_t<std::is_enum<T>::value, int> = 0>
+        int compare(T a, T b)
+        {
+            using UT = std::underlying_type_t<T>;
+            return compare(static_cast<UT>(a), static_cast<UT>(b));
+        }
 
-        //! Compare uint
-        BLACKMISC_EXPORT int compare(uint a, uint b);
+        //! Compare QFlags
+        template <typename T>
+        int compare(QFlags<T> a, QFlags<T> b)
+        {
+            using UT = typename QFlags<T>::Int;
+            return compare(static_cast<UT>(a), static_cast<UT>(b));
+        }
 
-        //! Compare qint64
-        BLACKMISC_EXPORT int compare(qint64 a, qint64 b);
-
-        //! Compare double
-        BLACKMISC_EXPORT int compare(double a, double b);
-
-        //! Compare double
-        BLACKMISC_EXPORT int compare(const QDateTime &a, const QDateTime &b);
+        //! Compare dates
+        inline int compare(const QDateTime &a, const QDateTime &b)
+        {
+            return compare(a.toMSecsSinceEpoch(), b.toMSecsSinceEpoch());
+        }
     } // ns
 } // ns
 
