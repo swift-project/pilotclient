@@ -6,10 +6,6 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#ifndef BLACKMISC_NAMESPACES_H
-#define BLACKMISC_NAMESPACES_H
-
-// just a dummy header, namespace documentation will go here
 //! \file
 
 /*!
@@ -63,5 +59,3 @@
  * \namespace BlackMisc::Mixin
  * \brief Mixin classes which implement common operations for value classes.
  */
-
-#endif

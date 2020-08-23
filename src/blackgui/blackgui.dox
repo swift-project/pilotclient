@@ -6,10 +6,6 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#ifndef BLACKGUI_NAMESPACES_H
-#define BLACKGUI_NAMESPACES_H
-
-// just a dummy header, namespace documentation will go here
 //! \file
 
 /*!
@@ -51,5 +47,3 @@
  * \namespace BlackGui::Win
  * \brief Windows specific classes.
  */
-
-#endif
