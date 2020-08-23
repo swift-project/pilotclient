@@ -8,14 +8,14 @@
 
 //! \file
 
-#ifndef BLACKCORE_MACROS_H
-#define BLACKCORE_MACROS_H
+#ifndef BLACKCORE_BLACKCOREEXPORT_H
+#define BLACKCORE_BLACKCOREEXPORT_H
 
 #include <QtGlobal>
 
 /*!
  * \def BLACKCORE_EXPORT
- * BlackCore Export Macro
+ * Export a class or function from the library
  */
 
 #ifndef WITH_STATIC

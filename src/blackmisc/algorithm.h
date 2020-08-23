@@ -11,14 +11,14 @@
 #ifndef BLACKMISC_ALGORITHM_H
 #define BLACKMISC_ALGORITHM_H
 
-#include "blackmisc/integersequence.h"
-
 #include <QThreadStorage>
 #include <QRandomGenerator>
 #include <QtGlobal>
 #include <algorithm>
 #include <iterator>
+#include <utility>
 #include <random>
+#include <tuple>
 
 namespace BlackMisc
 {

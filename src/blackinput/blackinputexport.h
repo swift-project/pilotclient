@@ -8,14 +8,14 @@
 
 //! \file
 
-#ifndef BLACKINPUT_MACROS_H
-#define BLACKINPUT_MACROS_H
+#ifndef BLACKINPUT_BLACKINPUTEXPORT_H
+#define BLACKINPUT_BLACKINPUTEXPORT_H
 
 #include <QtGlobal>
 
 /*!
  * \def BLACKINPUT_EXPORT
- * BlackInput Export Macro
+ * Export a class or function from the library
  */
 
 #ifndef WITH_STATIC
@@ -28,4 +28,4 @@
 #  define BLACKINPUT_EXPORT
 #endif
 
-#endif // BLACKINPUT_MACROS_H
+#endif // guard

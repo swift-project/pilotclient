@@ -11,7 +11,6 @@
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/crashhandler.h"
-#include "blackmisc/appstarttime.h"
 #include "swiftdata.h"
 
 #include <stdlib.h>

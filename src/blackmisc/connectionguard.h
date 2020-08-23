@@ -15,7 +15,6 @@
 
 #include <QList>
 #include <QMetaObject>
-#include <QObject>
 
 namespace BlackMisc
 {

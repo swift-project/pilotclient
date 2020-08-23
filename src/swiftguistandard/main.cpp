@@ -15,7 +15,6 @@
 #include "blackmisc/audio/audioutils.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/crashhandler.h"
-#include "blackmisc/appstarttime.h"
 
 #include <stdlib.h>
 #include <iostream>

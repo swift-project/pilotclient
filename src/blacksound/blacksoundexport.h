@@ -8,14 +8,14 @@
 
 //! \file
 
-#ifndef BLACKSOUND_MACROS_H
-#define BLACKSOUND_MACROS_H
+#ifndef BLACKSOUND_BLACKSOUNDEXPORT_H
+#define BLACKSOUND_BLACKSOUNDEXPORT_H
 
 #include <QtGlobal>
 
 /*!
  * \def BLACKSOUND_EXPORT
- * BlackSound Export Macro
+ * Export a class or function from the library
  */
 
 #ifndef WITH_STATIC
@@ -28,4 +28,4 @@
 #  define BLACKSOUND_EXPORT
 #endif
 
-#endif // BLACKSOUND_MACROS_H
+#endif // guard

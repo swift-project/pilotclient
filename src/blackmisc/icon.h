@@ -158,7 +158,7 @@ namespace BlackMisc
 
     namespace Private
     {
-        //! \private Needed so we can copy forward-declared CIcon.
+        //! \private Needed so CValueObjectMetaInfoHelper can copy forward-declared CIcon.
         inline void assign(CIcon &a, const CIcon &b) { a = b; }
     }
 

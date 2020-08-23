@@ -8,14 +8,14 @@
 
 //! \file
 
-#ifndef BLACKMISC_MACROS_H
-#define BLACKMISC_MACROS_H
+#ifndef BLACKMISC_BLACKMISCEXPORT_H
+#define BLACKMISC_BLACKMISCEXPORT_H
 
 #include <QtGlobal>
 
 /*!
  * \def BLACKMISC_EXPORT
- * BlackMisc Export Macro
+ * Export a class or function from the library
  */
 #ifndef WITH_STATIC
 #  if defined(BUILD_BLACKMISC_LIB)
@@ -29,12 +29,12 @@
 
 /*!
  * \def BLACKMISC_EXPORT_DECLARE_TEMPLATE
- * BlackMisc Export Explicit Template Declaration Macro
+ * Export explicit template declaration
  */
 
 /*!
  * \def BLACKMISC_EXPORT_DEFINE_TEMPLATE
- * BlackMisc Export Explicit Template Definition Macro
+ * Export explicit template definition
  */
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
 #  define BLACKMISC_EXPORT_DECLARE_TEMPLATE BLACKMISC_EXPORT

@@ -21,7 +21,6 @@ class QTextStream;
 class QObject;
 struct QMetaObject;
 
-//! Metadata util functions
 namespace BlackMisc
 {
     //! Display all user metatypes

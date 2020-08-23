@@ -36,7 +36,6 @@
 
 template <class T1, class T2> class QMap;
 
-//! Free functions in BlackMisc
 namespace BlackMisc
 {
     //! Return a string with characters removed that match the given predicate.

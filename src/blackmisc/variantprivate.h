@@ -35,10 +35,10 @@ namespace BlackMisc
 
     namespace Private
     {
-        //! \private Needed so we can copy forward-declared CVariant.
+        //! \private Defined in variant.h
         void assign(CVariant &, const CVariant &);
 
-        //! \private Needed so we can copy forward-declared CIcon.
+        //! \private Defined in icon.h
         void assign(CIcon &, const CIcon &);
 
         //! \private Abstract base class representing the set of operations supported by a particular value type.

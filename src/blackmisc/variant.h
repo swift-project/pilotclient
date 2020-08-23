@@ -384,7 +384,7 @@ namespace BlackMisc
 {
     namespace Private
     {
-        //! \private Needed so we can copy forward-declared CVariant.
+        //! \private Needed so CValueObjectMetaInfoHelper can copy forward-declared CVariant.
         inline void assign(CVariant &a, const CVariant &b) { a = b; }
 
         //! \private

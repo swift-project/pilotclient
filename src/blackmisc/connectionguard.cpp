@@ -7,7 +7,9 @@
  */
 
 #include "blackmisc/connectionguard.h"
-#include "blackmisc/range.h"
+#include "blackmisc/range.h" // for as_const
+
+#include <QObject>
 
 namespace BlackMisc
 {

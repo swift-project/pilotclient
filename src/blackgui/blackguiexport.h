@@ -8,14 +8,14 @@
 
 //! \file
 
-#ifndef BLACKGUI_MACROS_H
-#define BLACKGUI_MACROS_H
+#ifndef BLACKGUI_BLACKGUIEXPORT_H
+#define BLACKGUI_BLACKGUIEXPORT_H
 
 #include <QtGlobal>
 
 /*!
  * \def BLACKGUI_EXPORT
- * BlackGui Export Macro
+ * Export a class or function from the library
  */
 
 #ifndef WITH_STATIC
@@ -30,12 +30,12 @@
 
 /*!
  * \def BLACKGUI_EXPORT_DECLARE_TEMPLATE
- * BLACKGUI Export Explicit Template Declaration Macro
+ * BLACKGUI Export explicit template declaration
  */
 
 /*!
  * \def BLACKGUI_EXPORT_DEFINE_TEMPLATE
- * BLACKGUI Export Explicit Template Definition Macro
+ * BLACKGUI Export explicit template definition
  */
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
 #  define BLACKGUI_EXPORT_DECLARE_TEMPLATE BLACKGUI_EXPORT

@@ -8,11 +8,10 @@
 
 //! \file
 
-#ifndef BLACKMISC_CTHREADUTILS_H
-#define BLACKMISC_CTHREADUTILS_H
+#ifndef BLACKMISC_THREADUTILS_H
+#define BLACKMISC_THREADUTILS_H
 
 #include "blackmisc/blackmiscexport.h"
-
 #include <QThread>
 #include <functional>
 

@@ -13,6 +13,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include <QString>
+#include <QList>
 
 namespace BlackMisc
 {

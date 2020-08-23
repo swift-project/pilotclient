@@ -7,7 +7,6 @@
  */
 
 #include "blackmisc/crashhandler.h"
-#include "blackmisc/appstarttime.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/filelogger.h"
