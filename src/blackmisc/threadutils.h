@@ -29,20 +29,11 @@ namespace BlackMisc
         //! Is the current thread the object's thread?
         static bool isCurrentThreadObjectThread(const QObject *toBeTested);
 
-        //! Is the application thread the object's thread?
-        static bool isApplicationThreadObjectThread(const QObject *toBeTested);
-
-        //! Is the application thread the object's thread?
-        static bool isApplicationThread(const QThread *toBeTested);
-
         //! Is the current thread the application thread?
         static bool isCurrentThreadApplicationThread();
 
         //! Info about current thread, for debug messages
         static QString currentThreadInfo();
-
-        //! Call in object's thread if not already in object's thread
-        static bool callInObjectThread(QObject *object, std::function<void()> callFunct);
     };
 } // ns
 

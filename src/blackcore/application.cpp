@@ -1809,7 +1809,7 @@ namespace BlackCore
         if (!this->isNetworkAccessible()) { return nullptr; }
 
         QWriteLocker locker(&m_accessManagerLock);
-        Q_ASSERT_X(CThreadUtils::isApplicationThreadObjectThread(m_accessManager), Q_FUNC_INFO, "Network manager supposed to be in main thread");
+        Q_ASSERT_X(m_accessManager->thread() == qApp->thread(), Q_FUNC_INFO, "Network manager supposed to be in main thread");
         if (!CThreadUtils::isCurrentThreadObjectThread(m_accessManager))
         {
             this->httpRequestImplInQAMThread(request, logId, callback, progress, maxRedirects, getPostOrDeleteRequest);

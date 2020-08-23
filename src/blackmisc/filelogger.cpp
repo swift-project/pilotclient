@@ -7,7 +7,6 @@
  */
 
 #include "blackmisc/filelogger.h"
-#include "blackmisc/appstarttime.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/directoryutils.h"
 #include "blackconfig/buildconfig.h"
@@ -40,7 +39,7 @@ namespace BlackMisc
     {
         static const QString fileName = applicationName() %
                 QLatin1String("_") %
-                getApplicationStartTimeUtc().toString(QStringLiteral("yyMMddhhmmss")) %
+                QDateTime::currentDateTimeUtc().toString(QStringLiteral("yyMMddhhmmss")) %
                 QLatin1String("_") %
                 QString::number(QCoreApplication::applicationPid()) %
                 QLatin1String(".log");

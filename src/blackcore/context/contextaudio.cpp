@@ -195,10 +195,10 @@ namespace BlackCore
             const CVoiceSetup vs = m_voiceSettings.getThreadLocal();
             m_voiceClient->updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
 
-            Q_ASSERT_X(CThreadUtils::isApplicationThread(m_voiceClient->thread()), Q_FUNC_INFO, "Should be in main thread");
+            Q_ASSERT_X(m_voiceClient->thread() == qApp->thread(), Q_FUNC_INFO, "Should be in main thread");
             m_voiceClient->start(); // thread
             Q_ASSERT_X(m_voiceClient->owner() == this, Q_FUNC_INFO, "Wrong owner");
-            Q_ASSERT_X(!CThreadUtils::isApplicationThread(m_voiceClient->thread()), Q_FUNC_INFO, "Must NOT be in main thread");
+            Q_ASSERT_X(m_voiceClient->thread() != qApp->thread(), Q_FUNC_INFO, "Must NOT be in main thread");
 
             // connect(m_voiceClient, &CAfvClient::outputVolumePeakVU,            this, &CContextAudioBase::outputVolumePeakVU, Qt::QueuedConnection);
             // connect(m_voiceClient, &CAfvClient::inputVolumePeakVU,             this, &CContextAudioBase::inputVolumePeakVU,  Qt::QueuedConnection);

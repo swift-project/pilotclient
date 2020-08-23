@@ -24,16 +24,6 @@ namespace BlackMisc
         return QThread::currentThread() == toBeTested->thread();
     }
 
-    bool CThreadUtils::isApplicationThreadObjectThread(const QObject *toBeTested)
-    {
-        return qApp && toBeTested->thread() == qApp->thread();
-    }
-
-    bool CThreadUtils::isApplicationThread(const QThread *toBeTested)
-    {
-        return qApp && toBeTested == qApp->thread();
-    }
-
     bool CThreadUtils::isCurrentThreadApplicationThread()
     {
         return qApp && QThread::currentThread() == qApp->thread();
@@ -46,14 +36,5 @@ namespace BlackMisc
         const QThread *thread = QThread::currentThread();
         const QString id = QString::fromStdString(oss.str());
         return QStringLiteral("%1 (%2) prio %3").arg(id).arg(thread->objectName()).arg(thread->priority());
-    }
-
-    bool CThreadUtils::callInObjectThread(QObject *object, std::function<void()> callFunct)
-    {
-        if (!object) { return false; }
-        if (CThreadUtils::isCurrentThreadObjectThread(object)) {  return false; }
-
-        QMetaObject::invokeMethod(object, callFunct);
-        return true;
     }
 } // ns

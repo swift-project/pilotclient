@@ -225,7 +225,15 @@ namespace BlackCore
 
         void CFSDClient::connectToServer()
         {
-            if (CThreadUtils::callInObjectThread(this, [ = ] { if (sApp && !sApp->isShuttingDown()) { this->connectToServer(); }})) { return; }
+            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            {
+                QMetaObject::invokeMethod(this, [ = ]
+                {
+                    if (sApp && !sApp->isShuttingDown()) { connectToServer(); }
+                });
+                return;
+            }
+
             if (m_socket.isOpen()) { return; }
             Q_ASSERT(!m_clientName.isEmpty());
             Q_ASSERT((m_versionMajor + m_versionMinor) > 0);
@@ -257,8 +265,15 @@ namespace BlackCore
 
         void CFSDClient::disconnectFromServer()
         {
-            if (this->isDisconnected()) { return; }
-            if (CThreadUtils::callInObjectThread(this, [ = ] { if (sApp && !sApp->isShuttingDown()) { this->disconnectFromServer(); }})) { return; }
+            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            {
+                QMetaObject::invokeMethod(this, [ = ]
+                {
+                    if (sApp && !sApp->isShuttingDown()) { disconnectFromServer(); }
+                });
+                return;
+            }
+
             this->stopPositionTimers();
             this->updateConnectionStatus(CConnectionStatus::Disconnecting);
 
@@ -426,7 +441,14 @@ namespace BlackCore
         void CFSDClient::sendClientQuery(ClientQueryType queryType, const CCallsign &receiver, const QStringList &queryData)
         {
             if (queryType == ClientQueryType::Unknown) { return; }
-            if (CThreadUtils::callInObjectThread(this, [ = ] { if (sApp && !sApp->isShuttingDown()) { this->sendClientQuery(queryType, receiver, queryData); }})) { return; }
+            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            {
+                QMetaObject::invokeMethod(this, [ = ]
+                {
+                    if (sApp && !sApp->isShuttingDown()) { sendClientQuery(queryType, receiver, queryData); }
+                });
+                return;
+            }
 
             const QString reveiverCallsign = receiver.getFsdCallsignString();
             if (queryType == ClientQueryType::IsValidATC)
@@ -492,7 +514,14 @@ namespace BlackCore
         void CFSDClient::sendTextMessages(const CTextMessageList &messages)
         {
             if (messages.isEmpty()) { return; }
-            if (CThreadUtils::callInObjectThread(this, [ = ] { if (sApp && !sApp->isShuttingDown()) { this->sendTextMessages(messages); }})) { return; }
+            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            {
+                QMetaObject::invokeMethod(this, [ = ]
+                {
+                    if (sApp && !sApp->isShuttingDown()) { sendTextMessages(messages); }
+                });
+                return;
+            }
 
             const CTextMessageList privateMessages = messages.getPrivateMessages().markedAsSent();
             const QString ownCallsign = getOwnCallsignAsString();
@@ -536,7 +565,14 @@ namespace BlackCore
         void CFSDClient::sendTextMessage(TextMessageGroups receiverGroup, const QString &message)
         {
             if (message.isEmpty()) { return; }
-            if (CThreadUtils::callInObjectThread(this, [ = ] { if (sApp && !sApp->isShuttingDown()) { this->sendTextMessage(receiverGroup, message); }})) { return; }
+            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            {
+                QMetaObject::invokeMethod(this, [ = ]
+                {
+                    if (sApp && !sApp->isShuttingDown()) { sendTextMessage(receiverGroup, message); }
+                });
+                return;
+            }
 
             QString receiver;
             if (receiverGroup == TextMessageGroups::AllClients)           { receiver = '*'; }
@@ -578,7 +614,14 @@ namespace BlackCore
 
         void CFSDClient::sendFlightPlan(const CFlightPlan &flightPlan)
         {
-            if (CThreadUtils::callInObjectThread(this, [ = ] { if (sApp && !sApp->isShuttingDown()) { this->sendFlightPlan(flightPlan); }})) { return; }
+            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            {
+                QMetaObject::invokeMethod(this, [ = ]
+                {
+                    if (sApp && !sApp->isShuttingDown()) { sendFlightPlan(flightPlan); }
+                });
+                return;
+            }
 
             // Removed with T353 although it is standard
             // const QString route = QString(flightPlan.getRoute()).replace(" ", ".");
@@ -628,7 +671,15 @@ namespace BlackCore
 
         void CFSDClient::sendPlaneInfoRequest(const CCallsign &receiver)
         {
-            if (CThreadUtils::callInObjectThread(this, [ = ] { if (sApp && !sApp->isShuttingDown()) { this->sendPlaneInfoRequest(receiver); }})) { return; }
+            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            {
+                QMetaObject::invokeMethod(this, [ = ]
+                {
+                    if (sApp && !sApp->isShuttingDown()) { sendPlaneInfoRequest(receiver); }
+                });
+                return;
+            }
+
             const PlaneInfoRequest planeInfoRequest(getOwnCallsignAsString(), receiver.toQString());
             sendQueudedMessage(planeInfoRequest);
             increaseStatisticsValue(QStringLiteral("sendPlaneInfoRequest"));
@@ -636,7 +687,15 @@ namespace BlackCore
 
         void CFSDClient::sendPlaneInfoRequestFsinn(const CCallsign &callsign)
         {
-            if (CThreadUtils::callInObjectThread(this, [ = ] { if (sApp && !sApp->isShuttingDown()) { this->sendPlaneInfoRequestFsinn(callsign); }})) { return; }
+            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            {
+                QMetaObject::invokeMethod(this, [ = ]
+                {
+                    if (sApp && !sApp->isShuttingDown()) { sendPlaneInfoRequestFsinn(callsign); }
+                });
+                return;
+            }
+
             const bool connected = isConnected();
             BLACK_VERIFY_X(connected, Q_FUNC_INFO, "Can't send to server when disconnected");
             if (!connected) { return; }
