@@ -12,8 +12,10 @@
 #define BLACKMISC_INHERITANCE_TRAITS_H
 
 #include "blackmisc/typetraits.h" // for void_t
-#include <QMetaType>
 #include <type_traits>
+
+template <typename T>
+struct QMetaTypeId;
 
 namespace BlackMisc
 {

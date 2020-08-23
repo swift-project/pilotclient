@@ -16,7 +16,6 @@
 #include <QPointer>
 #include <QObject>
 #include <QtGlobal>
-#include <QTimer>
 
 #include <atomic>
 #include <functional>

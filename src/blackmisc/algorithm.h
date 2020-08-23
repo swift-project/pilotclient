@@ -11,8 +11,6 @@
 #ifndef BLACKMISC_ALGORITHM_H
 #define BLACKMISC_ALGORITHM_H
 
-#include <QThreadStorage>
-#include <QRandomGenerator>
 #include <QtGlobal>
 #include <algorithm>
 #include <iterator>
@@ -45,16 +43,12 @@ namespace BlackMisc
 
     namespace Private
     {
-        //! \private A high quality deterministic pseudo-random number generator.
+        //! \private A high quality pseudo-random number generator.
         //! \threadsafe
         inline std::mt19937 &defaultRandomGenerator()
         {
-            //! \fixme Move rng to namespace scope to ensure destruction after function-local statics
-            //!        and avoid warning "thread exited after QThreadStorage destroyed".
-            //!        This will require careful thought about linkage.
-            static QThreadStorage<std::mt19937> rng;
-            if (rng.hasLocalData()) { rng.setLocalData(std::mt19937(static_cast<std::mt19937::result_type>(QRandomGenerator::global()->generate()))); }
-            return rng.localData();
+            thread_local std::mt19937 rng(std::random_device{}());
+            return rng;
         }
     }
 

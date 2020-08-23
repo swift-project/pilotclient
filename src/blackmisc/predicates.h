@@ -12,8 +12,6 @@
 #define BLACKMISC_PREDICATES_H
 
 #include "blackmisc/algorithm.h"
-
-#include <QObject>
 #include <functional>
 #include <algorithm>
 
