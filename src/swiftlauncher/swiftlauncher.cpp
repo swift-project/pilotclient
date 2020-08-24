@@ -20,6 +20,7 @@
 #include "blackcore/context/contextnetwork.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/dbusserver.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
@@ -133,7 +134,7 @@ void CSwiftLauncher::installerMode()
     bool runDialog = false;
     do
     {
-        const QDir dir = CDirectoryUtils::logDirectory();
+        const QDir dir = CSwiftDirectories::logDirectory();
         if (!dir.exists()) { break; }
 
         if (sGui && sGui->getSetupReader())
@@ -344,13 +345,13 @@ bool CSwiftLauncher::setSwiftCoreExecutable()
     if (ui->cb_DisableCoreAudio->isChecked()) { args.append("--noaudio"); }
 
     m_executableArgs = sGui->argumentsJoined(args);
-    m_executable = CDirectoryUtils::executableFilePath(CBuildConfig::swiftCoreExecutableName());
+    m_executable = CSwiftDirectories::executableFilePath(CBuildConfig::swiftCoreExecutableName());
     return true;
 }
 
 bool CSwiftLauncher::setSwiftDataExecutable()
 {
-    m_executable = CDirectoryUtils::executableFilePath(CBuildConfig::swiftDataExecutableName());
+    m_executable = CSwiftDirectories::executableFilePath(CBuildConfig::swiftDataExecutableName());
 
     QStringList fsdArgs;
     int id = 0;
@@ -369,7 +370,7 @@ bool CSwiftLauncher::setSwiftDataExecutable()
 bool CSwiftLauncher::setSwiftGuiExecutable()
 {
     if (!sGui || sGui->isShuttingDown()) { return false; }
-    m_executable = CDirectoryUtils::executableFilePath(CBuildConfig::swiftGuiExecutableName());
+    m_executable = CSwiftDirectories::executableFilePath(CBuildConfig::swiftGuiExecutableName());
     QStringList args
     {
         "--core", CoreModes::coreModeToString(getCoreMode()),

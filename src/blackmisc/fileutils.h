@@ -57,9 +57,6 @@ namespace BlackMisc
         //! Read file into string, with a lock so two applications can't access at the same time
         static QString readLockedFileToString(const QString &filePath, const QString &fileName);
 
-        //! Write string to text file in background
-        static bool writeStringToFileInBackground(const QString &content, const QString &fileNameAndPath);
-
         //! Write byte array to file
         static bool writeByteArrayToFile(const QByteArray &data, const QString &fileNameAndPath);
 
@@ -184,9 +181,6 @@ namespace BlackMisc
         //! All UNC machines from the paths
         static QSet<QString> windowsUncMachines(const QSet<QString> &paths);
 
-        //! Can connect the UNC machine
-        static bool canPingUncMachine(const QString &machine);
-
         //! To Windows path using "\" delimiter
         static QString toWindowsLocalPath(const QString &path);
 
@@ -201,15 +195,6 @@ namespace BlackMisc
 
         //! swift installer
         static bool isSwiftInstaller(const QString &fileName);
-
-        //! Returns the full path and file name for a sound file
-        static QString soundFilePathAndFileName(const QString &name);
-
-        //! File path (with file name) of file name and
-        static QString soundFilePathOrDefaultPath(const QString &directory, const QString &fileName);
-
-        //! QUrl of soundFilePathAndFileName
-        static QUrl soundFileQUrlOrDefault(const QString &directory, const QString &fileName);
     };
 } // ns
 

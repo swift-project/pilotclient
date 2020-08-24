@@ -7,6 +7,7 @@
  */
 
 #include "blackmisc/directories.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include <QFileInfo>
 #include <QDir>
@@ -15,12 +16,12 @@ namespace BlackMisc
 {
     QString CDirectories::getFlightPlanDirectoryOrDefault() const
     {
-        return this->existingOrDefaultDir(this->getFlightPlanDirectory(), CDirectoryUtils::documentationDirectory());
+        return this->existingOrDefaultDir(this->getFlightPlanDirectory(), CSwiftDirectories::documentationDirectory());
     }
 
     QString CDirectories::getLastViewJsonDirectoryOrDefault() const
     {
-        return this->existingOrDefaultDir(this->getLastViewJsonDirectory(), CDirectoryUtils::documentationDirectory());
+        return this->existingOrDefaultDir(this->getLastViewJsonDirectory(), CSwiftDirectories::documentationDirectory());
     }
 
     QString CDirectories::getLastModelDirectoryOrDefault() const
@@ -51,7 +52,7 @@ namespace BlackMisc
     {
         if (m_dirMatchingScript.isEmpty())
         {
-            return CDirectoryUtils::shareMatchingScriptDirectory();
+            return CSwiftDirectories::shareMatchingScriptDirectory();
         }
         return m_dirMatchingScript;
     }

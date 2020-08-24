@@ -22,6 +22,7 @@
 #include "blackcore/setupreader.h"
 #include "blackmisc/slot.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/logcategory.h"
@@ -406,7 +407,7 @@ namespace BlackGui
     {
         static const QString filename = []
         {
-            QString dir = CFileUtils::appendFilePaths(CDirectoryUtils::normalizedApplicationDataDirectory(), "settings/qgeom");
+            QString dir = CFileUtils::appendFilePaths(CSwiftDirectories::normalizedApplicationDataDirectory(), "settings/qgeom");
             return CFileUtils::appendFilePaths(dir, QFileInfo(QCoreApplication::applicationFilePath()).completeBaseName() + ".ini");
         }();
         return filename;
@@ -1085,14 +1086,14 @@ namespace BlackGui
 
     bool CGuiApplication::openStandardLogDirectory()
     {
-        const QString path(QDir::toNativeSeparators(CDirectoryUtils::logDirectory()));
+        const QString path(QDir::toNativeSeparators(CSwiftDirectories::logDirectory()));
         if (!QDir(path).exists()) { return false; }
         return QDesktopServices::openUrl(QUrl::fromLocalFile(path));
     }
 
     bool CGuiApplication::openStandardCrashDumpDirectory()
     {
-        const QString path(QDir::toNativeSeparators(CDirectoryUtils::crashpadDatabaseDirectory()));
+        const QString path(QDir::toNativeSeparators(CSwiftDirectories::crashpadDatabaseDirectory()));
         if (!QDir(path).exists()) { return false; }
         return QDesktopServices::openUrl(QUrl::fromLocalFile(path));
     }

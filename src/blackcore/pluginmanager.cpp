@@ -8,6 +8,7 @@
 
 #include "blackcore/pluginmanager.h"
 #include "blackcore/application.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
@@ -51,7 +52,7 @@ namespace BlackCore
 
     const QString &IPluginManager::pluginDirectory() const
     {
-        return CDirectoryUtils::pluginsDirectory();
+        return CSwiftDirectories::pluginsDirectory();
     }
 
     bool IPluginManager::isValid(const QJsonObject &metadata) const

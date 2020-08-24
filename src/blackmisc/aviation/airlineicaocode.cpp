@@ -17,6 +17,7 @@
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
@@ -191,7 +192,7 @@ namespace BlackMisc
             {
                 static const QString p("airlines/%1_%2.png");
                 const QString n(p.arg(this->getDbKey(), 5, 10, QChar('0')).arg(this->getDesignator()));
-                return CFileUtils::appendFilePaths(CDirectoryUtils::imagesDirectory(), n);
+                return CFileUtils::appendFilePaths(CSwiftDirectories::imagesDirectory(), n);
             }
             return {};
         }
@@ -489,7 +490,7 @@ namespace BlackMisc
         //! \private
         QSet<int> iconIdsImpl()
         {
-            QDir dir(CDirectoryUtils::imagesAirlinesDirectory());
+            QDir dir(CSwiftDirectories::imagesAirlinesDirectory());
             Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "image directory missing");
 
             QSet<int> ids;

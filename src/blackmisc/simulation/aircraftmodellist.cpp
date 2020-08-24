@@ -16,6 +16,7 @@
 #include "blackmisc/iterator.h"
 #include "blackmisc/range.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
@@ -1886,7 +1887,7 @@ namespace BlackMisc
 
         const QString &CAircraftModelList::invalidModelFileAndPath()
         {
-            static const QString f = CFileUtils::appendFilePathsAndFixUnc(CDirectoryUtils::logDirectory(), "invalidmodels.json");
+            static const QString f = CFileUtils::appendFilePathsAndFixUnc(CSwiftDirectories::logDirectory(), "invalidmodels.json");
             return f;
         }
 

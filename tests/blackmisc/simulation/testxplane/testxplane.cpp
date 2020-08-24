@@ -13,6 +13,7 @@
 #include "blackmisc/simulation/xplane/qtfreeutils.h"
 #include "blackmisc/simulation/settings/xswiftbussettings.h"
 #include "blackmisc/simulation/settings/xswiftbussettingsqtfree.inc"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "test.h"
 
@@ -94,7 +95,7 @@ namespace BlackMiscTest
 
     void CTestXPlane::acfPropertiesTest()
     {
-        QString testAcfFile = CDirectoryUtils::testFilesDirectory() + "/testaircraft.acf";
+        QString testAcfFile = CSwiftDirectories::testFilesDirectory() + "/testaircraft.acf";
         AcfProperties acfProperties = extractAcfProperties(testAcfFile.toStdString());
         QCOMPARE(QString::fromStdString(acfProperties.aircraftIcaoCode), QString("BE58"));
         QCOMPARE(QString::fromStdString(acfProperties.modelDescription), QString("[ACF] Beechcraft Baron B58"));

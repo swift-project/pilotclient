@@ -8,7 +8,7 @@
 
 #include "notificationplayer.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/fileutils.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blacksound/sampleprovider/samples.h"
 #include <QTimer>
 #include <QSound>
@@ -95,7 +95,7 @@ namespace BlackSound
         if (e) { e->deleteLater(); }
 
         // file if existing
-        const QUrl url = CFileUtils::soundFileQUrlOrDefault(directory, name);
+        const QUrl url = QUrl::fromLocalFile(CSwiftDirectories::soundFilePathOrDefaultPath(directory, name));
         if (url.isEmpty() || !url.isLocalFile())
         {
             // remove notification as not existing

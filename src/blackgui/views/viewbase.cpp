@@ -843,11 +843,9 @@ namespace BlackGui
             const QString json(this->toJsonString(QJsonDocument::Indented, selectedOnly)); // save as CVariant JSON
 
             // save file
-            const bool ok = CFileUtils::writeStringToFileInBackground(json, fileName);
-            if (ok) { this->rememberLastJsonDirectory(fileName); }
-            return ok ?
-                   CStatusMessage(this, CStatusMessage::SeverityInfo, u"Writing " % fileName % u" in progress", true) :
-                   CStatusMessage(this, CStatusMessage::SeverityError, u"Writing " % fileName % u" failed", true);
+            CWorker::fromTask(qApp, Q_FUNC_INFO, [ = ] { CFileUtils::writeStringToFile(json, fileName); });
+            this->rememberLastJsonDirectory(fileName);
+            return CStatusMessage(this, CStatusMessage::SeverityInfo, u"Writing " % fileName % u" in progress", true);
         }
 
         template<class T>

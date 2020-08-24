@@ -13,6 +13,7 @@
 #include "guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackconfig/buildconfig.h"
 
@@ -40,7 +41,7 @@ namespace BlackGui
 
         const QMessageBox::StandardButton reply = QMessageBox::question(parent,
                 "Copy XSwiftBus",
-                QStringLiteral("Copy XSwiftBus from build directory '%1' to plugin directory '%2'?").arg(CDirectoryUtils::getXSwiftBusBuildDirectory(), CXPlaneUtil::xswiftbusPluginDir(xplaneRootDir)),
+                QStringLiteral("Copy XSwiftBus from build directory '%1' to plugin directory '%2'?").arg(CSwiftDirectories::getXSwiftBusBuildDirectory(), CXPlaneUtil::xswiftbusPluginDir(xplaneRootDir)),
                 QMessageBox::Yes | QMessageBox::No);
         if (reply != QMessageBox::Yes) { return 0; }
         return CXPlaneUtil::copyXSwiftBusBuildFiles(xplaneRootDir);

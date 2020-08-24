@@ -20,6 +20,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/verify.h"
 #include "ui_datainfoareacomponent.h"
@@ -95,7 +96,7 @@ namespace BlackGui
             }
 
             // write to disk
-            const bool s = sGui->getWebDataServices()->writeDbDataToDisk(CDirectoryUtils::staticDbFilesDirectory());
+            const bool s = sGui->getWebDataServices()->writeDbDataToDisk(CSwiftDirectories::staticDbFilesDirectory());
             if (s)
             {
                 CLogMessage(this).info(u"Written DB data");
@@ -116,7 +117,7 @@ namespace BlackGui
             bool ok = false;
             if (msgs.isSuccess())
             {
-                CLogMessage(this).info(u"Read DB data from directory: %1") << CDirectoryUtils::staticDbFilesDirectory();
+                CLogMessage(this).info(u"Read DB data from directory: %1") << CSwiftDirectories::staticDbFilesDirectory();
                 ui->comp_DbAircraftIcao->showLoadIndicator();
                 ui->comp_DbAirlineIcao->showLoadIndicator();
                 ui->comp_DbCountries->showLoadIndicator();

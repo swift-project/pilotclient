@@ -16,6 +16,7 @@
 #include "blackmisc/pq/length.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/blackmiscexport.h"
 
@@ -91,7 +92,7 @@ namespace BlackMisc
             bool readFromJsonFile(const QString &fileAndPath, bool clear = true);
 
             //! Read all JSON files matching the base name
-            int readFromJsonFiles(const QString &dirPath = CDirectoryUtils::logDirectory());
+            int readFromJsonFiles(const QString &dirPath = CSwiftDirectories::logDirectory());
 
             //! Analyze against DB data
             CStatusMessageList analyzeAgainstDBData(const CAircraftModelList &dbModels);
@@ -109,10 +110,10 @@ namespace BlackMisc
             static const QString &fileAppendix();
 
             //! Do any auto pubish files exist?
-            static bool existAutoPublishFiles(const QString &dirPath = CDirectoryUtils::logDirectory());
+            static bool existAutoPublishFiles(const QString &dirPath = CSwiftDirectories::logDirectory());
 
             //! Delete any existing auto publish files
-            static int deleteAutoPublishFiles(const QString &dirPath = CDirectoryUtils::logDirectory());
+            static int deleteAutoPublishFiles(const QString &dirPath = CSwiftDirectories::logDirectory());
 
             // ----------------- testing only ---------------
 

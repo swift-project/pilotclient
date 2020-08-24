@@ -9,6 +9,7 @@
 #include "blackcore/application.h"
 #include "blackcore/pluginmanagerweatherdata.h"
 #include "blackcore/weatherdata.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 
 #include <QJsonObject>
@@ -65,7 +66,7 @@ namespace BlackCore
 
     const QString &CPluginManagerWeatherData::pluginDirectory() const
     {
-        static const QString d(CFileUtils::appendFilePaths(CDirectoryUtils::pluginsDirectory(), "weatherdata"));
+        static const QString d(CFileUtils::appendFilePaths(CSwiftDirectories::pluginsDirectory(), "weatherdata"));
         return d;
     }
 }

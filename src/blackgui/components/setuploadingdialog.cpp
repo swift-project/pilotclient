@@ -12,6 +12,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/setupreader.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/network/urllist.h"
 
@@ -187,14 +188,14 @@ namespace BlackGui
 
         void CSetupLoadingDialog::displayOtherVersionsInfo()
         {
-            const int other = CDirectoryUtils::applicationDataDirectoriesCount() - 1 ;
+            const int other = CSwiftDirectories::applicationDataDirectoriesCount() - 1 ;
             ui->le_OtherSwiftVersions->setText(QStringLiteral("There is/are %1 other swift version(s) installed").arg(other));
             ui->pb_CopyFromSwift->setEnabled(other > 0);
         }
 
         void CSetupLoadingDialog::openDirectory()
         {
-            const QUrl url = QUrl::fromLocalFile(CDirectoryUtils::normalizedApplicationDataDirectory());
+            const QUrl url = QUrl::fromLocalFile(CSwiftDirectories::normalizedApplicationDataDirectory());
             QDesktopServices::openUrl(url);
         }
 

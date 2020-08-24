@@ -7,6 +7,7 @@
  */
 
 #include "autopublishdata.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/json.h"
 #include "blackmisc/logcategorylist.h"
@@ -106,7 +107,7 @@ namespace BlackMisc
         {
             if (this->isEmpty()) { return false; }
             const QString fn = fileBaseName() % u'_' % QDateTime::currentDateTimeUtc().toString("yyyyMMddHHmmss") % fileAppendix();
-            return this->writeJsonToFile(CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), fn));
+            return this->writeJsonToFile(CFileUtils::appendFilePaths(CSwiftDirectories::logDirectory(), fn));
         }
 
         bool CAutoPublishData::writeJsonToFile(const QString &pathAndFile) const

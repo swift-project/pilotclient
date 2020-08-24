@@ -499,7 +499,7 @@ namespace BlackCore
         void synchronizeDbCaches(BlackMisc::Network::CEntityFlags::Entity entities);
 
         //! Write data to disk (mainly for testing scenarios)
-        bool writeDbDataToDisk(const QString &dir) const;
+        bool writeDbDataToDisk(const QString &dir);
 
         //! Load DB data from disk (mainly for initial data load and testing scenarios)
         //! \remark if the DB readers are alred in aother thread reads in background

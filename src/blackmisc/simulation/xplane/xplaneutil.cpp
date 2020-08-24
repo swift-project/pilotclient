@@ -8,6 +8,7 @@
 
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "qsystemdetection.h"
 #include <QDir>
@@ -213,7 +214,7 @@ namespace BlackMisc
 
             bool CXPlaneUtil::hasXSwiftBusBuildAndPluginDir(const QString &xplaneRootDir)
             {
-                if (CDirectoryUtils::getXSwiftBusBuildDirectory().isEmpty()) { return false; }
+                if (CSwiftDirectories::getXSwiftBusBuildDirectory().isEmpty()) { return false; }
                 const QString xswiftBusPluginDir = CXPlaneUtil::xswiftbusPluginDir(xplaneRootDir);
                 return (!xswiftBusPluginDir.isEmpty());
             }
@@ -255,11 +256,11 @@ namespace BlackMisc
 
             bool CXPlaneUtil::hasNewerXSwiftBusBuild(const QString &xplaneRootDir)
             {
-                if (CDirectoryUtils::getXSwiftBusBuildDirectory().isEmpty()) { return false; }
+                if (CSwiftDirectories::getXSwiftBusBuildDirectory().isEmpty()) { return false; }
                 const QString xswiftBusPluginDir = CXPlaneUtil::xswiftbusPluginDir(xplaneRootDir);
                 if (xswiftBusPluginDir.isEmpty()) { return false; }
 
-                const QFileInfo fiLatestBuild = CFileUtils::findLastModified(CDirectoryUtils::getXSwiftBusBuildDirectory(), true, xplFileFilter());
+                const QFileInfo fiLatestBuild = CFileUtils::findLastModified(CSwiftDirectories::getXSwiftBusBuildDirectory(), true, xplFileFilter());
                 if (!fiLatestBuild.lastModified().isValid()) { return false; }
 
                 const QFileInfo fiLatestDeployed = CFileUtils::findLastModified(xswiftBusPluginDir, true, xplFileFilter());
@@ -271,11 +272,11 @@ namespace BlackMisc
 
             int CXPlaneUtil::copyXSwiftBusBuildFiles(const QString &xplaneRootDir)
             {
-                if (CDirectoryUtils::getXSwiftBusBuildDirectory().isEmpty()) { return -1; }
+                if (CSwiftDirectories::getXSwiftBusBuildDirectory().isEmpty()) { return -1; }
                 const QString xswiftBusPluginDir = CXPlaneUtil::xswiftbusPluginDir(xplaneRootDir);
                 if (xswiftBusPluginDir.isEmpty()) { return -1; }
 
-                return CDirectoryUtils::copyDirectoryRecursively(CDirectoryUtils::getXSwiftBusBuildDirectory(), xswiftBusPluginDir, true);
+                return CDirectoryUtils::copyDirectoryRecursively(CSwiftDirectories::getXSwiftBusBuildDirectory(), xswiftBusPluginDir, true);
             }
 
             const QStringList &CXPlaneUtil::xplFileFilter()

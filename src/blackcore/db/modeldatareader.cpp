@@ -599,29 +599,35 @@ namespace BlackCore
             return true;
         }
 
-        bool CModelDataReader::writeToJsonFiles(const QString &dir) const
+        bool CModelDataReader::writeToJsonFiles(const QString &dir)
         {
             QDir directory(dir);
             if (!directory.exists()) { return false; }
+            QList<QPair<QString, QString>> fileContents;
             if (this->getLiveriesCount() > 0)
             {
                 const QString json(QJsonDocument(this->getLiveries().toJson()).toJson());
-                const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "liveries.json"));
-                if (!s) { return false; }
+                fileContents.push_back({ "liveries.json", json });
             }
 
             if (this->getModelsCount() > 0)
             {
                 const QString json(QJsonDocument(this->getModels().toJson()).toJson());
-                const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "models.json"));
-                if (!s) { return false; }
+                fileContents.push_back({ "models.json", json });
             }
 
             if (this->getDistributorsCount() > 0)
             {
                 const QString json(QJsonDocument(this->getDistributors().toJson()).toJson());
-                const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "distributors.json"));
-                if (!s) { return false; }
+                fileContents.push_back({ "distributors.json", json });
+            }
+
+            for (const auto &pair : fileContents)
+            {
+                CWorker::fromTask(this, Q_FUNC_INFO, [pair, directory]
+                {
+                    CFileUtils::writeStringToFile(CFileUtils::appendFilePaths(directory.absolutePath(), pair.first), pair.second);
+                });
             }
             return true;
         }

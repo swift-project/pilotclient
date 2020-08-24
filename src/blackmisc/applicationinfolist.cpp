@@ -7,6 +7,7 @@
 */
 
 #include "blackmisc/applicationinfolist.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackconfig/buildconfig.h"
 
@@ -45,8 +46,8 @@ namespace BlackMisc
     {
         this->clear();
         const QMap<QString, CApplicationInfo> otherVersions = reinit ?
-                CDirectoryUtils::currentApplicationDataDirectoryMapWithoutCurrentVersion() :
-                CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion();
+                CSwiftDirectories::currentApplicationDataDirectoryMapWithoutCurrentVersion() :
+                CSwiftDirectories::applicationDataDirectoryMapWithoutCurrentVersion();
 
         for (const CApplicationInfo &info : otherVersions)
         {

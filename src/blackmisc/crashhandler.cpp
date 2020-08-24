@@ -7,6 +7,7 @@
  */
 
 #include "blackmisc/crashhandler.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/filelogger.h"
@@ -57,9 +58,9 @@ namespace BlackMisc
     {
 #ifdef BLACK_USE_CRASHPAD
         static const QString crashpadHandler(CBuildConfig::isRunningOnWindowsNtPlatform() ? "swift_crashpad_handler.exe" : "swift_crashpad_handler");
-        static const QString handler = CFileUtils::appendFilePaths(CDirectoryUtils::binDirectory(), crashpadHandler);
-        const QString database = CDirectoryUtils::crashpadDatabaseDirectory();
-        const QString metrics  = CDirectoryUtils::crashpadMetricsDirectory();
+        static const QString handler = CFileUtils::appendFilePaths(CSwiftDirectories::binDirectory(), crashpadHandler);
+        const QString database = CSwiftDirectories::crashpadDatabaseDirectory();
+        const QString metrics  = CSwiftDirectories::crashpadMetricsDirectory();
 
         if (!QFileInfo::exists(handler)) { return; }
 

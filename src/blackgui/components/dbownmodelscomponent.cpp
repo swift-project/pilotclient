@@ -16,6 +16,7 @@
 #include "blackcore/webdataservices.h"
 #include "blackcore/db/databaseutils.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/processctrl.h"
 #include "blackmisc/statusmessage.h"
@@ -295,7 +296,7 @@ namespace BlackGui
 
         void CDbOwnModelsComponent::runScriptCSL2XSB()
         {
-            static const QString script = QDir(CDirectoryUtils::shareDirectory()).filePath("CSL2XSB/CSL2XSB.exe");
+            static const QString script = QDir(CSwiftDirectories::shareDirectory()).filePath("CSL2XSB/CSL2XSB.exe");
             for (const QString &modelDir : m_simulatorSettings.getModelDirectoriesOrDefault(CSimulatorInfo::xplane()))
             {
                 CLogMessage(this).info(u"Running CSL2XSB on model directory %1") << modelDir;

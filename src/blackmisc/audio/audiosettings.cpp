@@ -7,7 +7,7 @@
  */
 
 #include "blackmisc/audio/audiosettings.h"
-#include "blackmisc/directoryutils.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/fileutils.h"
 #include <QChar>
 #include <QtGlobal>
@@ -76,13 +76,13 @@ namespace BlackMisc
                 const QDir d(m_notificationSoundDir);
                 if (d.exists()) { return m_notificationSoundDir; }
             }
-            return CDirectoryUtils::soundFilesDirectory();
+            return CSwiftDirectories::soundFilesDirectory();
         }
 
         QString CSettings::getNotificationFilePath(const QString &fileName) const
         {
             if (fileName.isEmpty()) { return {}; }
-            return CFileUtils::soundFilePathOrDefaultPath(m_notificationSoundDir, fileName);
+            return CSwiftDirectories::soundFilePathOrDefaultPath(m_notificationSoundDir, fileName);
         }
 
         void CSettings::setNotificationVolume(int volume)

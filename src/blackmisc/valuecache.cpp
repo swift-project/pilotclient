@@ -10,6 +10,7 @@
 
 #include "blackmisc/valuecache.h"
 #include "blackmisc/atomicfile.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/lockfree.h"
@@ -50,7 +51,7 @@ namespace BlackMisc
     //! \private
     std::pair<QString &, std::atomic<bool> &> getCacheRootDirectoryMutable()
     {
-        static QString dir = CDirectoryUtils::normalizedApplicationDataDirectory();
+        static QString dir = CSwiftDirectories::normalizedApplicationDataDirectory();
         static std::atomic<bool> frozen { false };
         return { dir, frozen };
     }

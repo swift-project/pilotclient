@@ -29,6 +29,7 @@
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/user.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
@@ -682,7 +683,7 @@ namespace BlackGui
         {
             const QString fn =
                 CFileUtils::appendFilePathsAndFixUnc(
-                    CDirectoryUtils::normalizedApplicationDataDirectory(),
+                    CSwiftDirectories::normalizedApplicationDataDirectory(),
                     QStringLiteral("swiftFlightPlanTemplate.json")
                 );
             return fn;

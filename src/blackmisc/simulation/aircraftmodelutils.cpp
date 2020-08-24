@@ -9,6 +9,7 @@
 #include "blackmisc/simulation/aircraftmodelutils.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/verify.h"
 
@@ -134,7 +135,7 @@ namespace BlackMisc
             BLACK_VERIFY_X(dir.exists(), Q_FUNC_INFO, "Directory does not exist");
             if (!dir.exists()) { return {}; }
 
-            const QString htmlTemplate = CFileUtils::readFileToString(CDirectoryUtils::htmlTemplateFilePath());
+            const QString htmlTemplate = CFileUtils::readFileToString(CSwiftDirectories::htmlTemplateFilePath());
             const QString fn("airlineAircraftMatrix.html");
             const bool ok = CFileUtils::writeStringToFile(htmlTemplate.arg(html), dir.absoluteFilePath(fn));
             return ok ? dir.absoluteFilePath(fn) : "";

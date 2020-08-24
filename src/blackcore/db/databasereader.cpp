@@ -15,6 +15,7 @@
 #include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/network/entityflags.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
@@ -621,14 +622,14 @@ namespace BlackCore
 
             if (inBackground || !CThreadUtils::isInThisThread(this))
             {
-                const bool s = this->readFromJsonFilesInBackground(CDirectoryUtils::staticDbFilesDirectory(), entities, overrideNewerOnly);
+                const bool s = this->readFromJsonFilesInBackground(CSwiftDirectories::staticDbFilesDirectory(), entities, overrideNewerOnly);
                 return s ?
-                       CStatusMessage(this).info(u"Started reading in background from '%1' of entities: '%2'") << CDirectoryUtils::staticDbFilesDirectory() << CEntityFlags::flagToString(entities) :
-                       CStatusMessage(this).error(u"Starting reading in background from '%1' of entities: '%2' failed") << CDirectoryUtils::staticDbFilesDirectory() << CEntityFlags::flagToString(entities);
+                       CStatusMessage(this).info(u"Started reading in background from '%1' of entities: '%2'") << CSwiftDirectories::staticDbFilesDirectory() << CEntityFlags::flagToString(entities) :
+                       CStatusMessage(this).error(u"Starting reading in background from '%1' of entities: '%2' failed") << CSwiftDirectories::staticDbFilesDirectory() << CEntityFlags::flagToString(entities);
             }
             else
             {
-                return this->readFromJsonFiles(CDirectoryUtils::staticDbFilesDirectory(), entities, overrideNewerOnly);
+                return this->readFromJsonFiles(CSwiftDirectories::staticDbFilesDirectory(), entities, overrideNewerOnly);
             }
         }
         //! \endcond

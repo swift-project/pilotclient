@@ -38,6 +38,7 @@
 
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/network/rawfsdmessage.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/range.h"
@@ -2080,7 +2081,7 @@ namespace BlackCore
             const QString s = this->getNetworkStatisticsAsText(false, "\n");
             if (s.isEmpty()) { return false; }
             const QString fn = QStringLiteral("networkstatistics_%1_%2.log").arg(QDateTime::currentDateTimeUtc().toString("yyMMddhhmmss"), server);
-            const QString fp = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), fn);
+            const QString fp = CFileUtils::appendFilePaths(CSwiftDirectories::logDirectory(), fn);
             return CFileUtils::writeStringToFile(s, fp);
         }
 

@@ -11,6 +11,7 @@
 #include "blackmisc/verify.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
@@ -115,7 +116,7 @@ namespace BlackCore
         if (m_bootstrapUrls.isEmpty())
         {
             // after all still empty
-            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo,  u"Your log files are here: " % CDirectoryUtils::logDirectory()));
+            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo,  u"Your log files are here: " % CSwiftDirectories::logDirectory()));
             msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, u"No bootstrap URLs, cannot load setup"));
         }
         else
@@ -307,7 +308,7 @@ namespace BlackCore
             if (dir.isEmpty()) { return CStatusMessage(this).error(u"Empty shared directory '%1' for bootstrap file") << dir; }
 
             // no version for local files, as those come with the current code
-            fn = CFileUtils::appendFilePaths(dir, "bootstrap/" + CDirectoryUtils::bootstrapFileName());
+            fn = CFileUtils::appendFilePaths(dir, "bootstrap/" + CSwiftDirectories::bootstrapFileName());
         }
         else
         {
@@ -482,7 +483,7 @@ namespace BlackCore
             CLogMessage(this).info(u"Setup cache prefill (bootstrap already cached, no prefill needed");
             return false;
         }
-        const QString fn = CDirectoryUtils::bootstrapResourceFilePath();
+        const QString fn = CSwiftDirectories::bootstrapResourceFilePath();
         const CStatusMessageList msgs = this->readLocalBootstrapFile(fn);
         CLogMessage::preformatted(msgs);
         return true;

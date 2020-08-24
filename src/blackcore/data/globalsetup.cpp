@@ -10,6 +10,7 @@
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/application.h"
 #include "blackmisc/json.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/user.h"
@@ -110,7 +111,7 @@ namespace BlackCore
 
         CUrlList CGlobalSetup::getSwiftBootstrapFileUrls() const
         {
-            return getSwiftSharedUrls().withAppendedPath(CGlobalSetup::schemaVersionString() + "/bootstrap/" + CDirectoryUtils::bootstrapFileName());
+            return getSwiftSharedUrls().withAppendedPath(CGlobalSetup::schemaVersionString() + "/bootstrap/" + CSwiftDirectories::bootstrapFileName());
         }
 
         CUrlList CGlobalSetup::getSwiftUpdateInfoFileUrls() const
@@ -217,23 +218,23 @@ namespace BlackCore
         {
             if (candidate.isEmpty()) return {}; // not possible
             static const QString version(QString(CGlobalSetup::schemaVersionString()).append("/"));
-            if (candidate.endsWith(CDirectoryUtils::bootstrapFileName())) { return candidate; }
+            if (candidate.endsWith(CSwiftDirectories::bootstrapFileName())) { return candidate; }
             CUrl url(candidate);
             if (candidate.contains("/bootstrap"))
             {
-                url.appendPath(CDirectoryUtils::bootstrapFileName());
+                url.appendPath(CSwiftDirectories::bootstrapFileName());
             }
             else if (candidate.endsWith(CGlobalSetup::schemaVersionString()) || candidate.endsWith(version))
             {
-                url.appendPath("/bootstrap/" + CDirectoryUtils::bootstrapFileName());
+                url.appendPath("/bootstrap/" + CSwiftDirectories::bootstrapFileName());
             }
             else if (candidate.endsWith("shared") || candidate.endsWith("shared/"))
             {
-                url.appendPath(CGlobalSetup::schemaVersionString() + "/bootstrap/" + CDirectoryUtils::bootstrapFileName());
+                url.appendPath(CGlobalSetup::schemaVersionString() + "/bootstrap/" + CSwiftDirectories::bootstrapFileName());
             }
             else
             {
-                url.appendPath("shared/" + CGlobalSetup::schemaVersionString() + "/bootstrap/" + CDirectoryUtils::bootstrapFileName());
+                url.appendPath("shared/" + CGlobalSetup::schemaVersionString() + "/bootstrap/" + CSwiftDirectories::bootstrapFileName());
             }
             return url.getFullUrl();
         }

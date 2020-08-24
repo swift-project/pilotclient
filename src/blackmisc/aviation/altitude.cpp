@@ -12,6 +12,7 @@
 #include "blackmisc/pq/pqstring.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/comparefunctions.h"
@@ -35,7 +36,7 @@ namespace BlackMisc
             QVector<CAltitude::MetricTuple> initMetricValues()
             {
                 QVector<CAltitude::MetricTuple> v;
-                const QString f = CFileUtils::appendFilePaths(CDirectoryUtils::shareMiscDirectory(), "Metric Altitudes.csv");
+                const QString f = CFileUtils::appendFilePaths(CSwiftDirectories::shareMiscDirectory(), "Metric Altitudes.csv");
                 const QString ma = CFileUtils::readFileToString(f);
                 const QStringList values = splitLines(ma);
                 for (const QString &value : values)

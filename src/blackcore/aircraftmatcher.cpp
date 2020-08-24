@@ -22,6 +22,7 @@
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "aircraftmatcher.h"
 
@@ -538,8 +539,8 @@ namespace BlackCore
             // matching script
             const bool msReverse = (script == ReverseLookup);
             const QString lf = msReverse ? setup.getMsReverseLookupFile() : setup.getMsMatchingStageFile();
-            static const QString logFileR = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), "logMatchingScriptReverseLookup.log");
-            static const QString logFileM = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), "logMatchingScriptMatchingStage.log");
+            static const QString logFileR = CFileUtils::appendFilePaths(CSwiftDirectories::logDirectory(), "logMatchingScriptReverseLookup.log");
+            static const QString logFileM = CFileUtils::appendFilePaths(CSwiftDirectories::logDirectory(), "logMatchingScriptMatchingStage.log");
 
             if (log)
             {
@@ -1390,7 +1391,7 @@ namespace BlackCore
         // log the models
         const QString ts = QDateTime::currentDateTimeUtc().toString("yyyyMMddHHmmss");
         const QString json = m_disabledModels.toJsonString();
-        return CFileUtils::writeStringToFile(json, CFileUtils::appendFilePathsAndFixUnc(CDirectoryUtils::logDirectory(), QStringLiteral("removed models %1.json").arg(ts)));
+        return CFileUtils::writeStringToFile(json, CFileUtils::appendFilePathsAndFixUnc(CSwiftDirectories::logDirectory(), QStringLiteral("removed models %1.json").arg(ts)));
     }
 
     CAircraftModelList CAircraftMatcher::getClosestMatchStepwiseReduceImplementation(const CAircraftModelList &modelSet, const CAircraftMatcherSetup &setup, const CCategoryMatcher &categoryMatcher, const CSimulatedAircraft &remoteAircraft, MatchingLog whatToLog, CStatusMessageList *log)

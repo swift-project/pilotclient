@@ -12,6 +12,7 @@
 #include "blackgui/guiutility.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/fileutils.h"
 
@@ -33,7 +34,7 @@ namespace BlackGui
             ui(new Ui::CInstallFsxTerrainProbeComponent)
         {
             ui->setupUi(this);
-            ui->le_Source->setText(CDirectoryUtils::shareTerrainProbeDirectory());
+            ui->le_Source->setText(CSwiftDirectories::shareTerrainProbeDirectory());
 
             ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
             ui->comp_SimulatorSelector->setFsxP3DOnly();

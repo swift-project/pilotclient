@@ -16,6 +16,7 @@
 #include "blackmisc/pq/length.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/worker.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackconfig/buildconfig.h"
 #include <QDateTime>
@@ -72,7 +73,7 @@ namespace BlackMisc
         QStringList CInterpolationLogger::getLatestLogFiles()
         {
             QStringList files({ "", "" });
-            const QString logDir = CDirectoryUtils::logDirectory();
+            const QString logDir = CSwiftDirectories::logDirectory();
             QDir logs(logDir);
             if (!logs.exists()) { return files; }
             logs.setNameFilters(filePatterns());
@@ -91,14 +92,14 @@ namespace BlackMisc
 
         QString CInterpolationLogger::getLogDirectory()
         {
-            return CDirectoryUtils::logDirectory();
+            return CSwiftDirectories::logDirectory();
         }
 
         CStatusMessageList CInterpolationLogger::writeLogFiles(const QList<SituationLog> &interpolation, const QList<PartsLog> &parts)
         {
             if (parts.isEmpty() && interpolation.isEmpty()) { return CStatusMessage(static_cast<CInterpolationLogger *>(nullptr)).warning(u"No data for log"); }
             static const QString html = QStringLiteral("Entries: %1\n\n%2");
-            const QString htmlTemplate = CFileUtils::readFileToString(CDirectoryUtils::htmlTemplateFilePath());
+            const QString htmlTemplate = CFileUtils::readFileToString(CSwiftDirectories::htmlTemplateFilePath());
 
             CStatusMessageList msgs;
             const QString ts = QDateTime::currentDateTimeUtc().toString("yyyyMMddhhmmss");
@@ -108,7 +109,7 @@ namespace BlackMisc
             {
                 QString file = filePatternInterpolationLog();
                 file.remove('*');
-                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), QStringLiteral("%1 %2").arg(ts, file));
+                const QString fn = CFileUtils::appendFilePaths(CSwiftDirectories::logDirectory(), QStringLiteral("%1 %2").arg(ts, file));
                 const bool s = CFileUtils::writeStringToFile(htmlTemplate.arg(html.arg(interpolation.size()).arg(htmlInterpolation)), fn);
                 msgs.push_back(CInterpolationLogger::logStatusFileWriting(s, fn));
             }
@@ -118,7 +119,7 @@ namespace BlackMisc
             {
                 QString file = filePatternPartsLog();
                 file.remove('*');
-                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), QStringLiteral("%1 %2").arg(ts, file));
+                const QString fn = CFileUtils::appendFilePaths(CSwiftDirectories::logDirectory(), QStringLiteral("%1 %2").arg(ts, file));
                 const bool s = CFileUtils::writeStringToFile(htmlTemplate.arg(html.arg(parts.size()).arg(htmlParts)), fn);
                 msgs.push_back(CInterpolationLogger::logStatusFileWriting(s, fn));
             }
@@ -126,7 +127,7 @@ namespace BlackMisc
             QString kml = CKmlUtils::wrapAsKmlDocument(CInterpolationLogger::getKmlChangedSituations(interpolation));
             if (!kml.isEmpty())
             {
-                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), QStringLiteral("%1_changedSituations.kml").arg(ts));
+                const QString fn = CFileUtils::appendFilePaths(CSwiftDirectories::logDirectory(), QStringLiteral("%1_changedSituations.kml").arg(ts));
                 const bool s = CFileUtils::writeStringToFile(kml, fn);
                 msgs.push_back(CInterpolationLogger::logStatusFileWriting(s, fn));
             }
@@ -134,7 +135,7 @@ namespace BlackMisc
             kml = CKmlUtils::wrapAsKmlDocument(CInterpolationLogger::getKmlInterpolatedSituations(interpolation));
             if (!kml.isEmpty())
             {
-                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), QStringLiteral("%1_interpolatedSituations.kml").arg(ts));
+                const QString fn = CFileUtils::appendFilePaths(CSwiftDirectories::logDirectory(), QStringLiteral("%1_interpolatedSituations.kml").arg(ts));
                 const bool s = CFileUtils::writeStringToFile(kml, fn);
                 msgs.push_back(CInterpolationLogger::logStatusFileWriting(s, fn));
             }
@@ -142,7 +143,7 @@ namespace BlackMisc
             kml = CKmlUtils::wrapAsKmlDocument(CInterpolationLogger::getKmlElevations(interpolation));
             if (!kml.isEmpty())
             {
-                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), QStringLiteral("%1_elevations.kml").arg(ts));
+                const QString fn = CFileUtils::appendFilePaths(CSwiftDirectories::logDirectory(), QStringLiteral("%1_elevations.kml").arg(ts));
                 const bool s = CFileUtils::writeStringToFile(kml, fn);
                 msgs.push_back(CInterpolationLogger::logStatusFileWriting(s, fn));
             }

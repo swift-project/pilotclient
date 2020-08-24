@@ -24,6 +24,7 @@
 #include "blackmisc/crashhandler.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/dbusserver.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/eventloop.h"
 #include "blackmisc/filelogger.h"
@@ -107,7 +108,7 @@ namespace BlackCore
         Q_ASSERT_X(!sApp, Q_FUNC_INFO, "already initialized");
         Q_ASSERT_X(QCoreApplication::instance(), Q_FUNC_INFO, "no application object");
 
-        m_applicationInfo.setApplicationDataDirectory(CDirectoryUtils::normalizedApplicationDataDirectory());
+        m_applicationInfo.setApplicationDataDirectory(CSwiftDirectories::normalizedApplicationDataDirectory());
         QCoreApplication::setApplicationName(m_applicationName);
         QCoreApplication::setApplicationVersion(CBuildConfig::getVersionString());
         this->setObjectName(m_applicationName);
@@ -1437,7 +1438,7 @@ namespace BlackCore
                                             "You'll need to update swift in order to use it thereafter.");
         }
 
-        const QStringList verifyErrors = CDirectoryUtils::verifyRuntimeDirectoriesAndFiles();
+        const QStringList verifyErrors = CSwiftDirectories::verifyRuntimeDirectoriesAndFiles();
         if (!verifyErrors.isEmpty() && !m_applicationInfo.isUnitTest())
         {
             this->cmdLineErrorMessage("Missing runtime directories/files:", verifyErrors.join(", "));
@@ -1862,7 +1863,7 @@ namespace BlackCore
 
     void CApplication::tagApplicationDataDirectory()
     {
-        const QString d = CDirectoryUtils::normalizedApplicationDataDirectory();
+        const QString d = CSwiftDirectories::normalizedApplicationDataDirectory();
         const QDir dir(d);
         if (!dir.exists() || !dir.isReadable()) { return; }
         const QString aiStr(this->getApplicationInfo().toJsonString());

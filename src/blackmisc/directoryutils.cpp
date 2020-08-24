@@ -11,6 +11,7 @@
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/range.h"
 #include "blackconfig/buildconfig.h"
 #include <QCoreApplication>
@@ -22,95 +23,14 @@
 #include <QStandardPaths>
 
 using namespace BlackConfig;
+using namespace BlackMisc::Network;
 
 namespace BlackMisc
 {
-    QString binDirectoryImpl()
-    {
-        QString appDirectoryString(qApp->applicationDirPath());
-        if (appDirectoryString.endsWith("Contents/MacOS")) { appDirectoryString += "/../../.."; }
-        QDir appDirectory(appDirectoryString);
-        return appDirectory.absolutePath();
-    }
-
-    const QString &CDirectoryUtils::binDirectory()
-    {
-        static const QString binDir(binDirectoryImpl());
-        return binDir;
-    }
-
     bool CDirectoryUtils::isInApplicationDirectory(const QString &path)
     {
         if (path.isEmpty()) { return false; }
         return path.contains(qApp->applicationDirPath(), CFileUtils::osFileNameCaseSensitivity());
-    }
-
-    const QString &CDirectoryUtils::pluginsDirectory()
-    {
-        static const QString pDir(CFileUtils::appendFilePaths(binDirectory(), "plugins"));
-        return pDir;
-    }
-
-    const QString &CDirectoryUtils::audioPluginDirectory()
-    {
-        static const QString pDir(CFileUtils::appendFilePaths(binDirectory(), "audio"));
-        return pDir;
-    }
-
-    const QString &CDirectoryUtils::getXSwiftBusBuildDirectory()
-    {
-        if (!CBuildConfig::isLocalDeveloperDebugBuild())
-        {
-            static const QString e;
-            return e;
-        }
-
-        // the xswiftbus directory in out, not in dist
-        static const QString bd = []
-        {
-            QDir dir(binDirectory());
-            if (!dir.cdUp()) { return QString(); }
-            if (!dir.cd("xswiftbus")) { return QString(); }
-            return dir.absolutePath();
-        }();
-        return bd;
-    }
-
-    QString CDirectoryUtils::executableFilePath(const QString &executable)
-    {
-        Q_ASSERT_X(!executable.isEmpty(), Q_FUNC_INFO, "Missing executable file path");
-        Q_ASSERT_X(CBuildConfig::isKnownExecutableName(executable), Q_FUNC_INFO, "Unknown exectuable");
-
-        QString s = CFileUtils::appendFilePaths(CDirectoryUtils::binDirectory(), executable);
-        if (CBuildConfig::isRunningOnMacOSPlatform())
-        {
-            // MacOS bundle may or may not be a bundle
-            const QDir dir(s + QLatin1String(".app/Contents/MacOS"));
-            if (dir.exists())
-            {
-                s += QLatin1String(".app/Contents/MacOS/") + executable;
-            }
-        }
-        else if (CBuildConfig::isRunningOnWindowsNtPlatform())
-        {
-            s += QLatin1String(".exe");
-        }
-        return s;
-    }
-
-    QString normalizedApplicationDirectoryImpl()
-    {
-        QString appDir = CDirectoryUtils::binDirectory();
-        Q_ASSERT(appDir.size() > 0);
-        // Remove leading '/' on Unix
-        if (appDir.at(0) == '/') { appDir.remove(0, 1); }
-        return QUrl::toPercentEncoding(appDir);
-    }
-
-    const QString &CDirectoryUtils::normalizedApplicationDirectory()
-    {
-        static const QString appDir(normalizedApplicationDirectoryImpl());
-        return appDir;
     }
 
     bool CDirectoryUtils::isMacOSAppBundle()
@@ -118,320 +38,6 @@ namespace BlackMisc
         static const bool appBundle = CBuildConfig::isRunningOnMacOSPlatform() &&
                                       qApp->applicationDirPath().contains("Contents/MacOS", Qt::CaseInsensitive);
         return appBundle;
-    }
-
-    const QString &CDirectoryUtils::applicationDataDirectory()
-    {
-        static const QString p = CFileUtils::appendFilePaths(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation), "/org.swift-project/");
-        return p;
-    }
-
-    const QFileInfoList &CDirectoryUtils::applicationDataDirectories()
-    {
-        static QFileInfoList fileInfoList = currentApplicationDataDirectories();
-        return fileInfoList;
-    }
-
-    QFileInfoList CDirectoryUtils::currentApplicationDataDirectories()
-    {
-        const QDir swiftAppData(CDirectoryUtils::applicationDataDirectory()); // contains 1..n subdirs
-        if (!swiftAppData.isReadable()) { return QFileInfoList(); }
-        return swiftAppData.entryInfoList({}, QDir::Dirs | QDir::NoDotAndDotDot, QDir::Time);
-    }
-
-    int CDirectoryUtils::applicationDataDirectoriesCount()
-    {
-        return CDirectoryUtils::applicationDataDirectories().size();
-    }
-
-    QStringList CDirectoryUtils::applicationDataDirectoryList(bool withoutCurrent, bool decodedDirName)
-    {
-        QStringList dirs;
-        for (const QFileInfo &info : CDirectoryUtils::applicationDataDirectories())
-        {
-            if (withoutCurrent && info.filePath().contains(normalizedApplicationDirectory(), Qt::CaseInsensitive)) continue;
-            dirs.append(decodedDirName ?
-                        CDirectoryUtils::decodeNormalizedDirectory(info.filePath()) :
-                        info.filePath());
-        }
-        return dirs;
-    }
-
-    const CDirectoryUtils::FilePerApplication &CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion()
-    {
-        static const FilePerApplication directories = currentApplicationDataDirectoryMapWithoutCurrentVersion();
-        return directories;
-    }
-
-    CDirectoryUtils::FilePerApplication CDirectoryUtils::currentApplicationDataDirectoryMapWithoutCurrentVersion()
-    {
-        FilePerApplication directories;
-        for (const QFileInfo &info : CDirectoryUtils::currentApplicationDataDirectories())
-        {
-            // check for myself (the running swift)
-            if (caseInsensitiveStringCompare(info.filePath(), CDirectoryUtils::normalizedApplicationDataDirectory())) { continue; }
-
-            // the application info will be written by each swift application started
-            // so the application type will always contain that application
-            const QString appInfoFile = CFileUtils::appendFilePaths(info.filePath(), CApplicationInfo::fileName());
-            const QString appInfoJson = CFileUtils::readFileToString(appInfoFile);
-            CApplicationInfo appInfo;
-            if (appInfoJson.isEmpty())
-            {
-                // no JSON means the app no longer exists
-                const QString exeDir = CDirectoryUtils::decodeNormalizedDirectory(info.filePath());
-                appInfo.setExecutablePath(exeDir);
-            }
-            else
-            {
-                appInfo = CApplicationInfo::fromJson(appInfoJson);
-            }
-            appInfo.setApplicationDataDirectory(info.filePath());
-            directories.insert(info.filePath(), appInfo);
-        }
-
-        return directories;
-    }
-
-    bool CDirectoryUtils::hasOtherSwiftDataDirectories()
-    {
-        return CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion().size() > 0;
-    }
-
-    const QString &CDirectoryUtils::normalizedApplicationDataDirectory()
-    {
-        static const QString p = CFileUtils::appendFilePaths(applicationDataDirectory(), normalizedApplicationDirectory());
-        return p;
-    }
-
-    const QString &CDirectoryUtils::logDirectory()
-    {
-        static const QString p = CFileUtils::appendFilePaths(normalizedApplicationDataDirectory(), "/logs");
-        return p;
-    }
-
-    QString getSwiftShareDirImpl()
-    {
-        QDir dir(CDirectoryUtils::binDirectory());
-        const bool success = dir.cd("../share");
-        if (success)
-        {
-            Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
-            return dir.absolutePath();
-        }
-        Q_ASSERT_X(false, Q_FUNC_INFO, "missing dir");
-        return {};
-    }
-
-    const QString &CDirectoryUtils::shareDirectory()
-    {
-        static const QString s(getSwiftShareDirImpl());
-        return s;
-    }
-
-    const QString &CDirectoryUtils::shareTestDirectory()
-    {
-        static const QString test(CFileUtils::appendFilePaths(CDirectoryUtils::shareDirectory(), "test"));
-        return test;
-    }
-
-    const QString &CDirectoryUtils::shareMiscDirectory()
-    {
-        static const QString misc(CFileUtils::appendFilePaths(CDirectoryUtils::shareDirectory(), "misc"));
-        return misc;
-    }
-
-    const QString &CDirectoryUtils::shareTerrainProbeDirectory()
-    {
-        static const QString tpd(CFileUtils::appendFilePaths(CDirectoryUtils::shareDirectory(), "simulator/swiftTerrainProbe"));
-        return tpd;
-    }
-
-    const QString &CDirectoryUtils::shareMatchingScriptDirectory()
-    {
-        static const QString ms(CFileUtils::appendFilePaths(CDirectoryUtils::shareDirectory(), "matchingscript"));
-        return ms;
-    }
-
-    const QString &CDirectoryUtils::bootstrapFileName()
-    {
-        static const QString n("bootstrap.json");
-        return n;
-    }
-
-    const QString getBootstrapResourceFileImpl()
-    {
-        const QString d(CDirectoryUtils::shareDirectory());
-        if (d.isEmpty()) { return {}; }
-        const QFile file(QDir::cleanPath(d + QDir::separator() + "shared/bootstrap/" + CDirectoryUtils::bootstrapFileName()));
-        Q_ASSERT_X(file.exists(), Q_FUNC_INFO, "missing bootstrap file");
-        return QFileInfo(file).absoluteFilePath();
-    }
-
-    const QString &CDirectoryUtils::bootstrapResourceFilePath()
-    {
-        static const QString s(getBootstrapResourceFileImpl());
-        return s;
-    }
-
-    QString getSwiftStaticDbFilesDirImpl()
-    {
-        const QString d(CDirectoryUtils::shareDirectory());
-        if (d.isEmpty()) { return {}; }
-        const QDir dir(QDir::cleanPath(d + QDir::separator() + "shared/dbdata"));
-        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
-        return dir.absolutePath();
-    }
-
-    const QString &CDirectoryUtils::staticDbFilesDirectory()
-    {
-        static const QString s(getSwiftStaticDbFilesDirImpl());
-        return s;
-    }
-
-    QString getSoundFilesDirImpl()
-    {
-        const QString d(CDirectoryUtils::shareDirectory());
-        if (d.isEmpty()) { return {}; }
-        const QDir dir(QDir::cleanPath(d + QDir::separator() + "sounds"));
-        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
-        return dir.absolutePath();
-    }
-
-    const QString &CDirectoryUtils::soundFilesDirectory()
-    {
-        static const QString s(getSoundFilesDirImpl());
-        return s;
-    }
-
-    QString getStylesheetsDirImpl()
-    {
-        const QString d(CDirectoryUtils::shareDirectory());
-        if (d.isEmpty()) { return {}; }
-        const QDir dir(QDir::cleanPath(d + QDir::separator() + "qss"));
-        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
-        return dir.absolutePath();
-    }
-
-    const QString &CDirectoryUtils::stylesheetsDirectory()
-    {
-        static const QString s(getStylesheetsDirImpl());
-        return s;
-    }
-
-    QString getImagesDirImpl()
-    {
-        const QString d(CDirectoryUtils::shareDirectory());
-        const QDir dir(QDir::cleanPath(d + QDir::separator() + "images"));
-        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
-        return dir.absolutePath();
-    }
-
-    const QString &CDirectoryUtils::imagesDirectory()
-    {
-        static const QString s(getImagesDirImpl());
-        return s;
-    }
-
-    const QString &CDirectoryUtils::imagesAirlinesDirectory()
-    {
-        static const QString s(QDir::cleanPath(imagesDirectory() + QDir::separator() + "airlines"));
-        return s;
-    }
-
-    const QString &CDirectoryUtils::imagesFlagsDirectory()
-    {
-        static const QString s(QDir::cleanPath(imagesDirectory() + QDir::separator() + "flags"));
-        return s;
-    }
-
-    QString getHtmlDirImpl()
-    {
-        const QString d(CDirectoryUtils::shareDirectory());
-        const QDir dir(QDir::cleanPath(d + QDir::separator() + "html"));
-        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
-        return dir.absolutePath();
-    }
-
-    const QString &CDirectoryUtils::htmlDirectory()
-    {
-        static const QString s(getHtmlDirImpl());
-        return s;
-    }
-
-    QString getLegalDirImpl()
-    {
-        const QString d(CDirectoryUtils::shareDirectory());
-        const QDir dir(QDir::cleanPath(d + QDir::separator() + "legal"));
-        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
-        return dir.absolutePath();
-    }
-
-    const QString &CDirectoryUtils::legalDirectory()
-    {
-        static const QString s(getLegalDirImpl());
-        return s;
-    }
-
-    const QString &CDirectoryUtils::aboutFilePath()
-    {
-        static const QString about = QDir::cleanPath(CDirectoryUtils::legalDirectory() + QDir::separator() + "about.html");
-        return about;
-    }
-
-    QString testFilesDirImpl()
-    {
-        const QString d(CDirectoryUtils::shareDirectory());
-        if (d.isEmpty()) { return {}; }
-        const QDir dir(QDir::cleanPath(d + QDir::separator() + "test"));
-        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
-        return dir.absolutePath();
-    }
-
-    const QString &CDirectoryUtils::testFilesDirectory()
-    {
-        static QString s(testFilesDirImpl());
-        return s;
-    }
-
-    const QString &CDirectoryUtils::htmlTemplateFilePath()
-    {
-        static const QString s(htmlDirectory() + QDir::separator() + "swifttemplate.html");
-        return s;
-    }
-
-    QString getDocumentationDirectoryImpl()
-    {
-        const QStringList pathes(QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation));
-        QString d = pathes.first();
-        d = QDir::cleanPath(CFileUtils::appendFilePaths(d, "swift"));
-        QDir dir(d);
-        if (dir.exists()) { return dir.absolutePath(); }
-        return pathes.first();
-    }
-
-    const QString &CDirectoryUtils::documentationDirectory()
-    {
-        static const QString d(getDocumentationDirectoryImpl());
-        return d;
-    }
-
-    const QString &CDirectoryUtils::crashpadDirectory()
-    {
-        static const QString p = CFileUtils::appendFilePaths(normalizedApplicationDataDirectory(), "/crashpad");
-        return p;
-    }
-
-    const QString &CDirectoryUtils::crashpadDatabaseDirectory()
-    {
-        static const QString p = CFileUtils::appendFilePaths(crashpadDirectory(), "/database");
-        return p;
-    }
-
-    const QString &CDirectoryUtils::crashpadMetricsDirectory()
-    {
-        static const QString p = CFileUtils::appendFilePaths(crashpadDirectory(), "/metrics");
-        return p;
     }
 
     QString CDirectoryUtils::decodeNormalizedDirectory(const QString &directory)
@@ -464,34 +70,6 @@ namespace BlackMisc
         return false;
     }
 
-    QStringList CDirectoryUtils::verifyRuntimeDirectoriesAndFiles()
-    {
-        QStringList failed;
-        QDir d(CDirectoryUtils::binDirectory());
-        if (!d.isReadable()) { failed.append(d.absolutePath()); }
-
-        d = QDir(CDirectoryUtils::imagesDirectory());
-        if (!d.isReadable()) { failed.append(d.absolutePath()); }
-
-        d = QDir(CDirectoryUtils::stylesheetsDirectory());
-        if (!d.isReadable()) { failed.append(d.absolutePath()); }
-
-        d = QDir(CDirectoryUtils::applicationDataDirectory());
-        if (!d.isReadable()) { failed.append(d.absolutePath()); }
-
-        // check if the executables are avialable
-        QString fn = CDirectoryUtils::executableFilePath(CBuildConfig::swiftCoreExecutableName());
-        if (!QFile::exists(fn)) { failed.append(fn); }
-
-        fn = CDirectoryUtils::executableFilePath(CBuildConfig::swiftDataExecutableName());
-        if (!QFile::exists(fn)) { failed.append(fn); }
-
-        fn = CDirectoryUtils::executableFilePath(CBuildConfig::swiftGuiExecutableName());
-        if (!QFile::exists(fn)) { failed.append(fn); }
-
-        return failed;
-    }
-
     bool CDirectoryUtils::existsUnemptyDirectory(const QString &testDir)
     {
         if (testDir.isEmpty()) { return false; }
@@ -520,24 +98,43 @@ namespace BlackMisc
 
     bool CDirectoryUtils::isDirExisting(const QString &path)
     {
-        if (!CBuildConfig::isRunningOnWindowsNtPlatform())
+        if (CBuildConfig::isRunningOnWindowsNtPlatform() && CFileUtils::isWindowsUncPath(path))
         {
-            const QDir dir(path);
-            return dir.exists();
+            const QString machine(CFileUtils::windowsUncMachine(path));
+            if (!canPingUncMachine(machine)) { return false; } // avoid long "hanging" if machine is switched off
+        }
+        return QDir(path).exists();
+    }
+
+    bool CDirectoryUtils::canPingUncMachine(const QString &machine)
+    {
+        static QMap<QString, qint64> good;
+        static QMap<QString, qint64> bad;
+
+        if (machine.isEmpty()) { return false; }
+        const QString m = machine.toLower();
+        if (good.contains(m)) { return true; } // good ones we only test once
+        if (bad.contains(m))
+        {
+            const qint64 ts = bad.value(m);
+            const qint64 dt = QDateTime::currentSecsSinceEpoch() - ts;
+            if (dt < 1000 * 60) { return false; } // still bad
+
+            // outdated, test again
         }
 
-        // Windows
-        if (!CFileUtils::isWindowsUncPath(path))
+        const bool p = CNetworkUtils::canPing(m);
+        if (p)
         {
-            const QDir dir(path);
-            return dir.exists();
+            good.insert(m, QDateTime::currentSecsSinceEpoch());
+            bad.remove(m);
         }
-        const QString machine(CFileUtils::windowsUncMachine(path));
-        if (!CFileUtils::canPingUncMachine(machine)) { return false; } // avoid long "hanging" if machine is switched off
-
-        const QDir dir(path);
-        const bool e = dir.exists();
-        return e;
+        else
+        {
+            bad.insert(m, QDateTime::currentSecsSinceEpoch());
+            good.remove(m);
+        }
+        return p;
     }
 
     bool CDirectoryUtils::isDirExisting(const QDir &dir)

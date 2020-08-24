@@ -9,6 +9,7 @@
 //! \cond PRIVATE
 
 #include "blackmisc/icons.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/threadutils.h"
@@ -1342,7 +1343,7 @@ namespace BlackMisc
         Q_ASSERT_X(!relativeFileName.isEmpty(), Q_FUNC_INFO, "missing filename");
         Q_ASSERT_X(CThreadUtils::thisIsMainThread(), Q_FUNC_INFO, "not thread safe");
 
-        fullFilePath = CFileUtils::appendFilePaths(CDirectoryUtils::imagesDirectory(), relativeFileName);
+        fullFilePath = CFileUtils::appendFilePaths(CSwiftDirectories::imagesDirectory(), relativeFileName);
         if (!getResourceFileCache().contains(relativeFileName))
         {
             QPixmap pm;

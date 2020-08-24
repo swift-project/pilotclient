@@ -8,6 +8,7 @@
 
 #include "blackmisc/filelogger.h"
 #include "blackmisc/loghandler.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackconfig/buildconfig.h"
 
@@ -51,7 +52,7 @@ namespace BlackMisc
         m_logFile(this)
     {
         Q_ASSERT(! applicationName().isEmpty());
-        QDir::root().mkpath(CDirectoryUtils::logDirectory());
+        QDir::root().mkpath(CSwiftDirectories::logDirectory());
         removeOldLogFiles();
         m_logFile.setFileName(getLogFilePath());
         m_logFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
@@ -104,7 +105,7 @@ namespace BlackMisc
 
     QString CFileLogger::getLogFilePath()
     {
-        QString filePath = CDirectoryUtils::logDirectory() % '/' % logFileName();
+        QString filePath = CSwiftDirectories::logDirectory() % '/' % logFileName();
         return filePath;
     }
 
@@ -112,7 +113,7 @@ namespace BlackMisc
     {
         QString nameFilter(applicationName());
         nameFilter += QLatin1String("*.log");
-        QDir dir(CDirectoryUtils::logDirectory(), nameFilter, QDir::Name, QDir::Files);
+        QDir dir(CSwiftDirectories::logDirectory(), nameFilter, QDir::Name, QDir::Files);
 
         QDateTime now = QDateTime::currentDateTime();
         for (const auto &logFileInfo : dir.entryInfoList())

@@ -12,6 +12,7 @@
 #include "blackcore/data/globalsetup.h"
 #include "blackgui/guiapplication.h"
 #include "blackconfig/buildconfig.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/datacache.h"
@@ -50,7 +51,7 @@ namespace BlackGui
             ui->setupUi(this);
             this->initOtherSwiftVersions();
             this->setWidths();
-            m_hasOtherSwiftVersions = CDirectoryUtils::hasOtherSwiftDataDirectories();
+            m_hasOtherSwiftVersions = CSwiftDirectories::hasOtherSwiftDataDirectories();
 
             ui->cb_ShowAll->setChecked(m_nameFilterDisables);
             connect(ui->rb_Cache, &QRadioButton::toggled, [ = ](bool) { this->initCurrentDirectories(true); });
@@ -191,7 +192,7 @@ namespace BlackGui
                 static const QStringList cacheFilterBs = [ = ]
                 {
                     QStringList f(cacheFilter);
-                    f.push_back(CDirectoryUtils::bootstrapFileName());
+                    f.push_back(CSwiftDirectories::bootstrapFileName());
                     return f;
                 }();
                 return cacheFilterBs;
@@ -324,7 +325,7 @@ namespace BlackGui
         QString CCopyConfigurationComponent::getOtherVersionsSelectedDirectory() const
         {
             if (ui->cb_OtherVersions->count() < 1) { return {}; }
-            const QFileInfoList dirs(CDirectoryUtils::applicationDataDirectories());
+            const QFileInfoList dirs(CSwiftDirectories::applicationDataDirectories());
             if (dirs.isEmpty()) { return {}; }
             const QString otherVersionDir = m_otherVersionDirs.at(ui->cb_OtherVersions->currentIndex());
             QString dir;
@@ -390,7 +391,7 @@ namespace BlackGui
                 {
                     this->initMultiSimulatorCache(&m_modelCaches, file);
                 }
-                else if (file.contains(CDirectoryUtils::bootstrapFileName()))
+                else if (file.contains(CSwiftDirectories::bootstrapFileName()))
                 {
                     CData<TGlobalSetup> setup { this };   //!< data cache setup
                     const CGlobalSetup s = CGlobalSetup::fromJsonFile(file, true);
@@ -418,7 +419,7 @@ namespace BlackGui
         void CCopyConfigurationComponent::initOtherSwiftVersions()
         {
             ui->cb_OtherVersions->clear();
-            const QMap<QString, CApplicationInfo> otherVersions = CDirectoryUtils::currentApplicationDataDirectoryMapWithoutCurrentVersion();
+            const QMap<QString, CApplicationInfo> otherVersions = CSwiftDirectories::currentApplicationDataDirectoryMapWithoutCurrentVersion();
             for (const auto &pair : makePairsRange(otherVersions))
             {
                 const CApplicationInfo &info(pair.second);

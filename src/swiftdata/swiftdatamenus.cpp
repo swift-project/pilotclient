@@ -11,6 +11,7 @@
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "swiftdata.h"
 #include "ui_swiftdata.h"
@@ -57,7 +58,7 @@ void CSwiftData::initDynamicMenus()
     //  menu entry for auto publish data
     ui->menu_Mapping->addAction(CIcons::database16(), "Auto publish data", this, &CSwiftData::showAutoPublishing);
 
-    QString resourceDir(CDirectoryUtils::shareDirectory());
+    QString resourceDir(CSwiftDirectories::shareDirectory());
     if (!resourceDir.isEmpty() && QDir(resourceDir).exists())
     {
         Q_ASSERT_X(ui->comp_MainInfoArea, Q_FUNC_INFO, "Missing main info area");

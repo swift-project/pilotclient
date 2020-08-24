@@ -1538,7 +1538,7 @@ namespace BlackCore
         CLogMessage(this).info(u"Changed data service ecosystem to '%1'") << es.toQString(true);
     }
 
-    bool CWebDataServices::writeDbDataToDisk(const QString &dir) const
+    bool CWebDataServices::writeDbDataToDisk(const QString &dir)
     {
         if (dir.isEmpty()) { return false; }
         const QDir directory(dir);
@@ -1547,28 +1547,33 @@ namespace BlackCore
             const bool s = directory.mkpath(dir);
             if (!s) { return false; }
         }
+        QList<QPair<QString, QString>> fileContents;
 
         if (this->getModelsCount() > 0)
         {
             const QString json(QJsonDocument(this->getModels().toJson()).toJson());
-            const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "models.json"));
-            if (!s) { return false; }
+            fileContents.push_back({ "models.json", json });
         }
 
         if (this->getLiveriesCount() > 0)
         {
             const QString json(QJsonDocument(this->getLiveries().toJson()).toJson());
-            const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "liveries.json"));
-            if (!s) { return false; }
+            fileContents.push_back({ "liveries.json", json });
         }
 
         if (this->getAirportsCount() > 0)
         {
             const QString json(QJsonDocument(this->getAirports().toJson()).toJson());
-            const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "airports.json"));
-            if (!s) { return false; }
+            fileContents.push_back({ "airports.json", json });
         }
 
+        for (const auto &pair : fileContents)
+        {
+            CWorker::fromTask(this, Q_FUNC_INFO, [pair, directory]
+            {
+                CFileUtils::writeStringToFile(CFileUtils::appendFilePaths(directory.absolutePath(), pair.first), pair.second);
+            });
+        }
         return true;
     }
 

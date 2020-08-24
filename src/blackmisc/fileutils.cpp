@@ -7,9 +7,6 @@
  */
 
 #include "blackmisc/fileutils.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/math/mathutils.h"
-#include "blackmisc/worker.h"
 #include "blackmisc/directoryutils.h"
 #include "blackconfig/buildconfig.h"
 
@@ -29,8 +26,6 @@
 #include <QStringBuilder>
 
 using namespace BlackConfig;
-using namespace BlackMisc::Math;
-using namespace BlackMisc::Network;
 
 namespace BlackMisc
 {
@@ -99,17 +94,6 @@ namespace BlackMisc
     QString CFileUtils::readLockedFileToString(const QString &filePath, const QString &fileName)
     {
         return readLockedFileToString(appendFilePaths(filePath, fileName));
-    }
-
-    bool CFileUtils::writeStringToFileInBackground(const QString &content, const QString &fileNameAndPath)
-    {
-        if (fileNameAndPath.isEmpty()) { return false; }
-        CWorker *worker = CWorker::fromTask(QCoreApplication::instance(), "writeStringToFileInBackground", [content, fileNameAndPath]()
-        {
-            const bool s = CFileUtils::writeStringToFile(content, fileNameAndPath);
-            Q_UNUSED(s);
-        });
-        return worker ? true : false;
     }
 
     QString CFileUtils::appendFilePaths(const QString &path1, const QString &path2)
@@ -531,37 +515,6 @@ namespace BlackMisc
         return machines;
     }
 
-    bool CFileUtils::canPingUncMachine(const QString &machine)
-    {
-        static QMap<QString, qint64> good;
-        static QMap<QString, qint64> bad;
-
-        if (machine.isEmpty()) { return false; }
-        const QString m = machine.toLower();
-        if (good.contains(m)) { return true; } // good ones we only test once
-        if (bad.contains(m))
-        {
-            const qint64 ts = bad.value(m);
-            const qint64 dt = QDateTime::currentSecsSinceEpoch() - ts;
-            if (dt < 1000 * 60) { return false; } // still bad
-
-            // outdated, test again
-        }
-
-        const bool p = CNetworkUtils::canPing(m);
-        if (p)
-        {
-            good.insert(m, QDateTime::currentSecsSinceEpoch());
-            bad.remove(m);
-        }
-        else
-        {
-            bad.insert(m, QDateTime::currentSecsSinceEpoch());
-            good.remove(m);
-        }
-        return p;
-    }
-
     QString CFileUtils::toWindowsLocalPath(const QString &path)
     {
         QString p = CFileUtils::fixWindowsUncPath(path);
@@ -583,7 +536,7 @@ namespace BlackMisc
             unit = i.next();
             currentSize /= 1024.0;
         }
-        return QStringLiteral("%1 %2").arg(CMathUtils::roundAsString(currentSize, 2), unit);
+        return QStringLiteral("%1 %2").arg(currentSize, 0, 'f', 2).arg(unit);
     }
 
     const QStringList &CFileUtils::executableSuffixes()
@@ -607,29 +560,5 @@ namespace BlackMisc
     {
         if (fileName.isEmpty()) { return false; }
         return fileName.contains("swift", Qt::CaseInsensitive) && fileName.contains("installer");
-    }
-
-    QString CFileUtils::soundFilePathAndFileName(const QString &name)
-    {
-        if (name.isEmpty()) { return {}; }
-        return CFileUtils::appendFilePaths(CDirectoryUtils::soundFilesDirectory(), name);
-    }
-
-    QString CFileUtils::soundFilePathOrDefaultPath(const QString &directory, const QString &fileName)
-    {
-        if (!directory.isEmpty())
-        {
-            const QString fp = CFileUtils::appendFilePathsAndFixUnc(directory, fileName);
-            const QFileInfo fi(fp);
-            if (fi.exists()) { return fi.absoluteFilePath(); }
-        }
-        const QString fp = CFileUtils::appendFilePathsAndFixUnc(CDirectoryUtils::soundFilesDirectory(), fileName);
-        const QFileInfo fi(fp);
-        return (fi.exists()) ? fi.absoluteFilePath() : QString();
-    }
-
-    QUrl CFileUtils::soundFileQUrlOrDefault(const QString &directory, const QString &fileName)
-    {
-        return QUrl::fromLocalFile(soundFilePathOrDefaultPath(directory, fileName));
     }
 } // ns

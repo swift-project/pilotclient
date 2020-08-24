@@ -8,6 +8,7 @@
 
 #include "blackmisc/crashinfo.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/worker.h"
 
 #include <QFile>
 #include <QStringBuilder>
@@ -80,7 +81,7 @@ namespace BlackMisc
     void CCrashInfo::triggerWritingFile() const
     {
         if (m_logFileAndPath.isEmpty()) { return; }
-        CFileUtils::writeStringToFileInBackground(this->summary(), m_logFileAndPath);
+        CWorker::fromTask(qApp, Q_FUNC_INFO, [this] { writeToFile(); });
     }
 
     bool CCrashInfo::writeToFile() const

@@ -12,6 +12,7 @@
 #include "blackcore/application.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 
 #include <QSet>
@@ -128,7 +129,7 @@ namespace BlackGui
 
             // create relative file name
             QString relativeModelFile = thisVersionModelFile;
-            relativeModelFile = relativeModelFile.replace(CDirectoryUtils::applicationDataDirectory(), "", Qt::CaseInsensitive);
+            relativeModelFile = relativeModelFile.replace(CSwiftDirectories::applicationDataDirectory(), "", Qt::CaseInsensitive);
             if (relativeModelFile.length() < 2) { return false; }
             relativeModelFile = relativeModelFile.mid(relativeModelFile.indexOf('/', 1));
 

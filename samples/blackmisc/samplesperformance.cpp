@@ -25,6 +25,7 @@
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/test/testing.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/stringutils.h"
 
@@ -278,7 +279,7 @@ namespace BlackSample
 
     int CSamplesPerformance::samplesJsonModelAndLivery(QTextStream &out)
     {
-        const QString dir = CDirectoryUtils::staticDbFilesDirectory();
+        const QString dir = CSwiftDirectories::staticDbFilesDirectory();
         const QString modelFileName = QDir(dir).filePath("models.json");
         const QString liveriesFileName = QDir(dir).filePath("liveries.json");
 

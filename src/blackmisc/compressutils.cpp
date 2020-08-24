@@ -8,6 +8,7 @@
 
 #include "blackmisc/compressutils.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
@@ -36,7 +37,7 @@ namespace BlackMisc
         QString executable;
         if (CBuildConfig::isRunningOnMacOSPlatform())
         {
-            executable += CDirectoryUtils::binDirectory();
+            executable += CSwiftDirectories::binDirectory();
             executable += '/';
         }
         executable +=  QStringLiteral("7za");

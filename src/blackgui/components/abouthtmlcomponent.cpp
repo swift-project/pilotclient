@@ -10,6 +10,7 @@
 #include "blackmisc/fileutils.h"
 #include "blackmisc/directoryutils.h"
 #include "abouthtmlcomponent.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/fileutils.h"
 #include "ui_abouthtmlcomponent.h"
@@ -53,7 +54,7 @@ namespace BlackGui
                 // workaround:
                 // 1) Only reading as HTML gives proper formatting
                 // 2) Reading the file resource fails (likely because of the style sheet)
-                const QString html = CFileUtils::readFileToString(CDirectoryUtils::aboutFilePath());
+                const QString html = CFileUtils::readFileToString(CSwiftDirectories::aboutFilePath());
                 return html;
 
                 // no longer replacing the URLs, doing this on anchor clicked
@@ -75,7 +76,7 @@ namespace BlackGui
                 QDesktopServices::openUrl(url);
                 return;
             }
-            const QString possibleLegalFile = CFileUtils::appendFilePaths(CDirectoryUtils::legalDirectory(), url.fileName());
+            const QString possibleLegalFile = CFileUtils::appendFilePaths(CSwiftDirectories::legalDirectory(), url.fileName());
             QFile f(possibleLegalFile);
             if (f.exists())
             {

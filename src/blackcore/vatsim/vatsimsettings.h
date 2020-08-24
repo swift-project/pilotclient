@@ -16,6 +16,7 @@
 #include "blackmisc/valueobject.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/network/serverlist.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/fileutils.h"
 
@@ -211,7 +212,7 @@ namespace BlackCore
             //! \copydoc BlackMisc::TSettingTrait::defaultValue
             static const CRawFsdMessageSettings &defaultValue()
             {
-                static const CRawFsdMessageSettings setting { false, BlackMisc::CDirectoryUtils::logDirectory() };
+                static const CRawFsdMessageSettings setting { false, BlackMisc::CSwiftDirectories::logDirectory() };
                 return setting;
             }
         };

@@ -8,6 +8,7 @@
 
 #include "fscommonutil.h"
 #include "aircraftcfgparser.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/stringutils.h"
@@ -418,9 +419,9 @@ namespace BlackMisc
             int CFsCommonUtil::copyFsxTerrainProbeFiles(const QString &simObjectDir, CStatusMessageList &messages)
             {
                 messages.clear();
-                if (!CDirectoryUtils::existsUnemptyDirectory(CDirectoryUtils::shareTerrainProbeDirectory()))
+                if (!CDirectoryUtils::existsUnemptyDirectory(CSwiftDirectories::shareTerrainProbeDirectory()))
                 {
-                    messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, u"No terrain probe source files in '%1'") << CDirectoryUtils::shareTerrainProbeDirectory());
+                    messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, u"No terrain probe source files in '%1'") << CSwiftDirectories::shareTerrainProbeDirectory());
                     return -1;
                 }
 
@@ -438,7 +439,7 @@ namespace BlackMisc
                     return -1;
                 }
 
-                const QString lastSegment = CFileUtils::lastPathSegment(CDirectoryUtils::shareTerrainProbeDirectory());
+                const QString lastSegment = CFileUtils::lastPathSegment(CSwiftDirectories::shareTerrainProbeDirectory());
                 targetDir = CFileUtils::appendFilePathsAndFixUnc(targetDir, lastSegment);
                 const bool hasDir = td.mkpath(targetDir);
                 if (!hasDir)
@@ -447,8 +448,8 @@ namespace BlackMisc
                     return -1;
                 }
 
-                const int copied = CDirectoryUtils::copyDirectoryRecursively(CDirectoryUtils::shareTerrainProbeDirectory(), targetDir, true);
-                messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityInfo, u"Copied %1 files from '%2' to '%3'") << copied << CDirectoryUtils::shareTerrainProbeDirectory() << targetDir);
+                const int copied = CDirectoryUtils::copyDirectoryRecursively(CSwiftDirectories::shareTerrainProbeDirectory(), targetDir, true);
+                messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityInfo, u"Copied %1 files from '%2' to '%3'") << copied << CSwiftDirectories::shareTerrainProbeDirectory() << targetDir);
                 return copied;
             }
 

@@ -687,38 +687,42 @@ namespace BlackCore
             return true;
         }
 
-        bool CIcaoDataReader::writeToJsonFiles(const QString &dir) const
+        bool CIcaoDataReader::writeToJsonFiles(const QString &dir)
         {
             QDir directory(dir);
             if (!directory.exists()) { return false; }
+            QList<QPair<CEntityFlags::EntityFlag, QString>> fileContents;
             if (this->getCountriesCount() > 0)
             {
                 const QString json(QJsonDocument(this->getCountries().toJson()).toJson());
-                const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), CDbInfo::entityToSharedName(CEntityFlags::CountryEntity)));
-                if (!s) { return false; }
+                fileContents.push_back({ CEntityFlags::CountryEntity, json });
             }
 
             if (this->getAircraftIcaoCodesCount() > 0)
             {
                 const QString json(QJsonDocument(this->getAircraftIcaoCodes().toJson()).toJson());
-                const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), CDbInfo::entityToSharedName(CEntityFlags::AircraftIcaoEntity)));
-                if (!s) { return false; }
+                fileContents.push_back({ CEntityFlags::AircraftIcaoEntity, json });
             }
 
             if (this->getAirlineIcaoCodesCount() > 0)
             {
                 const QString json(QJsonDocument(this->getAirlineIcaoCodes().toJson()).toJson());
-                const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), CDbInfo::entityToSharedName(CEntityFlags::AirlineIcaoEntity)));
-                if (!s) { return false; }
+                fileContents.push_back({ CEntityFlags::AirlineIcaoEntity, json });
             }
 
             if (this->getAircraftCategoryCount() > 0)
             {
                 const QString json(QJsonDocument(this->getAirlineIcaoCodes().toJson()).toJson());
-                const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), CDbInfo::entityToSharedName(CEntityFlags::AircraftCategoryEntity)));
-                if (!s) { return false; }
+                fileContents.push_back({ CEntityFlags::AircraftCategoryEntity, json });
             }
 
+            for (const auto &pair : fileContents)
+            {
+                CWorker::fromTask(this, Q_FUNC_INFO, [pair, directory]
+                {
+                    CFileUtils::writeStringToFile(CFileUtils::appendFilePaths(directory.absolutePath(), CDbInfo::entityToSharedName(pair.first)), pair.second);
+                });
+            }
             return true;
         }
 

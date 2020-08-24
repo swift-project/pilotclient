@@ -140,7 +140,7 @@ namespace BlackCore
             bool areAllDataRead() const;
 
             //! Write to static DB data file
-            bool writeToJsonFiles(const QString &dir) const;
+            bool writeToJsonFiles(const QString &dir);
 
             // data read from local data
             virtual BlackMisc::CStatusMessageList readFromJsonFiles(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead, bool overrideNewerOnly) override;

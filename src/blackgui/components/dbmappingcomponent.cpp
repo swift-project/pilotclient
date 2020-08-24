@@ -30,6 +30,7 @@
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/authenticateduser.h"
 #include "blackmisc/propertyindexvariantmap.h"
@@ -545,7 +546,7 @@ namespace BlackGui
         void CDbMappingComponent::loadRemovedModels()
         {
             if (!ui->comp_ModelWorkbench->view()) { return; }
-            const QString logDir = CDirectoryUtils::logDirectory();
+            const QString logDir = CSwiftDirectories::logDirectory();
             ui->comp_ModelWorkbench->view()->showFileLoadDialog(logDir);
         }
 

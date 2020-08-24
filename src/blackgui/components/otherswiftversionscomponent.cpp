@@ -8,6 +8,7 @@
 
 #include "otherswiftversionscomponent.h"
 #include "ui_otherswiftversionscomponent.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "guiapplication.h"
 #include <QUrl>
@@ -70,7 +71,7 @@ namespace BlackGui
 
         void COtherSwiftVersionsComponent::openDataDirectory()
         {
-            const QString dir = CDirectoryUtils::applicationDataDirectory();
+            const QString dir = CSwiftDirectories::applicationDataDirectory();
             const QUrl url = QUrl::fromLocalFile(dir);
             QDesktopServices::openUrl(url);
         }

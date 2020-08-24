@@ -9,6 +9,7 @@
 #include "blackcore/application.h"
 #include "blackcore/pluginmanagersimulator.h"
 #include "blackcore/simulator.h"
+#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/logmessage.h"
 
@@ -112,7 +113,7 @@ namespace BlackCore
 
     const QString &CPluginManagerSimulator::pluginDirectory() const
     {
-        static const QString d(CFileUtils::appendFilePaths(CDirectoryUtils::pluginsDirectory(), "simulator"));
+        static const QString d(CFileUtils::appendFilePaths(CSwiftDirectories::pluginsDirectory(), "simulator"));
         return d;
     }
 }
