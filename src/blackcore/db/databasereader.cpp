@@ -619,7 +619,7 @@ namespace BlackCore
             const bool overrideNewerOnly = true;
             entities = this->maskBySupportedEntities(entities);
 
-            if (inBackground || !CThreadUtils::isCurrentThreadObjectThread(this))
+            if (inBackground || !CThreadUtils::isInThisThread(this))
             {
                 const bool s = this->readFromJsonFilesInBackground(CDirectoryUtils::staticDbFilesDirectory(), entities, overrideNewerOnly);
                 return s ?

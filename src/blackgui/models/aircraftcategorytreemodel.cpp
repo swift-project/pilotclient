@@ -41,7 +41,7 @@ namespace BlackGui
 
         void CAircraftCategoryTreeModel::updateContainer(const CAircraftCategoryList &categories)
         {
-            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Wrong thread");
+            Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Wrong thread");
 
             this->clear();
             if (categories.isEmpty())  { return; }

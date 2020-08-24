@@ -501,7 +501,7 @@ namespace BlackSimPlugin
             if (this->isShuttingDownOrDisconnected()) { return false; }
 
             // entry checks
-            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
+            Q_ASSERT_X(CThreadUtils::isInThisThread(this),  Q_FUNC_INFO, "thread");
             Q_ASSERT_X(!newRemoteAircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "empty callsign");
             Q_ASSERT_X(newRemoteAircraft.hasModelString(), Q_FUNC_INFO, "missing model string");
 
@@ -557,7 +557,7 @@ namespace BlackSimPlugin
             if (this->isShuttingDownOrDisconnected()) { return false; }
 
             // only remove from sim
-            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thread");
+            Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "wrong thread");
             if (callsign.isEmpty()) { return false; } // can happen if an object is not an aircraft
 
             // really remove from simulator
@@ -622,7 +622,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFlightgear::updateRemoteAircraft()
         {
-            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "thread");
+            Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "thread");
 
             const int remoteAircraftNo = this->getAircraftInRangeCount();
             if (remoteAircraftNo < 1) { return; }
@@ -1042,7 +1042,7 @@ namespace BlackSimPlugin
         void CSimulatorFlightgearListener::checkConnection()
         {
             if (this->isShuttingDown()) { return; }
-            Q_ASSERT_X(!CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background");
+            Q_ASSERT_X(!CThreadUtils::thisIsMainThread(), Q_FUNC_INFO, "Expect to run in background");
 
             QString dbusAddress = m_fgSswiftBusServerSetting.getThreadLocal();
             if (CDBusServer::isSessionOrSystemAddress(dbusAddress))

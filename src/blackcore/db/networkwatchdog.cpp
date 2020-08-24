@@ -234,7 +234,7 @@ namespace BlackCore
             if (m_disableNetworkCheck) { return; } // ignore with disabled check
 
             // shift to thread
-            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            if (!CThreadUtils::isInThisThread(this))
             {
                 QPointer<CNetworkWatchdog> myself(this);
                 QTimer::singleShot(0, this, [ = ]
@@ -315,7 +315,7 @@ namespace BlackCore
             nw->close();
 
             if (!sApp || sApp->isShuttingDown()) { return; }
-            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Wrong thread");
+            Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Wrong thread");
 
             m_lastClientPingSuccess = ok;
             {

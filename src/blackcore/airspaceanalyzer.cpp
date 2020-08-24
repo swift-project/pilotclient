@@ -219,7 +219,7 @@ namespace BlackCore
 
     void CAirspaceAnalyzer::analyzeAirspace()
     {
-        Q_ASSERT_X(!CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background thread");
+        Q_ASSERT_X(!CThreadUtils::thisIsMainThread(), Q_FUNC_INFO, "Expect to run in background thread");
         Q_ASSERT_X(thread() != qApp->thread(), Q_FUNC_INFO, "Expect to run in background thread affinity");
 
         bool restricted, enabled;

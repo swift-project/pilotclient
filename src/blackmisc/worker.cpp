@@ -163,7 +163,7 @@ namespace BlackMisc
         if (hasStarted()) { return; }
 
         // avoid message "QObject: Cannot create children for a parent that is in a different thread"
-        Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(m_owner), Q_FUNC_INFO, "Needs to be started in owner thread");
+        Q_ASSERT_X(CThreadUtils::isInThisThread(m_owner), Q_FUNC_INFO, "Needs to be started in owner thread");
         emit this->aboutToStart();
         setStarted();
         auto *thread = new CRegularThread(m_owner);
@@ -203,7 +203,7 @@ namespace BlackMisc
         if (this->thread() == m_owner->thread()) { return; }
 
         // called by own thread, will deadlock, return
-        if (CThreadUtils::isCurrentThreadObjectThread(this)) { return; }
+        if (CThreadUtils::isInThisThread(this)) { return; }
 
         QThread *workerThread = thread(); // must be before quit()
         this->quit();
@@ -224,7 +224,7 @@ namespace BlackMisc
     void CContinuousWorker::startUpdating(int updateTimeSecs)
     {
         Q_ASSERT_X(this->hasStarted(), Q_FUNC_INFO, "Worker not yet started");
-        if (!CThreadUtils::isCurrentThreadObjectThread(this))
+        if (!CThreadUtils::isInThisThread(this))
         {
             // shift in correct thread
             QPointer<CContinuousWorker> myself(this);
@@ -254,7 +254,7 @@ namespace BlackMisc
         if (!m_updateTimer.isActive()) { return; }
 
         // avoid "Timers cannot be stopped from another thread"
-        if (CThreadUtils::isCurrentThreadObjectThread(&m_updateTimer))
+        if (CThreadUtils::isInThisThread(&m_updateTimer))
         {
             m_updateTimer.stop();
         }

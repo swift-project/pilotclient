@@ -19,12 +19,12 @@
 
 namespace BlackMisc
 {
-    bool CThreadUtils::isCurrentThreadObjectThread(const QObject *toBeTested)
+    bool CThreadUtils::isInThisThread(const QObject *toBeTested)
     {
         return QThread::currentThread() == toBeTested->thread();
     }
 
-    bool CThreadUtils::isCurrentThreadApplicationThread()
+    bool CThreadUtils::thisIsMainThread()
     {
         return qApp && QThread::currentThread() == qApp->thread();
     }

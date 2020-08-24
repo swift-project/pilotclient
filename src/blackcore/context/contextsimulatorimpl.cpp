@@ -461,7 +461,7 @@ namespace BlackCore
             Q_ASSERT(this->getIContextApplication());
             Q_ASSERT(this->getIContextApplication()->isUsingImplementingObject());
             Q_ASSERT(!simulatorPluginInfo.isUnspecified());
-            Q_ASSERT(CThreadUtils::isCurrentThreadApplicationThread()); // only run in main thread
+            Q_ASSERT(CThreadUtils::thisIsMainThread()); // only run in main thread
 
             // Is a plugin already loaded?
             if (!m_simulatorPlugin.first.isUnspecified())

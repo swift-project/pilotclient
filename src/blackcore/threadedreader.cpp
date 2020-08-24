@@ -167,7 +167,7 @@ namespace BlackCore
         if (!this->isEnabled())  { return false; }
 
         // MS 2019-02-23 isAbandoned() check only makes sense when called by worker thread (T541)
-        if (CThreadUtils::isCurrentThreadObjectThread(this) && this->isAbandoned()) { return false; }
+        if (CThreadUtils::isInThisThread(this) && this->isAbandoned()) { return false; }
 
         if (!m_unitTest && (!sApp || sApp->isShuttingDown())) { return false; }
         return true;

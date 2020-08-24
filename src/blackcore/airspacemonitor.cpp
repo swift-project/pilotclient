@@ -562,7 +562,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::onReceivedAtcBookings(const CAtcStationList &bookedStations)
     {
-        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
+        Q_ASSERT(CThreadUtils::isInThisThread(this));
         if (bookedStations.isEmpty())
         {
             m_atcStationsBooked.clear();
@@ -592,7 +592,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::onReceivedVatsimDataFile()
     {
-        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
+        Q_ASSERT(CThreadUtils::isInThisThread(this));
         if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return; }
         CClientList clients(this->getClients()); // copy
         bool changed = false;
@@ -731,7 +731,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::onAtcPositionUpdate(const CCallsign &callsign, const CFrequency &frequency, const CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range)
     {
-        Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thread");
+        Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "wrong thread");
         if (!this->isConnectedAndNotShuttingDown()) { return; }
 
         const CAtcStationList stationsWithCallsign = m_atcStationsOnline.findByCallsign(callsign);
@@ -780,7 +780,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::onAtcControllerDisconnected(const CCallsign &callsign)
     {
-        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
+        Q_ASSERT(CThreadUtils::isInThisThread(this));
         if (!this->isConnectedAndNotShuttingDown()) { return; }
 
         this->removeClient(callsign);
@@ -798,7 +798,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::onAtisReceived(const CCallsign &callsign, const CInformationMessage &atisMessage)
     {
-        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
+        Q_ASSERT(CThreadUtils::isInThisThread(this));
         if (!this->isConnectedAndNotShuttingDown() || callsign.isEmpty()) return;
         const bool changedAtis = m_atcStationsOnline.updateIfMessageChanged(atisMessage, callsign, true);
 
@@ -811,7 +811,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::onAtisLogoffTimeReceived(const CCallsign &callsign, const QString &zuluTime)
     {
-        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
+        Q_ASSERT(CThreadUtils::isInThisThread(this));
         if (!this->isConnectedAndNotShuttingDown()) { return; }
 
         if (zuluTime.length() == 4)
@@ -837,7 +837,7 @@ namespace BlackCore
         // ES sends FsInn packets for callsigns such as ACCGER1, which are hard to distinguish
         // 1) checking if they are already in the list checks again ATC position which is safe
         // 2) the ATC alike callsign check is guessing
-        Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "not in main thread");
+        Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "not in main thread");
         if (!callsign.isValid()) { return; } // aircraft OBS, other invalid callsigns
         if (!this->isConnectedAndNotShuttingDown()) { return; }
 
@@ -899,7 +899,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::onIcaoCodesReceived(const CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery)
     {
-        Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "not in main thread");
+        Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "not in main thread");
         if (!this->isConnectedAndNotShuttingDown()) { return; }
         if (CBuildConfig::isLocalDeveloperDebugBuild()) { BLACK_VERIFY_X(callsign.isValid(), Q_FUNC_INFO, "invalid callsign"); }
         if (!callsign.isValid()) { return; }
@@ -1217,7 +1217,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::onAircraftUpdateReceived(const CAircraftSituation &situation, const CTransponder &transponder)
     {
-        Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Called in different thread");
+        Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Called in different thread");
         if (!this->isConnectedAndNotShuttingDown()) { return; }
 
         const CCallsign callsign(situation.getCallsign());
@@ -1267,7 +1267,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::onAircraftInterimUpdateReceived(const CAircraftSituation &situation)
     {
-        Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Called in different thread");
+        Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Called in different thread");
         if (!this->isConnectedAndNotShuttingDown()) { return; }
 
         const CCallsign callsign(situation.getCallsign());
@@ -1329,7 +1329,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::onPilotDisconnected(const CCallsign &callsign)
     {
-        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
+        Q_ASSERT(CThreadUtils::isInThisThread(this));
 
         // in case of inconsistencies I always remove here
         this->removeFromAircraftCachesAndLogs(callsign);
@@ -1340,7 +1340,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::onFrequencyReceived(const CCallsign &callsign, const CFrequency &frequency)
     {
-        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
+        Q_ASSERT(CThreadUtils::isInThisThread(this));
 
         // update
         const CPropertyIndexVariantMap vm({CSimulatedAircraft::IndexCom1System, CComSystem::IndexActiveFrequency}, CVariant::from(frequency));
@@ -1350,7 +1350,7 @@ namespace BlackCore
     void CAirspaceMonitor::onRevBAircraftConfigReceived(const CCallsign &callsign, const QString &config, qint64 currentOffsetMs)
     {
 
-        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
+        Q_ASSERT(CThreadUtils::isInThisThread(this));
         BLACK_AUDIT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
         if (callsign.isEmpty()) { return; }
 
@@ -1410,7 +1410,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::onAircraftConfigReceived(const CCallsign &callsign, const QJsonObject &jsonObject, qint64 currentOffsetMs)
     {
-        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
+        Q_ASSERT(CThreadUtils::isInThisThread(this));
         BLACK_AUDIT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
         if (callsign.isEmpty()) { return; }
 

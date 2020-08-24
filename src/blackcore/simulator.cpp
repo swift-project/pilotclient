@@ -343,7 +343,7 @@ namespace BlackCore
     void ISimulator::safeKillTimer()
     {
         if (m_timerId < 0) { return; }
-        BLACK_AUDIT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Try to kill timer from another thread");
+        BLACK_AUDIT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Try to kill timer from another thread");
         this->killTimer(m_timerId);
         m_timerId = -1;
     }
@@ -816,7 +816,7 @@ namespace BlackCore
         // when changing back from restricted->unrestricted an one time update is required
         if (!snapshot.isRestricted() && !snapshot.isRestrictionChanged()) { return; }
 
-        Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Needs to run in object thread");
+        Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Needs to run in object thread");
         Q_ASSERT_X(snapshot.generatingThreadName() != QThread::currentThread()->objectName(), Q_FUNC_INFO, "Expect snapshot from background thread");
 
         // restricted snapshot values?
@@ -1464,7 +1464,7 @@ namespace BlackCore
     void ISimulatorListener::start()
     {
         if (m_isRunning) { return; }
-        if (!CThreadUtils::isCurrentThreadObjectThread(this))
+        if (!CThreadUtils::isInThisThread(this))
         {
             // call in correct thread
             QPointer<ISimulatorListener> myself(this);
@@ -1479,7 +1479,7 @@ namespace BlackCore
     void ISimulatorListener::stop()
     {
         if (!m_isRunning) { return; }
-        if (!CThreadUtils::isCurrentThreadObjectThread(this))
+        if (!CThreadUtils::isInThisThread(this))
         {
             // call in correct thread
             QPointer<ISimulatorListener> myself(this);
@@ -1494,7 +1494,7 @@ namespace BlackCore
     void ISimulatorListener::check()
     {
         if (!m_isRunning) { return; }
-        if (!CThreadUtils::isCurrentThreadObjectThread(this))
+        if (!CThreadUtils::isInThisThread(this))
         {
             // call in correct thread
             QPointer<ISimulatorListener> myself(this);

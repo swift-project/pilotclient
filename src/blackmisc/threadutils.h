@@ -27,10 +27,14 @@ namespace BlackMisc
         CThreadUtils() = delete;
 
         //! Is the current thread the object's thread?
-        static bool isCurrentThreadObjectThread(const QObject *toBeTested);
+        //! \deprecated
+        //! \todo Refactor to inline method
+        static bool isInThisThread(const QObject *toBeTested);
 
         //! Is the current thread the application thread?
-        static bool isCurrentThreadApplicationThread();
+        //! \deprecated
+        //! \todo Refactor to inline method
+        static bool thisIsMainThread();
 
         //! Info about current thread, for debug messages
         static QString currentThreadInfo();

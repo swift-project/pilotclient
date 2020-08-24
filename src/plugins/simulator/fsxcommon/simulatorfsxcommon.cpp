@@ -1513,7 +1513,7 @@ namespace BlackSimPlugin
             const bool probe = newRemoteAircraft.isTerrainProbe();
 
             // entry checks
-            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
+            Q_ASSERT_X(CThreadUtils::isInThisThread(this),  Q_FUNC_INFO, "thread");
             Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
             Q_ASSERT_X(newRemoteAircraft.hasModelString(), Q_FUNC_INFO, "missing model string");
 
@@ -1701,7 +1701,7 @@ namespace BlackSimPlugin
         {
             if (coordinate.isNull()) { return false; }
             if (!this->isUsingFsxTerrainProbe()) { return false; }
-            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
+            Q_ASSERT_X(CThreadUtils::isInThisThread(this),  Q_FUNC_INFO, "thread");
 
             // static const QString modelString("OrcaWhale");
             // static const QString modelString("Water Drop"); // not working on P3Dx86/FSX, no requests on that id possible
@@ -1745,7 +1745,7 @@ namespace BlackSimPlugin
         bool CSimulatorFsxCommon::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
             // only remove from sim
-            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thread");
+            Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "wrong thread");
             if (callsign.isEmpty()) { return false; } // can happen if an object is not an aircraft
 
             // clean up anyway
@@ -1939,7 +1939,7 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::updateRemoteAircraft()
         {
             static_assert(sizeof(DataDefinitionRemoteAircraftPartsWithoutLights) == sizeof(double) * 10, "DataDefinitionRemoteAircraftPartsWithoutLights has an incorrect size.");
-            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "thread");
+            Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "thread");
 
             // Freeze interpolation while paused
             if (this->isPaused() && m_pausedSimFreezesInterpolation) { return; }
@@ -2395,7 +2395,7 @@ namespace BlackSimPlugin
             if (this->isShuttingDownOrDisconnected()) { return; }
             if (weatherGrid.isEmpty()) { return; }
 
-            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            if (!CThreadUtils::isInThisThread(this))
             {
                 BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Wrong thread");
                 QPointer<CSimulatorFsxCommon> myself(this);
@@ -2841,7 +2841,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommonListener::checkConnection()
         {
-            Q_ASSERT_X(!CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background");
+            Q_ASSERT_X(!CThreadUtils::thisIsMainThread(), Q_FUNC_INFO, "Expect to run in background");
 
             // check before we access the sim. connection
             if (this->isShuttingDown() || this->thread()->isInterruptionRequested())

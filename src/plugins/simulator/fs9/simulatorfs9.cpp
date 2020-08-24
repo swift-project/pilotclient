@@ -515,7 +515,7 @@ namespace BlackSimPlugin
             if (this->isShuttingDownOrDisconnected()) { return; }
             if (weatherGrid.isEmpty()) { return; }
 
-            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            if (!CThreadUtils::isInThisThread(this))
             {
                 BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Wrong thread");
                 QPointer<CSimulatorFs9> myself(this);

@@ -62,7 +62,7 @@ namespace BlackMisc
         Q_UNUSED(event)
         if (m_timerId >= 0)
         {
-            BLACK_AUDIT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Try to kill timer from another thread");
+            BLACK_AUDIT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Try to kill timer from another thread");
             this->killTimer(m_timerId);
         }
         m_timerId = -1;

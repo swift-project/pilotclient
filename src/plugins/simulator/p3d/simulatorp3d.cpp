@@ -108,7 +108,7 @@ namespace BlackSimPlugin
             if (this->isShuttingDown()) { return false; }
             if (!this->isConnected())   { return false; }
 
-            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
+            Q_ASSERT_X(CThreadUtils::isInThisThread(this),  Q_FUNC_INFO, "thread");
             const bool hasHeight = reference.hasMSLGeodeticHeight();
             const double latDeg = reference.latitude().value(CAngleUnit::deg());
             const double lngDeg = reference.longitude().value(CAngleUnit::deg());

@@ -395,7 +395,7 @@ namespace BlackMisc
 
             // run in page thread
             //! \todo KB 2018-01 is this OK or should it go to CValuePage::setValuesFromCache?
-            if (CThreadUtils::isCurrentThreadObjectThread(this->m_page)) { queue->setQueuedValueFromCache(key); }
+            if (CThreadUtils::isInThisThread(this->m_page)) { queue->setQueuedValueFromCache(key); }
             else
             {
                 QPointer<QObject> myself(queue);

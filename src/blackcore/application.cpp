@@ -1769,7 +1769,7 @@ namespace BlackCore
         {
             // should be now in QAM thread
             if (!sApp || sApp->isShuttingDown()) { return; }
-            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(sApp->m_accessManager), Q_FUNC_INFO, "Wrong thread, must be QAM thread");
+            Q_ASSERT_X(CThreadUtils::isInThisThread(sApp->m_accessManager), Q_FUNC_INFO, "Wrong thread, must be QAM thread");
             this->httpRequestImpl(request, logId, callback, progress, maxRedirects, getPostOrDeleteRequest);
         });
     }
@@ -1782,7 +1782,7 @@ namespace BlackCore
         {
             // should be now in QAM thread
             if (!sApp || sApp->isShuttingDown()) { return; }
-            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(sApp->m_accessManager), Q_FUNC_INFO, "Wrong thread, must be QAM thread");
+            Q_ASSERT_X(CThreadUtils::isInThisThread(sApp->m_accessManager), Q_FUNC_INFO, "Wrong thread, must be QAM thread");
             const QNetworkAccessManager::NetworkAccessibility accessibility = m_accessManager->networkAccessible();
             m_networkWatchDog->setNetworkAccessibility(accessibility);
         });
@@ -1805,13 +1805,13 @@ namespace BlackCore
 
         QWriteLocker locker(&m_accessManagerLock);
         Q_ASSERT_X(m_accessManager->thread() == qApp->thread(), Q_FUNC_INFO, "Network manager supposed to be in main thread");
-        if (!CThreadUtils::isCurrentThreadObjectThread(m_accessManager))
+        if (!CThreadUtils::isInThisThread(m_accessManager))
         {
             this->httpRequestImplInQAMThread(request, logId, callback, progress, maxRedirects, getPostOrDeleteRequest);
             return nullptr; // not yet started, will be called again in QAM thread
         }
 
-        Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(m_accessManager), Q_FUNC_INFO, "Network manager thread mismatch");
+        Q_ASSERT_X(CThreadUtils::isInThisThread(m_accessManager), Q_FUNC_INFO, "Network manager thread mismatch");
         QNetworkRequest copiedRequest = CNetworkUtils::getSwiftNetworkRequest(request, this->getApplicationNameAndVersion());
 
         // If URL is one of the shared URLs, add swift client SSL certificate to request

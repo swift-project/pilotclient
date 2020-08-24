@@ -225,7 +225,7 @@ namespace BlackCore
 
         void CFSDClient::connectToServer()
         {
-            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            if (!CThreadUtils::isInThisThread(this))
             {
                 QMetaObject::invokeMethod(this, [ = ]
                 {
@@ -265,7 +265,7 @@ namespace BlackCore
 
         void CFSDClient::disconnectFromServer()
         {
-            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            if (!CThreadUtils::isInThisThread(this))
             {
                 QMetaObject::invokeMethod(this, [ = ]
                 {
@@ -441,7 +441,7 @@ namespace BlackCore
         void CFSDClient::sendClientQuery(ClientQueryType queryType, const CCallsign &receiver, const QStringList &queryData)
         {
             if (queryType == ClientQueryType::Unknown) { return; }
-            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            if (!CThreadUtils::isInThisThread(this))
             {
                 QMetaObject::invokeMethod(this, [ = ]
                 {
@@ -514,7 +514,7 @@ namespace BlackCore
         void CFSDClient::sendTextMessages(const CTextMessageList &messages)
         {
             if (messages.isEmpty()) { return; }
-            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            if (!CThreadUtils::isInThisThread(this))
             {
                 QMetaObject::invokeMethod(this, [ = ]
                 {
@@ -565,7 +565,7 @@ namespace BlackCore
         void CFSDClient::sendTextMessage(TextMessageGroups receiverGroup, const QString &message)
         {
             if (message.isEmpty()) { return; }
-            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            if (!CThreadUtils::isInThisThread(this))
             {
                 QMetaObject::invokeMethod(this, [ = ]
                 {
@@ -614,7 +614,7 @@ namespace BlackCore
 
         void CFSDClient::sendFlightPlan(const CFlightPlan &flightPlan)
         {
-            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            if (!CThreadUtils::isInThisThread(this))
             {
                 QMetaObject::invokeMethod(this, [ = ]
                 {
@@ -671,7 +671,7 @@ namespace BlackCore
 
         void CFSDClient::sendPlaneInfoRequest(const CCallsign &receiver)
         {
-            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            if (!CThreadUtils::isInThisThread(this))
             {
                 QMetaObject::invokeMethod(this, [ = ]
                 {
@@ -687,7 +687,7 @@ namespace BlackCore
 
         void CFSDClient::sendPlaneInfoRequestFsinn(const CCallsign &callsign)
         {
-            if (!CThreadUtils::isCurrentThreadObjectThread(this))
+            if (!CThreadUtils::isInThisThread(this))
             {
                 QMetaObject::invokeMethod(this, [ = ]
                 {

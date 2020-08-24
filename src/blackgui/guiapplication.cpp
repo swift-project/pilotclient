@@ -1384,7 +1384,7 @@ namespace BlackGui
         // changing widget style is slow, so I try to prevent setting it when nothing changed
         const QString widgetStyle = m_guiSettings.get().getWidgetStyle();
         const QString currentWidgetStyle(this->getWidgetStyle());
-        Q_ASSERT_X(CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Wrong thread");
+        Q_ASSERT_X(CThreadUtils::thisIsMainThread(), Q_FUNC_INFO, "Wrong thread");
         if (!stringCompare(widgetStyle, currentWidgetStyle, Qt::CaseInsensitive))
         {
             const QStringList availableStyles = QStyleFactory::keys();

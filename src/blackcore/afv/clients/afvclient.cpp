@@ -738,7 +738,7 @@ namespace BlackCore
 
             bool CAfvClient::setInputVolumeDb(double valueDb)
             {
-                if (!CThreadUtils::isCurrentThreadObjectThread(this))
+                if (!CThreadUtils::isInThisThread(this))
                 {
                     // call in background thread of AFVClient to avoid lock issues
                     QPointer<CAfvClient> myself(this);
@@ -986,7 +986,7 @@ namespace BlackCore
                 this->stopAudio();
                 this->disconnectFrom();
                 this->quitAndWait();
-                Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Needs to be back in current thread");
+                Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Needs to be back in current thread");
             }
 
             void CAfvClient::initialize()
@@ -1398,7 +1398,7 @@ namespace BlackCore
 
             bool CAfvClient::setOutputVolumeDb(double valueDb)
             {
-                if (!CThreadUtils::isCurrentThreadObjectThread(this))
+                if (!CThreadUtils::isInThisThread(this))
                 {
                     // call in background thread of AFVClient to avoid lock issues
                     QPointer<CAfvClient> myself(this);

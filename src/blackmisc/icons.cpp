@@ -1340,7 +1340,7 @@ namespace BlackMisc
     {
         //! \fixme KB 20170701 noticed the "cache" is not threadsafe. However, there has never be an issue so far. Added thread assert.
         Q_ASSERT_X(!relativeFileName.isEmpty(), Q_FUNC_INFO, "missing filename");
-        Q_ASSERT_X(CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "not thread safe");
+        Q_ASSERT_X(CThreadUtils::thisIsMainThread(), Q_FUNC_INFO, "not thread safe");
 
         fullFilePath = CFileUtils::appendFilePaths(CDirectoryUtils::imagesDirectory(), relativeFileName);
         if (!getResourceFileCache().contains(relativeFileName))

@@ -443,7 +443,7 @@ namespace BlackMisc
                 static CCentralMultiSimulatorModelCachesProvider &modelCachesInstance()
                 {
                     static CCentralMultiSimulatorModelCachesProvider c("Central model caches provider");
-                    Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(&c), Q_FUNC_INFO, "Wrong thread");
+                    Q_ASSERT_X(CThreadUtils::isInThisThread(&c), Q_FUNC_INFO, "Wrong thread");
                     return c;
                 }
 
@@ -496,7 +496,7 @@ namespace BlackMisc
                 static CCentralMultiSimulatorModelSetCachesProvider &modelCachesInstance()
                 {
                     static CCentralMultiSimulatorModelSetCachesProvider c("Central model sets provider");
-                    Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(&c), Q_FUNC_INFO, "Wrong thread");
+                    Q_ASSERT_X(CThreadUtils::isInThisThread(&c), Q_FUNC_INFO, "Wrong thread");
                     return c;
                 }
 

@@ -217,7 +217,7 @@ namespace BlackCore
             if (m_voiceClient)
             {
                 m_voiceClient->gracefulShutdown();
-                Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(m_voiceClient), Q_FUNC_INFO, "Needs to be back in current thread");
+                Q_ASSERT_X(CThreadUtils::isInThisThread(m_voiceClient), Q_FUNC_INFO, "Needs to be back in current thread");
                 m_voiceClient->deleteLater();
                 m_voiceClient = nullptr;
 #ifdef Q_OS_WIN

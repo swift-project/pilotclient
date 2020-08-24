@@ -14,7 +14,7 @@ namespace BlackMisc
 {
     void CDigestSignal::inputSignal()
     {
-        if (!CThreadUtils::isCurrentThreadObjectThread(this))
+        if (!CThreadUtils::isInThisThread(this))
         {
             // call in correct thread
             const QPointer<CDigestSignal> myself(this);

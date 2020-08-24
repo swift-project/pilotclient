@@ -92,7 +92,7 @@ namespace BlackGui
         m_pendingIds.clear();
         if (m_timerId != -1)
         {
-            BLACK_AUDIT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Try to kill timer from another thread");
+            BLACK_AUDIT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Try to kill timer from another thread");
             this->killTimer(m_timerId);
         }
         m_timerId = -1;
@@ -106,7 +106,7 @@ namespace BlackGui
         m_delayMs = delay;
         if (m_timerId != -1)
         {
-            BLACK_AUDIT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Try to kill timer from another thread");
+            BLACK_AUDIT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Try to kill timer from another thread");
             this->killTimer(m_timerId);
         }
         m_timerId = this->startTimer(m_delayMs);

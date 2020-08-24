@@ -1012,7 +1012,7 @@ namespace BlackCore
 
     void CWebDataServices::initReaders(CWebReaderFlags::WebReader readersNeeded, CEntityFlags::Entity entities)
     {
-        Q_ASSERT_X(CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "shall run in main application thread");
+        Q_ASSERT_X(CThreadUtils::thisIsMainThread(), Q_FUNC_INFO, "shall run in main application thread");
 
         //
         // ---- "metadata" reader, 1 will trigger read directly during init
@@ -1173,7 +1173,7 @@ namespace BlackCore
     {
         // run in correct thread
         if (m_shuttingDown) { return; }
-        if (!CThreadUtils::isCurrentThreadObjectThread(this))
+        if (!CThreadUtils::isInThisThread(this))
         {
             const QPointer<CWebDataServices> myself(this);
             QTimer::singleShot(0, this, [ = ]
@@ -1215,7 +1215,7 @@ namespace BlackCore
     {
         // run in correct thread
         if (m_shuttingDown) { return; }
-        if (!CThreadUtils::isCurrentThreadObjectThread(this))
+        if (!CThreadUtils::isInThisThread(this))
         {
             const QPointer<CWebDataServices> myself(this);
             QTimer::singleShot(0, this, [ = ]
@@ -1582,7 +1582,7 @@ namespace BlackCore
         if (m_icaoDataReader)
         {
             // force update to background reading if reader is already in another thread
-            bool ib = inBackground || !CThreadUtils::isCurrentThreadObjectThread(m_icaoDataReader);
+            bool ib = inBackground || !CThreadUtils::isInThisThread(m_icaoDataReader);
             if (ib)
             {
                 CLogMessage(this).info(u"Reading from disk in background: %1") << m_icaoDataReader->getSupportedEntitiesAsString();
@@ -1600,7 +1600,7 @@ namespace BlackCore
         if (m_modelDataReader)
         {
             // force update to background reading if reader is already in another thread
-            bool ib = inBackground || !CThreadUtils::isCurrentThreadObjectThread(m_modelDataReader);
+            bool ib = inBackground || !CThreadUtils::isInThisThread(m_modelDataReader);
             if (ib)
             {
                 CLogMessage(this).info(u"Reading from disk in background: %1") << m_modelDataReader->getSupportedEntitiesAsString();
@@ -1618,7 +1618,7 @@ namespace BlackCore
         if (m_airportDataReader)
         {
             // force update to background reading if reader is already in another thread
-            bool ib = inBackground || !CThreadUtils::isCurrentThreadObjectThread(m_airportDataReader);
+            bool ib = inBackground || !CThreadUtils::isInThisThread(m_airportDataReader);
             if (ib)
             {
                 CLogMessage(this).info(u"Reading from disk in background: %1") << m_airportDataReader->getSupportedEntitiesAsString();
