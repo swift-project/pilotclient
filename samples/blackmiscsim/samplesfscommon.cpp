@@ -10,7 +10,7 @@
 //! \ingroup sampleblackmiscsim
 
 #include "samplesfscommon.h"
-#include "blackmisc/sampleutils.h"
+#include "sampleutils.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"

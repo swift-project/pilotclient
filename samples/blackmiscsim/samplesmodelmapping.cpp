@@ -10,10 +10,10 @@
 //! \ingroup sampleblackmiscsim
 
 #include "samplesmodelmapping.h"
+#include "sampleutils.h"
 #include "blackcore/aircraftmatcher.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/sampleutils.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"

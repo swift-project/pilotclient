@@ -8,19 +8,17 @@
 
 //! \file
 
-#ifndef BLACKMISC_SAMPLEUTILS_H
-#define BLACKMISC_SAMPLEUTILS_H
+#ifndef BLACKSAMPLE_SAMPLEUTILS_H
+#define BLACKSAMPLE_SAMPLEUTILS_H
 
-#include "blackmisc/blackmiscexport.h"
-#include <QString>
-#include <QStringList>
-
+class QString;
+class QStringList;
 class QTextStream;
 
 namespace BlackMisc
 {
     //! Utils for sample programms
-    class BLACKMISC_EXPORT CSampleUtils
+    class CSampleUtils
     {
     public:
         //! Select directory among given ones

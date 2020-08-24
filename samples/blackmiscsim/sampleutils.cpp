@@ -6,8 +6,10 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackmisc/sampleutils.h"
+#include "sampleutils.h"
 
+#include <QString>
+#include <QStringList>
 #include <QTextStream>
 #include <QtGlobal>
 
