@@ -180,9 +180,6 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Db::CDistribution getOwnDistribution() const;
 
-        //! Currently running in application thread?
-        bool isApplicationThread() const;
-
         //! String with beta, dev. and version
         const QString &versionStringDetailed() const;
 

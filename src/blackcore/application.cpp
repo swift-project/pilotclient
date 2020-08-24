@@ -495,11 +495,6 @@ namespace BlackCore
         return m_webDataServices.data();
     }
 
-    bool CApplication::isApplicationThread() const
-    {
-        return CThreadUtils::isCurrentThreadApplicationThread();
-    }
-
     const QString &CApplication::versionStringDetailed() const
     {
         if (this->isDeveloperFlagSet() && CBuildConfig::isLocalDeveloperDebugBuild())
