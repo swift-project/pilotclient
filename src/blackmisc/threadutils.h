@@ -26,35 +26,22 @@ namespace BlackMisc
         //! No constructor
         CThreadUtils() = delete;
 
-        //! Is the current thread the QObject's thread?
-        //! \remarks can be used as ASSERT check for threaded objects
+        //! Is the current thread the object's thread?
         static bool isCurrentThreadObjectThread(const QObject *toBeTested);
 
-        //! Is the application thread the QObject's thread?
-        //! \remarks can be used as ASSERT check for threaded objects
+        //! Is the application thread the object's thread?
         static bool isApplicationThreadObjectThread(const QObject *toBeTested);
 
-        //! Is the application thread the QObject's thread?
-        //! \remarks can be used as ASSERT check for threaded objects
+        //! Is the application thread the object's thread?
         static bool isApplicationThread(const QThread *toBeTested);
 
-        //! Is the current thread the Application thread?
-        //! \remarks can be used as ASSERT check for threaded objects
+        //! Is the current thread the application thread?
         static bool isCurrentThreadApplicationThread();
 
-        //! Priority to string
-        static const QString &priorityToString(QThread::Priority priority);
+        //! Info about current thread, for debug messages
+        static QString currentThreadInfo();
 
-        //! Thread to int string info
-        static const QString threadToString(const void *t);
-
-        //! Info about current thread
-        static const QString threadInfo(const QThread *thread);
-
-        //! Info about current thread
-        static const QString currentThreadInfo();
-
-        //! Call in object's thread IF not already in object's thread
+        //! Call in object's thread if not already in object's thread
         static bool callInObjectThread(QObject *object, std::function<void()> callFunct);
     };
 } // ns

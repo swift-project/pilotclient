@@ -1008,7 +1008,7 @@ namespace BlackCore
                     if (hr == S_OK || hr == S_FALSE) { m_winCoInitialized = true; }
                 }
 #endif
-                CLogMessage(this).info(u"Initialize AFV client in thread: %1") << CThreadUtils::threadInfo(this->thread());
+                CLogMessage(this).info(u"Initialize AFV client in thread %1") << CThreadUtils::currentThreadInfo();
             }
 
             void CAfvClient::cleanup()
