@@ -149,10 +149,7 @@ namespace BlackMisc
     uint CPropertyIndexVariantMap::getValueHash() const
     {
         // there is no hash for map, so I use this workaround here
-        const QString s = this->toQString(false);
-        QList<uint> h;
-        h << qHash(s);
-        return BlackMisc::calculateHash(h, "CPropertyIndexVariantMap");
+        return qHash(this->toQString(false));
     }
 } // namespace
 

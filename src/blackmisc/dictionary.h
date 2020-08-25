@@ -537,17 +537,6 @@ namespace BlackMisc
         };
     }
 
-    /*!
-     * Calculate a single hash value based on a list of individual hash values.
-     * \param values
-     * \param className Will be hashed and used as an additional value in the list.
-     */
-    //! @{
-    BLACKMISC_EXPORT uint calculateHash(const QList<uint> &values, const char *className);
-
-    BLACKMISC_EXPORT uint calculateHash(const QList<int> &values, const char *className);
-    //! @}
-
 } // namespace BlackMisc
 
 #endif // BLACKMISC_DICTIONARY_H

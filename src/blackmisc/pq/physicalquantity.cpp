@@ -424,11 +424,9 @@ namespace BlackMisc
         template <class MU, class PQ>
         uint CPhysicalQuantity<MU, PQ>::getValueHash() const
         {
-            QList<uint> hashs;
             // there is no double qHash
             // also unit and rounding has to be considered
-            hashs << qHash(this->valueRoundedWithUnit(MU::defaultUnit()));
-            return calculateHash(hashs, "PQ");
+            return qHash(this->valueRoundedWithUnit(MU::defaultUnit()));
         }
 
         template <class MU, class PQ>
