@@ -15,6 +15,7 @@
 #include "blackmisc/integersequence.h"
 #include <QHash>
 #include <QString>
+#include <QLatin1String>
 #include <type_traits>
 #include <functional>
 
@@ -101,6 +102,24 @@ inline uint qHash(const std::string &key) { return qHash(QString::fromStdString(
 namespace BlackMisc
 {
     class CVariant;
+
+    /*!
+     * Simple literal type containing a single QLatin1String.
+     *
+     * Just useful for encapsulating a QLatin1String in a way that inhibits implicit conversion to QString
+     * to avoid ambiguities in overload resolution.
+     */
+    struct CExplicitLatin1String
+    {
+        //! Embedded string.
+        const QLatin1String m_latin1;
+
+        //! Implicit constructor.
+        constexpr CExplicitLatin1String(QLatin1String s) : m_latin1(s) {}
+
+        //! Implicit conversion.
+        constexpr operator QLatin1String() const { return m_latin1; }
+    };
 
     // *INDENT-OFF*
     /*!

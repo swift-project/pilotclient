@@ -32,27 +32,6 @@ class QDateTime;
 class QPixmap;
 class QStringList;
 
-namespace BlackMisc
-{
-    /*!
-     * Simple literal type containing a single QLatin1String.
-     *
-     * Just useful for encapsulating a QLatin1String in a way that inhibits implicit conversion to QString
-     * to avoid ambiguities in overload resolution.
-     */
-    struct CExplicitLatin1String
-    {
-        //! Embedded string.
-        const QLatin1String m_latin1;
-
-        //! Implicit constructor.
-        constexpr CExplicitLatin1String(QLatin1String s) : m_latin1(s) {}
-
-        //! Implicit conversion.
-        constexpr operator QLatin1String() const { return m_latin1; }
-    };
-}
-
 /*!
  * \defgroup JSON Streaming operators for JSON
  */
