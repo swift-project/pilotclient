@@ -73,8 +73,7 @@ namespace BlackMisc
         public Mixin::EqualsByMetaClass<CIcon>,
         public Mixin::LessThanByMetaClass<CIcon>,
         public Mixin::CompareByMetaClass<CIcon>,
-        public Mixin::String<CIcon>,
-        public Mixin::Icon<CIcon>
+        public Mixin::String<CIcon>
     {
     public:
         //! Default constructor.
@@ -115,6 +114,9 @@ namespace BlackMisc
 
         //! Corresponding pixmap
         QPixmap toPixmap() const;
+
+        //! Identity function
+        CIcon toIcon() const { return *this; }
 
         //! A QIcon
         QIcon toQIcon() const;
