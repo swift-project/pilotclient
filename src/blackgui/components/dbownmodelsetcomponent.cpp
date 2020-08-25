@@ -24,7 +24,7 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/simulation/distributorlistpreferences.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/orderable.h"

@@ -11,11 +11,9 @@
 #ifndef BLACKMISC_COMPAREFUNCTIONS_H
 #define BLACKMISC_COMPAREFUNCTIONS_H
 
+#include <QFlags>
 #include <QDateTime>
 #include <type_traits>
-
-template<typename Enum>
-class QFlags;
 
 namespace BlackMisc
 {

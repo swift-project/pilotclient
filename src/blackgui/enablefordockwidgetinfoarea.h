@@ -14,6 +14,8 @@
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/connectionguard.h"
 
+class QWidget;
+
 namespace BlackGui
 {
     class CDockWidgetInfoArea;

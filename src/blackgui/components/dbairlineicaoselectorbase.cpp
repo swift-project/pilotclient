@@ -11,7 +11,7 @@
 #include "blackcore/webdataservices.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/db/datastoreutility.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/variant.h"
 
 #include <QCompleter>

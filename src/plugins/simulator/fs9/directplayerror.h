@@ -11,6 +11,10 @@
 #ifndef BLACKSIMPLUGIN_FS9_DIRECTPLAYERROR_H
 #define BLACKSIMPLUGIN_FS9_DIRECTPLAYERROR_H
 
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
 #include <dplay8.h>
 
 namespace BlackSimPlugin

@@ -20,9 +20,10 @@
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/stringutils.h"
+#include "blackmisc/mixin/mixinstring.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/variant.h"
+#include "blackmisc/mixin/mixinmetatype.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/blackmiscexport.h"
 
 #include <QMetaType>

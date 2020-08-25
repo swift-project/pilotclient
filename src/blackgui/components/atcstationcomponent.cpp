@@ -22,7 +22,7 @@
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/weather/metar.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
 #include "ui_atcstationcomponent.h"

@@ -11,6 +11,7 @@
 #include "blackmisc/simulation/xplane/xswiftbusconfigwriter.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/dbusserver.h"
+#include "blackmisc/stringutils.h"
 
 #include <QFile>
 #include <QTextStream>

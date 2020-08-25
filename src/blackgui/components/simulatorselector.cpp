@@ -11,7 +11,7 @@
 #include "blackgui/guiutility.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackmisc/icons.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackconfig/buildconfig.h"
 #include "ui_simulatorselector.h"
 

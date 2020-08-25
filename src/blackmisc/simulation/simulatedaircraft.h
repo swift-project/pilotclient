@@ -28,7 +28,7 @@
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"

@@ -12,7 +12,7 @@
 #include "blackmisc/simulation/flightgear/aircraftmodelloaderflightgear.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/directoryutils.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/logmessage.h"
 
 #include <QDir>

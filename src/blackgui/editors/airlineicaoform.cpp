@@ -17,7 +17,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/icons.h"
 #include "ui_airlineicaoform.h"
 

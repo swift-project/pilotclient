@@ -10,7 +10,7 @@
 //! \file
 //! \ingroup testblackmisc
 
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/input/actionhotkey.h"
 #include "blackmisc/input/actionhotkeylist.h"

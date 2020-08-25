@@ -8,7 +8,7 @@
 
 #include "blackcore/context/contextownaircraft.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"

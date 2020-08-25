@@ -8,6 +8,7 @@
 
 #include "blackmisc/json.h"
 #include "blackmisc/imageutils.h"
+#include "blackmisc/stringutils.h"
 
 #include <QDateTime>
 #include <QJsonDocument>

@@ -8,12 +8,13 @@
 
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/comparefunctions.h"
+#include "blackmisc/stringutils.h"
 
 #include <QCoreApplication>
 #include <QtGlobal>

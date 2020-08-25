@@ -11,6 +11,7 @@
 #include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/worker.h"
+#include "blackmisc/stringutils.h"
 
 #include <QByteArray>
 #include <QDateTime>

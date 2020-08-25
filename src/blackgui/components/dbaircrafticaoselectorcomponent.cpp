@@ -14,7 +14,7 @@
 #include "blackgui/uppercasevalidator.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/db/datastoreutility.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/variant.h"
 

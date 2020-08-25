@@ -8,6 +8,7 @@
 
 #include "blackmisc/fileutils.h"
 #include "blackmisc/directoryutils.h"
+#include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
 
 #include <QCoreApplication>

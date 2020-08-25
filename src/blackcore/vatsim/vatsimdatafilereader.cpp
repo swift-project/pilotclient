@@ -22,7 +22,7 @@
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/range.h"
 #include "blackmisc/simulation/simulatedaircraft.h"

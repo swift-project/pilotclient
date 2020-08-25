@@ -15,10 +15,10 @@
 #undef min
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/dbus.h"
+#include "blackmisc/mixin/mixindbus.h"
 #include "blackmisc/pq/measurementunit.h"
-#include "blackmisc/propertyindexvariantmap.h"
-#include "blackmisc/variant.h"
+#include "blackmisc/mixin/mixinindex.h"
+#include "blackmisc/mixin/mixinmetatype.h"
 
 #include <math.h>
 #include <QDBusArgument>

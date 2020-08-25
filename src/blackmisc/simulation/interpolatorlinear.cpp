@@ -14,7 +14,7 @@
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/range.h"
 #include "blackmisc/sequence.h"

@@ -14,6 +14,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/worker.h"
+#include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
 
 #include <QDateTime>

@@ -9,7 +9,7 @@
 #include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/aviation/logutils.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"

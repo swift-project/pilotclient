@@ -9,7 +9,7 @@
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/columns.h"
 #include "blackgui/models/namevariantpairlistmodel.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/namevariantpair.h"
 #include "blackmisc/propertyindexvariantmap.h"
 

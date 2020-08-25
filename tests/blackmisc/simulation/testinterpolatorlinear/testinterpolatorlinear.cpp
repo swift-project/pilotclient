@@ -29,7 +29,7 @@
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/units.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "test.h"
 
 #include <QCoreApplication>

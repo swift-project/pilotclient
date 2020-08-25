@@ -22,7 +22,7 @@
 #include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/aviation/navsystem.h"
 #include "blackmisc/aviation/transponder.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"

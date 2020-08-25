@@ -19,7 +19,7 @@
 #include "blackgui/labelandicon.h"
 #include "blackcore/webdataservices.h"
 #include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/icons.h"
 
 #include <QCheckBox>

@@ -8,7 +8,7 @@
 
 #include "blackgui/components/colorselector.h"
 #include "blackgui/guiutility.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/rgbcolor.h"
 #include "blackmisc/variant.h"

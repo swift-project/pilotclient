@@ -26,7 +26,7 @@
 #include "blackmisc/pq/constants.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/units.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/iterator.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/sequence.h"

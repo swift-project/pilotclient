@@ -14,7 +14,7 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/context.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/identifierlist.h"

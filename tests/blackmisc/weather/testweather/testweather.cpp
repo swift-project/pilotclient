@@ -12,7 +12,7 @@
 
 #include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/aviation/altitude.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/physicalquantity.h"

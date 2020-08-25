@@ -9,7 +9,7 @@
 #include "blackgui/models/aircraftcategorytreemodel.h"
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/columns.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/variant.h"

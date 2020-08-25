@@ -7,7 +7,7 @@
  */
 
 #include "blackmisc/input/hotkeycombination.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/iterator.h"
 
 #include <QStringList>

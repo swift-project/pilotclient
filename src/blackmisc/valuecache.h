@@ -12,9 +12,10 @@
 #define BLACKMISC_VALUECACHE_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/compare.h"
-#include "blackmisc/dbus.h"
-#include "blackmisc/datastream.h"
+#include "blackmisc/mixin/mixincompare.h"
+#include "blackmisc/mixin/mixindbus.h"
+#include "blackmisc/mixin/mixindatastream.h"
+#include "blackmisc/mixin/mixinhash.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/metaclass.h"
@@ -23,7 +24,7 @@
 #include "blackmisc/slot.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/valuecacheprivate.h"
-#include "blackmisc/variant.h"
+#include "blackmisc/mixin/mixinmetatype.h"
 #include "blackmisc/variantmap.h"
 
 #include <QChar>

@@ -7,7 +7,7 @@
  */
 
 #include "blackmisc/identifierlist.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 
 #include <QString>
 #include <tuple>

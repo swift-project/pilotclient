@@ -7,7 +7,7 @@
  */
 
 #include "blackmisc/network/ecosystem.h"
-#include "blackmisc/icon.h"
+#include "blackmisc/iconlist.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/comparefunctions.h"
 

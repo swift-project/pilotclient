@@ -33,6 +33,7 @@ HEADERS +=  *.h \
             $$files($$PWD/geo/*.h) \
             $$files($$PWD/input/*.h) \
             $$files($$PWD/math/*.h) \
+            $$files($$PWD/mixin/*.h) \
             $$files($$PWD/network/*.h) \
             $$files($$PWD/network/data/*.h) \
             $$files($$PWD/network/settings/*.h) \
@@ -59,6 +60,7 @@ SOURCES +=  *.cpp \
             $$files($$PWD/geo/*.cpp) \
             $$files($$PWD/input/*.cpp) \
             $$files($$PWD/math/*.cpp) \
+            $$files($$PWD/mixin/*.cpp) \
             $$files($$PWD/network/*.cpp) \
             $$files($$PWD/network/settings/*.cpp) \
             $$files($$PWD/network/external/*.cpp) \

@@ -14,8 +14,10 @@
 #include "blackmisc/range.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/json.h"
-#include "blackmisc/variant.h"
-#include "blackmisc/dbus.h"
+#include "blackmisc/mixin/mixinjson.h"
+#include "blackmisc/mixin/mixinmetatype.h"
+#include "blackmisc/mixin/mixindbus.h"
+#include "blackmisc/mixin/mixinstring.h"
 
 #include <algorithm>
 #include <QStringList>

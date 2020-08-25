@@ -12,16 +12,16 @@
 #define BLACKMISC_LOGPATTERN_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/compare.h"
-#include "blackmisc/dbus.h"
-#include "blackmisc/datastream.h"
-#include "blackmisc/dictionary.h"
-#include "blackmisc/icon.h"
+#include "blackmisc/mixin/mixincompare.h"
+#include "blackmisc/mixin/mixindbus.h"
+#include "blackmisc/mixin/mixindatastream.h"
+#include "blackmisc/mixin/mixinhash.h"
+#include "blackmisc/mixin/mixinicon.h"
 #include "blackmisc/metaclass.h"
-#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/mixin/mixinindex.h"
 #include "blackmisc/statusmessage.h"
-#include "blackmisc/stringutils.h"
-#include "blackmisc/variant.h"
+#include "blackmisc/mixin/mixinstring.h"
+#include "blackmisc/mixin/mixinmetatype.h"
 
 #include <QDBusArgument>
 #include <QMetaType>

@@ -12,16 +12,16 @@
 #define BLACKMISC_PQ_PHYSICALQUANTITY_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/dbus.h"
-#include "blackmisc/datastream.h"
-#include "blackmisc/icon.h"
-#include "blackmisc/json.h"
+#include "blackmisc/mixin/mixindbus.h"
+#include "blackmisc/mixin/mixindatastream.h"
+#include "blackmisc/mixin/mixinicon.h"
+#include "blackmisc/mixin/mixinjson.h"
 #include "blackmisc/pq/pqstring.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/propertyindexvariantmap.h"
-#include "blackmisc/stringutils.h"
-#include "blackmisc/variant.h"
+#include "blackmisc/mixin/mixinindex.h"
+#include "blackmisc/mixin/mixinstring.h"
+#include "blackmisc/mixin/mixinmetatype.h"
 
 #include <QDBusArgument>
 #include <QJsonObject>

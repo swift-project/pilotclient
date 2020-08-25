@@ -16,6 +16,7 @@
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/variantlist.h"
+#include "blackmisc/stringutils.h"
 
 #include <QByteArray>
 #include <QChar>

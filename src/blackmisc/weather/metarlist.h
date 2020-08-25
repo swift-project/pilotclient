@@ -14,7 +14,7 @@
 #include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/weather/metar.h"

@@ -7,7 +7,8 @@
  */
 
 #include "blackmisc/aviation/callsign.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
+#include "blackmisc/stringutils.h"
 
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>

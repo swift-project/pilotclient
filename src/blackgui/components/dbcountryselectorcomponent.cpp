@@ -10,7 +10,7 @@
 #include "blackgui/components/dbcountryselectorcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/countrylist.h"
 #include "blackmisc/variant.h"
 #include "ui_dbcountryselectorcomponent.h"

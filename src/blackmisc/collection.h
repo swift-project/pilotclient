@@ -12,8 +12,8 @@
 #define BLACKMISC_COLLECTION_H
 
 #include "blackmisc/containerbase.h"
-#include "blackmisc/datastream.h"
-#include "blackmisc/icon.h"
+#include "blackmisc/mixin/mixindatastream.h"
+#include "blackmisc/mixin/mixinicon.h"
 #include <QMap>
 #include <algorithm>
 #include <type_traits>

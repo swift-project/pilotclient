@@ -11,7 +11,7 @@
 #include "blackgui/editors/validationindicator.h"
 #include "blackgui/labelandicon.h"
 #include "blackgui/dropsite.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "distributorform.h"

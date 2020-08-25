@@ -12,9 +12,10 @@
 #define BLACKMISC_PQ_MEASUREMENTUNIT_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/dictionary.h"
-#include "blackmisc/icon.h"
+#include "blackmisc/mixin/mixinhash.h"
+#include "blackmisc/mixin/mixinicon.h"
 #include "blackmisc/math/mathutils.h"
+#include "blackmisc/mixin/mixinstring.h"
 #include "blackmisc/stringutils.h"
 
 #include <QCoreApplication>

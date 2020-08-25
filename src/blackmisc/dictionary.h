@@ -12,16 +12,18 @@
 #define BLACKMISC_DICTIONARY_H
 
 #include "blackmisc/containerbase.h"
-#include "blackmisc/dbus.h"
+#include "blackmisc/mixin/mixindbus.h"
+#include "blackmisc/mixin/mixindatastream.h"
 #include "blackmisc/datastream.h"
 #include "blackmisc/inheritancetraits.h"
 #include "blackmisc/iterator.h"
-#include "blackmisc/json.h"
+#include "blackmisc/mixin/mixinjson.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/range.h"
-#include "blackmisc/stringutils.h"
+#include "blackmisc/mixin/mixinstring.h"
 #include "blackmisc/typetraits.h"
+#include "blackmisc/mixin/mixinhash.h"
 #include "blackmisc/blackmiscexport.h"
 
 #include <QDBusArgument>
@@ -42,13 +44,6 @@
 
 namespace BlackMisc
 {
-    class CEmpty;
-
-    // Needed so that our qHash overload doesn't hide the qHash overloads in the global namespace.
-    // This will be safe as long as no global qHash has the same signature as ours.
-    // Alternative would be to qualify all our invokations of the global qHash as ::qHash.
-    using ::qHash;
-
     namespace Private
     {
         //! \cond PRIVATE
@@ -70,19 +65,8 @@ namespace BlackMisc
             template <class Key, class>
             struct DefaultType { static_assert(std::is_void<Key>::value, "Key does not support either QHash or QMap"); };
         };
-
-        // Work around MSVC2015 bug affecting generic lambda
-        template <typename T>
-        struct Hasher
-        {
-            template <typename U>
-            void operator()(const U &member) { m_hash ^= qHash(member.in(m_object)); }
-            const T &m_object;
-            uint &m_hash;
-        };
-
         //! \endcond
-    } // namespace Private
+    }
 
     /*!
      * Trait to select the appropriate default associative container type depending on what the key type supports.
@@ -504,39 +488,6 @@ namespace BlackMisc
             else { functor(it1.key(), it1.value(), it2); ++it1; ++it2; }
         }
     }
-
-    namespace Mixin
-    {
-        /*!
-         * CRTP class template from which a derived class can inherit common methods dealing with hashing instances by metaclass.
-         *
-         * \tparam Derived Must be registered with BLACK_DECLARE_TUPLE_CONVERSION.
-         */
-        template <class Derived>
-        class HashByMetaClass
-        {
-        public:
-            //! qHash overload, needed for storing value in a QSet.
-            friend uint qHash(const Derived &value, uint seed = 0) // clazy:exclude=qhash-namespace
-            {
-                return ::qHash(hashImpl(value), seed);
-            }
-
-        private:
-            static uint hashImpl(const Derived &value)
-            {
-                uint hash = baseHash(static_cast<const TBaseOfT<Derived> *>(&value));
-                constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForHashing>());
-                meta.forEachMember(Private::Hasher<Derived> { value, hash });
-                return hash;
-            }
-
-            template <typename T> static uint baseHash(const T *base) { return qHash(*base); }
-            static uint baseHash(const void *) { return 0; }
-            static uint baseHash(const CEmpty *) { return 0; }
-        };
-    }
-
 } // namespace BlackMisc
 
 #endif // BLACKMISC_DICTIONARY_H

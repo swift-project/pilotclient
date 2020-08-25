@@ -12,6 +12,7 @@
 #define BLACKMISC_VARIANTMAP_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/mixin/mixinhash.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/variant.h"
 

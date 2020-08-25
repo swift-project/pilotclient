@@ -8,7 +8,7 @@
 
 #include "blackcore/vatsim/vatsimmetarreader.h"
 #include "blackcore/application.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/url.h"

@@ -9,6 +9,7 @@
 #include "blackmisc/network/urllog.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/stringutils.h"
 
 #include <QJsonValue>
 #include <QPair>

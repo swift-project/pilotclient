@@ -13,7 +13,7 @@
 #define BLACKMISC_IDENTIFIABLE_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/identifier.h"
 
 #include <QMetaObject>

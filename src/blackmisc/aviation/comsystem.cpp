@@ -9,6 +9,7 @@
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/dbus.h"
+#include "blackmisc/stringutils.h"
 
 #include <QDBusMetaType>
 #include <QtDebug>

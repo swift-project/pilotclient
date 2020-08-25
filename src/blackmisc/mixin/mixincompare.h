@@ -8,8 +8,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_COMPARE_H
-#define BLACKMISC_COMPARE_H
+#ifndef BLACKMISC_MIXIN_MIXINCOMPARE_H
+#define BLACKMISC_MIXIN_MIXINCOMPARE_H
 
 #include "blackmisc/metaclass.h"
 #include "blackmisc/inheritancetraits.h"

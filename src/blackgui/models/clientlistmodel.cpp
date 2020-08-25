@@ -11,7 +11,7 @@
 #include "blackgui/models/columns.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/network/user.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/propertyindexvariantmap.h"
 

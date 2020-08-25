@@ -9,7 +9,7 @@
 #include "blackcore/application.h"
 #include "blackcore/setupreader.h"
 #include "blackmisc/verify.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"

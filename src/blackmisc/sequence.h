@@ -13,7 +13,7 @@
 
 #include "blackmisc/containerbase.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/icon.h"
+#include "blackmisc/mixin/mixinicon.h"
 #include <QVector>
 #include <algorithm>
 #include <type_traits>

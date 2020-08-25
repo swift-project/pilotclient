@@ -9,7 +9,7 @@
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/iterator.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/predicates.h"

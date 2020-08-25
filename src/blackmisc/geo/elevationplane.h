@@ -12,7 +12,7 @@
 #define BLACKMISC_GEO_ELEVATIONPLANE_H
 
 #include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/stringutils.h"
+#include "blackmisc/mixin/mixinstring.h"
 #include "blackmisc/blackmiscexport.h"
 
 namespace BlackMisc

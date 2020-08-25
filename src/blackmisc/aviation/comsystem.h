@@ -19,10 +19,10 @@
 #include "blackmisc/pq/units.h"
 #include "blackmisc/pq/pqstring.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/propertyindexvariantmap.h"
-#include "blackmisc/dictionary.h"
-#include "blackmisc/json.h"
-#include "blackmisc/variant.h"
+#include "blackmisc/mixin/mixinindex.h"
+#include "blackmisc/mixin/mixinhash.h"
+#include "blackmisc/mixin/mixinjson.h"
+#include "blackmisc/mixin/mixinmetatype.h"
 
 #include <QHash>
 #include <QJsonObject>

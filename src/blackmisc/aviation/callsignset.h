@@ -14,7 +14,7 @@
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/sequence.h"
 
 #include <QMetaType>

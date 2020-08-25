@@ -17,6 +17,7 @@
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
+#include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
 
 #include "QStringBuilder"

@@ -19,7 +19,7 @@
 #include "blackmisc/aviation/heading.h"
 #include "blackmisc/aviation/navsystem.h"
 #include "blackmisc/aviation/transponder.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/pq/frequency.h"

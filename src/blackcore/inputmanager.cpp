@@ -7,7 +7,7 @@
  */
 
 #include "blackcore/inputmanager.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/input/actionhotkey.h"
 #include "blackmisc/range.h"

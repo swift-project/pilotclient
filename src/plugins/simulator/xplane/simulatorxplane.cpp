@@ -48,7 +48,7 @@
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/temperature.h"
 #include "blackmisc/verify.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/iterator.h"
 #include "blackmisc/logmessage.h"

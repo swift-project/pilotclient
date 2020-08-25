@@ -8,8 +8,8 @@
 
 #include "blackmisc/network/client.h"
 #include "blackmisc/aviation/callsign.h"
-#include "blackmisc/compare.h"
-#include "blackmisc/icon.h"
+#include "blackmisc/mixin/mixincompare.h"
+#include "blackmisc/iconlist.h"
 
 #include <QPixmap>
 #include <QString>

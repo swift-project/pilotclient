@@ -15,6 +15,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/timestampobjectlist.h"
 #include "blackmisc/collection.h"
+#include "blackmisc/mixin/mixinmetatype.h"
 
 namespace BlackMisc
 {

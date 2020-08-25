@@ -25,6 +25,7 @@
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/iconlist.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

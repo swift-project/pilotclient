@@ -9,6 +9,7 @@
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/iterator.h"
 #include "blackmisc/range.h"
+#include "blackmisc/stringutils.h"
 
 #include <QString>
 #include <QAudioDeviceInfo>

@@ -7,7 +7,7 @@
  */
 
 #include "blackmisc/aviation/altitude.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/weather/windlayerlist.h"
 
 using namespace BlackMisc::Aviation;

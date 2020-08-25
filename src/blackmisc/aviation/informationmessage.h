@@ -14,6 +14,7 @@
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/valueobject.h"
+#include "blackmisc/dbus.h"
 #include "blackmisc/blackmiscexport.h"
 
 #include <QDateTime>

@@ -12,16 +12,16 @@
 #define BLACKMISC_VALUEOBJECT_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/dbus.h"
-#include "blackmisc/datastream.h"
+#include "blackmisc/mixin/mixindbus.h"
+#include "blackmisc/mixin/mixindatastream.h"
 #include "blackmisc/metaclass.h"
-#include "blackmisc/json.h"
-#include "blackmisc/compare.h"
-#include "blackmisc/variant.h"
-#include "blackmisc/propertyindexvariantmap.h"
-#include "blackmisc/iconlist.h"
-#include "blackmisc/dictionary.h"
-#include "blackmisc/stringutils.h"
+#include "blackmisc/mixin/mixinjson.h"
+#include "blackmisc/mixin/mixincompare.h"
+#include "blackmisc/mixin/mixinmetatype.h"
+#include "blackmisc/mixin/mixinindex.h"
+#include "blackmisc/mixin/mixinicon.h"
+#include "blackmisc/mixin/mixinhash.h"
+#include "blackmisc/mixin/mixinstring.h"
 
 #include <QtDBus/QDBusMetaType>
 #include <QString>

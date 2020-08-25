@@ -17,7 +17,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/fscommon/vpilotmodelrule.h"

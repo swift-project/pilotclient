@@ -12,6 +12,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/json.h"
 #include "blackmisc/verify.h"
+#include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
 
 using namespace BlackMisc::Aviation;

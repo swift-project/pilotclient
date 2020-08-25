@@ -27,7 +27,6 @@
 #endif
 
 #include "blackmisc/collection.h"
-#include "blackmisc/compare.h"
 #include "blackmisc/containerbase.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/dictionary.h"

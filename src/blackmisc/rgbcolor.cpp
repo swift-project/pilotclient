@@ -7,7 +7,7 @@
  */
 
 #include "blackmisc/rgbcolor.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/stringutils.h"

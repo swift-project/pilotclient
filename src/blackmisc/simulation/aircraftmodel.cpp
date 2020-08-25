@@ -15,8 +15,9 @@
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/statusmessage.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/verify.h"
+#include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
 
 #include <QJsonDocument>

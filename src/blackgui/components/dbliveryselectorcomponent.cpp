@@ -13,7 +13,7 @@
 #include "blackgui/uppercasevalidator.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/db/datastoreutility.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/variant.h"
 #include "ui_dbliveryselectorcomponent.h"

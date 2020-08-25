@@ -12,7 +12,7 @@
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/logutils.h"
 #include "blackmisc/math/mathutils.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/iterator.h"
 #include "blackmisc/range.h"
 #include "blackmisc/fileutils.h"

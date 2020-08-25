@@ -20,7 +20,7 @@
 #include "blackcore/webdataservices.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/db/datastore.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/icons.h"
 
 #include <QCheckBox>

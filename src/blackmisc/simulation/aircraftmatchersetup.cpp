@@ -7,6 +7,7 @@
  */
 
 #include "blackmisc/simulation/aircraftmatchersetup.h"
+#include "blackmisc/stringutils.h"
 #include <QStringBuilder>
 
 namespace BlackMisc

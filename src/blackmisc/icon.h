@@ -12,15 +12,16 @@
 #define BLACKMISC_ICON_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
+#include "blackmisc/mixin/mixindbus.h"
 #include "blackmisc/dbus.h"
-#include "blackmisc/datastream.h"
-#include "blackmisc/dictionary.h"
+#include "blackmisc/mixin/mixindatastream.h"
+#include "blackmisc/mixin/mixinhash.h"
 #include "blackmisc/icons.h"
-#include "blackmisc/json.h"
+#include "blackmisc/mixin/mixinjson.h"
 #include "blackmisc/metaclass.h"
-#include "blackmisc/stringutils.h"
-#include "blackmisc/variant.h"
+#include "blackmisc/mixin/mixinstring.h"
+#include "blackmisc/mixin/mixinmetatype.h"
 
 #include <QIcon>
 #include <QMetaType>
@@ -30,37 +31,7 @@
 
 namespace BlackMisc
 {
-    class CIcon;
     namespace PhysicalQuantities { class CAngle; }
-
-    namespace Mixin
-    {
-        /*!
-         * CRTP class template from which a derived class can inherit icon-related functions.
-         */
-        template <class Derived, CIcons::IconIndex IconIndex = CIcons::StandardIconUnknown16>
-        class Icon
-        {
-        public:
-            //! As icon, not implemented by all classes
-            CIcon toIcon() const;
-
-            //! As pixmap, required for most GUI views
-            QPixmap toPixmap() const;
-
-        private:
-            const Derived *derived() const { return static_cast<const Derived *>(this); }
-            Derived *derived() { return static_cast<Derived *>(this); }
-        };
-
-        /*!
-         * When a derived class and a base class both inherit from Mixin::Icon,
-         * the derived class uses this macro to disambiguate the inherited members.
-         */
-#       define BLACKMISC_DECLARE_USING_MIXIN_ICON(DERIVED)      \
-            using ::BlackMisc::Mixin::Icon<DERIVED>::toIcon;    \
-            using ::BlackMisc::Mixin::Icon<DERIVED>::toPixmap;
-    } // Mixin
 
     //! Value object for icons. An icon is stored in the global icon repository and
     //! identified by its index. It contains no(!) pyhsical data for the icon itself.
@@ -162,20 +133,6 @@ namespace BlackMisc
     {
         //! \private Needed so CValueObjectMetaInfoHelper can copy forward-declared CIcon.
         inline void assign(CIcon &a, const CIcon &b) { a = b; }
-    }
-
-    namespace Mixin
-    {
-        template <class Derived, CIcons::IconIndex IconIndex>
-        CIcon Icon<Derived, IconIndex>::toIcon() const
-        {
-            return CIcon::iconByIndex(IconIndex);
-        }
-        template <class Derived, CIcons::IconIndex IconIndex>
-        QPixmap Icon<Derived, IconIndex>::toPixmap() const
-        {
-            return derived()->toIcon().toPixmap();
-        }
     }
 } // namespace
 

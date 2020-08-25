@@ -15,6 +15,7 @@
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/stringutils.h"
 
 #include <QChar>
 #include <QJsonValue>

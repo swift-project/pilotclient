@@ -12,7 +12,7 @@
 #define BLACKMISC_PQ_ANGLE_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/icon.h"
+#include "blackmisc/mixin/mixinicon.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/pq/units.h"

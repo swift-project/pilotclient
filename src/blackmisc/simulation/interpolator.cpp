@@ -20,6 +20,7 @@
 #include "blackmisc/pq/length.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/verify.h"
+#include "blackmisc/stringutils.h"
 #include <QTimer>
 #include <QDateTime>
 #include <QStringBuilder>

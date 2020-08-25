@@ -30,7 +30,7 @@
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/simplecommandparser.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logmessage.h"
