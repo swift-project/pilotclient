@@ -100,11 +100,11 @@ namespace BlackMisc
         CVariant CAircraftLights::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            if (INullable::canHandleIndex(index)) { return INullable::propertyByIndex(index); }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
+            case IndexIsNull: return CVariant::from(this->isNull());
             case IndexBeacon: return CVariant::from(m_beaconOn);
             case IndexLanding: return CVariant::from(m_landingOn);
             case IndexLogo: return CVariant::from(m_logoOn);
@@ -120,11 +120,11 @@ namespace BlackMisc
         void CAircraftLights::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CAircraftLights>(); return; }
-            if (INullable::canHandleIndex(index)) { INullable::setPropertyByIndex(index, variant); return; }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
+            case IndexIsNull: m_isNull = variant.toBool(); break;
             case IndexBeacon: m_beaconOn = variant.toBool(); break;
             case IndexLanding: m_landingOn = variant.toBool(); break;
             case IndexLogo: m_logoOn = variant.toBool(); break;
@@ -142,6 +142,7 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
+            case IndexIsNull: return Compare::compare(m_isNull, compareValue.isNull());
             case IndexBeacon: return Compare::compare(m_beaconOn, compareValue.isBeaconOn());
             case IndexLanding: return Compare::compare(m_landingOn, compareValue.isLandingOn());
             case IndexLogo: return Compare::compare(m_logoOn, compareValue.isLogoOn());
@@ -152,7 +153,7 @@ namespace BlackMisc
             case IndexRecognition: return Compare::compare(m_recognition, compareValue.isRecognitionOn());
             default: break;
             }
-            return INullable::comparePropertyByIndex(index.copyFrontRemoved(), compareValue);
+            return 0;
         }
 
         void CAircraftLights::setAllOn()

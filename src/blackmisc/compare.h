@@ -183,60 +183,6 @@ namespace BlackMisc
         };
 
     } // Mixin
-
-    /*!
-     * Helps with debugging Mixin::EqualsByMetaClass.
-     */
-    class CMetaMemberComparator
-    {
-    public:
-        //! Return list of pairs containing member name and bool indicating if member is equal.
-        template <typename T, std::enable_if_t<THasMetaClass<T>::value, int> = 0>
-        QList<QPair<QString, bool>> operator ()(const T &a, const T &b) const
-        {
-            constexpr auto meta = introspect<T>().without(MetaFlags<DisabledForComparison>());
-            auto result = baseEquals(static_cast<const TBaseOfT<T> *>(&a), static_cast<const TBaseOfT<T> *>(&b));
-            meta.forEachMember([ & ](auto member)
-            {
-                constexpr auto flags = decltype(member.m_flags)();
-                result.append(qMakePair(member.latin1Name(), membersEqual(member.in(a), member.in(b), flags & MetaFlags<CaseInsensitiveComparison>())));
-            });
-            return result;
-        }
-
-        //! Recurse into one of the submembers of T, comparing members of that member.
-        template <typename T, std::enable_if_t<THasMetaClass<T>::value, int> = 0>
-        QList<QPair<QString, bool>> operator ()(const T &a, const T &b, QStringList memberNames) const // clazy:exclude=function-args-by-ref
-        {
-            if (memberNames.isEmpty()) { return CMetaMemberComparator()(a, b); }
-            constexpr auto meta = introspect<T>().without(MetaFlags<DisabledForComparison>());
-            auto result = baseEquals(static_cast<const TBaseOfT<T> *>(&a), static_cast<const TBaseOfT<T> *>(&b), memberNames);
-            const auto memberName = memberNames.takeFirst();
-            meta.forEachMember([ & ](auto member)
-            {
-                const auto p = [ & ](const auto &m) { return qMakePair(memberName + '.' + m.first, m.second); };
-                if (member.latin1Name() == memberName) { result.append(makeRange(CMetaMemberComparator()(member.in(a), member.in(b), memberNames)).transform(p)); }
-            });
-            return result;
-        }
-
-        //! Return empty list if T doesn't have a metaclass.
-        template <typename T, std::enable_if_t<!THasMetaClass<T>::value, int> = 0>
-        QList<QPair<QString, bool>> operator ()(const T &, const T &) const { return {}; }
-
-        //! Return empty list if T doesn't have a metaclass.
-        template <typename T, std::enable_if_t<!THasMetaClass<T>::value, int> = 0>
-        QList<QPair<QString, bool>> operator ()(const T &, const T &, QStringList) const { return {}; } // clazy:exclude=function-args-by-ref
-
-    private:
-        template <typename T> static auto baseEquals(const T *a, const T *b) { return CMetaMemberComparator()(*a, *b); }
-        template <typename T> static auto baseEquals(const T *a, const T *b, const QStringList &memberNames) { return CMetaMemberComparator()(*a, *b, memberNames); }
-        static auto baseEquals(const void *, const void *, const QStringList & = {}) { return QList<QPair<QString, bool>>(); }
-        static auto baseEquals(const CEmpty *, const CEmpty *, const QStringList & = {}) { return QList<QPair<QString, bool>>(); }
-
-        template <typename T> static bool membersEqual(const T &a, const T &b, std::true_type) { return a.compare(b, Qt::CaseInsensitive) == 0; }
-        template <typename T> static bool membersEqual(const T &a, const T &b, std::false_type) { return a == b; }
-    };
 } // BlackMisc
 
 #endif

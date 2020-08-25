@@ -16,7 +16,6 @@
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
-#include "blackmisc/nullable.h"
 
 #include <QMetaType>
 #include <QString>
@@ -28,14 +27,13 @@ namespace BlackMisc
         class CAircraftSituation;
 
         //! Value object encapsulating information about aircraft's lights
-        class BLACKMISC_EXPORT CAircraftLights :
-            public CValueObject<CAircraftLights>,
-            public INullable
+        class BLACKMISC_EXPORT CAircraftLights : public CValueObject<CAircraftLights>
         {
         public:
             //! Properties by index
             enum ColumnIndex
             {
+                IndexIsNull = CPropertyIndex::GlobalIndexINullable,
                 IndexStrobe = CPropertyIndex::GlobalIndexCAircraftLights,
                 IndexLanding,
                 IndexTaxi,
@@ -49,8 +47,8 @@ namespace BlackMisc
             //! Default constructor
             CAircraftLights() = default;
 
-            //! Constructor, init to null
-            using INullable::INullable;
+            //! Null constructor
+            CAircraftLights(std::nullptr_t) : m_isNull(true) {}
 
             //! Constructor
             CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn);
@@ -136,7 +134,14 @@ namespace BlackMisc
             //! Guessed lights
             static CAircraftLights guessedLights(const CAircraftSituation &situation);
 
+            //! Null?
+            bool isNull() const { return m_isNull; }
+
+            //! Null?
+            void setNull(bool null) { m_isNull = null; }
+
         private:
+            bool m_isNull = false; //!< null?
             bool m_strobeOn = false;
             bool m_landingOn = false;
             bool m_taxiOn = false;
