@@ -34,7 +34,7 @@ Error Code: ${program_exit_code}
 Check if another version was already installed and if not, try to run the installer manually from
 ${installdir}\vcredist\
 
-The installation will now continue, but swift might not work properly. If this is the case, raise a bugreport on https://dev.swift-project.org with the error code, you received.</text>
+The installation will now continue, but swift might not work properly. If this is the case, raise a bugreport on https://github.com/swift-project/pilotclient with the error code, you received.</text>
                     <ruleList>
                         <!-- No error -->
                         <compareValues>
