@@ -74,7 +74,7 @@ namespace BlackSample
         // now Jane's time is over
         CPropertyIndexVariantMap anotherController;
         anotherController.addValue(CAtcStation::IndexController, CVariant::fromValue(CUser("445566", "Fuzzy")));
-        atcList.applyIf(BlackMisc::Predicates::Matches(newController), anotherController);
+        atcList.applyIf([ = ](const auto &arg) { return newController.matches(arg); }, anotherController);
 
         qDebug() << "-- after update via value map";
         qDebug() << atcList.toQString();

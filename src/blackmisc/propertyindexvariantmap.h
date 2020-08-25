@@ -312,12 +312,6 @@ namespace BlackMisc
             return derived()->toQString().compare(compareValue.toQString());
         }
     } // Mixin
-
-    template <class T>
-    bool Predicates::Private::Matches::operator()(const T &value) const
-    {
-        return m_map.matches(value);
-    }
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::CPropertyIndexVariantMap)

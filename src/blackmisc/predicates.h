@@ -21,17 +21,6 @@ namespace BlackMisc
 
     namespace Predicates
     {
-        namespace Private
-        {
-            //! \private
-            struct Matches
-            {
-                const CPropertyIndexVariantMap &m_map;
-                Matches(const CPropertyIndexVariantMap &map) : m_map(map) {}
-                template <class T> bool operator()(const T &value) const;
-            };
-        }
-
         /*!
          * Predicate which tests whether some member functions return some values.
          * \param vs Pairs of { pointer to member function of T, value to compare it against }.
@@ -109,14 +98,6 @@ namespace BlackMisc
             {
                 return std::forward_as_tuple((a.*vs)()...) == std::forward_as_tuple((b.*vs)()...);
             };
-        }
-
-        /*!
-         * Returns a predicate that returns true if its argument matches a captured CPropertyIndexVariantMap.
-         */
-        inline auto Matches(const CPropertyIndexVariantMap &map) -> Private::Matches
-        {
-            return { map };
         }
 
     } //namespace Predicates
