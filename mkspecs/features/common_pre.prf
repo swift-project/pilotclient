@@ -218,6 +218,10 @@ win32:llvm {
         equals(WORD_SIZE,32): QMAKE_CXXFLAGS += --target=i686-pc-windows-gnu
         equals(WORD_SIZE,64): QMAKE_CXXFLAGS += --target=x86_64-pc-windows-gnu
     }
+    else {
+        CONFIG += c++latest
+        QMAKE_CXXFLAGS_WARN_ON += -Wno-deprecated-declarations
+    }
 
     # Address Sanitizer
     # https://stackoverflow.com/a/48585886/1639256

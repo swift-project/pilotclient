@@ -8,7 +8,7 @@
 
 #include "blackmisc/processctrl.h"
 #include "blackmisc/logmessage.h"
-
+#include <QStringBuilder>
 #include <array>
 
 #ifdef Q_OS_WIN
@@ -36,7 +36,7 @@ namespace BlackMisc
         QString command = '"' % QString(program).replace('/', '\\') % '"';
         if (!arguments.isEmpty())
         {
-            command += " \"" % arguments.join('" "').replace('/', '\\') % '"';
+            command += " \"" % arguments.join("\" \"").replace('/', '\\') % '"';
         }
 
         DWORD flags = 0;

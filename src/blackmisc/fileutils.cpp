@@ -358,7 +358,7 @@ namespace BlackMisc
         QFileInfoList result = dir.entryInfoList(nameFilters, QDir::Files);
         if (predicate)
         {
-            result.erase(std::remove_if(result.begin(), result.end(), std::not1(predicate)), result.end());
+            result.erase(std::remove_if(result.begin(), result.end(), [ = ](const auto &f) { return !predicate(f); }), result.end());
         }
         if (recursive)
         {

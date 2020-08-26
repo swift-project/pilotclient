@@ -571,7 +571,12 @@ namespace BlackMisc
     {
         if (m_page)
         {
-            if (std::uncaught_exception()) { m_page->abandonBatch(); }
+#if __cplusplus >= 201700L
+            const bool ex = std::uncaught_exceptions() > 0;
+#else
+            const bool ex = std::uncaught_exception();
+#endif
+            if (ex) { m_page->abandonBatch(); }
             else { m_page->endBatch(); }
         }
     }

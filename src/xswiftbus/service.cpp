@@ -145,12 +145,13 @@ namespace XSwiftBus
     void CService::addTextMessage(const std::string &text, double red, double green, double blue)
     {
         if (text.empty()) { return; }
-        static const std::string ellipsis = u8"\u2026";
+        static const CMessage::string ellipsis = u8"\u2026";
         const int lineLength = m_messages.maxLineLength() - static_cast<int>(ellipsis.size());
-        std::vector<std::string> wrappedLines;
+        std::vector<CMessage::string> wrappedLines;
         for (size_t i = 0; i < text.size(); i += static_cast<size_t>(lineLength))
         {
-            wrappedLines.push_back(text.substr(i, static_cast<size_t>(lineLength)) + ellipsis);
+            wrappedLines.emplace_back(text.begin() + i, text.begin() + i + static_cast<size_t>(lineLength));
+            wrappedLines.back() += ellipsis;
         }
         wrappedLines.back().erase(wrappedLines.back().size() - ellipsis.size());
         if (wrappedLines.back().empty()) { wrappedLines.pop_back(); }

@@ -22,16 +22,30 @@
 
 namespace XSwiftBus
 {
+    //! \cond
+    namespace Private
+    {
+        inline auto empty_u8string()
+        {
+            using namespace std::literals;
+            return u8""s;
+        }
+    }
+    //! \endcond
+
     /*!
      * Class representing a single line of text to be drawn in a message box.
      */
     struct CMessage
     {
+        //! String type.
+        using string = decltype(Private::empty_u8string());
+
         //! Constructor.
-        CMessage(const std::string &text, float r = 1, float g = 1, float b = 1) : m_text(text), m_rgb{{ r, g, b }} {}
+        CMessage(const string &text, float r = 1, float g = 1, float b = 1) : m_text(text), m_rgb{{ r, g, b }} {}
 
         //! Text.
-        std::string m_text;
+        string m_text;
 
         //! Color.
         std::array<float, 3> m_rgb;
@@ -148,7 +162,6 @@ namespace XSwiftBus
         CCommand m_scrollDownCommand;
         CCommand m_scrollToTopCommand;
         CCommand m_scrollToBottomCommand;
-        CCommand m_debugCommand;
     };
 } //ns
 
