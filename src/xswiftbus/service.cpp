@@ -152,12 +152,12 @@ namespace XSwiftBus
         {
             wrappedLines.push_back(text.substr(i, static_cast<size_t>(lineLength)) + ellipsis);
         }
-        wrappedLines.back().erase(wrappedLines.back().size() - 3);
+        wrappedLines.back().erase(wrappedLines.back().size() - ellipsis.size());
         if (wrappedLines.back().empty()) { wrappedLines.pop_back(); }
         else if (wrappedLines.back().size() == ellipsis.size() && wrappedLines.size() > 1)
         {
             auto secondLastLine = wrappedLines.end() - 2;
-            secondLastLine->erase(wrappedLines.back().size() - 3);
+            secondLastLine->erase(wrappedLines.back().size() - ellipsis.size());
             secondLastLine->append(wrappedLines.back());
             wrappedLines.pop_back();
         }
