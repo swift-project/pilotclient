@@ -12,7 +12,7 @@
 #include "blackmisc/algorithm.h"
 #include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/crashhandler.h"
-#include "blackmisc/worker.h"
+#include "blackmisc/threadutils.h"
 #include "blackconfig/buildconfig.h"
 
 #ifdef BLACK_USE_CRASHPAD
