@@ -130,18 +130,11 @@ namespace BlackCore
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << application; }
 
-            CIdentifier identifier(application);
-            identifier.setCurrentUtcTime();
-
-            if (!m_registeredApplications.contains(identifier))
+            if (!m_registeredApplications.contains(application))
             {
-                m_registeredApplications.push_back(identifier);
+                m_registeredApplications.push_back(application);
                 emit this->registrationChanged();
                 emit this->hotkeyActionsRegistered(sApp->getInputManager()->allAvailableActions(), {});
-            }
-            else
-            {
-                m_registeredApplications.replace(application, identifier);
             }
 
             this->cleanupRegisteredApplications();
@@ -158,15 +151,16 @@ namespace BlackCore
 
         void CContextApplication::cleanupRegisteredApplications()
         {
-            static const int outdatedMs = qRound(1.5 * PingIdentifiersMs);
-            m_registeredApplications.removeOlderThanNowMinusOffset(outdatedMs);
+            //static const int outdatedMs = qRound(1.5 * PingIdentifiersMs);
+            //m_registeredApplications.removeOlderThanNowMinusOffset(outdatedMs);
         }
 
         CIdentifierList CContextApplication::getRegisteredApplications() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            static const int outdatedMs = qRound(1.5 * PingIdentifiersMs);
-            return m_registeredApplications.findAfterNowMinusOffset(outdatedMs);
+            //static const int outdatedMs = qRound(1.5 * PingIdentifiersMs);
+            //return m_registeredApplications.findAfterNowMinusOffset(outdatedMs);
+            return m_registeredApplications;
         }
 
         CIdentifier CContextApplication::getApplicationIdentifier() const

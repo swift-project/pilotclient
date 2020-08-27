@@ -57,6 +57,7 @@ namespace BlackCore
 
             CAfvClient::CAfvClient(const QString &apiServer, QObject *owner) :
                 CContinuousWorker(owner, "CAfvClient"),
+                CIdentifiable("CAfvClient"),
                 m_connection(new CClientConnection(apiServer, this)),
                 m_input(new CInput(SampleRate, this)),
                 m_output(new COutput(this)),

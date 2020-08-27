@@ -747,7 +747,6 @@ namespace BlackMisc
     // see here for the reason of thess forward instantiations
     // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::CCountry, BlackMisc::CCountryList>;
-    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::CIdentifier, BlackMisc::CIdentifierList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAircraftCategory, BlackMisc::Aviation::CAircraftCategoryList>;

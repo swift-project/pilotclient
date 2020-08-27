@@ -9,6 +9,7 @@
 #include "blackmisc/identifier.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/propertyindex.h"
 
 #include <QCoreApplication>
 #include <QHostInfo>
@@ -108,8 +109,7 @@ QByteArray cachedMachineUniqueId()
 namespace BlackMisc
 {
     CIdentifier::CIdentifier(const QString &name)
-        : ITimestampBased(QDateTime::currentMSecsSinceEpoch()),
-          m_name(name.trimmed()),
+        : m_name(name.trimmed()),
           m_machineIdBase64(cachedMachineUniqueId().toBase64(QByteArray::OmitTrailingEquals)),
           m_machineName(cachedLocalHostName()),
           m_processName(cachedEscapedApplicationName()),
@@ -128,7 +128,6 @@ namespace BlackMisc
 
     CIdentifier::CIdentifier(const QString &name, const QString &machineId, const QString &machineName,
                              const QString &processName, qint64 processId) :
-        ITimestampBased(QDateTime::currentMSecsSinceEpoch()),
         m_name(name), m_machineIdBase64(machineId), m_machineName(machineName),
         m_processName(processName), m_processId(processId)
     { }
@@ -157,7 +156,6 @@ namespace BlackMisc
         QByteArray baseData;
         baseData.append(getMachineId());
         baseData.append(reinterpret_cast<const char *>(&m_processId), sizeof(m_processId));
-        baseData.append(reinterpret_cast<const char *>(&m_timestampMSecsSinceEpoch), sizeof(m_timestampMSecsSinceEpoch));
         baseData.append(getName());
         return QUuid::createUuidV5(ns, baseData);
     }
@@ -283,7 +281,6 @@ namespace BlackMisc
         if (index.isMyself()) { return CVariant::from(*this); }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
 
         switch (i)
         {
@@ -305,7 +302,6 @@ namespace BlackMisc
         if (index.isMyself()) { return Compare::compare(m_processId, compareValue.m_processId); }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
 
         switch (i)
         {

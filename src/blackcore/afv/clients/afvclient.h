@@ -45,7 +45,7 @@ namespace BlackCore
         namespace Clients
         {
             //! AFV client
-            class BLACKCORE_EXPORT CAfvClient final : public BlackMisc::CContinuousWorker
+            class BLACKCORE_EXPORT CAfvClient final : public BlackMisc::CContinuousWorker, public BlackMisc::CIdentifiable
             {
                 Q_OBJECT
 

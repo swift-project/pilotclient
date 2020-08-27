@@ -25,8 +25,7 @@ namespace BlackMisc
      */
     class BLACKMISC_EXPORT CIdentifierList :
         public CSequence<CIdentifier>,
-        public Mixin::MetaType<CIdentifierList>,
-        public ITimestampObjectList<CIdentifier, CIdentifierList>
+        public Mixin::MetaType<CIdentifierList>
     {
     public:
         BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CIdentifierList)

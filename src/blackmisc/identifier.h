@@ -13,10 +13,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/metaclass.h"
-#include "blackmisc/propertyindex.h"
-#include "blackmisc/timestampbased.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/variant.h"
 
 #include <QByteArray>
 #include <QMetaType>
@@ -30,9 +27,7 @@ namespace BlackMisc
     /*!
      * Value object encapsulating information identifying a component of a modular distributed swift process (core, GUI, audio)
      */
-    class BLACKMISC_EXPORT CIdentifier :
-        public CValueObject<CIdentifier>,
-        public ITimestampBased
+    class BLACKMISC_EXPORT CIdentifier : public CValueObject<CIdentifier>
     {
     public:
         //! Properties by index
@@ -172,8 +167,7 @@ namespace BlackMisc
             BLACK_METAMEMBER(machineIdBase64),
             BLACK_METAMEMBER(machineName, 0, DisabledForComparison | DisabledForHashing),
             BLACK_METAMEMBER(processName),
-            BLACK_METAMEMBER(processId),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForComparison | DisabledForHashing)
+            BLACK_METAMEMBER(processId)
         );
     };
 } // namespace

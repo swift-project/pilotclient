@@ -26,7 +26,6 @@ namespace BlackGui
             this->m_columns.addColumn(CColumn::standardString("machine", CIdentifier::IndexMachineName));
             this->m_columns.addColumn(CColumn::standardString("process", CIdentifier::IndexProcessName));
             this->m_columns.addColumn(CColumn::standardString("p.id", "process id", CIdentifier::IndexProcessId));
-            this->m_columns.addColumn(CColumn("time", "received", CIdentifier::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHms())));
             this->m_columns.addColumn(CColumn("lcl m.", "local machine", CIdentifier::IndexIsFromLocalMachine, new CBoolIconFormatter("local", "remote")));
             this->m_columns.addColumn(CColumn("same p.", "same process", CIdentifier::IndexIsFromSameProcess, new CBoolIconFormatter("same process", "other process")));
             this->m_columns.addColumn(CColumn::standardString("m.id", "machine id", CIdentifier::IndexMachineIdBase64));

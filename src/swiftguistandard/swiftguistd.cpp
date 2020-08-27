@@ -313,7 +313,7 @@ void SwiftGuiStd::setContextAvailability()
     if (!isShuttingDown && sGui->getIContextApplication() && !sGui->getIContextApplication()->isEmptyObject())
     {
         // ping to check if core is still alive
-        m_coreAvailable = this->isMyIdentifier(sGui->getIContextApplication()->registerApplication(getCurrentTimestampIdentifier()));
+        m_coreAvailable = this->isMyIdentifier(sGui->getIContextApplication()->registerApplication(identifier()));
     }
     else
     {

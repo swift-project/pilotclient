@@ -21,6 +21,8 @@
 
 namespace BlackMisc
 {
+    class CIdentifier;
+
     namespace Weather
     {
         //! Direct threadsafe in memory access to weather grid

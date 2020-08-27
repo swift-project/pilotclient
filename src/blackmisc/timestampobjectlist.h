@@ -329,8 +329,6 @@ namespace BlackMisc
 
     class CStatusMessage;
     class CStatusMessageList;
-    class CIdentifier;
-    class CIdentifierList;
     class CCountry;
     class CCountryList;
 
@@ -349,7 +347,6 @@ namespace BlackMisc
     extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ITimestampObjectList<BlackMisc::Network::CRawFsdMessage, BlackMisc::Network::CRawFsdMessageList>;
     extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ITimestampObjectList<BlackMisc::Network::CUrlLog, BlackMisc::Network::CUrlLogList>;
     extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ITimestampObjectList<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>;
-    extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ITimestampObjectList<BlackMisc::CIdentifier, BlackMisc::CIdentifierList>;
     extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ITimestampObjectList<BlackMisc::CCountry, BlackMisc::CCountryList>;
 
     // for the derived version both templates are required

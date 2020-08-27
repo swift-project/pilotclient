@@ -149,7 +149,6 @@ namespace BlackMisc
     }
 
     CContinuousWorker::CContinuousWorker(QObject *owner, const QString &name) :
-        CIdentifiable(name),
         m_owner(owner), m_name(name)
     {
         Q_ASSERT_X(!name.isEmpty(), Q_FUNC_INFO, "Empty name");

@@ -10,13 +10,6 @@
 
 namespace BlackMisc
 {
-    CIdentifier CIdentifiable::getCurrentTimestampIdentifier() const
-    {
-        CIdentifier o(m_identifier);
-        o.setCurrentUtcTime();
-        return o;
-    }
-
     CIdentifiable::CIdentifiable(QObject *object) : m_identifier(object->objectName())
     {
         // if the object name changes we update our originator

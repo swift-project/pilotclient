@@ -17,7 +17,6 @@
 #include "blackmisc/invoke.h"
 #include "blackmisc/promise.h"
 #include "blackmisc/stacktrace.h"
-#include "blackmisc/identifiable.h"
 #include "blackmisc/variant.h"
 
 #include <QFuture>
@@ -266,9 +265,7 @@ namespace BlackMisc
     /*!
      * Base class for a long-lived worker object which lives in its own thread.
      */
-    class BLACKMISC_EXPORT CContinuousWorker :
-        public CWorkerBase,
-        public CIdentifiable
+    class BLACKMISC_EXPORT CContinuousWorker : public CWorkerBase
     {
         Q_OBJECT
 
