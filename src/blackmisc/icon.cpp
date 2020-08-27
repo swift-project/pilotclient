@@ -8,9 +8,6 @@
 
 #include "blackmisc/icon.h"
 #include "blackmisc/iconlist.h"
-#include "blackmisc/pq/angle.h"
-#include "blackmisc/pq/units.h"
-#include "blackmisc/sequence.h"
 
 #include <QStringBuilder>
 #include <QtGlobal>
@@ -75,11 +72,6 @@ namespace BlackMisc
     QIcon CIcon::toQIcon() const
     {
         return QIcon(toPixmap());
-    }
-
-    void CIcon::setRotation(const PhysicalQuantities::CAngle &rotate)
-    {
-        m_rotateDegrees = static_cast<int>(rotate.valueRounded(PhysicalQuantities::CAngleUnit::deg(), 0));
     }
 
     QString CIcon::convertToQString(bool i18n) const

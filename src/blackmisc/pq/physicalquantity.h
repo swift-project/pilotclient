@@ -32,6 +32,7 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
+        class CAngle;
         class CLength;
         class CPressure;
         class CFrequency;

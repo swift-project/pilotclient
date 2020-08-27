@@ -13,9 +13,7 @@
 #include <QtGlobal>
 #include <tuple>
 
-using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
-
 
 namespace BlackMisc
 {

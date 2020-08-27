@@ -52,7 +52,7 @@ namespace BlackMisc
         CIcon CAngle::toIcon() const
         {
             CIcon i = CIcon::iconByIndex(CIcons::StandardIconArrowMediumNorth16);
-            i.setRotation(*this);
+            i.setRotation(value(CAngleUnit::deg()));
             return i;
         }
 

@@ -31,8 +31,6 @@
 
 namespace BlackMisc
 {
-    namespace PhysicalQuantities { class CAngle; }
-
     //! Value object for icons. An icon is stored in the global icon repository and
     //! identified by its index. It contains no(!) pyhsical data for the icon itself.
     class BLACKMISC_EXPORT CIcon :
@@ -94,9 +92,6 @@ namespace BlackMisc
 
         //! Rotate by n degrees
         void setRotation(int degrees) { m_rotateDegrees = degrees; }
-
-        //! Rotate by given degrees
-        void setRotation(const BlackMisc::PhysicalQuantities::CAngle &rotate);
 
         //! Set descriptive text
         void setDescriptiveText(const QString &text) { m_descriptiveText = text; }
