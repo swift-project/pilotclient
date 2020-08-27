@@ -12,9 +12,6 @@
 #define BLACKMISC_LOCKFREE_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/integersequence.h"
-#include "blackmisc/variant.h"
-#include "blackmisc/variantprivate.h"
 
 #include <stddef.h>
 #include <QMetaType>
@@ -108,7 +105,7 @@ namespace BlackMisc
         {
             if (m_ptr.use_count() == 0) { return; } // *this has been moved from
             bool success = std::atomic_compare_exchange_strong(m_now, &m_old, std::shared_ptr<const T>(m_ptr));
-            Q_ASSERT_X(success, qPrintable(name()), "UniqueWriter detected simultaneous writes");
+            Q_ASSERT_X(success, Q_FUNC_INFO, "UniqueWriter detected simultaneous writes");
             Q_UNUSED(success);
         }
 
@@ -119,8 +116,6 @@ namespace BlackMisc
         std::shared_ptr<const T> m_old;
         std::shared_ptr<const T> *m_now;
         std::shared_ptr<T> m_ptr;
-
-        static QString name() { return QString("LockFree<") + QMetaType::typeName(Private::MetaTypeHelper<T>::maybeGetMetaTypeId()) + ">"; }
     };
 
     /*!
@@ -152,7 +147,7 @@ namespace BlackMisc
         //! If false is returned, then the caller must try again. This would happen if another simultaneous write had occurred.
         operator bool()
         {
-            Q_ASSERT_X(m_ptr.use_count() > 0, qPrintable(name()), "SharedWriter tried to commit changes twice");
+            Q_ASSERT_X(m_ptr.use_count() > 0, Q_FUNC_INFO, "SharedWriter tried to commit changes twice");
             if (std::atomic_compare_exchange_strong(m_now, &m_old, std::shared_ptr<const T>(m_ptr)))
             {
                 m_ptr.reset();
@@ -167,7 +162,7 @@ namespace BlackMisc
         //! Destructor. The writer's changes must be committed before this is called.
         ~LockFreeSharedWriter()
         {
-            Q_ASSERT_X(m_ptr.use_count() == 0, qPrintable(name()), "SharedWriter destroyed without committing changes");
+            Q_ASSERT_X(m_ptr.use_count() == 0, Q_FUNC_INFO, "SharedWriter destroyed without committing changes");
         }
 
         //! LockFreeSharedWriter cannot be copied.
@@ -193,8 +188,6 @@ namespace BlackMisc
         std::shared_ptr<const T> m_old;
         std::shared_ptr<const T> *m_now;
         std::shared_ptr<T> m_ptr;
-
-        static QString name() { return QString("LockFree<") + QMetaType::typeName(Private::MetaTypeHelper<T>::maybeGetMetaTypeId()) + ">"; }
     };
 
     /*!
