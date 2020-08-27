@@ -7,18 +7,9 @@
  */
 
 #include "blackmisc/dbusutils.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/aviation/airport.h"
 #include <QString>
 #include <QStringBuilder>
 #include <QVariant>
-
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
 
 namespace BlackMisc
 {
@@ -62,46 +53,5 @@ namespace BlackMisc
         default:
             return QLatin1String("Unknown type");
         }
-    }
-
-    void CDBusUtils::showDBusSignatures(QTextStream &out)
-    {
-        const CCallsign cs;
-        const CLength l;
-        const CAircraftIcaoCode icao;
-        const CAircraftModel model;
-        const CCountry country;
-        const CAirportIcaoCode airportIcao;
-        const CLivery livery;
-        const CAirport airport;
-        const CAircraftSituation situation;
-        const CSimulatedAircraft aircraft;
-        const CSimulatedAircraftList aircraftList;
-        const CVariant var;
-        QString s;
-        s = CDBusUtils::dBusSignature(cs);
-        out << "CCallsign" << " size: " << s.size() << " sig: " << s << Qt::endl;
-        s = CDBusUtils::dBusSignature(l);
-        out << "CLength" << " size: " << s.size() << " sig: " << s << Qt::endl;
-        s = CDBusUtils::dBusSignature(icao);
-        out << "CAircraftIcaoCode" << " size: " << s.size() << " sig: " << s << Qt::endl;
-        s = CDBusUtils::dBusSignature(airportIcao);
-        out << "CAirportIcaoCode" << " size: " << s.size() << " sig: " << s << Qt::endl;
-        s = CDBusUtils::dBusSignature(livery);
-        out << "CLivery" << " size: " << s.size() << " sig: " << s << Qt::endl;
-        s = CDBusUtils::dBusSignature(situation);
-        out << "CAircraftSituation" << " size: " << s.size() << " sig: " << s << Qt::endl;
-        s = CDBusUtils::dBusSignature(country);
-        out << "CCountry" << " size: " << s.size() << " sig: " << s << Qt::endl;
-        s = CDBusUtils::dBusSignature(airport);
-        out << "CAirport" << " size: " << s.size() << " sig: " << s << Qt::endl;
-        s = CDBusUtils::dBusSignature(model);
-        out << "CAircraftModel" << " size: " << s.size() << " sig: " << s << Qt::endl;
-        s = CDBusUtils::dBusSignature(aircraft);
-        out << "CSimulatedAircraft" << " size: " << s.size() << " sig: " << s << Qt::endl;
-        s = CDBusUtils::dBusSignature(aircraftList);
-        out << "CSimulatedAircraftList" << " size: " << s.size() << " sig: " << s << Qt::endl;
-        s = CDBusUtils::dBusSignature(var);
-        out << "CVariant" << " size: " << s.size() << " sig: " << s << Qt::endl;
     }
 } // ns
