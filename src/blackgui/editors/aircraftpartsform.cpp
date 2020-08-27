@@ -88,7 +88,7 @@ namespace BlackGui
             }
             catch (const CJsonException &ex)
             {
-                ex.toLogMessage(this, "Parse error");
+                CLogMessage(this).preformatted(CStatusMessage::fromJsonException(ex, this, "Parse error"));
                 return parts;
             }
             return parts;

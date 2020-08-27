@@ -510,6 +510,9 @@ namespace BlackMisc
         //! Object from JSON
         static CStatusMessage fromDatabaseJson(const QJsonObject &json);
 
+        //! Object from JSON exception message
+        static CStatusMessage fromJsonException(const CJsonException &ex, const CLogCategoryList &categories, const QString &prefix);
+
         //! \copydoc BlackMisc::CValueObject::registerMetadata
         static void registerMetadata();
 
@@ -543,7 +546,7 @@ namespace BlackMisc
         }
         catch (const CJsonException &ex)
         {
-            return ex.toStatusMessage(categories, prefix);
+            return CStatusMessage::fromJsonException(ex, categories, prefix);
         }
         return {};
     }
@@ -558,7 +561,7 @@ namespace BlackMisc
         }
         catch (const CJsonException &ex)
         {
-            return ex.toStatusMessage(categories, prefix);
+            return CStatusMessage::fromJsonException(ex, categories, prefix);
         }
         return {};
     }

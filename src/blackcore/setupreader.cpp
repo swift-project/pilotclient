@@ -330,7 +330,7 @@ namespace BlackCore
         }
         catch (const CJsonException &ex)
         {
-            return ex.toStatusMessage(this, QStringLiteral("Parsing local setup file '%1'").arg(fn));
+            return CStatusMessage::fromJsonException(ex, this, QStringLiteral("Parsing local setup file '%1'").arg(fn));
         }
     }
 
@@ -408,7 +408,7 @@ namespace BlackCore
                     // we downloaded an unparsable JSON file.
                     // as we control those files something is wrong
                     const QString errorMsg = QStringLiteral("Setup file loaded from '%1' cannot be parsed").arg(urlString);
-                    const CStatusMessage msg = ex.toStatusMessage(this, errorMsg);
+                    const CStatusMessage msg = CStatusMessage::fromJsonException(ex, this, errorMsg);
                     CLogMessage::preformatted(msg);
                     emit this->setupLoadingMessages(msg);
 

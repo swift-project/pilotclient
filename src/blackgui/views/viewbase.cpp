@@ -801,7 +801,7 @@ namespace BlackGui
                 }
                 catch (const CJsonException &ex)
                 {
-                    m = ex.toStatusMessage(this, QString("Reading JSON from '%1'").arg(fileName));
+                    m = CStatusMessage::fromJsonException(ex, this, QString("Reading JSON from '%1'").arg(fileName));
                     break;
                 }
             }

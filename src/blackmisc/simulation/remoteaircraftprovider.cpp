@@ -458,7 +458,7 @@ namespace BlackMisc
             }
             catch (const CJsonException &ex)
             {
-                CStatusMessage message = ex.toStatusMessage(this, "Invalid parts packet");
+                CStatusMessage message = CStatusMessage::fromJsonException(ex, this, "Invalid parts packet");
                 message.setSeverity(CStatusMessage::SeverityDebug);
                 CLogMessage::preformatted(message);
             }

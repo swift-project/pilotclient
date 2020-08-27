@@ -116,7 +116,7 @@ namespace BlackCore
                     catch (const CJsonException &ex)
                     {
                         emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFailed, 0, url);
-                        return ex.toStatusMessage(this, QStringLiteral("Reading airports from '%1'").arg(fileName));
+                        return CStatusMessage::fromJsonException(ex, this, QStringLiteral("Reading airports from '%1'").arg(fileName));
                     }
                 }
             }

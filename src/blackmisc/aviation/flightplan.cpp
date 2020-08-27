@@ -630,7 +630,7 @@ namespace BlackMisc
             }
             catch (const CJsonException &ex)
             {
-                const CStatusMessage m = ex.toStatusMessage(&fp, QString("Parsing flight plan from failed."));
+                const CStatusMessage m = CStatusMessage::fromJsonException(ex, &fp, QString("Parsing flight plan from failed."));
                 Q_UNUSED(m)
             }
             return fp;
@@ -703,7 +703,7 @@ namespace BlackMisc
                         }
                         catch (const CJsonException &ex)
                         {
-                            m = ex.toStatusMessage(getLogCategories(), "Parse error in " + fileName);
+                            m = CStatusMessage::fromJsonException(ex, getLogCategories(), "Parse error in " + fileName);
                             if (msgs) { msgs->push_back(m); }
                             break;
                         }
@@ -717,7 +717,7 @@ namespace BlackMisc
             {
                 if (msgs)
                 {
-                    msgs->push_back(ex.toStatusMessage(getLogCategories(), QStringLiteral("Parsing flight plan from '%1' failed.").arg(fileName)));
+                    msgs->push_back(CStatusMessage::fromJsonException(ex, getLogCategories(), QStringLiteral("Parsing flight plan from '%1' failed.").arg(fileName)));
                 }
             }
             return CFlightPlan();

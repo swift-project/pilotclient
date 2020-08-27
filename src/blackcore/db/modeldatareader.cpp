@@ -493,7 +493,7 @@ namespace BlackCore
                         catch (const CJsonException &ex)
                         {
                             emit this->dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFailed, 0, url);
-                            msgs.push_back(ex.toStatusMessage(this, QStringLiteral("Reading liveries from '%1'").arg(fileName)));
+                            msgs.push_back(CStatusMessage::fromJsonException(ex, this, QStringLiteral("Reading liveries from '%1'").arg(fileName)));
                         }
                     }
                 }
@@ -533,7 +533,7 @@ namespace BlackCore
                         catch (const CJsonException &ex)
                         {
                             emit this->dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFailed, 0, url);
-                            msgs.push_back(ex.toStatusMessage(this, QStringLiteral("Reading models from '%1'").arg(fileName)));
+                            msgs.push_back(CStatusMessage::fromJsonException(ex, this, QStringLiteral("Reading models from '%1'").arg(fileName)));
                         }
                     }
                 }
@@ -573,7 +573,7 @@ namespace BlackCore
                         catch (const CJsonException &ex)
                         {
                             emit this->dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFailed, 0, url);
-                            msgs.push_back(ex.toStatusMessage(this, QStringLiteral("Reading distributors from '%1'").arg(fileName)));
+                            msgs.push_back(CStatusMessage::fromJsonException(ex, this, QStringLiteral("Reading distributors from '%1'").arg(fileName)));
                         }
                     }
                 }

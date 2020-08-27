@@ -7,9 +7,7 @@
  */
 
 #include "blackmisc/jsonexception.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/logcategorylist.h"
-#include "blackmisc/logmessage.h"
+#include "blackmisc/range.h"
 #include <QStringBuilder>
 #include <QThreadStorage>
 #include <vector>
@@ -28,20 +26,10 @@ namespace BlackMisc
     void CJsonException::anchor()
     { }
 
-    CStatusMessage CJsonException::toStatusMessage(const CLogCategoryList &categories, const QString &prefix) const
-    {
-        return CStatusMessage(categories).validationError(toString(prefix));
-    }
-
     QString CJsonException::toString(const QString &prefix) const
     {
         if (prefix.isEmpty()) { return QStringLiteral("%1 in '%2'").arg(what()).arg(getStackTrace()); }
         return QStringLiteral("%1: %2 in '%3'").arg(prefix).arg(what()).arg(getStackTrace());
-    }
-
-    void CJsonException::toLogMessage(const CLogCategoryList &categories, const QString &prefix) const
-    {
-        CLogMessage(categories).validationError(toString(prefix));
     }
 
     QString CJsonException::stackString()

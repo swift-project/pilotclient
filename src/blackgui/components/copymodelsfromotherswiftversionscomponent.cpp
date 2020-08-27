@@ -152,7 +152,7 @@ namespace BlackGui
             }
             catch (const CJsonException &ex)
             {
-                this->showOverlayMessage(ex.toStatusMessage(this, QStringLiteral("JSON format error. '%1'").arg(fiOtherModelFile.absoluteFilePath())));
+                this->showOverlayMessage(CStatusMessage::fromJsonException(ex, this, QStringLiteral("JSON format error. '%1'").arg(fiOtherModelFile.absoluteFilePath())));
                 return false;
             }
 

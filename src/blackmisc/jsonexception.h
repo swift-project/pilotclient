@@ -34,14 +34,8 @@ namespace BlackMisc
         //! Get a stack trace of where in the JSON object tree the error occurred.
         const QString &getStackTrace() const { return m_stack; }
 
-        //! Get a status message representation.
-        CStatusMessage toStatusMessage(const CLogCategoryList &categories, const QString &prefix) const;
-
         //! As string info
         QString toString(const QString &prefix) const;
-
-        //! Write a message to the log.
-        void toLogMessage(const CLogCategoryList &categories, const QString &prefix) const;
 
     private:
         static QString stackString();

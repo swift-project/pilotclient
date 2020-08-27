@@ -287,7 +287,7 @@ namespace BlackMisc
         }
         catch (const CJsonException &ex)
         {
-            return ex.toStatusMessage(categories, prefix);
+            return CStatusMessage::fromJsonException(ex, categories, prefix);
         }
         return {};
     }
@@ -355,7 +355,7 @@ namespace BlackMisc
         }
         catch (const CJsonException &ex)
         {
-            return ex.toStatusMessage(categories, prefix);
+            return CStatusMessage::fromJsonException(ex, categories, prefix);
         }
         return {};
     }

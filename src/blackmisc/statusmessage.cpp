@@ -348,6 +348,11 @@ namespace BlackMisc
         return m;
     }
 
+    CStatusMessage CStatusMessage::fromJsonException(const CJsonException &ex, const CLogCategoryList &categories, const QString &prefix)
+    {
+        return CStatusMessage(categories).validationError(ex.toString(prefix));
+    }
+
     void CStatusMessage::registerMetadata()
     {
         CValueObject<CStatusMessage>::registerMetadata();
