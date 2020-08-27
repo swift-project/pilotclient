@@ -7,18 +7,11 @@
  */
 
 #include "blackmisc/tokenbucket.h"
-#include "blackmisc/pq/units.h"
 
 #include <QtGlobal>
 
-using namespace BlackMisc::PhysicalQuantities;
-
 namespace BlackMisc
 {
-    CTokenBucket::CTokenBucket(int capacity, const CTime &interval, int numTokensToRefill)
-        : m_capacity(capacity), m_numTokensToRefill(numTokensToRefill), m_intervalMs(interval.value(CTimeUnit::ms()))
-    {}
-
     CTokenBucket::CTokenBucket(int capacity, qint64 intervalMs, int numTokensToRefill)
         : m_capacity(capacity), m_numTokensToRefill(numTokensToRefill), m_intervalMs(intervalMs)
     {}

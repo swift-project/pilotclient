@@ -156,9 +156,8 @@ namespace BlackMisc
             else if (statusMessage.getMessage().startsWith(QStringLiteral("QCommandLineParser: option not defined"))) { statusMessage.setSeverity(CStatusMessage::SeverityDebug); }
         }
 
-        using namespace BlackMisc::PhysicalQuantities;
         auto bucket = m_tokenBuckets.find(statusMessage);
-        if (bucket == m_tokenBuckets.end()) { bucket = m_tokenBuckets.insert(statusMessage, { { 5, CTime(1, CTimeUnit::s()), 1 }, 0 }); }
+        if (bucket == m_tokenBuckets.end()) { bucket = m_tokenBuckets.insert(statusMessage, { { 5, 1000, 1 }, 0 }); }
         if (! bucket->first.tryConsume())
         {
             bucket->second++;

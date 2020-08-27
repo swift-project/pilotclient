@@ -10,7 +10,6 @@
 #define BLACKMISC_TOKENBUCKET_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/pq/time.h"
 #include <QDateTime>
 
 namespace BlackMisc
@@ -25,9 +24,6 @@ namespace BlackMisc
     class BLACKMISC_EXPORT CTokenBucket
     {
     public:
-        //! Constructor for given replenishment policy
-        CTokenBucket(int capacity, const PhysicalQuantities::CTime &interval, int numTokensToRefill);
-
         //! Constructor for given replenishment policy
         CTokenBucket(int capacity, qint64 intervalMs, int numTokensToRefill);
 

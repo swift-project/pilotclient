@@ -102,7 +102,7 @@ namespace BlackCore
               CClientAware(clientProvider),
               COwnAircraftAware(ownAircraftProvider),
               CRemoteAircraftAware(remoteAircraftProvider),
-              m_tokenBucket(10, CTime(5, CTimeUnit::s()), 1)
+              m_tokenBucket(10, 5000, 1)
         {
             initializeMessageTypes();
             connect(&m_socket, &QTcpSocket::readyRead, this, &CFSDClient::readDataFromSocket,  Qt::QueuedConnection);
