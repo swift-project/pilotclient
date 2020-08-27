@@ -8,7 +8,6 @@
 
 #include "blackmisc/atomicfile.h"
 #include "blackmisc/algorithm.h"
-#include "blackmisc/logmessage.h"
 #include "blackmisc/stacktrace.h"
 
 #include <QDir>
@@ -174,12 +173,7 @@ namespace BlackMisc
                     return;
                 }
             }
-            if (rename(m_originalFilename))
-            {
-                // fall back succeeded, so just log the reason for the original failure
-                CLogMessage(this).debug(u"CAtomicFile replacing %1: %2") << m_originalFilename << windowsError;
-            }
-            // else if rename() failed, then the reason is already reported by QFile
+            rename(m_originalFilename);
         }
     }
 #else
