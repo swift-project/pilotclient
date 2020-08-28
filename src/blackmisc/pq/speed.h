@@ -13,6 +13,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/physicalquantity.h"
+#include <QPair>
 
 namespace BlackMisc
 {
@@ -34,9 +35,11 @@ namespace BlackMisc
             CSpeed(const QString &unitString) : CPhysicalQuantity(unitString) {}
         };
 
+        using CSpeedPair  = QPair<CSpeed, CSpeed>;   //!< Pair of speeds
     } // ns
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CSpeed)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CSpeedPair)
 
 #endif // guard

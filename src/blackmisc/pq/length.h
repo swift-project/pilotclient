@@ -13,6 +13,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/physicalquantity.h"
+#include <QPair>
 
 namespace BlackMisc
 {
@@ -37,9 +38,12 @@ namespace BlackMisc
             //! \copydoc CPhysicalQuantity(const QString &unitString)
             CLength(const QString &unitString) : CPhysicalQuantity(unitString) {}
         };
+
+        using CLengthPair = QPair<CLength, CLength>; //!< Pair of length
     } // ns
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CLength)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CLengthPair)
 
 #endif // guard

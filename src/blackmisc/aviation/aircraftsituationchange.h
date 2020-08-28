@@ -15,7 +15,6 @@
 #include "altitude.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/speed.h"
-#include "blackmisc/pair.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/valueobject.h"

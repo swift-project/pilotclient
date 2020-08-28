@@ -19,6 +19,7 @@
 
 #include <QMetaType>
 #include <QString>
+#include <QPair>
 
 namespace BlackMisc
 {
@@ -114,9 +115,12 @@ namespace BlackMisc
             //! Normalize: 0≤ degrees <360
             static double normalizeDegrees360(double degrees, int roundDigits = -1);
         };
+
+        using CAnglePair  = QPair<CAngle, CAngle>;   //!< Pair of angle
     } // ns
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAngle)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAnglePair)
 
 #endif // guard

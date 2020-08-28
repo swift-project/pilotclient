@@ -27,6 +27,7 @@
 #include "blackmisc/mixin/mixinmetatype.h"
 #include "blackmisc/blackmiscexport.h"
 
+#include <QPair>
 #include <QMetaType>
 #include <QString>
 #include <QRegularExpression>
@@ -239,11 +240,14 @@ namespace BlackMisc
                 BLACK_METAMEMBER(altitudeType)
             );
         };
+
+        using CAltitudePair = QPair<CAltitude, CAltitude>; //!< Pair of altitude
     } // ns
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAltitude)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAltitude::ReferenceDatum)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAltitude::AltitudeType)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAltitudePair)
 
 #endif // guard
