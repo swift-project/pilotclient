@@ -60,9 +60,6 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
-        //! Load from file
-        static CPixmap loadFromFile(const QString &filePath, CStatusMessage &msg);
-
     private:
         //! Init the byte array with data
         void fillByteArray();

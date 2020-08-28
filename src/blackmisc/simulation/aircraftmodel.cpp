@@ -569,10 +569,13 @@ namespace BlackMisc
         CPixmap CAircraftModel::loadIcon(CStatusMessage &success) const
         {
             static const CStatusMessage noIcon(this, CStatusMessage::SeverityInfo, u"no icon");
+            static const CStatusMessage loaded(this, CStatusMessage::SeverityInfo, u"icon loaded");
             if (m_iconFile.isEmpty()) { success = noIcon; return CPixmap(); }
+            if (!QFile(m_iconFile).exists()) { success = noIcon; return CPixmap(); }
 
-            // load from file
-            const CPixmap pm(CPixmap::loadFromFile(m_iconFile, success));
+            QPixmap pm;
+            if (!pm.load(m_iconFile)) { success = noIcon; return CPixmap(); }
+            success = loaded;
             return pm;
         }
 

@@ -7,7 +7,6 @@
  */
 
 #include "blackmisc/pixmap.h"
-#include "blackmisc/statusmessage.h"
 
 #include <QBuffer>
 #include <QFile>
@@ -73,31 +72,6 @@ namespace BlackMisc
     {
         Q_UNUSED(i18n);
         return "Pixmap";
-    }
-
-    CPixmap CPixmap::loadFromFile(const QString &filePath, CStatusMessage &msg)
-    {
-        if (filePath.isEmpty())
-        {
-            msg = CStatusMessage(CStatusMessage::SeverityError, u"no file path");
-            return CPixmap();
-        }
-        if (!QFile(filePath).exists())
-        {
-            msg = CStatusMessage().error(u"file %1 does not exist") << filePath;
-            return CPixmap();
-        }
-        QPixmap pm;
-        if (pm.load(filePath))
-        {
-            msg = CStatusMessage().info(u"file %1 loaded") << filePath;
-            return CPixmap(pm);
-        }
-        else
-        {
-            msg = CStatusMessage().error(u"file %1 not loaded") << filePath;
-            return CPixmap();
-        }
     }
 
     QPixmap CPixmap::toPixmap() const
