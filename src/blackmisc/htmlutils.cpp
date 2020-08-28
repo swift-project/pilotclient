@@ -8,6 +8,7 @@
 
 #include "blackmisc/htmlutils.h"
 #include <QStringBuilder>
+#include <QStringList>
 
 namespace BlackMisc
 {
@@ -31,11 +32,6 @@ namespace BlackMisc
             html += QStringLiteral("</tr>");
         }
         return u"<table>" % html % u"</table>";
-    }
-
-    QString unwrappedTooltip(const QString &text)
-    {
-        return u"<p style='white-space:pre'>" % text % u"</p>";
     }
 
     QString asHyperlink(const QString &url, const QString &text)
