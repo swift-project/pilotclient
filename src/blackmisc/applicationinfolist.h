@@ -48,6 +48,15 @@ namespace BlackMisc
 
         //! Filled from cache data directories
         static CApplicationInfoList fromOtherSwiftVersionsFromDataDirectories(bool reinit = false);
+
+        //! swift application data sub directories with info if available
+        static const QMap<QString, CApplicationInfo> &applicationDataDirectoryMapWithoutCurrentVersion();
+
+        //! swift application data sub directories with info if available
+        static QMap<QString, CApplicationInfo> currentApplicationDataDirectoryMapWithoutCurrentVersion();
+
+        //! Other swift data directories
+        static bool hasOtherSwiftDataDirectories();
     };
 } // ns
 

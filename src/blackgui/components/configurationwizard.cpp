@@ -40,7 +40,7 @@ namespace BlackGui
 
             // no other versions, skip copy pages
             // disabled afetr discussion with RP as it is confusing
-            // if (!CDirectoryUtils::hasOtherSwiftDataDirectories()) { this->setStartId(ConfigSimulator); }
+            // if (!CApplicationInfoList::hasOtherSwiftDataDirectories()) { this->setStartId(ConfigSimulator); }
 
             ui->tb_SimulatorSpecific->setCurrentWidget(ui->comp_InstallXSwiftBus);
 

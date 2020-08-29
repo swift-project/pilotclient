@@ -11,7 +11,6 @@
 #ifndef BLACKMISC_SWIFTDIRECTORIES_H
 #define BLACKMISC_SWIFTDIRECTORIES_H
 
-#include "blackmisc/applicationinfo.h"
 #include "blackmisc/blackmiscexport.h"
 #include <QMap>
 #include <QSet>
@@ -28,9 +27,6 @@ namespace BlackMisc
     class BLACKMISC_EXPORT CSwiftDirectories
     {
     public:
-        //! File path and swift application
-        using FilePerApplication = QMap<QString, CApplicationInfo>;
-
         //! Returns the bin directory. On Windows/Linux this is the same directory as
         //! QCoreApplication::applicationDirPath(), but on MacOS the exceutable is
         //! located deeper in the hierarchy of the bundles
@@ -66,15 +62,6 @@ namespace BlackMisc
 
         //! swift application data sub directories
         static QStringList applicationDataDirectoryList(bool withoutCurrent = false, bool decodedDirName = false);
-
-        //! swift application data sub directories with info if available
-        static const FilePerApplication &applicationDataDirectoryMapWithoutCurrentVersion();
-
-        //! swift application data sub directories with info if available
-        static FilePerApplication currentApplicationDataDirectoryMapWithoutCurrentVersion();
-
-        //! Other swift data directories
-        static bool hasOtherSwiftDataDirectories();
 
         //! swift application data directory for one specific installation (a version)
         //! \remark use CDirectoryUtils::applicationDataDirectory for one all swift versions

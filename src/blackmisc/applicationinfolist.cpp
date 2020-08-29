@@ -9,6 +9,7 @@
 #include "blackmisc/applicationinfolist.h"
 #include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
+#include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
 
 using namespace BlackConfig;
@@ -46,8 +47,8 @@ namespace BlackMisc
     {
         this->clear();
         const QMap<QString, CApplicationInfo> otherVersions = reinit ?
-                CSwiftDirectories::currentApplicationDataDirectoryMapWithoutCurrentVersion() :
-                CSwiftDirectories::applicationDataDirectoryMapWithoutCurrentVersion();
+                currentApplicationDataDirectoryMapWithoutCurrentVersion() :
+                applicationDataDirectoryMapWithoutCurrentVersion();
 
         for (const CApplicationInfo &info : otherVersions)
         {
@@ -61,5 +62,46 @@ namespace BlackMisc
         CApplicationInfoList il;
         il.otherSwiftVersionsFromDataDirectories(reinit);
         return il;
+    }
+
+    const QMap<QString, CApplicationInfo> &CApplicationInfoList::applicationDataDirectoryMapWithoutCurrentVersion()
+    {
+        static const QMap<QString, CApplicationInfo> directories = currentApplicationDataDirectoryMapWithoutCurrentVersion();
+        return directories;
+    }
+
+    QMap<QString, CApplicationInfo> CApplicationInfoList::currentApplicationDataDirectoryMapWithoutCurrentVersion()
+    {
+        QMap<QString, CApplicationInfo> directories;
+        for (const QFileInfo &info : CSwiftDirectories::currentApplicationDataDirectories())
+        {
+            // check for myself (the running swift)
+            if (caseInsensitiveStringCompare(info.filePath(), CSwiftDirectories::normalizedApplicationDataDirectory())) { continue; }
+
+            // the application info will be written by each swift application started
+            // so the application type will always contain that application
+            const QString appInfoFile = CFileUtils::appendFilePaths(info.filePath(), CApplicationInfo::fileName());
+            const QString appInfoJson = CFileUtils::readFileToString(appInfoFile);
+            CApplicationInfo appInfo;
+            if (appInfoJson.isEmpty())
+            {
+                // no JSON means the app no longer exists
+                const QString exeDir = CDirectoryUtils::decodeNormalizedDirectory(info.filePath());
+                appInfo.setExecutablePath(exeDir);
+            }
+            else
+            {
+                appInfo = CApplicationInfo::fromJson(appInfoJson);
+            }
+            appInfo.setApplicationDataDirectory(info.filePath());
+            directories.insert(info.filePath(), appInfo);
+        }
+
+        return directories;
+    }
+
+    bool CApplicationInfoList::hasOtherSwiftDataDirectories()
+    {
+        return applicationDataDirectoryMapWithoutCurrentVersion().size() > 0;
     }
 } // ns

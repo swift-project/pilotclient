@@ -145,47 +145,6 @@ namespace BlackMisc
         return dirs;
     }
 
-    const CSwiftDirectories::FilePerApplication &CSwiftDirectories::applicationDataDirectoryMapWithoutCurrentVersion()
-    {
-        static const FilePerApplication directories = currentApplicationDataDirectoryMapWithoutCurrentVersion();
-        return directories;
-    }
-
-    CSwiftDirectories::FilePerApplication CSwiftDirectories::currentApplicationDataDirectoryMapWithoutCurrentVersion()
-    {
-        FilePerApplication directories;
-        for (const QFileInfo &info : currentApplicationDataDirectories())
-        {
-            // check for myself (the running swift)
-            if (caseInsensitiveStringCompare(info.filePath(), normalizedApplicationDataDirectory())) { continue; }
-
-            // the application info will be written by each swift application started
-            // so the application type will always contain that application
-            const QString appInfoFile = CFileUtils::appendFilePaths(info.filePath(), CApplicationInfo::fileName());
-            const QString appInfoJson = CFileUtils::readFileToString(appInfoFile);
-            CApplicationInfo appInfo;
-            if (appInfoJson.isEmpty())
-            {
-                // no JSON means the app no longer exists
-                const QString exeDir = CDirectoryUtils::decodeNormalizedDirectory(info.filePath());
-                appInfo.setExecutablePath(exeDir);
-            }
-            else
-            {
-                appInfo = CApplicationInfo::fromJson(appInfoJson);
-            }
-            appInfo.setApplicationDataDirectory(info.filePath());
-            directories.insert(info.filePath(), appInfo);
-        }
-
-        return directories;
-    }
-
-    bool CSwiftDirectories::hasOtherSwiftDataDirectories()
-    {
-        return applicationDataDirectoryMapWithoutCurrentVersion().size() > 0;
-    }
-
     const QString &CSwiftDirectories::normalizedApplicationDataDirectory()
     {
         static const QString p = CFileUtils::appendFilePaths(applicationDataDirectory(), normalizedApplicationDirectory());

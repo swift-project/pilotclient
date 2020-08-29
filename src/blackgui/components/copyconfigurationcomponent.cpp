@@ -51,7 +51,7 @@ namespace BlackGui
             ui->setupUi(this);
             this->initOtherSwiftVersions();
             this->setWidths();
-            m_hasOtherSwiftVersions = CSwiftDirectories::hasOtherSwiftDataDirectories();
+            m_hasOtherSwiftVersions = CApplicationInfoList::hasOtherSwiftDataDirectories();
 
             ui->cb_ShowAll->setChecked(m_nameFilterDisables);
             connect(ui->rb_Cache, &QRadioButton::toggled, [ = ](bool) { this->initCurrentDirectories(true); });
@@ -419,7 +419,7 @@ namespace BlackGui
         void CCopyConfigurationComponent::initOtherSwiftVersions()
         {
             ui->cb_OtherVersions->clear();
-            const QMap<QString, CApplicationInfo> otherVersions = CSwiftDirectories::currentApplicationDataDirectoryMapWithoutCurrentVersion();
+            const QMap<QString, CApplicationInfo> otherVersions = CApplicationInfoList::currentApplicationDataDirectoryMapWithoutCurrentVersion();
             for (const auto &pair : makePairsRange(otherVersions))
             {
                 const CApplicationInfo &info(pair.second);
