@@ -74,8 +74,6 @@ namespace BlackMiscTest
         QVERIFY(v3 == v33 && v3 == 0);
 
         QVERIFY(callsigns.front().equalsString("DLH3000"));
-        callsigns.sortByProperty(indexListCs);
-        QVERIFY(callsigns.front().equalsString("DLH1000"));
 
         CStatusMessage s1(CStatusMessage::SeverityDebug, u"debug msg.");
         s1.setMSecsSinceEpoch(4000);
@@ -110,9 +108,6 @@ namespace BlackMiscTest
 
         QVERIFY(msgs.front().getMSecsSinceEpoch() == 4000);
         QVERIFY(msgs.back().getMSecsSinceEpoch() == 1000);
-        msgs.sortByProperty(indexList);
-        QVERIFY(msgs.front().getMSecsSinceEpoch() == 1000);
-        QVERIFY(msgs.back().getMSecsSinceEpoch() == 4000);
     }
 } // namespace
 
