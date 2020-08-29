@@ -17,7 +17,6 @@
 #include "blackmisc/invoke.h"
 #include "blackmisc/promise.h"
 #include "blackmisc/stacktrace.h"
-#include "blackmisc/variant.h"
 
 #include <QFuture>
 #include <QMetaObject>
@@ -30,6 +29,7 @@
 #include <QString>
 #include <QThread>
 #include <QTimer>
+#include <QVariant>
 #include <QWeakPointer>
 #include <QtGlobal>
 #include <algorithm>
@@ -211,7 +211,7 @@ namespace BlackMisc
         static CWorker *fromTask(QObject *owner, const QString &name, F &&task)
         {
             int typeId = qMetaTypeId<std::decay_t<decltype(std::forward<F>(task)())>>();
-            return fromTaskImpl(owner, name, typeId, [task = std::forward<F>(task)]() mutable { return CVariant::fromResultOf(std::move(task)); });
+            return fromTaskImpl(owner, name, typeId, [task = std::forward<F>(task)]() mutable { return fromResultOf(std::move(task), 0); });
         }
 
         //! Connects to a functor to which will be passed the result when the task is finished.
@@ -252,14 +252,19 @@ namespace BlackMisc
         void ps_runTask();
 
     private:
-        CWorker(const std::function<CVariant()> &task) : m_task(task) {}
-        static CWorker *fromTaskImpl(QObject *owner, const QString &name, int typeId, const std::function<CVariant()> &task);
+        CWorker(const std::function<QVariant()> &task) : m_task(task) {}
+        static CWorker *fromTaskImpl(QObject *owner, const QString &name, int typeId, const std::function<QVariant()> &task);
+
+        template <typename F>
+        static auto fromResultOf(F &&func, std::enable_if_t<std::is_void<decltype(func())>::value, int>) { func(); return QVariant(); }
+        template <typename F>
+        static auto fromResultOf(F &&func, std::enable_if_t<!std::is_void<decltype(func())>::value, int>) { return QVariant::fromValue(func()); }
 
         template <typename R>
         R resultNoWait() { Q_ASSERT(m_result.canConvert<R>()); return m_result.value<R>(); }
 
-        std::function<CVariant()> m_task;
-        CVariant m_result;
+        std::function<QVariant()> m_task;
+        QVariant m_result;
     };
 
     /*!

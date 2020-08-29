@@ -127,12 +127,6 @@ namespace BlackMisc
             return CVariant(QVariant::fromValue(std::forward<T>(value)));
         }
 
-        //! Call a function and construct a variant from its return value.
-        template <typename F> static CVariant fromResultOf(F &&func)
-        {
-            return fromResultOfImpl(std::forward<F>(func), typename std::is_void<decltype(func())>::type());
-        }
-
         //! Change the value.
         template <typename T> void setValue(T &&value) { m_v.setValue(std::forward<T>(value)); }
 
@@ -296,9 +290,6 @@ namespace BlackMisc
             return result;
         }
         bool isVariantList() const;
-
-        template <typename F> static CVariant fromResultOfImpl(F &&func, std::true_type) { std::forward<F>(func)(); return {}; }
-        template <typename F> static CVariant fromResultOfImpl(F &&func, std::false_type) { return from(std::forward<F>(func)()); }
     };
 } // namespace
 
