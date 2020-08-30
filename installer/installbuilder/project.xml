@@ -115,7 +115,7 @@ It must be closed before the installation can proceed</progressText>
             <actionList>
                 <readFile>
                     <name>installBaseDir</name>
-                    <path>${windows_folder_local_appdata}/org.swift-project/lastinstallpath.txt</path>
+                    <path>${windows_folder_local_appdata}/org.swift-project/lastinstallpath-${architecture}bit.txt</path>
                 </readFile>
                 <setInstallerVariableFromRegEx>
                     <name>installBaseDir</name>
@@ -130,7 +130,7 @@ It must be closed before the installation can proceed</progressText>
                 </platformTest>
                 <fileTest>
                     <condition>readable</condition>
-                    <path>${windows_folder_local_appdata}/org.swift-project/lastinstallpath.txt</path>
+                    <path>${windows_folder_local_appdata}/org.swift-project/lastinstallpath-${architecture}bit.txt</path>
                 </fileTest>
             </ruleList>
         </actionGroup>
@@ -214,7 +214,7 @@ It must be closed before the installation can proceed</progressText>
             </ruleList>
         </createDirectory>
         <writeFile>
-            <path>${windows_folder_local_appdata}/org.swift-project/lastinstallpath.txt</path>
+            <path>${windows_folder_local_appdata}/org.swift-project/lastinstallpath-${architecture}bit.txt</path>
             <text>${installdir}</text>
             <ruleList>
                 <platformTest>
