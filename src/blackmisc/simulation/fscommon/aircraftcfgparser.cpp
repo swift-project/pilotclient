@@ -305,7 +305,11 @@ namespace BlackMisc
                                 {
                                     atcType = c;
                                 }
-                                else if (lineFixed.startsWith("atc_model", Qt::CaseInsensitive))
+                                /*else if (lineFixed.startsWith("atc_model", Qt::CaseInsensitive))
+                                {
+                                    atcModel = c;
+                                }*/
+                                else if (lineFixed.startsWith("icao_type_designator", Qt::CaseInsensitive))
                                 {
                                     atcModel = c;
                                 }
@@ -434,11 +438,16 @@ namespace BlackMisc
             QString CAircraftCfgParser::getFixedIniLineContent(const QString &line)
             {
                 if (line.isEmpty()) { return {}; }
+
+                // Remove inline comments starting with ;
+                const int indexComment = line.indexOf(';');
+                QString content = line.leftRef(indexComment - 1).trimmed().toString();
+
                 const int index = line.indexOf('=');
                 if (index < 0) { return {}; }
                 if (line.length() < index + 1) { return {}; }
 
-                QString content(line.midRef(index + 1).trimmed().toString());
+                content = content.midRef(index + 1).trimmed().toString();
 
                 // fix "" strings, some are malformed and just contain " at beginning, not at the end
                 if (hasBalancedQuotes(content, '"'))
