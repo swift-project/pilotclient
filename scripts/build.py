@@ -258,6 +258,7 @@ class Builder:
         params = (
             ('format', 'symbols'),
             ('token', token),
+            ('tag', self.version),
         )
         r = requests.post(url, params=params, data=data)
         r.raise_for_status()
