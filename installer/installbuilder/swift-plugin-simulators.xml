@@ -72,6 +72,38 @@ This plugin acts as the interface between swift and FSX.</detailedDescription>
             </shouldPackRuleList>
         </component>
         <component>
+            <name>fs2020</name>
+            <description>MS Flight Simulator 2020</description>
+            <canBeEdited>1</canBeEdited>
+            <detailedDescription>MS Flight Simulator 2020 Simulator Plugin
+This plugin acts as the interface between swift and FS2020.</detailedDescription>
+            <selected>1</selected>
+            <show>1</show>
+            <folderList>
+                <folder>
+                    <description>bin/plugins/simulator</description>
+                    <destination>${installdir}/bin/plugins/simulator</destination>
+                    <name>bin_plugins_simulator</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>../../dist/bin/plugins/simulator/simulatorfs2020.dll</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+            <shouldPackRuleList>
+                <platformTest>
+                    <type>windows</type>
+                </platformTest>
+                <compareText>
+                    <logic>equals</logic>
+                    <text>${architecture}</text>
+                    <value>32</value>
+                </compareText>
+            </shouldPackRuleList>
+        </component>
+        <component>
             <name>p3d</name>
             <description>PREPAR3D</description>
             <canBeEdited>1</canBeEdited>

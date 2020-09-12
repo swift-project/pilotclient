@@ -84,6 +84,11 @@ namespace BlackMisc
             return getSimulator().testFlag(FG);
         }
 
+        bool CSimulatorInfo::isFS2020() const
+        {
+            return getSimulator().testFlag(FS2020);
+        }
+
         bool CSimulatorInfo::isAnySimulator() const
         {
             return isFSX() || isFS9() || isXPlane() || isP3D() || isFG();
@@ -260,6 +265,7 @@ namespace BlackMisc
             {
                 s |= P3D;
             }
+            if (i.contains("fs2020")) { s |= FS2020; }
             return s;
         }
 

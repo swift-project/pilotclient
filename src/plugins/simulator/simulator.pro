@@ -34,4 +34,7 @@ swiftConfig(sims.fg) {
     SUBDIRS += flightgear
     SUBDIRS += flightgearconfig
 }
+swiftConfig(sims.fs2020) {
+    SUBDIRS += fs2020
+}
 load(common_post)

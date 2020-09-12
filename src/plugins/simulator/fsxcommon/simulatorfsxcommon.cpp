@@ -2917,6 +2917,11 @@ namespace BlackSimPlugin
                 // FSX drivers only works with FSX
                 return connectedSimName.contains("fsx") || connectedSimName.contains("microsoft") || connectedSimName.contains("simulator x");
             }
+            else if (pluginSim.isFS2020())
+            {
+                // FS2020 drivers only works with FS2020
+                return connectedSimName.contains("kittyhawk");
+            }
             return false;
         }
 

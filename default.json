@@ -25,7 +25,8 @@
         "fsuipc": true,
         "xplane": true,
         "xswiftbus": true,
-        "fg": true
+        "fg": true,
+        "fs2020": true
     },
     "releaseWithDebugInfo": true,
     "profileRelease": false,
