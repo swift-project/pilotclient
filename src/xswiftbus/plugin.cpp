@@ -35,6 +35,10 @@ namespace XSwiftBus
         {
             m_traffic->setDrawingLabels(!m_traffic->isDrawingLabels());
         });
+        m_enableDisableXPlaneAtisMenuItem = m_menu.item("Enable/Disable X-Plane ATIS", [this]
+        {
+            m_atisEnabled.set(m_atisEnabled.get() ? 0 : 1);
+        });
         m_messageWindowSubMenu = m_menu.subMenu("Message Window");
         m_toggleMessageWindowMenuItem = m_messageWindowSubMenu.item("Show/Hide", [this]
         {
