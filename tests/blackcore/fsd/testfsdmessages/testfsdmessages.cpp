@@ -385,34 +385,34 @@ namespace BlackMiscTest
 
     void CTestFsdMessages::testPBH()
     {
-//        for (int pitch = -90; pitch < 90; pitch++)
-//        {
-//            for (int bank = -180; bank < 180; bank++)
-//            {
-//                for (int heading = 0; heading < 360; heading++)
-//                {
-//                    std::uint32_t pbh = 0;
-//                    packPBH(pitch, bank, heading, true, pbh);
+        struct PBH { int pitch, bank, heading; };
+        QVector<PBH> testData;
+        for (int pitch = -90; pitch < 90; pitch++)      { testData.push_back({ pitch, 0, 0 }); }
+        for (int bank = -179; bank < 180; bank++)       { testData.push_back({ 0, bank, 0 }); }
+        for (int heading = 0; heading < 360; heading++) { testData.push_back({ 0, 0, heading }); }
+        for (const auto &input : testData)
+        {
+            std::uint32_t pbh = 0;
+            packPBH(input.pitch, input.bank, input.heading, true, pbh);
 
-//                    double pitch2 = 0;
-//                    double bank2 = 0;
-//                    double heading2 = 0;
-//                    bool onGround2 = false;
-//                    unpackPBH(pbh, pitch2, bank2, heading2, onGround2);
-//                    QVERIFY(pitch2 >= -90);
-//                    QVERIFY(pitch2 < 90);
-//                    QVERIFY(bank2 >= -180);
-//                    QVERIFY(bank2 < 180);
-//                    QVERIFY(heading2 >= 0);
-//                    QVERIFY(heading2 < 360);
-//                    QCOMPARE(pitch, pitch2);
-//                    QCOMPARE(bank, bank2);
-//                    QVERIFY(qAbs(heading - heading2) < 1);
-//                    QCOMPARE(true, onGround2);
-//                }
-//            }
-//        }
+            double pitch2 = 0;
+            double bank2 = 0;
+            double heading2 = 0;
+            bool onGround2 = false;
+            unpackPBH(pbh, pitch2, bank2, heading2, onGround2);
+            QVERIFY(pitch2 >= -90);
+            QVERIFY(pitch2 < 90);
+            QVERIFY(bank2 >= -180);
+            QVERIFY(bank2 < 180);
+            QVERIFY(heading2 >= 0);
+            QVERIFY(heading2 < 360);
+            QCOMPARE(input.pitch, pitch2);
+            QCOMPARE(input.bank, bank2);
+            QCOMPARE(true, onGround2);
 
+            if (input.heading < 0) { heading2 -= 360; }
+            QVERIFY(qAbs(input.heading - heading2) < 1);
+        }
     }
 
     void CTestFsdMessages::testPilotDataUpdate()
