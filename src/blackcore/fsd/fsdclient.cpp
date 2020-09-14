@@ -334,7 +334,7 @@ namespace BlackCore
                                                 myAircraft.getGroundSpeed().valueInteger(CSpeedUnit::kts()),
                                                 myAircraft.getPitch().value(CAngleUnit::deg()),
                                                 myAircraft.getBank().value(CAngleUnit::deg()),
-                                                myAircraft.getHeading().value(CAngleUnit::deg()),
+                                                myAircraft.getHeading().normalizedTo360Degrees().value(CAngleUnit::deg()),
                                                 myAircraft.getParts().isOnGround());
                 sendQueudedMessage(pilotDataUpdate);
             }
@@ -352,7 +352,7 @@ namespace BlackCore
                     myAircraft.getGroundSpeed().valueInteger(CSpeedUnit::kts()),
                     myAircraft.getPitch().value(CAngleUnit::deg()),
                     myAircraft.getBank().value(CAngleUnit::deg()),
-                    myAircraft.getHeading().value(CAngleUnit::deg()),
+                    myAircraft.getHeading().normalizedTo360Degrees().value(CAngleUnit::deg()),
                     myAircraft.getParts().isOnGround());
 
             for (const auto &receiver : as_const(m_interimPositionReceivers))
