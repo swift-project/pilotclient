@@ -266,7 +266,7 @@ class MSVCBuilder(Builder):
 
     def _specific_prepare(self):
         if self.word_size == '32':
-            vs_env = get_vs_env('x86')
+            vs_env = get_vs_env('amd64_x86')
         else:
             vs_env = get_vs_env('amd64')
 
