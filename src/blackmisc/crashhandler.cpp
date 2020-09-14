@@ -69,11 +69,12 @@ namespace BlackMisc
         std::map<std::string, std::string> annotations;
 
         // Backtrace annotations
-        annotations["token"]     = "b15efd93e290be3cf5d39750cadc092b651327ff0c027b80abd75e0ee50df1da";
-        annotations["format"]    = "minidump";
-        annotations["version"]   = CBuildConfig::getVersionString().toStdString();
-        annotations["platform"]  = CBuildConfig::getPlatformString().toStdString();
-        annotations["qtversion"] = QT_VERSION_STR;
+        annotations["token"]         = "b15efd93e290be3cf5d39750cadc092b651327ff0c027b80abd75e0ee50df1da";
+        annotations["format"]        = "minidump";
+        annotations["version"]       = CBuildConfig::getVersionString().toStdString();
+        annotations["short_version"] = CBuildConfig::getShortVersionString().toStdString();
+        annotations["platform"]      = CBuildConfig::getPlatformString().toStdString();
+        annotations["qtversion"]     = QT_VERSION_STR;
 
         // add our logfile
         const QString logAttachment = QStringLiteral("--attachment=attachment_%1=%2").arg(CFileLogger::getLogFileName(), CFileLogger::getLogFilePath());
