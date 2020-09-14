@@ -1,10 +1,5 @@
 load(common_pre)
 
-load(common_pre)
-
-# the P3D version is decided here
-# client\mkspecs\features\libraries.pri
-
 QT += core dbus widgets network
 
 TEMPLATE = lib

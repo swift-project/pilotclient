@@ -17,7 +17,7 @@ HEADERS += *.h
 
 REQUIRES += swiftConfig(sims.p3d)
 TARGET = simulatorp3dconfig
-DISTFILES += simulatorp3d.json
+DISTFILES += simulatorp3dconfig.json
 
 win32 {
     dlltarget.path = $$PREFIX/bin/plugins/simulator

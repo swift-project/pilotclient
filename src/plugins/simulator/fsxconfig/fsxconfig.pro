@@ -17,7 +17,7 @@ HEADERS += *.h
 
 REQUIRES += swiftConfig(sims.fsx)
 TARGET = simulatorfsxconfig
-DISTFILES += simulatorfsx.json
+DISTFILES += simulatorfsxconfig.json
 
 win32 {
     dlltarget.path = $$PREFIX/bin/plugins/simulator
@@ -26,6 +26,5 @@ win32 {
     target.path = $$PREFIX/bin/plugins/simulator
     INSTALLS += target
 }
-
 
 load(common_post)
