@@ -203,9 +203,7 @@ class Builder:
         return True
 
     def _get_externals_path(self):
-        qmake_spec = self._get_qmake_spec()
-        lib_path = 'lib' + self.word_size
-        return path.abspath(path.join(self._get_swift_source_path(), 'externals', qmake_spec, lib_path))
+        return path.abspath(path.join(self._get_swift_source_path(), 'externals', self._get_qmake_spec(), self.word_size, 'lib'))
 
     def __init__(self, word_size):
         self.__source_path = path.abspath(path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
