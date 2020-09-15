@@ -118,6 +118,9 @@ namespace BlackConfig
         //! Vatsim client key
         static const QString &vatsimPrivateKey(); // defined in buildconfig_gen.cpp.in
 
+        //! Backtrace token for minidump uploads
+        static const QString &backtraceToken(); // defined in buildconfig_gen.cpp.in
+
         //! GitHub repository URL
         static const QString &gitHubRepoUrl();
 

@@ -30,6 +30,12 @@ const QString &BlackConfig::CBuildConfig::vatsimPrivateKey()
     return pk;
 }
 
+const QString &BlackConfig::CBuildConfig::backtraceToken()
+{
+    static const auto bt = QString { \"$$(BACKTRACE_MINIDUMP_TOKEN)\" };
+    return bt;
+}
+
 const QString &BlackConfig::CBuildConfig::gitHeadSha1()
 {
     static const QString gitHeadSha1(\"$$GIT_HEAD_SHA1\");

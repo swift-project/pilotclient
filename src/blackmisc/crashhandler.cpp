@@ -68,7 +68,7 @@ namespace BlackMisc
         std::map<std::string, std::string> annotations;
 
         // Backtrace annotations
-        annotations["token"]         = "b15efd93e290be3cf5d39750cadc092b651327ff0c027b80abd75e0ee50df1da";
+        annotations["token"]         = CBuildConfig::backtraceToken().toStdString();
         annotations["format"]        = "minidump";
         annotations["commit"]        = CBuildConfig::gitHeadSha1().toStdString();
         annotations["version"]       = CBuildConfig::getVersionString().toStdString();

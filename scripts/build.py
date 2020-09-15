@@ -250,7 +250,7 @@ class Builder:
     def __upload_symbol_files(self, symbols_package):
         print('Uploading symbols')
         url = 'https://swift-project.sp.backtrace.io:6098/post'
-        token = os.environ['BACKTRACE_TOKEN']
+        token = os.environ['BACKTRACE_SYMBOL_TOKEN']
 
         data = open(symbols_package, 'rb').read()
         params = (
