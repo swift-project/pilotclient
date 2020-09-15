@@ -71,6 +71,7 @@ namespace BlackMisc
         // Backtrace annotations
         annotations["token"]         = "b15efd93e290be3cf5d39750cadc092b651327ff0c027b80abd75e0ee50df1da";
         annotations["format"]        = "minidump";
+        annotations["commit"]        = CBuildConfig::gitHeadSha1().toStdString();
         annotations["version"]       = CBuildConfig::getVersionString().toStdString();
         annotations["short_version"] = CBuildConfig::getShortVersionString().toStdString();
         annotations["platform"]      = CBuildConfig::getPlatformString().toStdString();
