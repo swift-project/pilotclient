@@ -448,6 +448,11 @@ namespace BlackMisc
                     }
                     return false;
                 }
+                if (package.planes.isEmpty())
+                {
+                    m_loadingMessages.push_back(CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : invalid position for command.") << path << lineNum);
+                    return false;
+                }
 
                 if (tokens[1] != "SOLID") { return true; }
 
@@ -487,6 +492,11 @@ namespace BlackMisc
                     m_loadingMessages.push_back(m);
                     return false;
                 }
+                if (package.planes.isEmpty())
+                {
+                    m_loadingMessages.push_back(CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : invalid position for command.") << path << lineNum);
+                    return false;
+                }
 
                 QString icao = tokens[1];
                 package.planes.back().icao = icao;
@@ -500,6 +510,11 @@ namespace BlackMisc
                 {
                     const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : AIRLINE command requires 2 arguments.") << path << lineNum;
                     m_loadingMessages.push_back(m);
+                    return false;
+                }
+                if (package.planes.isEmpty())
+                {
+                    m_loadingMessages.push_back(CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : invalid position for command.") << path << lineNum);
                     return false;
                 }
 
@@ -517,6 +532,11 @@ namespace BlackMisc
                 {
                     const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : LIVERY command requires 3 arguments.") << path << lineNum;
                     m_loadingMessages.push_back(m);
+                    return false;
+                }
+                if (package.planes.isEmpty())
+                {
+                    m_loadingMessages.push_back(CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : invalid position for command.") << path << lineNum);
                     return false;
                 }
 
