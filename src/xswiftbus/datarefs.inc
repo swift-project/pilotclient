@@ -1,3 +1,5 @@
+// -*- c++ -*-
+
 // DO NOT EDIT
 // This file automatically generated from DataRefs.txt by datarefs.pl
 

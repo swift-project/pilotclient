@@ -87,6 +87,8 @@ close $fh;
 
 our $indent = '    ';
 print <<"EOF";
+// -*- c++ -*-
+
 // DO NOT EDIT
 // This file automatically generated from DataRefs.txt by $0
 
