@@ -105,14 +105,14 @@ jobs:
         run: |
           dbus-launch --sh-syntax | tee session.sh
           eval $(cat session.sh)
-          echo "::set-env name=DBUS_SESSION_BUS_ADDRESS::$DBUS_SESSION_BUS_ADDRESS"
+          echo "DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS" >>$GITHUB_ENV
       - name: Create Vatsim key file
         if: ${{ env.do_vatsim_key == 'true' }}
         run: |
           cat >vatsim.json <<EOF
           { "vatsim": { "id": "$VATSIM_ID", "key": "$VATSIM_KEY" } }
           EOF
-          echo "::set-env name=vatsim_key_file::vatsim.json"
+          echo "vatsim_key_file=vatsim.json" >>$GITHUB_ENV
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
@@ -194,7 +194,7 @@ jobs:
           echo >vatsim.json @"
           { "vatsim": { "id": "$env:VATSIM_ID", "key": "$env:VATSIM_KEY" } }
           "@
-          echo "::set-env name=vatsim_key_file::vatsim.json"
+          echo "vatsim_key_file=vatsim.json" >>$env:GITHUB_ENV
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
@@ -277,7 +277,7 @@ jobs:
           echo >vatsim.json @"
           { "vatsim": { "id": "$env:VATSIM_ID", "key": "$env:VATSIM_KEY" } }
           "@
-          echo "::set-env name=vatsim_key_file::vatsim.json"
+          echo "vatsim_key_file=vatsim.json" >>$env:GITHUB_ENV
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
@@ -354,7 +354,7 @@ jobs:
           cat >vatsim.json <<EOF
           { "vatsim": { "id": "$VATSIM_ID", "key": "$VATSIM_KEY" } }
           EOF
-          echo "::set-env name=vatsim_key_file::vatsim.json"
+          echo "vatsim_key_file=vatsim.json" >>$GITHUB_ENV
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
@@ -462,8 +462,8 @@ jobs:
           [[ $result = WARNING   ]] && emoji=warning
           [[ $result = CANCELLED ]] && emoji=grey_question
           [[ $result = FAILED    ]] && emoji=x
-          echo "::set-env name=result::$result"
-          echo "::set-env name=emoji::$emoji"
+          echo "result=$result"  >>$GITHUB_ENV
+          echo "emoji=$emoji"    >>$GITHUB_ENV
       - name: Prepare Discord release message
         uses: satackey/action-js-inline@v0.0.2
         if: ${{ needs.release.result == 'success' }}
