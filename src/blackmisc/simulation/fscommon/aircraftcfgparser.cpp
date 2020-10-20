@@ -181,7 +181,7 @@ namespace BlackMisc
                 const int airFilesCount = dirForAir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot, QDir::DirsLast).size();
                 const bool hasAirFiles =  airFilesCount > 0;
 
-                if (!hasAirFiles)
+                if (CBuildConfig::buildWordSize() != 32 && !hasAirFiles)
                 {
                     const CStatusMessage m = CStatusMessage(this).warning(u"No \"air\" files in '%1'") << currentDir;
                     messages.push_back(m);
@@ -209,11 +209,8 @@ namespace BlackMisc
                     }
                     else
                     {
-                        if (!hasAirFiles)
-                        {
-                            if (!CBuildConfig::isLocalDeveloperDebugBuild()) { continue; } // "productive versions"
-                            // for testing purposes we continue in dev.versions
-                        }
+                        // Enforce air files only for 64 bit P3D
+                        if (CBuildConfig::buildWordSize() != 32 && !hasAirFiles) { continue; }
 
                         // due to the filter we expect only "aircraft.cfg"/"sim.cfg" here
                         // remark: in a 1st version I have used QSettings to parse to file as ini file
@@ -482,8 +479,16 @@ namespace BlackMisc
 
             const QStringList &CAircraftCfgParser::fileNameFilters()
             {
-                static const QStringList f({ "aircraft.cfg", "sim.cfg" });
-                return f;
+                if (CBuildConfig::buildWordSize() == 32)
+                {
+                    static const QStringList f({ "aircraft.cfg" });
+                    return f;
+                }
+                else
+                {
+                    static const QStringList f({ "aircraft.cfg", "sim.cfg" });
+                    return f;
+                }
             }
 
             bool CAircraftCfgParser::isExcludedSubDirectory(const QString &checkDirectory)
