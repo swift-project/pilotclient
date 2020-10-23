@@ -1,6 +1,6 @@
 <component>
     <name>vcruntime32</name>
-    <description>Visual Studio 2017 x86 Redistributables</description>
+    <description>Visual Studio 2019 x86 Redistributables</description>
     <canBeEdited>0</canBeEdited>
     <selected>1</selected>
     <show>1</show>
@@ -15,7 +15,7 @@
                     <abortOnError>0</abortOnError>
                     <program>${installdir}/vcredist/vcredist_x86.exe</program>
                     <programArguments>/install /quiet /norestart</programArguments>
-                    <progressText>Installing Visual Studio 2017 x86 Redistributables</progressText>
+                    <progressText>Installing Visual Studio 2019 x86 Redistributables</progressText>
                     <showMessageOnError>0</showMessageOnError>
                     <ruleList>
                         <platformTest>
@@ -29,7 +29,7 @@
                     </ruleList>
                 </runProgram>
                 <showWarning>
-                    <text>Installation of MS Visual Studio 2017 x86 Redistributables failed! 
+                    <text>Installation of MS Visual Studio 2019 x86 Redistributables failed! 
 Error Code: ${program_exit_code}
 Check if another version was already installed and if not, try to run the installer manually from
 ${installdir}\vcredist\
