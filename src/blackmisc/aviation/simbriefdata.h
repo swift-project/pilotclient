@@ -15,7 +15,6 @@
 #include "blackmisc/valueobject.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/metaclass.h"
-#include "blackmisc/icon.h"
 #include "blackmisc/blackmiscexport.h"
 
 #include <QString>

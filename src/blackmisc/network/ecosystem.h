@@ -12,7 +12,6 @@
 #define BLACKMISC_NETWORK_ECOSYSTEM_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/icon.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
 

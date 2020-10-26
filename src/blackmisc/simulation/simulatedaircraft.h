@@ -29,7 +29,6 @@
 #include "blackmisc/pq/length.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/icon.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"

@@ -13,7 +13,6 @@
 
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/icon.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/units.h"

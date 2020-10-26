@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_MIXIN_MIXINICON_H
 #define BLACKMISC_MIXIN_MIXINICON_H
 
-#include "blackmisc/icon.h"
+#include "blackmisc/icons.h"
 #include <QIcon>
 #include <QPixmap>
 #include <QString>

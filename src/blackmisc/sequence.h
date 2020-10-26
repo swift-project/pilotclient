@@ -13,6 +13,7 @@
 
 #include "blackmisc/containerbase.h"
 #include "blackmisc/mixin/mixinicon.h"
+#include "blackmisc/mixin/mixindatastream.h"
 #include <QVector>
 #include <algorithm>
 #include <type_traits>

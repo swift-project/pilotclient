@@ -16,7 +16,6 @@
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/icon.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"

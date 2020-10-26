@@ -11,6 +11,7 @@
 #ifndef BLACKMISC_MIXIN_MIXININDEX_H
 #define BLACKMISC_MIXIN_MIXININDEX_H
 
+#include "blackmisc/icon.h"
 #include "blackmisc/inheritancetraits.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/propertyindex.h"

@@ -6,8 +6,6 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackmisc/icon.h"
-#include "blackmisc/iconlist.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/network/voicecapabilities.h"
 

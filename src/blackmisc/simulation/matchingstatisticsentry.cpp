@@ -8,7 +8,6 @@
 
 #include "matchingstatisticsentry.h"
 #include "blackmisc/comparefunctions.h"
-#include "blackmisc/icon.h"
 
 namespace BlackMisc
 {

@@ -13,7 +13,6 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
-#include "blackmisc/icon.h"
 #include "blackmisc/namevariantpair.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"

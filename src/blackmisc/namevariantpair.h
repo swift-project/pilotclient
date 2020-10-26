@@ -12,7 +12,6 @@
 #define BLACKMISC_NAMEVARIANTPAIR_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/icon.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"

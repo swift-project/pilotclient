@@ -14,7 +14,6 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/country.h"
 #include "blackmisc/db/datastore.h"
-#include "blackmisc/icon.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/network/rolelist.h"
 #include "blackmisc/propertyindex.h"
