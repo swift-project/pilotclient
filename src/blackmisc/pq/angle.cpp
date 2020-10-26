@@ -49,11 +49,9 @@ namespace BlackMisc
             minutes = std::copysign(minutes, degrees);
         }
 
-        CIcon CAngle::toIcon() const
+        CIcons::IconIndex CAngle::toIcon() const
         {
-            CIcon i = CIcon::iconByIndex(CIcons::StandardIconArrowMediumNorth16);
-            i.setRotation(value(CAngleUnit::deg()));
-            return i;
+            return CIcons::StandardIconArrowMediumNorth16;
         }
 
         CAngle::DegMinSecFractionalSec CAngle::asSexagesimalDegMinSec(bool range180Degrees) const

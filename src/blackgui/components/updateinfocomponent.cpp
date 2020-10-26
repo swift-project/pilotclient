@@ -106,7 +106,7 @@ namespace BlackGui
             ui->cb_Platforms->clear();
             for (const CPlatform &platform : platforms)
             {
-                ui->cb_Platforms->insertItem(i++, platform.toPixmap(), platform.getPlatformName());
+                ui->cb_Platforms->insertItem(i++, CIcon(platform.toIcon()).toPixmap(), platform.getPlatformName());
             }
             if (platforms.contains(settings.last())) { ui->cb_Platforms->setCurrentText(settings.last()); }
             else if (platforms.contains(CPlatform::currentPlatform().getPlatformName())) { ui->cb_Platforms->setCurrentText(CPlatform::currentPlatform().getPlatformName()); }
@@ -116,7 +116,7 @@ namespace BlackGui
             ui->cb_Channels->clear();
             for (const CDistribution &distribution : distributions)
             {
-                ui->cb_Channels->insertItem(i++, distribution.getRestrictionIcon().toPixmap(), distribution.getChannel());
+                ui->cb_Channels->insertItem(i++, CIcon(distribution.getRestrictionIcon()).toPixmap(), distribution.getChannel());
             }
             if (distributions.containsChannel(settings.front())) { ui->cb_Channels->setCurrentText(settings.front()); }
 

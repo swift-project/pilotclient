@@ -91,7 +91,7 @@ namespace BlackMisc
         void setPlatform(const QString &p) { setPlatform(stringToPlatform(p)); }
 
         //! Representing icon
-        CIcon toIcon() const;
+        CIcons::IconIndex toIcon() const;
 
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;

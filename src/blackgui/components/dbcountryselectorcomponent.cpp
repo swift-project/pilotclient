@@ -62,7 +62,7 @@ namespace BlackGui
         {
             ui->le_CountryIso->setText(country.getIsoCode());
             ui->le_CountryName->setText(country.getName());
-            ui->lbl_CountryIcon->setPixmap(country.toPixmap());
+            ui->lbl_CountryIcon->setPixmap(CIcon(country.toIcon()));
             if (country != m_currentCountry)
             {
                 m_currentCountry = country;

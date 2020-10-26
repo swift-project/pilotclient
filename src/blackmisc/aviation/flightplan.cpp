@@ -960,9 +960,9 @@ namespace BlackMisc
             return p;
         }
 
-        CIcon CFlightPlan::toIcon() const
+        CIcons::IconIndex CFlightPlan::toIcon() const
         {
-            return CIcon::iconByIndex(CIcons::StandardIconAppFlightPlan16);
+            return CIcons::StandardIconAppFlightPlan16;
         }
 
     } // namespace

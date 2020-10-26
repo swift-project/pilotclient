@@ -193,7 +193,7 @@ namespace BlackMisc
             static QString fpAltitudeExamples();
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon
-            BlackMisc::CIcon toIcon() const;
+            BlackMisc::CIcons::IconIndex toIcon() const;
 
             //! \copydoc PhysicalQuantities::CPhysicalQuantity::compare
             int compare(const CAltitude &otherAltitude) const;

@@ -181,7 +181,7 @@ namespace BlackMisc
             QString getSelcalCode() const;
 
             //! As icon, not implement by all classes
-            CIcon toIcon() const;
+            CIcons::IconIndex toIcon() const;
 
             //! As pixmap, required for most GUI views
             QPixmap toPixmap() const;

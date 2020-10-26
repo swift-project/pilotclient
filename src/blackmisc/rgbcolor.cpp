@@ -37,22 +37,22 @@ namespace BlackMisc
         this->setQColor(color);
     }
 
-    CIcon CRgbColor::toIcon() const
+    CIcons::IconIndex CRgbColor::toIcon() const
     {
-        if (this->isValid())
+        //if (this->isValid())
+        //{
+        //    QPixmap pixmap(QSize(16, 16));
+        //    QPainter p(&pixmap);
+        //    QBrush brush(this->toQColor());
+        //    p.setBackground(brush);
+        //    p.setBrush(this->toQColor());
+        //    p.drawRect(0, 0, 16, 16);
+        //    CIcon icon(pixmap, hex());
+        //    return icon;
+        //}
+        //else
         {
-            QPixmap pixmap(QSize(16, 16));
-            QPainter p(&pixmap);
-            QBrush brush(this->toQColor());
-            p.setBackground(brush);
-            p.setBrush(this->toQColor());
-            p.drawRect(0, 0, 16, 16);
-            CIcon icon(pixmap, hex());
-            return icon;
-        }
-        else
-        {
-            return CIcon::iconByIndex(CIcons::StandardIconError16);
+            return CIcons::StandardIconError16;
         }
     }
 

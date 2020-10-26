@@ -156,7 +156,7 @@ namespace BlackMisc
             bool isValid() const;
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-            CIcon toIcon() const { return convertToIcon(*this); }
+            CIcons::IconIndex toIcon() const { return convertToIcon(*this).getIndex(); }
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const CPropertyIndex &index) const;

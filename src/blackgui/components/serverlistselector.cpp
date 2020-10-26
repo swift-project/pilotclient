@@ -99,7 +99,7 @@ namespace BlackGui
                     }
                     else
                     {
-                        this->addItem(country.toPixmap(), d);
+                        this->addItem(CIcon(country.toIcon()).toPixmap(), d);
                     }
                 }
                 else

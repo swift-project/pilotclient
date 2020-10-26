@@ -67,7 +67,7 @@ namespace BlackMisc
             const QString &getSystemString() const;
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-            CIcon toIcon() const;
+            CIcons::IconIndex toIcon() const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;

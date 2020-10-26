@@ -40,7 +40,7 @@ namespace BlackGui
         void CStatusMessageForm::setValue(const CStatusMessage &message)
         {
             ui->te_Message->setPlainText(message.getMessage());
-            ui->lbl_SeverityIcon->setPixmap(message.toPixmap());
+            ui->lbl_SeverityIcon->setPixmap(CIcon(message.toIcon()));
             const QString hrc(message.getHumanReadablePattern());
             if (hrc.isEmpty())
             {

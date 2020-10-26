@@ -174,17 +174,17 @@ namespace BlackMisc
             return str.trimmed();
         }
 
-        CIcon CSimulatorInfo::toIcon() const
+        CIcons::IconIndex CSimulatorInfo::toIcon() const
         {
             if (this->isSingleSimulator())
             {
                 switch (this->getSimulator())
                 {
-                case FSX: return CIconList::allIcons().findByIndex(CIcons::SimulatorFSX16);
-                case FS9: return CIconList::allIcons().findByIndex(CIcons::SimulatorFS916);
-                case P3D: return CIconList::allIcons().findByIndex(CIcons::SimulatorP3D16);
-                case XPLANE: return CIconList::allIcons().findByIndex(CIcons::SimulatorXPlane16);
-                case FG: return CIconList::allIcons().findByIndex(CIcons::SimulatorXPlane16);
+                case FSX: return CIcons::SimulatorFSX16;
+                case FS9: return CIcons::SimulatorFS916;
+                case P3D: return CIcons::SimulatorP3D16;
+                case XPLANE: return CIcons::SimulatorXPlane16;
+                case FG: return CIcons::SimulatorXPlane16;
                 default: break;
                 }
             }

@@ -460,7 +460,7 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-            CIcon toIcon() const { return m_callsign.toIcon(); }
+            CIcons::IconIndex toIcon() const { return m_callsign.toIcon(); }
 
         private:
             static constexpr int CurrentModel = 0; //!< m_models

@@ -54,7 +54,7 @@ namespace BlackMisc
         //! With Pixmap?
         bool isNull() const;
 
-        //! \copydoc CValueObject::toPixmap
+        //! \copydoc CIcon::toPixmap
         QPixmap toPixmap() const;
 
         //! \copydoc BlackMisc::Mixin::String::toQString

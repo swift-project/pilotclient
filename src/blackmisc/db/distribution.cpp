@@ -41,10 +41,10 @@ namespace BlackMisc
             return !m_downloadUrls.isEmpty();
         }
 
-        CIcon CDistribution::getRestrictionIcon() const
+        CIcons::IconIndex CDistribution::getRestrictionIcon() const
         {
             // StandardIconLockOpen16 is hard to distinguish from closed
-            return CIcon::iconByIndex(m_restricted ? CIcons::StandardIconLockClosed16 : CIcons::StandardIconGlobe16);
+            return m_restricted ? CIcons::StandardIconLockClosed16 : CIcons::StandardIconGlobe16;
         }
 
         bool CDistribution::isStabilitySameOrBetter(const CDistribution &otherDistribution) const
@@ -74,7 +74,7 @@ namespace BlackMisc
                    this->getFormattedUtcTimestampYmdhms();
         }
 
-        CIcon CDistribution::toIcon() const
+        CIcons::IconIndex CDistribution::toIcon() const
         {
             return this->getRestrictionIcon();
         }

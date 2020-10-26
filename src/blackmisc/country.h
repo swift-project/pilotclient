@@ -56,7 +56,7 @@ namespace BlackMisc
         bool isValid() const;
 
         //! Representing icon
-        CIcon toIcon() const;
+        CIcons::IconIndex toIcon() const;
 
         //! DB ISO code
         const QString &getIsoCode() const { return m_dbKey; }

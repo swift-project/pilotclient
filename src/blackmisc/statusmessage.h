@@ -463,7 +463,7 @@ namespace BlackMisc
         void setCategories(const CLogCategoryList &categories) { this->m_categories = categories; }
 
         //! Representing icon
-        const CIcon &toIcon() const { return convertToIcon(*this); }
+        CIcons::IconIndex toIcon() const { return convertToIcon(*this).getIndex(); }
 
         //! Severity as string
         const QString &getSeverityAsString() const;

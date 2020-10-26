@@ -45,7 +45,7 @@ namespace BlackMisc
             LATorLON operator *(double multiply) const;
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon
-            CIcon toIcon() const;
+            CIcons::IconIndex toIcon() const;
 
             /*!
              * Latitude / Longitude from a WGS string such as

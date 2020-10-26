@@ -152,7 +152,7 @@ namespace BlackMisc
             bool setCallsign(const Aviation::CCallsign &callsign);
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-            CIcon toIcon() const { return this->getCallsign().toIcon(); }
+            CIcons::IconIndex toIcon() const { return this->getCallsign().toIcon(); }
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const CPropertyIndex &index) const;

@@ -74,7 +74,7 @@ namespace BlackGui
             ui->cb_Military->setChecked(icao.isMilitary());
             ui->country_Selector->setCountry(icao.getCountry());
 
-            const QPixmap pm = icao.toPixmap();
+            const QPixmap pm = CIcon(icao.toIcon());
             if (pm.width() < 125)
             {
                 ui->lbl_AirlineIcon->setPixmap(pm);

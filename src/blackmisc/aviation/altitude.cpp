@@ -403,9 +403,9 @@ namespace BlackMisc
             return e;
         }
 
-        CIcon CAltitude::toIcon() const
+        CIcons::IconIndex CAltitude::toIcon() const
         {
-            return BlackMisc::CIcon::iconByIndex(CIcons::GeoPosition);
+            return CIcons::GeoPosition;
         }
 
         int CAltitude::compare(const CAltitude &otherAltitude) const

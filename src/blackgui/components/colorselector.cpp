@@ -72,7 +72,7 @@ namespace BlackGui
             else
             {
                 ui->le_Color->setText(color.hex());
-                ui->lbl_ColorIcon->setPixmap(color.toPixmap());
+                ui->lbl_ColorIcon->setPixmap(CIcon(color.toIcon()));
                 m_lastColor = color;
             }
             emit colorChanged(color);
@@ -176,7 +176,7 @@ namespace BlackGui
 
             mimeData->setColorData(QVariant::fromValue(c.toQColor()));
             drag->setMimeData(mimeData);
-            drag->setPixmap(c.toPixmap());
+            drag->setPixmap(CIcon(c.toIcon()));
 
             Qt::DropAction dropAction = drag->exec(Qt::CopyAction);
             Q_UNUSED(dropAction);

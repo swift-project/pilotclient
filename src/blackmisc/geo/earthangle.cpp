@@ -161,9 +161,9 @@ namespace BlackMisc
         LATorLON *CEarthAngle<LATorLON>::derived() { return static_cast<LATorLON *>(this); }
 
         template <class LATorLON>
-        CIcon CEarthAngle<LATorLON>::toIcon() const
+        CIcons::IconIndex CEarthAngle<LATorLON>::toIcon() const
         {
-            return BlackMisc::CIcon::iconByIndex(CIcons::GeoPosition);
+            return CIcons::GeoPosition;
         }
 
         template<class LATorLON>

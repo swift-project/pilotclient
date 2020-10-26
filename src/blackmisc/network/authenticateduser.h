@@ -155,7 +155,7 @@ namespace BlackMisc
             bool canDirectlyWriteModels() const;
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-            BlackMisc::CIcon toIcon() const;
+            BlackMisc::CIcons::IconIndex toIcon() const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;

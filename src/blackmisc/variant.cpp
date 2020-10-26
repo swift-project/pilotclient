@@ -508,20 +508,18 @@ namespace BlackMisc
         }
     }
 
-    CIcon CVariant::toIcon() const
+    CIcons::IconIndex CVariant::toIcon() const
     {
         auto *meta = getValueObjectMetaInfo();
         if (! meta) { return {}; }
         try
         {
-            CIcon result;
-            meta->toIcon(data(), result);
-            return result;
+            return static_cast<CIcons::IconIndex>(meta->toIcon(data()));
         }
         catch (const Private::CVariantException &ex)
         {
             CLogMessage(this).debug() << ex.what();
-            return {};
+            return CIcons::StandardIconError16;
         }
     }
 
@@ -531,7 +529,7 @@ namespace BlackMisc
         if (m_v.type() == QVariant::Image)  { return QPixmap::fromImage(m_v.value<QImage>()); }
         if (m_v.type() == QVariant::Icon)   { return iconToPixmap(m_v.value<QIcon>()); }
 
-        return toIcon().toPixmap();
+        return CIcon(toIcon()).toPixmap();
     }
 
     bool CVariant::matches(const CVariant &value) const

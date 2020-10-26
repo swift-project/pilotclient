@@ -122,9 +122,9 @@ namespace BlackMisc
             return this->hasBulkRole() || this->hasBulkAddRole();
         }
 
-        CIcon CAuthenticatedUser::toIcon() const
+        CIcons::IconIndex CAuthenticatedUser::toIcon() const
         {
-            return CIcon::iconByIndex(CIcons::StandardIconUser16);
+            return CIcons::StandardIconUser16;
         }
 
         CVariant CAuthenticatedUser::propertyByIndex(const BlackMisc::CPropertyIndex &index) const

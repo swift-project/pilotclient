@@ -38,9 +38,6 @@ namespace BlackMisc
         //! \private Defined in variant.h
         void assign(CVariant &, const CVariant &);
 
-        //! \private Defined in icon.h
-        void assign(CIcon &, const CIcon &);
-
         //! \private Abstract base class representing the set of operations supported by a particular value type.
         struct BLACKMISC_EXPORT IValueObjectMetaInfo
         {
@@ -60,7 +57,7 @@ namespace BlackMisc
             virtual QString propertyByIndexAsString(const void *object, const CPropertyIndex &index, bool i18n) const = 0;
             virtual bool equalsPropertyByIndex(const void *object, const CVariant &compareValue, const CPropertyIndex &index) const = 0;
             virtual bool matches(const void *object, const CVariant &value) const = 0;
-            virtual void toIcon(const void *object, CIcon &o_icon) const = 0;
+            virtual int toIcon(const void *object) const = 0;
         };
 
         //! \private Exception to signal that an unsupported operation was requested.
@@ -139,9 +136,9 @@ namespace BlackMisc
             static bool equalsPropertyByIndex(const T &object, const CVariant &, const CPropertyIndex &, ...) { throw CVariantException(object, "equalsPropertyByIndex"); }
 
             template <typename T>
-            static void toIcon(const T &object, CIcon &o_icon, std::enable_if_t < ! std::is_same<T, CVariant>::value, decltype(static_cast<void>(object.toIcon()), 0) >) { assign(o_icon, object.toIcon()); }
+            static int toIcon(const T &object, std::enable_if_t < ! std::is_same<T, CVariant>::value, decltype(static_cast<void>(object.toIcon()), 0) >) { return object.toIcon(); }
             template <typename T>
-            static void toIcon(const T &object, CIcon &, ...) { throw CVariantException(object, "toIcon"); }
+            static int toIcon(const T &object, ...) { throw CVariantException(object, "toIcon"); }
 
             template <typename T>
             static bool matches(const T &object, const CVariant &value, decltype(static_cast<void>(object.matches(value)), 0)) { return object.matches(value); }
@@ -210,9 +207,9 @@ namespace BlackMisc
             {
                 return CValueObjectMetaInfoHelper::equalsPropertyByIndex(cast(object), compareValue, index, 0);
             }
-            virtual void toIcon(const void *object, CIcon &o_icon) const override
+            virtual int toIcon(const void *object) const override
             {
-                CValueObjectMetaInfoHelper::toIcon(cast(object), o_icon, 0);
+                return CValueObjectMetaInfoHelper::toIcon(cast(object), 0);
             }
             virtual bool matches(const void *object, const CVariant &value) const override
             {

@@ -292,14 +292,14 @@ namespace BlackMisc
             return std::move(candidate).right(4).toUpper();
         }
 
-        CIcon CTextMessage::toIcon() const
+        CIcons::IconIndex CTextMessage::toIcon() const
         {
             return m_senderCallsign.toIcon();
         }
 
         QPixmap CTextMessage::toPixmap() const
         {
-            return m_senderCallsign.toPixmap();
+            return CIcon(toIcon()).toPixmap();
         }
 
         CVariant CTextMessage::propertyByIndex(const BlackMisc::CPropertyIndex &index) const

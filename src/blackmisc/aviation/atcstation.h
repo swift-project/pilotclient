@@ -269,7 +269,7 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-            BlackMisc::CIcon toIcon() const { return m_callsign.toIcon(); }
+            BlackMisc::CIcons::IconIndex toIcon() const { return m_callsign.toIcon(); }
 
         private:
             CCallsign                      m_callsign;

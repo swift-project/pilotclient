@@ -379,7 +379,7 @@ namespace BlackMisc
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon
-            CIcon toIcon() const;
+            CIcons::IconIndex toIcon() const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;

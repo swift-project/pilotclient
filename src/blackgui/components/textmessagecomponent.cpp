@@ -491,7 +491,7 @@ namespace BlackGui
             if (supervisor)
             {
                 //! \fixme hardcoded stylesheet color
-                bar->setTabIcon(index, callsign.toPixmap());
+                bar->setTabIcon(index, CIcon(callsign.toIcon()).toQIcon());
                 bar->setTabTextColor(index, QColor(Qt::yellow));
             }
             ui->tw_TextMessages->setCurrentIndex(index);

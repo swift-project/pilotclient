@@ -16,7 +16,7 @@ namespace BlackMisc
         : m_name(name), m_variant(variant), m_icon(icon)
     {  }
 
-    CIcon CNameVariantPair::toIcon() const { return m_icon; }
+    CIcons::IconIndex CNameVariantPair::toIcon() const { return m_icon.getIndex(); }
 
     bool CNameVariantPair::hasIcon() const
     {

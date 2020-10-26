@@ -15,20 +15,23 @@
 
 namespace BlackMisc
 {
+    CIcon::CIcon(CIcons::IconIndex index) :
+        CIcon(iconByIndex(index)) {}
+
     CIcon::CIcon(CIcons::IconIndex index, const QString &descriptiveText) :
         m_index(index), m_descriptiveText(descriptiveText) {}
 
-    CIcon::CIcon(const QPixmap &pixmap, const QString &descriptiveText) :
-        m_index(CIcons::IconIsGenerated), m_descriptiveText(descriptiveText), m_pixmap(pixmap)
-    { }
+    //CIcon::CIcon(const QPixmap &pixmap, const QString &descriptiveText) :
+    //    m_index(CIcons::IconIsGenerated), m_descriptiveText(descriptiveText), m_pixmap(pixmap)
+    //{ }
 
-    CIcon::CIcon(const QString &resourceFilePath, const QString &descriptiveText) :
-        m_index(CIcons::IconIsFile), m_descriptiveText(descriptiveText)
-    {
-        QString fullPath;
-        m_pixmap = CIcons::pixmapByResourceFileName(QDir::cleanPath(resourceFilePath), fullPath);
-        m_fileResourcePath = fullPath;
-    }
+    //CIcon::CIcon(const QString &resourceFilePath, const QString &descriptiveText) :
+    //    m_index(CIcons::IconIsFile), m_descriptiveText(descriptiveText)
+    //{
+    //    QString fullPath;
+    //    m_pixmap = CIcons::pixmapByResourceFileName(QDir::cleanPath(resourceFilePath), fullPath);
+    //    m_fileResourcePath = fullPath;
+    //}
 
     CIcons::IconIndex CIcon::getIndex() const
     {

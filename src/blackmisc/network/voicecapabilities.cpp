@@ -80,18 +80,18 @@ namespace BlackMisc
             this->setCapabilities(Unknown);
         }
 
-        CIcon CVoiceCapabilities::toIcon() const
+        CIcons::IconIndex CVoiceCapabilities::toIcon() const
         {
             switch (m_voiceCapabilities)
             {
-            case Voice: return CIcon::iconByIndex(CIcons::NetworkCapabilityVoiceBackground);
-            case TextOnly: return CIcon::iconByIndex(CIcons::NetworkCapabilityTextOnly);
-            case VoiceReceivingOnly: return CIcon::iconByIndex(CIcons::NetworkCapabilityVoiceReceiveOnlyBackground);
-            case Unknown: return CIcon::iconByIndex(CIcons::NetworkCapabilityUnknown);
+            case Voice: return CIcons::NetworkCapabilityVoiceBackground;
+            case TextOnly: return CIcons::NetworkCapabilityTextOnly;
+            case VoiceReceivingOnly: return CIcons::NetworkCapabilityVoiceReceiveOnlyBackground;
+            case Unknown: return CIcons::NetworkCapabilityUnknown;
             default: break;
             }
             Q_ASSERT_X(false, Q_FUNC_INFO, "Illegal mode");
-            return CIcon::iconByIndex(CIcons::NetworkCapabilityUnknown); // never reached
+            return CIcons::NetworkCapabilityUnknown; // never reached
         }
 
         const CVoiceCapabilities &CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::VoiceCapabilities capabilities)

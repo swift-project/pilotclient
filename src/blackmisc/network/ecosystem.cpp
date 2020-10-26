@@ -72,17 +72,17 @@ namespace BlackMisc
             }
         }
 
-        CIcon CEcosystem::toIcon() const
+        CIcons::IconIndex CEcosystem::toIcon() const
         {
             switch (this->getSystem())
             {
-            case VATSIM: return CIconList::allIcons().findByIndex(CIcons::NetworkVatsimLogo);
-            case Swift: return CIconList::allIcons().findByIndex(CIcons::Swift24);
-            case SwiftTest: return CIconList::allIcons().findByIndex(CIcons::Swift24);
-            case PrivateFSD: return CIconList::allIcons().findByIndex(CIcons::StandardIconAppAircraft16);
-            case NoSystem: return CIconList::allIcons().findByIndex(CIcons::StandardIconCrossCircle16);
+            case VATSIM: return CIcons::NetworkVatsimLogo;
+            case Swift: return CIcons::Swift24;
+            case SwiftTest: return CIcons::Swift24;
+            case PrivateFSD: return CIcons::StandardIconAppAircraft16;
+            case NoSystem: return CIcons::StandardIconCrossCircle16;
             case Unspecified:
-            default: return CIconList::allIcons().findByIndex(CIcons::StandardIconUnknown16);
+            default: return CIcons::StandardIconUnknown16;
             }
         }
 

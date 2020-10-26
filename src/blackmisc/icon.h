@@ -49,13 +49,16 @@ namespace BlackMisc
         CIcon() {}
 
         //! Constructor.
+        CIcon(CIcons::IconIndex index);
+
+        //! Constructor.
         CIcon(CIcons::IconIndex index, const QString &descriptiveText);
 
         //! Constructor for generated icon
-        CIcon(const QPixmap &pixmap, const QString &descriptiveText);
+        //CIcon(const QPixmap &pixmap, const QString &descriptiveText);
 
         //! Constructor for file icons
-        CIcon(const QString &resourceFilePath, const QString &descriptiveText);
+        //CIcon(const QString &resourceFilePath, const QString &descriptiveText);
 
         //! Get descriptive text
         const QString &getDescriptiveText() const { return m_descriptiveText; }
@@ -85,7 +88,7 @@ namespace BlackMisc
         QPixmap toPixmap() const;
 
         //! Identity function
-        CIcon toIcon() const { return *this; }
+        CIcons::IconIndex toIcon() const { return m_index; }
 
         //! A QIcon
         QIcon toQIcon() const;
@@ -123,12 +126,6 @@ namespace BlackMisc
             BLACK_METAMEMBER(fileResourcePath)
         );
     };
-
-    namespace Private
-    {
-        //! \private Needed so CValueObjectMetaInfoHelper can copy forward-declared CIcon.
-        inline void assign(CIcon &a, const CIcon &b) { a = b; }
-    }
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CIcon)

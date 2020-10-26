@@ -162,7 +162,7 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-            CIcon toIcon() const;
+            CIcons::IconIndex toIcon() const;
 
             //! Add simulator
             CSimulatorInfo add(const CSimulatorInfo &other);

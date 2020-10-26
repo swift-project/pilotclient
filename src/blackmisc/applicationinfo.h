@@ -134,7 +134,7 @@ namespace BlackMisc
         QString convertToQString(bool i18n = false) const;
 
         //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-        CIcon toIcon() const;
+        CIcons::IconIndex toIcon() const;
 
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
         CVariant propertyByIndex(const CPropertyIndex &index) const;

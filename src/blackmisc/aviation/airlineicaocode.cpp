@@ -175,15 +175,15 @@ namespace BlackMisc
             return this->hasValidDesignator() && this->hasValidCountry() && this->hasName();
         }
 
-        CIcon CAirlineIcaoCode::toIcon() const
+        CIcons::IconIndex CAirlineIcaoCode::toIcon() const
         {
-            if (this->hasValidDbKey() && CAirlineIcaoCode::iconIds().contains(this->getDbKey()))
-            {
-                static const QString p("airlines/%1_%2.png");
-                const QString n(p.arg(this->getDbKey(), 5, 10, QChar('0')).arg(this->getDesignator()));
-                return CIcon(n, this->convertToQString());
-            }
-            return CIcon::iconByIndex(CIcons::StandardIconEmpty);
+            //if (this->hasValidDbKey() && CAirlineIcaoCode::iconIds().contains(this->getDbKey()))
+            //{
+            //    static const QString p("airlines/%1_%2.png");
+            //    const QString n(p.arg(this->getDbKey(), 5, 10, QChar('0')).arg(this->getDesignator()));
+            //    return CIcon(n, this->convertToQString());
+            //}
+            return CIcons::StandardIconEmpty;
         }
 
         QString CAirlineIcaoCode::getIconResourcePath() const

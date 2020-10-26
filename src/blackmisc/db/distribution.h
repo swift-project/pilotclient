@@ -77,7 +77,7 @@ namespace BlackMisc
             void setRestricted(bool r) { m_restricted = r; }
 
             //! Get the restrict icon
-            CIcon getRestrictionIcon() const;
+            CIcons::IconIndex getRestrictionIcon() const;
 
             //! "this" having same or better stability than other distribution?
             bool isStabilitySameOrBetter(const CDistribution &otherDistribution) const;
@@ -95,7 +95,7 @@ namespace BlackMisc
             QString convertToQString(const QString &separator, bool i18n = false) const;
 
             //! Representing icon
-            CIcon toIcon() const;
+            CIcons::IconIndex toIcon() const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const CPropertyIndex &index) const;

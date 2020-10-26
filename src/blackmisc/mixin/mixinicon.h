@@ -31,10 +31,7 @@ namespace BlackMisc
         {
         public:
             //! As icon, not implemented by all classes
-            CIcon toIcon() const { return CIcon::iconByIndex(IconIndex); }
-
-            //! As pixmap, required for most GUI views
-            QPixmap toPixmap() const { return derived()->toIcon().toPixmap(); }
+            CIcons::IconIndex toIcon() const { return IconIndex; }
 
         private:
             const Derived *derived() const { return static_cast<const Derived *>(this); }
@@ -46,8 +43,7 @@ namespace BlackMisc
          * the derived class uses this macro to disambiguate the inherited members.
          */
 #       define BLACKMISC_DECLARE_USING_MIXIN_ICON(DERIVED)      \
-            using ::BlackMisc::Mixin::Icon<DERIVED>::toIcon;    \
-            using ::BlackMisc::Mixin::Icon<DERIVED>::toPixmap;
+            using ::BlackMisc::Mixin::Icon<DERIVED>::toIcon;
     }
 } // namespace
 

@@ -50,17 +50,17 @@ namespace BlackGui
         {
             CStatusMessage msg;
             msg.setSeverity(CStatusMessage::SeverityError);
-            ui->rb_Error->setIcon(msg.toIcon().toQIcon());
+            ui->rb_Error->setIcon(CIcon(msg.toIcon()).toQIcon());
             ui->rb_Error->setToolTip(msg.getSeverityAsString());
             ui->rb_Error->setText(oneCharacterText ? msg.getSeverityAsString().left(1) : "");
 
             msg.setSeverity(CStatusMessage::SeverityWarning);
-            ui->rb_Warning->setIcon(msg.toIcon().toQIcon());
+            ui->rb_Warning->setIcon(CIcon(msg.toIcon()).toQIcon());
             ui->rb_Warning->setToolTip(msg.getSeverityAsString());
             ui->rb_Warning->setText(oneCharacterText ? msg.getSeverityAsString().left(1) : "");
 
             msg.setSeverity(CStatusMessage::SeverityInfo);
-            ui->rb_Info->setIcon(msg.toIcon().toQIcon());
+            ui->rb_Info->setIcon(CIcon(msg.toIcon()).toQIcon());
             ui->rb_Info->setToolTip(msg.getSeverityAsString());
             ui->rb_Info->setText(oneCharacterText ? msg.getSeverityAsString().left(1) : "");
         }

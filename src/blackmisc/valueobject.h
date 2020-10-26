@@ -125,9 +125,6 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::Icon::toIcon
         using Mixin::Icon<Derived>::toIcon;
 
-        //! \copydoc BlackMisc::Mixin::Icon::toPixmap
-        using Mixin::Icon<Derived>::toPixmap;
-
         //! \copydoc BlackMisc::Mixin::MetaType::isA
         using Mixin::MetaType<Derived>::isA;
 

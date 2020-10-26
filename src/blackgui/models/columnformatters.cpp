@@ -421,7 +421,7 @@ namespace BlackGui
         {
             const CRgbColor rgbColor(dataCVariant.to<CRgbColor>());
             if (!rgbColor.isValid())  { return emptyPixmapVariant(); }
-            return CVariant::fromValue(rgbColor.toPixmap());
+            return CVariant::fromValue(CIcon(rgbColor.toIcon()).toPixmap());
         }
 
         CVariant CColorFormatter::tooltipRole(const CVariant &dataCVariant) const

@@ -94,17 +94,17 @@ namespace BlackMisc
         return QStringLiteral("{ %1, %2, %3, %4 }").arg(this->getApplicationAsString(), m_exePath, m_version, m_process.convertToQString(i18n));
     }
 
-    CIcon CApplicationInfo::toIcon() const
+    CIcons::IconIndex CApplicationInfo::toIcon() const
     {
         switch (getApplication())
         {
-        case Laucher: return CIconList::allIcons().findByIndex(CIcons::SwiftLauncher16);
-        case PilotClientCore: return CIconList::allIcons().findByIndex(CIcons::SwiftCore16);
-        case PilotClientGui: return CIconList::allIcons().findByIndex(CIcons::Swift16);
-        case MappingTool: return CIconList::allIcons().findByIndex(CIcons::SwiftDatabase16);
+        case Laucher: return CIcons::SwiftLauncher16;
+        case PilotClientCore: return CIcons::SwiftCore16;
+        case PilotClientGui: return CIcons::Swift16;
+        case MappingTool: return CIcons::SwiftDatabase16;
         default: break;
         }
-        return CIconList::allIcons().findByIndex(CIcons::StandardIconUnknown16);
+        return CIcons::StandardIconUnknown16;
     }
 
     CVariant CApplicationInfo::propertyByIndex(const CPropertyIndex &index) const

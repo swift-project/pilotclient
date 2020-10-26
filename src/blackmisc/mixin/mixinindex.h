@@ -155,8 +155,8 @@ namespace BlackMisc
             const auto i = index.frontCasted<ColumnIndex>(); // keep that "auto", otherwise I won's compile
             switch (i)
             {
-            case IndexIcon: return CVariant::from(derived()->toIcon());
-            case IndexPixmap: return CVariant::from(derived()->toPixmap());
+            case IndexIcon: return CVariant::from(CIcon(derived()->toIcon()));
+            case IndexPixmap: return CVariant::from(CIcon(derived()->toIcon()).toPixmap());
             case IndexString: return CVariant(derived()->toQString());
             default: return basePropertyByIndex(static_cast<const TIndexBaseOfT<Derived> *>(derived()), index);
             }

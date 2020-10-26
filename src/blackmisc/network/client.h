@@ -145,7 +145,7 @@ namespace BlackMisc
             void setQueriedModelString(const QString &modelString);
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-            CIcon toIcon() const;
+            CIcons::IconIndex toIcon() const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;

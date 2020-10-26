@@ -96,12 +96,11 @@ namespace BlackMisc
             if (!modelString.isEmpty()) { this->addCapability(CClient::FsdModelString); }
         }
 
-        CIcon CClient::toIcon() const
+        CIcons::IconIndex CClient::toIcon() const
         {
             if (!m_swift) { return m_user.toIcon(); }
 
-            static const CIcon swift = CIconList::allIcons().findByIndex(CIcons::Swift16);
-            return swift;
+            return CIcons::Swift16;
         }
 
         CVariant CClient::propertyByIndex(const CPropertyIndex &index) const
@@ -117,8 +116,8 @@ namespace BlackMisc
             case IndexModelString:        return CVariant(m_modelString);
             case IndexServer:             return CVariant(m_server);
             case IndexVoiceCapabilities:  return m_voiceCapabilities.propertyByIndex(index.copyFrontRemoved());
-            case IndexVoiceCapabilitiesPixmap: return CVariant::from(m_voiceCapabilities.toPixmap());
-            case IndexVoiceCapabilitiesIcon:   return CVariant::fromValue(m_voiceCapabilities.toIcon());
+            case IndexVoiceCapabilitiesPixmap: return CVariant::from(CIcon(m_voiceCapabilities.toIcon()).toPixmap());
+            case IndexVoiceCapabilitiesIcon:   return CVariant::from(CIcon(m_voiceCapabilities.toIcon()));
             case IndexVoiceCapabilitiesString: return CVariant(m_voiceCapabilities.toQString(true));
             default: break;
             }

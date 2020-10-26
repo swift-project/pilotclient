@@ -56,7 +56,7 @@ namespace BlackMisc
         void setVariant(const CVariant &variant) { m_variant = variant; }
 
         //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-        BlackMisc::CIcon toIcon() const;
+        BlackMisc::CIcons::IconIndex toIcon() const;
 
         //! Has icon
         bool hasIcon() const;

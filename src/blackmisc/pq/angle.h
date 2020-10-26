@@ -77,7 +77,7 @@ namespace BlackMisc
             static void unifySign(int degrees, int &minutes);
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon
-            BlackMisc::CIcon toIcon() const;
+            BlackMisc::CIcons::IconIndex toIcon() const;
 
             //! As individual values
             DegMinSecFractionalSec asSexagesimalDegMinSec(bool range180Degrees = false) const;

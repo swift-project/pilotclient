@@ -209,7 +209,7 @@ namespace BlackMisc
             CAirlineIcaoCode thisOrCallsignCode(const CCallsign &callsign) const;
 
             //! \copydoc Mixin::Icon::toIcon
-            CIcon toIcon() const;
+            CIcons::IconIndex toIcon() const;
 
             //! \copydoc Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;

@@ -22,6 +22,7 @@
 #include "blackmisc/mixin/mixinstring.h"
 #include "blackmisc/mixin/mixinmetatype.h"
 #include "blackmisc/variantprivate.h"
+#include "blackmisc/icons.h"
 
 #include <QDBusArgument>
 #include <QDateTime>
@@ -255,11 +256,11 @@ namespace BlackMisc
         //! \copydoc CValueObject::equalsPropertyByIndex
         bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const;
 
-        //! \copydoc CValueObject::toPixmap
+        //! \copydoc CIcon::toPixmap
         QPixmap toPixmap() const;
 
         //! \copydoc BlackMisc::Mixin::Icon::toIcon
-        CIcon toIcon() const;
+        CIcons::IconIndex toIcon() const;
 
         //! If this is an event subscription, return true if it matches the given event.
         bool matches(const CVariant &event) const;

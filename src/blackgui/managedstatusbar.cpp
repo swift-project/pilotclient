@@ -112,7 +112,7 @@ namespace BlackGui
 
         this->show();
         m_timerStatusBar.start(3000); // start / restart
-        m_statusBarIcon->setPixmap(statusMessage.toPixmap());
+        m_statusBarIcon->setPixmap(CIcon(statusMessage.toIcon()));
 
         // restrict size for own status bars
         const QSize size = m_statusBar->window()->size();

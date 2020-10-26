@@ -23,16 +23,16 @@ namespace BlackMisc
         this->setSimplifiedNameIfNotSame();
     }
 
-    CIcon CCountry::toIcon() const
+    CIcons::IconIndex CCountry::toIcon() const
     {
-        if (m_dbKey.length() == 2)
+        //if (m_dbKey.length() == 2)
+        //{
+        //    // relative to images
+        //    return CIcon(u"flags/" % m_dbKey.toLower() % u".png", this->convertToQString());
+        //}
+        //else
         {
-            // relative to images
-            return CIcon(u"flags/" % m_dbKey.toLower() % u".png", this->convertToQString());
-        }
-        else
-        {
-            return CIcon::iconByIndex(CIcons::StandardIconEmpty);
+            return CIcons::StandardIconEmpty;
         }
     }
 
