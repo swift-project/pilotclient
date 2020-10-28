@@ -15,22 +15,22 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        void CMatchingUtils::addLogDetailsToList(CStatusMessageList *log, const CSimulatedAircraft &remoteAircraft, const QString &message, const CLogCategoryList &extraCategories, CStatusMessage::StatusSeverity s)
+        void CMatchingUtils::addLogDetailsToList(CStatusMessageList *log, const CSimulatedAircraft &remoteAircraft, const QString &message, const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
         {
             CLogUtilities::addLogDetailsToList(log, remoteAircraft.getCallsign(), message, extraCategories, s);
         }
 
         const CLogCategoryList &CMatchingUtils::defaultCategories()
         {
-            static const CLogCategoryList cats({ CLogCategory::matching() });
+            static const CLogCategoryList cats({ CLogCategories::matching() });
             return cats;
         }
 
-        CLogCategoryList CMatchingUtils::categories(const CLogCategoryList &extraCategories)
+        CLogCategoryList CMatchingUtils::categories(const QStringList &extraCategories)
         {
             if (extraCategories.isEmpty()) { return defaultCategories(); }
             CLogCategoryList cats(defaultCategories());
-            cats.push_back(extraCategories);
+            cats.push_back(CLogCategoryList::fromQStringList(extraCategories));
             return cats;
         }
     } // ns

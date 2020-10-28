@@ -61,9 +61,9 @@ namespace BlackGui
             // void
         }
 
-        const CLogCategoryList &CDbModelWorkbenchComponent::getLogCategories()
+        const QStringList &CDbModelWorkbenchComponent::getLogCategories()
         {
-            static const CLogCategoryList l({ CLogCategory::modelGui(), CLogCategory::guiComponent() });
+            static const QStringList l({ CLogCategories::modelGui(), CLogCategories::guiComponent() });
             return l;
         }
 

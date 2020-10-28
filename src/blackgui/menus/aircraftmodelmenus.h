@@ -38,7 +38,7 @@ namespace BlackGui
             {}
 
             //! Log.categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
         protected:
             //! Model view
@@ -64,7 +64,7 @@ namespace BlackGui
             CShowSimulatorFileMenu(Views::CAircraftModelView *modelView, COverlayMessagesFrame *messageFrame);
 
             //! Log.categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! \copydoc IMenuDelegate::customMenu
             virtual void customMenu(CMenuActions &menuActions) override;
@@ -93,7 +93,7 @@ namespace BlackGui
             CConsolidateWithDbDataMenu(BlackGui::Views::CAircraftModelView *modelView, QObject *modelsTarget);
 
             //! Log.categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! \copydoc IMenuDelegate::customMenu
             virtual void customMenu(CMenuActions &menuActions) override;
@@ -125,7 +125,7 @@ namespace BlackGui
             CConsolidateWithSimulatorModels(Views::CAircraftModelView *modelView, QObject *modelsTarget);
 
             //! Log.categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! \copydoc IMenuDelegate::customMenu
             virtual void customMenu(CMenuActions &menuActions) override;

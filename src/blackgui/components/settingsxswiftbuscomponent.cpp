@@ -22,9 +22,9 @@ namespace BlackGui
 {
     namespace Components
     {
-        const CLogCategoryList &CSettingsXSwiftBusComponent::getLogCategories()
+        const QStringList &CSettingsXSwiftBusComponent::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::guiComponent() };
+            static const QStringList cats { CLogCategories::guiComponent() };
             return cats;
         }
 

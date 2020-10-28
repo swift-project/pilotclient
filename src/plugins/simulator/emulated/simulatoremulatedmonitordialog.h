@@ -37,7 +37,7 @@ namespace BlackSimPlugin
 
         public:
             //! Log categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Ctor
             explicit CSimulatorEmulatedMonitorDialog(CSimulatorEmulated *simulator, QWidget *parent = nullptr);

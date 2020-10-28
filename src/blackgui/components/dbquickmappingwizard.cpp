@@ -72,9 +72,9 @@ namespace BlackGui
         CDbQuickMappingWizard::~CDbQuickMappingWizard()
         { }
 
-        const CLogCategoryList &CDbQuickMappingWizard::getLogCategories()
+        const QStringList &CDbQuickMappingWizard::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::mapping(), CLogCategory::guiComponent() };
+            static const QStringList cats { CLogCategories::mapping(), CLogCategories::guiComponent() };
             return cats;
         }
 

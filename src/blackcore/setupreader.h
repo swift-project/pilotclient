@@ -50,7 +50,7 @@ namespace BlackCore
 
     public:
         //! Categories
-        static const BlackMisc::CLogCategoryList &getLogCategories();
+        static const QStringList &getLogCategories();
 
         //! Has a given cmd line argument for bootstrap URL?
         bool hasCmdLineBootstrapUrl() const;

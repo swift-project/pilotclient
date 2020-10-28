@@ -30,7 +30,7 @@ namespace BlackMisc
                 CXPlaneUtil() = delete;
 
                 //! Log categories
-                static const CLogCategoryList &getLogCategories();
+                static const QStringList &getLogCategories();
 
                 //! XPlane 9 directory
                 static QString xplane9Dir();

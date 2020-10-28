@@ -40,7 +40,7 @@ namespace BlackMisc
             using CSequence::CSequence;
 
             //! Categories
-            static const CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Default constructor.
             CAirlineIcaoCodeList();

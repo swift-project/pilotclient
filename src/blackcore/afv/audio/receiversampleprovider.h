@@ -43,7 +43,7 @@ namespace BlackCore
 
             public:
                 //! Log.categories
-                static const BlackMisc::CLogCategoryList &getLogCategories();
+                static const QStringList &getLogCategories();
 
                 //! Ctor
                 CReceiverSampleProvider(const QAudioFormat &audioFormat, quint16 id, int voiceInputNumber, QObject *parent = nullptr);

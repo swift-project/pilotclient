@@ -16,9 +16,9 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        const CLogCategoryList &CSimBriefData::getLogCategories()
+        const QStringList &CSimBriefData::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::flightPlan() };
+            static const QStringList cats { CLogCategories::flightPlan() };
             return cats;
         }
 

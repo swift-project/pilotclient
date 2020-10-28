@@ -80,7 +80,7 @@ namespace BlackGui
         static CGuiApplication *instance();
 
         //! Own log categories
-        static const BlackMisc::CLogCategoryList &getLogCategories();
+        static const QStringList &getLogCategories();
 
         //! Organization string used for settings, is the registry key under windows
         static const QString &settingsOrganization();

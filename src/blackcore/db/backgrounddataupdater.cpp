@@ -28,9 +28,9 @@ namespace BlackCore
 {
     namespace Db
     {
-        const CLogCategoryList &CBackgroundDataUpdater::getLogCategories()
+        const QStringList &CBackgroundDataUpdater::getLogCategories()
         {
-            static const CLogCategoryList cats({ CLogCategory::worker(), CLogCategory::modelSetCache(), CLogCategory::modelCache() });
+            static const QStringList cats({ CLogCategories::worker(), CLogCategories::modelSetCache(), CLogCategories::modelCache() });
             return cats;
         }
 

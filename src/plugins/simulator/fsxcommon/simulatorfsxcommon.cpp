@@ -1375,7 +1375,7 @@ namespace BlackSimPlugin
             {
                 const bool trace = parser.toBool(2);
                 this->setTraceSendId(trace);
-                CLogMessage(this, CLogCategory::cmdLine()).info(u"Tracing %1 driver sendIds is '%2'") << this->getSimulatorPluginInfo().getIdentifier() << boolToOnOff(trace);
+                CLogMessage(this, CLogCategories::cmdLine()).info(u"Tracing %1 driver sendIds is '%2'") << this->getSimulatorPluginInfo().getIdentifier() << boolToOnOff(trace);
                 return true;
             }
 
@@ -1384,7 +1384,7 @@ namespace BlackSimPlugin
             {
                 const bool on = parser.toBool(2);
                 this->setUsingSbOffsetValues(on);
-                CLogMessage(this, CLogCategory::cmdLine()).info(u"SB offsets is '%1'") << boolToOnOff(on);
+                CLogMessage(this, CLogCategories::cmdLine()).info(u"SB offsets is '%1'") << boolToOnOff(on);
                 return true;
             }
 
@@ -1393,7 +1393,7 @@ namespace BlackSimPlugin
             {
                 const bool on = parser.toBool(2);
                 m_logSbOffsets = on;
-                CLogMessage(this, CLogCategory::cmdLine()).info(u"SB log. offsets is '%1'") << boolToOnOff(on);
+                CLogMessage(this, CLogCategories::cmdLine()).info(u"SB log. offsets is '%1'") << boolToOnOff(on);
                 return true;
             }
 

@@ -236,7 +236,7 @@ namespace BlackMisc
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                     break;
                 }
-                return CStatusMessage({ CLogCategory::settings() }, CStatusMessage::SeverityError, u"wrong simulator");
+                return CStatusMessage({ CLogCategories::settings() }, CStatusMessage::SeverityError, u"wrong simulator");
             }
 
             CStatusMessage CMultiSimulatorSettings::addModelDirectory(const QString &modelDirectory, const CSimulatorInfo &simulator)
@@ -244,7 +244,7 @@ namespace BlackMisc
                 CSimulatorSettings s = this->getSettings(simulator);
                 if (!s.addModelDirectory(modelDirectory))
                 {
-                    return CStatusMessage({ CLogCategory::settings() }, CStatusMessage::SeverityInfo, u"directory already existing");
+                    return CStatusMessage({ CLogCategories::settings() }, CStatusMessage::SeverityInfo, u"directory already existing");
                 }
                 return this->setSettings(s, simulator);
             }
@@ -296,7 +296,7 @@ namespace BlackMisc
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                     break;
                 }
-                return CStatusMessage({ CLogCategory::settings() }, CStatusMessage::SeverityError, u"wrong simulator");
+                return CStatusMessage({ CLogCategories::settings() }, CStatusMessage::SeverityError, u"wrong simulator");
             }
 
             CStatusMessage CMultiSimulatorSettings::setAndSaveSettings(const CSpecializedSimulatorSettings &settings, const CSimulatorInfo &simulator)
@@ -318,7 +318,7 @@ namespace BlackMisc
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                     break;
                 }
-                return CStatusMessage({ CLogCategory::settings() }, CStatusMessage::SeverityError, u"wrong simulator");
+                return CStatusMessage({ CLogCategories::settings() }, CStatusMessage::SeverityError, u"wrong simulator");
             }
 
             QString CMultiSimulatorSettings::getSimulatorDirectoryIfNotDefault(const CSimulatorInfo &simulator) const

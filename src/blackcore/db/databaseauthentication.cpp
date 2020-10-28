@@ -35,9 +35,9 @@ namespace BlackCore
 {
     namespace Db
     {
-        const CLogCategoryList &CDatabaseAuthenticationService::getLogCategories()
+        const QStringList &CDatabaseAuthenticationService::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::swiftDbWebservice() };
+            static const QStringList cats { CLogCategories::swiftDbWebservice() };
             return cats;
         }
 

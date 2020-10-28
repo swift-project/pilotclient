@@ -36,7 +36,7 @@ namespace BlackGui
 
         public:
             //! Categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Constructor
             explicit CDbOwnModelSetFormDialog(QWidget *parent = nullptr);

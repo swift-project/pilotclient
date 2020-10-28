@@ -67,9 +67,9 @@ namespace BlackGui
 {
     namespace Components
     {
-        const CLogCategoryList &CLoginAdvComponent::getLogCategories()
+        const QStringList &CLoginAdvComponent::getLogCategories()
         {
-            static const BlackMisc::CLogCategoryList cats { CLogCategory::guiComponent() };
+            static const QStringList cats { CLogCategories::guiComponent() };
             return cats;
         }
 

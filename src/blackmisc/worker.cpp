@@ -117,9 +117,9 @@ namespace BlackMisc
         s_allWorkers.remove(this);
     }
 
-    const CLogCategoryList &CWorkerBase::getLogCategories()
+    const QStringList &CWorkerBase::getLogCategories()
     {
-        static const BlackMisc::CLogCategoryList cats { CLogCategory::worker() };
+        static const QStringList cats { CLogCategories::worker() };
         return cats;
     }
 

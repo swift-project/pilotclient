@@ -31,9 +31,9 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        const CLogCategoryList &IAircraftModelLoader::getLogCategories()
+        const QStringList &IAircraftModelLoader::getLogCategories()
         {
-            static const CLogCategoryList cats({ CLogCategory::modelLoader() });
+            static const QStringList cats({ CLogCategories::modelLoader() });
             return cats;
         }
 

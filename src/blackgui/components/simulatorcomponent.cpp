@@ -38,9 +38,9 @@ namespace BlackGui
 {
     namespace Components
     {
-        const CLogCategoryList &CSimulatorComponent::getLogCategories()
+        const QStringList &CSimulatorComponent::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::guiComponent(), CLogCategory::matching() };
+            static const QStringList cats { CLogCategories::guiComponent(), CLogCategories::matching() };
             return cats;
         }
 

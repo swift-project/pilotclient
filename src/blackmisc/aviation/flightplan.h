@@ -156,7 +156,7 @@ namespace BlackMisc
         {
         public:
             //! The log. catgeories
-            static const CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Flight rules (VFR or IFR)
             enum FlightRules

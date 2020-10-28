@@ -72,7 +72,7 @@ namespace BlackCore
 
     public:
         //! Log categories
-        static const BlackMisc::CLogCategoryList &getLogCategories();
+        static const QStringList &getLogCategories();
 
         //! Constructor
         CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider      *ownAircraft,

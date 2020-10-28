@@ -42,7 +42,7 @@ namespace BlackCore
                     BLACK_VERIFY_X(false, Q_FUNC_INFO, msg);
                 }
 
-                CLogMessage(CLogCategory::fsd()).info(u"%1. Please report this to the DEVELOPERS!") << message;
+                CLogMessage(CLogCategories::fsd()).info(u"%1. Please report this to the DEVELOPERS!") << message;
             }
         }
 

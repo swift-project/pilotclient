@@ -187,7 +187,7 @@ namespace BlackMisc
         {
         public:
             //! Log categories
-            static const CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Latest interpolation result
             const Aviation::CAircraftSituation &getLastInterpolatedSituation() const { return m_lastSituation; }

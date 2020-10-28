@@ -47,7 +47,7 @@ namespace BlackMisc
         static const QString &coreServiceName(const QDBusConnection &connection);
 
         //! Log categories
-        static const CLogCategoryList &getLogCategories();
+        static const QStringList &getLogCategories();
 
         //! Server mode
         enum ServerMode

@@ -67,7 +67,7 @@ namespace BlackMisc
         //! \warning This must only be called from the main thread.
         CLogPatternHandler *handlerForValidation()
         {
-            return handlerForPattern(CLogPattern::exactMatch(CLogCategory::validation()).withSeverityAtOrAbove(CStatusMessage::SeverityWarning));
+            return handlerForPattern(CLogPattern::exactMatch(CLogCategories::validation()).withSeverityAtOrAbove(CStatusMessage::SeverityWarning));
         }
 
         //! Returns all log patterns for which there are currently subscribed log pattern handlers.

@@ -88,9 +88,9 @@ namespace BlackGui
         return qobject_cast<CGuiApplication *>(CApplication::instance());
     }
 
-    const BlackMisc::CLogCategoryList &CGuiApplication::getLogCategories()
+    const QStringList &CGuiApplication::getLogCategories()
     {
-        static const CLogCategoryList l(CApplication::getLogCategories().join({ CLogCategory::guiComponent() }));
+        static const QStringList l(CApplication::getLogCategories() + QStringList { CLogCategories::guiComponent() });
         return l;
     }
 

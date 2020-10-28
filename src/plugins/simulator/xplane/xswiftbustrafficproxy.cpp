@@ -24,9 +24,9 @@ namespace BlackSimPlugin
 {
     namespace XPlane
     {
-        const CLogCategoryList &CXSwiftBusTrafficProxy::getLogCategories()
+        const QStringList &CXSwiftBusTrafficProxy::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::driver(), CLogCategory::dbus() };
+            static const QStringList cats { CLogCategories::driver(), CLogCategories::dbus() };
             return cats;
         }
 

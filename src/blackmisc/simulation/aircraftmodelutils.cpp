@@ -144,27 +144,28 @@ namespace BlackMisc
         CStatusMessageList CAircraftModelUtilities::validateModelFiles(const CSimulatorInfo &simulator, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simulatorDir)
         {
             // some generic tests
+            CLogCategoryList cats = { CLogCategories::matching() };
             CStatusMessageList msgs;
             if (models.isEmpty())
             {
-                msgs.push_back(CStatusMessage(CLogCategory::matching(), CStatusMessage::SeverityError, u"No models", true));
+                msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"No models", true));
                 return msgs;
             }
 
             const int noDb = models.size() - models.countWithValidDbKey();
             if (noDb > 0)
             {
-                msgs.push_back(CStatusMessage(CLogCategory::matching(), CStatusMessage::SeverityWarning, QStringLiteral("%1 models without DB data, is this intended?").arg(noDb), true));
+                msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, QStringLiteral("%1 models without DB data, is this intended?").arg(noDb), true));
                 const QString ms = models.findWithoutValidDbKey(5).getModelStringList().join(", ");
-                msgs.push_back(CStatusMessage(CLogCategory::matching(), CStatusMessage::SeverityWarning, QStringLiteral("Some of the non DB models are: '%1'").arg(ms), true));
+                msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, QStringLiteral("Some of the non DB models are: '%1'").arg(ms), true));
             }
 
             const int noExcluded = models.countByMode(CAircraftModel::Exclude);
             if (noExcluded > 0)
             {
-                msgs.push_back(CStatusMessage(CLogCategory::matching(), CStatusMessage::SeverityWarning, QStringLiteral("%1 models marked as excluded, is this intended?").arg(noExcluded), true));
+                msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, QStringLiteral("%1 models marked as excluded, is this intended?").arg(noExcluded), true));
                 const QString ms = models.findAllExcludedModels(5).getModelStringList().join(", ");
-                msgs.push_back(CStatusMessage(CLogCategory::matching(), CStatusMessage::SeverityWarning, QStringLiteral("Some of the excluded models are: '%1'").arg(ms), true));
+                msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, QStringLiteral("Some of the excluded models are: '%1'").arg(ms), true));
             }
 
             // specific checks for FSX/XPlane/FG

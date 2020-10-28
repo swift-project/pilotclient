@@ -26,9 +26,9 @@ using namespace BlackCore::Vatsim;
 
 namespace BlackCore
 {
-    const CLogCategoryList &CThreadedReader::getLogCategories()
+    const QStringList &CThreadedReader::getLogCategories()
     {
-        static const BlackMisc::CLogCategoryList cats { BlackMisc::CLogCategory::worker() };
+        static const QStringList cats { BlackMisc::CLogCategories::worker() };
         return cats;
     }
 
@@ -218,7 +218,7 @@ namespace BlackCore
     {
         if (msg.isEmpty()) { return; }
         CStatusMessage logMsg(msg);
-        logMsg.addCategory(CLogCategory::dataInconsistency());
+        logMsg.addCategory(CLogCategories::dataInconsistency());
         if (funcInfo)
         {
             const QByteArray m(logMsg.getMessage().toLatin1());

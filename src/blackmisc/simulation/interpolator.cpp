@@ -163,9 +163,9 @@ namespace BlackMisc
         }
 
         template <typename Derived>
-        const CLogCategoryList &CInterpolator<Derived>::getLogCategories()
+        const QStringList &CInterpolator<Derived>::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::interpolator() };
+            static const QStringList cats { CLogCategories::interpolator() };
             return cats;
         }
 

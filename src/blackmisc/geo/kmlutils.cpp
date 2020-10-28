@@ -17,9 +17,9 @@ namespace BlackMisc
 {
     namespace Geo
     {
-        const CLogCategoryList &CKmlUtils::getLogCategories()
+        const QStringList &CKmlUtils::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::interpolator() };
+            static const QStringList cats { CLogCategories::interpolator() };
             return cats;
         }
 

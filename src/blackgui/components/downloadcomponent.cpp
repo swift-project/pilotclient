@@ -92,7 +92,7 @@ namespace BlackGui
             if (downloadDir.isEmpty()) { return; } // canceled
             if (!QDir(downloadDir).exists())
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).warning(u"'%1' is not a valid download directory") << downloadDir;
+                const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).warning(u"'%1' is not a valid download directory") << downloadDir;
                 this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeoutMs);
                 return;
             }
@@ -182,7 +182,7 @@ namespace BlackGui
             if (!sGui || !sGui->hasWebDataServices() || sGui->isShuttingDown()) { return false; }
             if (!this->existsDownloadDir())
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"Invalid download directory");
+                const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"Invalid download directory");
                 this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeoutMs);
                 return false;
             }
@@ -190,7 +190,7 @@ namespace BlackGui
             const CUrl download = remoteFile.getSmartUrl();
             if (download.isEmpty())
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"No download URL for file name '%1'") << remoteFile.getBaseNameAndSize();
+                const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"No download URL for file name '%1'") << remoteFile.getBaseNameAndSize();
                 this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeoutMs);
                 return false;
             }
@@ -227,7 +227,7 @@ namespace BlackGui
             }
             else
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"Starting download for '%1' failed") << download.getFullUrl();
+                const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"Starting download for '%1' failed") << download.getFullUrl();
                 this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeoutMs);
             }
             return success;

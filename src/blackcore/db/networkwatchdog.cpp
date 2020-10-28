@@ -22,12 +22,12 @@ namespace BlackCore
 {
     namespace Db
     {
-        const CLogCategoryList &CNetworkWatchdog::getLogCategories()
+        const QStringList &CNetworkWatchdog::getLogCategories()
         {
-            static const CLogCategoryList cats = CContinuousWorker::getLogCategories().with(
+            static const QStringList cats = CContinuousWorker::getLogCategories() + QStringList
             {
-                CLogCategory::swiftDbWebservice(), CLogCategory::webservice(), CLogCategory::network()
-            });
+                CLogCategories::swiftDbWebservice(), CLogCategories::webservice(), CLogCategories::network()
+            };
             return cats;
         }
 

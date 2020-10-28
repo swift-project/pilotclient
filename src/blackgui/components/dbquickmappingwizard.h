@@ -62,7 +62,7 @@ namespace BlackGui
             virtual bool validateCurrentPage() override;
 
             //! Log categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
         protected:
             //! \copydoc QWizard::keyPressEvent

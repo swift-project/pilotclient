@@ -432,9 +432,9 @@ namespace BlackCore
         }
     }
 
-    const CLogCategoryList &CSetupReader::getLogCategories()
+    const QStringList &CSetupReader::getLogCategories()
     {
-        static const CLogCategoryList cats({ CLogCategory("swift.setupreader"), CLogCategory::webservice(), CLogCategory::startup()});
+        static const QStringList cats({ "swift.setupreader", CLogCategories::webservice(), CLogCategories::startup()});
         return cats;
     }
 

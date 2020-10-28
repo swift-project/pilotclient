@@ -320,7 +320,7 @@ namespace BlackMisc
                 CModelCaches(bool synchronizeCache, QObject *parent = nullptr);
 
                 //! Log categories
-                static const BlackMisc::CLogCategoryList &getLogCategories();
+                static const QStringList &getLogCategories();
 
                 //! \name Interface implementations
                 //! @{
@@ -361,7 +361,7 @@ namespace BlackMisc
                 CModelSetCaches(bool synchronizeCache, QObject *parent = nullptr);
 
                 //! Log categories
-                static const BlackMisc::CLogCategoryList &getLogCategories();
+                static const QStringList &getLogCategories();
 
                 //! \name Interface implementations
                 //! @{

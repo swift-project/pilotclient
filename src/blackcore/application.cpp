@@ -1337,9 +1337,9 @@ namespace BlackCore
         return e;
     }
 
-    const BlackMisc::CLogCategoryList &CApplication::getLogCategories()
+    const QStringList &CApplication::getLogCategories()
     {
-        static const CLogCategoryList l({ CLogCategory("swift.application"), CLogCategory("swift." + executable())});
+        static const QStringList l({ "swift.application", "swift." % executable()});
         return l;
     }
 

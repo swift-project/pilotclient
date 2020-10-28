@@ -91,7 +91,7 @@ namespace BlackCore
 
     public:
         //! Log categories
-        static const BlackMisc::CLogCategoryList &getLogCategories();
+        static const QStringList &getLogCategories();
 
         //! Constructor, only allowed from BlackCore::CApplication
         CWebDataServices(CWebReaderFlags::WebReader readerFlags, const BlackCore::Db::CDatabaseReaderConfigList &dbReaderConfig, BlackMisc::Restricted<CApplication>, QObject *parent = nullptr);

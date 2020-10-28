@@ -150,11 +150,11 @@ namespace BlackCore
             return n;
         }
 
-        const CLogCategoryList &CDatabaseWriter::getLogCategories()
+        const QStringList &CDatabaseWriter::getLogCategories()
         {
-            static const CLogCategoryList cats
+            static const QStringList cats
             {
-                CLogCategory::swiftDbWebservice(), CLogCategory::webservice()
+                CLogCategories::swiftDbWebservice(), CLogCategories::webservice()
             };
             return cats;
         }
@@ -208,7 +208,7 @@ namespace BlackCore
 
         void CDatabaseWriter::postedAutoPublishResponse(QNetworkReply *nwReplyPtr)
         {
-            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::swiftDbWebservice()}));
+            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategories::swiftDbWebservice()}));
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             if (m_shutdown || !sApp)
             {

@@ -105,7 +105,7 @@ namespace BlackMisc
             CInterpolationLogger(QObject *parent = nullptr);
 
             //! Log categories
-            static const CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Write a log in background
             CWorker *writeLogInBackground(bool clearLog);

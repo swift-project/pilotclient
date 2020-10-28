@@ -163,7 +163,7 @@ namespace BlackMisc
         class BatchGuard;
 
         //! Log categories
-        static const CLogCategoryList &getLogCategories();
+        static const QStringList &getLogCategories();
 
         //! Constructor.
         explicit CValueCache(int fileSplitDepth, QObject *parent = nullptr);

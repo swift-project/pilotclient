@@ -89,21 +89,21 @@ namespace BlackCore
 
         CSimulatedAircraft CContextOwnAircraft::getOwnAircraft() const
         {
-            if (m_debugEnabled) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (m_debugEnabled) {CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
             QReadLocker l(&m_lockAircraft);
             return m_ownAircraft;
         }
 
         CComSystem CContextOwnAircraft::getOwnComSystem(CComSystem::ComUnit unit) const
         {
-            if (m_debugEnabled) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (m_debugEnabled) {CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
             QReadLocker l(&m_lockAircraft);
             return m_ownAircraft.getComSystem(unit);
         }
 
         CTransponder CContextOwnAircraft::getOwnTransponder() const
         {
-            if (m_debugEnabled) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (m_debugEnabled) {CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
             QReadLocker l(&m_lockAircraft);
             return m_ownAircraft.getTransponder();
         }
@@ -334,7 +334,7 @@ namespace BlackCore
 
         bool CContextOwnAircraft::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const CAltitude &pressureAltitude)
         {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << position << altitude; }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << position << altitude; }
             QWriteLocker l(&m_lockAircraft);
             bool changed = (m_ownAircraft.getPosition() != position);
             if (changed) { m_ownAircraft.setPosition(position); }
@@ -355,7 +355,7 @@ namespace BlackCore
 
         bool CContextOwnAircraft::updateCockpit(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder, const CIdentifier &originator)
         {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << com1 << com2 << transponder; }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << com1 << com2 << transponder; }
             bool changed;
             {
                 QWriteLocker l(&m_lockAircraft);
@@ -372,7 +372,7 @@ namespace BlackCore
 
         bool CContextOwnAircraft::updateTransponderMode(const CTransponder::TransponderMode &transponderMode, const CIdentifier &originator)
         {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << transponderMode; }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << transponderMode; }
             bool changed;
             {
                 QWriteLocker l(&m_lockAircraft);
@@ -476,7 +476,7 @@ namespace BlackCore
 
         void CContextOwnAircraft::setAudioOutputVolume(int outputVolume)
         {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << outputVolume; }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << outputVolume; }
             CContextAudioBase *audio = qobject_cast<CContextAudioBase *>(this->getIContextAudio());
             if (audio) { audio->setVoiceOutputVolume(outputVolume); }
         }

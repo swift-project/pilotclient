@@ -33,53 +33,53 @@ namespace BlackMisc
             //! Specialized log for matching / reverse lookup
             //! \threadsafe
             static void addLogDetailsToList(CStatusMessageList *log, const CCallsign &callsign,
-                                            const QString &message, const CLogCategoryList &extraCategories = {},
+                                            const QString &message, const QStringList &extraCategories = {},
                                             CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
             //! Specialized log for matching / reverse lookup
             //! \threadsafe
             static void addLogDetailsToList(CStatusMessageList *log, const CAircraftIcaoCode &icao,
-                                            const QString &message, const CLogCategoryList &extraCategories = {},
+                                            const QString &message, const QStringList &extraCategories = {},
                                             CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
             //! Specialized log for matching / reverse lookup
             //! \threadsafe
             static void addLogDetailsToList(CStatusMessageList *log, const CAirlineIcaoCode &icao,
-                                            const QString &message, const CLogCategoryList &extraCategories = {},
+                                            const QString &message, const QStringList &extraCategories = {},
                                             CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
             //! Specialized log for matching / reverse lookup
             //! \threadsafe
             static void addLogDetailsToList(CStatusMessageList *log, const CLivery &livery,
-                                            const QString &message, const CLogCategoryList &extraCategories = {},
+                                            const QString &message, const QStringList &extraCategories = {},
                                             CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
             //! Specialized log message for matching / reverse lookup
             //! \threadsafe
             static CStatusMessage logMessage(
                 const CCallsign &callsign,
-                const QString &message, const CLogCategoryList &extraCategories = {},
+                const QString &message, const QStringList &extraCategories = {},
                 CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
             //! Specialized log message for matching / reverse lookup
             //! \threadsafe
             static CStatusMessage logMessage(
                 const CAircraftIcaoCode &icaoCode,
-                const QString &message, const CLogCategoryList &extraCategories = {},
+                const QString &message, const QStringList &extraCategories = {},
                 CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
             //! Specialized log message for matching / reverse lookup
             //! \threadsafe
             static CStatusMessage logMessage(
                 const CAirlineIcaoCode &icaoCode,
-                const QString &message, const CLogCategoryList &extraCategories = {},
+                const QString &message, const QStringList &extraCategories = {},
                 CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
             //! Specialized log message for matching / reverse lookup
             //! \threadsafe
             static CStatusMessage logMessage(
                 const CLivery &livery,
-                const QString &message, const CLogCategoryList &extraCategories = {},
+                const QString &message, const QStringList &extraCategories = {},
                 CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
         private:
@@ -87,7 +87,7 @@ namespace BlackMisc
             static const CLogCategoryList &defaultCategories();
 
             //! Categories
-            static CLogCategoryList categories(const CLogCategoryList &extraCategories);
+            static CLogCategoryList categories(const QStringList &extraCategories);
         };
     } // ns
 } // ns

@@ -45,7 +45,7 @@ namespace BlackCore
             virtual ~IContext() override {}
 
             //! Log categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Using local implementing object?
             bool isUsingImplementingObject() const
@@ -159,7 +159,7 @@ namespace BlackCore
             //! Empty context called
             void logEmptyContextWarning(const QString &functionName) const
             {
-                BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).warning(u"Empty context called, details: %1") << functionName;
+                BlackMisc::CLogMessage(this, BlackMisc::CLogCategories::contextSlot()).warning(u"Empty context called, details: %1") << functionName;
             }
 
             //! Called when shutdown is about to be called

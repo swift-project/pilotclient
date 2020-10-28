@@ -72,7 +72,7 @@ namespace BlackMisc
 
     public:
         //! Log categories
-        static const CLogCategoryList &getLogCategories();
+        static const QStringList &getLogCategories();
 
         //! Connects to a functor or method which will be called when the task is finished.
         //! \threadsafe The functor may not call any method that observes the worker's finished flag.

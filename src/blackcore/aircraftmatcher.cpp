@@ -40,9 +40,9 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {
-    const CLogCategoryList &CAircraftMatcher::getLogCategories()
+    const QStringList &CAircraftMatcher::getLogCategories()
     {
-        static const CLogCategoryList cats { CLogCategory::matching() };
+        static const QStringList cats { CLogCategories::matching() };
         return cats;
     }
 
@@ -594,7 +594,7 @@ namespace BlackCore
             if (ms.isError())
             {
                 const QString msg = QStringLiteral("Matching script error: %1 '%2'").arg(ms.property("lineNumber").toInt()).arg(ms.toString());
-                CLogMessage(getLogCategories()).warning(msg);
+                CLogMessage(static_cast<CAircraftMatcher *>(nullptr)).warning(msg);
                 if (log) { CLogUtilities::addLogDetailsToList(log, callsign, msg); }
             }
             else

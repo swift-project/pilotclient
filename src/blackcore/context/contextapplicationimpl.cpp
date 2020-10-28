@@ -46,19 +46,19 @@ namespace BlackCore
 
         BlackMisc::CValueCachePacket CContextApplication::getAllSettings() const
         {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
             return CSettingsCache::instance()->getAllValuesWithTimestamps();
         }
 
         QStringList CContextApplication::getUnsavedSettingsKeys() const
         {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
             return CSettingsCache::instance()->getAllUnsavedKeys();
         }
 
         CSettingsDictionary CContextApplication::getUnsavedSettingsKeysDescribed() const
         {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
             const QStringList keys = CSettingsCache::instance()->getAllUnsavedKeys();
             CSettingsDictionary result;
             for (const QString &key : keys) { result.insert(key, CSettingsCache::instance()->getHumanReadableName(key)); }
@@ -72,19 +72,19 @@ namespace BlackCore
 
         BlackMisc::CStatusMessage CContextApplication::saveSettings(const QString &keyPrefix)
         {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << keyPrefix; }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << keyPrefix; }
             return CSettingsCache::instance()->saveToStore(keyPrefix);
         }
 
         BlackMisc::CStatusMessage CContextApplication::saveSettingsByKey(const QStringList &keys)
         {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << keys.join(", "); }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << keys.join(", "); }
             return CSettingsCache::instance()->saveToStore(keys);
         }
 
         BlackMisc::CStatusMessage CContextApplication::loadSettings()
         {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
             return CSettingsCache::instance()->loadFromStore();
         }
 
@@ -114,7 +114,7 @@ namespace BlackCore
 
         bool CContextApplication::writeToFile(const QString &fileName, const QString &content)
         {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << fileName << content.left(25); }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << fileName << content.left(25); }
             if (fileName.isEmpty()) { return false; }
             QFile file(fileName);
             if (file.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -128,7 +128,7 @@ namespace BlackCore
 
         CIdentifier CContextApplication::registerApplication(const CIdentifier &application)
         {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << application; }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << application; }
 
             if (!m_registeredApplications.contains(application))
             {
@@ -143,7 +143,7 @@ namespace BlackCore
 
         void CContextApplication::unregisterApplication(const CIdentifier &application)
         {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << application; }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << application; }
             int r = m_registeredApplications.remove(application);
             this->cleanupRegisteredApplications();
             if (r > 0) { emit registrationChanged(); }
@@ -157,7 +157,7 @@ namespace BlackCore
 
         CIdentifierList CContextApplication::getRegisteredApplications() const
         {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
             //static const int outdatedMs = qRound(1.5 * PingIdentifiersMs);
             //return m_registeredApplications.findAfterNowMinusOffset(outdatedMs);
             return m_registeredApplications;
@@ -165,13 +165,13 @@ namespace BlackCore
 
         CIdentifier CContextApplication::getApplicationIdentifier() const
         {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
             return this->identifier();
         }
 
         QString CContextApplication::readFromFile(const QString &fileName) const
         {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << fileName; }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << fileName; }
             QFile file(fileName);
             QString content;
             if (fileName.isEmpty()) return content;
@@ -186,14 +186,14 @@ namespace BlackCore
 
         bool CContextApplication::removeFile(const QString &fileName)
         {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << fileName; }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << fileName; }
             if (fileName.isEmpty()) { return false; }
             return QFile::remove(fileName);
         }
 
         bool CContextApplication::existsFile(const QString &fileName) const
         {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << fileName; }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << fileName; }
             if (fileName.isEmpty()) return false;
             return QFile::exists(fileName);
         }

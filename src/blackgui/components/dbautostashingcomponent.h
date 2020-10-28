@@ -54,7 +54,7 @@ namespace BlackGui
             };
 
             //! Log categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Constructor
             explicit CDbAutoStashingComponent(QWidget *parent = nullptr);

@@ -49,9 +49,9 @@ namespace BlackCore
             constexpr double CAfvClient::MaxDbOut;
             constexpr quint32 CAfvClient::UniCom;
 
-            const CLogCategoryList &CAfvClient::getLogCategories()
+            const QStringList &CAfvClient::getLogCategories()
             {
-                static const CLogCategoryList cats { CLogCategory::audio(), CLogCategory::vatsimSpecific() };
+                static const QStringList cats { CLogCategories::audio(), CLogCategories::vatsimSpecific() };
                 return cats;
             }
 

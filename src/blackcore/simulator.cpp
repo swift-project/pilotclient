@@ -46,9 +46,9 @@ using namespace BlackCore::Db;
 
 namespace BlackCore
 {
-    const CLogCategoryList &ISimulator::getLogCategories()
+    const QStringList &ISimulator::getLogCategories()
     {
-        static const CLogCategoryList cats({ CLogCategory::driver(), CLogCategory::plugin() });
+        static const QStringList cats({ CLogCategories::driver(), CLogCategories::plugin() });
         return cats;
     }
 

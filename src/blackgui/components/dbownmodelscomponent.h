@@ -66,7 +66,7 @@ namespace BlackGui
             virtual ~CDbOwnModelsComponent() override;
 
             //! Log categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Own (installed) model for given model string
             BlackMisc::Simulation::CAircraftModel getOwnModelForModelString(const QString &modelString) const;

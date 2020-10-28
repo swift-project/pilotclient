@@ -32,7 +32,7 @@ namespace BlackCore
             {
             public:
                 //! Categories
-                static const BlackMisc::CLogCategoryList &getLogCategories();
+                static const QStringList &getLogCategories();
 
                 //! Ctor
                 CClientConnectionData() = default;

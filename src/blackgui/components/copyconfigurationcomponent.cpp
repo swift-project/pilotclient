@@ -38,9 +38,9 @@ namespace BlackGui
 {
     namespace Components
     {
-        const CLogCategoryList &CCopyConfigurationComponent::getLogCategories()
+        const QStringList &CCopyConfigurationComponent::getLogCategories()
         {
-            static const BlackMisc::CLogCategoryList cats { CLogCategory::guiComponent() };
+            static const QStringList cats { CLogCategories::guiComponent() };
             return cats;
         }
 
@@ -451,9 +451,9 @@ namespace BlackGui
             ui->tv_Source->setMinimumWidth(wView);
         }
 
-        const CLogCategoryList &CCopyConfigurationWizardPage::getLogCategories()
+        const QStringList &CCopyConfigurationWizardPage::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::wizard(), CLogCategory::guiComponent() };
+            static const QStringList cats { CLogCategories::wizard(), CLogCategories::guiComponent() };
             return cats;
         }
 

@@ -29,7 +29,7 @@ namespace BlackMisc
             //! \threadsafe
             static void addLogDetailsToList(
                 CStatusMessageList *log, const Simulation::CSimulatedAircraft &remoteAircraft,
-                const QString &message, const CLogCategoryList &extraCategories = {},
+                const QString &message, const QStringList &extraCategories = {},
                 CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
         private:
@@ -37,7 +37,7 @@ namespace BlackMisc
             static const CLogCategoryList &defaultCategories();
 
             //! Categories
-            static CLogCategoryList categories(const CLogCategoryList &extraCategories);
+            static CLogCategoryList categories(const QStringList &extraCategories);
         };
     } // ns
 } // ns

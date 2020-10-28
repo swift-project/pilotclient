@@ -34,7 +34,7 @@ namespace BlackCore
             CDatabaseUtils() = delete;
 
             //! Log categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Consolidate models with simulator model data (aka "models on disk")
             //! \remark kept here with the other consolidate functions, but actually DB independent

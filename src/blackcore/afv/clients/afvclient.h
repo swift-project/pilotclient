@@ -60,7 +60,7 @@ namespace BlackCore
 
             public:
                 //! Categories
-                static const BlackMisc::CLogCategoryList &getLogCategories();
+                static const QStringList &getLogCategories();
 
                 //! Connection status
                 enum ConnectionStatus { Disconnected, Connected };

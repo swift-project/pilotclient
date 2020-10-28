@@ -43,7 +43,7 @@ namespace BlackGui
 
         public:
             //! Categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Tabs
             enum Tab

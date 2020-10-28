@@ -30,9 +30,9 @@ namespace BlackGui
 {
     namespace Components
     {
-        const CLogCategoryList &CDbOwnModelSetFormDialog::getLogCategories()
+        const QStringList &CDbOwnModelSetFormDialog::getLogCategories()
         {
-            static const CLogCategoryList cats({ CLogCategory("swift.ownmodelset"), CLogCategory::guiComponent()});
+            static const QStringList cats({ "swift.ownmodelset", CLogCategories::guiComponent()});
             return cats;
         }
 

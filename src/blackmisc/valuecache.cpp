@@ -158,9 +158,9 @@ namespace BlackMisc
     // CValueCache
     ////////////////////////////////
 
-    const CLogCategoryList &CValueCache::getLogCategories()
+    const QStringList &CValueCache::getLogCategories()
     {
-        static const CLogCategoryList cats({ CLogCategory("swift.valuecache") , CLogCategory::services()} );
+        static const QStringList cats({ "swift.valuecache" , CLogCategories::services()} );
         return cats;
     }
 
@@ -592,7 +592,7 @@ namespace BlackMisc
     // Private :: CValuePage
     ////////////////////////////////
 
-    const CLogCategoryList &CValuePage::getLogCategories()
+    const QStringList &CValuePage::getLogCategories()
     {
         return CValueCache::getLogCategories();
     }

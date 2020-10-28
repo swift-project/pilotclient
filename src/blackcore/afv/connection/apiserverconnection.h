@@ -50,7 +50,7 @@ namespace BlackCore
                 };
 
                 //! Categories
-                static const BlackMisc::CLogCategoryList &getLogCategories();
+                static const QStringList &getLogCategories();
 
                 //! Constructor
                 CApiServerConnection(const QString &address, QObject *parent = nullptr);

@@ -49,7 +49,7 @@ namespace BlackSimPlugin
             void setPlayerUserId(DPNID id) { m_playerUser = id; }
 
             //! Log categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
 
 

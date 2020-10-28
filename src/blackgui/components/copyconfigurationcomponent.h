@@ -34,7 +34,7 @@ namespace BlackGui
 
         public:
             //! Log.categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Constructor
             explicit CCopyConfigurationComponent(QWidget *parent = nullptr);
@@ -152,7 +152,7 @@ namespace BlackGui
             using QWizardPage::QWizardPage;
 
             //! Log.categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Set config
             void setConfigComponent(CCopyConfigurationComponent *config) { m_config = config; }

@@ -33,9 +33,9 @@ namespace BlackGui
 {
     namespace Components
     {
-        const CLogCategoryList &CInterpolationLogDisplay::getLogCategories()
+        const QStringList &CInterpolationLogDisplay::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::interpolator(), CLogCategory::driver() };
+            static const QStringList cats { CLogCategories::interpolator(), CLogCategories::driver() };
             return cats;
         }
 

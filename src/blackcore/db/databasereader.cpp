@@ -710,12 +710,12 @@ namespace BlackCore
             return ts.toUTC().toString(Qt::ISODate);
         }
 
-        const CLogCategoryList &CDatabaseReader::getLogCategories()
+        const QStringList &CDatabaseReader::getLogCategories()
         {
-            static const CLogCategoryList cats = CThreadedReader::getLogCategories().with(
+            static const QStringList cats = CThreadedReader::getLogCategories() + QStringList
             {
-                CLogCategory::swiftDbWebservice(), CLogCategory::webservice()
-            });
+                CLogCategories::swiftDbWebservice(), CLogCategories::webservice()
+            };
             return cats;
         }
 

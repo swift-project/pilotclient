@@ -34,7 +34,7 @@ namespace BlackMisc
 
         public:
             //! Log categories
-            static const CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Constructor
             CBackgroundValidation(QObject *owner);

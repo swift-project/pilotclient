@@ -109,9 +109,9 @@ namespace BlackMisc
         return CDBusServer::isP2PConnection(connection) ? empty : CDBusServer::coreServiceName();
     }
 
-    const CLogCategoryList &CDBusServer::getLogCategories()
+    const QStringList &CDBusServer::getLogCategories()
     {
-        static const CLogCategoryList cats({ CLogCategory::dbus() });
+        static const QStringList cats({ CLogCategories::dbus() });
         return cats;
     }
 

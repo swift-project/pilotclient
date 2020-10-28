@@ -142,7 +142,7 @@ namespace BlackMisc
 
         CStatusMessageList CAutoPublishData::analyzeAgainstDBData(const CAircraftModelList &dbModels)
         {
-            static const CLogCategoryList cats({ CLogCategory::mapping(), CLogCategory::webservice() });
+            static const CLogCategoryList cats({ CLogCategories::mapping(), CLogCategories::webservice() });
             if (dbModels.isEmpty()) { return CStatusMessage(this).validationError(u"No DB data"); }
             if (this->isEmpty())    { return CStatusMessage(this).validationWarning(u"No data"); }
 

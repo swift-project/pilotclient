@@ -205,7 +205,7 @@ namespace BlackCore
         {
             if (!sApp || origin.isFromLocalMachine()) { return; }
             sApp->getInputManager()->callFunctionsBy(action, argument);
-            CLogMessage(this, CLogCategory::contextSlot()).debug() << "Calling function" << action << "from origin" << origin.getMachineName();
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << "Calling function" << action << "from origin" << origin.getMachineName();
         }
     } // namespace
 } // namespace

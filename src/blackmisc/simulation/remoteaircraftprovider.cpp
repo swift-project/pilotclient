@@ -31,9 +31,9 @@ namespace BlackMisc
         IRemoteAircraftProvider::~IRemoteAircraftProvider()
         { }
 
-        const CLogCategoryList &CRemoteAircraftProvider::getLogCategories()
+        const QStringList &CRemoteAircraftProvider::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::matching(), CLogCategory::network() };
+            static const QStringList cats { CLogCategories::matching(), CLogCategories::network() };
             return cats;
         }
 

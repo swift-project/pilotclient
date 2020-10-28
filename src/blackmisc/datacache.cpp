@@ -261,9 +261,9 @@ namespace BlackMisc
         }
     }
 
-    const CLogCategoryList &CDataCacheSerializer::getLogCategories()
+    const QStringList &CDataCacheSerializer::getLogCategories()
     {
-        static const BlackMisc::CLogCategoryList cats { BlackMisc::CLogCategory::cache() };
+        static const QStringList cats { BlackMisc::CLogCategories::cache() };
         return cats;
     }
 

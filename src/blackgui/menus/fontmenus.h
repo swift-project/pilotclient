@@ -35,7 +35,7 @@ namespace BlackGui
             CFontMenu(QWidget *widget, Qt::ShortcutContext shortcutContext = Qt::WidgetShortcut);
 
             //! Log.categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! \copydoc IMenuDelegate::customMenu
             virtual void customMenu(CMenuActions &menuActions) override;

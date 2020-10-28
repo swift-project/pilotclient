@@ -178,7 +178,7 @@ namespace BlackSimPlugin
             }
 
             //! Log. categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Constructor
             CXSwiftBusTrafficProxy(QDBusConnection &connection, QObject *parent = nullptr, bool dummy = false);

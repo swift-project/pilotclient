@@ -192,9 +192,9 @@ namespace BlackMisc
                 }
             }
 
-            const CLogCategoryList &CModelCaches::getLogCategories()
+            const QStringList &CModelCaches::getLogCategories()
             {
-                static const CLogCategoryList l({ CLogCategory::modelCache() });
+                static const QStringList l({ CLogCategories::modelCache() });
                 return l;
             }
 
@@ -411,9 +411,9 @@ namespace BlackMisc
                 }
             }
 
-            const CLogCategoryList &CModelSetCaches::getLogCategories()
+            const QStringList &CModelSetCaches::getLogCategories()
             {
-                static const CLogCategoryList l({ CLogCategory::modelSetCache() });
+                static const QStringList l({ CLogCategories::modelSetCache() });
                 return l;
             }
 

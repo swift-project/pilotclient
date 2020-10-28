@@ -103,7 +103,7 @@ namespace BlackCore
         static CApplication *instance();
 
         //! Own log categories
-        static const BlackMisc::CLogCategoryList &getLogCategories();
+        static const QStringList &getLogCategories();
 
         //! Constructor
         CApplication(BlackMisc::CApplicationInfo::Application application, bool init = true);

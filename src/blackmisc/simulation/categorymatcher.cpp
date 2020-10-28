@@ -20,9 +20,9 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        const CLogCategoryList &CCategoryMatcher::getLogCategories()
+        const QStringList &CCategoryMatcher::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::matching() };
+            static const QStringList cats { CLogCategories::matching() };
             return cats;
         }
 

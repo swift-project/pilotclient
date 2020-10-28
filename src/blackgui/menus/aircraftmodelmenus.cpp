@@ -36,9 +36,9 @@ namespace BlackGui
         void IAircraftModelViewMenu::anchor()
         { }
 
-        const CLogCategoryList &IAircraftModelViewMenu::getLogCategories()
+        const QStringList &IAircraftModelViewMenu::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::guiComponent() };
+            static const QStringList cats { CLogCategories::guiComponent() };
             return cats;
         }
 
@@ -74,9 +74,9 @@ namespace BlackGui
             IAircraftModelViewMenu(modelView), m_messageFrame(messageFrame)
         { }
 
-        const CLogCategoryList &CShowSimulatorFileMenu::getLogCategories()
+        const QStringList &CShowSimulatorFileMenu::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::guiComponent() };
+            static const QStringList cats { CLogCategories::guiComponent() };
             return cats;
         }
 
@@ -175,9 +175,9 @@ namespace BlackGui
             }
         }
 
-        const CLogCategoryList &CConsolidateWithDbDataMenu::getLogCategories()
+        const QStringList &CConsolidateWithDbDataMenu::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::mapping(), CLogCategory::guiComponent() };
+            static const QStringList cats { CLogCategories::mapping(), CLogCategories::guiComponent() };
             return cats;
         }
 
@@ -280,9 +280,9 @@ namespace BlackGui
             }
         }
 
-        const CLogCategoryList &CConsolidateWithSimulatorModels::getLogCategories()
+        const QStringList &CConsolidateWithSimulatorModels::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::mapping(), CLogCategory::guiComponent() };
+            static const QStringList cats { CLogCategories::mapping(), CLogCategories::guiComponent() };
             return cats;
         }
 

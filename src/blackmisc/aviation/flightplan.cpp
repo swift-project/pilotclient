@@ -202,9 +202,9 @@ namespace BlackMisc
             return r.isEmpty() ? newRemark : r % u" " % newRemark;
         }
 
-        const CLogCategoryList &CFlightPlan::getLogCategories()
+        const QStringList &CFlightPlan::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::flightPlan() };
+            static const QStringList cats { CLogCategories::flightPlan() };
             return cats;
         }
 
@@ -643,14 +643,14 @@ namespace BlackMisc
                 QFileInfo fi(fileName);
                 if (fileName.isEmpty())
                 {
-                    if (msgs) { msgs->push_back(CStatusMessage(getLogCategories()).validationError(u"No file name")); }
+                    if (msgs) { msgs->push_back(CStatusMessage(static_cast<CFlightPlan *>(nullptr)).validationError(u"No file name")); }
                     return CFlightPlan();
                 }
                 else
                 {
                     if (!fi.exists())
                     {
-                        if (msgs) { msgs->push_back(CStatusMessage(getLogCategories()).validationError(u"File '%1' does not exist") << fileName); }
+                        if (msgs) { msgs->push_back(CStatusMessage(static_cast<CFlightPlan *>(nullptr)).validationError(u"File '%1' does not exist") << fileName); }
                         return CFlightPlan();
                     }
                 }
@@ -658,7 +658,7 @@ namespace BlackMisc
                 const QString data = CFileUtils::readFileToString(fileName);
                 if (data.isEmpty())
                 {
-                    if (msgs) { msgs->push_back(CStatusMessage(getLogCategories()).validationError(u"File '%1' does not contain data") << fileName); }
+                    if (msgs) { msgs->push_back(CStatusMessage(static_cast<CFlightPlan *>(nullptr)).validationError(u"File '%1' does not contain data") << fileName); }
                     return CFlightPlan();
                 }
 
@@ -671,7 +671,7 @@ namespace BlackMisc
                         CStatusMessage m;
                         if (!Json::looksLikeSwiftJson(data))
                         {
-                            m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityWarning, u"Reading '%1' yields no data", true) << fileName;
+                            m = CStatusMessage(static_cast<CFlightPlan *>(nullptr), CStatusMessage::SeverityWarning, u"Reading '%1' yields no data", true) << fileName;
                             if (msgs) { msgs->push_back(m); }
                             break;
                         }
@@ -691,7 +691,7 @@ namespace BlackMisc
                                 }
                                 else
                                 {
-                                    m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityWarning, u"Wrong format for flight plan in '%1'") << fileName;
+                                    m = CStatusMessage(static_cast<CFlightPlan *>(nullptr), CStatusMessage::SeverityWarning, u"Wrong format for flight plan in '%1'") << fileName;
                                     if (msgs) { msgs->push_back(m); }
                                 }
                             }
@@ -703,7 +703,7 @@ namespace BlackMisc
                         }
                         catch (const CJsonException &ex)
                         {
-                            m = CStatusMessage::fromJsonException(ex, getLogCategories(), "Parse error in " + fileName);
+                            m = CStatusMessage::fromJsonException(ex, static_cast<CFlightPlan *>(nullptr), "Parse error in " + fileName);
                             if (msgs) { msgs->push_back(m); }
                             break;
                         }
@@ -717,7 +717,7 @@ namespace BlackMisc
             {
                 if (msgs)
                 {
-                    msgs->push_back(CStatusMessage::fromJsonException(ex, getLogCategories(), QStringLiteral("Parsing flight plan from '%1' failed.").arg(fileName)));
+                    msgs->push_back(CStatusMessage::fromJsonException(ex, static_cast<CFlightPlan *>(nullptr), QStringLiteral("Parsing flight plan from '%1' failed.").arg(fileName)));
                 }
             }
             return CFlightPlan();

@@ -66,7 +66,7 @@ namespace BlackGui
             };
 
             //! Log categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Constructor
             explicit CMappingComponent(QWidget *parent = nullptr);

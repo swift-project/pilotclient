@@ -24,9 +24,9 @@ namespace BlackSimPlugin
 {
     namespace Fs9
     {
-        const CLogCategoryList &CDirectPlayPeer::getLogCategories()
+        const QStringList &CDirectPlayPeer::getLogCategories()
         {
-            static const BlackMisc::CLogCategoryList cats { CLogCategory::driver() };
+            static const QStringList cats { CLogCategories::driver() };
             return cats;
         }
 

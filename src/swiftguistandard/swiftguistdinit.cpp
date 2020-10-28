@@ -94,7 +94,7 @@ void SwiftGuiStd::init()
     connect(&m_logHistoryForOverlay, &CLogHistoryReplica::elementAdded, this, [this](const CStatusMessage& message)
     {
         //! \todo filter out validation messages at CLogPattern level
-        if (!message.getCategories().contains(CLogCategory::validation())) { ui->fr_CentralFrameInside->showOverlayMessage(message); }
+        if (!message.getCategories().contains(CLogCategories::validation())) { ui->fr_CentralFrameInside->showOverlayMessage(message); }
     });
     m_logHistoryForStatus.initialize(sApp->getDataLinkDBus());
     m_logHistoryForOverlay.initialize(sApp->getDataLinkDBus());

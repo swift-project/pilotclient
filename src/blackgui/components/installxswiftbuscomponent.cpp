@@ -76,7 +76,7 @@ namespace BlackGui
             if (xPlanePluginDir.isEmpty()) { return; } // canceled
             if (!QDir(xPlanePluginDir).exists())
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).warning(u"'%1' is not a valid X-Plane plugin directory") << xPlanePluginDir;
+                const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).warning(u"'%1' is not a valid X-Plane plugin directory") << xPlanePluginDir;
                 this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
                 return;
             }
@@ -92,7 +92,7 @@ namespace BlackGui
             if (downloadDir.isEmpty()) { return; } // canceled
             if (!QDir(downloadDir).exists())
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).warning(u"'%1' is not a valid download directory") << downloadDir;
+                const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).warning(u"'%1' is not a valid download directory") << downloadDir;
                 this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
                 return;
             }
@@ -108,7 +108,7 @@ namespace BlackGui
 
             if (!downloadFile.exists())
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"Cannot read downloaded file '%1'") << downloadFileName;
+                const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"Cannot read downloaded file '%1'") << downloadFileName;
                 this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
                 return;
             }
@@ -116,7 +116,7 @@ namespace BlackGui
             const QString xSwiftBusDirectory = this->xSwiftBusDir();
             if (xSwiftBusDirectory.isEmpty())
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"No directory to install to'");
+                const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"No directory to install to'");
                 this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
                 return;
             }
@@ -124,7 +124,7 @@ namespace BlackGui
             const QDir installDir(xSwiftBusDirectory);
             if (!installDir.exists())
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"Directory '%1' does not exist") << xSwiftBusDirectory;
+                const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"Directory '%1' does not exist") << xSwiftBusDirectory;
                 this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
                 return;
             }
@@ -137,7 +137,7 @@ namespace BlackGui
                     const bool removed = destFile.remove();
                     if (!removed)
                     {
-                        const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"Cannot remove '%1'") << destFileName;
+                        const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"Cannot remove '%1'") << destFileName;
                         this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
                         return;
                     }
@@ -147,7 +147,7 @@ namespace BlackGui
             const bool copied = QFile::copy(downloadFileName, destFileName);
             if (!copied)
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"Cannot copy '%1' to '%2'") << downloadFileName << destFileName;
+                const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"Cannot copy '%1' to '%2'") << downloadFileName << destFileName;
                 this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
                 return;
             }
@@ -156,7 +156,7 @@ namespace BlackGui
             const QFileInfo destFile(destFileName);
             if (!destFile.exists())
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"XSwiftBus file '%1' does not exist") << destFileName;
+                const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"XSwiftBus file '%1' does not exist") << destFileName;
                 this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
                 return;
             }
@@ -166,7 +166,7 @@ namespace BlackGui
             if (CCompressUtils::zip7Uncompress(destFile.absoluteFilePath(), xSwiftBusDirectory, &stdOutAndError))
             {
                 // capture values by copy!
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).info(u"Uncompressed XSwiftBus in '%1'") << xSwiftBusDirectory;
+                const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).info(u"Uncompressed XSwiftBus in '%1'") << xSwiftBusDirectory;
                 this->showOverlayMessagesWithConfirmation(msg, false, "Delete downloaded file?", [ = ]
                 {
                     if (!myself) { return; }
@@ -179,7 +179,7 @@ namespace BlackGui
             }
             else
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).warning(u"Unzip failed: stdout '%1' stderr '%2'") << safeAt(stdOutAndError, 0) << safeAt(stdOutAndError, 1);
+                const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).warning(u"Unzip failed: stdout '%1' stderr '%2'") << safeAt(stdOutAndError, 0) << safeAt(stdOutAndError, 1);
                 this->showOverlayMessage(msg);
             }
 
@@ -214,7 +214,7 @@ namespace BlackGui
 
             if (!this->existsDownloadDir())
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"Invalid download directory");
+                const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"Invalid download directory");
                 this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
                 return;
             }
@@ -222,7 +222,7 @@ namespace BlackGui
             const CUrl download = rf.getSmartUrl();
             if (download.isEmpty())
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"No download URL for file name '%1'") << rf.getBaseNameAndSize();
+                const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"No download URL for file name '%1'") << rf.getBaseNameAndSize();
                 this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
                 return;
             }
@@ -257,7 +257,7 @@ namespace BlackGui
             }
             else
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"Starting download for '%1' failed") << download.getFullUrl();
+                const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"Starting download for '%1' failed") << download.getFullUrl();
                 this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
             }
         }

@@ -106,7 +106,7 @@ namespace BlackMisc
 
         CStatusMessageList CAircraftIcaoCode::validate() const
         {
-            static const CLogCategoryList cats({ CLogCategory("swift.blackmisc.aircrafticao"), CLogCategory::validation()});
+            static const CLogCategoryList cats({ CLogCategory("swift.blackmisc.aircrafticao"), CLogCategories::validation()});
             CStatusMessageList msg;
             if (this->isLoadedFromDb())
             {

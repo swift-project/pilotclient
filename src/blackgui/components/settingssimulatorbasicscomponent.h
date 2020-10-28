@@ -34,7 +34,7 @@ namespace BlackGui
 
         public:
             //! Log categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Constructor
             explicit CSettingsSimulatorBasicsComponent(QWidget *parent = nullptr);

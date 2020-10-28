@@ -38,7 +38,7 @@ namespace BlackCore
 
     public:
         //! Log categories
-        static const BlackMisc::CLogCategoryList &getLogCategories();
+        static const QStringList &getLogCategories();
 
         //! Destructor
         virtual ~CThreadedReader();

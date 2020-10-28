@@ -29,9 +29,9 @@ namespace BlackMisc
 {
     namespace Db
     {
-        const CLogCategoryList &CDatastoreUtility::getLogCategories()
+        const QStringList &CDatastoreUtility::getLogCategories()
         {
-            static const CLogCategoryList cats({CLogCategory::swiftDbWebservice()});
+            static const QStringList cats({CLogCategories::swiftDbWebservice()});
             return cats;
         }
 
@@ -86,7 +86,7 @@ namespace BlackMisc
 
             if (jsonResponse.isEmpty())
             {
-                messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, u"Empty JSON data for published models"));
+                messages.push_back(CStatusMessage(static_cast<CDatastoreUtility *>(nullptr), CStatusMessage::SeverityError, u"Empty JSON data for published models"));
                 return false;
             }
 
@@ -104,7 +104,7 @@ namespace BlackMisc
             if (!jsonDoc.isObject())
             {
                 const QString phpError(CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(jsonResponse));
-                messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, phpError));
+                messages.push_back(CStatusMessage(static_cast<CDatastoreUtility *>(nullptr), CStatusMessage::SeverityError, phpError));
                 return false;
             }
 
@@ -153,7 +153,7 @@ namespace BlackMisc
 
             if (!hasData)
             {
-                messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, u"Received response, but no JSON data"));
+                messages.push_back(CStatusMessage(static_cast<CDatastoreUtility *>(nullptr), CStatusMessage::SeverityError, u"Received response, but no JSON data"));
             }
 
             return hasData;
@@ -163,7 +163,7 @@ namespace BlackMisc
         {
             if (jsonResponse.isEmpty())
             {
-                messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, u"Empty JSON data for published models"));
+                messages.push_back(CStatusMessage(static_cast<CDatastoreUtility *>(nullptr), CStatusMessage::SeverityError, u"Empty JSON data for published models"));
                 return false;
             }
 
@@ -181,7 +181,7 @@ namespace BlackMisc
             if (!jsonDoc.isObject())
             {
                 const QString phpError(CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(jsonResponse));
-                messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, phpError));
+                messages.push_back(CStatusMessage(static_cast<CDatastoreUtility *>(nullptr), CStatusMessage::SeverityError, phpError));
                 return false;
             }
 

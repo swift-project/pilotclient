@@ -28,9 +28,9 @@ namespace BlackCore
     {
         namespace Audio
         {
-            const CLogCategoryList &CReceiverSampleProvider::getLogCategories()
+            const QStringList &CReceiverSampleProvider::getLogCategories()
             {
-                static const CLogCategoryList cats { CLogCategory::audio(), CLogCategory::vatsimSpecific() };
+                static const QStringList cats { CLogCategories::audio(), CLogCategories::vatsimSpecific() };
                 return cats;
             }
 

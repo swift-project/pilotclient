@@ -34,9 +34,9 @@ namespace BlackGui
 {
     namespace Components
     {
-        const CLogCategoryList &CFirstModelSetComponent::getLogCategories()
+        const QStringList &CFirstModelSetComponent::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::modelGui() };
+            static const QStringList cats { CLogCategories::modelGui() };
             return cats;
         }
 

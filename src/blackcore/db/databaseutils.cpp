@@ -23,9 +23,9 @@ namespace BlackCore
 {
     namespace Db
     {
-        const CLogCategoryList &CDatabaseUtils::getLogCategories()
+        const QStringList &CDatabaseUtils::getLogCategories()
         {
-            static const BlackMisc::CLogCategoryList cats { CLogCategory::modelCache(), CLogCategory::modelSetCache() };
+            static const QStringList cats { CLogCategories::modelCache(), CLogCategories::modelSetCache() };
             return cats;
         }
 

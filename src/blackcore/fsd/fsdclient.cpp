@@ -82,13 +82,13 @@ namespace BlackCore
             return escaped;
         }
 
-        const CLogCategoryList &CFSDClient::getLogCategories()
+        const QStringList &CFSDClient::getLogCategories()
         {
-            static const CLogCategoryList cats = []
+            static const QStringList cats = []
             {
-                CLogCategoryList cl = CContinuousWorker::getLogCategories();
-                cl.push_back(CLogCategory::network());
-                cl.push_back(CLogCategory::fsd());
+                QStringList cl = CContinuousWorker::getLogCategories();
+                cl.push_back(CLogCategories::network());
+                cl.push_back(CLogCategories::fsd());
                 return cl;
             }();
             return cats;

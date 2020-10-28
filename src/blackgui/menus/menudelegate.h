@@ -42,9 +42,9 @@ namespace BlackGui
             virtual ~IMenuDelegate() {}
 
             //! Log categories
-            const BlackMisc::CLogCategoryList &getLogCategories()
+            const QStringList &getLogCategories()
             {
-                static const BlackMisc::CLogCategoryList cats({BlackMisc::CLogCategory::guiComponent()});
+                static const QStringList cats({BlackMisc::CLogCategories::guiComponent()});
                 return cats;
             }
 

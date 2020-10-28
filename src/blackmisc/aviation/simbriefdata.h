@@ -29,7 +29,7 @@ namespace BlackMisc
         {
         public:
             //! The log. catgeories
-            static const CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Default constructor
             CSimBriefData();

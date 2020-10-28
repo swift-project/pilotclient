@@ -63,7 +63,7 @@ namespace BlackMisc
 
         public:
             //! Log categories
-            static const CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Returns a CValuePage owned by the parent and connected to the cache, creating one if it doesn't exist.
             static CValuePage &getPageFor(QObject *parent, CValueCache *cache);

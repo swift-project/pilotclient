@@ -84,7 +84,7 @@ namespace BlackCore
 
         public:
             //! Categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Ctor
             CFSDClient(BlackMisc::Network::IClientProvider            *clientProvider,

@@ -29,9 +29,9 @@ namespace BlackSimPlugin
 {
     namespace Emulated
     {
-        const CLogCategoryList &CSimulatorEmulatedMonitorDialog::getLogCategories()
+        const QStringList &CSimulatorEmulatedMonitorDialog::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::driver(), CLogCategory::plugin() };
+            static const QStringList cats { CLogCategories::driver(), CLogCategories::plugin() };
             return cats;
         }
 

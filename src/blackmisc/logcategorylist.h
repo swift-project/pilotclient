@@ -75,7 +75,7 @@ namespace BlackMisc
         CLogCategoryList with(const CLogCategoryList &other) const { auto copy = *this; copy.push_back(other); return copy; }
 
         //! Return a copy with validation category appended.
-        CLogCategoryList withValidation() const { return with(CLogCategory::validation()); }
+        CLogCategoryList withValidation() const { return with(CLogCategories::validation()); }
 
         //! Convert each of the categories to a QString and return the result as a QStringList.
         QStringList toQStringList() const;
@@ -118,14 +118,14 @@ namespace BlackMisc
                 list.appendCategoriesFromMemberFunction(tag<T>(), THasGetLogCategories<T>());
                 list.appendCategoriesFromMetaType(tag<T>(), std::integral_constant<bool, QMetaTypeId<T>::Defined>());
                 list.appendCategoriesFromMetaObject(tag<T>(), std::is_base_of<QObject, T>());
-                if (list.isEmpty()) { list.push_back(CLogCategory::uncategorized()); }
+                if (list.isEmpty()) { list.push_back(CLogCategories::uncategorized()); }
                 return list;
             }();
             return list;
         }
 
         template <typename T>
-        void appendCategoriesFromMemberFunction(tag<T>, std::true_type) { push_back(T::getLogCategories()); }
+        void appendCategoriesFromMemberFunction(tag<T>, std::true_type) { push_back(fromQStringList(T::getLogCategories())); }
         void appendCategoriesFromMemberFunction(...) {}
 
         template <typename T>

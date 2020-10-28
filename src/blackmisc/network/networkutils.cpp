@@ -402,7 +402,7 @@ namespace BlackMisc
 
         CStatusMessageList CNetworkUtils::createNetworkReport(const CUrl &url, const QNetworkAccessManager *qam)
         {
-            static const CLogCategoryList cats({CLogCategory::network()});
+            static const CLogCategoryList cats({CLogCategories::network()});
             CStatusMessageList msgs;
 
             if (!url.isEmpty())

@@ -246,7 +246,7 @@ namespace BlackMisc
         bool isEmpty() const { return this->m_message.isEmpty() && this->m_args.isEmpty(); }
 
     private:
-        void setValidation() { m_categories.remove(CLogCategory::uncategorized()); this->addIfNotExisting(CLogCategory::validation()); }
+        void setValidation() { m_categories.remove(CLogCategories::uncategorized()); this->addIfNotExisting(CLogCategories::validation()); }
         Derived &arg(const QString &value) { m_args.push_back(value); return derived(); }
         Derived &derived() { return static_cast<Derived &>(*this); }
 
@@ -279,7 +279,7 @@ namespace BlackMisc
         //! @{
         CStrongStringView m_message;
         QStringList m_args;
-        CLogCategoryList m_categories = CLogCategoryList { CLogCategory::uncategorized() };
+        CLogCategoryList m_categories = CLogCategoryList { CLogCategories::uncategorized() };
         StatusSeverity m_severity = SeverityDebug;
 
         QString message() const { return Private::arg(m_message.view(), m_args); }
@@ -451,7 +451,7 @@ namespace BlackMisc
         void addCategory(const CLogCategory &category) { this->addIfNotExisting(category); }
 
         //! Adds validation as category
-        void addValidationCategory() { this->addCategory(CLogCategory::validation()); }
+        void addValidationCategory() { this->addCategory(CLogCategories::validation()); }
 
         //! Add categories, avoids duplicates
         void addCategories(const CLogCategoryList &categories) { this->addIfNotExisting(categories); }

@@ -41,9 +41,9 @@ namespace BlackMisc
             this->setObjectName("CInterpolationLogger");
         }
 
-        const CLogCategoryList &CInterpolationLogger::getLogCategories()
+        const QStringList &CInterpolationLogger::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::interpolator() };
+            static const QStringList cats { CLogCategories::interpolator() };
             return cats;
         }
 

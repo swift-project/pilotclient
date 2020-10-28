@@ -82,7 +82,7 @@ namespace BlackCore
         Q_FLAG(SimulatorStatus)
 
         //! Log categories
-        static const BlackMisc::CLogCategoryList &getLogCategories();
+        static const QStringList &getLogCategories();
 
         //! Render all aircraft if number of aircraft >= MaxAircraftInfinite
         const int MaxAircraftInfinite = 100;

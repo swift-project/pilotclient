@@ -87,7 +87,7 @@ namespace BlackGui
             const BlackMisc::Aviation::CFlightPlan &getSentFlightPlan() const { return m_sentFlightPlan; }
 
             //! Log.categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
         private:
             static constexpr int OverlayTimeoutMs = 5000;

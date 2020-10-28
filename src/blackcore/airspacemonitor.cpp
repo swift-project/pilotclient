@@ -152,9 +152,9 @@ namespace BlackCore
         return r;
     }
 
-    const CLogCategoryList &CAirspaceMonitor::getLogCategories()
+    const QStringList &CAirspaceMonitor::getLogCategories()
     {
-        static const CLogCategoryList cats { CLogCategory::matching(), CLogCategory::network() };
+        static const QStringList cats { CLogCategories::matching(), CLogCategories::network() };
         return cats;
     }
 

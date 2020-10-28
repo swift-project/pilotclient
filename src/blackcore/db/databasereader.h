@@ -283,7 +283,7 @@ namespace BlackCore
             virtual bool readFromJsonFilesInBackground(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead, bool overrideNewer) = 0;
 
             //! Log categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Transform JSON data to response struct data
             //! \private used also for samples, that`s why it is declared public

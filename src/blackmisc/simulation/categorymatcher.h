@@ -29,7 +29,7 @@ namespace BlackMisc
         {
         public:
             //! Log categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Constructor
             CCategoryMatcher() {}

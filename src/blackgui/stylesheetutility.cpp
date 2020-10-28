@@ -43,9 +43,9 @@ namespace BlackGui
         connect(&m_fileWatcher, &QFileSystemWatcher::fileChanged, this, &CStyleSheetUtility::qssDirectoryChanged);
     }
 
-    const CLogCategoryList &CStyleSheetUtility::getLogCategories()
+    const QStringList &CStyleSheetUtility::getLogCategories()
     {
-        static const CLogCategoryList cats { CLogCategory::guiComponent() };
+        static const QStringList cats { CLogCategories::guiComponent() };
         return cats;
     }
 
@@ -268,7 +268,7 @@ namespace BlackGui
         }
         else
         {
-            CLogMessage(getLogCategories()).warning(u"Cannot open file '%1' for writing") << fn;
+            CLogMessage(static_cast<CStyleSheetUtility *>(nullptr)).warning(u"Cannot open file '%1' for writing") << fn;
         }
         return ok;
     }

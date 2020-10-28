@@ -39,9 +39,9 @@ namespace BlackMisc
         {
             using FsRegistryPathPair = QList<QPair<QString, QString>>;
 
-            const CLogCategoryList &CFsCommonUtil::getLogCategories()
+            const QStringList &CFsCommonUtil::getLogCategories()
             {
-                static const CLogCategoryList cats({ CLogCategory::validation(), CLogCategory::driver() });
+                static const QStringList cats({ CLogCategories::validation(), CLogCategories::driver() });
                 return cats;
             }
 
@@ -421,13 +421,13 @@ namespace BlackMisc
                 messages.clear();
                 if (!CDirectoryUtils::existsUnemptyDirectory(CSwiftDirectories::shareTerrainProbeDirectory()))
                 {
-                    messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, u"No terrain probe source files in '%1'") << CSwiftDirectories::shareTerrainProbeDirectory());
+                    messages.push_back(CStatusMessage(static_cast<CFsCommonUtil *>(nullptr), CStatusMessage::SeverityError, u"No terrain probe source files in '%1'") << CSwiftDirectories::shareTerrainProbeDirectory());
                     return -1;
                 }
 
                 if (simObjectDir.isEmpty())
                 {
-                    messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, u"No simObject directory"));
+                    messages.push_back(CStatusMessage(static_cast<CFsCommonUtil *>(nullptr), CStatusMessage::SeverityError, u"No simObject directory"));
                     return -1;
                 }
 
@@ -435,7 +435,7 @@ namespace BlackMisc
                 const QDir td(targetDir);
                 if (!td.exists())
                 {
-                    messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, u"Cannot access target directory '%1'") << targetDir);
+                    messages.push_back(CStatusMessage(static_cast<CFsCommonUtil *>(nullptr), CStatusMessage::SeverityError, u"Cannot access target directory '%1'") << targetDir);
                     return -1;
                 }
 
@@ -444,12 +444,12 @@ namespace BlackMisc
                 const bool hasDir = td.mkpath(targetDir);
                 if (!hasDir)
                 {
-                    messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, u"Cannot create target directory '%1'") << targetDir);
+                    messages.push_back(CStatusMessage(static_cast<CFsCommonUtil *>(nullptr), CStatusMessage::SeverityError, u"Cannot create target directory '%1'") << targetDir);
                     return -1;
                 }
 
                 const int copied = CDirectoryUtils::copyDirectoryRecursively(CSwiftDirectories::shareTerrainProbeDirectory(), targetDir, true);
-                messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityInfo, u"Copied %1 files from '%2' to '%3'") << copied << CSwiftDirectories::shareTerrainProbeDirectory() << targetDir);
+                messages.push_back(CStatusMessage(static_cast<CFsCommonUtil *>(nullptr), CStatusMessage::SeverityInfo, u"Copied %1 files from '%2' to '%3'") << copied << CSwiftDirectories::shareTerrainProbeDirectory() << targetDir);
                 return copied;
             }
 
@@ -475,7 +475,7 @@ namespace BlackMisc
                     const QString pathUp = CFileUtils::appendFilePaths(CFileUtils::pathUp(path), "Lockheed Martin");
                     const QDir d(pathUp);
                     if (!d.exists()) { continue; }
-                    if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"P3D config dir: '%1'") << d.absolutePath(); }
+                    if (logConfigPathReading()) { CLogMessage(static_cast<CFsCommonUtil *>(nullptr)).info(u"P3D config dir: '%1'") << d.absolutePath(); }
 
                     // all versions sub directories
                     // looking for "add-ons.cfg" or simobjects.cfg
@@ -490,7 +490,7 @@ namespace BlackMisc
                             if (fi.exists())
                             {
                                 files.insert(f);
-                                if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"P3D config file: '%1'") << f; }
+                                if (logConfigPathReading()) { CLogMessage(static_cast<CFsCommonUtil *>(nullptr)).info(u"P3D config file: '%1'") << f; }
                             }
                         } // contains
                     } // entries
@@ -531,7 +531,7 @@ namespace BlackMisc
                     QDomDocument doc;
                     QFile file(filename);
                     if (!file.open(QIODevice::ReadOnly) || !doc.setContent(&file)) { continue; }
-                    if (CFsCommonUtil::logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"Reading '%1' from addon path: '%2'") << file.fileName() << addOnPath; }
+                    if (CFsCommonUtil::logConfigPathReading()) { CLogMessage(static_cast<CFsCommonUtil *>(nullptr)).info(u"Reading '%1' from addon path: '%2'") << file.fileName() << addOnPath; }
 
                     const QDomNodeList components = doc.elementsByTagName("AddOn.Component");
                     for (int i = 0; i < components.size(); i++)
@@ -550,11 +550,11 @@ namespace BlackMisc
                         const QString fp = pathValue.left(3).contains(':') ?
                                            pathValue :
                                            CFileUtils::appendFilePaths(addOnPath, pathValue);
-                        if (CFsCommonUtil::logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"Testing '%1' as addon path: '%2'") << fp << addOnPath; }
+                        if (CFsCommonUtil::logConfigPathReading()) { CLogMessage(static_cast<CFsCommonUtil *>(nullptr)).info(u"Testing '%1' as addon path: '%2'") << fp << addOnPath; }
                         if (!checked || QDir(fp).exists())
                         {
                             simObjectPaths.insert(CFileUtils::normalizeFilePathToQtStandard(fp));
-                            if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"P3D SimObjects path: '%1'") << fp; }
+                            if (logConfigPathReading()) { CLogMessage(static_cast<CFsCommonUtil *>(nullptr)).info(u"P3D SimObjects path: '%1'") << fp; }
                         }
                     } // components
                 } // paths
@@ -591,7 +591,7 @@ namespace BlackMisc
                     if (fi.exists())
                     {
                         files.push_back(fi.absoluteFilePath());
-                        if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"FSX config file: '%1'") << fi.absoluteFilePath(); }
+                        if (logConfigPathReading()) { CLogMessage(static_cast<CFsCommonUtil *>(nullptr)).info(u"FSX config file: '%1'") << fi.absoluteFilePath(); }
                     }
                 }
                 return files;
@@ -626,7 +626,7 @@ namespace BlackMisc
                     if (i2 < 0 || i1 >= i2 || line.endsWith('=')) { continue; }
                     const QStringRef path = line.mid(i2 + 1);
                     QString soPath = QDir::fromNativeSeparators(path.toString());
-                    if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"FSX SimObjects path checked: '%1' in '%2'") << line << fsxFile; }
+                    if (logConfigPathReading()) { CLogMessage(static_cast<CFsCommonUtil *>(nullptr)).info(u"FSX SimObjects path checked: '%1' in '%2'") << line << fsxFile; }
 
                     // ignore exclude patterns
                     if (containsAny(soPath, CFsCommonUtil::fsxSimObjectsExcludeDirectoryPatterns(), Qt::CaseInsensitive)) { continue; }
@@ -638,19 +638,19 @@ namespace BlackMisc
                     if (checked && !dir.exists())
                     {
                         // skip, not existing
-                        if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"FSX SimObjects path skipped, not existing: '%1' in '%2'") << dir.absolutePath() << fsxFile; }
+                        if (logConfigPathReading()) { CLogMessage(static_cast<CFsCommonUtil *>(nullptr)).info(u"FSX SimObjects path skipped, not existing: '%1' in '%2'") << dir.absolutePath() << fsxFile; }
                         continue;
                     }
 
                     const QString afp = dir.absolutePath().toLower();
                     if (!CDirectoryUtils::containsFileInDir(afp, airFileFilter(), true))
                     {
-                        if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"FSX SimObjects path: Skipping '%1' from '%2', no '%3' file") << afp << fsxFile << airFileFilter(); }
+                        if (logConfigPathReading()) { CLogMessage(static_cast<CFsCommonUtil *>(nullptr)).info(u"FSX SimObjects path: Skipping '%1' from '%2', no '%3' file") << afp << fsxFile << airFileFilter(); }
                         continue;
                     }
 
                     paths.insert(afp);
-                    if (logConfigPathReading()) { CLogMessage(getLogCategories()).info(u"FSX SimObjects path: '%1' from '%2'") << afp << fsxFile; }
+                    if (logConfigPathReading()) { CLogMessage(static_cast<CFsCommonUtil *>(nullptr)).info(u"FSX SimObjects path: '%1' from '%2'") << afp << fsxFile; }
                 }
                 return paths;
             }
@@ -669,13 +669,13 @@ namespace BlackMisc
                 {
                     for (const CAircraftModel &model : nonFsModels)
                     {
-                        m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, QStringLiteral("Removed '%1' non FS family model").arg(model.getModelStringAndDbKey()), true);
+                        m = CStatusMessage(static_cast<CFsCommonUtil *>(nullptr), CStatusMessage::SeverityError, QStringLiteral("Removed '%1' non FS family model").arg(model.getModelStringAndDbKey()), true);
                         msgs.push_back(m);
                         if (wasStopped) { break; } // allow to break from "outside"
                     }
 
                     const int d = validModels.removeIfNotFsFamily();
-                    m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, QStringLiteral("Removed %1 non FS family models").arg(d), true);
+                    m = CStatusMessage(static_cast<CFsCommonUtil *>(nullptr), CStatusMessage::SeverityError, QStringLiteral("Removed %1 non FS family models").arg(d), true);
                     msgs.push_back(m);
                 }
 
@@ -692,7 +692,7 @@ namespace BlackMisc
                     for (const CAircraftModel &removedModel : removedModels)
                     {
                         removedCfgEntries++;
-                        m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, QStringLiteral("'%1' removed because no longer in '%2'").arg(removedModel.getModelStringAndDbKey(), removedModel.getFileName()), true);
+                        m = CStatusMessage(static_cast<CFsCommonUtil *>(nullptr), CStatusMessage::SeverityError, QStringLiteral("'%1' removed because no longer in '%2'").arg(removedModel.getModelStringAndDbKey(), removedModel.getFileName()), true);
                         msgs.push_back(m);
                         CAircraftModelList::addAsValidOrInvalidModel(removedModel, false, validModels, invalidModels);
                     }
@@ -700,18 +700,18 @@ namespace BlackMisc
 
                 if (removedCfgEntries < 1)
                 {
-                    m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityInfo, QStringLiteral("Not removed any models, all OK!"), true);
+                    m = CStatusMessage(static_cast<CFsCommonUtil *>(nullptr), CStatusMessage::SeverityInfo, QStringLiteral("Not removed any models, all OK!"), true);
                     msgs.push_back(m);
                 }
 
                 if (!validModels.isEmpty())
                 {
-                    m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityInfo, QStringLiteral("cfg validation, valid models: %1").arg(validModels.size()), true);
+                    m = CStatusMessage(static_cast<CFsCommonUtil *>(nullptr), CStatusMessage::SeverityInfo, QStringLiteral("cfg validation, valid models: %1").arg(validModels.size()), true);
                     msgs.push_back(m);
                 }
                 if (!invalidModels.isEmpty())
                 {
-                    m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityWarning, QStringLiteral("cfg validation, invalid models: %1").arg(invalidModels.size()), true);
+                    m = CStatusMessage(static_cast<CFsCommonUtil *>(nullptr), CStatusMessage::SeverityWarning, QStringLiteral("cfg validation, invalid models: %1").arg(invalidModels.size()), true);
                     msgs.push_back(m);
                 }
 
@@ -747,7 +747,7 @@ namespace BlackMisc
                 CStatusMessageList msgs;
                 if (simObjectDirs.isEmpty())
                 {
-                    msgs.push_back(CStatusMessage(getLogCategories()).validationInfo(u"No SimObject directories from cfg files, skipping validation"));
+                    msgs.push_back(CStatusMessage(static_cast<CFsCommonUtil *>(nullptr)).validationInfo(u"No SimObject directories from cfg files, skipping validation"));
                     return msgs;
                 }
 
@@ -755,13 +755,13 @@ namespace BlackMisc
                 sortedModels.sortByFileName();
                 if (sortedModels.isEmpty())
                 {
-                    msgs.push_back(CStatusMessage(getLogCategories()).validationInfo(u"No models to validate"));
+                    msgs.push_back(CStatusMessage(static_cast<CFsCommonUtil *>(nullptr)).validationInfo(u"No models to validate"));
                     return msgs;
                 }
 
                 // info
                 const QString simObjDirs = joinStringSet(simObjectDirs, ", ");
-                msgs.push_back(CStatusMessage(getLogCategories()).validationInfo(u"Validating %1 models against %2 SimObjects path(s): '%3'") << models.size() << simObjectDirs.size() << simObjDirs);
+                msgs.push_back(CStatusMessage(static_cast<CFsCommonUtil *>(nullptr)).validationInfo(u"Validating %1 models against %2 SimObjects path(s): '%3'") << models.size() << simObjectDirs.size() << simObjDirs);
 
                 // validate
                 int failed = 0;
@@ -770,7 +770,7 @@ namespace BlackMisc
                     if (!model.hasFileName())
                     {
                         if (ignoreEmptyFileNames) { continue; }
-                        msgs.push_back(CStatusMessage(getLogCategories()).validationWarning(u"No file name for model '%1'") << model.getModelString());
+                        msgs.push_back(CStatusMessage(static_cast<CFsCommonUtil *>(nullptr)).validationWarning(u"No file name for model '%1'") << model.getModelString());
                         CAircraftModelList::addAsValidOrInvalidModel(model, false, validModels, invalidModels);
                         continue;
                     }
@@ -785,14 +785,14 @@ namespace BlackMisc
                     CAircraftModelList::addAsValidOrInvalidModel(model, ok, validModels, invalidModels);
                     if (!ok)
                     {
-                        msgs.push_back(CStatusMessage(getLogCategories()).validationWarning(u"Model '%1' '%2' in none of the %3 SimObjects path(s)") << model.getModelString() << model.getFileName() << simObjectDirs.size());
+                        msgs.push_back(CStatusMessage(static_cast<CFsCommonUtil *>(nullptr)).validationWarning(u"Model '%1' '%2' in none of the %3 SimObjects path(s)") << model.getModelString() << model.getFileName() << simObjectDirs.size());
                         failed++;
                     }
 
                     if (stopAtFailedFiles > 0 && failed >= stopAtFailedFiles)
                     {
                         stopped = true;
-                        msgs.push_back(CStatusMessage(getLogCategories()).validationWarning(u"Stopping after %1 failed models") << failed);
+                        msgs.push_back(CStatusMessage(static_cast<CFsCommonUtil *>(nullptr)).validationWarning(u"Stopping after %1 failed models") << failed);
                         break;
                     }
                 } // models

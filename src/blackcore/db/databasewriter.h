@@ -59,7 +59,7 @@ namespace BlackCore
             const BlackMisc::Network::CUrlLogList &getWriteLog() const { return m_writeLog; }
 
             //! Log categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
         signals:
             //! Published models, the response to \sa asyncPublishModels

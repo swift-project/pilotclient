@@ -1004,9 +1004,9 @@ namespace BlackCore
         return entities;
     }
 
-    const CLogCategoryList &CWebDataServices::getLogCategories()
+    const QStringList &CWebDataServices::getLogCategories()
     {
-        static const BlackMisc::CLogCategoryList cats { CLogCategory("swift.datareader"), CLogCategory::webservice() };
+        static const QStringList cats { "swift.datareader", CLogCategories::webservice() };
         return cats;
     }
 

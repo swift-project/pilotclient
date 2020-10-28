@@ -32,7 +32,7 @@ namespace BlackCore
 
         public:
             //! Log categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            static const QStringList &getLogCategories();
 
             //! Ctor
             explicit CNetworkWatchdog(bool networkAccessible, QObject *owner);

@@ -29,9 +29,9 @@ namespace BlackMisc
     {
         namespace XPlane
         {
-            const CLogCategoryList &CXPlaneUtil::getLogCategories()
+            const QStringList &CXPlaneUtil::getLogCategories()
             {
-                static const CLogCategoryList cats { CLogCategory::matching() };
+                static const QStringList cats { CLogCategories::matching() };
                 return cats;
             }
 
@@ -289,7 +289,7 @@ namespace BlackMisc
             {
                 if (simDir.isEmpty())
                 {
-                    return CStatusMessage(getLogCategories(), CStatusMessage::SeverityWarning, u"no simulator directory", true);
+                    return CStatusMessage(static_cast<CXPlaneUtil *>(nullptr), CStatusMessage::SeverityWarning, u"no simulator directory", true);
                 }
 
                 CStatusMessageList msgs;
@@ -302,8 +302,8 @@ namespace BlackMisc
                                         CDirectoryUtils::isSameOrSubDirectoryOf(modelDir, sd) :
                                         CDirectoryUtils::isSameOrSubDirectoryOfStringBased(modelDir, sd.absolutePath());
                     const CStatusMessage m = exists ?
-                                             CStatusMessage(getLogCategories()).info(u"Model directory '%1' inside '%2'") << modelDir << sd.absolutePath() :
-                                             CStatusMessage(getLogCategories()).error(u"Model directory '%1' NOT inside '%2'") << modelDir << sd.absolutePath();
+                                             CStatusMessage(static_cast<CXPlaneUtil *>(nullptr)).info(u"Model directory '%1' inside '%2'") << modelDir << sd.absolutePath() :
+                                             CStatusMessage(static_cast<CXPlaneUtil *>(nullptr)).error(u"Model directory '%1' NOT inside '%2'") << modelDir << sd.absolutePath();
                     msgs.push_back(m);
                 }
                 msgs.addValidationCategory();

@@ -19,9 +19,9 @@ namespace BlackGui
 {
     namespace Menus
     {
-        const CLogCategoryList &CFontMenu::getLogCategories()
+        const QStringList &CFontMenu::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::guiComponent() };
+            static const QStringList cats { CLogCategories::guiComponent() };
             return cats;
         }
 

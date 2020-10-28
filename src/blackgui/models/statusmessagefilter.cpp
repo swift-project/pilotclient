@@ -59,7 +59,7 @@ namespace BlackGui
                 return CVariant::from(CLogPattern::exactMatch(m_category).withSeverityAtOrAbove(m_severity));
             }
 
-            CLogCategoryList categories = CLogCategory::allSpecialCategories();
+            CLogCategoryList categories = CLogCategoryList::fromQStringList(CLogCategories::allSpecialCategories());
             categories.removeIf([this](const CLogCategory &cat) { return this->stringMatchesFilterExpression(cat.toQString(), this->m_category); });
             CSequence<QString> humanNames = CLogPattern::allHumanReadableNames();
             humanNames.removeIf([this](const QString &name) { return this->stringMatchesFilterExpression(name, this->m_category); });

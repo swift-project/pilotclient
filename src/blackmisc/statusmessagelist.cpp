@@ -89,7 +89,7 @@ namespace BlackMisc
 
     void CStatusMessageList::addValidationCategory()
     {
-        this->addCategory(CLogCategory::validation());
+        this->addCategory(CLogCategories::validation());
     }
 
     void CStatusMessageList::addCategories(const CLogCategoryList &categories)
@@ -102,7 +102,7 @@ namespace BlackMisc
 
     void CStatusMessageList::addValidationMessage(const QString &validationText, CStatusMessage::StatusSeverity severity)
     {
-        static const CLogCategoryList cats({ CLogCategory::validation() });
+        static const CLogCategoryList cats({ CLogCategories::validation() });
         const CStatusMessage msg(cats, severity, validationText);
         this->push_back(msg);
     }

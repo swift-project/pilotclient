@@ -42,7 +42,7 @@ namespace BlackGui
         explicit CStyleSheetUtility(BlackMisc::Restricted<CGuiApplication>, QObject *parent = nullptr);
 
         //! Log cats.
-        static const BlackMisc::CLogCategoryList &getLogCategories();
+        static const QStringList &getLogCategories();
 
         //! Style for given file name
         QString style(const QString &fileName) const;

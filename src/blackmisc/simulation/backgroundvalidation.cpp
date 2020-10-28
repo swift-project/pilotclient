@@ -22,9 +22,9 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        const CLogCategoryList &CBackgroundValidation::getLogCategories()
+        const QStringList &CBackgroundValidation::getLogCategories()
         {
-            static const CLogCategoryList cats({ CLogCategory::worker(), CLogCategory::modelSetCache() });
+            static const QStringList cats({ CLogCategories::worker(), CLogCategories::modelSetCache() });
             return cats;
         }
 

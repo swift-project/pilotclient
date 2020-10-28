@@ -20,9 +20,9 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        const CLogCategoryList &CAirlineIcaoCodeList::getLogCategories()
+        const QStringList &CAirlineIcaoCodeList::getLogCategories()
         {
-            static const CLogCategoryList cats(CLogCategory::aviation());
+            static const QStringList cats(CLogCategories::aviation());
             return cats;
         }
 

@@ -296,9 +296,9 @@ namespace BlackGui
             }
         }
 
-        const CLogCategoryList &CFlightPlanComponent::getLogCategories()
+        const QStringList &CFlightPlanComponent::getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::flightPlan(), CLogCategory::guiComponent() };
+            static const QStringList cats { CLogCategories::flightPlan(), CLogCategories::guiComponent() };
             return cats;
         }
 

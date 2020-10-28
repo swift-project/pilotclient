@@ -343,7 +343,7 @@ namespace BlackMisc
         StatusSeverity severity = stringToSeverity(severityText);
 
         typeText = u"swift.db.type." % typeText.toLower().remove(' ');
-        const CStatusMessage m({ CLogCategory::swiftDbWebservice(), CLogCategory(typeText)}, severity, msgText);
+        const CStatusMessage m({ CLogCategories::swiftDbWebservice(), typeText}, severity, msgText);
         return m;
     }
 

@@ -16,9 +16,9 @@ namespace BlackCore
 {
     namespace Context
     {
-        const CLogCategoryList &IContext::getLogCategories()
+        const QStringList &IContext::getLogCategories()
         {
-            static const CLogCategoryList cats { BlackMisc::CLogCategory::context() };
+            static const QStringList cats { BlackMisc::CLogCategories::context() };
             return cats;
         }
 

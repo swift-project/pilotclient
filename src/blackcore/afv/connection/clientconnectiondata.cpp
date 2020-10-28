@@ -19,9 +19,9 @@ namespace BlackCore
     {
         namespace Connection
         {
-            const CLogCategoryList &CClientConnectionData::getLogCategories()
+            const QStringList &CClientConnectionData::getLogCategories()
             {
-                static const CLogCategoryList cats { CLogCategory::audio(), CLogCategory::vatsimSpecific() };
+                static const QStringList cats { CLogCategories::audio(), CLogCategories::vatsimSpecific() };
                 return cats;
             }
 

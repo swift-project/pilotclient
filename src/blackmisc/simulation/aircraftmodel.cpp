@@ -844,12 +844,12 @@ namespace BlackMisc
         {
             if (same)
             {
-                static const CStatusMessage msgSame({ CLogCategory::validation() }, CStatusMessage::SeverityWarning, u"Model '%1' same %2 '%3'");
+                static const CStatusMessage msgSame({ CLogCategories::validation() }, CStatusMessage::SeverityWarning, u"Model '%1' same %2 '%3'");
                 return CStatusMessage(msgSame) << model.getModelStringAndDbKey() << description << newValue;
             }
             else
             {
-                static const CStatusMessage msgDiff({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, u"Model '%1' changed %2 '%3'->'%4'");
+                static const CStatusMessage msgDiff({ CLogCategories::validation() }, CStatusMessage::SeverityInfo, u"Model '%1' changed %2 '%3'->'%4'");
                 return CStatusMessage(msgDiff) << model.getModelStringAndDbKey() << description << oldValue << newValue;
             }
         }
@@ -858,7 +858,7 @@ namespace BlackMisc
         {
             if (!dbModel.isLoadedFromDb())
             {
-                static const CStatusMessage msgNoDbModel({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, u"No DB model yet");
+                static const CStatusMessage msgNoDbModel({ CLogCategories::validation() }, CStatusMessage::SeverityInfo, u"No DB model yet");
                 if (details) { details->push_back(msgNoDbModel); }
                 return false;
             }
