@@ -14,7 +14,7 @@
 #include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/network/urlloglist.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/worker.h"
 
 #include <QDateTime>

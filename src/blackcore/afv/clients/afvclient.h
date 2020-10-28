@@ -24,7 +24,7 @@
 #include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/audio/ptt.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/worker.h"

@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_DB_DATASTOREUTILITY_H
 #define BLACKMISC_DB_DATASTOREUTILITY_H
 
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/blackmiscexport.h"
 
 #include <QDateTime>

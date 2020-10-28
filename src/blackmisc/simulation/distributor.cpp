@@ -6,8 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackmisc/logcategory.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/simulation/distributor.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"

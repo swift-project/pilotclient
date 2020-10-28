@@ -12,7 +12,7 @@
 #define BLACKMISC_GEO_KMLUTILS_H
 
 #include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/blackmiscexport.h"
 
 namespace BlackMisc

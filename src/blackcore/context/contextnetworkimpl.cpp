@@ -31,7 +31,7 @@
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/dbusserver.h"
-#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/simplecommandparser.h"

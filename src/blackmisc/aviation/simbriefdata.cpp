@@ -7,7 +7,7 @@
  */
 
 #include "simbriefdata.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include <QStringBuilder>
 
 using namespace BlackMisc::Network;

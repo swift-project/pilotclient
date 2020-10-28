@@ -8,7 +8,7 @@
 
 #include "blackcore/context/context.h"
 #include "blackcore/application.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 
 using namespace BlackMisc;
 

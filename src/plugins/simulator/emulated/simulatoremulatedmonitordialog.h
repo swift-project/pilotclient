@@ -14,7 +14,7 @@
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/identifiable.h"
 
 #include <QDialog>

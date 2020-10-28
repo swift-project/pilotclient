@@ -14,8 +14,7 @@
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/lockfree.h"
-#include "blackmisc/logcategory.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/logmessage.h"
 
 #include <QByteArray>

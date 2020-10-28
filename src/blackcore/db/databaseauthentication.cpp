@@ -10,7 +10,7 @@
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/db/databaseauthentication.h"
 #include "blackmisc/json.h"
-#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/authenticateduser.h"
 #include "blackmisc/network/networkutils.h"

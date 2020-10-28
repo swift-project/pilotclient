@@ -20,7 +20,7 @@
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/callsign.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/statusmessagelist.h"
 
 #include <QObject>

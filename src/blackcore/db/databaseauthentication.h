@@ -14,7 +14,7 @@
 #include "blackcore/data/authenticateduser.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/datacache.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/statusmessagelist.h"
 
 #include <QObject>

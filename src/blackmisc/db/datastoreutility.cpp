@@ -7,8 +7,7 @@
  */
 
 #include "blackmisc/db/datastoreutility.h"
-#include "blackmisc/logcategory.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/statusmessage.h"

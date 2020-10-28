@@ -13,7 +13,7 @@
 
 #include "blackcore/afv/dto.h"
 #include "apiserverconnection.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackcore/afv/crypto/cryptodtochannel.h"
 
 #include <QDateTime>

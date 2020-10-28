@@ -9,7 +9,7 @@
 #ifndef BLACKGUI_MENUS_MENUDELEGATE_H
 #define BLACKGUI_MENUS_MENUDELEGATE_H
 
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackgui/menus/menuaction.h"
 
 #include <QMenu>

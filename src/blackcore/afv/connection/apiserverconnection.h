@@ -15,7 +15,7 @@
 #include "blackcore/application.h"
 #include "blackmisc/slot.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 
 #include <QString>
 #include <QNetworkAccessManager>

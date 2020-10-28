@@ -13,7 +13,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/connectionguard.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/invoke.h"
 #include "blackmisc/promise.h"
 #include "blackmisc/stacktrace.h"

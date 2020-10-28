@@ -15,7 +15,7 @@
 #include "blackcore/inputmanager.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/dbusserver.h"
-#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/statusmessage.h"

@@ -12,7 +12,7 @@
 #define BLACKMISC_SIMULATION_FSCOMMONUTIL_H
 
 #include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/blackmiscexport.h"
 
 #include <atomic>

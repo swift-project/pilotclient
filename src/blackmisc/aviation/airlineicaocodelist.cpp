@@ -8,7 +8,7 @@
 
 #include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/aviation/logutils.h"
-#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/country.h"
 #include "blackmisc/range.h"
 

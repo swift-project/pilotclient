@@ -26,7 +26,7 @@
 #include "blackmisc/pq/pqstring.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/units.h"
-#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/swiftdirectories.h"

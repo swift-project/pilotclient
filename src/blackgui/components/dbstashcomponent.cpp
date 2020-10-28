@@ -20,7 +20,7 @@
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/livery.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/verify.h"
 #include "dbstashcomponent.h"

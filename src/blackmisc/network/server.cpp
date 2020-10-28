@@ -7,8 +7,7 @@
  */
 
 #include "blackmisc/network/server.h"
-#include "blackmisc/logcategorylist.h"
-#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessage.h"

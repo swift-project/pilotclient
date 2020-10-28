@@ -14,7 +14,7 @@
 #include "blackgui/overlaymessagesframe.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 
 #include <QFrame>
 #include <QFileDialog>

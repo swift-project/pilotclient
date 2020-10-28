@@ -16,7 +16,7 @@
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituationchange.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 
 #include <QObject>
 #include <QStringList>

@@ -16,7 +16,7 @@
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/geo/elevationplane.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 
 #include <QObject>
 #include <QString>

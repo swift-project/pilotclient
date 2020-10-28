@@ -7,7 +7,7 @@
  */
 
 #include "blackmisc/network/fsdsetup.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"

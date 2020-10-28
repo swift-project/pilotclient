@@ -12,7 +12,7 @@
 #define BLACKGUI_STYLESHEETUTILITY_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/restricted.h"
 #include "blackmisc/digestsignal.h"
 

@@ -7,7 +7,7 @@
  */
 
 #include "blackmisc/audio/voicesetup.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/comparefunctions.h"

@@ -9,7 +9,7 @@
 #include "serializer.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategories.h"
 #include "blackconfig/buildconfig.h"
 
 using namespace BlackConfig;

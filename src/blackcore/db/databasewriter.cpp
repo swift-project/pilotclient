@@ -13,8 +13,7 @@
 #include "blackmisc/simulation/autopublishdata.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/db/datastoreutility.h"
-#include "blackmisc/logcategorylist.h"
-#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/statusmessage.h"
 
 #include <QStringBuilder>

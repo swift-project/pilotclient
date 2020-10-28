@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_SIMULATION_XPLANE_XPLANEUTIL_H
 #define BLACKMISC_SIMULATION_XPLANE_XPLANEUTIL_H
 
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/blackmiscexport.h"
 #include <QStringList>

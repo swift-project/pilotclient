@@ -16,7 +16,7 @@
 #include "blackmisc/identifier.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessage.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/valuecache.h"
 #include "blackmisc/valuecacheprivate.h"
 #include "blackmisc/variant.h"

@@ -32,7 +32,7 @@
 #include "blackmisc/simplecommandparser.h"
 #include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/dbusserver.h"
-#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/statusmessage.h"

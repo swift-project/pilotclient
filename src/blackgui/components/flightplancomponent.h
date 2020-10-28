@@ -23,7 +23,7 @@
 #include "blackmisc/datacache.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 
 #include <QObject>
 #include <QScopedPointer>

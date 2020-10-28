@@ -14,7 +14,7 @@
 #include "blackcore/corefacade.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
 

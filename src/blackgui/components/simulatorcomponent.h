@@ -14,7 +14,7 @@
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/icons.h"
 
 #include <QObject>

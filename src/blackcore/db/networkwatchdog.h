@@ -15,7 +15,7 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/worker.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 
 #include <atomic>
 #include <QReadWriteLock>

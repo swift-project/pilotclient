@@ -9,7 +9,7 @@
 #include "simconnectsymbols.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategories.h"
 #include <QLibrary>
 #include <Windows.h>
 #include <SimConnect.h>

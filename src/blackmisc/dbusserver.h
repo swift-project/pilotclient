@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_DBUSSERVER_H
 #define BLACKMISC_DBUSSERVER_H
 
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/blackmiscexport.h"
 
 #include <QDBusConnection>

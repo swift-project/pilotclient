@@ -17,7 +17,7 @@
 #include "blacksound/sampleprovider/sinusgenerator.h"
 #include "blacksound/sampleprovider/volumesampleprovider.h"
 
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/audio/audiosettings.h"
 

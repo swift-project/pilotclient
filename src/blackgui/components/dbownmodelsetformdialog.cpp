@@ -11,8 +11,7 @@
 #include "blackgui/components/dbownmodelsetformdialog.h"
 #include "blackgui/editors/ownmodelsetform.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/logcategory.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "ui_dbownmodelsetformdialog.h"
 

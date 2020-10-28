@@ -17,8 +17,7 @@
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
-#include "blackmisc/logcategory.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/verify.h"
 

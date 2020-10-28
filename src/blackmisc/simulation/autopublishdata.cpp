@@ -10,7 +10,7 @@
 #include "blackmisc/swiftdirectories.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/json.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 
 #include <QStringList>
 #include <QStringBuilder>

@@ -28,7 +28,7 @@
 #include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/simplecommandparser.h"
-#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"

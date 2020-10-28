@@ -14,7 +14,7 @@
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/settings/xswiftbussettings.h"
 #include "blackmisc/settingscache.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include <QFrame>
 #include <QScopedPointer>
 

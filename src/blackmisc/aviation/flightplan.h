@@ -23,7 +23,7 @@
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/metaclass.h"

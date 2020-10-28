@@ -14,7 +14,6 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/statusmessage.h"
-#include "blackmisc/logcategorylist.h"
 #include "blackmisc/integersequence.h"
 #include <QDebug>
 #include <QLoggingCategory>

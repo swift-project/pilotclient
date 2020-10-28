@@ -7,7 +7,7 @@
  */
 
 #include "blackgui/components/statusmessageform.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategories.h"
 #include "ui_statusmessageform.h"
 
 #include <QLabel>
