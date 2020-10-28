@@ -51,9 +51,7 @@ namespace BlackMisc
 
         CStatusMessageList CAircraftCategory::validate() const
         {
-            static const CLogCategoryList cats({ CLogCategory("swift.blackmisc.aircraftcategory"), CLogCategory::validation()});
-            CStatusMessageList msg;
-            return msg;
+            return {};
         }
 
         bool CAircraftCategory::isNull() const
