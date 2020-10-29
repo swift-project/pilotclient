@@ -477,21 +477,6 @@ namespace BlackMisc
         }
     }
 
-    QString CVariant::propertyByIndexAsString(const CPropertyIndex &index, bool i18n) const
-    {
-        auto *meta = getValueObjectMetaInfo();
-        Q_ASSERT(meta);
-        try
-        {
-            return meta->propertyByIndexAsString(data(), index, i18n);
-        }
-        catch (const Private::CVariantException &ex)
-        {
-            CLogMessage(this).debug() << ex.what();
-            return {};
-        }
-    }
-
     bool CVariant::equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const
     {
         auto *meta = getValueObjectMetaInfo();

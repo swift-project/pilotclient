@@ -116,9 +116,6 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
         using Mixin::Index<Derived>::comparePropertyByIndex;
 
-        //! \copydoc BlackMisc::Mixin::Index::propertyByIndexAsString
-        using Mixin::Index<Derived>::propertyByIndexAsString;
-
         //! \copydoc BlackMisc::Mixin::Index::equalsPropertyByIndex
         using Mixin::Index<Derived>::equalsPropertyByIndex;
 

@@ -49,9 +49,6 @@ namespace BlackMisc
         //! Convert to CStatusMessage for returning the message directly from the function which generated it.
         operator CStatusMessage();
 
-        //! Convert to CVariant for returning the message directly from the function which generated it.
-        operator CVariant();
-
         //! Sends a verbatim, preformatted message to the log.
         static void preformatted(const CStatusMessage &statusMessage);
 

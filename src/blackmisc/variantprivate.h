@@ -54,7 +54,6 @@ namespace BlackMisc
             virtual int compareImpl(const void *lhs, const void *rhs) const = 0;
             virtual void setPropertyByIndex(void *object, const CVariant &variant, const CPropertyIndex &index) const = 0;
             virtual void propertyByIndex(const void *object, CVariant &o_variant, const BlackMisc::CPropertyIndex &index) const = 0;
-            virtual QString propertyByIndexAsString(const void *object, const CPropertyIndex &index, bool i18n) const = 0;
             virtual bool equalsPropertyByIndex(const void *object, const CVariant &compareValue, const CPropertyIndex &index) const = 0;
             virtual bool matches(const void *object, const CVariant &value) const = 0;
             virtual int toIcon(const void *object) const = 0;
@@ -126,11 +125,6 @@ namespace BlackMisc
             static void propertyByIndex(CVariant &, const T &object, const CPropertyIndex &, ...) { throw CVariantException(object, "propertyByIndex"); }
 
             template <typename T>
-            static QString propertyByIndexAsString(const T &object, const CPropertyIndex &index, bool i18n, decltype(static_cast<void>(object.propertyByIndexAsString(index, i18n)), 0)) { return object.propertyByIndexAsString(index, i18n); }
-            template <typename T>
-            static QString propertyByIndexAsString(const T &object, const CPropertyIndex &, bool, ...) { throw CVariantException(object, "propertyByIndexAsString"); }
-
-            template <typename T>
             static bool equalsPropertyByIndex(const T &object, const CVariant &variant, const CPropertyIndex &index, decltype(static_cast<void>(object.equalsPropertyByIndex(variant, index)), 0)) { return object.equalsPropertyByIndex(variant, index); }
             template <typename T>
             static bool equalsPropertyByIndex(const T &object, const CVariant &, const CPropertyIndex &, ...) { throw CVariantException(object, "equalsPropertyByIndex"); }
@@ -198,10 +192,6 @@ namespace BlackMisc
             virtual void propertyByIndex(const void *object, CVariant &o_variant, const BlackMisc::CPropertyIndex &index) const override
             {
                 CValueObjectMetaInfoHelper::propertyByIndex(o_variant, cast(object), index, 0);
-            }
-            virtual QString propertyByIndexAsString(const void *object, const CPropertyIndex &index, bool i18n) const override
-            {
-                return CValueObjectMetaInfoHelper::propertyByIndexAsString(cast(object), index, i18n, 0);
             }
             virtual bool equalsPropertyByIndex(const void *object, const CVariant &compareValue, const CPropertyIndex &index) const override
             {

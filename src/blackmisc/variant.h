@@ -250,9 +250,6 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
         CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-        //! \copydoc BlackMisc::Mixin::Index::propertyByIndexAsString
-        QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const;
-
         //! \copydoc CValueObject::equalsPropertyByIndex
         bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const;
 

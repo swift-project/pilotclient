@@ -61,9 +61,6 @@ namespace BlackMisc
             //! Property by index
             CVariant propertyByIndex(const CPropertyIndex &index) const;
 
-            //! Property by index as String
-            QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const;
-
             //! Compare for index
             int comparePropertyByIndex(const CPropertyIndex &index, const Derived &compareValue) const;
 
@@ -109,7 +106,6 @@ namespace BlackMisc
             using ::BlackMisc::Mixin::Index<DERIVED>::apply;                    \
             using ::BlackMisc::Mixin::Index<DERIVED>::setPropertyByIndex;       \
             using ::BlackMisc::Mixin::Index<DERIVED>::propertyByIndex;          \
-            using ::BlackMisc::Mixin::Index<DERIVED>::propertyByIndexAsString;  \
             using ::BlackMisc::Mixin::Index<DERIVED>::comparePropertyByIndex;   \
             using ::BlackMisc::Mixin::Index<DERIVED>::equalsPropertyByIndex;
         // *INDENT-ON*
@@ -139,12 +135,6 @@ namespace BlackMisc
             case IndexString: return CVariant(derived()->toQString());
             default: return basePropertyByIndex(static_cast<const TIndexBaseOfT<Derived> *>(derived()), index);
             }
-        }
-
-        template <class Derived>
-        QString Index<Derived>::propertyByIndexAsString(const CPropertyIndex &index, bool i18n) const
-        {
-            return derived()->propertyByIndex(index).toQString(i18n);
         }
 
         template <class Derived>

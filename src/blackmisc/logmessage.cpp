@@ -22,11 +22,6 @@ namespace BlackMisc
         return { m_categories, m_severity, message() };
     }
 
-    CLogMessage::operator CVariant()
-    {
-        return CVariant::from(static_cast<CStatusMessage>(*this));
-    }
-
     CLogMessage::~CLogMessage()
     {
         ostream(qtCategory()).noquote() << message();

@@ -203,7 +203,8 @@ namespace BlackGui
 
                     if (msgSettings.popupSelcalMessages())
                     {
-                        this->emitDisplayInInfoWindow(CLogMessage(this).info(u"SELCAL received"), 3 * 1000);
+                        CStatusMessage msg = CLogMessage(this).info(u"SELCAL received");
+                        this->emitDisplayInInfoWindow(CVariant::from(msg), 3 * 1000);
                     }
                     continue;
                 }
