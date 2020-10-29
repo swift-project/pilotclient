@@ -53,7 +53,7 @@ namespace BlackMisc
 
             //! Update by variant map
             //! \return number of values changed, with skipEqualValues equal values will not be changed
-            CPropertyIndexList apply(const CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false);
+            CPropertyIndexList apply(const CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false); // impl in propertyindexvariantmap.h
 
             //! Set property by index
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
@@ -113,28 +113,6 @@ namespace BlackMisc
             using ::BlackMisc::Mixin::Index<DERIVED>::comparePropertyByIndex;   \
             using ::BlackMisc::Mixin::Index<DERIVED>::equalsPropertyByIndex;
         // *INDENT-ON*
-
-        template <class Derived>
-        CPropertyIndexList Index<Derived>::apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues)
-        {
-            if (indexMap.isEmpty()) return {};
-
-            CPropertyIndexList changed;
-            const auto &map = indexMap.map();
-            for (auto it = map.begin(); it != map.end(); ++it)
-            {
-                const CVariant value = it.value();
-                const CPropertyIndex index = it.key();
-                if (skipEqualValues)
-                {
-                    const bool equal = derived()->equalsPropertyByIndex(value, index);
-                    if (equal) { continue; }
-                }
-                derived()->setPropertyByIndex(index, value);
-                changed.push_back(index);
-            }
-            return changed;
-        }
 
         template <class Derived>
         void Index<Derived>::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
