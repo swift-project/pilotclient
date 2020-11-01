@@ -32,6 +32,11 @@ namespace BlackMisc
         this->parseFromString(indexes);
     }
 
+    CPropertyIndex::operator CPropertyIndexRef() const
+    {
+        return CPropertyIndexRef(m_indexes);
+    }
+
     CPropertyIndex CPropertyIndex::copyFrontRemoved() const
     {
         BLACK_VERIFY_X(!this->isEmpty(), Q_FUNC_INFO, "Empty index");

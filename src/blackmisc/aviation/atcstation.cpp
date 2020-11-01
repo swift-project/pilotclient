@@ -435,7 +435,7 @@ namespace BlackMisc
 
         int CAtcStation::comparePropertyByIndex(const CPropertyIndex &index, const CAtcStation &compareValue) const
         {
-            if (index.isMyself()) { return this->getCallsign().comparePropertyByIndex(CPropertyIndex::empty(), compareValue.getCallsign()); }
+            if (index.isMyself()) { return this->getCallsign().comparePropertyByIndex(CPropertyIndexRef::empty(), compareValue.getCallsign()); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -443,7 +443,7 @@ namespace BlackMisc
             case IndexBookedUntil: return Compare::compare(this->getBookedUntilUtc(), compareValue.getBookedUntilUtc());
             case IndexCallsignString:
             case IndexCallsignStringCrossCopuled:
-                return m_callsign.comparePropertyByIndex(CPropertyIndex::empty(), compareValue.getCallsign());
+                return m_callsign.comparePropertyByIndex(CPropertyIndexRef::empty(), compareValue.getCallsign());
             case IndexCallsign:    return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
             case IndexController:  return m_controller.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getController());
             case IndexFrequency:   return m_frequency.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getFrequency());

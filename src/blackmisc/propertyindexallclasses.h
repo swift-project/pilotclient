@@ -11,6 +11,7 @@
 
 #include "blackmisc/propertyindexlist.h"
 #include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/propertyindex.h"
 
 #endif // guard

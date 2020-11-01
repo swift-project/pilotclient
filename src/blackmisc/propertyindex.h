@@ -11,6 +11,7 @@
 #ifndef BLACKMISC_PROPERTYINDEX_H
 #define BLACKMISC_PROPERTYINDEX_H
 
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/mixin/mixindbus.h"
@@ -198,6 +199,9 @@ namespace BlackMisc
 
         //! From string
         CPropertyIndex(const QString &indexes);
+
+        //! Return a simplified non-owning reference
+        operator CPropertyIndexRef() const;
 
         //! Copy with first element removed
         CPropertyIndex copyFrontRemoved() const;
