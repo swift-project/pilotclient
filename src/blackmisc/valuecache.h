@@ -19,7 +19,7 @@
 #include "blackmisc/dictionary.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/metaclass.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/range.h"
 #include "blackmisc/slot.h"
 #include "blackmisc/statusmessagelist.h"

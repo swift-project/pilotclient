@@ -9,7 +9,7 @@
 #include "blackmisc/identifier.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/stringutils.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 
 #include <QCoreApplication>
 #include <QHostInfo>

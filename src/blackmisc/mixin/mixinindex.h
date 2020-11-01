@@ -15,7 +15,6 @@
 #include "blackmisc/inheritancetraits.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/propertyindexref.h"
-#include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
 
 #include <QDBusArgument>

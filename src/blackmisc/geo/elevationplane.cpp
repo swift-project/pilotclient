@@ -9,7 +9,7 @@
 #include "elevationplane.h"
 #include "coordinategeodetic.h"
 #include "blackmisc/pq/length.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;

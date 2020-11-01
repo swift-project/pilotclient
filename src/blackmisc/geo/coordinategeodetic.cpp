@@ -8,7 +8,7 @@
 
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
 

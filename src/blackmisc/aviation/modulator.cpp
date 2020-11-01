@@ -12,7 +12,7 @@
 #include "blackmisc/aviation/adfsystem.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/pq/units.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/comparefunctions.h"
 #include <QtGlobal>

@@ -14,7 +14,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/identifier.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/logcategories.h"
 #include "blackmisc/valuecache.h"

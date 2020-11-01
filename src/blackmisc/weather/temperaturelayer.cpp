@@ -7,7 +7,7 @@
  */
 
 #include "blackmisc/weather/temperaturelayer.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/variant.h"
 
 using namespace BlackMisc::Aviation;

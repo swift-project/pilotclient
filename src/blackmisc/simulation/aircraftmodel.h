@@ -28,7 +28,7 @@
 #include "blackmisc/metaclass.h"
 #include "blackmisc/orderable.h"
 #include "blackmisc/pixmap.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/blackmiscexport.h"
 
 #include <QFlags>

@@ -19,7 +19,7 @@
 #include "blackmisc/geo/longitude.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/pq/length.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"

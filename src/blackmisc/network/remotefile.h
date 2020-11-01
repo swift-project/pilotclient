@@ -15,7 +15,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/metaclass.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
 

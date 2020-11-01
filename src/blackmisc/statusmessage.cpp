@@ -8,7 +8,7 @@
 
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusexception.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/logpattern.h"
 #include "blackmisc/comparefunctions.h"

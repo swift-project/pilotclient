@@ -14,7 +14,7 @@
 #include "blackmisc/simulation/distributorlistpreferences.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 
 namespace BlackMisc
 {

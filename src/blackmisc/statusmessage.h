@@ -15,7 +15,7 @@
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/orderable.h"
 #include "blackmisc/mixin/mixinicon.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/mixin/mixinstring.h"
 #include "blackmisc/typetraits.h"
 #include "blackmisc/blackmiscexport.h"

@@ -9,7 +9,7 @@
 #include "blackmisc/network/server.h"
 #include "blackmisc/logcategories.h"
 #include "blackmisc/stringutils.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/obfuscation.h"

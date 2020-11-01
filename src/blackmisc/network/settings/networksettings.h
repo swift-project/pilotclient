@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_NETWORK_SETTINGS_NETWORKSETTINGS_H
 #define BLACKMISC_NETWORK_SETTINGS_NETWORKSETTINGS_H
 
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"

@@ -13,7 +13,7 @@
 
 #include "blackmisc/settingscache.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/blackmiscexport.h"
 
 #include <QString>

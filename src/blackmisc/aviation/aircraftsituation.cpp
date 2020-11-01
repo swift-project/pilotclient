@@ -13,7 +13,7 @@
 #include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/units.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/verify.h"

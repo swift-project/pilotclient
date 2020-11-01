@@ -19,7 +19,7 @@
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/blackmiscexport.h"
 
 namespace BlackMisc

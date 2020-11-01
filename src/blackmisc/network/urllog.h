@@ -15,7 +15,7 @@
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 
 #include <QJsonObject>
 #include <QString>

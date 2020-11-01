@@ -19,7 +19,7 @@
 #include "blackmisc/pq/units.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/metaclass.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/mixin/mixinstring.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/mixin/mixinmetatype.h"

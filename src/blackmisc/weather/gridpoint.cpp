@@ -7,7 +7,7 @@
  */
 
 #include "blackmisc/weather/gridpoint.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/variant.h"
 
 #include <QtDebug>

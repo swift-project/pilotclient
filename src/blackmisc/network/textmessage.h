@@ -16,7 +16,7 @@
 #include "blackmisc/metaclass.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/units.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/valueobject.h"

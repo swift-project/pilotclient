@@ -18,7 +18,7 @@
 #include "blackmisc/mixin/mixinjson.h"
 #include "blackmisc/pq/pqstring.h"
 #include "blackmisc/pq/units.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/mixin/mixinindex.h"
 #include "blackmisc/mixin/mixinstring.h"
 #include "blackmisc/mixin/mixinmetatype.h"

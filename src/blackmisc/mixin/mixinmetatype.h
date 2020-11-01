@@ -12,6 +12,7 @@
 #define BLACKMISC_MIXIN_MIXINMETATYPE_H
 
 #include "blackmisc/inheritancetraits.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/variantprivate.h"
 #include <QMetaType>
 #include <QtGlobal>

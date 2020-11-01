@@ -10,7 +10,7 @@
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/pq/constants.h"
 #include "blackmisc/verify.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/stringutils.h"
 #include <QStringBuilder>

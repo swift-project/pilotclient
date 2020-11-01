@@ -13,7 +13,7 @@
 
 #include "blackmisc/input/hotkeycombination.h"
 #include "blackmisc/metaclass.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/identifier.h"

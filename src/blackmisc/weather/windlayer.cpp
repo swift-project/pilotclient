@@ -8,7 +8,7 @@
 
 #include "blackmisc/weather/windlayer.h"
 #include "blackmisc/pq/physicalquantity.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/variant.h"
 
 using namespace BlackMisc::PhysicalQuantities;

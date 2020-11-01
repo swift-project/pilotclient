@@ -30,7 +30,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/metaclass.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
 

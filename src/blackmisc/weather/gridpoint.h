@@ -20,7 +20,7 @@
 #include "blackmisc/pq/constants.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/metaclass.h"

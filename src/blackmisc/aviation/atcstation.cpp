@@ -11,7 +11,7 @@
 #include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/pq/units.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/stringutils.h"

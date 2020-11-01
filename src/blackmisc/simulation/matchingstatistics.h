@@ -14,6 +14,7 @@
 #include "matchingstatisticsentry.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/timestampobjectlist.h"
+#include "blackmisc/sequence.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/mixin/mixinmetatype.h"
 

@@ -8,7 +8,7 @@
 
 #include "blackmisc/network/url.h"
 #include "blackmisc/network/networkutils.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 
 #include <QJsonValue>
 #include <QPair>

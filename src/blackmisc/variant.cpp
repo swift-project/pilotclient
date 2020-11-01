@@ -12,7 +12,7 @@
 #include "blackmisc/imageutils.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/variantlist.h"
 #include "blackmisc/stringutils.h"

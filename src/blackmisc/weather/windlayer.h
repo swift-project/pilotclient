@@ -16,7 +16,7 @@
 #include "blackmisc/metaclass.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/speed.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
 

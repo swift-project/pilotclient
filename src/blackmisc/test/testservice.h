@@ -29,7 +29,7 @@
 #include "blackmisc/network/user.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/speed.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/variantlist.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"

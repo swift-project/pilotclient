@@ -14,7 +14,7 @@
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/settingscache.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/blackmiscexport.h"
 
 namespace BlackMisc

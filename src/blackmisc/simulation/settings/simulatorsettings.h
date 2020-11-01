@@ -18,7 +18,7 @@
 #include "blackmisc/pq/length.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/statusmessage.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/blackmiscexport.h"
 

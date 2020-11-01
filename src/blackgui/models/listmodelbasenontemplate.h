@@ -14,6 +14,7 @@
 #include "blackgui/models/columns.h"
 #include "blackgui/dropbase.h"
 #include "blackgui/blackguiexport.h"
+#include "blackmisc/propertyindexlist.h"
 #include "blackmisc/digestsignal.h"
 #include "blackmisc/variant.h"
 

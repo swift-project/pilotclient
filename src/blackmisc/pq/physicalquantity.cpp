@@ -9,7 +9,7 @@
 #include "blackmisc/pq/measurementunit.h"
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/pq/pqstring.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/pressure.h"
 #include "blackmisc/pq/frequency.h"
