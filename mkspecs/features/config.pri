@@ -69,7 +69,7 @@ system($$TOUCH $$system_path($$BuildRoot/swift_config.cookie)) {
     PRE_TARGETDEPS += $${swift_config_changed.target}
 }
 else:msvc {
-    warning(Failed to create swift_config.cookie, you will need to manually run qmake again after any changes in $$join(SWIFT_CONFIG_JSON, ", ").)
+    warning(Failed to create swift_config.cookie; you will need to manually run qmake again after any changes in $$join(SWIFT_CONFIG_JSON, ", ").)
 }
 
 ################################
