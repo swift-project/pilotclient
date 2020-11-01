@@ -96,4 +96,14 @@ namespace BlackMisc
         Q_ASSERT_X(index >= 0 && index < CIconList::allIcons().size(), "iconForIndex", "wrong index");
         return CIconList::allIcons()[index];
     }
+
+    // CIcons methods defined here to circumvent cyclic dependency
+    QVariant CIcons::toVariant(IconIndex icon)
+    {
+        return QVariant::fromValue(CIcon(icon));
+    }
+    QVariant CIcons::toVariantPixmap(IconIndex icon)
+    {
+        return QVariant::fromValue(CIcon(icon).toPixmap());
+    }
 } // namespace

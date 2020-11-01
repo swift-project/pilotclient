@@ -805,6 +805,17 @@ namespace BlackMisc
         //! Rotate by pixmap
         static QPixmap rotate(int rotateDegrees, const QPixmap &original);
 
+        // -------------------------------------------------------------
+        // Convert enum to QVariant containing CIcon or QPixmap
+        // (function definitions in icon.cpp)
+        // -------------------------------------------------------------
+
+        //! Variant containing CIcon
+        static QVariant toVariant(IconIndex icon);
+
+        //! Variant containing QPixmap
+        static QVariant toVariantPixmap(IconIndex icon);
+
     private:
         //! File cache for the loaded files
         static QMap<QString, QPixmap> &getResourceFileCache();
