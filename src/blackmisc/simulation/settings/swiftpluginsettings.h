@@ -30,7 +30,7 @@ namespace BlackMisc
                 //! Properties by index
                 enum ColumnIndex
                 {
-                    IndexEmulatedSimulator = CPropertyIndex::GlobalIndexCSwiftPluignSettings,
+                    IndexEmulatedSimulator = CPropertyIndexRef::GlobalIndexCSwiftPluignSettings,
                     IndexOwnModel,
                     IndexDefaultModel,
                     IndexLoggingFunctionCalls

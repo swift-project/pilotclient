@@ -26,7 +26,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexEnabled = CPropertyIndex::GlobalIndexCCrashSettings,
+                IndexEnabled = CPropertyIndexRef::GlobalIndexCCrashSettings,
                 IndexPrivateInfo
             };
 

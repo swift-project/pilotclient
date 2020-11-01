@@ -242,9 +242,9 @@ namespace BlackMisc
         if (indexes.isEmpty() || this->isEmpty()) { return {}; }
         QString html;
         int line = 1;
-        const bool withLineNumbers = indexes.contains(CPropertyIndex::GlobalIndexLineNumber);
+        const bool withLineNumbers = indexes.contains(CPropertyIndexRef::GlobalIndexLineNumber);
         CPropertyIndexList usedIndexes(indexes);
-        if (withLineNumbers) { usedIndexes.remove(CPropertyIndex::GlobalIndexLineNumber); }
+        if (withLineNumbers) { usedIndexes.remove(CPropertyIndexRef::GlobalIndexLineNumber); }
         for (const CStatusMessage &statusMessage : *this)
         {
             QString rowHtml;
@@ -268,7 +268,7 @@ namespace BlackMisc
 
     const CPropertyIndexList &CStatusMessageList::simpleHtmlOutput()
     {
-        static const CPropertyIndexList properties({ CPropertyIndex::GlobalIndexLineNumber, CStatusMessage::IndexMessage });
+        static const CPropertyIndexList properties({ CPropertyIndexRef::GlobalIndexLineNumber, CStatusMessage::IndexMessage });
         return properties;
     }
 

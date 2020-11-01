@@ -37,7 +37,7 @@ namespace BlackMisc
             //! Specific values
             enum ColumnIndex
             {
-                IndexData = CPropertyIndex::GlobalIndexCSimulatorInternals
+                IndexData = CPropertyIndexRef::GlobalIndexCSimulatorInternals
             };
 
             //! Default constructor

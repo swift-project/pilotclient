@@ -36,7 +36,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexRadius = CPropertyIndex::GlobalIndexCElevationPlane
+                IndexRadius = CPropertyIndexRef::GlobalIndexCElevationPlane
             };
 
             //! Default constructor

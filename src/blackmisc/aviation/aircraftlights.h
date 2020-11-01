@@ -33,8 +33,8 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexIsNull = CPropertyIndex::GlobalIndexINullable,
-                IndexStrobe = CPropertyIndex::GlobalIndexCAircraftLights,
+                IndexIsNull = CPropertyIndexRef::GlobalIndexINullable,
+                IndexStrobe = CPropertyIndexRef::GlobalIndexCAircraftLights,
                 IndexLanding,
                 IndexTaxi,
                 IndexBeacon,

@@ -65,7 +65,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexCallsign = CPropertyIndex::GlobalIndexCSimulatedAircraft,
+                IndexCallsign = CPropertyIndexRef::GlobalIndexCSimulatedAircraft,
                 IndexPilot,
                 IndexRelativeDistance,
                 IndexCom1System,

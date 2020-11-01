@@ -32,7 +32,7 @@ namespace BlackGui
             //! Properties by index
             enum ColumnIndex
             {
-                IndexPopupPrivateMessages = BlackMisc::CPropertyIndex::GlobalIndexCTextMessageSettings,
+                IndexPopupPrivateMessages = BlackMisc::CPropertyIndexRef::GlobalIndexCTextMessageSettings,
                 IndexPopupSupervisorMessages,
                 IndexPopupFrequencyMessages,
                 IndexPopupAllMessages,

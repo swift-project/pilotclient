@@ -31,7 +31,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexName = CPropertyIndex::GlobalIndexCArtifact,
+                IndexName = CPropertyIndexRef::GlobalIndexCArtifact,
                 IndexMd5,
                 IndexType,
                 IndexPlatform,

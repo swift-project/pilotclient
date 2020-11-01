@@ -30,7 +30,7 @@ namespace BlackGui
             //! Properties by index
             enum ColumnIndex
             {
-                IndexWidgetStyle = BlackMisc::CPropertyIndex::GlobalIndexCGeneralGuiSettings,
+                IndexWidgetStyle = BlackMisc::CPropertyIndexRef::GlobalIndexCGeneralGuiSettings,
                 IndexPreferredSelection
             };
 

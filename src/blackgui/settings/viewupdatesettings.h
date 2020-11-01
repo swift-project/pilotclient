@@ -33,7 +33,7 @@ namespace BlackGui
             //! Properties by index
             enum ColumnIndex
             {
-                IndexAtc = BlackMisc::CPropertyIndex::GlobalIndexCViewUpdateSettings,
+                IndexAtc = BlackMisc::CPropertyIndexRef::GlobalIndexCViewUpdateSettings,
                 IndexAircraft,
                 IndexRendering,
                 IndexUser

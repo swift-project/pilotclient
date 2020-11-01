@@ -26,7 +26,7 @@ namespace BlackGui
             //! Properties by index
             enum ColumnIndex
             {
-                IndexInRangeOnly = BlackMisc::CPropertyIndex::GlobalIndexCAtcStationsSettings,
+                IndexInRangeOnly = BlackMisc::CPropertyIndexRef::GlobalIndexCAtcStationsSettings,
                 IndexValidFrequencyOnly
             };
 

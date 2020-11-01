@@ -39,7 +39,7 @@ namespace BlackMisc
                 //! Property indexes
                 enum ColumnIndex
                 {
-                    IndexModelName = CPropertyIndex::GlobalIndexCVPilotModelRule,
+                    IndexModelName = CPropertyIndexRef::GlobalIndexCVPilotModelRule,
                     IndexFolder,
                     IndexTypeCode,
                     IndexCallsignPrefix

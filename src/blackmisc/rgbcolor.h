@@ -33,7 +33,7 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexRed = BlackMisc::CPropertyIndex::GlobalIndexCRgbColor,
+            IndexRed = BlackMisc::CPropertyIndexRef::GlobalIndexCRgbColor,
             IndexGreen,
             IndexBlue,
             IndexWebHex

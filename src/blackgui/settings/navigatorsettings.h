@@ -32,7 +32,7 @@ namespace BlackGui
             //! Properties by index
             enum ColumnIndex
             {
-                IndexMargins = BlackMisc::CPropertyIndex::GlobalIndexCNavigatorSettings,
+                IndexMargins = BlackMisc::CPropertyIndexRef::GlobalIndexCNavigatorSettings,
                 IndexFrameless,
                 IndexColumns
             };

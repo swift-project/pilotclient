@@ -41,7 +41,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexIdentifier = CPropertyIndex::GlobalIndexCGridPoint,
+                IndexIdentifier = CPropertyIndexRef::GlobalIndexCGridPoint,
                 IndexPosition,
                 IndexCloudLayers,
                 IndexTemperatureLayers,

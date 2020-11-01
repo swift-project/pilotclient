@@ -15,7 +15,7 @@ namespace BlackMisc
 {
     CPropertyIndex::CPropertyIndex(int singleProperty) : m_indexes { singleProperty }
     {
-        Q_ASSERT(singleProperty >= static_cast<int>(GlobalIndexCValueObject));
+        Q_ASSERT(singleProperty >= static_cast<int>(CPropertyIndexRef::GlobalIndexCValueObject));
     }
 
     CPropertyIndex::CPropertyIndex(std::initializer_list<int> il) : m_indexes(il)
@@ -67,7 +67,7 @@ namespace BlackMisc
         QString s;
         for (const int i : m_indexes)
         {
-            Q_ASSERT(i >= static_cast<int>(GlobalIndexCValueObject));
+            Q_ASSERT(i >= static_cast<int>(CPropertyIndexRef::GlobalIndexCValueObject));
             if (!s.isEmpty()) { s.append(";"); }
             s.append(QString::number(i));
         }
@@ -84,7 +84,7 @@ namespace BlackMisc
             bool ok;
             int i = index.toInt(&ok);
             Q_ASSERT(ok);
-            Q_ASSERT(i >= static_cast<int>(GlobalIndexCValueObject));
+            Q_ASSERT(i >= static_cast<int>(CPropertyIndexRef::GlobalIndexCValueObject));
             m_indexes.append(i);
         }
     }

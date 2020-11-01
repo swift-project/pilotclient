@@ -33,7 +33,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexId = CPropertyIndex::GlobalIndexCUrlLog,
+                IndexId = CPropertyIndexRef::GlobalIndexCUrlLog,
                 IndexSuccess,
                 IndexUrl,
                 IndexResponseTimestamp,

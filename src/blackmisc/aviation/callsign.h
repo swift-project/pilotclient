@@ -33,7 +33,7 @@ namespace BlackMisc
             //! Indexes
             enum ColumnIndex
             {
-                IndexCallsignString = CPropertyIndex::GlobalIndexCCallsign,
+                IndexCallsignString = CPropertyIndexRef::GlobalIndexCCallsign,
                 IndexCallsignStringAsSet,
                 IndexTelephonyDesignator,
                 IndexSuffix,

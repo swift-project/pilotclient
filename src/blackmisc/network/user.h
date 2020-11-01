@@ -41,7 +41,7 @@ namespace BlackMisc
              */
             enum ColumnIndex
             {
-                IndexEmail = CPropertyIndex::GlobalIndexCUser,
+                IndexEmail = CPropertyIndexRef::GlobalIndexCUser,
                 IndexId,
                 IndexIdInteger,
                 IndexId7Digit,

@@ -33,7 +33,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexAfvVoiceServerUrl = CPropertyIndex::GlobalIndexCVoiceSetup,
+                IndexAfvVoiceServerUrl = CPropertyIndexRef::GlobalIndexCVoiceSetup,
                 IndexAfvMapUrl
             };
 

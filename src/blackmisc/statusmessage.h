@@ -308,7 +308,7 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexCategoriesAsString = CPropertyIndex::GlobalIndexCStatusMessage,
+            IndexCategoriesAsString = CPropertyIndexRef::GlobalIndexCStatusMessage,
             IndexCategoriesHumanReadableAsString,
             IndexCategoryHumanReadableOrTechnicalAsString,
             IndexSeverity,

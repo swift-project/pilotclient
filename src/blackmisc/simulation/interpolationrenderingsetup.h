@@ -31,7 +31,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexLogInterpolation = CPropertyIndex::GlobalIndexCInterpolatioRenderingSetup,
+                IndexLogInterpolation = CPropertyIndexRef::GlobalIndexCInterpolatioRenderingSetup,
                 IndexSimulatorDebugMessages,
                 IndexForceFullInterpolation,
                 IndexSendGndFlagToSimulator,

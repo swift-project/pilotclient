@@ -30,7 +30,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexArtifactsPilotClient = CPropertyIndex::GlobalIndexCUpdateInfo,
+                IndexArtifactsPilotClient = CPropertyIndexRef::GlobalIndexCUpdateInfo,
                 IndexArtifactsXSwiftBus,
                 IndexDistributions
             };

@@ -39,7 +39,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexAircraftDesignator = CPropertyIndex::GlobalIndexCAircraftIcaoCode,
+                IndexAircraftDesignator = CPropertyIndexRef::GlobalIndexCAircraftIcaoCode,
                 IndexIataCode,
                 IndexFamily,
                 IndexCombinedAircraftType,

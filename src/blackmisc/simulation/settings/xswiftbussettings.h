@@ -36,7 +36,7 @@ namespace BlackMisc
                 //! Properties by index
                 enum ColumnIndex
                 {
-                    IndexDBusServerAddress = CPropertyIndex::GlobalIndexCXSwiftBusSettings,
+                    IndexDBusServerAddress = CPropertyIndexRef::GlobalIndexCXSwiftBusSettings,
                     IndexMaxPlanes,
                     IndexDrawingLabels,
                     IndexBundleTaxiLandingLights,

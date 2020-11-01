@@ -38,7 +38,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexScenarioIndex = CPropertyIndex::GlobalIndexCWeatherScenario,
+                IndexScenarioIndex = CPropertyIndexRef::GlobalIndexCWeatherScenario,
                 IndexScenarioName,
                 IndexScenarioDescription
             };

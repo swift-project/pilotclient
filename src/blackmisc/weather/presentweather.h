@@ -87,7 +87,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexPresentWeather = BlackMisc::CPropertyIndex::GlobalIndexCPresentWeather,
+                IndexPresentWeather = BlackMisc::CPropertyIndexRef::GlobalIndexCPresentWeather,
                 IndexIntensity,
                 IndexDescriptor,
                 IndexWeatherPhenomena

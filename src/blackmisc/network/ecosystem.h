@@ -29,7 +29,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexSystem = CPropertyIndex::GlobalIndexCEcosystem,
+                IndexSystem = CPropertyIndexRef::GlobalIndexCEcosystem,
                 IndexSystemString
             };
 

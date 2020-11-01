@@ -65,7 +65,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexBase = BlackMisc::CPropertyIndex::GlobalIndexCCloudLayer,
+                IndexBase = BlackMisc::CPropertyIndexRef::GlobalIndexCCloudLayer,
                 IndexTop,
                 IndexPrecipitationRate,
                 IndexPrecipitation,

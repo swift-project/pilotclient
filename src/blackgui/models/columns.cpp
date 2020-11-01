@@ -84,7 +84,7 @@ namespace BlackGui
 
         CColumn CColumn::emptyColumn()
         {
-            CColumn col = CColumn("", "", CPropertyIndex::GlobalIndexEmpty, new CEmptyFormatter());
+            CColumn col = CColumn("", "", CPropertyIndexRef::GlobalIndexEmpty, new CEmptyFormatter());
             col.setWidthPercentage(1);
             return col;
         }
@@ -276,7 +276,7 @@ namespace BlackGui
         {
             if (m_columns.isEmpty()) { return false; }
             const CColumn c = m_columns.last();
-            return c.getPropertyIndex() == CPropertyIndex::GlobalIndexEmpty;
+            return c.getPropertyIndex() == CPropertyIndexRef::GlobalIndexEmpty;
         }
 
         const CDefaultFormatter *CColumns::getFormatter(const QModelIndex &index) const

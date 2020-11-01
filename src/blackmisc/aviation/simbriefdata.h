@@ -40,7 +40,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexUsername = CPropertyIndex::GlobalIndexCSimBriefData,
+                IndexUsername = CPropertyIndexRef::GlobalIndexCSimBriefData,
                 IndexUrl
             };
 

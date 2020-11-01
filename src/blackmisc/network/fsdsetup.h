@@ -31,7 +31,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexTextCodec = CPropertyIndex::GlobalIndexCFsdSetup,
+                IndexTextCodec = CPropertyIndexRef::GlobalIndexCFsdSetup,
                 IndexSendReceiveDetails
             };
 

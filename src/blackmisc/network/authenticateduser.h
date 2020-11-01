@@ -41,7 +41,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexEmail = BlackMisc::CPropertyIndex::GlobalIndexCAuthenticatedUser,
+                IndexEmail = BlackMisc::CPropertyIndexRef::GlobalIndexCAuthenticatedUser,
                 IndexVatsimId,
                 IndexPassword,
                 IndexRealName,

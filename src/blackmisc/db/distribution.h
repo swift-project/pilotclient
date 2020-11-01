@@ -37,7 +37,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexChannel = CPropertyIndex::GlobalIndexCDistribution,
+                IndexChannel = CPropertyIndexRef::GlobalIndexCDistribution,
                 IndexStability,
                 IndexRestricted,
                 IndexDownloadUrls

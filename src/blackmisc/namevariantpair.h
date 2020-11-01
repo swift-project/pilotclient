@@ -29,7 +29,7 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexName = BlackMisc::CPropertyIndex::GlobalIndexCNameVariantPair,
+            IndexName = BlackMisc::CPropertyIndexRef::GlobalIndexCNameVariantPair,
             IndexVariant
         };
 

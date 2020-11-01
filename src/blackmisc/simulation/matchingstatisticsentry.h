@@ -29,7 +29,7 @@ namespace BlackMisc
             //! Property indexes
             enum ColumnIndex
             {
-                IndexSessionId = CPropertyIndex::GlobalIndexCMatchingStatisticsEntry,
+                IndexSessionId = CPropertyIndexRef::GlobalIndexCMatchingStatisticsEntry,
                 IndexModelSetId,
                 IndexEntryType,
                 IndexEntryTypeAsString,

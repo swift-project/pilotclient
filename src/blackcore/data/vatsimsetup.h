@@ -38,7 +38,7 @@ namespace BlackCore
             //! Properties by index
             enum ColumnIndex
             {
-                IndexServerFiles = BlackMisc::CPropertyIndex::GlobalIndexCVatsimSetup,
+                IndexServerFiles = BlackMisc::CPropertyIndexRef::GlobalIndexCVatsimSetup,
                 IndexDataFiles,
                 IndexMetarFiles,
                 IndexFsdServers,

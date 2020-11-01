@@ -38,7 +38,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexCallsign = CPropertyIndex::GlobalIndexCAircraftSituationChange,
+                IndexCallsign = CPropertyIndexRef::GlobalIndexCAircraftSituationChange,
                 IndexIsNull,
                 IndexSituationsCount,
                 IndexConstAscending,

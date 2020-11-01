@@ -41,7 +41,7 @@ namespace BlackCore
             //! Properties by index
             enum ColumnIndex
             {
-                IndexDbRootDirectory = BlackMisc::CPropertyIndex::GlobalIndexCGlobalSetup,
+                IndexDbRootDirectory = BlackMisc::CPropertyIndexRef::GlobalIndexCGlobalSetup,
                 IndexDbHttpPort,
                 IndexDbHttpsPort,
                 IndexDbLoginService,

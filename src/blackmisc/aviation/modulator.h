@@ -25,7 +25,7 @@ namespace BlackMisc
             //! Column indexes
             enum ColumnIndex
             {
-                IndexActiveFrequency = CPropertyIndex::GlobalIndexCModulator,
+                IndexActiveFrequency = CPropertyIndexRef::GlobalIndexCModulator,
                 IndexStandbyFrequency,
                 IndexReceiveVolume,
                 IndexTransmitVolume,

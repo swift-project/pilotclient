@@ -47,7 +47,7 @@ namespace BlackMisc
         {
             // since we use different keys all the compares, set, get are in the derived class
             // in general we can say, it was a bad decision to use different key types
-            // IndexDbIntegerKey = CPropertyIndex::GlobalIndexIDatastore for future usage
+            // IndexDbIntegerKey = CPropertyIndexRef::GlobalIndexIDatastore for future usage
 
         public:
             //! Version info
@@ -78,7 +78,7 @@ namespace BlackMisc
             //! Property index
             enum ColumnIndex
             {
-                IndexDbIntegerKey = CPropertyIndex::GlobalIndexIDatastoreInteger,
+                IndexDbIntegerKey = CPropertyIndexRef::GlobalIndexIDatastoreInteger,
                 IndexDbKeyAsString,
                 IndexIsLoadedFromDb,
                 IndexDatabaseIcon,
@@ -166,7 +166,7 @@ namespace BlackMisc
             //! Property index
             enum ColumnIndex
             {
-                IndexDbStringKey = CPropertyIndex::GlobalIndexIDatastoreString,
+                IndexDbStringKey = CPropertyIndexRef::GlobalIndexIDatastoreString,
                 IndexDbKeyAsString,
                 IndexIsLoadedFromDb,
                 IndexDatabaseIcon,

@@ -35,7 +35,7 @@ namespace BlackMisc
                 //! Properties by index
                 enum ColumnIndex
                 {
-                    IndexDynamicOffsetTime = CPropertyIndex::GlobalIndexCNetworkSettings,
+                    IndexDynamicOffsetTime = CPropertyIndexRef::GlobalIndexCNetworkSettings,
                 };
 
                 //! Constructor

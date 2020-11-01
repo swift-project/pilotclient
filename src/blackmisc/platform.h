@@ -31,7 +31,7 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexPlatform = CPropertyIndex::GlobalIndexCPlatform
+            IndexPlatform = CPropertyIndexRef::GlobalIndexCPlatform
         };
 
         //! OS

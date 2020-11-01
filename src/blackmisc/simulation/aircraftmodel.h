@@ -108,7 +108,7 @@ namespace BlackMisc
             //! Indexes
             enum ColumnIndex
             {
-                IndexModelString = CPropertyIndex::GlobalIndexCAircraftModel,
+                IndexModelString = CPropertyIndexRef::GlobalIndexCAircraftModel,
                 IndexModelStringAlias,
                 IndexAllModelStrings, //!< indluding aliases
                 IndexCallsign,

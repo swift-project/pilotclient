@@ -40,7 +40,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexLights = CPropertyIndex::GlobalIndexCAircraftParts,
+                IndexLights = CPropertyIndexRef::GlobalIndexCAircraftParts,
                 IndexGearDown,
                 IndexFlapsPercentage,
                 IndexSpoilersOut,

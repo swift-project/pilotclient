@@ -37,7 +37,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexName = CPropertyIndex::GlobalIndexCRole,
+                IndexName = CPropertyIndexRef::GlobalIndexCRole,
                 IndexDescription
             };
 

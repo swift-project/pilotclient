@@ -35,7 +35,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexName = CPropertyIndex::GlobalIndexCAudioDeviceInfo,
+                IndexName = CPropertyIndexRef::GlobalIndexCAudioDeviceInfo,
                 IndexDeviceType,
                 IndexDeviceTypeAsString,
                 IndexIdentifier

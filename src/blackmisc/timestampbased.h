@@ -28,7 +28,7 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexUtcTimestamp = CPropertyIndex::GlobalIndexITimestampBased,
+            IndexUtcTimestamp = CPropertyIndexRef::GlobalIndexITimestampBased,
             IndexUtcTimestampFormattedYmdhms,
             IndexUtcTimestampFormattedYmdhmsz,
             IndexUtcTimestampFormattedMdhms,
@@ -173,7 +173,7 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexOffsetMs = CPropertyIndex::GlobalIndexITimestampBased + ITimestampBased::IndexMSecsSinceEpoch + 1,
+            IndexOffsetMs = CPropertyIndexRef::GlobalIndexITimestampBased + ITimestampBased::IndexMSecsSinceEpoch + 1,
             IndexAdjustedMsWithOffset,
             IndexOffsetWithUnit // keep this as last item
         };

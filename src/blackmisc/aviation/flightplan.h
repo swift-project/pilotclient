@@ -171,7 +171,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexCallsign = CPropertyIndex::GlobalIndexCFlightPlan,
+                IndexCallsign = CPropertyIndexRef::GlobalIndexCFlightPlan,
                 IndexOriginAirportIcao,
                 IndexDestinationAirportIcao,
                 IndexAlternateAirportIcao,

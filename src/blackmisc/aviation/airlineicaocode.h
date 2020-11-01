@@ -41,7 +41,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexAirlineDesignator = CPropertyIndex::GlobalIndexCAirlineIcaoCode,
+                IndexAirlineDesignator = CPropertyIndexRef::GlobalIndexCAirlineIcaoCode,
                 IndexIataCode,
                 IndexAirlineName,
                 IndexAirlineCountryIso,

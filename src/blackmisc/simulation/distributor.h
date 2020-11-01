@@ -41,7 +41,7 @@ namespace BlackMisc
             //! Property indexes
             enum ColumnIndex
             {
-                IndexDescription = CPropertyIndex::GlobalIndexCDistributor,
+                IndexDescription = CPropertyIndexRef::GlobalIndexCDistributor,
                 IndexAlias1,
                 IndexAlias2,
                 IndexSimulator

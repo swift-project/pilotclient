@@ -33,7 +33,7 @@ namespace BlackGui
             //! Properties by index
             enum ColumnIndex
             {
-                IndexFloatingMargins = BlackMisc::CPropertyIndex::GlobalIndexCDockWidgetSettings,
+                IndexFloatingMargins = BlackMisc::CPropertyIndexRef::GlobalIndexCDockWidgetSettings,
                 IndexFloatingFramelessMargins,
                 IndexDockedMargins,
                 IndexFrameless,

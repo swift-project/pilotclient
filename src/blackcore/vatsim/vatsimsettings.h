@@ -33,7 +33,7 @@ namespace BlackCore
             //! Properties by index
             enum ColumnIndex
             {
-                IndexInitialTime = BlackMisc::CPropertyIndex::GlobalIndexCSettingsReaders,
+                IndexInitialTime = BlackMisc::CPropertyIndexRef::GlobalIndexCSettingsReaders,
                 IndexPeriodicTime,
                 IndexNeverUpdate
             };
@@ -151,7 +151,7 @@ namespace BlackCore
             //! Properties by index
             enum ColumnIndex
             {
-                IndexRawFsdMessagesEnabled = BlackMisc::CPropertyIndex::GlobalIndexRawFsdMessageSettings,
+                IndexRawFsdMessagesEnabled = BlackMisc::CPropertyIndexRef::GlobalIndexRawFsdMessageSettings,
                 IndexFileDir,
                 IndexFileWriteMode
             };

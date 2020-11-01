@@ -39,7 +39,7 @@ namespace BlackMisc
                 //! Properties by index
                 enum ColumnIndex
                 {
-                    IndexSimulatorDirectory = CPropertyIndex::GlobalIndexCSimulatorSettings,
+                    IndexSimulatorDirectory = CPropertyIndexRef::GlobalIndexCSimulatorSettings,
                     IndexModelDirectories,
                     IndexModelExcludeDirectoryPatterns,
                     IndexComIntegration, //!< COM unit integration
@@ -524,7 +524,7 @@ namespace BlackMisc
                 //! Properties by index
                 enum ColumnIndex
                 {
-                    IndexTechnicalLogSeverity = CPropertyIndex::GlobalIndexCSimulatorMessageSettings,
+                    IndexTechnicalLogSeverity = CPropertyIndexRef::GlobalIndexCSimulatorMessageSettings,
                     IndexRelayTextMessage,
                     IndexRelayGloballyEnabled
                 };

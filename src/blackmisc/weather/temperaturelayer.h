@@ -36,7 +36,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexTemperatureLayer = BlackMisc::CPropertyIndex::GlobalIndexCTemperatureLayer,
+                IndexTemperatureLayer = BlackMisc::CPropertyIndexRef::GlobalIndexCTemperatureLayer,
                 IndexLevel,
                 IndexTemperature,
                 IndexDewPoint,

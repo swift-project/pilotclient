@@ -9,7 +9,6 @@
 //! \file
 
 #include "blackmisc/propertyindexref.h"
-#include "blackmisc/propertyindex.h"
 #include "blackmisc/verify.h"
 #include <QtGlobal>
 
@@ -72,7 +71,7 @@ namespace BlackMisc
         auto end = it + (m_begin ? m_sizeOrIndex : 1);
         for (; it != end; ++it)
         {
-            Q_ASSERT(*it >= static_cast<int>(CPropertyIndex::GlobalIndexCValueObject));
+            Q_ASSERT(*it >= static_cast<int>(CPropertyIndexRef::GlobalIndexCValueObject));
             if (!s.isEmpty()) { s.append(";"); }
             s.append(QString::number(*it));
         }

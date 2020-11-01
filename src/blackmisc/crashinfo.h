@@ -25,7 +25,7 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexUserName = CPropertyIndex::GlobalIndexCCrashInfo,
+            IndexUserName = CPropertyIndexRef::GlobalIndexCCrashInfo,
             IndexInfo,
             IndexSimulatorString,
             IndexFlightNetworkInfo

@@ -36,7 +36,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexLevel = BlackMisc::CPropertyIndex::GlobalIndexCWindLayer,
+                IndexLevel = BlackMisc::CPropertyIndexRef::GlobalIndexCWindLayer,
                 IndexDirection,
                 IndexDirectionVariable,
                 IndexSpeed,

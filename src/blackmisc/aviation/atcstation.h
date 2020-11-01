@@ -45,7 +45,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexCallsign = CPropertyIndex::GlobalIndexCAtcStation,
+                IndexCallsign = CPropertyIndexRef::GlobalIndexCAtcStation,
                 IndexCallsignString,
                 IndexCallsignStringCrossCopuled,
                 IndexController,

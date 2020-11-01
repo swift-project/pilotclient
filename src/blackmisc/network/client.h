@@ -34,7 +34,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexCapabilities = CPropertyIndex::GlobalIndexCClient,
+                IndexCapabilities = CPropertyIndexRef::GlobalIndexCClient,
                 IndexCapabilitiesString,
                 IndexModelString,
                 IndexServer,

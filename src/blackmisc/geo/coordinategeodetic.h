@@ -47,7 +47,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexLatitude = CPropertyIndex::GlobalIndexICoordinateGeodetic,
+                IndexLatitude = CPropertyIndexRef::GlobalIndexICoordinateGeodetic,
                 IndexLongitude,
                 IndexLatitudeAsString,
                 IndexLongitudeAsString,
@@ -171,7 +171,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexRelativeDistance = CPropertyIndex::GlobalIndexICoordinateWithRelativePosition,
+                IndexRelativeDistance = CPropertyIndexRef::GlobalIndexICoordinateWithRelativePosition,
                 IndexRelativeBearing
             };
 

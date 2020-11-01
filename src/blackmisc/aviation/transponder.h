@@ -46,7 +46,7 @@ namespace BlackMisc
             //! Indexes
             enum ColumnIndex
             {
-                IndexMode = CPropertyIndex::GlobalIndexCTransponder,
+                IndexMode = CPropertyIndexRef::GlobalIndexCTransponder,
                 IndexModeAsString,
                 IndexTransponderCode,
                 IndexTransponderCodeFormatted,

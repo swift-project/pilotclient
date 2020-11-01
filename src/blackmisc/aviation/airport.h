@@ -43,7 +43,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexIcao = BlackMisc::CPropertyIndex::GlobalIndexCAirport,
+                IndexIcao = BlackMisc::CPropertyIndexRef::GlobalIndexCAirport,
                 IndexLocation,
                 IndexDescriptiveName,
                 IndexPosition,

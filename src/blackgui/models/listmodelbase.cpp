@@ -107,8 +107,8 @@ namespace BlackGui
             // special cases
             switch (propertyIndexFront)
             {
-            case CPropertyIndex::GlobalIndexLineNumber: return QVariant::fromValue(row + 1);
-            case CPropertyIndex::GlobalIndexEmpty: return {};
+            case CPropertyIndexRef::GlobalIndexLineNumber: return QVariant::fromValue(row + 1);
+            case CPropertyIndexRef::GlobalIndexEmpty: return {};
             default: break; // continue here
             }
 

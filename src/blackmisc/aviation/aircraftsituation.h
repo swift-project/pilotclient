@@ -54,7 +54,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexPosition = CPropertyIndex::GlobalIndexCAircraftSituation,
+                IndexPosition = CPropertyIndexRef::GlobalIndexCAircraftSituation,
                 IndexLatitude,
                 IndexLongitude,
                 IndexAltitude,

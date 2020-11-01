@@ -26,7 +26,7 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexOrder = CPropertyIndex::GlobalIndexIOrderable,
+            IndexOrder = CPropertyIndexRef::GlobalIndexIOrderable,
             IndexOrderString
         };
 

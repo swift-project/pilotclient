@@ -35,7 +35,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexRawMessage = CPropertyIndex::GlobalIndexCRawFsdMessage,
+                IndexRawMessage = CPropertyIndexRef::GlobalIndexCRawFsdMessage,
             };
 
             //! Default constructor.

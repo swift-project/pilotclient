@@ -42,7 +42,7 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexApplication = CPropertyIndex::GlobalIndexCApplicationInfo,
+            IndexApplication = CPropertyIndexRef::GlobalIndexCApplicationInfo,
             IndexApplicationAsString,
             IndexApplicationDataPath,
             IndexCompileInfo,

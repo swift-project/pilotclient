@@ -28,7 +28,7 @@ namespace BlackCore
             //! Properties by index
             enum ColumnIndex
             {
-                IndexDBusAddress = BlackMisc::CPropertyIndex::GlobalIndexCLauncherSetup,
+                IndexDBusAddress = BlackMisc::CPropertyIndexRef::GlobalIndexCLauncherSetup,
                 IndexFramelessWindow,
                 IndexCoreMode,
                 IndexAudioMode

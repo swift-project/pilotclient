@@ -41,7 +41,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexSenderCallsign = CPropertyIndex::GlobalIndexCTextMessage,
+                IndexSenderCallsign = CPropertyIndexRef::GlobalIndexCTextMessage,
                 IndexRecipientCallsign,
                 IndexRecipientCallsignOrFrequency,
                 IndexMessage

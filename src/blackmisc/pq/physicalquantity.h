@@ -62,7 +62,7 @@ namespace BlackMisc
             //! Index
             enum ColumnIndex
             {
-                IndexUnit = CPropertyIndex::GlobalIndexCPhysicalQuantity,
+                IndexUnit = CPropertyIndexRef::GlobalIndexCPhysicalQuantity,
                 IndexValue,
                 IndexValueRounded0DigitsWithUnit,
                 IndexValueRounded1DigitsWithUnit,

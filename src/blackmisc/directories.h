@@ -30,7 +30,7 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexDirFlightPlan = CPropertyIndex::GlobalIndexCDirectories,
+            IndexDirFlightPlan = CPropertyIndexRef::GlobalIndexCDirectories,
             IndexDirFlightPlanOrDefault,
             IndexDirLastViewJson,
             IndexDirLastViewJsonOrDefault,

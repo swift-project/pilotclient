@@ -44,7 +44,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexType = CPropertyIndex::GlobalIndexCInformationMessage,
+                IndexType = CPropertyIndexRef::GlobalIndexCInformationMessage,
                 IndexMessage,
             };
 

@@ -36,7 +36,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexBase = BlackMisc::CPropertyIndex::GlobalIndexCVisibilityLayer,
+                IndexBase = BlackMisc::CPropertyIndexRef::GlobalIndexCVisibilityLayer,
                 IndexTop,
                 IndexVisibility,
             };

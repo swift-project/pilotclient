@@ -39,7 +39,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexDescription = CPropertyIndex::GlobalIndexCLivery,
+                IndexDescription = CPropertyIndexRef::GlobalIndexCLivery,
                 IndexAirlineIcaoCode,
                 IndexCombinedCode,
                 IndexColorFuselage,

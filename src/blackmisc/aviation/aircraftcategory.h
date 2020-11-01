@@ -38,7 +38,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexName = CPropertyIndex::GlobalIndexCAircraftCategory,
+                IndexName = CPropertyIndexRef::GlobalIndexCAircraftCategory,
                 IndexDescription,
                 IndexLevelString,
                 IndexLevelStringAndName,

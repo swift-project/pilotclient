@@ -108,7 +108,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexMatchingAlgorithm = CPropertyIndex::GlobalIndexCAircraftMatcherSetup,
+                IndexMatchingAlgorithm = CPropertyIndexRef::GlobalIndexCAircraftMatcherSetup,
                 IndexMatchingMode,
                 IndexForceMode,
                 IndexPickStrategy,

@@ -29,7 +29,7 @@ namespace BlackMisc
                 //! Properties by index
                 enum ColumnIndex
                 {
-                    IndexAllowExclude = CPropertyIndex::GlobalIndexCSimulatorSettings
+                    IndexAllowExclude = CPropertyIndexRef::GlobalIndexCSimulatorSettings
                 };
 
                 //! Default constructor

@@ -33,7 +33,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexIdentifier = CPropertyIndex::GlobalIndexCSettingKeyboardHotkey,
+                IndexIdentifier = CPropertyIndexRef::GlobalIndexCSettingKeyboardHotkey,
                 IndexIdentifierAsString,
                 IndexCombination,
                 IndexCombinationAsString,

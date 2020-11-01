@@ -119,7 +119,7 @@ namespace BlackGui
             static CColumn standardString(const QString &headerName, const QString &toolTip, const BlackMisc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
 
             //! Get a standard string object formatted column
-            static CColumn orderColumn(const BlackMisc::CPropertyIndex &propertyIndex = BlackMisc::CPropertyIndex::GlobalIndexIOrderable, int alignment = CDefaultFormatter::alignRightVCenter());
+            static CColumn orderColumn(const BlackMisc::CPropertyIndex &propertyIndex = BlackMisc::CPropertyIndexRef::GlobalIndexIOrderable, int alignment = CDefaultFormatter::alignRightVCenter());
 
             //! Get a standard integer value formatted column
             static CColumn standardInteger(const QString &headerName, const QString &toolTip, const BlackMisc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignRightVCenter());
