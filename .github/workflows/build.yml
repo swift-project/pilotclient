@@ -11,7 +11,7 @@ env:
   do_vatsim_key: ${{ github.event_name == 'push' }}
   do_symbols:    ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/heads/develop/') }}
   eol_months:    12
-  qt_version:    5.15.0
+  qt_version:    5.15.2
   bitrock_version: qt-professional-20.6.0
   bitrock_url:     https://clients.bitrock.com/installbuilder
 
