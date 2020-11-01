@@ -92,20 +92,20 @@ namespace BlackMisc
         return QStringLiteral("unknown");
     }
 
-    CVariant CPlatform::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+    QVariant CPlatform::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return CVariant::from(*this); }
+        if (index.isMyself()) { return QVariant::fromValue(*this); }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexPlatform: return CVariant::fromValue(m_platform);
+        case IndexPlatform: return QVariant::fromValue(m_platform);
         default: return CValueObject::propertyByIndex(index);
         }
     }
 
-    void CPlatform::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+    void CPlatform::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.to<CPlatform>(); return; }
+        if (index.isMyself()) { (*this) = variant.value<CPlatform>(); return; }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -114,7 +114,7 @@ namespace BlackMisc
         }
     }
 
-    int CPlatform::comparePropertyByIndex(const CPropertyIndex &index, const CPlatform &compareValue) const
+    int CPlatform::comparePropertyByIndex(CPropertyIndexRef index, const CPlatform &compareValue) const
     {
         if (index.isMyself()) { return Compare::compare(m_platform, compareValue.m_platform); }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();

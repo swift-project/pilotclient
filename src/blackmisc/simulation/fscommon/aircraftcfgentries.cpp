@@ -179,55 +179,55 @@ namespace BlackMisc
                 return {};
             }
 
-            CVariant CAircraftCfgEntries::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+            QVariant CAircraftCfgEntries::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
             {
-                if (index.isMyself()) { return CVariant::from(*this); }
+                if (index.isMyself()) { return QVariant::fromValue(*this); }
                 if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
                 ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexEntryIndex: return CVariant::from(m_index);
-                case IndexFileName: return CVariant::from(m_fileName);
-                case IndexTitle: return CVariant::from(m_title);
-                case IndexAirline: return CVariant::from(m_atcAirline);
-                case IndexAtcType: return CVariant::from(m_atcType);
-                case IndexAtcModel: return CVariant::from(m_atcModel);
-                case IndexAtcIdColor: return CVariant::from(m_atcIdColor);
-                case IndexParkingCode: return CVariant::from(m_atcParkingCode);
-                case IndexDescription: return CVariant::from(m_description);
-                case IndexUiType: return CVariant::from(m_uiType);
-                case IndexUiManufacturer: return CVariant::from(m_uiManufacturer);
-                case IndexUiVariation: return CVariant::from(m_uiVariation);
-                case IndexTexture: return CVariant::from(m_texture);
-                case IndexSimulatorName: return CVariant::from(m_simName);
-                case IndexCreatedBy: return CVariant::from(m_createdBy);
-                case IndexRotorcraft: return CVariant::from(m_rotorcraft);
+                case IndexEntryIndex: return QVariant::fromValue(m_index);
+                case IndexFileName: return QVariant::fromValue(m_fileName);
+                case IndexTitle: return QVariant::fromValue(m_title);
+                case IndexAirline: return QVariant::fromValue(m_atcAirline);
+                case IndexAtcType: return QVariant::fromValue(m_atcType);
+                case IndexAtcModel: return QVariant::fromValue(m_atcModel);
+                case IndexAtcIdColor: return QVariant::fromValue(m_atcIdColor);
+                case IndexParkingCode: return QVariant::fromValue(m_atcParkingCode);
+                case IndexDescription: return QVariant::fromValue(m_description);
+                case IndexUiType: return QVariant::fromValue(m_uiType);
+                case IndexUiManufacturer: return QVariant::fromValue(m_uiManufacturer);
+                case IndexUiVariation: return QVariant::fromValue(m_uiVariation);
+                case IndexTexture: return QVariant::fromValue(m_texture);
+                case IndexSimulatorName: return QVariant::fromValue(m_simName);
+                case IndexCreatedBy: return QVariant::fromValue(m_createdBy);
+                case IndexRotorcraft: return QVariant::fromValue(m_rotorcraft);
                 default: return CValueObject::propertyByIndex(index);
                 }
             }
 
-            void CAircraftCfgEntries::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+            void CAircraftCfgEntries::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
             {
-                if (index.isMyself()) { (*this) = variant.to<CAircraftCfgEntries>(); return; }
+                if (index.isMyself()) { (*this) = variant.value<CAircraftCfgEntries>(); return; }
                 if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
                 ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
                 case IndexEntryIndex: this->setIndex(variant.toInt()); break;
-                case IndexFileName: this->setFileName(variant.toQString()); break;
-                case IndexTitle: this->setTitle(variant.toQString()); break;
+                case IndexFileName: this->setFileName(variant.toString()); break;
+                case IndexTitle: this->setTitle(variant.toString()); break;
                 case IndexAirline: this->setTitle(m_atcAirline); break;
-                case IndexAtcType: this->setAtcType(variant.toQString()); break;
-                case IndexAtcModel: this->setAtcModel(variant.toQString()); break;
-                case IndexAtcIdColor: this->setAtcIdColor(variant.toQString()); break;
-                case IndexParkingCode: this->setAtcParkingCode(variant.toQString()); break;
-                case IndexDescription: this->setDescription(variant.toQString()); break;
-                case IndexUiType: this->setUiType(variant.toQString()); break;
-                case IndexUiVariation: this->setUiVariation(variant.toQString()); break;
-                case IndexUiManufacturer: this->setUiManufacturer(variant.toQString()); break;
-                case IndexTexture: this->setTexture(variant.toQString()); break;
-                case IndexSimulatorName: this->setSimName(variant.toQString()); break;
-                case IndexCreatedBy: this->setCreatedBy(variant.toQString()); break;
+                case IndexAtcType: this->setAtcType(variant.toString()); break;
+                case IndexAtcModel: this->setAtcModel(variant.toString()); break;
+                case IndexAtcIdColor: this->setAtcIdColor(variant.toString()); break;
+                case IndexParkingCode: this->setAtcParkingCode(variant.toString()); break;
+                case IndexDescription: this->setDescription(variant.toString()); break;
+                case IndexUiType: this->setUiType(variant.toString()); break;
+                case IndexUiVariation: this->setUiVariation(variant.toString()); break;
+                case IndexUiManufacturer: this->setUiManufacturer(variant.toString()); break;
+                case IndexTexture: this->setTexture(variant.toString()); break;
+                case IndexSimulatorName: this->setSimName(variant.toString()); break;
+                case IndexCreatedBy: this->setCreatedBy(variant.toString()); break;
                 case IndexRotorcraft: this->setRotorcraft(variant.toBool()); break;
                 default:
                     CValueObject::setPropertyByIndex(index, variant);

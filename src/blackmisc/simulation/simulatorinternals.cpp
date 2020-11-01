@@ -94,24 +94,24 @@ namespace BlackMisc
             return m_data.toQString(i18n);
         }
 
-        CVariant CSimulatorInternals::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CSimulatorInternals::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexData: return CVariant::from(m_data);
+            case IndexData: return QVariant::fromValue(m_data);
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CSimulatorInternals::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CSimulatorInternals::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CSimulatorInternals>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CSimulatorInternals>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexData: m_data = variant.to<CNameVariantPairList>(); break;
+            case IndexData: m_data = variant.value<CNameVariantPairList>(); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }

@@ -241,27 +241,27 @@ namespace BlackMisc
             return newRealName;
         }
 
-        CVariant CUser::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CUser::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexEmail: return CVariant(m_email);
-            case IndexId: return CVariant(m_id);
-            case IndexId7Digit:  return CVariant(this->get7DigitId());
-            case IndexIdInteger: return CVariant::fromValue(this->getIntegerId());
-            case IndexPassword:  return CVariant(m_password);
-            case IndexRealName:  return CVariant(m_realname);
+            case IndexEmail: return QVariant(m_email);
+            case IndexId: return QVariant(m_id);
+            case IndexId7Digit:  return QVariant(this->get7DigitId());
+            case IndexIdInteger: return QVariant::fromValue(this->getIntegerId());
+            case IndexPassword:  return QVariant(m_password);
+            case IndexRealName:  return QVariant(m_realname);
             case IndexHomebase:  return m_homebase.propertyByIndex(index.copyFrontRemoved());
             case IndexCallsign:  return m_callsign.propertyByIndex(index.copyFrontRemoved());
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CUser::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CUser::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CUser>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CUser>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -277,7 +277,7 @@ namespace BlackMisc
             }
         }
 
-        int CUser::comparePropertyByIndex(const CPropertyIndex &index, const CUser &compareValue) const
+        int CUser::comparePropertyByIndex(CPropertyIndexRef index, const CUser &compareValue) const
         {
             if (index.isMyself()) { return this->getRealName().compare(compareValue.getRealName(), Qt::CaseInsensitive); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();

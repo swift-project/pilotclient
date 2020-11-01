@@ -87,24 +87,24 @@ namespace BlackMisc
                    " URL: " + m_url.getFullUrl();
         }
 
-        CVariant CRemoteFile::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CRemoteFile::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexName: return CVariant::fromValue(m_name);
-            case IndexDescription: return CVariant::fromValue(m_description);
-            case IndexUrl: return CVariant::fromValue(m_url);
-            case IndexSize: return CVariant::fromValue(m_size);
+            case IndexName: return QVariant::fromValue(m_name);
+            case IndexDescription: return QVariant::fromValue(m_description);
+            case IndexUrl: return QVariant::fromValue(m_url);
+            case IndexSize: return QVariant::fromValue(m_size);
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CRemoteFile::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CRemoteFile::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CRemoteFile>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CRemoteFile>(); return; }
             if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)

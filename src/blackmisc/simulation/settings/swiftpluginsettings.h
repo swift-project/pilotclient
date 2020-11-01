@@ -67,10 +67,10 @@ namespace BlackMisc
                 QString convertToQString(bool i18n = false) const;
 
                 //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-                BlackMisc::CVariant propertyByIndex(const CPropertyIndex &index) const;
+                QVariant propertyByIndex(CPropertyIndexRef index) const;
 
                 //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-                void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+                void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
             private:
                 CSimulatorInfo m_emulatedSimulator { CSimulatorInfo::P3D }; // simulator with default value

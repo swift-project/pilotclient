@@ -129,10 +129,10 @@ namespace BlackMisc
             PhysicalQuantities::CAngle calculateBearing(const ICoordinateGeodetic &otherCoordinate) const;
 
             //! \copydoc Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const CPropertyIndex &index) const;
+            QVariant propertyByIndex(CPropertyIndexRef index) const;
 
             //! \copydoc Mixin::Index::comparePropertyByIndex
-            int comparePropertyByIndex(const CPropertyIndex &index, const ICoordinateGeodetic &compareValue) const;
+            int comparePropertyByIndex(CPropertyIndexRef index, const ICoordinateGeodetic &compareValue) const;
 
             //! \copydoc Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
@@ -149,7 +149,7 @@ namespace BlackMisc
 
         protected:
             //! Can given index be handled?
-            static bool canHandleIndex(const CPropertyIndex &index);
+            static bool canHandleIndex(CPropertyIndexRef index);
         };
 
         //! Great circle distance between points
@@ -200,13 +200,13 @@ namespace BlackMisc
             PhysicalQuantities::CLength calculcateAndUpdateRelativeDistanceAndBearing(const Geo::ICoordinateGeodetic &position);
 
             //! \copydoc Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const CPropertyIndex &index) const;
+            QVariant propertyByIndex(CPropertyIndexRef index) const;
 
             //! \copydoc Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
             //! \copydoc Mixin::Index::comparePropertyByIndex
-            int comparePropertyByIndex(const CPropertyIndex &index, const ICoordinateWithRelativePosition &compareValue) const;
+            int comparePropertyByIndex(CPropertyIndexRef index, const ICoordinateWithRelativePosition &compareValue) const;
 
             //! \copydoc Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
@@ -216,7 +216,7 @@ namespace BlackMisc
             ICoordinateWithRelativePosition();
 
             //! Can given index be handled?
-            static bool canHandleIndex(const CPropertyIndex &index);
+            static bool canHandleIndex(CPropertyIndexRef index);
 
             PhysicalQuantities::CAngle  m_relativeBearing  { 0, nullptr }; //!< temporary stored value
             PhysicalQuantities::CLength m_relativeDistance { 0, nullptr }; //!< temporary stored value
@@ -269,13 +269,13 @@ namespace BlackMisc
             virtual std::array<double, 3> normalVectorDouble() const override;
 
             //! \copydoc Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const CPropertyIndex &index) const;
+            QVariant propertyByIndex(CPropertyIndexRef index) const;
 
             //! \copydoc Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
             //! \copydoc Mixin::Index::setPropertyByIndex
-            int comparePropertyByIndex(const CPropertyIndex &index, const CCoordinateGeodetic &compareValue) const;
+            int comparePropertyByIndex(CPropertyIndexRef index, const CCoordinateGeodetic &compareValue) const;
 
             //! Switch unit of height
             CCoordinateGeodetic &switchUnit(const PhysicalQuantities::CLengthUnit &unit);

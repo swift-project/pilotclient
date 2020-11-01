@@ -116,25 +116,25 @@ namespace BlackMisc
         }
 
         template <class AVIO>
-        CVariant CModulator<AVIO>::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CModulator<AVIO>::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*derived()); }
+            if (index.isMyself()) { return QVariant::fromValue(*derived()); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexActiveFrequency:  return this->getFrequencyActive().propertyByIndex(index.copyFrontRemoved());
             case IndexStandbyFrequency: return this->getFrequencyStandby().propertyByIndex(index.copyFrontRemoved());
-            case IndexEnabledTransmit:  return CVariant::from(this->isTransmitEnabled());
-            case IndexEnabledReceive:   return CVariant::from(this->isReceiveEnabled());
-            case IndexTransmitVolume:   return CVariant::from(this->getVolumeTransmit());
-            case IndexReceiveVolume:    return CVariant::from(this->getVolumeReceive());
+            case IndexEnabledTransmit:  return QVariant::fromValue(this->isTransmitEnabled());
+            case IndexEnabledReceive:   return QVariant::fromValue(this->isReceiveEnabled());
+            case IndexTransmitVolume:   return QVariant::fromValue(this->getVolumeTransmit());
+            case IndexReceiveVolume:    return QVariant::fromValue(this->getVolumeReceive());
             default:
                 return CValueObject<CModulator<AVIO>>::propertyByIndex(index);
             }
         }
 
         template <class AVIO>
-        void CModulator<AVIO>::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CModulator<AVIO>::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
             if (index.isMyself()) { Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong index to base template"); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -153,7 +153,7 @@ namespace BlackMisc
         }
 
         template <class AVIO>
-        int CModulator<AVIO>::comparePropertyByIndex(const CPropertyIndex &index, const AVIO &compareValue) const
+        int CModulator<AVIO>::comparePropertyByIndex(CPropertyIndexRef index, const AVIO &compareValue) const
         {
             if (index.isMyself()) { return m_frequencyActive.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyActive); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();

@@ -366,28 +366,28 @@ namespace BlackMisc
             return m_position.normalVectorDouble();
         }
 
-        CVariant CAtcStation::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CAtcStation::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexBookedFrom:  return CVariant::from(m_bookedFromUtc);
-            case IndexBookedUntil: return CVariant::from(m_bookedUntilUtc);
+            case IndexBookedFrom:  return QVariant::fromValue(m_bookedFromUtc);
+            case IndexBookedUntil: return QVariant::fromValue(m_bookedUntilUtc);
             case IndexCallsign:    return m_callsign.propertyByIndex(index.copyFrontRemoved());
             case IndexCallsignString:             return this->getCallsignAsString();
             case IndexCallsignStringCrossCopuled: return this->getCallsignAsStringCrossCoupled();
             case IndexController:  return m_controller.propertyByIndex(index.copyFrontRemoved());
             case IndexFrequency:   return m_frequency.propertyByIndex(index.copyFrontRemoved());
-            case IndexIsOnline:    return CVariant::from(m_isOnline);
+            case IndexIsOnline:    return QVariant::fromValue(m_isOnline);
             case IndexLatitude:    return this->latitude().propertyByIndex(index.copyFrontRemoved());
             case IndexLongitude:   return this->longitude().propertyByIndex(index.copyFrontRemoved());
             case IndexPosition:    return m_position.propertyByIndex(index.copyFrontRemoved());
             case IndexRange:       return m_range.propertyByIndex(index.copyFrontRemoved());
-            case IndexIsInRange:   return CVariant::fromValue(isInRange());
+            case IndexIsInRange:   return QVariant::fromValue(isInRange());
             case IndexAtis:        return m_atis.propertyByIndex(index.copyFrontRemoved());
             case IndexMetar:       return m_metar.propertyByIndex(index.copyFrontRemoved());
-            case IndexIsAfvCrossCoupled: return CVariant::from(m_isAfvCrossCoupled);
+            case IndexIsAfvCrossCoupled: return QVariant::fromValue(m_isAfvCrossCoupled);
             default:
                 return (ICoordinateWithRelativePosition::canHandleIndex(index)) ?
                        ICoordinateWithRelativePosition::propertyByIndex(index) :
@@ -395,9 +395,9 @@ namespace BlackMisc
             }
         }
 
-        void CAtcStation::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CAtcStation::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CAtcStation>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CAtcStation>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -415,7 +415,7 @@ namespace BlackMisc
             case IndexCallsignString:
             case IndexCallsignStringCrossCopuled:
                 {
-                    const QString cs = variant.toQString();
+                    const QString cs = variant.toString();
                     *this = CAtcStation();
                     this->setAfvCrossCoupled(cs.startsWith('*'));
                 }
@@ -433,7 +433,7 @@ namespace BlackMisc
             }
         }
 
-        int CAtcStation::comparePropertyByIndex(const CPropertyIndex &index, const CAtcStation &compareValue) const
+        int CAtcStation::comparePropertyByIndex(CPropertyIndexRef index, const CAtcStation &compareValue) const
         {
             if (index.isMyself()) { return this->getCallsign().comparePropertyByIndex(CPropertyIndexRef::empty(), compareValue.getCallsign()); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();

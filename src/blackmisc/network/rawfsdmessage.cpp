@@ -50,22 +50,22 @@ namespace BlackMisc
             return allPacketTypes;
         }
 
-        CVariant CRawFsdMessage::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CRawFsdMessage::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexRawMessage: return CVariant::fromValue(m_rawMessage);
+            case IndexRawMessage: return QVariant::fromValue(m_rawMessage);
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CRawFsdMessage::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CRawFsdMessage::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CRawFsdMessage>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CRawFsdMessage>(); return; }
             if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();

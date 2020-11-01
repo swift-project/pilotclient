@@ -63,39 +63,39 @@ namespace BlackMisc
         return m_dirFlightPlan;
     }
 
-    CVariant CDirectories::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+    QVariant CDirectories::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return CVariant::from(*this); }
+        if (index.isMyself()) { return QVariant::fromValue(*this); }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexDirFlightPlan:             return CVariant::fromValue(m_dirFlightPlan);
-        case IndexDirFlightPlanOrDefault:    return CVariant::fromValue(this->getFlightPlanDirectoryOrDefault());
-        case IndexDirLastViewJson:           return CVariant::fromValue(m_dirLastViewJson);
-        case IndexDirLastViewJsonOrDefault:  return CVariant::fromValue(this->getLastViewJsonDirectoryOrDefault());
-        case IndexDirLastModelJson:          return CVariant::fromValue(m_dirLastModelStashJson);
-        case IndexDirLastModelJsonOrDefault: return CVariant::fromValue(this->getLastModelDirectoryOrDefault());
-        case IndexDirLastModelStashJson:     return CVariant::fromValue(m_dirLastModelStashJson);
-        case IndexDirMatchingScript:         return CVariant::fromValue(this->getMatchingScriptDirectoryOrDefault());
-        case IndexDirLastModelStashJsonOrDefault: return CVariant::fromValue(this->getLastModelStashDirectoryOrDefault());
+        case IndexDirFlightPlan:             return QVariant::fromValue(m_dirFlightPlan);
+        case IndexDirFlightPlanOrDefault:    return QVariant::fromValue(this->getFlightPlanDirectoryOrDefault());
+        case IndexDirLastViewJson:           return QVariant::fromValue(m_dirLastViewJson);
+        case IndexDirLastViewJsonOrDefault:  return QVariant::fromValue(this->getLastViewJsonDirectoryOrDefault());
+        case IndexDirLastModelJson:          return QVariant::fromValue(m_dirLastModelStashJson);
+        case IndexDirLastModelJsonOrDefault: return QVariant::fromValue(this->getLastModelDirectoryOrDefault());
+        case IndexDirLastModelStashJson:     return QVariant::fromValue(m_dirLastModelStashJson);
+        case IndexDirMatchingScript:         return QVariant::fromValue(this->getMatchingScriptDirectoryOrDefault());
+        case IndexDirLastModelStashJsonOrDefault: return QVariant::fromValue(this->getLastModelStashDirectoryOrDefault());
         default: return CValueObject::propertyByIndex(index);
         }
     }
 
-    void CDirectories::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+    void CDirectories::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.to<CDirectories>(); return; }
+        if (index.isMyself()) { (*this) = variant.value<CDirectories>(); return; }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexDirFlightPlan: this->setFlightPlanDirectory(variant.toQString()); break;
+        case IndexDirFlightPlan: this->setFlightPlanDirectory(variant.toString()); break;
         case IndexDirLastViewJsonOrDefault:
-        case IndexDirLastViewJson: this->setLastViewJsonDirectory(variant.toQString()); break;
+        case IndexDirLastViewJson: this->setLastViewJsonDirectory(variant.toString()); break;
         case IndexDirLastModelJsonOrDefault:
-        case IndexDirLastModelJson: this->setLastModelDirectory(variant.toQString()); break;
+        case IndexDirLastModelJson: this->setLastModelDirectory(variant.toString()); break;
         case IndexDirLastModelStashJsonOrDefault:
-        case IndexDirLastModelStashJson: this->setLastModelStashDirectory(variant.toQString()); break;
-        case IndexDirMatchingScript: this->setMatchingScriptDirectory(variant.toQString()); break;
+        case IndexDirLastModelStashJson: this->setLastModelStashDirectory(variant.toString()); break;
+        case IndexDirMatchingScript: this->setMatchingScriptDirectory(variant.toString()); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }

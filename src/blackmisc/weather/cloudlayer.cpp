@@ -53,32 +53,32 @@ namespace BlackMisc
             return None;
         }
 
-        CVariant CCloudLayer::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CCloudLayer::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexBase:
-                return CVariant::fromValue(m_base);
+                return QVariant::fromValue(m_base);
             case IndexTop:
-                return CVariant::fromValue(m_top);
+                return QVariant::fromValue(m_top);
             case IndexPrecipitationRate:
-                return CVariant::fromValue(m_precipitationRate);
+                return QVariant::fromValue(m_precipitationRate);
             case IndexPrecipitation:
-                return CVariant::fromValue(m_precipitation);
+                return QVariant::fromValue(m_precipitation);
             case IndexClouds:
-                return CVariant::fromValue(m_clouds);
+                return QVariant::fromValue(m_clouds);
             case IndexCoveragePercent:
-                return CVariant::fromValue(m_coveragePercent);
+                return QVariant::fromValue(m_coveragePercent);
             default:
                 return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CCloudLayer::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CCloudLayer::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CCloudLayer>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CCloudLayer>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

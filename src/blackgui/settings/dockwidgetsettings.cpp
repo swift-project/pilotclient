@@ -102,42 +102,42 @@ namespace BlackGui
             return s;
         }
 
-        CVariant CDockWidgetSettings::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CDockWidgetSettings::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexFloatingMargins:
-                return CVariant::fromValue(m_floatingMargins);
+                return QVariant::fromValue(m_floatingMargins);
             case IndexFloatingFramelessMargins:
-                return CVariant::fromValue(m_floatingFramelessMargins);
+                return QVariant::fromValue(m_floatingFramelessMargins);
             case IndexDockedMargins:
-                return CVariant::fromValue(m_dockedMargins);
+                return QVariant::fromValue(m_dockedMargins);
             case IndexFrameless:
-                return CVariant::fromValue(m_floating);
+                return QVariant::fromValue(m_floating);
             case IndexFloating:
-                return CVariant::fromValue(m_floating);
+                return QVariant::fromValue(m_floating);
             default:
                 return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CDockWidgetSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CDockWidgetSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CDockWidgetSettings>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CDockWidgetSettings>(); return; }
 
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexFloatingMargins:
-                m_floatingMargins = variant.toQString();
+                m_floatingMargins = variant.toString();
                 break;
             case IndexFloatingFramelessMargins:
-                m_floatingFramelessMargins = variant.toQString();
+                m_floatingFramelessMargins = variant.toString();
                 break;
             case IndexDockedMargins:
-                m_dockedMargins = variant.toQString();
+                m_dockedMargins = variant.toString();
                 break;
             case IndexFloating:
                 m_floating = variant.toBool();

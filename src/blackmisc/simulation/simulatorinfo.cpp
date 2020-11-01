@@ -155,7 +155,7 @@ namespace BlackMisc
             return this->matchesAny(otherInfo);
         }
 
-        int CSimulatorInfo::comparePropertyByIndex(const CPropertyIndex &index, const CSimulatorInfo &compareValue) const
+        int CSimulatorInfo::comparePropertyByIndex(CPropertyIndexRef index, const CSimulatorInfo &compareValue) const
         {
             Q_UNUSED(index)
             return Compare::compare(m_simulator, compareValue.m_simulator);

@@ -147,9 +147,9 @@ namespace BlackMisc
             m_radius = majorAirportRadius();
         }
 
-        CVariant CElevationPlane::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CElevationPlane::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -159,9 +159,9 @@ namespace BlackMisc
             return CCoordinateGeodetic::propertyByIndex(index);
         }
 
-        void CElevationPlane::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CElevationPlane::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CElevationPlane>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CElevationPlane>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -170,7 +170,7 @@ namespace BlackMisc
             }
         }
 
-        int CElevationPlane::comparePropertyByIndex(const CPropertyIndex &index, const CElevationPlane &elevationPlane) const
+        int CElevationPlane::comparePropertyByIndex(CPropertyIndexRef index, const CElevationPlane &elevationPlane) const
         {
             Q_UNUSED(index)
             return this->getAltitude().compare(elevationPlane.getAltitude());

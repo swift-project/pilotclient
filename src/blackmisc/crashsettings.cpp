@@ -24,22 +24,22 @@ namespace BlackMisc
             return QStringLiteral("{ %1, %2 }").arg(boolToYesNo(this->isEnabled()), boolToYesNo(this->withPrivacyInfo()));
         }
 
-        CVariant CCrashSettings::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CCrashSettings::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexEnabled: return CVariant::fromValue(this->isEnabled());
-            case IndexPrivateInfo: return CVariant::fromValue(this->withPrivacyInfo());
+            case IndexEnabled: return QVariant::fromValue(this->isEnabled());
+            case IndexPrivateInfo: return QVariant::fromValue(this->withPrivacyInfo());
             default: break;
             }
             return CValueObject::propertyByIndex(index);
         }
 
-        void CCrashSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CCrashSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CCrashSettings>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CCrashSettings>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -49,7 +49,7 @@ namespace BlackMisc
             }
         }
 
-        int CCrashSettings::comparePropertyByIndex(const CPropertyIndex &index, const CCrashSettings &compareValue) const
+        int CCrashSettings::comparePropertyByIndex(CPropertyIndexRef index, const CCrashSettings &compareValue) const
         {
             if (index.isMyself()) { return this->convertToQString().compare(compareValue.convertToQString()); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();

@@ -352,9 +352,9 @@ namespace BlackMisc
             return temp;
         }
 
-        CVariant CLivery::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CLivery::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -362,31 +362,31 @@ namespace BlackMisc
             case IndexAirlineIcaoCode: return m_airline.propertyByIndex(index.copyFrontRemoved());
             case IndexColorFuselage:   return m_colorFuselage.propertyByIndex(index.copyFrontRemoved());;
             case IndexColorTail:       return m_colorTail.propertyByIndex(index.copyFrontRemoved());
-            case IndexDescription:     return CVariant::fromValue(m_description);
-            case IndexCombinedCode:    return CVariant::fromValue(m_combinedCode);
-            case IndexIsMilitary:      return CVariant::fromValue(m_military);
+            case IndexDescription:     return QVariant::fromValue(m_description);
+            case IndexCombinedCode:    return QVariant::fromValue(m_combinedCode);
+            case IndexIsMilitary:      return QVariant::fromValue(m_military);
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CLivery::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CLivery::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CLivery>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CLivery>(); return; }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDescription:     m_description = variant.toQString(false); break;
+            case IndexDescription:     m_description = variant.toString(); break;
             case IndexAirlineIcaoCode: m_airline.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexColorFuselage:   m_colorFuselage.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexColorTail:       m_colorTail.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexCombinedCode:    this->setCombinedCode(variant.toQString(false)); break;
+            case IndexCombinedCode:    this->setCombinedCode(variant.toString()); break;
             case IndexIsMilitary:      this->setMilitary(variant.toBool()); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
 
-        int CLivery::comparePropertyByIndex(const CPropertyIndex &index, const CLivery &compareValue) const
+        int CLivery::comparePropertyByIndex(CPropertyIndexRef index, const CLivery &compareValue) const
         {
             if (index.isMyself()) { return this->getCombinedCode().compare(compareValue.getCombinedCode()); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);}

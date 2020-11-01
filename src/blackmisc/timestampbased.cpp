@@ -179,38 +179,38 @@ namespace BlackMisc
         return (index >= static_cast<int>(IndexUtcTimestamp)) && (index <= static_cast<int>(IndexMSecsSinceEpoch));
     }
 
-    bool ITimestampBased::canHandleIndex(const CPropertyIndex &index)
+    bool ITimestampBased::canHandleIndex(CPropertyIndexRef index)
     {
         if (index.isEmpty()) { return false; }
         const int i = index.frontCasted<int>();
         return isAnyTimestampIndex(i);
     }
 
-    CVariant ITimestampBased::propertyByIndex(const CPropertyIndex &index) const
+    QVariant ITimestampBased::propertyByIndex(CPropertyIndexRef index) const
     {
         if (!index.isEmpty())
         {
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexUtcTimestamp:                 return CVariant::fromValue(this->getUtcTimestamp());
-            case IndexMSecsSinceEpoch:              return CVariant::fromValue(this->getMSecsSinceEpoch());
-            case IndexUtcTimestampFormattedDhms:    return CVariant::fromValue(this->getFormattedUtcTimestampDhms());
-            case IndexUtcTimestampFormattedHm:      return CVariant::fromValue(this->getFormattedUtcTimestampHm());
-            case IndexUtcTimestampFormattedHms:     return CVariant::fromValue(this->getFormattedUtcTimestampHms());
-            case IndexUtcTimestampFormattedYmdhms:  return CVariant::fromValue(this->getFormattedUtcTimestampYmdhms());
-            case IndexUtcTimestampFormattedYmdhmsz: return CVariant::fromValue(this->getFormattedUtcTimestampYmdhmsz());
-            case IndexUtcTimestampFormattedMdhms:   return CVariant::fromValue(this->getFormattedUtcTimestampMdhms());
-            case IndexUtcTimestampFormattedMdhmsz:  return CVariant::fromValue(this->getFormattedUtcTimestampMdhmsz());
+            case IndexUtcTimestamp:                 return QVariant::fromValue(this->getUtcTimestamp());
+            case IndexMSecsSinceEpoch:              return QVariant::fromValue(this->getMSecsSinceEpoch());
+            case IndexUtcTimestampFormattedDhms:    return QVariant::fromValue(this->getFormattedUtcTimestampDhms());
+            case IndexUtcTimestampFormattedHm:      return QVariant::fromValue(this->getFormattedUtcTimestampHm());
+            case IndexUtcTimestampFormattedHms:     return QVariant::fromValue(this->getFormattedUtcTimestampHms());
+            case IndexUtcTimestampFormattedYmdhms:  return QVariant::fromValue(this->getFormattedUtcTimestampYmdhms());
+            case IndexUtcTimestampFormattedYmdhmsz: return QVariant::fromValue(this->getFormattedUtcTimestampYmdhmsz());
+            case IndexUtcTimestampFormattedMdhms:   return QVariant::fromValue(this->getFormattedUtcTimestampMdhms());
+            case IndexUtcTimestampFormattedMdhmsz:  return QVariant::fromValue(this->getFormattedUtcTimestampMdhmsz());
             default: break;
             }
         }
         const QString m = QStringLiteral("Cannot handle index %1").arg(index.toQString());
         BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
-        return CVariant::fromValue(m);
+        return QVariant::fromValue(m);
     }
 
-    void ITimestampBased::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+    void ITimestampBased::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
         if (!index.isEmpty())
         {
@@ -218,14 +218,14 @@ namespace BlackMisc
             switch (i)
             {
             case IndexUtcTimestamp: this->setUtcTimestamp(variant.toDateTime()); return;
-            case IndexMSecsSinceEpoch: this->setMSecsSinceEpoch(variant.toQInt64()); return;
+            case IndexMSecsSinceEpoch: this->setMSecsSinceEpoch(variant.toLongLong()); return;
             case IndexUtcTimestampFormattedYmdhms:
             case IndexUtcTimestampFormattedYmdhmsz:
             case IndexUtcTimestampFormattedHm:
             case IndexUtcTimestampFormattedHms:
             case IndexUtcTimestampFormattedDhms:
                 {
-                    const QDateTime dt = fromStringUtc(variant.toQString());
+                    const QDateTime dt = fromStringUtc(variant.toString());
                     m_timestampMSecsSinceEpoch = dt.toMSecsSinceEpoch();
                 }
                 return;
@@ -236,7 +236,7 @@ namespace BlackMisc
         BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
     }
 
-    int ITimestampBased::comparePropertyByIndex(const CPropertyIndex &index, const ITimestampBased &compareValue) const
+    int ITimestampBased::comparePropertyByIndex(CPropertyIndexRef index, const ITimestampBased &compareValue) const
     {
         Q_UNUSED(index);
         return Compare::compare(m_timestampMSecsSinceEpoch, compareValue.m_timestampMSecsSinceEpoch);
@@ -286,7 +286,7 @@ namespace BlackMisc
         return this->getAdjustedMSecsSinceEpoch() < mSecsSinceEpoch;
     }
 
-    bool ITimestampWithOffsetBased::canHandleIndex(const CPropertyIndex &index)
+    bool ITimestampWithOffsetBased::canHandleIndex(CPropertyIndexRef index)
     {
         if (ITimestampBased::canHandleIndex(index)) { return true; }
         if (index.isEmpty()) { return false; }
@@ -309,7 +309,7 @@ namespace BlackMisc
         return QStringLiteral("%1ms").arg(this->getTimeOffsetMs());
     }
 
-    CVariant ITimestampWithOffsetBased::propertyByIndex(const CPropertyIndex &index) const
+    QVariant ITimestampWithOffsetBased::propertyByIndex(CPropertyIndexRef index) const
     {
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
         if (!index.isEmpty())
@@ -325,10 +325,10 @@ namespace BlackMisc
         }
         const QString m = QStringLiteral("Cannot handle index %1").arg(index.toQString());
         BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
-        return CVariant();
+        return QVariant();
     }
 
-    void ITimestampWithOffsetBased::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+    void ITimestampWithOffsetBased::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
         if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
         if (!index.isEmpty())
@@ -346,7 +346,7 @@ namespace BlackMisc
         BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
     }
 
-    int ITimestampWithOffsetBased::comparePropertyByIndex(const CPropertyIndex &index, const ITimestampWithOffsetBased &compareValue) const
+    int ITimestampWithOffsetBased::comparePropertyByIndex(CPropertyIndexRef index, const ITimestampWithOffsetBased &compareValue) const
     {
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
         if (!index.isEmpty())

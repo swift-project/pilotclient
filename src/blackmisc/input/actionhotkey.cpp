@@ -64,36 +64,36 @@ namespace BlackMisc
             m_combination = obj.m_combination;
         }
 
-        CVariant CActionHotkey::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CActionHotkey::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexIdentifier:          return CVariant::from(m_identifier);
-            case IndexIdentifierAsString:  return CVariant::from(m_identifier.getMachineName());
-            case IndexAction:              return CVariant::from(m_action);
-            case IndexActionAsString:      return CVariant::from(m_action);
-            case IndexCombination:         return CVariant::from(m_combination);
-            case IndexCombinationAsString: return CVariant::from(QString(m_combination.toQString()));
+            case IndexIdentifier:          return QVariant::fromValue(m_identifier);
+            case IndexIdentifierAsString:  return QVariant::fromValue(m_identifier.getMachineName());
+            case IndexAction:              return QVariant::fromValue(m_action);
+            case IndexActionAsString:      return QVariant::fromValue(m_action);
+            case IndexCombination:         return QVariant::fromValue(m_combination);
+            case IndexCombinationAsString: return QVariant::fromValue(QString(m_combination.toQString()));
             default:                       return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CActionHotkey::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CActionHotkey::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CActionHotkey>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CActionHotkey>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAction:
                 {
-                    m_action = variant.to<QString>();
+                    m_action = variant.value<QString>();
                     break;
                 }
             case IndexCombination:
             case IndexCombinationAsString:
-                m_combination = variant.to<CHotkeyCombination>();
+                m_combination = variant.value<CHotkeyCombination>();
                 break;
             case IndexObject:
                 this->setObject(variant.value<CActionHotkey>());

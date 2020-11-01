@@ -24,26 +24,26 @@ namespace BlackMisc
             m_base(base), m_top(top), m_visibility(visibility)
         { }
 
-        CVariant CVisibilityLayer::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CVisibilityLayer::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexBase:
-                return CVariant::fromValue(m_base);
+                return QVariant::fromValue(m_base);
             case IndexTop:
-                return CVariant::fromValue(m_top);
+                return QVariant::fromValue(m_top);
             case IndexVisibility:
-                return CVariant::fromValue(m_visibility);
+                return QVariant::fromValue(m_visibility);
             default:
                 return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CVisibilityLayer::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CVisibilityLayer::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CVisibilityLayer>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CVisibilityLayer>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

@@ -58,23 +58,23 @@ namespace BlackCore
             return s;
         }
 
-        CVariant CVatsimSetup::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CVatsimSetup::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexFsdServers: return CVariant::fromValue(this->m_fsdServers);
-            case IndexDataFiles:  return CVariant::fromValue(this->m_dataFileUrls);
+            case IndexFsdServers: return QVariant::fromValue(this->m_fsdServers);
+            case IndexDataFiles:  return QVariant::fromValue(this->m_dataFileUrls);
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CVatsimSetup::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CVatsimSetup::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CVatsimSetup>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CVatsimSetup>(); return; }
             if (ITimestampBased::canHandleIndex(index))
             {
                 ITimestampBased::setPropertyByIndex(index, variant);

@@ -30,14 +30,14 @@ namespace BlackMisc
         return s;
     }
 
-    CVariant CNameVariantPair::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+    QVariant CNameVariantPair::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return CVariant::from(*this); }
+        if (index.isMyself()) { return QVariant::fromValue(*this); }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexName:
-            return CVariant(this->m_name);
+            return QVariant(this->m_name);
         case IndexVariant:
             return this->m_variant;
         default:
@@ -45,9 +45,9 @@ namespace BlackMisc
         }
     }
 
-    void CNameVariantPair::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+    void CNameVariantPair::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.to<CNameVariantPair>(); return; }
+        if (index.isMyself()) { (*this) = variant.value<CNameVariantPair>(); return; }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
 
         // special case, handle icon and allow to set it

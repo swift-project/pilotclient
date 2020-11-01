@@ -24,7 +24,7 @@ namespace BlackMisc
 {
     class CEmpty;
     class CVariant;
-    class CPropertyIndex;
+    class CPropertyIndexRef;
     class CIcon;
 
     template <typename T>
@@ -35,9 +35,6 @@ namespace BlackMisc
 
     namespace Private
     {
-        //! \private Defined in variant.h
-        void assign(CVariant &, const CVariant &);
-
         //! \private Abstract base class representing the set of operations supported by a particular value type.
         struct BLACKMISC_EXPORT IValueObjectMetaInfo
         {
@@ -52,9 +49,9 @@ namespace BlackMisc
             virtual int getMetaTypeId() const = 0;
             virtual const void *upCastTo(const void *object, int metaTypeId) const = 0;
             virtual int compareImpl(const void *lhs, const void *rhs) const = 0;
-            virtual void setPropertyByIndex(void *object, const CVariant &variant, const CPropertyIndex &index) const = 0;
-            virtual void propertyByIndex(const void *object, CVariant &o_variant, const BlackMisc::CPropertyIndex &index) const = 0;
-            virtual bool equalsPropertyByIndex(const void *object, const CVariant &compareValue, const CPropertyIndex &index) const = 0;
+            virtual void setPropertyByIndex(void *object, const QVariant &variant, CPropertyIndexRef index) const = 0;
+            virtual void propertyByIndex(const void *object, QVariant &o_variant, BlackMisc::CPropertyIndexRef index) const = 0;
+            virtual bool equalsPropertyByIndex(const void *object, const QVariant &compareValue, CPropertyIndexRef index) const = 0;
             virtual bool matches(const void *object, const CVariant &value) const = 0;
             virtual int toIcon(const void *object) const = 0;
         };
@@ -115,19 +112,19 @@ namespace BlackMisc
             static int compareImpl(const T &lhs, const T &, ...) { throw CVariantException(lhs, "compare"); }
 
             template <typename T>
-            static void setPropertyByIndex(T &object, const CVariant &variant, const CPropertyIndex &index, decltype(static_cast<void>(object.setPropertyByIndex(index, variant)), 0)) { object.setPropertyByIndex(index, variant); }
+            static void setPropertyByIndex(T &object, const QVariant &variant, CPropertyIndexRef index, decltype(static_cast<void>(object.setPropertyByIndex(index, variant)), 0)) { object.setPropertyByIndex(index, variant); }
             template <typename T>
-            static void setPropertyByIndex(T &object, const CVariant &, const CPropertyIndex &, ...) { throw CVariantException(object, "setPropertyByIndex"); }
+            static void setPropertyByIndex(T &object, const QVariant &, CPropertyIndexRef, ...) { throw CVariantException(object, "setPropertyByIndex"); }
 
             template <typename T>
-            static void propertyByIndex(CVariant &o_variant, const T &object, const CPropertyIndex &index, decltype(static_cast<void>(object.propertyByIndex(index)), 0)) { assign(o_variant, object.propertyByIndex(index)); }
+            static void propertyByIndex(QVariant &o_variant, const T &object, CPropertyIndexRef index, decltype(static_cast<void>(object.propertyByIndex(index)), 0)) { o_variant = object.propertyByIndex(index); }
             template <typename T>
-            static void propertyByIndex(CVariant &, const T &object, const CPropertyIndex &, ...) { throw CVariantException(object, "propertyByIndex"); }
+            static void propertyByIndex(QVariant &, const T &object, CPropertyIndexRef, ...) { throw CVariantException(object, "propertyByIndex"); }
 
             template <typename T>
-            static bool equalsPropertyByIndex(const T &object, const CVariant &variant, const CPropertyIndex &index, decltype(static_cast<void>(object.equalsPropertyByIndex(variant, index)), 0)) { return object.equalsPropertyByIndex(variant, index); }
+            static bool equalsPropertyByIndex(const T &object, const QVariant &variant, CPropertyIndexRef index, decltype(static_cast<void>(object.equalsPropertyByIndex(variant, index)), 0)) { return object.equalsPropertyByIndex(variant, index); }
             template <typename T>
-            static bool equalsPropertyByIndex(const T &object, const CVariant &, const CPropertyIndex &, ...) { throw CVariantException(object, "equalsPropertyByIndex"); }
+            static bool equalsPropertyByIndex(const T &object, const QVariant &, CPropertyIndexRef, ...) { throw CVariantException(object, "equalsPropertyByIndex"); }
 
             template <typename T>
             static int toIcon(const T &object, std::enable_if_t < ! std::is_same<T, CVariant>::value, decltype(static_cast<void>(object.toIcon()), 0) >) { return object.toIcon(); }
@@ -185,15 +182,15 @@ namespace BlackMisc
             {
                 return CValueObjectMetaInfoHelper::compareImpl(cast(lhs), cast(rhs), 0);
             }
-            virtual void setPropertyByIndex(void *object, const CVariant &variant, const CPropertyIndex &index) const override
+            virtual void setPropertyByIndex(void *object, const QVariant &variant, CPropertyIndexRef index) const override
             {
                 CValueObjectMetaInfoHelper::setPropertyByIndex(cast(object), variant, index, 0);
             }
-            virtual void propertyByIndex(const void *object, CVariant &o_variant, const BlackMisc::CPropertyIndex &index) const override
+            virtual void propertyByIndex(const void *object, QVariant &o_variant, BlackMisc::CPropertyIndexRef index) const override
             {
                 CValueObjectMetaInfoHelper::propertyByIndex(o_variant, cast(object), index, 0);
             }
-            virtual bool equalsPropertyByIndex(const void *object, const CVariant &compareValue, const CPropertyIndex &index) const override
+            virtual bool equalsPropertyByIndex(const void *object, const QVariant &compareValue, CPropertyIndexRef index) const override
             {
                 return CValueObjectMetaInfoHelper::equalsPropertyByIndex(cast(object), compareValue, index, 0);
             }

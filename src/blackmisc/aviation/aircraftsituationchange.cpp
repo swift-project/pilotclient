@@ -129,36 +129,36 @@ namespace BlackMisc
                    u" elv. " % m_elvMean.valueRoundedWithUnit(1) % u'/' % m_elvStdDev.valueRoundedWithUnit(1);
         }
 
-        CVariant CAircraftSituationChange::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CAircraftSituationChange::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::fromValue(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             if (ITimestampWithOffsetBased::canHandleIndex(index)) { return ITimestampWithOffsetBased::propertyByIndex(index); }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexCallsign: return m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
-            case IndexSituationsCount: return CVariant::fromValue(m_situationsCount);
-            case IndexConstAscending: return CVariant::fromValue(m_constAscending);
-            case IndexConstDescending: return CVariant::fromValue(m_constDescending);
-            case IndexConstNotOnGround: return CVariant::fromValue(m_constNotOnGround);
-            case IndexConstOnGround: return CVariant::fromValue(m_constOnGround);
-            case IndexIsNull: return CVariant::fromValue(this->isNull());
-            case IndexJustTakingOff: return CVariant::fromValue(m_justTakeoff);
-            case IndexJustTouchingDown: return CVariant::fromValue(m_justTouchdown);
-            case IndexRotatingUp: return CVariant::fromValue(m_rotateUp);
-            case IndexContainsPushBack: return CVariant::fromValue(m_containsPushBack);
-            case IndexAltitudeMean: return CVariant::fromValue(m_altMean);
-            case IndexAltitudeStdDev: return CVariant::fromValue(m_altStdDev);
-            case IndexElevationMean: return CVariant::fromValue(m_elvMean);
-            case IndexElevationStdDev: return CVariant::fromValue(m_elvStdDev);
+            case IndexSituationsCount: return QVariant::fromValue(m_situationsCount);
+            case IndexConstAscending: return QVariant::fromValue(m_constAscending);
+            case IndexConstDescending: return QVariant::fromValue(m_constDescending);
+            case IndexConstNotOnGround: return QVariant::fromValue(m_constNotOnGround);
+            case IndexConstOnGround: return QVariant::fromValue(m_constOnGround);
+            case IndexIsNull: return QVariant::fromValue(this->isNull());
+            case IndexJustTakingOff: return QVariant::fromValue(m_justTakeoff);
+            case IndexJustTouchingDown: return QVariant::fromValue(m_justTouchdown);
+            case IndexRotatingUp: return QVariant::fromValue(m_rotateUp);
+            case IndexContainsPushBack: return QVariant::fromValue(m_containsPushBack);
+            case IndexAltitudeMean: return QVariant::fromValue(m_altMean);
+            case IndexAltitudeStdDev: return QVariant::fromValue(m_altStdDev);
+            case IndexElevationMean: return QVariant::fromValue(m_elvMean);
+            case IndexElevationStdDev: return QVariant::fromValue(m_elvStdDev);
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CAircraftSituationChange::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CAircraftSituationChange::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CAircraftSituationChange>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CAircraftSituationChange>(); return; }
             if (ITimestampWithOffsetBased::canHandleIndex(index)) { ITimestampWithOffsetBased::setPropertyByIndex(index, variant); return; }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -184,7 +184,7 @@ namespace BlackMisc
             }
         }
 
-        int CAircraftSituationChange::comparePropertyByIndex(const CPropertyIndex &index, const CAircraftSituationChange &compareValue) const
+        int CAircraftSituationChange::comparePropertyByIndex(CPropertyIndexRef index, const CAircraftSituationChange &compareValue) const
         {
             if (index.isMyself()) { return ITimestampWithOffsetBased::comparePropertyByIndex(CPropertyIndex(), compareValue); }
             if (ITimestampWithOffsetBased::canHandleIndex(index)) { return ITimestampWithOffsetBased::comparePropertyByIndex(index, compareValue); }

@@ -109,22 +109,22 @@ namespace BlackMisc
                    this->getDistributions().toQString(i18n);
         }
 
-        CVariant CUpdateInfo::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CUpdateInfo::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexArtifactsPilotClient: return CVariant::fromValue(m_artifactsPilotClient);
-            case IndexArtifactsXSwiftBus: return CVariant::fromValue(m_artifactsXSwiftBus);
-            case IndexDistributions: return CVariant::fromValue(m_distributions);
+            case IndexArtifactsPilotClient: return QVariant::fromValue(m_artifactsPilotClient);
+            case IndexArtifactsXSwiftBus: return QVariant::fromValue(m_artifactsXSwiftBus);
+            case IndexDistributions: return QVariant::fromValue(m_distributions);
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CUpdateInfo::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CUpdateInfo::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CUpdateInfo>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CUpdateInfo>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

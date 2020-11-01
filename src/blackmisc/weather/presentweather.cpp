@@ -26,26 +26,26 @@ namespace BlackMisc
             m_intensity(intensity), m_descriptor(descriptor), m_weatherPhenomena(weatherPhenomena)
         { }
 
-        CVariant CPresentWeather::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CPresentWeather::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexIntensity:
-                return CVariant::fromValue(m_intensity);
+                return QVariant::fromValue(m_intensity);
             case IndexDescriptor:
-                return CVariant::fromValue(m_descriptor);
+                return QVariant::fromValue(m_descriptor);
             case IndexWeatherPhenomena:
-                return CVariant::fromValue(m_weatherPhenomena);
+                return QVariant::fromValue(m_weatherPhenomena);
             default:
                 return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CPresentWeather::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CPresentWeather::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CPresentWeather>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CPresentWeather>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

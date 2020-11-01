@@ -201,32 +201,32 @@ namespace BlackMisc
             return session.arg(isConnected ? u"connected" : u"disconnected").arg(this->getName(), this->getAddress()).arg(this->getPort()).arg(this->getEcosystem().getSystemString(), this->getUser().getRealName(), this->getFormattedUtcTimestampHms());
         }
 
-        CVariant CServer::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CServer::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAddress:                return CVariant::fromValue(m_address);
-            case IndexDescription:            return CVariant::fromValue(m_description);
-            case IndexName:                   return CVariant::fromValue(m_name);
-            case IndexPort:                   return CVariant::fromValue(m_port);
+            case IndexAddress:                return QVariant::fromValue(m_address);
+            case IndexDescription:            return QVariant::fromValue(m_description);
+            case IndexName:                   return QVariant::fromValue(m_name);
+            case IndexPort:                   return QVariant::fromValue(m_port);
             case IndexUser:                   return m_user.propertyByIndex(index.copyFrontRemoved());
             case IndexFsdSetup:               return m_fsdSetup.propertyByIndex(index.copyFrontRemoved());
             case IndexVoiceSetup:             return m_voiceSetup.propertyByIndex(index.copyFrontRemoved());
             case IndexEcosystem:              return m_ecosystem.propertyByIndex(index.copyFrontRemoved());
-            case IndexIsAcceptingConnections: return CVariant::fromValue(m_isAcceptingConnections);
-            case IndexServerType:             return CVariant::fromValue(m_serverType);
-            case IndexServerTypeAsString:     return CVariant::fromValue(getServerTypeAsString());
+            case IndexIsAcceptingConnections: return QVariant::fromValue(m_isAcceptingConnections);
+            case IndexServerType:             return QVariant::fromValue(m_serverType);
+            case IndexServerTypeAsString:     return QVariant::fromValue(getServerTypeAsString());
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CServer::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CServer::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CServer>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CServer>(); return; }
             if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -246,7 +246,7 @@ namespace BlackMisc
             }
         }
 
-        int CServer::comparePropertyByIndex(const CPropertyIndex &index, const CServer &compareValue) const
+        int CServer::comparePropertyByIndex(CPropertyIndexRef index, const CServer &compareValue) const
         {
             if (index.isMyself()) { return this->getName().compare(compareValue.getName()); }
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue);}

@@ -446,7 +446,7 @@ namespace BlackMisc
         stream >> m_v;
     }
 
-    void CVariant::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+    void CVariant::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
         auto *meta = getValueObjectMetaInfo();
         Q_ASSERT(meta);
@@ -460,13 +460,13 @@ namespace BlackMisc
         }
     }
 
-    CVariant CVariant::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+    QVariant CVariant::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
     {
         auto *meta = getValueObjectMetaInfo();
         Q_ASSERT(meta);
         try
         {
-            CVariant result;
+            QVariant result;
             meta->propertyByIndex(data(), result, index);
             return result;
         }
@@ -477,7 +477,7 @@ namespace BlackMisc
         }
     }
 
-    bool CVariant::equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const
+    bool CVariant::equalsPropertyByIndex(const CVariant &compareValue, CPropertyIndexRef index) const
     {
         auto *meta = getValueObjectMetaInfo();
         Q_ASSERT(meta);

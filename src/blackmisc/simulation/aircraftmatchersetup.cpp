@@ -106,28 +106,28 @@ namespace BlackMisc
                    u"\' matching script: " % boolToOnOff(m_msReverseEnabled) % u'/' % boolToOnOff(m_msMatchingEnabled);
         }
 
-        CVariant CAircraftMatcherSetup::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CAircraftMatcherSetup::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexMatchingAlgorithm:   return CVariant::fromValue(m_algorithm);
-            case IndexMatchingMode:        return CVariant::fromValue(m_mode);
-            case IndexPickStrategy:        return CVariant::fromValue(m_strategy);
-            case IndexForceMode:           return CVariant::fromValue(m_force);
-            case IndexMsNetworkEntryFile:  return CVariant::fromValue(m_msReverseLookupFile);
-            case IndexMsMatchingStageFile: return CVariant::fromValue(m_msMatchingStageFile);
-            case IndexMsNetworkEnabled:    return CVariant::fromValue(m_msReverseEnabled);
-            case IndexMsMatchingStageEnabled: return CVariant::fromValue(m_msMatchingEnabled);
+            case IndexMatchingAlgorithm:   return QVariant::fromValue(m_algorithm);
+            case IndexMatchingMode:        return QVariant::fromValue(m_mode);
+            case IndexPickStrategy:        return QVariant::fromValue(m_strategy);
+            case IndexForceMode:           return QVariant::fromValue(m_force);
+            case IndexMsNetworkEntryFile:  return QVariant::fromValue(m_msReverseLookupFile);
+            case IndexMsMatchingStageFile: return QVariant::fromValue(m_msMatchingStageFile);
+            case IndexMsNetworkEnabled:    return QVariant::fromValue(m_msReverseEnabled);
+            case IndexMsMatchingStageEnabled: return QVariant::fromValue(m_msMatchingEnabled);
             default: break;
             }
             return CValueObject::propertyByIndex(index);
         }
 
-        void CAircraftMatcherSetup::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CAircraftMatcherSetup::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CAircraftMatcherSetup>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CAircraftMatcherSetup>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -135,8 +135,8 @@ namespace BlackMisc
             case IndexMatchingMode:           m_mode  = variant.toInt(); break;
             case IndexForceMode:              m_force = variant.toInt(); break;
             case IndexPickStrategy:           m_strategy = variant.toInt(); break;
-            case IndexMsNetworkEntryFile:     m_msReverseLookupFile  = variant.toQString(); break;
-            case IndexMsMatchingStageFile:    m_msMatchingStageFile  = variant.toQString(); break;
+            case IndexMsNetworkEntryFile:     m_msReverseLookupFile  = variant.toString(); break;
+            case IndexMsMatchingStageFile:    m_msMatchingStageFile  = variant.toString(); break;
             case IndexMsNetworkEnabled:       m_msReverseEnabled = variant.toBool(); break;
             case IndexMsMatchingStageEnabled: m_msReverseEnabled = variant.toBool(); break;
             default: break;

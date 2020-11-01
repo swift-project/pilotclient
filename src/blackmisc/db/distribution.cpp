@@ -79,25 +79,25 @@ namespace BlackMisc
             return this->getRestrictionIcon();
         }
 
-        CVariant CDistribution::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CDistribution::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexChannel:      return CVariant::fromValue(m_channel);
-            case IndexStability :   return CVariant::fromValue(m_stability);
-            case IndexDownloadUrls: return CVariant::fromValue(m_downloadUrls);
-            case IndexRestricted:   return CVariant::fromValue(m_restricted);
+            case IndexChannel:      return QVariant::fromValue(m_channel);
+            case IndexStability :   return QVariant::fromValue(m_stability);
+            case IndexDownloadUrls: return QVariant::fromValue(m_downloadUrls);
+            case IndexRestricted:   return QVariant::fromValue(m_restricted);
             default:                return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CDistribution::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CDistribution::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CDistribution>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CDistribution>(); return; }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
             {
                 IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant);

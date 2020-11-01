@@ -103,13 +103,13 @@ namespace BlackMisc
             bool matches(EntryType type, const QString &sessionId, const QString &aircraftDesignator, const QString &airlineDesignator) const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
 
             //! Compare by index
-            int comparePropertyByIndex(const CPropertyIndex &index, const CMatchingStatisticsEntry &compareValue) const;
+            int comparePropertyByIndex(CPropertyIndexRef index, const CMatchingStatisticsEntry &compareValue) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;

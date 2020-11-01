@@ -104,18 +104,18 @@ namespace BlackMisc
             return airport;
         }
 
-        CVariant CAirport::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CAirport::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexIcao: return m_icao.propertyByIndex(index.copyFrontRemoved());
-            case IndexLocation: return CVariant(m_location);
-            case IndexDescriptiveName: return CVariant(m_descriptiveName);
+            case IndexLocation: return QVariant(m_location);
+            case IndexDescriptiveName: return QVariant(m_descriptiveName);
             case IndexPosition: return m_position.propertyByIndex(index.copyFrontRemoved());
             case IndexElevation: return this->getElevation().propertyByIndex(index.copyFrontRemoved());
-            case IndexOperating: return CVariant::from(this->isOperating());
+            case IndexOperating: return QVariant::fromValue(this->isOperating());
             default:
                 return (ICoordinateWithRelativePosition::canHandleIndex(index)) ?
                        ICoordinateWithRelativePosition::propertyByIndex(index) :
@@ -123,9 +123,9 @@ namespace BlackMisc
             }
         }
 
-        void CAirport::setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant)
+        void CAirport::setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CAirport>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CAirport>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -133,10 +133,10 @@ namespace BlackMisc
                 m_icao.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexLocation:
-                this->setLocation(variant.toQString());
+                this->setLocation(variant.toString());
                 break;
             case IndexDescriptiveName:
-                this->setDescriptiveName(variant.toQString());
+                this->setDescriptiveName(variant.toString());
                 break;
             case IndexPosition:
                 m_position.setPropertyByIndex(index.copyFrontRemoved(), variant);
@@ -157,7 +157,7 @@ namespace BlackMisc
             }
         }
 
-        int CAirport::comparePropertyByIndex(const CPropertyIndex &index, const CAirport &compareValue) const
+        int CAirport::comparePropertyByIndex(CPropertyIndexRef index, const CAirport &compareValue) const
         {
             if (index.isMyself()) { return m_icao.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIcao()); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();

@@ -50,29 +50,29 @@ namespace BlackGui
             return QStringLiteral("Widget style: %1").arg(this->m_widgetStyle);
         }
 
-        BlackMisc::CVariant CGeneralGuiSettings::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CGeneralGuiSettings::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexWidgetStyle:
-                return CVariant::fromValue(this->m_widgetStyle);
+                return QVariant::fromValue(this->m_widgetStyle);
             case IndexPreferredSelection:
-                return CVariant::fromValue(this->m_preferredSelection);
+                return QVariant::fromValue(this->m_preferredSelection);
             default:
                 return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CGeneralGuiSettings::setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant)
+        void CGeneralGuiSettings::setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CGeneralGuiSettings>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CGeneralGuiSettings>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexWidgetStyle:
-                this->setWidgetStyle(variant.toQString());
+                this->setWidgetStyle(variant.toString());
                 break;
             case IndexPreferredSelection:
                 this->m_preferredSelection = variant.toInt();

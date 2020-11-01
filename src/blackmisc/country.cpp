@@ -120,19 +120,19 @@ namespace BlackMisc
         return this->getCombinedStringIsoName();
     }
 
-    CVariant CCountry::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+    QVariant CCountry::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return CVariant::from(*this); }
+        if (index.isMyself()) { return QVariant::fromValue(*this); }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexIsoCode: return CVariant::fromValue(m_dbKey);
-        case IndexIso3Code: return CVariant::fromValue(getIso3Code());
-        case IndexName: return CVariant::fromValue(m_name);
-        case IndexIsoName: return CVariant::fromValue(getCombinedStringIsoName());
-        case IndexAlias1: return CVariant::fromValue(this->getAlias1());
-        case IndexAlias2: return CVariant::fromValue(this->getAlias2());
-        case IndexHistoric: return CVariant::fromValue(this->isHistoric());
+        case IndexIsoCode: return QVariant::fromValue(m_dbKey);
+        case IndexIso3Code: return QVariant::fromValue(getIso3Code());
+        case IndexName: return QVariant::fromValue(m_name);
+        case IndexIsoName: return QVariant::fromValue(getCombinedStringIsoName());
+        case IndexAlias1: return QVariant::fromValue(this->getAlias1());
+        case IndexAlias2: return QVariant::fromValue(this->getAlias2());
+        case IndexHistoric: return QVariant::fromValue(this->isHistoric());
         default:
             return (IDatastoreObjectWithStringKey::canHandleIndex(index)) ?
                    IDatastoreObjectWithStringKey::propertyByIndex(index) :
@@ -140,17 +140,17 @@ namespace BlackMisc
         }
     }
 
-    void CCountry::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+    void CCountry::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.to<CCountry>(); return; }
+        if (index.isMyself()) { (*this) = variant.value<CCountry>(); return; }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexIsoCode: this->setIsoCode(variant.toQString()); break;
-        case IndexIso3Code: this->setIso3Code(variant.toQString()); break;
-        case IndexName: this->setName(variant.toQString()); break;
-        case IndexAlias1: this->setAlias1(variant.toQString()); break;
-        case IndexAlias2: this->setAlias1(variant.toQString()); break;
+        case IndexIsoCode: this->setIsoCode(variant.toString()); break;
+        case IndexIso3Code: this->setIso3Code(variant.toString()); break;
+        case IndexName: this->setName(variant.toString()); break;
+        case IndexAlias1: this->setAlias1(variant.toString()); break;
+        case IndexAlias2: this->setAlias1(variant.toString()); break;
         case IndexHistoric: this->setHistoric(variant.toBool()); break;
         default:
             IDatastoreObjectWithStringKey::canHandleIndex(index) ?
@@ -160,7 +160,7 @@ namespace BlackMisc
         }
     }
 
-    int CCountry::comparePropertyByIndex(const CPropertyIndex &index, const CCountry &compareValue) const
+    int CCountry::comparePropertyByIndex(CPropertyIndexRef index, const CCountry &compareValue) const
     {
         if (index.isMyself()) { return getIsoCode().compare(compareValue.getIsoCode(), Qt::CaseInsensitive); }
         if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { return IDatastoreObjectWithStringKey::comparePropertyByIndex(index, compareValue);}

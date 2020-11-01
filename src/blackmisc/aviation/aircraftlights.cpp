@@ -97,29 +97,29 @@ namespace BlackMisc
             return s;
         }
 
-        CVariant CAircraftLights::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CAircraftLights::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexIsNull: return CVariant::from(this->isNull());
-            case IndexBeacon: return CVariant::from(m_beaconOn);
-            case IndexLanding: return CVariant::from(m_landingOn);
-            case IndexLogo: return CVariant::from(m_logoOn);
-            case IndexNav: return CVariant::from(m_navOn);
-            case IndexStrobe: return CVariant::from(m_strobeOn);
-            case IndexTaxi: return CVariant::from(m_taxiOn);
-            case IndexRecognition: return CVariant::from(m_recognition);
-            case IndexCabin: return CVariant::from(m_cabin);
+            case IndexIsNull: return QVariant::fromValue(this->isNull());
+            case IndexBeacon: return QVariant::fromValue(m_beaconOn);
+            case IndexLanding: return QVariant::fromValue(m_landingOn);
+            case IndexLogo: return QVariant::fromValue(m_logoOn);
+            case IndexNav: return QVariant::fromValue(m_navOn);
+            case IndexStrobe: return QVariant::fromValue(m_strobeOn);
+            case IndexTaxi: return QVariant::fromValue(m_taxiOn);
+            case IndexRecognition: return QVariant::fromValue(m_recognition);
+            case IndexCabin: return QVariant::fromValue(m_cabin);
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CAircraftLights::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CAircraftLights::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CAircraftLights>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CAircraftLights>(); return; }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -137,7 +137,7 @@ namespace BlackMisc
             }
         }
 
-        int CAircraftLights::comparePropertyByIndex(const CPropertyIndex &index, const CAircraftLights &compareValue) const
+        int CAircraftLights::comparePropertyByIndex(CPropertyIndexRef index, const CAircraftLights &compareValue) const
         {
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)

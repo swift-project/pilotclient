@@ -124,8 +124,8 @@ namespace BlackMisc
         CStatusMessage set(const typename Trait::type &value, qint64 timestamp = 0) = delete;
         CStatusMessage setAndSave(const typename Trait::type &value, qint64 timestamp = 0) = delete;
         CStatusMessage save() = delete;
-        CStatusMessage setProperty(const CPropertyIndex &index, const CVariant &value, qint64 timestamp = 0) = delete;
-        CStatusMessage setAndSaveProperty(const CPropertyIndex &index, const CVariant &value, qint64 timestamp = 0) = delete;
+        CStatusMessage setProperty(CPropertyIndexRef index, const CVariant &value, qint64 timestamp = 0) = delete;
+        CStatusMessage setAndSaveProperty(CPropertyIndexRef index, const CVariant &value, qint64 timestamp = 0) = delete;
         CStatusMessage setDefault() = delete;
         //! @}
     };

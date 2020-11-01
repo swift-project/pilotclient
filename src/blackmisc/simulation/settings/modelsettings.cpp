@@ -24,20 +24,20 @@ namespace BlackMisc
                 return QStringLiteral("Allow exclude: %1").arg(boolToYesNo(this->m_allowExcludeModels));
             }
 
-            CVariant CModelSettings::propertyByIndex(const CPropertyIndex &index) const
+            QVariant CModelSettings::propertyByIndex(CPropertyIndexRef index) const
             {
-                if (index.isMyself()) { return CVariant::from(*this); }
+                if (index.isMyself()) { return QVariant::fromValue(*this); }
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexAllowExclude: return CVariant::fromValue(this->m_allowExcludeModels);
+                case IndexAllowExclude: return QVariant::fromValue(this->m_allowExcludeModels);
                 default: return CValueObject::propertyByIndex(index);
                 }
             }
 
-            void CModelSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+            void CModelSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
             {
-                if (index.isMyself()) { (*this) = variant.to<CModelSettings>(); return; }
+                if (index.isMyself()) { (*this) = variant.value<CModelSettings>(); return; }
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {

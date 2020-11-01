@@ -223,10 +223,10 @@ namespace BlackCore
             QString convertToQString(const QString &separator, bool i18n = false) const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            BlackMisc::CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
+            void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
 
             //! Schema version (shared files, bootstrap file)
             static const QString &schemaVersionString();

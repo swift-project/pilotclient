@@ -276,28 +276,28 @@ namespace BlackMisc
         return s;
     }
 
-    CVariant CIdentifier::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+    QVariant CIdentifier::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return CVariant::from(*this); }
+        if (index.isMyself()) { return QVariant::fromValue(*this); }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
 
         switch (i)
         {
-        case IndexName:               return CVariant::fromValue(m_name);
-        case IndexMachineIdBase64:    return CVariant::fromValue(m_machineIdBase64);
-        case IndexMachineName:        return CVariant::fromValue(getMachineName());
-        case IndexMachineId:          return CVariant::fromValue(getMachineId());
-        case IndexProcessId:          return CVariant::fromValue(m_processId);
-        case IndexProcessName:        return CVariant::fromValue(m_processName);
-        case IndexIsFromLocalMachine: return CVariant::fromValue(isFromLocalMachine());
-        case IndexIsFromSameProcess:  return CVariant::fromValue(hasApplicationProcessId());
-        case IndexIsFromSameProcessName: return CVariant::fromValue(hasApplicationProcessName());
+        case IndexName:               return QVariant::fromValue(m_name);
+        case IndexMachineIdBase64:    return QVariant::fromValue(m_machineIdBase64);
+        case IndexMachineName:        return QVariant::fromValue(getMachineName());
+        case IndexMachineId:          return QVariant::fromValue(getMachineId());
+        case IndexProcessId:          return QVariant::fromValue(m_processId);
+        case IndexProcessName:        return QVariant::fromValue(m_processName);
+        case IndexIsFromLocalMachine: return QVariant::fromValue(isFromLocalMachine());
+        case IndexIsFromSameProcess:  return QVariant::fromValue(hasApplicationProcessId());
+        case IndexIsFromSameProcessName: return QVariant::fromValue(hasApplicationProcessName());
         default: return CValueObject::propertyByIndex(index);
         }
     }
 
-    int CIdentifier::comparePropertyByIndex(const CPropertyIndex &index, const CIdentifier &compareValue) const
+    int CIdentifier::comparePropertyByIndex(CPropertyIndexRef index, const CIdentifier &compareValue) const
     {
         if (index.isMyself()) { return Compare::compare(m_processId, compareValue.m_processId); }
 
@@ -318,7 +318,7 @@ namespace BlackMisc
         }
     }
 
-    void CIdentifier::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+    void CIdentifier::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
         CValueObject::setPropertyByIndex(index, variant);
     }

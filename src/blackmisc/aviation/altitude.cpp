@@ -119,7 +119,7 @@ namespace BlackMisc
             }
         }
 
-        int CAltitude::comparePropertyByIndex(const CPropertyIndex &index, const CAltitude &compareValue) const
+        int CAltitude::comparePropertyByIndex(CPropertyIndexRef index, const CAltitude &compareValue) const
         {
             if (index.isMyself()) { return this->compare(compareValue); }
             return CLength::comparePropertyByIndex(index, compareValue);

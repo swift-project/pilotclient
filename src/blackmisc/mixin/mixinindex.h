@@ -14,9 +14,8 @@
 #include "blackmisc/icon.h"
 #include "blackmisc/inheritancetraits.h"
 #include "blackmisc/predicates.h"
+#include "blackmisc/propertyindexref.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/propertyindexlist.h"
-#include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/variant.h"
 
 #include <QDBusArgument>
@@ -31,6 +30,9 @@
 
 namespace BlackMisc
 {
+    class CPropertyIndexList;
+    class CPropertyIndexVariantMap;
+
     namespace Mixin
     {
         /*!
@@ -56,44 +58,46 @@ namespace BlackMisc
             CPropertyIndexList apply(const CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false); // impl in propertyindexvariantmap.h
 
             //! Set property by index
-            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
             //! Property by index
-            CVariant propertyByIndex(const CPropertyIndex &index) const;
+            QVariant propertyByIndex(CPropertyIndexRef index) const;
 
             //! Compare for index
-            int comparePropertyByIndex(const CPropertyIndex &index, const Derived &compareValue) const;
+            int comparePropertyByIndex(CPropertyIndexRef index, const Derived &compareValue) const;
 
             //! Is given variant equal to value of property index?
-            bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const;
+            bool equalsPropertyByIndex(const QVariant &compareValue, CPropertyIndexRef index) const;
 
         private:
             const Derived *derived() const { return static_cast<const Derived *>(this); }
             Derived *derived() { return static_cast<Derived *>(this); }
 
             template <typename T, std::enable_if_t<std::is_default_constructible<T>::value, int> = 0>
-            CVariant myself() const { return CVariant::from(*derived()); }
+            QVariant myself() const { return QVariant::fromValue(*derived()); }
             template <typename T, std::enable_if_t<std::is_default_constructible<T>::value, int> = 0>
-            void myself(const CVariant &variant) { *derived() = variant.to<T>(); }
+            void myself(const QVariant &variant) { *derived() = variant.value<T>(); }
 
             template <typename T, std::enable_if_t<! std::is_default_constructible<T>::value, int> = 0>
-            CVariant myself() const { qFatal("isMyself should have been handled before reaching here"); return {}; }
+            QVariant myself() const { qFatal("isMyself should have been handled before reaching here"); return {}; }
             template <typename T, std::enable_if_t<! std::is_default_constructible<T>::value, int> = 0>
-            void myself(const CVariant &) { qFatal("isMyself should have been handled before reaching here"); }
+            void myself(const QVariant &) { qFatal("isMyself should have been handled before reaching here"); }
 
             template <typename T>
-            CVariant basePropertyByIndex(const T *base, const CPropertyIndex &index) const { return base->propertyByIndex(index); }
+            QVariant basePropertyByIndex(const T *base, CPropertyIndexRef index) const { return base->propertyByIndex(index); }
             template <typename T>
-            void baseSetPropertyByIndex(T *base, const CVariant &var, const CPropertyIndex &index) { base->setPropertyByIndex(index, var); }
+            void baseSetPropertyByIndex(T *base, const QVariant &var, CPropertyIndexRef index) { base->setPropertyByIndex(index, var); }
 
-            CVariant basePropertyByIndex(const void *, const CPropertyIndex &index) const
+            QVariant basePropertyByIndex(const void *, CPropertyIndexRef) const
             {
-                qFatal("%s", qPrintable("Property by index not found, index: " + index.toQString())); return {};
+                //qFatal("%s", qPrintable("Property by index not found, index: " + index.toQString())); return {};
+                qFatal("Property by index not found"); return {};
             }
 
-            void baseSetPropertyByIndex(void *, const CVariant &, const CPropertyIndex &index)
+            void baseSetPropertyByIndex(void *, const QVariant &, CPropertyIndexRef)
             {
-                qFatal("%s", qPrintable("Property by index not found (setter), index: " + index.toQString()));
+                //qFatal("%s", qPrintable("Property by index not found (setter), index: " + index.toQString()));
+                qFatal("Property by index not found");
             }
         };
 
@@ -111,7 +115,7 @@ namespace BlackMisc
         // *INDENT-ON*
 
         template <class Derived>
-        void Index<Derived>::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void Index<Derived>::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
             if (index.isMyself())
             {
@@ -124,27 +128,27 @@ namespace BlackMisc
         }
 
         template <class Derived>
-        CVariant Index<Derived>::propertyByIndex(const CPropertyIndex &index) const
+        QVariant Index<Derived>::propertyByIndex(CPropertyIndexRef index) const
         {
             if (index.isMyself()) { return myself<Derived>(); }
             const auto i = index.frontCasted<ColumnIndex>(); // keep that "auto", otherwise I won's compile
             switch (i)
             {
-            case IndexIcon: return CVariant::from(CIcon(derived()->toIcon()));
-            case IndexPixmap: return CVariant::from(CIcon(derived()->toIcon()).toPixmap());
-            case IndexString: return CVariant(derived()->toQString());
+            case IndexIcon: return CIcons::toVariant(derived()->toIcon());
+            case IndexPixmap: return CIcons::toVariantPixmap(derived()->toIcon());
+            case IndexString: return QVariant(derived()->toQString());
             default: return basePropertyByIndex(static_cast<const TIndexBaseOfT<Derived> *>(derived()), index);
             }
         }
 
         template <class Derived>
-        bool Index<Derived>::equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const
+        bool Index<Derived>::equalsPropertyByIndex(const QVariant &compareValue, CPropertyIndexRef index) const
         {
             return derived()->propertyByIndex(index) == compareValue;
         }
 
         template<class Derived>
-        int Index<Derived>::comparePropertyByIndex(const CPropertyIndex &index, const Derived &compareValue) const
+        int Index<Derived>::comparePropertyByIndex(CPropertyIndexRef index, const Derived &compareValue) const
         {
             if (this == &compareValue) { return 0; }
             if (index.isMyself()) {

@@ -90,21 +90,21 @@ namespace BlackMisc
             return msgs;
         }
 
-        CVariant CFsdSetup::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CFsdSetup::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexTextCodec: return CVariant::fromValue(m_textCodec);
-            case IndexSendReceiveDetails: return CVariant::fromValue(m_sendReceive);
+            case IndexTextCodec: return QVariant::fromValue(m_textCodec);
+            case IndexSendReceiveDetails: return QVariant::fromValue(m_sendReceive);
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CFsdSetup::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CFsdSetup::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CFsdSetup>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CFsdSetup>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -116,7 +116,7 @@ namespace BlackMisc
             }
         }
 
-        int CFsdSetup::comparePropertyByIndex(const CPropertyIndex &index, const CFsdSetup &compareValue) const
+        int CFsdSetup::comparePropertyByIndex(CPropertyIndexRef index, const CFsdSetup &compareValue) const
         {
             if (index.isMyself()) { return this->convertToQString(true).compare(compareValue.convertToQString()); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();

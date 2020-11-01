@@ -95,27 +95,27 @@ namespace BlackMisc
             return this->setEnabledAircraftParts(masked);
         }
 
-        CVariant CInterpolationAndRenderingSetupBase::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CInterpolationAndRenderingSetupBase::propertyByIndex(CPropertyIndexRef index) const
         {
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexLogInterpolation:       return CVariant::fromValue(m_logInterpolation);
-            case IndexSimulatorDebugMessages: return CVariant::fromValue(m_simulatorDebugMessages);
-            case IndexForceFullInterpolation: return CVariant::fromValue(m_forceFullInterpolation);
-            case IndexEnabledAircraftParts:   return CVariant::fromValue(m_enabledAircraftParts);
-            case IndexSendGndFlagToSimulator: return CVariant::fromValue(m_sendGndToSim);
-            case IndexInterpolatorMode:       return CVariant::fromValue(m_interpolatorMode);
-            case IndexInterpolatorModeAsString: return CVariant::fromValue(this->getInterpolatorModeAsString());
-            case IndexFixSceneryOffset: return CVariant::fromValue(m_fixSceneryOffset);
-            case IndexPitchOnGround:    return CVariant::fromValue(m_pitchOnGround);
+            case IndexLogInterpolation:       return QVariant::fromValue(m_logInterpolation);
+            case IndexSimulatorDebugMessages: return QVariant::fromValue(m_simulatorDebugMessages);
+            case IndexForceFullInterpolation: return QVariant::fromValue(m_forceFullInterpolation);
+            case IndexEnabledAircraftParts:   return QVariant::fromValue(m_enabledAircraftParts);
+            case IndexSendGndFlagToSimulator: return QVariant::fromValue(m_sendGndToSim);
+            case IndexInterpolatorMode:       return QVariant::fromValue(m_interpolatorMode);
+            case IndexInterpolatorModeAsString: return QVariant::fromValue(this->getInterpolatorModeAsString());
+            case IndexFixSceneryOffset: return QVariant::fromValue(m_fixSceneryOffset);
+            case IndexPitchOnGround:    return QVariant::fromValue(m_pitchOnGround);
             default: break;
             }
             BLACK_VERIFY_X(false, Q_FUNC_INFO, "Cannot handle index");
             return QStringLiteral("Wrong index for %1").arg(i);
         }
 
-        void CInterpolationAndRenderingSetupBase::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CInterpolationAndRenderingSetupBase::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -126,7 +126,7 @@ namespace BlackMisc
             case IndexEnabledAircraftParts:   m_enabledAircraftParts = variant.toBool(); return;
             case IndexSendGndFlagToSimulator: m_sendGndToSim = variant.toBool(); return;
             case IndexInterpolatorMode:       m_interpolatorMode = variant.toInt(); return;
-            case IndexInterpolatorModeAsString: this->setInterpolatorMode(variant.toQString()); return;
+            case IndexInterpolatorModeAsString: this->setInterpolatorMode(variant.toString()); return;
             case IndexFixSceneryOffset: m_fixSceneryOffset = variant.toBool(); return;
             case IndexPitchOnGround:    m_pitchOnGround.setPropertyByIndex(index.copyFrontRemoved(), variant); return;
             default: break;
@@ -283,21 +283,21 @@ namespace BlackMisc
                 QStringLiteral(" max.distance:") % m_maxRenderedDistance.valueRoundedWithUnit(CLengthUnit::NM(), 2);
         }
 
-        CVariant CInterpolationAndRenderingSetupGlobal::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CInterpolationAndRenderingSetupGlobal::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexMaxRenderedAircraft: return CVariant::fromValue(m_maxRenderedAircraft);
-            case IndexMaxRenderedDistance: return CVariant::fromValue(m_maxRenderedDistance);
+            case IndexMaxRenderedAircraft: return QVariant::fromValue(m_maxRenderedAircraft);
+            case IndexMaxRenderedDistance: return QVariant::fromValue(m_maxRenderedDistance);
             default: break;
             }
             if (CInterpolationAndRenderingSetupBase::canHandleIndex(i)) { return CInterpolationAndRenderingSetupBase::propertyByIndex(index); }
             return CValueObject::propertyByIndex(index);
         }
 
-        void CInterpolationAndRenderingSetupGlobal::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CInterpolationAndRenderingSetupGlobal::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
             if (index.isMyself())
             {
@@ -346,9 +346,9 @@ namespace BlackMisc
             return equal;
         }
 
-        CVariant CInterpolationAndRenderingSetupPerCallsign::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CInterpolationAndRenderingSetupPerCallsign::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::fromValue(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -358,7 +358,7 @@ namespace BlackMisc
             return CInterpolationAndRenderingSetupBase::propertyByIndex(index);
         }
 
-        void CInterpolationAndRenderingSetupPerCallsign::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CInterpolationAndRenderingSetupPerCallsign::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
             if (index.isMyself())
             {

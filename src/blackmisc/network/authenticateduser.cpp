@@ -126,25 +126,25 @@ namespace BlackMisc
             return CIcons::StandardIconUser16;
         }
 
-        CVariant CAuthenticatedUser::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CAuthenticatedUser::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexVatsimId: return CVariant::fromValue(m_vatsimId);
-            case IndexEmail: return CVariant::fromValue(m_email);
-            case IndexPassword: return CVariant::fromValue(m_password);
-            case IndexRealName: return CVariant::fromValue(m_realname);
-            case IndexUsername: return CVariant::fromValue(m_username);
+            case IndexVatsimId: return QVariant::fromValue(m_vatsimId);
+            case IndexEmail: return QVariant::fromValue(m_email);
+            case IndexPassword: return QVariant::fromValue(m_password);
+            case IndexRealName: return QVariant::fromValue(m_realname);
+            case IndexUsername: return QVariant::fromValue(m_username);
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CAuthenticatedUser::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CAuthenticatedUser::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CAuthenticatedUser>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CAuthenticatedUser>(); return; }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)

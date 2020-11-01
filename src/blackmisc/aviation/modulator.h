@@ -70,13 +70,13 @@ namespace BlackMisc
             void setReceiveEnabled(bool enable);
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
 
             //! Compare by property index
-            int comparePropertyByIndex(const BlackMisc::CPropertyIndex &index, const AVIO &compareValue) const;
+            int comparePropertyByIndex(BlackMisc::CPropertyIndexRef index, const AVIO &compareValue) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;

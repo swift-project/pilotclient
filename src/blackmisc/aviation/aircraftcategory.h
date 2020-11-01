@@ -129,13 +129,13 @@ namespace BlackMisc
             void setAssignable(bool assignable) { m_assignable = assignable; }
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
 
             //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
-            int comparePropertyByIndex(const CPropertyIndex &index, const CAircraftCategory &compareValue) const;
+            int comparePropertyByIndex(CPropertyIndexRef index, const CAircraftCategory &compareValue) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;

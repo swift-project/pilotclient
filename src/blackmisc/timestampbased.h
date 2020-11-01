@@ -139,7 +139,7 @@ namespace BlackMisc
         static bool isAnyTimestampIndex(int index);
 
         //! Can given index be handled
-        static bool canHandleIndex(const CPropertyIndex &index);
+        static bool canHandleIndex(CPropertyIndexRef index);
 
     protected:
         //! Constructor
@@ -152,13 +152,13 @@ namespace BlackMisc
         ITimestampBased(const QDateTime &timestamp);
 
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-        CVariant propertyByIndex(const CPropertyIndex &index) const;
+        QVariant propertyByIndex(CPropertyIndexRef index) const;
 
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+        void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
         //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
-        int comparePropertyByIndex(const CPropertyIndex &index, const ITimestampBased &compareValue) const;
+        int comparePropertyByIndex(CPropertyIndexRef index, const ITimestampBased &compareValue) const;
 
         //! Update missing parts
         void updateMissingParts(const ITimestampBased &other);
@@ -222,7 +222,7 @@ namespace BlackMisc
 
     protected:
         //! Can given index be handled
-        static bool canHandleIndex(const CPropertyIndex &index);
+        static bool canHandleIndex(CPropertyIndexRef index);
 
         //! Constructor
         ITimestampWithOffsetBased() : ITimestampBased() {}
@@ -234,13 +234,13 @@ namespace BlackMisc
         ITimestampWithOffsetBased(const QDateTime &timestamp) : ITimestampBased(timestamp) {}
 
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-        CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+        QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
 
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+        void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
 
         //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
-        int comparePropertyByIndex(const CPropertyIndex &index, const ITimestampWithOffsetBased &compareValue) const;
+        int comparePropertyByIndex(CPropertyIndexRef index, const ITimestampWithOffsetBased &compareValue) const;
 
         qint64 m_timeOffsetMs = 0; //!< offset time in ms
     };

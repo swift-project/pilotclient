@@ -19,7 +19,7 @@ class QDBusArgument;
 namespace BlackMisc
 {
 
-    class CPropertyIndex;
+    class CPropertyIndexRef;
 
     //! \cond PRIVATE
     // Own implementation of C++17 std::void_t, simple variadic alias
@@ -133,24 +133,24 @@ namespace BlackMisc
 
     /*!
      * Trait which is true if the expression a.compareByPropertyIndex(b, i) is valid when a and b are instances of T,
-     * and i is an instance of CPropertyIndex.
+     * and i is an instance of CPropertyIndexRef.
      */
     template <typename T, typename = void_t<>>
     struct THasComparePropertyByIndex : public std::false_type {};
     //! \cond
     template <typename T>
-    struct THasComparePropertyByIndex<T, void_t<decltype(std::declval<T>().comparePropertyByIndex(std::declval<const CPropertyIndex &>(), std::declval<const T &>()))>> : public std::true_type {};
+    struct THasComparePropertyByIndex<T, void_t<decltype(std::declval<T>().comparePropertyByIndex(std::declval<CPropertyIndexRef>(), std::declval<const T &>()))>> : public std::true_type {};
     //! \endcond
 
     /*!
      * Trait which is true if the expression a.propertyByIndex(i) is valid with a is an instance of T and i is an
-     * instance of CPropertyIndex.
+     * instance of CPropertyIndexRef.
      */
     template <typename T, typename = void_t<>>
     struct THasPropertyByIndex : public std::false_type {};
     //! \cond
     template <typename T>
-    struct THasPropertyByIndex<T, void_t<decltype(std::declval<T>().propertyByIndex(std::declval<CPropertyIndex>()))>> : public std::true_type {};
+    struct THasPropertyByIndex<T, void_t<decltype(std::declval<T>().propertyByIndex(std::declval<CPropertyIndexRef>()))>> : public std::true_type {};
     //! \endcond
 
     /*!

@@ -62,27 +62,27 @@ namespace BlackMisc
             return m_simulator.matchesAny(simulator);
         }
 
-        CVariant CDistributor::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CDistributor::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { return IDatastoreObjectWithStringKey::propertyByIndex(index); }
             if (IOrderable::canHandleIndex(index)) { return IOrderable::propertyByIndex(index); }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAlias1: return CVariant::from(m_alias1);
-            case IndexAlias2: return CVariant::from(m_alias2);
-            case IndexDescription: return CVariant::from(m_description);
+            case IndexAlias1: return QVariant::fromValue(m_alias1);
+            case IndexAlias2: return QVariant::fromValue(m_alias2);
+            case IndexDescription: return QVariant::fromValue(m_description);
             case IndexSimulator: return m_simulator.propertyByIndex(index.copyFrontRemoved());
             default:
                 return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CDistributor::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CDistributor::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CDistributor>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CDistributor>(); return; }
             if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { IDatastoreObjectWithStringKey::setPropertyByIndex(index, variant); return; }
             if (IOrderable::canHandleIndex(index)) { IOrderable::setPropertyByIndex(index, variant); return; }
 
@@ -97,7 +97,7 @@ namespace BlackMisc
             }
         }
 
-        int CDistributor::comparePropertyByIndex(const CPropertyIndex &index, const CDistributor &compareValue) const
+        int CDistributor::comparePropertyByIndex(CPropertyIndexRef index, const CDistributor &compareValue) const
         {
             if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { return IDatastoreObjectWithStringKey::comparePropertyByIndex(index, compareValue); }
             if (IOrderable::canHandleIndex(index)) { return IOrderable::comparePropertyByIndex(index, compareValue); }

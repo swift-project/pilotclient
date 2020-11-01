@@ -155,31 +155,31 @@ namespace BlackMisc
                        m_excludeDirectoryPatterns.join(',');
             }
 
-            CVariant CSimulatorSettings::propertyByIndex(const CPropertyIndex &index) const
+            QVariant CSimulatorSettings::propertyByIndex(CPropertyIndexRef index) const
             {
-                if (index.isMyself()) { return CVariant::from(*this); }
+                if (index.isMyself()) { return QVariant::fromValue(*this); }
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexSimulatorDirectory:            return CVariant::fromValue(m_simulatorDirectory);
-                case IndexModelDirectories:              return CVariant::fromValue(m_modelDirectories);
-                case IndexModelExcludeDirectoryPatterns: return CVariant::fromValue(m_excludeDirectoryPatterns);
-                case IndexComIntegration:                return CVariant::fromValue(m_comIntegration);
-                case IndexRecordOwnAircraftGnd:          return CVariant::fromValue(m_recordGnd);
-                case IndexCGSource:                      return CVariant::fromValue(m_cgSource);
+                case IndexSimulatorDirectory:            return QVariant::fromValue(m_simulatorDirectory);
+                case IndexModelDirectories:              return QVariant::fromValue(m_modelDirectories);
+                case IndexModelExcludeDirectoryPatterns: return QVariant::fromValue(m_excludeDirectoryPatterns);
+                case IndexComIntegration:                return QVariant::fromValue(m_comIntegration);
+                case IndexRecordOwnAircraftGnd:          return QVariant::fromValue(m_recordGnd);
+                case IndexCGSource:                      return QVariant::fromValue(m_cgSource);
                 case IndexRecordOwnAircraftGndRadius:    return m_recordedGndRadius.propertyByIndex(index.copyFrontRemoved());
                 default: return CValueObject::propertyByIndex(index);
                 }
             }
 
-            void CSimulatorSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+            void CSimulatorSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
             {
-                if (index.isMyself()) { (*this) = variant.to<CSimulatorSettings>(); return; }
+                if (index.isMyself()) { (*this) = variant.value<CSimulatorSettings>(); return; }
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexSimulatorDirectory:   this->setSimulatorDirectory(variant.toQString()); break;
-                case IndexModelDirectories:     this->setSimulatorDirectory(variant.toQString()); break;
+                case IndexSimulatorDirectory:   this->setSimulatorDirectory(variant.toString()); break;
+                case IndexModelDirectories:     this->setSimulatorDirectory(variant.toString()); break;
                 case IndexComIntegration:       this->setComIntegrated(variant.toBool()); break;
                 case IndexRecordOwnAircraftGnd: this->setRecordOwnAircraftGnd(variant.toBool()); break;
                 case IndexModelExcludeDirectoryPatterns: m_excludeDirectoryPatterns = variant.value<QStringList>(); break;
@@ -524,22 +524,22 @@ namespace BlackMisc
                 return s.arg(boolToOnOff(m_relayGloballyEnabled)).arg(m_messageType).arg(severity);
             }
 
-            CVariant CSimulatorMessagesSettings::propertyByIndex(const CPropertyIndex &index) const
+            QVariant CSimulatorMessagesSettings::propertyByIndex(CPropertyIndexRef index) const
             {
-                if (index.isMyself()) { return CVariant::from(*this); }
+                if (index.isMyself()) { return QVariant::fromValue(*this); }
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexTechnicalLogSeverity: return CVariant::fromValue(m_technicalLogLevel);
-                case IndexRelayTextMessage: return CVariant::from(m_messageType);
-                case IndexRelayGloballyEnabled: return CVariant::from(m_relayGloballyEnabled);
+                case IndexTechnicalLogSeverity: return QVariant::fromValue(m_technicalLogLevel);
+                case IndexRelayTextMessage: return QVariant::fromValue(m_messageType);
+                case IndexRelayGloballyEnabled: return QVariant::fromValue(m_relayGloballyEnabled);
                 default: return CValueObject::propertyByIndex(index);
                 }
             }
 
-            void CSimulatorMessagesSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+            void CSimulatorMessagesSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
             {
-                if (index.isMyself()) { (*this) = variant.to<CSimulatorMessagesSettings>(); return; }
+                if (index.isMyself()) { (*this) = variant.value<CSimulatorMessagesSettings>(); return; }
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
@@ -746,13 +746,13 @@ namespace BlackMisc
                        u" SB offsets: " % boolToYesNo(m_useSbOffsets);
             }
 
-            CVariant CFsxP3DSettings::propertyByIndex(const CPropertyIndex &index) const
+            QVariant CFsxP3DSettings::propertyByIndex(CPropertyIndexRef index) const
             {
                 Q_UNUSED(index)
                 return {};
             }
 
-            void CFsxP3DSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+            void CFsxP3DSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
             {
                 Q_UNUSED(index)
                 Q_UNUSED(variant)

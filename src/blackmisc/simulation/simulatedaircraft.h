@@ -353,7 +353,7 @@ namespace BlackMisc
             QString getCombinedIcaoLiveryString(bool networkModel = false) const;
 
             //! Compare for index
-            int comparePropertyByIndex(const CPropertyIndex &index, const CSimulatedAircraft &compareValue) const;
+            int comparePropertyByIndex(CPropertyIndexRef index, const CSimulatedAircraft &compareValue) const;
 
             //! Get model (model used for mapping)
             const Simulation::CAircraftModel &getModel() const { return m_models[CurrentModel]; }
@@ -450,10 +450,10 @@ namespace BlackMisc
             void setSupportingGndFlag(bool supports) { m_supportsGndFlag = supports; }
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const CPropertyIndex &index) const;
+            QVariant propertyByIndex(CPropertyIndexRef index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
             //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;

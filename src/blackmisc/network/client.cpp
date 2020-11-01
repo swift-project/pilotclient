@@ -103,36 +103,36 @@ namespace BlackMisc
             return CIcons::Swift16;
         }
 
-        CVariant CClient::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CClient::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexCapabilities:       return CVariant::fromValue(m_capabilities);
-            case IndexCapabilitiesString: return CVariant(this->getCapabilitiesAsString());
+            case IndexCapabilities:       return QVariant::fromValue(m_capabilities);
+            case IndexCapabilitiesString: return QVariant(this->getCapabilitiesAsString());
             case IndexCallsign:           return this->getCallsign().propertyByIndex(index.copyFrontRemoved());
             case IndexUser:               return this->getUser().propertyByIndex(index.copyFrontRemoved());
-            case IndexModelString:        return CVariant(m_modelString);
-            case IndexServer:             return CVariant(m_server);
+            case IndexModelString:        return QVariant(m_modelString);
+            case IndexServer:             return QVariant(m_server);
             case IndexVoiceCapabilities:  return m_voiceCapabilities.propertyByIndex(index.copyFrontRemoved());
-            case IndexVoiceCapabilitiesPixmap: return CVariant::from(CIcon(m_voiceCapabilities.toIcon()).toPixmap());
-            case IndexVoiceCapabilitiesIcon:   return CVariant::from(CIcon(m_voiceCapabilities.toIcon()));
-            case IndexVoiceCapabilitiesString: return CVariant(m_voiceCapabilities.toQString(true));
+            case IndexVoiceCapabilitiesPixmap: return QVariant::fromValue(CIcon(m_voiceCapabilities.toIcon()).toPixmap());
+            case IndexVoiceCapabilitiesIcon:   return QVariant::fromValue(CIcon(m_voiceCapabilities.toIcon()));
+            case IndexVoiceCapabilitiesString: return QVariant(m_voiceCapabilities.toQString(true));
             default: break;
             }
             return CValueObject::propertyByIndex(index);
         }
 
-        void CClient::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CClient::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CClient>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CClient>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexCapabilities: m_capabilities = variant.toInt(); break;
-            case IndexModelString:  m_modelString = variant.toQString(); break;
-            case IndexServer:   m_server = variant.toQString(); break;
+            case IndexModelString:  m_modelString = variant.toString(); break;
+            case IndexServer:   m_server = variant.toString(); break;
             case IndexUser:     m_user.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexCallsign: m_user.setCallsign(variant.value<BlackMisc::Aviation::CCallsign>()); break;
             case IndexVoiceCapabilities: m_voiceCapabilities.setPropertyByIndex(index.copyFrontRemoved(), variant); break;

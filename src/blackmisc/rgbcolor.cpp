@@ -184,35 +184,35 @@ namespace BlackMisc
         return this->hex();
     }
 
-    CVariant CRgbColor::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+    QVariant CRgbColor::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return CVariant::from(*this); }
+        if (index.isMyself()) { return QVariant::fromValue(*this); }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexBlue: return CVariant::fromValue(blue());
-        case IndexRed: return CVariant::fromValue(red());
-        case IndexGreen: return CVariant::fromValue(green());
-        case IndexWebHex: return CVariant::fromValue(hex());
+        case IndexBlue: return QVariant::fromValue(blue());
+        case IndexRed: return QVariant::fromValue(red());
+        case IndexGreen: return QVariant::fromValue(green());
+        case IndexWebHex: return QVariant::fromValue(hex());
         default: return CValueObject::propertyByIndex(index);
         }
     }
 
-    void CRgbColor::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+    void CRgbColor::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.to<CRgbColor>(); return; }
+        if (index.isMyself()) { (*this) = variant.value<CRgbColor>(); return; }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexBlue: m_b = variant.toInt(); break;
         case IndexRed: m_r = variant.toInt(); break;
         case IndexGreen: m_g = variant.toInt(); break;
-        case IndexWebHex: this->setByString(variant.toQString()); break;
+        case IndexWebHex: this->setByString(variant.toString()); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 
-    int CRgbColor::comparePropertyByIndex(const CPropertyIndex &index, const CRgbColor &compareValue) const
+    int CRgbColor::comparePropertyByIndex(CPropertyIndexRef index, const CRgbColor &compareValue) const
     {
         if (index.isMyself()) { return this->compare(compareValue); }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();

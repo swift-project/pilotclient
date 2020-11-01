@@ -27,23 +27,23 @@ namespace BlackMisc
                    this->getDbKeyAsStringInParentheses(" ");
         }
 
-        CVariant CRole::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CRole::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexName: return CVariant::fromValue(m_name);
-            case IndexDescription: return CVariant::fromValue(m_description);
+            case IndexName: return QVariant::fromValue(m_name);
+            case IndexDescription: return QVariant::fromValue(m_description);
             default: break;
             }
             return CValueObject::propertyByIndex(index);
         }
 
-        void CRole::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CRole::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CRole>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CRole>(); return; }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)

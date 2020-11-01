@@ -38,31 +38,31 @@ namespace BlackMisc
         return (index >= static_cast<int>(IndexOrder)) && (index <= static_cast<int>(IndexOrderString));
     }
 
-    bool IOrderable::canHandleIndex(const CPropertyIndex &index)
+    bool IOrderable::canHandleIndex(CPropertyIndexRef index)
     {
         if (index.isEmpty()) { return false; }
         const int i = index.frontCasted<int>();
         return isAnyOrderIndex(i);
     }
 
-    CVariant IOrderable::propertyByIndex(const CPropertyIndex &index) const
+    QVariant IOrderable::propertyByIndex(CPropertyIndexRef index) const
     {
         if (!index.isEmpty())
         {
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexOrder: return CVariant::fromValue(this->m_order);
-            case IndexOrderString: return CVariant::fromValue(this->getOrderAsString());
+            case IndexOrder: return QVariant::fromValue(this->m_order);
+            case IndexOrderString: return QVariant::fromValue(this->getOrderAsString());
             default: break;
             }
         }
         const QString m = QStringLiteral("Cannot handle index %1").arg(index.toQString());
         BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
-        return CVariant::fromValue(m);
+        return QVariant::fromValue(m);
     }
 
-    void IOrderable::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+    void IOrderable::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
         if (!index.isEmpty())
         {
@@ -79,7 +79,7 @@ namespace BlackMisc
         BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
     }
 
-    int IOrderable::comparePropertyByIndex(const CPropertyIndex &index, const IOrderable &compareValue) const
+    int IOrderable::comparePropertyByIndex(CPropertyIndexRef index, const IOrderable &compareValue) const
     {
         Q_UNUSED(index)
         static const int max = std::numeric_limits<int>::max();

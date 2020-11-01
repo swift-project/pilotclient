@@ -214,13 +214,13 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
             //! \copydoc Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const CPropertyIndex &index) const;
+            QVariant propertyByIndex(CPropertyIndexRef index) const;
 
             //! \copydoc Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
             //! \copydoc Mixin::Index::comparePropertyByIndex
-            int comparePropertyByIndex(const CPropertyIndex &index, const CAirlineIcaoCode &compareValue) const;
+            int comparePropertyByIndex(CPropertyIndexRef index, const CAirlineIcaoCode &compareValue) const;
 
             //! Get icon resource path
             QString getIconResourcePath() const;

@@ -21,27 +21,27 @@ namespace BlackCore
             return QStringLiteral("DBus: %1 frameless: %2 mode: %3").arg(m_dBusAddress, boolToYesNo(m_windowFrameless)).arg(m_coreMode);
         }
 
-        CVariant CLauncherSetup::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CLauncherSetup::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDBusAddress:     return CVariant::fromValue(m_dBusAddress);
-            case IndexFramelessWindow: return CVariant::fromValue(m_windowFrameless);
-            case IndexCoreMode:        return CVariant::fromValue(m_coreMode);
-            case IndexAudioMode:       return CVariant::fromValue(m_audioMode);
+            case IndexDBusAddress:     return QVariant::fromValue(m_dBusAddress);
+            case IndexFramelessWindow: return QVariant::fromValue(m_windowFrameless);
+            case IndexCoreMode:        return QVariant::fromValue(m_coreMode);
+            case IndexAudioMode:       return QVariant::fromValue(m_audioMode);
             default:                   return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CLauncherSetup::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CLauncherSetup::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CLauncherSetup>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CLauncherSetup>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDBusAddress:       this->setDBusAddress(variant.toQString());  break;
+            case IndexDBusAddress:       this->setDBusAddress(variant.toString());   break;
             case IndexFramelessWindow:   m_windowFrameless = variant.toBool();       break;
             case IndexCoreMode:          m_coreMode  = variant.toInt();              break;
             case IndexAudioMode:         m_audioMode = variant.toInt();              break;

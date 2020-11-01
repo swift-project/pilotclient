@@ -323,7 +323,7 @@ namespace BlackGui
         QString CViewBaseNonTemplate::getRememberedLastJsonDirectory() const
         {
             const CDirectories directories = m_dirSettings.get();
-            return directories.propertyByIndex(m_dirSettingsIndex).toQString();
+            return directories.propertyByIndex(m_dirSettingsIndex).toString();
         }
 
         Components::CTextEditDialog *CViewBaseNonTemplate::textEditDialog()
@@ -590,7 +590,7 @@ namespace BlackGui
             }
 
             // Save file path
-            const QString dir = m_dirSettings.get().propertyByIndex(m_dirSettingsIndex).toQString();
+            const QString dir = m_dirSettings.get().propertyByIndex(m_dirSettingsIndex).toString();
             QString name(m_saveFileName);
             if (name.isEmpty())
             {

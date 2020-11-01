@@ -154,13 +154,13 @@ namespace BlackMisc
             CIcons::IconIndex toIcon() const { return this->getCallsign().toIcon(); }
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const CPropertyIndex &index) const;
+            QVariant propertyByIndex(CPropertyIndexRef index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
             //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
-            int comparePropertyByIndex(const CPropertyIndex &index, const CUser &compareValue) const;
+            int comparePropertyByIndex(CPropertyIndexRef index, const CUser &compareValue) const;
 
             //! This and another user exchange missing data, This user has priority and overrides first.
             void synchronizeData(CUser &otherUser);

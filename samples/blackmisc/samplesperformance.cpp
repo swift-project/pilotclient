@@ -840,13 +840,13 @@ namespace BlackSample
         QString r;
         if (byPropertyIndex)
         {
-            r.append(station.propertyByIndex({ CAtcStation::IndexCallsign, CCallsign::IndexString}).toQString());
-            r.append(station.propertyByIndex({ CAtcStation::IndexController, CUser::IndexRealName}).toQString());
-            r.append(station.propertyByIndex({ CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLatitudeAsString}).toQString());
-            r.append(station.propertyByIndex({ CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLongitudeAsString}).toQString());
-            r.append(station.propertyByIndex({ CAtcStation::IndexRelativeDistance, CLength::IndexValueRounded2DigitsWithUnit}).toQString());
-            r.append(station.propertyByIndex({ CAtcStation::IndexBookedFrom}).toDateTime().toString("yyyy-MM-dd hh:mm"));
-            r.append(station.propertyByIndex({ CAtcStation::IndexBookedUntil}).toDateTime().toString("yyyy-MM-dd hh:mm"));
+            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexCallsign, CCallsign::IndexString}).toString());
+            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexController, CUser::IndexRealName}).toString());
+            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLatitudeAsString}).toString());
+            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLongitudeAsString}).toString());
+            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexRelativeDistance, CLength::IndexValueRounded2DigitsWithUnit}).toString());
+            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexBookedFrom}).toDateTime().toString("yyyy-MM-dd hh:mm"));
+            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexBookedUntil}).toDateTime().toString("yyyy-MM-dd hh:mm"));
         }
         else
         {

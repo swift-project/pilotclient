@@ -102,36 +102,36 @@ namespace BlackMisc
             return !(jv.isNull() || jv.isUndefined());
         }
 
-        CVariant IDatastoreObjectWithIntegerKey::propertyByIndex(const CPropertyIndex &index) const
+        QVariant IDatastoreObjectWithIntegerKey::propertyByIndex(CPropertyIndexRef index) const
         {
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDbIntegerKey:   return CVariant::from(m_dbKey);
-            case IndexDbKeyAsString:  return CVariant::from(this->getDbKeyAsString());
-            case IndexIsLoadedFromDb: return CVariant::from(this->hasValidDbKey());
-            case IndexDatabaseIcon:   return CVariant::from(this->toDatabaseIcon());
-            case IndexVersion:        return CVariant::from(this->getVersion());
+            case IndexDbIntegerKey:   return QVariant::fromValue(m_dbKey);
+            case IndexDbKeyAsString:  return QVariant::fromValue(this->getDbKeyAsString());
+            case IndexIsLoadedFromDb: return QVariant::fromValue(this->hasValidDbKey());
+            case IndexDatabaseIcon:   return QVariant::fromValue(this->toDatabaseIcon());
+            case IndexVersion:        return QVariant::fromValue(this->getVersion());
             default: break;
             }
-            return CVariant();
+            return QVariant();
         }
 
-        void IDatastoreObjectWithIntegerKey::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void IDatastoreObjectWithIntegerKey::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
             if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexDbIntegerKey:  m_dbKey = variant.toInt(); break;
-            case IndexDbKeyAsString: m_dbKey = stringToDbKey(variant.toQString()); break;
-            case IndexVersion: this->setVersion(variant.toQString()); break;
+            case IndexDbKeyAsString: m_dbKey = stringToDbKey(variant.toString()); break;
+            case IndexVersion: this->setVersion(variant.toString()); break;
             default: break;
             }
         }
 
-        int IDatastoreObjectWithIntegerKey::comparePropertyByIndex(const CPropertyIndex &index, const IDatastoreObjectWithIntegerKey &compareValue) const
+        int IDatastoreObjectWithIntegerKey::comparePropertyByIndex(CPropertyIndexRef index, const IDatastoreObjectWithIntegerKey &compareValue) const
         {
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -147,7 +147,7 @@ namespace BlackMisc
             return 0;
         }
 
-        bool IDatastoreObjectWithIntegerKey::canHandleIndex(const BlackMisc::CPropertyIndex &index)
+        bool IDatastoreObjectWithIntegerKey::canHandleIndex(BlackMisc::CPropertyIndexRef index)
         {
             if (ITimestampBased::canHandleIndex(index)) { return true; }
             const int i = index.frontCasted<int>();
@@ -193,23 +193,23 @@ namespace BlackMisc
             return !(jv.isNull() || jv.isUndefined());
         }
 
-        CVariant IDatastoreObjectWithStringKey::propertyByIndex(const CPropertyIndex &index) const
+        QVariant IDatastoreObjectWithStringKey::propertyByIndex(CPropertyIndexRef index) const
         {
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexDbKeyAsString: // fall thru
-            case IndexDbStringKey:    return CVariant::from(m_dbKey);
-            case IndexDatabaseIcon:   return CVariant::from(this->toDatabaseIcon());
-            case IndexIsLoadedFromDb: return CVariant::from(m_loadedFromDb);
-            case IndexVersion:        return CVariant::from(this->getVersion());
+            case IndexDbStringKey:    return QVariant::fromValue(m_dbKey);
+            case IndexDatabaseIcon:   return QVariant::fromValue(this->toDatabaseIcon());
+            case IndexIsLoadedFromDb: return QVariant::fromValue(m_loadedFromDb);
+            case IndexVersion:        return QVariant::fromValue(this->getVersion());
             default: break;
             }
-            return CVariant();
+            return QVariant();
         }
 
-        void IDatastoreObjectWithStringKey::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void IDatastoreObjectWithStringKey::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
             if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -220,13 +220,13 @@ namespace BlackMisc
                 m_dbKey = variant.value<QString>();
                 break;
             case IndexIsLoadedFromDb: m_loadedFromDb = variant.toBool(); break;
-            case IndexVersion: this->setVersion(variant.toQString()); break;
+            case IndexVersion: this->setVersion(variant.toString()); break;
             default:
                 break;
             }
         }
 
-        int IDatastoreObjectWithStringKey::comparePropertyByIndex(const CPropertyIndex &index, const IDatastoreObjectWithStringKey &compareValue) const
+        int IDatastoreObjectWithStringKey::comparePropertyByIndex(CPropertyIndexRef index, const IDatastoreObjectWithStringKey &compareValue) const
         {
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -242,7 +242,7 @@ namespace BlackMisc
             return 0;
         }
 
-        bool IDatastoreObjectWithStringKey::canHandleIndex(const CPropertyIndex &index)
+        bool IDatastoreObjectWithStringKey::canHandleIndex(CPropertyIndexRef index)
         {
             if (index.isEmpty()) { return false; }
             if (ITimestampBased::canHandleIndex(index)) { return true;}

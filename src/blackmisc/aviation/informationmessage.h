@@ -99,13 +99,13 @@ namespace BlackMisc
             bool isEmpty() const { return m_message.isEmpty(); }
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const CPropertyIndex &index) const;
+            QVariant propertyByIndex(CPropertyIndexRef index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
             //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
-            int comparePropertyByIndex(const CPropertyIndex &index, const CInformationMessage &compareValue) const;
+            int comparePropertyByIndex(CPropertyIndexRef index, const CInformationMessage &compareValue) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;

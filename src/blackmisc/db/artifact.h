@@ -132,10 +132,10 @@ namespace BlackMisc
             QString convertToQString(const QString &separator, bool i18n = false) const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
+            void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
 
             //! Object from database JSON format
             static CArtifact fromDatabaseJson(const QJsonObject &json, const QString &prefix = {});

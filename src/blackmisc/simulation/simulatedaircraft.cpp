@@ -334,9 +334,9 @@ namespace BlackMisc
             return model.getAircraftIcaoCode().getDesignator();
         }
 
-        CVariant CSimulatedAircraft::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CSimulatedAircraft::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -345,11 +345,11 @@ namespace BlackMisc
             case IndexNetworkModelAircraftIcaoDifference: return this->getNetworkModelAircraftIcaoDifference();
             case IndexNetworkModelAirlineIcaoDifference: return this->getNetworkModelAirlineIcaoDifference();
             case IndexNetworkModelLiveryDifference: return this->getNetworkModelLiveryDifference();
-            case IndexEnabled:  return CVariant::fromValue(this->isEnabled());
-            case IndexRendered: return CVariant::fromValue(this->isRendered());
-            case IndexPartsSynchronized: return CVariant::fromValue(this->isPartsSynchronized());
-            case IndexFastPositionUpdates: return CVariant::fromValue(this->fastPositionUpdates());
-            case IndexSupportsGndFlag: return CVariant::fromValue(this->isSupportingGndFlag());
+            case IndexEnabled:  return QVariant::fromValue(this->isEnabled());
+            case IndexRendered: return QVariant::fromValue(this->isRendered());
+            case IndexPartsSynchronized: return QVariant::fromValue(this->isPartsSynchronized());
+            case IndexFastPositionUpdates: return QVariant::fromValue(this->fastPositionUpdates());
+            case IndexSupportsGndFlag: return QVariant::fromValue(this->isSupportingGndFlag());
             case IndexCallsign: return m_callsign.propertyByIndex(index.copyFrontRemoved());
             case IndexPilot:    return m_pilot.propertyByIndex(index.copyFrontRemoved());
             case IndexRelativeDistance: return m_relativeDistance.propertyByIndex(index.copyFrontRemoved());
@@ -360,9 +360,9 @@ namespace BlackMisc
             case IndexAircraftIcaoCode: return this->getAircraftIcaoCode().propertyByIndex(index.copyFrontRemoved());
             case IndexLivery: return this->getLivery().propertyByIndex(index.copyFrontRemoved());
             case IndexParts: return m_parts.propertyByIndex(index.copyFrontRemoved());
-            case IndexIsVtol: return CVariant::fromValue(this->isVtol());
-            case IndexCombinedIcaoLiveryString: return CVariant::fromValue(this->getCombinedIcaoLiveryString(false));
-            case IndexCombinedIcaoLiveryStringNetworkModel: return CVariant::fromValue(this->getCombinedIcaoLiveryString(true));
+            case IndexIsVtol: return QVariant::fromValue(this->isVtol());
+            case IndexCombinedIcaoLiveryString: return QVariant::fromValue(this->getCombinedIcaoLiveryString(false));
+            case IndexCombinedIcaoLiveryStringNetworkModel: return QVariant::fromValue(this->getCombinedIcaoLiveryString(true));
             default:
                 return (ICoordinateWithRelativePosition::canHandleIndex(index)) ?
                        ICoordinateWithRelativePosition::propertyByIndex(index) :
@@ -370,9 +370,9 @@ namespace BlackMisc
             }
         }
 
-        void CSimulatedAircraft::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CSimulatedAircraft::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CSimulatedAircraft>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CSimulatedAircraft>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -408,7 +408,7 @@ namespace BlackMisc
             }
         }
 
-        int CSimulatedAircraft::comparePropertyByIndex(const CPropertyIndex &index, const CSimulatedAircraft &compareValue) const
+        int CSimulatedAircraft::comparePropertyByIndex(CPropertyIndexRef index, const CSimulatedAircraft &compareValue) const
         {
             if (index.isMyself()) { return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign()); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();

@@ -25,28 +25,28 @@ namespace BlackMisc
             m_level(level), m_temperature(value), m_dewPoint(dewPoint), m_relativeHumidity(relativeHumidity)
         { }
 
-        CVariant CTemperatureLayer::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CTemperatureLayer::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexLevel:
-                return CVariant::fromValue(m_level);
+                return QVariant::fromValue(m_level);
             case IndexTemperature:
-                return CVariant::fromValue(m_temperature);
+                return QVariant::fromValue(m_temperature);
             case IndexDewPoint:
-                return CVariant::fromValue(m_dewPoint);
+                return QVariant::fromValue(m_dewPoint);
             case IndexRelativeHumidity:
-                return CVariant::fromValue(m_relativeHumidity);
+                return QVariant::fromValue(m_relativeHumidity);
             default:
                 return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CTemperatureLayer::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CTemperatureLayer::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CTemperatureLayer>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CTemperatureLayer>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

@@ -31,28 +31,28 @@ namespace BlackMisc
                 return ms.arg(this->m_emulatedSimulator.toQString(), m_defaultModel.getModelStringAndDbKey(), boolToYesNo(m_logFunctionCalls));
             }
 
-            CVariant CSwiftPluginSettings::propertyByIndex(const CPropertyIndex &index) const
+            QVariant CSwiftPluginSettings::propertyByIndex(CPropertyIndexRef index) const
             {
-                if (index.isMyself()) { return CVariant::from(*this); }
+                if (index.isMyself()) { return QVariant::fromValue(*this); }
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
                 case IndexEmulatedSimulator:
                     return this->m_emulatedSimulator.propertyByIndex(index.copyFrontRemoved());
                 case IndexOwnModel:
-                    return CVariant::from(m_ownModel);
+                    return QVariant::fromValue(m_ownModel);
                 case IndexDefaultModel:
-                    return CVariant::from(m_defaultModel);
+                    return QVariant::fromValue(m_defaultModel);
                 case IndexLoggingFunctionCalls:
-                    return CVariant::from(m_logFunctionCalls);
+                    return QVariant::fromValue(m_logFunctionCalls);
                 default:
                     return CValueObject::propertyByIndex(index);
                 }
             }
 
-            void CSwiftPluginSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+            void CSwiftPluginSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
             {
-                if (index.isMyself()) { (*this) = variant.to<CSwiftPluginSettings>(); return; }
+                if (index.isMyself()) { (*this) = variant.value<CSwiftPluginSettings>(); return; }
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {

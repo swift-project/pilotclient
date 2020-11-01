@@ -58,35 +58,35 @@ namespace BlackMisc
             }
         }
 
-        CVariant CInformationMessage::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CInformationMessage::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexType: return CVariant::from(m_type);
-            case IndexMessage: return CVariant::from(m_message);
+            case IndexType: return QVariant::fromValue(m_type);
+            case IndexMessage: return QVariant::fromValue(m_message);
             default: break;
             }
             return CValueObject::propertyByIndex(index);
         }
 
-        void CInformationMessage::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CInformationMessage::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CInformationMessage>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CInformationMessage>(); return; }
             if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexType:    m_type = static_cast<InformationType>(variant.toInt()); break;
-            case IndexMessage: m_message = variant.toQString(); break;
+            case IndexMessage: m_message = variant.toString(); break;
             default: break;
             }
             CValueObject::setPropertyByIndex(index, variant);
         }
 
-        int CInformationMessage::comparePropertyByIndex(const CPropertyIndex &index, const CInformationMessage &compareValue) const
+        int CInformationMessage::comparePropertyByIndex(CPropertyIndexRef index, const CInformationMessage &compareValue) const
         {
             if (index.isMyself())
             {

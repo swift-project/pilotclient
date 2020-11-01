@@ -103,25 +103,25 @@ namespace BlackMisc
             return allModifiers;
         }
 
-        CVariant CKeyboardKey::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CKeyboardKey::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexKey: return CVariant::from(m_keyCode);
-            case IndexKeyAsString: return CVariant::from(getKeyAsString());
+            case IndexKey: return QVariant::fromValue(m_keyCode);
+            case IndexKeyAsString: return QVariant::fromValue(getKeyAsString());
             default: break;
             }
 
             Q_ASSERT_X(false, "CKeyboardKey", "index unknown");
             QString m = QString("no property, index ").append(index.toQString());
-            return CVariant::fromValue(m);
+            return QVariant::fromValue(m);
         }
 
-        void CKeyboardKey::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CKeyboardKey::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CKeyboardKey>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CKeyboardKey>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

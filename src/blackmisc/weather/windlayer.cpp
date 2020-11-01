@@ -23,30 +23,30 @@ namespace BlackMisc
             m_level(level), m_directionMain(direction), m_speed(speed), m_gustSpeed(gustSpeed)
         { }
 
-        CVariant CWindLayer::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CWindLayer::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexLevel:
-                return CVariant::fromValue(m_level);
+                return QVariant::fromValue(m_level);
             case IndexDirection:
-                return CVariant::fromValue(m_directionMain);
+                return QVariant::fromValue(m_directionMain);
             case IndexDirectionVariable:
-                return CVariant::fromValue(m_directionVariable);
+                return QVariant::fromValue(m_directionVariable);
             case IndexSpeed:
-                return CVariant::fromValue(m_speed);
+                return QVariant::fromValue(m_speed);
             case IndexGustSpeed:
-                return CVariant::fromValue(m_gustSpeed);
+                return QVariant::fromValue(m_gustSpeed);
             default:
                 return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CWindLayer::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CWindLayer::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CWindLayer>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CWindLayer>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

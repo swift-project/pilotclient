@@ -137,13 +137,13 @@ namespace BlackMisc
         CIcons::IconIndex toIcon() const;
 
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-        CVariant propertyByIndex(const CPropertyIndex &index) const;
+        QVariant propertyByIndex(CPropertyIndexRef index) const;
 
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+        void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
         //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
-        int comparePropertyByIndex(const CPropertyIndex &index, const CApplicationInfo &compareValue) const;
+        int comparePropertyByIndex(CPropertyIndexRef index, const CApplicationInfo &compareValue) const;
 
         //! Name of pilot client GUI
         static const QString &swiftPilotClientGui();

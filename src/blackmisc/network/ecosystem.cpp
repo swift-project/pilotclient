@@ -86,21 +86,21 @@ namespace BlackMisc
             }
         }
 
-        CVariant CEcosystem::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CEcosystem::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexSystem: return CVariant::fromValue(m_system);
-            case IndexSystemString: return CVariant::fromValue(this->getSystemString());
+            case IndexSystem: return QVariant::fromValue(m_system);
+            case IndexSystemString: return QVariant::fromValue(this->getSystemString());
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CEcosystem::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CEcosystem::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CEcosystem>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CEcosystem>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -109,7 +109,7 @@ namespace BlackMisc
             }
         }
 
-        int CEcosystem::comparePropertyByIndex(const CPropertyIndex &index, const CEcosystem &compareValue) const
+        int CEcosystem::comparePropertyByIndex(CPropertyIndexRef index, const CEcosystem &compareValue) const
         {
             if (index.isMyself()) { return Compare::compare(m_system, compareValue.m_system); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();

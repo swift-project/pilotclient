@@ -284,23 +284,23 @@ namespace BlackMisc
             return q;
         }
 
-        CVariant CUrl::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CUrl::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexHost:   return CVariant::fromValue(m_host);
-            case IndexPort:   return CVariant::fromValue(m_port);
-            case IndexScheme: return CVariant::fromValue(m_scheme);
-            case IndexPath:   return CVariant::fromValue(m_path);
+            case IndexHost:   return QVariant::fromValue(m_host);
+            case IndexPort:   return QVariant::fromValue(m_port);
+            case IndexScheme: return QVariant::fromValue(m_scheme);
+            case IndexPath:   return QVariant::fromValue(m_path);
             default:          return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CUrl::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CUrl::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CUrl>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CUrl>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

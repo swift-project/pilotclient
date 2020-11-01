@@ -63,32 +63,32 @@ namespace BlackGui
             return s;
         }
 
-        CVariant CNavigatorSettings::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CNavigatorSettings::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexMargins:
-                return CVariant::fromValue(this->m_margins);
+                return QVariant::fromValue(this->m_margins);
             case IndexFrameless:
-                return CVariant::fromValue(this->isFramless());
+                return QVariant::fromValue(this->isFramless());
             case IndexColumns:
-                return CVariant::fromValue(this->m_columns);
+                return QVariant::fromValue(this->m_columns);
             default:
                 return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CNavigatorSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CNavigatorSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CNavigatorSettings>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CNavigatorSettings>(); return; }
 
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexMargins:
-                this->m_margins = variant.toQString();
+                this->m_margins = variant.toString();
                 break;
             case IndexColumns:
                 this->m_columns = variant.toInt();

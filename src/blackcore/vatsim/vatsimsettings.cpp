@@ -36,9 +36,9 @@ namespace BlackCore
             return s;
         }
 
-        CVariant CReaderSettings::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CReaderSettings::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -47,15 +47,15 @@ namespace BlackCore
             case IndexPeriodicTime:
                 return this->m_periodicTime.propertyByIndex(index.copyFrontRemoved());
             case IndexNeverUpdate:
-                return CVariant::fromValue(this->m_neverUpdate);
+                return QVariant::fromValue(this->m_neverUpdate);
             default:
                 return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CReaderSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CReaderSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CReaderSettings>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CReaderSettings>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -90,28 +90,28 @@ namespace BlackCore
             return s;
         }
 
-        CVariant CRawFsdMessageSettings::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CRawFsdMessageSettings::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexRawFsdMessagesEnabled: return CVariant::fromValue(this->m_rawFsdMessagesEnabled);
-            case IndexFileDir: return CVariant::fromValue(this->m_FileDir);
-            case IndexFileWriteMode: return CVariant::fromValue(this->m_fileWriteMode);
+            case IndexRawFsdMessagesEnabled: return QVariant::fromValue(this->m_rawFsdMessagesEnabled);
+            case IndexFileDir: return QVariant::fromValue(this->m_FileDir);
+            case IndexFileWriteMode: return QVariant::fromValue(this->m_fileWriteMode);
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CRawFsdMessageSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CRawFsdMessageSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CRawFsdMessageSettings>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CRawFsdMessageSettings>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexRawFsdMessagesEnabled: this->m_rawFsdMessagesEnabled = variant.toBool(); break;
-            case IndexFileDir: this->m_FileDir = variant.toQString(); break;
-            case IndexFileWriteMode: this->m_fileWriteMode = variant.to<FileWriteMode>(); break;
+            case IndexFileDir: this->m_FileDir = variant.toString(); break;
+            case IndexFileWriteMode: this->m_fileWriteMode = variant.value<FileWriteMode>(); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }

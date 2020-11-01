@@ -36,26 +36,26 @@ namespace BlackMisc
             return url;
         }
 
-        CVariant CSimBriefData::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CSimBriefData::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexUrl:      return CVariant::from(m_url);
-            case IndexUsername: return CVariant::from(m_username);
+            case IndexUrl:      return QVariant::fromValue(m_url);
+            case IndexUsername: return QVariant::fromValue(m_username);
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CSimBriefData::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CSimBriefData::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CSimBriefData>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CSimBriefData>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexUrl:      m_url = variant.toQString(); break;
-            case IndexUsername: m_username = variant.toQString(); break;
+            case IndexUrl:      m_url = variant.toString(); break;
+            case IndexUsername: m_username = variant.toString(); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }

@@ -24,21 +24,21 @@ namespace BlackGui
             return s.arg(boolToOnOff(this->showOnlyInRange()), boolToOnOff(this->showOnlyWithValidFrequency()));
         }
 
-        CVariant CAtcStationsSettings::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CAtcStationsSettings::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexInRangeOnly: return CVariant::fromValue(m_showOnlyInRange);
-            case IndexValidFrequencyOnly: return CVariant::fromValue(m_onlyWithValidFrequency);
+            case IndexInRangeOnly: return QVariant::fromValue(m_showOnlyInRange);
+            case IndexValidFrequencyOnly: return QVariant::fromValue(m_onlyWithValidFrequency);
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CAtcStationsSettings::setPropertyByIndex(const CPropertyIndex &index, const BlackMisc::CVariant &variant)
+        void CAtcStationsSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CAtcStationsSettings>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CAtcStationsSettings>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

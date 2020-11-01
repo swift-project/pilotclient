@@ -88,31 +88,31 @@ namespace BlackMisc
             }
         }
 
-        CVariant CMatchingStatisticsEntry::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CMatchingStatisticsEntry::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexSessionId: return CVariant::from(m_sessionId);
-            case IndexModelSetId: return CVariant::from(m_modelSetId);
-            case IndexCount: return CVariant::from(m_count);
-            case IndexEntryType: return CVariant::from(m_entryType);
-            case IndexEntryTypeAsString: return CVariant::from(entryTypeToString(this->getEntryType()));
-            case IndexEntryTypeAsIcon: return CVariant::from(entryTypeToIcon(this->getEntryType()));
-            case IndexAircraftDesignator: return CVariant::from(m_aircraftDesignator);
-            case IndexAirlineDesignator: return CVariant::from(m_airlineDesignator);
-            case IndexDescription: return CVariant::from(m_description);
-            case IndexHasAircraftAirlineCombination: return CVariant::from(this->hasAircraftAirlineCombination());
+            case IndexSessionId: return QVariant::fromValue(m_sessionId);
+            case IndexModelSetId: return QVariant::fromValue(m_modelSetId);
+            case IndexCount: return QVariant::fromValue(m_count);
+            case IndexEntryType: return QVariant::fromValue(m_entryType);
+            case IndexEntryTypeAsString: return QVariant::fromValue(entryTypeToString(this->getEntryType()));
+            case IndexEntryTypeAsIcon: return QVariant::fromValue(entryTypeToIcon(this->getEntryType()));
+            case IndexAircraftDesignator: return QVariant::fromValue(m_aircraftDesignator);
+            case IndexAirlineDesignator: return QVariant::fromValue(m_airlineDesignator);
+            case IndexDescription: return QVariant::fromValue(m_description);
+            case IndexHasAircraftAirlineCombination: return QVariant::fromValue(this->hasAircraftAirlineCombination());
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CMatchingStatisticsEntry::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CMatchingStatisticsEntry::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CMatchingStatisticsEntry>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CMatchingStatisticsEntry>(); return; }
             if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -129,7 +129,7 @@ namespace BlackMisc
             }
         }
 
-        int CMatchingStatisticsEntry::comparePropertyByIndex(const CPropertyIndex &index, const CMatchingStatisticsEntry &compareValue) const
+        int CMatchingStatisticsEntry::comparePropertyByIndex(CPropertyIndexRef index, const CMatchingStatisticsEntry &compareValue) const
         {
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();

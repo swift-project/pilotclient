@@ -56,10 +56,10 @@ namespace BlackGui
             QString convertToQString(bool i18n = false) const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            BlackMisc::CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
+            void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
 
         private:
             QString m_widgetStyle { "Fusion" };

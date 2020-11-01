@@ -320,9 +320,9 @@ namespace BlackMisc
             return CFlightPlan::concatPrefixIcaoSuffix(m_prefix, m_aircraftIcao.getDesignator(), m_equipmentSuffix);
         }
 
-        CVariant CFlightPlan::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CFlightPlan::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -332,14 +332,14 @@ namespace BlackMisc
             case IndexDestinationAirportIcao: return m_destinationAirportIcao.propertyByIndex(index.copyFrontRemoved());
             case IndexOriginAirportIcao: return m_originAirportIcao.propertyByIndex(index.copyFrontRemoved());
             case IndexCallsign: return m_callsign.propertyByIndex(index.copyFrontRemoved());
-            case IndexRemarks: return CVariant::from(m_remarks);
+            case IndexRemarks: return QVariant::fromValue(m_remarks);
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CFlightPlan::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CFlightPlan::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CFlightPlan>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CFlightPlan>(); return; }
             if (ITimestampBased::canHandleIndex(index))
             {
                 ITimestampBased::setPropertyByIndex(index, variant);
@@ -353,7 +353,7 @@ namespace BlackMisc
             case IndexDestinationAirportIcao: m_destinationAirportIcao.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexOriginAirportIcao: m_originAirportIcao.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexCallsign: m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexRemarks: this->setRemarks(variant.toQString()); break;
+            case IndexRemarks: this->setRemarks(variant.toString()); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }

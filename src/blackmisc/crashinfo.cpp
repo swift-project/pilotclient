@@ -35,36 +35,36 @@ namespace BlackMisc
         m_logFileAndPath = fileName;
     }
 
-    CVariant CCrashInfo::propertyByIndex(const CPropertyIndex &index) const
+    QVariant CCrashInfo::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return CVariant::from(*this); }
+        if (index.isMyself()) { return QVariant::fromValue(*this); }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexUserName: return CVariant::fromValue(m_userName);
-        case IndexInfo: return CVariant::fromValue(m_info);
-        case IndexSimulatorString: return CVariant::fromValue(m_simulatorString);
-        case IndexFlightNetworkInfo: return CVariant::fromValue(m_flightNetwork);
+        case IndexUserName: return QVariant::fromValue(m_userName);
+        case IndexInfo: return QVariant::fromValue(m_info);
+        case IndexSimulatorString: return QVariant::fromValue(m_simulatorString);
+        case IndexFlightNetworkInfo: return QVariant::fromValue(m_flightNetwork);
         default: break;
         }
         return CValueObject::propertyByIndex(index);
     }
 
-    void CCrashInfo::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+    void CCrashInfo::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.to<CCrashInfo>(); return; }
+        if (index.isMyself()) { (*this) = variant.value<CCrashInfo>(); return; }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexUserName: this->setUserName(variant.toQString()); break;
-        case IndexInfo: this->setUserName(variant.toQString()); break;
-        case IndexSimulatorString: this->setSimulatorString(variant.toQString()); break;
-        case IndexFlightNetworkInfo: this->setFlightNetworkString(variant.toQString()); break;
+        case IndexUserName: this->setUserName(variant.toString()); break;
+        case IndexInfo: this->setUserName(variant.toString()); break;
+        case IndexSimulatorString: this->setSimulatorString(variant.toString()); break;
+        case IndexFlightNetworkInfo: this->setFlightNetworkString(variant.toString()); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 
-    int CCrashInfo::comparePropertyByIndex(const CPropertyIndex &index, const CCrashInfo &compareValue) const
+    int CCrashInfo::comparePropertyByIndex(CPropertyIndexRef index, const CCrashInfo &compareValue) const
     {
         if (index.isMyself()) { return this->getInfo().compare(compareValue.getInfo()); }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();

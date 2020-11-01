@@ -49,28 +49,28 @@ namespace BlackGui
                    .arg(m_updateUser.valueRounded(CTimeUnit::s(), 2)).arg(m_updateRendering.valueRounded(CTimeUnit::s(), 2));
         }
 
-        CVariant CViewUpdateSettings::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CViewUpdateSettings::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAircraft:
-                return CVariant::fromValue(this->m_updateAircraft);
+                return QVariant::fromValue(this->m_updateAircraft);
             case IndexAtc:
-                return CVariant::fromValue(this->m_updateAtc);
+                return QVariant::fromValue(this->m_updateAtc);
             case IndexRendering:
-                return CVariant::fromValue(this->m_updateRendering);
+                return QVariant::fromValue(this->m_updateRendering);
             case IndexUser:
-                return CVariant::fromValue(this->m_updateUser);
+                return QVariant::fromValue(this->m_updateUser);
             default:
                 return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CViewUpdateSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CViewUpdateSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CViewUpdateSettings>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CViewUpdateSettings>(); return; }
 
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)

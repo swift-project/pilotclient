@@ -156,7 +156,7 @@ namespace BlackMisc
             void setAllSimulators() { setSimulator(All); }
 
             //! \copydoc Mixin::String::toQString
-            int comparePropertyByIndex(const CPropertyIndex &index, const CSimulatorInfo &compareValue) const;
+            int comparePropertyByIndex(CPropertyIndexRef index, const CSimulatorInfo &compareValue) const;
 
             //! \copydoc Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;

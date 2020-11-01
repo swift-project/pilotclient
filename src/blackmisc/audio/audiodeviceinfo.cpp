@@ -74,36 +74,36 @@ namespace BlackMisc
             return CAudioDeviceInfo(InputDevice, QAudioDeviceInfo::defaultInputDevice().deviceName());
         }
 
-        CVariant CAudioDeviceInfo::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CAudioDeviceInfo::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::fromValue(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDeviceType:  return CVariant::fromValue(this->getType());
-            case IndexDeviceTypeAsString: return CVariant::fromValue(this->getTypeAsString());
-            case IndexName:        return CVariant::fromValue(this->getName());
+            case IndexDeviceType:  return QVariant::fromValue(this->getType());
+            case IndexDeviceTypeAsString: return QVariant::fromValue(this->getTypeAsString());
+            case IndexName:        return QVariant::fromValue(this->getName());
             case IndexIdentifier:  return m_identifier.propertyByIndex(index.copyFrontRemoved());
             default: break;
             }
             return CValueObject::propertyByIndex(index);
         }
 
-        void CAudioDeviceInfo::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CAudioDeviceInfo::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CAudioDeviceInfo>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CAudioDeviceInfo>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexDeviceType: m_type = static_cast<DeviceType>(variant.toInt()); return;
-            case IndexName:       m_deviceName = variant.toQString(); return;
+            case IndexName:       m_deviceName = variant.toString(); return;
             case IndexIdentifier: m_identifier.setPropertyByIndex(index.copyFrontRemoved(), variant); return;
             default: break;
             }
             CValueObject::setPropertyByIndex(index, variant);
         }
 
-        int CAudioDeviceInfo::comparePropertyByIndex(const CPropertyIndex &index, const CAudioDeviceInfo &compareValue) const
+        int CAudioDeviceInfo::comparePropertyByIndex(CPropertyIndexRef index, const CAudioDeviceInfo &compareValue) const
         {
             if (index.isMyself()) { return m_deviceName.compare(compareValue.m_deviceName, Qt::CaseInsensitive); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();

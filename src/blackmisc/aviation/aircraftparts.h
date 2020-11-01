@@ -72,13 +72,13 @@ namespace BlackMisc
                            const CAircraftEngineList &engines, bool onGround, qint64 timestamp);
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const CPropertyIndex &index) const;
+            QVariant propertyByIndex(CPropertyIndexRef index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
             //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
-            int comparePropertyByIndex(const CPropertyIndex &index, const CAircraftParts &compareValue) const;
+            int comparePropertyByIndex(CPropertyIndexRef index, const CAircraftParts &compareValue) const;
 
             //! Get aircraft lights
             CAircraftLights getLights() const { return m_lights; }

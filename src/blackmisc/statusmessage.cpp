@@ -431,29 +431,29 @@ namespace BlackMisc
         return all;
     }
 
-    CVariant CStatusMessage::propertyByIndex(const CPropertyIndex &index) const
+    QVariant CStatusMessage::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return CVariant::from(*this); }
+        if (index.isMyself()) { return QVariant::fromValue(*this); }
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
         if (IOrderable::canHandleIndex(index))      { return IOrderable::propertyByIndex(index); }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexMessage: return CVariant::from(this->getMessage());
-        case IndexSeverity: return CVariant::from(m_severity);
-        case IndexSeverityAsString: return CVariant::from(this->getSeverityAsString());
-        case IndexSeverityAsIcon: return CVariant::from(this->getSeverityAsIcon());
-        case IndexCategoriesAsString: return CVariant::from(m_categories.toQString());
-        case IndexCategoriesHumanReadableAsString: return CVariant::from(this->getHumanReadablePattern());
-        case IndexCategoryHumanReadableOrTechnicalAsString: return CVariant::from(this->getHumanOrTechnicalCategoriesAsString());
-        case IndexMessageAsHtml: return CVariant::from(this->toHtml(false, true));
+        case IndexMessage: return QVariant::fromValue(this->getMessage());
+        case IndexSeverity: return QVariant::fromValue(m_severity);
+        case IndexSeverityAsString: return QVariant::fromValue(this->getSeverityAsString());
+        case IndexSeverityAsIcon: return QVariant::fromValue(this->getSeverityAsIcon());
+        case IndexCategoriesAsString: return QVariant::fromValue(m_categories.toQString());
+        case IndexCategoriesHumanReadableAsString: return QVariant::fromValue(this->getHumanReadablePattern());
+        case IndexCategoryHumanReadableOrTechnicalAsString: return QVariant::fromValue(this->getHumanOrTechnicalCategoriesAsString());
+        case IndexMessageAsHtml: return QVariant::fromValue(this->toHtml(false, true));
         default: return CValueObject::propertyByIndex(index);
         }
     }
 
-    void CStatusMessage::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+    void CStatusMessage::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.to<CStatusMessage>(); return; }
+        if (index.isMyself()) { (*this) = variant.value<CStatusMessage>(); return; }
         if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
         if (IOrderable::canHandleIndex(index))      { IOrderable::setPropertyByIndex(index, variant); return; }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -469,7 +469,7 @@ namespace BlackMisc
         }
     }
 
-    int CStatusMessage::comparePropertyByIndex(const CPropertyIndex &index, const CStatusMessage &compareValue) const
+    int CStatusMessage::comparePropertyByIndex(CPropertyIndexRef index, const CStatusMessage &compareValue) const
     {
         if (index.isMyself()) { return Compare::compare(this->getSeverity(), compareValue.getSeverity()); }
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }

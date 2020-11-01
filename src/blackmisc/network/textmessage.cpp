@@ -302,9 +302,9 @@ namespace BlackMisc
             return CIcon(toIcon()).toPixmap();
         }
 
-        CVariant CTextMessage::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CTextMessage::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -312,15 +312,15 @@ namespace BlackMisc
             {
             case IndexSenderCallsign:    return m_senderCallsign.propertyByIndex(index.copyFrontRemoved());
             case IndexRecipientCallsign: return m_recipientCallsign.propertyByIndex(index.copyFrontRemoved());
-            case IndexRecipientCallsignOrFrequency: return CVariant::fromValue(this->getRecipientCallsignOrFrequency());
-            case IndexMessage: return CVariant::fromValue(m_message);
+            case IndexRecipientCallsignOrFrequency: return QVariant::fromValue(this->getRecipientCallsignOrFrequency());
+            case IndexMessage: return QVariant::fromValue(m_message);
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CTextMessage::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CTextMessage::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CTextMessage>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CTextMessage>(); return; }
             if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -333,7 +333,7 @@ namespace BlackMisc
             }
         }
 
-        int CTextMessage::comparePropertyByIndex(const CPropertyIndex &index, const CTextMessage &compareValue) const
+        int CTextMessage::comparePropertyByIndex(CPropertyIndexRef index, const CTextMessage &compareValue) const
         {
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();

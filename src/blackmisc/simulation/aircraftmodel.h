@@ -156,13 +156,13 @@ namespace BlackMisc
             CAircraftModel(const QString &model, ModelType type, const CSimulatorInfo &simulator, const QString &name, const QString &description, const Aviation::CAircraftIcaoCode &icao, const Aviation::CLivery &livery = Aviation::CLivery());
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const CPropertyIndex &index) const;
+            QVariant propertyByIndex(CPropertyIndexRef index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
             //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
-            int comparePropertyByIndex(const CPropertyIndex &index, const CAircraftModel &compareValue) const;
+            int comparePropertyByIndex(CPropertyIndexRef index, const CAircraftModel &compareValue) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;

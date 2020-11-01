@@ -143,16 +143,16 @@ namespace BlackMisc
             static bool existsKey(const QJsonObject &json, const QString &prefix = QString());
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
 
             //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
-            int comparePropertyByIndex(const CPropertyIndex &index, const IDatastoreObjectWithIntegerKey &compareValue) const;
+            int comparePropertyByIndex(CPropertyIndexRef index, const IDatastoreObjectWithIntegerKey &compareValue) const;
 
             //! Can given index be handled?
-            static bool canHandleIndex(const BlackMisc::CPropertyIndex &index);
+            static bool canHandleIndex(BlackMisc::CPropertyIndexRef index);
 
             int m_dbKey = -1; //!< key
         };
@@ -227,16 +227,16 @@ namespace BlackMisc
             static bool existsKey(const QJsonObject &json, const QString &prefix = QString());
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
 
             //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
-            int comparePropertyByIndex(const BlackMisc::CPropertyIndex &index, const IDatastoreObjectWithStringKey &compareValue) const;
+            int comparePropertyByIndex(BlackMisc::CPropertyIndexRef index, const IDatastoreObjectWithStringKey &compareValue) const;
 
             //! Can given index be handled
-            static bool canHandleIndex(const BlackMisc::CPropertyIndex &index);
+            static bool canHandleIndex(BlackMisc::CPropertyIndexRef index);
 
             QString m_dbKey;                //!< key
             bool    m_loadedFromDb = false; //!< as we have no artificial key, it can happen key is set, but not loaded from DB

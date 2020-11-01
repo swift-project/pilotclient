@@ -19,7 +19,7 @@ struct QMetaTypeId;
 
 namespace BlackMisc
 {
-    class CPropertyIndex;
+    class CPropertyIndexRef;
 
     /*!
      * If T has a member typedef base_type, this trait will obtain it, otherwise void.
@@ -57,7 +57,7 @@ namespace BlackMisc
     };
     //! \cond
     template <typename T>
-    struct TIndexBaseOf<T, void_t<decltype(std::declval<typename T::base_type>().propertyByIndex(std::declval<CPropertyIndex>()))>>
+    struct TIndexBaseOf<T, void_t<decltype(std::declval<typename T::base_type>().propertyByIndex(std::declval<CPropertyIndexRef>()))>>
     {
         using type = typename T::base_type; //!< T::base_type
     };

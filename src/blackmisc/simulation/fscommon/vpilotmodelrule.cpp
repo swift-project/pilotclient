@@ -50,25 +50,25 @@ namespace BlackMisc
                 return "??? - " + f;
             }
 
-            CVariant CVPilotModelRule::propertyByIndex(const CPropertyIndex &index) const
+            QVariant CVPilotModelRule::propertyByIndex(CPropertyIndexRef index) const
             {
-                if (index.isMyself()) { return CVariant::from(*this); }
+                if (index.isMyself()) { return QVariant::fromValue(*this); }
                 if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
                 ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexModelName: return CVariant::from(this->m_modelName);
-                case IndexFolder: return CVariant::from(this->m_folder);
-                case IndexTypeCode: return CVariant::from(this->m_typeCode);
-                case IndexCallsignPrefix: return CVariant::from(this->m_callsignPrefix);
+                case IndexModelName: return QVariant::fromValue(this->m_modelName);
+                case IndexFolder: return QVariant::fromValue(this->m_folder);
+                case IndexTypeCode: return QVariant::fromValue(this->m_typeCode);
+                case IndexCallsignPrefix: return QVariant::fromValue(this->m_callsignPrefix);
                 default:
                     return CValueObject::propertyByIndex(index);
                 }
             }
 
-            void CVPilotModelRule::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+            void CVPilotModelRule::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
             {
-                if (index.isMyself()) { (*this) = variant.to<CVPilotModelRule>(); return; }
+                if (index.isMyself()) { (*this) = variant.value<CVPilotModelRule>(); return; }
                 if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
                 ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)

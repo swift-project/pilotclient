@@ -24,9 +24,9 @@ namespace BlackMisc
                 return QStringLiteral("NOT USED");
             }
 
-            CVariant CNetworkSettings::propertyByIndex(const CPropertyIndex &index) const
+            QVariant CNetworkSettings::propertyByIndex(CPropertyIndexRef index) const
             {
-                if (index.isMyself()) { return CVariant::from(*this); }
+                if (index.isMyself()) { return QVariant::fromValue(*this); }
                 // const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 // switch (i)
                 // {
@@ -36,9 +36,9 @@ namespace BlackMisc
                 return CValueObject::propertyByIndex(index);
             }
 
-            void CNetworkSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+            void CNetworkSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
             {
-                if (index.isMyself()) { (*this) = variant.to<CNetworkSettings>(); return; }
+                if (index.isMyself()) { (*this) = variant.value<CNetworkSettings>(); return; }
                 // const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 // switch (i)
                 // {

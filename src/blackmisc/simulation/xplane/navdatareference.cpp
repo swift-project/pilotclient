@@ -30,17 +30,17 @@ namespace BlackMisc
                 m_position(latitudeDegrees, longitudeDegrees, 0)
             {}
 
-            CVariant CNavDataReference::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+            QVariant CNavDataReference::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
             {
-                if (index.isMyself()) { return CVariant::from(*this); }
+                if (index.isMyself()) { return QVariant::fromValue(*this); }
                 return ICoordinateGeodetic::canHandleIndex(index) ?
                        ICoordinateGeodetic::propertyByIndex(index) :
                        CValueObject::propertyByIndex(index);
             }
 
-            void CNavDataReference::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+            void CNavDataReference::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
             {
-                if (index.isMyself()) { (*this) = variant.to<CNavDataReference>(); return; }
+                if (index.isMyself()) { (*this) = variant.value<CNavDataReference>(); return; }
                 CValueObject::setPropertyByIndex(index, variant);
             }
 

@@ -9,6 +9,7 @@
 //! \cond PRIVATE
 
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/propertyindexlist.h"
 #include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/range.h"
 
@@ -255,7 +256,7 @@ namespace BlackMisc
             for (const CPropertyIndex &index : usedIndexes)
             {
                 rowHtml += u"<td>" %
-                           statusMessage.propertyByIndex(index).toQString(true).toHtmlEscaped().replace('\n', "<br>") %
+                           statusMessage.propertyByIndex(index).toString().toHtmlEscaped().replace('\n', "<br>") %
                            u"</td>";
             }
 

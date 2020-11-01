@@ -327,9 +327,9 @@ namespace BlackMisc
             return false;
         }
 
-        CVariant CAircraftSituation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CAircraftSituation::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             if (ITimestampWithOffsetBased::canHandleIndex(index)) { return ITimestampWithOffsetBased::propertyByIndex(index); }
             if (ICoordinateGeodetic::canHandleIndex(index)) { return ICoordinateGeodetic::propertyByIndex(index); }
 
@@ -342,29 +342,29 @@ namespace BlackMisc
             case IndexAltitude:  return this->getAltitude().propertyByIndex(index.copyFrontRemoved());
             case IndexHeading:   return m_heading.propertyByIndex(index.copyFrontRemoved());
             case IndexPitch:     return m_pitch.propertyByIndex(index.copyFrontRemoved());
-            case IndexPBHInfo:   return CVariant::fromValue(this->getPBHInfo());
+            case IndexPBHInfo:   return QVariant::fromValue(this->getPBHInfo());
             case IndexBank:      return m_bank.propertyByIndex(index.copyFrontRemoved());
             case IndexCG:        return m_cg.propertyByIndex(index.copyFrontRemoved());
             case IndexSceneryOffset: return m_sceneryOffset.propertyByIndex(index.copyFrontRemoved());
             case IndexGroundSpeed:                    return m_groundSpeed.propertyByIndex(index.copyFrontRemoved());
             case IndexGroundElevationPlane:           return m_groundElevationPlane.propertyByIndex(index.copyFrontRemoved());
             case IndexCallsign:                       return m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
-            case IndexIsOnGround:                     return CVariant::fromValue(m_onGround);
-            case IndexIsOnGroundString:               return CVariant::fromValue(this->onGroundAsString());
-            case IndexOnGroundReliability:            return CVariant::fromValue(m_onGroundDetails);
-            case IndexOnGroundReliabilityString:      return CVariant::fromValue(this->getOnGroundDetailsAsString());
-            case IndexGroundElevationInfo:            return CVariant::fromValue(this->getGroundElevationInfo());
-            case IndexGroundElevationInfoTransferred: return CVariant::fromValue(this->isGroundElevationInfoTransferred());
-            case IndexGroundElevationInfoString:      return CVariant::fromValue(this->getGroundElevationInfoAsString());
-            case IndexGroundElevationPlusInfo:        return CVariant::fromValue(this->getGroundElevationAndInfo());
-            case IndexCanLikelySkipNearGroundInterpolation: return CVariant::fromValue(this->canLikelySkipNearGroundInterpolation());
+            case IndexIsOnGround:                     return QVariant::fromValue(m_onGround);
+            case IndexIsOnGroundString:               return QVariant::fromValue(this->onGroundAsString());
+            case IndexOnGroundReliability:            return QVariant::fromValue(m_onGroundDetails);
+            case IndexOnGroundReliabilityString:      return QVariant::fromValue(this->getOnGroundDetailsAsString());
+            case IndexGroundElevationInfo:            return QVariant::fromValue(this->getGroundElevationInfo());
+            case IndexGroundElevationInfoTransferred: return QVariant::fromValue(this->isGroundElevationInfoTransferred());
+            case IndexGroundElevationInfoString:      return QVariant::fromValue(this->getGroundElevationInfoAsString());
+            case IndexGroundElevationPlusInfo:        return QVariant::fromValue(this->getGroundElevationAndInfo());
+            case IndexCanLikelySkipNearGroundInterpolation: return QVariant::fromValue(this->canLikelySkipNearGroundInterpolation());
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CAircraftSituation::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CAircraftSituation::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CAircraftSituation>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CAircraftSituation>(); return; }
             if (ITimestampWithOffsetBased::canHandleIndex(index)) { ITimestampWithOffsetBased::setPropertyByIndex(index, variant); return; }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -388,7 +388,7 @@ namespace BlackMisc
             }
         }
 
-        int CAircraftSituation::comparePropertyByIndex(const CPropertyIndex &index, const CAircraftSituation &compareValue) const
+        int CAircraftSituation::comparePropertyByIndex(CPropertyIndexRef index, const CAircraftSituation &compareValue) const
         {
             if (ITimestampWithOffsetBased::canHandleIndex(index)) { return ITimestampWithOffsetBased::comparePropertyByIndex(index, compareValue); }
             if (ICoordinateGeodetic::canHandleIndex(index)) { return ICoordinateGeodetic::comparePropertyByIndex(index, compareValue); }

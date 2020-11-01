@@ -70,15 +70,15 @@ namespace BlackMisc
             return QStringLiteral("Table %1 with entries %1").arg(m_tableName).arg(m_entries);
         }
 
-        CVariant CDbInfo::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CDbInfo::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexTableName: return CVariant::fromValue(m_tableName);
-            case IndexEntries:   return CVariant::fromValue(m_entries);
-            case IndexEntity:    return CVariant::fromValue(m_entity);
+            case IndexTableName: return QVariant::fromValue(m_tableName);
+            case IndexEntries:   return QVariant::fromValue(m_entries);
+            case IndexEntity:    return QVariant::fromValue(m_entity);
             default:
                 return (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) ?
                        IDatastoreObjectWithIntegerKey::propertyByIndex(index) :
@@ -86,14 +86,14 @@ namespace BlackMisc
             }
         }
 
-        void CDbInfo::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CDbInfo::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CDbInfo>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CDbInfo>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexTableName: this->setTableName(variant.toQString()); break;
-            case IndexEntries:   this->setTableName(variant.toQString()); break;
+            case IndexTableName: this->setTableName(variant.toString()); break;
+            case IndexEntries:   this->setTableName(variant.toString()); break;
             case IndexEntity:    this->setEntity(static_cast<CEntityFlags::Entity>(variant.toInt())); break;
             default:
                 if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
@@ -108,7 +108,7 @@ namespace BlackMisc
             }
         }
 
-        int CDbInfo::comparePropertyByIndex(const CPropertyIndex &index, const CDbInfo &compareValue) const
+        int CDbInfo::comparePropertyByIndex(CPropertyIndexRef index, const CDbInfo &compareValue) const
         {
             if (index.isMyself()) { return getTableName().compare(compareValue.getTableName(), Qt::CaseInsensitive); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);}

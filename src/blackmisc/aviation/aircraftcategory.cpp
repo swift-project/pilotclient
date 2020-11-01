@@ -160,27 +160,27 @@ namespace BlackMisc
             return this->matchesLevel(l1, l2, l3);
         }
 
-        CVariant CAircraftCategory::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CAircraftCategory::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexName:        return CVariant::fromValue(m_name);
-            case IndexDescription: return CVariant::fromValue(m_description);
-            case IndexAssignable:  return CVariant::fromValue(m_assignable);
-            case IndexPath:        return CVariant::fromValue(m_path);
-            case IndexLevelString: return CVariant::fromValue(this->getLevelString());
-            case IndexLevelStringAndName: return CVariant::fromValue(this->getLevelAndName());
-            case IndexLevelStringAndPath: return CVariant::fromValue(this->getLevelAndPath());
+            case IndexName:        return QVariant::fromValue(m_name);
+            case IndexDescription: return QVariant::fromValue(m_description);
+            case IndexAssignable:  return QVariant::fromValue(m_assignable);
+            case IndexPath:        return QVariant::fromValue(m_path);
+            case IndexLevelString: return QVariant::fromValue(this->getLevelString());
+            case IndexLevelStringAndName: return QVariant::fromValue(this->getLevelAndName());
+            case IndexLevelStringAndPath: return QVariant::fromValue(this->getLevelAndPath());
             default:               return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CAircraftCategory::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CAircraftCategory::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CAircraftCategory>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CAircraftCategory>(); return; }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -192,7 +192,7 @@ namespace BlackMisc
             }
         }
 
-        int CAircraftCategory::comparePropertyByIndex(const CPropertyIndex &index, const CAircraftCategory &compareValue) const
+        int CAircraftCategory::comparePropertyByIndex(CPropertyIndexRef index, const CAircraftCategory &compareValue) const
         {
             if (index.isMyself()) { return m_path.compare(compareValue.getPath(), Qt::CaseInsensitive); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);}

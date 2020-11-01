@@ -221,33 +221,33 @@ namespace BlackMisc
             return i;
         }
 
-        CVariant CTransponder::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CTransponder::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexMode: return CVariant::from(this->getTransponderMode());
-            case IndexModeAsString: return CVariant::from(this->getModeAsString());
-            case IndexTransponderCode: return CVariant::from(this->getTransponderCode());
-            case IndexTransponderCodeFormatted: return CVariant::from(this->getTransponderCodeFormatted());
-            case IndexTransponderCodeAndModeFormatted: return CVariant::from(this->getTransponderCodeAndModeFormatted());
+            case IndexMode: return QVariant::fromValue(this->getTransponderMode());
+            case IndexModeAsString: return QVariant::fromValue(this->getModeAsString());
+            case IndexTransponderCode: return QVariant::fromValue(this->getTransponderCode());
+            case IndexTransponderCodeFormatted: return QVariant::fromValue(this->getTransponderCodeFormatted());
+            case IndexTransponderCodeAndModeFormatted: return QVariant::fromValue(this->getTransponderCodeAndModeFormatted());
             default: break;
             }
 
             Q_ASSERT_X(false, "CTransponder", "index unknown");
             const QString m = QString("no property, index ").append(index.toQString());
-            return CVariant::fromValue(m);
+            return QVariant::fromValue(m);
         }
 
-        void CTransponder::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CTransponder::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CTransponder>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CTransponder>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexMode: m_transponderMode = variant.toInt(); break;
-            case IndexModeAsString: this->setTransponderMode(modeFromString(variant.toQString())); break;
+            case IndexModeAsString: this->setTransponderMode(modeFromString(variant.toString())); break;
             case IndexTransponderCode:
             case IndexTransponderCodeFormatted:
                 if (variant.canConvert<int>())
@@ -256,7 +256,7 @@ namespace BlackMisc
                 }
                 else
                 {
-                    this->setTransponderCode(variant.toQString());
+                    this->setTransponderCode(variant.toString());
                 }
                 break;
             case IndexTransponderCodeAndModeFormatted:

@@ -84,27 +84,27 @@ namespace BlackGui
                    );
         }
 
-        CVariant CTextMessageSettings::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CTextMessageSettings::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexPopupAllMessages:        return CVariant::fromValue(this->getPopupAllMessages());
-            case IndexPopupFrequencyMessages:  return CVariant::fromValue(this->popupFrequencyMessages());
-            case IndexPopupPrivateMessages:    return CVariant::fromValue(this->popupPrivateMessages());
-            case IndexPopupSupervisorMessages: return CVariant::fromValue(this->popupSupervisorMessages());
-            case IndexPopupSelcalMessages:     return CVariant::fromValue(this->popupSelcalMessages());
-            case IndexStyle:       return CVariant::fromValue(this->getStyleSheet());
-            case IndexLatestFirst: return CVariant::fromValue(this->isLatestFirst());
-            case IndexFocus:       return CVariant::fromValue(this->focusOverlayWindow());
+            case IndexPopupAllMessages:        return QVariant::fromValue(this->getPopupAllMessages());
+            case IndexPopupFrequencyMessages:  return QVariant::fromValue(this->popupFrequencyMessages());
+            case IndexPopupPrivateMessages:    return QVariant::fromValue(this->popupPrivateMessages());
+            case IndexPopupSupervisorMessages: return QVariant::fromValue(this->popupSupervisorMessages());
+            case IndexPopupSelcalMessages:     return QVariant::fromValue(this->popupSelcalMessages());
+            case IndexStyle:       return QVariant::fromValue(this->getStyleSheet());
+            case IndexLatestFirst: return QVariant::fromValue(this->isLatestFirst());
+            case IndexFocus:       return QVariant::fromValue(this->focusOverlayWindow());
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CTextMessageSettings::setPropertyByIndex(const CPropertyIndex &index, const BlackMisc::CVariant &variant)
+        void CTextMessageSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CTextMessageSettings>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CTextMessageSettings>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -115,7 +115,7 @@ namespace BlackGui
             case IndexPopupSelcalMessages:     this->setPopupSelcalMessages(variant.toBool());  break;
             case IndexFocus:       this->setFocusOverlayWindows(variant.toBool()); break;
             case IndexLatestFirst: this->setLatestFirst(variant.toBool()); break;
-            case IndexStyle:       this->setStyleSheet(variant.toQString()); break;
+            case IndexStyle:       this->setStyleSheet(variant.toString()); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }

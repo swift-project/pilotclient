@@ -107,13 +107,13 @@ namespace BlackMisc
         QString convertToQString(bool i18n = false) const;
 
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-        CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+        QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
 
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+        void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
 
         //! Compare for index
-        int comparePropertyByIndex(const CPropertyIndex &index, const CRgbColor &compareValue) const;
+        int comparePropertyByIndex(CPropertyIndexRef index, const CRgbColor &compareValue) const;
 
         //! Compare with other color
         int compare(const CRgbColor &color) const;

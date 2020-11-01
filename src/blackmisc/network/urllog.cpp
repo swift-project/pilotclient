@@ -40,26 +40,26 @@ namespace BlackMisc
             return m_responseTimeMs < 0;
         }
 
-        CVariant CUrlLog::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CUrlLog::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexId: return CVariant::from(m_id);
-            case IndexSuccess: return CVariant::from(m_success);
+            case IndexId: return QVariant::fromValue(m_id);
+            case IndexSuccess: return QVariant::fromValue(m_success);
             case IndexUrl: return this->m_url.propertyByIndex(index.copyFrontRemoved());
-            case IndexResponseTimestamp: return CVariant::fromValue(this->getResponseTimestamp());
-            case IndexResponseTime: return CVariant::fromValue(m_responseTimeMs);
+            case IndexResponseTimestamp: return QVariant::fromValue(this->getResponseTimestamp());
+            case IndexResponseTime: return QVariant::fromValue(m_responseTimeMs);
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CUrlLog::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CUrlLog::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CUrlLog>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CUrlLog>(); return; }
             if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();

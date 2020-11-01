@@ -354,7 +354,7 @@ namespace BlackMisc
         }
 
         //! \copydoc BlackMisc::CCached::setProperty
-        CStatusMessage setProperty(const CPropertyIndex &index, const CVariant &value, qint64 timestamp = 0)
+        CStatusMessage setProperty(CPropertyIndexRef index, const CVariant &value, qint64 timestamp = 0)
         {
             CDataCache::instance()->admitValue(this->getKey(), false);
             return CCached<typename Trait::type>::setProperty(index, value, timestamp);
@@ -410,7 +410,7 @@ namespace BlackMisc
         //! Data cache doesn't support setAndSave (because set() already causes save anyway).
         //! @{
         CStatusMessage setAndSave(const typename Trait::type &value, qint64 timestamp = 0) = delete;
-        CStatusMessage setAndSaveProperty(const CPropertyIndex &index, const CVariant &value, qint64 timestamp = 0) = delete;
+        CStatusMessage setAndSaveProperty(CPropertyIndexRef index, const CVariant &value, qint64 timestamp = 0) = delete;
         //! @}
 
         //! Data cache doesn't support save (because currently set value is saved already).
@@ -431,7 +431,7 @@ namespace BlackMisc
         //! Deleted mutators.
         //! @{
         CStatusMessage set(const typename Trait::type &value, qint64 timestamp = 0) = delete;
-        CStatusMessage setProperty(const CPropertyIndex &index, const CVariant &value, qint64 timestamp = 0) = delete;
+        CStatusMessage setProperty(CPropertyIndexRef index, const CVariant &value, qint64 timestamp = 0) = delete;
         CStatusMessage setDefault() = delete;
         void renewTimestamp(qint64 timestamp) = delete;
         //! @}

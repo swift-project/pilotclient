@@ -22,38 +22,38 @@ namespace BlackMisc
                 this->parseXSwiftBusStringQt(json);
             }
 
-            CVariant CXSwiftBusSettings::propertyByIndex(const CPropertyIndex &index) const
+            QVariant CXSwiftBusSettings::propertyByIndex(CPropertyIndexRef index) const
             {
-                if (index.isMyself()) { return CVariant::from(*this); }
+                if (index.isMyself()) { return QVariant::fromValue(*this); }
                 if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexMaxPlanes:               return CVariant::fromValue(m_maxPlanes);
-                case IndexDBusServerAddress:       return CVariant::fromValue(QString::fromStdString(m_dBusServerAddress));
-                case IndexNightTextureMode:        return CVariant::fromValue(QString::fromStdString(m_nightTextureMode));
-                case IndexMessageBoxMargins:       return CVariant::fromValue(QString::fromStdString(m_msgBox));
-                case IndexDrawingLabels:           return CVariant::fromValue(m_drawingLabels);
-                case IndexBundleTaxiLandingLights: return CVariant::fromValue(m_bundleTaxiLandingLights);
-                case IndexMaxDrawingDistance:      return CVariant::fromValue(m_maxDrawDistanceNM);
-                case IndexFollowAircraftDistance:  return CVariant::fromValue(m_followAircraftDistanceM);
+                case IndexMaxPlanes:               return QVariant::fromValue(m_maxPlanes);
+                case IndexDBusServerAddress:       return QVariant::fromValue(QString::fromStdString(m_dBusServerAddress));
+                case IndexNightTextureMode:        return QVariant::fromValue(QString::fromStdString(m_nightTextureMode));
+                case IndexMessageBoxMargins:       return QVariant::fromValue(QString::fromStdString(m_msgBox));
+                case IndexDrawingLabels:           return QVariant::fromValue(m_drawingLabels);
+                case IndexBundleTaxiLandingLights: return QVariant::fromValue(m_bundleTaxiLandingLights);
+                case IndexMaxDrawingDistance:      return QVariant::fromValue(m_maxDrawDistanceNM);
+                case IndexFollowAircraftDistance:  return QVariant::fromValue(m_followAircraftDistanceM);
                 default: break;
                 }
                 return CValueObject::propertyByIndex(index);
             }
 
-            void CXSwiftBusSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+            void CXSwiftBusSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
             {
-                if (index.isMyself()) { (*this) = variant.to<CXSwiftBusSettings>(); return; }
+                if (index.isMyself()) { (*this) = variant.value<CXSwiftBusSettings>(); return; }
                 if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); }
 
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
                 case IndexMaxPlanes:               m_maxPlanes  = variant.toInt(); break;
-                case IndexDBusServerAddress:       m_dBusServerAddress = variant.toStdString(); break;
-                case IndexMessageBoxMargins:       m_msgBox   = variant.toStdString(); break;
-                case IndexNightTextureMode:        m_nightTextureMode  = variant.toStdString(); break;
+                case IndexDBusServerAddress:       m_dBusServerAddress = variant.toString().toStdString(); break;
+                case IndexMessageBoxMargins:       m_msgBox   = variant.toString().toStdString(); break;
+                case IndexNightTextureMode:        m_nightTextureMode  = variant.toString().toStdString(); break;
                 case IndexDrawingLabels:           m_drawingLabels = variant.toBool(); break;
                 case IndexBundleTaxiLandingLights: m_bundleTaxiLandingLights = variant.toBool(); break;
                 case IndexMaxDrawingDistance:      m_maxDrawDistanceNM = variant.toDouble(); break;

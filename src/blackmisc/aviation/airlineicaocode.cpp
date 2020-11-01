@@ -216,34 +216,34 @@ namespace BlackMisc
             return s.trimmed();
         }
 
-        CVariant CAirlineIcaoCode::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CAirlineIcaoCode::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAirlineDesignator: return CVariant::fromValue(m_designator);
-            case IndexIataCode: return CVariant::fromValue(m_iataCode);
-            case IndexAirlineCountryIso: return CVariant::fromValue(this->getCountryIso());
+            case IndexAirlineDesignator: return QVariant::fromValue(m_designator);
+            case IndexIataCode: return QVariant::fromValue(m_iataCode);
+            case IndexAirlineCountryIso: return QVariant::fromValue(this->getCountryIso());
             case IndexAirlineCountry: return m_country.propertyByIndex(index.copyFrontRemoved());
-            case IndexAirlineName: return CVariant::fromValue(m_name);
-            case IndexAirlineIconHTML: return CVariant::fromValue(this->getIconAsHTMLImage());
-            case IndexTelephonyDesignator: return CVariant::fromValue(m_telephonyDesignator);
-            case IndexIsVirtualAirline: return CVariant::fromValue(m_isVa);
-            case IndexIsOperating: return CVariant::fromValue(m_isOperating);
-            case IndexIsMilitary: return CVariant::fromValue(m_isMilitary);
-            case IndexDesignatorNameCountry: return CVariant::fromValue(this->getDesignatorNameCountry());
-            case IndexGroupDesignator: return CVariant::fromValue(this->getGroupDesignator());
-            case IndexGroupName: return CVariant::fromValue(this->getGroupName());
-            case IndexGroupId: return CVariant::fromValue(this->getGroupId());
+            case IndexAirlineName: return QVariant::fromValue(m_name);
+            case IndexAirlineIconHTML: return QVariant::fromValue(this->getIconAsHTMLImage());
+            case IndexTelephonyDesignator: return QVariant::fromValue(m_telephonyDesignator);
+            case IndexIsVirtualAirline: return QVariant::fromValue(m_isVa);
+            case IndexIsOperating: return QVariant::fromValue(m_isOperating);
+            case IndexIsMilitary: return QVariant::fromValue(m_isMilitary);
+            case IndexDesignatorNameCountry: return QVariant::fromValue(this->getDesignatorNameCountry());
+            case IndexGroupDesignator: return QVariant::fromValue(this->getGroupDesignator());
+            case IndexGroupName: return QVariant::fromValue(this->getGroupName());
+            case IndexGroupId: return QVariant::fromValue(this->getGroupId());
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CAirlineIcaoCode::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CAirlineIcaoCode::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CAirlineIcaoCode>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CAirlineIcaoCode>(); return; }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -256,14 +256,14 @@ namespace BlackMisc
             case IndexIsVirtualAirline: this->setVirtualAirline(variant.toBool()); break;
             case IndexIsOperating: this->setOperating(variant.toBool()); break;
             case IndexIsMilitary: this->setMilitary(variant.toBool()); break;
-            case IndexGroupDesignator: this->setGroupDesignator(variant.toQString()); break;
-            case IndexGroupName: this->setGroupName(variant.toQString()); break;
+            case IndexGroupDesignator: this->setGroupDesignator(variant.toString()); break;
+            case IndexGroupName: this->setGroupName(variant.toString()); break;
             case IndexGroupId: this->setGroupId(variant.toInt()); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
 
-        int CAirlineIcaoCode::comparePropertyByIndex(const CPropertyIndex &index, const CAirlineIcaoCode &compareValue) const
+        int CAirlineIcaoCode::comparePropertyByIndex(CPropertyIndexRef index, const CAirlineIcaoCode &compareValue) const
         {
             if (index.isMyself()) { return m_designator.compare(compareValue.getDesignator(), Qt::CaseInsensitive); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);}

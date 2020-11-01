@@ -148,6 +148,12 @@ namespace BlackMisc
         //! Return the internal QVariant.
         const QVariant &getQVariant() const { return m_v; }
 
+        //! Return the internal QVariant.
+        operator const QVariant &() const { return m_v; }
+
+        //! Return the internal QVariant.
+        operator QVariant() && { return std::move(m_v); }
+
         //! True if this variant can be converted to the type with the given metatype ID.
         bool canConvert(int typeId) const;
 
@@ -245,13 +251,13 @@ namespace BlackMisc
         friend int compare(const CVariant &a, const CVariant &b) { return compareImpl(a, b); }
 
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+        void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-        CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+        QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
 
         //! \copydoc CValueObject::equalsPropertyByIndex
-        bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const;
+        bool equalsPropertyByIndex(const CVariant &compareValue, CPropertyIndexRef index) const;
 
         //! \copydoc CIcon::toPixmap
         QPixmap toPixmap() const;
@@ -297,9 +303,6 @@ namespace BlackMisc
 {
     namespace Private
     {
-        //! \private Needed so CValueObjectMetaInfoHelper can copy forward-declared CVariant.
-        inline void assign(CVariant &a, const CVariant &b) { a = b; }
-
         //! \private
         template <typename T, typename>
         void maybeRegisterMetaListConvert(int)

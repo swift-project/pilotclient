@@ -653,37 +653,37 @@ namespace BlackMisc
                    matchesFamily(icaoIataOrFamily);
         }
 
-        CVariant CAircraftIcaoCode::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CAircraftIcaoCode::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAircraftDesignator: return CVariant::fromValue(m_designator);
+            case IndexAircraftDesignator: return QVariant::fromValue(m_designator);
             case IndexCategory: return m_category.propertyByIndex(index.copyFrontRemoved());
-            case IndexIataCode: return CVariant::fromValue(m_iataCode);
-            case IndexFamily:   return CVariant::fromValue(m_family);
-            case IndexCombinedAircraftType:  return CVariant::fromValue(m_combinedType);
-            case IndexModelDescription:      return CVariant::fromValue(m_modelDescription);
-            case IndexModelIataDescription:  return CVariant::fromValue(m_modelIataDescription);
-            case IndexModelSwiftDescription: return CVariant::fromValue(m_modelSwiftDescription);
-            case IndexCombinedDescription:   return CVariant::fromValue(this->getCombinedModelDescription());
-            case IndexManufacturer:          return CVariant::fromValue(m_manufacturer);
-            case IndexWtc:         return CVariant::fromValue(m_wtc);
-            case IndexIsVtol:      return CVariant::fromValue(this->isVtol());
-            case IndexIsLegacy:    return CVariant::fromValue(m_legacy);
-            case IndexIsMilitary:  return CVariant::fromValue(m_military);
-            case IndexIsRealworld: return CVariant::fromValue(m_realWorld);
-            case IndexRank:        return CVariant::fromValue(m_rank);
-            case IndexDesignatorManufacturer: return CVariant::fromValue(this->getDesignatorManufacturer());
+            case IndexIataCode: return QVariant::fromValue(m_iataCode);
+            case IndexFamily:   return QVariant::fromValue(m_family);
+            case IndexCombinedAircraftType:  return QVariant::fromValue(m_combinedType);
+            case IndexModelDescription:      return QVariant::fromValue(m_modelDescription);
+            case IndexModelIataDescription:  return QVariant::fromValue(m_modelIataDescription);
+            case IndexModelSwiftDescription: return QVariant::fromValue(m_modelSwiftDescription);
+            case IndexCombinedDescription:   return QVariant::fromValue(this->getCombinedModelDescription());
+            case IndexManufacturer:          return QVariant::fromValue(m_manufacturer);
+            case IndexWtc:         return QVariant::fromValue(m_wtc);
+            case IndexIsVtol:      return QVariant::fromValue(this->isVtol());
+            case IndexIsLegacy:    return QVariant::fromValue(m_legacy);
+            case IndexIsMilitary:  return QVariant::fromValue(m_military);
+            case IndexIsRealworld: return QVariant::fromValue(m_realWorld);
+            case IndexRank:        return QVariant::fromValue(m_rank);
+            case IndexDesignatorManufacturer: return QVariant::fromValue(this->getDesignatorManufacturer());
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CAircraftIcaoCode::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CAircraftIcaoCode::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CAircraftIcaoCode>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CAircraftIcaoCode>(); return; }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -705,7 +705,7 @@ namespace BlackMisc
             }
         }
 
-        int CAircraftIcaoCode::comparePropertyByIndex(const CPropertyIndex &index, const CAircraftIcaoCode &compareValue) const
+        int CAircraftIcaoCode::comparePropertyByIndex(CPropertyIndexRef index, const CAircraftIcaoCode &compareValue) const
         {
             if (index.isMyself()) { return m_designator.compare(compareValue.getDesignator(), Qt::CaseInsensitive); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);}

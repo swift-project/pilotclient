@@ -45,33 +45,33 @@ namespace BlackMisc
             m_afvVoiceServerUrl(afvVoiceServerUrl), m_afvMapUrl(afvMapUrl)
         { }
 
-        CVariant CVoiceSetup::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CVoiceSetup::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAfvVoiceServerUrl: return CVariant::fromValue(m_afvVoiceServerUrl);
-            case IndexAfvMapUrl:         return CVariant::fromValue(m_afvMapUrl);
+            case IndexAfvVoiceServerUrl: return QVariant::fromValue(m_afvVoiceServerUrl);
+            case IndexAfvMapUrl:         return QVariant::fromValue(m_afvMapUrl);
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CVoiceSetup::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CVoiceSetup::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CVoiceSetup>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CVoiceSetup>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAfvVoiceServerUrl: m_afvVoiceServerUrl = variant.toQString(); break;
-            case IndexAfvMapUrl:         m_afvMapUrl         = variant.toQString(); break;
+            case IndexAfvVoiceServerUrl: m_afvVoiceServerUrl = variant.toString(); break;
+            case IndexAfvMapUrl:         m_afvMapUrl         = variant.toString(); break;
             default:
                 CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }
 
-        int CVoiceSetup::comparePropertyByIndex(const CPropertyIndex &index, const CVoiceSetup &compareValue) const
+        int CVoiceSetup::comparePropertyByIndex(CPropertyIndexRef index, const CVoiceSetup &compareValue) const
         {
             if (index.isMyself()) { return this->convertToQString(true).compare(compareValue.convertToQString()); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();

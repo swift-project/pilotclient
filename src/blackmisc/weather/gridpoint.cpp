@@ -51,32 +51,32 @@ namespace BlackMisc
             setPressureAtMsl(other.getPressureAtMsl());
         }
 
-        CVariant CGridPoint::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CGridPoint::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexIdentifier:
-                return CVariant::fromValue(m_identifier);
+                return QVariant::fromValue(m_identifier);
             case IndexPosition:
-                return CVariant::fromValue(m_position);
+                return QVariant::fromValue(m_position);
             case IndexCloudLayers:
-                return CVariant::fromValue(m_cloudLayers);
+                return QVariant::fromValue(m_cloudLayers);
             case IndexTemperatureLayers:
-                return CVariant::fromValue(m_temperatureLayers);
+                return QVariant::fromValue(m_temperatureLayers);
             case IndexWindLayers:
-                return CVariant::fromValue(m_windLayers);
+                return QVariant::fromValue(m_windLayers);
             case IndexPressureAtMsl:
-                return CVariant::fromValue(m_pressureAtMsl);
+                return QVariant::fromValue(m_pressureAtMsl);
             default:
                 return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CGridPoint::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CGridPoint::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CGridPoint>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CGridPoint>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

@@ -55,19 +55,19 @@ namespace BlackMisc
             return (containsChar(icaoCode, [](QChar c) { return c.isDigit(); }));
         }
 
-        CVariant CAirportIcaoCode::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CAirportIcaoCode::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             return CValueObject::propertyByIndex(index);
         }
 
-        void CAirportIcaoCode::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CAirportIcaoCode::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CAirportIcaoCode>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CAirportIcaoCode>(); return; }
             CValueObject::setPropertyByIndex(index, variant);
         }
 
-        int CAirportIcaoCode::comparePropertyByIndex(const CPropertyIndex &index, const CAirportIcaoCode &compareValue) const
+        int CAirportIcaoCode::comparePropertyByIndex(CPropertyIndexRef index, const CAirportIcaoCode &compareValue) const
         {
             Q_UNUSED(index);
             return m_icaoCode.compare(compareValue.getIcaoCode(), Qt::CaseInsensitive);

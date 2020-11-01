@@ -107,49 +107,49 @@ namespace BlackMisc
         return CIcons::StandardIconUnknown16;
     }
 
-    CVariant CApplicationInfo::propertyByIndex(const CPropertyIndex &index) const
+    QVariant CApplicationInfo::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return CVariant::from(*this); }
+        if (index.isMyself()) { return QVariant::fromValue(*this); }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexApplication: return CVariant::fromValue(m_app);
-        case IndexApplicationAsString: return CVariant::fromValue(this->getApplicationAsString());
-        case IndexApplicationDataPath: return CVariant::fromValue(this->getApplicationDataDirectory());
-        case IndexCompileInfo: return CVariant::fromValue(this->getCompileInfo());
-        case IndexExecutablePath: return CVariant::fromValue(this->getExecutablePath());
-        case IndexExecutablePathExisting: return CVariant::fromValue(this->isExecutablePathExisting());
-        case IndexPlatformInfo: return CVariant::fromValue(this->getPlatform());
+        case IndexApplication: return QVariant::fromValue(m_app);
+        case IndexApplicationAsString: return QVariant::fromValue(this->getApplicationAsString());
+        case IndexApplicationDataPath: return QVariant::fromValue(this->getApplicationDataDirectory());
+        case IndexCompileInfo: return QVariant::fromValue(this->getCompileInfo());
+        case IndexExecutablePath: return QVariant::fromValue(this->getExecutablePath());
+        case IndexExecutablePathExisting: return QVariant::fromValue(this->isExecutablePathExisting());
+        case IndexPlatformInfo: return QVariant::fromValue(this->getPlatform());
         case IndexProcessInfo: return m_process.propertyByIndex(index.copyFrontRemoved());
-        case IndexVersionString: return CVariant::fromValue(this->getVersionString());
-        case IndexWordSize: return CVariant::fromValue(this->getWordSize());
+        case IndexVersionString: return QVariant::fromValue(this->getVersionString());
+        case IndexWordSize: return QVariant::fromValue(this->getWordSize());
         default: break;
         }
         return CValueObject::propertyByIndex(index);
     }
 
-    void CApplicationInfo::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+    void CApplicationInfo::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.to<CApplicationInfo>(); return; }
+        if (index.isMyself()) { (*this) = variant.value<CApplicationInfo>(); return; }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexApplication: this->setApplication(static_cast<Application>(variant.toInt())); break;
         case IndexApplicationAsString: break;
-        case IndexApplicationDataPath: this->setApplicationDataDirectory(variant.toQString()); break;
-        case IndexCompileInfo: this->setCompileInfo(variant.toQString()); break;
-        case IndexExecutablePath: this->setExecutablePath(variant.toQString()); break;
+        case IndexApplicationDataPath: this->setApplicationDataDirectory(variant.toString()); break;
+        case IndexCompileInfo: this->setCompileInfo(variant.toString()); break;
+        case IndexExecutablePath: this->setExecutablePath(variant.toString()); break;
         case IndexExecutablePathExisting: break;
-        case IndexPlatformInfo: this->setPlatformInfo(variant.toQString()); break;
+        case IndexPlatformInfo: this->setPlatformInfo(variant.toString()); break;
         case IndexProcessInfo: m_process.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-        case IndexVersionString: this->setVersionString(variant.toQString()); break;
+        case IndexVersionString: this->setVersionString(variant.toString()); break;
         case IndexWordSize: this->setWordSize(variant.toInt()); break;
         default: break;
         }
         CValueObject::setPropertyByIndex(index, variant);
     }
 
-    int CApplicationInfo::comparePropertyByIndex(const CPropertyIndex &index, const CApplicationInfo &compareValue) const
+    int CApplicationInfo::comparePropertyByIndex(CPropertyIndexRef index, const CApplicationInfo &compareValue) const
     {
         if (index.isMyself()) { return this->getExecutablePath().compare(compareValue.getExecutablePath()); }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();

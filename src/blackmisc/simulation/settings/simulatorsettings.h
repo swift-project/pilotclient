@@ -136,10 +136,10 @@ namespace BlackMisc
                 QString convertToQString(const QString &separator, bool i18n = false) const;
 
                 //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-                CVariant propertyByIndex(const CPropertyIndex &index) const;
+                QVariant propertyByIndex(CPropertyIndexRef index) const;
 
                 //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-                void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+                void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
             private:
                 QString     m_simulatorDirectory;       //!< Simulator directory
@@ -191,10 +191,10 @@ namespace BlackMisc
                 QString convertToQString(bool i18n = false) const;
 
                 //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-                CVariant propertyByIndex(const CPropertyIndex &index) const;
+                QVariant propertyByIndex(CPropertyIndexRef index) const;
 
                 //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-                void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+                void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
             private:
                 bool m_useSimulatedObjectAdding = false; //!< COM integration
@@ -600,10 +600,10 @@ namespace BlackMisc
                 QString convertToQString(bool i18n = false) const;
 
                 //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-                BlackMisc::CVariant propertyByIndex(const CPropertyIndex &index) const;
+                QVariant propertyByIndex(CPropertyIndexRef index) const;
 
                 //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-                void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+                void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
             private:
                 int m_technicalLogLevel     = CStatusMessage::SeverityError; //!< log level

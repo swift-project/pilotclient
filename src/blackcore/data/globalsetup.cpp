@@ -378,41 +378,41 @@ namespace BlackCore
             return s;
         }
 
-        CVariant CGlobalSetup::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CGlobalSetup::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return CVariant::fromValue(*this); }
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDbRootDirectory:       return CVariant::fromValue(m_dbRootDirectoryUrl);
-            case IndexDbHttpPort:            return CVariant::fromValue(m_dbHttpPort);
-            case IndexDbHttpsPort:           return CVariant::fromValue(m_dbHttpsPort);
-            case IndexDbLoginService:        return CVariant::fromValue(this->getDbLoginServiceUrl());
-            case IndexDbClientPingService:   return CVariant::fromValue(this->getDbClientPingServiceUrl());
-            case IndexVatsimStatus:          return CVariant::fromValue(m_vatsimStatusFileUrls);
-            case IndexVatsimData:            return CVariant::fromValue(m_vatsimDataFileUrls);
-            case IndexVatsimBookings:        return CVariant::fromValue(m_vatsimDataFileUrls);
-            case IndexVatsimMetars:          return CVariant::fromValue(m_vatsimMetarsUrls);
-            case IndexBootstrapFileUrls:     return CVariant::fromValue(this->getSwiftBootstrapFileUrls());
-            case IndexUpdateInfoFileUrls:    return CVariant::fromValue(this->getSwiftUpdateInfoFileUrls());
-            case IndexSharedUrls:            return CVariant::fromValue(m_sharedUrls);
-            case IndexNewsUrls:              return CVariant::fromValue(m_newsUrls);
-            case IndexSwiftMapUrls:          return CVariant::fromValue(m_mapUrls);
-            case IndexOnlineHelpUrls:        return CVariant::fromValue(m_onlineHelpUrls);
-            case IndexCrashReportServerUrl:  return CVariant::fromValue(m_crashReportServerUrl);
-            case IndexWasLoadedFromWeb:      return CVariant::fromValue(m_wasLoadedFromWeb);
-            case IndexWasLoadedFromFile:     return CVariant::fromValue(m_wasLoadedFromFile);
-            case IndexMappingMinimumVersion: return CVariant::fromValue(m_mappingMinimumVersion);
-            case IndexPredefinedServers:     return CVariant::fromValue(m_predefinedServers);
+            case IndexDbRootDirectory:       return QVariant::fromValue(m_dbRootDirectoryUrl);
+            case IndexDbHttpPort:            return QVariant::fromValue(m_dbHttpPort);
+            case IndexDbHttpsPort:           return QVariant::fromValue(m_dbHttpsPort);
+            case IndexDbLoginService:        return QVariant::fromValue(this->getDbLoginServiceUrl());
+            case IndexDbClientPingService:   return QVariant::fromValue(this->getDbClientPingServiceUrl());
+            case IndexVatsimStatus:          return QVariant::fromValue(m_vatsimStatusFileUrls);
+            case IndexVatsimData:            return QVariant::fromValue(m_vatsimDataFileUrls);
+            case IndexVatsimBookings:        return QVariant::fromValue(m_vatsimDataFileUrls);
+            case IndexVatsimMetars:          return QVariant::fromValue(m_vatsimMetarsUrls);
+            case IndexBootstrapFileUrls:     return QVariant::fromValue(this->getSwiftBootstrapFileUrls());
+            case IndexUpdateInfoFileUrls:    return QVariant::fromValue(this->getSwiftUpdateInfoFileUrls());
+            case IndexSharedUrls:            return QVariant::fromValue(m_sharedUrls);
+            case IndexNewsUrls:              return QVariant::fromValue(m_newsUrls);
+            case IndexSwiftMapUrls:          return QVariant::fromValue(m_mapUrls);
+            case IndexOnlineHelpUrls:        return QVariant::fromValue(m_onlineHelpUrls);
+            case IndexCrashReportServerUrl:  return QVariant::fromValue(m_crashReportServerUrl);
+            case IndexWasLoadedFromWeb:      return QVariant::fromValue(m_wasLoadedFromWeb);
+            case IndexWasLoadedFromFile:     return QVariant::fromValue(m_wasLoadedFromFile);
+            case IndexMappingMinimumVersion: return QVariant::fromValue(m_mappingMinimumVersion);
+            case IndexPredefinedServers:     return QVariant::fromValue(m_predefinedServers);
             default:                         return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CGlobalSetup::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CGlobalSetup::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CGlobalSetup>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CGlobalSetup>(); return; }
             if (ITimestampBased::canHandleIndex(index))
             {
                 ITimestampBased::setPropertyByIndex(index, variant);
@@ -437,7 +437,7 @@ namespace BlackCore
             case IndexCrashReportServerUrl:  m_crashReportServerUrl = variant.value<CUrl>(); break;
             case IndexWasLoadedFromWeb:      m_wasLoadedFromWeb = variant.toBool(); break;
             case IndexWasLoadedFromFile:     m_wasLoadedFromFile = variant.toBool(); break;
-            case IndexMappingMinimumVersion: m_mappingMinimumVersion = variant.toQString(); break;
+            case IndexMappingMinimumVersion: m_mappingMinimumVersion = variant.toString(); break;
             case IndexPredefinedServers:     m_predefinedServers = variant.value<CServerList>(); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }

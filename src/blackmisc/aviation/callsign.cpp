@@ -311,36 +311,36 @@ namespace BlackMisc
             return other == (*this);
         }
 
-        CVariant CCallsign::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CCallsign::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexCallsignString:      return CVariant(this->asString());
-            case IndexCallsignStringAsSet: return CVariant(this->getStringAsSet());
-            case IndexTelephonyDesignator: return CVariant(this->getTelephonyDesignator());
-            case IndexSuffix:              return CVariant(this->getSuffix());
+            case IndexCallsignString:      return QVariant(this->asString());
+            case IndexCallsignStringAsSet: return QVariant(this->getStringAsSet());
+            case IndexTelephonyDesignator: return QVariant(this->getTelephonyDesignator());
+            case IndexSuffix:              return QVariant(this->getSuffix());
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CCallsign::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CCallsign::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CCallsign>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CCallsign>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexCallsignString:      m_callsign = unifyCallsign(variant.toQString()); break;
-            case IndexCallsignStringAsSet: m_callsignAsSet = variant.toQString(); break;
-            case IndexTelephonyDesignator: m_telephonyDesignator = variant.toQString(); break;
+            case IndexCallsignString:      m_callsign = unifyCallsign(variant.toString()); break;
+            case IndexCallsignStringAsSet: m_callsignAsSet = variant.toString(); break;
+            case IndexTelephonyDesignator: m_telephonyDesignator = variant.toString(); break;
             default:
                 CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }
 
-        int CCallsign::comparePropertyByIndex(const CPropertyIndex &index, const CCallsign &compareValue) const
+        int CCallsign::comparePropertyByIndex(CPropertyIndexRef index, const CCallsign &compareValue) const
         {
             if (index.isMyself()) { return m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();

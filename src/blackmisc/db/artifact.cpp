@@ -113,30 +113,30 @@ namespace BlackMisc
                    this->getFormattedUtcTimestampYmdhms();
         }
 
-        CVariant CArtifact::propertyByIndex(const CPropertyIndex &index) const
+        QVariant CArtifact::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexName: return CVariant::fromValue(m_name);
-            case IndexMd5: return CVariant::fromValue(m_md5);
+            case IndexName: return QVariant::fromValue(m_name);
+            case IndexMd5: return QVariant::fromValue(m_md5);
             case IndexPlatform: return m_platform.propertyByIndex(index.copyFrontRemoved());
-            case IndexType: return CVariant::fromValue(m_type);
-            case IndexSize: return CVariant::fromValue(m_size);
-            case IndexSizeHumanReadable: return CVariant::fromValue(this->getFileSizeHumanReadable());
-            case IndexVersionString: return CVariant::fromValue(m_version);
-            case IndexQVersion: return CVariant::fromValue(this->getQVersion());
-            case IndexDistributions: return CVariant::fromValue(m_distributions);
+            case IndexType: return QVariant::fromValue(m_type);
+            case IndexSize: return QVariant::fromValue(m_size);
+            case IndexSizeHumanReadable: return QVariant::fromValue(this->getFileSizeHumanReadable());
+            case IndexVersionString: return QVariant::fromValue(m_version);
+            case IndexQVersion: return QVariant::fromValue(this->getQVersion());
+            case IndexDistributions: return QVariant::fromValue(m_distributions);
             default: return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CArtifact::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CArtifact::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CArtifact>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CArtifact>(); return; }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
             {
                 IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant);
@@ -146,12 +146,12 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexName: this->setName(variant.toQString()); break;
-            case IndexMd5: m_md5 = variant.toQString(); break;
+            case IndexName: this->setName(variant.toString()); break;
+            case IndexMd5: m_md5 = variant.toString(); break;
             case IndexPlatform: m_platform.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexType: m_type = variant.toInt(); break;
             case IndexSize: m_size = variant.toInt(); break;
-            case IndexVersionString: m_version = variant.toQString(); break;
+            case IndexVersionString: m_version = variant.toString(); break;
             case IndexDistributions: m_distributions = variant.value<CDistributionList>(); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }

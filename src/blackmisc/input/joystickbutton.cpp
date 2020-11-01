@@ -38,9 +38,9 @@ namespace BlackMisc
             m_buttonIndex = button.m_buttonIndex;
         }
 
-        void CJoystickButton::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CJoystickButton::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CJoystickButton>(); return; }
+            if (index.isMyself()) { (*this) = variant.value<CJoystickButton>(); return; }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -60,21 +60,21 @@ namespace BlackMisc
             }
         }
 
-        CVariant CJoystickButton::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        QVariant CJoystickButton::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return QVariant::fromValue(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDeviceName:     return CVariant::from(this->getDeviceName());
-            case IndexButton:         return CVariant::from(this->getButtonIndex());
-            case IndexButtonAsString: return CVariant::from(this->getButtonAsString());
-            case IndexButtonObject:   return CVariant::from(*this);
+            case IndexDeviceName:     return QVariant::fromValue(this->getDeviceName());
+            case IndexButton:         return QVariant::fromValue(this->getButtonIndex());
+            case IndexButtonAsString: return QVariant::fromValue(this->getButtonAsString());
+            case IndexButtonObject:   return QVariant::fromValue(*this);
             }
 
             Q_ASSERT_X(false, "CJoystickButton", "index unknown");
             QString m = QString("no property, index ").append(index.toQString());
-            return CVariant::fromValue(m);
+            return QVariant::fromValue(m);
         }
 
         QString CJoystickButton::buttonIndexToString(qint32 buttonIndex)

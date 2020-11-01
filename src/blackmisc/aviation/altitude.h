@@ -202,7 +202,7 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
             //! \copydoc Mixin::Index::setPropertyByIndex
-            int comparePropertyByIndex(const CPropertyIndex &index, const CAltitude &compareValue) const;
+            int comparePropertyByIndex(CPropertyIndexRef index, const CAltitude &compareValue) const;
 
             //! Round to the nearest 100ft, like needed for China and Russia
             //! \remark https://en.wikipedia.org/wiki/Flight_level
