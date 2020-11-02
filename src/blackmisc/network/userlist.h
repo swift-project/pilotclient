@@ -15,7 +15,6 @@
 #include "blackmisc/network/user.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/blackmiscexport.h"
 
 #include <QMetaType>

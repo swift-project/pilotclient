@@ -13,7 +13,6 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/obfuscation.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
 
 #include <Qt>

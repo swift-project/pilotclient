@@ -9,7 +9,6 @@
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/containerbase.h"
 #include "blackmisc/dbus.h"
-#include "blackmisc/variant.h"
 
 #include <QDBusMetaType>
 #include <QJsonObject>

@@ -13,7 +13,6 @@
 
 #include "blackmisc/identifier.h"
 #include "blackmisc/collection.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/blackmiscexport.h"
 #include <QMetaType>
 

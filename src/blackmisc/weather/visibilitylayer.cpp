@@ -8,7 +8,6 @@
 
 #include "blackmisc/weather/visibilitylayer.h"
 #include "blackmisc/propertyindexref.h"
-#include "blackmisc/variant.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;

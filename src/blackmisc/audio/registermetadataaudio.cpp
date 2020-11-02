@@ -9,6 +9,7 @@
 #include "registermetadataaudio.h"
 #include "audio.h"
 #include "ptt.h"
+#include "blackmisc/variant.h"
 #include <QDBusMetaType>
 
 namespace BlackMisc

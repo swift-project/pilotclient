@@ -18,7 +18,6 @@
 #include "blackmisc/settingscache.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/variant.h"
 
 #include <QMetaType>
 #include <QVersionNumber>

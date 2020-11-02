@@ -15,7 +15,6 @@
 #include "blackmisc/collection.h"
 #include "blackmisc/input/joystickbutton.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/variant.h"
 
 #include <QMetaType>
 #include <initializer_list>

@@ -14,7 +14,6 @@
 #include "blackmisc/identifier.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/timestampobjectlist.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/blackmiscexport.h"
 #include <QMetaType>
 

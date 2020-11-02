@@ -17,7 +17,6 @@
 #include "blackmisc/icon.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/variant.h" // removing this line causes a clang undefined symbol error
 
 #include <QJsonObject>
 #include <QMetaType>

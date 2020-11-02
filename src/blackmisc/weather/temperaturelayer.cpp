@@ -8,7 +8,6 @@
 
 #include "blackmisc/weather/temperaturelayer.h"
 #include "blackmisc/propertyindexref.h"
-#include "blackmisc/variant.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;

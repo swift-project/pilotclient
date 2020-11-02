@@ -19,7 +19,6 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/variant.h"
 #include <QSet>
 #include <QString>
 

@@ -17,7 +17,6 @@
 #include "blackmisc/metaclass.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/variant.h"
 
 #include <QMetaType>
 #include <QString>

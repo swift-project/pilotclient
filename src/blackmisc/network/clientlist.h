@@ -15,7 +15,6 @@
 #include "blackmisc/collection.h"
 #include "blackmisc/network/client.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/blackmiscexport.h"
 #include <QMap>
 #include <QMetaType>

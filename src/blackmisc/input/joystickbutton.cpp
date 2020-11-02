@@ -7,7 +7,6 @@
  */
 
 #include "blackmisc/input/joystickbutton.h"
-#include "blackmisc/variant.h"
 
 namespace BlackMisc
 {

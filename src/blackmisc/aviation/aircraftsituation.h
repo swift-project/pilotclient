@@ -27,7 +27,6 @@
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/variant.h"
 
 #include <QMetaType>
 #include <QString>

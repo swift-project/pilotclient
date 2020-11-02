@@ -12,7 +12,6 @@
 #define BLACKMISC_DB_DATASTORE_H
 
 #include "blackmisc/timestampbased.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackconfig/buildconfig.h"

@@ -14,7 +14,6 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/timestampbased.h"
-#include "blackmisc/variant.h"
 
 namespace BlackMisc
 {

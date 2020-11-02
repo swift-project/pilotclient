@@ -17,7 +17,6 @@
 #include "blackmisc/sequence.h"
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/timestampobjectlist.h"
-#include "blackmisc/variant.h"
 #include <QHash>
 #include <QMetaType>
 

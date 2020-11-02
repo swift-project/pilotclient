@@ -8,7 +8,6 @@
 
 #include "blackmisc/weather/cloudlayer.h"
 #include "blackmisc/propertyindexref.h"
-#include "blackmisc/variant.h"
 
 #include <QHash>
 

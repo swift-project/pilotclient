@@ -11,7 +11,6 @@
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/comparefunctions.h"
 

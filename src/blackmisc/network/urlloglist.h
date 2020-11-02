@@ -16,7 +16,6 @@
 #include "blackmisc/timestampobjectlist.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/variant.h"
 #include <QNetworkReply>
 
 namespace BlackMisc

@@ -22,7 +22,6 @@
 #include "blackmisc/db/datastore.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/memotable.h"
 #include "blackmisc/metaclass.h"

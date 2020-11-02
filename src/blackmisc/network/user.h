@@ -18,7 +18,6 @@
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/blackmiscexport.h"
 
 #include <QMetaType>

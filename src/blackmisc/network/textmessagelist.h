@@ -18,7 +18,6 @@
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/timestampobjectlist.h"
-#include "blackmisc/variant.h"
 
 #include <QList>
 #include <QMetaType>

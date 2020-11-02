@@ -20,7 +20,6 @@
 #include "blackmisc/predicates.h"
 #include "blackmisc/countrylist.h"
 #include "blackmisc/json.h"
-#include "blackmisc/variantprivate.h"
 
 #include <QJsonObject>
 #include <QJsonValue>

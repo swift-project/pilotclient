@@ -8,6 +8,7 @@
 
 #include "registermetadatadb.h"
 #include "db.h"
+#include "blackmisc/variant.h"
 
 namespace BlackMisc
 {

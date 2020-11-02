@@ -8,6 +8,7 @@
 
 #include "registermetadatageo.h"
 #include "geo.h"
+#include "blackmisc/variant.h"
 
 namespace BlackMisc
 {

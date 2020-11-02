@@ -8,6 +8,7 @@
 
 #include "registermetadataaviation.h"
 #include "aviation.h"
+#include "blackmisc/variant.h"
 
 namespace BlackMisc
 {

@@ -18,7 +18,6 @@
 #include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/geo/geoobjectlist.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/variant.h"
 
 #include <QMetaType>
 

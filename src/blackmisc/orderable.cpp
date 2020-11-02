@@ -8,7 +8,6 @@
 
 #include "blackmisc/orderable.h"
 #include "blackmisc/comparefunctions.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
 
 #include <QByteArray>

@@ -17,7 +17,6 @@
 #include "blackmisc/collection.h"
 #include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/variant.h"
 
 #include <QJsonArray>
 #include <QMetaType>

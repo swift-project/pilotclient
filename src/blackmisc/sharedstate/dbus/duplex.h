@@ -14,6 +14,7 @@
 #include "blackmisc/genericdbusinterface.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/promise.h"
+#include "blackmisc/variant.h"
 #include <QObject>
 #include <QFuture>
 #include <QMap>
@@ -26,7 +27,6 @@
 
 namespace BlackMisc
 {
-    class CVariant;
     class CVariantList;
 
     namespace SharedState

@@ -19,7 +19,6 @@
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/variant.h"
 
 #include <QDateTime>
 #include <QMetaType>

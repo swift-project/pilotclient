@@ -18,7 +18,6 @@
 #include "blackmisc/stringutils.h"
 #include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
 
 #include <QJsonValue>

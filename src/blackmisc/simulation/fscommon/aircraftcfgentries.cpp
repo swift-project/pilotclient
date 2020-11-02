@@ -11,7 +11,6 @@
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/simulation/distributor.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentries.h"
-#include "blackmisc/variant.h"
 
 #include <QDir>
 #include <QFile>

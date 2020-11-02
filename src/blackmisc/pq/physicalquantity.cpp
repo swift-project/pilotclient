@@ -23,7 +23,6 @@
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/dictionary.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
 
 #include <QCoreApplication>

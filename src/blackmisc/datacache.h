@@ -19,7 +19,6 @@
 #include "blackmisc/logcategories.h"
 #include "blackmisc/valuecache.h"
 #include "blackmisc/valuecacheprivate.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/variantmap.h"
 #include "blackmisc/worker.h"
 

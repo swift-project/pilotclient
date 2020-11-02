@@ -16,7 +16,6 @@
 #include "blackmisc/collection.h"
 #include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/weather/metar.h"
 
 #include <QMetaType>

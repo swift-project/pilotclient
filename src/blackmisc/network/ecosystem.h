@@ -13,7 +13,6 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/variant.h"
 
 #include <QMetaType>
 #include <QString>

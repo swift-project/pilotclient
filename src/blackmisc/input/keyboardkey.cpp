@@ -14,7 +14,6 @@
 #include <QtGlobal>
 
 #include "blackmisc/propertyindexref.h"
-#include "blackmisc/variant.h"
 
 namespace BlackMisc
 {

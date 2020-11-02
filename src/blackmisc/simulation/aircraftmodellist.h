@@ -25,7 +25,6 @@
 #include "blackmisc/orderablelist.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/blackmiscexport.h"
 
 #include <QJsonArray>

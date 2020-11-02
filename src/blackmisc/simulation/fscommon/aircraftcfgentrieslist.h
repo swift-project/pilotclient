@@ -17,7 +17,6 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentries.h"
 #include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/variant.h"
 
 #include <QMetaType>
 #include <QString>

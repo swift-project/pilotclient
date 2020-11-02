@@ -8,7 +8,6 @@
 
 #include "blackmisc/aviation/transponder.h"
 #include "blackmisc/propertyindexref.h"
-#include "blackmisc/variant.h"
 
 #include <QRegularExpression>
 #include <Qt>

@@ -9,7 +9,6 @@
 #include "blackmisc/aviation/airport.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/propertyindexref.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/stringutils.h"
 
 #include <QCoreApplication>

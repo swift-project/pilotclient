@@ -16,7 +16,6 @@
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/variant.h"
 
 #include <QMetaType>
 #include <QString>

@@ -22,6 +22,7 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/mixin/mixinstring.h"
 #include "blackmisc/mixin/mixinmetatype.h"
+#include "blackmisc/variant.h"
 
 #include <QDBusArgument>
 #include <QMetaType>

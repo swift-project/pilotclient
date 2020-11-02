@@ -16,7 +16,6 @@
 #include "blackmisc/sequence.h"
 #include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/timestampobjectlist.h"
-#include "blackmisc/variant.h"
 
 namespace BlackMisc
 {

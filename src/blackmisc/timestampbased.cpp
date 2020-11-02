@@ -9,7 +9,6 @@
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/stringutils.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
 
 #include <QByteArray>

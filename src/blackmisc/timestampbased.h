@@ -13,10 +13,10 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindexref.h"
-#include "blackmisc/variant.h"
 
 #include <QDateTime>
 #include <QString>
+#include <QVariant>
 #include <QtGlobal>
 
 namespace BlackMisc

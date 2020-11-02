@@ -22,7 +22,6 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/metaclass.h"
 
 #include <QMetaType>

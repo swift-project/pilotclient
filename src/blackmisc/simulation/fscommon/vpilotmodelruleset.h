@@ -21,7 +21,6 @@
 #include "blackmisc/sequence.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/fscommon/vpilotmodelrule.h"
-#include "blackmisc/variant.h"
 
 namespace BlackMisc
 {

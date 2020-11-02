@@ -17,7 +17,6 @@
 #include "blackmisc/collection.h"
 #include "blackmisc/json.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/variant.h"
 
 #include <QJsonObject>
 #include <QMetaType>

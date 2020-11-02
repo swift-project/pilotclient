@@ -14,7 +14,6 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/weather/gridpoint.h"
 #include "blackmisc/weather/weatherscenario.h"
 

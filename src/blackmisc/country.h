@@ -15,7 +15,6 @@
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/blackmiscexport.h"
 
 #include <QJsonObject>

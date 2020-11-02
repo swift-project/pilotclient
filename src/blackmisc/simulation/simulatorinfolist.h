@@ -15,7 +15,6 @@
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/variant.h"
 
 #include <QMetaType>
 

@@ -11,7 +11,6 @@
 #include "blackmisc/dbus.h"
 #include "blackmisc/iterator.h"
 #include "blackmisc/range.h"
-#include "blackmisc/variant.h"
 
 #include <QDBusMetaType>
 #include <QList>

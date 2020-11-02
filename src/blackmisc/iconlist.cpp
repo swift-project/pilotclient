@@ -10,7 +10,6 @@
 #include "blackmisc/containerbase.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/range.h"
-#include "blackmisc/variant.h"
 #include <QDBusMetaType>
 
 namespace BlackMisc

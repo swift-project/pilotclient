@@ -13,8 +13,8 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindexref.h"
-#include "blackmisc/variant.h"
 
+#include <QVariant>
 #include <QString>
 
 namespace BlackMisc

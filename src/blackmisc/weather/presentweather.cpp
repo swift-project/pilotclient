@@ -8,7 +8,6 @@
 
 #include "blackmisc/weather/presentweather.h"
 #include "blackmisc/propertyindexref.h"
-#include "blackmisc/variant.h"
 
 namespace BlackMisc
 {

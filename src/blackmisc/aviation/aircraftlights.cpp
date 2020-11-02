@@ -10,7 +10,6 @@
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/comparefunctions.h"
-#include "blackmisc/variant.h"
 #include <QStringBuilder>
 
 using namespace BlackMisc::PhysicalQuantities;

@@ -15,7 +15,6 @@
 #include "blackmisc/collection.h"
 #include "blackmisc/network/role.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/variant.h"
 
 #include <QJsonArray>
 #include <QMetaType>

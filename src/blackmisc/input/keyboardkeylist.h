@@ -15,7 +15,6 @@
 #include "blackmisc/collection.h"
 #include "blackmisc/input/keyboardkey.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/variant.h"
 
 #include <QStringList>
 #include <QMetaType>

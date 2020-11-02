@@ -19,7 +19,6 @@
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/timestampobjectlist.h"
-#include "blackmisc/variant.h"
 
 #include <QMetaType>
 #include <QList>

@@ -19,7 +19,6 @@
 #include "blackmisc/rgbcolor.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/variant.h"
 
 #include <QMap>
 #include <QJsonObject>

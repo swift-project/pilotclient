@@ -13,7 +13,6 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/weather/windlayer.h"
 
 #include <QMetaType>
