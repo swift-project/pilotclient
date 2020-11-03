@@ -15,7 +15,6 @@
 
 #include <Qt>
 
-using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 

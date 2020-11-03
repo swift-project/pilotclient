@@ -11,7 +11,7 @@
 #ifndef BLACKGUI_COMPONENTS_DBQUICKMAPPINGWIZARD_H
 #define BLACKGUI_COMPONENTS_DBQUICKMAPPINGWIZARD_H
 
-#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include <QWizard>
 #include <QScopedPointer>

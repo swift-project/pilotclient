@@ -12,6 +12,9 @@
 #define BLACKGUI_EDITORS_AIRCRAFTMODELFORM_H
 
 #include "form.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/simulation/distributor.h"
 
 namespace Ui { class CAircraftModelForm; }
 namespace BlackGui

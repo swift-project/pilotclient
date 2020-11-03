@@ -16,8 +16,6 @@
 #include <Qt>
 #include <tuple>
 
-using namespace BlackMisc::Network;
-
 namespace BlackMisc
 {
     namespace Simulation

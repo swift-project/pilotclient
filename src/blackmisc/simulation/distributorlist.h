@@ -26,6 +26,7 @@ namespace BlackMisc
 {
     namespace Simulation
     {
+        class CAircraftModel;
         class CSimulatorModel;
 
         //! Value object encapsulating a list of distributors.

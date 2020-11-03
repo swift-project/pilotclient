@@ -16,6 +16,7 @@
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/identifier.h"

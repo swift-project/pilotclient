@@ -14,6 +14,7 @@
 
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
+#include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/callsignset.h"
 #include <QTextStream>
 #include <QtGlobal>

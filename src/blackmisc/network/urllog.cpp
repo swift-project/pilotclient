@@ -17,8 +17,6 @@
 
 #include <atomic>
 
-using namespace BlackMisc::Db;
-
 namespace BlackMisc
 {
     namespace Network

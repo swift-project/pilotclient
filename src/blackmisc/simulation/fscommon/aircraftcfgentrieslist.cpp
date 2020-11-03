@@ -15,7 +15,6 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Network;
 
 namespace BlackMisc
 {

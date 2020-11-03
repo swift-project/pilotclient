@@ -32,7 +32,6 @@
 #include <QtGlobal>
 
 using namespace BlackMisc;
-using namespace BlackMisc::Network;
 
 namespace BlackMisc
 {

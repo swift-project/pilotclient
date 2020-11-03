@@ -12,6 +12,7 @@
 #define BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDMONITORDIALOG_H
 
 #include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/network/textmessage.h"
 #include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/logcategories.h"
