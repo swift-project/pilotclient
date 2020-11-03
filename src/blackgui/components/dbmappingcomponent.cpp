@@ -694,8 +694,8 @@ namespace BlackGui
             QPoint globalPos = this->mapToGlobal(point);
             QScopedPointer<QMenu> contextMenu(new QMenu(this));
 
-            contextMenu->addAction("Max.data area", this, &CDbMappingComponent::resizeForSelect, QKeySequence(Qt::CTRL + Qt::Key_M, Qt::Key_D));
-            contextMenu->addAction("Max.mapping area", this, &CDbMappingComponent::resizeForMapping, QKeySequence(Qt::CTRL + Qt::Key_M, Qt::Key_M));
+            contextMenu->addAction("Max.data area", this, &CDbMappingComponent::resizeForSelect, QKeySequence(static_cast<Qt::Key>(Qt::CTRL) + Qt::Key_M, Qt::Key_D));
+            contextMenu->addAction("Max.mapping area", this, &CDbMappingComponent::resizeForMapping, QKeySequence(static_cast<Qt::Key>(Qt::CTRL) + Qt::Key_M, Qt::Key_M));
             QAction *selectedItem = contextMenu.data()->exec(globalPos);
             Q_UNUSED(selectedItem)
         }

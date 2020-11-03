@@ -173,7 +173,7 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexOffsetMs = CPropertyIndexRef::GlobalIndexITimestampBased + ITimestampBased::IndexMSecsSinceEpoch + 1,
+            IndexOffsetMs = static_cast<int>(CPropertyIndexRef::GlobalIndexITimestampBased) + ITimestampBased::IndexMSecsSinceEpoch + 1,
             IndexAdjustedMsWithOffset,
             IndexOffsetWithUnit // keep this as last item
         };

@@ -222,7 +222,7 @@ namespace BlackMisc
     {
         QString result;
         // QChar c (NOT QChar &c), see https://discordapp.com/channels/539048679160676382/539925070550794240/686321311076581440
-        for (const QChar c : s)
+        for (const QChar &c : s)
         {
             if (c.decompositionTag() == QChar::NoDecomposition)
             {
@@ -230,7 +230,7 @@ namespace BlackMisc
             }
             else
             {
-                for (const QChar dc : c.decomposition())
+                for (const QChar &dc : c.decomposition())
                 {
                     if (!dc.isMark()) { result.push_back(dc); }
                 }

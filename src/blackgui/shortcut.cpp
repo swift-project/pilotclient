@@ -17,50 +17,50 @@ namespace BlackGui
 {
     const QKeySequence &CShortcut::keyStash()
     {
-        static const QKeySequence k(Qt::ALT + Qt::Key_S);
+        static const QKeySequence k(static_cast<Qt::Key>(Qt::ALT) + Qt::Key_S);
         return k;
     }
 
     const QKeySequence &CShortcut::keyAddToModelSet()
     {
-        static const QKeySequence k(Qt::ALT + Qt::Key_A);
+        static const QKeySequence k(static_cast<Qt::Key>(Qt::ALT) + Qt::Key_A);
         return k;
     }
 
     const QKeySequence &CShortcut::keyClearSelection()
     {
-        static const QKeySequence k(Qt::CTRL + Qt::Key_Space);
+        static const QKeySequence k(static_cast<Qt::Key>(Qt::CTRL) + Qt::Key_Space);
         return k;
     }
 
     const QKeySequence &CShortcut::keySelectAll()
     {
-        static const QKeySequence k(Qt::CTRL + Qt::Key_A);
+        static const QKeySequence k(static_cast<Qt::Key>(Qt::CTRL) + Qt::Key_A);
         return k;
     }
 
     const QKeySequence &BlackGui::CShortcut::keyDisplayFilter()
     {
-        static const QKeySequence k(Qt::CTRL + Qt::Key_F);
+        static const QKeySequence k(static_cast<Qt::Key>(Qt::CTRL) + Qt::Key_F);
         return k;
     }
 
     const QKeySequence &CShortcut::keyResizeView()
     {
-        static const QKeySequence k(Qt::CTRL + Qt::Key_R);
+        static const QKeySequence k(static_cast<Qt::Key>(Qt::CTRL) + Qt::Key_R);
         return k;
     }
 
     const QKeySequence &CShortcut::keySave()
     {
-        static const QKeySequence k(Qt::CTRL + Qt::Key_S);
+        static const QKeySequence k(static_cast<Qt::Key>(Qt::CTRL) + Qt::Key_S);
         return k;
     }
 
     const QKeySequence &CShortcut::keySaveViews()
     {
         // remark CTRL+S not working in views
-        static const QKeySequence k(Qt::SHIFT + Qt::Key_S);
+        static const QKeySequence k(static_cast<Qt::Key>(Qt::SHIFT) + Qt::Key_S);
         return k;
     }
 
@@ -78,25 +78,25 @@ namespace BlackGui
 
     const QKeySequence &CShortcut::keyCopy()
     {
-        static const QKeySequence k(Qt::CTRL + Qt::Key_C);
+        static const QKeySequence k(static_cast<Qt::Key>(Qt::CTRL) + Qt::Key_C);
         return k;
     }
 
     const QKeySequence &CShortcut::keyFontPlus()
     {
-        static const QKeySequence k(Qt::CTRL + Qt::Key_Plus);
+        static const QKeySequence k(static_cast<Qt::Key>(Qt::CTRL) + Qt::Key_Plus);
         return k;
     }
 
     const QKeySequence &CShortcut::keyFontMinus()
     {
-        static const QKeySequence k(Qt::CTRL + Qt::Key_Minus);
+        static const QKeySequence k(static_cast<Qt::Key>(Qt::CTRL) + Qt::Key_Minus);
         return k;
     }
 
     const QKeySequence &CShortcut::keyFontReset()
     {
-        static const QKeySequence k(Qt::CTRL + Qt::Key_0);
+        static const QKeySequence k(static_cast<Qt::Key>(Qt::CTRL) + Qt::Key_0);
         return k;
     }
 

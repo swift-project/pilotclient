@@ -90,7 +90,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(ui->pb_FSXConfigDirs, &QPushButton::released, this, &CSwiftLauncher::showSimulatorConfigDirs, Qt::QueuedConnection);
     connect(ui->pb_P3DConfigDirs, &QPushButton::released, this, &CSwiftLauncher::showSimulatorConfigDirs, Qt::QueuedConnection);
 
-    const QShortcut *logPageShortCut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(showLogPage()));
+    const QShortcut *logPageShortCut = new QShortcut(QKeySequence(static_cast<Qt::Key>(Qt::CTRL) + Qt::Key_L), this, SLOT(showLogPage()));
     Q_UNUSED(logPageShortCut)
 
     // periodically check

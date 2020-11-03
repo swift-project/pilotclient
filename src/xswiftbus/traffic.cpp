@@ -846,7 +846,7 @@ namespace XSwiftBus
     void CTraffic::doPlaneUpdates()
     {
         m_updates.clear();
-        for (const auto pair : m_planesById)
+        for (const auto &pair : m_planesById)
         {
             Plane *plane = pair.second;
             interpolatePosition(plane);
@@ -909,7 +909,7 @@ namespace XSwiftBus
         XPLMCameraPosition_t camPos {};
         XPLMReadCameraPosition(&camPos);
 
-        for (const auto pair : m_traffic->m_planesById)
+        for (const auto &pair : m_traffic->m_planesById)
         {
             char *text = const_cast<char *>(pair.second->label);
             const XPMPPlanePosition_t &planePos = pair.second->positions[3];

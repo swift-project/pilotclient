@@ -420,7 +420,7 @@ namespace BlackGui
         {
             ui->cb_OtherVersions->clear();
             const QMap<QString, CApplicationInfo> otherVersions = CApplicationInfoList::currentApplicationDataDirectoryMapWithoutCurrentVersion();
-            for (const auto &pair : makePairsRange(otherVersions))
+            for (const auto pair : makePairsRange(otherVersions))
             {
                 const CApplicationInfo &info(pair.second);
                 if (info.isNull())

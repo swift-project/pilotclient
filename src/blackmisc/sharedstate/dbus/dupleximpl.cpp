@@ -64,7 +64,7 @@ namespace BlackMisc
                 {
                     if (client != this) { channels.unite(client->m_subscriptions.keys().toSet()); }
                 }
-                for (const auto channel : channels)
+                for (const auto &channel : channels)
                 {
                     requestPeerSubscriptions(channel);
                 }

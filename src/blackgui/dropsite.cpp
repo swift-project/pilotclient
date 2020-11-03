@@ -26,7 +26,7 @@ namespace BlackGui
 {
     CDropSite::CDropSite(QWidget *parent) : QLabel(parent)
     {
-        this->setFrameStyle(QFrame::Sunken | QFrame::StyledPanel);
+        this->setFrameStyle(static_cast<int>(QFrame::Sunken) | QFrame::StyledPanel);
         this->setAlignment(Qt::AlignCenter);
         this->setAcceptDrops(true);
         this->setTextFormat(Qt::RichText);

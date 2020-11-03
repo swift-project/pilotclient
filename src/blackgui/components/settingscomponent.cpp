@@ -75,56 +75,56 @@ namespace BlackGui
         {
             QAction *a = new QAction(this);
             a->setObjectName("overview");
-            a->setShortcut(QKeySequence(Qt::ALT + Qt::Key_S, Qt::Key_O));
+            a->setShortcut(QKeySequence(static_cast<Qt::Key>(Qt::ALT) + Qt::Key_S, Qt::Key_O));
             connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
             this->addAction(a);
             ui->lbl_Hint->setText("Hint: See tooltips for shortcuts, \"ALT+S, O\" for overview.");
 
             a = new QAction(this);
             a->setObjectName("audio");
-            a->setShortcut(QKeySequence(Qt::ALT + Qt::Key_S, Qt::Key_A));
+            a->setShortcut(QKeySequence(static_cast<Qt::Key>(Qt::ALT) + Qt::Key_S, Qt::Key_A));
             ui->pb_Audio->setToolTip(a->shortcut().toString());
             connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
             this->addAction(a);
 
             a = new QAction(this);
             a->setObjectName("data");
-            a->setShortcut(QKeySequence(Qt::ALT + Qt::Key_S, Qt::Key_D));
+            a->setShortcut(QKeySequence(static_cast<Qt::Key>(Qt::ALT) + Qt::Key_S, Qt::Key_D));
             ui->pb_DataLoadAndCaches->setToolTip(a->shortcut().toString());
             connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
             this->addAction(a);
 
             a = new QAction(this);
             a->setObjectName("gui");
-            a->setShortcut(QKeySequence(Qt::ALT + Qt::Key_S, Qt::Key_G));
+            a->setShortcut(QKeySequence(static_cast<Qt::Key>(Qt::ALT) + Qt::Key_S, Qt::Key_G));
             ui->pb_Gui->setToolTip(a->shortcut().toString());
             connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
             this->addAction(a);
 
             a = new QAction(this);
             a->setObjectName("hotkeys");
-            a->setShortcut(QKeySequence(Qt::ALT + Qt::Key_S, Qt::Key_H));
+            a->setShortcut(QKeySequence(static_cast<Qt::Key>(Qt::ALT) + Qt::Key_S, Qt::Key_H));
             ui->pb_Hotkeys->setToolTip(a->shortcut().toString());
             connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
             this->addAction(a);
 
             a = new QAction(this);
             a->setObjectName("network");
-            a->setShortcut(QKeySequence(Qt::ALT + Qt::Key_S, Qt::Key_N));
+            a->setShortcut(QKeySequence(static_cast<Qt::Key>(Qt::ALT) + Qt::Key_S, Qt::Key_N));
             ui->pb_Network->setToolTip(a->shortcut().toString());
             connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
             this->addAction(a);
 
             a = new QAction(this);
             a->setObjectName("simulator");
-            a->setShortcut(QKeySequence(Qt::ALT + Qt::Key_S, Qt::Key_S));
+            a->setShortcut(QKeySequence(static_cast<Qt::Key>(Qt::ALT) + Qt::Key_S, Qt::Key_S));
             ui->pb_Simulator->setToolTip(a->shortcut().toString());
             connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
             this->addAction(a);
 
             a = new QAction(this);
             a->setObjectName("matching");
-            a->setShortcut(QKeySequence(Qt::ALT + Qt::Key_S, Qt::Key_M));
+            a->setShortcut(QKeySequence(static_cast<Qt::Key>(Qt::ALT) + Qt::Key_S, Qt::Key_M));
             ui->pb_Matching->setToolTip(a->shortcut().toString());
             connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
             this->addAction(a);

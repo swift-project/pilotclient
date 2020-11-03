@@ -166,7 +166,7 @@ namespace BlackMisc
             CUpdateInfo result;
             result.m_distributions = { alphaDistribution, betaDistribution };
 
-            for (const QJsonValue &release : QJsonDocument::fromJson(jsonData).array())
+            for (const QJsonValue release : QJsonDocument::fromJson(jsonData).array())
             {
                 QString version = release[QLatin1String("tag_name")].toString();
                 if (version.isEmpty() || version[0] != 'v') { continue; }
@@ -176,7 +176,7 @@ namespace BlackMisc
                 bool existing = !release[QLatin1String("draft")].toBool();
                 bool alpha = release[QLatin1String("prerelease")].toBool();
 
-                for (const QJsonValue &asset : release[QLatin1String("assets")].toArray())
+                for (const QJsonValue asset : release[QLatin1String("assets")].toArray())
                 {
                     QString name = asset[QLatin1String("name")].toString();
                     QString filename = QStringLiteral("v%1/%2").arg(version, name);
