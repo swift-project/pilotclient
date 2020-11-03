@@ -389,7 +389,7 @@ namespace BlackMisc
         {
             if (m_combinedType.length() < 1) { return {}; }
             QChar c(m_combinedType.at(0));
-            if (c == "-") { return {}; }
+            if (c == '-') { return {}; }
             return c;
         }
 
