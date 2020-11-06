@@ -53,5 +53,32 @@ namespace BlackMisc
             CTrack::registerMetadata();
             CTransponder::registerMetadata();
         }
+    }
+
+#if defined(Q_OS_WIN) && defined(Q_CC_CLANG)
+    namespace Private
+    {
+        template void maybeRegisterMetaListConvert<Aviation::CAircraftEngineList>(int);
+        template void maybeRegisterMetaListConvert<Aviation::CAircraftIcaoCodeList>(int);
+        template void maybeRegisterMetaListConvert<Aviation::CAircraftCategoryList>(int);
+        template void maybeRegisterMetaListConvert<Aviation::CAircraftPartsList>(int);
+        template void maybeRegisterMetaListConvert<Aviation::CAircraftSituationList>(int);
+        template void maybeRegisterMetaListConvert<Aviation::CAirlineIcaoCodeList>(int);
+        template void maybeRegisterMetaListConvert<Aviation::CAirportList>(int);
+        template void maybeRegisterMetaListConvert<Aviation::CAtcStationList>(int);
+        template void maybeRegisterMetaListConvert<Aviation::CFlightPlanList>(int);
+        template void maybeRegisterMetaListConvert<Aviation::CLiveryList>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Aviation::CAircraftEngine>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Aviation::CAircraftIcaoCode>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Aviation::CAircraftCategory>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Aviation::CAircraftParts>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Aviation::CAircraftSituation>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Aviation::CAirlineIcaoCode>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Aviation::CAirport>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Aviation::CAtcStation>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Aviation::CFlightPlan>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Aviation::CLivery>>(int);
     } // ns
+#endif
+
 } // ns

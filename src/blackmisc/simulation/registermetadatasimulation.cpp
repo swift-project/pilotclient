@@ -83,5 +83,28 @@ namespace BlackMisc
             qRegisterMetaTypeStreamOperators<ReverseLookupLoggingFlag>();
             qRegisterMetaTypeStreamOperators<ReverseLookupLogging>();
         }
+    }
+
+#if defined(Q_OS_WIN) && defined(Q_CC_CLANG)
+    namespace Private
+    {
+        template void maybeRegisterMetaListConvert<Simulation::FsCommon::CAircraftCfgEntriesList>(int);
+        template void maybeRegisterMetaListConvert<Simulation::CAircraftModelList>(int);
+        template void maybeRegisterMetaListConvert<Simulation::CDistributorList>(int);
+        template void maybeRegisterMetaListConvert<Simulation::CInterpolationSetupList>(int);
+        template void maybeRegisterMetaListConvert<Simulation::CMatchingStatistics>(int);
+        template void maybeRegisterMetaListConvert<Simulation::CSimulatedAircraftList>(int);
+        template void maybeRegisterMetaListConvert<Simulation::CSimulatorInfoList>(int);
+        template void maybeRegisterMetaListConvert<Simulation::CSimulatorPluginInfoList>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Simulation::FsCommon::CAircraftCfgEntries>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Simulation::CAircraftModel>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Simulation::CDistributor>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Simulation::CInterpolationAndRenderingSetupPerCallsign>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Simulation::CMatchingStatisticsEntry>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Simulation::CSimulatedAircraft>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Simulation::CSimulatorInfo>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Simulation::CSimulatorPluginInfo>>(int);
     } // ns
+#endif
+
 } // ns

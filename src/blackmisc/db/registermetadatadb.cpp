@@ -25,5 +25,18 @@ namespace BlackMisc
             CDistributionList::registerMetadata();
             CUpdateInfo::registerMetadata();
         }
+    }
+
+#if defined(Q_OS_WIN) && defined(Q_CC_CLANG)
+    namespace Private
+    {
+        template void maybeRegisterMetaListConvert<Db::CDbInfoList>(int);
+        template void maybeRegisterMetaListConvert<Db::CArtifactList>(int);
+        template void maybeRegisterMetaListConvert<Db::CDistributionList>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Db::CDbInfo>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Db::CArtifact>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Db::CDistribution>>(int);
     } // ns
+#endif
+
 } // ns

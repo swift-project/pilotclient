@@ -35,5 +35,26 @@ namespace BlackMisc
             CWindLayer::registerMetadata();
             CWindLayerList::registerMetadata();
         }
+    }
+
+#if defined(Q_OS_WIN) && defined(Q_CC_CLANG)
+    namespace Private
+    {
+        template void maybeRegisterMetaListConvert<Weather::CCloudLayerList>(int);
+        template void maybeRegisterMetaListConvert<Weather::CMetarList>(int);
+        template void maybeRegisterMetaListConvert<Weather::CPresentWeatherList>(int);
+        template void maybeRegisterMetaListConvert<Weather::CTemperatureLayerList>(int);
+        template void maybeRegisterMetaListConvert<Weather::CVisibilityLayerList>(int);
+        template void maybeRegisterMetaListConvert<Weather::CWeatherDataPluginInfoList>(int);
+        template void maybeRegisterMetaListConvert<Weather::CWindLayerList>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Weather::CCloudLayer>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Weather::CMetar>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Weather::CPresentWeather>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Weather::CTemperatureLayer>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Weather::CVisibilityLayer>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Weather::CWeatherDataPluginInfo>>(int);
+        template void maybeRegisterMetaListConvert<CSequence<Weather::CWindLayer>>(int);
     } // ns
+#endif
+
 } // ns
