@@ -9,7 +9,6 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/iconlist.h"
-#include "blackmisc/logpattern.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/verify.h"
@@ -194,29 +193,6 @@ namespace BlackMisc
     QString CStatusMessage::getCategoriesAsString() const
     {
         return m_categories.toQString();
-    }
-
-    QString CStatusMessage::getHumanReadablePattern() const
-    {
-        const QStringList patternNames(getHumanReadablePatterns());
-        return patternNames.isEmpty() ? QString() : patternNames.join(", ");
-    }
-
-    QStringList CStatusMessage::getHumanReadablePatterns() const
-    {
-        QStringList patternNames;
-        for (const QString &name : CLogPattern::allHumanReadableNames())
-        {
-            if (CLogPattern::fromHumanReadableName(name).match(*this)) { patternNames.push_back(name); }
-        }
-        return patternNames;
-    }
-
-    QString CStatusMessage::getHumanOrTechnicalCategoriesAsString() const
-    {
-        if (m_categories.isEmpty()) { return {}; }
-        const QString c(getHumanReadablePattern());
-        return c.isEmpty() ? this->getCategoriesAsString() : c;
     }
 
     bool CStatusMessage::clampSeverity(CStatusMessage::StatusSeverity severity)
@@ -430,8 +406,6 @@ namespace BlackMisc
         case IndexSeverityAsString: return QVariant::fromValue(this->getSeverityAsString());
         case IndexSeverityAsIcon: return QVariant::fromValue(this->getSeverityAsIcon());
         case IndexCategoriesAsString: return QVariant::fromValue(m_categories.toQString());
-        case IndexCategoriesHumanReadableAsString: return QVariant::fromValue(this->getHumanReadablePattern());
-        case IndexCategoryHumanReadableOrTechnicalAsString: return QVariant::fromValue(this->getHumanOrTechnicalCategoriesAsString());
         case IndexMessageAsHtml: return QVariant::fromValue(this->toHtml(false, true));
         default: return CValueObject::propertyByIndex(index);
         }
@@ -469,8 +443,6 @@ namespace BlackMisc
         case IndexSeverityAsIcon:
         case IndexSeverity:           return Compare::compare(this->getSeverity(), compareValue.getSeverity());
         case IndexCategoriesAsString: return this->getCategoriesAsString().compare(compareValue.getCategoriesAsString());
-        case IndexCategoriesHumanReadableAsString:          return this->getHumanReadablePattern().compare(compareValue.getHumanReadablePattern());
-        case IndexCategoryHumanReadableOrTechnicalAsString: return this->getHumanOrTechnicalCategoriesAsString().compare(compareValue.getHumanOrTechnicalCategoriesAsString());
         default: break;
         }
         return CValueObject::comparePropertyByIndex(index, compareValue);

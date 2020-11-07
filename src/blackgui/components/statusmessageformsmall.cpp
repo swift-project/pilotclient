@@ -7,6 +7,7 @@
  */
 
 #include "blackgui/components/statusmessageformsmall.h"
+#include "blackmisc/logpattern.h"
 #include "ui_statusmessageformsmall.h"
 
 #include <QLabel>
@@ -39,7 +40,7 @@ namespace BlackGui
         {
             ui->te_Message->setPlainText(message.getMessage());
             ui->lbl_SeverityIcon->setPixmap(CIcon(message.toIcon()));
-            ui->le_Categories->setText(message.getHumanOrTechnicalCategoriesAsString());
+            ui->le_Categories->setText(CLogPattern::humanOrTechnicalCategoriesFrom(message).join(", "));
             ui->le_Severity->setText(message.getSeverityAsString());
             ui->le_Timestamp->setText(message.getFormattedUtcTimestampYmdhms());
         }

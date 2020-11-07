@@ -58,6 +58,12 @@ namespace BlackMisc
         //! Return a predefined CLogPattern corresponding to the given human-readable name.
         static const CLogPattern &fromHumanReadableName(const QString &name);
 
+        //! Human readable categories of message.
+        static QStringList humanReadableNamesFrom(const CStatusMessage &message);
+
+        //! Human or machine readable categories of message.
+        static QStringList humanOrTechnicalCategoriesFrom(const CStatusMessage &message);
+
         //! Default constructed CLogPattern will match any message.
         CLogPattern();
 

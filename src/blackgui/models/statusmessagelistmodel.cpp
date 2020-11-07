@@ -89,7 +89,7 @@ namespace BlackGui
                     col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
                     m_columns.addColumn(col);
                     m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
-                    m_columns.addColumn(CColumn::standardString("category", CStatusMessage::IndexCategoryHumanReadableOrTechnicalAsString));
+                    m_columns.addColumn(CColumn::standardString("category", CStatusMessage::IndexCategoriesAsString));
                 }
                 break;
             case SimplifiedWithOrder:

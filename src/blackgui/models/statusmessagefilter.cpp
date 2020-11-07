@@ -40,7 +40,7 @@ namespace BlackGui
 
                 if (!this->m_category.isEmpty())
                 {
-                    if (!this->stringMatchesFilterExpression(msg.getHumanOrTechnicalCategoriesAsString(), this->m_category)) { continue; }
+                    if (!this->stringMatchesFilterExpression(CLogPattern::humanOrTechnicalCategoriesFrom(msg).join(", "), this->m_category)) { continue; }
                 }
 
                 outContainer.push_back(msg);

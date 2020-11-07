@@ -307,8 +307,6 @@ namespace BlackMisc
         enum ColumnIndex
         {
             IndexCategoriesAsString = CPropertyIndexRef::GlobalIndexCStatusMessage,
-            IndexCategoriesHumanReadableAsString,
-            IndexCategoryHumanReadableOrTechnicalAsString,
             IndexSeverity,
             IndexSeverityAsString,
             IndexSeverityAsIcon,
@@ -379,12 +377,6 @@ namespace BlackMisc
 
         //! Message categories as string
         QString getCategoriesAsString() const;
-
-        //! Human readable category
-        QString getHumanReadablePattern() const;
-
-        //! All human readable categories
-        QStringList getHumanReadablePatterns() const;
 
         //! The human or technical categories
         QString getHumanOrTechnicalCategoriesAsString() const;

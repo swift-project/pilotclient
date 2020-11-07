@@ -71,6 +71,23 @@ namespace BlackMisc
         return names;
     }
 
+    QStringList CLogPattern::humanReadableNamesFrom(const CStatusMessage &message)
+    {
+        QStringList patternNames;
+        for (const QString &name : CLogPattern::allHumanReadableNames())
+        {
+            if (CLogPattern::fromHumanReadableName(name).match(message)) { patternNames.push_back(name); }
+        }
+        return patternNames;
+    }
+
+    QStringList CLogPattern::humanOrTechnicalCategoriesFrom(const CStatusMessage &message)
+    {
+        if (message.getCategories().isEmpty()) { return {}; }
+        QStringList c(humanReadableNamesFrom(message).join(", "));
+        return c.isEmpty() ? message.getCategories().toQStringList() : c;
+    }
+
     const CLogPattern &CLogPattern::fromHumanReadableName(const QString &name)
     {
         static const CLogPattern empty {};
