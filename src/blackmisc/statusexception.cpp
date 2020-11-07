@@ -30,4 +30,9 @@ namespace BlackMisc
         if (m_temp.isNull()) { m_temp = m_payload.getMessage().toLocal8Bit(); }
         return m_temp;
     }
+
+    void CStatusException::maybeThrow(const CStatusMessage &message)
+    {
+        if (!message.isEmpty()) { throw CStatusException(message); }
+    }
 } // ns

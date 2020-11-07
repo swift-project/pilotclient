@@ -25,8 +25,6 @@
 
 namespace BlackMisc
 {
-    class CStatusException;
-
     namespace Private
     {
         //! Like QString::arg() but for QStringView.
@@ -375,12 +373,6 @@ namespace BlackMisc
         //! Convert to a Qt logging triple
         //! \sa QtMessageHandler
         void toQtLogTriple(QtMsgType *o_type, QString *o_category, QString *o_message) const;
-
-        //! Return a throwable exception object containing this status message.
-        CStatusException asException() const;
-
-        //! If message is empty then do nothing, otherwise throw a CStatusException.
-        void maybeThrow() const;
 
         //! Message categories
         const CLogCategoryList &getCategories() const { return this->m_categories; }

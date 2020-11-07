@@ -22,8 +22,6 @@ namespace BlackMisc
 {
     /*!
      * Throwable exception class containing a CStatusMessage.
-     *
-     * This is the exception type which may be thrown by CStatusMessage::maybeThrow().
      */
     class BLACKMISC_EXPORT CStatusException : public std::exception
     {
@@ -45,6 +43,9 @@ namespace BlackMisc
 
         //! Destructor.
         ~CStatusException() override {}
+
+        //! If the message is not empty then throw it.
+        static void maybeThrow(const CStatusMessage &);
 
     private:
         const CStatusMessage   m_payload;
