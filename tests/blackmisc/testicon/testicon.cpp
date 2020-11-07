@@ -32,10 +32,10 @@ namespace BlackMiscTest
     void CTestIcon::iconIndex()
     {
         const int max = static_cast<int>(CIcons::IconIsGenerated);
-        QVERIFY2(CIconList::allIcons().size() == max, "Icon list size");
+        QVERIFY2(CIcon::allIcons().size() == max, "Icon list size");
 
         int c = 0;
-        for (const CIcon &icon : CIconList::allIcons())
+        for (const CIcon &icon : CIcon::allIcons())
         {
             CIcons::IconIndex ii = icon.getIndex();
             const int i = static_cast<int>(ii);

@@ -45,9 +45,6 @@ namespace BlackMisc
 
         //! Register metadata of unit and quantity
         static void registerMetadata();
-
-        //! All icons
-        static const CIconList &allIcons();
     };
 }
 

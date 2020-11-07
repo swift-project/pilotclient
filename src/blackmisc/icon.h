@@ -51,9 +51,6 @@ namespace BlackMisc
         //! Constructor.
         CIcon(CIcons::IconIndex index);
 
-        //! Constructor.
-        CIcon(CIcons::IconIndex index, const QString &descriptiveText);
-
         //! Constructor for generated icon
         //CIcon(const QPixmap &pixmap, const QString &descriptiveText);
 
@@ -111,7 +108,13 @@ namespace BlackMisc
         //! Icon for given index
         static const CIcon &iconByIndex(int index);
 
+        //! All icons
+        static const CSequence<CIcon> &allIcons();
+
     private:
+        //! Constructor.
+        CIcon(CIcons::IconIndex index, const QString &descriptiveText);
+
         CIcons::IconIndex m_index = CIcons::NotSet;
         int m_rotateDegrees = 0;    //!< Rotation
         QString m_descriptiveText;  //!< what does it represent?

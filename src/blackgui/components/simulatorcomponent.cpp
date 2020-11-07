@@ -151,16 +151,16 @@ namespace BlackGui
                 if (sGui->getISimulator())
                 {
                     const double fps = sGui->getISimulator()->getAverageFPS();
-                    this->addOrUpdateLiveDataByName(QStringLiteral("FPS"), fps < 0 ? QStringLiteral("N/A") : QString::number(fps, 'f', 1), CIconList::allIcons().findByIndex(CIcons::ApplicationSimulator));
+                    this->addOrUpdateLiveDataByName(QStringLiteral("FPS"), fps < 0 ? QStringLiteral("N/A") : QString::number(fps, 'f', 1), CIcon(CIcons::ApplicationSimulator));
 
                     const double ratio = sGui->getISimulator()->getSimTimeRatio();
-                    this->addOrUpdateLiveDataByName(QStringLiteral("Time Ratio"), QString::number(ratio, 'f', 2), CIconList::allIcons().findByIndex(CIcons::ApplicationSimulator));
+                    this->addOrUpdateLiveDataByName(QStringLiteral("Time Ratio"), QString::number(ratio, 'f', 2), CIcon(CIcons::ApplicationSimulator));
 
                     const double miles = sGui->getISimulator()->getTrackMilesShort();
-                    this->addOrUpdateLiveDataByName(QStringLiteral("Miles Short"), QString::number(miles, 'f', 1), CIconList::allIcons().findByIndex(CIcons::ApplicationSimulator));
+                    this->addOrUpdateLiveDataByName(QStringLiteral("Miles Short"), QString::number(miles, 'f', 1), CIcon(CIcons::ApplicationSimulator));
 
                     const double minutes = sGui->getISimulator()->getMinutesLate();
-                    this->addOrUpdateLiveDataByName(QStringLiteral("Minutes Late"), QString::number(minutes, 'f', 1), CIconList::allIcons().findByIndex(CIcons::ApplicationSimulator));
+                    this->addOrUpdateLiveDataByName(QStringLiteral("Minutes Late"), QString::number(minutes, 'f', 1), CIcon(CIcons::ApplicationSimulator));
                 }
             }
 
