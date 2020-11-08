@@ -11,7 +11,6 @@
 #include "blackmisc/loghandler.h"
 #include "blackmisc/algorithm.h"
 #include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/crashhandler.h"
 #include "blackmisc/threadutils.h"
 #include "blackconfig/buildconfig.h"
 

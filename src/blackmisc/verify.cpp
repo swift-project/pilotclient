@@ -7,7 +7,6 @@
  */
 
 #include "blackmisc/verify.h"
-#include "blackmisc/crashhandler.h"
 #include "blackmisc/logmessage.h"
 #include <QtGlobal>
 
