@@ -84,10 +84,10 @@ namespace BlackMisc
             return true;
         }
 
-        bool CNetworkUtils::canPing(const CUrl &url)
+        bool CNetworkUtils::canPing(const QUrl &url)
         {
             if (url.isEmpty()) { return false; }
-            return CNetworkUtils::canPing(url.getHost());
+            return CNetworkUtils::canPing(url.host());
         }
 
         QStringList CNetworkUtils::getKnownLocalIpV4Addresses()
@@ -179,17 +179,6 @@ namespace BlackMisc
             return canConnect(url, m, timeoutMs);
         }
 
-        bool CNetworkUtils::canConnect(const CUrl &url, QString &message, int timeoutMs)
-        {
-            return canConnect(url.getHost(), url.getPort(), message, timeoutMs);
-        }
-
-        bool CNetworkUtils::canConnect(const CUrl &url, int timeoutMs)
-        {
-            QString m;
-            return canConnect(url, m, timeoutMs);
-        }
-
         bool CNetworkUtils::isValidIPv4Address(const QString &candidate)
         {
             QHostAddress address(candidate);
@@ -262,37 +251,14 @@ namespace BlackMisc
         }
         //! \endcond
 
-        void CNetworkUtils::setSwiftClientSslCertificate(QNetworkRequest &request)
-        {
-            static const QSslKey privateKey(loadPrivateSslKey());
-            static const QSslCertificate certificate(loadSslCertifcate());
-            QSslConfiguration sslConfiguration = request.sslConfiguration();
-            sslConfiguration.setPrivateKey(privateKey);
-            sslConfiguration.setLocalCertificate(certificate);
-            request.setSslConfiguration(sslConfiguration);
-        }
-
-        void CNetworkUtils::setSwiftClientSslCertificate(QNetworkRequest &request, const CUrlList &swiftSharedUrls)
-        {
-            for (const CUrl &sharedUrl : swiftSharedUrls)
-            {
-                const QString urlString = request.url().toString();
-                if (urlString.startsWith(sharedUrl.toQString()))
-                {
-                    CNetworkUtils::setSwiftClientSslCertificate(request);
-                    break;
-                }
-            }
-        }
-
         void CNetworkUtils::addDebugFlag(QUrlQuery &qurl)
         {
             qurl.addQueryItem("XDEBUG_SESSION_START", "ECLIPSE_DBGP");
         }
 
-        QNetworkRequest CNetworkUtils::getSwiftNetworkRequest(const CUrl &url, RequestType type, const QString &userAgentDetails)
+        QNetworkRequest CNetworkUtils::getSwiftNetworkRequest(const QUrl &url, RequestType type, const QString &userAgentDetails)
         {
-            QNetworkRequest request(url.toQUrl());
+            QNetworkRequest request(url);
             switch (type)
             {
             case PostUrlEncoded:
@@ -397,17 +363,17 @@ namespace BlackMisc
 
         CStatusMessageList CNetworkUtils::createNetworkReport(const QNetworkAccessManager *am)
         {
-            return CNetworkUtils::createNetworkReport(CUrl(), am);
+            return CNetworkUtils::createNetworkReport(QUrl(), am);
         }
 
-        CStatusMessageList CNetworkUtils::createNetworkReport(const CUrl &url, const QNetworkAccessManager *qam)
+        CStatusMessageList CNetworkUtils::createNetworkReport(const QUrl &url, const QNetworkAccessManager *qam)
         {
             static const CLogCategoryList cats({CLogCategories::network()});
             CStatusMessageList msgs;
 
             if (!url.isEmpty())
             {
-                const QString host = url.getHost();
+                const QString host = url.host();
                 const bool canPing = CNetworkUtils::canPing(host);
                 const CStatusMessage ping(cats, canPing ? CStatusMessage::SeverityInfo : CStatusMessage::SeverityError, "Host: " + host + " ping: " + boolToYesNo(canPing));
                 msgs.push_back(ping);
@@ -416,11 +382,11 @@ namespace BlackMisc
                 const bool canConnect = CNetworkUtils::canConnect(url, msg, getTimeoutMs() * 2);
                 if (canConnect)
                 {
-                    msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityInfo, u"Can connect to " % url.getFullUrl()));
+                    msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityInfo, u"Can connect to " % url.toString()));
                 }
                 else
                 {
-                    msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Cannot connect to " % url.getFullUrl() % u" msg: " % msg));
+                    msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Cannot connect to " % url.toString() % u" msg: " % msg));
                 }
             }
 

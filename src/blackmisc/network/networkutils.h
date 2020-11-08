@@ -11,7 +11,6 @@
 #ifndef BLACKMISC_NETWORKUTILS_H
 #define BLACKMISC_NETWORKUTILS_H
 
-#include "blackmisc/network/urllist.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/statusmessagelist.h"
 
@@ -25,7 +24,6 @@
 
 class QHttpPart;
 class QNetworkReply;
-class QUrl;
 class QUrlQuery;
 
 namespace BlackMisc
@@ -58,7 +56,7 @@ namespace BlackMisc
 
             //! Can ping the address?
             //! \note uses OS ping
-            static bool canPing(const BlackMisc::Network::CUrl &url);
+            static bool canPing(const QUrl &url);
 
             //! Can connect?
             //! \param hostAddress   130.4.20.3, or myserver.com
@@ -82,12 +80,6 @@ namespace BlackMisc
             //! Can connect to URL?
             static bool canConnect(const QUrl &url, int timeoutMs = getTimeoutMs());
 
-            //! Can connect to URL?
-            static bool canConnect(const BlackMisc::Network::CUrl &url, QString &message, int timeoutMs = getTimeoutMs());
-
-            //! Can connect to URL?
-            static bool canConnect(const BlackMisc::Network::CUrl &url, int timeoutMs = getTimeoutMs());
-
             //! Find out my IPv4 addresses including loopback, empty if not possible
             static QStringList getKnownLocalIpV4Addresses();
 
@@ -109,17 +101,11 @@ namespace BlackMisc
             //! Set user agent for request
             static void setSwiftUserAgent(QNetworkRequest &request, const QString &userAgentDetails = {});
 
-            //! Set swift client SSL certificate
-            static void setSwiftClientSslCertificate(QNetworkRequest &request);
-
-            //! Set swift client SSL certificate
-            static void setSwiftClientSslCertificate(QNetworkRequest &request, const BlackMisc::Network::CUrlList &swiftSharedUrls);
-
             //! Add debug flag
             static void addDebugFlag(QUrlQuery &qurl);
 
             //! Our tweaked network request with swift header
-            static QNetworkRequest getSwiftNetworkRequest(const CUrl &url, RequestType type = Get, const QString &userAgentDetails = {});
+            static QNetworkRequest getSwiftNetworkRequest(const QUrl &url, RequestType type = Get, const QString &userAgentDetails = {});
 
             //! Get a copied network request with swift header
             static QNetworkRequest getSwiftNetworkRequest(const QNetworkRequest &request, const QString &userAgentDetails = {});
@@ -161,7 +147,7 @@ namespace BlackMisc
 
             //! Status about network, can be used when an URL fails to resolve issues
             //! \remark that can take a moment to complete, as it checks network
-            static BlackMisc::CStatusMessageList createNetworkReport(const CUrl &url, const QNetworkAccessManager *qam = nullptr);
+            static BlackMisc::CStatusMessageList createNetworkReport(const QUrl &url, const QNetworkAccessManager *qam = nullptr);
 
             //! Info about network configurations
             static QString createNetworkConfigurationReport(const QNetworkConfigurationManager *qcm, const QNetworkAccessManager *qam, const QString &separator = "\n");
