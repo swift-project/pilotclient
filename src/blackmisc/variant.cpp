@@ -14,7 +14,6 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/statusmessage.h"
-#include "blackmisc/variantlist.h"
 #include "blackmisc/stringutils.h"
 
 #include <QByteArray>
@@ -33,6 +32,9 @@
 
 namespace BlackMisc
 {
+    //! \private
+    int qMetaTypeId_CVariantList = -1; // referenced in variantlist.cpp
+
     Private::IValueObjectMetaInfo *Private::getValueObjectMetaInfo(int typeId)
     {
         return getValueObjectMetaInfo(QVariant(typeId, nullptr));
@@ -49,11 +51,11 @@ namespace BlackMisc
         {
             return true;
         }
-        if (typeId == qMetaTypeId<CVariantList>())
+        if (typeId == qMetaTypeId_CVariantList)
         {
             return m_v.canConvert<QVector<CVariant>>() || m_v.canConvert<QVariantList>();
         }
-        if (userType() == qMetaTypeId<CVariantList>())
+        if (userType() == qMetaTypeId_CVariantList)
         {
             return QVariant::fromValue(QVector<CVariant>()).canConvert(typeId)
                 || QVariant(typeId, nullptr).canConvert<QVariantList>();
@@ -66,7 +68,7 @@ namespace BlackMisc
         if (!m_v.canConvert(typeId))
         {
             if (!canConvert(typeId)) { return false; }
-            if (typeId == qMetaTypeId<CVariantList>())
+            if (typeId == qMetaTypeId_CVariantList)
             {
                 if (m_v.canConvert<QVector<CVariant>>())
                 {
@@ -74,11 +76,15 @@ namespace BlackMisc
                 }
                 else if (m_v.canConvert<QVariantList>())
                 {
-                    m_v.setValue(CVariantList(m_v.value<QSequentialIterable>()));
+                    QVector<CVariant> vec;
+                    const auto seqit = m_v.value<QSequentialIterable>();
+                    vec.reserve(seqit.size());
+                    for (auto it = seqit.begin(); it != seqit.end(); ++it) { vec.push_back(*it); }
+                    m_v.setValue(vec);
                 }
                 else { return false; }
             }
-            if (userType() == qMetaTypeId<CVariantList>())
+            if (userType() == qMetaTypeId_CVariantList)
             {
                 if (QVariant::fromValue(QVector<CVariant>()).canConvert(typeId))
                 {
@@ -92,7 +98,7 @@ namespace BlackMisc
 
     bool CVariant::isVariantList() const
     {
-        return userType() == qMetaTypeId<CVariantList>();
+        return userType() == qMetaTypeId_CVariantList;
     }
 
     QString CVariant::convertToQString(bool i18n) const

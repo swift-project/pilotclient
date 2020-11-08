@@ -39,7 +39,6 @@ namespace BlackMisc
 {
     class CIcon;
     class CPropertyIndex;
-    class CVariantList;
 
     /*!
      * Wrapper around QVariant which provides transparent access to CValueObject methods

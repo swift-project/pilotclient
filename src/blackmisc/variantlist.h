@@ -46,9 +46,6 @@ namespace BlackMisc
         //! Construct from a moved QVariantList.
         CVariantList(QVariantList &&other);
 
-        //! Construct from a QSequentialIterable.
-        CVariantList(const QSequentialIterable &other);
-
         //! Convert to a sequence type by converting all elements.
         template <typename T>
         T to() const { return CVariant::from(*this).template to<T>(); }
