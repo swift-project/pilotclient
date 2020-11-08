@@ -7,8 +7,10 @@
  */
 
 #include "blackmisc/verify.h"
-#include "blackmisc/logmessage.h"
+#include "blackmisc/logcategories.h"
+#include <QLoggingCategory>
 #include <QtGlobal>
+#include <QString>
 
 #ifdef BLACK_USE_CRASHPAD
 #include "crashpad/client/simulate_crash.h"
@@ -62,13 +64,14 @@ namespace BlackMisc
 #endif
 
 #if defined(QT_NO_DEBUG) || defined(Q_CC_MSVC)
+            auto logger = QMessageLogger().warning(QLoggingCategory(qPrintable(CLogCategories::verification())));
             if (context && message)
             {
-                CLogMessage(CLogCategories::verification()).warning(u"Failed to verify: %1 (%2 in %3) in %4 line %5") << condition << message << context << filename << line;
+                logger << QStringLiteral("Failed to verify: %1 (%2 in %3) in %4 line %5").arg(condition, message, context, filename, QString::number(line));
             }
             else
             {
-                CLogMessage(CLogCategories::verification()).warning(u"Failed to verify: %1 in %2 line %3") << condition << filename << line;
+                logger << QStringLiteral("Failed to verify: %1 in %2 line %3").arg(condition, filename, QString::number(line));
             }
 #   if defined(BLACK_USE_CRASHPAD)
             CRASHPAD_SIMULATE_CRASH();
