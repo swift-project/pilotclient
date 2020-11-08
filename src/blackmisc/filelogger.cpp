@@ -7,7 +7,6 @@
  */
 
 #include "blackmisc/filelogger.h"
-#include "blackmisc/loghandler.h"
 #include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackconfig/buildconfig.h"
@@ -59,9 +58,6 @@ namespace BlackMisc
         m_stream.setDevice(&m_logFile);
         m_stream.setCodec("UTF-8");
         writeHeaderToFile();
-
-        connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, this, &CFileLogger::ps_writeStatusMessageToFile);
-        connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, this, &CFileLogger::ps_writeStatusMessageToFile);
     }
 
     CFileLogger::~CFileLogger()
@@ -84,7 +80,7 @@ namespace BlackMisc
         return logFileName();
     }
 
-    void CFileLogger::ps_writeStatusMessageToFile(const BlackMisc::CStatusMessage &statusMessage)
+    void CFileLogger::writeStatusMessageToFile(const BlackMisc::CStatusMessage &statusMessage)
     {
         if (statusMessage.isEmpty()) { return; }
         if (!m_logFile.isOpen()) { return; }

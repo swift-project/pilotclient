@@ -47,9 +47,9 @@ namespace BlackMisc
         //! Get the log file path (including its name)
         static QString getLogFilePath();
 
-    private slots:
+    public slots:
         //! Write single status message to file
-        void ps_writeStatusMessageToFile(const BlackMisc::CStatusMessage &statusMessage);
+        void writeStatusMessageToFile(const BlackMisc::CStatusMessage &statusMessage);
 
     private:
         void removeOldLogFiles();

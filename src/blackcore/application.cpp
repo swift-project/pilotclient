@@ -1008,6 +1008,8 @@ namespace BlackCore
 
         // File logger
         m_fileLogger.reset(new CFileLogger(this));
+        connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, m_fileLogger.data(), &CFileLogger::writeStatusMessageToFile);
+        connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, m_fileLogger.data(), &CFileLogger::writeStatusMessageToFile);
         m_fileLogger->changeLogPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityDebug));
     }
 
