@@ -99,7 +99,7 @@ namespace BlackCoreTest
         constexpr int max = 5;
         for (int i = 0; i < max; i++)
         {
-            bool ok = CNetworkUtils::canPing(host);
+            bool ok = canPing(host);
             if (!ok) { QSKIP(qPrintable("Cannot ping " + url.getFullUrl())); }
         }
         int elapsedMs = timer.elapsed();
@@ -112,7 +112,7 @@ namespace BlackCoreTest
         QVERIFY2(sApp->getNetworkWatchdog(), "No network watchdog");
         const CUrl dbUrl = CNetworkWatchdog::dbTestUrl();
         qDebug() << "Using DB test URL: " << dbUrl.toQString();
-        const bool ok = CNetworkUtils::canPing(dbUrl);
+        const bool ok = canPing(dbUrl);
         if (!ok) { QSKIP(qPrintable("Cannot ping " + dbUrl.getFullUrl())); }
 
         // only if URL is reachable

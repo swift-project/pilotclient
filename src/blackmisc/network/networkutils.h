@@ -13,6 +13,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/network/ping.h"
 
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
@@ -49,14 +50,6 @@ namespace BlackMisc
 
             //! Default for timeout (long)
             static int getLongTimeoutMs();
-
-            //! Can ping the address?
-            //! \note uses OS ping
-            static bool canPing(const QString &hostAddress);
-
-            //! Can ping the address?
-            //! \note uses OS ping
-            static bool canPing(const QUrl &url);
 
             //! Can connect?
             //! \param hostAddress   130.4.20.3, or myserver.com

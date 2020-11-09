@@ -58,38 +58,6 @@ namespace BlackMisc
             return 3 * getTimeoutMs();
         }
 
-        bool CNetworkUtils::canPing(const QString &hostAddress)
-        {
-            if (hostAddress.isEmpty()) { return false; }
-            QProcess process;
-            process.setProgram("ping");
-            if (CBuildConfig::isRunningOnWindowsNtPlatform())
-            {
-                process.setArguments({ "-n", "1", hostAddress });
-            }
-            else
-            {
-                // all UNIX alike
-                process.setArguments({ "-c", "1", hostAddress });
-            }
-            process.start();
-            process.waitForFinished();
-            const int rc = process.exitCode();
-            if (rc != 0) { return false; }
-
-            const QString std = process.readAllStandardOutput();
-            const QString err = process.readAllStandardError();
-            if (std.contains("unreachable", Qt::CaseInsensitive)) { return false; }
-            if (err.contains("unreachable", Qt::CaseInsensitive)) { return false; }
-            return true;
-        }
-
-        bool CNetworkUtils::canPing(const QUrl &url)
-        {
-            if (url.isEmpty()) { return false; }
-            return CNetworkUtils::canPing(url.host());
-        }
-
         QStringList CNetworkUtils::getKnownLocalIpV4Addresses()
         {
             QStringList ips;
@@ -374,7 +342,7 @@ namespace BlackMisc
             if (!url.isEmpty())
             {
                 const QString host = url.host();
-                const bool canPing = CNetworkUtils::canPing(host);
+                const bool canPing = Network::canPing(host);
                 const CStatusMessage ping(cats, canPing ? CStatusMessage::SeverityInfo : CStatusMessage::SeverityError, "Host: " + host + " ping: " + boolToYesNo(canPing));
                 msgs.push_back(ping);
 

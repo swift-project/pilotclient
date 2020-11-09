@@ -1662,7 +1662,7 @@ namespace BlackMisc
 
             for (const QString &m : uncMachines)
             {
-                const bool ping = CNetworkUtils::canPing(m);
+                const bool ping = canPing(m);
                 if (!ping)
                 {
                     msgs.push_back(CStatusMessage(this).validationError(u"Cannot ping UNC machine(s): %1. UNC files: %2") << m << uncFiles.size());

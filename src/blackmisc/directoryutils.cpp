@@ -11,7 +11,7 @@
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/stringutils.h"
-#include "blackmisc/network/networkutils.h"
+#include "blackmisc/network/ping.h"
 #include "blackmisc/range.h"
 #include "blackconfig/buildconfig.h"
 #include <QCoreApplication>
@@ -123,7 +123,7 @@ namespace BlackMisc
             // outdated, test again
         }
 
-        const bool p = CNetworkUtils::canPing(m);
+        const bool p = canPing(m);
         if (p)
         {
             good.insert(m, QDateTime::currentSecsSinceEpoch());
