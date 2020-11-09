@@ -104,6 +104,12 @@ namespace BlackCore
 
             //! Split data array
             static QList<QByteArray> splitData(const QByteArray &data, int size);
+
+            //! Get data from a DB response
+            static bool parseSwiftPublishResponse(const QString &jsonResponse,
+                                                  BlackMisc::Simulation::CAircraftModelList &publishedModels,
+                                                  BlackMisc::Simulation::CAircraftModelList &skippedModels,
+                                                  BlackMisc::CStatusMessageList &messages, bool &directWrite);
         };
     } // ns
 } // ns

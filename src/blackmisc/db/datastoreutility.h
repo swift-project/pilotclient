@@ -21,7 +21,6 @@ namespace BlackMisc
 {
     class CStatusMessageList;
 
-    namespace Simulation { class CAircraftModelList; }
     namespace Db
     {
         /*!
@@ -50,12 +49,6 @@ namespace BlackMisc
 
             //! Parse a timestamp object
             static QDateTime parseTimestamp(const QString &timestamp);
-
-            //! Get data from a DB response
-            static bool parseSwiftPublishResponse(const QString &jsonResponse,
-                                                  Simulation::CAircraftModelList &publishedModels,
-                                                  Simulation::CAircraftModelList &skippedModels,
-                                                  CStatusMessageList &messages, bool &directWrite);
 
             //! Auto publish response
             static bool parseAutoPublishResponse(const QString &jsonResponse, CStatusMessageList &messages);

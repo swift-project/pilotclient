@@ -30,7 +30,6 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
-using namespace BlackMisc::Simulation;
 
 namespace BlackMisc
 {

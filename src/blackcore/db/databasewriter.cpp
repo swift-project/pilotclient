@@ -185,7 +185,7 @@ namespace BlackCore
                 CAircraftModelList modelsSkipped;
                 CStatusMessageList msgs;
                 bool directWrite;
-                const bool sendingSuccessful = CDatastoreUtility::parseSwiftPublishResponse(responseData, modelsPublished, modelsSkipped, msgs, directWrite);
+                const bool sendingSuccessful = parseSwiftPublishResponse(responseData, modelsPublished, modelsSkipped, msgs, directWrite);
                 const int c = CDatabaseUtils::fillInMissingAircraftAndLiveryEntities(modelsPublished);
 
                 emit this->publishedModels(modelsPublished, modelsSkipped, msgs, sendingSuccessful, directWrite);
@@ -275,6 +275,85 @@ namespace BlackCore
                 pos += arr.size();
             }
             return arrays;
+        }
+
+        bool CDatabaseWriter::parseSwiftPublishResponse(const QString &jsonResponse, CAircraftModelList &publishedModels,  CAircraftModelList &skippedModels, CStatusMessageList &messages, bool &directWrite)
+        {
+            directWrite = false;
+
+            if (jsonResponse.isEmpty())
+            {
+                messages.push_back(CStatusMessage(static_cast<CDatabaseWriter *>(nullptr), CStatusMessage::SeverityError, u"Empty JSON data for published models"));
+                return false;
+            }
+
+            const QJsonDocument jsonDoc(QJsonDocument::fromJson(jsonResponse.toUtf8()));
+
+            // array of messages only
+            if (jsonDoc.isArray())
+            {
+                const CStatusMessageList msgs(CStatusMessageList::fromDatabaseJson(jsonDoc.array()));
+                messages.push_back(msgs);
+                return true;
+            }
+
+            // no object -> most likely some fucked up HTML string with the PHP error
+            if (!jsonDoc.isObject())
+            {
+                const QString phpError(CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(jsonResponse));
+                messages.push_back(CStatusMessage(static_cast<CDatabaseWriter *>(nullptr), CStatusMessage::SeverityError, phpError));
+                return false;
+            }
+
+            // fully blown object
+            QJsonObject json(jsonDoc.object());
+            bool hasData = false;
+            if (json.contains("msgs"))
+            {
+                const QJsonValue msgJson(json.take("msgs"));
+                const CStatusMessageList msgs(CStatusMessageList::fromDatabaseJson(msgJson.toArray()));
+                if (!msgs.isEmpty())
+                {
+                    messages.push_back(msgs);
+                    hasData = true;
+                }
+            }
+
+            // direct write means models written, otherwise CRs
+            if (json.contains("directWrite"))
+            {
+                const QJsonValue dw(json.take("directWrite"));
+                directWrite = dw.toBool(false);
+            }
+
+            if (json.contains("publishedModels"))
+            {
+                const QJsonValue publishedJson(json.take("publishedModels"));
+                const CAircraftModelList published = CAircraftModelList::fromDatabaseJson(publishedJson.toArray(), "");
+                if (!published.isEmpty())
+                {
+                    publishedModels.push_back(published);
+                    hasData = true;
+                }
+            }
+
+            if (json.contains("skippedModels"))
+            {
+                const QJsonValue skippedJson(json.take("skippedModels"));
+                const CAircraftModelList skipped = CAircraftModelList::fromDatabaseJson(skippedJson.toArray(), "");
+                if (!skipped.isEmpty())
+                {
+                    skippedModels.push_back(skipped);
+                    hasData = true;
+                }
+            }
+
+            if (!hasData)
+            {
+                messages.push_back(CStatusMessage(static_cast<CDatabaseWriter *>(nullptr), CStatusMessage::SeverityError, u"Received response, but no JSON data"));
+            }
+
+            return hasData;
         }
     } // ns
 } // ns
