@@ -70,6 +70,9 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
+            //! Simulator info to plugin indentifier, empty string if not single simulator
+            static const QString &identifierFromSimulatorInfo(const CSimulatorInfo &);
+
             //! Plugin identifier (FSX)
             static const QString &fsxPluginIdentifier();
 

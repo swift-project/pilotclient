@@ -67,6 +67,19 @@ namespace BlackMisc
             return QStringLiteral("%1 (%2)").arg(m_name, m_identifier);
         }
 
+        const QString &CSimulatorPluginInfo::identifierFromSimulatorInfo(const CSimulatorInfo &simInfo)
+        {
+            static const QString e;
+            if (!simInfo.isSingleSimulator()) { return e; }
+            const CSimulatorInfo::Simulator s = simInfo.getSimulator();
+            if (s.testFlag(CSimulatorInfo::FSX))    { return CSimulatorPluginInfo::fsxPluginIdentifier(); }
+            if (s.testFlag(CSimulatorInfo::FS9))    { return CSimulatorPluginInfo::fs9PluginIdentifier(); }
+            if (s.testFlag(CSimulatorInfo::P3D))    { return CSimulatorPluginInfo::p3dPluginIdentifier(); }
+            if (s.testFlag(CSimulatorInfo::XPLANE)) { return CSimulatorPluginInfo::xplanePluginIdentifier(); }
+            if (s.testFlag(CSimulatorInfo::FG))     { return CSimulatorPluginInfo::fgPluginIdentifier(); }
+            return e;
+        }
+
         const QString &CSimulatorPluginInfo::fsxPluginIdentifier()
         {
             static const QString s("org.swift-project.plugins.simulator.fsx");

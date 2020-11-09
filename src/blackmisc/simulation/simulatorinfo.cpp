@@ -7,7 +7,6 @@
  */
 
 #include "blackconfig/buildconfig.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
@@ -216,19 +215,6 @@ namespace BlackMisc
         void CSimulatorInfo::invertSimulators()
         {
             m_simulator = (m_simulator ^ static_cast<int>(All)) & static_cast<int>(All);
-        }
-
-        const QString &CSimulatorInfo::toPluginIdentifier() const
-        {
-            static const QString e;
-            if (!this->isSingleSimulator()) { return e; }
-            const Simulator s = getSimulator();
-            if (s.testFlag(FSX))    { return CSimulatorPluginInfo::fsxPluginIdentifier(); }
-            if (s.testFlag(FS9))    { return CSimulatorPluginInfo::fs9PluginIdentifier(); }
-            if (s.testFlag(P3D))    { return CSimulatorPluginInfo::p3dPluginIdentifier(); }
-            if (s.testFlag(XPLANE)) { return CSimulatorPluginInfo::xplanePluginIdentifier(); }
-            if (s.testFlag(FG))     { return CSimulatorPluginInfo::fgPluginIdentifier(); }
-            return e;
         }
 
         CStatusMessage CSimulatorInfo::validateSimulatorsForModel() const

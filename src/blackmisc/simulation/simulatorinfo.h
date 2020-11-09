@@ -173,9 +173,6 @@ namespace BlackMisc
             //! All simulators selected become unselected and vice versa
             void invertSimulators();
 
-            //! To plugin indentifier, empty string if not single simulator
-            const QString &toPluginIdentifier() const;
-
             //! Validate simulators for an aircraft model
             CStatusMessage validateSimulatorsForModel() const;
 
