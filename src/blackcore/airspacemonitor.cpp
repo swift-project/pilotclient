@@ -1215,6 +1215,44 @@ namespace BlackCore
         return aircraft;
     }
 
+    bool CAirspaceMonitor::extrapolateElevation(CAircraftSituationList &situations, const CAircraftSituationChange &change)
+    {
+        if (situations.size() < 3) { return false; }
+        //Q_ASSERT_X(situations.m_tsAdjustedSortHint == CAircraftSituationList::AdjustedTimestampLatestFirst, Q_FUNC_INFO, "Need latest first");
+        const CAircraftSituation old = situations[1];
+        const CAircraftSituation older = situations[2];
+        return extrapolateElevation(situations.front(), old, older, change);
+    }
+
+    bool CAirspaceMonitor::extrapolateElevation(CAircraftSituation &situationToBeUpdated, const CAircraftSituation &oldSituation, const CAircraftSituation &olderSituation, const CAircraftSituationChange &oldChange)
+    {
+        if (situationToBeUpdated.hasGroundElevation()) { return false; }
+
+        // if acceptable transfer
+        if (oldSituation.transferGroundElevationFromMe(situationToBeUpdated))
+        {
+            // change or keep type is the question
+            // situationToBeUpdated.setGroundElevationInfo(Extrapolated);
+            return true;
+        }
+        if (oldSituation.isNull() || olderSituation.isNull()) { return false; }
+
+        if (oldChange.isNull()) { return false; }
+        if (oldChange.isConstOnGround() && oldChange.hasAltitudeDevWithinAllowedRange() && oldChange.hasElevationDevWithinAllowedRange())
+        {
+            // we have almost const altitudes and elevations
+            const double deltaAltFt = qAbs(situationToBeUpdated.getAltitude().value(CLengthUnit::ft()) - olderSituation.getAltitude().value(CLengthUnit::ft()));
+            if (deltaAltFt <= CAircraftSituation::allowedAltitudeDeviation().value(CLengthUnit::ft()))
+            {
+                // the current alt is also not much different
+                situationToBeUpdated.setGroundElevation(oldSituation.getGroundElevation(), CAircraftSituation::Extrapolated);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     void CAirspaceMonitor::onAircraftUpdateReceived(const CAircraftSituation &situation, const CTransponder &transponder)
     {
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Called in different thread");
@@ -1539,7 +1577,7 @@ namespace BlackCore
                     // values before updating (i.e. "storing") so the new situation is not yet considered
                     if (situationsBeforeStoring.size() > 1)
                     {
-                        const bool extrapolated = correctedSituation.extrapolateElevation(situationsBeforeStoring[0], situationsBeforeStoring[1], changesBeforeStoring);
+                        const bool extrapolated = extrapolateElevation(correctedSituation, situationsBeforeStoring[0], situationsBeforeStoring[1], changesBeforeStoring);
                         triedExtrapolation  = true;
                         couldNotExtrapolate = !extrapolated;
                         fromWhere = 20;

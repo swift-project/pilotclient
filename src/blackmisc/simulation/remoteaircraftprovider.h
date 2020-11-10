@@ -473,6 +473,10 @@ namespace BlackMisc
             //! \threadsafe
             ReverseLookupLogging whatToReverseLog() const;
 
+            //! Set ground elevation from elevation plane and guess ground
+            //! \note requires a sorted list latest first
+            static int setGroundElevationCheckedAndGuessGround(Aviation::CAircraftSituationList &situations, const Geo::CElevationPlane &elevationPlane, Aviation::CAircraftSituation::GndElevationInfo info, const Simulation::CAircraftModel &model, Aviation::CAircraftSituationChange *changeOut, bool *setForOnGroundPosition);
+
         private:
             //! Store the latest changes
             //! \remark latest first

@@ -27,9 +27,6 @@ namespace BlackMisc
     namespace Simulation { class CAircraftModel; }
     namespace Aviation
     {
-        class CAircraftSituation;
-        class CAircraftSituationChange;
-
         //! Value object encapsulating information of aircraft's parts
         class BLACKMISC_EXPORT CAircraftParts :
             public CValueObject<CAircraftParts>,
@@ -158,9 +155,6 @@ namespace BlackMisc
             //! Set parts details
             void setPartsDetails(PartsDetails details) { m_partsDetails = static_cast<int>(details); }
 
-            //! Guess the parts
-            void guessParts(const CAircraftSituation &situation, const CAircraftSituationChange &change, const Simulation::CAircraftModel &model);
-
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
@@ -180,9 +174,6 @@ namespace BlackMisc
 
             //! NULL parts object
             static const CAircraftParts &null();
-
-            //! Guessed parts
-            static CAircraftParts guessedParts(const CAircraftSituation &situation, const CAircraftSituationChange &change, const Simulation::CAircraftModel &model);
 
             //! Convert to QString
             static const QString &partsDetailsToString(PartsDetails details);

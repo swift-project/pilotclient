@@ -63,20 +63,11 @@ namespace BlackMisc
             //! Set ground elevation from elevation plane
             int setGroundElevationChecked(const Geo::CElevationPlane &elevationPlane, CAircraftSituation::GndElevationInfo info, qint64 newerThanAdjustedMs = -1);
 
-            //! Set ground elevation from elevation plane and guess ground
-            //! \note requires a sorted list latest first
-            int setGroundElevationCheckedAndGuessGround(const Geo::CElevationPlane &elevationPlane, CAircraftSituation::GndElevationInfo info, const Simulation::CAircraftModel &model, CAircraftSituationChange *changeOut, bool *setForOnGroundPosition);
-
             //! Adjust flag from parts by using CAircraftSituation::adjustGroundFlag
             int adjustGroundFlag(const CAircraftParts &parts, double timeDeviationFactor = 0.1);
 
             //! Extrapolate ground flag into the future
             int extrapolateGroundFlag();
-
-            //! Extrapolates elevation into front (first) element from 2nd and 3rd element
-            //! \sa CAircraftSituation::extrapolateElevation
-            //! \pre the list must be sorted latest first and containt at least 3 elements
-            bool extrapolateElevation(const CAircraftSituationChange &change);
 
             //! Find if having inbound information
             CAircraftSituationList findByInboundGroundInformation(bool hasGroundInfo) const;

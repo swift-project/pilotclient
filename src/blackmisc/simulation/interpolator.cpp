@@ -11,6 +11,8 @@
 #include "blackmisc/simulation/interpolationlogger.h"
 #include "blackmisc/simulation/interpolatorlinear.h"
 #include "blackmisc/simulation/interpolatorspline.h"
+#include "blackmisc/aviation/aircraftsituationchange.h"
+#include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/network/fsdsetup.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/heading.h"
@@ -115,6 +117,54 @@ namespace BlackMisc
                 m_currentSceneryOffset = CLength::null();
             }
             return validSituations;
+        }
+
+        template<typename Derived>
+        bool CInterpolator<Derived>::presetGroundElevation(CAircraftSituation &situationToPreset, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const CAircraftSituationChange &change)
+        {
+            // IMPORTANT: we do not know what the situation will be (interpolated to), so we cannot transfer
+            situationToPreset.resetGroundElevation();
+            do
+            {
+                if (oldSituation.equalNormalVectorDouble(newSituation))
+                {
+                    if (oldSituation.hasGroundElevation())
+                    {
+                        // same positions, we can use existing elevation
+                        // means we were not moving between old an new
+                        situationToPreset.transferGroundElevationToMe(oldSituation, true);
+                        break;
+                    }
+                }
+
+                const CLength distance = newSituation.calculateGreatCircleDistance(oldSituation);
+                if (distance < newSituation.getDistancePerTime250ms(CElevationPlane::singlePointRadius()))
+                {
+                    if (oldSituation.hasGroundElevation())
+                    {
+                        // almost same positions, we can use existing elevation
+                        situationToPreset.transferGroundElevationToMe(oldSituation, true);
+                        break;
+                    }
+                }
+
+                if (change.hasElevationDevWithinAllowedRange())
+                {
+                    // not much change in known elevations
+                    const CAltitudePair elvDevMean = change.getElevationStdDevAndMean();
+                    situationToPreset.setGroundElevation(elvDevMean.second, CAircraftSituation::SituationChange);
+                    break;
+                }
+
+                const CElevationPlane epInterpolated = CAircraftSituation::interpolatedElevation(CAircraftSituation::null(), oldSituation, newSituation, distance);
+                if (!epInterpolated.isNull())
+                {
+                    situationToPreset.setGroundElevation(epInterpolated, CAircraftSituation::Interpolated);
+                    break;
+                }
+            }
+            while (false);
+            return situationToPreset.hasGroundElevation();
         }
 
         template<typename Derived>
@@ -238,7 +288,7 @@ namespace BlackMisc
                 }
 
                 // GND flag.
-                if (!interpolateGndFlag) { currentSituation.guessOnGround(CAircraftSituationChange::null(), m_model); }
+                if (!interpolateGndFlag) { CAircraftSituationChange::null().guessOnGround(currentSituation, m_model); }
 
                 // as we now have the position and can interpolate elevation
                 currentSituation.interpolateElevation(pbh.getOldSituation(), pbh.getNewSituation());
@@ -428,7 +478,7 @@ namespace BlackMisc
                 // check if model has been thru model matching
                 if (!m_lastSituation.isNull())
                 {
-                    parts.guessParts(m_lastSituation, m_pastSituationsChange, m_model);
+                    parts = guessParts(m_lastSituation, m_pastSituationsChange, m_model);
                     this->logParts(parts, 0, false);
                 }
                 else
@@ -468,6 +518,136 @@ namespace BlackMisc
         bool CInterpolator<Derived>::doLogging() const
         {
             return this->hasAttachedLogger() &&  m_currentSetup.logInterpolation();
+        }
+
+        template<typename Derived>
+        CAircraftParts CInterpolator<Derived>::guessParts(const CAircraftSituation &situation, const CAircraftSituationChange &change, const CAircraftModel &model)
+        {
+            CAircraftParts parts;
+            parts.setMSecsSinceEpoch(situation.getMSecsSinceEpoch());
+            parts.setTimeOffsetMs(situation.getTimeOffsetMs());
+            parts.setPartsDetails(CAircraftParts::GuessedParts);
+            parts.setLights(situation.guessLights());
+
+            QString *details = /*CBuildConfig::isLocalDeveloperDebugBuild() ? &parts.m_guessingDetails :*/ nullptr;
+
+            CAircraftEngineList engines;
+            const bool vtol = model.isVtol();
+            const int engineCount = model.getEngineCount();
+            CSpeed guessedVRotate = CSpeed::null();
+            CLength guessedCG = model.getCG();
+            model.getAircraftIcaoCode().guessModelParameters(guessedCG, guessedVRotate);
+
+            if (situation.getOnGroundDetails() != CAircraftSituation::NotSetGroundDetails)
+            {
+                do
+                {
+                    // set some reasonable values
+                    const bool isOnGround = situation.isOnGround();
+                    engines.initEngines(engineCount, !isOnGround || situation.isMoving());
+                    parts.setGearDown(isOnGround);
+                    parts.setSpoilersOut(false);
+                    parts.setEngines(engines);
+
+                    if (!change.isNull())
+                    {
+                        if (change.isConstDecelarating())
+                        {
+                            parts.setSpoilersOut(true);
+                            parts.setFlapsPercent(10);
+                            break;
+                        }
+                    }
+
+                    const CSpeed slowSpeed = guessedVRotate * 0.30;
+                    if (situation.getGroundSpeed() < slowSpeed)
+                    {
+                        if (details) { *details += u"slow speed <" % slowSpeed.valueRoundedWithUnit(1) % u" on ground"; }
+                        parts.setFlapsPercent(0);
+                        break;
+                    }
+                    else
+                    {
+                        if (details) { *details += u"faster speed >" % slowSpeed.valueRoundedWithUnit(1) % u" on ground"; }
+                        parts.setFlapsPercent(0);
+                        break;
+                    }
+                }
+                while (false);
+            }
+            else
+            {
+                if (details) { *details = QStringLiteral("no ground info");  }
+
+                // no idea if on ground or not
+                engines.initEngines(engineCount, true);
+                parts.setEngines(engines);
+                parts.setGearDown(true);
+                parts.setSpoilersOut(false);
+            }
+
+            const double pitchDeg = situation.getPitch().value(CAngleUnit::deg());
+            const bool isLikelyTakeOffOrClimbing = change.isNull() ?  pitchDeg > 20 : (change.isRotatingUp() || change.isConstAscending());
+            const bool isLikelyLanding = change.isNull() ? false : change.isConstDescending();
+
+            if (situation.hasGroundElevation())
+            {
+                const CLength aboveGnd = situation.getHeightAboveGround();
+                if (aboveGnd.isNull() || std::isnan(aboveGnd.value()))
+                {
+                    BLACK_VERIFY_X(false, Q_FUNC_INFO, "above gnd.is null");
+                    return parts;
+                }
+
+                const double nearGround1Ft = 300;
+                const double nearGround2Ft = isLikelyTakeOffOrClimbing ? 500 : 1000;
+                const double aGroundFt = aboveGnd.value(CLengthUnit::ft());
+                static const QString detailsInfo("above ground: %1ft near grounds: %2ft %3ft likely takeoff: %4 likely landing: %5");
+
+                if (details) { *details = detailsInfo.arg(aGroundFt).arg(nearGround1Ft).arg(nearGround2Ft).arg(boolToYesNo(isLikelyTakeOffOrClimbing), boolToYesNo(isLikelyLanding));  }
+                if (aGroundFt < nearGround1Ft)
+                {
+                    if (details) { details->prepend(QStringLiteral("near ground: ")); }
+                    parts.setGearDown(true);
+                    parts.setFlapsPercent(25);
+                }
+                else if (aGroundFt < nearGround2Ft)
+                {
+                    if (details) { details->prepend(QStringLiteral("2nd layer: ")); }
+                    const bool gearDown = !isLikelyTakeOffOrClimbing && (situation.getGroundSpeed() < guessedVRotate || isLikelyLanding);
+                    parts.setGearDown(gearDown);
+                    parts.setFlapsPercent(10);
+                }
+                else
+                {
+                    if (details) { details->prepend(QStringLiteral("airborne: ")); }
+                    parts.setGearDown(false);
+                    parts.setFlapsPercent(0);
+                }
+            }
+            else
+            {
+                if (situation.getOnGroundDetails() != CAircraftSituation::NotSetGroundDetails)
+                {
+                    // we have no ground elevation but a ground info
+                    if (situation.getOnGroundDetails() == CAircraftSituation::OnGroundByGuessing)
+                    {
+                        // should be OK
+                        if (details) { *details = QStringLiteral("on ground, no elv.");  }
+                    }
+                    else
+                    {
+                        if (!vtol)
+                        {
+                            const bool gearDown = situation.getGroundSpeed() < guessedVRotate;
+                            parts.setGearDown(gearDown);
+                            if (details) { *details = QStringLiteral("not on ground elv., gs < ") + guessedVRotate.valueRoundedWithUnit(1);  }
+                        }
+                    }
+                }
+            }
+
+            return parts;
         }
 
         template<typename Derived>
@@ -592,7 +772,7 @@ namespace BlackMisc
             }
 
             // preset elevation here, as we do not know where the situation will be after the interpolation step!
-            const bool preset = currentSituation.presetGroundElevation(oldSituation, newSituation, m_pastSituationsChange);
+            const bool preset = presetGroundElevation(currentSituation, oldSituation, newSituation, m_pastSituationsChange);
             Q_UNUSED(preset)
 
             // fetch CG once

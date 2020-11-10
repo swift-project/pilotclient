@@ -287,7 +287,7 @@ namespace BlackMisc
         CElevationPlane ISimulationEnvironmentProvider::averageElevationOfOnGroundAircraft(const CAircraftSituation &reference, const CLength &range, int minValues, int sufficientValues) const
         {
             const CCoordinateGeodeticList coordinates = this->getElevationCoordinatesOnGround();
-            return coordinates.averageGeodeticHeight(reference, range, CAircraftSituationChange::allowedAltitudeDeviation(), minValues, sufficientValues);
+            return coordinates.averageGeodeticHeight(reference, range, CAircraftSituation::allowedAltitudeDeviation(), minValues, sufficientValues);
         }
 
         CAltitude ISimulationEnvironmentProvider::highestElevation() const

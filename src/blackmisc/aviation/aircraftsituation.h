@@ -41,7 +41,7 @@ namespace BlackMisc
     {
         class CAircraftParts;
         class CAircraftPartsList;
-        class CAircraftSituationChange;
+        class CAircraftLights;
 
         //! Value object encapsulating information of an aircraft's situation
         class BLACKMISC_EXPORT CAircraftSituation :
@@ -241,9 +241,6 @@ namespace BlackMisc
             //! Should we guess on ground?
             bool shouldGuessOnGround() const;
 
-            //! Guess on ground flag
-            bool guessOnGround(const CAircraftSituationChange &change, const Simulation::CAircraftModel &model);
-
             //! Distance to ground, null if impossible to calculate
             PhysicalQuantities::CLength getGroundDistance(const PhysicalQuantities::CLength &centerOfGravity) const;
 
@@ -315,19 +312,6 @@ namespace BlackMisc
 
             //! Transfer ground elevation from given situation (to me)
             bool transferGroundElevationToMe(const CAircraftSituation &fromSituation, bool transferred);
-
-            //! Preset "this" elevation from the two adjacent positions
-            //! \remark it is not required that the position of "this" is already known
-            //! \remark "transfer" can be used, if the positions are known, "preset" if they are still unknown
-            //! \sa CAircraftSituation::transferGroundElevation
-            //! \sa CAircraftSituation::interpolateElevation
-            bool presetGroundElevation(const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &newSituation, const CAircraftSituationChange &change);
-
-            //! Set "my" elevation from older situations.
-            //! \remark this object normally is a future value
-            //! \sa CAircraftSituation::transferGroundElevation
-            //! \sa CAircraftSituation::interpolateElevation
-            bool extrapolateElevation(const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &olderSituation, const CAircraftSituationChange &change);
 
             //! Interpolate "this" elevation from the two adjacent positions
             //! \remark "transfer" can be used, if the positions are known, "preset" if they are still unknown
@@ -553,24 +537,18 @@ namespace BlackMisc
             }
             //! @}
 
-            //! Preset the ground elevation based on info we already have, either by transfer or elevation
-            //! \remark either sets a gnd. elevation or sets it to null
-            //! \remark situationToPreset position is unknown
-            //! \remark situationToPreset needs to be between oldSituation and newSituation
-            //! \sa CAircraftSituation::transferGroundElevation
-            static bool presetGroundElevation(CAircraftSituation &situationToPreset, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const CAircraftSituationChange &change);
-
-            //! Extrapolated between the 2 situations for situation
-            //! \remark normally used if situationToBeUpdated is not between oldSituation and olderSituation (that would be interpolation)
-            //! \return false if there are no two elevations, there is already an elevation, or no extrapolation is possible (too much deviation)
-            static bool extrapolateElevation(CAircraftSituation &situationToBeUpdated, const CAircraftSituation &oldSituation, const CAircraftSituation &olderSituation, const CAircraftSituationChange &oldChange);
-
             //! Interpolate between the 2 situations for situation
             //! \remark NULL if there are no two elevations or threshold MaxDeltaElevationFt is exceeded
             static Geo::CElevationPlane interpolatedElevation(const CAircraftSituation &situation, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const PhysicalQuantities::CLength &distance = PhysicalQuantities::CLength::null());
 
             //! Threshold until we interpolate elevations
             static constexpr double MaxDeltaElevationFt = 25.0;
+
+            //! Within this range deviation is so small we consider values "almost constant"
+            static const PhysicalQuantities::CLength &allowedAltitudeDeviation();
+
+            //! Guessed lights
+            CAircraftLights guessLights() const;
 
             //! Register metadata
             static void registerMetadata();

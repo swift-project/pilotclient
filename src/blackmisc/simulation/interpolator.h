@@ -30,6 +30,11 @@
 
 namespace BlackMisc
 {
+    namespace Aviation
+    {
+        class CAircraftSituation;
+        class CAircraftSituationChange;
+    }
     namespace Simulation
     {
         class CInterpolationLogger;
@@ -309,6 +314,9 @@ namespace BlackMisc
             CInterpolationLogger *m_logger = nullptr; //!< optional interpolation logger
             QTimer m_initTimer; //!< timer to init model, will be deleted when interpolator is deleted and cancel the call
 
+            //! Guessed parts
+            static Aviation::CAircraftParts guessParts(const Aviation::CAircraftSituation &situation, const Aviation::CAircraftSituationChange &change, const Simulation::CAircraftModel &model);
+
             //! Log parts
             void logParts(const Aviation::CAircraftParts &parts, int partsNo, bool empty) const;
 
@@ -318,6 +326,13 @@ namespace BlackMisc
 
             //! Center of gravity, fetched from provider in case needed
             PhysicalQuantities::CLength getAndFetchModelCG(const PhysicalQuantities::CLength &dbCG);
+
+            //! Preset the ground elevation based on info we already have, either by transfer or elevation
+            //! \remark either sets a gnd. elevation or sets it to null
+            //! \remark situationToPreset position is unknown
+            //! \remark situationToPreset needs to be between oldSituation and newSituation
+            //! \sa CAircraftSituation::transferGroundElevation
+            static bool presetGroundElevation(Aviation::CAircraftSituation &situationToPreset, const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &newSituation, const Aviation::CAircraftSituationChange &change);
 
             //! Deferred init
             void deferredInit();

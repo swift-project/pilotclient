@@ -8,8 +8,8 @@
 
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
+#include "blackmisc/aviation/aircraftlights.h"
 #include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/units.h"
@@ -31,6 +31,59 @@ namespace BlackMisc
 {
     namespace Aviation
     {
+        const CLength &CAircraftSituation::allowedAltitudeDeviation()
+        {
+            // approx. 1 meter
+            static const CLength allowedStdDev(3, CLengthUnit::ft());
+            return allowedStdDev;
+        }
+
+        CAircraftLights CAircraftSituation::guessLights() const
+        {
+            const bool isOnGround = getOnGround() == CAircraftSituation::OnGround;
+            const double gsKts = getGroundSpeed().value(CSpeedUnit::kts());
+            CAircraftLights lights;
+            lights.setCabinOn(true);
+            lights.setRecognitionOn(true);
+
+            // when first detected moving, lights on
+            if (isOnGround)
+            {
+                lights.setTaxiOn(true);
+                lights.setBeaconOn(true);
+                lights.setNavOn(true);
+
+                if (gsKts > 5)
+                {
+                    // mode taxi
+                    lights.setTaxiOn(true);
+                    lights.setLandingOn(false);
+                }
+                else if (gsKts > 30)
+                {
+                    // mode accelaration for takeoff
+                    lights.setTaxiOn(false);
+                    lights.setLandingOn(true);
+                }
+                else
+                {
+                    // slow movements or parking
+                    lights.setTaxiOn(false);
+                    lights.setLandingOn(false);
+                }
+            }
+            else
+            {
+                // not on ground
+                lights.setTaxiOn(false);
+                lights.setBeaconOn(true);
+                lights.setNavOn(true);
+                // landing lights for < 10000ft (normally MSL, here ignored)
+                lights.setLandingOn(getAltitude().value(CLengthUnit::ft()) < 10000);
+            }
+            return lights;
+        }
+
         void CAircraftSituation::registerMetadata()
         {
             CValueObject<CAircraftSituation>::registerMetadata();
@@ -207,53 +260,6 @@ namespace BlackMisc
             return cg;
         }
 
-        bool CAircraftSituation::presetGroundElevation(CAircraftSituation &situationToPreset, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const CAircraftSituationChange &change)
-        {
-            // IMPORTANT: we do not know what the situation will be (interpolated to), so we cannot transfer
-            situationToPreset.resetGroundElevation();
-            do
-            {
-                if (oldSituation.equalNormalVectorDouble(newSituation))
-                {
-                    if (oldSituation.hasGroundElevation())
-                    {
-                        // same positions, we can use existing elevation
-                        // means we were not moving between old an new
-                        situationToPreset.transferGroundElevationToMe(oldSituation, true);
-                        break;
-                    }
-                }
-
-                const CLength distance = newSituation.calculateGreatCircleDistance(oldSituation);
-                if (distance < newSituation.getDistancePerTime250ms(CElevationPlane::singlePointRadius()))
-                {
-                    if (oldSituation.hasGroundElevation())
-                    {
-                        // almost same positions, we can use existing elevation
-                        situationToPreset.transferGroundElevationToMe(oldSituation, true);
-                        break;
-                    }
-                }
-
-                if (change.hasElevationDevWithinAllowedRange())
-                {
-                    // not much change in known elevations
-                    const CAltitudePair elvDevMean = change.getElevationStdDevAndMean();
-                    situationToPreset.setGroundElevation(elvDevMean.second, CAircraftSituation::SituationChange);
-                    break;
-                }
-
-                const CElevationPlane epInterpolated = CAircraftSituation::interpolatedElevation(CAircraftSituation::null(), oldSituation, newSituation, distance);
-                if (!epInterpolated.isNull())
-                {
-                    situationToPreset.setGroundElevation(epInterpolated, CAircraftSituation::Interpolated);
-                    break;
-                }
-            }
-            while (false);
-            return situationToPreset.hasGroundElevation();
-        }
-
         CElevationPlane CAircraftSituation::interpolatedElevation(const CAircraftSituation &situation, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const CLength &distance)
         {
             if (oldSituation.isNull() || newSituation.isNull()) { return CElevationPlane::null(); }
@@ -295,35 +301,6 @@ namespace BlackMisc
                 const double elvFt = 0.5 * elvSumFt;
                 return CElevationPlane(newSituation, elvFt, CElevationPlane::singlePointRadius());
             }
-        }
-
-        bool CAircraftSituation::extrapolateElevation(CAircraftSituation &situationToBeUpdated, const CAircraftSituation &oldSituation, const CAircraftSituation &olderSituation, const CAircraftSituationChange &oldChange)
-        {
-            if (situationToBeUpdated.hasGroundElevation()) { return false; }
-
-            // if acceptable transfer
-            if (oldSituation.transferGroundElevationFromMe(situationToBeUpdated))
-            {
-                // change or keep type is the question
-                // situationToBeUpdated.setGroundElevationInfo(Extrapolated);
-                return true;
-            }
-            if (oldSituation.isNull() || olderSituation.isNull()) { return false; }
-
-            if (oldChange.isNull()) { return false; }
-            if (oldChange.isConstOnGround() && oldChange.hasAltitudeDevWithinAllowedRange() && oldChange.hasElevationDevWithinAllowedRange())
-            {
-                // we have almost const altitudes and elevations
-                const double deltaAltFt = qAbs(situationToBeUpdated.getAltitude().value(CLengthUnit::ft()) - olderSituation.getAltitude().value(CLengthUnit::ft()));
-                if (deltaAltFt <= CAircraftSituationChange::allowedAltitudeDeviation().value(CLengthUnit::ft()))
-                {
-                    // the current alt is also not much different
-                    situationToBeUpdated.setGroundElevation(oldSituation.getGroundElevation(), Extrapolated);
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         QVariant CAircraftSituation::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
@@ -556,117 +533,6 @@ namespace BlackMisc
             return !this->hasInboundGroundDetails();
         }
 
-        bool CAircraftSituation::guessOnGround(const CAircraftSituationChange &change, const CAircraftModel &model)
-        {
-            if (!this->shouldGuessOnGround()) { return false; }
-
-            // for debugging purposed
-            QString *details = CBuildConfig::isLocalDeveloperDebugBuild() ? &m_onGroundGuessingDetails : nullptr;
-
-            // Non VTOL aircraft have to move to be not on ground
-            const bool vtol = model.isVtol();
-            if (!vtol)
-            {
-                if (this->getGroundSpeed().isNegativeWithEpsilonConsidered())
-                {
-                    this->setOnGround(OnGround, CAircraftSituation::OnGroundByGuessing);
-                    if (details) { *details = QStringLiteral("No VTOL, push back"); }
-                    return true;
-                }
-
-                if (!this->isMoving())
-                {
-                    this->setOnGround(OnGround, CAircraftSituation::OnGroundByGuessing);
-                    if (details) { *details = QStringLiteral("No VTOL, not moving => on ground"); }
-                    return true;
-                }
-            }
-
-            // not on ground is default
-            this->setOnGround(CAircraftSituation::NotOnGround, CAircraftSituation::OnGroundByGuessing);
-
-            CLength cg = m_cg.isNull() ? model.getCG() : m_cg;
-            CSpeed guessedRotateSpeed = CSpeed::null();
-            CSpeed sureRotateSpeed    = CSpeed(130, CSpeedUnit::kts());
-            model.getAircraftIcaoCode().guessModelParameters(cg, guessedRotateSpeed);
-            if (!guessedRotateSpeed.isNull())
-            {
-                // does the value make any sense?
-                const bool validGuessedSpeed = (guessedRotateSpeed.value(CSpeedUnit::km_h()) > 5.0);
-                BLACK_VERIFY_X(validGuessedSpeed, Q_FUNC_INFO, "Wrong guessed value for lift off");
-                if (!validGuessedSpeed) { guessedRotateSpeed = CSpeed(80, CSpeedUnit::kts()); } // fix
-                sureRotateSpeed = guessedRotateSpeed * 1.25;
-            }
-
-            // "extreme" values for which we are surely not on ground
-            if (qAbs(this->getPitch().value(CAngleUnit::deg())) > 20)  { if (details) { *details = QStringLiteral("max.pitch"); } return true; } // some tail wheel aircraft already have 11° pitch on ground
-            if (qAbs(this->getBank().value(CAngleUnit::deg()))  > 10)  { if (details) { *details = QStringLiteral("max.bank"); }  return true; }
-            if (this->getGroundSpeed() > sureRotateSpeed) { if (details) { *details = u"gs. > vr " % sureRotateSpeed.valueRoundedWithUnit(1); } return true; }
-
-            // use the most accurate or reliable guesses here first
-            // ------------------------------------------------------
-            // by elevation
-            // we can detect "on ground" (underflow, near ground), but not "not on ground" because of overflow
-
-            // we can detect on ground for underflow, but not for overflow (so we can not rely on NotOnGround)
-            IsOnGround og = this->isOnGroundByElevation(cg);
-            if (og == OnGround)
-            {
-                if (details) { *details = QStringLiteral("elevation on ground"); }
-                this->setOnGround(og, CAircraftSituation::OnGroundByGuessing);
-                return true;
-            }
-
-            if (!change.isNull())
-            {
-                if (!vtol && change.wasConstOnGround())
-                {
-                    if (change.isRotatingUp())
-                    {
-                        // not OG
-                        if (details) { *details = QStringLiteral("rotating up detected"); }
-                        return true;
-                    }
-
-                    // here we stick to ground until we detect rotate up
-                    this->setOnGround(CAircraftSituation::OnGround, CAircraftSituation::OnGroundByGuessing);
-                    if (details) { *details = QStringLiteral("waiting for rotating up"); }
-                    return true;
-                }
-
-                if (change.isConstAscending())
-                {
-                    // not OG
-                    if (details) { *details = QStringLiteral("const ascending"); }
-                    return true;
-                }
-            }
-
-            // on VTOL we stop here
-            if (vtol)
-            {
-                // no idea
-                this->setOnGround(OnGroundSituationUnknown, NotSetGroundDetails);
-                return false;
-            }
-
-            // guessed speed null -> vtol
-            if (!guessedRotateSpeed.isNull())
-            {
-                // does the value make any sense?
-                if (this->getGroundSpeed() < guessedRotateSpeed)
-                {
-                    this->setOnGround(OnGround, CAircraftSituation::OnGroundByGuessing);
-                    if (details) { *details = QStringLiteral("Guessing, max.guessed gs.") + guessedRotateSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1); }
-                    return true;
-                }
-            }
-
-            // not sure, but this is a guess
-            if (details) { *details = QStringLiteral("Fall through"); }
-            return true;
-        }
-
         CLength CAircraftSituation::getGroundDistance(const CLength &centerOfGravity) const
         {
             if (centerOfGravity.isNull() || !this->hasGroundElevation()) { return CLength::null(); }
@@ -781,16 +647,6 @@ namespace BlackMisc
         bool CAircraftSituation::transferGroundElevationToMe(const CAircraftSituation &fromSituation, bool transferred)
         {
             return this->setGroundElevation(fromSituation.getGroundElevationPlane(), fromSituation.getGroundElevationInfo(), transferred);
-        }
-
-        bool CAircraftSituation::presetGroundElevation(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const CAircraftSituationChange &change)
-        {
-            return CAircraftSituation::presetGroundElevation(*this, oldSituation, newSituation, change);
-        }
-
-        bool CAircraftSituation::extrapolateElevation(const CAircraftSituation &oldSituation, const CAircraftSituation &olderSituation, const CAircraftSituationChange &change)
-        {
-            return CAircraftSituation::extrapolateElevation(*this, oldSituation, olderSituation, change);
         }
 
         bool CAircraftSituation::interpolateElevation(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation)

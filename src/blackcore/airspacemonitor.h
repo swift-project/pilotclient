@@ -419,6 +419,16 @@ namespace BlackCore
         //! Set matching readiness flag
         Readiness &addMatchingReadinessFlag(const BlackMisc::Aviation::CCallsign &callsign, MatchingReadinessFlag mrf);
 
+        //! Extrapolates elevation into front (first) element from 2nd and 3rd element
+        //! \pre the list must be sorted latest first and containt at least 3 elements
+        static bool extrapolateElevation(BlackMisc::Aviation::CAircraftSituationList &situations, const BlackMisc::Aviation::CAircraftSituationChange &change);
+
+        //! Extrapolated between the 2 situations for situation
+        //! \remark normally used if situationToBeUpdated is not between oldSituation and olderSituation (that would be interpolation)
+        //! \return false if there are no two elevations, there is already an elevation, or no extrapolation is possible (too much deviation)
+        static bool extrapolateElevation(BlackMisc::Aviation::CAircraftSituation &situationToBeUpdated, const BlackMisc::Aviation::CAircraftSituation &oldSituation,
+            const BlackMisc::Aviation::CAircraftSituation &olderSituation, const BlackMisc::Aviation::CAircraftSituationChange &oldChange);
+
         //! Create aircraft in range, this is the only place where a new aircraft should be added
         void onAircraftUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
 

@@ -23,6 +23,10 @@
 
 namespace BlackMisc
 {
+    namespace Simulation
+    {
+        class CAircraftModel;
+    }
     namespace Aviation
     {
         class CAircraftSituation;
@@ -134,6 +138,9 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Aviation::CAircraftSituationList::minMaxGroundDistance
             PhysicalQuantities::CLengthPair getMinMaxGroundDistance() const { return PhysicalQuantities::CLengthPair(m_minGroundDistance, m_maxGroundDistance); }
 
+            //! Guess on ground flag
+            bool guessOnGround(CAircraftSituation &situation, const Simulation::CAircraftModel &model) const;
+
             //! Scnenery deviation (if it can be calculated, otherwise PhysicalQuantities::CLength::null)
             //! \remark This is without CG, so substract CG to get deviation
             const PhysicalQuantities::CLength &getGuessedSceneryDeviation() const { return m_guessedSceneryDeviation; }
@@ -176,9 +183,6 @@ namespace BlackMisc
 
             //! The enum as string
             static const QString &guessedSceneryDeviationToString(GuessedSceneryDeviation hint);
-
-            //! Within this range deviation is so small we consider values "almost constant"
-            static const PhysicalQuantities::CLength &allowedAltitudeDeviation();
 
             //! Register metadata
             static void registerMetadata();

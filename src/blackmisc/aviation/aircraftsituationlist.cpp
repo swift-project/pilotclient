@@ -7,7 +7,6 @@
  */
 
 #include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/math/mathutils.h"
@@ -64,52 +63,6 @@ namespace BlackMisc
             return c;
         }
 
-        int CAircraftSituationList::setGroundElevationCheckedAndGuessGround(
-            const CElevationPlane &elevationPlane, CAircraftSituation::GndElevationInfo info, const CAircraftModel &model,
-            CAircraftSituationChange *changeOut, bool *setForOnGroundPosition)
-        {
-            if (setForOnGroundPosition)  { *setForOnGroundPosition = false; } // set a default
-            if (elevationPlane.isNull()) { return 0; }
-            if (this->isEmpty())         { return 0; }
-
-            // the change has the timestamps of the latest situation
-            Q_ASSERT_X(m_tsAdjustedSortHint == CAircraftSituationList::AdjustedTimestampLatestFirst || this->isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Need sorted situations without NULL positions");
-            const CAircraftSituationChange simpleChange(*this, model.getCG(), model.isVtol(), true, false);
-            int c = 0; // changed elevations
-            bool latest = true;
-            bool setForOnGndPosition = false;
-
-            for (CAircraftSituation &s : *this)
-            {
-                const bool set = s.setGroundElevationChecked(elevationPlane, info);
-                if (set)
-                {
-                    // simpleChange is only valid for the latest situation
-                    // this will do nothing if not appropriate!
-                    const bool guessed = s.guessOnGround(latest ? simpleChange : CAircraftSituationChange::null(), model);
-                    Q_UNUSED(guessed)
-                    c++;
-
-                    // if not guessed and "on ground" we mark the "elevation"
-                    // as an elevation for a ground position
-                    if (!setForOnGndPosition && s.hasInboundGroundDetails() && s.isOnGround())
-                    {
-                        setForOnGndPosition = true;
-                    }
-                }
-                latest = false; // only first pos. is "the latest" one
-            }
-
-            if (setForOnGroundPosition) { *setForOnGroundPosition = setForOnGndPosition; }
-            if (changeOut)
-            {
-                const CAircraftSituationChange change(*this, model.getCG(), model.isVtol(), true, true);
-                *changeOut = change;
-            }
-
-            return c;
-        }
-
         int CAircraftSituationList::adjustGroundFlag(const CAircraftParts &parts, double timeDeviationFactor)
         {
             int c = 0;
@@ -139,15 +92,6 @@ namespace BlackMisc
                 }
             }
             return c;
-        }
-
-        bool CAircraftSituationList::extrapolateElevation(const CAircraftSituationChange &change)
-        {
-            if (this->size() < 3) { return false; }
-            Q_ASSERT_X(m_tsAdjustedSortHint == CAircraftSituationList::AdjustedTimestampLatestFirst, Q_FUNC_INFO, "Need latest first");
-            const CAircraftSituation old = (*this)[1];
-            const CAircraftSituation older = (*this)[2];
-            return this->front().extrapolateElevation(old, older, change);
         }
 
         CAircraftSituationList CAircraftSituationList::findByInboundGroundInformation(bool hasGroundInfo) const
@@ -632,7 +576,7 @@ namespace BlackMisc
 
             if (valuesInFt.size() < minValues) { return CElevationPlane::null(); }
 
-            static const double MaxDevFt = CAircraftSituationChange::allowedAltitudeDeviation().value(CLengthUnit::ft());
+            static const double MaxDevFt = CAircraftSituation::allowedAltitudeDeviation().value(CLengthUnit::ft());
             const QPair<double, double> elvStdDevMean = CMathUtils::standardDeviationAndMean(valuesInFt);
             if (elvStdDevMean.first > MaxDevFt) { return CElevationPlane::null(); }
             return CElevationPlane(reference, elvStdDevMean.second, CElevationPlane::singlePointRadius());

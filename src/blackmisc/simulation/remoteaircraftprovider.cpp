@@ -321,7 +321,7 @@ namespace BlackMisc
                     const CAircraftSituationChange simpleChange(updatedSituations, situationCorrected.getCG(), aircraftModel.isVtol(), true, false);
 
                     // guess GND
-                    newSituationsList.front().guessOnGround(simpleChange, aircraftModel);
+                    simpleChange.guessOnGround(newSituationsList.front(), aircraftModel);
                 }
                 updatedSituations = m_situationsByCallsign[cs];
 
@@ -504,7 +504,7 @@ namespace BlackMisc
         {
             if (aircraftModel.hasCG() && !situation.hasCG()) { situation.setCG(aircraftModel.getCG()); }
             if (!situation.shouldGuessOnGround()) { return false; }
-            return situation.guessOnGround(change, aircraftModel);
+            return change.guessOnGround(situation, aircraftModel);
         }
 
         bool CRemoteAircraftProvider::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering)
@@ -590,7 +590,7 @@ namespace BlackMisc
                 QWriteLocker l(&m_lockSituations);
                 CAircraftSituationList &situations = m_situationsByCallsign[callsign];
                 if (situations.isEmpty()) { return 0; }
-                updated = situations.setGroundElevationCheckedAndGuessGround(elevation, info, model, &change, &setForOnGndPosition);
+                updated = setGroundElevationCheckedAndGuessGround(situations, elevation, info, model, &change, &setForOnGndPosition);
                 if (updated < 1) { return 0; }
                 m_situationsLastModified[callsign] = now;
                 const CAircraftSituation latestSituation = situations.front();
@@ -770,6 +770,52 @@ namespace BlackMisc
         {
             QReadLocker l(&m_lockMessages);
             return m_enableReverseLookupMsgs;
+        }
+
+        int CRemoteAircraftProvider::setGroundElevationCheckedAndGuessGround(
+            CAircraftSituationList &situations, const CElevationPlane &elevationPlane, CAircraftSituation::GndElevationInfo info, const CAircraftModel &model,
+            CAircraftSituationChange *changeOut, bool *setForOnGroundPosition)
+        {
+            if (setForOnGroundPosition)  { *setForOnGroundPosition = false; } // set a default
+            if (elevationPlane.isNull()) { return 0; }
+            if (situations.isEmpty())    { return 0; }
+
+            // the change has the timestamps of the latest situation
+            //Q_ASSERT_X(situations.m_tsAdjustedSortHint == CAircraftSituationList::AdjustedTimestampLatestFirst || situations.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Need sorted situations without NULL positions");
+            const CAircraftSituationChange simpleChange(situations, model.getCG(), model.isVtol(), true, false);
+            int c = 0; // changed elevations
+            bool latest = true;
+            bool setForOnGndPosition = false;
+
+            for (CAircraftSituation &s : situations)
+            {
+                const bool set = s.setGroundElevationChecked(elevationPlane, info);
+                if (set)
+                {
+                    // simpleChange is only valid for the latest situation
+                    // this will do nothing if not appropriate!
+                    const bool guessed = (latest ? simpleChange : CAircraftSituationChange::null()).guessOnGround(s, model);
+                    Q_UNUSED(guessed)
+                    c++;
+
+                    // if not guessed and "on ground" we mark the "elevation"
+                    // as an elevation for a ground position
+                    if (!setForOnGndPosition && s.hasInboundGroundDetails() && s.isOnGround())
+                    {
+                        setForOnGndPosition = true;
+                    }
+                }
+                latest = false; // only first pos. is "the latest" one
+            }
+
+            if (setForOnGroundPosition) { *setForOnGroundPosition = setForOnGndPosition; }
+            if (changeOut)
+            {
+                const CAircraftSituationChange change(situations, model.getCG(), model.isVtol(), true, true);
+                *changeOut = change;
+            }
+
+            return c;
         }
 
         CStatusMessageList CRemoteAircraftProvider::getAircraftPartsHistory(const CCallsign &callsign) const

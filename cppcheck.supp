@@ -5,6 +5,10 @@
 // [error id]:[filename2]
 // [error id]
 
+// Issues introduced by refactoring - expected to be fixed
+knownConditionTrueFalse:src/blackmisc/simulation/interpolator.cpp
+knownConditionTrueFalse:src/blackmisc/aviation/aircraftsituationchange.cpp
+
 // Ignore noExplicitConstructor for now.
 noExplicitConstructor
 

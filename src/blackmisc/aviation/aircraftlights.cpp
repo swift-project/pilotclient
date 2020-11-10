@@ -7,12 +7,9 @@
  */
 
 #include "blackmisc/aviation/aircraftlights.h"
-#include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/comparefunctions.h"
 #include <QStringBuilder>
-
-using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
 {
@@ -34,52 +31,6 @@ namespace BlackMisc
         CAircraftLights CAircraftLights::allLightsOff()
         {
             return CAircraftLights {false, false, false, false, false, false, false, false};
-        }
-
-        CAircraftLights CAircraftLights::guessedLights(const CAircraftSituation &situation)
-        {
-            const bool isOnGround = situation.getOnGround() == CAircraftSituation::OnGround;
-            const double gsKts = situation.getGroundSpeed().value(CSpeedUnit::kts());
-            CAircraftLights lights;
-            lights.setCabinOn(true);
-            lights.setRecognitionOn(true);
-
-            // when first detected moving, lights on
-            if (isOnGround)
-            {
-                lights.setTaxiOn(true);
-                lights.setBeaconOn(true);
-                lights.setNavOn(true);
-
-                if (gsKts > 5)
-                {
-                    // mode taxi
-                    lights.setTaxiOn(true);
-                    lights.setLandingOn(false);
-                }
-                else if (gsKts > 30)
-                {
-                    // mode accelaration for takeoff
-                    lights.setTaxiOn(false);
-                    lights.setLandingOn(true);
-                }
-                else
-                {
-                    // slow movements or parking
-                    lights.setTaxiOn(false);
-                    lights.setLandingOn(false);
-                }
-            }
-            else
-            {
-                // not on ground
-                lights.setTaxiOn(false);
-                lights.setBeaconOn(true);
-                lights.setNavOn(true);
-                // landing lights for < 10000ft (normally MSL, here ignored)
-                lights.setLandingOn(situation.getAltitude().value(CLengthUnit::ft()) < 10000);
-            }
-            return lights;
         }
 
         QString CAircraftLights::convertToQString(bool i18n) const
@@ -177,11 +128,6 @@ namespace BlackMisc
             m_taxiOn = false;
             m_recognition = false;
             m_cabin = false;
-        }
-
-        void CAircraftLights::guessLights(const CAircraftSituation &situation)
-        {
-            *this = guessedLights(situation);
         }
     } // namespace
 } // namespace

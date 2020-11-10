@@ -9,6 +9,7 @@
 #include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/units.h"
@@ -87,6 +88,117 @@ namespace BlackMisc
             }
         }
 
+        bool CAircraftSituationChange::guessOnGround(CAircraftSituation &situation, const Simulation::CAircraftModel &model) const
+        {
+            if (!situation.shouldGuessOnGround()) { return false; }
+
+            // for debugging purposed
+            QString *details = /*CBuildConfig::isLocalDeveloperDebugBuild() ? &m_onGroundGuessingDetails :*/ nullptr;
+
+            // Non VTOL aircraft have to move to be not on ground
+            const bool vtol = model.isVtol();
+            if (!vtol)
+            {
+                if (situation.getGroundSpeed().isNegativeWithEpsilonConsidered())
+                {
+                    situation.setOnGround(CAircraftSituation::OnGround, CAircraftSituation::OnGroundByGuessing);
+                    if (details) { *details = QStringLiteral("No VTOL, push back"); }
+                    return true;
+                }
+
+                if (!situation.isMoving())
+                {
+                    situation.setOnGround(CAircraftSituation::OnGround, CAircraftSituation::OnGroundByGuessing);
+                    if (details) { *details = QStringLiteral("No VTOL, not moving => on ground"); }
+                    return true;
+                }
+            }
+
+            // not on ground is default
+            situation.setOnGround(CAircraftSituation::NotOnGround, CAircraftSituation::OnGroundByGuessing);
+
+            CLength cg = situation.hasCG() ? situation.getCG() : model.getCG();
+            CSpeed guessedRotateSpeed = CSpeed::null();
+            CSpeed sureRotateSpeed    = CSpeed(130, CSpeedUnit::kts());
+            model.getAircraftIcaoCode().guessModelParameters(cg, guessedRotateSpeed);
+            if (!guessedRotateSpeed.isNull())
+            {
+                // does the value make any sense?
+                const bool validGuessedSpeed = (guessedRotateSpeed.value(CSpeedUnit::km_h()) > 5.0);
+                BLACK_VERIFY_X(validGuessedSpeed, Q_FUNC_INFO, "Wrong guessed value for lift off");
+                if (!validGuessedSpeed) { guessedRotateSpeed = CSpeed(80, CSpeedUnit::kts()); } // fix
+                sureRotateSpeed = guessedRotateSpeed * 1.25;
+            }
+
+            // "extreme" values for which we are surely not on ground
+            if (qAbs(situation.getPitch().value(CAngleUnit::deg())) > 20)  { if (details) { *details = QStringLiteral("max.pitch"); } return true; } // some tail wheel aircraft already have 11° pitch on ground
+            if (qAbs(situation.getBank().value(CAngleUnit::deg()))  > 10)  { if (details) { *details = QStringLiteral("max.bank"); }  return true; }
+            if (situation.getGroundSpeed() > sureRotateSpeed) { if (details) { *details = u"gs. > vr " % sureRotateSpeed.valueRoundedWithUnit(1); } return true; }
+
+            // use the most accurate or reliable guesses here first
+            // ------------------------------------------------------
+            // by elevation
+            // we can detect "on ground" (underflow, near ground), but not "not on ground" because of overflow
+
+            // we can detect on ground for underflow, but not for overflow (so we can not rely on NotOnGround)
+            CAircraftSituation::IsOnGround og = situation.isOnGroundByElevation(cg);
+            if (og == CAircraftSituation::OnGround)
+            {
+                if (details) { *details = QStringLiteral("elevation on ground"); }
+                situation.setOnGround(og, CAircraftSituation::OnGroundByGuessing);
+                return true;
+            }
+
+            if (!isNull())
+            {
+                if (!vtol && wasConstOnGround())
+                {
+                    if (isRotatingUp())
+                    {
+                        // not OG
+                        if (details) { *details = QStringLiteral("rotating up detected"); }
+                        return true;
+                    }
+
+                    // here we stick to ground until we detect rotate up
+                    situation.setOnGround(CAircraftSituation::OnGround, CAircraftSituation::OnGroundByGuessing);
+                    if (details) { *details = QStringLiteral("waiting for rotating up"); }
+                    return true;
+                }
+
+                if (isConstAscending())
+                {
+                    // not OG
+                    if (details) { *details = QStringLiteral("const ascending"); }
+                    return true;
+                }
+            }
+
+            // on VTOL we stop here
+            if (vtol)
+            {
+                // no idea
+                situation.setOnGround(CAircraftSituation::OnGroundSituationUnknown, CAircraftSituation::NotSetGroundDetails);
+                return false;
+            }
+
+            // guessed speed null -> vtol
+            if (!guessedRotateSpeed.isNull())
+            {
+                // does the value make any sense?
+                if (situation.getGroundSpeed() < guessedRotateSpeed)
+                {
+                    situation.setOnGround(CAircraftSituation::OnGround, CAircraftSituation::OnGroundByGuessing);
+                    if (details) { *details = QStringLiteral("Guessing, max.guessed gs.") + guessedRotateSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1); }
+                    return true;
+                }
+            }
+
+            // not sure, but this is a guess
+            if (details) { *details = QStringLiteral("Fall through"); }
+            return true;
+        }
+
         bool CAircraftSituationChange::hasSceneryDeviation() const
         {
             return !m_guessedSceneryDeviation.isNull();
@@ -95,13 +207,13 @@ namespace BlackMisc
         bool CAircraftSituationChange::hasElevationDevWithinAllowedRange() const
         {
             if (m_elvStdDev.isNull()) { return false; }
-            return m_elvStdDev < allowedAltitudeDeviation();
+            return m_elvStdDev < CAircraftSituation::allowedAltitudeDeviation();
         }
 
         bool CAircraftSituationChange::hasAltitudeDevWithinAllowedRange() const
         {
             if (m_altStdDev.isNull()) { return false; }
-            return m_altStdDev < allowedAltitudeDeviation();
+            return m_altStdDev < CAircraftSituation::allowedAltitudeDeviation();
         }
 
         QString CAircraftSituationChange::convertToQString(bool i18n) const
@@ -284,13 +396,6 @@ namespace BlackMisc
             default: break;
             }
             return noInfo;
-        }
-
-        const CLength &CAircraftSituationChange::allowedAltitudeDeviation()
-        {
-            // approx. 1 meter
-            static const CLength allowedStdDev(3, CLengthUnit::ft());
-            return allowedStdDev;
         }
 
         void CAircraftSituationChange::setSceneryDeviation(const CLength &deviation, const CLength &cg, CAircraftSituationChange::GuessedSceneryDeviation hint)
