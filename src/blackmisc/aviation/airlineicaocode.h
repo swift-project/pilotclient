@@ -257,6 +257,19 @@ namespace BlackMisc
             //! Normalize string as airline designator
             static QString normalizeDesignator(const QString &candidate);
 
+            //! Specialized log message for matching / reverse lookup
+            //! \threadsafe
+            static CStatusMessage logMessage(
+                const CAirlineIcaoCode &icaoCode,
+                const QString &message, const QStringList &extraCategories = {},
+                CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
+
+            //! Specialized log for matching / reverse lookup
+            //! \threadsafe
+            static void addLogDetailsToList(CStatusMessageList *log, const CAirlineIcaoCode &icao,
+                                            const QString &message, const QStringList &extraCategories = {},
+                                            CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
+
             //! From our DB JSON
             static CAirlineIcaoCode fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 

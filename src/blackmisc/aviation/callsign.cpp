@@ -9,6 +9,7 @@
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/statusmessagelist.h"
 
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
@@ -99,6 +100,20 @@ namespace BlackMisc
             return pilot ?
                    CIcon::iconByIndex(CIcons::NetworkRolePilot) :
                    CCallsign::atcSuffixToIcon(callsign.getSuffix());
+        }
+
+        CStatusMessage CCallsign::logMessage(const CCallsign &callsign, const QString &message, const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
+        {
+            static const CLogCategoryList cats({ CLogCategories::aviation() });
+            const CStatusMessage m(cats.with(CLogCategoryList::fromQStringList(extraCategories)), s, callsign.isEmpty() ? message.trimmed() : callsign.toQString() + ": " + message.trimmed());
+            return m;
+        }
+
+        void CCallsign::addLogDetailsToList(CStatusMessageList *log, const CCallsign &callsign, const QString &message, const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
+        {
+            if (!log) { return; }
+            if (message.isEmpty()) { return; }
+            log->push_back(logMessage(callsign, message, extraCategories, s));
         }
 
         const CIcon &CCallsign::atcSuffixToIcon(const QString &suffix)

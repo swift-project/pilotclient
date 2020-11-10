@@ -8,7 +8,6 @@
 
 #include "matchingutils.h"
 #include "aircraftmodel.h"
-#include "blackmisc/aviation/logutils.h"
 #include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/fileutils.h"
@@ -817,7 +816,7 @@ namespace BlackMisc
         {
             const int icaoScore = this->getAircraftIcaoCode().calculateScore(compareModel.getAircraftIcaoCode(), log);
             const int liveryScore = this->getLivery().calculateScore(compareModel.getLivery(), preferColorLiveries, log);
-            CLogUtilities::addLogDetailsToList(log, this->getCallsign(), QStringLiteral("ICAO score: %1 | livery score: %2").arg(icaoScore).arg(liveryScore));
+            CCallsign::addLogDetailsToList(log, this->getCallsign(), QStringLiteral("ICAO score: %1 | livery score: %2").arg(icaoScore).arg(liveryScore));
             return qRound(0.5 * (icaoScore + liveryScore));
         }
 

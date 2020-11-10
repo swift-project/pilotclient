@@ -20,7 +20,6 @@
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/modulator.h"
 #include "blackmisc/aviation/transponder.h"
-#include "blackmisc/aviation/logutils.h"
 #include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/network/voicecapabilities.h"
@@ -651,7 +650,7 @@ namespace BlackCore
                 if (!myself || !sApp || sApp->isShuttingDown()) { return; }
                 if (!this->isAircraftInRange(callsign))
                 {
-                    const CStatusMessage m = CLogUtilities::logMessage(callsign, "No longer in range", CAirspaceMonitor::getLogCategories());
+                    const CStatusMessage m = CCallsign::logMessage(callsign, "No longer in range", CAirspaceMonitor::getLogCategories());
                     this->addReverseLookupMessage(callsign, m);
                     return;
                 }
@@ -677,14 +676,14 @@ namespace BlackCore
 
             readiness.setFlag(ReadyForMatchingSent); // stored in readiness as reference
             const QString readyMsg = readyForMatching.arg(readiness.toQString(), callsign.toQString(), remoteAircraft.getModel().getModelTypeAsString(), remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey(), remoteAircraft.getAirlineIcaoCode().getDesignatorDbKey());
-            const CStatusMessage m = CLogUtilities::logMessage(callsign, readyMsg, getLogCategories());
+            const CStatusMessage m = CCallsign::logMessage(callsign, readyMsg, getLogCategories());
             this->addReverseLookupMessage(callsign, m);
 
             emit this->readyForModelMatching(remoteAircraft);
         }
         else
         {
-            const CStatusMessage m = CLogUtilities::logMessage(callsign, "Ignoring this aircraft, not found in range list, disconnected, or no callsign", CAirspaceMonitor::getLogCategories(), CStatusMessage::SeverityWarning);
+            const CStatusMessage m = CCallsign::logMessage(callsign, "Ignoring this aircraft, not found in range list, disconnected, or no callsign", CAirspaceMonitor::getLogCategories(), CStatusMessage::SeverityWarning);
             this->addReverseLookupMessage(callsign, m);
             m_readiness.remove(callsign);
         }
@@ -864,7 +863,7 @@ namespace BlackCore
             CStatusMessageList reverseLookupMessages;
             CStatusMessageList *pReverseLookupMessages = reverseLookupEnabled.testFlag(RevLogEnabled) ? &reverseLookupMessages : nullptr;
 
-            CLogUtilities::addLogDetailsToList(pReverseLookupMessages, callsign,
+            CCallsign::addLogDetailsToList(pReverseLookupMessages, callsign,
                                                QStringLiteral("FsInn data from network: aircraft '%1', airline '%2', model '%3', combined '%4'").
                                                arg(aircraftIcaoDesignator, airlineIcaoDesignator, modelString, combinedAircraftType));
 
@@ -874,7 +873,7 @@ namespace BlackCore
             if (!modelString.isEmpty() && !setup.isReverseLookupModelString())
             {
                 usedModelString.clear();
-                CLogUtilities::addLogDetailsToList(pReverseLookupMessages, callsign,
+                CCallsign::addLogDetailsToList(pReverseLookupMessages, callsign,
                                                    QStringLiteral("FsInn modelstring '%1' ignored because of setuo").arg(modelString));
             }
             else if (!CAircraftMatcher::isKnownModelString(modelString, callsign, pReverseLookupMessages))
@@ -882,7 +881,7 @@ namespace BlackCore
                 // from the T701 test, do NOT use if model string is unknown
                 // this can overrride "swift livery strings", FsInn here only is useful with a known model string
                 usedModelString.clear();
-                CLogUtilities::addLogDetailsToList(pReverseLookupMessages, callsign,
+                CCallsign::addLogDetailsToList(pReverseLookupMessages, callsign,
                                                    QStringLiteral("FsInn modelstring ignored, as modelstring '%1' is not known").arg(modelString));
             }
 
@@ -908,7 +907,7 @@ namespace BlackCore
         const ReverseLookupLogging reverseLookupEnabled = this->isReverseLookupMessagesEnabled();
         CStatusMessageList reverseLookupMessages;
         CStatusMessageList *pReverseLookupMessages = reverseLookupEnabled.testFlag(RevLogEnabled) ? &reverseLookupMessages : nullptr;
-        CLogUtilities::addLogDetailsToList(pReverseLookupMessages, callsign,
+        CCallsign::addLogDetailsToList(pReverseLookupMessages, callsign,
                                            QStringLiteral("Data from network: aircraft '%1', airline '%2', livery '%3'").
                                            arg(aircraftIcaoDesignator, airlineIcaoDesignator, livery),
                                            CAirspaceMonitor::getLogCategories());
@@ -927,7 +926,7 @@ namespace BlackCore
         CAircraftModel::ModelType type, CStatusMessageList *log, bool runMatchinScript)
     {
         const int modelSetCount = this->getModelSetCount();
-        CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Reverse lookup (with FP data), model set count: %1").arg(modelSetCount), CAirspaceMonitor::getLogCategories());
+        CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Reverse lookup (with FP data), model set count: %1").arg(modelSetCount), CAirspaceMonitor::getLogCategories());
 
         const DBTripleIds ids = CAircraftModel::parseNetworkLiveryString(liveryString);
         const bool hasAnyId = ids.hasAnyId();
@@ -951,7 +950,7 @@ namespace BlackCore
 
             if (!setup.isReverseLookupSwiftLiveryIds())
             {
-                CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Reverse lookup of livery string '%1' disabled").arg(liveryString));
+                CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Reverse lookup of livery string '%1' disabled").arg(liveryString));
             }
             else if (hasAnyId)
             {
@@ -966,7 +965,7 @@ namespace BlackCore
 
                 if (aircraftIcao.hasValidDbKey() && livery.hasValidDbKey())
                 {
-                    CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Using DB livery %1 and aircraft ICAO %2 to create model").arg(livery.getDbKeyAsString(), aircraftIcao.getDbKeyAsString()), CAirspaceMonitor::getLogCategories());
+                    CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Using DB livery %1 and aircraft ICAO %2 to create model").arg(livery.getDbKeyAsString(), aircraftIcao.getDbKeyAsString()), CAirspaceMonitor::getLogCategories());
 
                     // we have a valid livery from DB + valid aircraft ICAO from DB
                     lookupModel = CAircraftModel(modelString, type, "By DB livery and aircraft ICAO", aircraftIcao, livery);
@@ -982,7 +981,7 @@ namespace BlackCore
                 if (airlineIcao.isLoadedFromDb() && !knownAircraftIcao)
                 {
                     // we have no valid aircraft ICAO, so we do a fuzzy search among those
-                    CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Fuzzy search among airline aircraft because '%1' is not known ICAO designator").arg(aircraftIcaoString));
+                    CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Fuzzy search among airline aircraft because '%1' is not known ICAO designator").arg(aircraftIcaoString));
                     const CAircraftIcaoCode foundIcao = CAircraftMatcher::searchAmongAirlineAircraft(aircraftIcaoString, airlineIcao, callsign, log);
                     if (foundIcao.isLoadedFromDb()) { aircraftIcao = foundIcao; }
                 }
@@ -1002,12 +1001,12 @@ namespace BlackCore
 
                 if (fpRemarks.isEmpty())
                 {
-                    CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("No flight plan remarks, skipping FP resolution"));
+                    CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("No flight plan remarks, skipping FP resolution"));
                 }
                 else
                 {
-                    CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("FP remarks: '%1'").arg(fpRemarks.getRemarks()));
-                    CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("FP rem.parsed: '%1'").arg(fpRemarks.toQString(true)));
+                    CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("FP remarks: '%1'").arg(fpRemarks.getRemarks()));
+                    CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("FP rem.parsed: '%1'").arg(fpRemarks.toQString(true)));
 
                     // FP data if any
                     telephonyFromFp   = CAircraftMatcher::reverseLookupTelephonyDesignator(fpRemarks.getRadioTelephony(), callsign, log);
@@ -1017,8 +1016,8 @@ namespace BlackCore
                     // turn into names as in DB
                     airlineNameLookup = CAircraftMatcher::reverseLookupAirlineName(airlineNameFromFp);
                     telephonyLookup   = CAircraftMatcher::reverseLookupTelephonyDesignator(telephonyFromFp);
-                    if (!airlineNameLookup.isEmpty()) { CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Using resolved airline name '%1' found by FP name '%2'").arg(airlineNameLookup, airlineNameFromFp), CAirspaceMonitor::getLogCategories()); }
-                    if (!telephonyLookup.isEmpty())   { CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Using resolved telephony designator '%1' found by FP telephoy '%2'").arg(telephonyLookup, telephonyFromFp), CAirspaceMonitor::getLogCategories()); }
+                    if (!airlineNameLookup.isEmpty()) { CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Using resolved airline name '%1' found by FP name '%2'").arg(airlineNameLookup, airlineNameFromFp), CAirspaceMonitor::getLogCategories()); }
+                    if (!telephonyLookup.isEmpty())   { CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Using resolved telephony designator '%1' found by FP telephoy '%2'").arg(telephonyLookup, telephonyFromFp), CAirspaceMonitor::getLogCategories()); }
                 }
 
                 // This code is needed WITH and WITHOUT FP data
@@ -1040,8 +1039,8 @@ namespace BlackCore
                 }
             }
 
-            CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Used aircraft ICAO: '%1'").arg(aircraftIcao.toQString(true)), CAirspaceMonitor::getLogCategories());
-            CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Used airline ICAO: '%1'").arg(airlineIcao.toQString(true)), CAirspaceMonitor::getLogCategories());
+            CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Used aircraft ICAO: '%1'").arg(aircraftIcao.toQString(true)), CAirspaceMonitor::getLogCategories());
+            CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Used airline ICAO: '%1'").arg(airlineIcao.toQString(true)), CAirspaceMonitor::getLogCategories());
 
             // matching script is used below
             lookupModel = CAircraftMatcher::reverseLookupModel(callsign, aircraftIcao, airlineIcao, liveryString, modelString, setup, modelSet, type, log);
@@ -1059,7 +1058,7 @@ namespace BlackCore
             {
                 if (rv.runScriptAndRerun())
                 {
-                    CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Matching script: Re-run reverseLookupModelWithFlightplanData"), CAirspaceMonitor::getLogCategories());
+                    CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Matching script: Re-run reverseLookupModelWithFlightplanData"), CAirspaceMonitor::getLogCategories());
                     return CAirspaceMonitor::reverseLookupModelWithFlightplanData(callsign,
                             rv.model.getAircraftIcaoCodeDesignator(), rv.model.getAirlineIcaoCodeVDesignator(), rv.model.getLivery().getCombinedCode(),
                             modelString, type, log, false);
@@ -1067,13 +1066,13 @@ namespace BlackCore
                 else
                 {
                     lookupModel = rv.model;
-                    CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("Matching script: Using model from matching script"), CAirspaceMonitor::getLogCategories());
+                    CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Matching script: Using model from matching script"), CAirspaceMonitor::getLogCategories());
                 }
             }
         }
         else
         {
-            CLogUtilities::addLogDetailsToList(log, callsign, QStringLiteral("No reverse lookup script used"));
+            CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("No reverse lookup script used"));
         }
 
         // done

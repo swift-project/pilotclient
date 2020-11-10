@@ -356,6 +356,19 @@ namespace BlackMisc
             //! Engine tye is Electric, Piston, TurboProp
             static bool isEPTEngineType(const QChar engineType);
 
+            //! Specialized log message for matching / reverse lookup
+            //! \threadsafe
+            static CStatusMessage logMessage(
+                const CAircraftIcaoCode &icaoCode,
+                const QString &message, const QStringList &extraCategories = {},
+                CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
+
+            //! Specialized log for matching / reverse lookup
+            //! \threadsafe
+            static void addLogDetailsToList(CStatusMessageList *log, const CAircraftIcaoCode &icao,
+                                            const QString &message, const QStringList &extraCategories = {},
+                                            CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
+
             //! From our database JSON format
             static CAircraftIcaoCode fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 

@@ -8,7 +8,6 @@
 
 #include "airlineicaocode.h"
 #include "callsign.h"
-#include "logutils.h"
 #include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/icons.h"
@@ -325,6 +324,20 @@ namespace BlackMisc
             return removeChars(n, [](QChar c) { return !c.isLetterOrNumber(); });
         }
 
+        CStatusMessage CAirlineIcaoCode::logMessage(const CAirlineIcaoCode &icaoCode, const QString &message, const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
+        {
+            static const CLogCategoryList cats({ CLogCategories::aviation() });
+            const CStatusMessage m(cats.with(CLogCategoryList::fromQStringList(extraCategories)), s, icaoCode.hasValidDesignator() ? icaoCode.getVDesignatorDbKey() + ": " + message.trimmed() : message.trimmed());
+            return m;
+        }
+
+        void CAirlineIcaoCode::addLogDetailsToList(CStatusMessageList *log, const CAirlineIcaoCode &icao, const QString &message, const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
+        {
+            if (!log) { return; }
+            if (message.isEmpty()) { return; }
+            log->push_back(logMessage(icao, message, extraCategories, s));
+        }
+
         QString CAirlineIcaoCode::getCombinedStringWithKey() const
         {
             return (this->hasValidDesignator() ? this->getVDesignator() : QString()) %
@@ -396,7 +409,7 @@ namespace BlackMisc
         {
             if (this->isDbEqual(otherCode))
             {
-                CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("DB equal score: 100"));
+                addLogDetailsToList(log, *this, QStringLiteral("DB equal score: 100"));
                 return 100;
             }
             const bool bothFromDb = this->isLoadedFromDb() && otherCode.isLoadedFromDb();
@@ -404,31 +417,31 @@ namespace BlackMisc
             if (otherCode.hasValidDesignator() && this->getDesignator() == otherCode.getDesignator())
             {
                 score += 60;
-                CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Same designator: %1").arg(score));
+                addLogDetailsToList(log, *this, QStringLiteral("Same designator: %1").arg(score));
             }
 
             // only for DB values we check VA
             if (bothFromDb && this->isVirtualAirline() == otherCode.isVirtualAirline())
             {
                 score += 20;
-                CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("VA equality: %1").arg(score));
+                addLogDetailsToList(log, *this, QStringLiteral("VA equality: %1").arg(score));
             }
 
             // consider the various names
             if (this->hasName() && this->getName() == otherCode.getName())
             {
                 score += 20;
-                CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Same name '%1': %2").arg(this->getName()).arg(score));
+                addLogDetailsToList(log, *this, QStringLiteral("Same name '%1': %2").arg(this->getName()).arg(score));
             }
             else if (this->hasTelephonyDesignator() && this->getTelephonyDesignator() == otherCode.getTelephonyDesignator())
             {
                 score += 15;
-                CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Same telephony '%1': %2").arg(this->getTelephonyDesignator()).arg(score));
+                addLogDetailsToList(log, *this, QStringLiteral("Same telephony '%1': %2").arg(this->getTelephonyDesignator()).arg(score));
             }
             else if (this->hasSimplifiedName() && this->getSimplifiedName() == otherCode.getSimplifiedName())
             {
                 score += 10;
-                CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Same simplified name '%1': %2").arg(this->getSimplifiedName()).arg(score));
+                addLogDetailsToList(log, *this, QStringLiteral("Same simplified name '%1': %2").arg(this->getSimplifiedName()).arg(score));
             }
             return score;
         }

@@ -22,7 +22,6 @@
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/matchingutils.h"
-#include "blackmisc/aviation/logutils.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/mixin/mixincompare.h"
@@ -729,14 +728,14 @@ namespace BlackCore
                 CSimulatedAircraft brokenAircraft(aircraftAfterModelApplied);
                 brokenAircraft.setEnabled(false);
                 brokenAircraft.setRendered(false);
-                CLogUtilities::addLogDetailsToList(pMatchingMessages, callsign, QStringLiteral("Cannot add remote aircraft, no model string: '%1'").arg(brokenAircraft.toQString()));
+                CCallsign::addLogDetailsToList(pMatchingMessages, callsign, QStringLiteral("Cannot add remote aircraft, no model string: '%1'").arg(brokenAircraft.toQString()));
                 emit this->aircraftRenderingChanged(brokenAircraft);
                 return;
             }
 
             // here the model is added to the simulator
             m_simulatorPlugin.second->logicallyAddRemoteAircraft(aircraftAfterModelApplied);
-            CLogUtilities::addLogDetailsToList(pMatchingMessages, callsign, QStringLiteral("Logically added remote aircraft: %1").arg(aircraftAfterModelApplied.toQString()));
+            CCallsign::addLogDetailsToList(pMatchingMessages, callsign, QStringLiteral("Logically added remote aircraft: %1").arg(aircraftAfterModelApplied.toQString()));
 
             this->clearMatchingMessages(callsign);
             this->addMatchingMessages(callsign, matchingMessages);

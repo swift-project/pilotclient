@@ -15,6 +15,7 @@
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/valueobject.h"
+#include "blackmisc/statusmessage.h"
 #include <QMetaType>
 #include <QString>
 #include <tuple>
@@ -23,6 +24,8 @@ class QStringList;
 
 namespace BlackMisc
 {
+    class CStatusMessageList;
+
     namespace Aviation
     {
         //! Value object encapsulating information of a callsign.
@@ -203,6 +206,19 @@ namespace BlackMisc
 
             //! Representing icon
             static const CIcon &convertToIcon(const CCallsign &callsign);
+
+            //! Specialized log message for matching / reverse lookup
+            //! \threadsafe
+            static CStatusMessage logMessage(
+                const CCallsign &callsign,
+                const QString &message, const QStringList &extraCategories = {},
+                CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
+
+            //! Specialized log for matching / reverse lookup
+            //! \threadsafe
+            static void addLogDetailsToList(CStatusMessageList *log, const CCallsign &callsign,
+                                            const QString &message, const QStringList &extraCategories = {},
+                                            CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
             //! Register metadata
             static void registerMetadata();

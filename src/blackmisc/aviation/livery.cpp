@@ -8,7 +8,6 @@
 
 #include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/aviation/livery.h"
-#include "blackmisc/aviation/logutils.h"
 #include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/logcategories.h"
@@ -26,7 +25,6 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
-using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
 {
@@ -350,6 +348,20 @@ namespace BlackMisc
             return temp;
         }
 
+        CStatusMessage CLivery::logMessage(const CLivery &livery, const QString &message, const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
+        {
+            static const CLogCategoryList cats({ CLogCategories::aviation() });
+            const CStatusMessage m(cats.with(CLogCategoryList::fromQStringList(extraCategories)), s, livery.hasCombinedCode() ? livery.getCombinedCodePlusInfoAndId() + ": " + message.trimmed() : message.trimmed());
+            return m;
+        }
+
+        void CLivery::addLogDetailsToList(CStatusMessageList *log, const CLivery &livery, const QString &message, const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
+        {
+            if (!log) { return; }
+            if (message.isEmpty()) { return; }
+            log->push_back(logMessage(livery, message, extraCategories, s));
+        }
+
         QVariant CLivery::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
         {
             if (index.isMyself()) { return QVariant::fromValue(*this); }
@@ -440,7 +452,7 @@ namespace BlackMisc
         {
             if (this->isDbEqual(otherLivery))
             {
-                CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Equal DB code: 100"));
+                addLogDetailsToList(log, *this, QStringLiteral("Equal DB code: 100"));
                 return 100;
             }
 
@@ -456,7 +468,7 @@ namespace BlackMisc
                 // 2 color liveries 25..85
                 score = 25;
                 score += 60 * colorMultiplier;
-                CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("2 color liveries, color multiplier %1: %2").arg(colorMultiplier).arg(score));
+                addLogDetailsToList(log, *this, QStringLiteral("2 color liveries, color multiplier %1: %2").arg(colorMultiplier).arg(score));
             }
             else if (this->isAirlineLivery() && otherLivery.isAirlineLivery())
             {
@@ -467,10 +479,10 @@ namespace BlackMisc
                 // same ICAO at least means 30, max 50
                 score = qRound(0.5 * this->getAirlineIcaoCode().calculateScore(otherLivery.getAirlineIcaoCode(), log));
                 score += 25 * colorMultiplier;
-                CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("2 airline liveries, color multiplier %1: %2").arg(colorMultiplier).arg(score));
+                addLogDetailsToList(log, *this, QStringLiteral("2 airline liveries, color multiplier %1: %2").arg(colorMultiplier).arg(score));
                 if (this->isMilitary() == otherLivery.isMilitary())
                 {
-                    CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Mil.flag '%1' matches: %2").arg(boolToYesNo(this->isMilitary())).arg(score));
+                    addLogDetailsToList(log, *this, QStringLiteral("Mil.flag '%1' matches: %2").arg(boolToYesNo(this->isMilitary())).arg(score));
                     score += 10;
                 }
             }
@@ -481,7 +493,7 @@ namespace BlackMisc
                 // 25 is weaker as same ICAO code / 2 from above
                 score = preferColorLiveries ? 25 : 0;
                 score += 25 * colorMultiplier; // needs to be the same as in 2 airlines
-                CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Color/airline mixed, color multiplier %1: %2").arg(colorMultiplier).arg(score));
+                addLogDetailsToList(log, *this, QStringLiteral("Color/airline mixed, color multiplier %1: %2").arg(colorMultiplier).arg(score));
             }
             return score;
         }

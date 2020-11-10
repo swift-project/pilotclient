@@ -218,6 +218,19 @@ namespace BlackMisc
             //! The code for a temporary livery
             static const QString &tempLiveryCode();
 
+            //! Specialized log message for matching / reverse lookup
+            //! \threadsafe
+            static CStatusMessage logMessage(
+                const CLivery &livery,
+                const QString &message, const QStringList &extraCategories = {},
+                CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
+
+            //! Specialized log for matching / reverse lookup
+            //! \threadsafe
+            static void addLogDetailsToList(CStatusMessageList *log, const CLivery &livery,
+                                            const QString &message, const QStringList &extraCategories = {},
+                                            CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
+
         private:
             CAirlineIcaoCode m_airline; //!< corresponding airline, if any
             QString   m_combinedCode;   //!< livery code and pseudo airline ICAO code

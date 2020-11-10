@@ -6,7 +6,6 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackmisc/aviation/logutils.h"
 #include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/db/datastoreutility.h"
@@ -130,7 +129,7 @@ namespace BlackMisc
         {
             if (this->isDbEqual(otherCode))
             {
-                CLogUtilities::addLogDetailsToList(log, *this, QString("Equal DB code: 100"));
+                addLogDetailsToList(log, *this, QString("Equal DB code: 100"));
                 return 100;
             }
 
@@ -141,7 +140,7 @@ namespace BlackMisc
                 score += 50; // same designator
                 if (log)
                 {
-                    CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Same designator: %1").arg(score));
+                    addLogDetailsToList(log, *this, QStringLiteral("Same designator: %1").arg(score));
                 }
 
                 int scoreOld = score;
@@ -150,7 +149,7 @@ namespace BlackMisc
                 else if (this->getRank() < 10) { score += (10 - this->getRank()); }
                 if (score > scoreOld)
                 {
-                    CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Added rank: %1").arg(score));
+                    addLogDetailsToList(log, *this, QStringLiteral("Added rank: %1").arg(score));
                 }
             }
             else
@@ -158,12 +157,12 @@ namespace BlackMisc
                 if (this->hasFamily() && this->getFamily() == otherCode.getFamily())
                 {
                     score += 40;
-                    CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Added family: %1").arg(score));
+                    addLogDetailsToList(log, *this, QStringLiteral("Added family: %1").arg(score));
                 }
                 else if (this->hasValidCombinedType() && otherCode.getCombinedType() == this->getCombinedType())
                 {
                     score += 30;
-                    CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Added combined code: %1").arg(score));
+                    addLogDetailsToList(log, *this, QStringLiteral("Added combined code: %1").arg(score));
                 }
                 else if (this->hasValidCombinedType())
                 {
@@ -206,7 +205,7 @@ namespace BlackMisc
                     {
                         score += 4;
                     }
-                    CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Added combined code parts: %1").arg(score));
+                    addLogDetailsToList(log, *this, QStringLiteral("Added combined code parts: %1").arg(score));
                 }
             }
 
@@ -216,11 +215,11 @@ namespace BlackMisc
                 if (this->matchesManufacturer(otherCode.getManufacturer()))
                 {
                     score += 10;
-                    CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Matches manufacturer '%1': %2").arg(this->getManufacturer()).arg(score));
+                    addLogDetailsToList(log, *this, QStringLiteral("Matches manufacturer '%1': %2").arg(this->getManufacturer()).arg(score));
                 }
                 else if (this->getManufacturer().contains(otherCode.getManufacturer(), Qt::CaseInsensitive))
                 {
-                    CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Contains manufacturer '%1': %2").arg(this->getManufacturer()).arg(score));
+                    addLogDetailsToList(log, *this, QStringLiteral("Contains manufacturer '%1': %2").arg(this->getManufacturer()).arg(score));
                     score += 5;
                 }
             }
@@ -229,12 +228,12 @@ namespace BlackMisc
             if (this->hasCategory() && otherCode.hasCategory() && this->getCategory() == otherCode.getCategory())
             {
                 score += 8;
-                CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Matches military flag '%1': %2").arg(boolToYesNo(this->isMilitary())).arg(score));
+                addLogDetailsToList(log, *this, QStringLiteral("Matches military flag '%1': %2").arg(boolToYesNo(this->isMilitary())).arg(score));
             }
             else if (this->isMilitary() == otherCode.isMilitary())
             {
                 score += 8;
-                CLogUtilities::addLogDetailsToList(log, *this, QStringLiteral("Matches military flag '%1': %2").arg(boolToYesNo(this->isMilitary())).arg(score));
+                addLogDetailsToList(log, *this, QStringLiteral("Matches military flag '%1': %2").arg(boolToYesNo(this->isMilitary())).arg(score));
             }
             // 0..85
             return score;
@@ -850,6 +849,20 @@ namespace BlackMisc
         {
             const QChar e = engineType.toUpper();
             return e == 'P' || e == 'E' || e == 'T';
+        }
+
+        CStatusMessage CAircraftIcaoCode::logMessage(const CAircraftIcaoCode &icaoCode, const QString &message, const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
+        {
+            static const CLogCategoryList cats({ CLogCategories::aviation() });
+            const CStatusMessage m(cats.with(CLogCategoryList::fromQStringList(extraCategories)), s, icaoCode.hasDesignator() ? icaoCode.getDesignatorDbKey() + ": " + message.trimmed() : message.trimmed());
+            return m;
+        }
+
+        void CAircraftIcaoCode::addLogDetailsToList(CStatusMessageList *log, const CAircraftIcaoCode &icao, const QString &message, const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
+        {
+            if (!log) { return; }
+            if (message.isEmpty()) { return; }
+            log->push_back(logMessage(icao, message, extraCategories, s));
         }
 
         CAircraftIcaoCode CAircraftIcaoCode::fromDatabaseJson(const QJsonObject &json, const QString &prefix)

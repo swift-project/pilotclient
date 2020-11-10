@@ -7,7 +7,6 @@
  */
 
 #include "matchingutils.h"
-#include "blackmisc/aviation/logutils.h"
 
 using namespace BlackMisc::Aviation;
 
@@ -17,7 +16,7 @@ namespace BlackMisc
     {
         void CMatchingUtils::addLogDetailsToList(CStatusMessageList *log, const CSimulatedAircraft &remoteAircraft, const QString &message, const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
         {
-            CLogUtilities::addLogDetailsToList(log, remoteAircraft.getCallsign(), message, extraCategories, s);
+            CCallsign::addLogDetailsToList(log, remoteAircraft.getCallsign(), message, extraCategories, s);
         }
 
         const CLogCategoryList &CMatchingUtils::defaultCategories()

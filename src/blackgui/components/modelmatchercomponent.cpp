@@ -22,7 +22,6 @@
 #include "blackcore/webdataservices.h"
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/matchingutils.h"
-#include "blackmisc/aviation/logutils.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/callsign.h"
@@ -295,12 +294,12 @@ namespace BlackGui
                 }
                 else
                 {
-                    CLogUtilities::addLogDetailsToList(&msgs, inModel.getCallsign(), QStringLiteral("Matching script, no modification"));
+                    CCallsign::addLogDetailsToList(&msgs, inModel.getCallsign(), QStringLiteral("Matching script, no modification"));
                 }
             }
             else
             {
-                CLogUtilities::addLogDetailsToList(&msgs, inModel.getCallsign(), QStringLiteral("No reverse lookup script used"));
+                CCallsign::addLogDetailsToList(&msgs, inModel.getCallsign(), QStringLiteral("No reverse lookup script used"));
             }
 
             return inModel;
