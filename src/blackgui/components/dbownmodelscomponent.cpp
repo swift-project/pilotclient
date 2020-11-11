@@ -15,6 +15,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/db/databaseutils.h"
+#include "blackmisc/simulation/aircraftmodelloaderprovider.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/swiftdirectories.h"
 #include "blackmisc/logmessage.h"
