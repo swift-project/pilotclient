@@ -8,7 +8,7 @@
 
 #include "blackmisc/simulation/fscommon/aircraftcfgentries.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
-#include "blackmisc/simulation/fscommon/fscommonutil.h"
+#include "blackmisc/simulation/fscommon/fsdirectories.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessagelist.h"
@@ -176,7 +176,7 @@ namespace BlackMisc
 
                 // the sim.cfg/aircraft.cfg file should have an *.air file sibling
                 // if not we assume these files can be ignored
-                const QDir dirForAir(directory, CFsCommonUtil::airFileFilter(), QDir::Name, QDir::Files | QDir::NoDotAndDotDot);
+                const QDir dirForAir(directory, CFsDirectories::airFileFilter(), QDir::Name, QDir::Files | QDir::NoDotAndDotDot);
                 const int airFilesCount = dirForAir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot, QDir::DirsLast).size();
                 const bool hasAirFiles =  airFilesCount > 0;
 

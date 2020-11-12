@@ -16,7 +16,7 @@
 #include "blackcore/context/contextapplicationproxy.h"
 #include "blackcore/setupreader.h"
 #include "blacksound/audioutilities.h"
-#include "blackmisc/simulation/fscommon/fscommonutil.h"
+#include "blackmisc/simulation/fscommon/fsdirectories.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/dbusserver.h"
@@ -648,16 +648,16 @@ void CSwiftLauncher::showSimulatorConfigDirs()
 
     if (s == ui->pb_P3DConfigDirs)
     {
-        simDir    = CFsCommonUtil::p3dDir();
-        simObjDir = CFsCommonUtil::p3dSimObjectsDir();
-        const QString versionHint = CFsCommonUtil::guessP3DVersion(simDir);
-        dirs      = CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(simObjDir, versionHint);
+        simDir    = CFsDirectories::p3dDir();
+        simObjDir = CFsDirectories::p3dSimObjectsDir();
+        const QString versionHint = CFsDirectories::guessP3DVersion(simDir);
+        dirs      = CFsDirectories::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(simObjDir, versionHint);
     }
     else if (s == ui->pb_FSXConfigDirs)
     {
-        dirs      = CFsCommonUtil::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths();
-        simDir    = CFsCommonUtil::fsxDir();
-        simObjDir = CFsCommonUtil::fsxSimObjectsDir();
+        dirs      = CFsDirectories::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths();
+        simDir    = CFsDirectories::fsxDir();
+        simObjDir = CFsDirectories::fsxSimObjectsDir();
     }
 
     const QString info = u"Sim.dir: " % simDir % "\n" %

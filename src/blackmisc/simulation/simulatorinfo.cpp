@@ -7,7 +7,7 @@
  */
 
 #include "blackconfig/buildconfig.h"
-#include "blackmisc/simulation/fscommon/fscommonutil.h"
+#include "blackmisc/simulation/fscommon/fsdirectories.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/db/datastoreutility.h"
@@ -299,14 +299,14 @@ namespace BlackMisc
             if (CBuildConfig::isRunningOnWindowsNtPlatform())
             {
                 fs9 =
-                    !CFsCommonUtil::fs9AircraftDir().isEmpty() &&
-                    !CFsCommonUtil::fs9Dir().isEmpty();
+                    !CFsDirectories::fs9AircraftDir().isEmpty() &&
+                    !CFsDirectories::fs9Dir().isEmpty();
                 fsx =
-                    !CFsCommonUtil::fsxSimObjectsDir().isEmpty() &&
-                    !CFsCommonUtil::fsxDir().isEmpty();
+                    !CFsDirectories::fsxSimObjectsDir().isEmpty() &&
+                    !CFsDirectories::fsxDir().isEmpty();
                 p3d =
-                    !CFsCommonUtil::p3dDir().isEmpty() &&
-                    !CFsCommonUtil::p3dSimObjectsDir().isEmpty();
+                    !CFsDirectories::p3dDir().isEmpty() &&
+                    !CFsDirectories::p3dSimObjectsDir().isEmpty();
             }
 
             const bool xp = !CXPlaneUtil::xplaneRootDir().isEmpty();

@@ -10,7 +10,7 @@
 //! \ingroup sampleblackmiscsim
 
 #include "samplesp3d.h"
-#include "blackmisc/simulation/fscommon/fscommonutil.h"
+#include "blackmisc/simulation/fscommon/fsdirectories.h"
 #include "blackmisc/stringutils.h"
 #include <QTextStream>
 
@@ -20,15 +20,15 @@ namespace BlackSample
 {
     void CSamplesP3D::samplesMisc(QTextStream &streamOut)
     {
-        QSet<QString> configFiles = CFsCommonUtil::findP3dAddOnConfigFiles("v5");
-        if (configFiles.isEmpty()) { configFiles = CFsCommonUtil::findP3dAddOnConfigFiles("v4"); }
+        QSet<QString> configFiles = CFsDirectories::findP3dAddOnConfigFiles("v5");
+        if (configFiles.isEmpty()) { configFiles = CFsDirectories::findP3dAddOnConfigFiles("v4"); }
 
         streamOut << BlackMisc::joinStringSet(configFiles, ", ") << Qt::endl;
 
-        const QSet<QString> addOnPaths = CFsCommonUtil::allConfigFilesPathValues(configFiles.values(), false, {});
+        const QSet<QString> addOnPaths = CFsDirectories::allConfigFilesPathValues(configFiles.values(), false, {});
         streamOut << BlackMisc::joinStringSet(addOnPaths, ", ") << Qt::endl;
 
-        const QSet<QString> simObjectPaths = CFsCommonUtil::fsxSimObjectsPaths("B:/fsx.cfg", false);
+        const QSet<QString> simObjectPaths = CFsDirectories::fsxSimObjectsPaths("B:/fsx.cfg", false);
         streamOut << BlackMisc::joinStringSet(simObjectPaths, ", ") << Qt::endl;
     }
 } // namespace

@@ -9,7 +9,7 @@
 #include "configsimulatorcomponent.h"
 #include "blackgui/guiutility.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/simulation/fscommon/fscommonutil.h"
+#include "blackmisc/simulation/fscommon/fsdirectories.h"
 #include "blackconfig/buildconfig.h"
 #include "ui_configsimulatorcomponent.h"
 
@@ -61,9 +61,9 @@ namespace BlackGui
             }
 
             // no x64 check as we would allow to config 32bit with launcher x64 and vice versa
-            const bool p3d = (sims.isP3D() || !CFsCommonUtil::p3dDir().isEmpty()) && CBuildConfig::isCompiledWithP3DSupport();
-            const bool fsx = (sims.isFSX() || !CFsCommonUtil::fsxDir().isEmpty()) && CBuildConfig::isCompiledWithFsxSupport();
-            const bool fs9 = (sims.isFS9() || !CFsCommonUtil::fs9Dir().isEmpty()) && CBuildConfig::isCompiledWithFs9Support();
+            const bool p3d = (sims.isP3D() || !CFsDirectories::p3dDir().isEmpty()) && CBuildConfig::isCompiledWithP3DSupport();
+            const bool fsx = (sims.isFSX() || !CFsDirectories::fsxDir().isEmpty()) && CBuildConfig::isCompiledWithFsxSupport();
+            const bool fs9 = (sims.isFS9() || !CFsDirectories::fs9Dir().isEmpty()) && CBuildConfig::isCompiledWithFs9Support();
             const bool xp = sims.isXPlane() && CBuildConfig::isCompiledWithXPlaneSupport();
             const bool fg = sims.isFG() && CBuildConfig::isCompiledWithFGSupport();
 

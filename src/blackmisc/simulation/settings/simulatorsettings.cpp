@@ -8,7 +8,7 @@
 
 #include "simulatorsettings.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/fscommon/fscommonutil.h"
+#include "blackmisc/simulation/fscommon/fsdirectories.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/simulation/flightgear/flightgearutil.h"
 #include "blackmisc/verify.h"
@@ -588,14 +588,14 @@ namespace BlackMisc
                 switch (m_simulator.getSimulator())
                 {
                 case CSimulatorInfo::FG:  dirs = QStringList(CFlightgearUtil::modelDirectoriesFromSimDir(s)); break;
-                case CSimulatorInfo::FS9: dirs = QStringList({ CFsCommonUtil::fs9AircraftDirFromSimDir(s) }); break;
+                case CSimulatorInfo::FS9: dirs = QStringList({ CFsDirectories::fs9AircraftDirFromSimDir(s) }); break;
                 case CSimulatorInfo::FSX:
-                    dirs = CFsCommonUtil::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths(CFsCommonUtil::fsxSimObjectsDirFromSimDir(s));
+                    dirs = CFsDirectories::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths(CFsDirectories::fsxSimObjectsDirFromSimDir(s));
                     break;
                 case CSimulatorInfo::P3D:
                     {
-                        const QString versionHint = CFsCommonUtil::guessP3DVersion(s);
-                        dirs = CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(CFsCommonUtil::p3dSimObjectsDirFromSimDir(s), versionHint);
+                        const QString versionHint = CFsDirectories::guessP3DVersion(s);
+                        dirs = CFsDirectories::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(CFsDirectories::p3dSimObjectsDirFromSimDir(s), versionHint);
                     }
                     break;
                 case CSimulatorInfo::XPLANE: dirs = QStringList({CXPlaneUtil::modelDirectoriesFromSimDir(s)}); break;
@@ -669,22 +669,22 @@ namespace BlackMisc
                     }
                 case CSimulatorInfo::FS9:
                     {
-                        if (CFsCommonUtil::fs9AircraftDir().isEmpty()) { return e; }
-                        static const QStringList md({ CFsCommonUtil::fs9AircraftDir() });
+                        if (CFsDirectories::fs9AircraftDir().isEmpty()) { return e; }
+                        static const QStringList md({ CFsDirectories::fs9AircraftDir() });
                         return md;
                     }
                 case CSimulatorInfo::FSX:
                     {
-                        if (CFsCommonUtil::fsxSimObjectsDir().isEmpty()) { return e; }
-                        static const QStringList md = CFsCommonUtil::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths();
+                        if (CFsDirectories::fsxSimObjectsDir().isEmpty()) { return e; }
+                        static const QStringList md = CFsDirectories::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths();
                         return md;
                     }
                 case CSimulatorInfo::P3D:
                     {
-                        static const QString p3d = CFsCommonUtil::p3dSimObjectsDir();
+                        static const QString p3d = CFsDirectories::p3dSimObjectsDir();
                         if (p3d.isEmpty()) { return e; }
-                        static const QString versionHint = CFsCommonUtil::guessP3DVersion(p3d);
-                        static const QStringList md      = CFsCommonUtil::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(p3d, versionHint);
+                        static const QString versionHint = CFsDirectories::guessP3DVersion(p3d);
+                        static const QStringList md      = CFsDirectories::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(p3d, versionHint);
                         return md;
                     }
                 case CSimulatorInfo::XPLANE:
@@ -705,9 +705,9 @@ namespace BlackMisc
                 switch (simulator.getSimulator())
                 {
                 case CSimulatorInfo::FG:     return CFlightgearUtil::flightgearRootDir();
-                case CSimulatorInfo::FS9:    return CFsCommonUtil::fs9Dir();
-                case CSimulatorInfo::FSX:    return CFsCommonUtil::fsxDir();
-                case CSimulatorInfo::P3D:    return CFsCommonUtil::p3dDir();
+                case CSimulatorInfo::FS9:    return CFsDirectories::fs9Dir();
+                case CSimulatorInfo::FSX:    return CFsDirectories::fsxDir();
+                case CSimulatorInfo::P3D:    return CFsDirectories::p3dDir();
                 case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneRootDir();
                 default:
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
@@ -723,9 +723,9 @@ namespace BlackMisc
                 switch (simulator.getSimulator())
                 {
                 case CSimulatorInfo::FG:     return CFlightgearUtil::flightgearModelExcludeDirectoryPatterns();
-                case CSimulatorInfo::FS9:    return CFsCommonUtil::fs9AircraftObjectsExcludeDirectoryPatterns();
-                case CSimulatorInfo::FSX:    return CFsCommonUtil::fsxSimObjectsExcludeDirectoryPatterns();
-                case CSimulatorInfo::P3D:    return CFsCommonUtil::p3dSimObjectsExcludeDirectoryPatterns();
+                case CSimulatorInfo::FS9:    return CFsDirectories::fs9AircraftObjectsExcludeDirectoryPatterns();
+                case CSimulatorInfo::FSX:    return CFsDirectories::fsxSimObjectsExcludeDirectoryPatterns();
+                case CSimulatorInfo::P3D:    return CFsDirectories::p3dSimObjectsExcludeDirectoryPatterns();
                 case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneModelExcludeDirectoryPatterns();
                 default:
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
