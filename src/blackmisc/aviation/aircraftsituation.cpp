@@ -6,7 +6,6 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftlights.h"
@@ -24,7 +23,6 @@
 
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
 using namespace BlackConfig;
 
 namespace BlackMisc

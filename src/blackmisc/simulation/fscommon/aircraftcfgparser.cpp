@@ -6,7 +6,6 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackmisc/simulation/aircraftmodelutils.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentries.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"

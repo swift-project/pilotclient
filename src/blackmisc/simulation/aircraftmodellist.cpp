@@ -7,7 +7,6 @@
  */
 
 #include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/matchingutils.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/math/mathutils.h"

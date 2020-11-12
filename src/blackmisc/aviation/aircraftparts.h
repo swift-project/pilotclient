@@ -24,7 +24,6 @@
 
 namespace BlackMisc
 {
-    namespace Simulation { class CAircraftModel; }
     namespace Aviation
     {
         //! Value object encapsulating information of aircraft's parts

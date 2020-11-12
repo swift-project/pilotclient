@@ -6,10 +6,10 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackmisc/simulation/aircraftmodel.h"
 #include "aircraftparts.h"
 #include "aircraftlights.h"
 #include "blackmisc/comparefunctions.h"
+#include "blackmisc/propertyindex.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/verify.h"
 #include "blackconfig/buildconfig.h"
@@ -17,8 +17,6 @@
 #include "QStringBuilder"
 #include <QtGlobal>
 
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
 using namespace BlackConfig;
 
 namespace BlackMisc

@@ -6,7 +6,6 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/comparefunctions.h"
@@ -14,6 +13,7 @@
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/pq/speed.h"
 
 #include <QChar>
 #include <QJsonValue>

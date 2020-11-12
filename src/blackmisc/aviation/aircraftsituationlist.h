@@ -28,7 +28,6 @@
 namespace BlackMisc
 {
     namespace Geo { class CElevationPlane; }
-    namespace Simulation { class CAircraftModel; }
     namespace Aviation
     {
         class CAircraftParts;
