@@ -146,21 +146,23 @@ namespace XSwiftBus
     {
         if (text.empty()) { return; }
         static const CMessage::string ellipsis = u8"\u2026";
-        const int lineLength = m_messages.maxLineLength() - static_cast<int>(ellipsis.size());
+        const unsigned lineLength = m_messages.maxLineLength() - 1;
+
+        using U8It = Utf8Iterator<typename CMessage::string::const_iterator>;
+        U8It begin(text.begin(), text.end());
+        auto characters = std::distance(begin, U8It(text.end(), text.end()));
         std::vector<CMessage::string> wrappedLines;
-        for (size_t i = 0; i < text.size(); i += static_cast<size_t>(lineLength))
+
+        for (; characters > lineLength; characters -= lineLength)
         {
-            wrappedLines.emplace_back(text.begin() + i, text.begin() + i + static_cast<size_t>(lineLength));
+            auto end = std::next(begin, lineLength);
+            wrappedLines.emplace_back(begin.base, end.base);
             wrappedLines.back() += ellipsis;
+            begin = end;
         }
-        wrappedLines.back().erase(wrappedLines.back().size() - ellipsis.size());
-        if (wrappedLines.back().empty()) { wrappedLines.pop_back(); }
-        else if (wrappedLines.back().size() == ellipsis.size() && wrappedLines.size() > 1)
+        if (characters > 0)
         {
-            auto secondLastLine = wrappedLines.end() - 2;
-            secondLastLine->erase(wrappedLines.back().size() - ellipsis.size());
-            secondLastLine->append(wrappedLines.back());
-            wrappedLines.pop_back();
+            wrappedLines.emplace_back(begin.base, text.end());
         }
         for (const auto &line : wrappedLines)
         {

@@ -17,6 +17,7 @@
 #include <cctype>
 #include <cmath>
 #include <algorithm>
+#include <iterator>
 
 // Strict header only X-Plane model parser utils shared between BlackMisc and XSwiftBus.
 // Header only is necessary to no require XSwiftBus to link against BlackMisc.
@@ -249,6 +250,59 @@ namespace BlackMisc
                     acfProperties.modelString = simplifyWhitespace(stringForFlyableModel(acfProperties, filePath));
                     return acfProperties;
                 }
+
+                //! Encoding-aware iterator adaptor for std::u8string
+                template <typename I>
+                struct Utf8Iterator
+                {
+                    //! STL compatibility
+                    //! @{
+                    using value_type = typename std::iterator_traits<I>::value_type;
+                    using difference_type = typename std::iterator_traits<I>::difference_type;
+                    using reference = typename std::iterator_traits<I>::reference;
+                    using pointer = typename std::iterator_traits<I>::pointer;
+                    using iterator_category = std::forward_iterator_tag;
+                    //! @}
+
+                    //! Default constructor
+                    Utf8Iterator() = default;
+
+                    //! Constructor
+                    Utf8Iterator(I base, I end) : base(base), end(end) {}
+
+                    //! Equality
+                    //! @{
+                    friend bool operator ==(Utf8Iterator a, Utf8Iterator b) { return a.base == b.base; }
+                    friend bool operator !=(Utf8Iterator a, Utf8Iterator b) { return a.base != b.base; }
+                    friend bool operator ==(Utf8Iterator a, I b) { return a.base == b; }
+                    friend bool operator !=(Utf8Iterator a, I b) { return a.base != b; }
+                    friend bool operator ==(I a, Utf8Iterator b) { return a == b.base; }
+                    friend bool operator !=(I a, Utf8Iterator b) { return a != b.base; }
+                    //! @}
+
+                    //! Dereference (not encoding-aware)
+                    reference operator *() const { return *base; }
+
+                    //! Pointer indirection (not encoding-aware)
+                    pointer operator ->() const { return base.operator ->(); }
+
+                    //! Pre-increment
+                    Utf8Iterator &operator ++()
+                    {
+                        constexpr auto isContinuation = [](auto c)
+                        {
+                            return (c & static_cast<value_type>(0b11000000)) == static_cast<value_type>(0b10000000);
+                        };
+                        do { ++base; } while (base != end && isContinuation(*base));
+                        return *this;
+                    }
+
+                    //! Post-increment
+                    Utf8Iterator operator ++(int) { auto copy = *this; ++*this; return copy; }
+
+                    I base; //!< Underlying iterator
+                    I end; //!< Underlying end iterator
+                };
             }
         } // namespace
     } // namespace
