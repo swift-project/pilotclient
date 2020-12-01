@@ -133,8 +133,9 @@ namespace BlackGui
 
             for (qreal angle = 0.0; angle < 359.0; angle += 30.0)
             {
-                const QLineF line({ 0.0, 0.0 }, polarPoint(100.0, qDegreesToRadians(angle)));
+                const QLineF line({ 0.0, 0.0 }, polarPoint(1000.0, qDegreesToRadians(angle)));
                 QGraphicsLineItem *li = new QGraphicsLineItem(line, &m_radials);
+                li->setFlags(QGraphicsItem::ItemIgnoresTransformations);
                 li->setPen(pen);
             }
         }
