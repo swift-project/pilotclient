@@ -745,20 +745,49 @@ namespace BlackMisc
 
         QString CFlightPlan::aircraftIcaoCodeFromEquipmentCode(const QString &equipmentCodeAndAircraft)
         {
-            // http://uk.flightaware.com/about/faq_aircraft_flight_plan_suffix.rvt
-            // we expect something like H/B772/F B773 B773/F
-            thread_local const QRegularExpression reg("/.");
-            QString aircraftIcaoCode(equipmentCodeAndAircraft);
-            aircraftIcaoCode = aircraftIcaoCode.replace(reg, "").trimmed().toUpper();
-            return aircraftIcaoCode;
+            return splitEquipmentCode(equipmentCodeAndAircraft)[1].trimmed().toUpper();
         }
 
         QStringList CFlightPlan::splitEquipmentCode(const QString &equipmentCodeAndAircraft)
         {
             static const QStringList empty({"", "", ""});
             if (empty.isEmpty()) { return empty; }
+            QStringList firstSplit = equipmentCodeAndAircraft.split('-');
+            if (firstSplit.size() >= 2)
+            {
+                // format like B789/H-SDE1E2E3FGHIJ2J3J4J5M1RWXY/LB1D1
+                QString equipment = firstSplit.size() >= 2 ? firstSplit[1] : "";
+                QStringList split = firstSplit[0].split('/');
+                if (split.size() >= 3)
+                {
+                    return { split[2], split[1], equipment.isEmpty() ? split[0] : equipment }; // "F/B789/H"
+                }
+                else if (split.size() >= 2)
+                {
+                    if (split[0].size() <= 1) // "H/B789"
+                    {
+                        return { split[0], split[1], equipment };
+                    }
+                    else // "B789/H"
+                    {
+                        return { split[1], split[0], equipment };
+                    }
+                }
+                else // "B789"
+                {
+                    return { {}, split[0], equipment };
+                }
+            }
             QStringList split = equipmentCodeAndAircraft.split('/');
-            if (split.length() == 3) { return split; } // "H/B738/F"
+            if (split.length() >= 3)
+            {
+                if (split[1].size() == 1 && CAircraftIcaoCode::isValidDesignator(split[0]))
+                {
+                    using std::swap;
+                    swap(split[0], split[1]); // "A359/H/L"
+                }
+                return split; // "H/B738/F"
+            }
             if (split.length() == 2)
             {
                 if (split[0].length() == 1)
@@ -766,6 +795,7 @@ namespace BlackMisc
                     // we assume prefix + ICAO
                     // e.g. "H/B748"
                     split.push_back("");
+                    return split;
                 }
                 else
                 {

@@ -232,201 +232,64 @@ namespace BlackCore
                     CLogMessage(this).info(u"VATSIM file '%1' has same content, skipped") << urlString;
                     return;
                 }
-                const QList<QStringRef> lines = splitLinesRefs(dataFileData);
-                if (lines.isEmpty()) { return; }
+                auto jsonDoc = QJsonDocument::fromJson(dataFileData.toUtf8());
+                if (jsonDoc.isEmpty()) { return; }
 
                 // build on local vars for thread safety
-                CServerList                         voiceServers;
                 CServerList                         fsdServers;
                 CAtcStationList                     atcStations;
                 CSimulatedAircraftList              aircraft;
                 QMap<CCallsign, CFlightPlanRemarks> flightPlanRemarksMap;
-                QDateTime                           updateTimestampFromFile;
+                auto updateTimestampFromFile = QDateTime::fromString(jsonDoc["general"]["update_timestamp"].toString(), Qt::ISODateWithMs);
 
-                QStringList clientSectionAttributes;
-                Section section = SectionNone;
-                int invalidSections = 0;
+                const bool alreadyRead = (updateTimestampFromFile == this->getUpdateTimestamp());
+                if (alreadyRead)
+                {
+                    CLogMessage(this).info(u"VATSIM file has same timestamp, skipped");
+                    return;
+                }
 
-                QString currentLine; // declared outside of the for loop, to amortize the cost of allocation
-                for (const QStringRef &clRef : lines)
+                for (QJsonValueRef pilot : jsonDoc["pilots"].toArray())
                 {
                     if (!this->doWorkCheck())
                     {
-                        CLogMessage(this).info(u"Terminated VATSIM file parsing process"); // for users
-                        return; // stop, terminate straight away, ending thread
+                        CLogMessage(this).info(u"Terminated VATSIM file parsing process");
+                        return;
                     }
-
-                    // parse lines
-                    currentLine = clRef.toString().trimmed();
-                    if (currentLine.isEmpty()) continue;
-                    if (currentLine.startsWith(";"))
+                    aircraft.push_back(parsePilot(pilot.toObject(), illegalEquipmentCodes));
+                    flightPlanRemarksMap.insert(aircraft.back().getCallsign(), parseFlightPlanRemarks(pilot.toObject()));
+                }
+                for (QJsonValueRef controller : jsonDoc["controllers"].toArray())
+                {
+                    if (!this->doWorkCheck())
                     {
-                        if (clientSectionAttributes.isEmpty() && currentLine.contains("!CLIENTS SECTION", Qt::CaseInsensitive))
-                        {
-                            // ; !CLIENTS section
-                            const int i = currentLine.lastIndexOf(' ');
-                            const QVector<QStringRef> attributes = currentLine.midRef(i).trimmed().split(':', Qt::SkipEmptyParts);
-                            for (const QStringRef &attr : attributes) { clientSectionAttributes.push_back(attr.toString().trimmed().toLower()); }
-                            section = SectionNone; // reset
-
-                            // consistency check to avoid tons of parsing errors afterwards
-                            // normally we have 40 attributes
-                            if (attributes.size() < 10)
-                            {
-                                CLogMessage(this).warning(u"Too few (%1) attributes in VATSIM file, CANCEL parsing. Line: '%2'") << attributes.size() << currentLine;
-                                return;
-                            }
-
-                        }
-                        continue;
+                        CLogMessage(this).info(u"Terminated VATSIM file parsing process");
+                        return;
                     }
-                    else if (currentLine.startsWith("!"))
+                    atcStations.push_back(parseController(controller.toObject()));
+                }
+                for (QJsonValueRef atis : jsonDoc["atis"].toArray())
+                {
+                    if (!this->doWorkCheck())
                     {
-                        section = currentLineToSection(currentLine);
-                        continue;
+                        CLogMessage(this).info(u"Terminated VATSIM file parsing process");
+                        return;
                     }
-
-                    switch (section)
+                    atcStations.push_back(parseController(atis.toObject()));
+                }
+                for (QJsonValueRef server : jsonDoc["servers"].toArray())
+                {
+                    if (!this->doWorkCheck())
                     {
-                    case SectionClients:
-                        {
-                            const bool logInconsistencies = invalidSections < 5; // flood protection
-                            const QMap<QString, QString> clientPartsMap = clientPartsToMap(currentLine, clientSectionAttributes, logInconsistencies);
-                            const CCallsign callsign = CCallsign(clientPartsMap["callsign"]);
-                            if (callsign.isEmpty())
-                            {
-                                invalidSections++;
-                                break;
-                            }
-                            const CUser user(clientPartsMap["cid"], clientPartsMap["realname"], callsign);
-                            const QString clientType = clientPartsMap["clienttype"].toLower();
-                            if (clientType.isEmpty()) { break; } // sometimes type is empty
-
-                            bool ok;
-                            bool validPos = true;
-                            QStringList posMsg;
-                            const double lat = clientPartsMap["latitude"].toDouble(&ok);
-                            if (!ok) { validPos = false; posMsg << QStringLiteral("latitude: '%1'").arg(clientPartsMap["latitude"]); }
-
-                            const double lng = clientPartsMap["longitude"].toDouble(&ok);
-                            if (!ok) { validPos = false; posMsg << QStringLiteral("longitude: '%1'").arg(clientPartsMap["longitude"]); }
-
-                            const double alt = clientPartsMap["altitude"].toDouble(&ok);
-                            if (!ok) { validPos = false; posMsg << QStringLiteral("altitude: '%1'").arg(clientPartsMap["altitude"]); }
-                            const CCoordinateGeodetic position = validPos ? CCoordinateGeodetic(lat, lng, alt) : CCoordinateGeodetic::null();
-
-                            Q_ASSERT_X((validPos && posMsg.isEmpty()) || (!validPos && !posMsg.isEmpty()), Q_FUNC_INFO, "Inconsistent data");
-                            if (!posMsg.isEmpty())
-                            {
-                                // Only info not to flood lof with warning
-                                CLogMessage(this).validationInfo(u"Callsign '%1' %2 (VATSIM data file)") << callsign << posMsg.join(", ");
-                            }
-
-                            const CFrequency frequency = CFrequency(clientPartsMap["frequency"].toDouble(), CFrequencyUnit::MHz());
-                            const QString flightPlanRemarks = clientPartsMap["planned_remarks"].trimmed();
-
-                            // Voice capabilities
-                            if (!flightPlanRemarks.isEmpty())
-                            {
-                                // CFlightPlanRemarks contains voice capabilities and other parsed values
-                                flightPlanRemarksMap[callsign] = CFlightPlanRemarks(flightPlanRemarks);
-                            }
-
-                            // set as per ATC/pilot
-                            if (clientType.startsWith('p'))
-                            {
-                                // Pilot section
-                                const double groundSpeedKts = clientPartsMap["groundspeed"].toDouble();
-                                CAircraftSituation situation(position);
-                                situation.setGroundSpeed(CSpeed(groundSpeedKts, CSpeedUnit::kts()));
-                                CSimulatedAircraft currentAircraft(user.getCallsign().getStringAsSet(), user, situation);
-
-                                const QString equipmentCodeAndAircraft = clientPartsMap["planned_aircraft"].trimmed();
-                                if (!equipmentCodeAndAircraft.isEmpty())
-                                {
-                                    const QString aircraftIcaoCode = CFlightPlan::aircraftIcaoCodeFromEquipmentCode(equipmentCodeAndAircraft);
-                                    if (CAircraftIcaoCode::isValidDesignator(aircraftIcaoCode))
-                                    {
-                                        currentAircraft.setAircraftIcaoDesignator(aircraftIcaoCode);
-                                    }
-                                    else
-                                    {
-                                        illegalEquipmentCodes.append(equipmentCodeAndAircraft);
-                                    }
-                                }
-                                aircraft.push_back(currentAircraft);
-                            }
-                            else if (clientType.startsWith('a'))
-                            {
-                                // ATC section
-                                CLength range;
-                                // should be alread have alt/height position.setGeodeticHeight(altitude);
-                                // the altitude is elevation for a station
-                                CAtcStation station(user.getCallsign().getStringAsSet(), user, frequency, position, range);
-                                station.setOnline(true);
-                                atcStations.push_back(station);
-                            }
-                            else
-                            {
-                                BLACK_VERIFY_X(false, Q_FUNC_INFO, "Wrong client type");
-                                break;
-                            }
-                        }
-                        break;
-                    case SectionGeneral:
-                        {
-                            if (currentLine.contains("UPDATE"))
-                            {
-                                const QStringList updateParts = currentLine.replace(" ", "").split('=');
-                                if (updateParts.length() < 2) { break; }
-                                const QString dts = updateParts.at(1).trimmed();
-                                updateTimestampFromFile = fromStringUtc(dts, "yyyyMMddHHmmss");
-                                const bool alreadyRead = (updateTimestampFromFile == this->getUpdateTimestamp());
-                                if (alreadyRead)
-                                {
-                                    CLogMessage(this).info(u"VATSIM file has same timestamp, skipped");
-                                    return;
-                                }
-                            }
-                        }
-                        break;
-                    case SectionFsdServers:
-                        {
-                            // ident:hostname_or_IP:location:name:clients_connection_allowed:
-                            const QStringList fsdServerParts = currentLine.split(':');
-                            if (fsdServerParts.size() < 5) { break; }
-                            if (!fsdServerParts.at(4).trimmed().contains('1')) { break; } // allowed?
-                            const QString description(fsdServerParts.at(2)); // part(3) could be added
-                            const CServer fsdServer(fsdServerParts.at(0), description, fsdServerParts.at(1), 6809,
-                                                    CUser("id", "real name", "email", "password"),
-                                                    CFsdSetup::vatsimStandard(), CVoiceSetup::vatsimStandard(),
-                                                    CEcosystem(CEcosystem::VATSIM), CServer::FSDServerVatsim);
-                            fsdServers.push_back(fsdServer);
-                        }
-                        break;
-                    case SectionVoiceServers:
-                        {
-                            // hostname_or_IP:location:name:clients_connection_allowed:type_of_voice_server:
-                            const QStringList voiceServerParts = currentLine.split(':');
-                            if (voiceServerParts.size() < 4) { break; }
-                            if (!voiceServerParts.at(3).trimmed().contains('1')) { break; } // allowed?
-                            const CServer voiceServer(voiceServerParts.at(1), voiceServerParts.at(2), voiceServerParts.at(0), -1,
-                                                      CUser(),
-                                                      CFsdSetup(), CVoiceSetup::vatsimStandard(),
-                                                      CEcosystem(CEcosystem::VATSIM), CServer::VoiceServerVatsim);
-                            voiceServers.push_back(voiceServer);
-                        }
-                        break;
-                    case SectionNone:
-                    default:
-                        break;
-
-                    } // switch section
-                } // for each line
+                        CLogMessage(this).info(u"Terminated VATSIM file parsing process");
+                        return;
+                    }
+                    fsdServers.push_back(parseServer(server.toObject()));
+                    if (!fsdServers.back().hasName()) { fsdServers.pop_back(); }
+                }
 
                 // Setup for VATSIM servers and sorting for comparison
                 fsdServers.sortBy(&CServer::getName, &CServer::getDescription);
-                voiceServers.sortBy(&CServer::getName, &CServer::getDescription);
 
                 // this part needs to be synchronized
                 {
@@ -439,7 +302,7 @@ namespace BlackCore
 
                 // update cache itself is thread safe
                 CVatsimSetup vs(m_lastGoodSetup.get());
-                const bool changedSetup = vs.setServers(fsdServers, voiceServers);
+                const bool changedSetup = vs.setServers(fsdServers, {});
                 if (changedSetup)
                 {
                     vs.setUtcTimestamp(updateTimestampFromFile);
@@ -455,8 +318,8 @@ namespace BlackCore
                 }
 
                 // data read finished
-                emit this->dataFileRead(lines.count());
-                emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, lines.count(), url);
+                emit this->dataFileRead(dataFileData.size() / 1000);
+                emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, dataFileData.size() / 1000, url);
             }
             else
             {
@@ -467,51 +330,58 @@ namespace BlackCore
             }
         }
 
+        CSimulatedAircraft CVatsimDataFileReader::parsePilot(const QJsonObject &pilot, QStringList &o_illegalEquipmentCodes) const
+        {
+            const CCallsign callsign(pilot["callsign"].toString());
+            const CUser user(pilot["cid"].toString(), pilot["name"].toString(), callsign);
+            const CCoordinateGeodetic position(pilot["latitude"].toDouble(), pilot["longitude"].toDouble(), pilot["altitude"].toInt());
+            const CHeading heading(pilot["heading"].toInt(), CAngleUnit::deg());
+            const CSpeed groundspeed(pilot["groundspeed"].toInt(), CSpeedUnit::kts());
+            const CAircraftSituation situation(callsign, position, heading, {}, {}, groundspeed);
+            CSimulatedAircraft aircraft(callsign, user, situation);
+            const QString icaoAndEquipment(pilot["flight_plan"]["aircraft"].toString().trimmed());
+            const QString icao(CFlightPlan::aircraftIcaoCodeFromEquipmentCode(icaoAndEquipment));
+            if (CAircraftIcaoCode::isValidDesignator(icao))
+            {
+                aircraft.setAircraftIcaoCode(icao);
+            }
+            else if (!icaoAndEquipment.isEmpty())
+            {
+                o_illegalEquipmentCodes.push_back(icaoAndEquipment);
+            }
+            aircraft.setTransponderCode(pilot["transponder"].toString().toInt());
+            return aircraft;
+        }
+
+        CFlightPlanRemarks CVatsimDataFileReader::parseFlightPlanRemarks(const QJsonObject &pilot) const
+        {
+            return CFlightPlanRemarks(pilot["flight_plan"]["remarks"].toString().trimmed());
+        }
+
+        CAtcStation CVatsimDataFileReader::parseController(const QJsonObject &controller) const
+        {
+            const CCallsign callsign(controller["callsign"].toString());
+            const CUser user(controller["cid"].toString(), controller["name"].toString(), callsign);
+            const CFrequency freq(controller["frequency"].toString().toDouble(), CFrequencyUnit::kHz());
+            const CLength range(controller["visual_range"].toInt(), CLengthUnit::NM());
+            const QJsonArray atisLines = controller["text_atis"].toArray();
+            const auto atisText = makeRange(atisLines).transform([](auto line) { return line.toString(); });
+            const CInformationMessage atis(CInformationMessage::ATIS, atisText.to<QStringList>().join('\n'));
+            return CAtcStation(callsign, user, freq, {}, range, true, {}, {}, atis);
+        }
+
+        CServer CVatsimDataFileReader::parseServer(const QJsonObject &server) const
+        {
+            return CServer(server["name"].toString(), server["location"].toString(),
+                server["hostname_or_ip"].toString(), 6809, CUser("id", "real name", "email", "password"),
+                CFsdSetup::vatsimStandard(), CVoiceSetup::vatsimStandard(), CEcosystem::VATSIM,
+                CServer::FSDServerVatsim, server["clients_connection_allowed"].toInt());
+        }
+
         void CVatsimDataFileReader::reloadSettings()
         {
             CReaderSettings s = m_settings.get();
             setInitialAndPeriodicTime(s.getInitialTime().toMs(), s.getPeriodicTime().toMs());
-        }
-
-        const QMap<QString, QString> CVatsimDataFileReader::clientPartsToMap(const QString &currentLine, const QStringList &clientSectionAttributes, bool logInconsistency)
-        {
-            QMap<QString, QString> parts;
-            if (currentLine.isEmpty()) { return parts; }
-            QStringList clientParts = currentLine.split(':');
-
-            // remove last empty item if required
-            if (currentLine.endsWith(':')) { clientParts.removeLast(); }
-            const int noParts = clientParts.size();
-            const int noAttributes = clientSectionAttributes.size();
-            const bool valid = (noParts == noAttributes);
-
-            // valid data?
-            if (!valid)
-            {
-                if (logInconsistency)
-                {
-                    logInconsistentData(
-                        CStatusMessage(static_cast<CVatsimDataFileReader *>(nullptr), CStatusMessage::SeverityInfo, u"VATSIM data file client parts: %1 attributes: %2 line: '%3'") << clientParts.size() << clientSectionAttributes.size() << currentLine);
-                }
-                return parts;
-            }
-
-            for (int i = 0; i < clientSectionAttributes.size(); i++)
-            {
-                // section attributes are the column names
-                const QString attribute(clientSectionAttributes.at(i));
-                parts.insert(attribute, clientParts.at(i));
-            }
-            return parts;
-        }
-
-        CVatsimDataFileReader::Section CVatsimDataFileReader::currentLineToSection(const QString &currentLine)
-        {
-            if (currentLine.contains("!GENERAL", Qt::CaseInsensitive)) { return SectionGeneral; }
-            if (currentLine.contains("!VOICE SERVERS", Qt::CaseInsensitive)) { return SectionVoiceServers; }
-            if (currentLine.contains("!SERVERS", Qt::CaseInsensitive)) { return SectionFsdServers; }
-            if (currentLine.contains("!CLIENTS", Qt::CaseInsensitive)) { return SectionClients; }
-            return SectionNone;
         }
     } // ns
 } // ns

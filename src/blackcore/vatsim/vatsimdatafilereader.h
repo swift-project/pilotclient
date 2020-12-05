@@ -124,7 +124,7 @@ namespace BlackCore
 
         signals:
             //! Data have been read
-            void dataFileRead(int lines);
+            void dataFileRead(int kB);
 
             //! Data have been read
             void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
@@ -155,18 +155,16 @@ namespace BlackCore
             //! Data have been read, parse VATSIM file
             void parseVatsimFile(QNetworkReply *nwReply);
 
+            BlackMisc::Simulation::CSimulatedAircraft parsePilot(const QJsonObject &, QStringList &o_illegalEquipmentCodes) const;
+            BlackMisc::Aviation::CFlightPlanRemarks parseFlightPlanRemarks(const QJsonObject &) const;
+            BlackMisc::Aviation::CAtcStation parseController(const QJsonObject &) const;
+            BlackMisc::Network::CServer parseServer(const QJsonObject &) const;
+
             //! Read / re-read data file
             void read();
 
             //! Reload the reader settings
             void reloadSettings();
-
-            //! Split line and assign values to their corresponding attribute names
-            //! \remark attributes expected as lower case
-            static const QMap<QString, QString> clientPartsToMap(const QString &currentLine, const QStringList &clientSectionAttributes, bool logInconsistency);
-
-            //! Get current section
-            static Section currentLineToSection(const QString &currentLine);
         };
     } // ns
 } // ns

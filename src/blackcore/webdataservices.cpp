@@ -1323,9 +1323,9 @@ namespace BlackCore
         CLogMessage(this).info(u"Read %1 METARs") << metars.size();
     }
 
-    void CWebDataServices::vatsimDataFileRead(int lines)
+    void CWebDataServices::vatsimDataFileRead(int kB)
     {
-        CLogMessage(this).info(u"Read VATSIM data file, %1 lines") << lines;
+        CLogMessage(this).info(u"Read VATSIM data file, %1 kB") << kB;
     }
 
     void CWebDataServices::vatsimStatusFileRead(int lines)
