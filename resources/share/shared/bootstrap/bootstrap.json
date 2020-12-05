@@ -65,7 +65,7 @@
     "vatsimDataFileUrls": {
         "containerbase": [
             {
-                "url": "http://info.vroute.net/vatsim-data.txt"
+                "url": "https://data.vatsim.net/v3/vatsim-data.json"
             }
         ]
     },

@@ -576,7 +576,7 @@ namespace BlackCore
         void receivedMetars(const BlackMisc::Weather::CMetarList &metars);
 
         //! VATSIM data file has been read
-        void vatsimDataFileRead(int lines);
+        void vatsimDataFileRead(int kB);
 
         //! VATSIM status file has been read
         void vatsimStatusFileRead(int lines);

@@ -50,7 +50,7 @@ namespace BlackCore
             m_vatsimBookingsUrl     = CUrl("http://vatbook.euroutepro.com/xml2.php");
             m_vatsimMetarsUrls      = CUrlList{"http://metar.vatsim.net/metar.php"};
             m_vatsimStatusFileUrls  = CUrlList{ "https://status.vatsim.net" };
-            m_vatsimDataFileUrls    = CUrlList{ "http://info.vroute.net/vatsim-data.txt" };
+            m_vatsimDataFileUrls    = CUrlList{ "https://data.vatsim.net/v3/vatsim-data.json" };
             m_sharedUrls = CUrlList
             {
                 "https://datastore.swift-project.net/shared/",

@@ -147,7 +147,7 @@ namespace BlackCore
                     const QString key(parts[0].trimmed().toLower());
                     const QString value(parts[1].trimmed());
                     const CUrl url(value);
-                    if (key.startsWith("url0"))
+                    if (key.startsWith("json3"))
                     {
                         dataFileUrls.push_back(url);
                     }
