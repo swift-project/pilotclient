@@ -73,13 +73,12 @@ namespace BlackMisc
                 dms *= -1.0;
             }
 
-            values.deg = CMathUtils::trunc(dms);
-            dms = CMathUtils::fract(dms) * 100;
-            values.min = CMathUtils::trunc(dms);
-            dms = CMathUtils::fract(dms) * 100;
-            values.sec = CMathUtils::trunc(dms);
-            dms = CMathUtils::fract(dms);
-            values.fractionalSec = CMathUtils::round(dms, 6);
+            char chars[16];
+            std::sprintf(chars, "%014.10f", dms); // 000.0000000000
+            values.deg = stringToInt(chars, chars + 3);
+            values.min = stringToInt(chars + 4, chars + 6);
+            values.sec = stringToInt(chars + 6, chars + 8);
+            values.fractionalSec = stringToInt(chars + 8, chars + 14) / 1000000.0;
             return values;
         }
 
