@@ -51,7 +51,7 @@ _DR = {
     'cjs/world_traffic/engine_rad_per_sec2':        'libxplanemp/engines/engine_rotation_speed_rad_sec2',
     'cjs/world_traffic/engine_rad_per_sec3':        'libxplanemp/engines/engine_rotation_speed_rad_sec3',
     'cjs/world_traffic/engine_rad_per_sec4':        'libxplanemp/engines/engine_rotation_speed_rad_sec4',
-    'cjs/world_traffic/thrust_reverser_position':   'libxplanemp/engines/thrust_reverser_deploy_ratio',
+    'cjs/world_traffic/thrust_reverser_position':   'libxplanemp/controls/thrust_revers',
     'cjs/world_traffic/touch_down':                 'libxplanemp/misc/touch_down',
     'cjs/world_traffic/main_gear_deflection':       'libxplanemp/gear/tire_vertical_deflection_mtr',
     'cjs/world_traffic/main_gear_wheel_angle':      'libxplanemp/gear/tire_rotation_angle_deg',
@@ -60,6 +60,17 @@ _DR = {
     'cjs/world_traffic/nose_gear_steering_angle':   'libxplanemp/controls/nws_ratio',
     'cjs/wolrd_traffic/landing_lights_on':          'libxplanemp/controls/landing_lites_on',
  }
+
+_DR_xsb = {
+    'libxplanemp/engines/engine_rotation_speed_rpm1':       'libxplanemp/controls/thrust_ratio',
+    'libxplanemp/engines/engine_rotation_speed_rpm2':       'libxplanemp/controls/thrust_ratio',
+    'libxplanemp/engines/engine_rotation_speed_rpm3':       'libxplanemp/controls/thrust_ratio',
+    'libxplanemp/engines/engine_rotation_speed_rpm4':       'libxplanemp/controls/thrust_ratio',
+    'libxplanemp/engines/engine_rotation_speed_rad_sec1':   'libxplanemp/controls/thrust_ratio',
+    'libxplanemp/engines/engine_rotation_speed_rad_sec2':   'libxplanemp/controls/thrust_ratio',
+    'libxplanemp/engines/engine_rotation_speed_rad_sec3':   'libxplanemp/controls/thrust_ratio',
+    'libxplanemp/engines/engine_rotation_speed_rad_sec4':   'libxplanemp/controls/thrust_ratio',
+}
 
 def OBJ8ReplaceDataRefs(line:str) -> str:
     """Replaces dataRefs
@@ -74,6 +85,28 @@ def OBJ8ReplaceDataRefs(line:str) -> str:
     # replace dataRefs as per replacement table
     for old, new in _DR.items():
         line = line.replace(old, new)
+
+    # replace dataRefs as per replacement table for Chris Collins' xpmp2
+    for old, new in _DR_xsb.items():
+        if old in line:
+            if 'ANIM_show' in line or 'ANIM_hide' in line:
+                cmd, v1, v2, dr = line.split(maxsplit=3)
+                if v1.startswith('-'):
+                    v1 = '-1.0'
+                elif v1.startswith('0'):
+                    v1 = '0.0'
+                else:
+                    v1 = '1.0'
+                if v2.startswith('-'):
+                    v2 = '-1.0'
+                elif v2.startswith('0'):
+                    v2 = '0.0'
+                else:
+                    v2 = '1.0'
+                line = "{0} {1} {2} {3}".format(cmd, v1, v2, new)
+            elif 'ANIM_rotate' in line:
+                cmd, x, y, z, r1, r2, v1, v2, dr = line.split(maxsplit=8)
+                line = "{0} {1} {2} {3} {4} {5} 0.0 1.0 {6}".format(cmd, x, y, z, r1, r2, new)
 
     # if requested replace libxplanemp with something else
     if args.replaceDR is not None:
