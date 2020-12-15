@@ -73,12 +73,11 @@ namespace BlackMisc
                 dms *= -1.0;
             }
 
-            char chars[16];
-            std::sprintf(chars, "%014.10f", dms); // 000.0000000000
-            values.deg = stringToInt(chars, chars + 3);
-            values.min = stringToInt(chars + 4, chars + 6);
-            values.sec = stringToInt(chars + 6, chars + 8);
-            values.fractionalSec = stringToInt(chars + 8, chars + 14) / 1000000.0;
+            QString str = QStringLiteral("%1").arg(dms, 14, 'f', 10, '0'); // 000.0000000000
+            values.deg = str.midRef(0, 3).toInt();
+            values.min = str.midRef(4, 2).toInt();
+            values.sec = str.midRef(6, 2).toInt();
+            values.fractionalSec = str.midRef(8, 6).toInt() / 1000000.0;
             return values;
         }
 

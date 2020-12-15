@@ -234,15 +234,6 @@ namespace BlackMisc
     //! Convert string to bool
     BLACKMISC_EXPORT bool stringToBool(const QString &boolString);
 
-    //! Convert string (begin and end iterators of char) to int
-    template <typename It>
-    int stringToInt(It begin, It end)
-    {
-        int result = 0;
-        std::for_each(begin, end, [&result](char c) { Q_ASSERT(is09(c)); result *= 10; result += (c - '0'); });
-        return result;
-    }
-
     //! Fuzzy compare for short strings (like ICAO designators)
     //! \return int 0..100 (100 is perfect match)
     BLACKMISC_EXPORT int fuzzyShortStringComparision(const QString &str1, const QString &str2, Qt::CaseSensitivity cs = Qt::CaseSensitive);
