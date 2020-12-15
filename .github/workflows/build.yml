@@ -77,12 +77,18 @@ jobs:
       warnings: ${{ steps.warnings.outputs.warnings }}
 
     steps:
+      - name: Upgrade pip
+        run: |
+          sudo pip3 install --upgrade pip
+          sudo pip3 install importlib-metadata==2.0.0
       - name: Install Qt
         uses: swift-project/install-qt-action@swift
         with:
           version: ${{ env.qt_version }}
           aqtversion: ==0.9.2
           doc: true
+        env:
+          PIP_IGNORE_REQUIRES_PYTHON: yes
       - name: Download InstallBuilder
         run: |
           wget -O ~/installbuilder.run ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-linux-x64-installer.run
