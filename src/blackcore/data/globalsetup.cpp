@@ -19,6 +19,7 @@
 
 #include <QVersionNumber>
 #include <QJsonObject>
+#include <QSysInfo>
 #include <QStringList>
 #include <QStringBuilder>
 
@@ -168,11 +169,7 @@ namespace BlackCore
             CUrl pingUrl = this->getDbClientPingServiceUrl();
             if (pingUrl.isEmpty()) { CUrl(); }
 
-            QString uuid = this->identifier().toUuidString();
-            uuid.remove('{');
-            uuid.remove('}');
-
-            pingUrl.appendQuery("uuid", uuid);
+            pingUrl.appendQuery("uuid", QSysInfo::machineUniqueId());
             if (type.testFlag(PingLogoff))   { pingUrl.appendQuery("logoff", "true"); }
             if (type.testFlag(PingShutdown)) { pingUrl.appendQuery("shutdown", "true"); }
             if (type.testFlag(PingStarted))  { pingUrl.appendQuery("started", "true"); }
