@@ -12,6 +12,7 @@
 #include "blackmisc/network/networkutils.h"
 
 #include <QNetworkReply>
+#include <QDateTime>
 #include <QPointer>
 
 using namespace BlackMisc;
@@ -146,19 +147,13 @@ namespace BlackCore
 
                 if (m_checkDbAccessibility && m_doDetailedCheck && canConnectDb)
                 {
-                    // test against real HTTP response
-                    const bool lastHttpSuccess = m_lastClientPingSuccess; // ping result received in meantime
-                    if (lastHttpSuccess && m_totalCheckCount % 10 == 0)
+                    const qint64 pingIntervalSecs = sApp->getGlobalSetup().getDbClientPingIntervalSecs();
+                    if (QDateTime::currentSecsSinceEpoch() >= pingIntervalSecs)
                     {
-                        // seems to be OK, from time to time ping
+                        m_nextPingSecsSinceEpoch = QDateTime::currentSecsSinceEpoch() + pingIntervalSecs;
                         this->pingDbClientService(CGlobalSetup::PingStarted);
+                        canConnectDb = m_lastClientPingSuccess;
                     }
-                    else if (!lastHttpSuccess && m_totalCheckCount % 3 == 0)
-                    {
-                        // not OK, retry more frequently
-                        this->pingDbClientService(CGlobalSetup::PingStarted, true); // force
-                    }
-                    canConnectDb = lastHttpSuccess;
                 }
 
                 bool canConnectInternet = canConnectDb;

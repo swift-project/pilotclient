@@ -150,6 +150,9 @@ namespace BlackCore
             //! Ping the DB server, fire and forget (no feedback etc)
             BlackMisc::Network::CUrl getDbClientPingServiceUrl(PingType type) const;
 
+            //! Seconds between pings
+            qint64 getDbClientPingIntervalSecs() const { return m_pingIntervalSecs; }
+
             //! alpha XSwiftBus files available
             BlackMisc::Network::CUrl getAlphaXSwiftBusFilesServiceUrl() const;
 
@@ -245,6 +248,7 @@ namespace BlackCore
             bool                            m_wasLoadedFromFile = false;   //!< Loaded from local file
             int                             m_dbHttpPort  = 80;            //!< port
             int                             m_dbHttpsPort = 443;           //!< SSL port
+            qint64                          m_pingIntervalSecs = 180;      //!< seconds between datastore pings
             bool                            m_development = false;         //!< dev. version?
             QString                         m_mappingMinimumVersion;       //!< minimum version
             BlackMisc::Network::CUrl        m_crashReportServerUrl;        //!< crash report server
@@ -276,6 +280,7 @@ namespace BlackCore
                 BLACK_METAMEMBER(dbRootDirectoryUrl),
                 BLACK_METAMEMBER(dbHttpPort),
                 BLACK_METAMEMBER(dbHttpsPort),
+                BLACK_METAMEMBER(pingIntervalSecs),
                 BLACK_METAMEMBER(vatsimStatusFileUrls),
                 BLACK_METAMEMBER(vatsimDataFileUrls),
                 BLACK_METAMEMBER(vatsimBookingsUrl),

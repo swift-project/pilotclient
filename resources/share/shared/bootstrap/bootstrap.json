@@ -38,6 +38,7 @@
             }
         ]
     },
+    "pingIntervalSecs": 180,
     "predefinedServers": {
         "containerbase": [
         ]

@@ -190,6 +190,7 @@ namespace BlackCore
             std::atomic_bool m_checkDbAccessibility { true };
             std::atomic_bool m_checkSharedUrl { true };
             std::atomic_bool m_checkInProgress { false };   //!< a check is currently in progress
+            std::atomic<qint64> m_nextPingSecsSinceEpoch { 0 }; //!< time at which next ping will be sent
             std::atomic_int  m_networkAccessibility { QNetworkAccessManager::Accessible }; //!< last state
             std::atomic_int  m_totalCheckCount { 0 };       //!< counting number of checks
             std::atomic_int  m_totalBadCountDb { 0 };       //!< Total number of DB failing counts (only real responses when tried)
