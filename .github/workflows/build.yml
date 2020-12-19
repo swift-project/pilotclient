@@ -60,7 +60,7 @@ jobs:
       - name: Run cppcheck
         id: cppcheck
         run: |
-          sudo apt install cppcheck
+          sudo apt-get -y install cppcheck
           sudo cpan Path::Class
           cppcheck --template=gcc --inline-suppr --std=c++14 --enable=style,unusedFunction -i externals \
                    --suppressions-list=cppcheck.supp --library=qt.cfg --library=posix.cfg . 2> >(tee error.log >&2)
@@ -100,7 +100,7 @@ jobs:
           BITROCK_LICENSE: ${{ secrets.BITROCK_LICENSE }}
       - name: Install dependencies
         run: |
-          sudo apt install dbus-x11 doxygen graphviz libglu1-mesa-dev libopus-dev libsodium-dev libpulse-dev libdbus-1-dev libevent-dev
+          sudo apt-get -y install dbus-x11 doxygen graphviz libglu1-mesa-dev libopus-dev libsodium-dev libpulse-dev libdbus-1-dev libevent-dev
           sudo cpan Path::Class
       - name: Checkout repository
         uses: actions/checkout@v2
