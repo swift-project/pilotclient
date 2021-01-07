@@ -26,7 +26,7 @@
 
 \brief   QJsonWebToken : JWT (JSON Web Token) Implementation in Qt C++
 
-## Introduction
+# Introduction
 
 This class implements a subset of the [JSON Web Token](https://en.wikipedia.org/wiki/JSON_Web_Token)
 open standard [RFC 7519](https://tools.ietf.org/html/rfc7519).
@@ -39,7 +39,7 @@ HS256 | HMAC using SHA-256 hash algorithm
 HS384 | HMAC using SHA-384 hash algorithm
 HS512 | HMAC using SHA-512 hash algorithm
 
-### Include
+## Include
 
 In order to include this class in your project, in the qt project **.pro** file add the lines:
 
@@ -48,7 +48,7 @@ HEADERS  += ./src/qjsonwebtoken.h
 SOURCES  += ./src/qjsonwebtoken.cpp
 ```
 
-### Usage
+## Usage
 
 The repository of this project includes examples that demonstrate the use of this class:
 
