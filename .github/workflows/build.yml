@@ -5,6 +5,7 @@ on:
     branches-ignore:
       - stable/**
       - nobuild/**
+      - readthedocs
   pull_request:
 
 env:
