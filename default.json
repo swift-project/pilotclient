@@ -1,8 +1,7 @@
 {
     "version": {
         "major": 0,
-        "minor": 9,
-        "micro": 9
+        "minor": 10
     },
     "libs": {
         "blackcore": true,

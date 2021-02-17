@@ -160,9 +160,6 @@ namespace BlackConfig
         static constexpr int versionMinor(); // defined in buildconfig_gen.inc.in
 
         //! Patch version
-        static constexpr int versionMicro(); // defined in buildconfig_gen.inc.in
-
-        //! Revision version
         static int versionRevision(); // defined in buildconfig_gen.cpp.in
     };
 } // ns

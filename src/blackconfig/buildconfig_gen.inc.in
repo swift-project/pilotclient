@@ -112,4 +112,3 @@ constexpr bool BlackConfig::CBuildConfig::isVatsimVersion()
 
 constexpr int BlackConfig::CBuildConfig::versionMajor() { return $$swiftConfig(version.major); }
 constexpr int BlackConfig::CBuildConfig::versionMinor() { return $$swiftConfig(version.minor); }
-constexpr int BlackConfig::CBuildConfig::versionMicro() { return $$swiftConfig(version.micro); }
