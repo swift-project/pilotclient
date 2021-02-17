@@ -228,8 +228,7 @@ class Builder:
         f.close()
         version_major = config_json['version']['major']
         version_minor = config_json['version']['minor']
-        version_micro = config_json['version']['micro']
-        return '.'.join([str(version_major), str(version_minor), str(version_micro)])
+        return '.'.join([str(version_major), str(version_minor)])
 
     def __get_rev_count(self):
         this_version = self.__get_swift_version_base()
@@ -239,8 +238,7 @@ class Builder:
             config_json = json.loads(json_data.decode("utf-8"))
             version_major = config_json['version']['major']
             version_minor = config_json['version']['minor']
-            version_micro = config_json['version']['micro']
-            if this_version == '.'.join([str(version_major), str(version_minor), str(version_micro)]):
+            if this_version == '.'.join([str(version_major), str(version_minor)]):
                 base_commit = sha
             else:
                 break

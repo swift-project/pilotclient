@@ -8,18 +8,17 @@ defineReplace(gitRevCount) {
     for(sha, CONFIG_LOG) {
         jsonBlob = $$system(git show $${sha}:../../default.json)
         parseJson(jsonBlob, jsonData)
-        v = $${jsonData.version.major}.$${jsonData.version.minor}.$${jsonData.version.micro}
+        v = $${jsonData.version.major}.$${jsonData.version.minor}
         equals(v, $$swiftConfig(version.full)): BASE_COMMIT = $$sha
     }
     isEmpty(BASE_COMMIT): warning(Failed to find commit that changed version number to '$$swiftConfig(version.full)')
     return($$system(git rev-list --count HEAD $$system_quote(^$$BASE_COMMIT)))
 }
 
-setSwiftConfig(version.full, $$swiftConfig(version.major).$$swiftConfig(version.minor).$$swiftConfig(version.micro))
+setSwiftConfig(version.full, $$swiftConfig(version.major).$$swiftConfig(version.minor))
 
 VER_MAJ = $$swiftConfig(version.major)
 VER_MIN = $$swiftConfig(version.minor)
-VER_PAT = $$swiftConfig(version.micro)
 VERSION = $$swiftConfig(version.full)
 
 !qtc_run: !isEmpty(GIT_BIN) {
