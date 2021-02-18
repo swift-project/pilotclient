@@ -134,7 +134,7 @@ namespace BlackMisc
             }
 
             // set some default values
-            const qint64 defaultValueMs = CFsdSetup::c_interimPositionTimeOffsetMsec; // CLANG cannot use reference in qMax
+            const qint64 defaultValueMs = CFsdSetup::c_minimumPositionTimeOffsetMsec; // CLANG cannot use reference in qMax
             const qint64 os = qMax(defaultValueMs, m_s[2].getTimeOffsetMs());
             m_s[0].addMsecs(-os); // oldest, Ref T297 default offset time to fill data
             m_s[2].addMsecs(os);  // latest, Ref T297 default offset time to fill data
