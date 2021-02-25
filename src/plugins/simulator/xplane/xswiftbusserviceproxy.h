@@ -109,6 +109,9 @@ namespace BlackSimPlugin
             //! Get own aircraft situation data
             void getOwnAircraftSituationDataAsync(BlackSimPlugin::XPlane::XPlaneData *o_xplaneData);
 
+            //! Get own aircraft velocity data
+            void getOwnAircraftVelocityDataAsync(BlackSimPlugin::XPlane::XPlaneData *o_xplaneData);
+
             //! Get own aircraft COM1 data
             void getOwnAircraftCom1DataAsync(BlackSimPlugin::XPlane::XPlaneData *o_xplaneData);
 
@@ -275,6 +278,42 @@ namespace BlackSimPlugin
             //! @{
             double getTrueHeadingDeg() const;
             void getTrueHeadingDegAsync(double *o_heading);
+            //! @}
+
+            //! \copydoc XSwiftBus::CService::getLocalXVelocityMps
+            //! @{
+            double getLocalXVelocityMps() const;
+            void getLocalXVelocityMpsAsync(double *o_velocity);
+            //! @}
+
+            //! \copydoc XSwiftBus::CService::getLocalYVelocityMps
+            //! @{
+            double getLocalYVelocityMps() const;
+            void getLocalYVelocityMpsAsync(double *o_velocity);
+            //! @}
+
+            //! \copydoc XSwiftBus::CService::getLocalZVelocityMps
+            //! @{
+            double getLocalZVelocityMps() const;
+            void getLocalZVelocityMpsAsync(double *o_velocity);
+            //! @}
+
+            //! \copydoc XSwiftBus::CService::getPitchRadPerSec
+            //! @{
+            double getPitchRadPerSec() const;
+            void getPitchRadPerSecAsync(double *o_radPerSec);
+            //! @}
+
+            //! \copydoc XSwiftBus::CService::getRollRadPerSec
+            //! @{
+            double getRollRadPerSec() const;
+            void getRollRadPerSecAsync(double *o_radPerSec);
+            //! @}
+
+            //! \copydoc XSwiftBus::CService::getHeadingRadPerSec
+            //! @{
+            double getHeadingRadPerSec() const;
+            void getHeadingRadPerSecAsync(double *o_radPerSec);
             //! @}
 
             //! Get whether any wheel is on the ground

@@ -308,6 +308,7 @@ namespace BlackSimPlugin
                 m_fastTimerCalls++;
 
                 m_serviceProxy->getOwnAircraftSituationDataAsync(&m_xplaneData);
+                m_serviceProxy->getOwnAircraftVelocityDataAsync(&m_xplaneData);
                 m_serviceProxy->getOwnAircraftCom1DataAsync(&m_xplaneData);
                 m_serviceProxy->getOwnAircraftCom2DataAsync(&m_xplaneData);
                 m_serviceProxy->getOwnAircraftXpdrAsync(&m_xplaneData);
@@ -324,6 +325,9 @@ namespace BlackSimPlugin
                 situation.setPitch({ m_xplaneData.pitchDeg, CAngleUnit::deg() });
                 situation.setBank({ m_xplaneData.rollDeg, CAngleUnit::deg() });
                 situation.setGroundSpeed({ m_xplaneData.groundspeedMs, CSpeedUnit::m_s() });
+                situation.setVelocity({ m_xplaneData.localXVelocityMs, m_xplaneData.localYVelocityMs, m_xplaneData.localZVelocityMs,
+                    CSpeedUnit::m_s(), m_xplaneData.pitchRadPerSec, m_xplaneData.rollRadPerSec, m_xplaneData.headingRadPerSec,
+                    CAngleUnit::rad(), CTimeUnit::s()});
 
                 // Updates
                 // Do not update ICAO codes, as this overrides reverse lookups

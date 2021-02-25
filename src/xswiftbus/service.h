@@ -154,6 +154,20 @@ namespace XSwiftBus
         //! Get aircraft true heading in degrees
         double getTrueHeadingDeg() const { return m_heading.get(); }
 
+        //! Get aircraft local velocity in world coordinates meters per second
+        //! @{
+        double getLocalXVelocityMps() const { return m_velocityX.get(); }
+        double getLocalYVelocityMps() const { return m_velocityY.get(); }
+        double getLocalZVelocityMps() const { return m_velocityZ.get(); }
+        //! @}
+
+        //! Get aircraft angular velocity in radians per second
+        //! @{
+        double getPitchRadPerSec() const { return m_pitchVelocity.get(); }
+        double getRollRadPerSec() const { return m_rollVelocity.get(); }
+        double getHeadingRadPerSec() const { return m_headingVelocity.get(); }
+        //! @}
+
         //! Get whether any wheel is on the ground
         bool getAnyWheelOnGround() const { return m_onGroundAny.get(); }
 
@@ -347,6 +361,12 @@ namespace XSwiftBus
         DataRef<xplane::data::sim::flightmodel::position::theta> m_pitch;
         DataRef<xplane::data::sim::flightmodel::position::phi> m_roll;
         DataRef<xplane::data::sim::flightmodel::position::psi> m_heading;
+        DataRef<xplane::data::sim::flightmodel::position::local_vx> m_velocityX;
+        DataRef<xplane::data::sim::flightmodel::position::local_vy> m_velocityY;
+        DataRef<xplane::data::sim::flightmodel::position::local_vz> m_velocityZ;
+        DataRef<xplane::data::sim::flightmodel::position::Prad> m_rollVelocity;
+        DataRef<xplane::data::sim::flightmodel::position::Qrad> m_pitchVelocity;
+        DataRef<xplane::data::sim::flightmodel::position::Rrad> m_headingVelocity;
         DataRef<xplane::data::sim::flightmodel::failures::onground_any> m_onGroundAny;
         DataRef<xplane::data::sim::flightmodel::failures::onground_all> m_onGroundAll;
         DataRef<xplane::data::sim::cockpit2::radios::actuators::com1_frequency_hz_833> m_com1Active;

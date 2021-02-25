@@ -22,6 +22,14 @@ R"XML(<node>
       <arg name="trueHeading" type="d" direction="out"/>
       <arg name="qnh" type="d" direction="out"/>
     </method>
+    <method name="getOwnAircraftVelocityData">
+      <arg name="x" type="d" direction="out"/>
+      <arg name="y" type="d" direction="out"/>
+      <arg name="z" type="d" direction="out"/>
+      <arg name="pitch" type="d" direction="out"/>
+      <arg name="roll" type="d" direction="out"/>
+      <arg name="heading" type="d" direction="out"/>
+    </method>
     <method name="getOwnAircraftCom1Data">
       <arg name="actv" type="i" direction="out"/>
       <arg name="stby" type="i" direction="out"/>
@@ -133,6 +141,24 @@ R"XML(<node>
       <arg type="d" direction="out"/>
     </method>
     <method name="getTrueHeadingDeg">
+      <arg type="d" direction="out"/>
+    </method>
+    <method name="getLocalXVelocityMps">
+      <arg type="d" direction="out"/>
+    </method>
+    <method name="getLocalYVelocityMps">
+      <arg type="d" direction="out"/>
+    </method>
+    <method name="getLocalZVelocityMps">
+      <arg type="d" direction="out"/>
+    </method>
+    <method name="getPitchRadPerSec">
+      <arg type="d" direction="out"/>
+    </method>
+    <method name="getRollRadPerSec">
+      <arg type="d" direction="out"/>
+    </method>
+    <method name="getHeadingRadPerSec">
       <arg type="d" direction="out"/>
     </method>
     <method name="getAnyWheelOnGround">
