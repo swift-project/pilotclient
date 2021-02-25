@@ -24,7 +24,8 @@ namespace BlackCore
         {
         public:
             //! Constructor
-            PilotDataUpdate(BlackMisc::Aviation::CTransponder::TransponderMode transponderMode, const QString &sender, int transponderCode, PilotRating rating,                        double latitude, double longitude, int altitudeTrue, int altitudePressure, int groundSpeed,
+            PilotDataUpdate(BlackMisc::Aviation::CTransponder::TransponderMode transponderMode, const QString &sender, int transponderCode, PilotRating rating,
+                            double latitude, double longitude, int altitudeTrue, int altitudePressure, int groundSpeed,
                             double pitch, double bank, double heading, bool onGround);
 
             //! Message converted to tokens
