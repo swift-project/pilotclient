@@ -50,8 +50,8 @@ namespace BlackMisc
                 AllReceive              = ReceiveAircraftParts | ReceiveInterimPositions | ReceiveGndFlag, //!< all in
                 All                     = AllReceive | AllSending, //!< all
                 AllParts                = SendAircraftParts | ReceiveAircraftParts,       //!< send/receive parts
-                AllSendingWithoutGnd    = SendAircraftParts | SendInterimPositions,       //!< all out, but no gnd.flag
-                AllReceiveWithoutGnd    = ReceiveAircraftParts | ReceiveInterimPositions, //!< all in, but no gnd.flag
+                AllSendingWithoutGnd    = AllSending - SendGndFlag,                       //!< all out, but no gnd.flag
+                AllReceiveWithoutGnd    = AllReceive - ReceiveGndFlag,                    //!< all in, but no gnd.flag
                 AllInterimPositions     = SendInterimPositions | ReceiveInterimPositions, //!< all interim positions
                 AllWithoutGnd           = AllReceiveWithoutGnd | AllSendingWithoutGnd,    //!< all, but no gnd.flag
                 VATSIMDefault           = AllParts | Force3LetterAirlineICAO

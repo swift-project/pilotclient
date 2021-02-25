@@ -22,7 +22,8 @@ namespace BlackCore
         PilotDataUpdate::PilotDataUpdate() : MessageBase()
         { }
 
-        PilotDataUpdate::PilotDataUpdate(CTransponder::TransponderMode transponderMode, const QString &sender, int transponderCode, PilotRating rating,                        double latitude, double longitude, int altitudeTrue, int altitudePressure, int groundSpeed,
+        PilotDataUpdate::PilotDataUpdate(CTransponder::TransponderMode transponderMode, const QString &sender, int transponderCode, PilotRating rating,
+                                         double latitude, double longitude, int altitudeTrue, int altitudePressure, int groundSpeed,
                                          double pitch, double bank, double heading, bool onGround)
             : MessageBase(sender, {}),
               m_transponderMode(transponderMode),

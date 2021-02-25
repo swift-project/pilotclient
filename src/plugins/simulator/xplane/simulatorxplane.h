@@ -74,37 +74,37 @@ namespace BlackSimPlugin
         {
             QString aircraftModelPath;          //!< Aircraft model path
             QString aircraftIcaoCode;           //!< Aircraft ICAO code
-            double latitudeDeg;                 //!< Longitude [deg]
-            double longitudeDeg;                //!< Latitude  [deg]
-            double altitudeM;                   //!< Altitude  [m]
-            double groundspeedMs;               //!< Ground speed [m/s]
-            double pitchDeg;                    //!< Pitch [deg]
-            double rollDeg;                     //!< Roll  [deg]
-            double trueHeadingDeg;              //!< True heading [deg]
-            bool onGroundAll;                   //!< All wheels on ground?
-            int com1ActiveKhz;                  //!< COM1 active  [kHz]
-            int com1StandbyKhz;                 //!< COM1 standby [kHz]
-            bool isCom1Receiving;               //!< COM1 receiving
-            bool isCom1Transmitting;            //!< COM1 transmittings
-            double com1Volume;                  //!< COM1 volume 0..1
-            int com2ActiveKhz;                  //!< COM2 active  [kHz]
-            int com2StandbyKhz;                 //!< COM2 standby [kHz]
-            bool isCom2Receiving;               //!< COM2 receiving
-            bool isCom2Transmitting;            //!< COM2 transmittings
-            double com2Volume;                  //!< COM2 volume 0..1
-            int xpdrCode;                       //!< Transpondder code
-            int xpdrMode;                       //!< Transponder mode (off=0,stdby=1,on=2,test=3)
-            bool xpdrIdent;                     //!< Is transponder in ident?
-            bool beaconLightsOn;                //!< Beacon lights on?
-            bool landingLightsOn;               //!< Landing lights on?
-            bool navLightsOn;                   //!< NAV lights on?
-            bool strobeLightsOn;                //!< Strobe lights on?
-            bool taxiLightsOn;                  //!< Taxi lights on?
-            double flapsDeployRatio;            //!< Flaps deployment ratio [%]
-            double gearDeployRatio;             //!< Gear deployment ratio  [%]
+            double latitudeDeg = 0;             //!< Longitude [deg]
+            double longitudeDeg = 0;            //!< Latitude  [deg]
+            double altitudeM = 0;               //!< Altitude  [m]
+            double groundspeedMs = 0;           //!< Ground speed [m/s]
+            double pitchDeg = 0;                //!< Pitch [deg]
+            double rollDeg = 0;                 //!< Roll  [deg]
+            double trueHeadingDeg = 0;          //!< True heading [deg]
+            bool onGroundAll = false;           //!< All wheels on ground?
+            int com1ActiveKhz = 122800;         //!< COM1 active  [kHz]
+            int com1StandbyKhz = 122800;        //!< COM1 standby [kHz]
+            bool isCom1Receiving = true;        //!< COM1 receiving
+            bool isCom1Transmitting = true;     //!< COM1 transmittings
+            double com1Volume = 1;              //!< COM1 volume 0..1
+            int com2ActiveKhz = 122800;         //!< COM2 active  [kHz]
+            int com2StandbyKhz = 122800;        //!< COM2 standby [kHz]
+            bool isCom2Receiving = true;        //!< COM2 receiving
+            bool isCom2Transmitting = true;     //!< COM2 transmittings
+            double com2Volume = 1;              //!< COM2 volume 0..1
+            int xpdrCode = 2000;                //!< Transpondder code
+            int xpdrMode = 0;                   //!< Transponder mode (off=0,stdby=1,on=2,test=3)
+            bool xpdrIdent = false;             //!< Is transponder in ident?
+            bool beaconLightsOn = false;        //!< Beacon lights on?
+            bool landingLightsOn = false;       //!< Landing lights on?
+            bool navLightsOn = false;           //!< NAV lights on?
+            bool strobeLightsOn = false;        //!< Strobe lights on?
+            bool taxiLightsOn = false;          //!< Taxi lights on?
+            double flapsDeployRatio = 0;        //!< Flaps deployment ratio [%]
+            double gearDeployRatio = 0;         //!< Gear deployment ratio  [%]
             QList<double> enginesN1Percentage;  //!< N1 per engine [%]
-            double speedBrakeRatio;             //!< Speed break ratio [%]
-            double seaLevelPressureInHg;        //!< Sea level pressure [inhg]
+            double speedBrakeRatio = 0;         //!< Speed break ratio [%]
+            double seaLevelPressureInHg = 0;    //!< Sea level pressure [inhg]
         };
 
         //! X-Plane ISimulator implementation
@@ -284,11 +284,7 @@ namespace BlackSimPlugin
             //! Reset the XPlane data
             void resetXPlaneData()
             {
-                m_xplaneData = { "", "", 0, 0, 0, 0, 0, 0, 0, false,
-                                 122800, 122800, true, true, 1.0, 122800, 122800, true, true, 1.0,
-                                 2000, 0, false, false, false, false,
-                                 false, false, 0, 0, {}, 0.0, 0.0
-                               };
+                m_xplaneData = {};
             }
         };
 
