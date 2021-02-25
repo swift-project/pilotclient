@@ -926,14 +926,6 @@ namespace XSwiftBus
                     sendDBusReply(sender, serial, getSpeedBrakeRatio());
                 });
             }
-            else if (message.getMethodName() == "toggleMessageBoxVisibility")
-            {
-                maybeSendEmptyDBusReply(wantsReply, sender, serial);
-                queueDBusCall([ = ]()
-                {
-                    toggleMessageBoxVisibility();
-                });
-            }
             else if (message.getMethodName() == "getSettingsJson")
             {
                 queueDBusCall([ = ]()
