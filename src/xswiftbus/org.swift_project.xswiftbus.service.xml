@@ -22,6 +22,42 @@ R"XML(<node>
       <arg name="trueHeading" type="d" direction="out"/>
       <arg name="qnh" type="d" direction="out"/>
     </method>
+    <method name="getOwnAircraftCom1Data">
+      <arg name="actv" type="i" direction="out"/>
+      <arg name="stby" type="i" direction="out"/>
+      <arg name="vol" type="d" direction="out"/>
+      <arg name="rx" type="b" direction="out"/>
+      <arg name="tx" type="b" direction="out"/>
+    </method>
+    <method name="getOwnAircraftCom2Data">
+      <arg name="actv" type="i" direction="out"/>
+      <arg name="stby" type="i" direction="out"/>
+      <arg name="vol" type="d" direction="out"/>
+      <arg name="rx" type="b" direction="out"/>
+      <arg name="tx" type="b" direction="out"/>
+    </method>
+    <method name="getOwnAircraftXpdr">
+      <arg name="code" type="i" direction="out"/>
+      <arg name="mode" type="i" direction="out"/>
+      <arg name="ident" type="b" direction="out"/>
+    </method>
+    <method name="getOwnAircraftLights">
+      <arg name="beacon" type="b" direction="out"/>
+      <arg name="landing" type="b" direction="out"/>
+      <arg name="nav" type="b" direction="out"/>
+      <arg name="strobe" type="b" direction="out"/>
+      <arg name="taxi" type="b" direction="out"/>
+    </method>
+    <method name="getOwnAircraftParts">
+      <arg name="flapRatio" type="d" direction="out"/>
+      <arg name="gearRatio" type="d" direction="out"/>
+      <arg name="spoilerRatio" type="d" direction="out"/>
+      <arg name="enginesN1pct" type="d" direction="out"/>
+    </method>
+    <method name="getOwnAircraftModelData">
+      <arg name="path" type="s" direction="out"/>
+      <arg name="icao" type="s" direction="out"/>
+    </method>
     <method name="updateAirportsInRange">
     </method>
     <method name="getAircraftModelPath">
@@ -177,7 +213,11 @@ R"XML(<node>
     <method name="getSpeedBrakeRatio">
       <arg type="d" direction="out"/>
     </method>
-    <method name="toggleMessageBoxVisibility">
+    <method name="getSettingsJson">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="setSettingsJson">
+      <arg type="s" direction="in"/>
     </method>
   </interface>
 </node>)XML"
