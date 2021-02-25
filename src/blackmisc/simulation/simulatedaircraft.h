@@ -113,6 +113,12 @@ namespace BlackMisc
             //! Set situation.
             void setSituation(const Aviation::CAircraftSituation &situation);
 
+            //! Get 6DOF velocity.
+            const Aviation::CAircraftVelocity &getVelocity() const { return m_situation.getVelocity(); }
+
+            //! Set 6DOF velocity.
+            void setVelocity(const Aviation::CAircraftVelocity &velocity) { m_situation.setVelocity(velocity); }
+
             //! Get user
             const Network::CUser &getPilot() const { return m_pilot; }
 

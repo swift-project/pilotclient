@@ -14,6 +14,7 @@
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/heading.h"
+#include "blackmisc/aviation/aircraftvelocity.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/geo/coordinategeodetic.h"
@@ -64,6 +65,7 @@ namespace BlackMisc
                 IndexOnGroundReliabilityString,
                 IndexPitch,
                 IndexPBHInfo,
+                IndexVelocity,
                 IndexGroundSpeed,
                 IndexGroundElevationPlane,
                 IndexGroundElevationInfo,
@@ -413,6 +415,12 @@ namespace BlackMisc
             //! Get PBH info (all together)
             QString getPBHInfo() const;
 
+            //! Set 6DOF velocity
+            void setVelocity(const CAircraftVelocity &velocity) { m_velocity = velocity; }
+
+            //! Get 6DOF velocity
+            const CAircraftVelocity &getVelocity() const { return m_velocity; }
+
             //! Get ground speed
             const PhysicalQuantities::CSpeed &getGroundSpeed() const { return m_groundSpeed; }
 
@@ -563,6 +571,7 @@ namespace BlackMisc
             PhysicalQuantities::CSpeed  m_groundSpeed   { 0, nullptr };
             PhysicalQuantities::CLength m_cg            { 0, nullptr };
             PhysicalQuantities::CLength m_sceneryOffset { 0, nullptr };
+            CAircraftVelocity m_velocity;
             bool m_isInterim = false; //!< interim situation?
             bool m_isElvInfoTransferred = false; //!< the gnd.elevation has been transferred
             int m_onGround = static_cast<int>(CAircraftSituation::OnGroundSituationUnknown);
@@ -588,6 +597,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(groundSpeed),
                 BLACK_METAMEMBER(cg),
                 BLACK_METAMEMBER(sceneryOffset),
+                BLACK_METAMEMBER(velocity),
                 BLACK_METAMEMBER(groundElevationPlane),
                 BLACK_METAMEMBER(onGround),
                 BLACK_METAMEMBER(onGroundDetails),

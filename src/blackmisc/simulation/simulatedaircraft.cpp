@@ -94,7 +94,10 @@ namespace BlackMisc
 
         void CSimulatedAircraft::setSituation(const CAircraftSituation &situation)
         {
+            CAircraftVelocity velocity = m_situation.getVelocity();
             m_situation = situation;
+            m_situation.setVelocity(velocity);
+
             m_situation.setCallsign(this->getCallsign());
             this->setSupportingGndFlag(situation.hasInboundGroundDetails());
         }

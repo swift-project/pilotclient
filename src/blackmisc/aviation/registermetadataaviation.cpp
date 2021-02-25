@@ -29,6 +29,7 @@ namespace BlackMisc
             CAircraftSituation::registerMetadata();
             CAircraftSituationChange::registerMetadata();
             CAircraftSituationList::registerMetadata();
+            CAircraftVelocity::registerMetadata();
             CAirlineIcaoCode::registerMetadata();
             CAirlineIcaoCodeList::registerMetadata();
             CAirportIcaoCode::registerMetadata();
