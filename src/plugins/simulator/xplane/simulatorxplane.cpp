@@ -1541,7 +1541,7 @@ namespace BlackSimPlugin
             const MultiplayerAcquireInfo info = traffic.acquireMultiplayerPlanes();
             if (!info.hasAcquired)
             {
-                const QString owner = info.owner.trimmed().isEmpty() ? QStringLiteral("Some/this plugin/application") : info.owner.trimmed();
+                const QString owner = info.owner.trimmed().isEmpty() ? QStringLiteral("unknown plugin") : info.owner.trimmed();
                 CLogMessage(this).error(u"Connection to XSwiftBus successful, but could not acquire multiplayer planes. '%1' has acquired them already. Disable '%2' or remove it if not required and reload XSwiftBus.") << owner << owner.toLower();
                 return;
             }
