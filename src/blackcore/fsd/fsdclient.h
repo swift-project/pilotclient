@@ -109,7 +109,6 @@ namespace BlackCore
             void setPartnerCallsign(const BlackMisc::Aviation::CCallsign &callsign) { QWriteLocker l(&m_lockUserClientBuffered); m_partnerCallsign = callsign; }
             void setIcaoCodes(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
             void setLiveryAndModelString(const QString &livery, bool sendLiveryString, const QString &modelString, bool sendModelString);
-            void setSimType(const BlackMisc::Simulation::CSimulatorPluginInfo &simInfo);
             void setSimType(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
             void setSimType(BlackMisc::Simulation::CSimulatorInfo::Simulator simulator);
             void setPilotRating(PilotRating rating) { QWriteLocker l(&m_lockUserClientBuffered); m_pilotRating = rating; }
@@ -271,7 +270,6 @@ namespace BlackCore
             void sendTextMessage(const QString &receiver, const QString &message);
             void sendPlaneInformation(const QString &receiver, const QString &aircraft, const QString &airline = {}, const QString &livery = {});
             void sendPlaneInformationFsinn(const BlackMisc::Aviation::CCallsign &callsign);
-            void sendCustomPilotPacket(const QString &receiver, const QString &subType, const std::vector<QString> &payload);
             void sendAircraftConfiguration(const QString &receiver, const QString &aircraftConfigJson);
             //
             void sendMessageString(const QString &message);
@@ -429,12 +427,6 @@ namespace BlackCore
 
             //! Emit raw FSD message (mostly for debugging)
             void emitRawFsdMessage(const QString &fsdMessage, bool isSent);
-
-            //! Additional offset time
-            //! @{
-            qint64 getAdditionalOffsetTime() const;
-            void setAdditionalOffsetTime(qint64 addOffset);
-            //! @}
 
             //! Save the statistics
             bool saveNetworkStatistics(const QString &server);
