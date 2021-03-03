@@ -416,6 +416,7 @@ namespace BlackCore
 
             bool isInterimPositionSendingEnabledForServer() const;
             bool isInterimPositionReceivingEnabledForServer() const;
+            bool isVisualPositionSendingEnabledForServer() const;
             const BlackMisc::Network::CFsdSetup &getSetupForServer() const;
 
             //! Handles ATIS replies from non-VATSIM servers. If the conditions are not met,

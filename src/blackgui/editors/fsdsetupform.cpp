@@ -41,7 +41,8 @@ namespace BlackGui
             s.setSendReceiveDetails(
                 ui->cb_AircraftPartsSend->isChecked(), ui->cb_AircraftPartsReceive->isChecked(),
                 ui->cb_GndFlagSend->isChecked(), ui->cb_GndFlagReceive->isChecked(),
-                ui->cb_FastPositionSend->isChecked(), ui->cb_FastPositionReceive->isChecked()
+                ui->cb_FastPositionSend->isChecked(), ui->cb_FastPositionReceive->isChecked(),
+                false //! \todo GUI for visual position updates
             );
             s.setForce3LetterAirlineCodes(ui->cb_3LetterAirlineICAO->isChecked());
             return s;

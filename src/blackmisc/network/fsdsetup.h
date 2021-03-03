@@ -46,7 +46,8 @@ namespace BlackMisc
                 ReceiveInterimPositions = 1 << 4, //!< fast position updates in
                 ReceiveGndFlag          = 1 << 5, //!< gnd.flag in (position)
                 Force3LetterAirlineICAO = 1 << 6, //!< force 3 letter airline ICAO code
-                AllSending              = SendAircraftParts | SendInterimPositions | SendGndFlag,          //!< all out
+                SendVisualPositions     = 1 << 7, //!< visual positions out
+                AllSending              = SendAircraftParts | SendInterimPositions | SendVisualPositions | SendGndFlag, //!< all out
                 AllReceive              = ReceiveAircraftParts | ReceiveInterimPositions | ReceiveGndFlag, //!< all in
                 All                     = AllReceive | AllSending, //!< all
                 AllParts                = SendAircraftParts | ReceiveAircraftParts,       //!< send/receive parts
@@ -93,13 +94,14 @@ namespace BlackMisc
             void removeSendReceiveDetails(SendReceiveDetails sendReceive) { m_sendReceive &= ~sendReceive; }
 
             //! Set send / receive details
-            void setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive);
+            void setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive, bool visualSend);
 
             //! FSD setup flags
             //! @{
             bool sendAircraftParts() const { return this->getSendReceiveDetails().testFlag(SendAircraftParts); }
             bool sendGndFlag() const { return this->getSendReceiveDetails().testFlag(SendGndFlag); }
             bool sendInterimPositions() const { return this->getSendReceiveDetails().testFlag(SendInterimPositions); }
+            bool sendVisualPositions() const { return this->getSendReceiveDetails().testFlag(SendVisualPositions); }
 
             bool receiveAircraftParts() const { return this->getSendReceiveDetails().testFlag(ReceiveAircraftParts); }
             bool receiveGndFlag() const { return this->getSendReceiveDetails().testFlag(ReceiveGndFlag); }

@@ -54,7 +54,8 @@ namespace BlackMisc
                 FsdAtisCanBeReceived    = 1 << 2, //!< ATIS
                 FsdWithAircraftConfig   = 1 << 3, //!< Aircraft parts
                 FsdWithGroundFlag       = 1 << 4, //!< supports gnd. flag (in position)
-                FsdModelString          = 1 << 5  //!< model string can be queried
+                FsdModelString          = 1 << 5, //!< model string can be queried
+                FsdWithVisualPositions  = 1 << 6  //!< visual position updates
             };
             Q_DECLARE_FLAGS(Capabilities, Capability)
 

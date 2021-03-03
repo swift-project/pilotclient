@@ -167,11 +167,14 @@ namespace BlackCore
             /*! Can send/receive fast position updates (pilot only). */
             FastPos          = (1 << 6),
 
+            /*! Can send/receive visual position updates (pilot only). */
+            VisPos           = (1 << 7),
+
             /*! Stealth mode */
-            Stealth          = (1 << 7),
+            Stealth          = (1 << 8),
 
             /*! Aircraft Config */
-            AircraftConfig   = (1 << 8)
+            AircraftConfig   = (1 << 9)
         };
 
         //! Operators

@@ -47,6 +47,7 @@ namespace BlackMisc
             return ds.arg(boolToYesNo(details.testFlag(SendAircraftParts)),
                           boolToYesNo(details.testFlag(SendGndFlag)),
                           boolToYesNo(details.testFlag(SendInterimPositions)),
+                          boolToYesNo(details.testFlag(SendVisualPositions)),
                           boolToYesNo(details.testFlag(ReceiveAircraftParts)),
                           boolToYesNo(details.testFlag(ReceiveGndFlag)),
                           boolToYesNo(details.testFlag(ReceiveInterimPositions)),
@@ -54,7 +55,7 @@ namespace BlackMisc
                          );
         }
 
-        void CFsdSetup::setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive)
+        void CFsdSetup::setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive, bool visualSend)
         {
             SendReceiveDetails s = Nothing;
             if (partsSend)    { s |= SendAircraftParts; }
@@ -63,6 +64,7 @@ namespace BlackMisc
             if (gndReceive)   { s |= ReceiveGndFlag; }
             if (interimSend)  { s |= SendInterimPositions; }
             if (interimReceive) { s |= ReceiveInterimPositions; }
+            if (visualSend)   { s |= SendVisualPositions; }
             this->setSendReceiveDetails(s);
         }
 
