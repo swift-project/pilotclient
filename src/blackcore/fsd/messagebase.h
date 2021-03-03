@@ -38,6 +38,7 @@ enum class MessageType
     FsdIdentification,
     KillRequest,
     PilotDataUpdate,
+    VisualPilotDataUpdate,
     Ping,
     Pong,
     ServerError,

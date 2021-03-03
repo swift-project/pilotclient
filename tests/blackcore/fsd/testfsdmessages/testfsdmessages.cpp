@@ -36,6 +36,7 @@
 #include "blackcore/fsd/serializer.h"
 #include "blackcore/fsd/servererror.h"
 #include "blackcore/fsd/interimpilotdataupdate.h"
+#include "blackcore/fsd/visualpilotdataupdate.h"
 #include "blackcore/fsd/planeinforequest.h"
 #include "blackcore/fsd/planeinformation.h"
 #include "blackcore/fsd/planeinforequestfsinn.h"
@@ -82,6 +83,7 @@ namespace BlackMiscTest
         void testKillRequest();
         void testPBH();
         void testPilotDataUpdate();
+        void testVisualPilotDataUpdate();
         void testPing();
         void testPlaneInfoRequest();
         void testPlaneInformation();
@@ -455,6 +457,45 @@ namespace BlackMiscTest
         QVERIFY(message.m_bank - messageFromTokens.m_bank < 1.0);
         QVERIFY(message.m_heading - messageFromTokens.m_heading < 1.0);
         QCOMPARE(messageFromTokens.m_onGround, true);
+    }
+
+    void CTestFsdMessages::testVisualPilotDataUpdate()
+    {
+        const VisualPilotDataUpdate message("ABCD", 43.12578, -72.15841, 12000.12, -2, 3, 280, -1.0001, 2.0001, 3.0001, -0.0349, 0.0524, 0.0175);
+
+        QCOMPARE(QString("ABCD"), message.sender());
+        QCOMPARE(43.12578, message.m_latitude);
+        QCOMPARE(-72.15841, message.m_longitude);
+        QCOMPARE(12000.12, message.m_altitudeTrue);
+        QCOMPARE(-2, message.m_pitch);
+        QCOMPARE(3, message.m_bank);
+        QCOMPARE(280, message.m_heading);
+        QCOMPARE(-1.0001, message.m_xVelocity);
+        QCOMPARE(2.0001, message.m_yVelocity);
+        QCOMPARE(3.0001, message.m_zVelocity);
+        QCOMPARE(-0.0349, message.m_pitchRadPerSec);
+        QCOMPARE(0.0524, message.m_bankRadPerSec);
+        QCOMPARE(0.0175, message.m_headingRadPerSec);
+
+        QString stringRef("ABCD:43.12578:-72.15841:12000.12:25132144:-1.0001:2.0001:3.0001:-0.0349:0.0175:0.0524");
+        QString str = message.toTokens().join(":");
+        QCOMPARE(str, stringRef);
+
+        QStringList tokens = QString("ABCD:43.12578:-72.15841:12000.12:25132144:-1.0001:2.0001:3.0001:-0.0349:0.0175:0.0524").split(':');
+        auto messageFromTokens = VisualPilotDataUpdate::fromTokens(tokens);
+        QCOMPARE(QString("ABCD"), messageFromTokens.sender());
+        QCOMPARE(43.12578, messageFromTokens.m_latitude);
+        QCOMPARE(-72.15841, messageFromTokens.m_longitude);
+        QCOMPARE(12000.12, messageFromTokens.m_altitudeTrue);
+        QVERIFY(message.m_pitch - messageFromTokens.m_pitch < 1.0);
+        QVERIFY(message.m_bank - messageFromTokens.m_bank < 1.0);
+        QVERIFY(message.m_heading - messageFromTokens.m_heading < 1.0);
+        QCOMPARE(-1.0001, messageFromTokens.m_xVelocity);
+        QCOMPARE(2.0001, messageFromTokens.m_yVelocity);
+        QCOMPARE(3.0001, messageFromTokens.m_zVelocity);
+        QCOMPARE(-0.0349, messageFromTokens.m_pitchRadPerSec);
+        QCOMPARE(0.0524, messageFromTokens.m_bankRadPerSec);
+        QCOMPARE(0.0175, messageFromTokens.m_headingRadPerSec);
     }
 
     void CTestFsdMessages::testPing()

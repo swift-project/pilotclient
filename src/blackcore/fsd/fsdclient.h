@@ -225,6 +225,7 @@ namespace BlackCore
             void planeInformationReceived(const QString &sender, const QString &aircraft, const QString &airline, const QString &livery);
             void customPilotPacketReceived(const QString &sender, const QStringList &data);
             void interimPilotDataUpdatedReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
+            void visualPilotDataUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
             void rawFsdMessage(const BlackMisc::Network::CRawFsdMessage &rawFsdMessage);
             void planeInformationFsinnReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &modelString);
             void revbAircraftConfigReceived(const QString &sender, const QString &config, qint64 currentOffsetTimeMs);
@@ -262,6 +263,7 @@ namespace BlackCore
             void sendDeleteAtc();
             void sendPilotDataUpdate();
             void sendInterimPilotDataUpdate();
+            void sendVisualPilotDataUpdate();
             void sendAtcDataUpdate(double latitude, double longitude);
             void sendPing(const QString &receiver);
             //
@@ -364,6 +366,7 @@ namespace BlackCore
             void handleDeletePilot(const QStringList &tokens);
             void handleTextMessage(const QStringList &tokens);
             void handlePilotDataUpdate(const QStringList &tokens);
+            void handleVisualPilotDataUpdate(const QStringList &tokens);
             void handlePing(const QStringList &tokens);
             void handlePong(const QStringList &tokens);
             void handleKillRequest(const QStringList &tokens);
@@ -507,6 +510,7 @@ namespace BlackCore
             QTimer m_scheduledConfigUpdate      { this }; //!< config updates
             QTimer m_positionUpdateTimer        { this }; //!< sending positions
             QTimer m_interimPositionUpdateTimer { this }; //!< sending interim positions
+            QTimer m_visualPositionUpdateTimer  { this }; //!< sending visual positions
             QTimer m_fsdSendMessageTimer        { this }; //!< FSD message sending
 
             qint64 m_additionalOffsetTime = 0; //!< additional offset time
@@ -556,6 +560,7 @@ namespace BlackCore
             static int constexpr c_processingIntervalMsec           = 100;  //!< interval for the processing timer
             static int constexpr c_updatePostionIntervalMsec        = 5000; //!< interval for the position update timer (send our position to network)
             static int constexpr c_updateInterimPostionIntervalMsec = 1000; //!< interval for iterim position updates (send our position as interim position)
+            static int constexpr c_updateVisualPositionIntervalMsec = 200;  //!< interval for the VATSIM visual position updates (send our position and 6DOF velocity)
             static int constexpr c_sendFsdMsgIntervalMsec           = 10;   //!< interval for FSD send messages
         };
     } // ns
