@@ -46,6 +46,13 @@
      </property>
     </widget>
    </item>
+   <item row="5" column="4">
+    <widget class="QCheckBox" name="cb_VisualPositionSend">
+     <property name="text">
+      <string>send</string>
+     </property>
+    </widget>
+   </item>
    <item row="5" column="2">
     <widget class="QCheckBox" name="cb_GndFlagSend">
      <property name="text">
@@ -81,6 +88,13 @@
      </property>
     </widget>
    </item>
+   <item row="4" column="4">
+    <widget class="QLabel" name="lbl_VisualPositions">
+     <property name="text">
+      <string>Visual pos.</string>
+     </property>
+    </widget>
+   </item>
    <item row="6" column="2">
     <widget class="QCheckBox" name="cb_GndFlagReceive">
      <property name="text">
@@ -95,21 +109,21 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="4">
+   <item row="4" column="5">
     <widget class="QLabel" name="lbl_TextCodec">
      <property name="text">
       <string>Text codec</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="4">
+   <item row="5" column="5">
     <widget class="QLineEdit" name="le_TextCodec">
      <property name="placeholderText">
       <string>e.g. &quot;latin1&quot;</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="4">
+   <item row="0" column="5">
     <widget class="QPushButton" name="pb_SetDefaults">
      <property name="text">
       <string>set defaults</string>
@@ -130,7 +144,7 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="4">
+   <item row="6" column="5">
     <widget class="QCheckBox" name="cb_3LetterAirlineICAO">
      <property name="toolTip">
       <string>force 3 letter airline ICAO code</string>
@@ -151,6 +165,7 @@
   <tabstop>cb_GndFlagReceive</tabstop>
   <tabstop>cb_FastPositionSend</tabstop>
   <tabstop>cb_FastPositionReceive</tabstop>
+  <tabstop>cb_VisualPositionSend</tabstop>
   <tabstop>le_TextCodec</tabstop>
   <tabstop>cb_3LetterAirlineICAO</tabstop>
  </tabstops>
