@@ -1382,13 +1382,13 @@ namespace BlackCore
         visualSituation.setGroundSpeed(lastSituation.getGroundSpeed());
 
         // store situation history
-        this->storeAircraftSituation(visualSituation);
+        //! \fixme Received visual position updates are currently ignored.
+        //this->storeAircraftSituation(visualSituation);
 
         const bool samePosition = lastSituation.equalNormalVectorDouble(visualSituation);
         if (samePosition) { return; } // nothing to update
 
         // update aircraft
-        //! \fixme Received visual position updates are currently ignored.
         //this->updateAircraftInRangeDistanceBearing(
         //    callsign, visualSituation,
         //    this->calculateDistanceToOwnAircraft(visualSituation),
