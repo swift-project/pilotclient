@@ -55,7 +55,7 @@ namespace BlackMisc
                 AllReceiveWithoutGnd    = AllReceive - ReceiveGndFlag,                    //!< all in, but no gnd.flag
                 AllInterimPositions     = SendInterimPositions | ReceiveInterimPositions, //!< all interim positions
                 AllWithoutGnd           = AllReceiveWithoutGnd | AllSendingWithoutGnd,    //!< all, but no gnd.flag
-                VATSIMDefault           = AllParts | Force3LetterAirlineICAO
+                VATSIMDefault           = AllParts | Force3LetterAirlineICAO | SendVisualPositions
             };
             Q_DECLARE_FLAGS(SendReceiveDetails, SendReceiveDetailsFlag)
 
