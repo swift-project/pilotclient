@@ -75,32 +75,38 @@ namespace BlackSimPlugin
         {
             QString aircraftModelPath;          //!< Aircraft model path
             QString aircraftIcaoCode;           //!< Aircraft ICAO code
-            double latitudeDeg;                 //!< Longitude [deg]
-            double longitudeDeg;                //!< Latitude [deg]
-            double altitudeFt;                  //!< Altitude [ft]
-            double groundspeedKts;              //!< Ground speed [kts]
-            double pitchDeg;                    //!< Pitch [deg]
-            double rollDeg;                     //!< Roll [deg]
-            double trueHeadingDeg;              //!< True heading [deg]
-            bool onGroundAll;                   //!< All wheels on ground?
-            int com1ActiveKhz;                  //!< COM1 active [kHz]
-            int com1StandbyKhz;                 //!< COM1 standby [kHz]
-            int com2ActiveKhz;                  //!< COM2 active [kHz]
-            int com2StandbyKhz;                 //!< COM2 standby [kHz]
-            int xpdrCode;                       //!< Transpondder code
-            int xpdrMode;                       //!< Transponder mode (off=0,stdby=1-2, >2 on)
-            bool xpdrIdent;                     //!< Is transponder in ident?
-            bool beaconLightsOn;                //!< Beacon lights on?
-            bool landingLightsOn;               //!< Landing lights on?
-            bool navLightsOn;                   //!< NAV lights on?
-            bool strobeLightsOn;                //!< Strobe lights on?
-            bool taxiLightsOn;                  //!< Taxi lights on?
-            double flapsReployRatio;            //!< Flaps deployment ratio [%]
-            double gearReployRatio;             //!< Gear deployment ratio [%]
+            double latitudeDeg = 0;             //!< Longitude [deg]
+            double longitudeDeg = 0;            //!< Latitude [deg]
+            double altitudeFt = 0;              //!< Altitude [ft]
+            double groundspeedKts = 0;          //!< Ground speed [kts]
+            double pitchDeg = 0;                //!< Pitch [deg]
+            double rollDeg = 0;                 //!< Roll [deg]
+            double trueHeadingDeg = 0;          //!< True heading [deg]
+            double velocityXMs = 0;             //!< x velocity [m/s]
+            double velocityYMs = 0;             //!< y velocity [m/s]
+            double velocityZMs = 0;             //!< z velocity [m/s]
+            double pitchRateRadPerSec = 0;      //!< Pitch angular velocity [rad/s]
+            double rollRateRadPerSec = 0;       //!< Roll angular velocity [rad/s]
+            double yawRateRadPerSec = 0;        //!< Yaw angular velocity [rad/s]
+            bool onGroundAll = false;           //!< All wheels on ground?
+            int com1ActiveKhz = 122800;         //!< COM1 active [kHz]
+            int com1StandbyKhz = 122800;        //!< COM1 standby [kHz]
+            int com2ActiveKhz = 122800;         //!< COM2 active [kHz]
+            int com2StandbyKhz = 122800;        //!< COM2 standby [kHz]
+            int xpdrCode = 2000;                //!< Transpondder code
+            int xpdrMode = 0;                   //!< Transponder mode (off=0,stdby=1-2, >2 on)
+            bool xpdrIdent = false;             //!< Is transponder in ident?
+            bool beaconLightsOn = false;        //!< Beacon lights on?
+            bool landingLightsOn = false;       //!< Landing lights on?
+            bool navLightsOn = false;           //!< NAV lights on?
+            bool strobeLightsOn = false;        //!< Strobe lights on?
+            bool taxiLightsOn = false;          //!< Taxi lights on?
+            double flapsReployRatio = false;    //!< Flaps deployment ratio [%]
+            double gearReployRatio = false;     //!< Gear deployment ratio [%]
             QList<double> enginesN1Percentage;  //!< N1 per engine [%]
-            double speedBrakeRatio;             //!< Speed break ratio [%]
-            double pressureAltitudeFt;          //!< Pressure altitude [inhg]
-            double groundElevation;             //!< Ground Elevation [m]
+            double speedBrakeRatio = 0;         //!< Speed break ratio [%]
+            double pressureAltitudeFt = 0;      //!< Pressure altitude [inhg]
+            double groundElevation = 0;         //!< Ground Elevation [m]
         };
 
         //! Flightgear ISimulator implementation
@@ -241,9 +247,7 @@ namespace BlackSimPlugin
             //! Reset the Flightgear data
             void resetFlightgearData()
             {
-                m_flightgearData = { "", "", 0, 0, 0, 0, 0, 0, 0, false, 122800, 122800, 122800, 122800, 2000, 0, false, false, false, false,
-                                     false, false, 0, 0, {}, 0.0, 0.0, 0.0
-                                   };
+                m_flightgearData = {};
 
             }
         };

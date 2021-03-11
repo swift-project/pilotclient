@@ -45,6 +45,7 @@ namespace BlackSimPlugin
 
         void CFGSwiftBusServiceProxy::getOwnAircraftSituationData(FlightgearData *o_flightgearData)
         {
+            if (!o_flightgearData) { return; }
             QPointer<CFGSwiftBusServiceProxy> myself(this);
             std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
             {
@@ -64,6 +65,29 @@ namespace BlackSimPlugin
                 watcher->deleteLater();
             };
             m_dbusInterface->callDBusAsync(QLatin1String("getOwnAircraftSituationData"), callback);
+        }
+
+        void CFGSwiftBusServiceProxy::getOwnAircraftVelocityData(FlightgearData *o_flightgearData)
+        {
+            if (!o_flightgearData) { return; }
+            QPointer<CFGSwiftBusServiceProxy> myself(this);
+            std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
+            {
+                if (!myself) { return; }
+                QDBusPendingReply<double, double, double, double, double, double> reply = *watcher;
+                if (!reply.isError())
+                {
+                    o_flightgearData->velocityXMs = reply.argumentAt<0>();
+                    o_flightgearData->velocityYMs = reply.argumentAt<1>();
+                    o_flightgearData->velocityZMs = reply.argumentAt<2>();
+                    o_flightgearData->pitchRateRadPerSec = reply.argumentAt<3>();
+                    o_flightgearData->rollRateRadPerSec = reply.argumentAt<4>();
+                    o_flightgearData->yawRateRadPerSec = reply.argumentAt<5>();
+                }
+                watcher->deleteLater();
+            };
+            m_dbusInterface->callDBusAsync(QLatin1String("getOwnAircraftVelocityData"), callback);
+
         }
 
         void CFGSwiftBusServiceProxy::addTextMessage(const QString &text)
