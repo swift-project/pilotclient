@@ -96,7 +96,10 @@ namespace BlackMisc
         {
             CAircraftVelocity velocity = m_situation.getVelocity();
             m_situation = situation;
-            m_situation.setVelocity(velocity);
+            if (m_situation.getVelocity() == CAircraftVelocity{})
+            {
+                m_situation.setVelocity(velocity);
+            }
 
             m_situation.setCallsign(this->getCallsign());
             this->setSupportingGndFlag(situation.hasInboundGroundDetails());
