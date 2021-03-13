@@ -474,6 +474,7 @@ jobs:
             core.exportVariable('url', release.data.html_url);
       - name: Send Discord build message
         uses: appleboy/discord-action@0.0.3
+        if: ${{ github.event_name != 'pull_request' }}
         with:
           webhook_id: ${{ secrets.DISCORD_ID }}
           webhook_token: ${{ secrets.DISCORD_TOKEN }}
