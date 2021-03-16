@@ -54,10 +54,10 @@ namespace BlackMisc
                 XPLANE      = 1 << 2,
                 P3D         = 1 << 3,
                 FG          = 1 << 4,
-                FS2020      = 1 << 5,
+                MSFS      = 1 << 5,
                 FSX_P3D     = FSX | P3D,
-                AllFsFamily = FSX | FS9 | P3D | FS2020,
-                All         = FSX | FS9 | XPLANE | P3D | FG | FS2020
+                AllFsFamily = FSX | FS9 | P3D | MSFS,
+                All         = FSX | FS9 | XPLANE | P3D | FG | MSFS
             };
             Q_DECLARE_FLAGS(Simulator, SimulatorFlag)
 
@@ -100,8 +100,8 @@ namespace BlackMisc
             //! FG?
             bool isFG() const;
 
-            //! FS2020?
-            bool isFS2020() const;
+            //! MSFS?
+            bool isMSFS() const;
 
             //! Any simulator?
             bool isAnySimulator() const;

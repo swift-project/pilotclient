@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "simulatorfs2020.h"
+#include "simulatormsfs.h"
 #include "../fsxcommon/simconnectsymbols.h"
 
 using namespace BlackMisc;
@@ -21,9 +21,9 @@ using namespace BlackCore;
 
 namespace BlackSimPlugin
 {
-    namespace Fs2020
+    namespace Msfs
     {
-        CSimulatorFs2020::CSimulatorFs2020(const CSimulatorPluginInfo &info,
+        CSimulatorMsFs::CSimulatorMsFs(const CSimulatorPluginInfo &info,
                                      IOwnAircraftProvider *ownAircraftProvider,
                                      IRemoteAircraftProvider *remoteAircraftProvider,
                                      IWeatherGridProvider *weatherGridProvider,
@@ -40,15 +40,15 @@ namespace BlackSimPlugin
             });
         }
 
-        bool CSimulatorFs2020::connectTo()
+        bool CSimulatorMsFs::connectTo()
         {
-            if (!loadAndResolveFsxSimConnect(true)) { return false; }
+            //if (!loadAndResolveFsxSimConnect(true)) { return false; }
             return CSimulatorFsxCommon::connectTo();
         }
 
-        void CSimulatorFs2020Listener::startImpl()
+        void CSimulatorMsFsListener::startImpl()
         {
-            if (!loadAndResolveFsxSimConnect(true)) { return; }
+            //if (!loadAndResolveFsxSimConnect(true)) { return; }
             return CSimulatorFsxCommonListener::startImpl();
         }
 

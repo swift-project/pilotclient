@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "simulatorfs2020factory.h"
-#include "simulatorfs2020.h"
+#include "simulatormsfsfactory.h"
+#include "simulatormsfs.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 
 using namespace BlackMisc::Network;
@@ -17,21 +17,21 @@ using namespace BlackCore;
 
 namespace BlackSimPlugin
 {
-    namespace Fs2020
+    namespace Msfs
     {
-        ISimulator *CSimulatorFs2020Factory::create(const CSimulatorPluginInfo &info,
+        ISimulator *CSimulatorMsFsFactory::create(const CSimulatorPluginInfo &info,
                 IOwnAircraftProvider *ownAircraftProvider,
                 IRemoteAircraftProvider *remoteAircraftProvider,
                 IWeatherGridProvider *weatherGridProvider,
                 IClientProvider *clientProvider)
         {
             Q_ASSERT(ownAircraftProvider);
-            return new CSimulatorFs2020(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, this);
+            return new CSimulatorMsFs(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, this);
         }
 
-        ISimulatorListener *CSimulatorFs2020Factory::createListener(const CSimulatorPluginInfo &info)
+        ISimulatorListener *CSimulatorMsFsFactory::createListener(const CSimulatorPluginInfo &info)
         {
-            return new CSimulatorFs2020Listener(info);
+            return new CSimulatorMsFsListener(info);
         }
     } // namespace
 } // namespace

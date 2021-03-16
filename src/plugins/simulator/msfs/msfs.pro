@@ -15,9 +15,21 @@ DESTDIR = $$DestRoot/bin/plugins/simulator
 SOURCES += *.cpp
 HEADERS += *.h
 
-REQUIRES += swiftConfig(sims.fs2020)
-TARGET = simulatorfs2020
-DISTFILES += simulatorfs2020.json
+DEFINES += SIMCONNECT_H_NOMANIFEST
+equals(WORD_SIZE,64) {
+    SIMCONNECT_INCLUDE += $$EXTERNALSROOT/common/include/simconnect/P3D-v4
+    DEFINES += P3D_SDK_VERSION=400
+}
+equals(WORD_SIZE,32) {
+    SIMCONNECT_INCLUDE += $$EXTERNALSROOT/common/include/simconnect/FSX-XPack
+}
+INCLUDEPATH *= $$SIMCONNECT_INCLUDE
+gcc:QMAKE_CXXFLAGS_WARN_ON += -isystem $$SIMCONNECT_INCLUDE
+llvm:QMAKE_CXXFLAGS_WARN_ON *= $$clangArg(-isystem$$system_path($$SIMCONNECT_INCLUDE))
+
+REQUIRES += swiftConfig(sims.msfs)
+TARGET = simulatormsfs
+DISTFILES += simulatormsfs.json
 
 win32 {
     dlltarget.path = $$PREFIX/bin/plugins/simulator

@@ -72,11 +72,11 @@ This plugin acts as the interface between swift and FSX.</detailedDescription>
             </shouldPackRuleList>
         </component>
         <component>
-            <name>fs2020</name>
+            <name>msfs</name>
             <description>MS Flight Simulator 2020</description>
             <canBeEdited>1</canBeEdited>
             <detailedDescription>MS Flight Simulator 2020 Simulator Plugin
-This plugin acts as the interface between swift and FS2020.</detailedDescription>
+This plugin acts as the interface between swift and MSFS.</detailedDescription>
             <selected>1</selected>
             <show>1</show>
             <folderList>
@@ -87,7 +87,7 @@ This plugin acts as the interface between swift and FS2020.</detailedDescription
                     <platforms>windows</platforms>
                     <distributionFileList>
                         <distributionFile>
-                            <origin>../../dist/bin/plugins/simulator/simulatorfs2020.dll</origin>
+                            <origin>../../dist/bin/plugins/simulator/simulatormsfs.dll</origin>
                         </distributionFile>
                     </distributionFileList>
                 </folder>

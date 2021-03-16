@@ -1,5 +1,5 @@
 {
-    "identifier" : "org.swift-project.plugins.simulator.fs2020",
+    "identifier" : "org.swift-project.plugins.simulator.msfs",
     "name" : "Flight Simulator 2020",
     "simulator" : "fsx",
     "description" : "Microsoft Flight Simulator 2020"

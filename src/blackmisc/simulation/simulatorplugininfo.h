@@ -88,8 +88,8 @@ namespace BlackMisc
             //! Plugin identifier (FlightGear)
             static const QString &fgPluginIdentifier();
 
-            //! Plugin identifier (FS2020)
-            static const QString &fs2020PluginIdentifier();
+            //! Plugin identifier (MSFS 2020)
+            static const QString &msfsPluginIdentifier();
 
             //! Plugin identifier (emulated simulator plugin)
             static const QString &emulatedPluginIdentifier();

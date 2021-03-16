@@ -110,9 +110,9 @@ namespace BlackMisc
             return s;
         }
 
-        const QString &CSimulatorPluginInfo::fs2020PluginIdentifier()
+        const QString &CSimulatorPluginInfo::msfsPluginIdentifier()
         {
-            static const QString s("org.swift-project.plugins.simulator.fs2020");
+            static const QString s("org.swift-project.plugins.simulator.msfs");
             return s;
         }
 
@@ -132,7 +132,7 @@ namespace BlackMisc
                 fs9PluginIdentifier(),
                 emulatedPluginIdentifier(),
                 fgPluginIdentifier(),
-                fs2020PluginIdentifier()
+                msfsPluginIdentifier()
             });
             return identifiers;
         }
@@ -148,7 +148,7 @@ namespace BlackMisc
             return QStringList
             {
                 fsxPluginIdentifier(),
-                fs2020PluginIdentifier(),
+                msfsPluginIdentifier(),
                 p3dPluginIdentifier(),
                 xplanePluginIdentifier(),
                 fgPluginIdentifier()

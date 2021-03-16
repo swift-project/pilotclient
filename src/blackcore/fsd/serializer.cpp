@@ -169,7 +169,7 @@ namespace BlackCore
             // future versions
             case SimType::XPLANE12:
             case SimType::P3Dv5:
-            case SimType::MSFS2020:
+            case SimType::MSFS:
                 return "0";
             }
 

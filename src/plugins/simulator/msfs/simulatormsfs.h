@@ -8,23 +8,23 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_FS2020_SIMULATORFS2020_H
-#define BLACKSIMPLUGIN_FS2020_SIMULATORFS2020_H
+#ifndef BLACKSIMPLUGIN_MSFS_SIMULATORMSFS_H
+#define BLACKSIMPLUGIN_MSFS_SIMULATORMSFS_H
 
 #include "../fsxcommon/simulatorfsxcommon.h"
 
 namespace BlackSimPlugin
 {
-    namespace Fs2020
+    namespace Msfs
     {
         //! FSX simulator implementation
-        class CSimulatorFs2020 : public BlackSimPlugin::FsxCommon::CSimulatorFsxCommon
+        class CSimulatorMsFs : public BlackSimPlugin::FsxCommon::CSimulatorFsxCommon
         {
             Q_OBJECT
 
         public:
             //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
-            CSimulatorFs2020(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+            CSimulatorMsFs(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                           BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                           BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                           BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
@@ -37,8 +37,8 @@ namespace BlackSimPlugin
             //! @}
         };
 
-        //! Listener for FSX
-        class CSimulatorFs2020Listener : public FsxCommon::CSimulatorFsxCommonListener
+        //! Listener for MSFS
+        class CSimulatorMsFsListener : public FsxCommon::CSimulatorFsxCommonListener
         {
             Q_OBJECT
 

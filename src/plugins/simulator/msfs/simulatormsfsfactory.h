@@ -8,8 +8,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_SIMULATOR_FSXFACTORY_H
-#define BLACKSIMPLUGIN_SIMULATOR_FSXFACTORY_H
+#ifndef BLACKSIMPLUGIN_SIMULATOR_MSFSFACTORY_H
+#define BLACKSIMPLUGIN_SIMULATOR_MSFSFACTORY_H
 
 #include "blackcore/simulator.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
@@ -19,15 +19,15 @@
 
 namespace BlackSimPlugin
 {
-    namespace Fs2020
+    namespace Msfs
     {
         //! Factory implementation to create CSimulatorFsx instances
-        class CSimulatorFs2020Factory :
+        class CSimulatorMsFsFactory :
             public QObject,
             public BlackCore::ISimulatorFactory
         {
             Q_OBJECT
-            Q_PLUGIN_METADATA(IID "org.swift-project.blackcore.simulatorinterface" FILE "simulatorfs2020.json")
+            Q_PLUGIN_METADATA(IID "org.swift-project.blackcore.simulatorinterface" FILE "simulatormsfs.json")
             Q_INTERFACES(BlackCore::ISimulatorFactory)
 
         public:
