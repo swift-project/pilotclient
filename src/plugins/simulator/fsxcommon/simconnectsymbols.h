@@ -39,6 +39,8 @@ FSXCOMMON_EXPORT bool loadAndResolveP3DSimConnect(P3DSimConnectVersion version);
 //! Same but string version
 inline bool loadAndResolveP3DSimConnectByString(const QString &version) { return loadAndResolveP3DSimConnect(stringToP3DVersion(version)); }
 
+FSXCOMMON_EXPORT bool loadAndResolveMSFSimConnect();
+
 #else
 
 //! Load and resolve FSX SimConnect.

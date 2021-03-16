@@ -103,8 +103,8 @@ win32-g++: CONFIG += separate_debug_info
 # FSX or FS9 on 32bit Windows only
 ################################
 
-!win32: disableSwiftConfig(sims.p3d)
-equals(WORD_SIZE,64)|!win32: disableSwiftConfig(sims.fsx, sims.fs9, sims.fs2020)
+!win32: disableSwiftConfig(sims.p3d, sims.msfs)
+equals(WORD_SIZE,64)|!win32: disableSwiftConfig(sims.fsx, sims.fs9)
 # equals(WORD_SIZE,64):win32-g++: disableSwiftConfig(sims.p3d)
 
 ################################

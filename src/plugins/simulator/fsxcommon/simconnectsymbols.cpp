@@ -244,6 +244,35 @@ bool loadAndResolveP3DSimConnect(P3DSimConnectVersion version)
         return false;
     }
 }
+
+bool loadAndResolveMSFSimConnect()
+{
+    // Check if already loaded
+    if (gSymbols.SimConnect_Open) { return true; }
+
+    QString simConnectFileName(QStringLiteral("SimConnect.MSFS"));
+
+    QLibrary simConnectDll(simConnectFileName);
+    simConnectDll.setLoadHints(QLibrary::PreventUnloadHint);
+    if (simConnectDll.load())
+    {
+        const bool resolvedCommon = resolveCommonSimConnectSymbols(simConnectDll);
+        if (!resolvedCommon)
+        {
+            CLogMessage(CLogCategories::driver()).error(u"Failed to resolve common symbols from SimConnect.dll: '%1'") << simConnectFileName;
+            return false;
+        }
+
+        CLogMessage(CLogCategories::driver()).info(u"Loaded and resolved MSFS symbols from SimConnect.dll: '%1'") << simConnectFileName;
+        return  resolvedCommon;
+    }
+    else
+    {
+        CLogMessage(CLogCategories::driver()).error(u"Failed to load SimConnect.dll: '%1' '%2'") << simConnectFileName << simConnectDll.errorString();
+        return false;
+    }
+}
+
 #else
 bool loadAndResolveFsxSimConnect(bool manifestProbing)
 {

@@ -96,11 +96,6 @@ This plugin acts as the interface between swift and MSFS.</detailedDescription>
                 <platformTest>
                     <type>windows</type>
                 </platformTest>
-                <compareText>
-                    <logic>equals</logic>
-                    <text>${architecture}</text>
-                    <value>32</value>
-                </compareText>
             </shouldPackRuleList>
         </component>
         <component>

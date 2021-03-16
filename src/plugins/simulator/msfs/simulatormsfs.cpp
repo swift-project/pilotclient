@@ -42,14 +42,24 @@ namespace BlackSimPlugin
 
         bool CSimulatorMsFs::connectTo()
         {
-            //if (!loadAndResolveFsxSimConnect(true)) { return false; }
+        #ifdef Q_OS_WIN64
+            if (!loadAndResolveMSFSimConnect()) { return false; }
             return CSimulatorFsxCommon::connectTo();
+        #else
+            if (!loadAndResolveFsxSimConnect(true)) { return false; }
+            return CSimulatorFsxCommon::connectTo();
+        #endif
         }
 
         void CSimulatorMsFsListener::startImpl()
         {
-            //if (!loadAndResolveFsxSimConnect(true)) { return; }
-            return CSimulatorFsxCommonListener::startImpl();
+        #ifdef Q_OS_WIN64
+            if (!loadAndResolveMSFSimConnect()) { return; }
+            CSimulatorFsxCommonListener::startImpl();
+        #else
+            if (!loadAndResolveFsxSimConnect(true)) { return; }
+            CSimulatorFsxCommonListener::startImpl();
+        #endif
         }
 
     } // ns

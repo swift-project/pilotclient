@@ -6,7 +6,7 @@ TEMPLATE = lib
 
 CONFIG += plugin shared
 CONFIG += blackconfig blackmisc blackcore blackgui
-CONFIG += simulatorfsxcommon simulatorfscommon simulatorplugincommon simconnect
+CONFIG += simulatorfsxcommon simulatorfscommon simulatorplugincommon
 
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
@@ -17,8 +17,7 @@ HEADERS += *.h
 
 DEFINES += SIMCONNECT_H_NOMANIFEST
 equals(WORD_SIZE,64) {
-    SIMCONNECT_INCLUDE += $$EXTERNALSROOT/common/include/simconnect/P3D-v4
-    DEFINES += P3D_SDK_VERSION=400
+    SIMCONNECT_INCLUDE += $$EXTERNALSROOT/common/include/simconnect/MSFS
 }
 equals(WORD_SIZE,32) {
     SIMCONNECT_INCLUDE += $$EXTERNALSROOT/common/include/simconnect/FSX-XPack
