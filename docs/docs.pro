@@ -13,22 +13,18 @@ else: DOXYGEN_BIN = $$system(which doxygen 2> /dev/null)
 
 !isEmpty(DOXYGEN_BIN) {
     DOXYFILE = Doxyfile.qmake
-    QDOC_PATH = $$(QDOC_PATH)
     DOXY_INPUT = .
     win32-g++ {
-                            doxy.commands  = set DOXY_SRC_ROOT=$$SourceRoot &
-        isEmpty(QDOC_PATH): doxy.commands += set QDOC_PATH=$$[QT_INSTALL_DOCS] &
-                            doxy.commands += doxygen $$PWD/$$DOXYFILE
+        doxy.commands  = set DOXY_SRC_ROOT=$$SourceRoot &
+        doxy.commands += doxygen $$PWD/$$DOXYFILE
     }
     else:win32 {
-                            doxy.commands  = set DOXY_SRC_ROOT=$$SourceRoot &
-        isEmpty(QDOC_PATH): doxy.commands += set QDOC_PATH=$$[QT_INSTALL_DOCS] &
-                            doxy.commands += doxygen $$PWD\\$$DOXYFILE
+        doxy.commands  = set DOXY_SRC_ROOT=$$SourceRoot &
+        doxy.commands += doxygen $$PWD\\$$DOXYFILE
     }
     else {
-                            doxy.commands  = DOXY_SRC_ROOT="$$SourceRoot"
-        isEmpty(QDOC_PATH): doxy.commands += QDOC_PATH="$$[QT_INSTALL_DOCS]"
-                            doxy.commands += doxygen $$PWD/$$DOXYFILE
+        doxy.commands  = DOXY_SRC_ROOT="$$SourceRoot"
+        doxy.commands += doxygen $$PWD/$$DOXYFILE
     }
 
     doxy.CONFIG = no_link target_predeps
