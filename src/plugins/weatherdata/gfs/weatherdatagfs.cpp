@@ -304,7 +304,7 @@ namespace BlackWxPlugin
             const QString filename = u"gfs." % QStringLiteral("t%1z").arg(hourLastPublishedCycle, 2, 10, QLatin1Char('0'))
                                      % u".pgrb2.0p25."
                                      % QStringLiteral("f%2").arg(forecast, 3, 10, QLatin1Char('0'));
-            const QString directory = u"/gfs." % cnow.toString("yyyyMMdd") % u"/" % QStringLiteral("%1").arg(hourLastPublishedCycle, 2, 10, QLatin1Char('0'));
+            const QString directory = u"/gfs." % cnow.toString("yyyyMMdd") % u"/" % QStringLiteral("%1").arg(hourLastPublishedCycle, 2, 10, QLatin1Char('0')) % u"/atmos";
 
             downloadUrl.appendQuery("file", filename);
             for (const auto &level : grib2Levels)
