@@ -26,6 +26,13 @@ equals (TEMPLATE, app) {
 }
 
 ################################
+# Work around ignored rpath for transitive dependencies
+# https://bugs.launchpad.net/ubuntu/+source/glibc/+bug/1737608/comments/4
+################################
+
+linux: QMAKE_LFLAGS += -Wl,--disable-new-dtags
+
+################################
 # Copy data files to build dir
 ################################
 
