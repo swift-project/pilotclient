@@ -92,7 +92,7 @@ jobs:
           BITROCK_LICENSE: ${{ secrets.BITROCK_LICENSE }}
       - name: Install dependencies
         run: |
-          sudo apt install dbus-x11 doxygen graphviz libglu1-mesa-dev libopus-dev libsodium-dev libpulse-dev libdbus-1-dev libevent-dev
+          sudo apt install dbus-x11 doxygen graphviz libglu1-mesa-dev libopus-dev libsodium-dev libpulse-dev libdbus-1-dev libevent-dev libpng-dev
           sudo cpan Path::Class
       - name: Checkout repository
         uses: actions/checkout@v2
