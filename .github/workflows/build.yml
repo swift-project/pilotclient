@@ -99,6 +99,10 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
+      - name: Copy dependencies to externals
+        run: |
+          dpkg-query -s libsodium23 libevent-core-2.1-6 libpng16-16
+          cp $(dpkg-query -L libsodium23 libevent-core-2.1-6 libpng16-16 | grep -E '^/usr/lib/.*\.so\.[0-9]+$') externals/linux-g++/64/lib/
       - name: Start DBus session bus
         run: |
           dbus-launch --sh-syntax | tee session.sh
