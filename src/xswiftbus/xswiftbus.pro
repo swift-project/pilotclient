@@ -159,8 +159,10 @@ win32 {
     QMAKE_EXTRA_TARGETS += fix_plugin_rpath
 
 } else:unix: {
-    dep_target.files *= $$DestRoot/lib/libevent_core-*.so.*
-    dep_target.files *= $$DestRoot/lib/libpng*.so.*
+    # Want to use wildcards in dep_target.files, but wildcard expansion happens too early, before the files exist.
+    dep_target.extra += $(QINSTALL) $$DestRoot/lib/libevent_core-*.so.* $$dep_target.path/`basename $$DestRoot/lib/libevent_core-*.so.*`
+    dep_target.extra += &&
+    dep_target.extra += $(QINSTALL) $$DestRoot/lib/libpng*.so.*         $$dep_target.path/`basename $$DestRoot/lib/libpng*.so.*`
 
     legacy_data_target.path = $$PREFIX/xswiftbus
     legacy_data_target.files *= LegacyData
