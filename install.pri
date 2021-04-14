@@ -78,10 +78,7 @@ INSTALLS += qt5_target
 
 ############### Install Qt5 audio plugins ##############
 
-win32: {
-    qt5_audio_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/audio/*$${DLL_DEBUG_SUFFIX}.dll
-    qt5_audio_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/audio/*$${DLL_DEBUG_SUFFIX}.dll.bak
-}
+win32: qt5_audio_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/audio/*$${DLL_DEBUG_SUFFIX}.dll
 else:macx: qt5_audio_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/audio/*.dylib
 else:unix:qt5_audio_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/audio/*.so
 qt5_audio_plugins_target.path = $${PREFIX}/bin/audio
