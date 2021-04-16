@@ -96,7 +96,7 @@ namespace BlackMisc
         {
             return [vs...](const auto &a, const auto &b)
             {
-                return std::forward_as_tuple((a.*vs)()...) == std::forward_as_tuple((b.*vs)()...);
+                return (((a.*vs)() == (b.*vs)()) && ...);
             };
         }
 

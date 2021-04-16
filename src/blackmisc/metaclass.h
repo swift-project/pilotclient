@@ -280,12 +280,7 @@ namespace BlackMisc
         template <typename F>
         static void forEachMember(F &&visitor)
         {
-            // parameter pack swallow idiom
-            static_cast<void>(std::initializer_list<int>
-            {
-                //! \fixme C-style cast is needed due to a clang bug: https://bugs.llvm.org/show_bug.cgi?id=39375
-                ((void)(std::forward<F>(visitor)(members().at(index<Is>()))), 0)...
-            });
+            (static_cast<void>(std::forward<F>(visitor)(members().at(index<Is>()))), ...);
         }
 
     private:
