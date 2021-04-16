@@ -1665,11 +1665,10 @@ namespace BlackCore
             this->insertLatestOffsetTime(callsign, diff);
 
             int count = 0;
-            static const qint64 minOffsetTime = CFsdSetup::c_interimPositionTimeOffsetMsec; // no longer needed with C++17
             const qint64 avgTimeMs = this->averageOffsetTimeMs(callsign, count, 3); // latest average
             qint64 offsetTime = CFsdSetup::c_positionTimeOffsetMsec;
 
-            if (avgTimeMs < minOffsetTime && count >= 3)
+            if (avgTimeMs < CFsdSetup::c_interimPositionTimeOffsetMsec && count >= 3)
             {
                 offsetTime = CFsdSetup::c_interimPositionTimeOffsetMsec;
             }

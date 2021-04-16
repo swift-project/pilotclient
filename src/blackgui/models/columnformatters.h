@@ -38,8 +38,9 @@ namespace BlackGui
         {
         public:
             //! Constructor
-            //! \fixme Defining this inline causes ICE in Clang on Windows
-            CDefaultFormatter(int alignment = alignDefault(), bool i18n = true, const QList<int> &supportedRoles = { Qt::DisplayRole });
+            CDefaultFormatter(int alignment = alignDefault(), bool i18n = true, const QList<int> &supportedRoles = { Qt::DisplayRole }) :
+                m_supportedRoles(supportedRoles), m_alignment(alignment), m_useI18n(i18n)
+            {}
 
             //! Virtual destructor
             virtual ~CDefaultFormatter() {}

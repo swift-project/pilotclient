@@ -384,7 +384,6 @@ namespace BlackMisc
         //! If the value is currently being loaded, wait for it to finish loading, and call the notification slot, if any.
         void synchronize()
         {
-            // does not compile on gcc without "this" -> this->m_page
             auto *queue = this->m_page->template findChild<Private::CDataPageQueue *>();
             Q_ASSERT(queue);
             this->admit();

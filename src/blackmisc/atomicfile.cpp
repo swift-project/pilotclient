@@ -72,12 +72,7 @@ namespace BlackMisc
 
     CAtomicFile::~CAtomicFile()
     {
-#if __cplusplus >= 201700L
-        const bool ex = std::uncaught_exceptions() > 0;
-#else
-        const bool ex = std::uncaught_exception();
-#endif
-        if (ex) { QFile::close(); }
+        if (std::uncaught_exceptions() > 0) { QFile::close(); }
     }
 
     void CAtomicFile::close()

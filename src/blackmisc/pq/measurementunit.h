@@ -226,7 +226,7 @@ namespace BlackMisc
                 ConverterFunction m_fromDefault = nullptr; //!< convert to this unit from default unit
             };
 
-            //! Workaround to constant-initialize QLatin1String on platforms without constexpr strlen.
+            //! Constant-initialize QLatin1String without using strlen.
             template <int N>
             static constexpr QLatin1String constQLatin1(const char (&str)[N])
             {

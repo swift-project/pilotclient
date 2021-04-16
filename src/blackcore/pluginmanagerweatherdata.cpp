@@ -49,8 +49,7 @@ namespace BlackCore
             QString iid = json["IID"].toString();
             if (iid == QStringLiteral("org.swift-project.blackcore.weatherdata"))
             {
-                // PluginExtended() instead of {} to silence wrong warning for gcc < 5.X
-                auto it = m_plugins.insert(pluginIdentifier(json), PluginExtended());
+                auto it = m_plugins.insert(pluginIdentifier(json), {});
                 it->info.convertFromJson(json);
             }
         }

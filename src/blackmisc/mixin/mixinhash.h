@@ -39,21 +39,6 @@ namespace BlackMisc
     // Alternative would be to qualify all our invokations of the global qHash as ::qHash.
     using ::qHash;
 
-    namespace Private
-    {
-        //! \cond PRIVATE
-        // Work around MSVC2015 bug affecting generic lambda
-        template <typename T>
-        struct Hasher
-        {
-            template <typename U>
-            void operator()(const U &member) { m_hash ^= qHash(member.in(m_object)); }
-            const T &m_object;
-            uint &m_hash;
-        };
-        //! \endcond
-    }
-
     namespace Mixin
     {
         /*!
@@ -76,7 +61,7 @@ namespace BlackMisc
             {
                 uint hash = baseHash(static_cast<const TBaseOfT<Derived> *>(&value));
                 constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForHashing>());
-                meta.forEachMember(Private::Hasher<Derived> { value, hash });
+                meta.forEachMember([ & ](const auto &member) { hash ^= qHash(member.in(value)); });
                 return hash;
             }
 

@@ -9,6 +9,7 @@ gcc:QMAKE_CXXFLAGS_USE_PRECOMPILE = -Winvalid-pch $$QMAKE_CXXFLAGS_USE_PRECOMPIL
 gcc|llvm:QMAKE_CXXFLAGS_WARN_ON *= -Wzero-as-null-pointer-constant
 gcc:QMAKE_CXXFLAGS_WARN_ON += -isystem $$[QT_INSTALL_HEADERS]/QtCore
 llvm:QMAKE_CXXFLAGS_WARN_ON *= -Wno-system-headers
+gcc:!clang:QMAKE_CXXFLAGS_WARN_ON *= -Wsuggest-override
 
 # elevated warnings
 swiftConfig(allowNoisyWarnings) {
@@ -30,19 +31,6 @@ swiftConfig(allowNoisyWarnings) {
 }
 else {
     DEFINES *= QT_NO_DEPRECATED_WARNINGS
-}
-
-# gcc 5 can warn about missing override keyword,
-# gcc 6 can do it without thousands of warnings in qt headers
-gcc: !clang {
-    GCC_VERSION = $$system($$QMAKE_CXX -dumpversion)
-    GCC_MAJOR = $$section(GCC_VERSION, ., 0, 0)
-    greaterThan(GCC_MAJOR, 5) {
-        QMAKE_CXXFLAGS_WARN_ON *= -Wsuggest-override
-    }
-    greaterThan(GCC_MAJOR, 4):swiftConfig(allowNoisyWarnings) {
-        QMAKE_CXXFLAGS_WARN_ON *= -Wsuggest-override
-    }
 }
 
 # clazy - Qt-aware linter

@@ -72,10 +72,6 @@ namespace BlackMisc
     // CValueCachePacket
     ////////////////////////////////
 
-    CValueCachePacket::CValueCachePacket(bool saved, bool valuesChanged) :
-        m_saved(saved), m_valuesChanged(valuesChanged)
-    {}
-
     CValueCachePacket::CValueCachePacket(const CVariantMap &values, qint64 timestamp, bool saved, bool valuesChanged) :
         m_saved(saved), m_valuesChanged(valuesChanged)
     {
@@ -570,12 +566,7 @@ namespace BlackMisc
     {
         if (m_page)
         {
-#if __cplusplus >= 201700L
-            const bool ex = std::uncaught_exceptions() > 0;
-#else
-            const bool ex = std::uncaught_exception();
-#endif
-            if (ex) { m_page->abandonBatch(); }
+            if (std::uncaught_exceptions() > 0) { m_page->abandonBatch(); }
             else { m_page->endBatch(); }
         }
     }

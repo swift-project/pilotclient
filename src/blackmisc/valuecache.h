@@ -78,8 +78,9 @@ namespace BlackMisc
         using base_type = CDictionary;
 
         //! Constructor.
-        //! \fixme Defining this inline causes ICE in Clang on Windows
-        CValueCachePacket(bool saved = false, bool valuesChanged = true);
+        CValueCachePacket(bool saved = false, bool valuesChanged = true) :
+            m_saved(saved), m_valuesChanged(valuesChanged)
+        {}
 
         //! Construct from CVariantMap and a timestamp.
         CValueCachePacket(const CVariantMap &values, qint64 timestamp, bool saved = false, bool valuesChanged = true);

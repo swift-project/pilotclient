@@ -61,13 +61,6 @@ namespace BlackMisc
         }
     }
 
-    // needed because these constants are odr-used (just like traditional C++98 static const)
-    // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=54483
-    const StatusSeverity CStatusMessage::SeverityDebug;
-    const StatusSeverity CStatusMessage::SeverityInfo;
-    const StatusSeverity CStatusMessage::SeverityWarning;
-    const StatusSeverity CStatusMessage::SeverityError;
-
     CStatusMessage::CStatusMessage(const CLogCategory &category) :
         CMessageBase(category), ITimestampBased(QDateTime::currentMSecsSinceEpoch())
     {}
