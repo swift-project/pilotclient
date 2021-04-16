@@ -26,9 +26,18 @@ namespace BlackMisc
         /*!
          * Configurable output iterator using a provided functor to do the insertion.
          */
-        template <class F> class OutputIterator : public std::iterator<std::output_iterator_tag, void, void, void, void>
+        template <class F> class OutputIterator
         {
         public:
+            //! Types
+            //! @{
+            using iterator_category = std::output_iterator_tag;
+            using value_type = void;
+            using difference_type = void;
+            using pointer = void;
+            using reference = void;
+            //! @}
+
             //! Constructor
             //! @{
             explicit OutputIterator(const F &func) : m_func(func) {}
@@ -101,10 +110,16 @@ namespace BlackMisc
          * By creating a CRange from such iterators, it is possible to perform a transformation on a container without copying elements.
          */
         template <class I, class F> class TransformIterator
-            : public std::iterator<std::forward_iterator_tag,
-                                   std::decay_t<decltype(std::declval<F>()(std::declval<typename std::iterator_traits<I>::value_type>()))>>
         {
         public:
+            //! Types
+            //! @{
+            using iterator_category = std::forward_iterator_tag;
+            using value_type = std::decay_t<decltype(std::declval<F>()(std::declval<typename std::iterator_traits<I>::value_type>()))>;
+            using difference_type = typename std::iterator_traits<I>::difference_type;
+            using reference = typename std::iterator_traits<I>::reference;
+            //! @}
+
             //! The type returned by the transformation function, which may or may not be a reference.
             using undecayed_type = decltype(std::declval<F>()(std::declval<typename std::iterator_traits<I>::value_type>()));
 
@@ -166,9 +181,18 @@ namespace BlackMisc
          *
          * By creating a CRange from such iterators, it is possible to return the results of predicate methods without copying elements.
          */
-        template <class I, class F> class ConditionalIterator : public std::iterator<std::forward_iterator_tag, typename std::iterator_traits<I>::value_type>
+        template <class I, class F> class ConditionalIterator
         {
         public:
+            //! Types
+            //! @{
+            using iterator_category = std::forward_iterator_tag;
+            using value_type = typename std::iterator_traits<I>::value_type;
+            using difference_type = typename std::iterator_traits<I>::difference_type;
+            using pointer = typename std::iterator_traits<I>::pointer;
+            using reference = typename std::iterator_traits<I>::reference;
+            //! @}
+
             //! Constructor.
             ConditionalIterator(I iterator, I end, F predicate) : m_iterator(iterator), m_end(end), m_predicate(predicate)
             {
@@ -230,9 +254,18 @@ namespace BlackMisc
         /*!
          * Iterator wrapper which concatenates zero or more pairs of begin and end iterators.
          */
-        template <class I> class ConcatIterator : public std::iterator<std::forward_iterator_tag, typename std::iterator_traits<I>::value_type>
+        template <class I> class ConcatIterator
         {
         public:
+            //! Types
+            //! @{
+            using iterator_category = std::forward_iterator_tag;
+            using value_type = typename std::iterator_traits<I>::value_type;
+            using difference_type = typename std::iterator_traits<I>::difference_type;
+            using pointer = typename std::iterator_traits<I>::pointer;
+            using reference = typename std::iterator_traits<I>::reference;
+            //! @}
+
             //! Constructor.
             ConcatIterator(QVector<I> iterators) : m_iterators(std::move(iterators))
             {
