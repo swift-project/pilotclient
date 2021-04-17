@@ -23,19 +23,6 @@ namespace BlackMisc
 
     namespace Private
     {
-        //! \private Own implementation of C++17 std::is_nothrow_swappable.
-        template <typename T, typename U>
-        struct is_nothrow_swappable
-        {
-            static constexpr bool impl()
-            {
-                using std::swap;
-                return noexcept(swap(std::declval<T>(), std::declval<U>()))
-                    && noexcept(swap(std::declval<U>(), std::declval<T>()));
-            }
-            static constexpr bool value = impl();
-        };
-
         //! \private Dummy that derives from T if T is a class.
         template <typename T, bool = std::is_class_v<T>>
         struct SyntheticDerived : public T {};

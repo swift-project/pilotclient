@@ -121,7 +121,7 @@ namespace BlackMisc
      * Efficient swap for two Optional objects.
      */
     template <typename T>
-    void swap(Optional<T> &a, Optional<T> &b) noexcept(Private::is_nothrow_swappable<T, T>::value)
+    void swap(Optional<T> &a, Optional<T> &b) noexcept(std::is_nothrow_swappable_v<T>)
     {
         if (a)
         {
