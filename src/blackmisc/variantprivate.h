@@ -171,7 +171,7 @@ namespace BlackMisc
             }
             virtual int getMetaTypeId() const override
             {
-                return maybeGetMetaTypeId(std::bool_constant<QMetaTypeId<T>::Defined> {});
+                if constexpr (QMetaTypeId<T>::Defined) { return qMetaTypeId<T>(); } else { return QMetaType::UnknownType; }
             }
             virtual const void *upCastTo(const void *object, int metaTypeId) const override
             {
@@ -205,9 +205,6 @@ namespace BlackMisc
 
             static const T &cast(const void *object) { return *static_cast<const T *>(object); }
             static T &cast(void *object) { return *static_cast<T *>(object); }
-
-            static int maybeGetMetaTypeId(std::true_type) { return qMetaTypeId<T>(); }
-            static int maybeGetMetaTypeId(std::false_type) { return QMetaType::UnknownType; }
         };
 
         //! \private Explicit specialization for the terminating case of the recursive CValueObjectMetaInfo::upCastTo.
@@ -236,22 +233,26 @@ namespace BlackMisc
         template <typename T>
         void maybeRegisterMetaListConvert(...) {}
 
-        template <typename T, bool IsRegisteredMetaType /* = true */>
-        struct MetaTypeHelperImpl
-        {
-            static constexpr int maybeGetMetaTypeId() { return qMetaTypeId<T>(); }
-            static void maybeRegisterMetaType() { qRegisterMetaType<T>(); qDBusRegisterMetaType<T>(); qRegisterMetaTypeStreamOperators<T>(); registerMetaValueType<T>(); maybeRegisterMetaListConvert<T>(0); }
-        };
-
         template <typename T>
-        struct MetaTypeHelperImpl<T, /* IsRegisteredMetaType = */ false>
+        struct MetaTypeHelper
         {
-            static constexpr int maybeGetMetaTypeId() { return QMetaType::UnknownType; }
-            static void maybeRegisterMetaType() {}
+            static constexpr int maybeGetMetaTypeId()
+            {
+                if constexpr (QMetaTypeId<T>::Defined) { return qMetaTypeId<T>(); }
+                else { return QMetaType::UnknownType; }
+            }
+            static void maybeRegisterMetaType()
+            {
+                if constexpr (QMetaTypeId<T>::Defined)
+                {
+                    qRegisterMetaType<T>();
+                    qDBusRegisterMetaType<T>();
+                    qRegisterMetaTypeStreamOperators<T>();
+                    registerMetaValueType<T>();
+                    maybeRegisterMetaListConvert<T>(0);
+                }
+            }
         };
-
-        template <typename T>
-        using MetaTypeHelper = MetaTypeHelperImpl<T, QMetaTypeId<T>::Defined>;
         //! \endcond
     }
 }

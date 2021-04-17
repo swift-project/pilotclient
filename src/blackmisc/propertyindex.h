@@ -31,31 +31,6 @@
 
 namespace BlackMisc
 {
-    class CPropertyIndex;
-
-    namespace Private
-    {
-        //! \private
-        template <class T, class X>
-        int compareByProperty(const T &a, const T &b, const CPropertyIndex &index, std::true_type, X)
-        {
-            return a.comparePropertyByIndex(index, b);
-        }
-        //! \private
-        template <class T>
-        int compareByProperty(const T &a, const T &b, const CPropertyIndex &index, std::false_type, std::true_type)
-        {
-            return compare(a.propertyByIndex(index), b.propertyByIndex(index));
-        }
-        //! \private
-        template <class T>
-        int compareByProperty(const T &, const T &, const CPropertyIndex &, std::false_type, std::false_type)
-        {
-            qFatal("Not implemented");
-            return 0;
-        }
-    }
-
     /*!
      * Property index. The index can be nested, that's why it is a sequence
      * (e.g. PropertyIndexPilot, PropertyIndexRealname).
@@ -153,7 +128,15 @@ namespace BlackMisc
             return [index = *this](const auto & a, const auto & b)
             {
                 using T = std::decay_t<decltype(a)>;
-                return Private::compareByProperty(a, b, index, THasComparePropertyByIndex<T>(), THasPropertyByIndex<T>());
+                if constexpr (THasComparePropertyByIndex<T>::value)
+                {
+                    return a.comparePropertyByIndex(index, b);
+                }
+                else if constexpr (THasPropertyByIndex<T>::value)
+                {
+                    return compare(a.propertyByIndex(index), b.propertyByIndex(index));
+                }
+                else { qFatal("Not implemented"); return 0; }
             };
         }
 

@@ -70,15 +70,18 @@ namespace BlackMisc
             const Derived *derived() const { return static_cast<const Derived *>(this); }
             Derived *derived() { return static_cast<Derived *>(this); }
 
-            template <typename T, std::enable_if_t<std::is_default_constructible_v<T>, int> = 0>
-            QVariant myself() const { return QVariant::fromValue(*derived()); }
-            template <typename T, std::enable_if_t<std::is_default_constructible_v<T>, int> = 0>
-            void myself(const QVariant &variant) { *derived() = variant.value<T>(); }
-
-            template <typename T, std::enable_if_t<! std::is_default_constructible_v<T>, int> = 0>
-            QVariant myself() const { qFatal("isMyself should have been handled before reaching here"); return {}; }
-            template <typename T, std::enable_if_t<! std::is_default_constructible_v<T>, int> = 0>
-            void myself(const QVariant &) { qFatal("isMyself should have been handled before reaching here"); }
+            template <typename T>
+            QVariant myself() const
+            {
+                if constexpr (std::is_default_constructible_v<T>) { return QVariant::fromValue(*derived()); }
+                else { qFatal("isMyself should have been handled before reaching here"); return {}; }
+            }
+            template <typename T>
+            void myself(const QVariant &variant)
+            {
+                if constexpr (std::is_default_constructible_v<T>) { *derived() = variant.value<T>(); }
+                else { qFatal("isMyself should have been handled before reaching here"); }
+            }
 
             template <typename T>
             QVariant basePropertyByIndex(const T *base, CPropertyIndexRef index) const { return base->propertyByIndex(index); }

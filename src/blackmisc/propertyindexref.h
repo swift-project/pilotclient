@@ -17,31 +17,6 @@
 
 namespace BlackMisc
 {
-    class CPropertyIndexRef;
-
-    namespace Private
-    {
-        //! \private
-        template <class T, class X>
-        int compareByProperty(const T &a, const T &b, const CPropertyIndexRef &index, std::true_type, X)
-        {
-            return a.comparePropertyByIndex(index, b);
-        }
-        //! \private
-        template <class T>
-        int compareByProperty(const T &a, const T &b, const CPropertyIndexRef &index, std::false_type, std::true_type)
-        {
-            return compare(a.propertyByIndex(index), b.propertyByIndex(index));
-        }
-        //! \private
-        template <class T>
-        int compareByProperty(const T &, const T &, const CPropertyIndexRef &, std::false_type, std::false_type)
-        {
-            qFatal("Not implemented");
-            return 0;
-        }
-    }
-
     /*!
      * Non-owning reference to a CPropertyIndex with a subset of its features.
      */
@@ -205,7 +180,15 @@ namespace BlackMisc
             return [index = *this](const auto & a, const auto & b)
             {
                 using T = std::decay_t<decltype(a)>;
-                return Private::compareByProperty(a, b, index, THasComparePropertyByIndex<T>(), THasPropertyByIndex<T>());
+                if constexpr (THasComparePropertyByIndex<T>::value)
+                {
+                    return a.comparePropertyByIndex(index, b);
+                }
+                else if constexpr (THasPropertyByIndex<T>::value)
+                {
+                    return compare(a.propertyByIndex(index), b.propertyByIndex(index));
+                }
+                else { qFatal("Not implemented"); return 0; }
             };
         }
 

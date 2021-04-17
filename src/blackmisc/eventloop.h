@@ -57,30 +57,14 @@ namespace BlackMisc
                 result = true;
                 eventLoop.quit();
             });
-            if (checkInit(init))
-            {
-                return true;
-            }
+            if constexpr (std::is_void_v<decltype(init())>) { init(); }
+            else if (init()) { return true; }
             if (timeoutMs > 0)
             {
                 QTimer::singleShot(timeoutMs, &eventLoop, &QEventLoop::quit);
             }
             eventLoop.exec();
             return result;
-        }
-
-    private:
-        template <typename F>
-        static bool checkInit(F init, std::enable_if_t<std::is_void_v<decltype(init())>, int> = 0)
-        {
-            init();
-            return false;
-        }
-
-        template <typename F>
-        static bool checkInit(F init, std::enable_if_t<!std::is_void_v<decltype(init())>, int> = 0)
-        {
-            return init();
         }
     };
 } // ns

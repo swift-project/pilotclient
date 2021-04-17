@@ -102,12 +102,6 @@ namespace BlackMisc
         QString convertToQString(bool i18n = false) const;
 
     private:
-        /*
-         * Templates used by the constructor template:
-         */
-        template <typename T>
-        struct tag {};
-
         template <typename T>
         static const CLogCategoryList &fromClass()
         {
@@ -115,26 +109,14 @@ namespace BlackMisc
             static const auto list = []
             {
                 CLogCategoryList list;
-                list.appendCategoriesFromMemberFunction(tag<T>(), THasGetLogCategories<T>());
-                list.appendCategoriesFromMetaType(tag<T>(), std::bool_constant<QMetaTypeId<T>::Defined>());
-                list.appendCategoriesFromMetaObject(tag<T>(), std::is_base_of<QObject, T>());
+                if constexpr (THasGetLogCategories<T>::value) { list.push_back(fromQStringList(T::getLogCategories())); }
+                if constexpr (QMetaTypeId<T>::Defined) { list.push_back(QMetaType::typeName(qMetaTypeId<T>())); }
+                if constexpr (std::is_base_of_v<QObject, T>) { list.appendCategoriesFromMetaObject(T::staticMetaObject); }
                 if (list.isEmpty()) { list.push_back(CLogCategories::uncategorized()); }
                 return list;
             }();
             return list;
         }
-
-        template <typename T>
-        void appendCategoriesFromMemberFunction(tag<T>, std::true_type) { push_back(fromQStringList(T::getLogCategories())); }
-        void appendCategoriesFromMemberFunction(...) {}
-
-        template <typename T>
-        void appendCategoriesFromMetaType(tag<T>, std::true_type) { push_back(QMetaType::typeName(qMetaTypeId<T>())); }
-        void appendCategoriesFromMetaType(...) {}
-
-        template <typename T>
-        void appendCategoriesFromMetaObject(tag<T>, std::true_type) { appendCategoriesFromMetaObject(T::staticMetaObject); }
-        void appendCategoriesFromMetaObject(...) {}
 
         void appendCategoriesFromMetaObject(const QMetaObject &);
     };

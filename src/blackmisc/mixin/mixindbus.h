@@ -26,27 +26,6 @@ namespace BlackMisc
      */
     class LosslessTag {};
 
-    // *INDENT-OFF*
-    namespace Private
-    {
-        //! \cond PRIVATE
-        template <class T, std::enable_if_t<THasMarshallMethods<T>::value, int> = 0>
-        void marshallMember(QDBusArgument &arg, const T &value, std::false_type) { value.marshallToDbus(arg); }
-        template <class T, std::enable_if_t<THasMarshallMethods<T>::value, int> = 0>
-        void marshallMember(QDBusArgument &arg, const T &value, std::true_type) { value.marshallToDbus(arg, LosslessTag()); }
-        template <class T, std::enable_if_t<!THasMarshallMethods<T>::value, int> = 0>
-        void marshallMember(QDBusArgument &arg, const T &value, std::false_type) { arg << value; }
-
-        template <class T, std::enable_if_t<THasMarshallMethods<T>::value, int> = 0>
-        void unmarshallMember(const QDBusArgument &arg, T &value, std::false_type) { value.unmarshallFromDbus(arg); }
-        template <class T, std::enable_if_t<THasMarshallMethods<T>::value, int> = 0>
-        void unmarshallMember(const QDBusArgument &arg, T &value, std::true_type) { value.unmarshallFromDbus(arg, LosslessTag()); }
-        template <class T, std::enable_if_t<!THasMarshallMethods<T>::value, int> = 0>
-        void unmarshallMember(const QDBusArgument &arg, T &value, std::false_type) { arg >> value; }
-        //! \endcond
-    }
-    // *INDENT-ON*
-
     namespace Mixin
     {
         /*!
@@ -95,8 +74,16 @@ namespace BlackMisc
                 constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForMarshalling>());
                 meta.forEachMember([ &, this ](auto member)
                 {
-                    using lossless = std::bool_constant<member.has(MetaFlags<LosslessMarshalling>())>;
-                    Private::marshallMember(arg, member.in(*this->derived()), lossless());
+                    const auto &value = member.in(*this->derived());
+                    if constexpr (THasMarshallMethods<std::decay_t<decltype(value)>>::value)
+                    {
+                        if constexpr (member.has(MetaFlags<LosslessMarshalling>()))
+                        {
+                            value.marshallToDbus(arg, LosslessTag());
+                        }
+                        else { value.marshallToDbus(arg); }
+                    }
+                    else { arg << value; }
                 });
             }
 
@@ -107,8 +94,16 @@ namespace BlackMisc
                 constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForMarshalling>());
                 meta.forEachMember([ &, this ](auto member)
                 {
-                    using lossless = std::bool_constant<member.has(MetaFlags<LosslessMarshalling>())>;
-                    Private::unmarshallMember(arg, member.in(*this->derived()), lossless());
+                    auto &value = member.in(*this->derived());
+                    if constexpr (THasMarshallMethods<std::decay_t<decltype(value)>>::value)
+                    {
+                        if constexpr (member.has(MetaFlags<LosslessMarshalling>()))
+                        {
+                            value.unmarshallFromDbus(arg, LosslessTag());
+                        }
+                        else { value.unmarshallFromDbus(arg); }
+                    }
+                    else { arg >> value; }
                 });
             }
 

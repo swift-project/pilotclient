@@ -82,26 +82,19 @@ namespace BlackMisc
             return OutputIterator<std::decay_t<F>>(std::forward<F>(func));
         }
 
-        namespace Private
-        {
-            //! \private
-            template <class T> auto makeInsertIterator(T &container, std::true_type)
-            {
-                return makeOutputIterator([&container](auto &&v) { container.push_back(std::forward<decltype(v)>(v)); });
-            }
-            //! \private
-            template <class T> auto makeInsertIterator(T &container, std::false_type)
-            {
-                return makeOutputIterator([&container](auto &&v) { container.insert(std::forward<decltype(v)>(v)); });
-            }
-        }
-
         /*!
          * Return an insert iterator appropriate to the container type (uses push_back or insert).
          */
         template <class T> auto makeInsertIterator(T &container)
         {
-            return Private::makeInsertIterator(container, THasPushBack<T>());
+            if constexpr (THasPushBack<T>::value)
+            {
+                return makeOutputIterator([&container](auto &&v) { container.push_back(std::forward<decltype(v)>(v)); });
+            }
+            else
+            {
+                return makeOutputIterator([&container](auto &&v) { container.insert(std::forward<decltype(v)>(v)); });
+            }
         }
 
         /*!

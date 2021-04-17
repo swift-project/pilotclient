@@ -211,7 +211,11 @@ namespace BlackMisc
         static CWorker *fromTask(QObject *owner, const QString &name, F &&task)
         {
             int typeId = qMetaTypeId<std::decay_t<decltype(std::forward<F>(task)())>>();
-            return fromTaskImpl(owner, name, typeId, [task = std::forward<F>(task)]() mutable { return fromResultOf(std::move(task), 0); });
+            return fromTaskImpl(owner, name, typeId, [task = std::forward<F>(task)]() mutable
+            {
+                if constexpr (std::is_void_v<decltype(task())>) { std::move(task)(); return QVariant(); }
+                else { return QVariant::fromValue(std::move(task)()); }
+            });
         }
 
         //! Connects to a functor to which will be passed the result when the task is finished.
@@ -254,11 +258,6 @@ namespace BlackMisc
     private:
         CWorker(const std::function<QVariant()> &task) : m_task(task) {}
         static CWorker *fromTaskImpl(QObject *owner, const QString &name, int typeId, const std::function<QVariant()> &task);
-
-        template <typename F>
-        static auto fromResultOf(F &&func, std::enable_if_t<std::is_void_v<decltype(func())>, int>) { func(); return QVariant(); }
-        template <typename F>
-        static auto fromResultOf(F &&func, std::enable_if_t<!std::is_void_v<decltype(func())>, int>) { return QVariant::fromValue(func()); }
 
         template <typename R>
         R resultNoWait() { Q_ASSERT(m_result.canConvert<R>()); return m_result.value<R>(); }
