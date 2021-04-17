@@ -618,7 +618,7 @@ namespace BlackGui
                     // fall thru intended
                     this->formatVPilotView();
                 }
-                Q_FALLTHROUGH();
+                [[fallthrough]];
             default:
                 {
                     ui->frp_Editors->setVisible(true);

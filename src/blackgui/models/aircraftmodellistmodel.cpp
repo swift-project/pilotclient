@@ -75,7 +75,7 @@ namespace BlackGui
             case OwnModelSet:
                 // intentional fall thru
                 m_columns.addColumn(CColumn::orderColumn());
-                Q_FALLTHROUGH();
+                [[fallthrough]];
 
             case OwnAircraftModelMappingTool:
             case StashModel:

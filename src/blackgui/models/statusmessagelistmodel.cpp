@@ -81,7 +81,7 @@ namespace BlackGui
             {
             case DetailedWithOrder:
                 m_columns.addColumn(CColumn::orderColumn());
-                Q_FALLTHROUGH();
+                [[fallthrough]];
             case Detailed:
                 {
                     m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHmsz())));
@@ -94,7 +94,7 @@ namespace BlackGui
                 break;
             case SimplifiedWithOrder:
                 m_columns.addColumn(CColumn::orderColumn());
-                Q_FALLTHROUGH();
+                [[fallthrough]];
             case Simplified:
                 {
                     m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHmsz())));

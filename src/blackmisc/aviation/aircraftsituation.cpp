@@ -397,7 +397,7 @@ namespace BlackMisc
                     const int c =  Compare::compare(this->getGroundElevationInfo(), compareValue.getGroundElevationInfo());
                     if (c != 0) { return c; }
                 }
-                Q_FALLTHROUGH();
+                [[fallthrough]];
             case IndexGroundElevationInfoTransferred: return Compare::compare(m_isElvInfoTransferred, compareValue.m_isElvInfoTransferred);
             case IndexCanLikelySkipNearGroundInterpolation: return Compare::compare(this->canLikelySkipNearGroundInterpolation(), compareValue.canLikelySkipNearGroundInterpolation());
             default: break;

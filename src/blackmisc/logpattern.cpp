@@ -174,11 +174,11 @@ namespace BlackMisc
         {
         default:
         case CStatusMessage::SeverityDebug:     result.m_severities.insert(CStatusMessage::SeverityDebug);
-        Q_FALLTHROUGH();
+        [[fallthrough]];
         case CStatusMessage::SeverityInfo:      result.m_severities.insert(CStatusMessage::SeverityInfo);
-        Q_FALLTHROUGH();
+        [[fallthrough]];
         case CStatusMessage::SeverityWarning:   result.m_severities.insert(CStatusMessage::SeverityWarning);
-        Q_FALLTHROUGH();
+        [[fallthrough]];
         case CStatusMessage::SeverityError:     result.m_severities.insert(CStatusMessage::SeverityError);
         }
         return result;

@@ -45,7 +45,7 @@ namespace BlackGui
             {
             case NormalWithOrder:
                 m_columns.addColumn(CColumn::orderColumn());
-                Q_FALLTHROUGH();
+                [[fallthrough]];
             case NotSet:
             case Normal:
                 {
@@ -64,7 +64,7 @@ namespace BlackGui
 
             case MinimalWithOrder:
                 m_columns.addColumn(CColumn::orderColumn());
-                Q_FALLTHROUGH();
+                [[fallthrough]];
             case Minimal:
                 {
                     m_columns.addColumn(CColumn::standardString("key", CDistributor::IndexDbStringKey));
