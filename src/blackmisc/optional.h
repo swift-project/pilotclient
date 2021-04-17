@@ -19,7 +19,9 @@ namespace BlackMisc
 {
 
     /*!
-     * Class which can directly contain zero or one object of type T, with pointer semantics.
+     * Own implementation of std::optional.
+     *
+     * Needed to work around lack of C++20 copyable lambda functions.
      */
     template <typename T>
     class Optional

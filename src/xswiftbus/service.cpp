@@ -148,7 +148,7 @@ namespace XSwiftBus
         static const CMessage::string ellipsis = u8"\u2026";
         const unsigned lineLength = m_messages.maxLineLength() - 1;
 
-        using U8It = Utf8Iterator<typename std::string::const_iterator>;
+        using U8It = Utf8Iterator<std::string::const_iterator>;
         U8It begin(text.begin(), text.end());
         auto characters = std::distance(begin, U8It(text.end(), text.end()));
         std::vector<CMessage::string> wrappedLines;

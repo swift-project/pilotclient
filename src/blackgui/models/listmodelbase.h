@@ -198,8 +198,7 @@ namespace BlackGui
                 {
                     if (!tieBreakers.isEmpty())
                     {
-                        const std::integral_constant<bool, true> marker;
-                        return compareForModelSort<ObjectType>(a, b, order, tieBreakers.front(), tieBreakers.copyFrontRemoved(), marker);
+                        return compareForModelSort<ObjectType>(a, b, order, tieBreakers.front(), tieBreakers.copyFrontRemoved(), std::true_type());
                     }
                     return false;
                 }
@@ -214,8 +213,7 @@ namespace BlackGui
                 const BlackMisc::CVariant bQv = b.propertyByIndex(index);
                 if (!tieBreakers.isEmpty() && aQv == bQv)
                 {
-                    const std::integral_constant<bool, false> marker;
-                    return compareForModelSort<ObjectType>(a, b, order, tieBreakers.front(), tieBreakers.copyFrontRemoved(), marker);
+                    return compareForModelSort<ObjectType>(a, b, order, tieBreakers.front(), tieBreakers.copyFrontRemoved(), std::false_type());
                 }
                 return (order == Qt::AscendingOrder) ? (aQv < bQv) : (bQv < aQv);
             }
