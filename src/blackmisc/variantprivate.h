@@ -171,7 +171,7 @@ namespace BlackMisc
             }
             virtual int getMetaTypeId() const override
             {
-                return maybeGetMetaTypeId(std::integral_constant<bool, QMetaTypeId<T>::Defined> {});
+                return maybeGetMetaTypeId(std::bool_constant<QMetaTypeId<T>::Defined> {});
             }
             virtual const void *upCastTo(const void *object, int metaTypeId) const override
             {

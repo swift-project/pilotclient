@@ -95,7 +95,7 @@ namespace BlackMisc
                 constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForMarshalling>());
                 meta.forEachMember([ &, this ](auto member)
                 {
-                    using lossless = std::integral_constant<bool, member.has(MetaFlags<LosslessMarshalling>())>;
+                    using lossless = std::bool_constant<member.has(MetaFlags<LosslessMarshalling>())>;
                     Private::marshallMember(arg, member.in(*this->derived()), lossless());
                 });
             }
@@ -107,7 +107,7 @@ namespace BlackMisc
                 constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForMarshalling>());
                 meta.forEachMember([ &, this ](auto member)
                 {
-                    using lossless = std::integral_constant<bool, member.has(MetaFlags<LosslessMarshalling>())>;
+                    using lossless = std::bool_constant<member.has(MetaFlags<LosslessMarshalling>())>;
                     Private::unmarshallMember(arg, member.in(*this->derived()), lossless());
                 });
             }

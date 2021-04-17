@@ -116,7 +116,7 @@ namespace BlackMisc
             {
                 CLogCategoryList list;
                 list.appendCategoriesFromMemberFunction(tag<T>(), THasGetLogCategories<T>());
-                list.appendCategoriesFromMetaType(tag<T>(), std::integral_constant<bool, QMetaTypeId<T>::Defined>());
+                list.appendCategoriesFromMetaType(tag<T>(), std::bool_constant<QMetaTypeId<T>::Defined>());
                 list.appendCategoriesFromMetaObject(tag<T>(), std::is_base_of<QObject, T>());
                 if (list.isEmpty()) { list.push_back(CLogCategories::uncategorized()); }
                 return list;

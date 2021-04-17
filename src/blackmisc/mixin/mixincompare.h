@@ -70,7 +70,7 @@ namespace BlackMisc
             template <typename T, typename Flags>
             static bool membersEqual(const T &a, const T &b, Flags)
             {
-                return membersEqual(a, b, std::integral_constant<bool, static_cast<bool>(Flags::value & CaseInsensitiveComparison)>());
+                return membersEqual(a, b, std::bool_constant<static_cast<bool>(Flags::value & CaseInsensitiveComparison)>());
             }
             template <typename T>
             static bool membersEqual(const T &a, const T &b, std::true_type) { return a.compare(b, Qt::CaseInsensitive) == 0; }
@@ -135,7 +135,7 @@ namespace BlackMisc
             template <typename T, typename Flags>
             static bool membersLess(bool &io_greaterThan, const T &a, const T &b, Flags)
             {
-                using CaseInsensitive = std::integral_constant<bool, static_cast<bool>(Flags::value & CaseInsensitiveComparison)>;
+                using CaseInsensitive = std::bool_constant<static_cast<bool>(Flags::value & CaseInsensitiveComparison)>;
                 if (io_greaterThan) { return false; }
                 io_greaterThan = membersLess(b, a, CaseInsensitive());
                 return membersLess(a, b, CaseInsensitive());
@@ -171,7 +171,7 @@ namespace BlackMisc
             template <typename T, typename Flags>
             static int membersCompare(const T &a, const T &b, Flags)
             {
-                using CaseInsensitive = std::integral_constant<bool, static_cast<bool>(Flags::value & CaseInsensitiveComparison)>;
+                using CaseInsensitive = std::bool_constant<static_cast<bool>(Flags::value & CaseInsensitiveComparison)>;
                 return membersCompare(a, b, CaseInsensitive(), THasCompare<T, T>());
             }
             template <typename T, typename U>

@@ -130,7 +130,7 @@ namespace BlackMisc
     struct MetaFlags : public std::integral_constant<quint64, F>
     {
         //! Implicit conversion to std::false_type (if F is zero) or std::true_type (if F is non-zero).
-        constexpr operator std::integral_constant<bool, static_cast<bool>(F)>() const { return {}; }
+        constexpr operator std::bool_constant<static_cast<bool>(F)>() const { return {}; }
     };
 
     /*!
