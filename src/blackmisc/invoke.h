@@ -26,23 +26,6 @@ namespace BlackMisc
     namespace Private
     {
 
-        // Our own version of C++17 std::invoke().
-        template <typename F, typename T, typename = std::enable_if_t<std::is_member_object_pointer_v<F>>>
-        decltype(auto) invoke(F ptr, T && object)
-        {
-            return std::forward<T>(object).*ptr;
-        }
-        template <typename F, typename T, typename... Ts, typename = std::enable_if_t<std::is_member_function_pointer_v<F>>>
-        decltype(auto) invoke(F ptr, T && object, Ts && ... args)
-        {
-            return (std::forward<T>(object).*ptr)(std::forward<Ts>(args)...);
-        }
-        template < typename F, typename... Ts, typename = std::enable_if_t < ! std::is_member_pointer_v<std::decay_t<F>>>>
-        decltype(auto) invoke(F && func, Ts && ... args)
-        {
-            return std::forward<F>(func)(std::forward<Ts>(args)...);
-        }
-
         // Like invoke() but ignores the first argument if callable is not a member function. For uniform calling of callables with slot semantics.
         template <typename F, typename T, typename U, size_t... Is>
         decltype(auto) invokeSlotImpl(F ptr, T *object, U tuple, std::index_sequence<Is...>, std::true_type)

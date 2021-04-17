@@ -174,7 +174,7 @@ namespace BlackMisc
         template <typename T, typename... Ts>
         decltype(auto) in(T &&object, Ts &&... args) const
         {
-            return Private::invoke(m_ptr, std::forward<T>(object), std::forward<Ts>(args)...);
+            return std::invoke(m_ptr, std::forward<T>(object), std::forward<Ts>(args)...);
         }
 
         //! Return name as QLatin1String.
