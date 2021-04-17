@@ -173,14 +173,14 @@ namespace BlackMisc
         template <class AVIO>
         CModulator<AVIO>::CModulator() : m_name("default")
         {
-            static_assert(!std::is_polymorphic<AVIO>::value, "Must not use virtual functions for value classes");
+            static_assert(!std::is_polymorphic_v<AVIO>, "Must not use virtual functions for value classes");
         }
 
         template <class AVIO>
         CModulator<AVIO>::CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency) :
             m_name(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency)
         {
-            static_assert(!std::is_polymorphic<AVIO>::value, "Must not use virtual functions for value classes");
+            static_assert(!std::is_polymorphic_v<AVIO>, "Must not use virtual functions for value classes");
         }
 
         template <class AVIO>

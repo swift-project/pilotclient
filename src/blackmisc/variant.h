@@ -116,14 +116,14 @@ namespace BlackMisc
         //! Construct a variant from a value.
         template <typename T> static CVariant fromValue(T &&value)
         {
-            static_assert(!std::is_same<CVariant, std::decay_t<T>>::value, "CVariant is an illegal type!");
+            static_assert(!std::is_same_v<CVariant, std::decay_t<T>>, "CVariant is an illegal type!");
             return CVariant(QVariant::fromValue(std::forward<T>(value)));
         }
 
         //! Synonym for fromValue().
         template <typename T> static CVariant from(T &&value)
         {
-            static_assert(!std::is_same<CVariant, std::decay_t<T>>::value, "CVariant is an illegal type!");
+            static_assert(!std::is_same_v<CVariant, std::decay_t<T>>, "CVariant is an illegal type!");
             return CVariant(QVariant::fromValue(std::forward<T>(value)));
         }
 

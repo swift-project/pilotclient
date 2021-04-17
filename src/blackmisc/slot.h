@@ -51,7 +51,7 @@ namespace BlackMisc
     template <typename T, typename F, typename G>
     QMetaObject::Connection connectOnce(T *sender, F signal, G &&slot)
     {
-        static_assert(! std::is_member_pointer<std::decay_t<G>>::value, "If slot is a pointer to member, a receiver must be supplied");
+        static_assert(! std::is_member_pointer_v<std::decay_t<G>>, "If slot is a pointer to member, a receiver must be supplied");
         return connectOnce(sender, signal, sender, std::forward<G>(slot));
     }
 

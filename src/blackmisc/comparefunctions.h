@@ -20,7 +20,7 @@ namespace BlackMisc
     namespace Compare
     {
         //! Compare arithmetic values
-        template <typename T, std::enable_if_t<std::is_arithmetic<T>::value, int> = 0>
+        template <typename T, std::enable_if_t<std::is_arithmetic_v<T>, int> = 0>
         int compare(T a, T b)
         {
             if (a < b) { return -1; }
@@ -29,7 +29,7 @@ namespace BlackMisc
         }
 
         //! Compare enumerators
-        template <typename T, std::enable_if_t<std::is_enum<T>::value, int> = 0>
+        template <typename T, std::enable_if_t<std::is_enum_v<T>, int> = 0>
         int compare(T a, T b)
         {
             using UT = std::underlying_type_t<T>;

@@ -55,7 +55,7 @@ namespace BlackMisc
             OutputIterator &operator *() { return *this; }
 
             //! Assignment operator performs the output
-            template <typename T, std::enable_if_t<! std::is_convertible<T, OutputIterator>::value, int> = 0>
+            template <typename T, std::enable_if_t<! std::is_convertible_v<T, OutputIterator>, int> = 0>
             OutputIterator &operator =(T &&value) { m_func(std::forward<T>(value)); return *this; }
 
             //! Copy assignment operator
@@ -135,7 +135,7 @@ namespace BlackMisc
             };
 
             //! The type returned by this iterator's arrow operator, which may be a pointer or a pointer-like wrapper object
-            using pointer = typename std::conditional<std::is_reference<undecayed_type>::value,
+            using pointer = typename std::conditional<std::is_reference_v<undecayed_type>,
                                                       std::remove_reference_t<undecayed_type> *,
                                                       PointerWrapper>::type;
 

@@ -21,7 +21,7 @@ namespace BlackMisc
     template<class OBJ, class CONTAINER>
     class IOrderableList
     {
-        static_assert(std::is_base_of<IOrderable, OBJ>::value, "OBJ needs to implement IOrderable");
+        static_assert(std::is_base_of_v<IOrderable, OBJ>, "OBJ needs to implement IOrderable");
 
     public:
         //! Sort ascending

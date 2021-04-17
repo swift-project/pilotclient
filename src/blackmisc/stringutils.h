@@ -382,11 +382,11 @@ namespace BlackMisc
     {
         static QString toQString(double n) { return QString::number(n); }
     };
-    template <typename T> struct TString<T, std::enable_if_t<std::is_enum<T>::value>>
+    template <typename T> struct TString<T, std::enable_if_t<std::is_enum_v<T>>>
     {
         static QString toQString(T e) { return QString::number(e); }
     };
-    template <typename T> struct TString<T, std::enable_if_t<std::is_convertible<T, QString>::value>>
+    template <typename T> struct TString<T, std::enable_if_t<std::is_convertible_v<T, QString>>>
     {
         static QString toQString(const T &v) { return v; }
     };

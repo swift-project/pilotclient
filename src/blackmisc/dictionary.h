@@ -63,7 +63,7 @@ namespace BlackMisc
         struct TAssociativityTraits<false, false>
         {
             template <class Key, class>
-            struct DefaultType { static_assert(std::is_void<Key>::value, "Key does not support either QHash or QMap"); };
+            struct DefaultType { static_assert(std::is_void_v<Key>, "Key does not support either QHash or QMap"); };
         };
         //! \endcond
     }
@@ -475,7 +475,7 @@ namespace BlackMisc
     template <class Map1, class Map2, class F>
     void forEachIntersection(const Map1 &map1, const Map2 &map2, F functor)
     {
-        static_assert(std::is_same<typename Map1::key_type, typename Map2::key_type>::value, "Maps must have the same key type");
+        static_assert(std::is_same_v<typename Map1::key_type, typename Map2::key_type>, "Maps must have the same key type");
         if (map1.empty() || map2.empty()) { return; }
         auto it1 = implementationOf(map1).lowerBound(map2.cbegin().key());
         auto end1 = implementationOf(map1).upperBound((map2.cend() - 1).key());

@@ -39,7 +39,7 @@ namespace BlackMisc
     QString CProcessInfo::processNameFromId(qint64 pid)
     {
         char name[1024];
-        proc_name(pid, name, std::extent<decltype(name)>::value);
+        proc_name(pid, name, std::extent_v<decltype(name)>);
         return name;
     }
 #elif defined(Q_OS_WIN)
@@ -48,7 +48,7 @@ namespace BlackMisc
         HANDLE proc = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, static_cast<DWORD>(pid));
         if (! proc) { return {}; }
         wchar_t path[1024];
-        auto len = GetModuleFileNameEx(proc, nullptr, path, std::extent<decltype(path)>::value);
+        auto len = GetModuleFileNameEx(proc, nullptr, path, std::extent_v<decltype(path)>);
         CloseHandle(proc);
         if (len <= 0) { return {}; }
         return QFileInfo(QString::fromWCharArray(path)).completeBaseName();

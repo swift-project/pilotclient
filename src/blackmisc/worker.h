@@ -256,9 +256,9 @@ namespace BlackMisc
         static CWorker *fromTaskImpl(QObject *owner, const QString &name, int typeId, const std::function<QVariant()> &task);
 
         template <typename F>
-        static auto fromResultOf(F &&func, std::enable_if_t<std::is_void<decltype(func())>::value, int>) { func(); return QVariant(); }
+        static auto fromResultOf(F &&func, std::enable_if_t<std::is_void_v<decltype(func())>, int>) { func(); return QVariant(); }
         template <typename F>
-        static auto fromResultOf(F &&func, std::enable_if_t<!std::is_void<decltype(func())>::value, int>) { return QVariant::fromValue(func()); }
+        static auto fromResultOf(F &&func, std::enable_if_t<!std::is_void_v<decltype(func())>, int>) { return QVariant::fromValue(func()); }
 
         template <typename R>
         R resultNoWait() { Q_ASSERT(m_result.canConvert<R>()); return m_result.value<R>(); }

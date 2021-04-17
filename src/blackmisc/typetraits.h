@@ -37,7 +37,7 @@ namespace BlackMisc
         };
 
         //! \private Dummy that derives from T if T is a class.
-        template <typename T, bool = std::is_class<T>::value>
+        template <typename T, bool = std::is_class_v<T>>
         struct SyntheticDerived : public T {};
         //! \cond
         template <typename T>
@@ -61,7 +61,7 @@ namespace BlackMisc
     struct TParameter
     {
         //! Whether the input parameter type T should be passed by value or by const reference.
-        static constexpr ParameterPassBy passBy = (sizeof(T) <= 16 && std::is_trivially_copy_constructible<T>::value && std::is_trivially_destructible<T>::value) ? ParameterPassBy::Value : ParameterPassBy::ConstRef;
+        static constexpr ParameterPassBy passBy = (sizeof(T) <= 16 && std::is_trivially_copy_constructible_v<T> && std::is_trivially_destructible_v<T>) ? ParameterPassBy::Value : ParameterPassBy::ConstRef;
     };
 
     /*!

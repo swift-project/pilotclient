@@ -29,7 +29,7 @@ namespace BlackMisc
         Optional() noexcept {}
 
         //! Construct from a value.
-        Optional(T value) noexcept(std::is_nothrow_move_constructible<T>::value)
+        Optional(T value) noexcept(std::is_nothrow_move_constructible_v<T>)
         {
             new (m_data.bytes) T(std::move(value));
             m_isValid = true;
@@ -39,14 +39,14 @@ namespace BlackMisc
         Optional(std::nullptr_t) noexcept {}
 
         //! Copy constructor.
-        Optional(const Optional &other) noexcept(std::is_nothrow_copy_constructible<T>::value)
+        Optional(const Optional &other) noexcept(std::is_nothrow_copy_constructible_v<T>)
         {
             if (other.m_isValid) { new (m_data.bytes) T(*other); }
             m_isValid = other.m_isValid;
         }
 
         //! Move constructor.
-        Optional(Optional &&other) noexcept(std::is_nothrow_move_constructible<T>::value)
+        Optional(Optional &&other) noexcept(std::is_nothrow_move_constructible_v<T>)
         {
             if (other.m_isValid) { new (m_data.bytes) T(std::move(*other)); }
             m_isValid = other.m_isValid;
@@ -60,7 +60,7 @@ namespace BlackMisc
         }
 
         //! Copy assignment.
-        Optional &operator =(const Optional &other) noexcept(std::is_nothrow_copy_constructible<T>::value)
+        Optional &operator =(const Optional &other) noexcept(std::is_nothrow_copy_constructible_v<T>)
         {
             reset();
             if (other.m_isValid) { new (m_data.bytes) T(*other); }
@@ -69,7 +69,7 @@ namespace BlackMisc
         }
 
         //! Move assignment.
-        Optional &operator =(Optional &&other) noexcept(std::is_nothrow_move_constructible<T>::value)
+        Optional &operator =(Optional &&other) noexcept(std::is_nothrow_move_constructible_v<T>)
         {
             reset();
             if (other.m_isValid) { new (m_data.bytes) T(std::move(*other)); }

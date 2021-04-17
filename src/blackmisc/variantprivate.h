@@ -127,7 +127,7 @@ namespace BlackMisc
             static bool equalsPropertyByIndex(const T &object, const QVariant &, CPropertyIndexRef, ...) { throw CVariantException(object, "equalsPropertyByIndex"); }
 
             template <typename T>
-            static int toIcon(const T &object, std::enable_if_t < ! std::is_same<T, CVariant>::value, decltype(static_cast<void>(object.toIcon()), 0) >) { return object.toIcon(); }
+            static int toIcon(const T &object, std::enable_if_t < ! std::is_same_v<T, CVariant>, decltype(static_cast<void>(object.toIcon()), 0) >) { return object.toIcon(); }
             template <typename T>
             static int toIcon(const T &object, ...) { throw CVariantException(object, "toIcon"); }
 
@@ -231,7 +231,7 @@ namespace BlackMisc
         IValueObjectMetaInfo *getValueObjectMetaInfo() { return getValueObjectMetaInfo(qMetaTypeId<T>()); }
 
         //! \cond PRIVATE
-        template <typename T, typename = std::enable_if_t<std::is_base_of<CSequence<typename T::value_type>, T>::value && ! std::is_same<typename T::value_type, CVariant>::value>>
+        template <typename T, typename = std::enable_if_t<std::is_base_of_v<CSequence<typename T::value_type>, T> && ! std::is_same_v<typename T::value_type, CVariant>>>
         void maybeRegisterMetaListConvert(int);
         template <typename T>
         void maybeRegisterMetaListConvert(...) {}

@@ -27,17 +27,17 @@ namespace BlackMisc
     {
 
         // Our own version of C++17 std::invoke().
-        template <typename F, typename T, typename = std::enable_if_t<std::is_member_object_pointer<F>::value>>
+        template <typename F, typename T, typename = std::enable_if_t<std::is_member_object_pointer_v<F>>>
         decltype(auto) invoke(F ptr, T && object)
         {
             return std::forward<T>(object).*ptr;
         }
-        template <typename F, typename T, typename... Ts, typename = std::enable_if_t<std::is_member_function_pointer<F>::value>>
+        template <typename F, typename T, typename... Ts, typename = std::enable_if_t<std::is_member_function_pointer_v<F>>>
         decltype(auto) invoke(F ptr, T && object, Ts && ... args)
         {
             return (std::forward<T>(object).*ptr)(std::forward<Ts>(args)...);
         }
-        template < typename F, typename... Ts, typename = std::enable_if_t < ! std::is_member_pointer<std::decay_t<F>>::value >>
+        template < typename F, typename... Ts, typename = std::enable_if_t < ! std::is_member_pointer_v<std::decay_t<F>>>>
         decltype(auto) invoke(F && func, Ts && ... args)
         {
             return std::forward<F>(func)(std::forward<Ts>(args)...);

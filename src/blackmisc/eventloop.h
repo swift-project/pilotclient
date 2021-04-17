@@ -71,14 +71,14 @@ namespace BlackMisc
 
     private:
         template <typename F>
-        static bool checkInit(F init, std::enable_if_t<std::is_void<decltype(init())>::value, int> = 0)
+        static bool checkInit(F init, std::enable_if_t<std::is_void_v<decltype(init())>, int> = 0)
         {
             init();
             return false;
         }
 
         template <typename F>
-        static bool checkInit(F init, std::enable_if_t<!std::is_void<decltype(init())>::value, int> = 0)
+        static bool checkInit(F init, std::enable_if_t<!std::is_void_v<decltype(init())>, int> = 0)
         {
             return init();
         }

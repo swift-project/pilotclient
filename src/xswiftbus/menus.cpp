@@ -19,8 +19,8 @@ namespace XSwiftBus
     //! "safe" cast from integer to void*
     template <typename T> void *voidptr_cast(T i)
     {
-        static_assert(std::is_integral<T>::value, "voidptr_cast expects an integer");
-        using intptr_type = std::conditional_t<std::is_signed<T>::value, intptr_t, uintptr_t>;
+        static_assert(std::is_integral_v<T>, "voidptr_cast expects an integer");
+        using intptr_type = std::conditional_t<std::is_signed_v<T>, intptr_t, uintptr_t>;
         return reinterpret_cast<void *>(static_cast<intptr_type>(i));
     }
 
@@ -28,7 +28,7 @@ namespace XSwiftBus
     template <typename T> T intptr_cast(void *p)
     {
         static_assert(std::is_integral<T>::value, "voidptr_cast returns an integer");
-        using intptr_type = std::conditional_t<std::is_signed<T>::value, intptr_t, uintptr_t>;
+        using intptr_type = std::conditional_t<std::is_signed_v<T>, intptr_t, uintptr_t>;
         return static_cast<T>(reinterpret_cast<intptr_type>(p));
     }
 

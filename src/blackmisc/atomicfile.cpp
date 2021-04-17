@@ -134,7 +134,7 @@ namespace BlackMisc
             char s[1024] {};
             auto x = strerror_r(errno, s, sizeof(s));
             setErrorString(QString::fromLocal8Bit(s));
-            static_assert(std::is_same<decltype(x), int>::value, "Non-standard signature of POSIX function strerror_r, check documentation.");
+            static_assert(std::is_same_v<decltype(x), int>, "Non-standard signature of POSIX function strerror_r, check documentation.");
         }
     }
 #elif defined(Q_OS_WIN32)

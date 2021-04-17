@@ -251,7 +251,7 @@ namespace BlackMisc
         template <typename M, quint64 Flags = 0>
         constexpr static CMetaMember<M, Flags> makeMetaMember(M ptrToMember, const char *name = nullptr, int index = 0, MetaFlags<Flags> flags = {})
         {
-            static_assert(std::is_member_object_pointer<M>::value, "M must be a pointer to member object");
+            static_assert(std::is_member_object_pointer_v<M>, "M must be a pointer to member object");
             return { ptrToMember, name, index, flags };
         }
     };

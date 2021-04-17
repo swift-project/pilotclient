@@ -76,7 +76,7 @@ namespace BlackMisc
             virtual void initialize(IDataLink *dataLink) override
             {
                 CGenericListObserver::initialize(dataLink);
-                if (std::is_same<U, CAnyMatch>::value) { setFilter({}); }
+                if (std::is_same_v<U, CAnyMatch>) { setFilter({}); }
             }
 
             //! Set filter to choose list elements.

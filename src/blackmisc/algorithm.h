@@ -176,7 +176,7 @@ namespace BlackMisc
     template <typename T, typename F>
     void tupleForEachPair(T &&tuple, F &&visitor)
     {
-        using seq = std::make_index_sequence<std::tuple_size<std::decay_t<T>>::value / 2>;
+        using seq = std::make_index_sequence<std::tuple_size_v<std::decay_t<T>> / 2>;
         return Private::tupleForEachPairImpl(std::forward<T>(tuple), std::forward<F>(visitor), seq());
     }
 }

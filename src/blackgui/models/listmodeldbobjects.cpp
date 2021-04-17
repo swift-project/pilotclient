@@ -43,8 +43,8 @@ namespace BlackGui
         {
             CListModelBaseNonTemplate::m_sortTieBreakers.push_front(ObjectType::keyIndex());
 
-            constexpr bool hasIntegerKey = std::is_base_of<IDatastoreObjectWithIntegerKey, ObjectType>::value && std::is_same<int, KeyType>::value;
-            constexpr bool hasStringKey  = std::is_base_of<IDatastoreObjectWithStringKey, ObjectType>::value && std::is_base_of<QString, KeyType>::value;
+            constexpr bool hasIntegerKey = std::is_base_of_v<IDatastoreObjectWithIntegerKey, ObjectType> && std::is_same_v<int, KeyType>;
+            constexpr bool hasStringKey  = std::is_base_of_v<IDatastoreObjectWithStringKey, ObjectType> && std::is_base_of_v<QString, KeyType>;
             static_assert(hasIntegerKey || hasStringKey, "ObjectType needs to implement IDatastoreObjectWithXXXXKey and have appropriate KeyType");
         }
 

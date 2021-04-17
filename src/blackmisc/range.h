@@ -213,12 +213,12 @@ namespace BlackMisc
         //! Create a range from reverse iterators.
         CRange<const_reverse_iterator> reverse() const
         {
-            static_assert(std::is_same<decltype(*rbegin()), decltype(*begin())>::value, "see https://dev.swift-project.org/T700");
+            static_assert(std::is_same_v<decltype(*rbegin()), decltype(*begin())>, "see https://dev.swift-project.org/T700");
             return { rbegin(), rend() };
         }
 
         //! Implicit conversion to any container of value_type which supports push_back. This will copy elements.
-        template <class T, class = std::enable_if_t<std::is_convertible<value_type, typename T::value_type>::value>>
+        template <class T, class = std::enable_if_t<std::is_convertible_v<value_type, typename T::value_type>>>
         operator T() const
         {
             return to<T>();

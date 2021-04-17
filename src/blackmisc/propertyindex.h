@@ -123,7 +123,7 @@ namespace BlackMisc
         //! Compare with index given by enum
         template<class EnumType> bool contains(EnumType ev) const
         {
-            static_assert(std::is_enum<EnumType>::value, "Argument must be an enum");
+            static_assert(std::is_enum_v<EnumType>, "Argument must be an enum");
             return this->contains(static_cast<int>(ev));
         }
 
@@ -136,14 +136,14 @@ namespace BlackMisc
         //! First element casted to given type, usually the PropertIndex enum
         template<class CastType> CastType frontCasted() const
         {
-            static_assert(std::is_enum<CastType>::value || std::is_integral<CastType>::value, "CastType must be an enum or integer");
+            static_assert(std::is_enum_v<CastType> || std::is_integral_v<CastType>, "CastType must be an enum or integer");
             return static_cast<CastType>(frontToInt());
         }
 
         //! Compare with index given by enum
         template<class EnumType> bool startsWithPropertyIndexEnum(EnumType ev) const
         {
-            static_assert(std::is_enum<EnumType>::value, "Argument must be an enum");
+            static_assert(std::is_enum_v<EnumType>, "Argument must be an enum");
             return this->startsWith(static_cast<int>(ev));
         }
 

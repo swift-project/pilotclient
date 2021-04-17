@@ -27,8 +27,8 @@ namespace BlackMisc
         //! Such objects should implement \sa ITimestampBased and \sa IDatastoreObjectWithIntegerKey or \sa IDatastoreObjectWithStringKey
         template<class OBJ, class CONTAINER, typename KEYTYPE> class IDatastoreObjectList : public ITimestampObjectList<OBJ, CONTAINER>
         {
-            static constexpr bool hasIntegerKey = std::is_base_of<IDatastoreObjectWithIntegerKey, OBJ>::value && std::is_same<int, KEYTYPE>::value;
-            static constexpr bool hasStringKey = std::is_base_of<IDatastoreObjectWithStringKey, OBJ>::value && std::is_base_of<QString, KEYTYPE>::value;
+            static constexpr bool hasIntegerKey = std::is_base_of_v<IDatastoreObjectWithIntegerKey, OBJ> && std::is_same_v<int, KEYTYPE>;
+            static constexpr bool hasStringKey = std::is_base_of_v<IDatastoreObjectWithStringKey, OBJ> && std::is_base_of_v<QString, KEYTYPE>;
             static_assert(hasIntegerKey || hasStringKey, "ObjectType needs to implement IDatastoreObjectWithXXXXKey and have appropriate KeyType");
 
         public:

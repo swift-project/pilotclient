@@ -108,7 +108,7 @@ namespace BlackMisc
         bool matchesVariant(const CVariant &value) const;
 
         //! True if this map matches the value
-        template <typename T, typename = std::enable_if_t<!std::is_same<T, CVariant>::value>>
+        template <typename T, typename = std::enable_if_t<!std::is_same_v<T, CVariant>>>
         bool matches(const T &value) const { return matchesVariant(CVariant::from(value)); }
 
         //! Map

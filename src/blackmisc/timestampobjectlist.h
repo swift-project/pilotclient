@@ -44,7 +44,7 @@ namespace BlackMisc
     //! Such objects should implement \sa ITimestampBased
     template<class OBJ, class CONTAINER> class ITimestampObjectList
     {
-        static_assert(std::is_base_of<ITimestampBased, OBJ>::value, "OBJ needs to implement ITimestampBased");
+        static_assert(std::is_base_of_v<ITimestampBased, OBJ>, "OBJ needs to implement ITimestampBased");
 
     public:
         //! Hint if the list is sorted
@@ -451,7 +451,7 @@ namespace BlackMisc
     //! Such objects should implement \sa ITimestampWithOffsetBased
     template<class OBJ, class CONTAINER> class ITimestampWithOffsetObjectList : public ITimestampObjectList<OBJ, CONTAINER>
     {
-        static_assert(std::is_base_of<ITimestampWithOffsetBased, OBJ>::value, "OBJ needs to implement ITimestampBased");
+        static_assert(std::is_base_of_v<ITimestampWithOffsetBased, OBJ>, "OBJ needs to implement ITimestampBased");
 
     public:
         //! Hint if the list is sorted
