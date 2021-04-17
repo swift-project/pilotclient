@@ -11,7 +11,6 @@
 #ifndef BLACKMISC_INHERITANCE_TRAITS_H
 #define BLACKMISC_INHERITANCE_TRAITS_H
 
-#include "blackmisc/typetraits.h" // for void_t
 #include <type_traits>
 
 template <typename T>
@@ -24,14 +23,14 @@ namespace BlackMisc
     /*!
      * If T has a member typedef base_type, this trait will obtain it, otherwise void.
      */
-    template <typename T, typename = void_t<>>
+    template <typename T, typename = std::void_t<>>
     struct TBaseOf
     {
         using type = void; //!< void
     };
     //! \cond
     template <typename T>
-    struct TBaseOf<T, void_t<typename T::base_type>>
+    struct TBaseOf<T, std::void_t<typename T::base_type>>
     {
         using type = typename T::base_type; //!< T::base_type
     };
@@ -50,14 +49,14 @@ namespace BlackMisc
     /*!
      * If T has a member typedef base_type which has a member propertyByIndex, this trait will obtain it, otherwise void.
      */
-    template <typename T, typename = void_t<>>
+    template <typename T, typename = std::void_t<>>
     struct TIndexBaseOf
     {
         using type = void; //!< void
     };
     //! \cond
     template <typename T>
-    struct TIndexBaseOf<T, void_t<decltype(std::declval<typename T::base_type>().propertyByIndex(std::declval<CPropertyIndexRef>()))>>
+    struct TIndexBaseOf<T, std::void_t<decltype(std::declval<typename T::base_type>().propertyByIndex(std::declval<CPropertyIndexRef>()))>>
     {
         using type = typename T::base_type; //!< T::base_type
     };

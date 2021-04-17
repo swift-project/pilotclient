@@ -21,13 +21,6 @@ namespace BlackMisc
 
     class CPropertyIndexRef;
 
-    //! \cond PRIVATE
-    // Own implementation of C++17 std::void_t, simple variadic alias
-    // template which is always void. Useful for expression SFINAE.
-    template <typename...>
-    using void_t = void;
-    //! \endcond
-
     namespace Private
     {
         //! \private Own implementation of C++17 std::is_nothrow_swappable.
@@ -74,103 +67,103 @@ namespace BlackMisc
     /*!
      * Trait to detect whether T contains a member function toQString.
      */
-    template <typename T, typename = void_t<>>
+    template <typename T, typename = std::void_t<>>
     struct THasToQString : public std::false_type {};
     //! \cond
     template <typename T>
-    struct THasToQString<T, void_t<decltype(std::declval<T>().toQString())>> : public std::true_type {};
+    struct THasToQString<T, std::void_t<decltype(std::declval<T>().toQString())>> : public std::true_type {};
     //! \endcond
 
     /*!
      * Trait which is true if the expression a.push_back(v) is valid when a and v are instances of T and T::value_type.
      */
-    template <typename T, typename = void_t<>>
+    template <typename T, typename = std::void_t<>>
     struct THasPushBack : public std::false_type {};
     //! \cond
     template <typename T>
-    struct THasPushBack<T, void_t<decltype(std::declval<T>().push_back(std::declval<typename T::value_type>()))>> : public std::true_type {};
+    struct THasPushBack<T, std::void_t<decltype(std::declval<T>().push_back(std::declval<typename T::value_type>()))>> : public std::true_type {};
     //! \endcond
 
     /*!
      * Trait to detect whether a class T has a static member function named getLogCategories.
      */
-    template <typename T, typename = void_t<>>
+    template <typename T, typename = std::void_t<>>
     struct THasGetLogCategories : public std::false_type {};
     //! \cond
     template <typename T>
-    struct THasGetLogCategories<T, void_t<decltype(T::getLogCategories())>> : public std::true_type {};
+    struct THasGetLogCategories<T, std::void_t<decltype(T::getLogCategories())>> : public std::true_type {};
     //! \endcond
 
     /*!
      * Trait to detect whether a class T can be used as a key in a QHash.
      */
-    template <typename T, typename = void_t<>>
+    template <typename T, typename = std::void_t<>>
     struct TModelsQHashKey : public std::false_type {};
     //! \cond
     template <typename T>
-    struct TModelsQHashKey<T, void_t<decltype(std::declval<T>() == std::declval<T>(), qHash(std::declval<T>()))>> : public std::true_type {};
+    struct TModelsQHashKey<T, std::void_t<decltype(std::declval<T>() == std::declval<T>(), qHash(std::declval<T>()))>> : public std::true_type {};
     //! \endcond
 
     /*!
      * Trait to detect whether a class T can be used as a key in a QMap.
      */
-    template <typename T, typename = void_t<>>
+    template <typename T, typename = std::void_t<>>
     struct TModelsQMapKey : public std::false_type {};
     //! \cond
     template <typename T>
-    struct TModelsQMapKey<T, void_t<decltype(std::declval<T>() < std::declval<T>())>> : public std::true_type {};
+    struct TModelsQMapKey<T, std::void_t<decltype(std::declval<T>() < std::declval<T>())>> : public std::true_type {};
     //! \endcond
 
     /*!
      * Trait which is true if the expression compare(a, b) is valid when a and b are instances of T and U.
      */
-    template <typename T, typename U, typename = void_t<>>
+    template <typename T, typename U, typename = std::void_t<>>
     struct THasCompare : public std::false_type {};
     //! \cond
     template <typename T, typename U>
-    struct THasCompare<T, U, void_t<decltype(compare(std::declval<T>(), std::declval<U>()))>> : public std::true_type {};
+    struct THasCompare<T, U, std::void_t<decltype(compare(std::declval<T>(), std::declval<U>()))>> : public std::true_type {};
     //! \endcond
 
     /*!
      * Trait which is true if the expression a.compareByPropertyIndex(b, i) is valid when a and b are instances of T,
      * and i is an instance of CPropertyIndexRef.
      */
-    template <typename T, typename = void_t<>>
+    template <typename T, typename = std::void_t<>>
     struct THasComparePropertyByIndex : public std::false_type {};
     //! \cond
     template <typename T>
-    struct THasComparePropertyByIndex<T, void_t<decltype(std::declval<T>().comparePropertyByIndex(std::declval<CPropertyIndexRef>(), std::declval<const T &>()))>> : public std::true_type {};
+    struct THasComparePropertyByIndex<T, std::void_t<decltype(std::declval<T>().comparePropertyByIndex(std::declval<CPropertyIndexRef>(), std::declval<const T &>()))>> : public std::true_type {};
     //! \endcond
 
     /*!
      * Trait which is true if the expression a.propertyByIndex(i) is valid with a is an instance of T and i is an
      * instance of CPropertyIndexRef.
      */
-    template <typename T, typename = void_t<>>
+    template <typename T, typename = std::void_t<>>
     struct THasPropertyByIndex : public std::false_type {};
     //! \cond
     template <typename T>
-    struct THasPropertyByIndex<T, void_t<decltype(std::declval<T>().propertyByIndex(std::declval<CPropertyIndexRef>()))>> : public std::true_type {};
+    struct THasPropertyByIndex<T, std::void_t<decltype(std::declval<T>().propertyByIndex(std::declval<CPropertyIndexRef>()))>> : public std::true_type {};
     //! \endcond
 
     /*!
      * Trait which is true if the expression a == b is valid when a and b are instances of T and U.
      */
-    template <typename T, typename U, typename = void_t<>>
+    template <typename T, typename U, typename = std::void_t<>>
     struct TIsEqualityComparable : public std::false_type {};
     //! \cond
     template <typename T, typename U>
-    struct TIsEqualityComparable<T, U, void_t<decltype(std::declval<T>() == std::declval<U>())>> : public std::true_type {};
+    struct TIsEqualityComparable<T, U, std::void_t<decltype(std::declval<T>() == std::declval<U>())>> : public std::true_type {};
     //! \endcond
 
     /*!
      * Trait which is true if T has methods marshallToDbus and unmarshallFromDbus.
      */
-    template <typename T, typename = void_t<>>
+    template <typename T, typename = std::void_t<>>
     struct THasMarshallMethods : public std::false_type {};
     //! \cond
     template <typename T>
-    struct THasMarshallMethods<T, void_t<decltype(std::declval<const T &>().marshallToDbus(std::declval<QDBusArgument &>()),
+    struct THasMarshallMethods<T, std::void_t<decltype(std::declval<const T &>().marshallToDbus(std::declval<QDBusArgument &>()),
                                                   std::declval<T &>().unmarshallFromDbus(std::declval<const QDBusArgument &>()))>> : public std::true_type {};
     //! \endcond
 
@@ -189,11 +182,11 @@ namespace BlackMisc
     /*!
      * Trait that detects if a type is QPrivateSignal.
      */
-    template <typename T, typename = void_t<>>
+    template <typename T, typename = std::void_t<>>
     struct TIsQPrivateSignal : public std::false_type {};
     //! \cond
     template <typename T>
-    struct TIsQPrivateSignal<T, void_t<typename Private::SyntheticDerived<T>::QPrivateSignal>> : public std::is_same<T, typename Private::SyntheticDerived<T>::QPrivateSignal> {};
+    struct TIsQPrivateSignal<T, std::void_t<typename Private::SyntheticDerived<T>::QPrivateSignal>> : public std::is_same<T, typename Private::SyntheticDerived<T>::QPrivateSignal> {};
     //! \endcond
 
 }
