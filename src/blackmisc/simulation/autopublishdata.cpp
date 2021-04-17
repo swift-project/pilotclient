@@ -53,15 +53,14 @@ namespace BlackMisc
             // used simple string JSON generation as it is faster
             QString json;
 
-            for (const auto pair : makePairsRange(m_modelStringVsCG))
+            for (const auto [string, cg] : makePairsRange(m_modelStringVsCG))
             {
-                json += QStringLiteral("{ \"type\": \"cg\", \"modelstring\": \"%1\", \"cgft\": %2 },\n").arg(pair.first, pair.second.valueRoundedAsString(CLengthUnit::ft(), 1));
+                json += QStringLiteral("{ \"type\": \"cg\", \"modelstring\": \"%1\", \"cgft\": %2 },\n").arg(string, cg.valueRoundedAsString(CLengthUnit::ft(), 1));
             }
 
-            for (const auto pair : makePairsRange(m_modelStringVsSimulatorInfo))
+            for (const auto [string, sim] : makePairsRange(m_modelStringVsSimulatorInfo))
             {
-                const QString sim = pair.second.toQString(false);
-                json += QStringLiteral("{ \"type\": \"simulatorupdate\", \"modelstring\": \"%1\", \"simulator\": \"%2\" },\n").arg(pair.first, sim);
+                json += QStringLiteral("{ \"type\": \"simulatorupdate\", \"modelstring\": \"%1\", \"simulator\": \"%2\" },\n").arg(string, sim.toQString(false));
             }
 
             if (json.isEmpty()) { return {}; }

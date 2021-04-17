@@ -61,9 +61,9 @@ namespace BlackMisc
         {
             const SetupsPerCallsign setups = this->getSetupsPerCallsign();
             CCallsignSet callsigns;
-            for (const auto pair : makePairsRange(setups))
+            for (const auto [callsign, setup] : makePairsRange(setups))
             {
-                if (pair.second.logInterpolation()) { callsigns.insert(pair.first); }
+                if (setup.logInterpolation()) { callsigns.insert(callsign); }
             }
             return callsigns;
         }
@@ -145,19 +145,18 @@ namespace BlackMisc
 
         void IInterpolationSetupProvider::clearInterpolationLogCallsigns()
         {
-            const SetupsPerCallsign setupsCopy = this->getSetupsPerCallsign();
+            SetupsPerCallsign setupsCopy = this->getSetupsPerCallsign();
             if (setupsCopy.isEmpty()) { return; }
 
             // potential risk, changes inbetween in another thread are missed now
             // on the other side, we keep locks for a minimal time frame
             SetupsPerCallsign setupsToKeep;
             CInterpolationAndRenderingSetupGlobal global = this->getInterpolationSetupGlobal();
-            for (const auto pair : makePairsRange(setupsCopy))
+            for (auto [callsign, setup] : makePairsRange(setupsCopy))
             {
-                CInterpolationAndRenderingSetupPerCallsign setup = pair.second;
                 setup.setLogInterpolation(false);
                 if (setup.isEqualToGlobal(global)) { continue; }
-                setupsToKeep.insert(pair.first, setup);
+                setupsToKeep.insert(callsign, setup);
             }
             {
                 QWriteLocker l(&m_lockSetup);

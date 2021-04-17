@@ -178,10 +178,8 @@ namespace BlackCore
         }
 
         QSet<QString> newActiveActions;
-        for (const auto pair : makePairsRange(as_const(m_configuredActions)))
+        for (const auto [combination, action] : makePairsRange(as_const(m_configuredActions)))
         {
-            const CHotkeyCombination &combination = pair.first;
-            const QString &action = pair.second;
             if (combination.isSubsetOf(currentCombination))
             {
                 newActiveActions.insert(action);

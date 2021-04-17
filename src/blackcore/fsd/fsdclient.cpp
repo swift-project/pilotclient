@@ -1871,10 +1871,10 @@ namespace BlackCore
             }
 
             if (callStatistics.isEmpty()) { return QString(); }
-            for (const auto pair : makePairsRange(as_const(callStatistics)))
+            for (const auto [key, value] : makePairsRange(as_const(callStatistics)))
             {
                 // key is pair.first, value is pair.second
-                transformed.push_back({ pair.second, pair.first });
+                transformed.push_back({ value, key });
             }
 
             // sorted by value

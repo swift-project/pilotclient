@@ -420,19 +420,18 @@ namespace BlackGui
         {
             ui->cb_OtherVersions->clear();
             const QMap<QString, CApplicationInfo> otherVersions = CApplicationInfoList::currentApplicationDataDirectoryMapWithoutCurrentVersion();
-            for (const auto pair : makePairsRange(otherVersions))
+            for (const auto [dir, info] : makePairsRange(otherVersions))
             {
-                const CApplicationInfo &info(pair.second);
                 if (info.isNull())
                 {
-                    const QString infoString = CDirectoryUtils::decodeNormalizedDirectory(pair.first);
+                    const QString infoString = CDirectoryUtils::decodeNormalizedDirectory(dir);
                     ui->cb_OtherVersions->addItem(infoString);
                 }
                 else
                 {
                     ui->cb_OtherVersions->addItem(QStringLiteral("swift %1 (%2)").arg(info.getVersionString(), info.getPlatform()));
                 }
-                m_otherVersionDirs.push_back(pair.first);
+                m_otherVersionDirs.push_back(dir);
             }
         }
 
