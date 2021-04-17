@@ -93,7 +93,7 @@ namespace BlackMisc
 
         //! When the given future is ready, use its result to set the result of this promise.
         template <typename U>
-        void chainResult(QFuture<U> future) { doAfter(future, nullptr, [self = *this](auto &&f) mutable { self.setResult(f); }); }
+        void chainResult(QFuture<U> future) { doAfter(future, nullptr, [*this](auto &&f) mutable { setResult(f); }); }
 
         //! Invoke a functor and use its return value to set the result.
         //! \details Useful for uniform syntax in generic code where T could be void.
