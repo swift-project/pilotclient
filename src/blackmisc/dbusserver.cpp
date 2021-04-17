@@ -264,7 +264,7 @@ namespace BlackMisc
             break;
         case SERVERMODE_P2P:
             {
-                for (QDBusConnection connection : as_const(m_connections))
+                for (QDBusConnection connection : std::as_const(m_connections))
                 {
                     if (connection.registerObject(path, object, registerOptions()))
                     {
@@ -300,7 +300,7 @@ namespace BlackMisc
 
     void CDBusServer::removeAllObjects()
     {
-        for (const QString &path : makeKeysRange(as_const(m_objects)))
+        for (const QString &path : makeKeysRange(std::as_const(m_objects)))
         {
             switch (m_serverMode)
             {
@@ -311,7 +311,7 @@ namespace BlackMisc
                 QDBusConnection::systemBus().unregisterObject(path);
                 break;
             case SERVERMODE_P2P:
-                for (QDBusConnection connection : as_const(m_connections))
+                for (QDBusConnection connection : std::as_const(m_connections))
                 {
                     connection.unregisterObject(path);
                 }

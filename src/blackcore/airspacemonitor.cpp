@@ -282,7 +282,7 @@ namespace BlackCore
 
         // we might have unresolved callsigns
         // those are the ones not in range
-        for (const CCallsign &callsign : as_const(searchList))
+        for (const CCallsign &callsign : std::as_const(searchList))
         {
             const CUserList usersByCallsign = sApp->getWebDataServices()->getUsersForCallsign(callsign);
             if (usersByCallsign.isEmpty())

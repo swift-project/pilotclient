@@ -159,7 +159,7 @@ namespace BlackGui
 
             QStringList select = comp.missingInTarget.values();
             select.append(comp.newerInSource.values());
-            for (const QString &file : as_const(comp.missingInTarget))
+            for (const QString &file : std::as_const(comp.missingInTarget))
             {
                 const QModelIndex index = sourceModel->index(file);
                 if (!index.isValid()) continue;

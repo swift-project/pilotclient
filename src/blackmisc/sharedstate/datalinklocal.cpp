@@ -58,7 +58,7 @@ namespace BlackMisc
 
         void CDataLinkLocal::dispatchEvent(const CVariant &param, const QString &channel)
         {
-            for (const auto &observerWeak : as_const(getChannel(channel).passiveObservers))
+            for (const auto &observerWeak : std::as_const(getChannel(channel).passiveObservers))
             {
                 auto observer = observerWeak.lock();
                 if (observer && observer->eventSubscription().matches(param))

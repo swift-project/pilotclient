@@ -178,14 +178,14 @@ namespace BlackMisc
     CValueCache::Element &CValueCache::getElement(const QString &key)
     {
         QMutexLocker lock(&m_mutex);
-        return getElement(key, as_const(m_elements).lowerBound(key));
+        return getElement(key, std::as_const(m_elements).lowerBound(key));
     }
 
     CValueCache::Element &CValueCache::getElement(const QString &key, QMap<QString, ElementPtr>::const_iterator pos)
     {
         QMutexLocker lock(&m_mutex);
         if (pos != m_elements.cend() && pos.key() == key) { return **pos; }
-        Q_ASSERT(pos == as_const(m_elements).lowerBound(key));
+        Q_ASSERT(pos == std::as_const(m_elements).lowerBound(key));
         return **m_elements.insert(pos, key, ElementPtr(new Element(key)));
     }
 
@@ -256,8 +256,8 @@ namespace BlackMisc
         QMutexLocker lock(&m_mutex);
         if (values.empty()) { return; }
         m_elements.detach(); //! \fixme see http://doc.qt.io/qt-5/containers.html#implicit-sharing-iterator-problem
-        auto out = as_const(m_elements).lowerBound(values.cbegin().key());
-        auto end = as_const(m_elements).upperBound((values.cend() - 1).key());
+        auto out = std::as_const(m_elements).lowerBound(values.cbegin().key());
+        auto end = std::as_const(m_elements).upperBound((values.cend() - 1).key());
         for (auto in = values.cbegin(); in != values.cend(); ++in)
         {
             while (out != end && out.key() < in.key()) { ++out; }
@@ -293,8 +293,8 @@ namespace BlackMisc
         CValueCachePacket ratifiedChanges(values.isSaved());
         CValueCachePacket ackedChanges(values.isSaved());
         m_elements.detach(); //! \fixme see http://doc.qt.io/qt-5/containers.html#implicit-sharing-iterator-problem
-        auto out = as_const(m_elements).lowerBound(values.cbegin().key());
-        auto end = as_const(m_elements).upperBound((values.cend() - 1).key());
+        auto out = std::as_const(m_elements).lowerBound(values.cbegin().key());
+        auto end = std::as_const(m_elements).upperBound((values.cend() - 1).key());
         for (auto in = values.cbegin(); in != values.cend(); ++in)
         {
             while (out != end && out.key() < in.key()) { ++out; }

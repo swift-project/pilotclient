@@ -139,7 +139,7 @@ namespace BlackMisc
 
     void CSimpleCommandParser::registerCommand(const CSimpleCommandParser::CommandHtmlHelp &command)
     {
-        for (const CommandHtmlHelp &help : as_const(s_commands))
+        for (const CommandHtmlHelp &help : std::as_const(s_commands))
         {
             // avoid duplicates
             if (help.command == command.command) { return; }

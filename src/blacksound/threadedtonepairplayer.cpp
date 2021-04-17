@@ -116,7 +116,7 @@ namespace BlackSound
         Q_ASSERT(tonePairs.size() > 0);
         QByteArray finalBufferData;
 
-        for (const auto &tonePair : as_const(tonePairs))
+        for (const auto &tonePair : std::as_const(tonePairs))
         {
             if (m_tonePairCache.contains(tonePair))
             {

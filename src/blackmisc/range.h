@@ -28,18 +28,6 @@ namespace BlackMisc
     template <class> class CRange;
 
     /*!
-     * Own implementation of C++17 std::as_const. Adds const to any lvalue.
-     * Useful with non-mutating range-for loops to avoid unnecessary detachment of Qt implicitly shared containers.
-     * Does not allow rvalues, as that could easily lead to undefined behaviour.
-     */
-    //! @{
-    template <class T>
-    constexpr std::add_const_t<T> &as_const(T &v) noexcept { return v; }
-    template <class T>
-    void as_const(const T &&) = delete;
-    //! @}
-
-    /*!
      * Any container class with begin and end iterators can inherit from this CRTP class
      * to gain some useful algorithms as member functions.
      * \tparam Derived The most derived container class inheriting from this instantiation.

@@ -48,7 +48,7 @@ namespace BlackMisc
             CAircraftModelList sortedByAircraft(models);
             sortedByAircraft.sortBy(&CAircraftModel::getAircraftIcaoCodeDesignator);
 
-            for (const CAircraftModel &model : as_const(sortedByAircraft))
+            for (const CAircraftModel &model : std::as_const(sortedByAircraft))
             {
                 const QString aircraftIcao(model.hasAircraftDesignator() ? model.getAircraftIcaoCodeDesignator() : emptyDesignator);
                 if (!modelsByDesignator.contains(aircraftIcao))
@@ -81,7 +81,7 @@ namespace BlackMisc
             // header
             html += "<thead><tr>\n"
                     "<th></th>";
-            for (const QString &airline : as_const(airlineIcaos))
+            for (const QString &airline : std::as_const(airlineIcaos))
             {
                 html += "<th>";
                 html += airline;
@@ -91,7 +91,7 @@ namespace BlackMisc
                     "<tbody>\n";
 
             // fill data
-            for (const QString &aircraftIcao : as_const(aircraftIcaos))
+            for (const QString &aircraftIcao : std::as_const(aircraftIcaos))
             {
                 html += "<tr>\n"
                         "  <th>";
@@ -99,7 +99,7 @@ namespace BlackMisc
                 html += "</th>\n";
 
                 const QMap<QString, CAircraftModelList> &airlineModels = modelsByDesignator[aircraftIcao];
-                for (const QString &airline : as_const(airlineIcaos))
+                for (const QString &airline : std::as_const(airlineIcaos))
                 {
                     if (airlineModels.contains(airline))
                     {

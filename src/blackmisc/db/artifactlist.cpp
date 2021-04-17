@@ -165,7 +165,7 @@ namespace BlackMisc
             CArtifactList copy(*this);
             copy.sortByVersion(Qt::DescendingOrder);
             QStringList names;
-            for (const CArtifact &artifact : as_const(copy))
+            for (const CArtifact &artifact : std::as_const(copy))
             {
                 if (artifact.hasName())
                 {
@@ -180,7 +180,7 @@ namespace BlackMisc
             CArtifactList copy(*this);
             copy.sortByVersion(Qt::DescendingOrder);
             QStringList versions;
-            for (const CArtifact &artifact : as_const(copy))
+            for (const CArtifact &artifact : std::as_const(copy))
             {
                 if (artifact.hasVersion())
                 {

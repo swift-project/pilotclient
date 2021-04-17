@@ -169,7 +169,7 @@ namespace BlackCore
         const WeatherRequest weatherRequest = m_pendingRequests.constFirst();
         const CLength maxDistance(100.0, CLengthUnit::km());
 
-        for (IWeatherData *plugin : as_const(m_weatherDataPlugins))
+        for (IWeatherData *plugin : std::as_const(m_weatherDataPlugins))
         {
             if (!plugin) { continue; }
             if (weatherRequest.filePath.isEmpty())

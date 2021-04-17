@@ -389,7 +389,7 @@ namespace BlackMisc
                 Q_ASSERT_X(fileTimestamp.isValid(), Q_FUNC_INFO, "Missing file timestamp");
 
                 CAircraftCfgEntriesList result;
-                for (const CAircraftCfgEntries &e : as_const(tempEntries))
+                for (const CAircraftCfgEntries &e : std::as_const(tempEntries))
                 {
                     if (e.getTitle().isEmpty())
                     {

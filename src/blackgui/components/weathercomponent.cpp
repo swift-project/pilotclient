@@ -53,7 +53,7 @@ namespace BlackGui
             connect(ui->pb_Update,      &QPushButton::clicked, this, &CWeatherComponent::updateWeatherInformationForced);
 
             m_weatherScenarios = CWeatherGrid::getAllScenarios();
-            for (const auto &scenario : as_const(m_weatherScenarios))
+            for (const auto &scenario : std::as_const(m_weatherScenarios))
             {
                 ui->cb_weatherScenario->addItem(scenario.getName(), QVariant::fromValue(scenario));
             }

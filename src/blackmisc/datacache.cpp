@@ -236,7 +236,7 @@ namespace BlackMisc
         std::swap(m_queue, queue);
         lock.unlock();
 
-        for (const auto &pair : BlackMisc::as_const(queue))
+        for (const auto &pair : std::as_const(queue))
         {
             m_page->setValuesFromCache(pair.first, pair.second);
         }

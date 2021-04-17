@@ -68,7 +68,7 @@ namespace BlackGui
             QList<double> series;
             CDistributorList distributorList(distributors.keys());
             distributorList.sortByKey();
-            for (const CDistributor &distributor : as_const(distributorList))
+            for (const CDistributor &distributor : std::as_const(distributorList))
             {
                 const int c = distributors[distributor];
                 if (c < 1) { continue; }
@@ -93,7 +93,7 @@ namespace BlackGui
             CAircraftIcaoCodeList icaoList(icaos.keys());
             icaoList.sortByDesignatorAndRank();
 
-            for (const CAircraftIcaoCode &icao : as_const(icaoList))
+            for (const CAircraftIcaoCode &icao : std::as_const(icaoList))
             {
                 const int c = icaos[icao];
                 if (c < 1) { continue; }

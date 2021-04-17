@@ -284,7 +284,7 @@ namespace BlackMisc
 
         Q_ASSERT_X(comp.sameNameInSource.size() == comp.sameNameInTarget.size(), Q_FUNC_INFO, "Same sets require same size");
         QSet<QString>::const_iterator targetIt = comp.sameNameInTarget.cbegin();
-        for (const QString &sourceFile : as_const(comp.sameNameInSource))
+        for (const QString &sourceFile : std::as_const(comp.sameNameInSource))
         {
             const QFileInfo source(sourceFile);
             const QFileInfo target(*targetIt);

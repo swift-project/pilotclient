@@ -402,7 +402,7 @@ namespace BlackWxPlugin
             CLogMessage(this).debug() << "Obtained" << weatherGridPointsNo << "grid points.";
 
             constexpr int maxPoints = 200;
-            for (const GfsGridPoint &gfsGridPoint : as_const(m_gfsWeatherGrid))
+            for (const GfsGridPoint &gfsGridPoint : std::as_const(m_gfsWeatherGrid))
             {
                 if (QThread::currentThread()->isInterruptionRequested()) { return false; }
 
@@ -431,7 +431,7 @@ namespace BlackWxPlugin
                 }
 
                 CCloudLayerList cloudLayers;
-                for (const GfsCloudLayer &gfsCloudLayer : as_const(gfsGridPoint.cloudLayers))
+                for (const GfsCloudLayer &gfsCloudLayer : std::as_const(gfsGridPoint.cloudLayers))
                 {
                     if (std::isnan(gfsCloudLayer.bottomLevelPressure) || std::isnan(gfsCloudLayer.topLevelPressure) || std::isnan(gfsCloudLayer.topLevelTemperature)) { continue; }
 
@@ -623,7 +623,7 @@ namespace BlackWxPlugin
                         }
                         else
                         {
-                            for (const CGridPoint &fixedGridPoint : as_const(m_grid))
+                            for (const CGridPoint &fixedGridPoint : std::as_const(m_grid))
                             {
                                 const CLength distance = calculateGreatCircleDistance(gridPointPosition, fixedGridPoint.getPosition());
                                 if (distance.isNull())

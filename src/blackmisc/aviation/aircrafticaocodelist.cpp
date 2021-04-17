@@ -227,7 +227,7 @@ namespace BlackMisc
             if (sort) { icaos.sortByDesignatorAndRank(); }
 
             // 3 steps to get a proper sort order of the string list
-            for (const CAircraftIcaoCode &icao : as_const(icaos))
+            for (const CAircraftIcaoCode &icao : std::as_const(icaos))
             {
                 c.append(withCategory ? icao.getCombinedIcaoCategoryStringWithKey() : icao.getCombinedIcaoStringWithKey());
             }
@@ -245,7 +245,7 @@ namespace BlackMisc
             {
                 icaos = icaos.findWithIataCode(true);
                 if (sort) { icaos.sortBy(&CAircraftIcaoCode::getIataCode, &CAircraftIcaoCode::getRank); }
-                for (const CAircraftIcaoCode &icao : as_const(icaos))
+                for (const CAircraftIcaoCode &icao : std::as_const(icaos))
                 {
                     c.append(icao.getCombinedIataStringWithKey());
                 }
@@ -441,7 +441,7 @@ namespace BlackMisc
             CAircraftIcaoCodeList grouped; // will contain the entries with the best rank
             QString designator;
             QString manufacturer;
-            for (const CAircraftIcaoCode &code : as_const(copy))
+            for (const CAircraftIcaoCode &code : std::as_const(copy))
             {
                 if (code.getDesignator() != designator ||  code.getManufacturer() != manufacturer)
                 {

@@ -1572,7 +1572,7 @@ namespace BlackMisc
                                            )
                                        );
 
-            for (const CAircraftModel &model : as_const(sorted))
+            for (const CAircraftModel &model : std::as_const(sorted))
             {
                 if (wasStopped) { break; } // allow breaking from external
                 bool ok = false;

@@ -113,7 +113,7 @@ namespace BlackInput
     CJoystickButtonList CJoystickMacOS::getAllAvailableJoystickButtons() const
     {
         CJoystickButtonList availableButtons;
-        for (const CJoystickDevice *device : as_const(m_joystickDevices))
+        for (const CJoystickDevice *device : std::as_const(m_joystickDevices))
         {
             availableButtons.push_back(device->getDeviceButtons());
         }

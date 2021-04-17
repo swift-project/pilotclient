@@ -53,7 +53,7 @@ namespace BlackGui
             QStandardItemModel::clear();
 
             int visibleColumns = 0;
-            for (const QString &suffix : as_const(m_suffixes))
+            for (const QString &suffix : std::as_const(m_suffixes))
             {
                 // ownership of QStandardItem is taken by model
                 QStandardItem *typeFolderFirstColumn = new QStandardItem(CCallsign::atcSuffixToIcon(suffix).toQIcon(), suffix);

@@ -1205,7 +1205,7 @@ namespace BlackSimPlugin
             CSimulatedAircraftList toBeAddedAircraft; // aircraft still to be added
             CCallsignSet toBeRemovedCallsigns;
 
-            for (const CSimConnectObject &pendingSimObj : as_const(m_addPendingAircraft))
+            for (const CSimConnectObject &pendingSimObj : std::as_const(m_addPendingAircraft))
             {
                 BLACK_VERIFY_X(pendingSimObj.hasCallsign(), Q_FUNC_INFO, "missing callsign");
                 if (!pendingSimObj.hasCallsign()) { continue; }

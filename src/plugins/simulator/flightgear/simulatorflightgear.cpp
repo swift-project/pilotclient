@@ -957,7 +957,7 @@ namespace BlackSimPlugin
                 timeoutCallsigns.push_back(cs);
             }
 
-            for (const CCallsign &cs : as_const(timeoutCallsigns))
+            for (const CCallsign &cs : std::as_const(timeoutCallsigns))
             {
                 m_addingInProgressAircraft.remove(cs);
                 CLogMessage(this).warning(u"Adding for '%1' timed out") << cs.asString();

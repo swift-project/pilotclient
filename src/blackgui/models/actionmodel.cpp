@@ -106,7 +106,7 @@ namespace BlackGui
             const QMap<QString, BlackMisc::CIcons::IconIndex> availableActionsAndIcons = sApp->getInputManager()->allAvailableActionsAndIcons();
             QStringList keys = availableActionsAndIcons.keys();
             keys.sort();
-            for (const QString &actionPath : as_const(keys))
+            for (const QString &actionPath : std::as_const(keys))
             {
                 QString currentPath;
                 const QStringList tokens = actionPath.split("/", Qt::SkipEmptyParts);

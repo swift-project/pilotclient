@@ -91,7 +91,7 @@ namespace BlackMisc
 
             if (!m_duplex) { return; }
 
-            for (const auto &filter : as_const(getChannel(channel).peerSubscriptions))
+            for (const auto &filter : std::as_const(getChannel(channel).peerSubscriptions))
             {
                 if (filter.matches(param))
                 {
@@ -103,7 +103,7 @@ namespace BlackMisc
 
         void CDataLinkDBus::handlePeerEvent(const QString &channel, const CVariant &param)
         {
-            for (const auto &observerWeak : as_const(getChannel(channel).passiveObservers))
+            for (const auto &observerWeak : std::as_const(getChannel(channel).passiveObservers))
             {
                 auto observer = observerWeak.lock();
                 if (observer && observer->eventSubscription().matches(param))
@@ -124,7 +124,7 @@ namespace BlackMisc
         void CDataLinkDBus::announceLocalSubscriptions(const QString &channel)
         {
             CVariantList filters;
-            for (const auto &observerWeak : as_const(getChannel(channel).passiveObservers))
+            for (const auto &observerWeak : std::as_const(getChannel(channel).passiveObservers))
             {
                 auto observer = observerWeak.lock();
                 if (observer) { filters.push_back(observer->eventSubscription()); }

@@ -163,22 +163,22 @@ namespace BlackSample
         QString containsStr("aaa");
         number = 0;
         timer.start();
-        for (const auto &str : as_const(strList1)) { if (newRegex.match(str).hasMatch()) number++; }
+        for (const auto &str : std::as_const(strList1)) { if (newRegex.match(str).hasMatch()) number++; }
         ms = timer.elapsed();
         out << "new regex matched " << number << " of" << strList1.size() << " strings in " << ms << "ms"  << Qt::endl;
         number = 0;
         timer.start();
-        for (const auto &str : as_const(strList2)) { if (fullRegex.exactMatch(str)) number++; }
+        for (const auto &str : std::as_const(strList2)) { if (fullRegex.exactMatch(str)) number++; }
         ms = timer.elapsed();
         out << "full regex matched " << number << " of" << strList2.size() << " strings in " << ms << "ms"  << Qt::endl;
         number = 0;
         timer.start();
-        for (const auto &str : as_const(strList3)) { if (wildcardRegex.exactMatch(str)) number++; }
+        for (const auto &str : std::as_const(strList3)) { if (wildcardRegex.exactMatch(str)) number++; }
         ms = timer.elapsed();
         out << "wildcard matched " << number << " of " << strList3.size() << " strings in " << ms << "ms"  << Qt::endl;
         number = 0;
         timer.start();
-        for (const auto &str : as_const(strList4)) { if (str.contains(containsStr)) number++; }
+        for (const auto &str : std::as_const(strList4)) { if (str.contains(containsStr)) number++; }
         ms = timer.elapsed();
         out << "contains matched " << number << " of " << strList4.size() << " strings in " << ms << "ms" << Qt::endl;
 
@@ -361,7 +361,7 @@ namespace BlackSample
         upperRegex.optimize();
 
         timer.start();
-        for (const QString &s : as_const(strings))
+        for (const QString &s : std::as_const(strings))
         {
             auto c = containsChar(s, [](QChar c) { return c.isUpper(); });
             Q_UNUSED(c);
@@ -369,7 +369,7 @@ namespace BlackSample
         out << "Check 100,000 strings for containing uppercase letter: (utility)     " << timer.elapsed() << "ms" << Qt::endl;
 
         timer.start();
-        for (const QString &s : as_const(strings))
+        for (const QString &s : std::as_const(strings))
         {
             auto c = s.contains(upperRegex);
             Q_UNUSED(c);
@@ -377,7 +377,7 @@ namespace BlackSample
         out << "Check 100,000 strings for containing uppercase letter: (regex)       " << timer.elapsed() << "ms" << endl << Qt::endl;
 
         timer.start();
-        for (const QString &s : as_const(strings))
+        for (const QString &s : std::as_const(strings))
         {
             auto i = indexOfChar(s, [](QChar c) { return c.isUpper(); });
             Q_UNUSED(i);
@@ -385,7 +385,7 @@ namespace BlackSample
         out << "Check 100,000 strings for index of first uppercase letter: (utility) " << timer.elapsed() << "ms" << Qt::endl;
 
         timer.start();
-        for (const QString &s : as_const(strings))
+        for (const QString &s : std::as_const(strings))
         {
             auto i = s.indexOf(upperRegex);
             Q_UNUSED(i);

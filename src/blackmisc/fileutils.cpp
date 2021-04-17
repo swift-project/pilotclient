@@ -286,7 +286,7 @@ namespace BlackMisc
 
         QString last;
         QStringList result;
-        for (const QString &path : as_const(dirs))
+        for (const QString &path : std::as_const(dirs))
         {
             if (path.isEmpty()) { continue; }
             if (last.isEmpty() || !path.startsWith(last, cs))

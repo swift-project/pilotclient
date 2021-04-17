@@ -249,7 +249,7 @@ namespace BlackMiscTest
         time.start();
         for (int i = 0; i < Loops; ++i)
         {
-            for (const CAircraftSituationList &s : as_const(listOfLists1))
+            for (const CAircraftSituationList &s : std::as_const(listOfLists1))
             {
                 const CAircraftSituation s1 = s.oldestAdjustedObject();
                 const CAircraftSituation s2 = s.latestAdjustedObject();
@@ -262,7 +262,7 @@ namespace BlackMiscTest
         time.start();
         for (int i = 0; i < Loops; ++i)
         {
-            for (const CAircraftSituationList &s : as_const(listOfLists2))
+            for (const CAircraftSituationList &s : std::as_const(listOfLists2))
             {
                 const CAircraftSituation s1 = s.oldestAdjustedObject();
                 const CAircraftSituation s2 = s.latestAdjustedObject();

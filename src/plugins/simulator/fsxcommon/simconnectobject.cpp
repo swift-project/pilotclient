@@ -443,7 +443,7 @@ namespace BlackSimPlugin
         int CSimConnectObjects::countConfirmedAdded()
         {
             int c = 0;
-            for (const CSimConnectObject &simObject : as_const(*this))
+            for (const CSimConnectObject &simObject : std::as_const(*this))
             {
                 if (simObject.isConfirmedAdded()) { c++; }
             }
@@ -542,7 +542,7 @@ namespace BlackSimPlugin
             CSimConnectObjects removedObjects;
 
             const qint64 ts = QDateTime::currentMSecsSinceEpoch();
-            for (const CSimConnectObject &simObject : as_const(*this))
+            for (const CSimConnectObject &simObject : std::as_const(*this))
             {
                 // verification takes at least a second, so we need some time before outdating
                 if (type != CSimConnectObject::AllTypes && simObject.getType() != type)  { continue; }

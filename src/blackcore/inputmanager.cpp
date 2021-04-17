@@ -103,7 +103,7 @@ namespace BlackCore
         if (action.isEmpty()) { return; }
         if (m_actionRelayingEnabled && shouldEmit) { emit remoteActionFromLocal(action, isKeyDown); }
 
-        for (const auto &boundAction : as_const(m_boundActions))
+        for (const auto &boundAction : std::as_const(m_boundActions))
         {
             if (boundAction.m_action == action)
             {
@@ -178,7 +178,7 @@ namespace BlackCore
         }
 
         QSet<QString> newActiveActions;
-        for (const auto [combination, action] : makePairsRange(as_const(m_configuredActions)))
+        for (const auto [combination, action] : makePairsRange(std::as_const(m_configuredActions)))
         {
             if (combination.isSubsetOf(currentCombination))
             {

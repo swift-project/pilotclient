@@ -7,7 +7,8 @@
  */
 
 #include "blackmisc/connectionguard.h"
-#include "blackmisc/range.h" // for as_const
+
+#include <utility> // for as_const
 
 #include <QObject>
 
@@ -45,7 +46,7 @@ namespace BlackMisc
     {
         if (m_connections.isEmpty()) { return 0; }
         int c = 0;
-        for (const QMetaObject::Connection &con : as_const(m_connections))
+        for (const QMetaObject::Connection &con : std::as_const(m_connections))
         {
             if (QObject::disconnect(con)) { c++; }
         }

@@ -275,7 +275,7 @@ namespace BlackMisc
                     file.close();
                     parseFullPackage(content, package);
 
-                    for (const auto &plane : as_const(package.planes))
+                    for (const auto &plane : std::as_const(package.planes))
                     {
                         if (installedModels.containsModelString(plane.getModelName()))
                         {

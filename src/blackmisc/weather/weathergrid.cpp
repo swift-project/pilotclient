@@ -78,7 +78,7 @@ namespace BlackMisc
                 CTemperatureLayerList temperatureLayers = gridPoint.getTemperatureLayers();
                 temperatureLayers.sort([](const CTemperatureLayer & a, const CTemperatureLayer & b) { return a.getLevel() < b.getLevel(); });
                 qtout << "    Temperature Layers: " << sep;
-                for (const auto &temperatureLayer : as_const(temperatureLayers))
+                for (const auto &temperatureLayer : std::as_const(temperatureLayers))
                 {
                     qtout << "        Level: " << temperatureLayer.getLevel().toQString() << sep;
                     qtout << "            Temperature: " << temperatureLayer.getTemperature().toQString() << sep;
@@ -89,7 +89,7 @@ namespace BlackMisc
                 CWindLayerList windLayers = gridPoint.getWindLayers();
                 windLayers.sort([](const CWindLayer & a, const CWindLayer & b) { return a.getLevel() < b.getLevel(); });
                 qtout << "    Wind Layers: " << sep;
-                for (const auto &windLayer : as_const(windLayers))
+                for (const auto &windLayer : std::as_const(windLayers))
                 {
                     qtout << "        Level: " << windLayer.getLevel().toQString() << sep;
                     qtout << "            Wind: " << windLayer.getDirection().toQString() << " at " << windLayer.getSpeed().toQString() << sep;

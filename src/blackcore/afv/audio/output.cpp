@@ -44,7 +44,7 @@ namespace BlackCore
                 QVector<float> buffer;
                 m_sampleProvider->readSamples(buffer, count);
 
-                for (float sample : as_const(buffer))
+                for (float sample : std::as_const(buffer))
                 {
                     const float absSample = qAbs(sample);
                     if (absSample > m_maxSampleOutput) { m_maxSampleOutput = absSample; }

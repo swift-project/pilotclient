@@ -366,7 +366,7 @@ namespace BlackCore
         }
 
         // blink mode, toggle aircraft
-        for (const CSimulatedAircraft &aircraft : as_const(m_highlightedAircraft))
+        for (const CSimulatedAircraft &aircraft : std::as_const(m_highlightedAircraft))
         {
             if (m_blinkCycle) { this->callPhysicallyRemoveRemoteAircraft(aircraft.getCallsign(), true); }
             else { this->callPhysicallyAddRemoteAircraft(aircraft);  }

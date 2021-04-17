@@ -125,7 +125,7 @@ namespace BlackInput
             return hr;
         }
 
-        for (const CJoystickDeviceInput &input : as_const(m_joystickDeviceInputs))
+        for (const CJoystickDeviceInput &input : std::as_const(m_joystickDeviceInputs))
         {
             const qint32 buttonIndex = input.m_offset - DIJOFS_BUTTON0;
             const bool isPressed = state.rgbButtons[buttonIndex] & 0x80;
@@ -198,7 +198,7 @@ namespace BlackInput
     CJoystickWindows::~CJoystickWindows()
     {
         // All DirectInput devices need to be cleaned up before the call to CoUninitialize()
-        for (CJoystickDevice *joystickDevice : as_const(m_joystickDevices))
+        for (CJoystickDevice *joystickDevice : std::as_const(m_joystickDevices))
         {
             delete joystickDevice;
         }
@@ -212,7 +212,7 @@ namespace BlackInput
     CJoystickButtonList CJoystickWindows::getAllAvailableJoystickButtons() const
     {
         CJoystickButtonList availableButtons;
-        for (const CJoystickDevice *device : as_const(m_joystickDevices))
+        for (const CJoystickDevice *device : std::as_const(m_joystickDevices))
         {
             availableButtons.push_back(device->getDeviceButtons());
         }
