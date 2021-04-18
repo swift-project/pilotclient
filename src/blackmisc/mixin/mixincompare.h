@@ -58,9 +58,14 @@ namespace BlackMisc
         private:
             static bool equals(const Derived &a, const Derived &b)
             {
-                constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForComparison>());
                 bool result = baseEquals(static_cast<const TBaseOfT<Derived> *>(&a), static_cast<const TBaseOfT<Derived> *>(&b));
-                meta.forEachMember([ & ](auto member) { result = result && EqualsByMetaClass::membersEqual(member.in(a), member.in(b), member.m_flags); });
+                introspect<Derived>().forEachMember([ & ](auto member)
+                {
+                    if constexpr (!decltype(member)::has(MetaFlags<DisabledForComparison>()))
+                    {
+                        result = result && EqualsByMetaClass::membersEqual(member.in(a), member.in(b), member.m_flags);
+                    }
+                });
                 return result;
             }
             template <typename T> static bool baseEquals(const T *a, const T *b) { return *a == *b; }
@@ -119,10 +124,15 @@ namespace BlackMisc
         private:
             static bool less(const Derived &a, const Derived &b)
             {
-                constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForComparison>());
                 bool result = baseLess(static_cast<const TBaseOfT<Derived> *>(&a), static_cast<const TBaseOfT<Derived> *>(&b));
                 bool gt = baseLess(static_cast<const TBaseOfT<Derived> *>(&b), static_cast<const TBaseOfT<Derived> *>(&a));
-                meta.forEachMember([ & ](auto member) { result = result || LessThanByMetaClass::membersLess(gt, member.in(a), member.in(b), member.m_flags); });
+                introspect<Derived>().forEachMember([ & ](auto member)
+                {
+                    if constexpr (!decltype(member)::has(MetaFlags<DisabledForComparison>()))
+                    {
+                        result = result || LessThanByMetaClass::membersLess(gt, member.in(a), member.in(b), member.m_flags);
+                    }
+                });
                 return result;
             }
             template <typename T> static bool baseLess(const T *a, const T *b) { return *a < *b; }
@@ -155,9 +165,14 @@ namespace BlackMisc
         private:
             static int compareImpl(const Derived &a, const Derived &b)
             {
-                constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForComparison>());
                 int result = baseCompare(static_cast<const TBaseOfT<Derived> *>(&a), static_cast<const TBaseOfT<Derived> *>(&b));
-                meta.forEachMember([ & ](auto member) { result = result ? result : CompareByMetaClass::membersCompare(member.in(a), member.in(b), member.m_flags); });
+                introspect<Derived>().forEachMember([ & ](auto member)
+                {
+                    if constexpr (!decltype(member)::has(MetaFlags<DisabledForComparison>()))
+                    {
+                        result = result ? result : CompareByMetaClass::membersCompare(member.in(a), member.in(b), member.m_flags);
+                    }
+                });
                 return result;
             }
             template <typename T> static int baseCompare(const T *a, const T *b) { return compare(*a, *b); }

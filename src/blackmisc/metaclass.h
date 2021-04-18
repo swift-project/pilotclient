@@ -12,7 +12,6 @@
 #define BLACKMISC_METACLASS_H
 
 #include "blackmisc/invoke.h"
-#include "blackmisc/integersequence.h"
 #include <QHash>
 #include <QString>
 #include <QLatin1String>
@@ -169,7 +168,7 @@ namespace BlackMisc
 
         //! True if m_flags contains all flags.
         template <typename Flags2>
-        constexpr bool has(Flags2 flags) const { return (MetaFlags<Flags>() & flags) == flags; }
+        static constexpr bool has(Flags2 flags) { return (MetaFlags<Flags>() & flags) == flags; }
 
         //! Invoke the member on an instance of the value class.
         template <typename T, typename... Ts>
@@ -266,34 +265,12 @@ namespace BlackMisc
     class CMetaClassIntrospector
     {
     public:
-        //! Return a CMetaClassIntrospector<T> covering only those members which have the given flags.
-        //! \see BlackMisc::MetaFlags
-        template <typename Flags>
-        constexpr static auto with(Flags) { return filter(MaskSequence<(members().at(index<Is>()).has(Flags()))...>()); }
-
-        //! Return a CMetaClassIntrospector<T> covering only those members which do not have the given flags.
-        //! \see BlackMisc::MetaFlags
-        template <typename Flags>
-        constexpr static auto without(Flags) { return filter(MaskSequence<(! members().at(index<Is>()).has(Flags()))...>()); }
-
         //! For each metamember in metaclass, pass metamember as argument to visitor function.
         template <typename F>
         static void forEachMember(F &&visitor)
         {
-            (static_cast<void>(std::forward<F>(visitor)(members().at(index<Is>()))), ...);
+            (static_cast<void>(std::forward<F>(visitor)(MetaClass::getMemberList().at(std::integral_constant<size_t, Is>()))), ...);
         }
-
-    private:
-        template <bool... Mask>
-        using MaskSequence = Private::MaskSequence<std::index_sequence<Is...>, Mask...>;
-
-        template <size_t... Js>
-        constexpr static auto filter(std::index_sequence<Js...>) { return CMetaClassIntrospector<T, MetaClass, Js...>(); }
-
-        template <size_t I>
-        using index = std::integral_constant<size_t, I>;
-
-        constexpr static auto members() { return MetaClass::getMemberList(); }
     };
     // *INDENT-ON*
 

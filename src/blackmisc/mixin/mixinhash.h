@@ -60,8 +60,13 @@ namespace BlackMisc
             static uint hashImpl(const Derived &value)
             {
                 uint hash = baseHash(static_cast<const TBaseOfT<Derived> *>(&value));
-                constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForHashing>());
-                meta.forEachMember([ & ](const auto &member) { hash ^= qHash(member.in(value)); });
+                introspect<Derived>().forEachMember([ & ](auto member)
+                {
+                    if constexpr (!decltype(member)::has(MetaFlags<DisabledForHashing>()))
+                    {
+                        hash ^= qHash(member.in(value));
+                    }
+                });
                 return hash;
             }
 

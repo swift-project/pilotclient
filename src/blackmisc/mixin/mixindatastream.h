@@ -58,16 +58,26 @@ namespace BlackMisc
             void marshalToDataStream(QDataStream &stream) const
             {
                 baseMarshal(static_cast<const TBaseOfT<Derived> *>(derived()), stream);
-                constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForMarshalling>());
-                meta.forEachMember([ &, this ](auto member) { stream << member.in(*this->derived()); });
+                introspect<Derived>().forEachMember([ &, this ](auto member)
+                {
+                    if constexpr (!decltype(member)::has(MetaFlags<DisabledForMarshalling>()))
+                    {
+                        stream << member.in(*this->derived());
+                    }
+                });
             }
 
             //! Unmarshal a value from a QDataStream.
             void unmarshalFromDataStream(QDataStream &stream)
             {
                 baseUnmarshal(static_cast<TBaseOfT<Derived> *>(derived()), stream);
-                constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForMarshalling>());
-                meta.forEachMember([ &, this ](auto member) { stream >> member.in(*this->derived()); });
+                introspect<Derived>().forEachMember([ &, this ](auto member)
+                {
+                    if constexpr (!decltype(member)::has(MetaFlags<DisabledForMarshalling>()))
+                    {
+                        stream >> member.in(*this->derived());
+                    }
+                });
             }
 
         private:

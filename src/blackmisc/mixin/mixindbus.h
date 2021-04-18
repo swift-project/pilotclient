@@ -71,19 +71,21 @@ namespace BlackMisc
             void marshallToDbus(QDBusArgument &arg, Tags...) const
             {
                 baseMarshall(static_cast<const TBaseOfT<Derived> *>(derived()), arg);
-                constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForMarshalling>());
-                meta.forEachMember([ &, this ](auto member)
+                introspect<Derived>().forEachMember([ &, this ](auto member)
                 {
-                    const auto &value = member.in(*this->derived());
-                    if constexpr (THasMarshallMethods<std::decay_t<decltype(value)>>::value)
+                    if constexpr (!decltype(member)::has(MetaFlags<DisabledForMarshalling>()))
                     {
-                        if constexpr (member.has(MetaFlags<LosslessMarshalling>()))
+                        const auto &value = member.in(*this->derived());
+                        if constexpr (THasMarshallMethods<std::decay_t<decltype(value)>>::value)
                         {
-                            value.marshallToDbus(arg, LosslessTag());
+                            if constexpr (member.has(MetaFlags<LosslessMarshalling>()))
+                            {
+                                value.marshallToDbus(arg, LosslessTag());
+                            }
+                            else { value.marshallToDbus(arg); }
                         }
-                        else { value.marshallToDbus(arg); }
+                        else { arg << value; }
                     }
-                    else { arg << value; }
                 });
             }
 
@@ -91,19 +93,21 @@ namespace BlackMisc
             void unmarshallFromDbus(const QDBusArgument &arg, Tags...)
             {
                 baseUnmarshall(static_cast<TBaseOfT<Derived> *>(derived()), arg);
-                constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForMarshalling>());
-                meta.forEachMember([ &, this ](auto member)
+                introspect<Derived>().forEachMember([ &, this ](auto member)
                 {
-                    auto &value = member.in(*this->derived());
-                    if constexpr (THasMarshallMethods<std::decay_t<decltype(value)>>::value)
+                    if constexpr (!decltype(member)::has(MetaFlags<DisabledForMarshalling>()))
                     {
-                        if constexpr (member.has(MetaFlags<LosslessMarshalling>()))
+                        auto &value = member.in(*this->derived());
+                        if constexpr (THasMarshallMethods<std::decay_t<decltype(value)>>::value)
                         {
-                            value.unmarshallFromDbus(arg, LosslessTag());
+                            if constexpr (member.has(MetaFlags<LosslessMarshalling>()))
+                            {
+                                value.unmarshallFromDbus(arg, LosslessTag());
+                            }
+                            else { value.unmarshallFromDbus(arg); }
                         }
-                        else { value.unmarshallFromDbus(arg); }
+                        else { arg >> value; }
                     }
-                    else { arg >> value; }
                 });
             }
 

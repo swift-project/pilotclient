@@ -125,22 +125,26 @@ namespace BlackMisc
         QJsonObject CAircraftModel::toMemoizedJson(MemoHelper::CMemoizer &helper) const
         {
             QJsonObject json;
-            constexpr auto meta = introspect<CAircraftModel>().without(MetaFlags<DisabledForJson>());
-            meta.forEachMember([ &, this ](auto member)
+            introspect<CAircraftModel>().forEachMember([ &, this ](auto member)
             {
-                auto &&maybeMemo = helper.maybeMemoize(member.in(*this));
-                json << std::make_pair(CExplicitLatin1String(member.latin1Name()), std::cref(maybeMemo));
+                if constexpr (!decltype(member)::has(MetaFlags<DisabledForJson>()))
+                {
+                    auto &&maybeMemo = helper.maybeMemoize(member.in(*this));
+                    json << std::make_pair(CExplicitLatin1String(member.latin1Name()), std::cref(maybeMemo));
+                }
             });
             return json;
         }
 
         void CAircraftModel::convertFromMemoizedJson(const QJsonObject &json, const MemoHelper::CUnmemoizer &helper)
         {
-            constexpr auto meta = introspect<CAircraftModel>().without(MetaFlags<DisabledForJson>());
-            meta.forEachMember([ &, this ](auto member)
+            introspect<CAircraftModel>().forEachMember([ &, this ](auto member)
             {
-                auto it = json.find(CExplicitLatin1String(member.latin1Name()));
-                if (it != json.end()) { it.value() >> helper.maybeUnmemoize(member.in(*this)).get(); }
+                if constexpr (!decltype(member)::has(MetaFlags<DisabledForJson>()))
+                {
+                    auto it = json.find(CExplicitLatin1String(member.latin1Name()));
+                    if (it != json.end()) { it.value() >> helper.maybeUnmemoize(member.in(*this)).get(); }
+                }
             });
         }
 

@@ -96,10 +96,12 @@ namespace BlackMisc
             QJsonObject toJson() const
             {
                 QJsonObject json;
-                constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForJson>());
-                meta.forEachMember([ &, this ](auto member)
+                introspect<Derived>().forEachMember([ &, this ](auto member)
                 {
-                    json << std::make_pair(CExplicitLatin1String(member.latin1Name()), std::cref(member.in(*this->derived())));
+                    if constexpr (!decltype(member)::has(MetaFlags<DisabledForJson>()))
+                    {
+                        json << std::make_pair(CExplicitLatin1String(member.latin1Name()), std::cref(member.in(*this->derived())));
+                    }
                 });
                 return Json::appendJsonObject(json, baseToJson(static_cast<const TBaseOfT<Derived> *>(derived())));
             }
@@ -115,23 +117,25 @@ namespace BlackMisc
             void convertFromJson(const QJsonObject &json)
             {
                 baseConvertFromJson(static_cast<TBaseOfT<Derived> *>(derived()), json);
-                constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForJson>());
-                meta.forEachMember([ &, this ](auto member)
+                introspect<Derived>().forEachMember([ &, this ](auto member)
                 {
-                    const auto value = json.value(CExplicitLatin1String(member.latin1Name()));
-                    if (value.isUndefined())
+                    if constexpr (!decltype(member)::has(MetaFlags<DisabledForJson>()))
                     {
-                        constexpr bool required = false; //! \fixme add RequiredForJson flag in metaclass system
-                        // cppcheck-suppress knownConditionTrueFalse
-                        // QLatin1String used instead of QStringLiteral below since the latter causes an internal compiler bug
-                        // in GCC 8 and higher
-                        if (required) { throw CJsonException(QLatin1String("Missing required member '%1'").arg(member.latin1Name())); }
-                    }
-                    else
-                    {
-                        CJsonScope scope(member.latin1Name());
-                        Q_UNUSED(scope);
-                        value >> member.in(*this->derived());
+                        const auto value = json.value(CExplicitLatin1String(member.latin1Name()));
+                        if (value.isUndefined())
+                        {
+                            constexpr bool required = false; //! \fixme add RequiredForJson flag in metaclass system
+                            // cppcheck-suppress knownConditionTrueFalse
+                            // QLatin1String used instead of QStringLiteral below since the latter causes an internal compiler bug
+                            // in GCC 8 and higher
+                            if (required) { throw CJsonException(QLatin1String("Missing required member '%1'").arg(member.latin1Name())); }
+                        }
+                        else
+                        {
+                            CJsonScope scope(member.latin1Name());
+                            Q_UNUSED(scope);
+                            value >> member.in(*this->derived());
+                        }
                     }
                 });
             }
