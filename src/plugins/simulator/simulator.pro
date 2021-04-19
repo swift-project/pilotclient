@@ -8,8 +8,8 @@ SUBDIRS += emulated
 SUBDIRS += emulatedconfig
 
 swiftConfig(sims.fsx)|swiftConfig(sims.fs9)|swiftConfig(sims.p3d) {
-    SUBDIRS += fsuipc32
-    SUBDIRS += fsuipc64
+    equals(WORD_SIZE,32): SUBDIRS += fsuipc32
+    equals(WORD_SIZE,64): SUBDIRS += fsuipc64
     SUBDIRS += fscommon
 }
 swiftConfig(sims.fsx)|swiftConfig(sims.p3d) {
