@@ -213,6 +213,9 @@ namespace BlackMisc
         //! Return the metatype ID of the value in this variant.
         int userType() const { return m_v.userType(); }
 
+        //! Return the QMetaType of the type in this variant.
+        QMetaType metaType() const { return QMetaType(userType()); }
+
         //! \copydoc BlackMisc::Mixin::JsonByMetaClass::toJson
         QJsonObject toJson() const;
 

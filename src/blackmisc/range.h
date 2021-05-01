@@ -213,6 +213,7 @@ namespace BlackMisc
         }
 
         //! Explicit conversion to any container of value_type which supports push_back. This will copy elements.
+        //! @{
         template <class T>
         T to() const
         {
@@ -220,6 +221,12 @@ namespace BlackMisc
             std::copy(begin(), end(), Iterators::makeInsertIterator(container));
             return container;
         }
+        template <template <class...> class T>
+        auto to() const
+        {
+            return to<T<value_type>>();
+        }
+        //! @}
 
         //! Returns true if the range is empty.
         //! @{
