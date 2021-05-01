@@ -32,7 +32,7 @@ namespace BlackMisc
             return [vs...](const auto &object)
             {
                 bool equal = true;
-                tupleForEachPair(std::make_tuple(vs...), [ & ](auto member, const auto &value) { equal = equal && (object.*member)() == value; });
+                tupleForEachPair(std::make_tuple(vs...), [ & ](auto member, const auto &value) { equal = equal && std::invoke(member, object) == value; });
                 return equal;
             };
         }
@@ -47,36 +47,36 @@ namespace BlackMisc
         {
             return [vs...](const auto &a, const auto &b)
             {
-                return std::forward_as_tuple((a.*vs)()...) < std::forward_as_tuple((b.*vs)()...);
+                return std::forward_as_tuple(std::invoke(vs, a)...) < std::forward_as_tuple(std::invoke(vs, b)...);
             };
         }
 
         /*!
          * Returns a function object that returns the value returned by one of it's argument member functions.
          */
-        template <class T, class R>
-        auto MemberTransform(R(T::*memberFunc)() const)
+        template <class T>
+        auto MemberTransform(T memberFunc)
         {
-            return [memberFunc](const T &object) { return (object.*memberFunc)(); };
+            return [memberFunc](const auto &object) { return std::invoke(memberFunc, object); };
         }
 
         /*!
          * Returns a predicate that returns true if the isValid() method of the value returned from one of its member functions returns true.
          */
-        template <class T, class R>
-        auto MemberValid(R(T::*memberFunc)() const)
+        template <class T>
+        auto MemberValid(T memberFunc)
         {
-            return [memberFunc](const T &object) { return (object.*memberFunc)().isValid(); };
+            return [memberFunc](const auto &object) { return std::invoke(memberFunc, object).isValid(); };
         }
 
         /*!
          * Returns a predicate that returns true if the value returned by its argument's member function can be found in a captured container.
          * \warning The container is captured by reference, so be careful that it remains valid for the lifetime of the predicate.
          */
-        template <class T, class R, class C>
-        auto MemberIsAnyOf(R(T::*memberFunc)() const, const C &container)
+        template <class T, class C>
+        auto MemberIsAnyOf(T memberFunc, const C &container)
         {
-            return [memberFunc, &container](const T &object) { return container.contains((object.*memberFunc)()); };
+            return [memberFunc, &container](const auto &object) { return container.contains(std::invoke(memberFunc, object)); };
         }
 
         /*!
@@ -96,7 +96,7 @@ namespace BlackMisc
         {
             return [vs...](const auto &a, const auto &b)
             {
-                return (((a.*vs)() == (b.*vs)()) && ...);
+                return ((std::invoke(vs, a) == std::invoke(vs, b)) && ...);
             };
         }
 

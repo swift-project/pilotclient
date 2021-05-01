@@ -515,9 +515,9 @@ namespace BlackMisc
 
         //! Split up the sequence into subsequences of elements having the same value for the given key.
         template <class Key>
-        auto separateBy(Key k) const -> QMap<decltype(std::declval<T>().*k), CSequence>
+        auto separateBy(Key k) const -> QMap<decltype(std::invoke(k, std::declval<T>())), CSequence>
         {
-            return separateBy([k](const T &v) { return v.*k; });
+            return separateBy([k](const T &v) { return std::invoke(k, v); });
         }
 
         //! \private Calls detach on the internal QVector.
