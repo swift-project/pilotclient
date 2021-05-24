@@ -18,6 +18,7 @@
 #include "crashpad/client/simulate_crash.h"
 #endif
 
+#include <QAbstractNativeEventFilter>
 #include <QCoreApplication>
 #include <QGlobalStatic>
 #include <QMessageLogContext>
@@ -57,7 +58,20 @@ namespace BlackMisc
 #if defined(Q_CC_MSVC) && defined(QT_NO_DEBUG)
         if (type == QtFatalMsg)
         {
+            struct EventFilter : public QAbstractNativeEventFilter
+            {
+                // Prevent Qt from handling Windows Messages while the messagebox is open
+                virtual bool nativeEventFilter(const QByteArray &, void *message, long *result) override
+                {
+                    auto msg = static_cast<MSG *>(message);
+                    *result = DefWindowProc(msg->hwnd, msg->message, msg->wParam, msg->lParam);
+                    return true;
+                }
+            };
+            EventFilter ef;
+            qApp->installNativeEventFilter(&ef);
             MessageBoxW(nullptr, message.toStdWString().c_str(), nullptr, MB_OK); // display assert dialog in release build
+            qApp->removeNativeEventFilter(&ef);
 #   if defined(BLACK_USE_CRASHPAD)
             CRASHPAD_SIMULATE_CRASH(); // workaround inability to catch __fastfail
 #   endif
