@@ -37,7 +37,7 @@
     "doxygen": true,
     "devBranch": false,
     "stableBranch": false,
-    "endOfLife": "20210601",
+    "endOfLife": "20300101",
     "vatsimSupport": true,
     "vatsim": {
         "id": "0xb9ba",
