@@ -64,15 +64,16 @@ namespace BlackMisc
 #endif
 
 #if defined(QT_NO_DEBUG) || defined(Q_CC_MSVC)
-            auto logger = QMessageLogger().warning(QLoggingCategory(qPrintable(CLogCategories::verification())));
+            QString log;
             if (context && message)
             {
-                logger << QStringLiteral("Failed to verify: %1 (%2 in %3) in %4 line %5").arg(condition, message, context, filename, QString::number(line));
+                log = QStringLiteral("Failed to verify: %1 (%2 in %3) in %4 line %5").arg(condition, message, context, filename, QString::number(line));
             }
             else
             {
-                logger << QStringLiteral("Failed to verify: %1 in %2 line %3").arg(condition, filename, QString::number(line));
+                log = QStringLiteral("Failed to verify: %1 in %2 line %3").arg(condition, filename, QString::number(line));
             }
+            QMessageLogger().warning(QLoggingCategory(qPrintable(CLogCategories::verification()))) << log;
 #   if defined(BLACK_USE_CRASHPAD)
             CRASHPAD_SIMULATE_CRASH();
 #   endif
