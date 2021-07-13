@@ -473,7 +473,7 @@ jobs:
             const github = require('@actions/github');
             const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
             const query = { owner: 'swift-project', repo: 'pilotclient', release_id: ${{ needs.release.outputs.id }} };
-            const release = await octokit.repos.getRelease(query);
+            const release = await octokit.rest.repos.getRelease(query);
             core.exportVariable('url', release.data.html_url);
       - name: Send Discord build message
         uses: appleboy/discord-action@0.0.3
