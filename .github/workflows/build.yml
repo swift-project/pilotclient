@@ -13,7 +13,7 @@ env:
   eol_months:    12
   qt_version:    5.15.0
   bitrock_version: qt-professional-20.12.0
-  bitrock_url:     https://clients.bitrock.com/installbuilder
+  bitrock_url:     https://installbuilder.com/
 
 jobs:
 
