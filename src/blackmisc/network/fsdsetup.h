@@ -46,6 +46,8 @@ namespace BlackMisc
                 ReceiveInterimPositions = 1 << 4, //!< fast position updates in
                 ReceiveGndFlag          = 1 << 5, //!< gnd.flag in (position)
                 Force3LetterAirlineICAO = 1 << 6, //!< force 3 letter airline ICAO code
+                // bit 7 reserved for VISUPDATE
+                ReceiveEuroscopeSimData = 1 << 8, //!< euroscope SIMDATA in
                 AllSending              = SendAircraftParts | SendInterimPositions | SendGndFlag,          //!< all out
                 AllReceive              = ReceiveAircraftParts | ReceiveInterimPositions | ReceiveGndFlag, //!< all in
                 All                     = AllReceive | AllSending, //!< all
@@ -93,7 +95,7 @@ namespace BlackMisc
             void removeSendReceiveDetails(SendReceiveDetails sendReceive) { m_sendReceive &= ~sendReceive; }
 
             //! Set send / receive details
-            void setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive);
+            void setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive, bool euroscopeSimDataReceive);
 
             //! FSD setup flags
             //! @{
@@ -104,6 +106,7 @@ namespace BlackMisc
             bool receiveAircraftParts() const { return this->getSendReceiveDetails().testFlag(ReceiveAircraftParts); }
             bool receiveGndFlag() const { return this->getSendReceiveDetails().testFlag(ReceiveGndFlag); }
             bool receiveInterimPositions() const { return this->getSendReceiveDetails().testFlag(ReceiveInterimPositions); }
+            bool receiveEuroscopeSimData() const { return this->getSendReceiveDetails().testFlag(ReceiveEuroscopeSimData); }
             //! @}
 
             //! Airline codes

@@ -54,7 +54,7 @@ namespace BlackMisc
                          );
         }
 
-        void CFsdSetup::setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive)
+        void CFsdSetup::setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive, bool euroscopeSimDataReceive)
         {
             SendReceiveDetails s = Nothing;
             if (partsSend)    { s |= SendAircraftParts; }
@@ -63,6 +63,7 @@ namespace BlackMisc
             if (gndReceive)   { s |= ReceiveGndFlag; }
             if (interimSend)  { s |= SendInterimPositions; }
             if (interimReceive) { s |= ReceiveInterimPositions; }
+            if (euroscopeSimDataReceive) { s |= ReceiveEuroscopeSimData; }
             this->setSendReceiveDetails(s);
         }
 
