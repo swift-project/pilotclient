@@ -19,7 +19,7 @@
 #include <QDebug>
 
 //! Message type
-//! \remark FSD Server docu https://studentweb.uvic.ca/~norrisng/fsd-doc/
+//! \remark FSD Server docu https://fsd-doc.norrisng.ca/
 enum class MessageType
 {
     Unknown,
