@@ -95,14 +95,14 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="4">
+   <item row="4" column="5">
     <widget class="QLabel" name="lbl_TextCodec">
      <property name="text">
       <string>Text codec</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="4">
+   <item row="5" column="5">
     <widget class="QLineEdit" name="le_TextCodec">
      <property name="placeholderText">
       <string>e.g. &quot;latin1&quot;</string>
@@ -130,13 +130,23 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="4">
+   <item row="5" column="4">
     <widget class="QCheckBox" name="cb_3LetterAirlineICAO">
      <property name="toolTip">
       <string>force 3 letter airline ICAO code</string>
      </property>
      <property name="text">
       <string>3 letter airline</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="4">
+    <widget class="QCheckBox" name="cb_EuroscopeSimData">
+     <property name="toolTip">
+      <string>Read SIMDATA packets from EuroScope simulator session</string>
+     </property>
+     <property name="text">
+      <string>euroscope simdata</string>
      </property>
     </widget>
    </item>
@@ -153,6 +163,7 @@
   <tabstop>cb_FastPositionReceive</tabstop>
   <tabstop>le_TextCodec</tabstop>
   <tabstop>cb_3LetterAirlineICAO</tabstop>
+  <tabstop>cb_EuroscopeSimData</tabstop>
  </tabstops>
  <resources/>
  <connections/>
