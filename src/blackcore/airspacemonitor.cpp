@@ -85,6 +85,7 @@ namespace BlackCore
         connect(m_fsdClient, &CFSDClient::deleteAtcReceived,               this, &CAirspaceMonitor::onAtcControllerDisconnected);
         connect(m_fsdClient, &CFSDClient::pilotDataUpdateReceived,         this, &CAirspaceMonitor::onAircraftUpdateReceived);
         connect(m_fsdClient, &CFSDClient::interimPilotDataUpdatedReceived, this, &CAirspaceMonitor::onAircraftInterimUpdateReceived);
+        connect(m_fsdClient, &CFSDClient::euroscopeSimDataUpdatedReceived, this, &CAirspaceMonitor::onAircraftSimDataUpdateReceived);
         connect(m_fsdClient, &CFSDClient::com1FrequencyResponseReceived,   this, &CAirspaceMonitor::onFrequencyReceived);
         connect(m_fsdClient, &CFSDClient::capabilityResponseReceived,      this, &CAirspaceMonitor::onCapabilitiesReplyReceived);
         connect(m_fsdClient, &CFSDClient::planeInformationFsinnReceived,   this, &CAirspaceMonitor::onCustomFSInnPacketReceived);
@@ -1345,6 +1346,20 @@ namespace BlackCore
             this->calculateDistanceToOwnAircraft(interimSituation),
             this->calculateBearingToOwnAircraft(interimSituation)
         );
+    }
+
+    void CAirspaceMonitor::onAircraftSimDataUpdateReceived(const CAircraftSituation &situation, const CAircraftParts &parts, qint64 currentOffsetMs, const QString &aircraftIcao, const QString &airlineIcao)
+    {
+        onAircraftUpdateReceived(situation, CTransponder(2000, CTransponder::ModeC));
+
+        const CAircraftModel &model = getAircraftInRangeForCallsign(situation.getCallsign()).getNetworkModel();
+        if (model.getAircraftIcaoCodeDesignator() != aircraftIcao)
+        {
+            onIcaoCodesReceived(situation.getCallsign(), aircraftIcao, airlineIcao, airlineIcao);
+        }
+
+        //! \fixme Converting CAircraftParts to JSON then converting JSON right back to CAircraftParts, should just directly use CAircraftParts without conversion.
+        onAircraftConfigReceived(situation.getCallsign(), parts.toFullJson(), currentOffsetMs);
     }
 
     void CAirspaceMonitor::onConnectionStatusChanged(CConnectionStatus oldStatus, CConnectionStatus newStatus)
