@@ -33,6 +33,7 @@ enum class MessageType
     ClientResponse,
     DeleteATC,
     DeletePilot,
+    EuroscopeSimData, // Euroscope only
     FlightPlan,
     ProController,
     FsdIdentification,

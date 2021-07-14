@@ -23,6 +23,7 @@
 #include "blackcore/fsd/clientidentification.h"
 #include "blackcore/fsd/deleteatc.h"
 #include "blackcore/fsd/deletepilot.h"
+#include "blackcore/fsd/euroscopesimdata.h"
 #include "blackcore/fsd/pbh.h"
 #include "blackcore/fsd/pilotdataupdate.h"
 #include "blackcore/fsd/ping.h"
@@ -76,6 +77,7 @@ namespace BlackMiscTest
         void testClientResponse();
         void testDeleteAtc();
         void testDeletePilot();
+        void testEuroscopeSimData();
         void testFlightPlan();
         void testFSDIdentification();
         void testInterimPilotDataUpdate();
@@ -294,6 +296,45 @@ namespace BlackMiscTest
         auto messageFromTokens = DeletePilot::fromTokens(tokens);
         QCOMPARE(messageFromTokens, message);
 
+    }
+
+    void CTestFsdMessages::testEuroscopeSimData()
+    {
+        const EuroscopeSimData message("ABCD", "A320", "DLH", 0, 43.1257800, -72.1584100, 12000, 180, 10, -10, 250, false, 0, 50, {});
+
+        QCOMPARE(message.sender(), QString("ABCD"));
+        QCOMPARE(QString(""), message.receiver());
+        QCOMPARE(43.12578, message.m_latitude);
+        QCOMPARE(-72.15841, message.m_longitude);
+        QCOMPARE(12000, message.m_altitude);
+        QCOMPARE(180, message.m_heading);
+        QCOMPARE(10, message.m_bank);
+        QCOMPARE(-10, message.m_pitch);
+        QCOMPARE(250, message.m_groundSpeed);
+        QCOMPARE(false, message.m_onGround);
+        QCOMPARE(0, message.m_gearPercent);
+        QCOMPARE(50, message.m_thrustPercent);
+        QCOMPARE(CAircraftLights(), message.m_lights);
+
+        QString stringRef(":ABCD:A320:DLH:0:43.1257800:-72.1584100:12000.0:180.00:10:-10:250:0:0:50:0:0.0:0");
+        QString str = message.toTokens().join(":");
+        QCOMPARE(str, stringRef);
+
+        QStringList tokens = QString(":ABCD:A320:DLH:0:43.1257800:-72.1584100:12000:180.00:10:-10:250:0:0:50:0:0.0:0").split(':');
+        auto messageFromTokens = EuroscopeSimData::fromTokens(tokens);
+        QCOMPARE(QString("ABCD"), messageFromTokens.sender());
+        QCOMPARE(QString(""), messageFromTokens.receiver());
+        QCOMPARE(43.12578, messageFromTokens.m_latitude);
+        QCOMPARE(-72.15841, messageFromTokens.m_longitude);
+        QCOMPARE(12000, messageFromTokens.m_altitude);
+        QCOMPARE(180, messageFromTokens.m_heading);
+        QCOMPARE(10, messageFromTokens.m_bank);
+        QCOMPARE(-10, messageFromTokens.m_pitch);
+        QCOMPARE(250, messageFromTokens.m_groundSpeed);
+        QCOMPARE(false, messageFromTokens.m_onGround);
+        QCOMPARE(0, messageFromTokens.m_gearPercent);
+        QCOMPARE(50, messageFromTokens.m_thrustPercent);
+        QCOMPARE(CAircraftLights(), messageFromTokens.m_lights);
     }
 
     void CTestFsdMessages::testFlightPlan()
