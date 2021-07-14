@@ -86,7 +86,8 @@ namespace BlackCore
             PublicIP,       /*!< What is my public IP address? */
             INF,            /*!< Supervisor Privileged Information Request. */
             FP,             /*!< Send Cached Flight Plan. Response by SERVER. */
-            AircraftConfig  /*!< Aircraft Configuration */
+            AircraftConfig, /*!< Aircraft Configuration */
+            EuroscopeSimData/*!< Broadcast to announce we request SIMDATA packets. */
             // There are many more which are only relevant to ATC clients.
         };
 

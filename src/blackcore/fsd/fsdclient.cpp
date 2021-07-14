@@ -18,6 +18,7 @@
 #include "blackcore/fsd/clientidentification.h"
 #include "blackcore/fsd/deleteatc.h"
 #include "blackcore/fsd/deletepilot.h"
+#include "blackcore/fsd/euroscopesimdata.h"
 #include "blackcore/fsd/pilotdataupdate.h"
 #include "blackcore/fsd/ping.h"
 #include "blackcore/fsd/pong.h"
@@ -312,6 +313,11 @@ namespace BlackCore
                 sendQueudedMessage(addAtc);
                 CStatusMessage(this).info(u"Sending OBS login as '%1' '%2' '%3' '%4' '%5'") << callsign << cid << toQString(m_atcRating) << m_protocolRevision << name;
             }
+
+            if (m_server.getFsdSetup().receiveEuroscopeSimData())
+            {
+                this->sendClientQuery(ClientQueryType::EuroscopeSimData, {}, {});
+            }
         }
 
         void CFSDClient::sendDeletePilot()
@@ -506,6 +512,11 @@ namespace BlackCore
             {
                 if (queryData.size() == 0) { return; }
                 const ClientQuery clientQuery(getOwnCallsignAsString(), reveiverCallsign, ClientQueryType::AircraftConfig, queryData);
+                sendQueudedMessage(clientQuery);
+            }
+            else if (queryType == ClientQueryType::EuroscopeSimData)
+            {
+                const ClientQuery clientQuery(getOwnCallsignAsString(), "@94835", ClientQueryType::EuroscopeSimData, { "1" });
                 sendQueudedMessage(clientQuery);
             }
 
@@ -973,6 +984,9 @@ namespace BlackCore
             m_messageTypeMapping["#TM"] = MessageType::TextMessage;
             m_messageTypeMapping["#SB"] = MessageType::PilotClientCom;
 
+            // Euroscope
+            m_messageTypeMapping["SIMDATA"] = MessageType::EuroscopeSimData;
+
             // IVAO only
             // Ref: https://github.com/DemonRem/X-IvAP/blob/1b0a14880532a0f5c8fe84be44e462c6892a5596/src/XIvAp/FSDprotocol.h
             m_messageTypeMapping["!R"]  = MessageType::RegistrationInfo;
@@ -1133,6 +1147,33 @@ namespace BlackCore
                 transponder = CTransponder(2000, CTransponder::StateStandby);
             }
             emit pilotDataUpdateReceived(situation, transponder);
+        }
+
+        void CFSDClient::handleEuroscopeSimData(const QStringList &tokens)
+        {
+            const EuroscopeSimData data = EuroscopeSimData::fromTokens(tokens);
+
+            CAircraftSituation situation(
+                CCallsign(data.sender(), CCallsign::Aircraft),
+                CCoordinateGeodetic(data.m_latitude, data.m_longitude, data.m_altitude),
+                CHeading(data.m_heading, CAngleUnit::deg()),
+                CAngle(-data.m_pitch, CAngleUnit::deg()),
+                CAngle(-data.m_bank, CAngleUnit::deg()),
+                CSpeed(data.m_groundSpeed, CSpeedUnit::kts()));
+            situation.setOnGround(data.m_onGround);
+            situation.setOnGroundDetails(CAircraftSituation::InFromNetwork);
+
+            // Ref T297, default offset time
+            situation.setCurrentUtcTime();
+            const qint64 offsetTimeMs = receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
+            situation.setTimeOffsetMs(offsetTimeMs);
+
+            CAircraftParts parts;
+            parts.setLights(data.m_lights);
+            parts.setGearDown(data.m_gearPercent);
+            parts.setOnGround(data.m_onGround);
+
+            emit euroscopeSimDataUpdatedReceived(situation, parts, currentOffsetTime(data.sender()), data.m_model, data.m_livery);
         }
 
         void CFSDClient::handlePing(const QStringList &tokens)
@@ -2031,9 +2072,7 @@ namespace BlackCore
                 case MessageType::TextMessage:       handleTextMessage(tokens);       break;
                 case MessageType::PilotClientCom:    handleCustomPilotPacket(tokens); break;
                 case MessageType::RevBClientParts:   handleRevBClientPartsPacket(tokens); break;
-
-
-
+                case MessageType::EuroscopeSimData:  handleEuroscopeSimData(tokens);  break;
 
                 // normally we should not get here
                 default:

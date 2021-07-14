@@ -225,6 +225,7 @@ namespace BlackCore
             void planeInformationReceived(const QString &sender, const QString &aircraft, const QString &airline, const QString &livery);
             void customPilotPacketReceived(const QString &sender, const QStringList &data);
             void interimPilotDataUpdatedReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
+            void euroscopeSimDataUpdatedReceived(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts, qint64 currentOffsetTimeMs, const QString &model, const QString &livery);
             void rawFsdMessage(const BlackMisc::Network::CRawFsdMessage &rawFsdMessage);
             void planeInformationFsinnReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &modelString);
             void revbAircraftConfigReceived(const QString &sender, const QString &config, qint64 currentOffsetTimeMs);
@@ -364,6 +365,7 @@ namespace BlackCore
             void handleDeletePilot(const QStringList &tokens);
             void handleTextMessage(const QStringList &tokens);
             void handlePilotDataUpdate(const QStringList &tokens);
+            void handleEuroscopeSimData(const QStringList &tokens);
             void handlePing(const QStringList &tokens);
             void handlePong(const QStringList &tokens);
             void handleKillRequest(const QStringList &tokens);

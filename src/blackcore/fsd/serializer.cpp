@@ -271,6 +271,7 @@ namespace BlackCore
             case ClientQueryType::INF:            return "INF";
             case ClientQueryType::FP:             return "FP";
             case ClientQueryType::AircraftConfig: return "ACC";
+            case ClientQueryType::EuroscopeSimData: return "SIMDATA";
             case ClientQueryType::Unknown:        return "Unknown query type";
             }
 
