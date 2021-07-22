@@ -20,9 +20,9 @@ struct QMetaObject;
 
 namespace BlackMisc
 {
-    void CLogCategoryList::appendCategoriesFromMetaObject(const QMetaObject &metaObject)
+    void CLogCategoryList::appendCategoriesFromMetaObject(const QMetaObject &metaObject, const QMetaObject &super)
     {
-        for (auto *meta = &metaObject; meta; meta = meta->superClass())
+        for (auto *meta = &metaObject; meta != &super; meta = meta->superClass())
         {
             push_back(meta->className());
         }

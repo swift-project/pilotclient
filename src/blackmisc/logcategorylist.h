@@ -66,7 +66,7 @@ namespace BlackMisc
          *                It is legal to pass static_cast<T>(nullptr), but in member functions passing the <tt>this</tt> pointer is easier.
          */
         template <typename T, typename = std::enable_if_t<std::is_class_v<T>>>
-        CLogCategoryList(const T *pointer) : CLogCategoryList(fromClass<T>()) { Q_UNUSED(pointer); }
+        CLogCategoryList(const T *pointer) : CLogCategoryList(fromClass(pointer)) {}
 
         //! Return a copy with another category appended.
         CLogCategoryList with(const CLogCategory &other) const { auto copy = *this; copy.push_back(other); return copy; }
@@ -103,22 +103,28 @@ namespace BlackMisc
 
     private:
         template <typename T>
-        static const CLogCategoryList &fromClass()
+        static CLogCategoryList fromClass(const T *ptr)
         {
             static_assert(sizeof(T) > 0, "T must be a complete type, not forward declared");
-            static const auto list = []
+            static const auto staticList = []
             {
                 CLogCategoryList list;
                 if constexpr (THasGetLogCategories<T>::value) { list.push_back(fromQStringList(T::getLogCategories())); }
                 if constexpr (QMetaTypeId<T>::Defined) { list.push_back(QMetaType::typeName(qMetaTypeId<T>())); }
                 if constexpr (std::is_base_of_v<QObject, T>) { list.appendCategoriesFromMetaObject(T::staticMetaObject); }
-                if (list.isEmpty()) { list.push_back(CLogCategories::uncategorized()); }
                 return list;
             }();
+            auto list = staticList;
+            if constexpr (std::is_base_of_v<QObject, T>)
+            {
+                if (ptr) { list.appendCategoriesFromMetaObject(*ptr->metaObject(), T::staticMetaObject); }
+            }
+            else { Q_UNUSED(ptr); }
+            if (list.isEmpty()) { return { CLogCategories::uncategorized() }; }
             return list;
         }
 
-        void appendCategoriesFromMetaObject(const QMetaObject &);
+        void appendCategoriesFromMetaObject(const QMetaObject &, const QMetaObject &super = QObject::staticMetaObject);
     };
 }
 
