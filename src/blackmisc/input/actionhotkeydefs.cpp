@@ -79,5 +79,27 @@ namespace BlackMisc
             return s;
         }
 
+        const QString &radarZoomInHotkeyAction()
+        {
+            static const QString s("/Radar/Zoom in");
+            return s;
+        }
+
+        CIcons::IconIndex radarZoomInHotkeyIcon()
+        {
+            return CIcons::StandardIconZoomIn16;
+        }
+
+        const QString &radarZoomOutHotkeyAction()
+        {
+            static const QString s("/Radar/Zoom out");
+            return s;
+        }
+
+        CIcons::IconIndex radarZoomOutHotkeyIcon()
+        {
+            return CIcons::StandardIconZoomOut16;
+        }
+
     } // ns
 } // ns

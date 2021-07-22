@@ -188,6 +188,8 @@ namespace BlackMisc
             StandardIconWarning16,
             StandardIconWeatherCloudy16,
             StandardIconWrench16,
+            StandardIconZoomIn16,
+            StandardIconZoomOut16,
             StandardIconBuilding16,
             Swift16,
             Swift24,
@@ -435,6 +437,12 @@ namespace BlackMisc
 
         //! Cut
         static const QPixmap &cut16();
+
+        //! Zoom in
+        static const QPixmap &zoomIn16();
+
+        //! Zoom out
+        static const QPixmap &zoomOut16();
 
         //! Building
         static const QPixmap &building16();

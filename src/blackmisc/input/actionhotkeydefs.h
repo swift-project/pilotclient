@@ -56,6 +56,18 @@ namespace BlackMisc
         //! XPDR ident
         BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex toggleXPDRIdentHotkeyIcon();
 
+        //! Radar zoom in
+        BLACKMISC_EXPORT const QString &radarZoomInHotkeyAction();
+
+        //! Radar zoom in
+        BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex radarZoomInHotkeyIcon();
+
+        //! Radar zoom out
+        BLACKMISC_EXPORT const QString &radarZoomOutHotkeyAction();
+
+        //! Radar zoom out
+        BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex radarZoomOutHotkeyIcon();
+
     } // ns
 } // ns
 

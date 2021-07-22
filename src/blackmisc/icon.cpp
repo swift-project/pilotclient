@@ -255,6 +255,8 @@ namespace BlackMisc
             CIcon(CIcons::StandardIconWarning16, "warning"),
             CIcon(CIcons::StandardIconWeatherCloudy16, "cloudy"),
             CIcon(CIcons::StandardIconWrench16, "wrench"),
+            CIcon(CIcons::StandardIconZoomIn16, "zoom in"),
+            CIcon(CIcons::StandardIconZoomOut16, "zoom out"),
             CIcon(CIcons::StandardIconBuilding16, "building"),
             CIcon(CIcons::Swift16, "swift"),
             CIcon(CIcons::Swift24, "swift"),

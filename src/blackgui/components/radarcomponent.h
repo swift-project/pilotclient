@@ -13,6 +13,8 @@
 
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
+#include "blackcore/actionbind.h"
+#include "blackmisc/input/actionhotkeydefs.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsItemGroup>
@@ -75,6 +77,11 @@ namespace BlackGui
             int    m_rotatenAngle = 0;
             QTimer m_updateTimer;
             QTimer m_headingTimer;
+
+            BlackCore::CActionBind m_actionZoomIn  { BlackMisc::Input::radarZoomInHotkeyAction(),  BlackMisc::Input::radarZoomInHotkeyIcon(),  this, &CRadarComponent::rangeZoomIn };
+            BlackCore::CActionBind m_actionZoomOut { BlackMisc::Input::radarZoomOutHotkeyAction(), BlackMisc::Input::radarZoomOutHotkeyIcon(), this, &CRadarComponent::rangeZoomOut };
+            void rangeZoomIn (bool keydown) { if (keydown) { changeRangeInSteps(true); } }
+            void rangeZoomOut(bool keydown) { if (keydown) { changeRangeInSteps(false); } }
         };
     } // ns
 } // ns
