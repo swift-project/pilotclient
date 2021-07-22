@@ -67,8 +67,10 @@ namespace BlackSound
         this->updateEffect(CNotificationSounds::NotificationError,  directory, "error.wav");
         this->updateEffect(CNotificationSounds::NotificationLogin,  directory, "login.wav");
         this->updateEffect(CNotificationSounds::NotificationLogoff, directory, "logoff.wav");
+        this->updateEffect(CNotificationSounds::NotificationTextMessageFrequency, directory, "frequencymessage.wav");
         this->updateEffect(CNotificationSounds::NotificationTextMessagePrivate, directory, "privatemessage.wav");
         this->updateEffect(CNotificationSounds::NotificationTextMessageSupervisor, directory, "supervisormessage.wav");
+        this->updateEffect(CNotificationSounds::NotificationTextMessageUnicom, directory, "unicommessage.wav");
         this->updateEffect(CNotificationSounds::NotificationTextCallsignMentioned, directory, "callsignmentioned.wav");
         this->updateEffect(CNotificationSounds::NotificationNoAudioTransmission,   directory, "noaudiotransmission.wav");
         this->updateEffect(CNotificationSounds::NotificationAtcTunedIn,  directory, "atctunedin.wav");

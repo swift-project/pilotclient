@@ -40,8 +40,10 @@ namespace BlackMisc
                 NotificationError                 = 1 << 0,
                 NotificationLogin                 = 1 << 1,
                 NotificationLogoff                = 1 << 2,
+                NotificationTextMessageFrequency  = 1 << 12,
                 NotificationTextMessagePrivate    = 1 << 3,
                 NotificationTextMessageSupervisor = 1 << 4,
+                NotificationTextMessageUnicom     = 1 << 13,
                 NotificationTextCallsignMentioned = 1 << 5,
                 NotificationNoAudioTransmission   = 1 << 6,
                 NotificationAtcTunedIn            = 1 << 10,
@@ -55,7 +57,8 @@ namespace BlackMisc
             Q_DECLARE_FLAGS(Notification, NotificationFlag)
 
             //! All text notification flags
-            constexpr static Notification AllTextNotifications = Notification(NotificationTextMessagePrivate | NotificationTextCallsignMentioned | NotificationTextMessageSupervisor);
+            constexpr static Notification AllTextNotifications = Notification(
+                NotificationTextMessageFrequency | NotificationTextMessagePrivate | NotificationTextCallsignMentioned | NotificationTextMessageSupervisor | NotificationTextMessageUnicom);
 
             //! All login notification flags
             constexpr static Notification AllLoginNotifications = Notification(NotificationLogin | NotificationLogoff);
@@ -70,7 +73,7 @@ namespace BlackMisc
             constexpr static Notification AllNotifications = Notification(NotificationError | AllTextNotifications | AllLoginNotifications | AllPTTNotifications | AllAfv);
 
             //! Default notification flags
-            constexpr static Notification DefaultNotifications = Notification(AllNotifications);
+            constexpr static Notification DefaultNotifications = Notification(AllNotifications & ~(NotificationTextMessageFrequency | NotificationTextMessageUnicom));
 
             //! As string
             static const QString &flagToString(NotificationFlag notification);
