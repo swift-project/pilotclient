@@ -863,8 +863,13 @@ namespace BlackGui
         CAircraftIcaoCode CFlightPlanComponent::getAircraftIcaoCode() const
         {
             const QString designator(ui->le_AircraftType->text());
-            if (!sApp || !sApp->hasWebDataServices() || !CAircraftIcaoCode::isValidDesignator(designator)) { return CAircraftIcaoCode(); }
-            return sApp->getWebDataServices()->getAircraftIcaoCodeForDesignator(designator);
+            if (!CAircraftIcaoCode::isValidDesignator(designator)) { return CAircraftIcaoCode(); }
+            if (sApp && sApp->hasWebDataServices())
+            {
+                const CAircraftIcaoCode designatorFromDb = sApp->getWebDataServices()->getAircraftIcaoCodeForDesignator(designator);
+                if (designatorFromDb.isLoadedFromDb()) { return designatorFromDb; }
+            }
+            return designator;
         }
 
         QString CFlightPlanComponent::getEquipmentSuffix() const
