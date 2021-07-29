@@ -100,6 +100,7 @@ namespace BlackMisc
                     BLACK_METAMEMBER(nightTextureMode),
                     BLACK_METAMEMBER(maxPlanes),
                     BLACK_METAMEMBER(drawingLabels),
+                    BLACK_METAMEMBER(labelColor),
                     BLACK_METAMEMBER(bundleTaxiLandingLights),
                     BLACK_METAMEMBER(maxDrawDistanceNM),
                     BLACK_METAMEMBER(followAircraftDistanceM),

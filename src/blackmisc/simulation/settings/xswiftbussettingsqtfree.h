@@ -46,6 +46,12 @@ namespace BlackMisc
                 //! Get whether the plugin draws type and callsign labels above aircraft
                 bool isDrawingLabels() const { return m_drawingLabels; }
 
+                //! Set the color to draw the callsign labels above aircraft
+                void setLabelColor(int rgb) { m_labelColor = rgb; }
+
+                //! Get the color to draw the callsign labels above aircraft
+                int getLabelColor() const { return m_labelColor; }
+
                 //! Bundle taxi and landing lights
                 void setBundlingTaxiAndLandingLights(bool bundle) { m_bundleTaxiLandingLights = bundle; }
 
@@ -58,25 +64,26 @@ namespace BlackMisc
                 //! The the night texture mode
                 const std::string &getNightTextureMode() const { return m_nightTextureMode; }
 
-                //! Left, top, right, bottom, lines, duration
+                //! Left, top, right, bottom, lines, duration, color(freq, priv, serv, stat, sup)
                 void setMessageBoxValues(const std::string &positions) { m_msgBox = positions; }
 
-                //! Left, top, right, bottom, lines, duration
-                void setMessageBoxValues(int leftPx, int topPx, int rightPx, int bottomPx, int lines, int durationMs)
+                //! Left, top, right, bottom, lines, duration, color(freq, priv, serv, stat, sup)
+                void setMessageBoxValues(int leftPx, int topPx, int rightPx, int bottomPx, int lines, int durationMs, int freqRgb, int privRgb, int servRgb, int statRgb, int supRgb)
                 {
                     if (topPx >= 0) { bottomPx = -1; }
                     if (lines < 3) { lines = 3; }
-                    this->setMessageBoxValues(std::to_string(leftPx) + ";" + std::to_string(topPx) + ";" + std::to_string(rightPx) + ";" + std::to_string(bottomPx) + ";" + std::to_string(lines) + ";" + std::to_string(durationMs));
+                    this->setMessageBoxValues(std::to_string(leftPx) + ";" + std::to_string(topPx) + ";" + std::to_string(rightPx) + ";" + std::to_string(bottomPx) + ";" + std::to_string(lines) + ";" + std::to_string(durationMs) + ";"
+                        + std::to_string(freqRgb) + ";" + std::to_string(privRgb) + ";" + std::to_string(servRgb) + ";" + std::to_string(statRgb) + ";" + std::to_string(supRgb));
                 }
 
-                //! Left, top, right, bottom, lines, duration
+                //! Left, top, right, bottom, lines, duration, color(freq, priv, serv, stat, sup)
                 const std::string &getMessageBoxValues() const { return m_msgBox; }
 
-                //! Left, top, right, bottom, lines, duration
+                //! Left, top, right, bottom, lines, duration, color(freq, priv, serv, stat, sup)
                 std::vector<int> getMessageBoxValuesVector() const
                 {
-                    constexpr int partCount = 6;
-                    std::vector<int> partsInt = {20, 20, 20, -1, 5, 5000};
+                    constexpr int partCount = 11;
+                    std::vector<int> partsInt = {20, 20, 20, -1, 5, 5000, 0x00ff00, 0xff00ff, 0xda70d6, 0x00ffff, 0xffff00};
                     const std::vector<std::string> parts = XPlane::QtFreeUtils::split(m_msgBox, partCount, ";");
 
                     size_t c = 0;
@@ -164,6 +171,7 @@ namespace BlackMisc
                 //! @{
                 static constexpr char JsonDBusServerAddress[] = "dbusserveradress";
                 static constexpr char JsonDrawingLabels[]     = "drawinglabels";
+                static constexpr char JsonLabelColor[]        = "labelcolor";
                 static constexpr char JsonLogRenderPhases[]   = "renderPhases";
                 static constexpr char JsonTcas[]              = "tcas";
                 static constexpr char JsonTerrainProbe[]      = "terrainProbe";
@@ -181,10 +189,11 @@ namespace BlackMisc
 
                 std::string m_dBusServerAddress { "tcp:host=127.0.0.1,port=45001" }; //!< DBus server (also in class CXSwiftBusConfigWriter)
                 std::string m_nightTextureMode  { "auto" }; //!< night texture mode
-                std::string m_msgBox            { "20;20;20;-1;5;5000" }; //!< left, top, right, bottom, lines, duration
+                std::string m_msgBox            { "20;20;20;-1;5;5000;65280;16711935;14315734;65535;16776960" }; //!< left, top, right, bottom, lines, duration, colors
                 int    m_maxPlanes               = 100;     //!< max. planes in XPlane
                 int    m_followAircraftDistanceM = 200;     //!< follow aircraft in distance
                 bool   m_drawingLabels           = true;    //!< labels in XPlane
+                int    m_labelColor              = 0xffc000;//!< labels in XPlane
                 bool   m_bundleTaxiLandingLights = true;    //!< bundle taxi and landing lights
                 bool   m_logRenderPhases         = false;   //!< render phases debug messages
                 bool   m_tcasEnabled             = true;    //!< TCAS functionality
