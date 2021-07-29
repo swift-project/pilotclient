@@ -569,7 +569,8 @@ namespace BlackSimPlugin
             if (isInFunction) { return; }
             isInFunction = true;
 
-            QColor color = "cyan";
+            std::vector<int> msgBoxValues = m_xSwiftBusServerSettings.getThreadLocal().getMessageBoxValuesVector();
+            QColor color = msgBoxValues[9];
             /* switch (message.getSeverity())
             {
             case CStatusMessage::SeverityDebug:   color = "teal";   break;
@@ -587,11 +588,12 @@ namespace BlackSimPlugin
             // avoid issues during shutdown
             if (this->isShuttingDownOrDisconnected()) { return; }
 
+            std::vector<int> msgBoxValues = m_xSwiftBusServerSettings.getThreadLocal().getMessageBoxValuesVector();
             QColor color;
-            if (message.isServerMessage())          { color = "orchid"; }
-            else if (message.isSupervisorMessage()) { color = "yellow"; }
-            else if (message.isPrivateMessage())    { color = "magenta"; }
-            else { color = "lime"; }
+            if (message.isServerMessage())          { color = msgBoxValues[8]; }
+            else if (message.isSupervisorMessage()) { color = msgBoxValues[10]; }
+            else if (message.isPrivateMessage())    { color = msgBoxValues[7]; }
+            else { color = msgBoxValues[6]; }
 
             m_serviceProxy->addTextMessage(message.getSenderCallsign().toQString() + ": " + message.getMessage(), color.redF(), color.greenF(), color.blueF());
         }

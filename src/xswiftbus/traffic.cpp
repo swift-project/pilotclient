@@ -261,7 +261,7 @@ namespace XSwiftBus
         XPMPSetDefaultPlaneICAO(defaultIcao.c_str());
     }
 
-    void CTraffic::setDrawingLabels(bool drawing)
+    void CTraffic::setDrawingLabels(bool drawing, int rgb)
     {
         CSettings s = this->getSettings();
         if (s.isDrawingLabels() != drawing)
@@ -269,7 +269,10 @@ namespace XSwiftBus
             s.setDrawingLabels(drawing);
             this->setSettings(s);
         }
-
+        if (rgb >= 0)
+        {
+            m_labels.setColor((rgb & 0xff0000) >> 16, (rgb & 0x00ff00) >> 8, rgb & 0x0000ff);
+        }
         if (drawing)
         {
             m_labels.show();
@@ -828,7 +831,7 @@ namespace XSwiftBus
     {
         invokeQueuedDBusCalls();
         doPlaneUpdates();
-        setDrawingLabels(getSettings().isDrawingLabels());
+        setDrawingLabels(getSettings().isDrawingLabels(), getSettings().getLabelColor());
         emitSimFrame();
         m_countFrame++;
         return 1;
@@ -901,7 +904,6 @@ namespace XSwiftBus
     {
         static const double maxRangeM = 10000;
         static const double metersPerFt = 0.3048;
-        static float color[3]{ 1.0f, 0.75f, 0.0f };
         std::array<float, 16> worldMat = m_worldMat.getAll();
         std::array<float, 16> projMat = m_projMat.getAll();
         double windowWidth = static_cast<double>(m_windowWidth.get());
@@ -931,7 +933,7 @@ namespace XSwiftBus
             {
                 continue; // plane is behind camera
             }
-            XPLMDrawString(color,
+            XPLMDrawString(m_color.data(),
                 static_cast<int>(std::lround(windowWidth  * (windowPos[0] * 0.5 + 0.5))),
                 static_cast<int>(std::lround(windowHeight * (windowPos[1] * 0.5 + 0.5))),
                 text, nullptr, xplmFont_Basic);

@@ -76,7 +76,7 @@ namespace XSwiftBus
         void setDefaultIcao(const std::string &defaultIcao);
 
         //! Set whether the plugin draws type and callsign labels above aircraft
-        void setDrawingLabels(bool drawing);
+        void setDrawingLabels(bool drawing, int rgb = -1);
 
         //! Get whether the plugin draws type and callsign labels above aircraft
         bool isDrawingLabels() const;
@@ -194,12 +194,14 @@ namespace XSwiftBus
         {
         public:
             Labels(CTraffic *traffic) : CDrawable(xplm_Phase_Window, false), m_traffic(traffic) {}
+            void setColor(int r, int g, int b) { m_color = {{ static_cast<float>(r) / 255.f, static_cast<float>(g) / 255.f, static_cast<float>(b) / 255.f }}; }
         protected:
             virtual void draw() override;
         private:
             static void matrixMultVec(double out[4], const float m[16], const double v[4]);
             double distanceSquared(const double pos[3]) const;
             CTraffic *m_traffic = nullptr;
+            std::array<float, 3> m_color{{ 1.0f, 0.75f, 0.0f }};
             ArrayDataRef<xplane::data::sim::graphics::view::world_matrix> m_worldMat;
             ArrayDataRef<xplane::data::sim::graphics::view::projection_matrix_3d> m_projMat;
             DataRef<xplane::data::sim::graphics::view::window_width> m_windowWidth;
