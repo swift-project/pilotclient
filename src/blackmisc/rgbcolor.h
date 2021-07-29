@@ -86,6 +86,12 @@ namespace BlackMisc
         //! Hex value
         QString hex(bool withHash = false) const;
 
+        //! Value packed in 24 bit integer
+        int packed() const;
+
+        //! Construct from packed 24 bit integer value
+        static CRgbColor fromPacked(int rgb);
+
         //! Hex or color name
         void setByString(const QString &color, bool isName = false);
 

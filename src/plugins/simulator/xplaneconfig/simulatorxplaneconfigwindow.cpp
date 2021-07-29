@@ -82,6 +82,7 @@ namespace BlackSimPlugin
             s.setMaxPlanes(ui->sb_MaxAircraft->value());
             s.setFollowAircraftDistanceM(ui->sb_FollowAircraftDistanceM->value());
             s.setDrawingLabels(ui->cb_DrawLabels->isChecked());
+            s.setLabelColor(ui->cs_LabelColor->getColor().packed());
             s.setNightTextureModeQt(ui->cb_NightTextureMode->currentText());
             s.setBundlingTaxiAndLandingLights(ui->cb_BundleTaxiLandingLights->isChecked());
             s.setTcasEnabled(ui->cb_TcasEnabled->isChecked());
@@ -95,7 +96,12 @@ namespace BlackSimPlugin
                 marginToInt(ui->le_MsgBoxMarginsRight->text(),  20),
                 marginToInt(ui->le_MsgBoxMarginsBottom->text(), 20),
                 ui->sb_MessageBoxLines->value(),
-                ui->sb_MessageBoxDuration->value()
+                ui->sb_MessageBoxDuration->value(),
+                ui->cs_ColorFreq->getColor().packed(),
+                ui->cs_ColorPriv->getColor().packed(),
+                ui->cs_ColorServ->getColor().packed(),
+                ui->cs_ColorStat->getColor().packed(),
+                ui->cs_ColorSup->getColor().packed()
             );
             return s;
         }
@@ -107,6 +113,7 @@ namespace BlackSimPlugin
             ui->sb_FollowAircraftDistanceM->setValue(settings.getFollowAircraftDistanceM());
             ui->ds_MaxDrawDistanceNM->setValue(settings.getMaxDrawDistanceNM());
             ui->cb_DrawLabels->setChecked(settings.isDrawingLabels());
+            ui->cs_LabelColor->setColor(CRgbColor::fromPacked(settings.getLabelColor()));
             ui->cb_BundleTaxiLandingLights->setChecked(settings.isBundlingTaxiAndLandingLights());
             ui->cb_TcasEnabled->setChecked(settings.isTcasEnabled());
             ui->cb_TerrainProbeEnabled->setChecked(settings.isTerrainProbeEnabled());
@@ -128,13 +135,22 @@ namespace BlackSimPlugin
             const std::vector<int> values = settings.getMessageBoxValuesVector();
             if (values.size() >= 6)
             {
-                // left, top, right, bottom, height
+                // left, top, right, bottom, height, duration
                 ui->le_MsgBoxMarginsLeft->setText(QString::number(values[0]));
                 ui->le_MsgBoxMarginsTop->setText(QString::number(values[1]));
                 ui->le_MsgBoxMarginsRight->setText(QString::number(values[2]));
                 ui->le_MsgBoxMarginsBottom->setText(QString::number(values[3]));
                 ui->sb_MessageBoxLines->setValue(values[4]);
                 ui->sb_MessageBoxDuration->setValue(values[5]);
+            }
+            if (values.size() >= 11)
+            {
+                // freq, priv, serv, stat, sup
+                ui->cs_ColorFreq->setColor(CRgbColor::fromPacked(values[6]));
+                ui->cs_ColorPriv->setColor(CRgbColor::fromPacked(values[7]));
+                ui->cs_ColorServ->setColor(CRgbColor::fromPacked(values[8]));
+                ui->cs_ColorStat->setColor(CRgbColor::fromPacked(values[9]));
+                ui->cs_ColorSup->setColor(CRgbColor::fromPacked(values[10]));
             }
         }
 

@@ -135,55 +135,65 @@
        </widget>
       </item>
       <item row="4" column="0">
+       <widget class="QLabel" name="lbl_LabelColor">
+        <property name="text">
+         <string>Label color</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="BlackGui::Components::CColorSelector" name="cs_LabelColor" />
+      </item>
+      <item row="5" column="0">
        <widget class="QLabel" name="lbl_BundleLights">
         <property name="text">
          <string>Bundle lights</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
+      <item row="5" column="1">
        <widget class="QCheckBox" name="cb_BundleTaxiLandingLights">
         <property name="text">
          <string>bundle taxi and landing lights</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
+      <item row="6" column="0">
        <widget class="QLabel" name="lbl_TcasEnabled">
         <property name="text">
          <string>TCAS</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="1">
+      <item row="6" column="1">
        <widget class="QCheckBox" name="cb_TcasEnabled">
         <property name="text">
          <string>show traffic on TCAS</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="0">
+      <item row="8" column="0">
        <widget class="QLabel" name="lbl_DebugMode">
         <property name="text">
          <string>Logging</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="1">
+      <item row="8" column="1">
        <widget class="QCheckBox" name="cb_LogRenderPhases">
         <property name="text">
          <string>log.render phases</string>
         </property>
        </widget>
       </item>
-      <item row="8" column="0">
+      <item row="9" column="0">
        <widget class="QLabel" name="lbl_MessageBox">
         <property name="text">
          <string>Message box </string>
         </property>
        </widget>
       </item>
-      <item row="8" column="1">
+      <item row="9" column="1">
        <widget class="QWidget" name="wi_MessageBox" native="true">
         <layout class="QHBoxLayout" name="hl_MessageBox">
          <property name="leftMargin">
@@ -214,14 +224,14 @@
         </layout>
        </widget>
       </item>
-      <item row="9" column="0">
+      <item row="10" column="0">
        <widget class="QLabel" name="lbl_MessageBoxDuration">
         <property name="text">
          <string>Box disappears after</string>
         </property>
        </widget>
       </item>
-      <item row="9" column="1">
+      <item row="10" column="1">
        <widget class="QSpinBox" name="sb_MessageBoxDuration">
         <property name="suffix">
          <string>ms</string>
@@ -237,14 +247,14 @@
         </property>
        </widget>
       </item>
-      <item row="10" column="0">
+      <item row="11" column="0">
        <widget class="QLabel" name="lbl_MessageBoxMargins">
         <property name="text">
          <string>Box margins px.</string>
         </property>
        </widget>
       </item>
-      <item row="10" column="1">
+      <item row="11" column="1">
        <widget class="QWidget" name="wi_Margins" native="true">
         <layout class="QGridLayout" name="gl_MessageBoxMargins">
          <property name="leftMargin">
@@ -318,14 +328,79 @@
         </layout>
        </widget>
       </item>
-      <item row="11" column="0">
+      <item row="12" column="0">
+       <widget class="QLabel" name="lbl_MessageColors">
+        <property name="text">
+         <string>Message colors</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="1">
+       <widget class="QWidget" name="wi_MessageColors" native="true">
+        <layout class="QGridLayout" name="gl_MessageColors">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item row="1" column="0"><widget class="BlackGui::Components::CColorSelector" name="cs_ColorFreq" /></item>
+         <item row="1" column="1"><widget class="BlackGui::Components::CColorSelector" name="cs_ColorPriv" /></item>
+         <item row="1" column="2"><widget class="BlackGui::Components::CColorSelector" name="cs_ColorServ" /></item>
+         <item row="1" column="3"><widget class="BlackGui::Components::CColorSelector" name="cs_ColorStat" /></item>
+         <item row="1" column="4"><widget class="BlackGui::Components::CColorSelector" name="cs_ColorSup" /></item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="lbl_ColorFreq">
+           <property name="text">
+            <string>Freq</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="lbl_ColorPriv">
+           <property name="text">
+            <string>Priv</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="lbl_ColorServ">
+           <property name="text">
+            <string>Serv</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QLabel" name="lbl_ColorStat">
+           <property name="text">
+            <string>Sup</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="4">
+          <widget class="QLabel" name="lbl_ColorSup">
+           <property name="text">
+            <string>Sup</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="13" column="0">
        <widget class="QLabel" name="lbl_NightTextureMode">
         <property name="text">
          <string>Night texture</string>
         </property>
        </widget>
       </item>
-      <item row="11" column="1">
+      <item row="13" column="1">
        <widget class="QComboBox" name="cb_NightTextureMode">
         <item>
          <property name="text">
@@ -344,14 +419,14 @@
         </item>
        </widget>
       </item>
-      <item row="6" column="0">
+      <item row="7" column="0">
        <widget class="QLabel" name="lbl_TerrainProbeEnabled">
         <property name="text">
          <string>Terrain probe</string>
         </property>
        </widget>
       </item>
-      <item row="6" column="1">
+      <item row="7" column="1">
        <widget class="QCheckBox" name="cb_TerrainProbeEnabled">
         <property name="text">
          <string>probe to determine ground elevation</string>
@@ -393,12 +468,18 @@
    <header>blackgui/components/dbusserveraddressselector.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CColorSelector</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/colorselector.h</header>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>sb_MaxAircraft</tabstop>
   <tabstop>ds_MaxDrawDistanceNM</tabstop>
   <tabstop>sb_FollowAircraftDistanceM</tabstop>
   <tabstop>cb_DrawLabels</tabstop>
+  <tabstop>cs_LabelColor</tabstop>
   <tabstop>cb_BundleTaxiLandingLights</tabstop>
   <tabstop>cb_TcasEnabled</tabstop>
   <tabstop>cb_LogRenderPhases</tabstop>
@@ -407,6 +488,11 @@
   <tabstop>le_MsgBoxMarginsBottom</tabstop>
   <tabstop>le_MsgBoxMarginsLeft</tabstop>
   <tabstop>le_MsgBoxMarginsRight</tabstop>
+  <tabstop>cs_ColorFreq</tabstop>
+  <tabstop>cs_ColorPriv</tabstop>
+  <tabstop>cs_ColorServ</tabstop>
+  <tabstop>cs_ColorStat</tabstop>
+  <tabstop>cs_ColorSup</tabstop>
   <tabstop>cb_NightTextureMode</tabstop>
  </tabstops>
  <resources/>

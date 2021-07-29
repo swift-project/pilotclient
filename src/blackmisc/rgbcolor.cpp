@@ -132,6 +132,17 @@ namespace BlackMisc
         return withHash ? u'#' % h : h;
     }
 
+    int CRgbColor::packed() const
+    {
+        if (!isValid()) { return 0; }
+        return static_cast<int>(toQColor().rgb() & qRgba(255, 255, 255, 0));
+    }
+
+    CRgbColor CRgbColor::fromPacked(int rgb)
+    {
+        return { qRed(rgb), qGreen(rgb), qBlue(rgb) };
+    }
+
     void CRgbColor::setByString(const QString &color, bool isName)
     {
         if (color.isEmpty()) { return; }
