@@ -411,6 +411,9 @@ namespace BlackCore
         //! Auto publish data written for simulator
         void autoPublishDataWritten(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
+        //! Frame rate has fallen too far below the threshold to maintain consistent sim rate
+        void insufficientFrameRateDetected(bool fatal);
+
     protected:
         //! Constructor with all the providers
         ISimulator(const BlackMisc::Simulation::CSimulatorPluginInfo &pluginInfo,

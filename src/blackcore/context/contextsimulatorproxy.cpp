@@ -104,6 +104,9 @@ namespace BlackCore
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                    "validatedModelSet", this, SIGNAL(validatedModelSet(BlackMisc::Simulation::CSimulatorInfo, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModelList, bool, BlackMisc::CStatusMessageList)));
             Q_ASSERT(s);
+            s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                                   "insufficientFrameRateDetected", this, SIGNAL(insufficientFrameRateDetected(bool)));
+            Q_ASSERT(s);
             Q_UNUSED(s)
             this->relayBaseClassSignals(serviceName, connection, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName());
         }

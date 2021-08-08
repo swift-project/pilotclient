@@ -120,6 +120,9 @@ namespace BlackCore
             //! A formerly vital driver is no longer vital/responding
             void vitalityLost();
 
+            //! Frame rate has fallen too far below the threshold to maintain consistent sim rate
+            void insufficientFrameRateDetected(bool fatal);
+
             //! Render restrictions have been changed
             void renderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance);
 

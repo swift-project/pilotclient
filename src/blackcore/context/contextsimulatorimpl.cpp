@@ -534,6 +534,10 @@ namespace BlackCore
             c = connect(simulator, &ISimulator::autoPublishDataWritten, this, &IContextSimulator::autoPublishDataWritten);
             Q_ASSERT(c);
 
+            // disconnect for X-Plane FPS below 20
+            c = connect(simulator, &ISimulator::insufficientFrameRateDetected, this, &IContextSimulator::insufficientFrameRateDetected);
+            Q_ASSERT(c);
+
             // log from context to simulator
             c = connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, this, &CContextSimulator::relayStatusMessageToSimulator);
             Q_ASSERT(c);

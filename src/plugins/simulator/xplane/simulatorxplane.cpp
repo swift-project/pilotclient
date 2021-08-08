@@ -444,10 +444,23 @@ namespace BlackSimPlugin
                 }
 
                 // FPS
+                // reading FPS resets average, so we only monitor over some time
                 if ((m_slowTimerCalls % 5u) == 0u)
                 {
-                    // reading FPS resets average, so we only monitor over some time
+                    constexpr double warningMiles = 1;
+                    constexpr double disconnectMiles = 2;
+                    const double previousMiles = m_trackMilesShort;
+
                     m_serviceProxy->getFrameStats(&m_averageFps, &m_simTimeRatio, &m_trackMilesShort, &m_minutesLate);
+
+                    if (previousMiles < disconnectMiles && m_trackMilesShort >= disconnectMiles)
+                    {
+                        emit insufficientFrameRateDetected(true);
+                    }
+                    else if (previousMiles < warningMiles && m_trackMilesShort >= warningMiles)
+                    {
+                        emit insufficientFrameRateDetected(false);
+                    }
                 }
             }
         }
