@@ -130,6 +130,7 @@ namespace BlackGui
                 m_altitudeStr = ui->le_AltitudeConvertedFt->text() % u"m";
                 break;
             case StringOnly:
+                m_altitudeStr = ui->le_String->text();
                 return;
             case Unknown:
             default:
