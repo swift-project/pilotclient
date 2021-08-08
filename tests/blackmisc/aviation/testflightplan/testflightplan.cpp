@@ -72,6 +72,8 @@ namespace BlackMiscTest
         CAltitude a;
         a.parseFromFpAltitudeString("FL125");
         QVERIFY2(a == CAltitude(12500, CAltitude::FlightLevel, CLengthUnit::ft()), "Wrong altitude FL125");
+        a.parseFromFpAltitudeString("FL126");
+        QVERIFY2(a == CAltitude(12600, CAltitude::FlightLevel, CLengthUnit::ft()), "Wrong altitude FL126");
         a.parseFromFpAltitudeString("A122");
         QVERIFY2(a == CAltitude(12200, CAltitude::MeanSeaLevel, CLengthUnit::ft()), "Wrong altitude A122");
         a.parseFromFpAltitudeString("123ft");
@@ -87,8 +89,6 @@ namespace BlackMiscTest
         CAltitude faulty(a);
         faulty.makeNegative();
         QVERIFY2(!faulty.isValidFpAltitude(), "Negative values not allowed");
-        faulty.parseFromFpAltitudeString("FL111");
-        QVERIFY2(!faulty.isValidFpAltitude(), "FL should end with 0/5");
 
         // as string
         a = CAltitude(12500, CAltitude::FlightLevel, CLengthUnit::ft());

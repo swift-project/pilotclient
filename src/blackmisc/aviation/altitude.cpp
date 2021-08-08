@@ -342,8 +342,7 @@ namespace BlackMisc
                     }
                     if (!CMathUtils::epsilonZero(fmod(flInt, 5)))
                     {
-                        if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"FL needs to end with 0 or 5")); }
-                        return false;
+                        if (msgs) { msgs->push_back(CStatusMessage(this).validationWarning(u"FL should end with 0 or 5")); }
                     }
                 }
             }
