@@ -146,6 +146,7 @@ namespace BlackSimPlugin
             virtual bool testSendSituationAndParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) override;
             virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
             virtual void callbackReceivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign, bool isWater) override;
+            virtual void setFlightNetworkConnected(bool connected) override;
             //! @}
 
             //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation

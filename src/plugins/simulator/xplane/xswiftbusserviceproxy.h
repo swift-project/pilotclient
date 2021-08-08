@@ -217,6 +217,9 @@ namespace BlackSimPlugin
             void getFrameStatsAsync(double *o_averageFps, double *o_simTimeRatio, double *o_trackMilesShort, double *o_minutesLate);
             //! @}
 
+            //! \copydoc XSwiftBus::CService::resetFrameTotals
+            void resetFrameTotals();
+
             //! \copydoc XSwiftBus::CService::getLatitudeDeg
             //! @{
             double getLatitudeDeg() const;

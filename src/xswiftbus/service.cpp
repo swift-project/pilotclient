@@ -607,6 +607,14 @@ namespace XSwiftBus
                     sendDBusMessage(reply);
                 });
             }
+            else if (message.getMethodName() == "resetFrameTotals")
+            {
+                maybeSendEmptyDBusReply(wantsReply, sender, serial);
+                queueDBusCall([=]()
+                {
+                    resetFrameTotals();
+                });
+            }
             else if (message.getMethodName() == "getLatitudeDeg")
             {
                 queueDBusCall([ = ]()

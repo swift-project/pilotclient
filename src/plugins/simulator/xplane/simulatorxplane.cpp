@@ -226,6 +226,15 @@ namespace BlackSimPlugin
             CSimulatorPluginCommon::callbackReceivedRequestedElevation(plane, callsign, isWater);
         }
 
+        void CSimulatorXPlane::setFlightNetworkConnected(bool connected)
+        {
+            if (connected && !this->isShuttingDownOrDisconnected())
+            {
+                m_serviceProxy->resetFrameTotals();
+            }
+            CSimulatorPluginCommon::setFlightNetworkConnected(connected);
+        }
+
         bool CSimulatorXPlane::isSuspiciousTerrainValue(const CElevationPlane &elevation)
         {
             if (!elevation.hasMSLGeodeticHeight()) { return true; }

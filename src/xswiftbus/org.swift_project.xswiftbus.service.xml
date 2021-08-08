@@ -105,6 +105,8 @@ R"XML(<node>
       <arg name="trackMilesShort" type="d" direction="out"/>
       <arg name="minutesLate" type="d" direction="out"/>
     </method>
+    <method name="resetFrameTotals">
+    </method>
     <method name="getLatitudeDeg">
       <arg type="d" direction="out"/>
     </method>

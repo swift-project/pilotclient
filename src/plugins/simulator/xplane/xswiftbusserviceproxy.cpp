@@ -358,6 +358,11 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBusAsync(QLatin1String("getFrameStats"), callback);
         }
 
+        void CXSwiftBusServiceProxy::resetFrameTotals()
+        {
+            m_dbusInterface->callDBus(QLatin1String("resetFrameTotals"));
+        }
+
         double CXSwiftBusServiceProxy::getLatitudeDeg() const
         {
             return m_dbusInterface->callDBusRet<double>(QLatin1String("getLatitudeDeg"));
@@ -746,5 +751,6 @@ namespace BlackSimPlugin
         {
             m_dbusInterface->callDBus(QLatin1String("setSettingsJson"), json);
         }
-    } // ns
+    }
+    // ns
 } // ns
