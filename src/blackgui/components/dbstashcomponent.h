@@ -134,9 +134,6 @@ namespace BlackGui
             void replaceModelsUnvalidated(const BlackMisc::Simulation::CAircraftModelList &models);
 
         signals:
-            //! Unstash
-            void unstashed(BlackMisc::Simulation::CAircraftModel &model);
-
             //! Stashed models have been changed
             void stashedModelsChanged();
 

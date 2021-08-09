@@ -163,20 +163,6 @@ namespace BlackGui
             ui->comp_NetworkAircraft->showValues();
         }
 
-        void CLoginOverviewComponent::onSimulatorStatusChanged(int status)
-        {
-            ISimulator::SimulatorStatus s = static_cast<ISimulator::SimulatorStatus>(status);
-            if (!this->hasValidContexts()) { return; }
-            if (sGui->getIContextNetwork()->isConnected())
-            {
-                if (!s.testFlag(ISimulator::Connected))
-                {
-                    // sim NOT connected but network connected
-                    this->autoLogoffDetection();
-                }
-            }
-        }
-
         bool CLoginOverviewComponent::hasValidContexts() const
         {
             if (!sGui || !sGui->supportsContexts()) { return false; }
@@ -185,17 +171,6 @@ namespace BlackGui
             if (!sGui->getIContextNetwork())     { return false; }
             if (!sGui->getIContextOwnAircraft()) { return false; }
             return true;
-        }
-
-        void CLoginOverviewComponent::autoLogoffDetection()
-        {
-            if (!ui->cb_AutoLogoff->isChecked()) { return; }
-            if (!this->hasValidContexts()) { return; }
-            if (!sGui->getIContextNetwork()->isConnected()) { return; } // nothing to logoff
-
-            const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo, u"Auto logoff in progress (could be simulator shutdown, crash, closing simulator)");
-            const int delaySecs = 30;
-            this->showOverlayHTMLMessage(m, qRound(1000 * delaySecs * 0.8));
         }
 
     } // namespace

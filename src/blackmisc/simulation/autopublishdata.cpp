@@ -148,9 +148,7 @@ namespace BlackMisc
             CStatusMessageList msgs;
             msgs.push_back(CStatusMessage(cats).validationInfo(u"DB models: %1") << dbModels.size());
 
-            QSet<QString> newModelStrings; // not in DB yet
             QSet<QString> unchangedCG;
-
             for (const QString &modelString : m_modelStringVsCG.keys())
             {
                 const CAircraftModel dbModel = dbModels.findFirstByModelStringOrDefault(modelString);
@@ -160,11 +158,6 @@ namespace BlackMisc
                     {
                         unchangedCG.insert(modelString);
                     }
-                }
-                else
-                {
-                    // not in DB
-                    newModelStrings << modelString;
                 }
             }
 
@@ -178,10 +171,6 @@ namespace BlackMisc
                     {
                         unchangedSim.insert(modelString);
                     }
-                }
-                else
-                {
-                    newModelStrings << modelString;
                 }
             }
 

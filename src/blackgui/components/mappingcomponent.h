@@ -87,9 +87,6 @@ namespace BlackGui
             BlackMisc::Simulation::CAircraftModelList findModelsStartingWith(const QString &modelName, Qt::CaseSensitivity cs);
 
         signals:
-            //! Request a text message
-            void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
-
             //! Request the validation dialog
             void requestValidationDialog();
 

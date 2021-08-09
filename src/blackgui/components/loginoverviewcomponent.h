@@ -84,18 +84,6 @@ namespace BlackGui
             //! Login cancelled
             void cancel();
 
-            //! Auto-logoff detection
-            void autoLogoffDetection();
-
-            //! Pause/Continue timeout
-            void toggleTimeout();
-
-            //! Set OK button string
-            void setOkButtonString(bool connected);
-
-            //! Simulator status changed
-            void onSimulatorStatusChanged(int status);
-
             //! Has contexts?
             bool hasValidContexts() const;
 
