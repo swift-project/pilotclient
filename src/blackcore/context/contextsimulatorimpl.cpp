@@ -535,6 +535,8 @@ namespace BlackCore
             Q_ASSERT(c);
 
             // disconnect for X-Plane FPS below 20
+            c = connect(simulator, &ISimulator::insufficientFrameRateDetected, this, [this](bool fatal) { if (fatal) { emit this->vitalityLost(); } });
+            Q_ASSERT(c);
             c = connect(simulator, &ISimulator::insufficientFrameRateDetected, this, &IContextSimulator::insufficientFrameRateDetected);
             Q_ASSERT(c);
 
