@@ -182,6 +182,9 @@ namespace BlackGui
             //! Auto-logoff detection
             void autoLogoffDetection();
 
+            //! Logoff due to insufficient simulator frame rate
+            void autoLogoffFrameRate(bool fatal);
+
             //! Lookup own model
             void lookupOwnAircraftModel();
 

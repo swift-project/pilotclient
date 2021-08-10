@@ -146,6 +146,7 @@ namespace BlackGui
                 connect(sGui->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this, &CLoginComponent::onSimulatorModelChanged, Qt::QueuedConnection);
                 connect(sGui->getIContextSimulator(), &IContextSimulator::vitalityLost, this, &CLoginComponent::autoLogoffDetection, Qt::QueuedConnection);
                 connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CLoginComponent::onSimulatorStatusChanged, Qt::QueuedConnection);
+                connect(sGui->getIContextSimulator(), &IContextSimulator::insufficientFrameRateDetected, this, &CLoginComponent::autoLogoffFrameRate, Qt::QueuedConnection);
             }
 
             if (sGui && sGui->getIContextNetwork())
@@ -718,6 +719,23 @@ namespace BlackGui
             const int delaySecs = 30;
             this->showOverlayHTMLMessage(m, qRound(1000 * delaySecs * 0.8));
             this->setLogoffCountdown(delaySecs);
+
+            emit this->requestLoginPage();
+        }
+
+        void CLoginComponent::autoLogoffFrameRate(bool fatal)
+        {
+            //! \fixme code duplication with function above
+            if (!ui->cb_AutoLogoff->isChecked()) { return; }
+            if (!this->hasValidContexts()) { return; }
+            if (!sGui->getIContextNetwork()->isConnected()) { return; }
+
+            const auto msg = fatal
+                ? CStatusMessage(this, CStatusMessage::SeverityError, u"Sim frame rate too low to maintain constant simulation rate. Disconnecting to avoid disrupting the network.")
+                : CStatusMessage(this, CStatusMessage::SeverityWarning, u"Sim frame rate too low to maintain constant simulation rate. Reduce graphics quality to avoid disconnection.");
+            const int delaySecs = 30;
+            this->showOverlayHTMLMessage(msg, qRound(1000 * delaySecs * 0.8));
+            if (fatal) { this->setLogoffCountdown(delaySecs); }
 
             emit this->requestLoginPage();
         }
