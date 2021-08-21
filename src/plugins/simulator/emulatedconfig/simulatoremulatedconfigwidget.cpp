@@ -21,6 +21,7 @@ namespace BlackSimPlugin
         {
             ui->setupUi(this);
             CGuiUtility::disableMinMaxCloseButtons(this);
+            connect(ui->bb_Close, &QDialogButtonBox::rejected, this, &CSimulatorEmulatedConfigWidget::close);
         }
 
         CSimulatorEmulatedConfigWidget::~CSimulatorEmulatedConfigWidget()
