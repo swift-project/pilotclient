@@ -65,6 +65,10 @@ namespace BlackMisc
         //! By QList of type T.
         CSequence(const QList<T> &list) : m_impl(list.toVector()) {}
 
+        //! Range constructor.
+        template <typename It>
+        CSequence(It first, It last) : m_impl(first, last) {}
+
         //! Copy constructor.
         CSequence(const CSequence &other) = default;
 
