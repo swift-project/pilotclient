@@ -11,6 +11,7 @@
 #include "blackmisc/fileutils.h"
 #include "blackmisc/json.h"
 #include "blackmisc/logcategories.h"
+#include "blackmisc/setbuilder.h"
 
 #include <QStringList>
 #include <QStringBuilder>
@@ -148,7 +149,7 @@ namespace BlackMisc
             CStatusMessageList msgs;
             msgs.push_back(CStatusMessage(cats).validationInfo(u"DB models: %1") << dbModels.size());
 
-            QSet<QString> unchangedCG;
+            CSetBuilder<QString> unchangedCG;
             for (const QString &modelString : m_modelStringVsCG.keys())
             {
                 const CAircraftModel dbModel = dbModels.findFirstByModelStringOrDefault(modelString);
@@ -161,7 +162,7 @@ namespace BlackMisc
                 }
             }
 
-            QSet<QString> unchangedSim;
+            CSetBuilder<QString> unchangedSim;
             for (const QString &modelString : m_modelStringVsSimulatorInfo.keys())
             {
                 const CAircraftModel dbModel = dbModels.findFirstByModelStringOrDefault(modelString);
@@ -177,14 +178,16 @@ namespace BlackMisc
             // remove
             if (!unchangedCG.isEmpty())
             {
-                msgs.push_back(CStatusMessage(cats).validationInfo(u"Removing unchanged CGs: %1") << unchangedCG.size());
-                for (const QString &m : unchangedCG) { m_modelStringVsCG.remove(m); }
+                QList<QString> unchangedCGList = std::move(unchangedCG);
+                msgs.push_back(CStatusMessage(cats).validationInfo(u"Removing unchanged CGs: %1") << unchangedCGList.size());
+                for (const QString &m : unchangedCGList) { m_modelStringVsCG.remove(m); }
             }
 
             if (!unchangedSim.isEmpty())
             {
-                msgs.push_back(CStatusMessage(cats).validationInfo(u"Removing unchanged simulators: %1") << unchangedSim.size());
-                for (const QString &m : unchangedSim) { m_modelStringVsSimulatorInfo.remove(m); }
+                QList<QString> unchangedSimList = std::move(unchangedSim);
+                msgs.push_back(CStatusMessage(cats).validationInfo(u"Removing unchanged simulators: %1") << unchangedSimList.size());
+                for (const QString &m : unchangedSimList) { m_modelStringVsSimulatorInfo.remove(m); }
             }
 
             msgs.push_back(CStatusMessage(this).validationInfo(this->getSummary()));

@@ -18,6 +18,7 @@
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/setbuilder.h"
 #include "blackconfig/buildconfig.h"
 
 #include <QStringBuilder>
@@ -1057,7 +1058,7 @@ namespace BlackMisc
 
         QSet<QString> CAircraftModelList::getModelStringSet() const
         {
-            QSet<QString> ms;
+            CSetBuilder<QString> ms;
             for (const CAircraftModel &model : *this)
             {
                 if (!model.hasModelString()) { continue; }
@@ -1233,7 +1234,7 @@ namespace BlackMisc
 
         QSet<QString> CAircraftModelList::getAircraftDesignators() const
         {
-            QSet<QString> designators;
+            CSetBuilder<QString> designators;
             for (const CAircraftModel &model : *this)
             {
                 if (!model.hasAircraftDesignator()) { continue; }
@@ -1244,8 +1245,8 @@ namespace BlackMisc
 
         QSet<QString> CAircraftModelList::getAircraftDesignatorsForAirline(const CAirlineIcaoCode &airlineCode) const
         {
-            QSet<QString> designators;
-            if (!airlineCode.hasValidDesignator()) { return designators; }
+            CSetBuilder<QString> designators;
+            if (!airlineCode.hasValidDesignator()) { return {}; }
             for (const CAircraftModel &model : *this)
             {
                 if (model.getAirlineIcaoCode() != airlineCode) { continue; }
@@ -1286,7 +1287,7 @@ namespace BlackMisc
 
         QSet<QString> CAircraftModelList::getAirlineDesignators() const
         {
-            QSet<QString> designators;
+            CSetBuilder<QString> designators;
             for (const CAircraftModel &model : *this)
             {
                 if (!model.hasAirlineDesignator()) { continue; }
@@ -1297,7 +1298,7 @@ namespace BlackMisc
 
         QSet<QString> CAircraftModelList::getAirlineVDesignators() const
         {
-            QSet<QString> designators;
+            CSetBuilder<QString> designators;
             for (const CAircraftModel &model : *this)
             {
                 if (!model.hasAirlineDesignator()) { continue; }
@@ -1332,7 +1333,7 @@ namespace BlackMisc
 
         QSet<QString> CAircraftModelList::getCombinedTypes() const
         {
-            QSet<QString> combinedCodes;
+            CSetBuilder<QString> combinedCodes;
             for (const CAircraftModel &model : *this)
             {
                 const QString ct = model.getAircraftIcaoCode().getCombinedType();
@@ -1345,7 +1346,7 @@ namespace BlackMisc
         QSet<QString> CAircraftModelList::getAllFileNames() const
         {
             const bool cs = CFileUtils::isFileNameCaseSensitive();
-            QSet<QString> files;
+            CSetBuilder<QString> files;
             for (const CAircraftModel &model : *this)
             {
                 if (!model.hasFileName()) { continue; }
@@ -1357,7 +1358,7 @@ namespace BlackMisc
         QSet<QString> CAircraftModelList::getAllUNCFileNames() const
         {
             const bool cs = CFileUtils::isFileNameCaseSensitive();
-            QSet<QString> files;
+            CSetBuilder<QString> files;
             for (const CAircraftModel &model : *this)
             {
                 if (!model.hasFileName()) { continue; }
@@ -1378,7 +1379,7 @@ namespace BlackMisc
 
         QSet<QString> CAircraftModelList::getAicraftAndAirlineDesignators(bool withDbId) const
         {
-            QSet<QString> str;
+            CSetBuilder<QString> str;
             for (const CAircraftModel &model : *this)
             {
                 const QString s = (model.hasAircraftDesignator() ?

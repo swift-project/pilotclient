@@ -8,6 +8,7 @@
 
 #include "blackmisc/aviation/aircraftcategorylist.h"
 #include "blackmisc/range.h"
+#include "blackmisc/setbuilder.h"
 
 #include <QJsonObject>
 #include <QJsonValue>
@@ -49,7 +50,7 @@ namespace BlackMisc
 
         QSet<QString> CAircraftCategoryList::getLevelStrings() const
         {
-            QSet<QString> levels;
+            CSetBuilder<QString> levels;
             for (const CAircraftCategory &category : *this)
             {
                 levels.insert(category.getLevelString());
@@ -66,27 +67,25 @@ namespace BlackMisc
 
         QList<int> CAircraftCategoryList::getFirstLevels() const
         {
-            QSet<int> levels;
+            CSetBuilder<int> levels;
             for (const CAircraftCategory &category : *this)
             {
                 levels.insert(category.getFirstLevel());
             }
-            levels.remove(0);
-            QList<int> ll = levels.values();
-            std::sort(ll.begin(), ll.end());
+            QList<int> ll = levels;
+            ll.removeOne(0);
             return ll;
         }
 
         QList<int> CAircraftCategoryList::getSecondLevels() const
         {
-            QSet<int> levels;
+            CSetBuilder<int> levels;
             for (const CAircraftCategory &category : *this)
             {
                 levels.insert(category.getSecondLevel());
             }
-            levels.remove(0);
-            QList<int> ll = levels.values();
-            std::sort(ll.begin(), ll.end());
+            QList<int> ll = levels;
+            ll.removeOne(0);
             return ll;
         }
 

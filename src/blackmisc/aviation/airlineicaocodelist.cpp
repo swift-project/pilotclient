@@ -10,6 +10,7 @@
 #include "blackmisc/logcategories.h"
 #include "blackmisc/country.h"
 #include "blackmisc/range.h"
+#include "blackmisc/setbuilder.h"
 
 #include <QJsonObject>
 #include <QJsonValue>
@@ -359,7 +360,7 @@ namespace BlackMisc
 
         QSet<QString> CAirlineIcaoCodeList::allDesignators() const
         {
-            QSet<QString> designators;
+            CSetBuilder<QString> designators;
             for (const CAirlineIcaoCode &icao : *this)
             {
                 if (!icao.hasValidDesignator()) { continue; }
@@ -370,7 +371,7 @@ namespace BlackMisc
 
         QSet<QString> CAirlineIcaoCodeList::allVDesignators() const
         {
-            QSet<QString> designators;
+            CSetBuilder<QString> designators;
             for (const CAirlineIcaoCode &icao : *this)
             {
                 if (!icao.hasValidDesignator()) { continue; }

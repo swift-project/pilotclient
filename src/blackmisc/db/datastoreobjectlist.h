@@ -14,6 +14,8 @@
 #include "blackmisc/timestampobjectlist.h"
 #include "blackmisc/jsonexception.h"
 #include "blackmisc/db/datastore.h"
+#include "blackmisc/setbuilder.h"
+#include "blackmisc/mapbuilder.h"
 #include <QJsonArray>
 #include <QSet>
 #include <QMap>
@@ -101,7 +103,7 @@ namespace BlackMisc
             //! All keys as set
             QSet<KEYTYPE> toDbKeySet() const
             {
-                QSet<KEYTYPE> keys;
+                CSetBuilder<KEYTYPE> keys;
                 for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
                 {
                     if (!obj.hasValidDbKey()) { continue; }
@@ -113,7 +115,7 @@ namespace BlackMisc
             //! As map with DB key/object
             QMap<KEYTYPE, OBJ> toDbKeyValueMap() const
             {
-                QMap<KEYTYPE, OBJ> map;
+                CMapBuilder<KEYTYPE, OBJ> map;
                 for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
                 {
                     if (!obj.hasValidDbKey()) { continue; }
@@ -125,7 +127,7 @@ namespace BlackMisc
             //! All keys as string set (also integer keys will be converted to string)
             QSet<QString> toDbKeyStringSet() const
             {
-                QSet<QString> keys;
+                CSetBuilder<QString> keys;
                 for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
                 {
                     if (!obj.hasValidDbKey()) { continue; }

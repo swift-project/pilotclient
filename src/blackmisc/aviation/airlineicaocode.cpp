@@ -18,6 +18,7 @@
 #include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/verify.h"
+#include "blackmisc/setbuilder.h"
 
 #include <QJsonValue>
 #include <QRegularExpression>
@@ -503,7 +504,7 @@ namespace BlackMisc
             QDir dir(CSwiftDirectories::imagesAirlinesDirectory());
             Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "image directory missing");
 
-            QSet<int> ids;
+            CSetBuilder<int> ids;
             dir.setFilter(QDir::Files | QDir::NoSymLinks);
             dir.setSorting(QDir::Name);
             for (const QFileInfo &fileInfo : dir.entryInfoList())

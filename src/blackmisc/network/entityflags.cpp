@@ -8,6 +8,7 @@
 
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/verify.h"
+#include "blackmisc/setbuilder.h"
 
 #include <QStringList>
 #include <QtGlobal>
@@ -207,7 +208,7 @@ namespace BlackMisc
 
         CEntityFlags::EntitySet CEntityFlags::asSingleEntities(Entity entities)
         {
-            QSet<CEntityFlags::Entity> s;
+            CSetBuilder<CEntityFlags::Entity> s;
             CEntityFlags::Entity currentEntity = iterateDbEntities(entities);
             while (currentEntity != NoEntity)
             {

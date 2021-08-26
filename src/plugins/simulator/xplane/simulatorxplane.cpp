@@ -52,6 +52,7 @@
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/iterator.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/setbuilder.h"
 #include "blackconfig/buildconfig.h"
 
 #include "dbus/dbus.h"
@@ -742,14 +743,15 @@ namespace BlackSimPlugin
 
             // comment KB 2019-06
             // a package is one xsb_aircraft.txt file BB has 9, X-CSL has 76
-            QSet<QString> superpackages;
+            CSetBuilder<QString> superpackages;
             for (const Prefix &package : std::as_const(packages))
             {
                 superpackages.insert(package.parent());
             }
+            QStringList superpackagesList = superpackages;
 
             const QDir simDir = getSimulatorSettings().getSimulatorDirectoryOrDefault();
-            for (const QString &package : std::as_const(superpackages))
+            for (const QString &package : superpackagesList)
             {
                 if (CDirectoryUtils::isSameOrSubDirectoryOf(package, simDir))
                 {

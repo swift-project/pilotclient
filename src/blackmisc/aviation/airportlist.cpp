@@ -9,6 +9,7 @@
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/range.h"
+#include "blackmisc/setbuilder.h"
 
 #include <QString>
 #include <tuple>
@@ -101,18 +102,16 @@ namespace BlackMisc
             return names;
         }
 
-        QStringList CAirportList::allLocations(bool sorted) const
+        QStringList CAirportList::allLocations() const
         {
-            QSet<QString> locations;
+            CSetBuilder<QString> locations;
             for (const CAirport &airport : *this)
             {
                 if (airport.getLocation().isEmpty()) { continue; }
                 locations.insert(airport.getLocation());
             }
 
-            QStringList locs = locations.values();
-            if (sorted) { locs.sort(); }
-            return locs;
+            return locations;
         }
 
         QStringList CAirportList::allLocationsPlusOptionalDescription(bool sorted) const

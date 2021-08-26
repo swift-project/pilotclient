@@ -8,6 +8,7 @@
 
 #include "blackmisc/fileutils.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/setbuilder.h"
 #include "blackconfig/buildconfig.h"
 
 #include <QCoreApplication>
@@ -497,7 +498,7 @@ namespace BlackMisc
         const Qt::CaseSensitivity cs = osFileNameCaseSensitivity();
         const bool isCs = isFileNameCaseSensitive();
 
-        QSet<QString> machines;
+        CSetBuilder<QString> machines;
         QString lastMachine;
 
         for (const QString &p : paths)

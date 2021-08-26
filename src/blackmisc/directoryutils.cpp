@@ -13,6 +13,7 @@
 #include "blackmisc/stringutils.h"
 #include "blackmisc/network/ping.h"
 #include "blackmisc/range.h"
+#include "blackmisc/setbuilder.h"
 #include "blackconfig/buildconfig.h"
 #include <QCoreApplication>
 #include <QDir>
@@ -182,7 +183,7 @@ namespace BlackMisc
 
     QSet<QString> CDirectoryUtils::fileNamesToQSet(const QFileInfoList &fileInfoList)
     {
-        QSet<QString> sl;
+        CSetBuilder<QString> sl;
         for (const QFileInfo &info : fileInfoList)
         {
             sl.insert(info.fileName());
@@ -192,7 +193,7 @@ namespace BlackMisc
 
     QSet<QString> CDirectoryUtils::canonicalFileNamesToQSet(const QFileInfoList &fileInfoList)
     {
-        QSet<QString> sl;
+        CSetBuilder<QString> sl;
         for (const QFileInfo &info : fileInfoList)
         {
             sl.insert(info.canonicalFilePath());
@@ -202,8 +203,8 @@ namespace BlackMisc
 
     const QSet<QString> CDirectoryUtils::filesToCanonicalNames(const QSet<QString> &fileNames, const QSet<QString> &canonicalFileNames)
     {
-        QSet<QString> found;
-        if (fileNames.isEmpty()) return found;
+        CSetBuilder<QString> found;
+        if (fileNames.isEmpty()) return {};
         for (const QString &canonical : canonicalFileNames)
         {
             if (canonical.endsWith('/')) continue;

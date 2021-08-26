@@ -12,6 +12,7 @@
 #include "stringutils.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/range.h"
+#include "blackmisc/setbuilder.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -57,7 +58,7 @@ namespace BlackMisc
 
             QSet<QString> CAircraftCfgEntriesList::getTitleSetUpperCase() const
             {
-                QSet<QString> titlesUc;
+                CSetBuilder<QString> titlesUc;
                 for (const CAircraftCfgEntries &entries : *this)
                 {
                     titlesUc.insert(entries.getTitle().toUpper());

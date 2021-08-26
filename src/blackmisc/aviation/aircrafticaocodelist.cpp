@@ -9,6 +9,7 @@
 #include "aircrafticaocodelist.h"
 #include "aircraftcategorylist.h"
 #include "blackmisc/range.h"
+#include "blackmisc/setbuilder.h"
 
 #include <QJsonObject>
 #include <QJsonValue>
@@ -256,7 +257,7 @@ namespace BlackMisc
 
         QSet<QString> CAircraftIcaoCodeList::allDesignators(bool noUnspecified) const
         {
-            QSet<QString> c;
+            CSetBuilder<QString> c;
             for (const CAircraftIcaoCode &icao : *this)
             {
                 if (noUnspecified && !icao.hasKnownDesignator()) { continue; }
@@ -268,7 +269,7 @@ namespace BlackMisc
 
         QSet<QString> CAircraftIcaoCodeList::allDesignatorsAndKey(bool noUnspecified) const
         {
-            QSet<QString> c;
+            CSetBuilder<QString> c;
             for (const CAircraftIcaoCode &icao : *this)
             {
                 if (noUnspecified && !icao.hasKnownDesignator()) { continue; }
@@ -280,7 +281,7 @@ namespace BlackMisc
 
         QSet<QString> CAircraftIcaoCodeList::allFamilies() const
         {
-            QSet<QString> c;
+            CSetBuilder<QString> c;
             for (const CAircraftIcaoCode &icao : *this)
             {
                 if (!icao.hasFamily()) { continue; }
@@ -292,7 +293,7 @@ namespace BlackMisc
 
         QSet<QString> CAircraftIcaoCodeList::allManufacturers(bool onlyKnownDesignators) const
         {
-            QSet<QString> c;
+            CSetBuilder<QString> c;
             for (const CAircraftIcaoCode &icao : *this)
             {
                 if (onlyKnownDesignators && !icao.hasKnownDesignator()) { continue; }

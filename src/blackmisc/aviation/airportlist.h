@@ -68,7 +68,7 @@ namespace BlackMisc
 
             //! All locations
             //! \remark less locations than airports, since a location (e.g. New Yorrk) homes multiple airports
-            QStringList allLocations(bool sorted) const;
+            QStringList allLocations() const;
 
             //! All locations plus optional description
             QStringList allLocationsPlusOptionalDescription(bool sorted) const;
