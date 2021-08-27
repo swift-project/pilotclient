@@ -195,7 +195,7 @@ namespace BlackMisc
             static const CSimulatorInfo &allFsFamilySimulators();
 
             //! Locally installed simulators
-            static const CSimulatorInfo getLocallyInstalledSimulators();
+            static CSimulatorInfo getLocallyInstalledSimulators();
 
             //! Guess a default simulator based on installation
             static const CSimulatorInfo &guessDefaultSimulator();

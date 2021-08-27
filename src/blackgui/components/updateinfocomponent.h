@@ -99,7 +99,7 @@ namespace BlackGui
             const BlackMisc::CPlatform &getSelectedOrDefaultPlatform() const;
 
             //! Selected or default distribution
-            const BlackMisc::Db::CDistribution getSelectedOrDefaultDistribution() const;
+            BlackMisc::Db::CDistribution getSelectedOrDefaultDistribution() const;
         };
     } // ns
 } // ns

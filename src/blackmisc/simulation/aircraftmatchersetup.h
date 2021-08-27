@@ -258,7 +258,7 @@ namespace BlackMisc
             static const QString &forceFlagToString(ForceModeFlag forceFlag);
 
             //! Force to string
-            static const QString forceToString(ForceMode force);
+            static QString forceToString(ForceMode force);
 
             //! Strategy to string
             static const QString &strategyToString(PickSimilarStrategy strategy);

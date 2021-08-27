@@ -391,7 +391,7 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<bool>(QLatin1String("testRemoteAircraft"), aircraft, add);
         }
 
-        bool CContextSimulatorProxy::testUpdateRemoteAircraft(const CCallsign cs, const CAircraftSituation &situation, const CAircraftParts &parts)
+        bool CContextSimulatorProxy::testUpdateRemoteAircraft(const CCallsign &cs, const CAircraftSituation &situation, const CAircraftParts &parts)
         {
             return m_dBusInterface->callDBusRet<bool>(QLatin1String("testUpdateRemoteAircraft"), cs, situation, parts);
         }

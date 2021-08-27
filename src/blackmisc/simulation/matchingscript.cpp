@@ -16,8 +16,8 @@ namespace BlackMisc
     namespace Simulation
     {
         MSInOutValues::MSInOutValues(const CCallsign &cs,
-                                     const CAircraftIcaoCode aircraftIcao,
-                                     const CAirlineIcaoCode airlineIcao,
+                                     const CAircraftIcaoCode &aircraftIcao,
+                                     const CAirlineIcaoCode &airlineIcao,
                                      const QString &livery, int liveryId) :
             MSInOutValues(cs.asString(), cs.getStringAsSet(), cs.getFlightNumber(),
                           aircraftIcao.getDesignator(), aircraftIcao.getFamily(),       aircraftIcao.getCombinedType(), aircraftIcao.getDbKey(),
@@ -26,8 +26,8 @@ namespace BlackMisc
         { }
 
         MSInOutValues::MSInOutValues(const CCallsign &cs,
-                                     const CAircraftIcaoCode aircraftIcao,
-                                     const CLivery livery) :
+                                     const CAircraftIcaoCode &aircraftIcao,
+                                     const CLivery &livery) :
             MSInOutValues(cs,
                           aircraftIcao,
                           livery.getAirlineIcaoCode(),

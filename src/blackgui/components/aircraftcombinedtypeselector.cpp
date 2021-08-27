@@ -48,7 +48,7 @@ namespace BlackGui
             if (m_cc == cc) { return; }
             m_cc = cc;
 
-            if (cc.length() > 0) { aircraftType = cc.left(1); }
+            if (cc.length() > 0) { aircraftType = cc.at(0); }
             if (cc.length() > 1) { engineCount  = cc.mid(1, 1); }
             if (cc.length() > 2) { engineType   = cc.mid(2, 1); }
 

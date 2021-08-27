@@ -262,7 +262,7 @@ namespace BlackGui
                 if (!myself || !sGui || sGui->isShuttingDown()) { return; }
                 myself->ui->pb_Download->setEnabled(true);
                 myself->ui->pb_Launch->setEnabled(true);
-                this->allDownloadsCompleted();
+                emit allDownloadsCompleted();
             });
             this->startDownloadedExecutable();
         }

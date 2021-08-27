@@ -80,14 +80,14 @@ namespace BlackMisc
 
             //! Ctor
             MSInOutValues(const BlackMisc::Aviation::CCallsign &cs,
-                          const BlackMisc::Aviation::CAircraftIcaoCode aircraftIcao,
-                          const BlackMisc::Aviation::CAirlineIcaoCode airlineIcao,
+                          const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao,
+                          const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao,
                           const QString &livery, int liveryId);
 
             //! Ctor
             MSInOutValues(const BlackMisc::Aviation::CCallsign &cs,
-                          const BlackMisc::Aviation::CAircraftIcaoCode aircraftIcao,
-                          const BlackMisc::Aviation::CLivery livery);
+                          const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao,
+                          const BlackMisc::Aviation::CLivery &livery);
 
             //! Ctor
             MSInOutValues(const BlackMisc::Simulation::CAircraftModel &model);

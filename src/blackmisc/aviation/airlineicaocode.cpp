@@ -53,7 +53,7 @@ namespace BlackMisc
             }
         }
 
-        const QString CAirlineIcaoCode::getVDesignator() const
+        QString CAirlineIcaoCode::getVDesignator() const
         {
             if (!this->isVirtualAirline()) { return m_designator; }
             return u'V' % m_designator;

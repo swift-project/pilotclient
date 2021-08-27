@@ -143,11 +143,11 @@ namespace BlackGui
             CLogMessage::preformatted(msg);
             if (msg.isSuccess())
             {
-                emit this->loginOrLogoffSuccessful();
+                emit loginOrLogoffSuccessful();
             }
             else
             {
-                emit this->cancel();
+                this->cancel();
             }
         }
 

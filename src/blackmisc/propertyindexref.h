@@ -140,7 +140,7 @@ namespace BlackMisc
         explicit CPropertyIndexRef(QVector<int> &&) = delete;
 
         //! Copy with first element removed
-        CPropertyIndexRef copyFrontRemoved() const;
+        Q_REQUIRED_RESULT CPropertyIndexRef copyFrontRemoved() const;
 
         //! Is nested index?
         bool isNested() const;

@@ -54,7 +54,7 @@ namespace BlackGui
             void setColor(const QColor &color);
 
             //! Selected color
-            const BlackMisc::CRgbColor getColor() const;
+            BlackMisc::CRgbColor getColor() const;
 
             //! Read only
             void setReadOnly(bool readOnly);

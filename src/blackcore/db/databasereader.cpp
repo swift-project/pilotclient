@@ -330,12 +330,12 @@ namespace BlackCore
 
         bool CDatabaseReader::hasDbInfoObjects() const
         {
-            return getDbInfoObjects().size() > 0;
+            return !getDbInfoObjects().isEmpty();
         }
 
         bool CDatabaseReader::hasSharedInfoObjects() const
         {
-            return getSharedInfoObjects().size() > 0;
+            return !getSharedInfoObjects().isEmpty();
         }
 
         bool CDatabaseReader::hasSharedFileHeader(const CEntityFlags::Entity entity) const

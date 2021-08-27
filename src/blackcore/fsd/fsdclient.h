@@ -162,8 +162,8 @@ namespace BlackCore
             void sendClientQueryRealName(const BlackMisc::Aviation::CCallsign &callsign);
             void sendClientQueryServer(const BlackMisc::Aviation::CCallsign &callsign);
             void sendClientQueryAtis(const BlackMisc::Aviation::CCallsign &callsign);
-            void sendClientQueryFlightPlan(const BlackMisc::Aviation::CCallsign callsign);
-            void sendClientQueryAircraftConfig(const BlackMisc::Aviation::CCallsign callsign);
+            void sendClientQueryFlightPlan(const BlackMisc::Aviation::CCallsign &callsign);
+            void sendClientQueryAircraftConfig(const BlackMisc::Aviation::CCallsign &callsign);
             void sendTextMessages(const BlackMisc::Network::CTextMessageList &messages);
             void sendTextMessage(const BlackMisc::Network::CTextMessage &message);
             void sendTextMessage(TextMessageGroups receiverGroup, const QString &message);

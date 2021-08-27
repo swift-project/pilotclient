@@ -100,7 +100,7 @@ namespace BlackGui
         return k;
     }
 
-    const QString CShortcut::toParenthesisString(const QKeySequence &sequence)
+    QString CShortcut::toParenthesisString(const QKeySequence &sequence)
     {
         return QStringLiteral("(%1)").arg(sequence.toString());
     }

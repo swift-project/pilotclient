@@ -781,7 +781,7 @@ namespace BlackMisc
 
         QString CAircraftModel::getFileDirectoryPath() const
         {
-            if (!this->hasFileName()) { return QStringLiteral(""); }
+            if (!this->hasFileName()) { return {}; }
             return this->getFileDirectory().absolutePath();
         }
 

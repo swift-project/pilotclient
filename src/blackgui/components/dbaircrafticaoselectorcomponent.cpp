@@ -54,9 +54,8 @@ namespace BlackGui
             if (sApp && sApp->hasWebDataServices())
             {
                 connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAircraftIcaoSelectorComponent::onCodesRead, Qt::QueuedConnection);
+                this->onCodesRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, sApp->getWebDataServices()->getAircraftIcaoCodesCount());
             }
-
-            this->onCodesRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, sApp->getWebDataServices()->getAircraftIcaoCodesCount());
         }
 
         CDbAircraftIcaoSelectorComponent::~CDbAircraftIcaoSelectorComponent()

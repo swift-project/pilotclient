@@ -1709,7 +1709,7 @@ namespace BlackCore
         if (m_webDataServices)
         {
             const CUrlList urls(m_webDataServices->getVatsimMetarUrls());
-            if (!urls.empty()) { return urls; }
+            if (!urls.isEmpty()) { return urls; }
         }
         if (m_setupReader)
         {
@@ -1724,7 +1724,7 @@ namespace BlackCore
         if (m_webDataServices)
         {
             const CUrlList urls(m_webDataServices->getVatsimDataFileUrls());
-            if (!urls.empty()) { return urls; }
+            if (!urls.isEmpty()) { return urls; }
         }
         if (m_setupReader)
         {

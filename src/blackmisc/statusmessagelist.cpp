@@ -278,7 +278,7 @@ namespace BlackMisc
         return properties;
     }
 
-    const QString htmlStyleSheetImpl()
+    QString htmlStyleSheetImpl()
     {
         const QString style = u'.' % CStatusMessage::severityToString(CStatusMessage::SeverityDebug) % u" { color: lightgreen; } " %
                               u'.' % CStatusMessage::severityToString(CStatusMessage::SeverityInfo) % u" { color: lightgreen; } " %

@@ -46,9 +46,8 @@ namespace BlackGui
             if (sGui && sGui->getWebDataServices())
             {
                 connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbDistributorComponent::onDistributorsRead, Qt::QueuedConnection);
+                this->onDistributorsRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getDistributorsCount());
             }
-
-            this->onDistributorsRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getDistributorsCount());
         }
 
         CDbDistributorComponent::~CDbDistributorComponent()

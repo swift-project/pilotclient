@@ -32,7 +32,7 @@ namespace BlackCore
 
         DeleteAtc DeleteAtc::fromTokens(const QStringList &tokens)
         {
-            if (tokens.size() < 1)
+            if (tokens.isEmpty())
             {
                 BlackMisc::CLogMessage(static_cast<DeleteAtc *>(nullptr)).debug(u"Wrong number of arguments.");
                 return {};

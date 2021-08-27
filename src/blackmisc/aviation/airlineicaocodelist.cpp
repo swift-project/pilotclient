@@ -218,7 +218,7 @@ namespace BlackMisc
             }
 
             CAirlineIcaoCodeList step1Data = airlineName.isEmpty() ? *this : this->findByNamesOrTelephonyDesignator(airlineName);
-            if (step1Data.size() < 1 || step1Data.size() == this->size())
+            if (step1Data.isEmpty() || step1Data.size() == this->size())
             {
                 if (log) { CCallsign::addLogDetailsToList(log, cs, loginfo % QStringLiteral(" cannot reduce by '%1'").arg(airlineName), getLogCategories()); }
                 step1Data = *this;
@@ -231,7 +231,7 @@ namespace BlackMisc
             if (step1Data.size() == 1) { return step1Data; }
 
             CAirlineIcaoCodeList step2Data = telephony.isEmpty() ? step1Data : step1Data.findByNamesOrTelephonyDesignator(telephony);
-            if (step2Data.size() < 1 || step2Data.size() == this->size())
+            if (step2Data.isEmpty() || step2Data.size() == this->size())
             {
                 if (log) { CCallsign::addLogDetailsToList(log, cs, loginfo % QStringLiteral(" cannot reduce by name '%1'").arg(telephony), getLogCategories()); }
                 step2Data = step1Data;
@@ -244,7 +244,7 @@ namespace BlackMisc
             if (step2Data.size() == 1) { return step2Data; }
 
             CAirlineIcaoCodeList step3Data = countryIso.isEmpty() ? step2Data : step2Data.findByCountryIsoCode(countryIso);
-            if (step3Data.size() < 1 || step3Data.size() == this->size())
+            if (step3Data.isEmpty() || step3Data.size() == this->size())
             {
                 if (log) { CCallsign::addLogDetailsToList(log, cs, loginfo % QStringLiteral(" cannot reduce by country '%1'").arg(countryIso), getLogCategories()); }
                 step3Data = step2Data;

@@ -379,7 +379,7 @@ namespace BlackWxPlugin
                     if (nscan != 0) {  CLogMessage(this).error(u"Can only handle scanning mode NS:WE."); }
                     if (npnts != nx * ny) {  CLogMessage(this).error(u"Cannot handle non-regular grid."); }
 
-                    if (m_gfsWeatherGrid.empty()) { createWeatherGrid(gfld); }
+                    if (m_gfsWeatherGrid.isEmpty()) { createWeatherGrid(gfld); }
 
                     if (gfld->ipdtnum == 0) { handleProductDefinitionTemplate40(gfld); }
                     else if (gfld->ipdtnum == 8) { handleProductDefinitionTemplate48(gfld); }

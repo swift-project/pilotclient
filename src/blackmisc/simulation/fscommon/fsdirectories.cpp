@@ -477,7 +477,7 @@ namespace BlackMisc
                         if (!correctPath) { continue; }
 
                         // absolute or relative path
-                        const QString fp = pathValue.left(3).contains(':') ?
+                        const QString fp = pathValue.leftRef(3).contains(':') ?
                                            pathValue :
                                            CFileUtils::appendFilePaths(addOnPath, pathValue);
                         if (CFsDirectories::logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"Testing '%1' as addon path: '%2'") << fp << addOnPath; }
@@ -562,7 +562,7 @@ namespace BlackMisc
                     if (containsAny(soPath, CFsDirectories::fsxSimObjectsExcludeDirectoryPatterns(), Qt::CaseInsensitive)) { continue; }
 
                     // make absolute
-                    if (!soPath.left(3).contains(':')) { soPath = CFileUtils::appendFilePaths(relPath, soPath); }
+                    if (!soPath.leftRef(3).contains(':')) { soPath = CFileUtils::appendFilePaths(relPath, soPath); }
 
                     const QDir dir(soPath); // always absolute path now
                     if (checked && !dir.exists())
@@ -585,7 +585,7 @@ namespace BlackMisc
                 return paths;
             }
 
-            const QString CFsDirectories::airFileFilter()
+            const QString &CFsDirectories::airFileFilter()
             {
                 static const QString a("*.air");
                 return a;

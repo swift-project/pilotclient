@@ -1,4 +1,4 @@
-/* Copyright (C) 2016
+﻿/* Copyright (C) 2016
  * swift project community / contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -734,7 +734,7 @@ namespace BlackMisc
                 return empty;
             }
 
-            const QString CXPlaneSimulatorSettings::getPluginDirOrDefault() const
+            QString CXPlaneSimulatorSettings::getPluginDirOrDefault() const
             {
                 return CFileUtils::appendFilePathsAndFixUnc(this->getSimulatorDirectoryOrDefault(), CXPlaneUtil::xplanePluginPathName());
             }

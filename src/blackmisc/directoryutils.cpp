@@ -201,7 +201,7 @@ namespace BlackMisc
         return sl;
     }
 
-    const QSet<QString> CDirectoryUtils::filesToCanonicalNames(const QSet<QString> &fileNames, const QSet<QString> &canonicalFileNames)
+    QSet<QString> CDirectoryUtils::filesToCanonicalNames(const QSet<QString> &fileNames, const QSet<QString> &canonicalFileNames)
     {
         CSetBuilder<QString> found;
         if (fileNames.isEmpty()) return {};

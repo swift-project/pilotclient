@@ -51,7 +51,7 @@ namespace BlackMisc
 
         signals:
             //! Emitted by request and requestAsync.
-            void requestPosted(const CVariant &param, BlackMisc::CPromise<BlackMisc::CVariant> o_reply);
+            void requestPosted(const BlackMisc::CVariant &param, BlackMisc::CPromise<BlackMisc::CVariant> o_reply);
         };
     }
 }

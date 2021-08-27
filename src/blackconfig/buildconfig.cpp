@@ -102,7 +102,7 @@ namespace BlackConfig
         return QDateTime::currentDateTime().daysTo(getEol());
     }
 
-    const QString boolToYesNo(bool v)
+    static QString boolToYesNo(bool v)
     {
         return v ? QStringLiteral("yes") : QStringLiteral("no");
     }

@@ -195,7 +195,7 @@ namespace BlackMisc
             return this->getModel().hasAircraftAndAirlineDesignator();
         }
 
-        const CComSystem CSimulatedAircraft::getComSystem(CComSystem::ComUnit unit) const
+        CComSystem CSimulatedAircraft::getComSystem(CComSystem::ComUnit unit) const
         {
             switch (unit)
             {

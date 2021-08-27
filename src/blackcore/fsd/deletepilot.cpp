@@ -33,7 +33,7 @@ namespace BlackCore
 
         DeletePilot DeletePilot::fromTokens(const QStringList &tokens)
         {
-            if (tokens.size() < 1)
+            if (tokens.isEmpty())
             {
                 CLogMessage(static_cast<DeletePilot *>(nullptr)).debug(u"Wrong number of arguments.");
                 return {};

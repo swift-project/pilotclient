@@ -57,7 +57,7 @@ namespace BlackSound
         const QString &CResourceSound::getFileName() const
         {
             static const QString empty;
-            return m_data ? empty : m_data->fileName;
+            return m_data ? m_data->fileName : empty;
         }
 
         bool CResourceSound::isSameFileName(const QString &fn) const

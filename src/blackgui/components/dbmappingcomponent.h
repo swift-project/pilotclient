@@ -153,7 +153,7 @@ namespace BlackGui
             BlackMisc::Simulation::CAircraftModel getOwnModelForModelString(const QString &modelString) const;
 
             //! Own models for simulator
-            const BlackMisc::Simulation::CSimulatorInfo getOwnModelsSimulator() const;
+            BlackMisc::Simulation::CSimulatorInfo getOwnModelsSimulator() const;
 
             //! Set simulator for own models
             void setOwnModelsSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);

@@ -158,7 +158,7 @@ namespace BlackCore
                     break;
                 }
 
-                if (modelsWithAirline.size() > 0)
+                if (!modelsWithAirline.isEmpty())
                 {
                     if (modelsWithAirline.size() > 1)
                     {
@@ -181,7 +181,7 @@ namespace BlackCore
                     break;
                 }
 
-                if (modelsWithAirline.size() > 0)
+                if (!modelsWithAirline.isEmpty())
                 {
                     if (modelsWithAirline.size() > 1)
                     {
@@ -211,7 +211,7 @@ namespace BlackCore
                     CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Found only 1 airline ICAO '%1' in %2 models").arg(countPerAirline.firstKey().getDesignatorDbKey()).arg(models.size()), getLogCategories());
                     break;
                 }
-                if (modelsWithAirline.size() > 0)
+                if (!modelsWithAirline.isEmpty())
                 {
                     if (modelsWithAirline.size() > 1)
                     {
@@ -1033,7 +1033,7 @@ namespace BlackCore
             }
         }
 
-        if (foundIcaos.size() < 1)
+        if (foundIcaos.isEmpty())
         {
             CCallsign::addLogDetailsToList(log, logCallsign, QStringLiteral("Reverse lookup of aircraft ICAO '%1', nothing found").arg(designator), CAircraftMatcher::getLogCategories());
             return CAircraftIcaoCode(icaoCandidate);
@@ -1882,7 +1882,7 @@ namespace BlackCore
         }
 
         CAircraftModelList step1Data = inList.findByAirlineNamesOrTelephonyDesignator(airlineName);
-        if (step1Data.size() < 1 || step1Data.size() == inList.size())
+        if (step1Data.isEmpty() || step1Data.size() == inList.size())
         {
             if (log) { CCallsign::addLogDetailsToList(log, cs, info % QStringLiteral(" cannot reduce by '%1'").arg(airlineName), getLogCategories()); }
             step1Data = inList;
@@ -1895,7 +1895,7 @@ namespace BlackCore
         if (step1Data.size() == 1) { return step1Data; }
 
         CAircraftModelList step2Data = inList.findByAirlineNamesOrTelephonyDesignator(telephony);
-        if (step2Data.size() < 1 || step2Data.size() == inList.size())
+        if (step2Data.isEmpty() || step2Data.size() == inList.size())
         {
             if (log) { CCallsign::addLogDetailsToList(log, cs, info % QStringLiteral(" cannot reduce by '%1'").arg(telephony), getLogCategories()); }
             step2Data = step1Data;

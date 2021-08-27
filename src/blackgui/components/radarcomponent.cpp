@@ -37,11 +37,11 @@ namespace BlackGui
             ui->gv_RadarView->setScene(&m_scene);
 
             ui->cb_RadarRange->addItem(QString::number(0.5) % u" nm", 0.5);
-            for (qreal r = 1.0; r < 10; r += 1)
+            for (int r = 1; r <= 9; ++r)
             {
                 ui->cb_RadarRange->addItem(QString::number(r) % u" nm", r);
             }
-            for (qreal r = 10; r < 91; r += 10)
+            for (int r = 10; r <= 90; r += 10)
             {
                 ui->cb_RadarRange->addItem(QString::number(r) % u" nm", r);
             }
@@ -110,7 +110,7 @@ namespace BlackGui
             pen.setCosmetic(true);
 
             // Macro graticule, drawn as full line at every 10 nm
-            for (qreal range = 10.0; range < 101.0; range += 10.0)
+            for (int range = 10; range <= 100; range += 10)
             {
                 QGraphicsEllipseItem *circle = new QGraphicsEllipseItem(-range, -range, 2.0 * range, 2.0 * range, &m_macroGraticule);
                 circle->setPen(pen);
@@ -119,9 +119,9 @@ namespace BlackGui
             pen.setCosmetic(true);
 
             // Micro graticule, drawn as dash line at every 2.5 nm
-            for (qreal range = 2.5; range < 9.9; range += 2.5)
+            for (qreal range = 1; range <= 3; ++range)
             {
-                QGraphicsEllipseItem *circle = new QGraphicsEllipseItem(-range, -range, 2.0 * range, 2.0 * range, &m_microGraticule);
+                QGraphicsEllipseItem *circle = new QGraphicsEllipseItem(-range * 2.5, -range * 2.5, 5.0 * range, 5.0 * range, &m_microGraticule);
                 circle->setPen(pen);
             }
         }
@@ -131,9 +131,9 @@ namespace BlackGui
             QPen pen(Qt::gray, 1, Qt::DashDotDotLine);
             pen.setCosmetic(true);
 
-            for (qreal angle = 0.0; angle < 359.0; angle += 30.0)
+            for (int angle = 0; angle < 360; angle += 30)
             {
-                const QLineF line({ 0.0, 0.0 }, polarPoint(1000.0, qDegreesToRadians(angle)));
+                const QLineF line({ 0.0, 0.0 }, polarPoint(1000.0, qDegreesToRadians(static_cast<qreal>(angle))));
                 QGraphicsLineItem *li = new QGraphicsLineItem(line, &m_radials);
                 li->setFlags(QGraphicsItem::ItemIgnoresTransformations);
                 li->setPen(pen);

@@ -25,7 +25,7 @@ namespace BlackMisc
             /*!
              * Client side implementation of IHub.
              */
-            class BLACKMISC_EXPORT CHubProxy : public IHub
+            class BLACKMISC_EXPORT CHubProxy final : public IHub
             {
                 Q_OBJECT
                 Q_CLASSINFO("D-Bus Interface", BLACKMISC_HUB_INTERFACE)

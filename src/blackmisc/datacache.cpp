@@ -190,7 +190,7 @@ namespace BlackMisc
         singleShot(0, m_serializer, [this, key] { m_revision.sessionValue(key); });
     }
 
-    const QString CDataCache::relativeFilePath()
+    const QString &CDataCache::relativeFilePath()
     {
         static const QString p("/data/cache/core");
         return p;

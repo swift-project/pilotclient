@@ -54,7 +54,7 @@ namespace BlackMisc
             return vl;
         }
 
-        const CPropertyIndexVariantMap getCPropertyIndexVariantMapImpl()
+        CPropertyIndexVariantMap getCPropertyIndexVariantMapImpl()
         {
             CPropertyIndexVariantMap valueMap;
             valueMap.addValue(1000, 111.222);
@@ -300,7 +300,7 @@ namespace BlackMisc
             return model;
         }
 
-        const CSimulatedAircraft getC172AircraftImpl()
+        CSimulatedAircraft getC172AircraftImpl()
         {
             CUser pilot = CTestData::getRandomPilot();
             CSimulatedAircraft aircraft(pilot.getCallsign(), CTestData::getDbAircraftModelFsxA2AC172Skyhawk(), pilot, CTestData::getAircraftSituationAboveMunichTower());
@@ -317,7 +317,7 @@ namespace BlackMisc
             return aircraft;
         }
 
-        const CSimulatedAircraft getA320AircraftImpl()
+        CSimulatedAircraft getA320AircraftImpl()
         {
             CUser pilot = CTestData::getRandomPilot();
             CSimulatedAircraft aircraft(pilot.getCallsign(), CTestData::getDbAircraftModelFsxAerosoftA320(), pilot, CTestData::getAircraftSituationAboveFrankfurtTower());

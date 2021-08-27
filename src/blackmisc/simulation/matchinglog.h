@@ -35,7 +35,7 @@ namespace BlackMisc
         Q_DECLARE_FLAGS(MatchingLog, MatchingLogFlag)
 
         //! Log flag to string
-        BLACKMISC_EXPORT const QString matchingLogToString(MatchingLog log);
+        BLACKMISC_EXPORT QString matchingLogToString(MatchingLog log);
 
         //! Log flag to string
         BLACKMISC_EXPORT const QString &matchingLogFlagToString(MatchingLogFlag logFlag);

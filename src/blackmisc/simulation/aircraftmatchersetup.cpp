@@ -303,14 +303,14 @@ namespace BlackMisc
             return n;
         }
 
-        const QString CAircraftMatcherSetup::forceToString(ForceMode force)
+        QString CAircraftMatcherSetup::forceToString(ForceMode force)
         {
             if (force.testFlag(ForceNothing)) { return QStringLiteral("nothing"); }
 
             QStringList forces;
-            if (force.testFlag(ForceType))        { forces << forceToString(ForceType); }
-            if (force.testFlag(ForceEnginecount)) { forces << forceToString(ForceEnginecount); }
-            if (force.testFlag(ForceEngine))      { forces << forceToString(ForceEngine); }
+            if (force.testFlag(ForceType))        { forces << forceFlagToString(ForceType); }
+            if (force.testFlag(ForceEnginecount)) { forces << forceFlagToString(ForceEnginecount); }
+            if (force.testFlag(ForceEngine))      { forces << forceFlagToString(ForceEngine); }
             return forces.join(", ");
         }
 

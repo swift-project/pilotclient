@@ -124,7 +124,7 @@ namespace BlackSound
             }
         }
 
-        if (supportedDevices.empty()) { return {}; }
+        if (supportedDevices.isEmpty()) { return {}; }
 
         QAudioDeviceInfo deviceWithLowestLatency = supportedDevices.at(0);
 

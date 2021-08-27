@@ -107,7 +107,7 @@ namespace BlackGui
 
         void CBarChart::setSymbols(const QStringList &titles, const QStringList &colors)
         {
-            Q_ASSERT_X(titles.size() > 0, Q_FUNC_INFO, "Need titles");
+            Q_ASSERT_X(!titles.isEmpty(), Q_FUNC_INFO, "Need titles");
             Q_ASSERT_X(titles.size() == colors.size(), Q_FUNC_INFO, "Need same size");
 
             int i = 0;
@@ -135,9 +135,7 @@ namespace BlackGui
             QVector< QVector<double> > series;
             for (double d : samples)
             {
-                QVector<double> values;
-                values << d;
-                series << values;
+                series << QVector<double> { d };
             }
 
             if (orientation == Qt::Vertical)

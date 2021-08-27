@@ -53,7 +53,7 @@ namespace BlackCore
     void CWeatherManager::appendRequest(const WeatherRequest &request)
     {
         const qint64 now = QDateTime::currentMSecsSinceEpoch();
-        if (m_pendingRequests.size() > 0 && m_lastPendingRequestTs > 0)
+        if (!m_pendingRequests.isEmpty() && m_lastPendingRequestTs > 0)
         {
             const qint64 pendingMs = now - m_lastPendingRequestTs;
             if (pendingMs > 30 * 1000)
@@ -227,7 +227,7 @@ namespace BlackCore
         m_pendingRequests.pop_front();
 
         // In case there are pending requests, start over again
-        if (m_pendingRequests.size() > 0)
+        if (!m_pendingRequests.isEmpty())
         {
             fetchNextWeatherData();
         }

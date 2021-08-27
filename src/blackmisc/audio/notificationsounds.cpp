@@ -28,12 +28,9 @@ namespace BlackMisc
             static const QString supMsg("supervisor msg.");
             static const QString unicomMsg("unicom msg.");
             static const QString mentioned("cs mentioned");
-            static const QString joined("room joined");
-            static const QString left("room left");
             static const QString pttUp("PTT click up");
             static const QString pttDown("PTT click down");
             static const QString pttBlocked("PTT blocked");
-            static const QString load("load sounds");
             static const QString noaudiotx("No audio tx");
             static const QString afvclick("AFC click");
             static const QString afvblock("AFV blocked");
@@ -64,7 +61,7 @@ namespace BlackMisc
             return unknown;
         }
 
-        const QString CNotificationSounds::toString(Notification notification)
+        QString CNotificationSounds::toString(Notification notification)
         {
             QStringList n;
             if (notification.testFlag(NotificationError))  n << flagToString(NotificationError);

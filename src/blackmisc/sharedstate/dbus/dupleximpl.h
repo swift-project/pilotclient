@@ -28,7 +28,7 @@ namespace BlackMisc
             /*!
              * Server side implementation of IDuplex. Receives messages from clients and forwards them to other clients via the CHub.
              */
-            class BLACKMISC_EXPORT CDuplex : public IDuplex
+            class BLACKMISC_EXPORT CDuplex final : public IDuplex
             {
                 Q_OBJECT
                 Q_CLASSINFO("D-Bus Interface", BLACKMISC_DUPLEX_INTERFACE)

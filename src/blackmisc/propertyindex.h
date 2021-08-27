@@ -72,7 +72,7 @@ namespace BlackMisc
         operator CPropertyIndexRef() const;
 
         //! Copy with first element removed
-        CPropertyIndex copyFrontRemoved() const;
+        Q_REQUIRED_RESULT CPropertyIndex copyFrontRemoved() const;
 
         //! Is nested index?
         bool isNested() const;

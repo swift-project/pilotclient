@@ -651,7 +651,7 @@ namespace BlackMisc
         CAirlineIcaoCode CAircraftModelList::getAirlineWithMaxCount() const
         {
             const QMap<CAirlineIcaoCode, int> ac = this->countPerAirlineIcao();
-            if (ac.size() < 1) { return {}; }
+            if (ac.isEmpty()) { return {}; }
             if (ac.size() == 1) { return ac.firstKey(); }
             const QList<int> values = ac.values();
             const int max = *std::max_element(values.begin(), values.end());
@@ -1641,7 +1641,7 @@ namespace BlackMisc
             return msgs;
         }
 
-        CStatusMessageList CAircraftModelList::validateUncFiles(const QSet<QString> uncFiles) const
+        CStatusMessageList CAircraftModelList::validateUncFiles(const QSet<QString> &uncFiles) const
         {
             // check if UNC paths can be reached
             CStatusMessageList msgs;

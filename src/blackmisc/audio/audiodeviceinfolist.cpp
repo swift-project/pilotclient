@@ -42,7 +42,7 @@ namespace BlackMisc
             return this->findByNameOrDefault(name, CAudioDeviceInfo(), strict);
         }
 
-        CAudioDeviceInfo CAudioDeviceInfoList::findByNameOrDefault(const QString &name, const CAudioDeviceInfo defaultDevice, bool strict) const
+        CAudioDeviceInfo CAudioDeviceInfoList::findByNameOrDefault(const QString &name, const CAudioDeviceInfo &defaultDevice, bool strict) const
         {
             if (name.isEmpty()) { return defaultDevice; }
             for (const CAudioDeviceInfo &d : *this)

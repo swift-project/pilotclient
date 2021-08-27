@@ -377,7 +377,7 @@ namespace BlackGui
                 QMenu *currentMenu = nullptr;
 
                 // reverse iteration because same key values are inserted and have reverse order
-                for (const CMenuAction &menuAction : actions)
+                for (const CMenuAction &menuAction : std::as_const(actions))
                 {
                     // create submenu if required
                     if (!currentMenu)

@@ -32,7 +32,7 @@ namespace BlackMisc
                 m_typeCode(typeCode.trimmed().toUpper()), m_callsignPrefix(callsignPrefix.trimmed().toUpper()), m_updatedMsSinceEpoch(updated)
             { }
 
-            const QString CVPilotModelRule::getDistributor() const
+            QString CVPilotModelRule::getDistributor() const
             {
                 QString f(this->getFolder().toUpper().simplified());
                 f.replace(" ", "");

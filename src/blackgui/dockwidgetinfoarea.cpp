@@ -146,7 +146,7 @@ namespace BlackGui
         return nestedInfoAreas;
     }
 
-    const QList<const CInfoArea *> CDockWidgetInfoArea::findParentInfoAreas() const
+    QList<const CInfoArea *> CDockWidgetInfoArea::findParentInfoAreas() const
     {
         QList<const CInfoArea *> parents;
         QWidget *currentWidget = this->parentWidget();

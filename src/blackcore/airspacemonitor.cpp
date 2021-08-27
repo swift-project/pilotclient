@@ -1327,7 +1327,7 @@ namespace BlackCore
         // If there is no full position available yet, throw this interim position away.
         CAircraftSituation interimSituation(situation);
         CAircraftSituationList history = this->remoteAircraftSituations(callsign);
-        if (history.empty()) { return; } // we need one full situation at least
+        if (history.isEmpty()) { return; } // we need one full situation at least
         const CAircraftSituation lastSituation = history.latestObject();
 
         // changed position, continue and copy values

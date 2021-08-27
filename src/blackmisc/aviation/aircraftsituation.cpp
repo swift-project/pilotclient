@@ -544,7 +544,7 @@ namespace BlackMisc
             return this->getOnGroundDetails() != CAircraftSituation::NotSetGroundDetails;
         }
 
-        const QString CAircraftSituation::getOnGroundDetailsAsString() const
+        const QString &CAircraftSituation::getOnGroundDetailsAsString() const
         {
             return CAircraftSituation::onGroundDetailsToString(this->getOnGroundDetails());
         }

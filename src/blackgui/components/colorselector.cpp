@@ -83,7 +83,7 @@ namespace BlackGui
             this->setColor(CRgbColor(color));
         }
 
-        const BlackMisc::CRgbColor CColorSelector::getColor() const
+        BlackMisc::CRgbColor CColorSelector::getColor() const
         {
             CRgbColor q(ui->le_Color->text());
             return q;

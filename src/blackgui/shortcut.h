@@ -71,7 +71,7 @@ namespace BlackGui
         static const QKeySequence &keyFontReset();
 
         //! As string for menus etc. Looks like "(CTRL + R)"
-        static const QString toParenthesisString(const QKeySequence &sequence);
+        static QString toParenthesisString(const QKeySequence &sequence);
     };
 } // ns
 #endif // guard

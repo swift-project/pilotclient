@@ -106,7 +106,7 @@ namespace BlackMisc
         static QSet<QString> canonicalFileNamesToQSet(const QFileInfoList &fileInfoList);
 
         //! File to canonical names
-        static const QSet<QString> filesToCanonicalNames(const QSet<QString> &fileNames, const QSet<QString> &canonicalFileNames);
+        static QSet<QString> filesToCanonicalNames(const QSet<QString> &fileNames, const QSet<QString> &canonicalFileNames);
 
         //! Can connect the UNC machine
         static bool canPingUncMachine(const QString &machine);

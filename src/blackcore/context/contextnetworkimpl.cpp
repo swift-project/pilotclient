@@ -596,7 +596,7 @@ namespace BlackCore
             CCallsignSet callsigns;
             callsigns.push_back(callsign);
             const CUserList users = this->getUsersForCallsigns(callsigns);
-            if (users.size() < 1) { return CUser(); }
+            if (users.isEmpty()) { return CUser(); }
             return users[0];
         }
 

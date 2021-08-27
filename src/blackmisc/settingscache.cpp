@@ -102,7 +102,7 @@ namespace BlackMisc
         return CFileUtils::appendFilePaths(persistentStore(), instance()->CValueCache::filenameForKey(key));
     }
 
-    const QString CSettingsCache::relativeFilePath()
+    const QString &CSettingsCache::relativeFilePath()
     {
         static const QString p("/settings/core");
         return p;

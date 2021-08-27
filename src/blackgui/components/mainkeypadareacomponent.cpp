@@ -87,7 +87,7 @@ namespace BlackGui
         CMainKeypadAreaComponent::~CMainKeypadAreaComponent()
         { }
 
-        void CMainKeypadAreaComponent::onMainInfoAreaChanged(int currentTabIndex, QList<int> dockedIndexes, QList<int> floatingIndexes)
+        void CMainKeypadAreaComponent::onMainInfoAreaChanged(int currentTabIndex, const QList<int> &dockedIndexes, const QList<int> &floatingIndexes)
         {
             this->unsetInfoAreaButtons();
             if (currentTabIndex >= 0)

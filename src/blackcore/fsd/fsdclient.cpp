@@ -1,4 +1,4 @@
-﻿/* Copyright (C) 2019
+/* Copyright (C) 2019
  * swift project community / contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -433,12 +433,12 @@ namespace BlackCore
             sendClientQuery(ClientQueryType::ATIS, callsign);
         }
 
-        void CFSDClient::sendClientQueryFlightPlan(const CCallsign callsign)
+        void CFSDClient::sendClientQueryFlightPlan(const CCallsign &callsign)
         {
             sendClientQuery(ClientQueryType::FP, {}, { callsign.toQString() });
         }
 
-        void CFSDClient::sendClientQueryAircraftConfig(const CCallsign callsign)
+        void CFSDClient::sendClientQueryAircraftConfig(const CCallsign &callsign)
         {
             QString data = QJsonDocument(JsonPackets::aircraftConfigRequest()).toJson(QJsonDocument::Compact);
             data = convertToUnicodeEscaped(data);
@@ -504,13 +504,13 @@ namespace BlackCore
             }
             else if (queryType == ClientQueryType::FP)
             {
-                if (queryData.size() == 0) { return; }
+                if (queryData.isEmpty()) { return; }
                 const ClientQuery clientQuery(getOwnCallsignAsString(), "SERVER", ClientQueryType::FP, queryData);
                 sendQueudedMessage(clientQuery);
             }
             else if (queryType == ClientQueryType::AircraftConfig)
             {
-                if (queryData.size() == 0) { return; }
+                if (queryData.isEmpty()) { return; }
                 const ClientQuery clientQuery(getOwnCallsignAsString(), reveiverCallsign, ClientQueryType::AircraftConfig, queryData);
                 sendQueudedMessage(clientQuery);
             }
@@ -1342,7 +1342,7 @@ namespace BlackCore
                 if (!inRange) { return; } // sort out all broadcasted we DO NOT NEED
                 if (!getSetupForServer().receiveAircraftParts()) { return; }
                 const QJsonObject config = doc.object().value("config").toObject();
-                if (config.empty()) { return; }
+                if (config.isEmpty()) { return; }
 
                 const qint64 offsetTimeMs = currentOffsetTime(callsign);
                 emit aircraftConfigReceived(clientQuery.sender(), config, offsetTimeMs);
@@ -1938,7 +1938,7 @@ namespace BlackCore
             if (!callByTime.isEmpty())
             {
                 const qint64 lastTs = callByTime.front().first;
-                for (const auto &pair : callByTime)
+                for (const auto &pair : std::as_const(callByTime))
                 {
                     const qint64 deltaTs = lastTs - pair.first;
                     stats += separator % QStringLiteral("%1").arg(deltaTs, 5, 10, QChar('0')) % u": " % pair.second;
@@ -2175,7 +2175,7 @@ namespace BlackCore
                 emit atisLogoffTimeReplyReceived(cs, m_mapAtisMessages[callsign].zuluLogoff);
 
                 CInformationMessage atisMessage(CInformationMessage::ATIS);
-                for (const QString &tm : m_mapAtisMessages[callsign].textLines)
+                for (const QString &tm : std::as_const(m_mapAtisMessages[callsign].textLines))
                 {
                     const QString fixed = tm.trimmed();
                     if (!fixed.isEmpty())

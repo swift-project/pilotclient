@@ -250,7 +250,7 @@ namespace BlackMisc
             bool hasGroundDetailsForGndInterpolation() const;
 
             //! On ground reliability as string
-            const QString getOnGroundDetailsAsString() const;
+            const QString &getOnGroundDetailsAsString() const;
 
             //! On ground details
             bool setOnGroundDetails(CAircraftSituation::OnGroundDetails details);

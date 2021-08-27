@@ -104,7 +104,7 @@ namespace BlackGui
 
         void CAirportSmallCompleter::onIcaoChanged()
         {
-            if (!sGui && !sGui->hasWebDataServices()) { return; }
+            if (!sGui || !sGui->hasWebDataServices()) { return; }
             const CAirport airport = sGui->getWebDataServices()->getAirportForIcaoDesignator(this->getIcaoText());
             if (!airport.isNull())
             {
@@ -114,7 +114,7 @@ namespace BlackGui
 
         void CAirportSmallCompleter::onAirportsChanged()
         {
-            if (!sGui && !sGui->hasWebDataServices()) { return; }
+            if (!sGui || !sGui->hasWebDataServices()) { return; }
             const CAirportList airports = sGui->getWebDataServices()->getAirports();
             ui->le_Icao->setCompleter(new QCompleter(airports.allIcaoCodes(true), ui->le_Icao));
 

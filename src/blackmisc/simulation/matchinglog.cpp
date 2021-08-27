@@ -41,7 +41,7 @@ namespace BlackMisc
         }
 
         //! Log flag to string
-        const QString matchingLogToString(MatchingLog log)
+        QString matchingLogToString(MatchingLog log)
         {
             if (log == MatchingLogNothing) { return matchingLogFlagToString(MatchingLogNothing); }
             QStringList l;

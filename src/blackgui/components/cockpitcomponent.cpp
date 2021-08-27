@@ -120,18 +120,18 @@ namespace BlackGui
 
         void CCockpitComponent::mouseDoubleClickEvent(QMouseEvent *event)
         {
-            if (event) { this->requestTextMessageEntryTab(TextMessagesAll); }
+            if (event) { emit requestTextMessageEntryTab(TextMessagesAll); }
             COverlayMessagesFrame::mouseDoubleClickEvent(event);
         }
 
         void CCockpitComponent::onRequestTextMessageCom1()
         {
-            this->requestTextMessageEntryTab(TextMessagesCom1);
+            emit requestTextMessageEntryTab(TextMessagesCom1);
         }
 
         void CCockpitComponent::onRequestTextMessageCom2()
         {
-            this->requestTextMessageEntryTab(TextMessagesCom2);
+            emit requestTextMessageEntryTab(TextMessagesCom2);
         }
 
         void CCockpitComponent::onATCStationsChanged()

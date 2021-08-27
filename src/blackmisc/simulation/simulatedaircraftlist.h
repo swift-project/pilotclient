@@ -59,10 +59,10 @@ namespace BlackMisc
             CAircraftModelList getModels() const;
 
             //! Enabled / disabled aircraft
-            CSimulatedAircraftList findByEnabled(bool enabled) const;
+            Q_REQUIRED_RESULT CSimulatedAircraftList findByEnabled(bool enabled) const;
 
             //! Rendered / not rendered aircraft
-            CSimulatedAircraftList findByRendered(bool rendered) const;
+            Q_REQUIRED_RESULT CSimulatedAircraftList findByRendered(bool rendered) const;
 
             //! VTOL / non VTOL aircraft
             CSimulatedAircraftList findByVtol(bool vtol) const;

@@ -254,7 +254,7 @@ namespace BlackMisc
     void CValueCache::changeValues(const CValueCachePacket &values)
     {
         QMutexLocker lock(&m_mutex);
-        if (values.empty()) { return; }
+        if (values.isEmpty()) { return; }
         m_elements.detach(); //! \fixme see http://doc.qt.io/qt-5/containers.html#implicit-sharing-iterator-problem
         auto out = std::as_const(m_elements).lowerBound(values.cbegin().key());
         auto end = std::as_const(m_elements).upperBound((values.cend() - 1).key());
@@ -284,7 +284,7 @@ namespace BlackMisc
     void CValueCache::changeValuesFromRemote(const CValueCachePacket &values, const CIdentifier &originator)
     {
         QMutexLocker lock(&m_mutex);
-        if (values.empty()) { return; }
+        if (values.isEmpty()) { return; }
         if (! values.valuesChanged())
         {
             if (values.isSaved()) { emit valuesSaveRequested(values); }
@@ -314,12 +314,12 @@ namespace BlackMisc
                 ratifiedChanges.insert(in.key(), in.value(), in.timestamp());
             }
         }
-        if (! ratifiedChanges.empty())
+        if (! ratifiedChanges.isEmpty())
         {
             if (ratifiedChanges.isSaved()) { emit valuesSaveRequested(ratifiedChanges); }
             emit valuesChanged(ratifiedChanges, nullptr);
         }
-        if (! ackedChanges.empty() && ackedChanges.isSaved()) { emit valuesSaveRequested(ackedChanges); }
+        if (! ackedChanges.isEmpty() && ackedChanges.isSaved()) { emit valuesSaveRequested(ackedChanges); }
     }
 
     QJsonObject CValueCache::saveToJson(const QString &keyPrefix) const
@@ -820,7 +820,7 @@ namespace BlackMisc
         Q_ASSERT(m_batchMode >= 0);
         m_batchMode--;
 
-        if (m_batchMode <= 0 && ! m_batchedValues.empty())
+        if (m_batchMode <= 0 && ! m_batchedValues.isEmpty())
         {
             qint64 timestamp = QDateTime::currentMSecsSinceEpoch();
             forEachIntersection(m_elements, m_batchedValues, [timestamp](const QString &, const ElementPtr & element, CVariantMap::const_iterator it)

@@ -67,7 +67,7 @@ namespace BlackMisc
         {
             const int i = valueWithKey.indexOf('(');
             if (i < 0) { return valueWithKey.trimmed(); }
-            if (i < 1) { return QStringLiteral(""); }
+            if (i < 1) { return {}; }
             return valueWithKey.left(i - 1).trimmed();
         }
 

@@ -50,7 +50,7 @@ namespace BlackCore
 
             void CSoundcardSampleProvider::setBypassEffects(bool value)
             {
-                for (CReceiverSampleProvider *receiverInput : m_receiverInputs)
+                for (CReceiverSampleProvider *receiverInput : std::as_const(m_receiverInputs))
                 {
                     receiverInput->setBypassEffects(value);
                 }
@@ -60,7 +60,7 @@ namespace BlackCore
             {
                 if (active)
                 {
-                    if (txTransceivers.size() > 0)
+                    if (!txTransceivers.isEmpty())
                     {
                         QVector<TxTransceiverDto> txTransceiversFiltered = txTransceivers;
 
@@ -84,7 +84,7 @@ namespace BlackCore
                 }
                 else
                 {
-                    for (CReceiverSampleProvider *receiverInput : m_receiverInputs)
+                    for (CReceiverSampleProvider *receiverInput : std::as_const(m_receiverInputs))
                     {
                         receiverInput->setMute(false);
                     }
@@ -111,7 +111,7 @@ namespace BlackCore
                     return a.distanceRatio > b.distanceRatio;
                 });
 
-                if (rxTransceiversFilteredAndSorted.size() > 0)
+                if (!rxTransceiversFilteredAndSorted.isEmpty())
                 {
                     bool audioPlayed = false;
                     QVector<quint16> handledTransceiverIDs;
@@ -171,7 +171,7 @@ namespace BlackCore
                     }
                 }
 
-                for (CReceiverSampleProvider *receiverInput : m_receiverInputs)
+                for (CReceiverSampleProvider *receiverInput : std::as_const(m_receiverInputs))
                 {
                     const quint16 transceiverID = receiverInput->getId();
                     const bool contains = std::any_of(radioTransceivers.cbegin(), radioTransceivers.cend(), [ transceiverID ](const auto &tx) { return transceiverID == tx.id; });

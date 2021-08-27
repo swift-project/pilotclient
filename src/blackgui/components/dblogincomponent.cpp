@@ -115,7 +115,7 @@ namespace BlackGui
                 displayOverlayMessages(msgs);
                 return;
             }
-            else if (!msgs.empty())
+            else if (!msgs.isEmpty())
             {
                 CLogMessage::preformatted(msgs);
             }

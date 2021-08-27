@@ -567,7 +567,7 @@ namespace BlackMisc
 
         private:
             //! Validate UNC paths (Windows)
-            CStatusMessageList validateUncFiles(const QSet<QString> uncFiles) const;
+            CStatusMessageList validateUncFiles(const QSet<QString> &uncFiles) const;
         };
 
         //! Model per callsign

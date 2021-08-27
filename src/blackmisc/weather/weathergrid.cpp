@@ -65,7 +65,7 @@ namespace BlackMisc
             return closest;
         }
 
-        QString CWeatherGrid::getDescription(const QString sep) const
+        QString CWeatherGrid::getDescription(const QString &sep) const
         {
             QString s;
             QTextStream qtout(&s);

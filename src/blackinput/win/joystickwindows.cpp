@@ -252,7 +252,7 @@ namespace BlackInput
             return hr;
         }
 
-        if (m_joystickDevices.empty())
+        if (m_joystickDevices.isEmpty())
         {
             CLogMessage(this).info(u"No joystick device found");
         }

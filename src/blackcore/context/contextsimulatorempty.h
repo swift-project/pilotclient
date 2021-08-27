@@ -437,7 +437,7 @@ namespace BlackCore
             }
 
             //! \copydoc IContextSimulator::testUpdateRemoteAircraft
-            virtual bool testUpdateRemoteAircraft(const BlackMisc::Aviation::CCallsign cs, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) override
+            virtual bool testUpdateRemoteAircraft(const BlackMisc::Aviation::CCallsign &cs, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) override
             {
                 Q_UNUSED(cs)
                 Q_UNUSED(situation)

@@ -145,7 +145,7 @@ namespace BlackGui
             return ui->tvp_OwnAircraftModels->selectedObjects();
         }
 
-        const CSimulatorInfo CDbOwnModelsComponent::getOwnModelsSimulator() const
+        CSimulatorInfo CDbOwnModelsComponent::getOwnModelsSimulator() const
         {
             return ui->comp_SimulatorSelector->getValue();
         }

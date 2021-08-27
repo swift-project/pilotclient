@@ -57,7 +57,7 @@ namespace BlackMisc
                 const QString &getFolder() const { return this->m_folder;}
 
                 //! Distributor derived from folder (hardcoded)
-                const QString getDistributor() const;
+                QString getDistributor() const;
 
                 //! Get type code
                 const QString &getTypeCode() const { return this->m_typeCode;}

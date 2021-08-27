@@ -385,7 +385,7 @@ namespace BlackGui
     {
         const QWidget *w = CGuiApplication::mainApplicationWidget();
         const int s = QApplication::desktop()->screenNumber(w);
-        if (s < QGuiApplication::screens().size()) { return QGuiApplication::screens()[s]; }
+        if (s < QGuiApplication::screens().size()) { return QGuiApplication::screens().at(s); }
         return QGuiApplication::primaryScreen();
     }
 
@@ -1039,7 +1039,7 @@ namespace BlackGui
     {
         if (this->isShuttingDown()) { return; }
         if (!qObject || qObject->objectName().isEmpty()) { this->showHelp(); }
-        this->showHelp(qObject->objectName());
+        else { this->showHelp(qObject->objectName()); }
     }
 
     bool CGuiApplication::triggerShowHelp(const QWidget *widget, QEvent *event)

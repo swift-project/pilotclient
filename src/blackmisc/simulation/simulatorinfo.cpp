@@ -288,7 +288,7 @@ namespace BlackMisc
             return s;
         }
 
-        const CSimulatorInfo CSimulatorInfo::getLocallyInstalledSimulators()
+        CSimulatorInfo CSimulatorInfo::getLocallyInstalledSimulators()
         {
             CSimulatorInfo sim;
             bool fs9 = false;

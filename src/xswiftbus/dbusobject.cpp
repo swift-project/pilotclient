@@ -66,7 +66,7 @@ namespace XSwiftBus
     void CDBusObject::invokeQueuedDBusCalls()
     {
         std::lock_guard<std::mutex> lock(m_mutex);
-        while (m_qeuedDBusCalls.size() > 0)
+        while (!m_qeuedDBusCalls.empty())
         {
             m_qeuedDBusCalls.front()();
             m_qeuedDBusCalls.pop_front();

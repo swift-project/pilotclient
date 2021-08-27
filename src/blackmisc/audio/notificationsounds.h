@@ -79,7 +79,7 @@ namespace BlackMisc
             static const QString &flagToString(NotificationFlag notification);
 
             //! As string
-            static const QString toString(Notification notification);
+            static QString toString(Notification notification);
         };
     } // ns
 } // ns

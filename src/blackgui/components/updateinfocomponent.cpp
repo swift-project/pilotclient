@@ -257,7 +257,7 @@ namespace BlackGui
             return CPlatform::stringToPlatformObject(p);
         }
 
-        const CDistribution CUpdateInfoComponent::getSelectedOrDefaultDistribution() const
+        CDistribution CUpdateInfoComponent::getSelectedOrDefaultDistribution() const
         {
             const QStringList settings = m_updateSettings.get(); // channel / platform
             QString c = ui->cb_Channels->currentText();

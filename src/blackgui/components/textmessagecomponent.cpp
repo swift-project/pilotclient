@@ -629,7 +629,6 @@ namespace BlackGui
         QWidget *CTextMessageComponent::findTextMessageTabByName(const QString &name) const
         {
             if (name.isEmpty()) { return nullptr; }
-            const QString n = name.trimmed();
 
             // search the private message tabs first
             for (int index = ui->tw_TextMessages->count() - 1; index >= 0; index--)
@@ -685,7 +684,7 @@ namespace BlackGui
             {
                 const CCallsign cs(tab->property("callsign").toString());
                 if (!validated) { return cs; }
-                if (!sGui && sGui->getIContextNetwork())
+                if (sGui && sGui->getIContextNetwork())
                 {
                     const CAtcStation atc = sGui->getIContextNetwork()->getOnlineStationForCallsign(cs);
                     if (atc.hasCallsign()) { return atc.getCallsign(); } // first hand callsign diretcly from network context

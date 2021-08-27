@@ -56,7 +56,7 @@ namespace BlackCore
 
             void CReceiverSampleProvider::setBypassEffects(bool value)
             {
-                for (CCallsignSampleProvider *voiceInput : m_voiceInputs)
+                for (CCallsignSampleProvider *voiceInput : std::as_const(m_voiceInputs))
                 {
                     voiceInput->setBypassEffects(value);
                 }
@@ -66,7 +66,7 @@ namespace BlackCore
             {
                 if (frequencyHz != m_frequencyHz)
                 {
-                    for (CCallsignSampleProvider *voiceInput : m_voiceInputs)
+                    for (CCallsignSampleProvider *voiceInput : std::as_const(m_voiceInputs))
                     {
                         voiceInput->clear();
                     }
@@ -88,7 +88,7 @@ namespace BlackCore
                 m_mute = value;
                 if (value)
                 {
-                    for (CCallsignSampleProvider *voiceInput : m_voiceInputs)
+                    for (CCallsignSampleProvider *voiceInput : std::as_const(m_voiceInputs))
                     {
                         voiceInput->clear();
                     }
@@ -120,7 +120,7 @@ namespace BlackCore
                 if (numberOfInUseInputs != m_lastNumberOfInUseInputs)
                 {
                     QStringList receivingCallsigns;
-                    for (const CCallsignSampleProvider *voiceInput : m_voiceInputs)
+                    for (const CCallsignSampleProvider *voiceInput : std::as_const(m_voiceInputs))
                     {
                         const QString callsign = voiceInput->callsign();
                         if (!callsign.isEmpty())
@@ -221,7 +221,7 @@ namespace BlackCore
 
                 QString l;
                 int no = 0;
-                for (const CCallsignSampleProvider *sp : m_voiceInputs)
+                for (const CCallsignSampleProvider *sp : std::as_const(m_voiceInputs))
                 {
                     if (!sp || !sp->inUse()) { continue; } // only log the ones in use
                     l += (l.isEmpty() ? QStringLiteral("") : QStringLiteral("\n")) %

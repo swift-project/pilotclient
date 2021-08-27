@@ -536,7 +536,7 @@ namespace BlackGui
         void CAtcStationComponent::showOverlayInlineTextMessage()
         {
             // COverlayMessagesFrame::showOverlayInlineTextMessage(TextMessagesCom1);
-            this->requestTextMessageEntryTab(TextMessagesCom1);
+            emit requestTextMessageEntryTab(TextMessagesCom1);
         }
 
         void CAtcStationComponent::onDetailsToggled(bool checked)

@@ -80,7 +80,7 @@ namespace BlackMiscTest
     void CTestContainers::collectionBasics()
     {
         CCollection<int> c1;
-        QVERIFY2(c1.empty(), "Uninitialized collection is empty");
+        QVERIFY2(c1.isEmpty(), "Uninitialized collection is empty");
         auto c2 = c1;
         QVERIFY2(c1 == c2, "Copy of collection is equal");
         c1.insert(1);
@@ -89,7 +89,7 @@ namespace BlackMiscTest
         c2.insert(1);
         QVERIFY2(c1 == c2, "Collections with equal elements are equal");
         c1.clear();
-        QVERIFY2(c1.empty(), "Cleared collection is empty");
+        QVERIFY2(c1.isEmpty(), "Cleared collection is empty");
         c1.insert(2);
         QVERIFY2(c1 != c2, "Collections with different elements are not equal");
         c1 = c2;
@@ -99,7 +99,7 @@ namespace BlackMiscTest
     void CTestContainers::sequenceBasics()
     {
         CSequence<int> s1;
-        QVERIFY2(s1.empty(), "Uninitialized sequence is empty");
+        QVERIFY2(s1.isEmpty(), "Uninitialized sequence is empty");
         auto s2 = s1;
         QVERIFY2(s1 == s2, "Copy of sequence is equal");
         s1.push_back(1);
@@ -108,7 +108,7 @@ namespace BlackMiscTest
         s2.push_back(1);
         QVERIFY2(s1 == s2, "Sequences with equal elements are equal");
         s1.clear();
-        QVERIFY2(s1.empty(), "Cleared sequence is empty");
+        QVERIFY2(s1.isEmpty(), "Cleared sequence is empty");
         s1.push_back(2);
         QVERIFY2(s1 != s2, "Sequences with different elements are not equal");
         s1 = s2;

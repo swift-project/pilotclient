@@ -599,7 +599,7 @@ namespace BlackSimPlugin
 
         void CFsuipc::processWeatherMessages()
         {
-            if (m_weatherMessageQueue.empty()) { return; }
+            if (m_weatherMessageQueue.isEmpty()) { return; }
             if (!m_opened) { return; }
             FsuipcWeatherMessage &weatherMessage = m_weatherMessageQueue.first();
 

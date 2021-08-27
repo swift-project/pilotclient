@@ -263,22 +263,22 @@ namespace BlackGui
         return unknown;
     }
 
-    const QString CGuiUtility::rectAsString(const QRect &rect)
+    QString CGuiUtility::rectAsString(const QRect &rect)
     {
         return QStringLiteral("x: %1 y: %2 w: %3 h: %4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height());
     }
 
-    const QString CGuiUtility::rectAsString(const QRectF &rect)
+    QString CGuiUtility::rectAsString(const QRectF &rect)
     {
         return QStringLiteral("x: %1 y: %2 w: %3 h: %4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height());
     }
 
-    const QString CGuiUtility::sizeAsString(const QSize &size)
+    QString CGuiUtility::sizeAsString(const QSize &size)
     {
         return QStringLiteral("w: %1 h: %2").arg(size.width()).arg(size.height());
     }
 
-    const QString CGuiUtility::sizeAsString(const QSizeF &size)
+    QString CGuiUtility::sizeAsString(const QSizeF &size)
     {
         return QStringLiteral("w: %1 h: %2").arg(size.width()).arg(size.height());
     }
@@ -972,7 +972,7 @@ namespace BlackGui
         return openWidgets;
     }
 
-    QStringList CGuiUtility::getAllWidgetTitles(const QWidgetList widgets)
+    QStringList CGuiUtility::getAllWidgetTitles(const QWidgetList &widgets)
     {
         QStringList titles;
         for (const QWidget *w : widgets)
@@ -990,7 +990,7 @@ namespace BlackGui
         return titles;
     }
 
-    QStringList CGuiUtility::getAllWidgetNames(const QWidgetList widgets)
+    QStringList CGuiUtility::getAllWidgetNames(const QWidgetList &widgets)
     {
         QStringList titles;
         for (const QWidget *w : widgets)

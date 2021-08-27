@@ -232,7 +232,7 @@ namespace BlackGui
             bool hasAnyWidthPercentage() const;
 
             //! Set the width percentages
-            void setWidthPercentages(const QList<int> percentages);
+            void setWidthPercentages(const QList<int> &percentages);
 
             //! Calculate the absolute width
             QList<int> calculateWidths(int totalWidth) const;

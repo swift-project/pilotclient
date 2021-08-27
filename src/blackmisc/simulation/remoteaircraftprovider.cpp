@@ -1176,7 +1176,7 @@ namespace BlackMisc
             // but to make sure we do the search
             const qint64 ts = partsList.latestTimestampMsecsSinceEpoch() - MaxPartsAgePerCallsignSecs * 1000;
             partsList.removeBefore(ts);
-            Q_ASSERT_X(partsList.size() >= 1, Q_FUNC_INFO, "Need at least 1 value");
+            Q_ASSERT_X(!partsList.isEmpty(), Q_FUNC_INFO, "Need at least 1 value");
         }
 
         const CCallsign &IRemoteAircraftProvider::testAltitudeOffsetCallsign()

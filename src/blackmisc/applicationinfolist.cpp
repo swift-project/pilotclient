@@ -102,6 +102,6 @@ namespace BlackMisc
 
     bool CApplicationInfoList::hasOtherSwiftDataDirectories()
     {
-        return applicationDataDirectoryMapWithoutCurrentVersion().size() > 0;
+        return !applicationDataDirectoryMapWithoutCurrentVersion().isEmpty();
     }
 } // ns

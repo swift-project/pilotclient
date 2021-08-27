@@ -59,7 +59,7 @@ namespace BlackMisc
             const QString &getDescription() const { return m_description;}
 
             //! Get id and description
-            const QString getIdAndDescription() const;
+            QString getIdAndDescription() const;
 
             //! Set description
             void setDescription(const QString &description) { m_description = description.trimmed(); }

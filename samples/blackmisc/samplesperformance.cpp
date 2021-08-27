@@ -798,7 +798,7 @@ namespace BlackSample
         return set;
     }
 
-    const QMap<CCallsign, CAircraftSituation> CSamplesPerformance::situationsMap(const CCallsignSet &callsigns)
+    QMap<CCallsign, CAircraftSituation> CSamplesPerformance::situationsMap(const CCallsignSet &callsigns)
     {
         QMap<CCallsign, CAircraftSituation> situations;
         for (const CCallsign &cs : callsigns)
@@ -809,7 +809,7 @@ namespace BlackSample
         return situations;
     }
 
-    const QHash<CCallsign, CAircraftSituation> CSamplesPerformance::situationsHash(const CCallsignSet &callsigns)
+    QHash<CCallsign, CAircraftSituation> CSamplesPerformance::situationsHash(const CCallsignSet &callsigns)
     {
         QHash<CCallsign, CAircraftSituation> situations;
         for (const CCallsign &cs : callsigns)

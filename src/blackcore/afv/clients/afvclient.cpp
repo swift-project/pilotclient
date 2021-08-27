@@ -876,7 +876,7 @@ namespace BlackCore
 
                 const QString callsign = this->getCallsign(); // threadsafe
                 const auto transmittingTransceivers = this->getTransmittingTransceivers(); // threadsafe
-                if (transmittingTransceivers.size() > 0)
+                if (!transmittingTransceivers.isEmpty())
                 {
                     if (transmit)
                     {

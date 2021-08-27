@@ -1046,7 +1046,7 @@ namespace BlackSimPlugin
             int aircraftNumber = 0;
             const bool updateAllAircraft = this->isUpdateAllRemoteAircraft(currentTimestamp);
             const CCallsignSet callsignsInRange = this->getAircraftInRangeCallsigns();
-            for (const CXPlaneMPAircraft &xplaneAircraft : m_xplaneAircraftObjects)
+            for (const CXPlaneMPAircraft &xplaneAircraft : std::as_const(m_xplaneAircraftObjects))
             {
                 const CCallsign callsign(xplaneAircraft.getCallsign());
                 const bool hasCallsign = !callsign.isEmpty();

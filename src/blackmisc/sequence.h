@@ -418,7 +418,7 @@ namespace BlackMisc
         }
 
         //! Reversed order
-        CSequence reversed() const
+        Q_REQUIRED_RESULT CSequence reversed() const
         {
             CSequence result = *this;
             result.reverse();
@@ -441,7 +441,7 @@ namespace BlackMisc
 
         //! Return a copy sorted by a given comparator predicate.
         template <class Predicate>
-        CSequence sorted(Predicate p) const
+        Q_REQUIRED_RESULT CSequence sorted(Predicate p) const
         {
             CSequence result = *this;
             result.sort(p);
@@ -474,7 +474,7 @@ namespace BlackMisc
 
         //! Return a copy with the smallest n elements at the beginning and sorted.
         template <class Predicate>
-        CSequence partiallySorted(size_type n, Predicate p) const
+        Q_REQUIRED_RESULT CSequence partiallySorted(size_type n, Predicate p) const
         {
             CSequence result = *this;
             result.partiallySort(n, p);

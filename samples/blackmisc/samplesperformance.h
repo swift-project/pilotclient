@@ -96,10 +96,10 @@ namespace BlackSample
         static BlackMisc::Aviation::CCallsignSet callsigns(int number);
 
         //! Situations map
-        static const QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituation> situationsMap(const BlackMisc::Aviation::CCallsignSet &callsigns);
+        static QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituation> situationsMap(const BlackMisc::Aviation::CCallsignSet &callsigns);
 
         //! Situations hash
-        static const QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituation> situationsHash(const BlackMisc::Aviation::CCallsignSet &callsigns);
+        static QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituation> situationsHash(const BlackMisc::Aviation::CCallsignSet &callsigns);
     };
 } // namespace
 

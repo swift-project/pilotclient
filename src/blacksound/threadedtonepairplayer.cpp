@@ -113,7 +113,7 @@ namespace BlackSound
 
     QByteArray CThreadedTonePairPlayer::getAudioByTonePairs(const QList<CTonePair> &tonePairs)
     {
-        Q_ASSERT(tonePairs.size() > 0);
+        Q_ASSERT(!tonePairs.isEmpty());
         QByteArray finalBufferData;
 
         for (const auto &tonePair : std::as_const(tonePairs))

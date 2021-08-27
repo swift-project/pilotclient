@@ -24,7 +24,7 @@ namespace BlackMisc
             /*!
              * Client side implementation of IDuplex, through which the client communicates with the server.
              */
-            class BLACKMISC_EXPORT CDuplexProxy : public IDuplex
+            class BLACKMISC_EXPORT CDuplexProxy final : public IDuplex
             {
                 Q_OBJECT
                 Q_CLASSINFO("D-Bus Interface", BLACKMISC_DUPLEX_INTERFACE)

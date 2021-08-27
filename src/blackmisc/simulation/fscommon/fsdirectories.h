@@ -132,7 +132,7 @@ namespace BlackMisc
                 static QSet<QString> fsxSimObjectsPaths(const QString &fsxFile, bool checked);
 
                 //! .air file filter
-                static const QString airFileFilter();
+                static const QString &airFileFilter();
 
             private:
                 //! Utility functions

@@ -295,7 +295,7 @@ namespace BlackMisc
                 {}
 
                 //! Plugin directory or default plugin dir
-                const QString getPluginDirOrDefault() const;
+                QString getPluginDirOrDefault() const;
             };
 
             //! Trait for simulator settings

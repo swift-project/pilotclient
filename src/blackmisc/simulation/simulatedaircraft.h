@@ -235,7 +235,7 @@ namespace BlackMisc
             const Aviation::CComSystem &getCom2System() const { return m_com2system; }
 
             //! Get COM unit
-            const Aviation::CComSystem getComSystem(Aviation::CComSystem::ComUnit unit) const;
+            Aviation::CComSystem getComSystem(Aviation::CComSystem::ComUnit unit) const;
 
             //! Set COM unit
             void setComSystem(const Aviation::CComSystem &com, Aviation::CComSystem::ComUnit unit);

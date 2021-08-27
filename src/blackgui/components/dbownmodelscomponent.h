@@ -81,7 +81,7 @@ namespace BlackGui
             BlackMisc::Simulation::CAircraftModelList getOwnSelectedModels() const;
 
             //! Own models for simulator
-            const BlackMisc::Simulation::CSimulatorInfo getOwnModelsSimulator() const;
+            BlackMisc::Simulation::CSimulatorInfo getOwnModelsSimulator() const;
 
             //! Change current simulator for own models
             bool setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator, bool forced = false);

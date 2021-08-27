@@ -29,7 +29,7 @@ namespace BlackMisc
             /*!
              * Server side implementation of IHub. Maintains a collection of CDuplex objects.
              */
-            class BLACKMISC_EXPORT CHub : public IHub
+            class BLACKMISC_EXPORT CHub final : public IHub
             {
                 Q_OBJECT
                 Q_CLASSINFO("D-Bus Interface", BLACKMISC_HUB_INTERFACE)

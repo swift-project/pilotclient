@@ -92,7 +92,7 @@ namespace BlackMisc
                 QSet<QString> removeSet(knownModels.begin(), knownModels.end());
                 removeSet &= QSet<QString>(remove.begin(), remove.end());
                 int c = 0;
-                for (const QString &model : removeSet)
+                for (const QString &model : std::as_const(removeSet))
                 {
                     c += this->removeIf(&CVPilotModelRule::getModelName, model);
                 }

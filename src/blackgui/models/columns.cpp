@@ -220,7 +220,7 @@ namespace BlackGui
             return false;
         }
 
-        void CColumns::setWidthPercentages(const QList<int> percentages)
+        void CColumns::setWidthPercentages(const QList<int> &percentages)
         {
             if (percentages.isEmpty())
             {

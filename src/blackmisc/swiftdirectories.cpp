@@ -206,7 +206,7 @@ namespace BlackMisc
         return n;
     }
 
-    const QString getBootstrapResourceFileImpl()
+    QString getBootstrapResourceFileImpl()
     {
         const QString d(CSwiftDirectories::shareDirectory());
         if (d.isEmpty()) { return {}; }

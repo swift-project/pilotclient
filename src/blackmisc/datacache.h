@@ -292,7 +292,7 @@ namespace BlackMisc
         void sessionValue(const QString &key);
 
         //! Relative file path in application data directory
-        static const QString relativeFilePath();
+        static const QString &relativeFilePath();
 
     private:
         CDataCache();

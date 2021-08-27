@@ -29,7 +29,7 @@ namespace BlackGui
         int CApplicationInfoView::otherSwiftVersionsFromDataDirectories(bool reinitOtherVersions)
         {
             const CApplicationInfoList others = CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories(reinitOtherVersions);
-            m_acceptRowSelection = (others.size() > 0);
+            m_acceptRowSelection = (!others.isEmpty());
 
             this->updateContainer(others);
             return others.size();
