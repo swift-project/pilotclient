@@ -32,6 +32,7 @@ swiftConfig(allowNoisyWarnings) {
 else {
     DEFINES *= QT_NO_DEPRECATED_WARNINGS
     mingw:QMAKE_CXXFLAGS_WARN_ON += -Wno-maybe-uninitialized
+    clang:QMAKE_CXXFLAGS_WARN_ON += -Wno-return-std-move
 }
 
 # clazy - Qt-aware linter
