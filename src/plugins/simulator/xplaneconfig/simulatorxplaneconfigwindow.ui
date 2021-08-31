@@ -360,12 +360,18 @@
            <property name="text">
             <string>Freq</string>
            </property>
+           <property name="toolTip">
+            <string>Frequency messages</string>
+           </property>
           </widget>
          </item>
          <item row="0" column="1">
           <widget class="QLabel" name="lbl_ColorPriv">
            <property name="text">
             <string>Priv</string>
+           </property>
+           <property name="toolTip">
+            <string>Private messages</string>
            </property>
           </widget>
          </item>
@@ -374,12 +380,18 @@
            <property name="text">
             <string>Serv</string>
            </property>
+           <property name="toolTip">
+            <string>Server messages</string>
+           </property>
           </widget>
          </item>
          <item row="0" column="3">
           <widget class="QLabel" name="lbl_ColorStat">
            <property name="text">
-            <string>Sup</string>
+            <string>Stat</string>
+           </property>
+           <property name="toolTip">
+            <string>Status messages</string>
            </property>
           </widget>
          </item>
@@ -387,6 +399,9 @@
           <widget class="QLabel" name="lbl_ColorSup">
            <property name="text">
             <string>Sup</string>
+           </property>
+           <property name="toolTip">
+            <string>Supervisor messages</string>
            </property>
           </widget>
          </item>
