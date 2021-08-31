@@ -71,6 +71,10 @@ namespace BlackMisc
                 {
                     m_drawingLabels = settingsDoc[CXSwiftBusSettingsQtFree::JsonDrawingLabels].GetBool();  c++;
                 }
+                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonLabelColor) && settingsDoc[CXSwiftBusSettingsQtFree::JsonLabelColor].IsInt())
+                {
+                    m_labelColor = settingsDoc[CXSwiftBusSettingsQtFree::JsonLabelColor].GetInt();  c++;
+                }
                 if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonBundleTaxiLandingLights) && settingsDoc[CXSwiftBusSettingsQtFree::JsonBundleTaxiLandingLights].IsBool())
                 {
                     m_bundleTaxiLandingLights = settingsDoc[CXSwiftBusSettingsQtFree::JsonBundleTaxiLandingLights].GetBool();  c++;
@@ -104,7 +108,7 @@ namespace BlackMisc
                     m_msSinceEpochQtFree = settingsDoc[CXSwiftBusSettingsQtFree::JsonTimestamp].GetInt64();  c++;
                 }
                 this->objectUpdated(); // post processing
-                return c == 12;
+                return c == 13;
             }
 
             std::string CXSwiftBusSettingsQtFree::toXSwiftBusJsonString() const
@@ -124,6 +128,7 @@ namespace BlackMisc
                 document.AddMember(JsonMaxDrawDistance,   m_maxDrawDistanceNM,  a);
                 document.AddMember(JsonTimestamp,         m_msSinceEpochQtFree, a);
                 document.AddMember(JsonDrawingLabels,     m_drawingLabels, a);
+                document.AddMember(JsonLabelColor,        m_labelColor,    a);
                 document.AddMember(JsonBundleTaxiLandingLights, m_bundleTaxiLandingLights, a);
                 document.AddMember(JsonFollowAircraftDistanceM, m_followAircraftDistanceM, a);
                 document.AddMember(JsonLogRenderPhases,   m_logRenderPhases,     a);
@@ -146,6 +151,9 @@ namespace BlackMisc
             {
                 return "DBusServer: " + m_dBusServerAddress +
                        ", drawLabels: "      + QtFreeUtils::boolToYesNo(m_drawingLabels) +
+                       ", labelColor: "      + std::to_string((m_labelColor >> 16) & 0xff) +
+                                   ";"       + std::to_string((m_labelColor >> 8) & 0xff) +
+                                   ";"       + std::to_string(m_labelColor & 0xff) +
                        ", bundle lights: "   + QtFreeUtils::boolToYesNo(m_bundleTaxiLandingLights) +
                        ", phases: "          + QtFreeUtils::boolToYesNo(m_logRenderPhases) +
                        ", TCAS: "            + QtFreeUtils::boolToYesNo(m_tcasEnabled) +
@@ -164,6 +172,7 @@ namespace BlackMisc
                 if (m_dBusServerAddress  != newValues.m_dBusServerAddress)  { m_dBusServerAddress  = newValues.m_dBusServerAddress;  changed++; }
                 if (m_msgBox             != newValues.m_msgBox)             { m_msgBox             = newValues.m_msgBox;             changed++; }
                 if (m_drawingLabels      != newValues.m_drawingLabels)      { m_drawingLabels      = newValues.m_drawingLabels;      changed++; }
+                if (m_labelColor         != newValues.m_labelColor)         { m_labelColor         = newValues.m_labelColor;         changed++; }
                 if (m_nightTextureMode   != newValues.m_nightTextureMode)   { m_nightTextureMode   = newValues.m_nightTextureMode;   changed++; }
                 if (m_logRenderPhases    != newValues.m_logRenderPhases)    { m_logRenderPhases    = newValues.m_logRenderPhases;          changed++; }
                 if (m_tcasEnabled        != newValues.m_tcasEnabled)        { m_tcasEnabled        = newValues.m_tcasEnabled;        changed++; }
