@@ -17,6 +17,7 @@
 #include "blackmisc/valueobject.h"
 
 #include <QColor>
+#include <QPixmap>
 #include <QMetaType>
 #include <QString>
 #include <tuple>
@@ -107,6 +108,9 @@ namespace BlackMisc
 
         //! Representing icon
         CIcons::IconIndex toIcon() const;
+
+        //! Icon as pixmap
+        QPixmap toPixmap() const;
 
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
