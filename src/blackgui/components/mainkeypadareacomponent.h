@@ -94,11 +94,11 @@ namespace BlackGui
             //! Info area buttons
             void unsetInfoAreaButtons();
 
-            //! Disable button for some (short) time to avoid double click
-            void disableButtonBriefly();
-
             //! Update values
             void update();
+
+            //! Update connection status
+            void updateConnectionStatus();
 
             QScopedPointer<Ui::CMainKeypadAreaComponent> ui;
             BlackMisc::CIdentifier m_identifier { "MainKeypadAreaComponent", this };

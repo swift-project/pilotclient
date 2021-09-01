@@ -57,8 +57,7 @@ namespace BlackGui
             connect(ui->pb_MainWeather,       &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
 
             // non info areas
-            connect(ui->pb_Connect,        &QPushButton::pressed,  this, &CMainKeypadAreaComponent::buttonSelected);
-            connect(ui->pb_Connect,        &QPushButton::pressed,  this, &CMainKeypadAreaComponent::disableButtonBriefly);
+            connect(ui->pb_Connect,        &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
             connect(ui->pb_Opacity050,     &QPushButton::pressed,  this, &CMainKeypadAreaComponent::buttonSelected);
             connect(ui->pb_Opacity100,     &QPushButton::pressed,  this, &CMainKeypadAreaComponent::buttonSelected);
             connect(ui->pb_SoundMaxVolume, &QPushButton::pressed,  this, &CMainKeypadAreaComponent::buttonSelected);
@@ -107,6 +106,8 @@ namespace BlackGui
                 if (pb) { pb->setChecked(true); }
             }
 
+            this->updateConnectionStatus();
+
             Q_UNUSED(dockedIndexes)
         }
 
@@ -153,6 +154,7 @@ namespace BlackGui
             else if (senderButton == ui->pb_Connect)
             {
                 emit this->connectPressed();
+                this->updateConnectionStatus();
             }
             else if (senderButton == ui->pb_Audio)
             {
@@ -167,7 +169,7 @@ namespace BlackGui
             // Connected button
             if (to.isConnected())
             {
-                ui->pb_Connect->setText("Discon."); // full terms some too wide
+                ui->pb_Connect->setText("Connected");
                 ui->pb_Connect->setChecked(true);
                 // moved to stylesheet: ui->pb_Connect->setStyleSheet("background-color: green");
             }
@@ -255,19 +257,8 @@ namespace BlackGui
             ui->pb_MainTextMessages->setChecked(false);
             ui->pb_MainUsers->setChecked(false);
             ui->pb_MainWeather->setChecked(false);
-        }
 
-        void CMainKeypadAreaComponent::disableButtonBriefly()
-        {
-            QPushButton *pb = qobject_cast<QPushButton *>(QObject::sender());
-            if (!pb) { return; }
-            pb->setEnabled(false);
-            QPointer<CMainKeypadAreaComponent> myself(this);
-            QTimer::singleShot(750, [ = ]
-            {
-                if (!sGui || sGui->isShuttingDown() || !myself) { return; }
-                pb->setEnabled(true);
-            });
+            this->updateConnectionStatus();
         }
 
         void CMainKeypadAreaComponent::update()
@@ -277,10 +268,18 @@ namespace BlackGui
             {
                 this->muteChanged(sGui->getCContextAudioBase()->isMuted());
             }
+            this->updateConnectionStatus();
+        }
 
+        void CMainKeypadAreaComponent::updateConnectionStatus()
+        {
             if (sGui->getIContextNetwork() && sGui->getIContextNetwork()->isConnected())
             {
                 this->connectionStatusChanged(CConnectionStatus::Connected, CConnectionStatus::Connected);
+            }
+            else
+            {
+                this->connectionStatusChanged(CConnectionStatus::Disconnected, CConnectionStatus::Disconnected);
             }
         }
     } // namespace
