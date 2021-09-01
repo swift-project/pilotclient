@@ -244,30 +244,21 @@ bool SwiftGuiStd::isMainPageSelected(SwiftGuiStd::MainPageIndex mainPage) const
 void SwiftGuiStd::loginRequested()
 {
     if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork()) { return; }
-    if (ui->sw_MainMiddle->currentIndex() == static_cast<int>(MainPageLogin))
+
+    const bool shift = QApplication::keyboardModifiers() & Qt::ShiftModifier;
+    if (shift)
     {
-        // already main page, we fake a re-trigger here
-        // emit this->currentMainInfoAreaChanged(ui->sw_MainMiddle->currentWidget());
-        ui->comp_Login->toggleNetworkConnection();
+        if (!m_loginDialog) { m_loginDialog.reset(new CLoginDialog(this)); }
+        connect(m_loginDialog.data(), &CLoginDialog::requestNetworkSettings, this, &SwiftGuiStd::displayNetworkSettings);
+        if (!CBuildConfig::isLocalDeveloperDebugBuild())
+        {
+            m_loginDialog->setAutoLogoff(true);
+        }
+        m_loginDialog->show();
     }
     else
     {
-        // const bool connected = sGui->getIContextNetwork()->isConnected();
-        const bool shift = QApplication::keyboardModifiers() & Qt::ShiftModifier;
-        if (shift)
-        {
-            if (!m_loginDialog) { m_loginDialog.reset(new CLoginDialog(this)); }
-            connect(m_loginDialog.data(), &CLoginDialog::requestNetworkSettings, this, &SwiftGuiStd::displayNetworkSettings);
-            if (!CBuildConfig::isLocalDeveloperDebugBuild())
-            {
-                m_loginDialog->setAutoLogoff(true);
-            }
-            m_loginDialog->show();
-        }
-        else
-        {
-            this->setMainPage(MainPageLogin);
-        }
+        this->setMainPage(MainPageLogin);
     }
 }
 
