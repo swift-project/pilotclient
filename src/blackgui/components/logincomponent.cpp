@@ -198,34 +198,13 @@ namespace BlackGui
             m_logoffCountdownTimer.stop(); // in any case stop the timer
             if (currentWidget != this && currentWidget != this->parentWidget())
             {
-                // const bool wasVisible = m_visible;
-                m_visible = false;
                 m_logoffCountdownTimer.stop();
-
-                /** T639
-                if (!wasVisible)
-                {
-                    // set own values, and send signals
-                    this->setOwnModelAndIcaoValues();
-                }
-                **/
             }
             else
             {
-                if (m_visible)
-                {
-                    // already visible:
-                    // re-trigger! treat as same as OK
-                    this->toggleNetworkConnection();
-                }
-                else
-                {
-                    m_visible = true;
-                    this->setOwnModelAndIcaoValues();
-                    const bool isConnected = sGui->getIContextNetwork()->isConnected();
-                    this->setUiLoginState(isConnected);
-                    if (isConnected) { this->startLogoffTimerCountdown(); }
-                }
+                this->setOwnModelAndIcaoValues();
+                const bool isConnected = sGui->getIContextNetwork()->isConnected();
+                this->setUiLoginState(isConnected);
             }
 
             // we decided to make it difficult for users to disable it
