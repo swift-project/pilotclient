@@ -76,7 +76,6 @@ namespace BlackCore
             virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator) override;
             virtual bool updateOwnCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual bool updateOwnIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode, const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcaoCode) override;
-            virtual void setAudioOutputVolume(int outputVolume) override;
             virtual void toggleTransponderMode() override;
             virtual bool setTransponderMode(BlackMisc::Aviation::CTransponder::TransponderMode mode) override;
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;

@@ -237,21 +237,21 @@ namespace BlackCore
                 //! Output volume in dB, [MinDbOut, MaxDbOut]dB
                 //! \threadsafe
                 //! @{
-                double getOutputVolumeDb() const;
-                Q_INVOKABLE bool setOutputVolumeDb(double valueDb);
+                double getOutputVolumeDb(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
+                Q_INVOKABLE bool setOutputVolumeDb(BlackMisc::Aviation::CComSystem::ComUnit comUnit, double valueDb);
                 //! @}
 
                 //! Gain ratio
                 //! \threadsafe
-                double getOutputGainRatio() const;
+                double getOutputGainRatio(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
 
                 //! Normalized volumes 0..100
                 //! \threadsafe
                 //! @{
                 int getNormalizedInputVolume() const;
-                int getNormalizedOutputVolume() const;
+                int getNormalizedOutputVolume(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
                 bool setNormalizedInputVolume(int volume);
-                void setNormalizedOutputVolume(int volume);
+                void setNormalizedOutputVolume(BlackMisc::Aviation::CComSystem::ComUnit comUnit, int volume);
                 //! @}
 
                 //! VU values, 0..1
@@ -412,8 +412,10 @@ namespace BlackCore
                 QDateTime m_startDateTimeUtc;
 
                 double m_inputVolumeDb   = 0.0;
-                double m_outputVolumeDb  = 0.0;
-                double m_outputGainRatio = 1.0; //!< 0dB
+                double m_outputVolumeDbCom1  = 0.0;
+                double m_outputGainRatioCom1 = 1.0; //!< 0dB
+                double m_outputVolumeDbCom2  = 0.0;
+                double m_outputGainRatioCom2 = 1.0; //!< 0dB
                 double m_maxDbReadingInPTTInterval = -100;
 
                 QTimer             *m_voiceServerTimer = nullptr;

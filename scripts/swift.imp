@@ -591,8 +591,6 @@
   { include: [ "\"textmessagecomponent.h\"", "private", "\"blackgui/components/textmessagecomponent.h\"", "public" ] },
   { include: [ "\"components/flightplancomponent.h\"", "private", "\"blackgui/components/flightplancomponent.h\"", "public" ] },
   { include: [ "\"flightplancomponent.h\"", "private", "\"blackgui/components/flightplancomponent.h\"", "public" ] },
-  { include: [ "\"components/audiovolumecomponent.h\"", "private", "\"blackgui/components/audiovolumecomponent.h\"", "public" ] },
-  { include: [ "\"audiovolumecomponent.h\"", "private", "\"blackgui/components/audiovolumecomponent.h\"", "public" ] },
   { include: [ "\"components/aircraftcomponent.h\"", "private", "\"blackgui/components/aircraftcomponent.h\"", "public" ] },
   { include: [ "\"aircraftcomponent.h\"", "private", "\"blackgui/components/aircraftcomponent.h\"", "public" ] },
   { include: [ "\"components/dbairlineicaocomponent.h\"", "private", "\"blackgui/components/dbairlineicaocomponent.h\"", "public" ] },

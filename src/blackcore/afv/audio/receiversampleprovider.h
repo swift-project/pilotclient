@@ -89,6 +89,9 @@ namespace BlackCore
                 //! Get frequency in Hz
                 uint getFrequencyHz() const;
 
+                //! Set gain ratio
+                bool setGainRatio(double gainRatio) { return m_volume->setGainRatio(gainRatio); }
+
                 //! Log all inputs
                 //! \private DEBUG only
                 void logVoiceInputs(const QString &prefix = {}, qint64 timeCheckOffsetMs = -1);

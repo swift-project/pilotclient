@@ -58,6 +58,9 @@ namespace BlackCore
                 //! Receiving callsign as single string
                 BlackMisc::Aviation::CCallsignSet getReceivingCallsigns(quint16 transceiverID) const;
 
+                //! Setting gain for specified receiver
+                bool setGainRatioForTransceiver(quint16 transceiverID, double gainRatio);
+
             signals:
                 //! Changed callsigns
                 void receivingCallsignsChanged(const TransceiverReceivingCallsignsChangedArgs &args);

@@ -26,11 +26,15 @@
    <property name="bottomMargin">
     <number>4</number>
    </property>
-   <item row="9" column="0">
+   <item row="8" column="3">
     <widget class="QToolButton" name="tb_ResetInVolume">
      <property name="text">
       <string>...</string>
      </property>
+      <property name="icon">
+        <iconset resource="../../blackmisc/blackmisc.qrc">
+          <normaloff>:/pastel/icons/pastel/16/undo.png</normaloff>:/pastel/icons/pastel/16/undo.png</iconset>
+      </property>
     </widget>
    </item>
    <item row="8" column="0">
@@ -120,17 +124,39 @@
      </property>
     </widget>
    </item>
-   <item row="12" column="0">
-    <widget class="QToolButton" name="tb_ResetOutVolume">
+   <item row="11" column="3">
+    <widget class="QToolButton" name="tb_ResetOutVolumeCom1">
      <property name="text">
       <string>...</string>
      </property>
+      <property name="icon">
+        <iconset resource="../../blackmisc/blackmisc.qrc">
+          <normaloff>:/pastel/icons/pastel/16/undo.png</normaloff>:/pastel/icons/pastel/16/undo.png</iconset>
+      </property>
+    </widget>
+   </item>
+   <item row="12" column="3">
+    <widget class="QToolButton" name="tb_ResetOutVolumeCom2">
+     <property name="text">
+      <string>...</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+        <normaloff>:/pastel/icons/pastel/16/undo.png</normaloff>:/pastel/icons/pastel/16/undo.png</iconset>
+      </property>
     </widget>
    </item>
    <item row="11" column="0">
-    <widget class="QLabel" name="lbl_VolumeOut">
+    <widget class="QLabel" name="lbl_VolumeOutCom1">
      <property name="text">
-      <string>Out</string>
+      <string>Out COM1</string>
+     </property>
+    </widget>
+   </item>
+  <item row="12" column="0">
+    <widget class="QLabel" name="lbl_VolumeOutCom2">
+     <property name="text">
+      <string>Out COM2</string>
      </property>
     </widget>
    </item>
@@ -277,7 +303,7 @@
     </widget>
    </item>
    <item row="11" column="1">
-    <widget class="QSlider" name="hs_VolumeOut">
+    <widget class="QSlider" name="hs_VolumeOutCom1">
      <property name="value">
       <number>50</number>
      </property>
@@ -287,6 +313,23 @@
     </widget>
    </item>
    <item row="12" column="1">
+    <widget class="QSlider" name="hs_VolumeOutCom2">
+     <property name="value">
+      <number>50</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+  <item row="13" column="0">
+    <widget class="QLabel" name="lbl_OutLevelMeter">
+     <property name="text">
+      <string>Output</string>
+     </property>
+    </widget>
+   </item>
+   <item row="13" column="1">
     <widget class="BlackGui::CLevelMeter" name="wip_OutLevelMeter">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -296,6 +339,13 @@
      </property>
     </widget>
    </item>
+  <item row="9" column="0">
+    <widget class="QLabel" name="lbl_InLevelMeter">
+     <property name="text">
+      <string>Input</string>
+     </property>
+    </widget>
+  </item>
    <item row="9" column="1">
     <widget class="BlackGui::CLevelMeter" name="wip_InLevelMeter">
      <property name="sizePolicy">
@@ -344,8 +394,10 @@
   <tabstop>cb_SetupAudioLoopback</tabstop>
   <tabstop>hs_VolumeIn</tabstop>
   <tabstop>tb_ResetInVolume</tabstop>
-  <tabstop>hs_VolumeOut</tabstop>
-  <tabstop>tb_ResetOutVolume</tabstop>
+  <tabstop>hs_VolumeOutCom1</tabstop>
+  <tabstop>tb_ResetOutVolumeCom1</tabstop>
+  <tabstop>hs_VolumeOutCom2</tabstop>
+  <tabstop>tb_ResetOutVolumeCom2</tabstop>
  </tabstops>
  <resources>
   <include location="../../blackmisc/blackmisc.qrc"/>
