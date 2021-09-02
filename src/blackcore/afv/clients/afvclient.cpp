@@ -268,15 +268,16 @@ namespace BlackCore
 
             bool CAfvClient::isMuted() const
             {
-                const int v = this->getNormalizedOutputVolume();
-                return v < 1;
+                const int v1 = this->getNormalizedOutputVolume(CComSystem::Com1);
+                const int v2 = this->getNormalizedOutputVolume(CComSystem::Com2);
+                return v1 < 1 && v2 < 1;
             }
 
             void CAfvClient::setMuted(bool mute)
             {
                 if (this->isMuted() == mute) { return; }
-                this->setNormalizedOutputVolume(mute ? 0 : 50);
-
+                this->setNormalizedOutputVolume(CComSystem::Com1, mute ? 0 : 50);
+                this->setNormalizedOutputVolume(CComSystem::Com2, mute ? 0 : 50);
                 emit this->changedMute(mute);
             }
 
@@ -316,7 +317,6 @@ namespace BlackCore
                 this->initTransceivers();
 
                 // threadsafe block
-                const double outputVolume = this->getOutputGainRatio();
                 {
                     // lock block 1
                     {
@@ -331,7 +331,7 @@ namespace BlackCore
 
                         if (m_outputSampleProvider) { m_outputSampleProvider->deleteLater(); }
                         m_outputSampleProvider = new CVolumeSampleProvider(m_soundcardSampleProvider, this);
-                        m_outputSampleProvider->setGainRatio(outputVolume);
+                        //m_outputSampleProvider->setGainRatio(outputVolume); // 2021-09 LT Disabled. Output volume is controlled independently for COM1/2
                     }
 
                     // lock block 2
@@ -768,16 +768,26 @@ namespace BlackCore
                 return changed;
             }
 
-            double CAfvClient::getOutputVolumeDb() const
+            double CAfvClient::getOutputVolumeDb(CComSystem::ComUnit comUnit) const
             {
                 QMutexLocker lock(&m_mutexVolume);
-                return m_outputVolumeDb;
+                if (comUnit == CComSystem::Com1)
+                    return m_outputVolumeDbCom1;
+                else if (comUnit == CComSystem::Com2)
+                    return m_outputVolumeDbCom2;
+                qFatal("Invalid COM unit");
+                return 0;
             }
 
-            double CAfvClient::getOutputGainRatio() const
+            double CAfvClient::getOutputGainRatio(CComSystem::ComUnit comUnit) const
             {
                 QMutexLocker lock(&m_mutexVolume);
-                return m_outputGainRatio;
+                if (comUnit == CComSystem::Com1)
+                    return m_outputGainRatioCom1;
+                else if (comUnit == CComSystem::Com2)
+                    return m_outputGainRatioCom2;
+                qFatal("Invalid COM unit");
+                return 0;
             }
 
             int CAfvClient::getNormalizedInputVolume() const
@@ -788,9 +798,9 @@ namespace BlackCore
                 return i;
             }
 
-            int CAfvClient::getNormalizedOutputVolume() const
+            int CAfvClient::getNormalizedOutputVolume(CComSystem::ComUnit comUnit) const
             {
-                double db = this->getOutputVolumeDb();
+                double db = this->getOutputVolumeDb(comUnit);
                 double range = MaxDbOut;
                 int v = 50;
                 if (db < 0)
@@ -814,7 +824,7 @@ namespace BlackCore
                 return this->setInputVolumeDb(dB);
             }
 
-            void CAfvClient::setNormalizedOutputVolume(int volume)
+            void CAfvClient::setNormalizedOutputVolume(CComSystem::ComUnit comUnit, int volume)
             {
                 if (volume < 0) { volume = 0; }
                 else if (volume > 100) { volume = 100; }
@@ -834,7 +844,7 @@ namespace BlackCore
                 dB += (volume * range / 50.0);
 
                 // converted to MinDbOut-MaxDbOut
-                this->setOutputVolumeDb(dB);
+                this->setOutputVolumeDb(comUnit, dB);
             }
 
             double CAfvClient::getInputVolumePeakVU() const
@@ -1089,10 +1099,12 @@ namespace BlackCore
             {
                 const CSettings audioSettings = m_audioSettings.get();
                 const int iv = audioSettings.getInVolume();
-                const int ov = audioSettings.getOutVolume();
+                const int ov1 = audioSettings.getOutVolumeCom1();
+                const int ov2 = audioSettings.getOutVolumeCom2();
 
                 this->setNormalizedInputVolume(iv);
-                this->setNormalizedOutputVolume(ov);
+                this->setNormalizedOutputVolume(CComSystem::Com1, ov1);
+                this->setNormalizedOutputVolume(CComSystem::Com2, ov2);
                 this->setBypassEffects(!audioSettings.isAudioEffectsEnabled());
             }
 
@@ -1144,6 +1156,12 @@ namespace BlackCore
                     const bool rx1 = com1.isReceiveEnabled();
                     const bool tx2 = com2.isTransmitEnabled(); // we only allow one (1) transmit
                     const bool rx2 = com2.isReceiveEnabled();
+
+                    const int vol1 = com1.getVolumeReceive();
+                    const int vol2 = com2.getVolumeReceive();
+
+                    this->setNormalizedOutputVolume(CComSystem::Com1, vol1);
+                    this->setNormalizedOutputVolume(CComSystem::Com2, vol2);
 
                     // enable, we currently treat receive as enable
                     // flight sim cockpits normally use rx and tx
@@ -1397,7 +1415,7 @@ namespace BlackCore
                 return sApp && !sApp->isShuttingDown() && sApp->getIContextOwnAircraft() && sApp->getIContextNetwork() && sApp->getIContextSimulator();
             }
 
-            bool CAfvClient::setOutputVolumeDb(double valueDb)
+            bool CAfvClient::setOutputVolumeDb(CComSystem::ComUnit comUnit, double valueDb)
             {
                 if (!CThreadUtils::isInThisThread(this))
                 {
@@ -1406,11 +1424,11 @@ namespace BlackCore
                     QTimer::singleShot(0, this, [ = ]
                     {
                         if (!myself || !CAfvClient::hasContexts()) { return; }
-                        myself->setOutputVolumeDb(valueDb);
+                        myself->setOutputVolumeDb(comUnit, valueDb);
                     });
                     return true; // not exactly "true" as we do it async
                 }
-
+                if (comUnit != CComSystem::Com1 && comUnit != CComSystem::Com2) { return false; }
                 if (valueDb > MaxDbOut)      { valueDb = MaxDbOut; }
                 else if (valueDb < MinDbOut) { valueDb = MinDbOut; }
 
@@ -1418,11 +1436,23 @@ namespace BlackCore
                 bool changed = false;
                 {
                     QMutexLocker lock(&m_mutexVolume);
-                    changed = !qFuzzyCompare(m_outputVolumeDb, valueDb);
-                    if (changed)
+                    if (comUnit == CComSystem::Com1)
                     {
-                        m_outputVolumeDb  = valueDb;
-                        m_outputGainRatio = gainRatio;
+                        changed = !qFuzzyCompare(m_outputVolumeDbCom1, valueDb);
+                        if (changed)
+                        {
+                            m_outputVolumeDbCom1  = valueDb;
+                            m_outputGainRatioCom1 = gainRatio;
+                        }
+                    }
+                    else
+                    {
+                        changed = !qFuzzyCompare(m_outputVolumeDbCom2, valueDb);
+                        if (changed)
+                        {
+                            m_outputVolumeDbCom2  = valueDb;
+                            m_outputGainRatioCom2 = gainRatio;
+                        }
                     }
                 }
 
@@ -1436,7 +1466,7 @@ namespace BlackCore
 
                 if (m_outputSampleProvider)
                 {
-                    changed = m_outputSampleProvider->setGainRatio(gainRatio);
+                    changed = m_soundcardSampleProvider->setGainRatioForTransceiver(comUnit, gainRatio);
                 }
                 m_mutexSampleProviders.unlock();
                 return changed;

@@ -474,13 +474,6 @@ namespace BlackCore
             return true;
         }
 
-        void CContextOwnAircraft::setAudioOutputVolume(int outputVolume)
-        {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << outputVolume; }
-            CContextAudioBase *audio = qobject_cast<CContextAudioBase *>(this->getIContextAudio());
-            if (audio) { audio->setVoiceOutputVolume(outputVolume); }
-        }
-
         void CContextOwnAircraft::xCtxChangedAtcStationOnlineConnectionStatus(const CAtcStation &atcStation, bool connected)
         {
             Q_UNUSED(connected)

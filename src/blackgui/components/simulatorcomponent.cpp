@@ -205,6 +205,8 @@ namespace BlackGui
             this->addOrUpdateLiveDataByName(QStringLiteral("COM2 active"), c2.getFrequencyActive().toQString(), iconRadio);
             this->addOrUpdateLiveDataByName(QStringLiteral("COM1 standby"), c1.getFrequencyStandby().toQString(), iconRadio);
             this->addOrUpdateLiveDataByName(QStringLiteral("COM2 standby"), c2.getFrequencyStandby().toQString(), iconRadio);
+            this->addOrUpdateLiveDataByName(QStringLiteral("COM1 volume"), QString::number(c1.getVolumeReceive()) , iconRadio);
+            this->addOrUpdateLiveDataByName(QStringLiteral("COM2 volume"), QString::number(c2.getVolumeReceive()), iconRadio);
             this->addOrUpdateLiveDataByName(QStringLiteral("Transponder"), ownAircraft.getTransponderCodeFormatted(), iconRadio);
         }
 

@@ -156,9 +156,6 @@ namespace BlackCore
             //! Own SELCAL code
             virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator) = 0;
 
-            //! Output volume 0..300
-            virtual void setAudioOutputVolume(int outputVolume) = 0;
-
             //! Default situation
             //! \remark normally used when no driver is attached
             static const BlackMisc::Aviation::CAircraftSituation &getDefaultSituation();

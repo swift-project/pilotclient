@@ -45,13 +45,15 @@ namespace BlackGui
             //! Get input and output volume values
             //! @{
             int getInValue(int from  = BlackMisc::Audio::CSettings::InMin,  int to = BlackMisc::Audio::CSettings::InMax) const;
-            int getOutValue(int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax) const;
+            int getOutValueCom1(int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax) const;
+            int getOutValueCom2(int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax) const;
             //! @}
 
             //! Set input and output volume values
             //! @{
             void setInValue(int value,  int from = BlackMisc::Audio::CSettings::InMin,  int to = BlackMisc::Audio::CSettings::InMax);
-            void setOutValue(int value, int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax);
+            void setOutValueCom1(int value, int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax);
+            void setOutValueCom2(int value, int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax);
             //! @}
 
             //! Set input and output level values 0..1
@@ -112,7 +114,8 @@ namespace BlackGui
 
             void onReloadDevices();
             void onResetVolumeIn();
-            void onResetVolumeOut();
+            void onResetVolumeOutCom1();
+            void onResetVolumeOutCom2();
 
             void setAudioRunsWhere();
 

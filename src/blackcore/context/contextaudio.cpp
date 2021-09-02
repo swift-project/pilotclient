@@ -110,7 +110,8 @@ namespace BlackCore
             else if (parser.commandStartsWith("vol") && parser.countParts() > 1)
             {
                 const int v = parser.toInt(1);
-                this->setVoiceOutputVolume(v);
+                this->setVoiceOutputVolume(CComSystem::Com1, v);
+                this->setVoiceOutputVolume(CComSystem::Com2, v);
                 return true;
             }
             else if (afvClient() && parser.matchesCommand(".aliased") && parser.countParts() > 1)
@@ -148,7 +149,8 @@ namespace BlackCore
                 if (!myself || !sApp || sApp->isShuttingDown()) { return; }
 
                 const CSettings as = m_audioSettings.getThreadLocal();
-                this->setVoiceOutputVolume(as.getOutVolume());
+                this->setVoiceOutputVolume(CComSystem::Com1, as.getOutVolumeCom1());
+                this->setVoiceOutputVolume(CComSystem::Com2, as.getOutVolumeCom2());
                 m_selcalPlayer = new CSelcalPlayer(CAudioDeviceInfo::getDefaultOutputDevice(), this);
 
                 myself->changeDeviceSettings();
@@ -419,20 +421,22 @@ namespace BlackCore
             m_voiceClient->startAudio(inputDevice, outputDevice);
         }
 
-        void CContextAudioBase::setVoiceOutputVolume(int volume)
+        void CContextAudioBase::setVoiceOutputVolume(CComSystem::ComUnit comUnit, int volume)
         {
+            if (comUnit != CComSystem::Com1 && comUnit != CComSystem::Com2) { return; }
             if (!m_voiceClient) { return; }
 
             const bool wasMuted = this->isMuted();
             volume = CSettings::fixOutVolume(volume);
 
-            const int  currentVolume = m_voiceClient->getNormalizedOutputVolume();
+            const int  currentVolume = m_voiceClient->getNormalizedOutputVolume(comUnit);
             const bool changedVoiceOutput = (currentVolume != volume);
             if (changedVoiceOutput)
             {
                 // TODO: KB 2020-05 the mute handling should entirely go to AFV client!
-                m_voiceClient->setNormalizedOutputVolume(volume);
-                m_outVolumeBeforeMute = volume;
+                m_voiceClient->setNormalizedOutputVolume(comUnit, volume);
+                if (comUnit == CComSystem::Com1) { m_outVolumeBeforeMuteCom1 = volume; }
+                if (comUnit == CComSystem::Com2) { m_outVolumeBeforeMuteCom2 = volume; }
 
                 emit this->changedAudioVolume(volume);
                 if ((volume > 0 && wasMuted) || (volume < 1 && !wasMuted))
@@ -443,17 +447,22 @@ namespace BlackCore
             }
 
             CSettings as(m_audioSettings.getThreadLocal());
-            if (as.getOutVolume() != volume)
+            if (comUnit == CComSystem::Com1 && as.getOutVolumeCom1() != volume)
             {
-                as.setOutVolume(volume);
+                as.setOutVolumeCom1(volume);
+                m_audioSettings.set(as);
+            }
+            else if (comUnit == CComSystem::Com2 && as.getOutVolumeCom2() != volume)
+            {
+                as.setOutVolumeCom2(volume);
                 m_audioSettings.set(as);
             }
         }
 
-        int CContextAudioBase::getVoiceOutputVolume() const
+        int CContextAudioBase::getVoiceOutputVolume(CComSystem::ComUnit comUnit) const
         {
             if (!m_voiceClient) { return 0; }
-            return m_voiceClient->getNormalizedOutputVolume();
+            return m_voiceClient->getNormalizedOutputVolume(comUnit);
         }
 
         void CContextAudioBase::setMute(bool muted)
@@ -463,12 +472,16 @@ namespace BlackCore
 
             if (muted)
             {
-                const int nv = m_voiceClient->getNormalizedOutputVolume();
-                m_outVolumeBeforeMute = nv;
+                m_outVolumeBeforeMuteCom1 = m_voiceClient->getNormalizedOutputVolume(CComSystem::Com1);
+                m_outVolumeBeforeMuteCom2 = m_voiceClient->getNormalizedOutputVolume(CComSystem::Com2);
             }
 
             m_voiceClient->setMuted(muted);
-            if (!muted) { m_voiceClient->setNormalizedOutputVolume(m_outVolumeBeforeMute); }
+            if (!muted)
+            {
+                m_voiceClient->setNormalizedOutputVolume(CComSystem::Com1, m_outVolumeBeforeMuteCom1);
+                m_voiceClient->setNormalizedOutputVolume(CComSystem::Com2, m_outVolumeBeforeMuteCom2);
+            }
 
             // signal no longer need, signaled by m_voiceClient->setMuted
             // emit this->changedMute(muted);
@@ -581,7 +594,8 @@ namespace BlackCore
             const CSettings s = m_audioSettings.get();
             const QString dir = s.getNotificationSoundDirectory();
             m_notificationPlayer.updateDirectory(dir);
-            this->setVoiceOutputVolume(s.getOutVolume());
+            this->setVoiceOutputVolume(CComSystem::Com1, s.getOutVolumeCom1());
+            this->setVoiceOutputVolume(CComSystem::Com2, s.getOutVolumeCom2());
         }
 
         void CContextAudioBase::onChangedVoiceSettings()
@@ -593,15 +607,19 @@ namespace BlackCore
         void CContextAudioBase::audioIncreaseVolume(bool enabled)
         {
             if (!enabled) { return; }
-            const int v = qRound(this->getVoiceOutputVolume() * 1.05);
-            this->setVoiceOutputVolume(v);
+            const int v1 = qRound(this->getVoiceOutputVolume(CComSystem::Com1) * 1.05);
+            const int v2 = qRound(this->getVoiceOutputVolume(CComSystem::Com2) * 1.05);
+            this->setVoiceOutputVolume(CComSystem::Com1, v1);
+            this->setVoiceOutputVolume(CComSystem::Com2, v2);
         }
 
         void CContextAudioBase::audioDecreaseVolume(bool enabled)
         {
             if (!enabled) { return; }
-            const int v = qRound(this->getVoiceOutputVolume() / 1.05);
-            this->setVoiceOutputVolume(v);
+            const int v1 = qRound(this->getVoiceOutputVolume(CComSystem::Com1) / 1.05);
+            const int v2 = qRound(this->getVoiceOutputVolume(CComSystem::Com2) / 1.05);
+            this->setVoiceOutputVolume(CComSystem::Com1, v1);
+            this->setVoiceOutputVolume(CComSystem::Com2, v2);
         }
 
         void CContextAudioBase::xCtxNetworkConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
