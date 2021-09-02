@@ -174,7 +174,11 @@ jobs:
           extra: --archives qtbase
       - name: Download InstallBuilder
         run: |
-          curl.exe --output "$HOME\installbuilder.exe" -L --url ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-windows-x64-installer.exe
+          $tries = 0
+          while ($tries -lt 5 -and -not (Test-Path "$HOME\installbuilder.exe")) {
+            $tries++
+            curl.exe --output "$HOME\installbuilder.exe" -L --url ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-windows-x64-installer.exe
+          }
           start -wait "$HOME\installbuilder.exe" @("--mode", "unattended", "--prefix", "$HOME\installbuilder")
           echo >$HOME\license.xml @"
           $env:BITROCK_LICENSE
@@ -256,7 +260,11 @@ jobs:
           extra: --archives qtbase
       - name: Download InstallBuilder
         run: |
-          curl.exe --output "$HOME\installbuilder.exe" -L --url ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-windows-installer.exe
+          $tries = 0
+          while ($tries -lt 5 -and -not (Test-Path "$HOME\installbuilder.exe")) {
+            $tries++
+            curl.exe --output "$HOME\installbuilder.exe" -L --url ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-windows-installer.exe
+          }
           start -wait "$HOME\installbuilder.exe" @("--mode", "unattended", "--prefix", "$HOME\installbuilder")
           echo >$HOME\license.xml @"
           $env:BITROCK_LICENSE
