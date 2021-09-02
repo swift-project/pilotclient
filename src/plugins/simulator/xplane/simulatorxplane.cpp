@@ -349,18 +349,16 @@ namespace BlackSimPlugin
                 // updates
                 com1.setFrequencyActive(CFrequency(m_xplaneData.com1ActiveKhz, CFrequencyUnit::kHz()));
                 com1.setFrequencyStandby(CFrequency(m_xplaneData.com1StandbyKhz, CFrequencyUnit::kHz()));
-                const int v1 = qRound(m_xplaneData.com1Volume);
+                const int v1 = qRound(m_xplaneData.com1Volume * 100);
                 com1.setVolumeReceive(v1);
-                com1.setVolumeTransmit(v1);
                 com1.setReceiveEnabled(m_xplaneData.isCom1Receiving);
                 com1.setTransmitEnabled(m_xplaneData.isCom1Transmitting);
                 const bool changedCom1 = myAircraft.getCom1System() != com1;
 
                 com2.setFrequencyActive(CFrequency(m_xplaneData.com2ActiveKhz, CFrequencyUnit::kHz()));
                 com2.setFrequencyStandby(CFrequency(m_xplaneData.com2StandbyKhz, CFrequencyUnit::kHz()));
-                const int v2 = qRound(m_xplaneData.com1Volume);
+                const int v2 = qRound(m_xplaneData.com2Volume * 100);
                 com2.setVolumeReceive(v2);
-                com2.setVolumeTransmit(v2);
                 com2.setReceiveEnabled(m_xplaneData.isCom2Receiving);
                 com2.setTransmitEnabled(m_xplaneData.isCom2Transmitting);
                 const bool changedCom2 = myAircraft.getCom2System() != com2;
