@@ -84,6 +84,25 @@ namespace BlackSimPlugin
                 };
             }
 
+            template <typename T>
+            std::function<void(QDBusPendingCallWatcher *)> setterCallbackWithDefault(T *obj, T defaultValue)
+            {
+                return [this, obj, defaultValue](QDBusPendingCallWatcher * watcher)
+                {
+                    QDBusPendingReply<T> reply = *watcher;
+                    if (reply.isError()) 
+                    {
+                        if (reply.error().type() == QDBusError::UnknownMethod) 
+                            *obj = defaultValue;
+                        else
+                            emit this->asyncMethodError(reply.error()); 
+                    }
+                    else { *obj = reply; }
+                    watcher->deleteLater();
+                };
+            }
+
+
         signals:
             //! Emitted if an asynchronous method call caused a DBus error
             BLACK_NO_RELAY void asyncMethodError(QDBusError error);
@@ -212,6 +231,18 @@ namespace BlackSimPlugin
             //! @{
             int getCom1StandbyKhz() const;
             void getCom1StandbyKhzAsync(int *o_com1Standby);
+            //! @}
+
+            //! Get Com1 volume [0..1]
+            //! @{
+            double getCom1Volume() const;
+            void getCom1VolumeAsync(double *o_com1Volume);
+            //! @}
+
+            //! Get Com2 volume [0..1]
+            //! @{
+            double getCom2Volume() const;
+            void getCom2VolumeAsync(double *o_com2Volume);
             //! @}
 
             //! Get the current COM2 active frequency in kHz
