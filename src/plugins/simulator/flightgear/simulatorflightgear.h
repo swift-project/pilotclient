@@ -101,6 +101,8 @@ namespace BlackSimPlugin
             double speedBrakeRatio;             //!< Speed break ratio [%]
             double pressureAltitudeFt;          //!< Pressure altitude [inhg]
             double groundElevation;             //!< Ground Elevation [m]
+            double volumeCom1;                  //!< Volume com1 [0..1]
+            double volumeCom2;                  //!< Volume com2 [0..1]
         };
 
         //! Flightgear ISimulator implementation
@@ -242,7 +244,7 @@ namespace BlackSimPlugin
             void resetFlightgearData()
             {
                 m_flightgearData = { "", "", 0, 0, 0, 0, 0, 0, 0, false, 122800, 122800, 122800, 122800, 2000, 0, false, false, false, false,
-                                     false, false, 0, 0, {}, 0.0, 0.0, 0.0
+                                     false, false, 0, 0, {}, 0.0, 0.0, 0.0, 1.0, 1.0
                                    };
 
             }

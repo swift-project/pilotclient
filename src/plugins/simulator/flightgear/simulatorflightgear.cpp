@@ -210,6 +210,8 @@ namespace BlackSimPlugin
                 m_serviceProxy->getTransponderIdentAsync(&m_flightgearData.xpdrIdent);
                 m_serviceProxy->getAllWheelsOnGroundAsync(&m_flightgearData.onGroundAll);
                 m_serviceProxy->getGroundElevationAsync(&m_flightgearData.groundElevation);
+                m_serviceProxy->getCom1VolumeAsync(&m_flightgearData.volumeCom1);
+                m_serviceProxy->getCom2VolumeAsync(&m_flightgearData.volumeCom2);
 
                 CAircraftSituation situation;
                 situation.setPosition({ m_flightgearData.latitudeDeg, m_flightgearData.longitudeDeg, 0 });
@@ -235,10 +237,12 @@ namespace BlackSimPlugin
                 // updates
                 com1.setFrequencyActive(CFrequency(m_flightgearData.com1ActiveKhz, CFrequencyUnit::kHz()));
                 com1.setFrequencyStandby(CFrequency(m_flightgearData.com1StandbyKhz, CFrequencyUnit::kHz()));
+                com1.setVolumeReceive(qRound(m_flightgearData.volumeCom1*100));
                 const bool changedCom1 = myAircraft.getCom1System() != com1;
 
                 com2.setFrequencyActive(CFrequency(m_flightgearData.com2ActiveKhz, CFrequencyUnit::kHz()));
                 com2.setFrequencyStandby(CFrequency(m_flightgearData.com2StandbyKhz, CFrequencyUnit::kHz()));
+                com2.setVolumeReceive(qRound(m_flightgearData.volumeCom2*100));
                 const bool changedCom2 = myAircraft.getCom2System() != com2;
 
                 transponder = CTransponder::getStandardTransponder(m_flightgearData.xpdrCode, xpdrMode(m_flightgearData.xpdrMode, m_flightgearData.xpdrIdent));
