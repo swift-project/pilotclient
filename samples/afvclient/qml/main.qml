@@ -282,12 +282,12 @@ ApplicationWindow {
 
             Slider {
                 id: slOutputVolume
-                from: -18
-                to: 18
-                value: 0
+                from: 0
+                to: 100
+                value: 50
                 anchors.verticalCenter: parent.verticalCenter
                 wheelEnabled: true
-                onMoved: voiceClient.setOutputVolumeDb(value)
+                onMoved: voiceClient.setNormalizedMasterOutputVolume(value)
             }
         }
 

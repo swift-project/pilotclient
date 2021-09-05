@@ -96,8 +96,8 @@ public:
     //! \copydoc BlackCore::Afv::Clients::CAfvClient::setInputVolumeDb
     Q_INVOKABLE void setInputVolumeDb(double valueDb) { m_afvClient->setInputVolumeDb(valueDb); }
 
-    //! \copydoc BlackCore::Afv::Clients::CAfvClient::setOutputVolumeDb
-    Q_INVOKABLE void setOutputVolumeDb(double valueDb) { m_afvClient->setOutputVolumeDb(valueDb); }
+    //! \copydoc BlackCore::Afv::Clients::CAfvClient::setNormalizedMasterOutputVolume
+    Q_INVOKABLE void setNormalizedMasterOutputVolume(double valueDb) { m_afvClient->setNormalizedMasterOutputVolume(valueDb); }
 
 signals:
     //! Receiving callsigns have been changed
