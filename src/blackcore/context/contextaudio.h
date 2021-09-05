@@ -178,8 +178,10 @@ namespace BlackCore
 
             //! Volume
             //! @{
-            void setVoiceOutputVolume(BlackMisc::Aviation::CComSystem::ComUnit comUnit, int volume);
-            int  getVoiceOutputVolume(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
+            void setMasterOutputVolume(int volume);
+            void setComOutputVolume(BlackMisc::Aviation::CComSystem::ComUnit comUnit, int volume);
+            int getMasterOutputVolume() const;
+            int getComOutputVolume(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
             void setMute(bool muted);
             bool isMuted() const;
             //! @}
@@ -354,8 +356,7 @@ namespace BlackCore
             CActionBind m_actionAudioVolumeIncrease { BlackMisc::Input::audioVolumeIncreaseHotkeyAction(), BlackMisc::Input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudioBase::audioIncreaseVolume };
             CActionBind m_actionAudioVolumeDecrease { BlackMisc::Input::audioVolumeDecreaseHotkeyAction(), BlackMisc::Input::audioVolumeDecreaseHotkeyIcon(), this, &CContextAudioBase::audioDecreaseVolume };
 
-            int m_outVolumeBeforeMuteCom1 = 90;
-            int m_outVolumeBeforeMuteCom2 = 90;
+            int m_outMasterVolumeBeforeMute = 50;
             static constexpr int MinUnmuteVolume = 20; //!< minimum volume when unmuted
 
             //! Do we use a local core

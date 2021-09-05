@@ -125,7 +125,7 @@
     </widget>
    </item>
    <item row="11" column="3">
-    <widget class="QToolButton" name="tb_ResetOutVolumeCom1">
+    <widget class="QToolButton" name="tb_ResetOutVolume">
      <property name="text">
       <string>...</string>
      </property>
@@ -136,6 +136,17 @@
     </widget>
    </item>
    <item row="12" column="3">
+    <widget class="QToolButton" name="tb_ResetOutVolumeCom1">
+     <property name="text">
+      <string>...</string>
+     </property>
+      <property name="icon">
+        <iconset resource="../../blackmisc/blackmisc.qrc">
+          <normaloff>:/pastel/icons/pastel/16/undo.png</normaloff>:/pastel/icons/pastel/16/undo.png</iconset>
+      </property>
+    </widget>
+   </item>
+   <item row="13" column="3">
     <widget class="QToolButton" name="tb_ResetOutVolumeCom2">
      <property name="text">
       <string>...</string>
@@ -147,13 +158,20 @@
     </widget>
    </item>
    <item row="11" column="0">
+    <widget class="QLabel" name="lbl_VolumeOut">
+     <property name="text">
+      <string>Out Master</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="0">
     <widget class="QLabel" name="lbl_VolumeOutCom1">
      <property name="text">
       <string>Out COM1</string>
      </property>
     </widget>
    </item>
-  <item row="12" column="0">
+   <item row="13" column="0">
     <widget class="QLabel" name="lbl_VolumeOutCom2">
      <property name="text">
       <string>Out COM2</string>
@@ -303,7 +321,7 @@
     </widget>
    </item>
    <item row="11" column="1">
-    <widget class="QSlider" name="hs_VolumeOutCom1">
+    <widget class="QSlider" name="hs_VolumeOut">
      <property name="value">
       <number>50</number>
      </property>
@@ -313,6 +331,16 @@
     </widget>
    </item>
    <item row="12" column="1">
+    <widget class="QSlider" name="hs_VolumeOutCom1">
+     <property name="value">
+      <number>50</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="13" column="1">
     <widget class="QSlider" name="hs_VolumeOutCom2">
      <property name="value">
       <number>50</number>
@@ -322,14 +350,14 @@
      </property>
     </widget>
    </item>
-  <item row="13" column="0">
+  <item row="14" column="0">
     <widget class="QLabel" name="lbl_OutLevelMeter">
      <property name="text">
       <string>Output</string>
      </property>
     </widget>
    </item>
-   <item row="13" column="1">
+   <item row="14" column="1">
     <widget class="BlackGui::CLevelMeter" name="wip_OutLevelMeter">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">

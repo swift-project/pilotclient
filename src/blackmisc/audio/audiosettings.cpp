@@ -92,6 +92,11 @@ namespace BlackMisc
             else if (m_notificationVolume > 100) { m_notificationVolume = 100; }
         }
 
+        void CSettings::setOutVolume(int volume)
+        {
+            m_outVolume = fixOutVolume(volume);
+        }
+
         void CSettings::setOutVolumeCom1(int volume)
         {
             m_outVolumeCom1 = fixOutVolume(volume);

@@ -95,6 +95,12 @@ namespace BlackMisc
             //! Get volume (notifications)
             int getNotificationVolume() const { return m_notificationVolume; }
 
+            //! Set volume (audio) 0..100
+            void setOutVolume(int volume);
+
+            //! Get volume (audio) 0..100
+            int getOutVolume() const { return m_outVolume; }
+
             //! Set volume for com1 (audio) 0..100
             void setOutVolumeCom1(int volume);
 
@@ -129,8 +135,9 @@ namespace BlackMisc
             QString m_notificationSoundDir;
             int m_notification = static_cast<int>(CNotificationSounds::DefaultNotifications); //!< play notification for notification x, a little trick to use a string here (streamable, hashable, ..)
             int m_notificationVolume = 90;   //!< 0-90
-            int m_outVolumeCom1      = 50;   //!< 0-100, AFV
-            int m_outVolumeCom2      = 50;   //!< 0-100, AFV
+            int m_outVolume          = 40;   //!< 0-100, AFV
+            int m_outVolumeCom1      = 100;   //!< 0-100, AFV
+            int m_outVolumeCom2      = 100;   //!< 0-100, AFV
             int m_inVolume           = 50;   //!< AFV range
             bool m_audioEffects      = true; //!< Audio effects en
             void initNotificationFlags();    //!< init flags
@@ -140,6 +147,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(notificationSoundDir),
                 BLACK_METAMEMBER(notification),
                 BLACK_METAMEMBER(notificationVolume),
+                BLACK_METAMEMBER(outVolume),
                 BLACK_METAMEMBER(outVolumeCom1),
                 BLACK_METAMEMBER(outVolumeCom2),
                 BLACK_METAMEMBER(inVolume),

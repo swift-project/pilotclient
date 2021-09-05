@@ -268,16 +268,14 @@ namespace BlackCore
 
             bool CAfvClient::isMuted() const
             {
-                const int v1 = this->getNormalizedOutputVolume(CComSystem::Com1);
-                const int v2 = this->getNormalizedOutputVolume(CComSystem::Com2);
-                return v1 < 1 && v2 < 1;
+                const int v = this->getNormalizedMasterOutputVolume();
+                return v < 1;
             }
 
             void CAfvClient::setMuted(bool mute)
             {
                 if (this->isMuted() == mute) { return; }
-                this->setNormalizedOutputVolume(CComSystem::Com1, mute ? 0 : 50);
-                this->setNormalizedOutputVolume(CComSystem::Com2, mute ? 0 : 50);
+                this->setNormalizedMasterOutputVolume(mute ? 0 : 50);
                 emit this->changedMute(mute);
             }
 
@@ -768,7 +766,7 @@ namespace BlackCore
                 return changed;
             }
 
-            double CAfvClient::getOutputVolumeDb(CComSystem::ComUnit comUnit) const
+            double CAfvClient::getComOutputVolumeDb(CComSystem::ComUnit comUnit) const
             {
                 QMutexLocker lock(&m_mutexVolume);
                 if (comUnit == CComSystem::Com1)
@@ -798,19 +796,19 @@ namespace BlackCore
                 return i;
             }
 
-            int CAfvClient::getNormalizedOutputVolume(CComSystem::ComUnit comUnit) const
+            int CAfvClient::getNormalizedMasterOutputVolume() const
             {
-                double db = this->getOutputVolumeDb(comUnit);
-                double range = MaxDbOut;
-                int v = 50;
-                if (db < 0)
-                {
-                    v = 0;
-                    db -= MinDbOut;
-                    range = qAbs(MinDbOut);
-                }
-                v += qRound(db * 50 / range);
-                return v;
+                QMutexLocker lock(&m_mutexVolume);
+                return m_outputMasterVolumeNormalized;
+            }
+
+            int CAfvClient::getNormalizedComOutputVolume(CComSystem::ComUnit comUnit) const
+            {
+                QMutexLocker lock(&m_mutexVolume);
+                if (comUnit == CComSystem::Com1) { return m_outputVolumeCom1Normalized; }
+                else if (comUnit == CComSystem::Com2) { return m_outputVolumeCom2Normalized; }
+                qFatal("Invalid ComUnit");
+                return 0;
             }
 
             bool CAfvClient::setNormalizedInputVolume(int volume)
@@ -824,10 +822,48 @@ namespace BlackCore
                 return this->setInputVolumeDb(dB);
             }
 
-            void CAfvClient::setNormalizedOutputVolume(CComSystem::ComUnit comUnit, int volume)
+            bool CAfvClient::setNormalizedMasterOutputVolume(int volume)
+            {
+                if (!CThreadUtils::isInThisThread(this))
+                {
+                    // call in background thread of AFVClient to avoid lock issues
+                    QPointer<CAfvClient> myself(this);
+                    QTimer::singleShot(0, this, [ = ]
+                    {
+                        if (!myself || !CAfvClient::hasContexts()) { return; }
+                        myself->setNormalizedMasterOutputVolume(volume);
+                    });
+                    return true; // not exactly "true" as we do it async
+                }
+
+                bool changed = false;
+                {
+                    QMutexLocker lock(&m_mutexVolume);
+                    changed = m_outputMasterVolumeNormalized != volume;
+                    if (changed) { m_outputMasterVolumeNormalized = volume; }
+                }
+
+                // Trigger update of com volumes
+                int com1Normalized = getNormalizedComOutputVolume(CComSystem::Com1);
+                int com2Normalized = getNormalizedComOutputVolume(CComSystem::Com2);
+                setNormalizedComOutputVolume(CComSystem::Com1, com1Normalized);
+                setNormalizedComOutputVolume(CComSystem::Com2, com2Normalized);
+
+                return changed;
+            }
+
+            bool CAfvClient::setNormalizedComOutputVolume(CComSystem::ComUnit comUnit, int volume)
             {
                 if (volume < 0) { volume = 0; }
                 else if (volume > 100) { volume = 100; }
+
+                // Save original volume
+                if (comUnit == CComSystem::Com1) { m_outputVolumeCom1Normalized = volume; }
+                else if (comUnit == CComSystem::Com2) { m_outputVolumeCom2Normalized = volume; }
+                else { qFatal("Invalid ComUnit"); }
+
+                // Calculate volume relative to master-output volume
+                volume = qRound((double)volume*getNormalizedMasterOutputVolume()/100);
 
                 // Asymetric
                 double range = MaxDbOut;
@@ -844,7 +880,7 @@ namespace BlackCore
                 dB += (volume * range / 50.0);
 
                 // converted to MinDbOut-MaxDbOut
-                this->setOutputVolumeDb(comUnit, dB);
+                return this->setComOutputVolumeDb(comUnit, dB);
             }
 
             double CAfvClient::getInputVolumePeakVU() const
@@ -1099,12 +1135,14 @@ namespace BlackCore
             {
                 const CSettings audioSettings = m_audioSettings.get();
                 const int iv = audioSettings.getInVolume();
+                const int ov = audioSettings.getOutVolume();
                 const int ov1 = audioSettings.getOutVolumeCom1();
                 const int ov2 = audioSettings.getOutVolumeCom2();
 
                 this->setNormalizedInputVolume(iv);
-                this->setNormalizedOutputVolume(CComSystem::Com1, ov1);
-                this->setNormalizedOutputVolume(CComSystem::Com2, ov2);
+                this->setNormalizedMasterOutputVolume(ov);
+                this->setNormalizedComOutputVolume(CComSystem::Com1, ov1);
+                this->setNormalizedComOutputVolume(CComSystem::Com2, ov2);
                 this->setBypassEffects(!audioSettings.isAudioEffectsEnabled());
             }
 
@@ -1160,8 +1198,8 @@ namespace BlackCore
                     const int vol1 = com1.getVolumeReceive();
                     const int vol2 = com2.getVolumeReceive();
 
-                    this->setNormalizedOutputVolume(CComSystem::Com1, vol1);
-                    this->setNormalizedOutputVolume(CComSystem::Com2, vol2);
+                    this->setNormalizedComOutputVolume(CComSystem::Com1, vol1);
+                    this->setNormalizedComOutputVolume(CComSystem::Com2, vol2);
 
                     // enable, we currently treat receive as enable
                     // flight sim cockpits normally use rx and tx
@@ -1415,7 +1453,7 @@ namespace BlackCore
                 return sApp && !sApp->isShuttingDown() && sApp->getIContextOwnAircraft() && sApp->getIContextNetwork() && sApp->getIContextSimulator();
             }
 
-            bool CAfvClient::setOutputVolumeDb(CComSystem::ComUnit comUnit, double valueDb)
+            bool CAfvClient::setComOutputVolumeDb(CComSystem::ComUnit comUnit, double valueDb)
             {
                 if (!CThreadUtils::isInThisThread(this))
                 {
@@ -1424,7 +1462,7 @@ namespace BlackCore
                     QTimer::singleShot(0, this, [ = ]
                     {
                         if (!myself || !CAfvClient::hasContexts()) { return; }
-                        myself->setOutputVolumeDb(comUnit, valueDb);
+                        myself->setComOutputVolumeDb(comUnit, valueDb);
                     });
                     return true; // not exactly "true" as we do it async
                 }
@@ -1464,7 +1502,7 @@ namespace BlackCore
                     return false;
                 }
 
-                if (m_outputSampleProvider)
+                if (m_soundcardSampleProvider)
                 {
                     changed = m_soundcardSampleProvider->setGainRatioForTransceiver(comUnit, gainRatio);
                 }

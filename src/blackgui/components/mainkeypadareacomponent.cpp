@@ -144,8 +144,7 @@ namespace BlackGui
             }
             else if (senderButton == ui->pb_SoundMaxVolume && sGui->getIContextAudio())
             {
-                sGui->getCContextAudioBase()->setVoiceOutputVolume(CComSystem::Com1, 100);
-                sGui->getCContextAudioBase()->setVoiceOutputVolume(CComSystem::Com2, 100);
+                sGui->getCContextAudioBase()->setMasterOutputVolume(100);
             }
             else if (senderButton == ui->pb_SoundMute && sGui->getIContextAudio())
             {

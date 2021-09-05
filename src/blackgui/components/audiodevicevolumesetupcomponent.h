@@ -45,6 +45,7 @@ namespace BlackGui
             //! Get input and output volume values
             //! @{
             int getInValue(int from  = BlackMisc::Audio::CSettings::InMin,  int to = BlackMisc::Audio::CSettings::InMax) const;
+            int getOutValue(int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax) const;
             int getOutValueCom1(int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax) const;
             int getOutValueCom2(int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax) const;
             //! @}
@@ -52,6 +53,7 @@ namespace BlackGui
             //! Set input and output volume values
             //! @{
             void setInValue(int value,  int from = BlackMisc::Audio::CSettings::InMin,  int to = BlackMisc::Audio::CSettings::InMax);
+            void setOutValue(int value,  int from = BlackMisc::Audio::CSettings::InMin,  int to = BlackMisc::Audio::CSettings::InMax);
             void setOutValueCom1(int value, int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax);
             void setOutValueCom2(int value, int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax);
             //! @}
@@ -114,6 +116,7 @@ namespace BlackGui
 
             void onReloadDevices();
             void onResetVolumeIn();
+            void onResetVolumeOut();
             void onResetVolumeOutCom1();
             void onResetVolumeOutCom2();
 
@@ -141,6 +144,9 @@ namespace BlackGui
 
             //! Checkboxes readonly?
             void setCheckBoxesReadOnly(bool readonly);
+
+            //! Volume sliders readlonly?
+            void setVolumeSlidersReadOnly(bool readonly);
 
             //! Direct access to client
             static BlackCore::Afv::Clients::CAfvClient *afvClient();

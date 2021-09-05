@@ -234,11 +234,11 @@ namespace BlackCore
                 Q_INVOKABLE bool setInputVolumeDb(double valueDb);
                 //! @}
 
-                //! Output volume in dB, [MinDbOut, MaxDbOut]dB
+                //! Output volume for each COM in dB, [MinDbOut, MaxDbOut]dB
                 //! \threadsafe
                 //! @{
-                double getOutputVolumeDb(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
-                Q_INVOKABLE bool setOutputVolumeDb(BlackMisc::Aviation::CComSystem::ComUnit comUnit, double valueDb);
+                double getComOutputVolumeDb(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
+                Q_INVOKABLE bool setComOutputVolumeDb(BlackMisc::Aviation::CComSystem::ComUnit comUnit, double valueDb);
                 //! @}
 
                 //! Gain ratio
@@ -249,9 +249,11 @@ namespace BlackCore
                 //! \threadsafe
                 //! @{
                 int getNormalizedInputVolume() const;
-                int getNormalizedOutputVolume(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
+                int getNormalizedComOutputVolume(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
+                int getNormalizedMasterOutputVolume() const;
                 bool setNormalizedInputVolume(int volume);
-                void setNormalizedOutputVolume(BlackMisc::Aviation::CComSystem::ComUnit comUnit, int volume);
+                bool setNormalizedComOutputVolume(BlackMisc::Aviation::CComSystem::ComUnit comUnit, int volume);
+                bool setNormalizedMasterOutputVolume(int volume);
                 //! @}
 
                 //! VU values, 0..1
@@ -412,6 +414,9 @@ namespace BlackCore
                 QDateTime m_startDateTimeUtc;
 
                 double m_inputVolumeDb   = 0.0;
+                int m_outputMasterVolumeNormalized = 0;
+                int m_outputVolumeCom1Normalized = 0;
+                int m_outputVolumeCom2Normalized = 0;
                 double m_outputVolumeDbCom1  = 0.0;
                 double m_outputGainRatioCom1 = 1.0; //!< 0dB
                 double m_outputVolumeDbCom2  = 0.0;
