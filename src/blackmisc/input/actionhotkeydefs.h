@@ -38,6 +38,18 @@ namespace BlackMisc
         //! Audio volume - key
         BLACKMISC_EXPORT const QString &audioVolumeDecreaseHotkeyAction();
 
+        //! Audio volume + key
+        BLACKMISC_EXPORT const QString &audioVolumeIncreaseCom1HotkeyAction();
+
+        //! Audio volume - key
+        BLACKMISC_EXPORT const QString &audioVolumeDecreaseCom1HotkeyAction();
+
+        //! Audio volume + key
+        BLACKMISC_EXPORT const QString &audioVolumeIncreaseCom2HotkeyAction();
+
+        //! Audio volume - key
+        BLACKMISC_EXPORT const QString &audioVolumeDecreaseCom2HotkeyAction();
+
         //! Audio icon volume +
         BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex audioVolumeIncreaseHotkeyIcon();
 

@@ -639,6 +639,38 @@ namespace BlackCore
             this->setMasterOutputVolume(v);
         }
 
+        void CContextAudioBase::audioIncreaseVolumeCom1(bool enabled)
+        {
+            if (!enabled) { return; }
+            if (isComUnitIntegrated()) { return; }
+            const int v = qRound(this->getComOutputVolume(CComSystem::Com1) * 1.05);
+            this->setComOutputVolume(CComSystem::Com1, v);
+        }
+
+        void CContextAudioBase::audioDecreaseVolumeCom1(bool enabled)
+        {
+            if (!enabled) { return; }
+            if (isComUnitIntegrated()) { return; }
+            const int v = qRound(this->getComOutputVolume(CComSystem::Com1) / 1.05);
+            this->setComOutputVolume(CComSystem::Com1, v);
+        }
+
+        void CContextAudioBase::audioIncreaseVolumeCom2(bool enabled)
+        {
+            if (!enabled) { return; }
+            if (isComUnitIntegrated()) { return; }
+            const int v = qRound(this->getComOutputVolume(CComSystem::Com2) * 1.05);
+            this->setComOutputVolume(CComSystem::Com2, v);
+        }
+
+        void CContextAudioBase::audioDecreaseVolumeCom2(bool enabled)
+        {
+            if (!enabled) { return; }
+            if (isComUnitIntegrated()) { return; }
+            const int v = qRound(this->getComOutputVolume(CComSystem::Com2) / 1.05);
+            this->setComOutputVolume(CComSystem::Com2, v);
+        }
+
         void CContextAudioBase::xCtxNetworkConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
         {
             if (!m_voiceClient) { return; }

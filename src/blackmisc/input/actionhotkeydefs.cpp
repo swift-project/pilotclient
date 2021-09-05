@@ -57,6 +57,31 @@ namespace BlackMisc
             return s;
         }
 
+        const QString &audioVolumeDecreaseCom1HotkeyAction()
+        {
+            static const QString s("/Audio/Volume (COM1) decrease");
+            return s;
+        }
+
+        const QString &audioVolumeIncreaseCom1HotkeyAction()
+        {
+            static const QString s("/Audio/Volume (COM1) increase");
+            return s;
+        }
+
+        const QString &audioVolumeDecreaseCom2HotkeyAction()
+        {
+            static const QString s("/Audio/Volume (COM2) decrease");
+            return s;
+        }
+
+        const QString &audioVolumeIncreaseCom2HotkeyAction()
+        {
+            static const QString s("/Audio/Volume (COM2) increase");
+            return s;
+        }
+
+
         CIcons::IconIndex toggleXPDRStateHotkeyIcon()
         {
             return CIcons::StandardIconRadio16;

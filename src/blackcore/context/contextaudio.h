@@ -339,6 +339,10 @@ namespace BlackCore
             //! @{
             void audioIncreaseVolume(bool enabled);
             void audioDecreaseVolume(bool enabled);
+            void audioIncreaseVolumeCom1(bool enabled);
+            void audioDecreaseVolumeCom1(bool enabled);
+            void audioIncreaseVolumeCom2(bool enabled);
+            void audioDecreaseVolumeCom2(bool enabled);
             //! @}
 
             //! Network connection status
@@ -355,6 +359,10 @@ namespace BlackCore
             CActionBind m_actionPttCom2 { BlackMisc::Input::pttCom2HotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudioBase::setVoiceTransmissionCom2 };
             CActionBind m_actionAudioVolumeIncrease { BlackMisc::Input::audioVolumeIncreaseHotkeyAction(), BlackMisc::Input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudioBase::audioIncreaseVolume };
             CActionBind m_actionAudioVolumeDecrease { BlackMisc::Input::audioVolumeDecreaseHotkeyAction(), BlackMisc::Input::audioVolumeDecreaseHotkeyIcon(), this, &CContextAudioBase::audioDecreaseVolume };
+            CActionBind m_actionAudioVolumeIncreaseCom1 { BlackMisc::Input::audioVolumeIncreaseCom1HotkeyAction(), BlackMisc::Input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudioBase::audioIncreaseVolumeCom1 };
+            CActionBind m_actionAudioVolumeDecreaseCom1 { BlackMisc::Input::audioVolumeDecreaseCom1HotkeyAction(), BlackMisc::Input::audioVolumeDecreaseHotkeyIcon(), this, &CContextAudioBase::audioDecreaseVolumeCom1 };
+            CActionBind m_actionAudioVolumeIncreaseCom2 { BlackMisc::Input::audioVolumeIncreaseCom2HotkeyAction(), BlackMisc::Input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudioBase::audioIncreaseVolumeCom2 };
+            CActionBind m_actionAudioVolumeDecreaseCom2 { BlackMisc::Input::audioVolumeDecreaseCom2HotkeyAction(), BlackMisc::Input::audioVolumeDecreaseHotkeyIcon(), this, &CContextAudioBase::audioDecreaseVolumeCom2 };
 
             int m_outMasterVolumeBeforeMute = 50;
             static constexpr int MinUnmuteVolume = 20; //!< minimum volume when unmuted
