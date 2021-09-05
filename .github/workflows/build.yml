@@ -175,9 +175,10 @@ jobs:
       - name: Download InstallBuilder
         run: |
           $tries = 0
-          while ($tries -lt 5 -and -not (Test-Path "$HOME\installbuilder.exe")) {
+          while ($tries -lt 20 -and -not (Test-Path "$HOME\installbuilder.exe")) {
             $tries++
             curl.exe --output "$HOME\installbuilder.exe" -L --url ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-windows-x64-installer.exe
+            sleep -s 5
           }
           start -wait "$HOME\installbuilder.exe" @("--mode", "unattended", "--prefix", "$HOME\installbuilder")
           echo >$HOME\license.xml @"
@@ -261,9 +262,10 @@ jobs:
       - name: Download InstallBuilder
         run: |
           $tries = 0
-          while ($tries -lt 5 -and -not (Test-Path "$HOME\installbuilder.exe")) {
+          while ($tries -lt 20 -and -not (Test-Path "$HOME\installbuilder.exe")) {
             $tries++
             curl.exe --output "$HOME\installbuilder.exe" -L --url ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-windows-installer.exe
+            sleep -s 5
           }
           start -wait "$HOME\installbuilder.exe" @("--mode", "unattended", "--prefix", "$HOME\installbuilder")
           echo >$HOME\license.xml @"
