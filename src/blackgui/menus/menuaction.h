@@ -159,6 +159,12 @@ namespace BlackGui
             //! Client COM related
             static const QString &pathClientCom() { static const QString p("Client.ATC/COM"); return p; }
 
+            //! Client flight plan
+            static const QString &pathClientFlightPlan() { static const QString p("Client.FlightPlan"); return p; }
+
+            //! Client follow in simulator
+            static const QString &pathClientFollowInSim() { static const QString p("Client.FollowInSim"); return p; }
+
             //! Client simulation related
             static const QString &pathClientSimulation() { static const QString p("ClientSimulation"); return p; }
 

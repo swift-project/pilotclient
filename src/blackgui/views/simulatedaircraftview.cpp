@@ -105,7 +105,7 @@ namespace BlackGui
 
                     if (m_withMenuFlightPlan && networkContext() && networkContext()->isConnected())
                     {
-                        menuActions.addAction(CIcons::appFlightPlan16(), "Flight plan",  CMenuAction::pathClientNetwork(), { this, &CSimulatedAircraftView::showFlightPlanDialog });
+                        menuActions.addAction(CIcons::appFlightPlan16(), "Flight plan",  CMenuAction::pathClientFlightPlan(), { this, &CSimulatedAircraftView::showFlightPlanDialog });
                     }
                     if (m_withMenuEnableAircraft)
                     {
@@ -113,7 +113,7 @@ namespace BlackGui
                     }
                     if (m_withMenuHighlightAndFollow)
                     {
-                        menuActions.addAction(CIcons::appAircraft16(),  "Follow in simulator", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::requestFollowInSimulator });
+                        menuActions.addAction(CIcons::appAircraft16(),  "Follow in simulator", CMenuAction::pathClientFollowInSim(), { this, &CSimulatedAircraftView::requestFollowInSimulator });
                         if (!menuActions.isEmpty()) { menuActions.addSeparator(CMenuAction::pathClientSimulationDisplay()); }
                         if (aircraft.isPartsSynchronized())
                         {
