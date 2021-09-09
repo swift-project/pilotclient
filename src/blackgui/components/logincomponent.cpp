@@ -695,9 +695,10 @@ namespace BlackGui
             if (!sGui->getIContextNetwork()->isConnected()) { return; } // nothing to logoff
 
             const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo, u"Auto logoff in progress (could be simulator shutdown, crash, closing simulator)");
-            const int delaySecs = 30;
+            const int delaySecs = 20;
             this->showOverlayHTMLMessage(m, qRound(1000 * delaySecs * 0.8));
             this->setLogoffCountdown(delaySecs);
+            this->startLogoffTimerCountdown();
 
             emit this->requestLoginPage();
         }
@@ -712,9 +713,13 @@ namespace BlackGui
             const auto msg = fatal
                 ? CStatusMessage(this, CStatusMessage::SeverityError, u"Sim frame rate too low to maintain constant simulation rate. Disconnecting to avoid disrupting the network.")
                 : CStatusMessage(this, CStatusMessage::SeverityWarning, u"Sim frame rate too low to maintain constant simulation rate. Reduce graphics quality to avoid disconnection.");
-            const int delaySecs = 30;
+            const int delaySecs = 20;
             this->showOverlayHTMLMessage(msg, qRound(1000 * delaySecs * 0.8));
-            if (fatal) { this->setLogoffCountdown(delaySecs); }
+            if (fatal)
+            {
+                this->setLogoffCountdown(delaySecs);
+                this->startLogoffTimerCountdown();
+            }
 
             emit this->requestLoginPage();
         }
