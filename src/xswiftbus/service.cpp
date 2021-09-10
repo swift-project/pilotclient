@@ -29,6 +29,7 @@ namespace XSwiftBus
     {
         DataRef<xplane::data::sim::operation::misc::frame_rate_period> m_thisFramePeriod;
         DataRef<xplane::data::sim::time::framerate_period> m_thisFramePeriodXP11;
+        DataRef<xplane::data::sim::time::total_flight_time_sec> m_secondsSinceReset;
         DataRef<xplane::data::sim::flightmodel::position::groundspeed> m_groundSpeed;
 
         std::vector<float> m_samples;
@@ -78,11 +79,14 @@ namespace XSwiftBus
             if (current > c_framePeriodBudget)
             {
                 m_totalOverBudget += current - c_framePeriodBudget;
-            }
 
-            const float metersShort = m_groundSpeed.get() * std::max(0.0f, current - c_framePeriodBudget);
-            m_totalMetersShort += metersShort;
-            if (m_groundSpeed.get() > 1.0f) { m_totalSecondsLate += std::max(0.0f, current - c_framePeriodBudget); }
+                if (m_secondsSinceReset.get() > 10)
+                {
+                    const float metersShort = m_groundSpeed.get() * std::max(0.0f, current - c_framePeriodBudget);
+                    m_totalMetersShort += metersShort;
+                    if (m_groundSpeed.get() > 1.0f) { m_totalSecondsLate += std::max(0.0f, current - c_framePeriodBudget); }
+                }
+            }
         }
     };
 
