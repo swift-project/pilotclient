@@ -29,6 +29,8 @@ namespace BlackGui
         {
             ui->setupUi(this);
             ui->le_Icao->setValidator(new CUpperCaseValidator(ui->le_Icao));
+            this->setFocusProxy(ui->le_Icao);
+
 
             connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this, &CAirportSmallCompleter::onAirportsChanged);
             connect(ui->le_Icao, &QLineEdit::editingFinished, this, &CAirportSmallCompleter::onIcaoChanged);

@@ -149,6 +149,7 @@
   <tabstop>le_Password</tabstop>
   <tabstop>pb_UnhidePassword</tabstop>
   <tabstop>le_RealName</tabstop>
+  <tabstop>comp_HomeAirport</tabstop>
  </tabstops>
  <resources>
   <include location="../../blackmisc/blackmisc.qrc"/>
