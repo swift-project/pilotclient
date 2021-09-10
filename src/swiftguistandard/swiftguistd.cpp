@@ -258,7 +258,13 @@ void SwiftGuiStd::loginRequested()
     }
     else
     {
+        const bool changed = MainPageLogin != ui->sw_MainMiddle->currentIndex();
         this->setMainPage(MainPageLogin);
+        if (!changed)
+        {
+            // fake changed signal to trigger blinking disconnect button (issue #115)
+            emit this->currentMainInfoAreaChanged(ui->sw_MainMiddle->currentWidget());
+        }
     }
 }
 

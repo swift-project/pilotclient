@@ -237,6 +237,12 @@ QPushButton::disabled {
 
 QPushButton:pressed{ background-color: lightblue; }
 
+// Button blinks on to catch the user's attention
+QPushButton[blinkOn="true"] {
+  background-color: yellow;
+  color: black;
+}
+
 /**
 KEYPAD area buttons are in swift GUI stylesheet
 

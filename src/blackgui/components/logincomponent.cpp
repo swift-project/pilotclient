@@ -204,6 +204,7 @@ namespace BlackGui
                 this->setOwnModelAndIcaoValues();
                 const bool isConnected = sGui->getIContextNetwork()->isConnected();
                 this->setUiLoginState(isConnected);
+                if (isConnected) { this->blinkDisconnectButton(); }
             }
 
             // we decided to make it difficult for users to disable it
@@ -815,6 +816,32 @@ namespace BlackGui
 
             const QString s = connected ? QStringLiteral("disconnect") : QStringLiteral("connect");
             ui->pb_Ok->setText(s);
+        }
+
+        void CLoginComponent::blinkDisconnectButton()
+        {
+            ui->pb_Ok->setProperty("blinkOn", true);
+            static constexpr int blinkLength = 100;
+            static constexpr int blinkTimes = 10;
+
+            auto timer = new QTimer(this);
+            connect(timer, &QTimer::timeout, this, [this, timer, count = std::make_shared<int>(0)]
+            {
+                if (++*count <= blinkTimes)
+                {
+                    ui->pb_Ok->setProperty("blinkOn", !ui->pb_Ok->property("blinkOn").toBool());
+                }
+                else
+                {
+                    ui->pb_Ok->setProperty("blinkOn", false);
+                    timer->stop();
+                    timer->deleteLater();
+                }
+                ui->pb_Ok->style()->unpolish(ui->pb_Ok);
+                ui->pb_Ok->style()->polish(ui->pb_Ok);
+            });
+            timer->setObjectName("blinker");
+            timer->start(blinkLength);
         }
 
         void CLoginComponent::highlightModelField(const CAircraftModel &model)
