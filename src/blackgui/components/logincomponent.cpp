@@ -195,10 +195,9 @@ namespace BlackGui
         void CLoginComponent::mainInfoAreaChanged(const QWidget *currentWidget)
         {
             if (!sGui || sGui->isShuttingDown()) { return; }
-            m_logoffCountdownTimer.stop(); // in any case stop the timer
             if (currentWidget != this && currentWidget != this->parentWidget())
             {
-                m_logoffCountdownTimer.stop();
+                //m_logoffCountdownTimer.stop();
             }
             else
             {
