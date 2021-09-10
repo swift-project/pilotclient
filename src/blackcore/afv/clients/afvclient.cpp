@@ -338,7 +338,6 @@ namespace BlackCore
 
                         m_output->start(useOutputDevice, m_outputSampleProvider);
                         m_input->start(useInputDevice);
-                        m_startDateTimeUtc = QDateTime::currentDateTimeUtc();
 
                         // runs in correct thread
                         m_voiceServerTimer->start(PositionUpdatesMs); // start for preset values

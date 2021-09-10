@@ -113,9 +113,6 @@ namespace BlackCore
                 //! Client started?
                 bool isStarted() const { return m_isStarted; }
 
-                //! When started
-                const QDateTime &getStartDateTimeUtc() const { return m_startDateTimeUtc; }
-
                 //! Muted
                 //! \threadsafe
                 //! @{
@@ -410,8 +407,6 @@ namespace BlackCore
                 std::atomic_bool m_enableAliased      { true  };
                 std::atomic_bool m_winCoInitialized   { false }; //!< Windows only CoInitializeEx
                 std::atomic_bool m_integratedComUnit  { false }; //!< is COM unit sychronized, integrated?
-
-                QDateTime m_startDateTimeUtc;
 
                 double m_inputVolumeDb   = 0.0;
                 int m_outputMasterVolumeNormalized = 0;

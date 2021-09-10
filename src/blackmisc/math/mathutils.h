@@ -30,9 +30,6 @@ namespace BlackMisc
             //! No objects, just static
             CMathUtils() = delete;
 
-            //! Calculates the hypotenuse of x and y without overflow
-            static double hypot(double x, double y);
-
             //! Calculates the square of x
             static inline double square(double x)
             {

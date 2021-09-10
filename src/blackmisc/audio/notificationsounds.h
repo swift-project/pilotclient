@@ -25,14 +25,6 @@ namespace BlackMisc
          */
         struct BLACKMISC_EXPORT CNotificationSounds
         {
-            //! How to play?
-            enum PlayMode
-            {
-                Single,
-                SingleWithAutomaticDeletion,
-                EndlessLoop
-            };
-
             //! Play notification
             enum NotificationFlag
             {
@@ -84,7 +76,6 @@ namespace BlackMisc
     } // ns
 } // ns
 
-Q_DECLARE_METATYPE(BlackMisc::Audio::CNotificationSounds::PlayMode)
 Q_DECLARE_METATYPE(BlackMisc::Audio::CNotificationSounds::Notification)
 Q_DECLARE_METATYPE(BlackMisc::Audio::CNotificationSounds::NotificationFlag)
 

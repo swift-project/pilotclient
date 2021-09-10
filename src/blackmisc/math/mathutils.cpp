@@ -20,16 +20,6 @@ namespace BlackMisc
 {
     namespace Math
     {
-        double CMathUtils::hypot(double x, double y)
-        {
-            x = qAbs(x);
-            y = qAbs(y);
-            const double max = std::max(x, y);
-            const double min = std::min(x, y);
-            double r = min / max;
-            return max * sqrt(1 + r * r);
-        }
-
         double CMathUtils::cubicRootReal(double x)
         {
             const double result = std::pow(qAbs(x), 1.0 / 3.0);
