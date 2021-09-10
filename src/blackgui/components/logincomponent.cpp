@@ -225,6 +225,7 @@ namespace BlackGui
         void CLoginComponent::loginCancelled()
         {
             m_logoffCountdownTimer.stop();
+            ui->fr_TimeoutConnected->hide();
             this->setLogoffCountdown(); // reset time
             this->closeOverlay();
             emit this->loginOrLogoffCancelled();
@@ -523,6 +524,7 @@ namespace BlackGui
             ui->pb_LogoffTimeout->setValue(m_logoffIntervalSeconds);
             m_logoffCountdownTimer.setInterval(1000);
             m_logoffCountdownTimer.start();
+            ui->fr_TimeoutConnected->show();
         }
 
         void CLoginComponent::setOwnModelAndIcaoValues(const CAircraftModel &ownModel)
