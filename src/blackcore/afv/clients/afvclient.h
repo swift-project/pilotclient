@@ -168,7 +168,7 @@ namespace BlackCore
                 //! \threadsafe
                 //! @{
                 bool isTransmittingTransceiver(quint16 id) const;
-                bool isTransmittingdComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
+                bool isTransmittingComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
                 //! @}
 
                 //! Simplified enable/disable

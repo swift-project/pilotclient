@@ -610,7 +610,7 @@ namespace BlackCore
                 return false;
             }
 
-            bool CAfvClient::isTransmittingdComUnit(CComSystem::ComUnit comUnit) const
+            bool CAfvClient::isTransmittingComUnit(CComSystem::ComUnit comUnit) const
             {
                 return this->isTransmittingTransceiver(comUnitToTransceiverId(comUnit));
             }

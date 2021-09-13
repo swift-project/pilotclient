@@ -287,7 +287,7 @@ namespace BlackCore
         bool CContextAudioBase::isTransmittingComUnit(CComSystem::ComUnit comUnit) const
         {
             if (!m_voiceClient) { return false; }
-            return m_voiceClient->isTransmittingdComUnit(comUnit);
+            return m_voiceClient->isTransmittingComUnit(comUnit);
         }
 
         bool CContextAudioBase::connectAudioWithNetworkCredentials()
