@@ -63,8 +63,6 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CInfoBarStatusComponent> ui;
             BlackCore::CActionBind m_actionPtt  { BlackMisc::Input::pttHotkeyAction(),     BlackMisc::Input::pttHotkeyIcon(), this, &CInfoBarStatusComponent::onPttChanged };
-            BlackCore::CActionBind m_actionPtt1 { BlackMisc::Input::pttCom1HotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CInfoBarStatusComponent::onPttChanged };
-            BlackCore::CActionBind m_actionPtt2 { BlackMisc::Input::pttCom2HotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CInfoBarStatusComponent::onPttChanged };
 
             BlackMisc::CDigestSignal m_dsResize { this, &CInfoBarStatusComponent::adjustTextSize, 1000, 50 };
 

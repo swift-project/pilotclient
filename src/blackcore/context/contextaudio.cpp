@@ -584,16 +584,6 @@ namespace BlackCore
             m_voiceClient->setPttForCom(enable, com);
         }
 
-        void CContextAudioBase::setVoiceTransmissionCom1(bool enabled)
-        {
-            this->setVoiceTransmission(enabled, COM1);
-        }
-
-        void CContextAudioBase::setVoiceTransmissionCom2(bool enabled)
-        {
-            this->setVoiceTransmission(enabled, COM2);
-        }
-
         void CContextAudioBase::setVoiceTransmissionComActive(bool enabled)
         {
             this->setVoiceTransmission(enabled, COMActive);

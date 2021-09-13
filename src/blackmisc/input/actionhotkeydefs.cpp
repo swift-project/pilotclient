@@ -23,18 +23,6 @@ namespace BlackMisc
             return CIcons::StandardIconRadio16;
         }
 
-        const QString &pttCom1HotkeyAction()
-        {
-            static const QString s("/Voice/Activate push-to-talk COM1");
-            return s;
-        }
-
-        const QString &pttCom2HotkeyAction()
-        {
-            static const QString s("/Voice/Activate push-to-talk COM2");
-            return s;
-        }
-
         CIcons::IconIndex audioVolumeDecreaseHotkeyIcon()
         {
             return CIcons::StandardIconVolumeLow16;

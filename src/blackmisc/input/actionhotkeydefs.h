@@ -23,12 +23,6 @@ namespace BlackMisc
         //! PTT key
         BLACKMISC_EXPORT const QString &pttHotkeyAction();
 
-        //! PTT key COM1 only
-        BLACKMISC_EXPORT const QString &pttCom1HotkeyAction();
-
-        //! PTT key COM2 only
-        BLACKMISC_EXPORT const QString &pttCom2HotkeyAction();
-
         //! PTT key
         BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex pttHotkeyIcon();
 

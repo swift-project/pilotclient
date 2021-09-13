@@ -321,8 +321,6 @@ namespace BlackCore
             //! Enable/disable voice transmission, nornally used with hotkey
             //! @{
             void setVoiceTransmission(bool enable, BlackMisc::Audio::PTTCOM com);
-            void setVoiceTransmissionCom1(bool enabled);
-            void setVoiceTransmissionCom2(bool enabled);
             void setVoiceTransmissionComActive(bool enabled);
             //! @}
 
@@ -355,8 +353,6 @@ namespace BlackCore
             void onAfvConnectionFailure(const BlackMisc::CStatusMessage &msg);
 
             CActionBind m_actionPtt     { BlackMisc::Input::pttHotkeyAction(),     BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudioBase::setVoiceTransmissionComActive };
-            CActionBind m_actionPttCom1 { BlackMisc::Input::pttCom1HotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudioBase::setVoiceTransmissionCom1 };
-            CActionBind m_actionPttCom2 { BlackMisc::Input::pttCom2HotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudioBase::setVoiceTransmissionCom2 };
             CActionBind m_actionAudioVolumeIncrease { BlackMisc::Input::audioVolumeIncreaseHotkeyAction(), BlackMisc::Input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudioBase::audioIncreaseVolume };
             CActionBind m_actionAudioVolumeDecrease { BlackMisc::Input::audioVolumeDecreaseHotkeyAction(), BlackMisc::Input::audioVolumeDecreaseHotkeyIcon(), this, &CContextAudioBase::audioDecreaseVolume };
             CActionBind m_actionAudioVolumeIncreaseCom1 { BlackMisc::Input::audioVolumeIncreaseCom1HotkeyAction(), BlackMisc::Input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudioBase::audioIncreaseVolumeCom1 };
