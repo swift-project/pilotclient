@@ -15,32 +15,29 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CDbModelMappingModifyDialog::CDbModelMappingModifyDialog(QWidget *parent) :
+        QDialog(parent),
+        CDbMappingComponentAware(parent),
+        ui(new Ui::CDbModelMappingModifyDialog)
     {
-        CDbModelMappingModifyDialog::CDbModelMappingModifyDialog(QWidget *parent) :
-            QDialog(parent),
-            CDbMappingComponentAware(parent),
-            ui(new Ui::CDbModelMappingModifyDialog)
-        {
-            ui->setupUi(this);
-            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-        }
+        ui->setupUi(this);
+        this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    }
 
-        CDbModelMappingModifyDialog::~CDbModelMappingModifyDialog()
-        {
-            // void
-        }
+    CDbModelMappingModifyDialog::~CDbModelMappingModifyDialog()
+    {
+        // void
+    }
 
-        CPropertyIndexVariantMap CDbModelMappingModifyDialog::getValues() const
-        {
-            return (ui->editor_ModelMappingModify->getValues());
-        }
+    CPropertyIndexVariantMap CDbModelMappingModifyDialog::getValues() const
+    {
+        return (ui->editor_ModelMappingModify->getValues());
+    }
 
-        void CDbModelMappingModifyDialog::setValue(const CAircraftModel &model)
-        {
-            ui->editor_ModelMappingModify->setValue(model);
-        }
-    } // ns
+    void CDbModelMappingModifyDialog::setValue(const CAircraftModel &model)
+    {
+        ui->editor_ModelMappingModify->setValue(model);
+    }
 } // ns

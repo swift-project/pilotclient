@@ -13,36 +13,33 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Settings;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CSettingsAdvancedComponent::CSettingsAdvancedComponent(QWidget *parent) :
+        QFrame(parent),
+        ui(new Ui::CSettingsAdvancedComponent)
     {
-        CSettingsAdvancedComponent::CSettingsAdvancedComponent(QWidget *parent) :
-            QFrame(parent),
-            ui(new Ui::CSettingsAdvancedComponent)
-        {
-            ui->setupUi(this);
+        ui->setupUi(this);
 
-            const CCrashSettings settings = m_crashDumpSettings.getThreadLocal();
-            ui->cb_crashDumpsUpload->setChecked(settings.isEnabled());
-            connect(ui->cb_crashDumpsUpload, &QCheckBox::stateChanged, this, &CSettingsAdvancedComponent::crashDumpUploadEnabledChanged);
+        const CCrashSettings settings = m_crashDumpSettings.getThreadLocal();
+        ui->cb_crashDumpsUpload->setChecked(settings.isEnabled());
+        connect(ui->cb_crashDumpsUpload, &QCheckBox::stateChanged, this, &CSettingsAdvancedComponent::crashDumpUploadEnabledChanged);
+    }
+
+    CSettingsAdvancedComponent::~CSettingsAdvancedComponent()
+    { }
+
+    void CSettingsAdvancedComponent::crashDumpUploadEnabledChanged(int state)
+    {
+        auto text = ui->cb_crashDumpsUpload->text();
+        if (!text.endsWith("(restart needed)"))
+        {
+            ui->cb_crashDumpsUpload->setText(ui->cb_crashDumpsUpload->text() + " (restart needed)");
         }
 
-        CSettingsAdvancedComponent::~CSettingsAdvancedComponent()
-        { }
+        CCrashSettings settings = m_crashDumpSettings.getThreadLocal();
+        settings.setEnabled(state == Qt::Checked);
+        m_crashDumpSettings.set(settings);
+    }
 
-        void CSettingsAdvancedComponent::crashDumpUploadEnabledChanged(int state)
-        {
-            auto text = ui->cb_crashDumpsUpload->text();
-            if (!text.endsWith("(restart needed)"))
-            {
-                ui->cb_crashDumpsUpload->setText(ui->cb_crashDumpsUpload->text() + " (restart needed)");
-            }
-
-            CCrashSettings settings = m_crashDumpSettings.getThreadLocal();
-            settings.setEnabled(state == Qt::Checked);
-            m_crashDumpSettings.set(settings);
-        }
-
-    } // ns
 } // ns

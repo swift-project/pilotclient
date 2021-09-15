@@ -18,19 +18,16 @@
 
 class QWidget;
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Distributors
+    class BLACKGUI_EXPORT CInterpolationSetupView : public CViewWithCallsignObjects<Models::CInterpolationSetupListModel>
     {
-        //! Distributors
-        class BLACKGUI_EXPORT CInterpolationSetupView : public CViewWithCallsignObjects<Models::CInterpolationSetupListModel>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CInterpolationSetupView(QWidget *parent = nullptr);
-        };
-    } // ns
+    public:
+        //! Constructor
+        explicit CInterpolationSetupView(QWidget *parent = nullptr);
+    };
 } // ns
 #endif // guard

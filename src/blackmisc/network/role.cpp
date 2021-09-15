@@ -11,57 +11,54 @@
 #include <QtGlobal>
 #include <QStringBuilder>
 
-namespace BlackMisc
+namespace BlackMisc::Network
 {
-    namespace Network
+    CRole::CRole(const QString &name, const QString &description)
+        : m_name(name), m_description(description)
+    {  }
+
+    QString CRole::convertToQString(bool i18n) const
     {
-        CRole::CRole(const QString &name, const QString &description)
-            : m_name(name), m_description(description)
-        {  }
+        Q_UNUSED(i18n);
+        return u"Role: " % m_name %
+                u" description: " % m_description %
+                this->getDbKeyAsStringInParentheses(" ");
+    }
 
-        QString CRole::convertToQString(bool i18n) const
+    QVariant CRole::propertyByIndex(CPropertyIndexRef index) const
+    {
+        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
         {
-            Q_UNUSED(i18n);
-            return u"Role: " % m_name %
-                   u" description: " % m_description %
-                   this->getDbKeyAsStringInParentheses(" ");
+        case IndexName: return QVariant::fromValue(m_name);
+        case IndexDescription: return QVariant::fromValue(m_description);
+        default: break;
         }
+        return CValueObject::propertyByIndex(index);
+    }
 
-        QVariant CRole::propertyByIndex(CPropertyIndexRef index) const
+    void CRole::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
+    {
+        if (index.isMyself()) { (*this) = variant.value<CRole>(); return; }
+        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
         {
-            if (index.isMyself()) { return QVariant::fromValue(*this); }
-            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
-            switch (i)
-            {
-            case IndexName: return QVariant::fromValue(m_name);
-            case IndexDescription: return QVariant::fromValue(m_description);
-            default: break;
-            }
-            return CValueObject::propertyByIndex(index);
+        case IndexName: this->setName(variant.value<QString>()); break;
+        case IndexDescription: this->setDescription(variant.value<QString>()); break;
+        default: break;
         }
+        CValueObject::setPropertyByIndex(index, variant);
+    }
 
-        void CRole::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
-        {
-            if (index.isMyself()) { (*this) = variant.value<CRole>(); return; }
-            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
-            switch (i)
-            {
-            case IndexName: this->setName(variant.value<QString>()); break;
-            case IndexDescription: this->setDescription(variant.value<QString>()); break;
-            default: break;
-            }
-            CValueObject::setPropertyByIndex(index, variant);
-        }
-
-        CRole CRole::fromDatabaseJson(const QJsonObject &json)
-        {
-            CRole role;
-            role.setName(json.value("name").toString());
-            role.setDescription(json.value("description").toString());
-            role.setDbKey(json.value("idrole").toInt(-1));
-            return role;
-        }
-    } // ns
+    CRole CRole::fromDatabaseJson(const QJsonObject &json)
+    {
+        CRole role;
+        role.setName(json.value("name").toString());
+        role.setDescription(json.value("description").toString());
+        role.setDbKey(json.value("idrole").toInt(-1));
+        return role;
+    }
 } // ns

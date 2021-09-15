@@ -10,52 +10,49 @@
 
 #include "blackmisc/logmessage.h"
 
-namespace BlackCore
+namespace BlackCore::Fsd
 {
-    namespace Fsd
-    {
-        TextMessage::TextMessage() : MessageBase()
-        { }
+    TextMessage::TextMessage() : MessageBase()
+    { }
 
-        TextMessage::TextMessage(const QString &sender, const QString &receiver, const QString &message)
-            : MessageBase(sender, receiver),
-              m_message(message)
+    TextMessage::TextMessage(const QString &sender, const QString &receiver, const QString &message)
+        : MessageBase(sender, receiver),
+            m_message(message)
+    {
+        if (receiver.startsWith('@'))
         {
-            if (receiver.startsWith('@'))
+            m_type = RadioMessage;
+            const QStringList frequencyStrings = receiver.split('&');
+            if (! frequencyStrings.isEmpty())
             {
-                m_type = RadioMessage;
-                const QStringList frequencyStrings = receiver.split('&');
-                if (! frequencyStrings.isEmpty())
+                for (QString frequencyString : frequencyStrings)
                 {
-                    for (QString frequencyString : frequencyStrings)
-                    {
-                        frequencyString.remove(0, 1);
-                        int frequency = frequencyString.toInt() + 100000;
-                        m_frequencies.push_back(frequency);
-                    }
+                    frequencyString.remove(0, 1);
+                    int frequency = frequencyString.toInt() + 100000;
+                    m_frequencies.push_back(frequency);
                 }
             }
         }
+    }
 
-        QStringList TextMessage::toTokens() const
+    QStringList TextMessage::toTokens() const
+    {
+        QStringList tokens;
+        tokens.push_back(m_sender);
+        tokens.push_back(m_receiver);
+        tokens.push_back(m_message);
+        return tokens;
+    }
+
+    TextMessage TextMessage::fromTokens(const QStringList &tokens)
+    {
+        if (tokens.size() < 3)
         {
-            QStringList tokens;
-            tokens.push_back(m_sender);
-            tokens.push_back(m_receiver);
-            tokens.push_back(m_message);
-            return tokens;
-        }
+            BlackMisc::CLogMessage(static_cast<TextMessage*>(nullptr)).warning(u"Wrong number of arguments.");
+            return {};
+        };
 
-        TextMessage TextMessage::fromTokens(const QStringList &tokens)
-        {
-            if (tokens.size() < 3)
-            {
-                BlackMisc::CLogMessage(static_cast<TextMessage*>(nullptr)).warning(u"Wrong number of arguments.");
-                return {};
-            };
-
-            QStringList messageTokens = tokens.mid(2);
-            return TextMessage(tokens[0], tokens[1], messageTokens.join(":"));
-        }
+        QStringList messageTokens = tokens.mid(2);
+        return TextMessage(tokens[0], tokens[1], messageTokens.join(":"));
     }
 }

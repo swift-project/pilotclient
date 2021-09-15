@@ -15,14 +15,11 @@
 #include <QString>
 #include <QtGlobal>
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
-    {
-        CFlightPlanList::CFlightPlanList() { }
+    CFlightPlanList::CFlightPlanList() { }
 
-        CFlightPlanList::CFlightPlanList(const CSequence<CFlightPlan> &other) :
-            CSequence<CFlightPlan>(other)
-        { }
-    } // namespace
+    CFlightPlanList::CFlightPlanList(const CSequence<CFlightPlan> &other) :
+        CSequence<CFlightPlan>(other)
+    { }
 } // namespace

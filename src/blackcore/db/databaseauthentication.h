@@ -22,56 +22,53 @@
 
 class QNetworkReply;
 
-namespace BlackMisc { namespace Network { class CAuthenticatedUser; } }
-namespace BlackCore
+namespace BlackMisc::Network { class CAuthenticatedUser; }
+namespace BlackCore::Db
 {
-    namespace Db
+    //! Database user used with swift DB. Features role and cookie handling.
+    class BLACKCORE_EXPORT CDatabaseAuthenticationService: public QObject
     {
-        //! Database user used with swift DB. Features role and cookie handling.
-        class BLACKCORE_EXPORT CDatabaseAuthenticationService: public QObject
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Log categories
-            static const QStringList &getLogCategories();
+    public:
+        //! Log categories
+        static const QStringList &getLogCategories();
 
-            //! Constructor
-            CDatabaseAuthenticationService(QObject *parent = nullptr);
+        //! Constructor
+        CDatabaseAuthenticationService(QObject *parent = nullptr);
 
-            //! Shutdown
-            void gracefulShutdown();
+        //! Shutdown
+        void gracefulShutdown();
 
-            //! DB user
-            BlackMisc::Network::CAuthenticatedUser getDbUser() const;
+        //! DB user
+        BlackMisc::Network::CAuthenticatedUser getDbUser() const;
 
-            //! User authenticated
-            bool isUserAuthenticated() const;
+        //! User authenticated
+        bool isUserAuthenticated() const;
 
-            //! Try to login to authentication web service
-            BlackMisc::CStatusMessageList login(const QString &id, const QString &password);
+        //! Try to login to authentication web service
+        BlackMisc::CStatusMessageList login(const QString &id, const QString &password);
 
-            //! Logoff
-            void logoff();
+        //! Logoff
+        void logoff();
 
-        signals:
-            //! User authenticated
-            void userAuthenticationFinished(const BlackMisc::Network::CAuthenticatedUser &user, const BlackMisc::CStatusMessageList &loginStatus);
+    signals:
+        //! User authenticated
+        void userAuthenticationFinished(const BlackMisc::Network::CAuthenticatedUser &user, const BlackMisc::CStatusMessageList &loginStatus);
 
-            //! Logoff completed
-            void logoffFinished();
+        //! Logoff completed
+        void logoffFinished();
 
-        private:
-            //! Parse login answer
-            void parseServerResponse(QNetworkReply *nwReplyPtr);
+    private:
+        //! Parse login answer
+        void parseServerResponse(QNetworkReply *nwReplyPtr);
 
-            //! User object changed
-            void userChanged();
+        //! User object changed
+        void userChanged();
 
-            BlackMisc::CData<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this, &CDatabaseAuthenticationService::userChanged };
-            bool m_shutdown = false;
-        };
-    } // ns
+        BlackMisc::CData<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this, &CDatabaseAuthenticationService::userChanged };
+        bool m_shutdown = false;
+    };
 } // ns
 
 #endif // guard

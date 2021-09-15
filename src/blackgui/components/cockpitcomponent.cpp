@@ -16,143 +16,140 @@
 #include <QDockWidget>
 #include <QtGlobal>
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CCockpitComponent::CCockpitComponent(QWidget *parent) :
+        COverlayMessagesFrameEnableForDockWidgetInfoArea(parent),
+        ui(new Ui::CCockpitComponent)
     {
-        CCockpitComponent::CCockpitComponent(QWidget *parent) :
-            COverlayMessagesFrameEnableForDockWidgetInfoArea(parent),
-            ui(new Ui::CCockpitComponent)
-        {
-            ui->setupUi(this);
-            ui->wip_CockpitComPanelShowHideBar->setVisible(false);
-            m_minHeightInfoArea = ui->comp_CockpitInfoArea->minimumHeight();
+        ui->setupUi(this);
+        ui->wip_CockpitComPanelShowHideBar->setVisible(false);
+        m_minHeightInfoArea = ui->comp_CockpitInfoArea->minimumHeight();
 
-            connect(ui->wip_CockpitComPanelShowHideBar, &CShowHideBar::toggleShowHide, this, &CCockpitComponent::onToggleShowHideDetails, Qt::QueuedConnection);
-            connect(ui->comp_CockpitComComponent, &CCockpitComComponent::requestCom1TextMessage, this, &CCockpitComponent::onRequestTextMessageCom1, Qt::QueuedConnection);
-            connect(ui->comp_CockpitComComponent, &CCockpitComComponent::requestCom2TextMessage, this, &CCockpitComponent::onRequestTextMessageCom2, Qt::QueuedConnection);
+        connect(ui->wip_CockpitComPanelShowHideBar, &CShowHideBar::toggleShowHide, this, &CCockpitComponent::onToggleShowHideDetails, Qt::QueuedConnection);
+        connect(ui->comp_CockpitComComponent, &CCockpitComComponent::requestCom1TextMessage, this, &CCockpitComponent::onRequestTextMessageCom1, Qt::QueuedConnection);
+        connect(ui->comp_CockpitComComponent, &CCockpitComComponent::requestCom2TextMessage, this, &CCockpitComponent::onRequestTextMessageCom2, Qt::QueuedConnection);
+    }
+
+    CCockpitComponent::~CCockpitComponent()
+    { }
+
+    bool CCockpitComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
+    {
+        Q_ASSERT(parentDockableWidget);
+        bool ok = CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(parentDockableWidget);
+        if (ok && parentDockableWidget)
+        {
+            ok = connect(parentDockableWidget, &QDockWidget::topLevelChanged, this, &CCockpitComponent::onToggleFloating, Qt::QueuedConnection);
         }
+        return ok;
+    }
 
-        CCockpitComponent::~CCockpitComponent()
-        { }
+    bool CCockpitComponent::isInfoAreaShown() const
+    {
+        return ui->wip_CockpitComPanelShowHideBar->isShown();
+    }
 
-        bool CCockpitComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
+    void CCockpitComponent::setSelectedTransponderModeStateIdent()
+    {
+        ui->comp_CockpitComComponent->setTransponderModeStateIdent();
+    }
+
+    void CCockpitComponent::showAudio()
+    {
+        ui->comp_CockpitInfoArea->selectArea(CCockpitInfoAreaComponent::InfoAreaAudio);
+    }
+
+    void CCockpitComponent::onToggleShowHideDetails(bool show)
+    {
+        // use the toggle method to set the sizes
+        this->toggleShowHideDetails(show, true);
+    }
+
+    void CCockpitComponent::toggleShowHideDetails(bool show, bool considerCurrentSize)
+    {
+        Q_ASSERT(this->isParentDockWidgetFloating()); // show hide should not be visible if docked
+        Q_ASSERT(this->window());
+        if (!this->isParentDockWidgetFloating()) { return; }
+
+        // manually setting size, all other approaches failed
+        static const QSize defaultSizeShown(500, 600);
+        static const QSize defaultSizeHidden(300, 150);
+
+        // keep old size
+        const QSize manuallySetSize = this->window()->size();
+
+        // hide area
+        ui->comp_CockpitInfoArea->setVisible(show);
+
+        // adjust size
+        if (show)
         {
-            Q_ASSERT(parentDockableWidget);
-            bool ok = CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(parentDockableWidget);
-            if (ok && parentDockableWidget)
+            ui->comp_CockpitInfoArea->setMinimumHeight(m_minHeightInfoArea);
+            if (m_sizeFloatingShown.isValid())
             {
-                ok = connect(parentDockableWidget, &QDockWidget::topLevelChanged, this, &CCockpitComponent::onToggleFloating, Qt::QueuedConnection);
+                this->window()->resize(m_sizeFloatingShown);
+                if (considerCurrentSize) { m_sizeFloatingHidden = manuallySetSize;  } // for next time
             }
-            return ok;
+            else
+            {
+                // manually setting size, all other approaches failed
+                this->window()->resize(defaultSizeShown);
+                m_sizeFloatingShown = this->window()->size();
+            }
         }
-
-        bool CCockpitComponent::isInfoAreaShown() const
+        else
         {
-            return ui->wip_CockpitComPanelShowHideBar->isShown();
+            ui->comp_CockpitInfoArea->setMinimumHeight(0);
+            this->window()->setMinimumSize(defaultSizeHidden);
+            if (m_sizeFloatingHidden.isValid())
+            {
+                this->window()->resize(m_sizeFloatingHidden);
+                if (considerCurrentSize) { m_sizeFloatingShown = manuallySetSize; }
+            }
+            else
+            {
+                // manually setting size, all other approaches failed
+                this->window()->resize(defaultSizeHidden);
+                m_sizeFloatingHidden = this->window()->size();
+            }
         }
+    }
 
-        void CCockpitComponent::setSelectedTransponderModeStateIdent()
-        {
-            ui->comp_CockpitComComponent->setTransponderModeStateIdent();
-        }
+    void CCockpitComponent::mouseDoubleClickEvent(QMouseEvent *event)
+    {
+        if (event) { emit requestTextMessageEntryTab(TextMessagesAll); }
+        COverlayMessagesFrame::mouseDoubleClickEvent(event);
+    }
 
-        void CCockpitComponent::showAudio()
-        {
-            ui->comp_CockpitInfoArea->selectArea(CCockpitInfoAreaComponent::InfoAreaAudio);
-        }
+    void CCockpitComponent::onRequestTextMessageCom1()
+    {
+        emit requestTextMessageEntryTab(TextMessagesCom1);
+    }
 
-        void CCockpitComponent::onToggleShowHideDetails(bool show)
+    void CCockpitComponent::onRequestTextMessageCom2()
+    {
+        emit requestTextMessageEntryTab(TextMessagesCom2);
+    }
+
+    void CCockpitComponent::onATCStationsChanged()
+    {
+        // void
+    }
+
+    void CCockpitComponent::onToggleFloating(bool floating)
+    {
+        ui->wip_CockpitComPanelShowHideBar->setVisible(floating);
+        if (floating)
         {
             // use the toggle method to set the sizes
-            this->toggleShowHideDetails(show, true);
+            this->toggleShowHideDetails(this->isInfoAreaShown(), false);
         }
-
-        void CCockpitComponent::toggleShowHideDetails(bool show, bool considerCurrentSize)
+        else
         {
-            Q_ASSERT(this->isParentDockWidgetFloating()); // show hide should not be visible if docked
-            Q_ASSERT(this->window());
-            if (!this->isParentDockWidgetFloating()) { return; }
-
-            // manually setting size, all other approaches failed
-            static const QSize defaultSizeShown(500, 600);
-            static const QSize defaultSizeHidden(300, 150);
-
-            // keep old size
-            const QSize manuallySetSize = this->window()->size();
-
-            // hide area
-            ui->comp_CockpitInfoArea->setVisible(show);
-
-            // adjust size
-            if (show)
-            {
-                ui->comp_CockpitInfoArea->setMinimumHeight(m_minHeightInfoArea);
-                if (m_sizeFloatingShown.isValid())
-                {
-                    this->window()->resize(m_sizeFloatingShown);
-                    if (considerCurrentSize) { m_sizeFloatingHidden = manuallySetSize;  } // for next time
-                }
-                else
-                {
-                    // manually setting size, all other approaches failed
-                    this->window()->resize(defaultSizeShown);
-                    m_sizeFloatingShown = this->window()->size();
-                }
-            }
-            else
-            {
-                ui->comp_CockpitInfoArea->setMinimumHeight(0);
-                this->window()->setMinimumSize(defaultSizeHidden);
-                if (m_sizeFloatingHidden.isValid())
-                {
-                    this->window()->resize(m_sizeFloatingHidden);
-                    if (considerCurrentSize) { m_sizeFloatingShown = manuallySetSize; }
-                }
-                else
-                {
-                    // manually setting size, all other approaches failed
-                    this->window()->resize(defaultSizeHidden);
-                    m_sizeFloatingHidden = this->window()->size();
-                }
-            }
+            const QSize sizeMinimum(200, 100); // set when docked, must fit into parent info area
+            ui->comp_CockpitInfoArea->setVisible(true);
+            this->window()->setMinimumSize(sizeMinimum);
         }
-
-        void CCockpitComponent::mouseDoubleClickEvent(QMouseEvent *event)
-        {
-            if (event) { emit requestTextMessageEntryTab(TextMessagesAll); }
-            COverlayMessagesFrame::mouseDoubleClickEvent(event);
-        }
-
-        void CCockpitComponent::onRequestTextMessageCom1()
-        {
-            emit requestTextMessageEntryTab(TextMessagesCom1);
-        }
-
-        void CCockpitComponent::onRequestTextMessageCom2()
-        {
-            emit requestTextMessageEntryTab(TextMessagesCom2);
-        }
-
-        void CCockpitComponent::onATCStationsChanged()
-        {
-            // void
-        }
-
-        void CCockpitComponent::onToggleFloating(bool floating)
-        {
-            ui->wip_CockpitComPanelShowHideBar->setVisible(floating);
-            if (floating)
-            {
-                // use the toggle method to set the sizes
-                this->toggleShowHideDetails(this->isInfoAreaShown(), false);
-            }
-            else
-            {
-                const QSize sizeMinimum(200, 100); // set when docked, must fit into parent info area
-                ui->comp_CockpitInfoArea->setVisible(true);
-                this->window()->setMinimumSize(sizeMinimum);
-            }
-        }
-    } // namespace
+    }
 } // namespace

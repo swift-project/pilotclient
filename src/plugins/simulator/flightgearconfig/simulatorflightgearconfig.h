@@ -20,30 +20,27 @@
 class QWidget;
 
 namespace BlackGui { class CPluginConfigWindow; }
-namespace BlackSimPlugin
+namespace BlackSimPlugin::Flightgear
 {
-    namespace Flightgear
+    /*!
+     * Config plugin for the Flightgear plugin.
+     */
+    class CSimulatorFlightgearConfig : public QObject, public BlackGui::IPluginConfig
     {
-        /*!
-         * Config plugin for the Flightgear plugin.
-         */
-        class CSimulatorFlightgearConfig : public QObject, public BlackGui::IPluginConfig
-        {
-            Q_OBJECT
-            Q_PLUGIN_METADATA(IID "org.swift-project.blackgui.pluginconfiginterface" FILE "simulatorflightgearconfig.json")
-            Q_INTERFACES(BlackGui::IPluginConfig)
+        Q_OBJECT
+        Q_PLUGIN_METADATA(IID "org.swift-project.blackgui.pluginconfiginterface" FILE "simulatorflightgearconfig.json")
+        Q_INTERFACES(BlackGui::IPluginConfig)
 
-        public:
-            //! Ctor
-            CSimulatorFlightgearConfig(QObject *parent = nullptr);
+    public:
+        //! Ctor
+        CSimulatorFlightgearConfig(QObject *parent = nullptr);
 
-            //! Dtor
-            virtual ~CSimulatorFlightgearConfig() {}
+        //! Dtor
+        virtual ~CSimulatorFlightgearConfig() {}
 
-            //! \copydoc BlackGui::IPluginConfig::createConfigWindow()
-            BlackGui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;
-        };
-    } // ns
+        //! \copydoc BlackGui::IPluginConfig::createConfigWindow()
+        BlackGui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;
+    };
 } // ns
 
 #endif // guard

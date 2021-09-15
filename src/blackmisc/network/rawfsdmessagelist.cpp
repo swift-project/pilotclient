@@ -8,29 +8,26 @@
 
 #include "rawfsdmessagelist.h"
 
-namespace BlackMisc
+namespace BlackMisc::Network
 {
-    namespace Network
+    CRawFsdMessageList::CRawFsdMessageList() { }
+
+    CRawFsdMessageList::CRawFsdMessageList(const CSequence &other) : CSequence<CRawFsdMessage>(other)
+    { }
+
+    CRawFsdMessageList CRawFsdMessageList::findByPacketType(const QString &type) const
     {
-        CRawFsdMessageList::CRawFsdMessageList() { }
-
-        CRawFsdMessageList::CRawFsdMessageList(const CSequence &other) : CSequence<CRawFsdMessage>(other)
-        { }
-
-        CRawFsdMessageList CRawFsdMessageList::findByPacketType(const QString &type) const
+        return this->findBy([ & ](const CRawFsdMessage &rawFsdMessage)
         {
-            return this->findBy([ & ](const CRawFsdMessage &rawFsdMessage)
-            {
-                 return rawFsdMessage.isPacketType(type);
-            });
-        }
+                return rawFsdMessage.isPacketType(type);
+        });
+    }
 
-        CRawFsdMessageList CRawFsdMessageList::findByContainsString(const QString &str) const
+    CRawFsdMessageList CRawFsdMessageList::findByContainsString(const QString &str) const
+    {
+        return this->findBy([ & ](const CRawFsdMessage &rawFsdMessage)
         {
-            return this->findBy([ & ](const CRawFsdMessage &rawFsdMessage)
-            {
-                return rawFsdMessage.containsString(str);
-            });
-        }
-    } // namespace
+            return rawFsdMessage.containsString(str);
+        });
+    }
 } // namespace

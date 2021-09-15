@@ -11,61 +11,58 @@
 
 #include "blackmisc/logmessage.h"
 
-namespace BlackCore
+namespace BlackCore::Fsd
 {
-    namespace Fsd
+    ServerError::ServerError()
+    { }
+
+    ServerError::ServerError(const QString &sender, const QString &receiver, ServerErrorCode errorCode, const QString &causingParameter, const QString &description)
+        : MessageBase(sender, receiver),
+            m_errorNumber(errorCode),
+            m_causingParameter(causingParameter),
+            m_description(description)
+    { }
+
+    bool ServerError::isFatalError() const
     {
-        ServerError::ServerError()
-        { }
-
-        ServerError::ServerError(const QString &sender, const QString &receiver, ServerErrorCode errorCode, const QString &causingParameter, const QString &description)
-            : MessageBase(sender, receiver),
-              m_errorNumber(errorCode),
-              m_causingParameter(causingParameter),
-              m_description(description)
-        { }
-
-        bool ServerError::isFatalError() const
+        static const QVector<ServerErrorCode> fatalErrors
         {
-            static const QVector<ServerErrorCode> fatalErrors
-            {
-                ServerErrorCode::CallsignInUse,
-                ServerErrorCode::InvalidCallsign,
-                ServerErrorCode::AlreadyRegistered,
-                ServerErrorCode::InvalidCidPassword,
-                ServerErrorCode::InvalidRevision,
-                ServerErrorCode::RequestedLevelTooHigh,
-                ServerErrorCode::ServerFull,
-                ServerErrorCode::CidSuspended,
-                ServerErrorCode::RatingTooLow,
-                ServerErrorCode::InvalidClient,
-                ServerErrorCode::AuthTimeout,
-            };
+            ServerErrorCode::CallsignInUse,
+            ServerErrorCode::InvalidCallsign,
+            ServerErrorCode::AlreadyRegistered,
+            ServerErrorCode::InvalidCidPassword,
+            ServerErrorCode::InvalidRevision,
+            ServerErrorCode::RequestedLevelTooHigh,
+            ServerErrorCode::ServerFull,
+            ServerErrorCode::CidSuspended,
+            ServerErrorCode::RatingTooLow,
+            ServerErrorCode::InvalidClient,
+            ServerErrorCode::AuthTimeout,
+        };
 
-            if(fatalErrors.contains(m_errorNumber)) { return true; }
-            else { return false; }
-        }
+        if(fatalErrors.contains(m_errorNumber)) { return true; }
+        else { return false; }
+    }
 
-        QStringList ServerError::toTokens() const
+    QStringList ServerError::toTokens() const
+    {
+        auto tokens = QStringList {};
+        tokens.push_back(m_sender);
+        tokens.push_back(m_receiver);
+        tokens.push_back(QString::number(static_cast<int>(m_errorNumber)));
+        tokens.push_back(m_causingParameter);
+        tokens.push_back(m_description);
+        return tokens;
+    }
+
+    ServerError ServerError::fromTokens(const QStringList &tokens)
+    {
+        if (tokens.size() < 5)
         {
-            auto tokens = QStringList {};
-            tokens.push_back(m_sender);
-            tokens.push_back(m_receiver);
-            tokens.push_back(QString::number(static_cast<int>(m_errorNumber)));
-            tokens.push_back(m_causingParameter);
-            tokens.push_back(m_description);
-            return tokens;
+            BlackMisc::CLogMessage(static_cast<ServerError *>(nullptr)).debug(u"Wrong number of arguments.");
+            return {};
         }
-
-        ServerError ServerError::fromTokens(const QStringList &tokens)
-        {
-            if (tokens.size() < 5)
-            {
-                BlackMisc::CLogMessage(static_cast<ServerError *>(nullptr)).debug(u"Wrong number of arguments.");
-                return {};
-            }
-            return ServerError(tokens[0], tokens[1], static_cast<ServerErrorCode>(tokens[2].toInt()), tokens[3], tokens[4]);
-        }
+        return ServerError(tokens[0], tokens[1], static_cast<ServerErrorCode>(tokens[2].toInt()), tokens[3], tokens[4]);
     }
 }
 

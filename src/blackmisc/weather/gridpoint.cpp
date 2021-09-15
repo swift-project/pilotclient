@@ -15,99 +15,96 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 
-namespace BlackMisc
+namespace BlackMisc::Weather
 {
-    namespace Weather
+    CGridPoint::CGridPoint(const QString &identifier,
+                            const ICoordinateGeodetic &position) :
+        m_identifier(identifier),
+        m_position(position)
+    { }
+
+    CGridPoint::CGridPoint(const QString &identifier,
+                            const Geo::ICoordinateGeodetic &position,
+                            const CCloudLayerList &cloudLayers,
+                            const CTemperatureLayerList &temperatureLayers,
+                            const CVisibilityLayerList &visibilityLayers,
+                            const CWindLayerList &windLayers,
+                            const CPressure &pressureAtMsl) :
+        m_identifier(identifier),
+        m_position(position),
+        m_cloudLayers(cloudLayers),
+        m_temperatureLayers(temperatureLayers),
+        m_visibilityLayers(visibilityLayers),
+        m_windLayers(windLayers),
+        m_pressureAtMsl(pressureAtMsl)
+    { }
+
+    void CGridPoint::copyWeatherDataFrom(const CGridPoint &other)
     {
-        CGridPoint::CGridPoint(const QString &identifier,
-                               const ICoordinateGeodetic &position) :
-            m_identifier(identifier),
-            m_position(position)
-        { }
+        setCloudLayers(other.getCloudLayers());
+        setTemperatureLayers(other.getTemperatureLayers());
+        setVisibilityLayers(other.getVisibilityLayers());
+        setWindLayers(other.getWindLayers());
+        setPressureAtMsl(other.getPressureAtMsl());
+    }
 
-        CGridPoint::CGridPoint(const QString &identifier,
-                               const Geo::ICoordinateGeodetic &position,
-                               const CCloudLayerList &cloudLayers,
-                               const CTemperatureLayerList &temperatureLayers,
-                               const CVisibilityLayerList &visibilityLayers,
-                               const CWindLayerList &windLayers,
-                               const CPressure &pressureAtMsl) :
-            m_identifier(identifier),
-            m_position(position),
-            m_cloudLayers(cloudLayers),
-            m_temperatureLayers(temperatureLayers),
-            m_visibilityLayers(visibilityLayers),
-            m_windLayers(windLayers),
-            m_pressureAtMsl(pressureAtMsl)
-        { }
-
-        void CGridPoint::copyWeatherDataFrom(const CGridPoint &other)
+    QVariant CGridPoint::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
+    {
+        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
         {
-            setCloudLayers(other.getCloudLayers());
-            setTemperatureLayers(other.getTemperatureLayers());
-            setVisibilityLayers(other.getVisibilityLayers());
-            setWindLayers(other.getWindLayers());
-            setPressureAtMsl(other.getPressureAtMsl());
+        case IndexIdentifier:
+            return QVariant::fromValue(m_identifier);
+        case IndexPosition:
+            return QVariant::fromValue(m_position);
+        case IndexCloudLayers:
+            return QVariant::fromValue(m_cloudLayers);
+        case IndexTemperatureLayers:
+            return QVariant::fromValue(m_temperatureLayers);
+        case IndexWindLayers:
+            return QVariant::fromValue(m_windLayers);
+        case IndexPressureAtMsl:
+            return QVariant::fromValue(m_pressureAtMsl);
+        default:
+            return CValueObject::propertyByIndex(index);
         }
+    }
 
-        QVariant CGridPoint::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
+    void CGridPoint::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
+    {
+        if (index.isMyself()) { (*this) = variant.value<CGridPoint>(); return; }
+        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
         {
-            if (index.isMyself()) { return QVariant::fromValue(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
-            switch (i)
-            {
-            case IndexIdentifier:
-                return QVariant::fromValue(m_identifier);
-            case IndexPosition:
-                return QVariant::fromValue(m_position);
-            case IndexCloudLayers:
-                return QVariant::fromValue(m_cloudLayers);
-            case IndexTemperatureLayers:
-                return QVariant::fromValue(m_temperatureLayers);
-            case IndexWindLayers:
-                return QVariant::fromValue(m_windLayers);
-            case IndexPressureAtMsl:
-                return QVariant::fromValue(m_pressureAtMsl);
-            default:
-                return CValueObject::propertyByIndex(index);
-            }
+        case IndexIdentifier:
+            setIdentifier(variant.value<QString>());
+            break;
+        case IndexPosition:
+            setPosition(variant.value<CCoordinateGeodetic>());
+            break;
+        case IndexCloudLayers:
+            setCloudLayers(variant.value<CCloudLayerList>());
+            break;
+        case IndexTemperatureLayers:
+            setTemperatureLayers(variant.value<CTemperatureLayerList>());
+            break;
+        case IndexWindLayers:
+            setWindLayers(variant.value<CWindLayerList>());
+            break;
+        case IndexPressureAtMsl:
+            setPressureAtMsl(variant.value<CPressure>());
+            break;
+        default:
+            CValueObject::setPropertyByIndex(index, variant);
+            break;
         }
+    }
 
-        void CGridPoint::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
-        {
-            if (index.isMyself()) { (*this) = variant.value<CGridPoint>(); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
-            switch (i)
-            {
-            case IndexIdentifier:
-                setIdentifier(variant.value<QString>());
-                break;
-            case IndexPosition:
-                setPosition(variant.value<CCoordinateGeodetic>());
-                break;
-            case IndexCloudLayers:
-                setCloudLayers(variant.value<CCloudLayerList>());
-                break;
-            case IndexTemperatureLayers:
-                setTemperatureLayers(variant.value<CTemperatureLayerList>());
-                break;
-            case IndexWindLayers:
-                setWindLayers(variant.value<CWindLayerList>());
-                break;
-            case IndexPressureAtMsl:
-                setPressureAtMsl(variant.value<CPressure>());
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
-            }
-        }
+    QString CGridPoint::convertToQString(bool /** i18n **/) const
+    {
+        qFatal("Not yet implemented!");
+        return {};
+    }
 
-        QString CGridPoint::convertToQString(bool /** i18n **/) const
-        {
-            qFatal("Not yet implemented!");
-            return {};
-        }
-
-    } // namespace
 } // namespace

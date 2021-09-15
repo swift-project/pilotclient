@@ -17,19 +17,16 @@
 #include "blackmisc/identifierlist.h"
 
 namespace BlackMisc { class CIdentifier; }
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Originator servers
+    class BLACKGUI_EXPORT CIdentifierView : public CViewBase<Models::CIdentifierListModel>
     {
-        //! Originator servers
-        class BLACKGUI_EXPORT CIdentifierView : public CViewBase<Models::CIdentifierListModel>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CIdentifierView(QWidget *parent = nullptr);
-        };
-    }
+    public:
+        //! Constructor
+        explicit CIdentifierView(QWidget *parent = nullptr);
+    };
 }
 #endif // guard

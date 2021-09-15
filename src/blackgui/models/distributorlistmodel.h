@@ -17,47 +17,44 @@
 
 #include <QString>
 
-namespace BlackMisc { namespace Simulation { class CDistributor; } }
-namespace BlackGui
+namespace BlackMisc::Simulation { class CDistributor; }
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Distributor list model
+    class BLACKGUI_EXPORT CDistributorListModel :
+        public COrderableListModelDbObjects<BlackMisc::Simulation::CDistributorList, QString, true>
     {
-        //! Distributor list model
-        class BLACKGUI_EXPORT CDistributorListModel :
-            public COrderableListModelDbObjects<BlackMisc::Simulation::CDistributorList, QString, true>
+        Q_OBJECT
+
+    public:
+        //! What kind of stations
+        enum DistributorMode
         {
-            Q_OBJECT
-
-        public:
-            //! What kind of stations
-            enum DistributorMode
-            {
-                NotSet,
-                Normal,
-                NormalWithOrder,
-                Minimal,
-                MinimalWithOrder
-            };
-
-            //! Constructor
-            explicit CDistributorListModel(QObject *parent = nullptr);
-
-            //! Destructor
-            virtual ~CDistributorListModel() override {}
-
-            //! Set mode
-            void setDistributorMode(DistributorMode distributorMode);
-
-            //! Mode
-            DistributorMode getDistributorMode() const { return this->m_distributorMode; }
-
-            //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::isOrderable
-            virtual bool isOrderable() const override { return true; }
-
-        private:
-            DistributorMode m_distributorMode = NotSet;
+            NotSet,
+            Normal,
+            NormalWithOrder,
+            Minimal,
+            MinimalWithOrder
         };
-    } // ns
+
+        //! Constructor
+        explicit CDistributorListModel(QObject *parent = nullptr);
+
+        //! Destructor
+        virtual ~CDistributorListModel() override {}
+
+        //! Set mode
+        void setDistributorMode(DistributorMode distributorMode);
+
+        //! Mode
+        DistributorMode getDistributorMode() const { return this->m_distributorMode; }
+
+        //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::isOrderable
+        virtual bool isOrderable() const override { return true; }
+
+    private:
+        DistributorMode m_distributorMode = NotSet;
+    };
 } // ns
 
 #endif // guard

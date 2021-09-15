@@ -11,28 +11,25 @@
 
 using namespace BlackMisc::Simulation;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CSettingsMatchingDialog::CSettingsMatchingDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CSettingsMatchingDialog)
     {
-        CSettingsMatchingDialog::CSettingsMatchingDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CSettingsMatchingDialog)
-        {
-            ui->setupUi(this);
-        }
+        ui->setupUi(this);
+    }
 
-        CSettingsMatchingDialog::~CSettingsMatchingDialog()
-        { }
+    CSettingsMatchingDialog::~CSettingsMatchingDialog()
+    { }
 
-        CAircraftMatcherSetup CSettingsMatchingDialog::getMatchingSetup() const
-        {
-            return ui->comp_Settings->getMatchingSetup();
-        }
+    CAircraftMatcherSetup CSettingsMatchingDialog::getMatchingSetup() const
+    {
+        return ui->comp_Settings->getMatchingSetup();
+    }
 
-        void CSettingsMatchingDialog::setMatchingSetup(const CAircraftMatcherSetup &setup)
-        {
-            ui->comp_Settings->setMatchingSetup(setup);
-        }
-    } // ns
+    void CSettingsMatchingDialog::setMatchingSetup(const CAircraftMatcherSetup &setup)
+    {
+        ui->comp_Settings->setMatchingSetup(setup);
+    }
 } // ns

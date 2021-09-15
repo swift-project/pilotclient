@@ -14,41 +14,38 @@
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/blackmiscexport.h"
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    //! Matching script type
+    enum MatchingScript
     {
-        //! Matching script type
-        enum MatchingScript
-        {
-            ReverseLookup,
-            MatchingStage
-        };
+        ReverseLookup,
+        MatchingStage
+    };
 
-        //! Enum as string
-        BLACKMISC_EXPORT const QString &msToString(MatchingScript ms);
+    //! Enum as string
+    BLACKMISC_EXPORT const QString &msToString(MatchingScript ms);
 
-        //! Return values
-        struct MatchingScriptReturnValues
-        {
-            //! Ctor
-            MatchingScriptReturnValues(const BlackMisc::Simulation::CAircraftModel &model) : model(model) {}
+    //! Return values
+    struct MatchingScriptReturnValues
+    {
+        //! Ctor
+        MatchingScriptReturnValues(const BlackMisc::Simulation::CAircraftModel &model) : model(model) {}
 
-            BlackMisc::Simulation::CAircraftModel model; //!< the model
-            bool modified  = false; //!< modified?
-            bool rerun     = false; //!< rerun that matching part?
-            bool runScript = false; //!< did we run the script
+        BlackMisc::Simulation::CAircraftModel model; //!< the model
+        bool modified  = false; //!< modified?
+        bool rerun     = false; //!< rerun that matching part?
+        bool runScript = false; //!< did we run the script
 
-            //! Did run the script with modified result
-            bool runScriptAndModified() const { return modified && runScript; }
+        //! Did run the script with modified result
+        bool runScriptAndModified() const { return modified && runScript; }
 
-            //! Did run the script and re-run requested
-            bool runScriptAndRerun() const { return rerun && runScript; }
+        //! Did run the script and re-run requested
+        bool runScriptAndRerun() const { return rerun && runScript; }
 
-            //! Did run the script, modified value and re-run requested
-            bool runScriptModifiedAndRerun() const { return modified && rerun && runScript; }
-        };
-    } // namespace
+        //! Did run the script, modified value and re-run requested
+        bool runScriptModifiedAndRerun() const { return modified && rerun && runScript; }
+    };
 } // namespace
 
 #endif // guard

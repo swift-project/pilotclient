@@ -23,67 +23,64 @@
 #include <QTimer>
 
 namespace Ui { class CRadarComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! GUI displaying a radar like view with aircrafts nearby
+    class BLACKGUI_EXPORT CRadarComponent :
+            public QFrame,
+            public CEnableForDockWidgetInfoArea
     {
-        //! GUI displaying a radar like view with aircrafts nearby
-        class BLACKGUI_EXPORT CRadarComponent :
-                public QFrame,
-                public CEnableForDockWidgetInfoArea
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CRadarComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CRadarComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CRadarComponent() override;
+        //! Destructor
+        virtual ~CRadarComponent() override;
 
-            //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
-            virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget) override;
+        //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
+        virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget) override;
 
-        private:
-            void prepareScene();
-            void addCenter();
-            void addGraticules();
-            void addRadials();
+    private:
+        void prepareScene();
+        void addCenter();
+        void addGraticules();
+        void addRadials();
 
-            void refreshTargets();
-            void rotateView();
+        void refreshTargets();
+        void rotateView();
 
-            void toggleGrid(bool checked);
+        void toggleGrid(bool checked);
 
-            void fitInView();
-            void changeRangeInSteps(bool zoomIn);
-            void changeRangeFromUserSelection(int index);
+        void fitInView();
+        void changeRangeInSteps(bool zoomIn);
+        void changeRangeFromUserSelection(int index);
 
-            static QPointF polarPoint(double distance, double angleRadians);
+        static QPointF polarPoint(double distance, double angleRadians);
 
-            //! Info area tab bar has changed
-            void onInfoAreaTabBarChanged(int index);
+        //! Info area tab bar has changed
+        void onInfoAreaTabBarChanged(int index);
 
-            QScopedPointer<Ui::CRadarComponent> ui;
-            QGraphicsScene     m_scene;
-            QGraphicsItemGroup m_radarTargets;
-            QGraphicsItemGroup m_center;
-            QGraphicsItemGroup m_macroGraticule;
-            QGraphicsItemGroup m_microGraticule;
-            QGraphicsItemGroup m_radials;
+        QScopedPointer<Ui::CRadarComponent> ui;
+        QGraphicsScene     m_scene;
+        QGraphicsItemGroup m_radarTargets;
+        QGraphicsItemGroup m_center;
+        QGraphicsItemGroup m_macroGraticule;
+        QGraphicsItemGroup m_microGraticule;
+        QGraphicsItemGroup m_radials;
 
-            QPen m_radarTargetPen = { Qt::green, 1 };
-            qreal  m_rangeNM      = 10.0;
-            int    m_rotatenAngle = 0;
-            QTimer m_updateTimer;
-            QTimer m_headingTimer;
+        QPen m_radarTargetPen = { Qt::green, 1 };
+        qreal  m_rangeNM      = 10.0;
+        int    m_rotatenAngle = 0;
+        QTimer m_updateTimer;
+        QTimer m_headingTimer;
 
-            BlackCore::CActionBind m_actionZoomIn  { BlackMisc::Input::radarZoomInHotkeyAction(),  BlackMisc::Input::radarZoomInHotkeyIcon(),  this, &CRadarComponent::rangeZoomIn };
-            BlackCore::CActionBind m_actionZoomOut { BlackMisc::Input::radarZoomOutHotkeyAction(), BlackMisc::Input::radarZoomOutHotkeyIcon(), this, &CRadarComponent::rangeZoomOut };
-            void rangeZoomIn (bool keydown) { if (keydown) { changeRangeInSteps(true); } }
-            void rangeZoomOut(bool keydown) { if (keydown) { changeRangeInSteps(false); } }
-        };
-    } // ns
+        BlackCore::CActionBind m_actionZoomIn  { BlackMisc::Input::radarZoomInHotkeyAction(),  BlackMisc::Input::radarZoomInHotkeyIcon(),  this, &CRadarComponent::rangeZoomIn };
+        BlackCore::CActionBind m_actionZoomOut { BlackMisc::Input::radarZoomOutHotkeyAction(), BlackMisc::Input::radarZoomOutHotkeyIcon(), this, &CRadarComponent::rangeZoomOut };
+        void rangeZoomIn (bool keydown) { if (keydown) { changeRangeInSteps(true); } }
+        void rangeZoomOut(bool keydown) { if (keydown) { changeRangeInSteps(false); } }
+    };
 } // ns
 
 #endif // guard

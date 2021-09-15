@@ -15,27 +15,24 @@
 #include <QScopedPointer>
 
 namespace Ui { class CInfoBarWebReadersStatusSmallComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Smaller version of CInfoBarWebReadersStatusComponent
+     */
+    class BLACKGUI_EXPORT CInfoBarWebReadersStatusSmallComponent : public CInfoBarWebReadersStatusBase
     {
-        /*!
-         * Smaller version of CInfoBarWebReadersStatusComponent
-         */
-        class BLACKGUI_EXPORT CInfoBarWebReadersStatusSmallComponent : public CInfoBarWebReadersStatusBase
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CInfoBarWebReadersStatusSmallComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CInfoBarWebReadersStatusSmallComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CInfoBarWebReadersStatusSmallComponent() override;
+        //! Destructor
+        virtual ~CInfoBarWebReadersStatusSmallComponent() override;
 
-        private:
-            QScopedPointer<Ui::CInfoBarWebReadersStatusSmallComponent> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CInfoBarWebReadersStatusSmallComponent> ui;
+    };
 } // ns
 #endif // guard

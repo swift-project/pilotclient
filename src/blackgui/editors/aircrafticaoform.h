@@ -21,68 +21,65 @@
 #include <QScopedPointer>
 
 namespace Ui { class CAircraftIcaoForm; }
-namespace BlackGui
+namespace BlackGui::Editors
 {
-    namespace Editors
+    /*!
+     * Aircraft ICAO form
+     */
+    class BLACKGUI_EXPORT CAircraftIcaoForm : public CForm
     {
-        /*!
-         * Aircraft ICAO form
-         */
-        class BLACKGUI_EXPORT CAircraftIcaoForm : public CForm
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAircraftIcaoForm(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAircraftIcaoForm(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAircraftIcaoForm() override;
+        //! Destructor
+        virtual ~CAircraftIcaoForm() override;
 
-            //! Get value
-            BlackMisc::Aviation::CAircraftIcaoCode getValue() const;
+        //! Get value
+        BlackMisc::Aviation::CAircraftIcaoCode getValue() const;
 
-            //! Allow to drop
-            void allowDrop(bool allowDrop);
+        //! Allow to drop
+        void allowDrop(bool allowDrop);
 
-            //! Is drop allowed?
-            bool isDropAllowed() const;
+        //! Is drop allowed?
+        bool isDropAllowed() const;
 
-            //! \name Form class implementations
-            //! @{
-            virtual void setReadOnly(bool readonly) override;
-            virtual void setSelectOnly() override;
-            virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
-            //! @}
+        //! \name Form class implementations
+        //! @{
+        virtual void setReadOnly(bool readonly) override;
+        virtual void setSelectOnly() override;
+        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        //! @}
 
-            //! Clear
-            void clear();
+        //! Clear
+        void clear();
 
-            //! Reset value to current value
-            void resetValue();
+        //! Reset value to current value
+        void resetValue();
 
-        public slots:
-            //! Set value
-            bool setValue(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+    public slots:
+        //! Set value
+        bool setValue(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
 
-        protected:
-            //! \copydoc CForm::jsonPasted
-            virtual void jsonPasted(const QString &json) override;
+    protected:
+        //! \copydoc CForm::jsonPasted
+        virtual void jsonPasted(const QString &json) override;
 
-        private:
-            QScopedPointer<Ui::CAircraftIcaoForm>  ui;
-            BlackMisc::Aviation::CAircraftIcaoCode m_originalCode;
+    private:
+        QScopedPointer<Ui::CAircraftIcaoForm>  ui;
+        BlackMisc::Aviation::CAircraftIcaoCode m_originalCode;
 
-            //! Variant has been dropped
-            void droppedCode(const BlackMisc::CVariant &variantDropped);
+        //! Variant has been dropped
+        void droppedCode(const BlackMisc::CVariant &variantDropped);
 
-            //! Id has been entered
-            void idEntered();
+        //! Id has been entered
+        void idEntered();
 
-            //! Key from GUI
-            int getDbKeyFromGui() const;
-        };
-    } // ns
+        //! Key from GUI
+        int getDbKeyFromGui() const;
+    };
 } // ns
 
 #endif // guard

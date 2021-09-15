@@ -18,26 +18,23 @@
 #include <QScopedPointer>
 
 namespace Ui { class CRawFsdMessagesDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! CRawFsdMessageComponent as dialog
+    class BLACKGUI_EXPORT CRawFsdMessagesDialog : public QDialog
     {
-        //! CRawFsdMessageComponent as dialog
-        class BLACKGUI_EXPORT CRawFsdMessagesDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CRawFsdMessagesDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CRawFsdMessagesDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CRawFsdMessagesDialog();
+        //! Destructor
+        virtual ~CRawFsdMessagesDialog();
 
-        private:
-            QScopedPointer<Ui::CRawFsdMessagesDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CRawFsdMessagesDialog> ui;
+    };
 } // ns
 
 #endif // guard

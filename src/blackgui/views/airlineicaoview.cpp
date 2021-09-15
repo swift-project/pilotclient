@@ -13,15 +13,12 @@
 using namespace BlackMisc;
 using namespace BlackGui::Models;
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    CAirlineIcaoCodeView::CAirlineIcaoCodeView(QWidget *parent) :
+        CViewWithDbObjects(parent)
     {
-        CAirlineIcaoCodeView::CAirlineIcaoCodeView(QWidget *parent) :
-            CViewWithDbObjects(parent)
-        {
-            this->standardInit(new CAirlineIcaoCodeListModel(this));
-            this->setMenu(MenuDefaultDbViews);
-        }
+        this->standardInit(new CAirlineIcaoCodeListModel(this));
+        this->setMenu(MenuDefaultDbViews);
     }
 } // namespace

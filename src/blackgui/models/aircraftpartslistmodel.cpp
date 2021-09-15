@@ -18,22 +18,19 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    CAircraftPartsListModel::CAircraftPartsListModel(QObject *parent) :
+        CListModelTimestampWithOffsetObjects<CAircraftPartsList, true>("ViewAircraftPartsList", parent)
     {
-        CAircraftPartsListModel::CAircraftPartsListModel(QObject *parent) :
-            CListModelTimestampWithOffsetObjects<CAircraftPartsList, true>("ViewAircraftPartsList", parent)
-        {
-            this->addTimestampOffsetColumns();
+        this->addTimestampOffsetColumns();
 
-            m_columns.addColumn(CColumn("gnd.", CAircraftParts::IndexIsOnGround, new CBoolIconFormatter("on gnd.", "not on gnd.")));
-            m_columns.addColumn(CColumn("gear", CAircraftParts::IndexGearDown, new CBoolIconFormatter("gear down", "gear up")));
-            m_columns.addColumn(CColumn("spoilers", CAircraftParts::IndexSpoilersOut, new CBoolIconFormatter("spoilers", "no spoilers")));
-            m_columns.addColumn(CColumn("flaps", CAircraftParts::IndexFlapsPercentage, new CIntegerFormatter()));
+        m_columns.addColumn(CColumn("gnd.", CAircraftParts::IndexIsOnGround, new CBoolIconFormatter("on gnd.", "not on gnd.")));
+        m_columns.addColumn(CColumn("gear", CAircraftParts::IndexGearDown, new CBoolIconFormatter("gear down", "gear up")));
+        m_columns.addColumn(CColumn("spoilers", CAircraftParts::IndexSpoilersOut, new CBoolIconFormatter("spoilers", "no spoilers")));
+        m_columns.addColumn(CColumn("flaps", CAircraftParts::IndexFlapsPercentage, new CIntegerFormatter()));
 
-            m_columns.addColumn(CColumn::standardString("engines", CAircraftParts::IndexEnginesAsString));
-            m_columns.addColumn(CColumn::standardString("lights", { CAircraftParts::IndexLights, CAircraftParts::IndexString }));
-        }
-    } // namespace
+        m_columns.addColumn(CColumn::standardString("engines", CAircraftParts::IndexEnginesAsString));
+        m_columns.addColumn(CColumn::standardString("lights", { CAircraftParts::IndexLights, CAircraftParts::IndexString }));
+    }
 } // namespace

@@ -9,18 +9,15 @@
 #include "simulatorp3dconfig.h"
 #include "../fsxcommon/simulatorfsxconfigwindow.h"
 
-namespace BlackSimPlugin
+namespace BlackSimPlugin::P3D
 {
-    namespace P3D
+    CSimulatorP3DConfig::CSimulatorP3DConfig(QObject *parent) : QObject(parent)
     {
-        CSimulatorP3DConfig::CSimulatorP3DConfig(QObject *parent) : QObject(parent)
-        {
-            // void
-        }
+        // void
+    }
 
-        BlackGui::CPluginConfigWindow *CSimulatorP3DConfig::createConfigWindow(QWidget *parent)
-        {
-            return new FsxCommon::CSimulatorFsxConfigWindow("P3D", parent);
-        }
+    BlackGui::CPluginConfigWindow *CSimulatorP3DConfig::createConfigWindow(QWidget *parent)
+    {
+        return new FsxCommon::CSimulatorFsxConfigWindow("P3D", parent);
     }
 }

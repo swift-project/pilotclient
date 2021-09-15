@@ -21,61 +21,58 @@
 #include <QScopedPointer>
 
 namespace Ui { class CDistributorForm; }
-namespace BlackGui
+namespace BlackGui::Editors
 {
-    namespace Editors
+    /*!
+     * Distributor form
+     */
+    class BLACKGUI_EXPORT CDistributorForm : public CForm
     {
-        /*!
-         * Distributor form
-         */
-        class BLACKGUI_EXPORT CDistributorForm : public CForm
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CDistributorForm(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CDistributorForm(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CDistributorForm() override;
+        //! Destructor
+        virtual ~CDistributorForm() override;
 
-            //! Get value
-            BlackMisc::Simulation::CDistributor getValue() const;
+        //! Get value
+        BlackMisc::Simulation::CDistributor getValue() const;
 
-            //! Allow to drop
-            void allowDrop(bool allowDrop);
+        //! Allow to drop
+        void allowDrop(bool allowDrop);
 
-            //! Is drop allowed?
-            bool isDropAllowed() const;
+        //! Is drop allowed?
+        bool isDropAllowed() const;
 
-            //! \name Form class implementations
-            //! @{
-            virtual void setReadOnly(bool readonly) override;
-            virtual void setSelectOnly() override;
-            virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
-            //! @}
+        //! \name Form class implementations
+        //! @{
+        virtual void setReadOnly(bool readonly) override;
+        virtual void setSelectOnly() override;
+        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        //! @}
 
-            //! Clear
-            void clear();
+        //! Clear
+        void clear();
 
-            //! Set value
-            bool setValue(const BlackMisc::Simulation::CDistributor &distributor = BlackMisc::Simulation::CDistributor());
+        //! Set value
+        bool setValue(const BlackMisc::Simulation::CDistributor &distributor = BlackMisc::Simulation::CDistributor());
 
-        protected:
-            //! \copydoc CForm::jsonPasted
-            virtual void jsonPasted(const QString &json) override;
+    protected:
+        //! \copydoc CForm::jsonPasted
+        virtual void jsonPasted(const QString &json) override;
 
-        private:
-            //! Variant has been dropped
-            void onDroppedCode(const BlackMisc::CVariant &variantDropped);
+    private:
+        //! Variant has been dropped
+        void onDroppedCode(const BlackMisc::CVariant &variantDropped);
 
-            //! Any UI values in the details fields
-            bool hasAnyUiDetailsValues() const;
+        //! Any UI values in the details fields
+        bool hasAnyUiDetailsValues() const;
 
-            QScopedPointer<Ui::CDistributorForm> ui;
-            BlackMisc::Simulation::CDistributor m_currentDistributor;
-        };
-    } // ns
+        QScopedPointer<Ui::CDistributorForm> ui;
+        BlackMisc::Simulation::CDistributor m_currentDistributor;
+    };
 } //ns
 
 #endif // guard

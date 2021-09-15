@@ -38,13 +38,10 @@ class QMainWindow;
 class CSplashScreen;
 
 namespace BlackMisc { class CLogCategoryList; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
-    {
-        class CApplicationCloseDialog;
-        class CUpdateInfoDialog;
-    }
+    class CApplicationCloseDialog;
+    class CUpdateInfoDialog;
 }
 namespace BlackGui
 {

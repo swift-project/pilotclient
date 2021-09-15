@@ -19,23 +19,20 @@
 class QModelIndex;
 class QObject;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Aircraft situation changes list model
+    class BLACKGUI_EXPORT CAircraftSituationChangeListModel : public CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftSituationChangeList, true>
     {
-        //! Aircraft situation changes list model
-        class BLACKGUI_EXPORT CAircraftSituationChangeListModel : public CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftSituationChangeList, true>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAircraftSituationChangeListModel(QObject *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAircraftSituationChangeListModel(QObject *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAircraftSituationChangeListModel() {}
-        };
-    } // namespace
+        //! Destructor
+        virtual ~CAircraftSituationChangeListModel() {}
+    };
 } // namespace
 
 #endif // guard

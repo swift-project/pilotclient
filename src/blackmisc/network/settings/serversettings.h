@@ -15,56 +15,50 @@
 #include "blackmisc/settingscache.h"
 #include "blackmisc/valueobject.h"
 
-namespace BlackMisc
+namespace BlackMisc::Network::Settings
 {
-    namespace Network
+    /*!
+     * Virtual air traffic servers
+     */
+    struct TTrafficServers : public TSettingTrait<CServerList>
     {
-        namespace Settings
+        //! \copydoc BlackMisc::TSettingTrait::key
+        static const char *key() { return "network/trafficservers"; }
+
+        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        static const QString &humanReadable() { static const QString name("Traffic servers"); return name; }
+    };
+
+    /*!
+     * Currently selected virtual air traffic server
+     */
+    struct TCurrentTrafficServer : public TSettingTrait<CServer>
+    {
+        //! \copydoc BlackMisc::TSettingTrait::key
+        static const char *key() { return "network/currenttrafficserver"; }
+
+        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        static const QString &humanReadable() { static const QString name("Current traffic servers"); return name; }
+
+        //! \copydoc BlackMisc::TSettingTrait::defaultValue
+        static const BlackMisc::Network::CServer &defaultValue()
         {
-            /*!
-             * Virtual air traffic servers
-             */
-            struct TTrafficServers : public TSettingTrait<CServerList>
-            {
-                //! \copydoc BlackMisc::TSettingTrait::key
-                static const char *key() { return "network/trafficservers"; }
+            static const CServer dv = CServer::swiftFsdTestServer();
+            return dv;
+        }
+    };
 
-                //! \copydoc BlackMisc::TSettingTrait::humanReadable
-                static const QString &humanReadable() { static const QString name("Traffic servers"); return name; }
-            };
+    /*!
+     * Auto logoff
+     */
+    struct TAutoLogoff : public TSettingTrait<bool>
+    {
+        //! \copydoc BlackMisc::TSettingTrait::key
+        static const char *key() { return "network/autologoff"; }
 
-            /*!
-             * Currently selected virtual air traffic server
-             */
-            struct TCurrentTrafficServer : public TSettingTrait<CServer>
-            {
-                //! \copydoc BlackMisc::TSettingTrait::key
-                static const char *key() { return "network/currenttrafficserver"; }
-
-                //! \copydoc BlackMisc::TSettingTrait::humanReadable
-                static const QString &humanReadable() { static const QString name("Current traffic servers"); return name; }
-
-                //! \copydoc BlackMisc::TSettingTrait::defaultValue
-                static const BlackMisc::Network::CServer &defaultValue()
-                {
-                    static const CServer dv = CServer::swiftFsdTestServer();
-                    return dv;
-                }
-            };
-
-            /*!
-             * Auto logoff
-             */
-            struct TAutoLogoff : public TSettingTrait<bool>
-            {
-                //! \copydoc BlackMisc::TSettingTrait::key
-                static const char *key() { return "network/autologoff"; }
-
-                //! \copydoc BlackMisc::TSettingTrait::humanReadable
-                static const QString &humanReadable() { static const QString name("Auto logoff"); return name; }
-            };
-        } // ns
-    } // ns
+        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        static const QString &humanReadable() { static const QString name("Auto logoff"); return name; }
+    };
 } // ns
 
 #endif

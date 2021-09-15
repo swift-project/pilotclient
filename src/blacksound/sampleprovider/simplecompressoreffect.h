@@ -18,39 +18,36 @@
 #include <QObject>
 #include <QTimer>
 
-namespace BlackSound
+namespace BlackSound::SampleProvider
 {
-    namespace SampleProvider
+    //! Compressor effect
+    class BLACKSOUND_EXPORT CSimpleCompressorEffect : public ISampleProvider
     {
-        //! Compressor effect
-        class BLACKSOUND_EXPORT CSimpleCompressorEffect : public ISampleProvider
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            CSimpleCompressorEffect(ISampleProvider *source, QObject *parent = nullptr);
+    public:
+        //! Ctor
+        CSimpleCompressorEffect(ISampleProvider *source, QObject *parent = nullptr);
 
-            //! \copydoc ISampleProvider::readSamples
-            virtual int readSamples(QVector<float> &samples, qint64 count) override;
+        //! \copydoc ISampleProvider::readSamples
+        virtual int readSamples(QVector<float> &samples, qint64 count) override;
 
-            //! Enable
-            void setEnabled(bool enabled);
+        //! Enable
+        void setEnabled(bool enabled);
 
-            //! Set gain
-            void setMakeUpGain(double gain);
+        //! Set gain
+        void setMakeUpGain(double gain);
 
-            //! Set channels 1 or 2
-            void setChannels(int channels);
+        //! Set channels 1 or 2
+        void setChannels(int channels);
 
-        private:
-            QTimer          *m_timer = nullptr;
-            ISampleProvider *m_sourceStream = nullptr;
-            bool             m_enabled = true;
-            int              m_channels = 1;
-            chunkware_simple::SimpleComp m_simpleCompressor;
-        };
-    } // ns
+    private:
+        QTimer          *m_timer = nullptr;
+        ISampleProvider *m_sourceStream = nullptr;
+        bool             m_enabled = true;
+        int              m_channels = 1;
+        chunkware_simple::SimpleComp m_simpleCompressor;
+    };
 } // ns
 
 #endif // guard

@@ -29,75 +29,72 @@ class QDropEvent;
 class QWidget;
 
 namespace Ui { class CDbCountrySelectorComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Country selector
+     */
+    class BLACKGUI_EXPORT CDbCountrySelectorComponent :
+        public QFrame,
+        public BlackGui::CDropBase
     {
-        /*!
-         * Country selector
-         */
-        class BLACKGUI_EXPORT CDbCountrySelectorComponent :
-            public QFrame,
-            public BlackGui::CDropBase
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CDbCountrySelectorComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CDbCountrySelectorComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            ~CDbCountrySelectorComponent() override;
+        //! Destructor
+        ~CDbCountrySelectorComponent() override;
 
-            //! Current country
-            void setCountry(const BlackMisc::CCountry &country);
+        //! Current country
+        void setCountry(const BlackMisc::CCountry &country);
 
-            //! Current country
-            void setCountry(const QString &isoCode);
+        //! Current country
+        void setCountry(const QString &isoCode);
 
-            //! Country
-            BlackMisc::CCountry getCountry() const;
+        //! Country
+        BlackMisc::CCountry getCountry() const;
 
-            //! Read only
-            void setReadOnly(bool readOnly);
+        //! Read only
+        void setReadOnly(bool readOnly);
 
-            //! Set with valid country
-            bool isSet() const;
+        //! Set with valid country
+        bool isSet() const;
 
-            //! Clear selection
-            void clear();
+        //! Clear selection
+        void clear();
 
-        signals:
-            //! Country has been changed
-            void countryChanged(const BlackMisc::CCountry &country);
+    signals:
+        //! Country has been changed
+        void countryChanged(const BlackMisc::CCountry &country);
 
-        protected:
-            //! \copydoc QWidget::dragEnterEvent
-            virtual void dragEnterEvent(QDragEnterEvent *event) override;
+    protected:
+        //! \copydoc QWidget::dragEnterEvent
+        virtual void dragEnterEvent(QDragEnterEvent *event) override;
 
-            //! \copydoc QWidget::dragMoveEvent
-            virtual void dragMoveEvent(QDragMoveEvent *event) override;
+        //! \copydoc QWidget::dragMoveEvent
+        virtual void dragMoveEvent(QDragMoveEvent *event) override;
 
-            //! \copydoc QWidget::dragLeaveEvent
-            virtual void dragLeaveEvent(QDragLeaveEvent *event) override;
+        //! \copydoc QWidget::dragLeaveEvent
+        virtual void dragLeaveEvent(QDragLeaveEvent *event) override;
 
-            //! \copydoc QWidget::dropEvent
-            virtual void dropEvent(QDropEvent *event) override;
+        //! \copydoc QWidget::dropEvent
+        virtual void dropEvent(QDropEvent *event) override;
 
-        private:
-            //! Countries have been read
-            void onCountriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+    private:
+        //! Countries have been read
+        void onCountriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
-            //! Data have been changed
-            void onDataChanged();
+        //! Data have been changed
+        void onDataChanged();
 
-            //! Data have been changed
-            void onCompleterActivated(const QString &countryName);
+        //! Data have been changed
+        void onCompleterActivated(const QString &countryName);
 
-            QScopedPointer<Ui::CDbCountrySelectorComponent> ui;
-            QScopedPointer<QCompleter> m_completerCountryNames;
-            BlackMisc::CCountry m_currentCountry;
-        };
-    }
+        QScopedPointer<Ui::CDbCountrySelectorComponent> ui;
+        QScopedPointer<QCompleter> m_completerCountryNames;
+        BlackMisc::CCountry m_currentCountry;
+    };
 }
 #endif // guard

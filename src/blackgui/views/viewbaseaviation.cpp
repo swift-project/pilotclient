@@ -8,18 +8,15 @@
 
 #include "viewbase.cpp"
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
-    {
-        template class CViewBase<BlackGui::Models::CAircraftPartsListModel>;
-        template class CViewBase<BlackGui::Models::CAircraftSituationListModel>;
-        template class CViewBase<BlackGui::Models::CAircraftSituationChangeListModel>;
-        template class CViewBase<BlackGui::Models::CAirlineIcaoCodeListModel>;
-        template class CViewBase<BlackGui::Models::CAircraftCategoryListModel>;
-        template class CViewBase<BlackGui::Models::CAircraftIcaoCodeListModel>;
-        template class CViewBase<BlackGui::Models::CAirportListModel>;
-        template class CViewBase<BlackGui::Models::CAtcStationListModel>;
-        template class CViewBase<BlackGui::Models::CLiveryListModel>;
-    } // namespace
+    template class CViewBase<BlackGui::Models::CAircraftPartsListModel>;
+    template class CViewBase<BlackGui::Models::CAircraftSituationListModel>;
+    template class CViewBase<BlackGui::Models::CAircraftSituationChangeListModel>;
+    template class CViewBase<BlackGui::Models::CAirlineIcaoCodeListModel>;
+    template class CViewBase<BlackGui::Models::CAircraftCategoryListModel>;
+    template class CViewBase<BlackGui::Models::CAircraftIcaoCodeListModel>;
+    template class CViewBase<BlackGui::Models::CAirportListModel>;
+    template class CViewBase<BlackGui::Models::CAtcStationListModel>;
+    template class CViewBase<BlackGui::Models::CLiveryListModel>;
 } // namespace

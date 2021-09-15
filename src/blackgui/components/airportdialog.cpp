@@ -3,34 +3,31 @@
 
 using namespace BlackMisc::Aviation;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CAirportDialog::CAirportDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CAirportDialog)
     {
-        CAirportDialog::CAirportDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CAirportDialog)
-        {
-            ui->setupUi(this);
-            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-        }
+        ui->setupUi(this);
+        this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    }
 
-        CAirportDialog::~CAirportDialog()
-        { }
+    CAirportDialog::~CAirportDialog()
+    { }
 
-        void CAirportDialog::setAirport(const CAirport &airport)
-        {
-            ui->comp_AirportCompleter->setAirport(airport);
-        }
+    void CAirportDialog::setAirport(const CAirport &airport)
+    {
+        ui->comp_AirportCompleter->setAirport(airport);
+    }
 
-        CAirport CAirportDialog::getAirport() const
-        {
-            return ui->comp_AirportCompleter->getAirport();
-        }
+    CAirport CAirportDialog::getAirport() const
+    {
+        return ui->comp_AirportCompleter->getAirport();
+    }
 
-        void CAirportDialog::clear()
-        {
-            ui->comp_AirportCompleter->clear();
-        }
-    } // ns
+    void CAirportDialog::clear()
+    {
+        ui->comp_AirportCompleter->clear();
+    }
 } // ns

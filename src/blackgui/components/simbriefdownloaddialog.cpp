@@ -11,41 +11,38 @@
 
 using namespace BlackMisc::Aviation;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CSimBriefDownloadDialog::CSimBriefDownloadDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CSimBriefDownloadDialog)
     {
-        CSimBriefDownloadDialog::CSimBriefDownloadDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CSimBriefDownloadDialog)
-        {
-            ui->setupUi(this);
-            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-        }
+        ui->setupUi(this);
+        this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    }
 
-        CSimBriefDownloadDialog::~CSimBriefDownloadDialog()
-        { }
+    CSimBriefDownloadDialog::~CSimBriefDownloadDialog()
+    { }
 
-        CSimBriefData CSimBriefDownloadDialog::getSimBriefData() const
-        {
-            return CSimBriefData(ui->le_SimBriefURL->text().trimmed(), ui->le_SimBriefUsername->text().trimmed());
-        }
+    CSimBriefData CSimBriefDownloadDialog::getSimBriefData() const
+    {
+        return CSimBriefData(ui->le_SimBriefURL->text().trimmed(), ui->le_SimBriefUsername->text().trimmed());
+    }
 
-        void CSimBriefDownloadDialog::setSimBriefData(const CSimBriefData &data)
-        {
-            ui->le_SimBriefURL->setText(data.getUrl());
-            ui->le_SimBriefUsername->setText(data.getUsername());
-        }
+    void CSimBriefDownloadDialog::setSimBriefData(const CSimBriefData &data)
+    {
+        ui->le_SimBriefURL->setText(data.getUrl());
+        ui->le_SimBriefUsername->setText(data.getUsername());
+    }
 
-        int CSimBriefDownloadDialog::exec()
+    int CSimBriefDownloadDialog::exec()
+    {
+        this->setSimBriefData(m_simBrief.get());
+        const int r = QDialog::exec();
+        if (r == Accepted)
         {
-            this->setSimBriefData(m_simBrief.get());
-            const int r = QDialog::exec();
-            if (r == Accepted)
-            {
-                m_simBrief.set(this->getSimBriefData());
-            }
-            return r;
+            m_simBrief.set(this->getSimBriefData());
         }
-    } // ns
+        return r;
+    }
 } // ns

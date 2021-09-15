@@ -21,160 +21,157 @@
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
+    CAtcStationList::CAtcStationList() { }
+
+    CAtcStationList::CAtcStationList(const CSequence<CAtcStation> &other) :
+        CSequence<CAtcStation>(other)
+    { }
+
+    CAtcStationList CAtcStationList::findIfComUnitTunedIn25KHz(const CComSystem &comUnit) const
     {
-        CAtcStationList::CAtcStationList() { }
-
-        CAtcStationList::CAtcStationList(const CSequence<CAtcStation> &other) :
-            CSequence<CAtcStation>(other)
-        { }
-
-        CAtcStationList CAtcStationList::findIfComUnitTunedIn25KHz(const CComSystem &comUnit) const
+        return this->findBy([&](const CAtcStation & atcStation)
         {
-            return this->findBy([&](const CAtcStation & atcStation)
-            {
-                return atcStation.isComUnitTunedIn25KHz(comUnit);
-            });
-        }
+            return atcStation.isComUnitTunedIn25KHz(comUnit);
+        });
+    }
 
-        CAtcStationList CAtcStationList::findIfComUnitTunedInChannelSpacing(const CComSystem &comUnit) const
+    CAtcStationList CAtcStationList::findIfComUnitTunedInChannelSpacing(const CComSystem &comUnit) const
+    {
+        return this->findBy([&](const CAtcStation & atcStation)
         {
-            return this->findBy([&](const CAtcStation & atcStation)
-            {
-                return atcStation.isComUnitTunedInChannelSpacing(comUnit);
-            });
-        }
+            return atcStation.isComUnitTunedInChannelSpacing(comUnit);
+        });
+    }
 
-        bool CAtcStationList::hasComUnitTunedInChannelSpacing(const CComSystem &comUnit) const
+    bool CAtcStationList::hasComUnitTunedInChannelSpacing(const CComSystem &comUnit) const
+    {
+        return this->containsBy([&](const CAtcStation & atcStation)
         {
-            return this->containsBy([&](const CAtcStation & atcStation)
-            {
-                return atcStation.isComUnitTunedInChannelSpacing(comUnit);
-            });
-        }
+            return atcStation.isComUnitTunedInChannelSpacing(comUnit);
+        });
+    }
 
-        CAtcStationList CAtcStationList::findIfFrequencyIsWithinSpacing(const CFrequency &frequency, CComSystem::ChannelSpacing spacing)
+    CAtcStationList CAtcStationList::findIfFrequencyIsWithinSpacing(const CFrequency &frequency, CComSystem::ChannelSpacing spacing)
+    {
+        if (frequency.isNull()) { return CAtcStationList(); }
+        return this->findBy([&](const CAtcStation & atcStation)
         {
-            if (frequency.isNull()) { return CAtcStationList(); }
-            return this->findBy([&](const CAtcStation & atcStation)
-            {
-                return atcStation.isFrequencyWithinChannelSpacing(frequency, spacing);
-            });
-        }
+            return atcStation.isFrequencyWithinChannelSpacing(frequency, spacing);
+        });
+    }
 
-        bool CAtcStationList::updateIfMessageChanged(const CInformationMessage &im, const CCallsign &callsign, bool overrideWithNewer)
+    bool CAtcStationList::updateIfMessageChanged(const CInformationMessage &im, const CCallsign &callsign, bool overrideWithNewer)
+    {
+        const CInformationMessage::InformationType type = im.getType();
+
+        // for loop just to get reference
+        bool unequal = false;
+        for (CAtcStation &station : *this)
         {
-            const CInformationMessage::InformationType type = im.getType();
+            if (station.getCallsign() != callsign) { continue; }
 
-            // for loop just to get reference
-            bool unequal = false;
-            for (CAtcStation &station : *this)
+            const CInformationMessage m = station.getInformationMessage(type);
+            if (m.getType() == CInformationMessage::Unspecified) { break; }
+
+            if (m.getMessage() == im.getMessage())
             {
-                if (station.getCallsign() != callsign) { continue; }
-
-                const CInformationMessage m = station.getInformationMessage(type);
-                if (m.getType() == CInformationMessage::Unspecified) { break; }
-
-                if (m.getMessage() == im.getMessage())
-                {
-                    if (!overrideWithNewer) { break; }
-                    if (!im.isNewerThan(m)) { break; }
-                }
-                else
-                {
-                    unequal = true;
-                }
-                station.setMessage(im);
-                break; // only count unequals
+                if (!overrideWithNewer) { break; }
+                if (!im.isNewerThan(m)) { break; }
             }
-            return unequal;
-        }
-
-        int CAtcStationList::setOnline(const CCallsign &callsign, bool online)
-        {
-            int c = 0;
-            for (CAtcStation &station : *this)
+            else
             {
-                if (station.getCallsign() != callsign) { continue; }
-                if (station.setOnline(online)) { c++; }
+                unequal = true;
             }
-            return c;
+            station.setMessage(im);
+            break; // only count unequals
+        }
+        return unequal;
+    }
+
+    int CAtcStationList::setOnline(const CCallsign &callsign, bool online)
+    {
+        int c = 0;
+        for (CAtcStation &station : *this)
+        {
+            if (station.getCallsign() != callsign) { continue; }
+            if (station.setOnline(online)) { c++; }
+        }
+        return c;
+    }
+
+    CAtcStationList CAtcStationList::stationsWithValidFrequency() const
+    {
+        return this->findBy(&CAtcStation::hasValidFrequency, true);
+    }
+
+    CUserList CAtcStationList::getControllers() const
+    {
+        return this->findBy(Predicates::MemberValid(&CAtcStation::getController)).transform(Predicates::MemberTransform(&CAtcStation::getController));
+    }
+
+    int CAtcStationList::removeIfOutsideRange()
+    {
+        return this->removeIf(&CAtcStation::isInRange, false);
+    }
+
+    CAtcStationList CAtcStationList::findInRange() const
+    {
+        if (this->isEmpty()) { return {}; }
+        CAtcStationList copy(*this);
+        copy.removeIfOutsideRange();
+        return copy;
+    }
+
+    int CAtcStationList::synchronizeWithBookedStation(CAtcStation &bookedAtcStation)
+    {
+        int c = 0;
+        bookedAtcStation.setOnline(false); // reset
+        if (this->isEmpty()) return 0;
+
+        for (auto i = this->begin(); i != this->end(); ++i)
+        {
+            if (i->getCallsign() != bookedAtcStation.getCallsign()) { continue; }
+            i->synchronizeWithBookedStation(bookedAtcStation);
+            c++;
         }
 
-        CAtcStationList CAtcStationList::stationsWithValidFrequency() const
-        {
-            return this->findBy(&CAtcStation::hasValidFrequency, true);
-        }
+        // normally 1 expected, as I should find
+        // only one online station for this booking
+        Q_ASSERT_X(c == 0 || c == 1, Q_FUNC_INFO, "Found >1 matching station");
+        return c;
+    }
 
-        CUserList CAtcStationList::getControllers() const
-        {
-            return this->findBy(Predicates::MemberValid(&CAtcStation::getController)).transform(Predicates::MemberTransform(&CAtcStation::getController));
-        }
+    void CAtcStationList::sortByAtcSuffixSortOrderAndDistance()
+    {
+        this->sortBy(&CAtcStation::getSuffixSortOrder, &CAtcStation::getRelativeDistance);
+    }
 
-        int CAtcStationList::removeIfOutsideRange()
-        {
-            return this->removeIf(&CAtcStation::isInRange, false);
-        }
+    CAtcStationList CAtcStationList::sortedByAtcSuffixSortOrderAndDistance() const
+    {
+        CAtcStationList stations = *this;
+        stations.sortByAtcSuffixSortOrderAndDistance();
+        return stations;
+    }
 
-        CAtcStationList CAtcStationList::findInRange() const
-        {
-            if (this->isEmpty()) { return {}; }
-            CAtcStationList copy(*this);
-            copy.removeIfOutsideRange();
-            return copy;
-        }
+    QHash<QString, CAtcStationList> CAtcStationList::splitPerSuffix(bool sort) const
+    {
+        if (this->isEmpty()) { return QHash<QString, CAtcStationList>(); }
+        const CAtcStationList stations = sort ? this->sortedByAtcSuffixSortOrderAndDistance() : * this;
 
-        int CAtcStationList::synchronizeWithBookedStation(CAtcStation &bookedAtcStation)
+        QString suffix;
+        QHash<QString, CAtcStationList> split;
+        for (const CAtcStation &s : stations)
         {
-            int c = 0;
-            bookedAtcStation.setOnline(false); // reset
-            if (this->isEmpty()) return 0;
-
-            for (auto i = this->begin(); i != this->end(); ++i)
+            const QString currentSuffix = s.getCallsignSuffix();
+            if (suffix != currentSuffix)
             {
-                if (i->getCallsign() != bookedAtcStation.getCallsign()) { continue; }
-                i->synchronizeWithBookedStation(bookedAtcStation);
-                c++;
+                suffix = currentSuffix;
+                split[currentSuffix] = CAtcStationList();
             }
-
-            // normally 1 expected, as I should find
-            // only one online station for this booking
-            Q_ASSERT_X(c == 0 || c == 1, Q_FUNC_INFO, "Found >1 matching station");
-            return c;
+            split[currentSuffix].push_back(s);
         }
-
-        void CAtcStationList::sortByAtcSuffixSortOrderAndDistance()
-        {
-            this->sortBy(&CAtcStation::getSuffixSortOrder, &CAtcStation::getRelativeDistance);
-        }
-
-        CAtcStationList CAtcStationList::sortedByAtcSuffixSortOrderAndDistance() const
-        {
-            CAtcStationList stations = *this;
-            stations.sortByAtcSuffixSortOrderAndDistance();
-            return stations;
-        }
-
-        QHash<QString, CAtcStationList> CAtcStationList::splitPerSuffix(bool sort) const
-        {
-            if (this->isEmpty()) { return QHash<QString, CAtcStationList>(); }
-            const CAtcStationList stations = sort ? this->sortedByAtcSuffixSortOrderAndDistance() : * this;
-
-            QString suffix;
-            QHash<QString, CAtcStationList> split;
-            for (const CAtcStation &s : stations)
-            {
-                const QString currentSuffix = s.getCallsignSuffix();
-                if (suffix != currentSuffix)
-                {
-                    suffix = currentSuffix;
-                    split[currentSuffix] = CAtcStationList();
-                }
-                split[currentSuffix].push_back(s);
-            }
-            return split;
-        }
-    } // namespace
+        return split;
+    }
 } // namespace

@@ -18,49 +18,46 @@ namespace BlackMisc
 {
     class CGenericDBusInterface;
 
-    namespace SharedState
+    namespace SharedState::DBus
     {
-        namespace DBus
+        /*!
+         * Client side implementation of IHub.
+         */
+        class BLACKMISC_EXPORT CHubProxy final : public IHub
         {
-            /*!
-             * Client side implementation of IHub.
-             */
-            class BLACKMISC_EXPORT CHubProxy final : public IHub
-            {
-                Q_OBJECT
-                Q_CLASSINFO("D-Bus Interface", BLACKMISC_HUB_INTERFACE)
+            Q_OBJECT
+            Q_CLASSINFO("D-Bus Interface", BLACKMISC_HUB_INTERFACE)
 
-            public:
-                //! Constructor.
-                CHubProxy(const QDBusConnection &connection, const QString &service, QObject *parent = nullptr);
+        public:
+            //! Constructor.
+            CHubProxy(const QDBusConnection &connection, const QString &service, QObject *parent = nullptr);
 
-                //! Destructor.
-                virtual ~CHubProxy() override;
+            //! Destructor.
+            virtual ~CHubProxy() override;
 
-                //! \name Interface implementations
-                //! @{
-                virtual bool isConnected() const override;
-                virtual std::pair<QSharedPointer<IDuplex>, QFuture<void>> getDuplex(const CIdentifier &) override;
-                //! @}
+            //! \name Interface implementations
+            //! @{
+            virtual bool isConnected() const override;
+            virtual std::pair<QSharedPointer<IDuplex>, QFuture<void>> getDuplex(const CIdentifier &) override;
+            //! @}
 
-            public slots:
-                //! \name Interface implementations
-                //! @{
-                virtual bool openDuplex(const BlackMisc::CIdentifier &client) override;
-                virtual void closeDuplex(const BlackMisc::CIdentifier &client) override;
-                //! @}
+        public slots:
+            //! \name Interface implementations
+            //! @{
+            virtual bool openDuplex(const BlackMisc::CIdentifier &client) override;
+            virtual void closeDuplex(const BlackMisc::CIdentifier &client) override;
+            //! @}
 
-            protected:
-                //! \name Interface implementations
-                //! @{
-                virtual QFuture<void> openDuplexAsync(const CIdentifier &client) override;
-                //! @}
+        protected:
+            //! \name Interface implementations
+            //! @{
+            virtual QFuture<void> openDuplexAsync(const CIdentifier &client) override;
+            //! @}
 
-            private:
-                CGenericDBusInterface *m_interface = nullptr;
-                QString m_service;
-            };
-        }
+        private:
+            CGenericDBusInterface *m_interface = nullptr;
+            QString m_service;
+        };
     }
 }
 

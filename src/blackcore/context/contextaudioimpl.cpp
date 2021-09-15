@@ -19,65 +19,62 @@ using namespace BlackMisc::Audio;
 using namespace BlackMisc::Aviation;
 using namespace BlackCore::Afv::Clients;
 
-namespace BlackCore
+namespace BlackCore::Context
 {
-    namespace Context
+    CContextAudio::CContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
+        CContextAudioBase(mode, runtime)
     {
-        CContextAudio::CContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
-            CContextAudioBase(mode, runtime)
+        connect(this, &CContextAudio::changedLocalAudioDevices, this, &CContextAudio::onChangedLocalDevices, Qt::QueuedConnection);
+    }
+
+    CContextAudio *CContextAudio::registerWithDBus(CDBusServer *server)
+    {
+        if (!server || m_mode != CCoreFacadeConfig::LocalInDBusServer) { return this; }
+
+        // remark that registers all SIGNALS, not only the interface ons
+        server->addObject(IContextAudio::ObjectPath(), this);
+        return this;
+    }
+
+    void CContextAudio::registerDevices(const CAudioDeviceInfoList &devices)
+    {
+        if (devices.isEmpty()) { return; }
+        m_registeredDevices.registerDevices(devices);
+    }
+
+    void CContextAudio::unRegisterDevices(const CAudioDeviceInfoList &devices)
+    {
+        m_registeredDevices.unRegisterDevices(devices);
+    }
+
+    void CContextAudio::unRegisterDevicesFor(const CIdentifier &identifier)
+    {
+        m_registeredDevices.unRegisterDevices(identifier);
+    }
+
+    void CContextAudio::registerAudioCallsign(const CCallsign &callsign, const CIdentifier &identifier)
+    {
+        m_registeredCallsigns.insert(identifier, callsign);
+    }
+
+    void CContextAudio::unRegisterAudioCallsign(const CCallsign &callsign, const CIdentifier &identifier)
+    {
+        m_registeredCallsigns.remove(identifier);
+        Q_UNUSED(callsign)
+    }
+
+    bool CContextAudio::hasRegisteredAudioCallsign(const CCallsign &callsign) const
+    {
+        for (const CCallsign &cs : m_registeredCallsigns.values())
         {
-            connect(this, &CContextAudio::changedLocalAudioDevices, this, &CContextAudio::onChangedLocalDevices, Qt::QueuedConnection);
+            if (callsign == cs) { return true; }
         }
+        return false;
+    }
 
-        CContextAudio *CContextAudio::registerWithDBus(CDBusServer *server)
-        {
-            if (!server || m_mode != CCoreFacadeConfig::LocalInDBusServer) { return this; }
+    CAudioDeviceInfoList CContextAudio::getRegisteredDevices() const
+    {
+        return m_registeredDevices;
+    }
 
-            // remark that registers all SIGNALS, not only the interface ons
-            server->addObject(IContextAudio::ObjectPath(), this);
-            return this;
-        }
-
-        void CContextAudio::registerDevices(const CAudioDeviceInfoList &devices)
-        {
-            if (devices.isEmpty()) { return; }
-            m_registeredDevices.registerDevices(devices);
-        }
-
-        void CContextAudio::unRegisterDevices(const CAudioDeviceInfoList &devices)
-        {
-            m_registeredDevices.unRegisterDevices(devices);
-        }
-
-        void CContextAudio::unRegisterDevicesFor(const CIdentifier &identifier)
-        {
-            m_registeredDevices.unRegisterDevices(identifier);
-        }
-
-        void CContextAudio::registerAudioCallsign(const CCallsign &callsign, const CIdentifier &identifier)
-        {
-            m_registeredCallsigns.insert(identifier, callsign);
-        }
-
-        void CContextAudio::unRegisterAudioCallsign(const CCallsign &callsign, const CIdentifier &identifier)
-        {
-            m_registeredCallsigns.remove(identifier);
-            Q_UNUSED(callsign)
-        }
-
-        bool CContextAudio::hasRegisteredAudioCallsign(const CCallsign &callsign) const
-        {
-            for (const CCallsign &cs : m_registeredCallsigns.values())
-            {
-                if (callsign == cs) { return true; }
-            }
-            return false;
-        }
-
-        CAudioDeviceInfoList CContextAudio::getRegisteredDevices() const
-        {
-            return m_registeredDevices;
-        }
-
-    } // namespace
 } // namespace

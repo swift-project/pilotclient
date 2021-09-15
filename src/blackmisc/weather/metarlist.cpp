@@ -10,18 +10,15 @@
 
 #include <tuple>
 
-namespace BlackMisc
+namespace BlackMisc::Weather
 {
-    namespace Weather
+    CMetarList::CMetarList(const CSequence<CMetar> &other) :
+        CSequence<CMetar>(other)
+    { }
+
+    CMetar CMetarList::getMetarForAirport(const Aviation::CAirportIcaoCode &icao) const
     {
-        CMetarList::CMetarList(const CSequence<CMetar> &other) :
-            CSequence<CMetar>(other)
-        { }
+        return this->findFirstByOrDefault(&CMetar::getAirportIcaoCode, icao);
+    }
 
-        CMetar CMetarList::getMetarForAirport(const Aviation::CAirportIcaoCode &icao) const
-        {
-            return this->findFirstByOrDefault(&CMetar::getAirportIcaoCode, icao);
-        }
-
-    } // namespace
 } // namespace

@@ -25,75 +25,72 @@ using namespace BlackMisc::Settings;
 using namespace BlackCore::Data;
 using namespace BlackConfig;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CLegalInfoComponent::CLegalInfoComponent(QWidget *parent) :
+        COverlayMessagesFrame(parent),
+        ui(new Ui::CLegalInfoComponent)
     {
-        CLegalInfoComponent::CLegalInfoComponent(QWidget *parent) :
-            COverlayMessagesFrame(parent),
-            ui(new Ui::CLegalInfoComponent)
+        ui->setupUi(this);
+        this->setChecklistInfo();
+
+        const CCrashSettings settings = m_crashDumpSettings.get();
+        ui->cb_CrashDumps->setChecked(settings.isEnabled());
+        ui->cb_Agree->setChecked(CBuildConfig::isLocalDeveloperDebugBuild());
+
+        connect(ui->cb_CrashDumps, &QCheckBox::toggled, this, &CLegalInfoComponent::onAllowCrashDumps);
+
+        QPointer<CLegalInfoComponent> myself(this);
+        QTimer::singleShot(5000, this, [ = ]
         {
-            ui->setupUi(this);
-            this->setChecklistInfo();
+            if (!sApp || sApp->isShuttingDown() || !myself) { return; }
+            myself->showCrashDumpHint();
+        });
+    }
 
-            const CCrashSettings settings = m_crashDumpSettings.get();
-            ui->cb_CrashDumps->setChecked(settings.isEnabled());
-            ui->cb_Agree->setChecked(CBuildConfig::isLocalDeveloperDebugBuild());
+    CLegalInfoComponent::~CLegalInfoComponent()
+    { }
 
-            connect(ui->cb_CrashDumps, &QCheckBox::toggled, this, &CLegalInfoComponent::onAllowCrashDumps);
+    bool CLegalInfoComponent::isAgreedTo() const
+    {
+        return ui->cb_Agree->isChecked();
+    }
 
-            QPointer<CLegalInfoComponent> myself(this);
-            QTimer::singleShot(5000, this, [ = ]
-            {
-                if (!sApp || sApp->isShuttingDown() || !myself) { return; }
-                myself->showCrashDumpHint();
-            });
-        }
+    bool CLegalInfoComponent::validateAgreement()
+    {
+        if (this->isAgreedTo()) { return true; }
+        static const CStatusMessage m = CStatusMessage(this).validationError(u"You need to agree with the swift license");
+        this->showOverlayMessage(m);
+        return false;
+    }
 
-        CLegalInfoComponent::~CLegalInfoComponent()
-        { }
+    void CLegalInfoComponent::onAllowCrashDumps(bool checked)
+    {
+        CCrashSettings settings = m_crashDumpSettings.get();
+        settings.setEnabled(checked);
+        CLogMessage::preformatted(m_crashDumpSettings.setAndSave(settings));
+    }
 
-        bool CLegalInfoComponent::isAgreedTo() const
-        {
-            return ui->cb_Agree->isChecked();
-        }
+    void CLegalInfoComponent::showCrashDumpHint()
+    {
+        if (ui->cb_CrashDumps->isChecked()) { return; }
+        const CStatusMessage m = CStatusMessage(this).info(u"We recommend to enable crash dump uploads");
+        this->showOverlayHTMLMessage(m, 7500);
+    }
 
-        bool CLegalInfoComponent::validateAgreement()
-        {
-            if (this->isAgreedTo()) { return true; }
-            static const CStatusMessage m = CStatusMessage(this).validationError(u"You need to agree with the swift license");
-            this->showOverlayMessage(m);
-            return false;
-        }
+    void CLegalInfoComponent::setChecklistInfo()
+    {
+        if (!sGui) { return; }
+        const CGlobalSetup gs = sGui->getGlobalSetup();
+        const CUrl url = gs.getHelpPageUrl("checklist");
+        ui->lbl_Tip->setText(QStringLiteral("Please read the <a href=\"%1\">checklist before your 1st flight</a>").arg(url.getFullUrl()));
+        ui->lbl_Tip->setTextFormat(Qt::RichText);
+        ui->lbl_Tip->setTextInteractionFlags(Qt::TextBrowserInteraction);
+        ui->lbl_Tip->setOpenExternalLinks(true);
+    }
 
-        void CLegalInfoComponent::onAllowCrashDumps(bool checked)
-        {
-            CCrashSettings settings = m_crashDumpSettings.get();
-            settings.setEnabled(checked);
-            CLogMessage::preformatted(m_crashDumpSettings.setAndSave(settings));
-        }
-
-        void CLegalInfoComponent::showCrashDumpHint()
-        {
-            if (ui->cb_CrashDumps->isChecked()) { return; }
-            const CStatusMessage m = CStatusMessage(this).info(u"We recommend to enable crash dump uploads");
-            this->showOverlayHTMLMessage(m, 7500);
-        }
-
-        void CLegalInfoComponent::setChecklistInfo()
-        {
-            if (!sGui) { return; }
-            const CGlobalSetup gs = sGui->getGlobalSetup();
-            const CUrl url = gs.getHelpPageUrl("checklist");
-            ui->lbl_Tip->setText(QStringLiteral("Please read the <a href=\"%1\">checklist before your 1st flight</a>").arg(url.getFullUrl()));
-            ui->lbl_Tip->setTextFormat(Qt::RichText);
-            ui->lbl_Tip->setTextInteractionFlags(Qt::TextBrowserInteraction);
-            ui->lbl_Tip->setOpenExternalLinks(true);
-        }
-
-        bool CLegalInfoWizardPage::validatePage()
-        {
-            return m_legalInfo && m_legalInfo->validateAgreement();
-        }
-    } // ns
+    bool CLegalInfoWizardPage::validatePage()
+    {
+        return m_legalInfo && m_legalInfo->validateAgreement();
+    }
 } // ns

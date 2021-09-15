@@ -13,19 +13,16 @@
 
 #include <QObject>
 
-namespace BlackMisc
+namespace BlackMisc::Audio
 {
-    namespace Audio
+    //! Voice COM channel
+    enum PTTCOM
     {
-        //! Voice COM channel
-        enum PTTCOM
-        {
-            COM1,
-            COM2,
-            COMActive,
-            COMUnspecified
-        };
-    }
+        COM1,
+        COM2,
+        COMActive,
+        COMUnspecified
+    };
 }
 
 Q_DECLARE_METATYPE(BlackMisc::Audio::PTTCOM)

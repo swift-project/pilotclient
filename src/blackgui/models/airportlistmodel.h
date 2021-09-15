@@ -18,23 +18,20 @@
 
 class QObject;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Airport list model
+    class BLACKGUI_EXPORT CAirportListModel :
+        public CListModelBase<BlackMisc::Aviation::CAirportList, true>
     {
-        //! Airport list model
-        class BLACKGUI_EXPORT CAirportListModel :
-            public CListModelBase<BlackMisc::Aviation::CAirportList, true>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAirportListModel(QObject *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAirportListModel(QObject *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAirportListModel() override {}
-        };
-    }
+        //! Destructor
+        virtual ~CAirportListModel() override {}
+    };
 }
 #endif // guard

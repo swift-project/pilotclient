@@ -15,55 +15,52 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace BlackCore { namespace Context { class IContextSimulator; }}
+namespace BlackCore::Context { class IContextSimulator; }
 namespace Ui { class CSettingsMatchingComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Settings for matching component
+    class CSettingsMatchingComponent : public QFrame
     {
-        //! Settings for matching component
-        class CSettingsMatchingComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CSettingsMatchingComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CSettingsMatchingComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CSettingsMatchingComponent() override;
+        //! Destructor
+        virtual ~CSettingsMatchingComponent() override;
 
-            //! Get setup
-            BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const;
+        //! Get setup
+        BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const;
 
-            //! Set setup
-            void setMatchingSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
+        //! Set setup
+        void setMatchingSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
 
-            //! Show buttons
-            void showButtons(bool show);
+        //! Show buttons
+        void showButtons(bool show);
 
-        private:
-            QScopedPointer<Ui::CSettingsMatchingComponent> ui;
+    private:
+        QScopedPointer<Ui::CSettingsMatchingComponent> ui;
 
-            //! Save pressed
-            void onSavePressed() const;
+        //! Save pressed
+        void onSavePressed() const;
 
-            //! Reload pressed
-            void onReloadPressed();
+        //! Reload pressed
+        void onReloadPressed();
 
-            //! Do re-matching
-            void onMatchingsAgainPressed();
+        //! Do re-matching
+        void onMatchingsAgainPressed();
 
-            //! Setup has been changed
-            void onSetupChanged();
+        //! Setup has been changed
+        void onSetupChanged();
 
-            //! Deferred reload
-            void deferredReload(int deferMs);
+        //! Deferred reload
+        void deferredReload(int deferMs);
 
-            //! Network context
-            static BlackCore::Context::IContextSimulator *simulatorContext();
-        };
-    } // ns
+        //! Network context
+        static BlackCore::Context::IContextSimulator *simulatorContext();
+    };
 } // ns
 
 #endif // guard

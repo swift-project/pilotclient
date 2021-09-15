@@ -17,36 +17,33 @@
 
 class QObject;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Matching statistics entry
+    class BLACKGUI_EXPORT CMatchingStatisticsModel : public CListModelBase<BlackMisc::Simulation::CMatchingStatistics, true>
     {
-        //! Matching statistics entry
-        class BLACKGUI_EXPORT CMatchingStatisticsModel : public CListModelBase<BlackMisc::Simulation::CMatchingStatistics, true>
+        Q_OBJECT
+
+    public:
+        //! How to display
+        enum MatchingStatisticsMode
         {
-            Q_OBJECT
-
-        public:
-            //! How to display
-            enum MatchingStatisticsMode
-            {
-                NoSet,
-                ForSingleSession,
-                ForMultiSessions
-            };
-
-            //! Constructor
-            explicit CMatchingStatisticsModel(MatchingStatisticsMode mode, QObject *parent = nullptr);
-
-            //! Destructor
-            virtual ~CMatchingStatisticsModel() {}
-
-            //! Set mode
-            void setMode(MatchingStatisticsMode mode);
-
-        private:
-            MatchingStatisticsMode m_mode = NoSet;
+            NoSet,
+            ForSingleSession,
+            ForMultiSessions
         };
-    } // ns
+
+        //! Constructor
+        explicit CMatchingStatisticsModel(MatchingStatisticsMode mode, QObject *parent = nullptr);
+
+        //! Destructor
+        virtual ~CMatchingStatisticsModel() {}
+
+        //! Set mode
+        void setMode(MatchingStatisticsMode mode);
+
+    private:
+        MatchingStatisticsMode m_mode = NoSet;
+    };
 } // ns
 #endif // guard

@@ -30,81 +30,78 @@
  */
 #define BLACK_SHARED_STATE_CHANNEL(ID) Q_CLASSINFO("SharedStateChannel", ID)
 
-namespace BlackMisc
+namespace BlackMisc::SharedState
 {
-    namespace SharedState
+    class IDataLink;
+    class CPassiveMutator;
+    class CActiveMutator;
+    class CPassiveObserver;
+    class CActiveObserver;
+
+    /*!
+     * Observe the connection state of an IDataLink.
+     * \ingroup SharedState
+     */
+    class CDataLinkConnectionWatcher : public QObject
     {
-        class IDataLink;
-        class CPassiveMutator;
-        class CActiveMutator;
-        class CPassiveObserver;
-        class CActiveObserver;
+        Q_OBJECT
 
-        /*!
-         * Observe the connection state of an IDataLink.
-         * \ingroup SharedState
-         */
-        class CDataLinkConnectionWatcher : public QObject
-        {
-            Q_OBJECT
+    public:
+        //! True if connected to the transport layer.
+        bool isConnected() const { return m_connected; }
 
-        public:
-            //! True if connected to the transport layer.
-            bool isConnected() const { return m_connected; }
+    signals:
+        //! Connection established.
+        void connected();
 
-        signals:
-            //! Connection established.
-            void connected();
+        //! Connection dropped.
+        void disconnected();
 
-            //! Connection dropped.
-            void disconnected();
+    private:
+        friend class IDataLink;
+        CDataLinkConnectionWatcher() = default;
+        void setStatus(bool connected);
+        bool m_connected = false;
+    };
 
-        private:
-            friend class IDataLink;
-            CDataLinkConnectionWatcher() = default;
-            void setStatus(bool connected);
-            bool m_connected = false;
-        };
+    /*!
+     * Interface that provides a transport mechanism for sharing state.
+     * \ingroup SharedState
+     */
+    class BLACKMISC_EXPORT IDataLink
+    {
+    public:
+        //! Constructor.
+        IDataLink();
 
-        /*!
-         * Interface that provides a transport mechanism for sharing state.
-         * \ingroup SharedState
-         */
-        class BLACKMISC_EXPORT IDataLink
-        {
-        public:
-            //! Constructor.
-            IDataLink();
+        //! Destructor.
+        virtual ~IDataLink() = 0;
 
-            //! Destructor.
-            virtual ~IDataLink() = 0;
+        //! Get a connection status watcher.
+        CDataLinkConnectionWatcher *watcher() { return &m_watcher; }
 
-            //! Get a connection status watcher.
-            CDataLinkConnectionWatcher *watcher() { return &m_watcher; }
+        //! Register a mutator with this transport mechanism.
+        //! @{
+        virtual void publish(const CPassiveMutator *mutator) = 0;
+        virtual void publish(const CActiveMutator *mutator) = 0;
+        //! @}
 
-            //! Register a mutator with this transport mechanism.
-            //! @{
-            virtual void publish(const CPassiveMutator *mutator) = 0;
-            virtual void publish(const CActiveMutator *mutator) = 0;
-            //! @}
+        //! Register an observer with this transport mechanism.
+        //! @{
+        virtual void subscribe(const CPassiveObserver *observer) = 0;
+        virtual void subscribe(const CActiveObserver *observer) = 0;
+        //! @}
 
-            //! Register an observer with this transport mechanism.
-            //! @{
-            virtual void subscribe(const CPassiveObserver *observer) = 0;
-            virtual void subscribe(const CActiveObserver *observer) = 0;
-            //! @}
+    protected:
+        //! Set the connection status visible through the watcher.
+        void setConnectionStatus(bool connected) { m_watcher.setStatus(connected); }
 
-        protected:
-            //! Set the connection status visible through the watcher.
-            void setConnectionStatus(bool connected) { m_watcher.setStatus(connected); }
+        //! Get the channel name for child endpoints of the given object.
+        static QString getChannelName(const QObject *object);
 
-            //! Get the channel name for child endpoints of the given object.
-            static QString getChannelName(const QObject *object);
-
-        private:
-            CDataLinkConnectionWatcher m_watcher;
-        };
-    }
+    private:
+        CDataLinkConnectionWatcher m_watcher;
+    };
 }
 
 Q_DECLARE_INTERFACE(BlackMisc::SharedState::IDataLink, "BlackMisc::SharedState::IDataLink")

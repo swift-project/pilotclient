@@ -20,59 +20,53 @@
 #include <memory>
 
 namespace Ui { class CAircraftIcaoFilterBar; }
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
-    {
-        class CAircraftIcaoCode;
-        class CAircraftIcaoCodeList;
-    }
+    class CAircraftIcaoCode;
+    class CAircraftIcaoCodeList;
 }
-namespace BlackGui
+namespace BlackGui::Filters
 {
-    namespace Filters
+    /*!
+     * Aircraft ICAO filter bar
+     */
+    class BLACKGUI_EXPORT CAircraftIcaoFilterBar :
+        public CFilterWidget,
+        public Models::IModelFilterProvider<BlackMisc::Aviation::CAircraftIcaoCodeList>
     {
-        /*!
-         * Aircraft ICAO filter bar
-         */
-        class BLACKGUI_EXPORT CAircraftIcaoFilterBar :
-            public CFilterWidget,
-            public Models::IModelFilterProvider<BlackMisc::Aviation::CAircraftIcaoCodeList>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAircraftIcaoFilterBar(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAircraftIcaoFilterBar(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAircraftIcaoFilterBar() override;
+        //! Destructor
+        virtual ~CAircraftIcaoFilterBar() override;
 
-            //! \copydoc Models::IModelFilterProvider::createModelFilter
-            std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CAircraftIcaoCodeList> > createModelFilter() const override;
+        //! \copydoc Models::IModelFilterProvider::createModelFilter
+        std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CAircraftIcaoCodeList> > createModelFilter() const override;
 
-            //! Filter by ICAO object as default values
-            void filter(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+        //! Filter by ICAO object as default values
+        void filter(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
 
-            //! Hide the description
-            void hideDescriptionField(bool hide);
+        //! Hide the description
+        void hideDescriptionField(bool hide);
 
-        public slots:
-            //! \copydoc CFilterWidget::onRowCountChanged
-            virtual void onRowCountChanged(int count, bool withFilter) override;
+    public slots:
+        //! \copydoc CFilterWidget::onRowCountChanged
+        virtual void onRowCountChanged(int count, bool withFilter) override;
 
-        protected:
-            //! \copydoc CFilterWidget::clearForm
-            void clearForm() override;
+    protected:
+        //! \copydoc CFilterWidget::clearForm
+        void clearForm() override;
 
-        private:
-            QScopedPointer<Ui::CAircraftIcaoFilterBar> ui;
-            bool m_hasCompleters = false;
+    private:
+        QScopedPointer<Ui::CAircraftIcaoFilterBar> ui;
+        bool m_hasCompleters = false;
 
-            //! Set the completers
-            void initCompleters();
-        };
-    } // ns
+        //! Set the completers
+        void initCompleters();
+    };
 } // ns
 
 #endif // guard

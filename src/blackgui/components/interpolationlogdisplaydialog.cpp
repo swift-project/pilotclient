@@ -13,47 +13,44 @@
 
 using namespace BlackCore;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CInterpolationLogDisplayDialog::CInterpolationLogDisplayDialog(ISimulator *simulator, CAirspaceMonitor *airspaceMonitor, QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CInterpolationLogDisplayDialog)
     {
-        CInterpolationLogDisplayDialog::CInterpolationLogDisplayDialog(ISimulator *simulator, CAirspaceMonitor *airspaceMonitor, QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CInterpolationLogDisplayDialog)
-        {
-            ui->setupUi(this);
-            this->setSimulator(simulator);
+        ui->setupUi(this);
+        this->setSimulator(simulator);
 
-            if (airspaceMonitor)
-            {
-                this->setAirspaceMonitor(airspaceMonitor);
-            }
-            else
-            {
-                ui->comp_InterpolationLogDisplay->linkWithAirspaceMonitor();
-            }
-        }
-
-        CInterpolationLogDisplayDialog::~CInterpolationLogDisplayDialog()
+        if (airspaceMonitor)
         {
-            //! \todo KB 2018-05 this is a hack, I have no idea why I need to invalidate the parent. But without doing it, the dtor of comp_InterpolationLogDisplay is called tywice
-            ui->comp_InterpolationLogDisplay->setParent(nullptr);
+            this->setAirspaceMonitor(airspaceMonitor);
         }
-
-        void CInterpolationLogDisplayDialog::setSimulator(ISimulator *simulator)
+        else
         {
-            ui->comp_InterpolationLogDisplay->setSimulator(simulator);
+            ui->comp_InterpolationLogDisplay->linkWithAirspaceMonitor();
         }
+    }
 
-        void CInterpolationLogDisplayDialog::setAirspaceMonitor(CAirspaceMonitor *airspaceMonitor)
-        {
-            ui->comp_InterpolationLogDisplay->setAirspaceMonitor(airspaceMonitor);
-        }
+    CInterpolationLogDisplayDialog::~CInterpolationLogDisplayDialog()
+    {
+        //! \todo KB 2018-05 this is a hack, I have no idea why I need to invalidate the parent. But without doing it, the dtor of comp_InterpolationLogDisplay is called tywice
+        ui->comp_InterpolationLogDisplay->setParent(nullptr);
+    }
 
-        bool CInterpolationLogDisplayDialog::event(QEvent *event)
-        {
-            if (CGuiApplication::triggerShowHelp(this, event)) { return true; }
-            return QDialog::event(event);
-        }
-    } // ns
+    void CInterpolationLogDisplayDialog::setSimulator(ISimulator *simulator)
+    {
+        ui->comp_InterpolationLogDisplay->setSimulator(simulator);
+    }
+
+    void CInterpolationLogDisplayDialog::setAirspaceMonitor(CAirspaceMonitor *airspaceMonitor)
+    {
+        ui->comp_InterpolationLogDisplay->setAirspaceMonitor(airspaceMonitor);
+    }
+
+    bool CInterpolationLogDisplayDialog::event(QEvent *event)
+    {
+        if (CGuiApplication::triggerShowHelp(this, event)) { return true; }
+        return QDialog::event(event);
+    }
 } // ns

@@ -21,27 +21,24 @@ class QWidget;
 
 namespace Ui { class CCoreStatusComponent; }
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Display status information about the core
+    class BLACKGUI_EXPORT CCoreStatusComponent : public QFrame
     {
-        //! Display status information about the core
-        class BLACKGUI_EXPORT CCoreStatusComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CCoreStatusComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CCoreStatusComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            ~CCoreStatusComponent();
+        //! Destructor
+        ~CCoreStatusComponent();
 
-        private:
-            QScopedPointer<Ui::CCoreStatusComponent> ui;
-        };
+    private:
+        QScopedPointer<Ui::CCoreStatusComponent> ui;
+    };
 
-    } // namespace
 } // namespace
 
 #endif // guard

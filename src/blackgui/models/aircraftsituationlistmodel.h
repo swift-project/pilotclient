@@ -17,22 +17,19 @@
 
 #include <QVariant>
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Client list model
+    class BLACKGUI_EXPORT CAircraftSituationListModel : public CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftSituationList, true>
     {
-        //! Client list model
-        class BLACKGUI_EXPORT CAircraftSituationListModel : public CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftSituationList, true>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAircraftSituationListModel(QObject *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAircraftSituationListModel(QObject *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAircraftSituationListModel() {}
-        };
-    } // namespace
+        //! Destructor
+        virtual ~CAircraftSituationListModel() {}
+    };
 } // namespace
 #endif // guard

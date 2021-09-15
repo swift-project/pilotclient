@@ -16,27 +16,24 @@ using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Weather;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    CWindLayerListModel::CWindLayerListModel(QObject *parent) :
+        CListModelBase("WindLayerListModel", parent)
     {
-        CWindLayerListModel::CWindLayerListModel(QObject *parent) :
-            CListModelBase("WindLayerListModel", parent)
-        {
-            m_columns.addColumn(CColumn("level", CWindLayer::IndexLevel, new CAltitudeFormatter()));
-            m_columns.addColumn(CColumn("direction", CWindLayer::IndexDirection, new CAngleDegreeFormatter()));
-            m_columns.addColumn(CColumn("speed", CWindLayer::IndexSpeed, new CSpeedKtsFormatter()));
-            m_columns.addColumn(CColumn("gust speed", CWindLayer::IndexGustSpeed, new CSpeedKtsFormatter()));
+        m_columns.addColumn(CColumn("level", CWindLayer::IndexLevel, new CAltitudeFormatter()));
+        m_columns.addColumn(CColumn("direction", CWindLayer::IndexDirection, new CAngleDegreeFormatter()));
+        m_columns.addColumn(CColumn("speed", CWindLayer::IndexSpeed, new CSpeedKtsFormatter()));
+        m_columns.addColumn(CColumn("gust speed", CWindLayer::IndexGustSpeed, new CSpeedKtsFormatter()));
 
-            // default sort order
-            this->setSortColumnByPropertyIndex(CWindLayer::IndexLevel);
-            m_sortOrder = Qt::AscendingOrder;
+        // default sort order
+        this->setSortColumnByPropertyIndex(CWindLayer::IndexLevel);
+        m_sortOrder = Qt::AscendingOrder;
 
-            // force strings for translation in resource files
-            (void)QT_TRANSLATE_NOOP("ModelWindLayerList", "level");
-            (void)QT_TRANSLATE_NOOP("ModelWindLayerList", "direction");
-            (void)QT_TRANSLATE_NOOP("ModelWindLayerList", "speed");
-            (void)QT_TRANSLATE_NOOP("ModelWindLayerList", "gust speed");
-        }
-    } // ns
+        // force strings for translation in resource files
+        (void)QT_TRANSLATE_NOOP("ModelWindLayerList", "level");
+        (void)QT_TRANSLATE_NOOP("ModelWindLayerList", "direction");
+        (void)QT_TRANSLATE_NOOP("ModelWindLayerList", "speed");
+        (void)QT_TRANSLATE_NOOP("ModelWindLayerList", "gust speed");
+    }
 } // ns

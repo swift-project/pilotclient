@@ -9,19 +9,16 @@
 #include "firstmodelsetdialog.h"
 #include "ui_firstmodelsetdialog.h"
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CFirstModelSetDialog::CFirstModelSetDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CFirstModelSetDialog)
     {
-        CFirstModelSetDialog::CFirstModelSetDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CFirstModelSetDialog)
-        {
-            ui->setupUi(this);
-            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-        }
+        ui->setupUi(this);
+        this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    }
 
-        CFirstModelSetDialog::~CFirstModelSetDialog()
-        { }
-    } // ns
+    CFirstModelSetDialog::~CFirstModelSetDialog()
+    { }
 } // ns

@@ -21,69 +21,66 @@
 
 namespace Ui { class CDbOwnModelSetFormDialog; }
 namespace BlackMisc { class CLogCategoryList; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Dialog to create new model set
+     */
+    class CDbOwnModelSetFormDialog :
+        public QDialog,
+        public CDbMappingComponentAware
     {
-        /*!
-         * Dialog to create new model set
-         */
-        class CDbOwnModelSetFormDialog :
-            public QDialog,
-            public CDbMappingComponentAware
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Categories
-            static const QStringList &getLogCategories();
+    public:
+        //! Categories
+        static const QStringList &getLogCategories();
 
-            //! Constructor
-            explicit CDbOwnModelSetFormDialog(QWidget *parent = nullptr);
+        //! Constructor
+        explicit CDbOwnModelSetFormDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CDbOwnModelSetFormDialog() override;
+        //! Destructor
+        virtual ~CDbOwnModelSetFormDialog() override;
 
-            //! Last build set
-            const BlackMisc::Simulation::CAircraftModelList &getModelSet() const { return m_modelSet; }
+        //! Last build set
+        const BlackMisc::Simulation::CAircraftModelList &getModelSet() const { return m_modelSet; }
 
-            //! Init last set
-            void setModelSet(const BlackMisc::Simulation::CAircraftModelList &models) { m_modelSet = models; }
+        //! Init last set
+        void setModelSet(const BlackMisc::Simulation::CAircraftModelList &models) { m_modelSet = models; }
 
-            //! Simulator info
-            const BlackMisc::Simulation::CSimulatorInfo &getSimulatorInfo() const { return m_simulatorInfo; }
+        //! Simulator info
+        const BlackMisc::Simulation::CSimulatorInfo &getSimulatorInfo() const { return m_simulatorInfo; }
 
-            //! Reload data e.g. current model set and simulator
-            void reloadData();
+        //! Reload data e.g. current model set and simulator
+        void reloadData();
 
-            //! Exec and display simulator
-            virtual int exec() override;
+        //! Exec and display simulator
+        virtual int exec() override;
 
-        protected:
-            //! \copydoc QObject::event
-            virtual bool event(QEvent *event) override;
+    protected:
+        //! \copydoc QObject::event
+        virtual bool event(QEvent *event) override;
 
-        private:
-            QScopedPointer<Ui::CDbOwnModelSetFormDialog> ui;
-            BlackMisc::Simulation::CAircraftModelList m_modelSet;
-            BlackMisc::Simulation::CSimulatorInfo     m_simulatorInfo;
+    private:
+        QScopedPointer<Ui::CDbOwnModelSetFormDialog> ui;
+        BlackMisc::Simulation::CAircraftModelList m_modelSet;
+        BlackMisc::Simulation::CSimulatorInfo     m_simulatorInfo;
 
-            //! Button clicked
-            void buttonClicked();
+        //! Button clicked
+        void buttonClicked();
 
-            //! Simulator changed
-            void simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        //! Simulator changed
+        void simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-            //! Check data
-            bool checkData();
+        //! Check data
+        bool checkData();
 
-            //! Set current simulator
-            void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        //! Set current simulator
+        void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-            //! Build the set
-            BlackMisc::Simulation::CAircraftModelList buildSet(const BlackMisc::Simulation::CSimulatorInfo &simulator, const BlackMisc::Simulation::CAircraftModelList &currentSet = {});
-        };
-    } // ns
+        //! Build the set
+        BlackMisc::Simulation::CAircraftModelList buildSet(const BlackMisc::Simulation::CSimulatorInfo &simulator, const BlackMisc::Simulation::CAircraftModelList &currentSet = {});
+    };
 } // ns
 
 #endif // guard

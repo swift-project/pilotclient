@@ -29,76 +29,70 @@
 #include <array>
 #include <tuple>
 
-namespace BlackMisc
+namespace BlackMisc::Simulation::XPlane
 {
-    namespace Simulation
+    /*!
+     * Reference to an entry in X-Plane's navigation data (airport, navaid, fix, etc.) with its position.
+     */
+    class BLACKMISC_EXPORT CNavDataReference : public CValueObject<CNavDataReference>, public Geo::ICoordinateGeodetic
     {
-        namespace XPlane
-        {
-            /*!
-             * Reference to an entry in X-Plane's navigation data (airport, navaid, fix, etc.) with its position.
-             */
-            class BLACKMISC_EXPORT CNavDataReference : public CValueObject<CNavDataReference>, public Geo::ICoordinateGeodetic
-            {
-            public:
-                //! Default constructor.
-                CNavDataReference();
+    public:
+        //! Default constructor.
+        CNavDataReference();
 
-                //! Construct from a navdata reference ID and position.
-                CNavDataReference(int id, const Geo::CLatitude &latitude, const Geo::CLongitude &longitude);
+        //! Construct from a navdata reference ID and position.
+        CNavDataReference(int id, const Geo::CLatitude &latitude, const Geo::CLongitude &longitude);
 
-                //! Construct from a navdata reference ID and position.
-                CNavDataReference(int id, float latitudeDegrees, float longitudeDegrees);
+        //! Construct from a navdata reference ID and position.
+        CNavDataReference(int id, float latitudeDegrees, float longitudeDegrees);
 
-                //! Return the navdata reference ID.
-                int id() const { return m_id; }
+        //! Return the navdata reference ID.
+        int id() const { return m_id; }
 
-                virtual Geo::CLatitude latitude() const override { return m_position.latitude(); }
-                virtual Geo::CLongitude longitude() const override { return m_position.longitude(); }
-                virtual const Aviation::CAltitude &geodeticHeight() const override { return m_position.geodeticHeight(); }
-                virtual QVector3D normalVector() const override { return m_position.normalVector(); }
-                virtual std::array<double, 3> normalVectorDouble() const override { return this->m_position.normalVectorDouble(); }
+        virtual Geo::CLatitude latitude() const override { return m_position.latitude(); }
+        virtual Geo::CLongitude longitude() const override { return m_position.longitude(); }
+        virtual const Aviation::CAltitude &geodeticHeight() const override { return m_position.geodeticHeight(); }
+        virtual QVector3D normalVector() const override { return m_position.normalVector(); }
+        virtual std::array<double, 3> normalVectorDouble() const override { return this->m_position.normalVectorDouble(); }
 
-                //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-                QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
+        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+        QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
 
-                //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-                void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
+        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+        void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
 
-                //! \copydoc BlackMisc::Mixin::String::toQString
-                QString convertToQString(bool i18n = false) const;
+        //! \copydoc BlackMisc::Mixin::String::toQString
+        QString convertToQString(bool i18n = false) const;
 
-            private:
-                int m_id = 0;
-                Geo::CCoordinateGeodetic m_position;
+    private:
+        int m_id = 0;
+        Geo::CCoordinateGeodetic m_position;
 
-                BLACK_METACLASS(
-                    CNavDataReference,
-                    BLACK_METAMEMBER(id),
-                    BLACK_METAMEMBER(position)
-                );
-            };
+        BLACK_METACLASS(
+            CNavDataReference,
+            BLACK_METAMEMBER(id),
+            BLACK_METAMEMBER(position)
+        );
+    };
 
-            /*!
-             * List of X-Plane navigation data entries (airports, navaids, fixes, etc) with their positions.
-             */
-            class BLACKMISC_EXPORT CNavDataReferenceList :
-                public CSequence<CNavDataReference>,
-                public Geo::IGeoObjectList<CNavDataReference, CNavDataReferenceList>,
-                public Mixin::MetaType<CNavDataReferenceList>
-            {
-            public:
-                BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CNavDataReferenceList)
-                using CSequence::CSequence;
+    /*!
+     * List of X-Plane navigation data entries (airports, navaids, fixes, etc) with their positions.
+     */
+    class BLACKMISC_EXPORT CNavDataReferenceList :
+        public CSequence<CNavDataReference>,
+        public Geo::IGeoObjectList<CNavDataReference, CNavDataReferenceList>,
+        public Mixin::MetaType<CNavDataReferenceList>
+    {
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CNavDataReferenceList)
+        using CSequence::CSequence;
 
-                //! Default constructor.
-                CNavDataReferenceList();
+        //! Default constructor.
+        CNavDataReferenceList();
 
-                //! Construct from a base class object.
-                CNavDataReferenceList(const CSequence<CNavDataReference> &other);
-            };
-        }
-    }
+        //! Construct from a base class object.
+        CNavDataReferenceList(const CSequence<CNavDataReference> &other);
+    };
 }
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::XPlane::CNavDataReference)

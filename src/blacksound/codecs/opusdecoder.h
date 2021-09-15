@@ -16,42 +16,39 @@
 
 #include <QVector>
 
-namespace BlackSound
+namespace BlackSound::Codecs
 {
-    namespace Codecs
+    //! OPUS decoder
+    class BLACKSOUND_EXPORT COpusDecoder
     {
-        //! OPUS decoder
-        class BLACKSOUND_EXPORT COpusDecoder
-        {
-        public:
-            //! Ctor
-            COpusDecoder(int sampleRate, int channels);
+    public:
+        //! Ctor
+        COpusDecoder(int sampleRate, int channels);
 
-            //! Dtor
-            ~COpusDecoder();
+        //! Dtor
+        ~COpusDecoder();
 
-            //! Not copyable and assignable
-            //! @{
-            COpusDecoder(const COpusDecoder &decoder) = delete;
-            COpusDecoder& operator=(COpusDecoder const&) = delete;
-            //! @}
+        //! Not copyable and assignable
+        //! @{
+        COpusDecoder(const COpusDecoder &decoder) = delete;
+        COpusDecoder& operator=(COpusDecoder const&) = delete;
+        //! @}
 
-            //! Frame count
-            int frameCount(int bufferSize);
+        //! Frame count
+        int frameCount(int bufferSize);
 
-            //! Decode
-            QVector<qint16> decode(const QByteArray &opusData, int dataLength, int *decodedLength);
+        //! Decode
+        QVector<qint16> decode(const QByteArray &opusData, int dataLength, int *decodedLength);
 
-            //! Reset
-            void resetState();
+        //! Reset
+        void resetState();
 
-        private:
-            OpusDecoder *m_opusDecoder = nullptr;
-            int m_channels;
+    private:
+        OpusDecoder *m_opusDecoder = nullptr;
+        int m_channels;
 
-            static constexpr int MaxDataBytes = 4000;
-        };
-    } // ns
+        static constexpr int MaxDataBytes = 4000;
+    };
 } // ns
 
 #endif // guard

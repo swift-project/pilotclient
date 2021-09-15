@@ -18,32 +18,29 @@
 #include <QScopedPointer>
 
 namespace Ui { class CSimulatorFlightgearConfigWindow; }
-namespace BlackSimPlugin
+namespace BlackSimPlugin::Flightgear
 {
-    namespace Flightgear
+    /**
+     * A window that shows all the Flightgear plugin options.
+     */
+    class CSimulatorFlightgearConfigWindow : public BlackGui::CPluginConfigWindow
     {
-        /**
-         * A window that shows all the Flightgear plugin options.
-         */
-        class CSimulatorFlightgearConfigWindow : public BlackGui::CPluginConfigWindow
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor.
-            CSimulatorFlightgearConfigWindow(QWidget *parent);
+    public:
+        //! Ctor.
+        CSimulatorFlightgearConfigWindow(QWidget *parent);
 
-            //! Dtor.
-            virtual ~CSimulatorFlightgearConfigWindow();
+        //! Dtor.
+        virtual ~CSimulatorFlightgearConfigWindow();
 
-        private:
-            //! Settings have been accepted
-            void onSettingsAccepted();
+    private:
+        //! Settings have been accepted
+        void onSettingsAccepted();
 
-            QScopedPointer<Ui::CSimulatorFlightgearConfigWindow> ui;
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TFGSwiftBusServer> m_fgswiftbusServerSetting { this };
-        };
-    } // ns
+        QScopedPointer<Ui::CSimulatorFlightgearConfigWindow> ui;
+        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TFGSwiftBusServer> m_fgswiftbusServerSetting { this };
+    };
 } // ns
 
 #endif // guard

@@ -18,23 +18,20 @@
 
 class QObject;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Wind layer list model
+    class BLACKGUI_EXPORT CWindLayerListModel :
+        public CListModelBase<BlackMisc::Weather::CWindLayerList, false>
     {
-        //! Wind layer list model
-        class BLACKGUI_EXPORT CWindLayerListModel :
-            public CListModelBase<BlackMisc::Weather::CWindLayerList, false>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CWindLayerListModel(QObject *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CWindLayerListModel(QObject *parent = nullptr);
 
-            //! Destructor
-            virtual ~CWindLayerListModel() {}
-        };
-    }
+        //! Destructor
+        virtual ~CWindLayerListModel() {}
+    };
 }
 #endif // guard

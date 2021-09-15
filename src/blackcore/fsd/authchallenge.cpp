@@ -10,36 +10,33 @@
 
 #include "blackmisc/logmessage.h"
 
-namespace BlackCore
+namespace BlackCore::Fsd
 {
-    namespace Fsd
+    AuthChallenge::AuthChallenge() : MessageBase ()
+    { }
+
+    AuthChallenge::AuthChallenge(const QString &sender, const QString &target, const QString &challengeKey) :
+        MessageBase(sender, target),
+        m_challengeKey(challengeKey)
+    { }
+
+    QStringList AuthChallenge::toTokens() const
     {
-        AuthChallenge::AuthChallenge() : MessageBase ()
-        { }
+        auto tokens = QStringList {};
+        tokens.push_back(m_sender);
+        tokens.push_back(m_receiver);
+        tokens.push_back(m_challengeKey);
+        return tokens;
+    }
 
-        AuthChallenge::AuthChallenge(const QString &sender, const QString &target, const QString &challengeKey) :
-            MessageBase(sender, target),
-            m_challengeKey(challengeKey)
-        { }
-
-        QStringList AuthChallenge::toTokens() const
+    AuthChallenge AuthChallenge::fromTokens(const QStringList &tokens)
+    {
+        if (tokens.size() < 3)
         {
-            auto tokens = QStringList {};
-            tokens.push_back(m_sender);
-            tokens.push_back(m_receiver);
-            tokens.push_back(m_challengeKey);
-            return tokens;
+            BlackMisc::CLogMessage(static_cast<AuthChallenge *>(nullptr)).warning(u"Wrong number of arguments.");
+            return {};
         }
-
-        AuthChallenge AuthChallenge::fromTokens(const QStringList &tokens)
-        {
-            if (tokens.size() < 3)
-            {
-                BlackMisc::CLogMessage(static_cast<AuthChallenge *>(nullptr)).warning(u"Wrong number of arguments.");
-                return {};
-            }
-            return AuthChallenge(tokens[0], tokens[1], tokens[2]);
-        }
+        return AuthChallenge(tokens[0], tokens[1], tokens[2]);
     }
 }
 

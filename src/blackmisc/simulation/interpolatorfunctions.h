@@ -11,29 +11,26 @@
 #ifndef BLACKMISC_SIMULATION_INTERPOLATORFUNCTIONS_H
 #define BLACKMISC_SIMULATION_INTERPOLATORFUNCTIONS_H
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    //! Valid time fraction [0,1]
+    inline bool isValidTimeFraction(double timeFraction)
     {
-        //! Valid time fraction [0,1]
-        inline bool isValidTimeFraction(double timeFraction)
-        {
-            return timeFraction >= 0.0 && timeFraction <= 1.0;
-        }
+        return timeFraction >= 0.0 && timeFraction <= 1.0;
+    }
 
-        //! Valid time fraction [0,1], this allows minor overshooting
-        inline bool isAcceptableTimeFraction(double timeFraction)
-        {
-            return timeFraction >= 0.0 && timeFraction <= 1.01;
-        }
+    //! Valid time fraction [0,1], this allows minor overshooting
+    inline bool isAcceptableTimeFraction(double timeFraction)
+    {
+        return timeFraction >= 0.0 && timeFraction <= 1.01;
+    }
 
-        //! Clamp time fraction [0,1]
-        inline double clampValidTimeFraction(double timeFraction)
-        {
-            if (timeFraction > 1.0) { return 1.0; }
-            if (timeFraction < 0.0) { return 0.0; }
-            return timeFraction;
-        }
-    } // namespace
+    //! Clamp time fraction [0,1]
+    inline double clampValidTimeFraction(double timeFraction)
+    {
+        if (timeFraction > 1.0) { return 1.0; }
+        if (timeFraction < 0.0) { return 0.0; }
+        return timeFraction;
+    }
 } // namespace
 #endif // guard

@@ -19,41 +19,38 @@
 using namespace BlackCore::Afv::Model;
 using namespace BlackCore::Afv::Clients;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CAfvMapDialog::CAfvMapDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CAfvMapDialog)
     {
-        CAfvMapDialog::CAfvMapDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CAfvMapDialog)
+        /**
+        m_afvMapReader = new CAfvMapReader(this);
+        m_afvMapReader->updateFromMap();
+
+        CAfvClient *afvClient = nullptr;
+        if (sGui && !sGui->isShuttingDown() && sGui->getIContextAudio())
         {
-            /**
-            m_afvMapReader = new CAfvMapReader(this);
-            m_afvMapReader->updateFromMap();
-
-            CAfvClient *afvClient = nullptr;
-            if (sGui && !sGui->isShuttingDown() && sGui->getIContextAudio())
+            if (sGui->getIContextAudio()->isUsingImplementingObject())
             {
-                if (sGui->getIContextAudio()->isUsingImplementingObject())
-                {
-                    afvClient = sGui->getCoreFacade()->getCContextAudio()->voiceClient();
-                }
+                afvClient = sGui->getCoreFacade()->getCContextAudio()->voiceClient();
             }
-
-            ui->setupUi(this);
-            QQmlContext *ctxt = ui->qw_AfvMap->rootContext();
-            ctxt->setContextProperty("afvMapReader", m_afvMapReader);
-
-            if (m_afvClient)
-            {
-                ctxt->setContextProperty("voiceClient", afvClient);
-            }
-
-            // ui->qw_AfvMap->engine()->setBaseUrl(":/blackgui/qml");
-            ui->qw_AfvMap->setSource(QUrl("qrc:/blackgui/qml/AFVMap.qml"));
-            **/
         }
 
-        CAfvMapDialog::~CAfvMapDialog() { }
-    } // ns
+        ui->setupUi(this);
+        QQmlContext *ctxt = ui->qw_AfvMap->rootContext();
+        ctxt->setContextProperty("afvMapReader", m_afvMapReader);
+
+        if (m_afvClient)
+        {
+            ctxt->setContextProperty("voiceClient", afvClient);
+        }
+
+        // ui->qw_AfvMap->engine()->setBaseUrl(":/blackgui/qml");
+        ui->qw_AfvMap->setSource(QUrl("qrc:/blackgui/qml/AFVMap.qml"));
+        **/
+    }
+
+    CAfvMapDialog::~CAfvMapDialog() { }
 } // ns

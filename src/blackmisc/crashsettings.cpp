@@ -12,53 +12,50 @@
 
 #include <QStringBuilder>
 
-namespace BlackMisc
+namespace BlackMisc::Settings
 {
-    namespace Settings
+    CCrashSettings::CCrashSettings() {}
+
+    QString CCrashSettings::convertToQString(bool i18n) const
     {
-        CCrashSettings::CCrashSettings() {}
+        Q_UNUSED(i18n);
+        return QStringLiteral("{ %1, %2 }").arg(boolToYesNo(this->isEnabled()), boolToYesNo(this->withPrivacyInfo()));
+    }
 
-        QString CCrashSettings::convertToQString(bool i18n) const
+    QVariant CCrashSettings::propertyByIndex(CPropertyIndexRef index) const
+    {
+        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
         {
-            Q_UNUSED(i18n);
-            return QStringLiteral("{ %1, %2 }").arg(boolToYesNo(this->isEnabled()), boolToYesNo(this->withPrivacyInfo()));
+        case IndexEnabled: return QVariant::fromValue(this->isEnabled());
+        case IndexPrivateInfo: return QVariant::fromValue(this->withPrivacyInfo());
+        default: break;
         }
+        return CValueObject::propertyByIndex(index);
+    }
 
-        QVariant CCrashSettings::propertyByIndex(CPropertyIndexRef index) const
+    void CCrashSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
+    {
+        if (index.isMyself()) { (*this) = variant.value<CCrashSettings>(); return; }
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
         {
-            if (index.isMyself()) { return QVariant::fromValue(*this); }
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
-            switch (i)
-            {
-            case IndexEnabled: return QVariant::fromValue(this->isEnabled());
-            case IndexPrivateInfo: return QVariant::fromValue(this->withPrivacyInfo());
-            default: break;
-            }
-            return CValueObject::propertyByIndex(index);
+        case IndexEnabled: this->setEnabled(variant.toBool()); break;
+        case IndexPrivateInfo: this->setPrivacyInfo(variant.toBool()); break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
+    }
 
-        void CCrashSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
+    int CCrashSettings::comparePropertyByIndex(CPropertyIndexRef index, const CCrashSettings &compareValue) const
+    {
+        if (index.isMyself()) { return this->convertToQString().compare(compareValue.convertToQString()); }
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
         {
-            if (index.isMyself()) { (*this) = variant.value<CCrashSettings>(); return; }
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
-            switch (i)
-            {
-            case IndexEnabled: this->setEnabled(variant.toBool()); break;
-            case IndexPrivateInfo: this->setPrivacyInfo(variant.toBool()); break;
-            default: CValueObject::setPropertyByIndex(index, variant); break;
-            }
+        case IndexEnabled: return Compare::compare(this->isEnabled(), compareValue.isEnabled());
+        case IndexPrivateInfo: return Compare::compare(this->withPrivacyInfo(), compareValue.withPrivacyInfo());
+        default: return CValueObject::comparePropertyByIndex(index.copyFrontRemoved(), compareValue);
         }
-
-        int CCrashSettings::comparePropertyByIndex(CPropertyIndexRef index, const CCrashSettings &compareValue) const
-        {
-            if (index.isMyself()) { return this->convertToQString().compare(compareValue.convertToQString()); }
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
-            switch (i)
-            {
-            case IndexEnabled: return Compare::compare(this->isEnabled(), compareValue.isEnabled());
-            case IndexPrivateInfo: return Compare::compare(this->withPrivacyInfo(), compareValue.withPrivacyInfo());
-            default: return CValueObject::comparePropertyByIndex(index.copyFrontRemoved(), compareValue);
-            }
-        }
-    } // ns
+    }
 } // ns

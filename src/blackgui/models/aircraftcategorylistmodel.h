@@ -16,23 +16,20 @@
 #include "blackgui/models/listmodeldbobjects.h"
 #include "blackgui/blackguiexport.h"
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Airport list model
+    class BLACKGUI_EXPORT CAircraftCategoryListModel :
+        public CListModelDbObjects<BlackMisc::Aviation::CAircraftCategoryList, int, true>
     {
-        //! Airport list model
-        class BLACKGUI_EXPORT CAircraftCategoryListModel :
-            public CListModelDbObjects<BlackMisc::Aviation::CAircraftCategoryList, int, true>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAircraftCategoryListModel(QObject *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAircraftCategoryListModel(QObject *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAircraftCategoryListModel() {}
-        };
-    }
+        //! Destructor
+        virtual ~CAircraftCategoryListModel() {}
+    };
 }
 #endif // guard

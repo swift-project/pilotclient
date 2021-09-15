@@ -48,17 +48,14 @@ class QEvent;
 class QMouseEvent;
 class QTimer;
 
-namespace BlackMisc { namespace Aviation   { class CAltitude; } }
-namespace BlackGui
+namespace BlackMisc::Aviation   { class CAltitude; }
+namespace BlackGui::Components
 {
-    namespace Components
-    {
-        class CDbLoadDataDialog;
-        class CAutoPublishDialog;
-        class CLoginDialog;
-        class CModelBrowserDialog;
-        class CAfvMapDialog;
-    }
+    class CDbLoadDataDialog;
+    class CAutoPublishDialog;
+    class CLoginDialog;
+    class CModelBrowserDialog;
+    class CAfvMapDialog;
 }
 namespace Ui { class SwiftGuiStd; }
 

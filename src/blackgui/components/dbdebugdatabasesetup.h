@@ -20,33 +20,30 @@
 #include <QScopedPointer>
 
 namespace Ui { class CDbDebugDatabaseSetup; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Debug settings for DB (only to be used as developer)
+     * \remarks Disabled when not runnig in dev.environment
+     */
+    class BLACKGUI_EXPORT CDbDebugDatabaseSetup : public QFrame
     {
-        /*!
-         * Debug settings for DB (only to be used as developer)
-         * \remarks Disabled when not runnig in dev.environment
-         */
-        class BLACKGUI_EXPORT CDbDebugDatabaseSetup : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CDbDebugDatabaseSetup(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CDbDebugDatabaseSetup(QWidget *parent = nullptr);
 
-            //! Dstructor
-            ~CDbDebugDatabaseSetup();
+        //! Dstructor
+        ~CDbDebugDatabaseSetup();
 
-        private:
-            //! Changed the debug checkbox
-            void onDebugChanged(bool set);
+    private:
+        //! Changed the debug checkbox
+        void onDebugChanged(bool set);
 
-            QScopedPointer<Ui::CDbDebugDatabaseSetup> ui;
-            BlackMisc::CData<BlackCore::Data::TGlobalSetup> m_setup {this};   //!< data cache
-        };
-    } // ns
+        QScopedPointer<Ui::CDbDebugDatabaseSetup> ui;
+        BlackMisc::CData<BlackCore::Data::TGlobalSetup> m_setup {this};   //!< data cache
+    };
 } // ns
 
 #endif // guard

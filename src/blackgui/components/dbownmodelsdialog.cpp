@@ -12,41 +12,38 @@
 
 using namespace BlackMisc::Simulation;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CDbOwnModelsDialog::CDbOwnModelsDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CDbOwnModelsDialog)
     {
-        CDbOwnModelsDialog::CDbOwnModelsDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CDbOwnModelsDialog)
-        {
-            ui->setupUi(this);
-            ui->comp_OwnModels->setSimulatorSelectorMode(CSimulatorSelector::ComboBox);
-            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-            connect(ui->comp_OwnModels, &CDbOwnModelsComponent::successfullyLoadedModels, this, &CDbOwnModelsDialog::successfullyLoadedModels);
-        }
+        ui->setupUi(this);
+        ui->comp_OwnModels->setSimulatorSelectorMode(CSimulatorSelector::ComboBox);
+        this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+        connect(ui->comp_OwnModels, &CDbOwnModelsComponent::successfullyLoadedModels, this, &CDbOwnModelsDialog::successfullyLoadedModels);
+    }
 
-        CDbOwnModelsDialog::~CDbOwnModelsDialog()
-        { }
+    CDbOwnModelsDialog::~CDbOwnModelsDialog()
+    { }
 
-        void CDbOwnModelsDialog::setSimulator(const CSimulatorInfo &simulator)
-        {
-            ui->comp_OwnModels->setSimulator(simulator);
-        }
+    void CDbOwnModelsDialog::setSimulator(const CSimulatorInfo &simulator)
+    {
+        ui->comp_OwnModels->setSimulator(simulator);
+    }
 
-        bool CDbOwnModelsDialog::requestModelsInBackground(const CSimulatorInfo &simulator, bool onlyIfNotEmpty)
-        {
-            return ui->comp_OwnModels->requestModelsInBackground(simulator, onlyIfNotEmpty);
-        }
+    bool CDbOwnModelsDialog::requestModelsInBackground(const CSimulatorInfo &simulator, bool onlyIfNotEmpty)
+    {
+        return ui->comp_OwnModels->requestModelsInBackground(simulator, onlyIfNotEmpty);
+    }
 
-        int CDbOwnModelsDialog::getOwnModelsCount() const
-        {
-            return ui->comp_OwnModels->getOwnModelsCount();
-        }
+    int CDbOwnModelsDialog::getOwnModelsCount() const
+    {
+        return ui->comp_OwnModels->getOwnModelsCount();
+    }
 
-        const CDbOwnModelsComponent *CDbOwnModelsDialog::modelsComponent() const
-        {
-            return ui->comp_OwnModels;
-        }
-    } // ns
+    const CDbOwnModelsComponent *CDbOwnModelsDialog::modelsComponent() const
+    {
+        return ui->comp_OwnModels;
+    }
 } // ns

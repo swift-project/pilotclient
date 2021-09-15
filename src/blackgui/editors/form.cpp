@@ -15,65 +15,62 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 
-namespace BlackGui
+namespace BlackGui::Editors
 {
-    namespace Editors
+    CForm::CForm(QWidget *parent) : COverlayMessagesFrame(parent)
+    { }
+
+    CForm::~CForm() { }
+
+    void CForm::setSelectOnly()
     {
-        CForm::CForm(QWidget *parent) : COverlayMessagesFrame(parent)
-        { }
+        this->setReadOnly(true);
+    }
 
-        CForm::~CForm() { }
+    CStatusMessageList CForm::validate(bool withNestedObjects) const
+    {
+        Q_UNUSED(withNestedObjects);
+        return CStatusMessageList();
+    }
 
-        void CForm::setSelectOnly()
-        {
-            this->setReadOnly(true);
-        }
+    CStatusMessageList CForm::validateAsOverlayMessage(bool withNestedObjects, bool appendOldMessages, int timeOutMs)
+    {
+        const CStatusMessageList msgs = this->validate(withNestedObjects);
+        this->showOverlayMessages(msgs, appendOldMessages, timeOutMs);
+        return msgs;
+    }
 
-        CStatusMessageList CForm::validate(bool withNestedObjects) const
-        {
-            Q_UNUSED(withNestedObjects);
-            return CStatusMessageList();
-        }
+    void CForm::jsonPasted(const QString &json)
+    {
+        Q_UNUSED(json);
+    }
 
-        CStatusMessageList CForm::validateAsOverlayMessage(bool withNestedObjects, bool appendOldMessages, int timeOutMs)
-        {
-            const CStatusMessageList msgs = this->validate(withNestedObjects);
-            this->showOverlayMessages(msgs, appendOldMessages, timeOutMs);
-            return msgs;
-        }
+    void CForm::pasted()
+    {
+        if (!QApplication::clipboard()) { return; }
+        const QString data = QApplication::clipboard()->text();
+        if (!Json::looksLikeSwiftJson(data)) { return; }
+        this->jsonPasted(data);
+    }
 
-        void CForm::jsonPasted(const QString &json)
-        {
-            Q_UNUSED(json);
-        }
+    void CForm::forceStyleSheetUpdate()
+    {
+        CGuiUtility::forceStyleSheetUpdate(this);
+    }
 
-        void CForm::pasted()
-        {
-            if (!QApplication::clipboard()) { return; }
-            const QString data = QApplication::clipboard()->text();
-            if (!Json::looksLikeSwiftJson(data)) { return; }
-            this->jsonPasted(data);
-        }
+    CFormDbUser::CFormDbUser(QWidget *parent) : CForm(parent)
+    { }
 
-        void CForm::forceStyleSheetUpdate()
-        {
-            CGuiUtility::forceStyleSheetUpdate(this);
-        }
+    CFormDbUser::~CFormDbUser()
+    { }
 
-        CFormDbUser::CFormDbUser(QWidget *parent) : CForm(parent)
-        { }
+    CAuthenticatedUser CFormDbUser::getSwiftDbUser() const
+    {
+        return m_swiftDbUser.get();
+    }
 
-        CFormDbUser::~CFormDbUser()
-        { }
-
-        CAuthenticatedUser CFormDbUser::getSwiftDbUser() const
-        {
-            return m_swiftDbUser.get();
-        }
-
-        void CFormDbUser::userChanged()
-        {
-            // void
-        }
-    } // ns
+    void CFormDbUser::userChanged()
+    {
+        // void
+    }
 } // ns

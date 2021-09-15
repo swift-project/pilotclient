@@ -15,37 +15,34 @@
 #include "blackmisc/simulation/aircraftmodel.h"
 #include <QLineEdit>
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * Completer for model keys
+     */
+    class CDbModelKeyCompleter : public QLineEdit
     {
-        /**
-         * Completer for model keys
-         */
-        class CDbModelKeyCompleter : public QLineEdit
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            CDbModelKeyCompleter(QWidget *parent = nullptr);
+    public:
+        //! Ctor
+        CDbModelKeyCompleter(QWidget *parent = nullptr);
 
-            //! Limit models to simulator, or add unspecified
-            void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        //! Limit models to simulator, or add unspecified
+        void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-            //! Aircraft model for current string (searched in DB data)
-            BlackMisc::Simulation::CAircraftModel getAircraftModel() const;
+        //! Aircraft model for current string (searched in DB data)
+        BlackMisc::Simulation::CAircraftModel getAircraftModel() const;
 
-        private:
-            //! Models have been read
-            void onModelsRead();
+    private:
+        //! Models have been read
+        void onModelsRead();
 
-            //! Init completer
-            void initCompleter();
+        //! Init completer
+        void initCompleter();
 
-            BlackMisc::Simulation::CSimulatorInfo m_simulator { BlackMisc::Simulation::CSimulatorInfo::All };
-        };
-    } // ns
+        BlackMisc::Simulation::CSimulatorInfo m_simulator { BlackMisc::Simulation::CSimulatorInfo::All };
+    };
 } // ns
 
 #endif // guard

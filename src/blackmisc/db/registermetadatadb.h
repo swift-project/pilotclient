@@ -13,13 +13,10 @@
 
 #include "blackmisc/blackmiscexport.h"
 
-namespace BlackMisc
+namespace BlackMisc::Db
 {
-    namespace Db
-    {
-        //! Register metadata for DB related classes
-        BLACKMISC_EXPORT void registerMetadata();
-    } // ns
+    //! Register metadata for DB related classes
+    BLACKMISC_EXPORT void registerMetadata();
 } // ns
 
 #endif // guard

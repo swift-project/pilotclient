@@ -18,28 +18,25 @@
 
 class QWidget;
 
-namespace BlackGui
+namespace BlackGui::Filters
 {
-    namespace Filters
+    //! Base for filter dialog
+    class BLACKGUI_EXPORT CFilterDialog : public QDialog
     {
-        //! Base for filter dialog
-        class BLACKGUI_EXPORT CFilterDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            CFilterDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        CFilterDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CFilterDialog();
+        //! Destructor
+        virtual ~CFilterDialog();
 
-        private:
-            //! Stylesheet changed
-            void onStyleSheetChanged();
-        };
+    private:
+        //! Stylesheet changed
+        void onStyleSheetChanged();
+    };
 
-    } // namespace
 } // namespace
 
 #endif // guard

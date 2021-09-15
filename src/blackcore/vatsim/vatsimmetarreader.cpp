@@ -34,142 +34,139 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Weather;
 using namespace BlackCore::Data;
 
-namespace BlackCore
+namespace BlackCore::Vatsim
 {
-    namespace Vatsim
+    CVatsimMetarReader::CVatsimMetarReader(QObject *owner) :
+        CThreadedReader(owner, "CVatsimMetarReader"),
+        CEcosystemAware(CEcosystemAware::providerIfPossible(owner))
     {
-        CVatsimMetarReader::CVatsimMetarReader(QObject *owner) :
-            CThreadedReader(owner, "CVatsimMetarReader"),
-            CEcosystemAware(CEcosystemAware::providerIfPossible(owner))
+        this->reloadSettings();
+    }
+
+    void CVatsimMetarReader::readInBackgroundThread()
+    {
+        QPointer<CVatsimMetarReader> myself(this);
+        QTimer::singleShot(0, this, [ = ]
         {
-            this->reloadSettings();
+            if (!myself) { return; }
+            myself->read();
+        });
+    }
+
+    CMetarList CVatsimMetarReader::getMetars() const
+    {
+        QReadLocker l(&m_lock);
+        return m_metars;
+    }
+
+    CMetar CVatsimMetarReader::getMetarForAirport(const CAirportIcaoCode &icao) const
+    {
+        QReadLocker l(&m_lock);
+        return m_metars.getMetarForAirport(icao);
+    }
+
+    int CVatsimMetarReader::getMetarsCount() const
+    {
+        QReadLocker l(&m_lock);
+        return m_metars.size();
+    }
+
+    void CVatsimMetarReader::doWorkImpl()
+    {
+        this->read();
+    }
+
+    void CVatsimMetarReader::read()
+    {
+        this->threadAssertCheck();
+        if (!this->doWorkCheck()) { return; }
+        if (!this->isInternetAccessible("No network/internet access, cannot read METARs")) { return; }
+        if (this->isNotVATSIMEcosystem()) { return; }
+
+        CFailoverUrlList urls(sApp->getVatsimMetarUrls());
+        const CUrl url(urls.obtainNextWorkingUrl(true));
+        if (url.isEmpty()) { return; }
+        Q_ASSERT_X(sApp, Q_FUNC_INFO, "No Application");
+        this->getFromNetworkAndLog(url.withAppendedQuery("id=all"), { this, &CVatsimMetarReader::decodeMetars});
+    }
+
+    void CVatsimMetarReader::decodeMetars(QNetworkReply *nwReplyPtr)
+    {
+        // wrap pointer, make sure any exit cleans up reply
+        // required to use delete later as object is created in a different thread
+        QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+
+        // Worker thread, make sure to write thread safe!
+        this->threadAssertCheck();
+        if (this->isNotVATSIMEcosystem()) { return; }
+
+        if (!this->doWorkCheck())
+        {
+            CLogMessage(this).info(u"Terminated METAR decoding process"); // for users
+            return; // stop, terminate straight away, ending thread
         }
 
-        void CVatsimMetarReader::readInBackgroundThread()
+        this->logNetworkReplyReceived(nwReplyPtr);
+        const QUrl url = nwReply->url();
+        const QString metarUrl = url.toString();
+
+        if (nwReply->error() == QNetworkReply::NoError)
         {
-            QPointer<CVatsimMetarReader> myself(this);
-            QTimer::singleShot(0, this, [ = ]
+            QString metarData = nwReply->readAll();
+            nwReply->close(); // close asap
+
+            if (metarData.isEmpty()) // Quick check by hash
             {
-                if (!myself) { return; }
-                myself->read();
-            });
-        }
-
-        CMetarList CVatsimMetarReader::getMetars() const
-        {
-            QReadLocker l(&m_lock);
-            return m_metars;
-        }
-
-        CMetar CVatsimMetarReader::getMetarForAirport(const CAirportIcaoCode &icao) const
-        {
-            QReadLocker l(&m_lock);
-            return m_metars.getMetarForAirport(icao);
-        }
-
-        int CVatsimMetarReader::getMetarsCount() const
-        {
-            QReadLocker l(&m_lock);
-            return m_metars.size();
-        }
-
-        void CVatsimMetarReader::doWorkImpl()
-        {
-            this->read();
-        }
-
-        void CVatsimMetarReader::read()
-        {
-            this->threadAssertCheck();
-            if (!this->doWorkCheck()) { return; }
-            if (!this->isInternetAccessible("No network/internet access, cannot read METARs")) { return; }
-            if (this->isNotVATSIMEcosystem()) { return; }
-
-            CFailoverUrlList urls(sApp->getVatsimMetarUrls());
-            const CUrl url(urls.obtainNextWorkingUrl(true));
-            if (url.isEmpty()) { return; }
-            Q_ASSERT_X(sApp, Q_FUNC_INFO, "No Application");
-            this->getFromNetworkAndLog(url.withAppendedQuery("id=all"), { this, &CVatsimMetarReader::decodeMetars});
-        }
-
-        void CVatsimMetarReader::decodeMetars(QNetworkReply *nwReplyPtr)
-        {
-            // wrap pointer, make sure any exit cleans up reply
-            // required to use delete later as object is created in a different thread
-            QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-
-            // Worker thread, make sure to write thread safe!
-            this->threadAssertCheck();
-            if (this->isNotVATSIMEcosystem()) { return; }
-
-            if (!this->doWorkCheck())
+                CLogMessage(this).warning(u"No METAR data from '%1', skipped") << metarUrl;
+                return;
+            }
+            if (!this->didContentChange(metarData)) // Quick check by hash
             {
-                CLogMessage(this).info(u"Terminated METAR decoding process"); // for users
-                return; // stop, terminate straight away, ending thread
+                CLogMessage(this).info(u"METAR file from '%1' has same content, skipped") << metarUrl;
+                return;
             }
 
-            this->logNetworkReplyReceived(nwReplyPtr);
-            const QUrl url = nwReply->url();
-            const QString metarUrl = url.toString();
-
-            if (nwReply->error() == QNetworkReply::NoError)
+            CMetarList metars;
+            int invalidLines = 0;
+            QTextStream lineReader(&metarData);
+            while (!lineReader.atEnd())
             {
-                QString metarData = nwReply->readAll();
-                nwReply->close(); // close asap
-
-                if (metarData.isEmpty()) // Quick check by hash
+                if (!this->doWorkCheck()) { return; }
+                const QString line = lineReader.readLine();
+                // some check for obvious errors
+                if (line.contains("<html")) { continue; }
+                const CMetar metar = m_metarDecoder.decode(line);
+                if (metar != CMetar())
                 {
-                    CLogMessage(this).warning(u"No METAR data from '%1', skipped") << metarUrl;
-                    return;
+                    metars.push_back(metar);
                 }
-                if (!this->didContentChange(metarData)) // Quick check by hash
+                else
                 {
-                    CLogMessage(this).info(u"METAR file from '%1' has same content, skipped") << metarUrl;
-                    return;
+                    invalidLines++;
                 }
-
-                CMetarList metars;
-                int invalidLines = 0;
-                QTextStream lineReader(&metarData);
-                while (!lineReader.atEnd())
-                {
-                    if (!this->doWorkCheck()) { return; }
-                    const QString line = lineReader.readLine();
-                    // some check for obvious errors
-                    if (line.contains("<html")) { continue; }
-                    const CMetar metar = m_metarDecoder.decode(line);
-                    if (metar != CMetar())
-                    {
-                        metars.push_back(metar);
-                    }
-                    else
-                    {
-                        invalidLines++;
-                    }
-                }
-
-                CLogMessage(this).info(u"METARs: %1 Metars (invalid %2) from '%3'") << metars.size() << invalidLines << metarUrl;
-                {
-                    QWriteLocker l(&m_lock);
-                    m_metars = metars;
-                }
-
-                emit metarsRead(metars);
-                emit dataRead(CEntityFlags::MetarEntity, CEntityFlags::ReadFinished, metars.size(), url);
             }
-            else
+
+            CLogMessage(this).info(u"METARs: %1 Metars (invalid %2) from '%3'") << metars.size() << invalidLines << metarUrl;
             {
-                // network error
-                CLogMessage(this).warning(u"Reading METARs failed '%1' for '%2'") << nwReply->errorString() << metarUrl;
-                nwReply->abort();
-                emit this->dataRead(CEntityFlags::MetarEntity, CEntityFlags::ReadFailed, 0, url);
+                QWriteLocker l(&m_lock);
+                m_metars = metars;
             }
-        } // method
 
-        void CVatsimMetarReader::reloadSettings()
-        {
-            const CReaderSettings s = m_settings.get();
-            this->setInitialAndPeriodicTime(s.getInitialTime().toMs(), s.getPeriodicTime().toMs());
+            emit metarsRead(metars);
+            emit dataRead(CEntityFlags::MetarEntity, CEntityFlags::ReadFinished, metars.size(), url);
         }
-    } // ns
+        else
+        {
+            // network error
+            CLogMessage(this).warning(u"Reading METARs failed '%1' for '%2'") << nwReply->errorString() << metarUrl;
+            nwReply->abort();
+            emit this->dataRead(CEntityFlags::MetarEntity, CEntityFlags::ReadFailed, 0, url);
+        }
+    } // method
+
+    void CVatsimMetarReader::reloadSettings()
+    {
+        const CReaderSettings s = m_settings.get();
+        this->setInitialAndPeriodicTime(s.getInitialTime().toMs(), s.getPeriodicTime().toMs());
+    }
 } // ns

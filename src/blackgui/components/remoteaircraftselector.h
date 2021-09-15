@@ -23,60 +23,57 @@
 class QShowEvent;
 class QWidget;
 
-namespace BlackMisc { namespace Simulation { class CSimulatedAircraft; } }
+namespace BlackMisc::Simulation { class CSimulatedAircraft; }
 namespace Ui { class CRemoteAircraftSelector; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Select a remote aircraft
+    //! \deprecated list gets too long with many aircraft
+    //! \remark CCallsignCompleter as a better alternative
+    class BLACKGUI_EXPORT CRemoteAircraftSelector : public QFrame
     {
-        //! Select a remote aircraft
-        //! \deprecated list gets too long with many aircraft
-        //! \remark CCallsignCompleter as a better alternative
-        class BLACKGUI_EXPORT CRemoteAircraftSelector : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CRemoteAircraftSelector(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CRemoteAircraftSelector(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CRemoteAircraftSelector() override;
+        //! Destructor
+        virtual ~CRemoteAircraftSelector() override;
 
-            //! Selected callsign
-            BlackMisc::Aviation::CCallsign getSelectedCallsign() const;
+        //! Selected callsign
+        BlackMisc::Aviation::CCallsign getSelectedCallsign() const;
 
-            //! Indicate if aircraft parts enabled aircraft
-            void indicatePartsEnabled(bool indicate);
+        //! Indicate if aircraft parts enabled aircraft
+        void indicatePartsEnabled(bool indicate);
 
-        signals:
-            //! Callsign changed
-            void changedCallsign();
+    signals:
+        //! Callsign changed
+        void changedCallsign();
 
-        protected:
-            //! \copydoc QWidget::showEvent
-            virtual void showEvent(QShowEvent *event) override;
+    protected:
+        //! \copydoc QWidget::showEvent
+        virtual void showEvent(QShowEvent *event) override;
 
-        private:
-            //! Added aircraft, change content of combobox
-            void onAddedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+    private:
+        //! Added aircraft, change content of combobox
+        void onAddedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
-            //! Removed aircraft, change content of combobox
-            void onRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
+        //! Removed aircraft, change content of combobox
+        void onRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
-            //! Combo box has been changed
-            void comboBoxChanged(const QString &text);
+        //! Combo box has been changed
+        void comboBoxChanged(const QString &text);
 
-            //! Set combobox items
-            void fillComboBox();
+        //! Set combobox items
+        void fillComboBox();
 
-            QScopedPointer<Ui::CRemoteAircraftSelector> ui;
-            QString m_currentText;
-            bool m_showPartsEnabled = false;
-            BlackMisc::Simulation::CSimulatedAircraftList m_aircraft;
-            BlackMisc::CDigestSignal m_dsFillComboBox { this, &CRemoteAircraftSelector::fillComboBox, 3000, 5 };
-        };
-    } // namespace
+        QScopedPointer<Ui::CRemoteAircraftSelector> ui;
+        QString m_currentText;
+        bool m_showPartsEnabled = false;
+        BlackMisc::Simulation::CSimulatedAircraftList m_aircraft;
+        BlackMisc::CDigestSignal m_dsFillComboBox { this, &CRemoteAircraftSelector::fillComboBox, 3000, 5 };
+    };
 } // namespace
 
 #endif // guard

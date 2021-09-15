@@ -21,45 +21,42 @@ namespace QtCharts
     class QBarSeries;
     class QHorizontalBarSeries;
 }
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Info about the models
+    class CAircraftModelStatisticsDialog : public QDialog
     {
-        //! Info about the models
-        class CAircraftModelStatisticsDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAircraftModelStatisticsDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAircraftModelStatisticsDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAircraftModelStatisticsDialog();
+        //! Destructor
+        virtual ~CAircraftModelStatisticsDialog();
 
-            //! Set and analyze the models
-            void analyzeModels(const BlackMisc::Simulation::CAircraftModelList &models);
+        //! Set and analyze the models
+        void analyzeModels(const BlackMisc::Simulation::CAircraftModelList &models);
 
-        private:
-            //! Display the HTML matrix
-            void displayHTMLMatrix();
+    private:
+        //! Display the HTML matrix
+        void displayHTMLMatrix();
 
-            //! Chart
-            void showChart();
+        //! Chart
+        void showChart();
 
-            //! Chart for distributors
-            void chartDistributors();
+        //! Chart for distributors
+        void chartDistributors();
 
-            //! Chart for aircraft ICAO
-            void chartAircraftIcao();
+        //! Chart for aircraft ICAO
+        void chartAircraftIcao();
 
-            //! Orientation
-            Qt::Orientation getOrientation() const;
+        //! Orientation
+        Qt::Orientation getOrientation() const;
 
-            QScopedPointer<Ui::CAircraftModelStatisticsDialog> ui;
-            BlackMisc::Simulation::CAircraftModelList m_models;
-        };
-    } // ns
+        QScopedPointer<Ui::CAircraftModelStatisticsDialog> ui;
+        BlackMisc::Simulation::CAircraftModelList m_models;
+    };
 } // ns
 
 #endif // guard

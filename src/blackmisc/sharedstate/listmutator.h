@@ -17,52 +17,49 @@
 #include <QObject>
 #include <QMutex>
 
-namespace BlackMisc
+namespace BlackMisc::SharedState
 {
-    namespace SharedState
+    class IDataLink;
+
+    /*!
+     * Non-template base class for CListMutator.
+     * \ingroup SharedState
+     */
+    class BLACKMISC_EXPORT CGenericListMutator : public QObject
     {
-        class IDataLink;
+        Q_OBJECT
 
-        /*!
-         * Non-template base class for CListMutator.
-         * \ingroup SharedState
-         */
-        class BLACKMISC_EXPORT CGenericListMutator : public QObject
-        {
-            Q_OBJECT
+    public:
+        //! Publish using the given transport mechanism.
+        void initialize(IDataLink *);
 
-        public:
-            //! Publish using the given transport mechanism.
-            void initialize(IDataLink *);
+    protected:
+        //! Constructor.
+        CGenericListMutator(QObject *parent) : QObject(parent) {}
 
-        protected:
-            //! Constructor.
-            CGenericListMutator(QObject *parent) : QObject(parent) {}
+        //! Add list element as variant.
+        void addElement(const CVariant &value);
 
-            //! Add list element as variant.
-            void addElement(const CVariant &value);
+    private:
+        QSharedPointer<CPassiveMutator> m_mutator = CPassiveMutator::create(this);
+    };
 
-        private:
-            QSharedPointer<CPassiveMutator> m_mutator = CPassiveMutator::create(this);
-        };
+    /*!
+     * Base class for an object that shares state with a corresponding CListObserver subclass object.
+     * \tparam T Datatype encapsulating the state to be shared.
+     * \ingroup SharedState
+     */
+    template <typename T>
+    class CListMutator : public CGenericListMutator
+    {
+    protected:
+        //! Constructor.
+        CListMutator(QObject *parent) : CGenericListMutator(parent) {}
 
-        /*!
-         * Base class for an object that shares state with a corresponding CListObserver subclass object.
-         * \tparam T Datatype encapsulating the state to be shared.
-         * \ingroup SharedState
-         */
-        template <typename T>
-        class CListMutator : public CGenericListMutator
-        {
-        protected:
-            //! Constructor.
-            CListMutator(QObject *parent) : CGenericListMutator(parent) {}
-
-        public:
-            //! Add list element.
-            void addElement(const typename T::value_type &value) { CGenericListMutator::addElement(CVariant::from(value)); }
-        };
-    }
+    public:
+        //! Add list element.
+        void addElement(const typename T::value_type &value) { CGenericListMutator::addElement(CVariant::from(value)); }
+    };
 }
 
 #endif

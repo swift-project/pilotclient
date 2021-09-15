@@ -23,107 +23,101 @@
 
 #include <QtGlobal>
 
-namespace BlackCore
+namespace BlackCore::Afv::Audio
 {
-    namespace Afv
+    //! Arguments
+    struct TransceiverReceivingCallsignsChangedArgs
     {
-        namespace Audio
-        {
-            //! Arguments
-            struct TransceiverReceivingCallsignsChangedArgs
-            {
-                quint16 transceiverID;          //!< transceiver id
-                QStringList receivingCallsigns; //!< callsigns
-            };
+        quint16 transceiverID;          //!< transceiver id
+        QStringList receivingCallsigns; //!< callsigns
+    };
 
-            //! A sample provider
-            class CReceiverSampleProvider : public BlackSound::SampleProvider::ISampleProvider
-            {
-                Q_OBJECT
+    //! A sample provider
+    class CReceiverSampleProvider : public BlackSound::SampleProvider::ISampleProvider
+    {
+        Q_OBJECT
 
-            public:
-                //! Log.categories
-                static const QStringList &getLogCategories();
+    public:
+        //! Log.categories
+        static const QStringList &getLogCategories();
 
-                //! Ctor
-                CReceiverSampleProvider(const QAudioFormat &audioFormat, quint16 id, int voiceInputNumber, QObject *parent = nullptr);
+        //! Ctor
+        CReceiverSampleProvider(const QAudioFormat &audioFormat, quint16 id, int voiceInputNumber, QObject *parent = nullptr);
 
-                //! Bypass effects
-                void setBypassEffects(bool value);
+        //! Bypass effects
+        void setBypassEffects(bool value);
 
-                //! Frequency
-                void setFrequency(const uint &frequencyHz);
+        //! Frequency
+        void setFrequency(const uint &frequencyHz);
 
-                //! Number of active callsign
-                int activeCallsigns() const;
+        //! Number of active callsign
+        int activeCallsigns() const;
 
-                //! Volume
-                double volume() const { return 1.0; }
+        //! Volume
+        double volume() const { return 1.0; }
 
-                //! Mute
-                //! @{
-                bool getMute() const { return m_mute; }
-                void setMute(bool value);
-                //! @}
+        //! Mute
+        //! @{
+        bool getMute() const { return m_mute; }
+        void setMute(bool value);
+        //! @}
 
-                //! \copydoc BlackSound::SampleProvider::ISampleProvider::readSamples
-                virtual int readSamples(QVector<float> &samples, qint64 count) override;
+        //! \copydoc BlackSound::SampleProvider::ISampleProvider::readSamples
+        virtual int readSamples(QVector<float> &samples, qint64 count) override;
 
-                //! Add samples
-                //! @{
-                void addOpusSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio);
-                void addSilentSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio);
-                //! @}
+        //! Add samples
+        //! @{
+        void addOpusSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio);
+        void addSilentSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio);
+        //! @}
 
-                //! ID
-                quint16 getId() const { return m_id; }
+        //! ID
+        quint16 getId() const { return m_id; }
 
-                //! Receiving callsigns as string
-                //! \remark those callsigns are transmitting and "I do receive them"
-                const QString &getReceivingCallsignsString() const { return m_receivingCallsignsString; }
+        //! Receiving callsigns as string
+        //! \remark those callsigns are transmitting and "I do receive them"
+        const QString &getReceivingCallsignsString() const { return m_receivingCallsignsString; }
 
-                //! Receiving callsigns
-                //! \remark those callsigns are transmitting and "I do receive them"
-                const BlackMisc::Aviation::CCallsignSet &getReceivingCallsigns() { return m_receivingCallsigns; }
+        //! Receiving callsigns
+        //! \remark those callsigns are transmitting and "I do receive them"
+        const BlackMisc::Aviation::CCallsignSet &getReceivingCallsigns() { return m_receivingCallsigns; }
 
-                //! Get frequency in Hz
-                uint getFrequencyHz() const;
+        //! Get frequency in Hz
+        uint getFrequencyHz() const;
 
-                //! Set gain ratio
-                bool setGainRatio(double gainRatio) { return m_volume->setGainRatio(gainRatio); }
+        //! Set gain ratio
+        bool setGainRatio(double gainRatio) { return m_volume->setGainRatio(gainRatio); }
 
-                //! Log all inputs
-                //! \private DEBUG only
-                void logVoiceInputs(const QString &prefix = {}, qint64 timeCheckOffsetMs = -1);
+        //! Log all inputs
+        //! \private DEBUG only
+        void logVoiceInputs(const QString &prefix = {}, qint64 timeCheckOffsetMs = -1);
 
-            signals:
-                //! Receving callsigns have changed
-                void receivingCallsignsChanged(const TransceiverReceivingCallsignsChangedArgs &args);
+    signals:
+        //! Receving callsigns have changed
+        void receivingCallsignsChanged(const TransceiverReceivingCallsignsChangedArgs &args);
 
-            private:
-                uint m_frequencyHz = 122800000;
-                bool m_mute        = false;
-                const double m_clickGain     = 1.0;
-                const double m_blockToneGain = 0.10;
+    private:
+        uint m_frequencyHz = 122800000;
+        bool m_mute        = false;
+        const double m_clickGain     = 1.0;
+        const double m_blockToneGain = 0.10;
 
-                quint16 m_id;
-                BlackMisc::CSettingReadOnly<BlackMisc::Audio::TSettings> m_audioSettings { this };
+        quint16 m_id;
+        BlackMisc::CSettingReadOnly<BlackMisc::Audio::TSettings> m_audioSettings { this };
 
-                BlackSound::SampleProvider::CVolumeSampleProvider *m_volume    = nullptr;
-                BlackSound::SampleProvider::CMixingSampleProvider *m_mixer     = nullptr;
-                BlackSound::SampleProvider::CSinusGenerator       *m_blockTone = nullptr;
-                QVector<CCallsignSampleProvider *> m_voiceInputs;
-                qint64 m_lastLogMessage = -1;
+        BlackSound::SampleProvider::CVolumeSampleProvider *m_volume    = nullptr;
+        BlackSound::SampleProvider::CMixingSampleProvider *m_mixer     = nullptr;
+        BlackSound::SampleProvider::CSinusGenerator       *m_blockTone = nullptr;
+        QVector<CCallsignSampleProvider *> m_voiceInputs;
+        qint64 m_lastLogMessage = -1;
 
-                QString m_receivingCallsignsString;
-                BlackMisc::Aviation::CCallsignSet m_receivingCallsigns;
+        QString m_receivingCallsignsString;
+        BlackMisc::Aviation::CCallsignSet m_receivingCallsigns;
 
-                bool m_doClickWhenAppropriate  = false;
-                bool m_doBlockWhenAppropriate  = false;
-                int  m_lastNumberOfInUseInputs = 0;
-            };
-        } // ns
-    } // ns
+        bool m_doClickWhenAppropriate  = false;
+        bool m_doBlockWhenAppropriate  = false;
+        int  m_lastNumberOfInUseInputs = 0;
+    };
 } // ns
 
 Q_DECLARE_METATYPE(BlackCore::Afv::Audio::TransceiverReceivingCallsignsChangedArgs)

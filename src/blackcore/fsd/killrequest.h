@@ -11,48 +11,45 @@
 #ifndef BLACKCORE_FSD_KILLREQUEST_H
 #define BLACKCORE_FSD_KILLREQUEST_H
 
-#include "messagebase.h"
+#include "blackcore/fsd/messagebase.h"
 
-namespace BlackCore
+namespace BlackCore::Fsd
 {
-    namespace Fsd
+    //! Kill request initiated from the server or supervisor.
+    //! Client needs to disconnect immediatly upon receiving it.
+    class BLACKCORE_EXPORT KillRequest : public MessageBase
     {
-        //! Kill request initiated from the server or supervisor.
-        //! Client needs to disconnect immediatly upon receiving it.
-        class BLACKCORE_EXPORT KillRequest : public MessageBase
-        {
-        public:
-            //! Constructor
-            KillRequest(const QString &sender, const QString &receiver, const QString &reason);
+    public:
+        //! Constructor
+        KillRequest(const QString &sender, const QString &receiver, const QString &reason);
 
-            //! Message converted to tokens
-            QStringList toTokens() const;
+        //! Message converted to tokens
+        QStringList toTokens() const;
 
-            //! Construct from tokens
-            static KillRequest fromTokens(const QStringList &tokens);
+        //! Construct from tokens
+        static KillRequest fromTokens(const QStringList &tokens);
 
-            //! PDU identifier
-            static QString pdu() { return "$!!"; }
+        //! PDU identifier
+        static QString pdu() { return "$!!"; }
 
-            QString m_reason; //!< reason for kill request/kicked
+        QString m_reason; //!< reason for kill request/kicked
 
-        private:
-            KillRequest();
-        };
+    private:
+        KillRequest();
+    };
 
-        //! Equal to operator
-        inline bool operator==(const KillRequest &lhs, const KillRequest &rhs)
-        {
-            return  lhs.sender() == rhs.sender() &&
-                    lhs.receiver() == rhs.receiver() &&
-                    lhs.m_reason == rhs.m_reason;
-        }
+    //! Equal to operator
+    inline bool operator==(const KillRequest &lhs, const KillRequest &rhs)
+    {
+        return  lhs.sender() == rhs.sender() &&
+                lhs.receiver() == rhs.receiver() &&
+                lhs.m_reason == rhs.m_reason;
+    }
 
-        //! Not equal to operator
-        inline bool operator!=(const KillRequest &lhs, const KillRequest &rhs)
-        {
-            return !(lhs == rhs);
-        }
+    //! Not equal to operator
+    inline bool operator!=(const KillRequest &lhs, const KillRequest &rhs)
+    {
+        return !(lhs == rhs);
     }
 }
 

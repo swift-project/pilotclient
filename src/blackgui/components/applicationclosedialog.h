@@ -17,41 +17,38 @@
 #include "blackcore/context/contextapplication.h"
 
 namespace Ui { class CApplicationCloseDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Close dialog for application
+     */
+    class CApplicationCloseDialog : public QDialog
     {
-        /*!
-         * Close dialog for application
-         */
-        class CApplicationCloseDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CApplicationCloseDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CApplicationCloseDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CApplicationCloseDialog();
+        //! Destructor
+        virtual ~CApplicationCloseDialog();
 
-        private:
-            QScopedPointer<Ui::CApplicationCloseDialog> ui;
-            QStringList m_settingsDescriptions; //!< values as displayed
-            BlackCore::Context::CSettingsDictionary m_settingsDictionary; //!< values and descriptions, unsorted
+    private:
+        QScopedPointer<Ui::CApplicationCloseDialog> ui;
+        QStringList m_settingsDescriptions; //!< values as displayed
+        BlackCore::Context::CSettingsDictionary m_settingsDictionary; //!< values and descriptions, unsorted
 
-            //! Accepted
-            void onAccepted();
+        //! Accepted
+        void onAccepted();
 
-            //! Rejected
-            void onRejected();
+        //! Rejected
+        void onRejected();
 
-            //! Button pressed
-            void buttonClicked(QAbstractButton *button);
+        //! Button pressed
+        void buttonClicked(QAbstractButton *button);
 
-            //! Init the settings view
-            void initSettingsView();
-        };
-    } // ns
+        //! Init the settings view
+        void initSettingsView();
+    };
 } // ns
 #endif // guard

@@ -23,58 +23,55 @@ class QWidget;
 
 namespace Ui { class CCoreInfoAreaComponent; }
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    class CCoreStatusComponent;
+    class CLogComponent;
+
+    //! Main info area
+    class BLACKGUI_EXPORT CCoreInfoAreaComponent : public BlackGui::CInfoArea
     {
-        class CCoreStatusComponent;
-        class CLogComponent;
+        Q_OBJECT
 
-        //! Main info area
-        class BLACKGUI_EXPORT CCoreInfoAreaComponent : public BlackGui::CInfoArea
+    public:
+        //! Constructor
+        explicit CCoreInfoAreaComponent(QWidget *parent = nullptr);
+
+        //! Destructor
+        virtual ~CCoreInfoAreaComponent() override;
+
+        //! Info areas
+        enum InfoArea
         {
-            Q_OBJECT
-
-        public:
-            //! Constructor
-            explicit CCoreInfoAreaComponent(QWidget *parent = nullptr);
-
-            //! Destructor
-            virtual ~CCoreInfoAreaComponent() override;
-
-            //! Info areas
-            enum InfoArea
-            {
-                // index must match tab index!
-                InfoAreaLog          = 0,
-                InfoAreaStatus       = 1,
-                InfoAreaNone         = -1
-            };
-
-            //! Log messages
-            CLogComponent *getLogComponent();
-
-            //! Simulator
-            CCoreStatusComponent *getStatusComponent();
-
-        public slots:
-            //! Toggle floating of given area
-            void toggleFloating(InfoArea infoArea) { CInfoArea::toggleFloatingByIndex(static_cast<int>(infoArea)); }
-
-            //! Select area
-            void selectArea(InfoArea infoArea) { CInfoArea::selectArea(static_cast<int>(infoArea)); }
-
-        protected:
-            //! \copydoc CInfoArea::getPreferredSizeWhenFloating
-            virtual QSize getPreferredSizeWhenFloating(int areaIndex) const override;
-
-            //! \copydoc CInfoArea::indexToPixmap
-            virtual const QPixmap &indexToPixmap(int areaIndex) const override;
-
-        private:
-            QScopedPointer<Ui::CCoreInfoAreaComponent> ui;
+            // index must match tab index!
+            InfoAreaLog          = 0,
+            InfoAreaStatus       = 1,
+            InfoAreaNone         = -1
         };
-    } // ns
+
+        //! Log messages
+        CLogComponent *getLogComponent();
+
+        //! Simulator
+        CCoreStatusComponent *getStatusComponent();
+
+    public slots:
+        //! Toggle floating of given area
+        void toggleFloating(InfoArea infoArea) { CInfoArea::toggleFloatingByIndex(static_cast<int>(infoArea)); }
+
+        //! Select area
+        void selectArea(InfoArea infoArea) { CInfoArea::selectArea(static_cast<int>(infoArea)); }
+
+    protected:
+        //! \copydoc CInfoArea::getPreferredSizeWhenFloating
+        virtual QSize getPreferredSizeWhenFloating(int areaIndex) const override;
+
+        //! \copydoc CInfoArea::indexToPixmap
+        virtual const QPixmap &indexToPixmap(int areaIndex) const override;
+
+    private:
+        QScopedPointer<Ui::CCoreInfoAreaComponent> ui;
+    };
 } // ns
 
 #endif // guard

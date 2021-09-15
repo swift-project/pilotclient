@@ -20,63 +20,60 @@
 #include <QCheckBox>
 
 namespace Ui { class CInterpolationSetupForm; }
-namespace BlackGui
+namespace BlackGui::Editors
 {
-    namespace Editors
+    //! Setup of interpolation and rendering
+    class CInterpolationSetupForm : public CForm
     {
-        //! Setup of interpolation and rendering
-        class CInterpolationSetupForm : public CForm
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CInterpolationSetupForm(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CInterpolationSetupForm(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CInterpolationSetupForm() override;
+        //! Destructor
+        virtual ~CInterpolationSetupForm() override;
 
-            //! Set value
-            void setValue(const BlackMisc::Simulation::CInterpolationAndRenderingSetupBase &setup);
+        //! Set value
+        void setValue(const BlackMisc::Simulation::CInterpolationAndRenderingSetupBase &setup);
 
-            //! Get value
-            BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign getValue() const;
+        //! Get value
+        BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign getValue() const;
 
-            //! \name Form class implementations
-            //! @{
-            virtual void setReadOnly(bool readonly) override;
-            virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
-            //! @}
+        //! \name Form class implementations
+        //! @{
+        virtual void setReadOnly(bool readonly) override;
+        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        //! @}
 
-        signals:
-            //! Value changed
-            void valueChanged();
+    signals:
+        //! Value changed
+        void valueChanged();
 
-        private:
-            QScopedPointer<Ui::CInterpolationSetupForm> ui;
-            QList<QCheckBox *> m_allCheckBoxes;
+    private:
+        QScopedPointer<Ui::CInterpolationSetupForm> ui;
+        QList<QCheckBox *> m_allCheckBoxes;
 
-            //! Checkbox has been changed
-            void onCheckboxChanged(int state);
+        //! Checkbox has been changed
+        void onCheckboxChanged(int state);
 
-            //! Interpolator mode
-            void onInterpolatorModeChanged(bool checked);
+        //! Interpolator mode
+        void onInterpolatorModeChanged(bool checked);
 
-            //! Pitch entry
-            void onPitchChanged();
+        //! Pitch entry
+        void onPitchChanged();
 
-            //! Pitch on ground
-            BlackMisc::PhysicalQuantities::CAngle getPitchOnGround() const;
+        //! Pitch on ground
+        BlackMisc::PhysicalQuantities::CAngle getPitchOnGround() const;
 
-            //! Display pitch on ground
-            void displayPitchOnGround(const BlackMisc::PhysicalQuantities::CAngle &pitchOnGround);
+        //! Display pitch on ground
+        void displayPitchOnGround(const BlackMisc::PhysicalQuantities::CAngle &pitchOnGround);
 
-            //! Mode from UI
-            BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode getInterpolatorMode() const;
+        //! Mode from UI
+        BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode getInterpolatorMode() const;
 
-            //! Set mode
-            void setInterpolatorMode(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode);
-        };
-    } // ns
+        //! Set mode
+        void setInterpolatorMode(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode);
+    };
 } // ns
 #endif // guard

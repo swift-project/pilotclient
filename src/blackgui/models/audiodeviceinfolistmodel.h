@@ -15,23 +15,20 @@
 #include "blackgui/models/listmodelbase.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Audio device list model
+    class BLACKGUI_EXPORT CAudioDeviceInfoListModel :
+        public CListModelBase<BlackMisc::Audio::CAudioDeviceInfoList, true>
     {
-        //! Audio device list model
-        class BLACKGUI_EXPORT CAudioDeviceInfoListModel :
-            public CListModelBase<BlackMisc::Audio::CAudioDeviceInfoList, true>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAudioDeviceInfoListModel(QObject *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAudioDeviceInfoListModel(QObject *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAudioDeviceInfoListModel() override {}
-        };
-    }
+        //! Destructor
+        virtual ~CAudioDeviceInfoListModel() override {}
+    };
 }
 #endif // guard

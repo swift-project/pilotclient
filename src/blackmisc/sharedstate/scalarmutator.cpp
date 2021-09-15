@@ -11,18 +11,15 @@
 #include "blackmisc/sharedstate/scalarmutator.h"
 #include "blackmisc/sharedstate/datalink.h"
 
-namespace BlackMisc
+namespace BlackMisc::SharedState
 {
-    namespace SharedState
+    void CGenericScalarMutator::initialize(IDataLink *dataLink)
     {
-        void CGenericScalarMutator::initialize(IDataLink *dataLink)
-        {
-            dataLink->publish(m_mutator.data());
-        }
+        dataLink->publish(m_mutator.data());
+    }
 
-        void CGenericScalarMutator::setValue(const CVariant &value)
-        {
-            m_mutator->postEvent(value);
-        }
+    void CGenericScalarMutator::setValue(const CVariant &value)
+    {
+        m_mutator->postEvent(value);
     }
 }

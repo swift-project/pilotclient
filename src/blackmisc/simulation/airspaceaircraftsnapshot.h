@@ -25,99 +25,96 @@
 #include <QString>
 #include <QtGlobal>
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    //! Current situation in the skies analyzed.
+    class BLACKMISC_EXPORT CAirspaceAircraftSnapshot : public CValueObject<CAirspaceAircraftSnapshot>
     {
-        //! Current situation in the skies analyzed.
-        class BLACKMISC_EXPORT CAirspaceAircraftSnapshot : public CValueObject<CAirspaceAircraftSnapshot>
-        {
-        public:
-            //! Default constructor
-            CAirspaceAircraftSnapshot();
+    public:
+        //! Default constructor
+        CAirspaceAircraftSnapshot();
 
-            //! Constructor
-            CAirspaceAircraftSnapshot(const CSimulatedAircraftList &allAircraft,
-                                      bool restricted       = false,
-                                      bool renderingEnabled = true,
-                                      int maxAircraft       = 100,
-                                      const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance = { 0, nullptr });
+        //! Constructor
+        CAirspaceAircraftSnapshot(const CSimulatedAircraftList &allAircraft,
+                                    bool restricted       = false,
+                                    bool renderingEnabled = true,
+                                    int maxAircraft       = 100,
+                                    const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance = { 0, nullptr });
 
-            //! Time when snapshot was taken
-            const QDateTime getTimestamp() const { return QDateTime::fromMSecsSinceEpoch(m_timestampMsSinceEpoch); }
+        //! Time when snapshot was taken
+        const QDateTime getTimestamp() const { return QDateTime::fromMSecsSinceEpoch(m_timestampMsSinceEpoch); }
 
-            //! Callsigns by distance
-            const BlackMisc::Aviation::CCallsignSet &getAircraftCallsignsByDistance() const { return m_aircraftCallsignsByDistance; }
+        //! Callsigns by distance
+        const BlackMisc::Aviation::CCallsignSet &getAircraftCallsignsByDistance() const { return m_aircraftCallsignsByDistance; }
 
-            //! Callsigns by distance, only enabled aircraft
-            const BlackMisc::Aviation::CCallsignSet &getEnabledAircraftCallsignsByDistance() const { return m_enabledAircraftCallsignsByDistance; }
+        //! Callsigns by distance, only enabled aircraft
+        const BlackMisc::Aviation::CCallsignSet &getEnabledAircraftCallsignsByDistance() const { return m_enabledAircraftCallsignsByDistance; }
 
-            //! Callsigns by distance, only disabled aircraft
-            const BlackMisc::Aviation::CCallsignSet &getDisabledAircraftCallsignsByDistance() const { return m_disabledAircraftCallsignsByDistance; }
+        //! Callsigns by distance, only disabled aircraft
+        const BlackMisc::Aviation::CCallsignSet &getDisabledAircraftCallsignsByDistance() const { return m_disabledAircraftCallsignsByDistance; }
 
-            //! VTOL aircraft callsigns by distance, only enabled aircraft
-            const BlackMisc::Aviation::CCallsignSet &getVtolAircraftCallsignsByDistance() const { return m_vtolAircraftCallsignsByDistance; }
+        //! VTOL aircraft callsigns by distance, only enabled aircraft
+        const BlackMisc::Aviation::CCallsignSet &getVtolAircraftCallsignsByDistance() const { return m_vtolAircraftCallsignsByDistance; }
 
-            //! VTOL aircraft callsigns by distance, only enabled aircraft
-            const BlackMisc::Aviation::CCallsignSet &getEnabledVtolAircraftCallsignsByDistance() const { return m_enabledVtolAircraftCallsignsByDistance; }
+        //! VTOL aircraft callsigns by distance, only enabled aircraft
+        const BlackMisc::Aviation::CCallsignSet &getEnabledVtolAircraftCallsignsByDistance() const { return m_enabledVtolAircraftCallsignsByDistance; }
 
-            //! Valid snapshot?
-            bool isValidSnapshot() const;
+        //! Valid snapshot?
+        bool isValidSnapshot() const;
 
-            //! Restricted snapshot?
-            bool isValidRestricted() const { return m_restricted; }
+        //! Restricted snapshot?
+        bool isValidRestricted() const { return m_restricted; }
 
-            //! Did restriction change compared to last snapshot
-            void setRestrictionChanged(const CAirspaceAircraftSnapshot &snapshot);
+        //! Did restriction change compared to last snapshot
+        void setRestrictionChanged(const CAirspaceAircraftSnapshot &snapshot);
 
-            //! Did the restriction flag change?
-            bool isRestrictionChanged() const { return m_restrictionChanged; }
+        //! Did the restriction flag change?
+        bool isRestrictionChanged() const { return m_restrictionChanged; }
 
-            //! Restricted values?
-            bool isRestricted() const { return m_restricted; }
+        //! Restricted values?
+        bool isRestricted() const { return m_restricted; }
 
-            //! Rendering enabled or all aircraft disabled?
-            bool isRenderingEnabled() const { return m_renderingEnabled; }
+        //! Rendering enabled or all aircraft disabled?
+        bool isRenderingEnabled() const { return m_renderingEnabled; }
 
-            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
+        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+        QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
 
-            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
+        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+        void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
 
-            //! \copydoc BlackMisc::Mixin::String::toQString
-            QString convertToQString(bool i18n = false) const;
+        //! \copydoc BlackMisc::Mixin::String::toQString
+        QString convertToQString(bool i18n = false) const;
 
-            //! Generating thread name
-            const QString &generatingThreadName() const { return m_threadName; }
+        //! Generating thread name
+        const QString &generatingThreadName() const { return m_threadName; }
 
-        private:
-            qint64 m_timestampMsSinceEpoch = -1;
-            bool m_restricted = false;
-            bool m_renderingEnabled = true;
-            bool m_restrictionChanged = false;
-            QString m_threadName; //!< generating thread name for debugging purposes
+    private:
+        qint64 m_timestampMsSinceEpoch = -1;
+        bool m_restricted = false;
+        bool m_renderingEnabled = true;
+        bool m_restrictionChanged = false;
+        QString m_threadName; //!< generating thread name for debugging purposes
 
-            // remark closest aircraft always first
-            BlackMisc::Aviation::CCallsignSet m_aircraftCallsignsByDistance;
+        // remark closest aircraft always first
+        BlackMisc::Aviation::CCallsignSet m_aircraftCallsignsByDistance;
 
-            BlackMisc::Aviation::CCallsignSet m_enabledAircraftCallsignsByDistance;
-            BlackMisc::Aviation::CCallsignSet m_disabledAircraftCallsignsByDistance;
+        BlackMisc::Aviation::CCallsignSet m_enabledAircraftCallsignsByDistance;
+        BlackMisc::Aviation::CCallsignSet m_disabledAircraftCallsignsByDistance;
 
-            BlackMisc::Aviation::CCallsignSet m_vtolAircraftCallsignsByDistance;
-            BlackMisc::Aviation::CCallsignSet m_enabledVtolAircraftCallsignsByDistance;
+        BlackMisc::Aviation::CCallsignSet m_vtolAircraftCallsignsByDistance;
+        BlackMisc::Aviation::CCallsignSet m_enabledVtolAircraftCallsignsByDistance;
 
-            BLACK_METACLASS(
-                CAirspaceAircraftSnapshot,
-                BLACK_METAMEMBER(timestampMsSinceEpoch),
-                BLACK_METAMEMBER(aircraftCallsignsByDistance, 0, DisabledForComparison),
-                BLACK_METAMEMBER(enabledAircraftCallsignsByDistance, 0, DisabledForComparison),
-                BLACK_METAMEMBER(disabledAircraftCallsignsByDistance, 0, DisabledForComparison),
-                BLACK_METAMEMBER(vtolAircraftCallsignsByDistance, 0, DisabledForComparison),
-                BLACK_METAMEMBER(enabledVtolAircraftCallsignsByDistance, 0, DisabledForComparison)
-            );
-        };
-    } // namespace
+        BLACK_METACLASS(
+            CAirspaceAircraftSnapshot,
+            BLACK_METAMEMBER(timestampMsSinceEpoch),
+            BLACK_METAMEMBER(aircraftCallsignsByDistance, 0, DisabledForComparison),
+            BLACK_METAMEMBER(enabledAircraftCallsignsByDistance, 0, DisabledForComparison),
+            BLACK_METAMEMBER(disabledAircraftCallsignsByDistance, 0, DisabledForComparison),
+            BLACK_METAMEMBER(vtolAircraftCallsignsByDistance, 0, DisabledForComparison),
+            BLACK_METAMEMBER(enabledVtolAircraftCallsignsByDistance, 0, DisabledForComparison)
+        );
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAirspaceAircraftSnapshot)

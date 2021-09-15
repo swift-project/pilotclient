@@ -18,29 +18,26 @@
 
 #include <QMetaType>
 
-namespace BlackMisc
+namespace BlackMisc::Weather
 {
-    namespace Weather
+    /*!
+     * Value object encapsulating a list of present weathers
+     */
+    class BLACKMISC_EXPORT CPresentWeatherList :
+        public CSequence<CPresentWeather>,
+        public BlackMisc::Mixin::MetaType<CPresentWeatherList>
     {
-        /*!
-         * Value object encapsulating a list of present weathers
-         */
-        class BLACKMISC_EXPORT CPresentWeatherList :
-            public CSequence<CPresentWeather>,
-            public BlackMisc::Mixin::MetaType<CPresentWeatherList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CPresentWeatherList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CPresentWeatherList)
+        using CSequence::CSequence;
 
-            //! Default constructor.
-            CPresentWeatherList() = default;
+        //! Default constructor.
+        CPresentWeatherList() = default;
 
-            //! Construct from a base class object.
-            CPresentWeatherList(const CSequence<CPresentWeather> &other);
-        };
+        //! Construct from a base class object.
+        CPresentWeatherList(const CSequence<CPresentWeather> &other);
+    };
 
-    } //namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CPresentWeatherList)

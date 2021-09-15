@@ -22,42 +22,39 @@
 class QWidget;
 
 namespace Ui { class CStatusMessageForm; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Display details about a single status message
+     */
+    class BLACKGUI_EXPORT CStatusMessageForm : public QFrame
     {
-        /*!
-         * Display details about a single status message
-         */
-        class BLACKGUI_EXPORT CStatusMessageForm : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CStatusMessageForm(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CStatusMessageForm(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CStatusMessageForm();
+        //! Destructor
+        virtual ~CStatusMessageForm();
 
-            //! Set message
-            void setVariant(const BlackMisc::CVariant &messageVariant);
+        //! Set message
+        void setVariant(const BlackMisc::CVariant &messageVariant);
 
-            //! Set message
-            void setValue(const BlackMisc::CStatusMessage &message);
+        //! Set message
+        void setValue(const BlackMisc::CStatusMessage &message);
 
-            //! Clear
-            void clear();
+        //! Clear
+        void clear();
 
-            //! Toggle visibility
-            void toggleVisibility();
+        //! Toggle visibility
+        void toggleVisibility();
 
-            //! Minimize by hiding status ...
-            void setReducedInfo(bool reduced);
+        //! Minimize by hiding status ...
+        void setReducedInfo(bool reduced);
 
-        private:
-            QScopedPointer<Ui::CStatusMessageForm> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CStatusMessageForm> ui;
+    };
 } // ns
 #endif // guard

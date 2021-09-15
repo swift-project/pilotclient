@@ -16,49 +16,46 @@
 
 using namespace BlackMisc;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CStatusMessageFormSmall::CStatusMessageFormSmall(QWidget *parent) :
+        QFrame(parent),
+        ui(new Ui::CStatusMessageFormSmall)
     {
-        CStatusMessageFormSmall::CStatusMessageFormSmall(QWidget *parent) :
-            QFrame(parent),
-            ui(new Ui::CStatusMessageFormSmall)
-        {
-            ui->setupUi(this);
-        }
+        ui->setupUi(this);
+    }
 
-        CStatusMessageFormSmall::~CStatusMessageFormSmall()
-        { }
+    CStatusMessageFormSmall::~CStatusMessageFormSmall()
+    { }
 
-        void CStatusMessageFormSmall::setVariant(const CVariant &messageVariant)
-        {
-            if (!this->isVisible()) { return; }
-            this->setValue(messageVariant.value<CStatusMessage>());
-        }
+    void CStatusMessageFormSmall::setVariant(const CVariant &messageVariant)
+    {
+        if (!this->isVisible()) { return; }
+        this->setValue(messageVariant.value<CStatusMessage>());
+    }
 
-        void CStatusMessageFormSmall::setValue(const CStatusMessage &message)
-        {
-            ui->te_Message->setPlainText(message.getMessage());
-            ui->lbl_SeverityIcon->setPixmap(CIcon(message.toIcon()));
-            ui->le_Categories->setText(CLogPattern::humanOrTechnicalCategoriesFrom(message).join(", "));
-            ui->le_Severity->setText(message.getSeverityAsString());
-            ui->le_Timestamp->setText(message.getFormattedUtcTimestampYmdhms());
-        }
+    void CStatusMessageFormSmall::setValue(const CStatusMessage &message)
+    {
+        ui->te_Message->setPlainText(message.getMessage());
+        ui->lbl_SeverityIcon->setPixmap(CIcon(message.toIcon()));
+        ui->le_Categories->setText(CLogPattern::humanOrTechnicalCategoriesFrom(message).join(", "));
+        ui->le_Severity->setText(message.getSeverityAsString());
+        ui->le_Timestamp->setText(message.getFormattedUtcTimestampYmdhms());
+    }
 
-        void CStatusMessageFormSmall::toggleVisibility()
-        {
-            this->setVisible(!isVisible());
-        }
+    void CStatusMessageFormSmall::toggleVisibility()
+    {
+        this->setVisible(!isVisible());
+    }
 
-        void CStatusMessageFormSmall::setReducedInfo(bool minimized)
-        {
-            ui->le_Timestamp->setVisible(!minimized);
-            ui->lbl_Timestamp->setVisible(!minimized);
-            ui->le_Categories->setVisible(!minimized);
-            ui->lbl_Categories->setVisible(!minimized);
-            ui->le_Severity->setVisible(!minimized);
-            ui->lbl_SeverityIcon->setVisible(!minimized);
-            ui->lbl_Severity->setVisible(!minimized);
-        }
-    } // ns
+    void CStatusMessageFormSmall::setReducedInfo(bool minimized)
+    {
+        ui->le_Timestamp->setVisible(!minimized);
+        ui->lbl_Timestamp->setVisible(!minimized);
+        ui->le_Categories->setVisible(!minimized);
+        ui->lbl_Categories->setVisible(!minimized);
+        ui->le_Severity->setVisible(!minimized);
+        ui->lbl_SeverityIcon->setVisible(!minimized);
+        ui->lbl_Severity->setVisible(!minimized);
+    }
 } // ns

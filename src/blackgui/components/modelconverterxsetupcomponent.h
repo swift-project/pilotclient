@@ -15,35 +15,32 @@
 #include <QFrame>
 
 namespace Ui { class CModelConverterXSetupComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+    * Setup to start ModelConverterX
+    */
+    class CModelConverterXSetupComponent : public QFrame
     {
-        /**
-        * Setup to start ModelConverterX
-        */
-        class CModelConverterXSetupComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            explicit CModelConverterXSetupComponent(QWidget *parent = nullptr);
+    public:
+        //! Ctor
+        explicit CModelConverterXSetupComponent(QWidget *parent = nullptr);
 
-            //! Dtor
-            virtual ~CModelConverterXSetupComponent();
+        //! Dtor
+        virtual ~CModelConverterXSetupComponent();
 
-        private:
-            //! File dialog
-            void selectBinary();
+    private:
+        //! File dialog
+        void selectBinary();
 
-            //! Save the settings
-            void saveSettings();
+        //! Save the settings
+        void saveSettings();
 
-            QScopedPointer<Ui::CModelConverterXSetupComponent> ui;
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TModelConverterXBinary> m_setting { this };
-        };
-    } // ns
+        QScopedPointer<Ui::CModelConverterXSetupComponent> ui;
+        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TModelConverterXBinary> m_setting { this };
+    };
 } // ns
 
 #endif // guard

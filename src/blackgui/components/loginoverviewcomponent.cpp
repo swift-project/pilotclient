@@ -63,115 +63,112 @@ using namespace BlackCore::Data;
 using namespace BlackCore::Context;
 using namespace BlackGui;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    const QStringList &CLoginOverviewComponent::getLogCategories()
     {
-        const QStringList &CLoginOverviewComponent::getLogCategories()
+        static const QStringList cats { CLogCategories::guiComponent() };
+        return cats;
+    }
+
+    CLoginOverviewComponent::CLoginOverviewComponent(QWidget *parent) :
+        COverlayMessagesFrame(parent),
+        ui(new Ui::CLoginOverviewComponent)
+    {
+        ui->setupUi(this);
+
+        connect(ui->pb_Cancel,     &QPushButton::clicked, this, &CLoginOverviewComponent::cancel,          Qt::QueuedConnection);
+        connect(ui->pb_Disconnect, &QPushButton::clicked, this, &CLoginOverviewComponent::toggleNetworkConnection, Qt::QueuedConnection);
+
+        // overlay
+        this->setOverlaySizeFactors(0.8, 0.5);
+        this->setReducedInfo(true);
+        this->setForceSmall(true);
+        this->showKillButton(false);
+
+        // forms
+        ui->form_Pilot->setReadOnly(true);
+        ui->form_Server->setReadOnly(true);
+
+        // auto logoff
+        // we decided to make it difficult for users to disable it
+        if (!CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            static const QStringList cats { CLogCategories::guiComponent() };
-            return cats;
+            ui->cb_AutoLogoff->setChecked(true);
         }
 
-        CLoginOverviewComponent::CLoginOverviewComponent(QWidget *parent) :
-            COverlayMessagesFrame(parent),
-            ui(new Ui::CLoginOverviewComponent)
+        // inital setup, if data already available
+        ui->form_Pilot->validate();
+        ui->cb_AutoLogoff->setChecked(m_networkSetup.useAutoLogoff());
+    }
+
+    CLoginOverviewComponent::~CLoginOverviewComponent()
+    { }
+
+    void CLoginOverviewComponent::setAutoLogoff(bool autoLogoff)
+    {
+        ui->cb_AutoLogoff->setChecked(autoLogoff);
+    }
+
+    void CLoginOverviewComponent::cancel()
+    {
+        this->closeOverlay();
+        emit this->closeOverview();
+    }
+
+    void CLoginOverviewComponent::toggleNetworkConnection()
+    {
+        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui->getIContextNetwork() || !sGui->getIContextAudio()) { return; }
+
+        const bool isConnected = sGui && sGui->getIContextNetwork()->isConnected();
+        m_networkSetup.setAutoLogoff(ui->cb_AutoLogoff->isChecked());
+
+        CStatusMessage msg;
+        if (!isConnected)
         {
-            ui->setupUi(this);
-
-            connect(ui->pb_Cancel,     &QPushButton::clicked, this, &CLoginOverviewComponent::cancel,          Qt::QueuedConnection);
-            connect(ui->pb_Disconnect, &QPushButton::clicked, this, &CLoginOverviewComponent::toggleNetworkConnection, Qt::QueuedConnection);
-
-            // overlay
-            this->setOverlaySizeFactors(0.8, 0.5);
-            this->setReducedInfo(true);
-            this->setForceSmall(true);
-            this->showKillButton(false);
-
-            // forms
-            ui->form_Pilot->setReadOnly(true);
-            ui->form_Server->setReadOnly(true);
-
-            // auto logoff
-            // we decided to make it difficult for users to disable it
-            if (!CBuildConfig::isLocalDeveloperDebugBuild())
-            {
-                ui->cb_AutoLogoff->setChecked(true);
-            }
-
-            // inital setup, if data already available
-            ui->form_Pilot->validate();
-            ui->cb_AutoLogoff->setChecked(m_networkSetup.useAutoLogoff());
+            // void
+        }
+        else
+        {
+            // disconnect from network
+            sGui->setExtraWindowTitle("");
+            msg = sGui->getIContextNetwork()->disconnectFromNetwork();
         }
 
-        CLoginOverviewComponent::~CLoginOverviewComponent()
-        { }
-
-        void CLoginOverviewComponent::setAutoLogoff(bool autoLogoff)
+        // log message and trigger events
+        msg.addCategories(this);
+        CLogMessage::preformatted(msg);
+        if (msg.isSuccess())
         {
-            ui->cb_AutoLogoff->setChecked(autoLogoff);
+            emit loginOrLogoffSuccessful();
         }
-
-        void CLoginOverviewComponent::cancel()
+        else
         {
-            this->closeOverlay();
-            emit this->closeOverview();
+            this->cancel();
         }
+    }
 
-        void CLoginOverviewComponent::toggleNetworkConnection()
-        {
-            if (!sGui || sGui->isShuttingDown()) { return; }
-            if (!sGui->getIContextNetwork() || !sGui->getIContextAudio()) { return; }
+    void CLoginOverviewComponent::showCurrentValues()
+    {
+        if (!this->hasValidContexts()) { return; }
+        const CServer server = sGui->getIContextNetwork()->getConnectedServer();
+        ui->form_Server->setServer(server);
+        ui->form_Server->resetToFirstTab();
+        ui->form_Pilot->setUser(server.getUser());
+        ui->le_LoginMode->setText(sGui->getIContextNetwork()->getLoginModeAsString());
+        ui->le_PartnerCallsign->setText(sGui->getIContextNetwork()->getPartnerCallsign().asString());
+        ui->comp_NetworkAircraft->showValues();
+    }
 
-            const bool isConnected = sGui && sGui->getIContextNetwork()->isConnected();
-            m_networkSetup.setAutoLogoff(ui->cb_AutoLogoff->isChecked());
+    bool CLoginOverviewComponent::hasValidContexts() const
+    {
+        if (!sGui || !sGui->supportsContexts()) { return false; }
+        if (sGui->isShuttingDown())          { return false; }
+        if (!sGui->getIContextSimulator())   { return false; }
+        if (!sGui->getIContextNetwork())     { return false; }
+        if (!sGui->getIContextOwnAircraft()) { return false; }
+        return true;
+    }
 
-            CStatusMessage msg;
-            if (!isConnected)
-            {
-                // void
-            }
-            else
-            {
-                // disconnect from network
-                sGui->setExtraWindowTitle("");
-                msg = sGui->getIContextNetwork()->disconnectFromNetwork();
-            }
-
-            // log message and trigger events
-            msg.addCategories(this);
-            CLogMessage::preformatted(msg);
-            if (msg.isSuccess())
-            {
-                emit loginOrLogoffSuccessful();
-            }
-            else
-            {
-                this->cancel();
-            }
-        }
-
-        void CLoginOverviewComponent::showCurrentValues()
-        {
-            if (!this->hasValidContexts()) { return; }
-            const CServer server = sGui->getIContextNetwork()->getConnectedServer();
-            ui->form_Server->setServer(server);
-            ui->form_Server->resetToFirstTab();
-            ui->form_Pilot->setUser(server.getUser());
-            ui->le_LoginMode->setText(sGui->getIContextNetwork()->getLoginModeAsString());
-            ui->le_PartnerCallsign->setText(sGui->getIContextNetwork()->getPartnerCallsign().asString());
-            ui->comp_NetworkAircraft->showValues();
-        }
-
-        bool CLoginOverviewComponent::hasValidContexts() const
-        {
-            if (!sGui || !sGui->supportsContexts()) { return false; }
-            if (sGui->isShuttingDown())          { return false; }
-            if (!sGui->getIContextSimulator())   { return false; }
-            if (!sGui->getIContextNetwork())     { return false; }
-            if (!sGui->getIContextOwnAircraft()) { return false; }
-            return true;
-        }
-
-    } // namespace
 } // namespace

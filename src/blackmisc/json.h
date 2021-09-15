@@ -215,115 +215,112 @@ QDataStream &operator<<(QDataStream &s, const std::string &v);
 QDataStream &operator>>(QDataStream &s, std::string &v);
 //! @}
 
-namespace BlackMisc
+namespace BlackMisc::Json
 {
-    namespace Json
+    //! Append to first JSON object (concatenate)
+    //! \ingroup JSON
+    BLACKMISC_EXPORT QJsonObject &appendJsonObject(QJsonObject &target, const QJsonObject &toBeAppended);
+
+    //! JSON Object from string
+    //! \ingroup JSON
+    BLACKMISC_EXPORT QJsonObject jsonObjectFromString(const QString &json, bool acceptCacheFormat = false);
+
+    //! JSON Object from string
+    //! \ingroup JSON
+    BLACKMISC_EXPORT QString stringFromJsonObject(const QJsonObject &jsonObject, QJsonDocument::JsonFormat format = QJsonDocument::Indented);
+
+    //! JSON Array from string
+    //! \ingroup JSON
+    BLACKMISC_EXPORT QJsonArray jsonArrayFromString(const QString &json);
+
+    //! First JSON string object marked as "value"
+    BLACKMISC_EXPORT QString firstJsonValueAsString(const QString &json);
+
+    //! First JSON string object marked as "value"
+    BLACKMISC_EXPORT QString firstJsonValueAsString(const QJsonObject &json);
+
+    //! First JSON string object marked as "value"
+    BLACKMISC_EXPORT int firstJsonValueAsInt(const QString &json, int defaultValue = -1, bool *ok = nullptr);
+
+    //! First JSON string object marked as "value"
+    BLACKMISC_EXPORT int firstJsonValueAsInt(const QJsonObject &json, int defaultValue = -1, bool *ok = nullptr);
+
+    //! First JSON string list object marked as "value"
+    BLACKMISC_EXPORT QStringList firstJsonValueAsStringList(const QString &json);
+
+    //! First JSON string list object marked as "value"
+    BLACKMISC_EXPORT QStringList firstJsonValueAsStringList(const QJsonObject &json);
+
+    //! JSON array to QStringList
+    BLACKMISC_EXPORT QStringList arrayToQStringList(const QJsonArray &array);
+
+    //! Creates an incremental json object from two existing objects
+    BLACKMISC_EXPORT QJsonObject getIncrementalObject(const QJsonObject &previousObject, const QJsonObject &currentObject);
+
+    //! Merges an incremental json object into an existing one
+    BLACKMISC_EXPORT QJsonObject applyIncrementalObject(const QJsonObject &previousObject, const QJsonObject &incrementalObject);
+
+    //! Looks like swift JSON?
+    //! \remark Quick check if the string could be a valid JSON string
+    BLACKMISC_EXPORT bool looksLikeJson(const QString &json);
+
+    //! Looks like swift JSON?
+    //! \remark Quick check if the string could be a valid swift JSON string
+    BLACKMISC_EXPORT bool looksLikeSwiftJson(const QString &json);
+
+    //! Looks like a valid swift container JSON object?
+    BLACKMISC_EXPORT bool looksLikeSwiftContainerJson(const QJsonObject &object);
+
+    //! Looks like a cache/setting object?
+    BLACKMISC_EXPORT bool looksLikeSwiftDataObjectJson(const QJsonObject &object);
+
+    //! Looks like a swift type/value pair?
+    BLACKMISC_EXPORT bool looksLikeSwiftTypeValuePairJson(const QJsonObject &object);
+
+    //! Looks like a swift DB format?
+    BLACKMISC_EXPORT bool looksLikeSwiftDbJson(const QJsonObject &object);
+
+    //! The value part of a cache/setting object
+    //! \remark if data object unstrip from that, otherwise leave unchanged
+    //! \remark this is the value ONLY!
+    BLACKMISC_EXPORT QJsonObject swiftDataObjectValue(const QJsonObject &object);
+
+    //! The value of a cache/setting object
+    //! \remark if data object unstrip from that, otherwise leave unchanged
+    //! \remark this is the value ONLY!
+    BLACKMISC_EXPORT QJsonObject swiftDataObjectValue(const QString &jsonString);
+
+    //! The type/value of a cache/setting object
+    //! \remark if cache object unstrip from that, otherwise leave unchanged
+    //! \remark format is type/value
+    BLACKMISC_EXPORT QJsonObject unwrapCache(const QJsonObject &object);
+
+    //! The type/value object of a cache/setting object
+    //! \remark if cache object unstrip from that, otherwise leave unchanged
+    //! \remark format is type/value
+    BLACKMISC_EXPORT QJsonObject unwrapCache(const QString &jsonString);
+
+    /*!
+     * Load JSON file and init by that
+     */
+    template <class T>
+    bool loadFromJsonFile(T &object, const QString &fileNameAndPath, bool acceptCacheFormat = false)
     {
-        //! Append to first JSON object (concatenate)
-        //! \ingroup JSON
-        BLACKMISC_EXPORT QJsonObject &appendJsonObject(QJsonObject &target, const QJsonObject &toBeAppended);
+        const QString jsonString(CFileUtils::readFileToString(fileNameAndPath));
+        if (jsonString.isEmpty()) { return false; }
+        object.convertFromJson(jsonString, acceptCacheFormat);
+        return true;
+    }
 
-        //! JSON Object from string
-        //! \ingroup JSON
-        BLACKMISC_EXPORT QJsonObject jsonObjectFromString(const QString &json, bool acceptCacheFormat = false);
-
-        //! JSON Object from string
-        //! \ingroup JSON
-        BLACKMISC_EXPORT QString stringFromJsonObject(const QJsonObject &jsonObject, QJsonDocument::JsonFormat format = QJsonDocument::Indented);
-
-        //! JSON Array from string
-        //! \ingroup JSON
-        BLACKMISC_EXPORT QJsonArray jsonArrayFromString(const QString &json);
-
-        //! First JSON string object marked as "value"
-        BLACKMISC_EXPORT QString firstJsonValueAsString(const QString &json);
-
-        //! First JSON string object marked as "value"
-        BLACKMISC_EXPORT QString firstJsonValueAsString(const QJsonObject &json);
-
-        //! First JSON string object marked as "value"
-        BLACKMISC_EXPORT int firstJsonValueAsInt(const QString &json, int defaultValue = -1, bool *ok = nullptr);
-
-        //! First JSON string object marked as "value"
-        BLACKMISC_EXPORT int firstJsonValueAsInt(const QJsonObject &json, int defaultValue = -1, bool *ok = nullptr);
-
-        //! First JSON string list object marked as "value"
-        BLACKMISC_EXPORT QStringList firstJsonValueAsStringList(const QString &json);
-
-        //! First JSON string list object marked as "value"
-        BLACKMISC_EXPORT QStringList firstJsonValueAsStringList(const QJsonObject &json);
-
-        //! JSON array to QStringList
-        BLACKMISC_EXPORT QStringList arrayToQStringList(const QJsonArray &array);
-
-        //! Creates an incremental json object from two existing objects
-        BLACKMISC_EXPORT QJsonObject getIncrementalObject(const QJsonObject &previousObject, const QJsonObject &currentObject);
-
-        //! Merges an incremental json object into an existing one
-        BLACKMISC_EXPORT QJsonObject applyIncrementalObject(const QJsonObject &previousObject, const QJsonObject &incrementalObject);
-
-        //! Looks like swift JSON?
-        //! \remark Quick check if the string could be a valid JSON string
-        BLACKMISC_EXPORT bool looksLikeJson(const QString &json);
-
-        //! Looks like swift JSON?
-        //! \remark Quick check if the string could be a valid swift JSON string
-        BLACKMISC_EXPORT bool looksLikeSwiftJson(const QString &json);
-
-        //! Looks like a valid swift container JSON object?
-        BLACKMISC_EXPORT bool looksLikeSwiftContainerJson(const QJsonObject &object);
-
-        //! Looks like a cache/setting object?
-        BLACKMISC_EXPORT bool looksLikeSwiftDataObjectJson(const QJsonObject &object);
-
-        //! Looks like a swift type/value pair?
-        BLACKMISC_EXPORT bool looksLikeSwiftTypeValuePairJson(const QJsonObject &object);
-
-        //! Looks like a swift DB format?
-        BLACKMISC_EXPORT bool looksLikeSwiftDbJson(const QJsonObject &object);
-
-        //! The value part of a cache/setting object
-        //! \remark if data object unstrip from that, otherwise leave unchanged
-        //! \remark this is the value ONLY!
-        BLACKMISC_EXPORT QJsonObject swiftDataObjectValue(const QJsonObject &object);
-
-        //! The value of a cache/setting object
-        //! \remark if data object unstrip from that, otherwise leave unchanged
-        //! \remark this is the value ONLY!
-        BLACKMISC_EXPORT QJsonObject swiftDataObjectValue(const QString &jsonString);
-
-        //! The type/value of a cache/setting object
-        //! \remark if cache object unstrip from that, otherwise leave unchanged
-        //! \remark format is type/value
-        BLACKMISC_EXPORT QJsonObject unwrapCache(const QJsonObject &object);
-
-        //! The type/value object of a cache/setting object
-        //! \remark if cache object unstrip from that, otherwise leave unchanged
-        //! \remark format is type/value
-        BLACKMISC_EXPORT QJsonObject unwrapCache(const QString &jsonString);
-
-        /*!
-         * Load JSON file and init by that
-         */
-        template <class T>
-        bool loadFromJsonFile(T &object, const QString &fileNameAndPath, bool acceptCacheFormat = false)
-        {
-            const QString jsonString(CFileUtils::readFileToString(fileNameAndPath));
-            if (jsonString.isEmpty()) { return false; }
-            object.convertFromJson(jsonString, acceptCacheFormat);
-            return true;
-        }
-
-        /*!
-         * Save to JSON file
-         */
-        template <class T>
-        bool saveToJsonFile(const T &object, const QString &fileNameAndPath)
-        {
-            const QString jsonString(object.toJsonString());
-            if (jsonString.isEmpty()) { return false; }
-            return CFileUtils::writeStringToFile(jsonString, fileNameAndPath);
-        }
+    /*!
+     * Save to JSON file
+     */
+    template <class T>
+    bool saveToJsonFile(const T &object, const QString &fileNameAndPath)
+    {
+        const QString jsonString(object.toJsonString());
+        if (jsonString.isEmpty()) { return false; }
+        return CFileUtils::writeStringToFile(jsonString, fileNameAndPath);
     }
 }
 

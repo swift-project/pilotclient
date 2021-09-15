@@ -18,44 +18,41 @@
 #include <QScopedPointer>
 
 namespace Ui { class CSimulatorXPlaneConfigWindow; }
-namespace BlackSimPlugin
+namespace BlackSimPlugin::XPlane
 {
-    namespace XPlane
+    /**
+     * A window that shows all the X-Plane plugin options.
+     */
+    class CSimulatorXPlaneConfigWindow : public BlackGui::CPluginConfigWindow
     {
-        /**
-         * A window that shows all the X-Plane plugin options.
-         */
-        class CSimulatorXPlaneConfigWindow : public BlackGui::CPluginConfigWindow
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor.
-            CSimulatorXPlaneConfigWindow(QWidget *parent);
+    public:
+        //! Ctor.
+        CSimulatorXPlaneConfigWindow(QWidget *parent);
 
-            //! Dtor.
-            virtual ~CSimulatorXPlaneConfigWindow() override;
+        //! Dtor.
+        virtual ~CSimulatorXPlaneConfigWindow() override;
 
-        private:
-            //! Settings from UI
-            BlackMisc::Simulation::Settings::CXSwiftBusSettings getSettingsFromUI() const;
+    private:
+        //! Settings from UI
+        BlackMisc::Simulation::Settings::CXSwiftBusSettings getSettingsFromUI() const;
 
-            //! Set settings
-            void setUiValues(const BlackMisc::Simulation::Settings::CXSwiftBusSettings &settings);
+        //! Set settings
+        void setUiValues(const BlackMisc::Simulation::Settings::CXSwiftBusSettings &settings);
 
-            //! Settings have been accepted
-            void onSettingsAccepted();
+        //! Settings have been accepted
+        void onSettingsAccepted();
 
-            //! Settings changed
-            void onSettingsChanged();
+        //! Settings changed
+        void onSettingsChanged();
 
-            //! Margin value to int
-            static int marginToInt(const QString &text, int defaultValue);
+        //! Margin value to int
+        static int marginToInt(const QString &text, int defaultValue);
 
-            QScopedPointer<Ui::CSimulatorXPlaneConfigWindow> ui;
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusSettings> m_xSwiftBusServerSettings { this, &CSimulatorXPlaneConfigWindow::onSettingsChanged };
-        };
-    } // ns
+        QScopedPointer<Ui::CSimulatorXPlaneConfigWindow> ui;
+        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusSettings> m_xSwiftBusServerSettings { this, &CSimulatorXPlaneConfigWindow::onSettingsChanged };
+    };
 } // ns
 
 #endif // guard

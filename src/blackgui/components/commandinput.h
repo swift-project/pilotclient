@@ -26,47 +26,44 @@ namespace BlackMisc
     namespace Network { class CServer; }
     namespace Simulation { class CSimulatorPluginInfo; }
 }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Specialized line edit for command inputs
+    class BLACKGUI_EXPORT CCommandInput :
+        public CLineEditHistory,
+        public BlackMisc::CIdentifiable
     {
-        //! Specialized line edit for command inputs
-        class BLACKGUI_EXPORT CCommandInput :
-            public CLineEditHistory,
-            public BlackMisc::CIdentifiable
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            CCommandInput(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        CCommandInput(QWidget *parent = nullptr);
 
-            //! Show tooltip
-            void showToolTip(bool show);
+        //! Show tooltip
+        void showToolTip(bool show);
 
-        signals:
-            //! Command was entered
-            void commandEntered(const QString &command, const BlackMisc::CIdentifier &originator);
+    signals:
+        //! Command was entered
+        void commandEntered(const QString &command, const BlackMisc::CIdentifier &originator);
 
-            //! Text entered (which is not a command)
-            void textEntered(const QString &command, const BlackMisc::CIdentifier &originator);
+        //! Text entered (which is not a command)
+        void textEntered(const QString &command, const BlackMisc::CIdentifier &originator);
 
-        private:
-            //! Basic command validation
-            void validateCommand();
+    private:
+        //! Basic command validation
+        void validateCommand();
 
-            //! Command tooltip
-            void setCommandToolTip();
+        //! Command tooltip
+        void setCommandToolTip();
 
-            //! Simulator plugin loaded / unloaded (default info)
-            void onSimulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
+        //! Simulator plugin loaded / unloaded (default info)
+        void onSimulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
-            //! Connected network server has been changed
-            void onConnectedServerChanged(const BlackMisc::Network::CServer &server);
+        //! Connected network server has been changed
+        void onConnectedServerChanged(const BlackMisc::Network::CServer &server);
 
-            bool m_showToolTip = true;
-            BlackMisc::CDigestSignal m_dsCommandTooltip { this, &CCommandInput::setCommandToolTip, 5000, 2 };
-        };
-    } // ns
+        bool m_showToolTip = true;
+        BlackMisc::CDigestSignal m_dsCommandTooltip { this, &CCommandInput::setCommandToolTip, 5000, 2 };
+    };
 } // ns
 #endif // guard

@@ -12,108 +12,105 @@
 #include <QDBusMetaType>
 #include <QJsonObject>
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    void CSimulatorInternals::setValue(const QString &name, const QString &value)
     {
-        void CSimulatorInternals::setValue(const QString &name, const QString &value)
-        {
-            m_data.addOrReplaceValue(name, value);
-        }
+        m_data.addOrReplaceValue(name, value);
+    }
 
-        void CSimulatorInternals::setValue(const QString &name, int value)
-        {
-            this->setValue(name, QString::number(value));
-        }
+    void CSimulatorInternals::setValue(const QString &name, int value)
+    {
+        this->setValue(name, QString::number(value));
+    }
 
-        CVariant CSimulatorInternals::getVariantValue(const QString &name) const
-        {
-            return m_data.getVariantValue(name);
-        }
+    CVariant CSimulatorInternals::getVariantValue(const QString &name) const
+    {
+        return m_data.getVariantValue(name);
+    }
 
-        QString CSimulatorInternals::getStringValue(const QString &name) const
-        {
-            return m_data.getValueAsString(name);
-        }
+    QString CSimulatorInternals::getStringValue(const QString &name) const
+    {
+        return m_data.getValueAsString(name);
+    }
 
-        QStringList CSimulatorInternals::getSortedNames() const
-        {
-            return m_data.getNames(true);
-        }
+    QStringList CSimulatorInternals::getSortedNames() const
+    {
+        return m_data.getNames(true);
+    }
 
-        void CSimulatorInternals::setSimulatorVersion(const QString &versionInfo)
-        {
-            this->setValue("all/versionInfo", versionInfo);
-        }
+    void CSimulatorInternals::setSimulatorVersion(const QString &versionInfo)
+    {
+        this->setValue("all/versionInfo", versionInfo);
+    }
 
-        void CSimulatorInternals::setSimulatorInstallationDirectory(const QString &fullFilePath)
-        {
-            this->setValue("all/installDir", fullFilePath);
-        }
+    void CSimulatorInternals::setSimulatorInstallationDirectory(const QString &fullFilePath)
+    {
+        this->setValue("all/installDir", fullFilePath);
+    }
 
-        QString CSimulatorInternals::getSimulatorName() const
-        {
-            return this->getStringValue("all/simulatorName");
-        }
+    QString CSimulatorInternals::getSimulatorName() const
+    {
+        return this->getStringValue("all/simulatorName");
+    }
 
-        void CSimulatorInternals::setSimulatorName(const QString &name)
-        {
-            this->setValue("all/simulatorName", name);
-        }
+    void CSimulatorInternals::setSimulatorName(const QString &name)
+    {
+        this->setValue("all/simulatorName", name);
+    }
 
-        QString CSimulatorInternals::getSimulatorSwiftPluginName() const
-        {
-            return this->getStringValue("all/pluginName");
-        }
+    QString CSimulatorInternals::getSimulatorSwiftPluginName() const
+    {
+        return this->getStringValue("all/pluginName");
+    }
 
-        void CSimulatorInternals::setSwiftPluginName(const QString &name)
-        {
-            this->setValue("all/pluginName", name);
-        }
+    void CSimulatorInternals::setSwiftPluginName(const QString &name)
+    {
+        this->setValue("all/pluginName", name);
+    }
 
-        QString CSimulatorInternals::getSimulatorVersion() const
-        {
-            return this->getStringValue("all/versionInfo");
-        }
+    QString CSimulatorInternals::getSimulatorVersion() const
+    {
+        return this->getStringValue("all/versionInfo");
+    }
 
-        QString CSimulatorInternals::getSimulatorInstallationDirectory() const
-        {
-            return this->getStringValue("all/installDir");
-        }
+    QString CSimulatorInternals::getSimulatorInstallationDirectory() const
+    {
+        return this->getStringValue("all/installDir");
+    }
 
-        void CSimulatorInternals::registerMetadata()
-        {
-            qRegisterMetaType<BlackMisc::Simulation::CSimulatorInternals>();
-            qDBusRegisterMetaType<BlackMisc::Simulation::CSimulatorInternals>();
-            qRegisterMetaTypeStreamOperators<BlackMisc::Simulation::CSimulatorInternals>();
-            registerMetaValueType<BlackMisc::Simulation::CSimulatorInternals>();
-        }
+    void CSimulatorInternals::registerMetadata()
+    {
+        qRegisterMetaType<BlackMisc::Simulation::CSimulatorInternals>();
+        qDBusRegisterMetaType<BlackMisc::Simulation::CSimulatorInternals>();
+        qRegisterMetaTypeStreamOperators<BlackMisc::Simulation::CSimulatorInternals>();
+        registerMetaValueType<BlackMisc::Simulation::CSimulatorInternals>();
+    }
 
-        QString CSimulatorInternals::convertToQString(bool i18n) const
-        {
-            return m_data.toQString(i18n);
-        }
+    QString CSimulatorInternals::convertToQString(bool i18n) const
+    {
+        return m_data.toQString(i18n);
+    }
 
-        QVariant CSimulatorInternals::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
+    QVariant CSimulatorInternals::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
+    {
+        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
         {
-            if (index.isMyself()) { return QVariant::fromValue(*this); }
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
-            switch (i)
-            {
-            case IndexData: return QVariant::fromValue(m_data);
-            default: return CValueObject::propertyByIndex(index);
-            }
+        case IndexData: return QVariant::fromValue(m_data);
+        default: return CValueObject::propertyByIndex(index);
         }
+    }
 
-        void CSimulatorInternals::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
+    void CSimulatorInternals::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
+    {
+        if (index.isMyself()) { (*this) = variant.value<CSimulatorInternals>(); return; }
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
         {
-            if (index.isMyself()) { (*this) = variant.value<CSimulatorInternals>(); return; }
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
-            switch (i)
-            {
-            case IndexData: m_data = variant.value<CNameVariantPairList>(); break;
-            default: CValueObject::setPropertyByIndex(index, variant); break;
-            }
+        case IndexData: m_data = variant.value<CNameVariantPairList>(); break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
-    } // ns
+    }
 } // ns

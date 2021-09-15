@@ -15,27 +15,24 @@
 #include <QScopedPointer>
 
 namespace Ui { class CFirstModelSetDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * First model set dialog
+     */
+    class CFirstModelSetDialog : public QDialog
     {
-        /**
-         * First model set dialog
-         */
-        class CFirstModelSetDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CFirstModelSetDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CFirstModelSetDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CFirstModelSetDialog();
+        //! Destructor
+        virtual ~CFirstModelSetDialog();
 
-        private:
-            QScopedPointer<Ui::CFirstModelSetDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CFirstModelSetDialog> ui;
+    };
 } // ns
 #endif // guard

@@ -26,48 +26,45 @@ namespace BlackMisc
     class CCountry;
     namespace Aviation { class CAirlineIcaoCodeList; }
 }
-namespace BlackGui
+namespace BlackGui::Filters
 {
-    namespace Filters
+    /*!
+     * Airline ICAO filter bar
+     */
+    class BLACKGUI_EXPORT CAirlineIcaoFilterBar :
+        public CFilterWidget,
+        public Models::IModelFilterProvider<BlackMisc::Aviation::CAirlineIcaoCodeList>
     {
-        /*!
-         * Airline ICAO filter bar
-         */
-        class BLACKGUI_EXPORT CAirlineIcaoFilterBar :
-            public CFilterWidget,
-            public Models::IModelFilterProvider<BlackMisc::Aviation::CAirlineIcaoCodeList>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAirlineIcaoFilterBar(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAirlineIcaoFilterBar(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAirlineIcaoFilterBar() override;
+        //! Destructor
+        virtual ~CAirlineIcaoFilterBar() override;
 
-            //! \copydoc Models::IModelFilterProvider::createModelFilter
-            virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CAirlineIcaoCodeList>> createModelFilter() const override;
+        //! \copydoc Models::IModelFilterProvider::createModelFilter
+        virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CAirlineIcaoCodeList>> createModelFilter() const override;
 
-            //! Filter default values by ICAO code
-            void filter(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
+        //! Filter default values by ICAO code
+        void filter(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
 
-        public slots:
-            //! \copydoc CFilterWidget::onRowCountChanged
-            virtual void onRowCountChanged(int count, bool withFilter) override;
+    public slots:
+        //! \copydoc CFilterWidget::onRowCountChanged
+        virtual void onRowCountChanged(int count, bool withFilter) override;
 
-        private slots:
-            //! Country has been changed
-            void ps_CountryChanged(const BlackMisc::CCountry &country);
+    private slots:
+        //! Country has been changed
+        void ps_CountryChanged(const BlackMisc::CCountry &country);
 
-        protected:
-            //! Clear form
-            virtual void clearForm() override;
+    protected:
+        //! Clear form
+        virtual void clearForm() override;
 
-        private:
-            QScopedPointer<Ui::CAirlineIcaoFilterBar> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CAirlineIcaoFilterBar> ui;
+    };
 } // ns
 
 #endif // guard

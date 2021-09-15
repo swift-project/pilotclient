@@ -21,46 +21,43 @@ using namespace BlackCore;
 using namespace BlackMisc::Network;
 using namespace BlackGui::Views;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CDbCountryComponent::CDbCountryComponent(QWidget *parent) :
+        QFrame(parent),
+        ui(new Ui::CDbCountryComponent)
     {
-        CDbCountryComponent::CDbCountryComponent(QWidget *parent) :
-            QFrame(parent),
-            ui(new Ui::CDbCountryComponent)
+        ui->setupUi(this);
+        this->setViewWithIndicator(ui->tvp_Countries);
+        ui->tvp_Countries->setResizeMode(CViewBaseNonTemplate::ResizingOnce);
+        connect(ui->tvp_Countries, &CCountryView::requestNewBackendData, this, &CDbCountryComponent::onReload);
+
+        // filter and drag and drop
+        ui->tvp_Countries->setFilterWidget(ui->filter_CountryComponent);
+        ui->tvp_Countries->allowDragDrop(true, false);
+
+        connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbCountryComponent::onCountriesRead, Qt::QueuedConnection);
+        this->onCountriesRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getCountriesCount(), {});
+    }
+
+    CDbCountryComponent::~CDbCountryComponent()
+    { }
+
+    void CDbCountryComponent::onCountriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count, const QUrl &url)
+    {
+        Q_UNUSED(count)
+        Q_UNUSED(url)
+
+        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
+        if (entity.testFlag(CEntityFlags::CountryEntity) && CEntityFlags::isFinishedReadState(readState))
         {
-            ui->setupUi(this);
-            this->setViewWithIndicator(ui->tvp_Countries);
-            ui->tvp_Countries->setResizeMode(CViewBaseNonTemplate::ResizingOnce);
-            connect(ui->tvp_Countries, &CCountryView::requestNewBackendData, this, &CDbCountryComponent::onReload);
-
-            // filter and drag and drop
-            ui->tvp_Countries->setFilterWidget(ui->filter_CountryComponent);
-            ui->tvp_Countries->allowDragDrop(true, false);
-
-            connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbCountryComponent::onCountriesRead, Qt::QueuedConnection);
-            this->onCountriesRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getCountriesCount(), {});
+            ui->tvp_Countries->updateContainerMaybeAsync(sApp->getWebDataServices()->getCountries());
         }
+    }
 
-        CDbCountryComponent::~CDbCountryComponent()
-        { }
-
-        void CDbCountryComponent::onCountriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count, const QUrl &url)
-        {
-            Q_UNUSED(count)
-            Q_UNUSED(url)
-
-            if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
-            if (entity.testFlag(CEntityFlags::CountryEntity) && CEntityFlags::isFinishedReadState(readState))
-            {
-                ui->tvp_Countries->updateContainerMaybeAsync(sApp->getWebDataServices()->getCountries());
-            }
-        }
-
-        void CDbCountryComponent::onReload()
-        {
-            if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
-            sApp->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::CountryEntity);
-        }
-    } // ns
+    void CDbCountryComponent::onReload()
+    {
+        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
+        sApp->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::CountryEntity);
+    }
 } // ns

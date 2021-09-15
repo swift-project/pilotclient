@@ -10,34 +10,31 @@
 
 #include "blackmisc/logmessage.h"
 
-namespace BlackCore
+namespace BlackCore::Fsd
 {
-    namespace Fsd
+    PlaneInfoRequest::PlaneInfoRequest() : MessageBase()
+    { }
+
+    PlaneInfoRequest::PlaneInfoRequest(const QString &sender, const QString &receiver)
+        : MessageBase(sender, receiver)
+    { }
+
+    QStringList PlaneInfoRequest::toTokens() const
     {
-        PlaneInfoRequest::PlaneInfoRequest() : MessageBase()
-        { }
+        auto tokens = QStringList {};
+        tokens.push_back(m_sender);
+        tokens.push_back(m_receiver);
+        tokens.push_back("PIR");
+        return tokens;
+    }
 
-        PlaneInfoRequest::PlaneInfoRequest(const QString &sender, const QString &receiver)
-            : MessageBase(sender, receiver)
-        { }
-
-        QStringList PlaneInfoRequest::toTokens() const
+    PlaneInfoRequest PlaneInfoRequest::fromTokens(const QStringList &tokens)
+    {
+        if (tokens.size() < 3)
         {
-            auto tokens = QStringList {};
-            tokens.push_back(m_sender);
-            tokens.push_back(m_receiver);
-            tokens.push_back("PIR");
-            return tokens;
-        }
-
-        PlaneInfoRequest PlaneInfoRequest::fromTokens(const QStringList &tokens)
-        {
-            if (tokens.size() < 3)
-            {
-                BlackMisc::CLogMessage(static_cast<PlaneInfoRequest *>(nullptr)).debug(u"Wrong number of arguments.");
-                return {};
-            };
-            return PlaneInfoRequest(tokens[0], tokens[1]);
-        }
+            BlackMisc::CLogMessage(static_cast<PlaneInfoRequest *>(nullptr)).debug(u"Wrong number of arguments.");
+            return {};
+        };
+        return PlaneInfoRequest(tokens[0], tokens[1]);
     }
 }

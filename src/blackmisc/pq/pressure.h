@@ -14,26 +14,23 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/physicalquantity.h"
 
-namespace BlackMisc
+namespace BlackMisc::PhysicalQuantities
 {
-    namespace PhysicalQuantities
+    /*!
+     * Physical unit distance
+     */
+    class BLACKMISC_EXPORT CPressure : public CPhysicalQuantity<CPressureUnit, CPressure>
     {
-        /*!
-         * Physical unit distance
-         */
-        class BLACKMISC_EXPORT CPressure : public CPhysicalQuantity<CPressureUnit, CPressure>
-        {
-        public:
-            //! Default constructor
-            CPressure() : CPhysicalQuantity(0, CPressureUnit::defaultUnit()) {}
+    public:
+        //! Default constructor
+        CPressure() : CPhysicalQuantity(0, CPressureUnit::defaultUnit()) {}
 
-            //! Init by double value
-            CPressure(double value, const CPressureUnit &unit) : CPhysicalQuantity(value, unit) {}
+        //! Init by double value
+        CPressure(double value, const CPressureUnit &unit) : CPhysicalQuantity(value, unit) {}
 
-            //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CPressure(const QString &unitString) : CPhysicalQuantity(unitString) {}
-        };
-    } // ns
+        //! \copydoc CPhysicalQuantity(const QString &unitString)
+        CPressure(const QString &unitString) : CPhysicalQuantity(unitString) {}
+    };
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CPressure)

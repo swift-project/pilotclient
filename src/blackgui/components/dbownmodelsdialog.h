@@ -17,44 +17,41 @@
 #include <QScopedPointer>
 
 namespace Ui { class CDbOwnModelsDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    class CDbOwnModelsComponent;
+
+    //! Own models dialog
+    class BLACKGUI_EXPORT CDbOwnModelsDialog : public QDialog
     {
-        class CDbOwnModelsComponent;
+        Q_OBJECT
 
-        //! Own models dialog
-        class BLACKGUI_EXPORT CDbOwnModelsDialog : public QDialog
-        {
-            Q_OBJECT
+    public:
+        //! Constructor
+        explicit CDbOwnModelsDialog(QWidget *parent = nullptr);
 
-        public:
-            //! Constructor
-            explicit CDbOwnModelsDialog(QWidget *parent = nullptr);
+        //! Destructor
+        virtual ~CDbOwnModelsDialog() override;
 
-            //! Destructor
-            virtual ~CDbOwnModelsDialog() override;
+        //! \copydoc CDbOwnModelsComponent::setSimulator
+        void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-            //! \copydoc CDbOwnModelsComponent::setSimulator
-            void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        //! \copydoc CDbOwnModelsComponent::requestModelsInBackground
+        bool requestModelsInBackground(const BlackMisc::Simulation::CSimulatorInfo &simulator, bool onlyIfNotEmpty);
 
-            //! \copydoc CDbOwnModelsComponent::requestModelsInBackground
-            bool requestModelsInBackground(const BlackMisc::Simulation::CSimulatorInfo &simulator, bool onlyIfNotEmpty);
+        //! \copydoc CDbOwnModelsComponent::getOwnModelsCount
+        int getOwnModelsCount() const;
 
-            //! \copydoc CDbOwnModelsComponent::getOwnModelsCount
-            int getOwnModelsCount() const;
+        //! Direct access to component
+        //! \remark allows to use the powerful component class
+        const CDbOwnModelsComponent *modelsComponent() const;
 
-            //! Direct access to component
-            //! \remark allows to use the powerful component class
-            const CDbOwnModelsComponent *modelsComponent() const;
+    signals:
+        //! \copydoc CDbOwnModelsComponent::successfullyLoadedModels
+        void successfullyLoadedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, int count);
 
-        signals:
-            //! \copydoc CDbOwnModelsComponent::successfullyLoadedModels
-            void successfullyLoadedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, int count);
-
-        private:
-            QScopedPointer<Ui::CDbOwnModelsDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CDbOwnModelsDialog> ui;
+    };
 } // ns
 #endif // guard

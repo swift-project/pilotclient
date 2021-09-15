@@ -21,58 +21,55 @@
 #include <QAbstractButton>
 
 namespace Ui { class CDbLoadDataDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * Load data from DB as dialog
+     */
+    class BLACKGUI_EXPORT CDbLoadDataDialog : public QDialog
     {
-        /**
-         * Load data from DB as dialog
-         */
-        class BLACKGUI_EXPORT CDbLoadDataDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CDbLoadDataDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CDbLoadDataDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CDbLoadDataDialog();
+        //! Destructor
+        virtual ~CDbLoadDataDialog();
 
-            //! Newer or empty entities detected
-            bool newerOrEmptyEntitiesDetected(BlackMisc::Network::CEntityFlags::Entity loadEntities);
+        //! Newer or empty entities detected
+        bool newerOrEmptyEntitiesDetected(BlackMisc::Network::CEntityFlags::Entity loadEntities);
 
-        private:
-            //! The string list model
-            QStringListModel *entitiesModel() const;
+    private:
+        //! The string list model
+        QStringListModel *entitiesModel() const;
 
-            //! All selected items
-            QStringList selectedEntities() const;
+        //! All selected items
+        QStringList selectedEntities() const;
 
-            //! Button clicked
-            void onButtonClicked(QAbstractButton *button);
+        //! Button clicked
+        void onButtonClicked(QAbstractButton *button);
 
-            //! Data are/have been read
-            void onDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        //! Data are/have been read
+        void onDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
-            //! Download progress
-            void onEntityDownloadProgress(BlackMisc::Network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
+        //! Download progress
+        void onEntityDownloadProgress(BlackMisc::Network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
 
-            //! Dialog rejected
-            void onRejected();
+        //! Dialog rejected
+        void onRejected();
 
-            //! Consolidate
-            void consolidate();
+        //! Consolidate
+        void consolidate();
 
-            QScopedPointer<Ui::CDbLoadDataDialog> ui;
-            BlackMisc::Network::CEntityFlags::Entity m_pendingEntities = BlackMisc::Network::CEntityFlags::NoEntity;
-            BlackMisc::Simulation::Data::CModelSetCaches m_sets { true, this }; //!< caches
-            BlackMisc::Simulation::Data::CModelCaches m_models  { true, this }; //!< models
-            int m_pendingEntitiesCount = -1;
-            bool m_consolidating   = false; //! currently consolidating
-            bool m_autoConsolidate = false;
-        };
-    } // ns
+        QScopedPointer<Ui::CDbLoadDataDialog> ui;
+        BlackMisc::Network::CEntityFlags::Entity m_pendingEntities = BlackMisc::Network::CEntityFlags::NoEntity;
+        BlackMisc::Simulation::Data::CModelSetCaches m_sets { true, this }; //!< caches
+        BlackMisc::Simulation::Data::CModelCaches m_models  { true, this }; //!< models
+        int m_pendingEntitiesCount = -1;
+        bool m_consolidating   = false; //! currently consolidating
+        bool m_autoConsolidate = false;
+    };
 } // ns
 
 #endif // guard

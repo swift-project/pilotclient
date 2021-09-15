@@ -17,33 +17,30 @@
 
 using namespace BlackMisc;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    CCountryListModel::CCountryListModel(QObject *parent) :
+        CListModelDbObjects("CountryListModel", parent)
     {
-        CCountryListModel::CCountryListModel(QObject *parent) :
-            CListModelDbObjects("CountryListModel", parent)
-        {
-            CColumn col("country", CCountry::IndexIcon);
-            col.setSortPropertyIndex(CCountry::IndexIsoCode);
-            m_columns.addColumn(col);
-            m_columns.addColumn(CColumn::standardString("ISO2", CCountry::IndexIsoCode));
-            m_columns.addColumn(CColumn::standardString("ISO3", CCountry::IndexIso3Code));
-            m_columns.addColumn(CColumn::standardString("name", CCountry::IndexName));
-            m_columns.addColumn(CColumn::standardString("alias 1", CCountry::IndexAlias1));
-            m_columns.addColumn(CColumn::standardString("alias 2", CCountry::IndexAlias2));
-            m_columns.addColumn(CColumn::standardString("changed", CCountry::IndexUtcTimestampFormattedYmdhms));
+        CColumn col("country", CCountry::IndexIcon);
+        col.setSortPropertyIndex(CCountry::IndexIsoCode);
+        m_columns.addColumn(col);
+        m_columns.addColumn(CColumn::standardString("ISO2", CCountry::IndexIsoCode));
+        m_columns.addColumn(CColumn::standardString("ISO3", CCountry::IndexIso3Code));
+        m_columns.addColumn(CColumn::standardString("name", CCountry::IndexName));
+        m_columns.addColumn(CColumn::standardString("alias 1", CCountry::IndexAlias1));
+        m_columns.addColumn(CColumn::standardString("alias 2", CCountry::IndexAlias2));
+        m_columns.addColumn(CColumn::standardString("changed", CCountry::IndexUtcTimestampFormattedYmdhms));
 
-            // default sort order
-            this->setSortColumnByPropertyIndex(CCountry::IndexIsoCode);
-            m_sortOrder = Qt::AscendingOrder;
+        // default sort order
+        this->setSortColumnByPropertyIndex(CCountry::IndexIsoCode);
+        m_sortOrder = Qt::AscendingOrder;
 
-            // force strings for translation in resource files
-            (void)QT_TRANSLATE_NOOP("ModelCountryList", "cty.");
-            (void)QT_TRANSLATE_NOOP("ModelCountryList", "country");
-            (void)QT_TRANSLATE_NOOP("ModelCountryList", "ISO2");
-            (void)QT_TRANSLATE_NOOP("ModelCountryList", "ISO3");
-            (void)QT_TRANSLATE_NOOP("ModelCountryList", "name");
-        }
-    } // ns
+        // force strings for translation in resource files
+        (void)QT_TRANSLATE_NOOP("ModelCountryList", "cty.");
+        (void)QT_TRANSLATE_NOOP("ModelCountryList", "country");
+        (void)QT_TRANSLATE_NOOP("ModelCountryList", "ISO2");
+        (void)QT_TRANSLATE_NOOP("ModelCountryList", "ISO3");
+        (void)QT_TRANSLATE_NOOP("ModelCountryList", "name");
+    }
 } // ns

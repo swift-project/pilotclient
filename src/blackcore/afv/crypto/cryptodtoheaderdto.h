@@ -16,22 +16,16 @@
 #include <QString>
 #include <cstdint>
 
-namespace BlackCore
+namespace BlackCore::Afv::Crypto
 {
-    namespace Afv
+    //! DTO header
+    struct CryptoDtoHeaderDto
     {
-        namespace Crypto
-        {
-            //! DTO header
-            struct CryptoDtoHeaderDto
-            {
-                std::string   ChannelTag; //!< channel
-                uint64_t      Sequence;   //!< sequence
-                CryptoDtoMode Mode;       //!< mode
-                MSGPACK_DEFINE(ChannelTag, Sequence, Mode)
-            };
-        } // ns
-    } // ns
+        std::string   ChannelTag; //!< channel
+        uint64_t      Sequence;   //!< sequence
+        CryptoDtoMode Mode;       //!< mode
+        MSGPACK_DEFINE(ChannelTag, Sequence, Mode)
+    };
 } // ns
 
 #endif // gaurd

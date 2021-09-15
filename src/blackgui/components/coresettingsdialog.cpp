@@ -11,28 +11,25 @@
 #include "blackgui/guiapplication.h"
 #include <QPushButton>
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CCoreSettingsDialog::CCoreSettingsDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CCoreSettingsDialog)
     {
-        CCoreSettingsDialog::CCoreSettingsDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CCoreSettingsDialog)
-        {
-            Q_ASSERT(sGui);
-            ui->setupUi(this);
-            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-            QPushButton *overview = ui->bb_CoreSettingsDialog->button(QDialogButtonBox::Reset);
-            overview->setText("Overview");
-            connect(overview, &QPushButton::released, this, &CCoreSettingsDialog::showOverview);
-        }
+        Q_ASSERT(sGui);
+        ui->setupUi(this);
+        this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+        QPushButton *overview = ui->bb_CoreSettingsDialog->button(QDialogButtonBox::Reset);
+        overview->setText("Overview");
+        connect(overview, &QPushButton::released, this, &CCoreSettingsDialog::showOverview);
+    }
 
-        CCoreSettingsDialog::~CCoreSettingsDialog()
-        { }
+    CCoreSettingsDialog::~CCoreSettingsDialog()
+    { }
 
-        void CCoreSettingsDialog::showOverview()
-        {
-            ui->comp_SettingsComponent->setSettingsOverviewTab();
-        }
-    } // ns
+    void CCoreSettingsDialog::showOverview()
+    {
+        ui->comp_SettingsComponent->setSettingsOverviewTab();
+    }
 } // ns

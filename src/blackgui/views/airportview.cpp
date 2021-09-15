@@ -12,13 +12,10 @@
 using namespace BlackMisc;
 using namespace BlackGui::Models;
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    CAirportView::CAirportView(QWidget *parent) : CViewBase(parent)
     {
-        CAirportView::CAirportView(QWidget *parent) : CViewBase(parent)
-        {
-            this->standardInit(new CAirportListModel(this));
-        }
+        this->standardInit(new CAirportListModel(this));
     }
 } // namespace

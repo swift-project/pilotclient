@@ -11,38 +11,35 @@
 #ifndef BLACKCORE_FSD_FSDIDENTIFICATION_H
 #define BLACKCORE_FSD_FSDIDENTIFICATION_H
 
-#include "messagebase.h"
+#include "blackcore/fsd/messagebase.h"
 
-namespace BlackCore
+namespace BlackCore::Fsd
 {
-    namespace Fsd
+    //! This packet is sent by the server immediately after a new client connection is made.
+    class BLACKCORE_EXPORT FSDIdentification : public MessageBase
     {
-        //! This packet is sent by the server immediately after a new client connection is made.
-        class BLACKCORE_EXPORT FSDIdentification : public MessageBase
-        {
-        public:
-            //! Constructor
-            FSDIdentification(const QString &callsign, const QString &receiver, const QString &serverVersion, const QString &initialChallenge);
+    public:
+        //! Constructor
+        FSDIdentification(const QString &callsign, const QString &receiver, const QString &serverVersion, const QString &initialChallenge);
 
-            //! Message converted to tokens
-            QStringList toTokens() const;
+        //! Message converted to tokens
+        QStringList toTokens() const;
 
-            //! Construct from tokens
-            static FSDIdentification fromTokens(const QStringList &tokens);
+        //! Construct from tokens
+        static FSDIdentification fromTokens(const QStringList &tokens);
 
-            //! PDU identifier
-            static QString pdu() { return "$DI"; }
+        //! PDU identifier
+        static QString pdu() { return "$DI"; }
 
-            //! Properties
-            //! @{
-            QString m_serverVersion;
-            QString m_initialChallenge;
-            //! @}
+        //! Properties
+        //! @{
+        QString m_serverVersion;
+        QString m_initialChallenge;
+        //! @}
 
-        private:
-            FSDIdentification();
-        };
-    }
+    private:
+        FSDIdentification();
+    };
 }
 
 #endif // guard

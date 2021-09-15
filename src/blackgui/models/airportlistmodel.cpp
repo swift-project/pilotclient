@@ -20,31 +20,28 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    CAirportListModel::CAirportListModel(QObject *parent) :
+        CListModelBase("AirportListModel", parent)
     {
-        CAirportListModel::CAirportListModel(QObject *parent) :
-            CListModelBase("AirportListModel", parent)
-        {
-            m_columns.addColumn(CColumn::standardValueObject("ICAO", CAirport::IndexIcao));
-            m_columns.addColumn(CColumn("distance", CAirport::IndexRelativeDistance, new CAirspaceDistanceFormatter()));
-            m_columns.addColumn(CColumn("bearing", CAirport::IndexRelativeBearing, new CAngleDegreeFormatter()));
-            m_columns.addColumn(CColumn::standardString("name", CAirport::IndexDescriptiveName));
-            m_columns.addColumn(CColumn("elevation", CAirport::IndexElevation, new CAltitudeFormatter()));
-            m_columns.addColumn(CColumn("latitude", CAirport::IndexLatitude, new CLatLonFormatter()));
-            m_columns.addColumn(CColumn("longitude", CAirport::IndexLongitude, new CLatLonFormatter()));
+        m_columns.addColumn(CColumn::standardValueObject("ICAO", CAirport::IndexIcao));
+        m_columns.addColumn(CColumn("distance", CAirport::IndexRelativeDistance, new CAirspaceDistanceFormatter()));
+        m_columns.addColumn(CColumn("bearing", CAirport::IndexRelativeBearing, new CAngleDegreeFormatter()));
+        m_columns.addColumn(CColumn::standardString("name", CAirport::IndexDescriptiveName));
+        m_columns.addColumn(CColumn("elevation", CAirport::IndexElevation, new CAltitudeFormatter()));
+        m_columns.addColumn(CColumn("latitude", CAirport::IndexLatitude, new CLatLonFormatter()));
+        m_columns.addColumn(CColumn("longitude", CAirport::IndexLongitude, new CLatLonFormatter()));
 
-            // default sort order
-            this->setSortColumnByPropertyIndex(CAirport::IndexRelativeDistance);
-            m_sortOrder = Qt::AscendingOrder;
+        // default sort order
+        this->setSortColumnByPropertyIndex(CAirport::IndexRelativeDistance);
+        m_sortOrder = Qt::AscendingOrder;
 
-            // force strings for translation in resource files
-            (void)QT_TRANSLATE_NOOP("ModelAirportList", "ICAO");
-            (void)QT_TRANSLATE_NOOP("ModelAirportList", "distance");
-            (void)QT_TRANSLATE_NOOP("ModelAirportList", "name");
-            (void)QT_TRANSLATE_NOOP("ModelAirportList", "elevation");
-            (void)QT_TRANSLATE_NOOP("ModelAirportList", "bearing");
-        }
-    } // ns
+        // force strings for translation in resource files
+        (void)QT_TRANSLATE_NOOP("ModelAirportList", "ICAO");
+        (void)QT_TRANSLATE_NOOP("ModelAirportList", "distance");
+        (void)QT_TRANSLATE_NOOP("ModelAirportList", "name");
+        (void)QT_TRANSLATE_NOOP("ModelAirportList", "elevation");
+        (void)QT_TRANSLATE_NOOP("ModelAirportList", "bearing");
+    }
 } // ns

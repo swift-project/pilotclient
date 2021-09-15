@@ -15,39 +15,36 @@
 #include <QFrame>
 
 namespace Ui { class CSettingsViewUpdateTimes; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Update rates / times
+     */
+    class CSettingsViewUpdateTimes : public QFrame
     {
-        /*!
-         * Update rates / times
-         */
-        class CSettingsViewUpdateTimes : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CSettingsViewUpdateTimes(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CSettingsViewUpdateTimes(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CSettingsViewUpdateTimes();
+        //! Destructor
+        virtual ~CSettingsViewUpdateTimes();
 
-        private slots:
-            //! Slider changed
-            void ps_sliderChanged();
+    private slots:
+        //! Slider changed
+        void ps_sliderChanged();
 
-            //! Settings have been changed
-            void ps_settingsChanged();
+        //! Settings have been changed
+        void ps_settingsChanged();
 
-            //! Reset all update times
-            void ps_resetUpdateTimes();
+        //! Reset all update times
+        void ps_resetUpdateTimes();
 
-        private:
-            QScopedPointer<Ui::CSettingsViewUpdateTimes> ui;
-            BlackMisc::CSetting<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CSettingsViewUpdateTimes::ps_settingsChanged }; //!< settings changed
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CSettingsViewUpdateTimes> ui;
+        BlackMisc::CSetting<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CSettingsViewUpdateTimes::ps_settingsChanged }; //!< settings changed
+    };
 } // ns
 
 #endif // guard

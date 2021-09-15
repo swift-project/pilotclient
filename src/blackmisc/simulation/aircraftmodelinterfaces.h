@@ -14,90 +14,87 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/blackmiscexport.h"
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    //! Interface to "something" backing models, which can be set
+    class BLACKMISC_EXPORT IModelsSetable
     {
-        //! Interface to "something" backing models, which can be set
-        class BLACKMISC_EXPORT IModelsSetable
-        {
-        public:
-            //! Set models
-            virtual void setModels(const CAircraftModelList &models) = 0;
+    public:
+        //! Set models
+        virtual void setModels(const CAircraftModelList &models) = 0;
 
-            //! Ctor, dtor, copy operators (CLANG warnings)
-            //! @{
-            IModelsSetable() {}
-            virtual ~IModelsSetable() {}
-            IModelsSetable(const IModelsSetable &) = default;
-            IModelsSetable &operator =(const IModelsSetable &) = default;
-            //! @}
-        };
+        //! Ctor, dtor, copy operators (CLANG warnings)
+        //! @{
+        IModelsSetable() {}
+        virtual ~IModelsSetable() {}
+        IModelsSetable(const IModelsSetable &) = default;
+        IModelsSetable &operator =(const IModelsSetable &) = default;
+        //! @}
+    };
 
-        //! Interface to "something" backing models, which can be modified (updated)
-        class BLACKMISC_EXPORT IModelsUpdatable
-        {
-        public:
-            //! Update models
-            virtual int updateModels(const CAircraftModelList &models) = 0;
+    //! Interface to "something" backing models, which can be modified (updated)
+    class BLACKMISC_EXPORT IModelsUpdatable
+    {
+    public:
+        //! Update models
+        virtual int updateModels(const CAircraftModelList &models) = 0;
 
-            //! Ctor, dtor, copy operators (CLANG warnings)
-            //! @{
-            IModelsUpdatable() {}
-            virtual ~IModelsUpdatable() {}
-            IModelsUpdatable(const IModelsUpdatable &) = default;
-            IModelsUpdatable &operator =(const IModelsUpdatable &) = default;
-            //! @}
-        };
+        //! Ctor, dtor, copy operators (CLANG warnings)
+        //! @{
+        IModelsUpdatable() {}
+        virtual ~IModelsUpdatable() {}
+        IModelsUpdatable(const IModelsUpdatable &) = default;
+        IModelsUpdatable &operator =(const IModelsUpdatable &) = default;
+        //! @}
+    };
 
-        //! Interface to "something" backing models, which can be set
-        class BLACKMISC_EXPORT IModelsForSimulatorSetable
-        {
-        public:
-            //! Set models
-            virtual void setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) = 0;
+    //! Interface to "something" backing models, which can be set
+    class BLACKMISC_EXPORT IModelsForSimulatorSetable
+    {
+    public:
+        //! Set models
+        virtual void setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) = 0;
 
-            //! Ctor, dtor, copy operators (CLANG warnings)
-            //! @{
-            IModelsForSimulatorSetable() {}
-            virtual ~IModelsForSimulatorSetable() {}
-            IModelsForSimulatorSetable(const IModelsForSimulatorSetable &) = default;
-            IModelsForSimulatorSetable &operator =(const IModelsForSimulatorSetable &) = default;
-            //! @}
-        };
+        //! Ctor, dtor, copy operators (CLANG warnings)
+        //! @{
+        IModelsForSimulatorSetable() {}
+        virtual ~IModelsForSimulatorSetable() {}
+        IModelsForSimulatorSetable(const IModelsForSimulatorSetable &) = default;
+        IModelsForSimulatorSetable &operator =(const IModelsForSimulatorSetable &) = default;
+        //! @}
+    };
 
-        //! Interface to "something" backing models, which can be modified (updated)
-        class BLACKMISC_EXPORT IModelsForSimulatorUpdatable
-        {
-        public:
-            //! Set models
-            virtual int updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) = 0;
+    //! Interface to "something" backing models, which can be modified (updated)
+    class BLACKMISC_EXPORT IModelsForSimulatorUpdatable
+    {
+    public:
+        //! Set models
+        virtual int updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) = 0;
 
-            //! Ctor, dtor, copy operators (CLANG warnings)
-            //! @{
-            IModelsForSimulatorUpdatable() {}
-            virtual ~IModelsForSimulatorUpdatable() {}
-            IModelsForSimulatorUpdatable(const IModelsForSimulatorUpdatable &) = default;
-            IModelsForSimulatorUpdatable &operator =(const IModelsForSimulatorUpdatable &) = default;
-            //! @}
-        };
+        //! Ctor, dtor, copy operators (CLANG warnings)
+        //! @{
+        IModelsForSimulatorUpdatable() {}
+        virtual ~IModelsForSimulatorUpdatable() {}
+        IModelsForSimulatorUpdatable(const IModelsForSimulatorUpdatable &) = default;
+        IModelsForSimulatorUpdatable &operator =(const IModelsForSimulatorUpdatable &) = default;
+        //! @}
+    };
 
-        //! Interface to "something" allowing a simulator selection
-        class BLACKMISC_EXPORT ISimulatorSelectable
-        {
-        public:
-            //! Simulator
-            virtual BlackMisc::Simulation::CSimulatorInfo getSelectedSimulator() const = 0;
+    //! Interface to "something" allowing a simulator selection
+    class BLACKMISC_EXPORT ISimulatorSelectable
+    {
+    public:
+        //! Simulator
+        virtual BlackMisc::Simulation::CSimulatorInfo getSelectedSimulator() const = 0;
 
-            //! Ctor, dtor, copy operators (CLANG warnings)
-            //! @{
-            ISimulatorSelectable() {}
-            virtual ~ISimulatorSelectable() {}
-            ISimulatorSelectable(const ISimulatorSelectable &) = default;
-            ISimulatorSelectable &operator =(const ISimulatorSelectable &) = default;
-            //! @}
-        };
-    } // namespace
+        //! Ctor, dtor, copy operators (CLANG warnings)
+        //! @{
+        ISimulatorSelectable() {}
+        virtual ~ISimulatorSelectable() {}
+        ISimulatorSelectable(const ISimulatorSelectable &) = default;
+        ISimulatorSelectable &operator =(const ISimulatorSelectable &) = default;
+        //! @}
+    };
 } // namespace
 
 Q_DECLARE_INTERFACE(BlackMisc::Simulation::IModelsSetable, "org.swift-project.blackmisc.simulation.imodelssetable")

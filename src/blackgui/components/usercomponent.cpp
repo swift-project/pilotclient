@@ -26,98 +26,95 @@ using namespace BlackGui::Settings;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CUserComponent::CUserComponent(QWidget *parent) :
+        QTabWidget(parent),
+        CEnableForDockWidgetInfoArea(),
+        ui(new Ui::CUserComponent)
     {
-        CUserComponent::CUserComponent(QWidget *parent) :
-            QTabWidget(parent),
-            CEnableForDockWidgetInfoArea(),
-            ui(new Ui::CUserComponent)
+        ui->setupUi(this);
+        this->setCurrentIndex(0);
+        this->tabBar()->setExpanding(false);
+        this->tabBar()->setUsesScrollButtons(true);
+        connect(ui->tvp_AllUsers, &CUserView::modelDataChangedDigest,   this, &CUserComponent::onCountChanged);
+        connect(ui->tvp_AllUsers, &CUserView::requestTextMessageWidget, this, &CUserComponent::requestTextMessageWidget);
+        connect(ui->tvp_Clients,  &CClientView::modelDataChangedDigest, this, &CUserComponent::onCountChanged);
+        connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CUserComponent::onConnectionStatusChanged);
+        connect(&m_updateTimer, &QTimer::timeout, this, &CUserComponent::update);
+        this->onSettingsChanged();
+    }
+
+    CUserComponent::~CUserComponent()
+    { }
+
+    int CUserComponent::countClients() const
+    {
+        Q_ASSERT(ui->tvp_Clients);
+        return ui->tvp_Clients->rowCount();
+    }
+
+    int CUserComponent::countUsers() const
+    {
+        Q_ASSERT(ui->tvp_AllUsers);
+        return ui->tvp_AllUsers->rowCount();
+    }
+
+    void CUserComponent::update()
+    {
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork()) { return; }
+        Q_ASSERT(ui->tvp_AllUsers);
+        Q_ASSERT(ui->tvp_Clients);
+
+        if (sGui->getIContextNetwork()->isConnected())
         {
-            ui->setupUi(this);
-            this->setCurrentIndex(0);
-            this->tabBar()->setExpanding(false);
-            this->tabBar()->setUsesScrollButtons(true);
-            connect(ui->tvp_AllUsers, &CUserView::modelDataChangedDigest,   this, &CUserComponent::onCountChanged);
-            connect(ui->tvp_AllUsers, &CUserView::requestTextMessageWidget, this, &CUserComponent::requestTextMessageWidget);
-            connect(ui->tvp_Clients,  &CClientView::modelDataChangedDigest, this, &CUserComponent::onCountChanged);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CUserComponent::onConnectionStatusChanged);
-            connect(&m_updateTimer, &QTimer::timeout, this, &CUserComponent::update);
-            this->onSettingsChanged();
-        }
-
-        CUserComponent::~CUserComponent()
-        { }
-
-        int CUserComponent::countClients() const
-        {
-            Q_ASSERT(ui->tvp_Clients);
-            return ui->tvp_Clients->rowCount();
-        }
-
-        int CUserComponent::countUsers() const
-        {
-            Q_ASSERT(ui->tvp_AllUsers);
-            return ui->tvp_AllUsers->rowCount();
-        }
-
-        void CUserComponent::update()
-        {
-            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork()) { return; }
-            Q_ASSERT(ui->tvp_AllUsers);
-            Q_ASSERT(ui->tvp_Clients);
-
-            if (sGui->getIContextNetwork()->isConnected())
+            bool withData = countUsers() > 0 || countClients() > 0;
+            if (withData && !isVisibleWidget())
             {
-                bool withData = countUsers() > 0 || countClients() > 0;
-                if (withData && !isVisibleWidget())
-                {
-                    // Skip update, invisible
-                    return;
-                }
-
-                // load data
-                const CUserList users = sGui->getIContextNetwork()->getUsers();
-                ui->tvp_AllUsers->updateContainer(users);
-                ui->tvp_Clients->updateContainer(sGui->getIContextNetwork()->getClientsForCallsigns(users.getCallsigns()));
+                // Skip update, invisible
+                return;
             }
-        }
 
-        void CUserComponent::onCountChanged(int count, bool withFilter)
-        {
-            Q_UNUSED(count);
-            Q_UNUSED(withFilter);
-            int iu = this->indexOf(ui->tb_AllUsers);
-            int ic = this->indexOf(ui->tb_Clients);
-            QString u = this->tabBar()->tabText(iu);
-            QString c = this->tabBar()->tabText(ic);
-            u = CGuiUtility::replaceTabCountValue(u, this->countUsers());
-            c = CGuiUtility::replaceTabCountValue(c, this->countClients());
-            this->tabBar()->setTabText(iu, u);
-            this->tabBar()->setTabText(ic, c);
+            // load data
+            const CUserList users = sGui->getIContextNetwork()->getUsers();
+            ui->tvp_AllUsers->updateContainer(users);
+            ui->tvp_Clients->updateContainer(sGui->getIContextNetwork()->getClientsForCallsigns(users.getCallsigns()));
         }
+    }
 
-        void CUserComponent::onConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
-        {
-            Q_UNUSED(from);
-            if (to.isDisconnected())
-            {
-                ui->tvp_AllUsers->clear();
-                ui->tvp_Clients->clear();
-                m_updateTimer.stop();
-            }
-            else if (to.isConnected())
-            {
-                m_updateTimer.start();
-            }
-        }
+    void CUserComponent::onCountChanged(int count, bool withFilter)
+    {
+        Q_UNUSED(count);
+        Q_UNUSED(withFilter);
+        int iu = this->indexOf(ui->tb_AllUsers);
+        int ic = this->indexOf(ui->tb_Clients);
+        QString u = this->tabBar()->tabText(iu);
+        QString c = this->tabBar()->tabText(ic);
+        u = CGuiUtility::replaceTabCountValue(u, this->countUsers());
+        c = CGuiUtility::replaceTabCountValue(c, this->countClients());
+        this->tabBar()->setTabText(iu, u);
+        this->tabBar()->setTabText(ic, c);
+    }
 
-        void CUserComponent::onSettingsChanged()
+    void CUserComponent::onConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
+    {
+        Q_UNUSED(from);
+        if (to.isDisconnected())
         {
-            const CViewUpdateSettings settings = m_settings.get();
-            const int ms = settings.getAtcUpdateTime().toMs();
-            m_updateTimer.setInterval(ms);
+            ui->tvp_AllUsers->clear();
+            ui->tvp_Clients->clear();
+            m_updateTimer.stop();
         }
-    } // namespace
+        else if (to.isConnected())
+        {
+            m_updateTimer.start();
+        }
+    }
+
+    void CUserComponent::onSettingsChanged()
+    {
+        const CViewUpdateSettings settings = m_settings.get();
+        const int ms = settings.getAtcUpdateTime().toMs();
+        m_updateTimer.setInterval(ms);
+    }
 } // namespace

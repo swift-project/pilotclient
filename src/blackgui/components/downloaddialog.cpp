@@ -12,70 +12,67 @@
 
 using namespace BlackMisc::Network;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CDownloadDialog::CDownloadDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CDownloadDialog)
     {
-        CDownloadDialog::CDownloadDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CDownloadDialog)
-        {
-            ui->setupUi(this);
-            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-        }
+        ui->setupUi(this);
+        this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    }
 
-        CDownloadDialog::~CDownloadDialog()
-        { }
+    CDownloadDialog::~CDownloadDialog()
+    { }
 
-        void CDownloadDialog::setDownloadFile(const CRemoteFile &remoteFile)
-        {
-            setWindowTitle("Downloading " + remoteFile.getName());
-            ui->comp_Download->setDownloadFile(remoteFile);
-        }
+    void CDownloadDialog::setDownloadFile(const CRemoteFile &remoteFile)
+    {
+        setWindowTitle("Downloading " + remoteFile.getName());
+        ui->comp_Download->setDownloadFile(remoteFile);
+    }
 
-        void CDownloadDialog::setDownloadFiles(const CRemoteFileList &remoteFiles)
-        {
-            ui->comp_Download->setDownloadFiles(remoteFiles);
-        }
+    void CDownloadDialog::setDownloadFiles(const CRemoteFileList &remoteFiles)
+    {
+        ui->comp_Download->setDownloadFiles(remoteFiles);
+    }
 
-        void CDownloadDialog::triggerDownloadingOfFiles(int delayMs)
-        {
-            ui->comp_Download->triggerDownloadingOfFiles(delayMs);
-        }
+    void CDownloadDialog::triggerDownloadingOfFiles(int delayMs)
+    {
+        ui->comp_Download->triggerDownloadingOfFiles(delayMs);
+    }
 
-        void CDownloadDialog::setMode(CDownloadComponent::Mode mode)
-        {
-            ui->comp_Download->setMode(mode);
-        }
+    void CDownloadDialog::setMode(CDownloadComponent::Mode mode)
+    {
+        ui->comp_Download->setMode(mode);
+    }
 
-        void CDownloadDialog::showAndStartDownloading()
+    void CDownloadDialog::showAndStartDownloading()
+    {
+        const QPointer<CDownloadDialog> guard(this);
+        QTimer::singleShot(0, this, [ = ]
         {
-            const QPointer<CDownloadDialog> guard(this);
-            QTimer::singleShot(0, this, [ = ]
+            if (guard.isNull()) { return; }
+            ui->comp_Download->triggerDownloadingOfFiles(2500);
+        });
+        this->show();
+    }
+
+    void CDownloadDialog::accept()
+    {
+        if (! ui->comp_Download->haveAllDownloadsCompleted())
+        {
+            const QString msg = QStringLiteral("Download ongoing. Do you want to abort it?");
+            QMessageBox::StandardButton reply = QMessageBox::question(this, "Abort?", msg, QMessageBox::Yes | QMessageBox::No);
+            if (reply == QMessageBox::Yes)
             {
-                if (guard.isNull()) { return; }
-                ui->comp_Download->triggerDownloadingOfFiles(2500);
-            });
-            this->show();
-        }
-
-        void CDownloadDialog::accept()
-        {
-            if (! ui->comp_Download->haveAllDownloadsCompleted())
-            {
-                const QString msg = QStringLiteral("Download ongoing. Do you want to abort it?");
-                QMessageBox::StandardButton reply = QMessageBox::question(this, "Abort?", msg, QMessageBox::Yes | QMessageBox::No);
-                if (reply == QMessageBox::Yes)
-                {
-                    ui->comp_Download->cancelOngoingDownloads();
-                    this->done(CDownloadDialog::Rejected);
-                }
-            }
-            else
-            {
-                this->done(CDownloadDialog::Accepted);
+                ui->comp_Download->cancelOngoingDownloads();
+                this->done(CDownloadDialog::Rejected);
             }
         }
+        else
+        {
+            this->done(CDownloadDialog::Accepted);
+        }
+    }
 
-    } // ns
 } // ns

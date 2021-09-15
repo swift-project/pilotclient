@@ -9,18 +9,15 @@
 #include "rawfsdmessagesdialog.h"
 #include "ui_rawfsdmessagesdialog.h"
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CRawFsdMessagesDialog::CRawFsdMessagesDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CRawFsdMessagesDialog)
     {
-        CRawFsdMessagesDialog::CRawFsdMessagesDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CRawFsdMessagesDialog)
-        {
-            ui->setupUi(this);
-        }
+        ui->setupUi(this);
+    }
 
-        CRawFsdMessagesDialog::~CRawFsdMessagesDialog()
-        { }
-    } // ns
+    CRawFsdMessagesDialog::~CRawFsdMessagesDialog()
+    { }
 } // ns

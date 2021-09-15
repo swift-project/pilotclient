@@ -24,65 +24,62 @@
 
 class QNetworkReply;
 
-namespace BlackCore
+namespace BlackCore::Vatsim
 {
-    namespace Vatsim
+    //! Read METARs from VATSIM
+    class BLACKCORE_EXPORT CVatsimMetarReader :
+        public BlackCore::CThreadedReader,
+        public BlackMisc::Network::CEcosystemAware
     {
-        //! Read METARs from VATSIM
-        class BLACKCORE_EXPORT CVatsimMetarReader :
-            public BlackCore::CThreadedReader,
-            public BlackMisc::Network::CEcosystemAware
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CVatsimMetarReader(QObject *owner);
+    public:
+        //! Constructor
+        explicit CVatsimMetarReader(QObject *owner);
 
-            //! Read / re-read bookings
-            void readInBackgroundThread();
+        //! Read / re-read bookings
+        void readInBackgroundThread();
 
-            //! Get METARs
-            //! \threadsafe
-            virtual BlackMisc::Weather::CMetarList getMetars() const;
+        //! Get METARs
+        //! \threadsafe
+        virtual BlackMisc::Weather::CMetarList getMetars() const;
 
-            //! Get METAR for airport
-            //! \threadsafe
-            virtual BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &icao) const;
+        //! Get METAR for airport
+        //! \threadsafe
+        virtual BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &icao) const;
 
-            //! Get METARs count
-            //! \threadsafe
-            virtual int getMetarsCount() const;
+        //! Get METARs count
+        //! \threadsafe
+        virtual int getMetarsCount() const;
 
-        signals:
-            //! METARs have been read and converted to BlackMisc::Weather::CMetarList
-            void metarsRead(const BlackMisc::Weather::CMetarList &metars);
+    signals:
+        //! METARs have been read and converted to BlackMisc::Weather::CMetarList
+        void metarsRead(const BlackMisc::Weather::CMetarList &metars);
 
-            //! Data have been read
-            void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        //! Data have been read
+        void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
-        protected:
-            //! \name BlackCore::CThreadedReader overrides
-            //! @{
-            virtual void doWorkImpl() override;
-            //! @}
+    protected:
+        //! \name BlackCore::CThreadedReader overrides
+        //! @{
+        virtual void doWorkImpl() override;
+        //! @}
 
-        private:
-            //! Decode METARs
-            //! \threadsafe
-            void decodeMetars(QNetworkReply *nwReply);
+    private:
+        //! Decode METARs
+        //! \threadsafe
+        void decodeMetars(QNetworkReply *nwReply);
 
-            //! Do reading
-            void read();
+        //! Do reading
+        void read();
 
-            //! Reload settings
-            void reloadSettings();
+        //! Reload settings
+        void reloadSettings();
 
-        private:
-            BlackMisc::Weather::CMetarDecoder m_metarDecoder;
-            BlackMisc::Weather::CMetarList    m_metars;
-            BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimMetars> m_settings { this, &CVatsimMetarReader::reloadSettings };
-        };
-    } // ns
+    private:
+        BlackMisc::Weather::CMetarDecoder m_metarDecoder;
+        BlackMisc::Weather::CMetarList    m_metars;
+        BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimMetars> m_settings { this, &CVatsimMetarReader::reloadSettings };
+    };
 } // ns
 #endif // guard

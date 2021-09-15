@@ -9,23 +9,20 @@
 #include "installxswiftbusdialog.h"
 #include "ui_installxswiftbusdialog.h"
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CInstallXSwiftBusDialog::CInstallXSwiftBusDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CInstallXSwiftBusDialog)
     {
-        CInstallXSwiftBusDialog::CInstallXSwiftBusDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CInstallXSwiftBusDialog)
-        {
-            ui->setupUi(this);
-        }
+        ui->setupUi(this);
+    }
 
-        CInstallXSwiftBusDialog::~CInstallXSwiftBusDialog()
-        { }
+    CInstallXSwiftBusDialog::~CInstallXSwiftBusDialog()
+    { }
 
-        void CInstallXSwiftBusDialog::setDefaultDownloadName(const QString &defaultName)
-        {
-            ui->comp_InstallXSwiftBus->setDefaultDownloadName(defaultName);
-        }
-    } // ns
+    void CInstallXSwiftBusDialog::setDefaultDownloadName(const QString &defaultName)
+    {
+        ui->comp_InstallXSwiftBus->setDefaultDownloadName(defaultName);
+    }
 } // ns

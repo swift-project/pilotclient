@@ -10,50 +10,47 @@
 #include "ui_copyconfigurationdialog.h"
 #include "blackgui/guiapplication.h"
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CCopyConfigurationDialog::CCopyConfigurationDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CCopyConfigurationDialog)
     {
-        CCopyConfigurationDialog::CCopyConfigurationDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CCopyConfigurationDialog)
-        {
-            ui->setupUi(this);
-            this->setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-        }
+        ui->setupUi(this);
+        this->setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    }
 
-        CCopyConfigurationDialog::~CCopyConfigurationDialog()
-        { }
+    CCopyConfigurationDialog::~CCopyConfigurationDialog()
+    { }
 
-        void CCopyConfigurationDialog::setCacheMode()
-        {
-            ui->comp_CopyConfiguration->setCacheMode();
-        }
+    void CCopyConfigurationDialog::setCacheMode()
+    {
+        ui->comp_CopyConfiguration->setCacheMode();
+    }
 
-        void CCopyConfigurationDialog::setSettingsMode()
-        {
-            ui->comp_CopyConfiguration->setSettingsMode();
-        }
+    void CCopyConfigurationDialog::setSettingsMode()
+    {
+        ui->comp_CopyConfiguration->setSettingsMode();
+    }
 
-        void CCopyConfigurationDialog::selectAll()
-        {
-            ui->comp_CopyConfiguration->selectAll();
-        }
+    void CCopyConfigurationDialog::selectAll()
+    {
+        ui->comp_CopyConfiguration->selectAll();
+    }
 
-        void CCopyConfigurationDialog::setNameFilterDisables(bool disable)
-        {
-            ui->comp_CopyConfiguration->setNameFilterDisables(disable);
-        }
+    void CCopyConfigurationDialog::setNameFilterDisables(bool disable)
+    {
+        ui->comp_CopyConfiguration->setNameFilterDisables(disable);
+    }
 
-        void CCopyConfigurationDialog::setWithBootstrapFile(bool withBootstrapFile)
-        {
-            ui->comp_CopyConfiguration->setWithBootstrapFile(withBootstrapFile);
-        }
+    void CCopyConfigurationDialog::setWithBootstrapFile(bool withBootstrapFile)
+    {
+        ui->comp_CopyConfiguration->setWithBootstrapFile(withBootstrapFile);
+    }
 
-        bool CCopyConfigurationDialog::event(QEvent *event)
-        {
-            if (CGuiApplication::triggerShowHelp(this, event)) { return true; }
-            return QDialog::event(event);
-        }
-    } // ns
+    bool CCopyConfigurationDialog::event(QEvent *event)
+    {
+        if (CGuiApplication::triggerShowHelp(this, event)) { return true; }
+        return QDialog::event(event);
+    }
 } // ns

@@ -17,40 +17,37 @@
 
 #include <QStandardItemModel>
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! ATC list model
+    class BLACKGUI_EXPORT CAircraftCategoryTreeModel : public QStandardItemModel
     {
-        //! ATC list model
-        class BLACKGUI_EXPORT CAircraftCategoryTreeModel : public QStandardItemModel
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAircraftCategoryTreeModel(QObject *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAircraftCategoryTreeModel(QObject *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAircraftCategoryTreeModel() override {}
+        //! Destructor
+        virtual ~CAircraftCategoryTreeModel() override {}
 
-            //! Set columns
-            void setColumns(const CColumns &columns) { m_columns.setColumns(columns); }
+        //! Set columns
+        void setColumns(const CColumns &columns) { m_columns.setColumns(columns); }
 
-            //! Update container
-            void updateContainer(const BlackMisc::Aviation::CAircraftCategoryList &categories);
+        //! Update container
+        void updateContainer(const BlackMisc::Aviation::CAircraftCategoryList &categories);
 
-            //! Clear everything
-            //! \remark hiding QStandardItemModel::clear()
-            void clear();
+        //! Clear everything
+        //! \remark hiding QStandardItemModel::clear()
+        void clear();
 
-            //! Get container
-            const BlackMisc::Aviation::CAircraftCategoryList &container() const { return m_categories; }
+        //! Get container
+        const BlackMisc::Aviation::CAircraftCategoryList &container() const { return m_categories; }
 
-        private:
-            CColumns m_columns { "CAircraftCategoryTreeModel" };
-            BlackMisc::Aviation::CAircraftCategoryList m_categories;
-        };
-    } // ns
+    private:
+        CColumns m_columns { "CAircraftCategoryTreeModel" };
+        BlackMisc::Aviation::CAircraftCategoryList m_categories;
+    };
 } // ns
 
 #endif // guard

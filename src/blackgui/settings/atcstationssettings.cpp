@@ -10,42 +10,39 @@
 
 using namespace BlackMisc;
 
-namespace BlackGui
+namespace BlackGui::Settings
 {
-    namespace Settings
+    CAtcStationsSettings::CAtcStationsSettings()
+    { }
+
+    QString CAtcStationsSettings::convertToQString(bool i18n) const
     {
-        CAtcStationsSettings::CAtcStationsSettings()
-        { }
+        Q_UNUSED(i18n)
+        static const QString s("In range only: %1 valid freq: %2");
+        return s.arg(boolToOnOff(this->showOnlyInRange()), boolToOnOff(this->showOnlyWithValidFrequency()));
+    }
 
-        QString CAtcStationsSettings::convertToQString(bool i18n) const
+    QVariant CAtcStationsSettings::propertyByIndex(CPropertyIndexRef index) const
+    {
+        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
         {
-            Q_UNUSED(i18n)
-            static const QString s("In range only: %1 valid freq: %2");
-            return s.arg(boolToOnOff(this->showOnlyInRange()), boolToOnOff(this->showOnlyWithValidFrequency()));
+        case IndexInRangeOnly: return QVariant::fromValue(m_showOnlyInRange);
+        case IndexValidFrequencyOnly: return QVariant::fromValue(m_onlyWithValidFrequency);
+        default: return CValueObject::propertyByIndex(index);
         }
+    }
 
-        QVariant CAtcStationsSettings::propertyByIndex(CPropertyIndexRef index) const
+    void CAtcStationsSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
+    {
+        if (index.isMyself()) { (*this) = variant.value<CAtcStationsSettings>(); return; }
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
         {
-            if (index.isMyself()) { return QVariant::fromValue(*this); }
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
-            switch (i)
-            {
-            case IndexInRangeOnly: return QVariant::fromValue(m_showOnlyInRange);
-            case IndexValidFrequencyOnly: return QVariant::fromValue(m_onlyWithValidFrequency);
-            default: return CValueObject::propertyByIndex(index);
-            }
+        case IndexInRangeOnly: this->setShowOnlyInRange(variant.toBool()); break;
+        case IndexValidFrequencyOnly: this->setShowOnlyWithValidFrequency(variant.toBool()); break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
-
-        void CAtcStationsSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
-        {
-            if (index.isMyself()) { (*this) = variant.value<CAtcStationsSettings>(); return; }
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
-            switch (i)
-            {
-            case IndexInRangeOnly: this->setShowOnlyInRange(variant.toBool()); break;
-            case IndexValidFrequencyOnly: this->setShowOnlyWithValidFrequency(variant.toBool()); break;
-            default: CValueObject::setPropertyByIndex(index, variant); break;
-            }
-        }
-    } // ns
+    }
 } // ns

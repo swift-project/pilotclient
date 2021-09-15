@@ -12,13 +12,10 @@
 using namespace BlackMisc;
 using namespace BlackGui::Models;
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    CTemperatureLayerView::CTemperatureLayerView(QWidget *parent) : CViewBase(parent)
     {
-        CTemperatureLayerView::CTemperatureLayerView(QWidget *parent) : CViewBase(parent)
-        {
-            this->standardInit(new CTemperatureLayerListModel(this));
-        }
+        this->standardInit(new CTemperatureLayerListModel(this));
     }
 } // namespace

@@ -18,35 +18,29 @@
 class QString;
 class QWidget;
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
-    {
-        class CDistributor;
-        class CDistributorList;
-    }
+    class CDistributor;
+    class CDistributorList;
 }
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Distributors
+    class BLACKGUI_EXPORT CDistributorView :
+        public COrderableViewWithDbObjects<BlackGui::Models::CDistributorListModel>
     {
-        //! Distributors
-        class BLACKGUI_EXPORT CDistributorView :
-            public COrderableViewWithDbObjects<BlackGui::Models::CDistributorListModel>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CDistributorView(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CDistributorView(QWidget *parent = nullptr);
 
-            //! Set mode
-            void setDistributorMode(BlackGui::Models::CDistributorListModel::DistributorMode distributorMode);
+        //! Set mode
+        void setDistributorMode(BlackGui::Models::CDistributorListModel::DistributorMode distributorMode);
 
-            //! Mode
-            BlackGui::Models::CDistributorListModel::DistributorMode getDistributorMode() const;
-        };
-    } // ns
+        //! Mode
+        BlackGui::Models::CDistributorListModel::DistributorMode getDistributorMode() const;
+    };
 } // ns
 #endif // guard

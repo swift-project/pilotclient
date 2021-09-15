@@ -17,108 +17,102 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 
-namespace BlackMisc
+namespace BlackMisc::Simulation::FsCommon
 {
-    namespace Simulation
+    bool CAircraftCfgEntriesList::containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity)
     {
-        namespace FsCommon
+        if (title.isEmpty()) { return false; }
+        return this->containsBy([ = ](const CAircraftCfgEntries & entries) { return title.compare(entries.getTitle(), caseSensitivity) == 0; });
+    }
+
+    QStringList CAircraftCfgEntriesList::detectAmbiguousTitles() const
+    {
+        QStringList titles = this->getTitles(true);
+        QStringList ambiguousTitles;
+        QString last;
+        for (const QString &title : titles)
         {
-            bool CAircraftCfgEntriesList::containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity)
+            if (title.isEmpty()) { continue; }
+            if (title.compare(last, Qt::CaseInsensitive) == 0)
             {
-                if (title.isEmpty()) { return false; }
-                return this->containsBy([ = ](const CAircraftCfgEntries & entries) { return title.compare(entries.getTitle(), caseSensitivity) == 0; });
-            }
-
-            QStringList CAircraftCfgEntriesList::detectAmbiguousTitles() const
-            {
-                QStringList titles = this->getTitles(true);
-                QStringList ambiguousTitles;
-                QString last;
-                for (const QString &title : titles)
+                if (!ambiguousTitles.contains(title, Qt::CaseInsensitive))
                 {
-                    if (title.isEmpty()) { continue; }
-                    if (title.compare(last, Qt::CaseInsensitive) == 0)
-                    {
-                        if (!ambiguousTitles.contains(title, Qt::CaseInsensitive))
-                        {
-                            ambiguousTitles.append(title);
-                        }
-                    }
-                    last = title;
+                    ambiguousTitles.append(title);
                 }
-                return ambiguousTitles;
             }
+            last = title;
+        }
+        return ambiguousTitles;
+    }
 
-            QStringList CAircraftCfgEntriesList::getTitles(bool sorted) const
-            {
-                QStringList titles = this->transform(Predicates::MemberTransform(&CAircraftCfgEntries::getTitle));
-                if (sorted) { titles.sort(Qt::CaseInsensitive); }
-                return titles;
-            }
+    QStringList CAircraftCfgEntriesList::getTitles(bool sorted) const
+    {
+        QStringList titles = this->transform(Predicates::MemberTransform(&CAircraftCfgEntries::getTitle));
+        if (sorted) { titles.sort(Qt::CaseInsensitive); }
+        return titles;
+    }
 
-            QSet<QString> CAircraftCfgEntriesList::getTitleSetUpperCase() const
+    QSet<QString> CAircraftCfgEntriesList::getTitleSetUpperCase() const
+    {
+        CSetBuilder<QString> titlesUc;
+        for (const CAircraftCfgEntries &entries : *this)
+        {
+            titlesUc.insert(entries.getTitle().toUpper());
+        }
+        return titlesUc;
+    }
+
+    QString CAircraftCfgEntriesList::getTitlesAsString(bool sorted, const QString &separator) const
+    {
+        return this->getTitles(sorted).join(separator);
+    }
+
+    bool CAircraftCfgEntriesList::containsTitle(const QString &title) const
+    {
+        if (title.isEmpty()) { return false; }
+        for (const CAircraftCfgEntries &entries : (*this))
+        {
+            if (stringCompare(entries.getTitle(), title, Qt::CaseInsensitive)) { return true; }
+        }
+        return false;
+    }
+
+    CAircraftModelList CAircraftCfgEntriesList::toAircraftModelList(bool ignoreDuplicatesAndEmptyModelStrings, CStatusMessageList &msgs) const
+    {
+        CAircraftModelList ml;
+        QSet<QString> keys;
+        for (const CAircraftCfgEntries &entries : (*this))
+        {
+            if (ignoreDuplicatesAndEmptyModelStrings)
             {
-                CSetBuilder<QString> titlesUc;
-                for (const CAircraftCfgEntries &entries : *this)
+                const QString key = entries.getTitle().toUpper();
+                if (key.isEmpty()) { continue; }
+                if (keys.contains(key))
                 {
-                    titlesUc.insert(entries.getTitle().toUpper());
+                    CStatusMessage msg(this);
+                    msg.warning(u"Duplicate model string %1 in %2 %3")
+                            << entries.getTitle() << entries.getFileDirectory() << entries.getFileName();
+                    msgs.push_back(msg);
+                    continue;
                 }
-                return titlesUc;
+                keys.insert(key);
             }
+            ml.push_back(entries.toAircraftModel());
+        }
+        return ml;
+    }
 
-            QString CAircraftCfgEntriesList::getTitlesAsString(bool sorted, const QString &separator) const
-            {
-                return this->getTitles(sorted).join(separator);
-            }
+    CAircraftModelList CAircraftCfgEntriesList::toAircraftModelList(const CSimulatorInfo &simInfo, bool ignoreDuplicatesAndEmptyModelStrings, CStatusMessageList &msgs) const
+    {
+        CAircraftModelList ml = this->toAircraftModelList(ignoreDuplicatesAndEmptyModelStrings, msgs);
+        ml.setSimulatorInfo(simInfo);
+        return ml;
+    }
 
-            bool CAircraftCfgEntriesList::containsTitle(const QString &title) const
-            {
-                if (title.isEmpty()) { return false; }
-                for (const CAircraftCfgEntries &entries : (*this))
-                {
-                    if (stringCompare(entries.getTitle(), title, Qt::CaseInsensitive)) { return true; }
-                }
-                return false;
-            }
+    CAircraftCfgEntriesList CAircraftCfgEntriesList::findByTitle(const QString &title, Qt::CaseSensitivity caseSensitivity) const
+    {
+        return this->findBy([ = ](const CAircraftCfgEntries & entries)
+        { return title.compare(entries.getTitle(), caseSensitivity) == 0; });
+    }
 
-            CAircraftModelList CAircraftCfgEntriesList::toAircraftModelList(bool ignoreDuplicatesAndEmptyModelStrings, CStatusMessageList &msgs) const
-            {
-                CAircraftModelList ml;
-                QSet<QString> keys;
-                for (const CAircraftCfgEntries &entries : (*this))
-                {
-                    if (ignoreDuplicatesAndEmptyModelStrings)
-                    {
-                        const QString key = entries.getTitle().toUpper();
-                        if (key.isEmpty()) { continue; }
-                        if (keys.contains(key))
-                        {
-                            CStatusMessage msg(this);
-                            msg.warning(u"Duplicate model string %1 in %2 %3")
-                                    << entries.getTitle() << entries.getFileDirectory() << entries.getFileName();
-                            msgs.push_back(msg);
-                            continue;
-                        }
-                        keys.insert(key);
-                    }
-                    ml.push_back(entries.toAircraftModel());
-                }
-                return ml;
-            }
-
-            CAircraftModelList CAircraftCfgEntriesList::toAircraftModelList(const CSimulatorInfo &simInfo, bool ignoreDuplicatesAndEmptyModelStrings, CStatusMessageList &msgs) const
-            {
-                CAircraftModelList ml = this->toAircraftModelList(ignoreDuplicatesAndEmptyModelStrings, msgs);
-                ml.setSimulatorInfo(simInfo);
-                return ml;
-            }
-
-            CAircraftCfgEntriesList CAircraftCfgEntriesList::findByTitle(const QString &title, Qt::CaseSensitivity caseSensitivity) const
-            {
-                return this->findBy([ = ](const CAircraftCfgEntries & entries)
-                { return title.compare(entries.getTitle(), caseSensitivity) == 0; });
-            }
-
-        } // namespace
-    } // namespace
 } // namespace

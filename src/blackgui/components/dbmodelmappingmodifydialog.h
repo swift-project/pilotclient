@@ -19,37 +19,34 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
+namespace BlackMisc::Simulation { class CAircraftModel; }
 namespace Ui { class CDbModelMappingModifyDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Modify model fields as dialog
+     */
+    class BLACKGUI_EXPORT CDbModelMappingModifyDialog :
+        public QDialog,
+        public CDbMappingComponentAware
     {
-        /*!
-         * Modify model fields as dialog
-         */
-        class BLACKGUI_EXPORT CDbModelMappingModifyDialog :
-            public QDialog,
-            public CDbMappingComponentAware
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CDbModelMappingModifyDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CDbModelMappingModifyDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CDbModelMappingModifyDialog();
+        //! Destructor
+        virtual ~CDbModelMappingModifyDialog();
 
-            //! Get the values
-            BlackMisc::CPropertyIndexVariantMap getValues() const;
+        //! Get the values
+        BlackMisc::CPropertyIndexVariantMap getValues() const;
 
-            //! Set default values
-            void setValue(const BlackMisc::Simulation::CAircraftModel &model);
+        //! Set default values
+        void setValue(const BlackMisc::Simulation::CAircraftModel &model);
 
-        private:
-            QScopedPointer<Ui::CDbModelMappingModifyDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CDbModelMappingModifyDialog> ui;
+    };
 } // ns
 #endif // guard

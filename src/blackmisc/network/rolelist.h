@@ -21,43 +21,40 @@
 #include <QString>
 #include <QStringList>
 
-namespace BlackMisc
+namespace BlackMisc::Network
 {
-    namespace Network
+    class CRole;
+
+    //! Value object encapsulating a list of servers.
+    class BLACKMISC_EXPORT CRoleList :
+        public CSequence<CRole>,
+        public BlackMisc::Mixin::MetaType<CRoleList>
     {
-        class CRole;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CRoleList)
+        using CSequence::CSequence;
 
-        //! Value object encapsulating a list of servers.
-        class BLACKMISC_EXPORT CRoleList :
-            public CSequence<CRole>,
-            public BlackMisc::Mixin::MetaType<CRoleList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CRoleList)
-            using CSequence::CSequence;
+        //! Default constructor.
+        CRoleList();
 
-            //! Default constructor.
-            CRoleList();
+        //! Has role?
+        bool hasRole(const QString &roleName) const;
 
-            //! Has role?
-            bool hasRole(const QString &roleName) const;
+        //! Has role?
+        bool hasRole(const CRole &role) const;
 
-            //! Has role?
-            bool hasRole(const CRole &role) const;
+        //! Has any role?
+        bool hasAnyRole(const QStringList &roles) const;
 
-            //! Has any role?
-            bool hasAnyRole(const QStringList &roles) const;
+        //! Construct from a base class object.
+        CRoleList(const CSequence<CRole> &other);
 
-            //! Construct from a base class object.
-            CRoleList(const CSequence<CRole> &other);
+        //! Roles as string
+        QString namesAsString(const QString &separator = ", ") const;
 
-            //! Roles as string
-            QString namesAsString(const QString &separator = ", ") const;
-
-            //! From our database JSON format
-            static CRoleList fromDatabaseJson(const QJsonArray &array);
-        };
-    } //namespace
+        //! From our database JSON format
+        static CRoleList fromDatabaseJson(const QJsonArray &array);
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Network::CRoleList)

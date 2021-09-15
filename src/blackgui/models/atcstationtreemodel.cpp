@@ -35,78 +35,75 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    CAtcStationTreeModel::CAtcStationTreeModel(QObject *parent) : QStandardItemModel(parent)
+    { }
+
+    void CAtcStationTreeModel::updateContainer(const CAtcStationList &stations)
     {
-        CAtcStationTreeModel::CAtcStationTreeModel(QObject *parent) : QStandardItemModel(parent)
-        { }
+        this->clear();
+        if (stations.isEmpty()) { return; }
 
-        void CAtcStationTreeModel::updateContainer(const CAtcStationList &stations)
+        m_stations = stations.sortedByAtcSuffixSortOrderAndDistance();
+        m_stationsBySuffix = m_stations.splitPerSuffix();
+        m_suffixes = m_stations.getSuffixes();
+        QStandardItemModel::clear();
+
+        int visibleColumns = 0;
+        for (const QString &suffix : std::as_const(m_suffixes))
         {
-            this->clear();
-            if (stations.isEmpty()) { return; }
+            // ownership of QStandardItem is taken by model
+            QStandardItem *typeFolderFirstColumn = new QStandardItem(CCallsign::atcSuffixToIcon(suffix).toQIcon(), suffix);
+            typeFolderFirstColumn->setEditable(false);
+            this->invisibleRootItem()->appendRow(typeFolderFirstColumn);
 
-            m_stations = stations.sortedByAtcSuffixSortOrderAndDistance();
-            m_stationsBySuffix = m_stations.splitPerSuffix();
-            m_suffixes = m_stations.getSuffixes();
-            QStandardItemModel::clear();
-
-            int visibleColumns = 0;
-            for (const QString &suffix : std::as_const(m_suffixes))
+            for (const CAtcStation &station : m_stationsBySuffix[suffix])
             {
-                // ownership of QStandardItem is taken by model
-                QStandardItem *typeFolderFirstColumn = new QStandardItem(CCallsign::atcSuffixToIcon(suffix).toQIcon(), suffix);
-                typeFolderFirstColumn->setEditable(false);
-                this->invisibleRootItem()->appendRow(typeFolderFirstColumn);
-
-                for (const CAtcStation &station : m_stationsBySuffix[suffix])
+                int colCount = 0;
+                QList<QStandardItem *> stationRow;
+                for (const CColumn &column : m_columns.columns())
                 {
-                    int colCount = 0;
-                    QList<QStandardItem *> stationRow;
-                    for (const CColumn &column : m_columns.columns())
+                    const CPropertyIndex i(column.getPropertyIndex());
+                    const CVariant v(station.propertyByIndex(i));
+
+                    QStandardItem *si = nullptr;
+                    if (column.getFormatter()->supportsRole(Qt::DecorationRole))
                     {
-                        const CPropertyIndex i(column.getPropertyIndex());
-                        const CVariant v(station.propertyByIndex(i));
-
-                        QStandardItem *si = nullptr;
-                        if (column.getFormatter()->supportsRole(Qt::DecorationRole))
-                        {
-                            const QIcon icon = column.getFormatter()->decorationRole(v).toPixmap();
-                            si = new QStandardItem(icon, QString());
-                        }
-                        else if (column.getFormatter()->supportsRole(Qt::DisplayRole))
-                        {
-                            const CVariant f = column.getFormatter()->displayRole(v);
-                            si = new QStandardItem(f.toQString(true));
-                        }
-                        if (!si) { continue; }
-                        colCount++;
-                        si->setEditable(false); // make not editable
-                        stationRow.push_back(si);
+                        const QIcon icon = column.getFormatter()->decorationRole(v).toPixmap();
+                        si = new QStandardItem(icon, QString());
                     }
-
-                    // add all items
-                    if (stationRow.isEmpty()) { continue; }
-                    typeFolderFirstColumn->appendRow(stationRow);
-                    visibleColumns = qMax(visibleColumns, colCount);
+                    else if (column.getFormatter()->supportsRole(Qt::DisplayRole))
+                    {
+                        const CVariant f = column.getFormatter()->displayRole(v);
+                        si = new QStandardItem(f.toQString(true));
+                    }
+                    if (!si) { continue; }
+                    colCount++;
+                    si->setEditable(false); // make not editable
+                    stationRow.push_back(si);
                 }
+
+                // add all items
+                if (stationRow.isEmpty()) { continue; }
+                typeFolderFirstColumn->appendRow(stationRow);
+                visibleColumns = qMax(visibleColumns, colCount);
             }
-            this->setColumnCount(visibleColumns);
         }
+        this->setColumnCount(visibleColumns);
+    }
 
-        void CAtcStationTreeModel::clear()
-        {
-            m_stations.clear();
-            m_stationsBySuffix.clear();
-            m_suffixes.clear();
-            QStandardItemModel::clear();
-        }
+    void CAtcStationTreeModel::clear()
+    {
+        m_stations.clear();
+        m_stationsBySuffix.clear();
+        m_suffixes.clear();
+        QStandardItemModel::clear();
+    }
 
-        void CAtcStationTreeModel::changedAtcStationConnectionStatus(const CAtcStation &station, bool added)
-        {
-            Q_UNUSED(station)
-            Q_UNUSED(added)
-        }
-    }  // namespace
+    void CAtcStationTreeModel::changedAtcStationConnectionStatus(const CAtcStation &station, bool added)
+    {
+        Q_UNUSED(station)
+        Q_UNUSED(added)
+    }
 } // namespace

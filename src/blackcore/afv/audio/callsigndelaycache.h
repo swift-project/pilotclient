@@ -14,52 +14,46 @@
 #include <QHash>
 #include <QString>
 
-namespace BlackCore
+namespace BlackCore::Afv::Audio
 {
-    namespace Afv
+    //! Callsign delay cache
+    class CallsignDelayCache
     {
-        namespace Audio
-        {
-            //! Callsign delay cache
-            class CallsignDelayCache
-            {
-            public:
-                //! Initialize
-                void initialise(const QString &callsign);
+    public:
+        //! Initialize
+        void initialise(const QString &callsign);
 
-                //! Callsign index
-                int get(const QString &callsign);
+        //! Callsign index
+        int get(const QString &callsign);
 
-                //! Underflow
-                void underflow(const QString &callsign);
+        //! Underflow
+        void underflow(const QString &callsign);
 
-                //! Success
-                void success(const QString &callsign);
+        //! Success
+        void success(const QString &callsign);
 
-                //! Delay plus/minus
-                //! @{
-                void increaseDelayMs(const QString &callsign);
-                void decreaseDelayMs(const QString &callsign);
-                //! @}
+        //! Delay plus/minus
+        //! @{
+        void increaseDelayMs(const QString &callsign);
+        void decreaseDelayMs(const QString &callsign);
+        //! @}
 
-                //! Singleton
-                static CallsignDelayCache &instance();
+        //! Singleton
+        static CallsignDelayCache &instance();
 
-            private:
-                //! Ctor
-                CallsignDelayCache() = default;
+    private:
+        //! Ctor
+        CallsignDelayCache() = default;
 
-                static constexpr int delayDefault = 60;
-                static constexpr int delayMin = 40;
-                static constexpr int delayIncrement = 20;
-                static constexpr int delayMax = 300;
+        static constexpr int delayDefault = 60;
+        static constexpr int delayMin = 40;
+        static constexpr int delayIncrement = 20;
+        static constexpr int delayMax = 300;
 
-                QHash<QString, int> m_delayCache;
-                QHash<QString, int> successfulTransmissionsCache;
-            };
+        QHash<QString, int> m_delayCache;
+        QHash<QString, int> successfulTransmissionsCache;
+    };
 
-        } // ns
-    } // ns
 } // ns
 
 #endif // guard

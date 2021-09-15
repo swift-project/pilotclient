@@ -12,30 +12,27 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CAboutDialog::CAboutDialog(QWidget *parent) :
+        QDialog(parent), ui(new Ui::CAboutDialog)
     {
-        CAboutDialog::CAboutDialog(QWidget *parent) :
-            QDialog(parent), ui(new Ui::CAboutDialog)
-        {
-            ui->setupUi(this);
-            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-            this->init();
-        }
+        ui->setupUi(this);
+        this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+        this->init();
+    }
 
-        CAboutDialog::~CAboutDialog()
-        { }
+    CAboutDialog::~CAboutDialog()
+    { }
 
-        void CAboutDialog::init()
-        {
-            if (!sGui || sGui->isShuttingDown()) { return; }
-            ui->lbl_VersionValue->setText(sGui->getApplicationNameVersionDetailed());
-            ui->pte_Info->setPlainText(sGui->getInfoString("\n"));
-            ui->pte_Info->appendPlainText("\nSetup follows:\n----");
-            ui->pte_Info->appendPlainText(sGui->getGlobalSetup().convertToQString("\n", true));
-            ui->pte_Info->appendPlainText("\nScreen info follows:\n----");
-            ui->pte_Info->appendPlainText(CGuiUtility::screenInformation("\n"));
-        }
-    } // ns
+    void CAboutDialog::init()
+    {
+        if (!sGui || sGui->isShuttingDown()) { return; }
+        ui->lbl_VersionValue->setText(sGui->getApplicationNameVersionDetailed());
+        ui->pte_Info->setPlainText(sGui->getInfoString("\n"));
+        ui->pte_Info->appendPlainText("\nSetup follows:\n----");
+        ui->pte_Info->appendPlainText(sGui->getGlobalSetup().convertToQString("\n", true));
+        ui->pte_Info->appendPlainText("\nScreen info follows:\n----");
+        ui->pte_Info->appendPlainText(CGuiUtility::screenInformation("\n"));
+    }
 } // ns

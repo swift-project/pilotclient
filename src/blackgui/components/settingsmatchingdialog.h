@@ -16,32 +16,29 @@
 #include <QScopedPointer>
 
 namespace Ui { class CSettingsMatchingDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Matching settings as dialog
+    class CSettingsMatchingDialog : public QDialog
     {
+        Q_OBJECT
+
+    public:
         //! Matching settings as dialog
-        class CSettingsMatchingDialog : public QDialog
-        {
-            Q_OBJECT
+        explicit CSettingsMatchingDialog(QWidget *parent = nullptr);
 
-        public:
-            //! Matching settings as dialog
-            explicit CSettingsMatchingDialog(QWidget *parent = nullptr);
+        //! Destructor
+        virtual ~CSettingsMatchingDialog();
 
-            //! Destructor
-            virtual ~CSettingsMatchingDialog();
+        //! Get setup
+        BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const;
 
-            //! Get setup
-            BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const;
+        //! Set the setup
+        void setMatchingSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
 
-            //! Set the setup
-            void setMatchingSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
-
-        private:
-            QScopedPointer<Ui::CSettingsMatchingDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CSettingsMatchingDialog> ui;
+    };
 } // ns
 
 #endif // guard

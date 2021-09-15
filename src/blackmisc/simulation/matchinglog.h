@@ -16,30 +16,27 @@
 #include <QMetaType>
 #include <QDBusArgument>
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    //! What to log
+    enum MatchingLogFlag
     {
-        //! What to log
-        enum MatchingLogFlag
-        {
-            MatchingLogNothing             = 0,
-            MatchingLogIntro               = 1 << 0,
-            MatchingLogModelstring         = 1 << 1,
-            MatchingLogStepwiseReduce      = 1 << 2,
-            MatchingLogScoring             = 1 << 3,
-            MatchingLogCombinedDefaultType = 1 << 4,
-            MatchingLogSimplified = MatchingLogIntro,
-            MatchingLogAll        = MatchingLogModelstring | MatchingLogStepwiseReduce | MatchingLogScoring | MatchingLogCombinedDefaultType
-        };
-        Q_DECLARE_FLAGS(MatchingLog, MatchingLogFlag)
+        MatchingLogNothing             = 0,
+        MatchingLogIntro               = 1 << 0,
+        MatchingLogModelstring         = 1 << 1,
+        MatchingLogStepwiseReduce      = 1 << 2,
+        MatchingLogScoring             = 1 << 3,
+        MatchingLogCombinedDefaultType = 1 << 4,
+        MatchingLogSimplified = MatchingLogIntro,
+        MatchingLogAll        = MatchingLogModelstring | MatchingLogStepwiseReduce | MatchingLogScoring | MatchingLogCombinedDefaultType
+    };
+    Q_DECLARE_FLAGS(MatchingLog, MatchingLogFlag)
 
-        //! Log flag to string
-        BLACKMISC_EXPORT QString matchingLogToString(MatchingLog log);
+    //! Log flag to string
+    BLACKMISC_EXPORT QString matchingLogToString(MatchingLog log);
 
-        //! Log flag to string
-        BLACKMISC_EXPORT const QString &matchingLogFlagToString(MatchingLogFlag logFlag);
-    } // ns
+    //! Log flag to string
+    BLACKMISC_EXPORT const QString &matchingLogFlagToString(MatchingLogFlag logFlag);
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::MatchingLog)

@@ -17,49 +17,46 @@
 #include <QString>
 #include <QFile>
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    class CAircraftModel;
+
+    //! Simple utility class to support ModelConverterX integration.
+    class BLACKMISC_EXPORT CModelConverterX
     {
-        class CAircraftModel;
+    public:
+        //! Default constructor
+        CModelConverterX() = delete;
 
-        //! Simple utility class to support ModelConverterX integration.
-        class BLACKMISC_EXPORT CModelConverterX
+        //! Guess a default simulator based on installation
+        static bool supportsModelConverterX();
+
+        //! Start ModelConverterX for given model
+        static QProcess *startModelConverterX(const CAircraftModel &model, QObject *parent);
+
+    private:
+        //! Get the binary
+        static QString getBinary();
+
+        static QProcess *s_proccess; //!< 0..1 process running
+    };
+
+    namespace Settings
+    {
+        //! Binary of MCX
+        struct TModelConverterXBinary : public BlackMisc::TSettingTrait<QString>
         {
-        public:
-            //! Default constructor
-            CModelConverterX() = delete;
+            //! \copydoc BlackMisc::TSettingTrait::key
+            static const char *key() { return "mapping/modelconverterxbin"; }
 
-            //! Guess a default simulator based on installation
-            static bool supportsModelConverterX();
-
-            //! Start ModelConverterX for given model
-            static QProcess *startModelConverterX(const CAircraftModel &model, QObject *parent);
-
-        private:
-            //! Get the binary
-            static QString getBinary();
-
-            static QProcess *s_proccess; //!< 0..1 process running
-        };
-
-        namespace Settings
-        {
-            //! Binary of MCX
-            struct TModelConverterXBinary : public BlackMisc::TSettingTrait<QString>
+            //! \copydoc BlackMisc::TSettingTrait::isValid
+            static bool isValid(const QString &value, QString &)
             {
-                //! \copydoc BlackMisc::TSettingTrait::key
-                static const char *key() { return "mapping/modelconverterxbin"; }
-
-                //! \copydoc BlackMisc::TSettingTrait::isValid
-                static bool isValid(const QString &value, QString &)
-                {
-                    if (value.isEmpty()) { return true; }
-                    const QFile f(value);
-                    return f.exists();
-                }
-            };
-        } // ns
+                if (value.isEmpty()) { return true; }
+                const QFile f(value);
+                return f.exists();
+            }
+        };
     } // ns
 } // ns
 

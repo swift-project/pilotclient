@@ -33,7 +33,7 @@ class QPaintEvent;
 class QPixmap;
 
 namespace Ui { class COverlayMessages; }
-namespace BlackMisc { namespace Network { class CTextMessage; } }
+namespace BlackMisc::Network { class CTextMessage; }
 namespace BlackGui
 {
     /*!

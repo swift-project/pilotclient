@@ -17,52 +17,49 @@
 #include <QObject>
 #include <QMutex>
 
-namespace BlackMisc
+namespace BlackMisc::SharedState
 {
-    namespace SharedState
+    class IDataLink;
+
+    /*!
+     * Non-template base class for CScalarMutator.
+     * \ingroup SharedState
+     */
+    class BLACKMISC_EXPORT CGenericScalarMutator : public QObject
     {
-        class IDataLink;
+        Q_OBJECT
 
-        /*!
-         * Non-template base class for CScalarMutator.
-         * \ingroup SharedState
-         */
-        class BLACKMISC_EXPORT CGenericScalarMutator : public QObject
-        {
-            Q_OBJECT
+    public:
+        //! Publish using the given transport mechanism.
+        void initialize(IDataLink *);
 
-        public:
-            //! Publish using the given transport mechanism.
-            void initialize(IDataLink *);
+    protected:
+        //! Constructor.
+        CGenericScalarMutator(QObject *parent) : QObject(parent) {}
 
-        protected:
-            //! Constructor.
-            CGenericScalarMutator(QObject *parent) : QObject(parent) {}
+        //! Set scalar value as variant.
+        void setValue(const CVariant &value);
 
-            //! Set scalar value as variant.
-            void setValue(const CVariant &value);
+    private:
+        QSharedPointer<CPassiveMutator> m_mutator = CPassiveMutator::create(this);
+    };
 
-        private:
-            QSharedPointer<CPassiveMutator> m_mutator = CPassiveMutator::create(this);
-        };
+    /*!
+     * Base class for an object that shares state with a corresponding CScalarObserver subclass object.
+     * \tparam T Datatype encapsulating the state to be shared.
+     * \ingroup SharedState
+     */
+    template <typename T>
+    class CScalarMutator : public CGenericScalarMutator
+    {
+    protected:
+        //! Constructor.
+        CScalarMutator(QObject *parent) : CGenericScalarMutator(parent) {}
 
-        /*!
-         * Base class for an object that shares state with a corresponding CScalarObserver subclass object.
-         * \tparam T Datatype encapsulating the state to be shared.
-         * \ingroup SharedState
-         */
-        template <typename T>
-        class CScalarMutator : public CGenericScalarMutator
-        {
-        protected:
-            //! Constructor.
-            CScalarMutator(QObject *parent) : CGenericScalarMutator(parent) {}
-
-        public:
-            //! Set scalar value.
-            void setValue(const T &value) { CGenericScalarMutator::setValue(CVariant::from(value)); }
-        };
-    }
+    public:
+        //! Set scalar value.
+        void setValue(const T &value) { CGenericScalarMutator::setValue(CVariant::from(value)); }
+    };
 }
 
 #endif

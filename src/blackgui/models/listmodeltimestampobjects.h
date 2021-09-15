@@ -20,57 +20,54 @@
 class QModelIndex;
 class QObject;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! List model for timestamp based objects with offset
+    template <typename T, bool UseCompare = false> class CListModelTimestampObjects :
+        public CListModelBase<T, UseCompare>
     {
-        //! List model for timestamp based objects with offset
-        template <typename T, bool UseCompare = false> class CListModelTimestampObjects :
-            public CListModelBase<T, UseCompare>
-        {
-        public:
-            //! Container type
-            using ContainerType = T;
+    public:
+        //! Container type
+        using ContainerType = T;
 
-            //! Container element type
-            using ObjectType = typename T::value_type;
+        //! Container element type
+        using ObjectType = typename T::value_type;
 
-            //! Sorted by one of the timestamp columns?
-            bool isSortedByTimestampProperty() const;
+        //! Sorted by one of the timestamp columns?
+        bool isSortedByTimestampProperty() const;
 
-        protected:
-            //! Constructor
-            CListModelTimestampObjects(const QString &translationContext, QObject *parent = nullptr);
+    protected:
+        //! Constructor
+        CListModelTimestampObjects(const QString &translationContext, QObject *parent = nullptr);
 
-            //! Standard timestamp columns
-            void addTimestampColumns();
-        };
+        //! Standard timestamp columns
+        void addTimestampColumns();
+    };
 
-        //! List model for timestamp based objects with offset
-        template <typename T, bool UseCompare = false> class CListModelTimestampWithOffsetObjects :
-            public CListModelTimestampObjects<T, UseCompare>
-        {
-        public:
-            //! Container type
-            using ContainerType = T;
+    //! List model for timestamp based objects with offset
+    template <typename T, bool UseCompare = false> class CListModelTimestampWithOffsetObjects :
+        public CListModelTimestampObjects<T, UseCompare>
+    {
+    public:
+        //! Container type
+        using ContainerType = T;
 
-            //! Container element type
-            using ObjectType = typename T::value_type;
+        //! Container element type
+        using ObjectType = typename T::value_type;
 
-            //! Destructor
-            virtual ~CListModelTimestampWithOffsetObjects() {}
+        //! Destructor
+        virtual ~CListModelTimestampWithOffsetObjects() {}
 
-            //! Insert as first element by keeping maxElements and the latest first
-            void push_frontKeepLatestAdjustedFirst(const ObjectType &object, int max);
+        //! Insert as first element by keeping maxElements and the latest first
+        void push_frontKeepLatestAdjustedFirst(const ObjectType &object, int max);
 
-        protected:
-            //! Constructor
-            CListModelTimestampWithOffsetObjects(const QString &translationContext, QObject *parent = nullptr);
+    protected:
+        //! Constructor
+        CListModelTimestampWithOffsetObjects(const QString &translationContext, QObject *parent = nullptr);
 
-            //! Standard timestamp offset columns
-            void addTimestampOffsetColumns();
-        };
-    } // namespace
+        //! Standard timestamp offset columns
+        void addTimestampOffsetColumns();
+    };
 } // namespace
 
 #endif // guard

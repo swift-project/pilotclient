@@ -20,52 +20,49 @@
 #include <QIntValidator>
 
 namespace Ui { class CPilotForm; }
-namespace BlackGui
+namespace BlackGui::Editors
 {
-    namespace Editors
+    //! Pilot form (name, homebase)
+    class BLACKGUI_EXPORT CPilotForm : public CForm
     {
-        //! Pilot form (name, homebase)
-        class BLACKGUI_EXPORT CPilotForm : public CForm
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CPilotForm(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CPilotForm(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CPilotForm() override;
+        //! Destructor
+        virtual ~CPilotForm() override;
 
-            //! Set VATSIM validation mode
-            void setVatsimValidation(bool vatsim);
+        //! Set VATSIM validation mode
+        void setVatsimValidation(bool vatsim);
 
-            //! Values as user
-            BlackMisc::Network::CUser getUser() const;
+        //! Values as user
+        BlackMisc::Network::CUser getUser() const;
 
-            //! Set user values
-            bool setUser(const BlackMisc::Network::CUser &user, bool ignoreEmptyUser = false);
+        //! Set user values
+        bool setUser(const BlackMisc::Network::CUser &user, bool ignoreEmptyUser = false);
 
-            //! Clear values
-            void clear();
+        //! Clear values
+        void clear();
 
-            //! \name Form class implementations
-            //! @{
-            virtual void setReadOnly(bool readonly) override;
-            virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
-            //! @}
+        //! \name Form class implementations
+        //! @{
+        virtual void setReadOnly(bool readonly) override;
+        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        //! @}
 
-        private:
-            //! Unhide password
-            void unhidePassword();
+    private:
+        //! Unhide password
+        void unhidePassword();
 
-            //! Call validation
-            void doValidation();
+        //! Call validation
+        void doValidation();
 
-            QScopedPointer<Ui::CPilotForm> ui;
-            QScopedPointer<QIntValidator> m_vatsimIntValidator { new QIntValidator(100000, 9999999, this) };
-            bool m_vatsim = false;
-        };
-    } // ns
+        QScopedPointer<Ui::CPilotForm> ui;
+        QScopedPointer<QIntValidator> m_vatsimIntValidator { new QIntValidator(100000, 9999999, this) };
+        bool m_vatsim = false;
+    };
 } // ns
 
 #endif // guard

@@ -13,13 +13,10 @@
 
 #include "blackmisc/blackmiscexport.h"
 
-namespace BlackMisc
+namespace BlackMisc::Geo
 {
-    namespace Geo
-    {
-        //! Register metadata for geo
-        BLACKMISC_EXPORT void registerMetadata();
-    } // ns
+    //! Register metadata for geo
+    BLACKMISC_EXPORT void registerMetadata();
 } // ns
 
 #endif // guard

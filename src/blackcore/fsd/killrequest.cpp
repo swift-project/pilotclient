@@ -10,35 +10,32 @@
 
 #include "blackmisc/logmessage.h"
 
-namespace BlackCore
+namespace BlackCore::Fsd
 {
-    namespace Fsd
+    KillRequest::KillRequest() : MessageBase()
+    { }
+
+    KillRequest::KillRequest(const QString &callsign, const QString &receiver, const QString &reason)
+        : MessageBase(callsign, receiver),
+            m_reason(reason)
+    { }
+
+    QStringList KillRequest::toTokens() const
     {
-        KillRequest::KillRequest() : MessageBase()
-        { }
+        auto tokens = QStringList {};
+        tokens.push_back(m_sender);
+        tokens.push_back(m_receiver);
+        tokens.push_back(m_reason);
+        return tokens;
+    }
 
-        KillRequest::KillRequest(const QString &callsign, const QString &receiver, const QString &reason)
-            : MessageBase(callsign, receiver),
-              m_reason(reason)
-        { }
-
-        QStringList KillRequest::toTokens() const
+    KillRequest KillRequest::fromTokens(const QStringList &tokens)
+    {
+        if (tokens.size() < 2)
         {
-            auto tokens = QStringList {};
-            tokens.push_back(m_sender);
-            tokens.push_back(m_receiver);
-            tokens.push_back(m_reason);
-            return tokens;
-        }
-
-        KillRequest KillRequest::fromTokens(const QStringList &tokens)
-        {
-            if (tokens.size() < 2)
-            {
-                BlackMisc::CLogMessage(static_cast<KillRequest *>(nullptr)).debug(u"Wrong number of arguments.");
-                return {};
-            };
-            return KillRequest(tokens[0], tokens[1], tokens.size() > 2 ? tokens[2] : QString());
-        }
+            BlackMisc::CLogMessage(static_cast<KillRequest *>(nullptr)).debug(u"Wrong number of arguments.");
+            return {};
+        };
+        return KillRequest(tokens[0], tokens[1], tokens.size() > 2 ? tokens[2] : QString());
     }
 }

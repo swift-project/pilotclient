@@ -26,92 +26,89 @@
 #include <QMetaType>
 #include <QString>
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
+    /*!
+     * Heading as used in aviation, can be true or magnetic heading
+     * \remarks Intentionally allowing +/- CAngle , and >= / <= CAngle.
+     */
+    class BLACKMISC_EXPORT CHeading :
+        public PhysicalQuantities::CAngle,
+        public Mixin::MetaType<CHeading>,
+        public Mixin::EqualsByMetaClass<CHeading>,
+        public Mixin::CompareByMetaClass<CHeading>,
+        public Mixin::HashByMetaClass<CHeading>,
+        public Mixin::DBusByMetaClass<CHeading>,
+        public Mixin::DataStreamByMetaClass<CHeading>,
+        public Mixin::JsonByMetaClass<CHeading>,
+        public Mixin::String<CHeading>,
+        public Mixin::Index<CHeading>
     {
-        /*!
-         * Heading as used in aviation, can be true or magnetic heading
-         * \remarks Intentionally allowing +/- CAngle , and >= / <= CAngle.
-         */
-        class BLACKMISC_EXPORT CHeading :
-            public PhysicalQuantities::CAngle,
-            public Mixin::MetaType<CHeading>,
-            public Mixin::EqualsByMetaClass<CHeading>,
-            public Mixin::CompareByMetaClass<CHeading>,
-            public Mixin::HashByMetaClass<CHeading>,
-            public Mixin::DBusByMetaClass<CHeading>,
-            public Mixin::DataStreamByMetaClass<CHeading>,
-            public Mixin::JsonByMetaClass<CHeading>,
-            public Mixin::String<CHeading>,
-            public Mixin::Index<CHeading>
+    public:
+        //! Base type
+        using base_type = PhysicalQuantities::CAngle;
+
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CHeading)
+        BLACKMISC_DECLARE_USING_MIXIN_STRING(CHeading)
+        BLACKMISC_DECLARE_USING_MIXIN_DBUS(CHeading)
+        BLACKMISC_DECLARE_USING_MIXIN_DATASTREAM(CHeading)
+        BLACKMISC_DECLARE_USING_MIXIN_JSON(CHeading)
+        BLACKMISC_DECLARE_USING_MIXIN_INDEX(CHeading)
+
+        //! Enum type to distinguish between true north and magnetic north
+        enum ReferenceNorth
         {
-        public:
-            //! Base type
-            using base_type = PhysicalQuantities::CAngle;
-
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CHeading)
-            BLACKMISC_DECLARE_USING_MIXIN_STRING(CHeading)
-            BLACKMISC_DECLARE_USING_MIXIN_DBUS(CHeading)
-            BLACKMISC_DECLARE_USING_MIXIN_DATASTREAM(CHeading)
-            BLACKMISC_DECLARE_USING_MIXIN_JSON(CHeading)
-            BLACKMISC_DECLARE_USING_MIXIN_INDEX(CHeading)
-
-            //! Enum type to distinguish between true north and magnetic north
-            enum ReferenceNorth
-            {
-                Magnetic = 0,   //!< magnetic north
-                True = 1        //!< true north
-            };
-
-            //! \copydoc BlackMisc::Mixin::String::toQString
-            QString convertToQString(bool i18n = false) const;
-
-            //! Default constructor: 0
-            CHeading() : CAngle(0, PhysicalQuantities::CAngleUnit::rad()), m_north(True) {}
-
-            //! Constructor
-            CHeading(double value, const PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_north(True) {}
-
-            //! Constructor
-            CHeading(double value, ReferenceNorth north, const PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_north(north) {}
-
-            //! Constructor by CAngle
-            CHeading(const CAngle &heading, ReferenceNorth north) : CAngle(heading), m_north(north) {}
-
-            //! Magnetic heading?
-            bool isMagneticHeading() const { return Magnetic == this->m_north; }
-
-            //! True heading?
-            bool isTrueHeading() const { return True == this->m_north; }
-
-            //! Get reference north (magnetic or true)
-            ReferenceNorth getReferenceNorth() const { return m_north; }
-
-            //! Normalize to [0, 359.99]
-            void normalizeTo360Degrees();
-
-            //! Normalize to +- 180deg, [-179.99, 180.0]
-            void normalizeToPlusMinus180Degrees();
-
-            //! As [-179.99, 180.0] normalized heading
-            CHeading normalizedToPlusMinus180Degrees() const;
-
-            //! As [0, 359.99] normalized heading
-            CHeading normalizedTo360Degrees() const;
-
-            //! Register metadata
-            static void registerMetadata();
-
-        private:
-            ReferenceNorth m_north; //!< magnetic or true?
-
-            BLACK_METACLASS(
-                CHeading,
-                BLACK_METAMEMBER(north)
-            );
+            Magnetic = 0,   //!< magnetic north
+            True = 1        //!< true north
         };
-    } // ns
+
+        //! \copydoc BlackMisc::Mixin::String::toQString
+        QString convertToQString(bool i18n = false) const;
+
+        //! Default constructor: 0
+        CHeading() : CAngle(0, PhysicalQuantities::CAngleUnit::rad()), m_north(True) {}
+
+        //! Constructor
+        CHeading(double value, const PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_north(True) {}
+
+        //! Constructor
+        CHeading(double value, ReferenceNorth north, const PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_north(north) {}
+
+        //! Constructor by CAngle
+        CHeading(const CAngle &heading, ReferenceNorth north) : CAngle(heading), m_north(north) {}
+
+        //! Magnetic heading?
+        bool isMagneticHeading() const { return Magnetic == this->m_north; }
+
+        //! True heading?
+        bool isTrueHeading() const { return True == this->m_north; }
+
+        //! Get reference north (magnetic or true)
+        ReferenceNorth getReferenceNorth() const { return m_north; }
+
+        //! Normalize to [0, 359.99]
+        void normalizeTo360Degrees();
+
+        //! Normalize to +- 180deg, [-179.99, 180.0]
+        void normalizeToPlusMinus180Degrees();
+
+        //! As [-179.99, 180.0] normalized heading
+        CHeading normalizedToPlusMinus180Degrees() const;
+
+        //! As [0, 359.99] normalized heading
+        CHeading normalizedTo360Degrees() const;
+
+        //! Register metadata
+        static void registerMetadata();
+
+    private:
+        ReferenceNorth m_north; //!< magnetic or true?
+
+        BLACK_METACLASS(
+            CHeading,
+            BLACK_METAMEMBER(north)
+        );
+    };
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CHeading)

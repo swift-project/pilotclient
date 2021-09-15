@@ -25,149 +25,146 @@
 #include <QStringBuilder>
 
 namespace BlackMisc { class CLogCategoryList; }
-namespace BlackCore
+namespace BlackCore::Context
 {
-    namespace Context
+    class IContextApplication;
+    class IContextAudio;
+    class IContextNetwork;
+    class IContextOwnAircraft;
+    class IContextSimulator;
+
+    //! Base for all context classes
+    class BLACKCORE_EXPORT IContext : public QObject
     {
-        class IContextApplication;
-        class IContextAudio;
-        class IContextNetwork;
-        class IContextOwnAircraft;
-        class IContextSimulator;
+        Q_OBJECT
 
-        //! Base for all context classes
-        class BLACKCORE_EXPORT IContext : public QObject
+    public:
+        //! Destructor
+        virtual ~IContext() override {}
+
+        //! Log categories
+        static const QStringList &getLogCategories();
+
+        //! Using local implementing object?
+        bool isUsingImplementingObject() const
         {
-            Q_OBJECT
+            return m_mode == CCoreFacadeConfig::Local || m_mode == CCoreFacadeConfig::LocalInDBusServer;
+        }
 
-        public:
-            //! Destructor
-            virtual ~IContext() override {}
+        //! Local or remote object?
+        bool isLocalObject() const
+        {
+            return isUsingImplementingObject() || m_mode == CCoreFacadeConfig::NotUsed;
+        }
 
-            //! Log categories
-            static const QStringList &getLogCategories();
+        //! Empty object?
+        bool isEmptyObject() const
+        {
+            return m_mode == CCoreFacadeConfig::NotUsed;
+        }
 
-            //! Using local implementing object?
-            bool isUsingImplementingObject() const
-            {
-                return m_mode == CCoreFacadeConfig::Local || m_mode == CCoreFacadeConfig::LocalInDBusServer;
-            }
+        //! Runtime
+        CCoreFacade *getRuntime()
+        {
+            Q_ASSERT(this->parent());
+            return static_cast<CCoreFacade *>(this->parent());
+        }
 
-            //! Local or remote object?
-            bool isLocalObject() const
-            {
-                return isUsingImplementingObject() || m_mode == CCoreFacadeConfig::NotUsed;
-            }
+        //! Const runtime
+        const CCoreFacade *getRuntime() const
+        {
+            Q_ASSERT(this->parent());
+            return static_cast<CCoreFacade *>(this->parent());
+        }
 
-            //! Empty object?
-            bool isEmptyObject() const
-            {
-                return m_mode == CCoreFacadeConfig::NotUsed;
-            }
+        //! Mode
+        CCoreFacadeConfig::ContextMode getMode() const { return this->m_mode; }
 
-            //! Runtime
-            CCoreFacade *getRuntime()
-            {
-                Q_ASSERT(this->parent());
-                return static_cast<CCoreFacade *>(this->parent());
-            }
+        //! Unique id
+        qint64 getUniqueId() const { return this->m_contextId; }
 
-            //! Const runtime
-            const CCoreFacade *getRuntime() const
-            {
-                Q_ASSERT(this->parent());
-                return static_cast<CCoreFacade *>(this->parent());
-            }
+        // ---------------------------------------------------------------
+        // cross context access
+        // ---------------------------------------------------------------
 
-            //! Mode
-            CCoreFacadeConfig::ContextMode getMode() const { return this->m_mode; }
+        //! Context for application
+        const IContextApplication *getIContextApplication() const;
 
-            //! Unique id
-            qint64 getUniqueId() const { return this->m_contextId; }
+        //! Application
+        IContextApplication *getIContextApplication();
 
-            // ---------------------------------------------------------------
-            // cross context access
-            // ---------------------------------------------------------------
+        //! Context for network
+        IContextAudio *getIContextAudio();
 
-            //! Context for application
-            const IContextApplication *getIContextApplication() const;
+        //! Context for network
+        const IContextAudio *getIContextAudio() const;
 
-            //! Application
-            IContextApplication *getIContextApplication();
+        //! Context for network
+        IContextNetwork *getIContextNetwork();
 
-            //! Context for network
-            IContextAudio *getIContextAudio();
+        //! Context for network
+        const IContextNetwork *getIContextNetwork() const;
 
-            //! Context for network
-            const IContextAudio *getIContextAudio() const;
+        //! Context for own aircraft
+        IContextOwnAircraft *getIContextOwnAircraft();
 
-            //! Context for network
-            IContextNetwork *getIContextNetwork();
+        //! Context for own aircraft
+        const IContextOwnAircraft *getIContextOwnAircraft() const;
 
-            //! Context for network
-            const IContextNetwork *getIContextNetwork() const;
+        //! Context for simulator
+        const IContextSimulator *getIContextSimulator() const;
 
-            //! Context for own aircraft
-            IContextOwnAircraft *getIContextOwnAircraft();
+        //! Simulator
+        IContextSimulator *getIContextSimulator();
 
-            //! Context for own aircraft
-            const IContextOwnAircraft *getIContextOwnAircraft() const;
+        //! Set debug flag
+        void setDebugEnabled(bool debug);
 
-            //! Context for simulator
-            const IContextSimulator *getIContextSimulator() const;
+        //! Debug enabled?
+        bool isDebugEnabled() const;
 
-            //! Simulator
-            IContextSimulator *getIContextSimulator();
+        // ---------------------------------------------------------------
+        // All context must implement those functions
+        // ---------------------------------------------------------------
 
-            //! Set debug flag
-            void setDebugEnabled(bool debug);
+        //! Id and path name for round trip protection
+        virtual QString getPathAndContextId() const = 0;
 
-            //! Debug enabled?
-            bool isDebugEnabled() const;
+        //! Parse a given command line
+        virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) = 0;
 
-            // ---------------------------------------------------------------
-            // All context must implement those functions
-            // ---------------------------------------------------------------
+    signals:
+        //! Log or debug values changed
+        void changedLogOrDebugSettings();
 
-            //! Id and path name for round trip protection
-            virtual QString getPathAndContextId() const = 0;
+    protected:
+        CCoreFacadeConfig::ContextMode m_mode; //!< How context is used
+        qint64 m_contextId;                    //!< unique identifer, avoid redirection rountrips
+        bool   m_debugEnabled = false;         //!< debug messages enabled
 
-            //! Parse a given command line
-            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) = 0;
+        //! Constructor
+        IContext(CCoreFacadeConfig::ContextMode mode, QObject *parent);
 
-        signals:
-            //! Log or debug values changed
-            void changedLogOrDebugSettings();
+        //! Path and context id
+        QString buildPathAndContextId(const QString &path) const
+        {
+            return path % u':' % QString::number(this->getUniqueId());
+        }
 
-        protected:
-            CCoreFacadeConfig::ContextMode m_mode; //!< How context is used
-            qint64 m_contextId;                    //!< unique identifer, avoid redirection rountrips
-            bool   m_debugEnabled = false;         //!< debug messages enabled
+        //! Relay signals from this class
+        void relayBaseClassSignals(const QString &serviceName, QDBusConnection &connection, const QString &objectPath, const QString &interfaceName);
 
-            //! Constructor
-            IContext(CCoreFacadeConfig::ContextMode mode, QObject *parent);
+        //! Empty context called
+        void logEmptyContextWarning(const QString &functionName) const
+        {
+            BlackMisc::CLogMessage(this, BlackMisc::CLogCategories::contextSlot()).warning(u"Empty context called, details: %1") << functionName;
+        }
 
-            //! Path and context id
-            QString buildPathAndContextId(const QString &path) const
-            {
-                return path % u':' % QString::number(this->getUniqueId());
-            }
+        //! Called when shutdown is about to be called
+        virtual void onAboutToShutdown() {}
 
-            //! Relay signals from this class
-            void relayBaseClassSignals(const QString &serviceName, QDBusConnection &connection, const QString &objectPath, const QString &interfaceName);
-
-            //! Empty context called
-            void logEmptyContextWarning(const QString &functionName) const
-            {
-                BlackMisc::CLogMessage(this, BlackMisc::CLogCategories::contextSlot()).warning(u"Empty context called, details: %1") << functionName;
-            }
-
-            //! Called when shutdown is about to be called
-            virtual void onAboutToShutdown() {}
-
-            //! Standard message when status message is returned in empty context
-            static const BlackMisc::CStatusMessage &statusMessageEmptyContext();
-        };
-    } // ns
+        //! Standard message when status message is returned in empty context
+        static const BlackMisc::CStatusMessage &statusMessageEmptyContext();
+    };
 } // ns
 #endif // guard

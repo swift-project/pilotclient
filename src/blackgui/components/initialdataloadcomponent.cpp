@@ -9,46 +9,43 @@
 #include "initialdataloadcomponent.h"
 #include "ui_initialdataloadcomponent.h"
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CInitialDataLoadComponent::CInitialDataLoadComponent(QWidget *parent) :
+        QFrame(parent),
+        ui(new Ui::CInitialDataLoadComponent)
     {
-        CInitialDataLoadComponent::CInitialDataLoadComponent(QWidget *parent) :
-            QFrame(parent),
-            ui(new Ui::CInitialDataLoadComponent)
-        {
-            ui->setupUi(this);
-            ui->comp_DataUpdates->showVisibleLoadAllButtons(true, false, true);
-        }
+        ui->setupUi(this);
+        ui->comp_DataUpdates->showVisibleLoadAllButtons(true, false, true);
+    }
 
-        CInitialDataLoadComponent::~CInitialDataLoadComponent()
-        { }
+    CInitialDataLoadComponent::~CInitialDataLoadComponent()
+    { }
 
-        void CInitialDataLoadComponent::loadAllFromShared()
-        {
-            ui->comp_DataUpdates->loadAllFromShared();
-        }
+    void CInitialDataLoadComponent::loadAllFromShared()
+    {
+        ui->comp_DataUpdates->loadAllFromShared();
+    }
 
-        void CInitialDataLoadComponent::loadAllFromDb()
-        {
-            ui->comp_DataUpdates->loadAllFromDb();
-        }
+    void CInitialDataLoadComponent::loadAllFromDb()
+    {
+        ui->comp_DataUpdates->loadAllFromDb();
+    }
 
-        bool CInitialDataLoadComponent::isLoadInProgress() const
-        {
-            return ui->comp_DataUpdates->isLoadInProgress();
-        }
+    bool CInitialDataLoadComponent::isLoadInProgress() const
+    {
+        return ui->comp_DataUpdates->isLoadInProgress();
+    }
 
-        void CInitialDataLoadWizardPage::initializePage()
-        {
-            Q_ASSERT_X(m_config, Q_FUNC_INFO, "Missing config");
-            QTimer::singleShot(500, m_config, [ = ] { m_config->loadAllFromShared(); });
-        }
+    void CInitialDataLoadWizardPage::initializePage()
+    {
+        Q_ASSERT_X(m_config, Q_FUNC_INFO, "Missing config");
+        QTimer::singleShot(500, m_config, [ = ] { m_config->loadAllFromShared(); });
+    }
 
-        bool CInitialDataLoadWizardPage::validatePage()
-        {
-            Q_ASSERT_X(m_config, Q_FUNC_INFO, "Missing config");
-            return !m_config->isLoadInProgress();
-        }
-    } // ns
+    bool CInitialDataLoadWizardPage::validatePage()
+    {
+        Q_ASSERT_X(m_config, Q_FUNC_INFO, "Missing config");
+        return !m_config->isLoadInProgress();
+    }
 } // ns

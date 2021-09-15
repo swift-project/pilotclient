@@ -17,38 +17,35 @@ namespace BlackMisc
 {
     class CGenericDBusInterface;
 
-    namespace SharedState
+    namespace SharedState::DBus
     {
-        namespace DBus
+        /*!
+         * Client side implementation of IDuplex, through which the client communicates with the server.
+         */
+        class BLACKMISC_EXPORT CDuplexProxy final : public IDuplex
         {
-            /*!
-             * Client side implementation of IDuplex, through which the client communicates with the server.
-             */
-            class BLACKMISC_EXPORT CDuplexProxy final : public IDuplex
-            {
-                Q_OBJECT
-                Q_CLASSINFO("D-Bus Interface", BLACKMISC_DUPLEX_INTERFACE)
+            Q_OBJECT
+            Q_CLASSINFO("D-Bus Interface", BLACKMISC_DUPLEX_INTERFACE)
 
-            public:
-                //! Constructor.
-                CDuplexProxy(const QDBusConnection &connection, const QString &service, QObject *parent = nullptr);
+        public:
+            //! Constructor.
+            CDuplexProxy(const QDBusConnection &connection, const QString &service, QObject *parent = nullptr);
 
-            public slots:
-                //! \name Interface implementations
-                //! @{
-                virtual void postEvent(const QString &channel, const BlackMisc::CVariant &param) override;
-                virtual void setSubscription(const QString &channel, const BlackMisc::CVariantList &filters) override;
-                virtual void requestPeerSubscriptions() override;
-                virtual void submitRequest(const QString &channel, const BlackMisc::CVariant &param, quint32 token) override;
-                virtual void reply(const BlackMisc::CVariant &param, quint32 token) override;
-                virtual void advertise(const QString &channel) override;
-                virtual void withdraw(const QString &channel) override;
-                //! @}
+        public slots:
+            //! \name Interface implementations
+            //! @{
+            virtual void postEvent(const QString &channel, const BlackMisc::CVariant &param) override;
+            virtual void setSubscription(const QString &channel, const BlackMisc::CVariantList &filters) override;
+            virtual void requestPeerSubscriptions() override;
+            virtual void submitRequest(const QString &channel, const BlackMisc::CVariant &param, quint32 token) override;
+            virtual void reply(const BlackMisc::CVariant &param, quint32 token) override;
+            virtual void advertise(const QString &channel) override;
+            virtual void withdraw(const QString &channel) override;
+            //! @}
 
-            private:
-                CGenericDBusInterface *m_interface = nullptr;
-            };
-        }
+        private:
+            CGenericDBusInterface *m_interface = nullptr;
+        };
     }
 }
 

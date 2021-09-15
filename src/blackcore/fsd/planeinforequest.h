@@ -11,45 +11,42 @@
 #ifndef BLACKCORE_FSD_PLANEINFOREQUEST_H
 #define BLACKCORE_FSD_PLANEINFOREQUEST_H
 
-#include "messagebase.h"
+#include "blackcore/fsd/messagebase.h"
 
-namespace BlackCore
+namespace BlackCore::Fsd
 {
-    namespace Fsd
+    //! Request to send plane information.
+    //! Shall be answered by a PlaneInformation message.
+    class BLACKCORE_EXPORT PlaneInfoRequest : public MessageBase
     {
-        //! Request to send plane information.
-        //! Shall be answered by a PlaneInformation message.
-        class BLACKCORE_EXPORT PlaneInfoRequest : public MessageBase
-        {
-        public:
-            //! Ctor
-            PlaneInfoRequest(const QString &sender, const QString &receiver);
+    public:
+        //! Ctor
+        PlaneInfoRequest(const QString &sender, const QString &receiver);
 
-            //! Message converted to tokens
-            QStringList toTokens() const;
+        //! Message converted to tokens
+        QStringList toTokens() const;
 
-            //! Construct from tokens
-            static PlaneInfoRequest fromTokens(const QStringList &tokens);
+        //! Construct from tokens
+        static PlaneInfoRequest fromTokens(const QStringList &tokens);
 
-            //! PDU identifier
-            static QString pdu() { return QStringLiteral("#SB"); }
+        //! PDU identifier
+        static QString pdu() { return QStringLiteral("#SB"); }
 
-        private:
-            PlaneInfoRequest();
-        };
+    private:
+        PlaneInfoRequest();
+    };
 
-        //! Equal to operator
-        inline bool operator==(const PlaneInfoRequest &lhs, const PlaneInfoRequest &rhs)
-        {
-            return  lhs.sender() == rhs.sender() &&
-                    lhs.receiver() == rhs.receiver();
-        }
+    //! Equal to operator
+    inline bool operator==(const PlaneInfoRequest &lhs, const PlaneInfoRequest &rhs)
+    {
+        return  lhs.sender() == rhs.sender() &&
+                lhs.receiver() == rhs.receiver();
+    }
 
-        //! Not equal to operator
-        inline bool operator!=(const PlaneInfoRequest &lhs, const PlaneInfoRequest &rhs)
-        {
-            return !(lhs == rhs);
-        }
+    //! Not equal to operator
+    inline bool operator!=(const PlaneInfoRequest &lhs, const PlaneInfoRequest &rhs)
+    {
+        return !(lhs == rhs);
     }
 }
 

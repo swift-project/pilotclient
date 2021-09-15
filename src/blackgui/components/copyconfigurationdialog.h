@@ -16,45 +16,42 @@
 #include <QScopedPointer>
 
 namespace Ui { class CCopyConfigurationDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Dialog to copy cache and settings
+    //! \deprecated replaced by CCopySettingsAndCachesComponent
+    class BLACKGUI_EXPORT CCopyConfigurationDialog : public QDialog
     {
-        //! Dialog to copy cache and settings
-        //! \deprecated replaced by CCopySettingsAndCachesComponent
-        class BLACKGUI_EXPORT CCopyConfigurationDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CCopyConfigurationDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CCopyConfigurationDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CCopyConfigurationDialog() override;
+        //! Destructor
+        virtual ~CCopyConfigurationDialog() override;
 
-            //! For cache data
-            void setCacheMode();
+        //! For cache data
+        void setCacheMode();
 
-            //! For settings
-            void setSettingsMode();
+        //! For settings
+        void setSettingsMode();
 
-            //! Select all settings or caches
-            void selectAll();
+        //! Select all settings or caches
+        void selectAll();
 
-            //! \copydoc QFileSystemModel::setNameFilterDisables
-            void setNameFilterDisables(bool disable);
+        //! \copydoc QFileSystemModel::setNameFilterDisables
+        void setNameFilterDisables(bool disable);
 
-            //! \copydoc CCopyConfigurationComponent::setWithBootstrapFile
-            void setWithBootstrapFile(bool withBootstrapFile);
+        //! \copydoc CCopyConfigurationComponent::setWithBootstrapFile
+        void setWithBootstrapFile(bool withBootstrapFile);
 
-        protected:
-            //! \copydoc QObject::event
-            virtual bool event(QEvent *event) override;
+    protected:
+        //! \copydoc QObject::event
+        virtual bool event(QEvent *event) override;
 
-        private:
-            QScopedPointer<Ui::CCopyConfigurationDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CCopyConfigurationDialog> ui;
+    };
 } // ns
 #endif // guard

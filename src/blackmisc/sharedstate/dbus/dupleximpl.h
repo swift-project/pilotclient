@@ -19,46 +19,43 @@ namespace BlackMisc
     class CIdentifier;
     class CDBusServer;
 
-    namespace SharedState
+    namespace SharedState::DBus
     {
-        namespace DBus
+        class CHub;
+
+        /*!
+         * Server side implementation of IDuplex. Receives messages from clients and forwards them to other clients via the CHub.
+         */
+        class BLACKMISC_EXPORT CDuplex final : public IDuplex
         {
-            class CHub;
+            Q_OBJECT
+            Q_CLASSINFO("D-Bus Interface", BLACKMISC_DUPLEX_INTERFACE)
 
-            /*!
-             * Server side implementation of IDuplex. Receives messages from clients and forwards them to other clients via the CHub.
-             */
-            class BLACKMISC_EXPORT CDuplex final : public IDuplex
-            {
-                Q_OBJECT
-                Q_CLASSINFO("D-Bus Interface", BLACKMISC_DUPLEX_INTERFACE)
+        public:
+            //! Constructor.
+            CDuplex(CHub *hub, const CIdentifier &client, CDBusServer *server, QObject *parent = nullptr);
 
-            public:
-                //! Constructor.
-                CDuplex(CHub *hub, const CIdentifier &client, CDBusServer *server, QObject *parent = nullptr);
+            //! Destructor.
+            virtual ~CDuplex() override;
 
-                //! Destructor.
-                virtual ~CDuplex() override;
+        public slots:
+            //! \name Interface implementations
+            //! @{
+            virtual void postEvent(const QString &channel, const BlackMisc::CVariant &param) override;
+            virtual void setSubscription(const QString &channel, const BlackMisc::CVariantList &filters) override;
+            virtual void requestPeerSubscriptions() override;
+            virtual void submitRequest(const QString &channel, const BlackMisc::CVariant &param, quint32 token) override;
+            virtual void advertise(const QString &channel) override;
+            virtual void withdraw(const QString &channel) override;
+            //! @}
 
-            public slots:
-                //! \name Interface implementations
-                //! @{
-                virtual void postEvent(const QString &channel, const BlackMisc::CVariant &param) override;
-                virtual void setSubscription(const QString &channel, const BlackMisc::CVariantList &filters) override;
-                virtual void requestPeerSubscriptions() override;
-                virtual void submitRequest(const QString &channel, const BlackMisc::CVariant &param, quint32 token) override;
-                virtual void advertise(const QString &channel) override;
-                virtual void withdraw(const QString &channel) override;
-                //! @}
+        private:
+            void requestPeerSubscriptions(const QString &channel);
 
-            private:
-                void requestPeerSubscriptions(const QString &channel);
-
-                CHub *m_hub = nullptr;
-                QMap<QString, CVariantList> m_subscriptions;
-                QSet<QString> m_handlingChannels;
-            };
-        }
+            CHub *m_hub = nullptr;
+            QMap<QString, CVariantList> m_subscriptions;
+            QSet<QString> m_handlingChannels;
+        };
     }
 }
 

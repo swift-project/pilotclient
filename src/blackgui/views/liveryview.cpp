@@ -11,15 +11,12 @@
 
 using namespace BlackGui::Models;
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    CLiveryView::CLiveryView(QWidget *parent) :
+        CViewWithDbObjects(parent)
     {
-        CLiveryView::CLiveryView(QWidget *parent) :
-            CViewWithDbObjects(parent)
-        {
-            this->standardInit(new CLiveryListModel(this));
-            this->setMenu(MenuDefaultDbViews);
-        }
+        this->standardInit(new CLiveryListModel(this));
+        this->setMenu(MenuDefaultDbViews);
     }
 } // namespace

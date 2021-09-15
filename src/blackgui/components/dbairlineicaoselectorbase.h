@@ -28,74 +28,71 @@ class QDragMoveEvent;
 class QDropEvent;
 class QWidget;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Airline ICAO selector base class
+     */
+    class BLACKGUI_EXPORT CDbAirlineIcaoSelectorBase :
+        public QFrame,
+        public BlackGui::CDropBase
     {
-        /*!
-         * Airline ICAO selector base class
-         */
-        class BLACKGUI_EXPORT CDbAirlineIcaoSelectorBase :
-            public QFrame,
-            public BlackGui::CDropBase
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Destructor
-            virtual ~CDbAirlineIcaoSelectorBase() override;
+    public:
+        //! Destructor
+        virtual ~CDbAirlineIcaoSelectorBase() override;
 
-            //! Current airline ICAO
-            virtual bool setAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
+        //! Current airline ICAO
+        virtual bool setAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
 
-            //! Current airline ICAO by key
-            bool setAirlineIcao(int key);
+        //! Current airline ICAO by key
+        bool setAirlineIcao(int key);
 
-            //! Airline ICAO
-            const BlackMisc::Aviation::CAirlineIcaoCode &getAirlineIcao() const { return m_currentIcao; }
+        //! Airline ICAO
+        const BlackMisc::Aviation::CAirlineIcaoCode &getAirlineIcao() const { return m_currentIcao; }
 
-            //! Read only
-            virtual void setReadOnly(bool readOnly) = 0;
+        //! Read only
+        virtual void setReadOnly(bool readOnly) = 0;
 
-            //! Clear selection
-            virtual void clear() = 0;
+        //! Clear selection
+        virtual void clear() = 0;
 
-            //! Set with valid value
-            bool isSet() const;
+        //! Set with valid value
+        bool isSet() const;
 
-        signals:
-            //! ICAO was changed
-            void changedAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
+    signals:
+        //! ICAO was changed
+        void changedAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
 
-        protected:
-            //! Constructor
-            explicit CDbAirlineIcaoSelectorBase(QWidget *parent = nullptr);
+    protected:
+        //! Constructor
+        explicit CDbAirlineIcaoSelectorBase(QWidget *parent = nullptr);
 
-            //! Create a new completer
-            virtual QCompleter *createCompleter() = 0;
+        //! Create a new completer
+        virtual QCompleter *createCompleter() = 0;
 
-            //! \copydoc QWidget::dragEnterEvent
-            virtual void dragEnterEvent(QDragEnterEvent *event) override;
+        //! \copydoc QWidget::dragEnterEvent
+        virtual void dragEnterEvent(QDragEnterEvent *event) override;
 
-            //! \copydoc QWidget::dragMoveEvent
-            virtual void dragMoveEvent(QDragMoveEvent *event) override;
+        //! \copydoc QWidget::dragMoveEvent
+        virtual void dragMoveEvent(QDragMoveEvent *event) override;
 
-            //! \copydoc QWidget::dragLeaveEvent
-            virtual void dragLeaveEvent(QDragLeaveEvent *event) override;
+        //! \copydoc QWidget::dragLeaveEvent
+        virtual void dragLeaveEvent(QDragLeaveEvent *event) override;
 
-            //! \copydoc QWidget::dropEvent
-            virtual void dropEvent(QDropEvent *event) override;
+        //! \copydoc QWidget::dropEvent
+        virtual void dropEvent(QDropEvent *event) override;
 
-            QScopedPointer<QCompleter>            m_completer;   //!< completer used
-            BlackMisc::Aviation::CAirlineIcaoCode m_currentIcao; //!< current ICAO object
+        QScopedPointer<QCompleter>            m_completer;   //!< completer used
+        BlackMisc::Aviation::CAirlineIcaoCode m_currentIcao; //!< current ICAO object
 
-        private:
-            //! Airlines have been read
-            void onCodesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count, const QUrl &url);
+    private:
+        //! Airlines have been read
+        void onCodesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count, const QUrl &url);
 
-            //! Data have been changed
-            void onCompleterActivated(const QString &icaoString);
-        };
-    } // ns
+        //! Data have been changed
+        void onCompleterActivated(const QString &icaoString);
+    };
 } // ns
 #endif // guard

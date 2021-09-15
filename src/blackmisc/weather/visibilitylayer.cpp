@@ -12,61 +12,58 @@
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 
-namespace BlackMisc
+namespace BlackMisc::Weather
 {
-    namespace Weather
+
+    CVisibilityLayer::CVisibilityLayer(const BlackMisc::Aviation::CAltitude &base,
+                                        const BlackMisc::Aviation::CAltitude &top,
+                                        const PhysicalQuantities::CLength &visibility) :
+        m_base(base), m_top(top), m_visibility(visibility)
+    { }
+
+    QVariant CVisibilityLayer::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
     {
-
-        CVisibilityLayer::CVisibilityLayer(const BlackMisc::Aviation::CAltitude &base,
-                                           const BlackMisc::Aviation::CAltitude &top,
-                                           const PhysicalQuantities::CLength &visibility) :
-            m_base(base), m_top(top), m_visibility(visibility)
-        { }
-
-        QVariant CVisibilityLayer::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
+        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
         {
-            if (index.isMyself()) { return QVariant::fromValue(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
-            switch (i)
-            {
-            case IndexBase:
-                return QVariant::fromValue(m_base);
-            case IndexTop:
-                return QVariant::fromValue(m_top);
-            case IndexVisibility:
-                return QVariant::fromValue(m_visibility);
-            default:
-                return CValueObject::propertyByIndex(index);
-            }
+        case IndexBase:
+            return QVariant::fromValue(m_base);
+        case IndexTop:
+            return QVariant::fromValue(m_top);
+        case IndexVisibility:
+            return QVariant::fromValue(m_visibility);
+        default:
+            return CValueObject::propertyByIndex(index);
         }
+    }
 
-        void CVisibilityLayer::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
+    void CVisibilityLayer::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
+    {
+        if (index.isMyself()) { (*this) = variant.value<CVisibilityLayer>(); return; }
+        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
         {
-            if (index.isMyself()) { (*this) = variant.value<CVisibilityLayer>(); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
-            switch (i)
-            {
-            case IndexBase:
-                setBase(variant.value<CAltitude>());
-                break;
-            case IndexTop:
-                setTop(variant.value<CAltitude>());
-                break;
-            case IndexVisibility:
-                setVisibility(variant.value<CLength>());
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
-            }
+        case IndexBase:
+            setBase(variant.value<CAltitude>());
+            break;
+        case IndexTop:
+            setTop(variant.value<CAltitude>());
+            break;
+        case IndexVisibility:
+            setVisibility(variant.value<CLength>());
+            break;
+        default:
+            CValueObject::setPropertyByIndex(index, variant);
+            break;
         }
+    }
 
-        QString CVisibilityLayer::convertToQString(bool /** i18n **/) const
-        {
-            QString visibilityAsString = QStringLiteral("Visibility: %1 from %2 to %3");
-            visibilityAsString = visibilityAsString.arg(m_visibility.toQString(), m_base.toQString(), m_top.toQString());
-            return visibilityAsString;
-        }
+    QString CVisibilityLayer::convertToQString(bool /** i18n **/) const
+    {
+        QString visibilityAsString = QStringLiteral("Visibility: %1 from %2 to %3");
+        visibilityAsString = visibilityAsString.arg(m_visibility.toQString(), m_base.toQString(), m_top.toQString());
+        return visibilityAsString;
+    }
 
-    } // namespace
 } // namespace

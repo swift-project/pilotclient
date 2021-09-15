@@ -13,59 +13,56 @@
 
 using namespace BlackMisc;
 
-namespace BlackSound
+namespace BlackSound::SampleProvider
 {
-    namespace SampleProvider
+    CResourceSoundSampleProvider::CResourceSoundSampleProvider(const CResourceSound &resourceSound, QObject *parent) :
+        ISampleProvider(parent),
+        m_resourceSound(resourceSound)
     {
-        CResourceSoundSampleProvider::CResourceSoundSampleProvider(const CResourceSound &resourceSound, QObject *parent) :
-            ISampleProvider(parent),
-            m_resourceSound(resourceSound)
+        const QString on = QStringLiteral("%1 %2").arg(classNameShort(this), resourceSound.getFileName());
+        this->setObjectName(on);
+        m_tempBuffer.resize(m_tempBufferSize);
+    }
+
+    int CResourceSoundSampleProvider::readSamples(QVector<float> &samples, qint64 count)
+    {
+        if (!m_resourceSound.isLoaded()) { return 0; }
+        if (count > m_tempBufferSize)
         {
-            const QString on = QStringLiteral("%1 %2").arg(classNameShort(this), resourceSound.getFileName());
-            this->setObjectName(on);
-            m_tempBuffer.resize(m_tempBufferSize);
+            qDebug() << "Count too large for temp buffer" << count;
+            return 0;
+        }
+        const qint64 availableSamples = m_resourceSound.audioData().size() - m_position;
+        const qint64 samplesToCopy    = qMin(availableSamples, count);
+        samples.clear();
+        samples.fill(0, static_cast<int>(samplesToCopy));
+
+        for (int i = 0; i < samplesToCopy; i++)
+        {
+            m_tempBuffer[i] = m_resourceSound.audioData().at(static_cast<int>(m_position) + i);
         }
 
-        int CResourceSoundSampleProvider::readSamples(QVector<float> &samples, qint64 count)
+        if (!qFuzzyCompare(m_gain, 1.0))
         {
-            if (!m_resourceSound.isLoaded()) { return 0; }
-            if (count > m_tempBufferSize)
-            {
-                qDebug() << "Count too large for temp buffer" << count;
-                return 0;
-            }
-            const qint64 availableSamples = m_resourceSound.audioData().size() - m_position;
-            const qint64 samplesToCopy    = qMin(availableSamples, count);
-            samples.clear();
-            samples.fill(0, static_cast<int>(samplesToCopy));
-
             for (int i = 0; i < samplesToCopy; i++)
             {
-                m_tempBuffer[i] = m_resourceSound.audioData().at(static_cast<int>(m_position) + i);
+                m_tempBuffer[i] = static_cast<float>(m_gain * m_tempBuffer[i]);
             }
-
-            if (!qFuzzyCompare(m_gain, 1.0))
-            {
-                for (int i = 0; i < samplesToCopy; i++)
-                {
-                    m_tempBuffer[i] = static_cast<float>(m_gain * m_tempBuffer[i]);
-                }
-            }
-
-            for (int i = 0; i < samplesToCopy; i++)
-            {
-                samples[i] = m_tempBuffer.at(i);
-            }
-
-            m_position += samplesToCopy;
-
-            if (m_position > availableSamples - 1)
-            {
-                if (m_looping) { m_position = 0; }
-                else { m_isFinished = true; }
-            }
-
-            return static_cast<int>(samplesToCopy);
         }
-    } // ns
+
+        for (int i = 0; i < samplesToCopy; i++)
+        {
+            samples[i] = m_tempBuffer.at(i);
+        }
+
+        m_position += samplesToCopy;
+
+        if (m_position > availableSamples - 1)
+        {
+            if (m_looping) { m_position = 0; }
+            else { m_isFinished = true; }
+        }
+
+        return static_cast<int>(samplesToCopy);
+    }
 } // ns

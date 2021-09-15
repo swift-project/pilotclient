@@ -11,80 +11,77 @@
 
 using namespace BlackMisc;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    CActionItem::CActionItem(const QString &action, const QString &name, CActionItem *parentItem) :
+        m_action(action), m_actionName(name), m_parentItem(parentItem)
+    { }
+
+    CActionItem::CActionItem(const QString &action, const QString &name, const QPixmap &icon, CActionItem *parentItem) :
+        m_action(action), m_actionName(name), m_icon(icon), m_parentItem(parentItem)
+    { }
+
+    CActionItem::CActionItem(const QString &action, const QString &name, CIcons::IconIndex icon, CActionItem *parentItem) :
+        m_action(action), m_actionName(name), m_icon(CIcons::pixmapByIndex(icon)), m_parentItem(parentItem)
+    { }
+
+    CActionItem::~CActionItem()
     {
-        CActionItem::CActionItem(const QString &action, const QString &name, CActionItem *parentItem) :
-            m_action(action), m_actionName(name), m_parentItem(parentItem)
-        { }
+        qDeleteAll(m_childItems);
+    }
 
-        CActionItem::CActionItem(const QString &action, const QString &name, const QPixmap &icon, CActionItem *parentItem) :
-            m_action(action), m_actionName(name), m_icon(icon), m_parentItem(parentItem)
-        { }
+    void CActionItem::appendChild(CActionItem *item)
+    {
+        m_childItems.append(item);
+    }
 
-        CActionItem::CActionItem(const QString &action, const QString &name, CIcons::IconIndex icon, CActionItem *parentItem) :
-            m_action(action), m_actionName(name), m_icon(CIcons::pixmapByIndex(icon)), m_parentItem(parentItem)
-        { }
-
-        CActionItem::~CActionItem()
+    CActionItem *CActionItem::findChildByName(const QString &name) const
+    {
+        for (auto child : m_childItems)
         {
-            qDeleteAll(m_childItems);
+            if (child->getActionName() == name) return child;
         }
+        return nullptr;
+    }
 
-        void CActionItem::appendChild(CActionItem *item)
-        {
-            m_childItems.append(item);
-        }
+    CActionItem *CActionItem::getChildByRow(int row) const
+    {
+        return m_childItems.value(row);
+    }
 
-        CActionItem *CActionItem::findChildByName(const QString &name) const
-        {
-            for (auto child : m_childItems)
-            {
-                if (child->getActionName() == name) return child;
-            }
-            return nullptr;
-        }
+    int CActionItem::getChildCount() const
+    {
+        return m_childItems.count();
+    }
 
-        CActionItem *CActionItem::getChildByRow(int row) const
-        {
-            return m_childItems.value(row);
-        }
+    bool CActionItem::hasChildren() const
+    {
+        return getChildCount() > 0;
+    }
 
-        int CActionItem::getChildCount() const
-        {
-            return m_childItems.count();
-        }
+    int CActionItem::getColumnCount() const
+    {
+        return 1;
+    }
 
-        bool CActionItem::hasChildren() const
-        {
-            return getChildCount() > 0;
-        }
+    QString CActionItem::getAction() const
+    {
+        return m_action;
+    }
 
-        int CActionItem::getColumnCount() const
-        {
-            return 1;
-        }
+    QString CActionItem::getActionName() const
+    {
+        return m_actionName;
+    }
 
-        QString CActionItem::getAction() const
-        {
-            return m_action;
-        }
+    CActionItem *CActionItem::getParentItem() const
+    {
+        return m_parentItem;
+    }
 
-        QString CActionItem::getActionName() const
-        {
-            return m_actionName;
-        }
-
-        CActionItem *CActionItem::getParentItem() const
-        {
-            return m_parentItem;
-        }
-
-        int CActionItem::getRow() const
-        {
-            if (m_parentItem) { return m_parentItem->m_childItems.indexOf(const_cast<CActionItem *>(this)); }
-            return 0;
-        }
+    int CActionItem::getRow() const
+    {
+        if (m_parentItem) { return m_parentItem->m_childItems.indexOf(const_cast<CActionItem *>(this)); }
+        return 0;
     }
 }

@@ -22,48 +22,45 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! LEDs representing transponder mode state
+    class BLACKGUI_EXPORT CCockpitTransponderModeLedsComponent :
+        public QFrame,
+        public BlackMisc::CIdentifiable
     {
-        //! LEDs representing transponder mode state
-        class BLACKGUI_EXPORT CCockpitTransponderModeLedsComponent :
-            public QFrame,
-            public BlackMisc::CIdentifiable
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CCockpitTransponderModeLedsComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CCockpitTransponderModeLedsComponent(QWidget *parent = nullptr);
 
-            //! Set the mode
-            void setMode(BlackMisc::Aviation::CTransponder::TransponderMode mode, bool force = false);
+        //! Set the mode
+        void setMode(BlackMisc::Aviation::CTransponder::TransponderMode mode, bool force = false);
 
-        private:
-            static constexpr int LedWidth = 14; //!< LED width
+    private:
+        static constexpr int LedWidth = 14; //!< LED width
 
-            //! \copydoc IContextOwnAircraft::changedAircraftCockpit
-            void onAircraftCockpitChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+        //! \copydoc IContextOwnAircraft::changedAircraftCockpit
+        void onAircraftCockpitChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
-            //! LED clicked
-            void onLedClicked();
+        //! LED clicked
+        void onLedClicked();
 
-            //! Init either in horizontal or vertical layout
-            void init(bool horizontal);
+        //! Init either in horizontal or vertical layout
+        void init(bool horizontal);
 
-            //! Own Transponder
-            BlackMisc::Aviation::CTransponder getOwnTransponder() const;
+        //! Own Transponder
+        BlackMisc::Aviation::CTransponder getOwnTransponder() const;
 
-            //! Own Aircraft
-            BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const;
+        //! Own Aircraft
+        BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const;
 
-            BlackMisc::Aviation::CTransponder::TransponderMode m_mode = BlackMisc::Aviation::CTransponder::StateStandby;
-            QScopedPointer<BlackGui::CLedWidget> m_ledStandby;
-            QScopedPointer<BlackGui::CLedWidget> m_ledModes;
-            QScopedPointer<BlackGui::CLedWidget> m_ledIdent;
-        };
-    } // namespace
+        BlackMisc::Aviation::CTransponder::TransponderMode m_mode = BlackMisc::Aviation::CTransponder::StateStandby;
+        QScopedPointer<BlackGui::CLedWidget> m_ledStandby;
+        QScopedPointer<BlackGui::CLedWidget> m_ledModes;
+        QScopedPointer<BlackGui::CLedWidget> m_ledIdent;
+    };
 } // namespace
 
 #endif // guard

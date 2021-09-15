@@ -11,45 +11,42 @@
 
 using namespace BlackMisc::Simulation::Settings;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CCGSourceSelector::CCGSourceSelector(QWidget *parent) :
+        QFrame(parent),
+        ui(new Ui::CCGSourceSelector)
     {
-        CCGSourceSelector::CCGSourceSelector(QWidget *parent) :
-            QFrame(parent),
-            ui(new Ui::CCGSourceSelector)
-        {
-            ui->setupUi(this);
-            this->initComboBox();
-        }
+        ui->setupUi(this);
+        this->initComboBox();
+    }
 
-        CCGSourceSelector::~CCGSourceSelector()
-        { }
+    CCGSourceSelector::~CCGSourceSelector()
+    { }
 
-        CSimulatorSettings::CGSource CCGSourceSelector::getValue() const
-        {
-            const int d = ui->cb_CGSourceSelector->currentData().toInt();
-            return static_cast<CSimulatorSettings::CGSource>(d);
-        }
+    CSimulatorSettings::CGSource CCGSourceSelector::getValue() const
+    {
+        const int d = ui->cb_CGSourceSelector->currentData().toInt();
+        return static_cast<CSimulatorSettings::CGSource>(d);
+    }
 
-        void CCGSourceSelector::setValue(const CSimulatorSettings &settings)
-        {
-            this->setValue(settings.getCGSource());
-        }
+    void CCGSourceSelector::setValue(const CSimulatorSettings &settings)
+    {
+        this->setValue(settings.getCGSource());
+    }
 
-        void CCGSourceSelector::setValue(CSimulatorSettings::CGSource source)
-        {
-            ui->cb_CGSourceSelector->setCurrentText(CSimulatorSettings::cgSourceAsString(source));
-        }
+    void CCGSourceSelector::setValue(CSimulatorSettings::CGSource source)
+    {
+        ui->cb_CGSourceSelector->setCurrentText(CSimulatorSettings::cgSourceAsString(source));
+    }
 
-        void CCGSourceSelector::initComboBox()
-        {
-            ui->cb_CGSourceSelector->clear();
-            ui->cb_CGSourceSelector->addItem(CSimulatorSettings::cgSourceAsString(CSimulatorSettings::CGFromSimulatorFirst), CSimulatorSettings::CGFromSimulatorFirst);
-            ui->cb_CGSourceSelector->addItem(CSimulatorSettings::cgSourceAsString(CSimulatorSettings::CGFromDBFirst), CSimulatorSettings::CGFromDBFirst);
-            ui->cb_CGSourceSelector->addItem(CSimulatorSettings::cgSourceAsString(CSimulatorSettings::CGFromSimulatorOnly), CSimulatorSettings::CGFromSimulatorOnly);
-            ui->cb_CGSourceSelector->addItem(CSimulatorSettings::cgSourceAsString(CSimulatorSettings::CGFromDBOnly), CSimulatorSettings::CGFromDBOnly);
-            this->setValue(CSimulatorSettings::CGFromSimulatorFirst);
-        }
-    } // ns
+    void CCGSourceSelector::initComboBox()
+    {
+        ui->cb_CGSourceSelector->clear();
+        ui->cb_CGSourceSelector->addItem(CSimulatorSettings::cgSourceAsString(CSimulatorSettings::CGFromSimulatorFirst), CSimulatorSettings::CGFromSimulatorFirst);
+        ui->cb_CGSourceSelector->addItem(CSimulatorSettings::cgSourceAsString(CSimulatorSettings::CGFromDBFirst), CSimulatorSettings::CGFromDBFirst);
+        ui->cb_CGSourceSelector->addItem(CSimulatorSettings::cgSourceAsString(CSimulatorSettings::CGFromSimulatorOnly), CSimulatorSettings::CGFromSimulatorOnly);
+        ui->cb_CGSourceSelector->addItem(CSimulatorSettings::cgSourceAsString(CSimulatorSettings::CGFromDBOnly), CSimulatorSettings::CGFromDBOnly);
+        this->setValue(CSimulatorSettings::CGFromSimulatorFirst);
+    }
 } // ns

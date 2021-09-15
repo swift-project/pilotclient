@@ -17,20 +17,17 @@
 
 class QWidget;
 
-namespace BlackMisc { namespace Weather { class CWindLayer; } }
-namespace BlackGui
+namespace BlackMisc::Weather { class CWindLayer; }
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Wind layer view
+    class BLACKGUI_EXPORT CWindLayerView : public CViewBase<Models::CWindLayerListModel>
     {
-        //! Wind layer view
-        class BLACKGUI_EXPORT CWindLayerView : public CViewBase<Models::CWindLayerListModel>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CWindLayerView(QWidget *parent = nullptr);
-        };
-    }
+    public:
+        //! Constructor
+        explicit CWindLayerView(QWidget *parent = nullptr);
+    };
 }
 #endif // guard

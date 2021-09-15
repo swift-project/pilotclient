@@ -9,26 +9,23 @@
 #include "audioadvanceddistributeddialog.h"
 #include "ui_audioadvanceddistributeddialog.h"
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CAudioAdvancedDistributedDialog::CAudioAdvancedDistributedDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CAudioAdvancedDistributedDialog)
     {
-        CAudioAdvancedDistributedDialog::CAudioAdvancedDistributedDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CAudioAdvancedDistributedDialog)
-        {
-            ui->setupUi(this);
-            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-            this->reloadRegisteredDevices();
-        }
+        ui->setupUi(this);
+        this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+        this->reloadRegisteredDevices();
+    }
 
-        CAudioAdvancedDistributedDialog::~CAudioAdvancedDistributedDialog()
-        { }
+    CAudioAdvancedDistributedDialog::~CAudioAdvancedDistributedDialog()
+    { }
 
-        void CAudioAdvancedDistributedDialog::reloadRegisteredDevices()
-        {
-            ui->comp_AudioAdvancedDistributed->reloadRegisteredDevices();
-        }
+    void CAudioAdvancedDistributedDialog::reloadRegisteredDevices()
+    {
+        ui->comp_AudioAdvancedDistributed->reloadRegisteredDevices();
+    }
 
-    } // ns
 } // ns

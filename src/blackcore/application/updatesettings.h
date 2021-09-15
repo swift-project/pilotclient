@@ -17,34 +17,31 @@
 #include "blackmisc/settingscache.h"
 #include <QStringList>
 
-namespace BlackCore
+namespace BlackCore::Application
 {
-    namespace Application
+    //! Update info settings, QStringList with 2 values: channel/platform
+    struct TUpdatePreferences : public BlackMisc::TSettingTrait<QStringList>
     {
-        //! Update info settings, QStringList with 2 values: channel/platform
-        struct TUpdatePreferences : public BlackMisc::TSettingTrait<QStringList>
+        //! \copydoc BlackMisc::TSettingTrait::key
+        static const char *key() { return "updatepreferences"; }
+
+        //! \copydoc BlackMisc::TSettingTrait::defaultValue
+        static const QStringList &defaultValue()
         {
-            //! \copydoc BlackMisc::TSettingTrait::key
-            static const char *key() { return "updatepreferences"; }
+            // guessing / preset-ing some default values
+            static const QStringList d = (sApp && !sApp->getUpdateInfo().isEmpty()) ?
+                                            sApp->getUpdateInfo().anticipateMyDefaultChannelAndPlatform() : // from cached or loaded update info
+                                            QStringList({ "STABLE", BlackMisc::CPlatform::currentPlatform().getPlatformName()});
+            return d;
+        }
 
-            //! \copydoc BlackMisc::TSettingTrait::defaultValue
-            static const QStringList &defaultValue()
-            {
-                // guessing / preset-ing some default values
-                static const QStringList d = (sApp && !sApp->getUpdateInfo().isEmpty()) ?
-                                             sApp->getUpdateInfo().anticipateMyDefaultChannelAndPlatform() : // from cached or loaded update info
-                                             QStringList({ "STABLE", BlackMisc::CPlatform::currentPlatform().getPlatformName()});
-                return d;
-            }
-
-            //! \copydoc BlackMisc::TSettingTrait::humanReadable
-            static const QString &humanReadable()
-            {
-                static const QString name("Updates channel/platform");
-                return name;
-            }
-        };
-    } // ns
+        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        static const QString &humanReadable()
+        {
+            static const QString name("Updates channel/platform");
+            return name;
+        }
+    };
 } // ns
 
 #endif // guard

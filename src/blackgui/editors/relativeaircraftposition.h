@@ -18,42 +18,39 @@
 #include "blackgui/editors/form.h"
 
 namespace Ui { class CRelativeAircraftPosition; }
-namespace BlackGui
+namespace BlackGui::Editors
 {
-    namespace Editors
+    //! Position relative to other aircraft
+    class CRelativeAircraftPosition : public CForm
     {
-        //! Position relative to other aircraft
-        class CRelativeAircraftPosition : public CForm
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CRelativeAircraftPosition(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CRelativeAircraftPosition(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CRelativeAircraftPosition() override;
+        //! Destructor
+        virtual ~CRelativeAircraftPosition() override;
 
-            //! \copydoc CForm::setReadOnly
-            virtual void setReadOnly(bool readOnly) override;
+        //! \copydoc CForm::setReadOnly
+        virtual void setReadOnly(bool readOnly) override;
 
-            //! Set origin coordinate
-            void setOriginCoordinate(const BlackMisc::Geo::CCoordinateGeodetic &originCoordinate) { m_originCoordinate = originCoordinate; }
+        //! Set origin coordinate
+        void setOriginCoordinate(const BlackMisc::Geo::CCoordinateGeodetic &originCoordinate) { m_originCoordinate = originCoordinate; }
 
-            //! Set the distance
-            void setDistance(const BlackMisc::PhysicalQuantities::CLength &distance);
+        //! Set the distance
+        void setDistance(const BlackMisc::PhysicalQuantities::CLength &distance);
 
-            //! Relative coordinate based on entered data
-            BlackMisc::Geo::CCoordinateGeodetic getRelativeCoordinate(const BlackMisc::PhysicalQuantities::CAngle &bearingOffset = BlackMisc::PhysicalQuantities::CAngle::null()) const;
+        //! Relative coordinate based on entered data
+        BlackMisc::Geo::CCoordinateGeodetic getRelativeCoordinate(const BlackMisc::PhysicalQuantities::CAngle &bearingOffset = BlackMisc::PhysicalQuantities::CAngle::null()) const;
 
-            //! Display coordinate info
-            void displayInfo(const BlackMisc::Geo::CCoordinateGeodetic &relPos = BlackMisc::Geo::CCoordinateGeodetic::null());
+        //! Display coordinate info
+        void displayInfo(const BlackMisc::Geo::CCoordinateGeodetic &relPos = BlackMisc::Geo::CCoordinateGeodetic::null());
 
-        private:
-            QScopedPointer<Ui::CRelativeAircraftPosition> ui;
-            BlackMisc::Geo::CCoordinateGeodetic m_originCoordinate;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CRelativeAircraftPosition> ui;
+        BlackMisc::Geo::CCoordinateGeodetic m_originCoordinate;
+    };
 } // ns
 
 #endif // guard

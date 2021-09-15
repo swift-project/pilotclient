@@ -13,13 +13,10 @@
 
 #include "blackmisc/blackmiscexport.h"
 
-namespace BlackMisc
+namespace BlackMisc::Input
 {
-    namespace Input
-    {
-        //! Register metadata for input
-        BLACKMISC_EXPORT void registerMetadata();
-    } // ns
+    //! Register metadata for input
+    BLACKMISC_EXPORT void registerMetadata();
 } // ns
 
 #endif // guard

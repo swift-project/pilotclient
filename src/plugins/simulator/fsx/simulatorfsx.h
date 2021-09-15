@@ -13,43 +13,40 @@
 
 #include "../fsxcommon/simulatorfsxcommon.h"
 
-namespace BlackSimPlugin
+namespace BlackSimPlugin::Fsx
 {
-    namespace Fsx
+    //! FSX simulator implementation
+    class CSimulatorFsx : public BlackSimPlugin::FsxCommon::CSimulatorFsxCommon
     {
-        //! FSX simulator implementation
-        class CSimulatorFsx : public BlackSimPlugin::FsxCommon::CSimulatorFsxCommon
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
-            CSimulatorFsx(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                          BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                          BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                          BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
-                          BlackMisc::Network::IClientProvider *clientProvider,
-                          QObject *parent = nullptr);
+    public:
+        //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
+        CSimulatorFsx(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+                        BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                        BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                        BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+                        BlackMisc::Network::IClientProvider *clientProvider,
+                        QObject *parent = nullptr);
 
-            //! \name ISimulator implementations
-            //! @{
-            virtual bool connectTo() override;
-            //! @}
-        };
+        //! \name ISimulator implementations
+        //! @{
+        virtual bool connectTo() override;
+        //! @}
+    };
 
-        //! Listener for FSX
-        class CSimulatorFsxListener : public FsxCommon::CSimulatorFsxCommonListener
-        {
-            Q_OBJECT
+    //! Listener for FSX
+    class CSimulatorFsxListener : public FsxCommon::CSimulatorFsxCommonListener
+    {
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            using CSimulatorFsxCommonListener::CSimulatorFsxCommonListener;
+    public:
+        //! Constructor
+        using CSimulatorFsxCommonListener::CSimulatorFsxCommonListener;
 
-        protected:
-            virtual void startImpl() override;
-        };
-    } // ns
+    protected:
+        virtual void startImpl() override;
+    };
 } // ns
 
 #endif // guard

@@ -15,44 +15,41 @@
 #include <QFrame>
 
 namespace Ui { class CSettingsAtcStationsInlineComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * How ATC stations will be displayed
+     */
+    class CSettingsAtcStationsInlineComponent : public QFrame
     {
-        /*!
-         * How ATC stations will be displayed
-         */
-        class CSettingsAtcStationsInlineComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CSettingsAtcStationsInlineComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CSettingsAtcStationsInlineComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CSettingsAtcStationsInlineComponent();
+        //! Destructor
+        virtual ~CSettingsAtcStationsInlineComponent();
 
-            //! Get the settings
-            Settings::CAtcStationsSettings getSettings() const { return m_atcSettings.get(); }
+        //! Get the settings
+        Settings::CAtcStationsSettings getSettings() const { return m_atcSettings.get(); }
 
-            //! Set count information
-            void setCounts(int all, int inRange);
+        //! Set count information
+        void setCounts(int all, int inRange);
 
-        signals:
-            //! Changed value
-            void changed();
+    signals:
+        //! Changed value
+        void changed();
 
-        private:
-            //! Settings have been changed
-            void onSettingsChanged();
+    private:
+        //! Settings have been changed
+        void onSettingsChanged();
 
-            //! Change the settings
-            void changeSettings();
+        //! Change the settings
+        void changeSettings();
 
-            QScopedPointer<Ui::CSettingsAtcStationsInlineComponent> ui;
-            BlackMisc::CSetting<BlackGui::Settings::TAtcStationsSettings> m_atcSettings { this, &CSettingsAtcStationsInlineComponent::onSettingsChanged };
-        };
-    } // ns
+        QScopedPointer<Ui::CSettingsAtcStationsInlineComponent> ui;
+        BlackMisc::CSetting<BlackGui::Settings::TAtcStationsSettings> m_atcSettings { this, &CSettingsAtcStationsInlineComponent::onSettingsChanged };
+    };
 } // ns
 #endif // guard

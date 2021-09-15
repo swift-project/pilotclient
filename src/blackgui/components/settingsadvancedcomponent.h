@@ -20,29 +20,26 @@
 #include <QScopedPointer>
 
 namespace Ui { class CSettingsAdvancedComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Configure general settings
+    class BLACKGUI_EXPORT CSettingsAdvancedComponent : public QFrame
     {
-        //! Configure general settings
-        class BLACKGUI_EXPORT CSettingsAdvancedComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            CSettingsAdvancedComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        CSettingsAdvancedComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CSettingsAdvancedComponent();
+        //! Destructor
+        virtual ~CSettingsAdvancedComponent();
 
-        private:
-            void crashDumpUploadEnabledChanged(int state);
+    private:
+        void crashDumpUploadEnabledChanged(int state);
 
-            QScopedPointer<Ui::CSettingsAdvancedComponent> ui;
-            BlackMisc::CSetting<BlackCore::Application::TCrashDumpSettings> m_crashDumpSettings { this };
-        };
-    } // ns
+        QScopedPointer<Ui::CSettingsAdvancedComponent> ui;
+        BlackMisc::CSetting<BlackCore::Application::TCrashDumpSettings> m_crashDumpSettings { this };
+    };
 } // ns
 
 #endif // guard

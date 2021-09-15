@@ -14,26 +14,23 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/physicalquantity.h"
 
-namespace BlackMisc
+namespace BlackMisc::PhysicalQuantities
 {
-    namespace PhysicalQuantities
+
+    //! Acceleration
+    class BLACKMISC_EXPORT CAcceleration : public CPhysicalQuantity<CAccelerationUnit, CAcceleration>
     {
+    public:
+        //! Default constructor
+        CAcceleration() : CPhysicalQuantity(0, CAccelerationUnit::defaultUnit()) {}
 
-        //! Acceleration
-        class BLACKMISC_EXPORT CAcceleration : public CPhysicalQuantity<CAccelerationUnit, CAcceleration>
-        {
-        public:
-            //! Default constructor
-            CAcceleration() : CPhysicalQuantity(0, CAccelerationUnit::defaultUnit()) {}
+        //! Init by double value
+        CAcceleration(double value, const CAccelerationUnit &unit) : CPhysicalQuantity(value, unit) {}
 
-            //! Init by double value
-            CAcceleration(double value, const CAccelerationUnit &unit) : CPhysicalQuantity(value, unit) {}
+        //! \copydoc CPhysicalQuantity(const QString &unitString)
+        CAcceleration(const QString &unitString) : CPhysicalQuantity(unitString) {}
+    };
 
-            //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CAcceleration(const QString &unitString) : CPhysicalQuantity(unitString) {}
-        };
-
-    }
 }
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAcceleration)

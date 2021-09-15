@@ -12,23 +12,20 @@
 
 using namespace BlackMisc;
 
-namespace BlackGui
+namespace BlackGui::Editors
 {
-    namespace Editors
+    CNetworkSetupForm::CNetworkSetupForm(QWidget *parent) :
+        CForm(parent),
+        ui(new Ui::CNetworkSetupForm)
     {
-        CNetworkSetupForm::CNetworkSetupForm(QWidget *parent) :
-            CForm(parent),
-            ui(new Ui::CNetworkSetupForm)
-        {
-            ui->setupUi(this);
-        }
+        ui->setupUi(this);
+    }
 
-        CNetworkSetupForm::~CNetworkSetupForm()
-        { }
+    CNetworkSetupForm::~CNetworkSetupForm()
+    { }
 
-        void CNetworkSetupForm::setReadOnly(bool readonly)
-        {
-            CGuiUtility::checkBoxReadOnly(ui->cb_DynamicOffsetTimes, readonly);
-        }
-    } // ns
+    void CNetworkSetupForm::setReadOnly(bool readonly)
+    {
+        CGuiUtility::checkBoxReadOnly(ui->cb_DynamicOffsetTimes, readonly);
+    }
 } // ns

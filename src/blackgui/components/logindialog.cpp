@@ -16,88 +16,85 @@ using namespace BlackMisc::Network;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CLoginDialog::CLoginDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CLoginDialog)
     {
-        CLoginDialog::CLoginDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CLoginDialog)
+        ui->setupUi(this);
+        this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
+        connect(ui->comp_LoginComponent, &CLoginAdvComponent::loginOrLogoffSuccessful, this, &CLoginDialog::onLoginOrLogoffSuccessful);
+        connect(ui->comp_LoginComponent, &CLoginAdvComponent::loginOrLogoffCancelled,  this, &CLoginDialog::onLoginOrLogoffCancelled);
+        connect(ui->comp_LoginComponent, &CLoginAdvComponent::requestNetworkSettings,  this, &CLoginDialog::onRequestNetworkSettings);
+
+        connect(ui->comp_LoginOverviewComponent, &CLoginOverviewComponent::closeOverview,           this, &CLoginDialog::close);
+        connect(ui->comp_LoginOverviewComponent, &CLoginOverviewComponent::loginOrLogoffSuccessful, this, &CLoginDialog::onLoginOrLogoffCancelled);
+
+        if (sGui && sGui->getIContextNetwork())
         {
-            ui->setupUi(this);
-            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CLoginDialog::onNetworkStatusChanged, Qt::QueuedConnection);
+        }
+    }
 
-            connect(ui->comp_LoginComponent, &CLoginAdvComponent::loginOrLogoffSuccessful, this, &CLoginDialog::onLoginOrLogoffSuccessful);
-            connect(ui->comp_LoginComponent, &CLoginAdvComponent::loginOrLogoffCancelled,  this, &CLoginDialog::onLoginOrLogoffCancelled);
-            connect(ui->comp_LoginComponent, &CLoginAdvComponent::requestNetworkSettings,  this, &CLoginDialog::onRequestNetworkSettings);
+    CLoginDialog::~CLoginDialog()
+    { }
 
-            connect(ui->comp_LoginOverviewComponent, &CLoginOverviewComponent::closeOverview,           this, &CLoginDialog::close);
-            connect(ui->comp_LoginOverviewComponent, &CLoginOverviewComponent::loginOrLogoffSuccessful, this, &CLoginDialog::onLoginOrLogoffCancelled);
+    void CLoginDialog::setAutoLogoff(bool logoff)
+    {
+        ui->comp_LoginComponent->setAutoLogoff(logoff);
+        ui->comp_LoginOverviewComponent->setAutoLogoff(logoff);
+    }
 
-            if (sGui && sGui->getIContextNetwork())
+    void CLoginDialog::show()
+    {
+        this->init();
+        QDialog::show();
+    }
+
+    void CLoginDialog::init()
+    {
+        bool connected = false;
+        if (sGui && sGui->getIContextNetwork())
+        {
+            connected = sGui->getIContextNetwork()->isConnected();
+            if (connected)
             {
-                connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CLoginDialog::onNetworkStatusChanged, Qt::QueuedConnection);
+                ui->comp_LoginOverviewComponent->showCurrentValues();
+            }
+            else
+            {
+                ui->comp_LoginComponent->resetState();
             }
         }
 
-        CLoginDialog::~CLoginDialog()
-        { }
+        ui->comp_LoginComponent->setVisible(!connected);
+        ui->comp_LoginOverviewComponent->setVisible(connected);
+    }
 
-        void CLoginDialog::setAutoLogoff(bool logoff)
-        {
-            ui->comp_LoginComponent->setAutoLogoff(logoff);
-            ui->comp_LoginOverviewComponent->setAutoLogoff(logoff);
-        }
+    void CLoginDialog::onLoginOrLogoffCancelled()
+    {
+        this->reject();
+    }
 
-        void CLoginDialog::show()
+    void CLoginDialog::onLoginOrLogoffSuccessful()
+    {
+        this->accept();
+    }
+
+    void CLoginDialog::onRequestNetworkSettings()
+    {
+        emit this->requestNetworkSettings();
+        this->close();
+    }
+
+    void CLoginDialog::onNetworkStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
+    {
+        Q_UNUSED(from);
+        if (to.isDisconnected() || to.isConnected())
         {
             this->init();
-            QDialog::show();
         }
-
-        void CLoginDialog::init()
-        {
-            bool connected = false;
-            if (sGui && sGui->getIContextNetwork())
-            {
-                connected = sGui->getIContextNetwork()->isConnected();
-                if (connected)
-                {
-                    ui->comp_LoginOverviewComponent->showCurrentValues();
-                }
-                else
-                {
-                    ui->comp_LoginComponent->resetState();
-                }
-            }
-
-            ui->comp_LoginComponent->setVisible(!connected);
-            ui->comp_LoginOverviewComponent->setVisible(connected);
-        }
-
-        void CLoginDialog::onLoginOrLogoffCancelled()
-        {
-            this->reject();
-        }
-
-        void CLoginDialog::onLoginOrLogoffSuccessful()
-        {
-            this->accept();
-        }
-
-        void CLoginDialog::onRequestNetworkSettings()
-        {
-            emit this->requestNetworkSettings();
-            this->close();
-        }
-
-        void CLoginDialog::onNetworkStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
-        {
-            Q_UNUSED(from);
-            if (to.isDisconnected() || to.isConnected())
-            {
-                this->init();
-            }
-        }
-    } // ns
+    }
 }// ns

@@ -24,58 +24,55 @@
 #include <QScopedPointer>
 
 namespace Ui { class CDbModelComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * Database models. Those are the models loaaded from the DB.
+     */
+    class BLACKGUI_EXPORT CDbModelComponent :
+        public COverlayMessagesFrame,
+        public CDbMappingComponentAware,
+        public CEnableForDockWidgetInfoArea,
+        public CEnableForViewBasedIndicator
     {
-        /**
-         * Database models. Those are the models loaaded from the DB.
-         */
-        class BLACKGUI_EXPORT CDbModelComponent :
-            public COverlayMessagesFrame,
-            public CDbMappingComponentAware,
-            public CEnableForDockWidgetInfoArea,
-            public CEnableForViewBasedIndicator
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CDbModelComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CDbModelComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CDbModelComponent();
+        //! Destructor
+        virtual ~CDbModelComponent();
 
-            //! Get latest model if any
-            BlackMisc::Simulation::CAircraftModel getLatestModel() const;
+        //! Get latest model if any
+        BlackMisc::Simulation::CAircraftModel getLatestModel() const;
 
-            //! Models loaded?
-            bool hasModels() const;
+        //! Models loaded?
+        bool hasModels() const;
 
-            //! Load new data
-            void requestUpdatedData();
+        //! Load new data
+        void requestUpdatedData();
 
-        signals:
-            //! Request to stash the selected models
-            void requestStash(const BlackMisc::Simulation::CAircraftModelList &models);
+    signals:
+        //! Request to stash the selected models
+        void requestStash(const BlackMisc::Simulation::CAircraftModelList &models);
 
-        private:
-            //! Models have been read
-            void onModelsRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count, const QUrl &url);
+    private:
+        //! Models have been read
+        void onModelsRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count, const QUrl &url);
 
-            //! Reload models
-            void onReload();
+        //! Reload models
+        void onReload();
 
-            //! Style sheet changed
-            void onStyleSheetChanged();
+        //! Style sheet changed
+        void onStyleSheetChanged();
 
-            //! Download progress for an entity
-            void onEntityDownloadProgress(BlackMisc::Network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
+        //! Download progress for an entity
+        void onEntityDownloadProgress(BlackMisc::Network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
 
-        private:
-            QScopedPointer<Ui::CDbModelComponent> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CDbModelComponent> ui;
+    };
 } // ns
 
 #endif // guard

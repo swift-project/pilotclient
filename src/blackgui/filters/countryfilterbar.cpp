@@ -20,46 +20,43 @@ using namespace BlackGui::Models;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 
-namespace BlackGui
+namespace BlackGui::Filters
 {
-    namespace Filters
+    CCountryFilterBar::CCountryFilterBar(QWidget *parent) :
+        CFilterWidget(parent),
+        ui(new Ui::CCountryFilterBar)
     {
-        CCountryFilterBar::CCountryFilterBar(QWidget *parent) :
-            CFilterWidget(parent),
-            ui(new Ui::CCountryFilterBar)
-        {
-            ui->setupUi(this);
-            this->setButtonsAndCount(ui->filter_Buttons);
-            connect(ui->le_IsoCode, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
-            connect(ui->le_Name, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+        ui->setupUi(this);
+        this->setButtonsAndCount(ui->filter_Buttons);
+        connect(ui->le_IsoCode, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+        connect(ui->le_Name, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
 
-            CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
-            ui->le_IsoCode->setValidator(ucv);
+        CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
+        ui->le_IsoCode->setValidator(ucv);
 
-            // reset form
-            this->clearForm();
-        }
+        // reset form
+        this->clearForm();
+    }
 
-        CCountryFilterBar::~CCountryFilterBar()
-        { }
+    CCountryFilterBar::~CCountryFilterBar()
+    { }
 
-        std::unique_ptr<BlackGui::Models::IModelFilter<CCountryList> > CCountryFilterBar::createModelFilter() const
-        {
-            return std::make_unique<CCountryFilter>(
-                       ui->le_IsoCode->text(),
-                       ui->le_Name->text()
-                   );
-        }
+    std::unique_ptr<BlackGui::Models::IModelFilter<CCountryList> > CCountryFilterBar::createModelFilter() const
+    {
+        return std::make_unique<CCountryFilter>(
+                    ui->le_IsoCode->text(),
+                    ui->le_Name->text()
+                );
+    }
 
-        void CCountryFilterBar::onRowCountChanged(int count, bool withFilter)
-        {
-            ui->filter_Buttons->onRowCountChanged(count, withFilter);
-        }
+    void CCountryFilterBar::onRowCountChanged(int count, bool withFilter)
+    {
+        ui->filter_Buttons->onRowCountChanged(count, withFilter);
+    }
 
-        void CCountryFilterBar::clearForm()
-        {
-            ui->le_IsoCode->clear();
-            ui->le_Name->clear();
-        }
-    } // ns
+    void CCountryFilterBar::clearForm()
+    {
+        ui->le_IsoCode->clear();
+        ui->le_Name->clear();
+    }
 } // ns

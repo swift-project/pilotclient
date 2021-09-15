@@ -14,75 +14,72 @@ class QDBusConnection;
 
 #define XSWIFTBUS_SERVICENAME "org.swift-project.xswiftbus"
 
-namespace BlackSimPlugin
+namespace BlackSimPlugin::XPlane
 {
-    namespace XPlane
+
+    CXSwiftBusWeatherProxy::CXSwiftBusWeatherProxy(QDBusConnection &connection, QObject *parent) : QObject(parent)
     {
-
-        CXSwiftBusWeatherProxy::CXSwiftBusWeatherProxy(QDBusConnection &connection, QObject *parent) : QObject(parent)
-        {
-            m_dbusInterface = new BlackMisc::CGenericDBusInterface(XSWIFTBUS_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
-        }
-
-        bool CXSwiftBusWeatherProxy::isUsingRealWeather() const
-        {
-            return m_dbusInterface->callDBusRet<bool>(QLatin1String("isUsingRealWeather"));
-        }
-
-        void CXSwiftBusWeatherProxy::setUseRealWeather(bool enable)
-        {
-            m_dbusInterface->callDBus(QLatin1String("setUseRealWeather"), enable);
-        }
-
-        void CXSwiftBusWeatherProxy::setVisibility(double visibilityM)
-        {
-            m_dbusInterface->callDBus(QLatin1String("setVisibility"), visibilityM);
-        }
-
-        void CXSwiftBusWeatherProxy::setTemperature(int degreesC)
-        {
-            m_dbusInterface->callDBus(QLatin1String("setTemperature"), degreesC);
-        }
-
-        void CXSwiftBusWeatherProxy::setDewPoint(int degreesC)
-        {
-            m_dbusInterface->callDBus(QLatin1String("setDewPoint"), degreesC);
-        }
-
-        void CXSwiftBusWeatherProxy::setQNH(double inHg)
-        {
-            m_dbusInterface->callDBus(QLatin1String("setQNH"), inHg);
-        }
-
-        void CXSwiftBusWeatherProxy::setPrecipitationRatio(double precipRatio)
-        {
-            m_dbusInterface->callDBus(QLatin1String("setPrecipitationRatio"), precipRatio);
-        }
-
-        void CXSwiftBusWeatherProxy::setThunderstormRatio(double cbRatio)
-        {
-            m_dbusInterface->callDBus(QLatin1String("setThunderstormRatio"), cbRatio);
-        }
-
-        void CXSwiftBusWeatherProxy::setTurbulenceRatio(double turbulenceRatio)
-        {
-            m_dbusInterface->callDBus(QLatin1String("setTurbulenceRatio"), turbulenceRatio);
-        }
-
-        void CXSwiftBusWeatherProxy::setRunwayFriction(int friction)
-        {
-            m_dbusInterface->callDBus(QLatin1String("setRunwayFriction"), friction);
-        }
-
-        void CXSwiftBusWeatherProxy::setCloudLayer(int layer, int baseM, int topsM, int type, int coverage)
-        {
-            m_dbusInterface->callDBus(QLatin1String("setCloudLayer"), layer, baseM, topsM, type, coverage);
-        }
-
-        void CXSwiftBusWeatherProxy::setWindLayer(int layer, int altitudeM, double directionDeg, int speedKt, int shearDirectionDeg, int shearSpeedKt, int turbulence)
-        {
-            m_dbusInterface->callDBus(QLatin1String("setWindLayer"), layer, altitudeM, directionDeg, speedKt, shearDirectionDeg, shearSpeedKt, turbulence);
-        }
-
+        m_dbusInterface = new BlackMisc::CGenericDBusInterface(XSWIFTBUS_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
     }
+
+    bool CXSwiftBusWeatherProxy::isUsingRealWeather() const
+    {
+        return m_dbusInterface->callDBusRet<bool>(QLatin1String("isUsingRealWeather"));
+    }
+
+    void CXSwiftBusWeatherProxy::setUseRealWeather(bool enable)
+    {
+        m_dbusInterface->callDBus(QLatin1String("setUseRealWeather"), enable);
+    }
+
+    void CXSwiftBusWeatherProxy::setVisibility(double visibilityM)
+    {
+        m_dbusInterface->callDBus(QLatin1String("setVisibility"), visibilityM);
+    }
+
+    void CXSwiftBusWeatherProxy::setTemperature(int degreesC)
+    {
+        m_dbusInterface->callDBus(QLatin1String("setTemperature"), degreesC);
+    }
+
+    void CXSwiftBusWeatherProxy::setDewPoint(int degreesC)
+    {
+        m_dbusInterface->callDBus(QLatin1String("setDewPoint"), degreesC);
+    }
+
+    void CXSwiftBusWeatherProxy::setQNH(double inHg)
+    {
+        m_dbusInterface->callDBus(QLatin1String("setQNH"), inHg);
+    }
+
+    void CXSwiftBusWeatherProxy::setPrecipitationRatio(double precipRatio)
+    {
+        m_dbusInterface->callDBus(QLatin1String("setPrecipitationRatio"), precipRatio);
+    }
+
+    void CXSwiftBusWeatherProxy::setThunderstormRatio(double cbRatio)
+    {
+        m_dbusInterface->callDBus(QLatin1String("setThunderstormRatio"), cbRatio);
+    }
+
+    void CXSwiftBusWeatherProxy::setTurbulenceRatio(double turbulenceRatio)
+    {
+        m_dbusInterface->callDBus(QLatin1String("setTurbulenceRatio"), turbulenceRatio);
+    }
+
+    void CXSwiftBusWeatherProxy::setRunwayFriction(int friction)
+    {
+        m_dbusInterface->callDBus(QLatin1String("setRunwayFriction"), friction);
+    }
+
+    void CXSwiftBusWeatherProxy::setCloudLayer(int layer, int baseM, int topsM, int type, int coverage)
+    {
+        m_dbusInterface->callDBus(QLatin1String("setCloudLayer"), layer, baseM, topsM, type, coverage);
+    }
+
+    void CXSwiftBusWeatherProxy::setWindLayer(int layer, int altitudeM, double directionDeg, int speedKt, int shearDirectionDeg, int shearSpeedKt, int turbulence)
+    {
+        m_dbusInterface->callDBus(QLatin1String("setWindLayer"), layer, altitudeM, directionDeg, speedKt, shearDirectionDeg, shearSpeedKt, turbulence);
+    }
+
 }

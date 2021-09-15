@@ -20,54 +20,51 @@
 #include <QScopedPointer>
 
 namespace Ui { class CDbReduceModelDuplicates; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Reduce modelss
+    class CDbReduceModelDuplicates :
+        public QDialog,
+        public BlackCore::IProgressIndicator
     {
-        //! Reduce modelss
-        class CDbReduceModelDuplicates :
-            public QDialog,
-            public BlackCore::IProgressIndicator
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            explicit CDbReduceModelDuplicates(QWidget *parent = nullptr);
+    public:
+        //! Ctor
+        explicit CDbReduceModelDuplicates(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CDbReduceModelDuplicates() override;
+        //! Destructor
+        virtual ~CDbReduceModelDuplicates() override;
 
-            //! Set the models
-            void setModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        //! Set the models
+        void setModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-            //! Process models
-            void process();
+        //! Process models
+        void process();
 
-            //! \copydoc BlackCore::IProgressIndicator::updateProgressIndicator
-            virtual void updateProgressIndicator(int percentage) override;
+        //! \copydoc BlackCore::IProgressIndicator::updateProgressIndicator
+        virtual void updateProgressIndicator(int percentage) override;
 
-            //! The models to be removed
-            const BlackMisc::Simulation::CAircraftModelList &getRemoveCandidates() const { return m_removeCandidates; }
+        //! The models to be removed
+        const BlackMisc::Simulation::CAircraftModelList &getRemoveCandidates() const { return m_removeCandidates; }
 
-            //! Simulator
-            const BlackMisc::Simulation::CSimulatorInfo &getSimulator() const { return m_simulator; }
+        //! Simulator
+        const BlackMisc::Simulation::CSimulatorInfo &getSimulator() const { return m_simulator; }
 
-        private:
-            //! Clear progress bar
-            void clearProgressBar();
+    private:
+        //! Clear progress bar
+        void clearProgressBar();
 
-            //! Stop
-            void stop() { m_stop = true; }
+        //! Stop
+        void stop() { m_stop = true; }
 
-            QScopedPointer<Ui::CDbReduceModelDuplicates> ui;
-            bool m_stop = false;
-            BlackMisc::Simulation::CSimulatorInfo     m_simulator;
-            BlackMisc::Simulation::CAircraftModelList m_models;
-            BlackMisc::Simulation::CAircraftModelList m_removeCandidates;
-            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this }; //!< distributor preferences
-        };
-    } //ns
+        QScopedPointer<Ui::CDbReduceModelDuplicates> ui;
+        bool m_stop = false;
+        BlackMisc::Simulation::CSimulatorInfo     m_simulator;
+        BlackMisc::Simulation::CAircraftModelList m_models;
+        BlackMisc::Simulation::CAircraftModelList m_removeCandidates;
+        BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this }; //!< distributor preferences
+    };
 } //ns
 
 #endif // guard

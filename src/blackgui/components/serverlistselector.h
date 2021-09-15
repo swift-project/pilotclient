@@ -21,51 +21,48 @@
 #include <QObject>
 #include <QStringList>
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! List of servers
+    class BLACKGUI_EXPORT CServerListSelector : public QComboBox
     {
-        //! List of servers
-        class BLACKGUI_EXPORT CServerListSelector : public QComboBox
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CServerListSelector(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CServerListSelector(QWidget *parent = nullptr);
 
-            //! Set the servers
-            void setServers(const BlackMisc::Network::CServerList &servers, bool nameIsCountry = false);
+        //! Set the servers
+        void setServers(const BlackMisc::Network::CServerList &servers, bool nameIsCountry = false);
 
-            //! Get the current server
-            BlackMisc::Network::CServer currentServer() const;
+        //! Get the current server
+        BlackMisc::Network::CServer currentServer() const;
 
-            //! Preselect
-            bool preSelect(const QString &name);
+        //! Preselect
+        bool preSelect(const QString &name);
 
-        signals:
-            //! Server has been changed
-            void serverChanged(const BlackMisc::Network::CServer &server);
+    signals:
+        //! Server has been changed
+        void serverChanged(const BlackMisc::Network::CServer &server);
 
-        private:
-            //! Build the item string descriptions
-            void setServerItems(const BlackMisc::Network::CServerList &servers, bool nameToCountry);
+    private:
+        //! Build the item string descriptions
+        void setServerItems(const BlackMisc::Network::CServerList &servers, bool nameToCountry);
 
-            //! Server index has been changed
-            void onServerTextChanged(const QString &text);
+        //! Server index has been changed
+        void onServerTextChanged(const QString &text);
 
-            //! Do we know all countries?
-            static bool knowsAllCountries();
+        //! Do we know all countries?
+        static bool knowsAllCountries();
 
-            //! Turn server name into country (for VATSIM servers)
-            static BlackMisc::CCountry findCountry(const BlackMisc::Network::CServer &server);
+        //! Turn server name into country (for VATSIM servers)
+        static BlackMisc::CCountry findCountry(const BlackMisc::Network::CServer &server);
 
-            BlackMisc::Network::CServerList m_servers; //!< corresponding servers
-            QStringList m_items;                       //!< items strings
-            QString m_pendingPreselect;                //!< pending preselect value
-            BlackMisc::CData<BlackMisc::Network::Data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
-        };
-    } // ns
+        BlackMisc::Network::CServerList m_servers; //!< corresponding servers
+        QStringList m_items;                       //!< items strings
+        QString m_pendingPreselect;                //!< pending preselect value
+        BlackMisc::CData<BlackMisc::Network::Data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
+    };
 } // ns
 
 #endif // guard

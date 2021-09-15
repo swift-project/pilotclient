@@ -9,29 +9,26 @@
 #include "viewbaseproxystyle.h"
 #include "viewbase.h"
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
-    {
-        CViewBaseProxyStyle::CViewBaseProxyStyle(CViewBaseNonTemplate *view, QStyle *style) : QProxyStyle(style), m_view(view) {}
+    CViewBaseProxyStyle::CViewBaseProxyStyle(CViewBaseNonTemplate *view, QStyle *style) : QProxyStyle(style), m_view(view) {}
 
-        void CViewBaseProxyStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
+    void CViewBaseProxyStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
+    {
+        const bool indicator = (element == QStyle::PE_IndicatorItemViewItemDrop);
+        if (indicator)
         {
-            const bool indicator = (element == QStyle::PE_IndicatorItemViewItemDrop);
-            if (indicator)
+            Q_UNUSED(painter);
+            Q_UNUSED(option);
+            Q_UNUSED(widget);
+            QPainter viewPainter(this->m_view->viewport());
+            QPoint point = this->m_view->mapFromGlobal(QCursor::pos());
+            if (!point.isNull())
             {
-                Q_UNUSED(painter);
-                Q_UNUSED(option);
-                Q_UNUSED(widget);
-                QPainter viewPainter(this->m_view->viewport());
-                QPoint point = this->m_view->mapFromGlobal(QCursor::pos());
-                if (!point.isNull())
-                {
-                    const QPoint topLeft(0, point.y());
-                    const QPoint topRight(this->m_view->width(), point.y());
-                    viewPainter.drawLine(topLeft, topRight);
-                }
+                const QPoint topLeft(0, point.y());
+                const QPoint topRight(this->m_view->width(), point.y());
+                viewPainter.drawLine(topLeft, topRight);
             }
         }
-    } // namespace
+    }
 } // namespace

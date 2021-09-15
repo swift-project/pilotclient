@@ -24,31 +24,28 @@
 #include <QMetaType>
 #include <initializer_list>
 
-namespace BlackMisc
+namespace BlackMisc::Geo
 {
-    namespace Geo
+    //! Value object encapsulating a list of coordinates.
+    class BLACKMISC_EXPORT CCoordinateGeodeticList :
+        public CSequence<CCoordinateGeodetic>,
+        public IGeoObjectList<CCoordinateGeodetic, CCoordinateGeodeticList>,
+        public Mixin::MetaType<CCoordinateGeodeticList>,
+        public Mixin::JsonOperators<CCoordinateGeodeticList>
     {
-        //! Value object encapsulating a list of coordinates.
-        class BLACKMISC_EXPORT CCoordinateGeodeticList :
-            public CSequence<CCoordinateGeodetic>,
-            public IGeoObjectList<CCoordinateGeodetic, CCoordinateGeodeticList>,
-            public Mixin::MetaType<CCoordinateGeodeticList>,
-            public Mixin::JsonOperators<CCoordinateGeodeticList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CCoordinateGeodeticList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CCoordinateGeodeticList)
+        using CSequence::CSequence;
 
-            //! Default constructor.
-            CCoordinateGeodeticList();
+        //! Default constructor.
+        CCoordinateGeodeticList();
 
-            //! Construct from a base class object.
-            CCoordinateGeodeticList(const CSequence<CCoordinateGeodetic> &other);
+        //! Construct from a base class object.
+        CCoordinateGeodeticList(const CSequence<CCoordinateGeodetic> &other);
 
-            //! Average height within range and having an height
-            CElevationPlane averageGeodeticHeight(const CCoordinateGeodetic &reference, const PhysicalQuantities::CLength &range, const PhysicalQuantities::CLength &maxDeviation = PhysicalQuantities::CLength(1.0, PhysicalQuantities::CLengthUnit::m()), int minValues = 3, int sufficentValues = 5) const;
-        };
-    } //namespace
+        //! Average height within range and having an height
+        CElevationPlane averageGeodeticHeight(const CCoordinateGeodetic &reference, const PhysicalQuantities::CLength &range, const PhysicalQuantities::CLength &maxDeviation = PhysicalQuantities::CLength(1.0, PhysicalQuantities::CLengthUnit::m()), int minValues = 3, int sufficentValues = 5) const;
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Geo::CCoordinateGeodeticList)

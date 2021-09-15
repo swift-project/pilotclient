@@ -15,29 +15,26 @@
 #include <QScopedPointer>
 
 namespace Ui { class CNetworkAircraftValuesComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Display the network aircraft values as sent
+    class CNetworkAircraftValuesComponent : public QFrame
     {
-        //! Display the network aircraft values as sent
-        class CNetworkAircraftValuesComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CNetworkAircraftValuesComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CNetworkAircraftValuesComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CNetworkAircraftValuesComponent() override;
+        //! Destructor
+        virtual ~CNetworkAircraftValuesComponent() override;
 
-            //! Show the current values
-            void showValues();
+        //! Show the current values
+        void showValues();
 
-        private:
-            QScopedPointer<Ui::CNetworkAircraftValuesComponent> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CNetworkAircraftValuesComponent> ui;
+    };
 } // ns
 
 #endif // guard

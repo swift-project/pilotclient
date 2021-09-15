@@ -19,88 +19,82 @@
 #include <QJsonArray>
 #include <QObject>
 
-namespace BlackCore
+namespace BlackCore::Afv::Model
 {
-    namespace Afv
+    //! Sample ATC station
+    class BLACKCORE_EXPORT CSampleAtcStation
     {
-        namespace Model
+    public:
+        //! Ctor
+        CSampleAtcStation() {}
+
+        //! Ctor
+        CSampleAtcStation(const QString &callsign, const BlackCore::Afv::TransceiverDto &transceiver);
+
+        //! Getter
+        //! @{
+        const QString &callsign() const { return m_callsign; }
+        QString formattedFrequency() const;
+        double latitude() const;
+        double longitude() const;
+        double radioDistanceM() const;
+        quint32 frequency() const;
+        //! @}
+
+    private:
+        QString m_callsign;
+        TransceiverDto m_transceiver;
+    };
+
+    inline bool operator==(const CSampleAtcStation &lhs, const CSampleAtcStation &rhs)
+    {
+        return lhs.callsign() == rhs.callsign() &&
+                qFuzzyCompare(lhs.latitude(), rhs.latitude()) &&
+                qFuzzyCompare(lhs.longitude(), rhs.longitude());
+    }
+
+    //! Sample list model
+    class CSampleAtcStationModel : public QAbstractListModel
+    {
+        Q_OBJECT
+
+    public:
+        //! Roles for model
+        enum AtcStationRoles
         {
-            //! Sample ATC station
-            class BLACKCORE_EXPORT CSampleAtcStation
-            {
-            public:
-                //! Ctor
-                CSampleAtcStation() {}
+            CallsignRole = Qt::UserRole + 1,
+            LatitudeRole,
+            LongitudeRole,
+            RadioDistanceRole,
+            FrequencyRole,
+            FrequencyKhzRole
+        };
 
-                //! Ctor
-                CSampleAtcStation(const QString &callsign, const BlackCore::Afv::TransceiverDto &transceiver);
+        //! Ctor
+        CSampleAtcStationModel(QObject *parent = nullptr);
 
-                //! Getter
-                //! @{
-                const QString &callsign() const { return m_callsign; }
-                QString formattedFrequency() const;
-                double latitude() const;
-                double longitude() const;
-                double radioDistanceM() const;
-                quint32 frequency() const;
-                //! @}
+        //! Dtor
+        virtual ~CSampleAtcStationModel() override;
 
-            private:
-                QString m_callsign;
-                TransceiverDto m_transceiver;
-            };
+        //! Update the stations
+        void updateAtcStations(const QVector<CSampleAtcStation> &atcStations);
 
-            inline bool operator==(const CSampleAtcStation &lhs, const CSampleAtcStation &rhs)
-            {
-                return lhs.callsign() == rhs.callsign() &&
-                       qFuzzyCompare(lhs.latitude(), rhs.latitude()) &&
-                       qFuzzyCompare(lhs.longitude(), rhs.longitude());
-            }
+        //! copydoc QAbstractListModel::rowCount
+        int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
-            //! Sample list model
-            class CSampleAtcStationModel : public QAbstractListModel
-            {
-                Q_OBJECT
+        //! copydoc QAbstractListModel::data
+        QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-            public:
-                //! Roles for model
-                enum AtcStationRoles
-                {
-                    CallsignRole = Qt::UserRole + 1,
-                    LatitudeRole,
-                    LongitudeRole,
-                    RadioDistanceRole,
-                    FrequencyRole,
-                    FrequencyKhzRole
-                };
+    protected:
+        //! copydoc QAbstractListModel::roleNames
+        QHash<int, QByteArray> roleNames() const override;
 
-                //! Ctor
-                CSampleAtcStationModel(QObject *parent = nullptr);
+    private:
+        void addStation(const CSampleAtcStation &atcStation);
+        void removeStationAtPosition(int i);
 
-                //! Dtor
-                virtual ~CSampleAtcStationModel() override;
-
-                //! Update the stations
-                void updateAtcStations(const QVector<CSampleAtcStation> &atcStations);
-
-                //! copydoc QAbstractListModel::rowCount
-                int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-
-                //! copydoc QAbstractListModel::data
-                QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-
-            protected:
-                //! copydoc QAbstractListModel::roleNames
-                QHash<int, QByteArray> roleNames() const override;
-
-            private:
-                void addStation(const CSampleAtcStation &atcStation);
-                void removeStationAtPosition(int i);
-
-                QList<CSampleAtcStation> m_atcStations;
-            };
-        } // ns
-    } // ns
+        QList<CSampleAtcStation> m_atcStations;
+    };
 } // ns
 
 #endif // guard

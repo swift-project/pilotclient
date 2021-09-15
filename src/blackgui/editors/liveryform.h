@@ -25,80 +25,77 @@
 class QWidget;
 
 namespace Ui { class CLiveryForm; }
-namespace BlackGui
+namespace BlackGui::Editors
 {
-    namespace Editors
+    /*!
+     * Livery form class
+     */
+    class BLACKGUI_EXPORT CLiveryForm : public CForm
     {
-        /*!
-         * Livery form class
-         */
-        class BLACKGUI_EXPORT CLiveryForm : public CForm
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CLiveryForm(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CLiveryForm(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CLiveryForm() override;
+        //! Destructor
+        virtual ~CLiveryForm() override;
 
-            //! Value
-            BlackMisc::Aviation::CLivery getValue() const;
+        //! Value
+        BlackMisc::Aviation::CLivery getValue() const;
 
-            //! Embedded ariline
-            BlackMisc::Aviation::CAirlineIcaoCode getValueAirlineIcao() const;
+        //! Embedded ariline
+        BlackMisc::Aviation::CAirlineIcaoCode getValueAirlineIcao() const;
 
-            //! Validate airline ICAO code only
-            BlackMisc::CStatusMessageList validateAirlineIcao() const;
+        //! Validate airline ICAO code only
+        BlackMisc::CStatusMessageList validateAirlineIcao() const;
 
-            //! Allow to drop
-            void allowDrop(bool allowDrop);
+        //! Allow to drop
+        void allowDrop(bool allowDrop);
 
-            //! Is drop allowed?
-            bool isDropAllowed() const;
+        //! Is drop allowed?
+        bool isDropAllowed() const;
 
-            //! \name Form class implementations
-            //! @{
-            virtual void setReadOnly(bool readonly) override;
-            virtual void setSelectOnly() override;
-            virtual BlackMisc::CStatusMessageList validate(bool withNestedForms) const override;
-            //! @}
+        //! \name Form class implementations
+        //! @{
+        virtual void setReadOnly(bool readonly) override;
+        virtual void setSelectOnly() override;
+        virtual BlackMisc::CStatusMessageList validate(bool withNestedForms) const override;
+        //! @}
 
-            //! Clear data
-            void clear();
+        //! Clear data
+        void clear();
 
-            //! Value
-            bool setValue(const BlackMisc::Aviation::CLivery &livery);
+        //! Value
+        bool setValue(const BlackMisc::Aviation::CLivery &livery);
 
-            //! Reset value to current value
-            void resetValue();
+        //! Reset value to current value
+        void resetValue();
 
-        protected:
-            //! \copydoc CForm::jsonPasted
-            virtual void jsonPasted(const QString &json) override;
+    protected:
+        //! \copydoc CForm::jsonPasted
+        virtual void jsonPasted(const QString &json) override;
 
-        private:
-            //! Livery dropped
-            void onDroppedLivery(const BlackMisc::CVariant &variantDropped);
+    private:
+        //! Livery dropped
+        void onDroppedLivery(const BlackMisc::CVariant &variantDropped);
 
-            //! Airline of embedded form has changed
-            void onAirlineChanged(const BlackMisc::Aviation::CAirlineIcaoCode &code);
+        //! Airline of embedded form has changed
+        void onAirlineChanged(const BlackMisc::Aviation::CAirlineIcaoCode &code);
 
-            //! Id entered
-            void onIdEntered();
+        //! Id entered
+        void onIdEntered();
 
-            //! Set data for a temp.livery
-            void setTemporaryLivery();
+        //! Set data for a temp.livery
+        void setTemporaryLivery();
 
-            //! Search for color
-            void searchForColor();
+        //! Search for color
+        void searchForColor();
 
-            QScopedPointer<Ui::CLiveryForm> ui;
-            BlackMisc::Aviation::CLivery m_originalLivery; //!< object allowing to override values
-            BlackGui::Components::CDbLiveryColorSearchDialog *m_colorSearch = nullptr; //!< search for color
-        };
-    } // ns
+        QScopedPointer<Ui::CLiveryForm> ui;
+        BlackMisc::Aviation::CLivery m_originalLivery; //!< object allowing to override values
+        BlackGui::Components::CDbLiveryColorSearchDialog *m_colorSearch = nullptr; //!< search for color
+    };
 } // ns
 
 #endif // guard

@@ -9,93 +9,90 @@
 #include "distributionlist.h"
 #include "blackmisc/stringutils.h"
 
-namespace BlackMisc
+namespace BlackMisc::Db
 {
-    namespace Db
+    CDistributionList::CDistributionList() { }
+
+    CDistributionList::CDistributionList(const CSequence<CDistribution> &other) :
+        CSequence<CDistribution>(other)
+    { }
+
+    QStringList CDistributionList::getChannels() const
     {
-        CDistributionList::CDistributionList() { }
-
-        CDistributionList::CDistributionList(const CSequence<CDistribution> &other) :
-            CSequence<CDistribution>(other)
-        { }
-
-        QStringList CDistributionList::getChannels() const
+        QStringList channels;
+        for (const CDistribution &distribution : *this)
         {
-            QStringList channels;
-            for (const CDistribution &distribution : *this)
-            {
-                if (distribution.getChannel().isEmpty()) { continue; }
-                channels << distribution.getChannel();
-            }
-            return channels;
+            if (distribution.getChannel().isEmpty()) { continue; }
+            channels << distribution.getChannel();
         }
+        return channels;
+    }
 
-        void CDistributionList::sortByStability(Qt::SortOrder order)
+    void CDistributionList::sortByStability(Qt::SortOrder order)
+    {
+        this->sort([order](const CDistribution & a, const CDistribution & b)
         {
-            this->sort([order](const CDistribution & a, const CDistribution & b)
-            {
-                const int as = a.getStability();
-                const int bs = b.getStability();
-                return order == Qt::AscendingOrder ? as < bs : bs < as;
-            });
-        }
+            const int as = a.getStability();
+            const int bs = b.getStability();
+            return order == Qt::AscendingOrder ? as < bs : bs < as;
+        });
+    }
 
-        bool CDistributionList::containsEqualOrMoreStable(CDistribution &distribution) const
-        {
-            return containsBy([&distribution](const CDistribution & dist) { return dist.isStabilitySameOrBetter(distribution); });
-        }
+    bool CDistributionList::containsEqualOrMoreStable(CDistribution &distribution) const
+    {
+        return containsBy([&distribution](const CDistribution & dist) { return dist.isStabilitySameOrBetter(distribution); });
+    }
 
-        bool CDistributionList::containsUnrestricted() const
-        {
-            return this->contains(&CDistribution::isRestricted, false);
-        }
+    bool CDistributionList::containsUnrestricted() const
+    {
+        return this->contains(&CDistribution::isRestricted, false);
+    }
 
-        bool CDistributionList::containsChannel(const QString &channel) const
-        {
-            return this->contains(&CDistribution::getChannel, channel);
-        }
+    bool CDistributionList::containsChannel(const QString &channel) const
+    {
+        return this->contains(&CDistribution::getChannel, channel);
+    }
 
-        CDistribution CDistributionList::findFirstByChannelOrDefault(const QString &channel) const
-        {
-            return this->findFirstByOrDefault(&CDistribution::getChannel, channel);
-        }
+    CDistribution CDistributionList::findFirstByChannelOrDefault(const QString &channel) const
+    {
+        return this->findFirstByOrDefault(&CDistribution::getChannel, channel);
+    }
 
-        CDistributionList CDistributionList::findByRestriction(bool restricted) const
-        {
-            return this->findBy(&CDistribution::isRestricted, restricted);
-        }
+    CDistributionList CDistributionList::findByRestriction(bool restricted) const
+    {
+        return this->findBy(&CDistribution::isRestricted, restricted);
+    }
 
-        CDistribution CDistributionList::getMostStableOrDefault() const
-        {
-            if (this->size() < 2) { return this->frontOrDefault(); }
-            CDistributionList copy(*this);
-            copy.sortByStability();
-            return copy.back();
-        }
+    CDistribution CDistributionList::getMostStableOrDefault() const
+    {
+        if (this->size() < 2) { return this->frontOrDefault(); }
+        CDistributionList copy(*this);
+        copy.sortByStability();
+        return copy.back();
+    }
 
-        CDistribution CDistributionList::getLeastStableOrDefault() const
-        {
-            if (this->size() < 2) { return this->frontOrDefault(); }
-            CDistributionList copy(*this);
-            copy.sortByStability();
-            return copy.front();
-        }
+    CDistribution CDistributionList::getLeastStableOrDefault() const
+    {
+        if (this->size() < 2) { return this->frontOrDefault(); }
+        CDistributionList copy(*this);
+        copy.sortByStability();
+        return copy.front();
+    }
 
-        CDistributionList CDistributionList::fromDatabaseJson(const QJsonArray &array)
+    CDistributionList CDistributionList::fromDatabaseJson(const QJsonArray &array)
+    {
+        CDistributionList distributions;
+        for (const QJsonValue &value : array)
         {
-            CDistributionList distributions;
-            for (const QJsonValue &value : array)
-            {
-                const CDistribution distribution(CDistribution::fromDatabaseJson(value.toObject()));
-                distributions.push_back(distribution);
-            }
-            return distributions;
+            const CDistribution distribution(CDistribution::fromDatabaseJson(value.toObject()));
+            distributions.push_back(distribution);
         }
+        return distributions;
+    }
 
-        CDistributionList CDistributionList::fromDatabaseJson(const QString &json)
-        {
-            if (json.isEmpty()) { return CDistributionList(); }
-            return CDistributionList::fromDatabaseJson(Json::jsonArrayFromString(json));
-        }
-    } // namespace
+    CDistributionList CDistributionList::fromDatabaseJson(const QString &json)
+    {
+        if (json.isEmpty()) { return CDistributionList(); }
+        return CDistributionList::fromDatabaseJson(Json::jsonArrayFromString(json));
+    }
 } // namespace

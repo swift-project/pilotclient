@@ -17,32 +17,29 @@
 #include <QScopedPointer>
 
 namespace Ui { class CSimulatorFsxConfigWindow; }
-namespace BlackSimPlugin
+namespace BlackSimPlugin::FsxCommon
 {
-    namespace FsxCommon
+    /**
+     * A window that lets user set up the FSX plugin.
+     */
+    class FSXCOMMON_EXPORT CSimulatorFsxConfigWindow : public BlackGui::CPluginConfigWindow
     {
-        /**
-         * A window that lets user set up the FSX plugin.
-         */
-        class FSXCOMMON_EXPORT CSimulatorFsxConfigWindow : public BlackGui::CPluginConfigWindow
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor.
-            CSimulatorFsxConfigWindow(const QString &simulator, QWidget *parent);
+    public:
+        //! Ctor.
+        CSimulatorFsxConfigWindow(const QString &simulator, QWidget *parent);
 
-            //! Dtor.
-            virtual ~CSimulatorFsxConfigWindow();
+        //! Dtor.
+        virtual ~CSimulatorFsxConfigWindow();
 
-            //! Related simulator, i.e. "P3D" or "FSX"
-            const BlackMisc::Simulation::CSimulatorInfo &getSimulator() const { return m_simulator; }
+        //! Related simulator, i.e. "P3D" or "FSX"
+        const BlackMisc::Simulation::CSimulatorInfo &getSimulator() const { return m_simulator; }
 
-        private:
-            const BlackMisc::Simulation::CSimulatorInfo m_simulator { "FSX" };
-            QScopedPointer<Ui::CSimulatorFsxConfigWindow> ui;
-        };
-    } // ns
+    private:
+        const BlackMisc::Simulation::CSimulatorInfo m_simulator { "FSX" };
+        QScopedPointer<Ui::CSimulatorFsxConfigWindow> ui;
+    };
 } // ns
 
 #endif // guard

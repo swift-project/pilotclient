@@ -21,16 +21,13 @@
 #endif
 //! \endcond
 
-namespace BlackMisc
+namespace BlackMisc::Private
 {
-    namespace Private
-    {
-        //! \private Do nothing.
-        inline void noop() {}
+    //! \private Do nothing.
+    inline void noop() {}
 
-        //! \private Called by BLACK_VERIFY when the condition is false.
-        BLACKMISC_EXPORT BLACK_NO_INLINE void failedVerify(const char *condition, const char *filename, int line, const char *context, const char *message, bool audit);
-    }
+    //! \private Called by BLACK_VERIFY when the condition is false.
+    BLACKMISC_EXPORT BLACK_NO_INLINE void failedVerify(const char *condition, const char *filename, int line, const char *context, const char *message, bool audit);
 }
 
 /*!

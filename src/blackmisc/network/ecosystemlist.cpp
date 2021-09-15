@@ -8,29 +8,26 @@
 
 #include "ecosystemlist.h"
 
-namespace BlackMisc
+namespace BlackMisc::Network
 {
-    namespace Network
+    CEcosystemList::CEcosystemList() { }
+
+    CEcosystemList::CEcosystemList(const CSequence &other) : CSequence<CEcosystem>(other)
+    { }
+
+    QStringList CEcosystemList::allSystemStrings() const
     {
-        CEcosystemList::CEcosystemList() { }
-
-        CEcosystemList::CEcosystemList(const CSequence &other) : CSequence<CEcosystem>(other)
-        { }
-
-        QStringList CEcosystemList::allSystemStrings() const
+        QStringList l;
+        for (const CEcosystem &e : *this)
         {
-            QStringList l;
-            for (const CEcosystem &e : *this)
-            {
-                l.push_back(e.getSystemString());
-            }
-            return l;
+            l.push_back(e.getSystemString());
         }
+        return l;
+    }
 
-        const CEcosystemList &CEcosystemList::allKnownSystems()
-        {
-            static const CEcosystemList s({ CEcosystem::vatsim(), CEcosystem::swift(), CEcosystem::swiftTest(), CEcosystem::privateFsd() });
-            return s;
-        }
-    } // namespace
+    const CEcosystemList &CEcosystemList::allKnownSystems()
+    {
+        static const CEcosystemList s({ CEcosystem::vatsim(), CEcosystem::swift(), CEcosystem::swiftTest(), CEcosystem::privateFsd() });
+        return s;
+    }
 } // namespace

@@ -11,40 +11,37 @@
 
 #include "blackmisc/logmessage.h"
 
-namespace BlackCore
+namespace BlackCore::Fsd
 {
-    namespace Fsd
+    ClientResponse::ClientResponse()
+    { }
+
+    ClientResponse::ClientResponse(const QString &sender, const QString &receiver, ClientQueryType queryType, const QStringList &responseData)
+        : MessageBase(sender, receiver),
+            m_queryType(queryType),
+            m_responseData(responseData)
+    { }
+
+    QStringList ClientResponse::toTokens() const
     {
-        ClientResponse::ClientResponse()
-        { }
+        QStringList tokens;
+        tokens.push_back(m_sender);
+        tokens.push_back(m_receiver);
+        tokens.push_back(toQString(m_queryType));
+        tokens.append(m_responseData);
+        return tokens;
+    }
 
-        ClientResponse::ClientResponse(const QString &sender, const QString &receiver, ClientQueryType queryType, const QStringList &responseData)
-            : MessageBase(sender, receiver),
-              m_queryType(queryType),
-              m_responseData(responseData)
-        { }
-
-        QStringList ClientResponse::toTokens() const
+    ClientResponse ClientResponse::fromTokens(const QStringList &tokens)
+    {
+        if (tokens.size() < 3)
         {
-            QStringList tokens;
-            tokens.push_back(m_sender);
-            tokens.push_back(m_receiver);
-            tokens.push_back(toQString(m_queryType));
-            tokens.append(m_responseData);
-            return tokens;
+            BlackMisc::CLogMessage(static_cast<ClientResponse *>(nullptr)).warning(u"Wrong number of arguments.");
+            return {};
         }
 
-        ClientResponse ClientResponse::fromTokens(const QStringList &tokens)
-        {
-            if (tokens.size() < 3)
-            {
-                BlackMisc::CLogMessage(static_cast<ClientResponse *>(nullptr)).warning(u"Wrong number of arguments.");
-                return {};
-            }
-
-            QStringList responseData;
-            if (tokens.size() > 3) { responseData = tokens.mid(3); }
-            return ClientResponse(tokens[0], tokens[1], fromQString<ClientQueryType>(tokens[2]), responseData);
-        }
+        QStringList responseData;
+        if (tokens.size() > 3) { responseData = tokens.mid(3); }
+        return ClientResponse(tokens[0], tokens[1], fromQString<ClientQueryType>(tokens[2]), responseData);
     }
 }

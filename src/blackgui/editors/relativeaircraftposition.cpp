@@ -12,47 +12,44 @@
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 
-namespace BlackGui
+namespace BlackGui::Editors
 {
-    namespace Editors
+    CRelativeAircraftPosition::CRelativeAircraftPosition(QWidget *parent) :
+        CForm(parent),
+        ui(new Ui::CRelativeAircraftPosition)
     {
-        CRelativeAircraftPosition::CRelativeAircraftPosition(QWidget *parent) :
-            CForm(parent),
-            ui(new Ui::CRelativeAircraftPosition)
-        {
-            ui->setupUi(this);
-        }
+        ui->setupUi(this);
+    }
 
-        CRelativeAircraftPosition::~CRelativeAircraftPosition()
-        { }
+    CRelativeAircraftPosition::~CRelativeAircraftPosition()
+    { }
 
-        void CRelativeAircraftPosition::setReadOnly(bool readOnly)
-        {
-            ui->sb_Distance->setReadOnly(readOnly);
-            ui->sb_RelativeBearing->setReadOnly(readOnly);
-        }
+    void CRelativeAircraftPosition::setReadOnly(bool readOnly)
+    {
+        ui->sb_Distance->setReadOnly(readOnly);
+        ui->sb_RelativeBearing->setReadOnly(readOnly);
+    }
 
-        void CRelativeAircraftPosition::setDistance(const CLength &distance)
-        {
-            const int distMeters = distance.valueInteger(CLengthUnit::m());
-            ui->sb_Distance->setValue(distMeters);
-        }
+    void CRelativeAircraftPosition::setDistance(const CLength &distance)
+    {
+        const int distMeters = distance.valueInteger(CLengthUnit::m());
+        ui->sb_Distance->setValue(distMeters);
+    }
 
-        CCoordinateGeodetic CRelativeAircraftPosition::getRelativeCoordinate(const CAngle &bearingOffset) const
-        {
-            if (m_originCoordinate.isNull()) { return CCoordinateGeodetic::null(); }
-            const CLength distance(ui->sb_Distance->value(), CLengthUnit::m());
-            CAngle relBearing(ui->sb_RelativeBearing->value(), CAngleUnit::deg());
-            if (!bearingOffset.isNull()) { relBearing += bearingOffset; }
-            return m_originCoordinate.calculatePosition(distance, relBearing);
-        }
+    CCoordinateGeodetic CRelativeAircraftPosition::getRelativeCoordinate(const CAngle &bearingOffset) const
+    {
+        if (m_originCoordinate.isNull()) { return CCoordinateGeodetic::null(); }
+        const CLength distance(ui->sb_Distance->value(), CLengthUnit::m());
+        CAngle relBearing(ui->sb_RelativeBearing->value(), CAngleUnit::deg());
+        if (!bearingOffset.isNull()) { relBearing += bearingOffset; }
+        return m_originCoordinate.calculatePosition(distance, relBearing);
+    }
 
-        void CRelativeAircraftPosition::displayInfo(const CCoordinateGeodetic &relPos)
-        {
-            const CCoordinateGeodetic p = relPos.isNull() ? this->getRelativeCoordinate() : relPos;
-            ui->le_Info->setText(
-                QStringLiteral("%1 / %2").arg(m_originCoordinate.toQString(true), p.toQString(true))
-            );
-        }
-    } // ns
+    void CRelativeAircraftPosition::displayInfo(const CCoordinateGeodetic &relPos)
+    {
+        const CCoordinateGeodetic p = relPos.isNull() ? this->getRelativeCoordinate() : relPos;
+        ui->le_Info->setText(
+            QStringLiteral("%1 / %2").arg(m_originCoordinate.toQString(true), p.toQString(true))
+        );
+    }
 } // ns

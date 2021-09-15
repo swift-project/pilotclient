@@ -15,26 +15,23 @@
 #include <QDialog>
 
 namespace Ui { class CCockpitComAudioDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Cockpit COM component as dialog
+    class BLACKGUI_EXPORT CCockpitComAudioDialog : public QDialog
     {
-        //! Cockpit COM component as dialog
-        class BLACKGUI_EXPORT CCockpitComAudioDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            explicit CCockpitComAudioDialog(QWidget *parent = nullptr);
+    public:
+        //! Ctor
+        explicit CCockpitComAudioDialog(QWidget *parent = nullptr);
 
-            //! Dtor
-            virtual ~CCockpitComAudioDialog() override;
+        //! Dtor
+        virtual ~CCockpitComAudioDialog() override;
 
-        private:
-            QScopedPointer<Ui::CCockpitComAudioDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CCockpitComAudioDialog> ui;
+    };
 } // ns
 
 #endif // guard

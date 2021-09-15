@@ -284,364 +284,361 @@ namespace BlackMisc
 
 Q_DECLARE_INTERFACE(BlackMisc::Simulation::IRemoteAircraftProvider, "org.swift-project.iremoteaircraftprovider")
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    //! Implementaion of the interface, which can also be used for testing
+    class BLACKMISC_EXPORT CRemoteAircraftProvider :
+        public QObject,
+        public IRemoteAircraftProvider,
+        public CIdentifiable
     {
-        //! Implementaion of the interface, which can also be used for testing
-        class BLACKMISC_EXPORT CRemoteAircraftProvider :
-            public QObject,
-            public IRemoteAircraftProvider,
-            public CIdentifiable
-        {
-            Q_OBJECT
-            Q_INTERFACES(BlackMisc::Simulation::IRemoteAircraftProvider)
-
-        public:
-            //! Log categories
-            static const QStringList &getLogCategories();
-
-            //! Constructor
-            CRemoteAircraftProvider(QObject *parent);
-
-            //! \ingroup remoteaircraftprovider
-            //! @{
-            virtual CSimulatedAircraftList getAircraftInRange() const override;
-            virtual Aviation::CCallsignSet getAircraftInRangeCallsigns() const override;
-            virtual CSimulatedAircraft getAircraftInRangeForCallsign(const Aviation::CCallsign &callsign) const override;
-            virtual CAircraftModel getAircraftInRangeModelForCallsign(const Aviation::CCallsign &callsign) const override;
-            virtual int getAircraftInRangeCount() const override;
-            virtual bool isAircraftInRange(const Aviation::CCallsign &callsign) const override;
-            virtual bool isVtolAircraft(const Aviation::CCallsign &callsign) const override;
-            virtual Aviation::CAircraftSituationList remoteAircraftSituations(const Aviation::CCallsign &callsign) const override;
-            virtual Aviation::CAircraftSituation remoteAircraftSituation(const Aviation::CCallsign &callsign, int index) const override;
-            virtual MillisecondsMinMaxMean remoteAircraftSituationsTimestampDifferenceMinMaxMean(const Aviation::CCallsign &callsign) const override;
-            virtual Aviation::CAircraftSituationList latestRemoteAircraftSituations() const override;
-            virtual Aviation::CAircraftSituationList latestOnGroundProviderElevations() const override;
-            virtual int remoteAircraftSituationsCount(const Aviation::CCallsign &callsign) const override;
-            virtual Aviation::CAircraftPartsList remoteAircraftParts(const Aviation::CCallsign &callsign) const override;
-            virtual int remoteAircraftPartsCount(const Aviation::CCallsign &callsign) const override;
-            virtual bool isRemoteAircraftSupportingParts(const Aviation::CCallsign &callsign) const override;
-            virtual int getRemoteAircraftSupportingPartsCount() const override;
-            virtual Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
-            virtual Aviation::CAircraftSituationChangeList remoteAircraftSituationChanges(const Aviation::CCallsign &callsign) const override;
-            virtual int remoteAircraftSituationChangesCount(const Aviation::CCallsign &callsign) const override;
-            virtual bool updateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRendering) override;
-            virtual bool setAircraftEnabledFlag(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;
-            virtual int updateMultipleAircraftEnabled(const Aviation::CCallsignSet &callsigns, bool enabledForRendering) override;
-            virtual bool updateAircraftModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator) override;
-            virtual bool updateAircraftNetworkModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator) override;
-            virtual bool updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
-            virtual bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered) override;
-            virtual int updateMultipleAircraftRendered(const Aviation::CCallsignSet &callsigns, bool rendered) override;
-            virtual int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info, bool *setForOnGroundPosition) override;
-            virtual bool updateCG(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg) override;
-            virtual bool updateCGAndModelString(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg, const QString &modelString) override;
-            virtual Aviation::CCallsignSet updateCGForModel(const QString &modelString, const PhysicalQuantities::CLength &cg) override;
-            virtual PhysicalQuantities::CLength getCGFromDB(const Aviation::CCallsign &callsign) const override;
-            virtual PhysicalQuantities::CLength getCGFromDB(const QString &modelString) const override;
-            virtual void rememberCGFromDB(const PhysicalQuantities::CLength &cgFromDB, const Aviation::CCallsign &callsign) override;
-            virtual void rememberCGFromDB(const PhysicalQuantities::CLength &cgFromDB, const QString &modelString) override;
-            virtual void updateMarkAllAsNotRendered() override;
-            virtual CStatusMessageList getAircraftPartsHistory(const Aviation::CCallsign &callsign) const override;
-            virtual bool isAircraftPartsHistoryEnabled() const override;
-            virtual void enableAircraftPartsHistory(bool enabled) override;
-            virtual int aircraftSituationsAdded() const override;
-            virtual int aircraftPartsAdded() const override;
-            virtual qint64 situationsLastModified(const Aviation::CCallsign &callsign) const override;
-            virtual qint64 partsLastModified(const Aviation::CCallsign &callsign) const override;
-            virtual Geo::CElevationPlane averageElevationOfNonMovingAircraft(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues = 1, int sufficientValues = 2) const override;
-            virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
-                QObject *receiver,
-                std::function<void(const Aviation::CAircraftSituation &)> addedSituationSlot,
-                std::function<void(const Aviation::CCallsign &, const Aviation::CAircraftParts &)> addedPartsSlot,
-                std::function<void(const Aviation::CCallsign &)> removedAircraftSlot,
-                std::function<void(const CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
-            ) override;
-            //! @}
-
-            //! \ingroup remoteaircraftprovider
-            //! \ingroup reverselookup
-            //! @{
-            virtual void enableReverseLookupMessages(ReverseLookupLogging enable) override;
-            virtual ReverseLookupLogging isReverseLookupMessagesEnabled() const override;
-            virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
-            //! @}
-
-            //! Reverse lookup messages
-            //! \threadsafe
-            //! \ingroup reverselookup
-            //! @{
-            void addReverseLookupMessages(const Aviation::CCallsign &callsign, const CStatusMessageList &messages);
-            void addReverseLookupMessage(const Aviation::CCallsign &callsign, const CStatusMessage &message);
-            void addReverseLookupMessage(
-                const Aviation::CCallsign &callsign, const QString &message,
-                CStatusMessage::StatusSeverity severity = CStatusMessage::SeverityInfo);
-            //! @}
-
-            //! \copydoc BlackMisc::IProvider::asQObject
-            virtual QObject *asQObject() override { return this; }
-
-            //! Clear all data
-            void clear();
-
-            // ------------------- testing ---------------
-
-            //! Has test offset value?
-            bool hasTestAltitudeOffset(const Aviation::CCallsign &callsign) const;
-
-            //! Has test offset value?
-            bool hasTestAltitudeOffsetGlobalValue() const;
-
-            //! Offset for callsign
-            bool testAddAltitudeOffset(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &offset);
-
-        signals:
-            //! A new aircraft appeared
-            void addedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
-
-            //! Parts added
-            void addedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
-
-            //! Situation added
-            void addedAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
-
-            //! Aircraft were changed
-            void changedAircraftInRange();
-
-            //! An aircraft disappeared
-            void removedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
-
-            //! \copydoc BlackCore::CAirspaceAnalyzer::airspaceAircraftSnapshot
-            void airspaceAircraftSnapshot(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
-
-        protected:
-            //! Remove all aircraft in range
-            //! \threadsafe
-            bool removeAircraft(const Aviation::CCallsign &callsign);
-
-            //! Remove all aircraft in range
-            //! \threadsafe
-            void removeAllAircraft();
-
-            //! Remove the lookup messages
-            //! \threadsafe
-            void removeReverseLookupMessages(const Aviation::CCallsign &callsign);
-
-            //! Add new aircraft, ignored if aircraft already exists
-            //! \threadsafe
-            bool addNewAircraftInRange(const CSimulatedAircraft &aircraft);
-
-            //! Init a new aircraft and add it or update model of existing aircraft
-            //! \threadsafe
-            CSimulatedAircraft addOrUpdateAircraftInRange(
-                const Aviation::CCallsign &callsign,
-                const QString &aircraftIcao, const QString &airlineIcao, const QString &livery, const QString &modelString,
-                CAircraftModel::ModelType modelType,
-                CStatusMessageList *log = nullptr);
-
-            //! Update aircraft
-            //! \threadsafe
-            int updateAircraftInRange(const Aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues = true);
-
-            //! Update aircraft bearing, distance and situation
-            //! \threadsafe
-            //! \remark does NOT emit signals
-            bool updateAircraftInRangeDistanceBearing(const Aviation::CCallsign &callsign, const Aviation::CAircraftSituation &situation, const PhysicalQuantities::CLength &distance, const PhysicalQuantities::CAngle &bearing);
-
-            //! Store an aircraft situation
-            //! \remark latest situations are kept first
-            //! \threadsafe
-            virtual Aviation::CAircraftSituation storeAircraftSituation(const Aviation::CAircraftSituation &situation, bool allowTestAltitudeOffset = true);
-
-            //! Store an aircraft part
-            //! \remark latest parts are kept first
-            //! \threadsafe
-            //! @{
-            void storeAircraftParts(const Aviation::CCallsign &callsign, const Aviation::CAircraftParts &parts, bool removeOutdated);
-            void storeAircraftParts(const Aviation::CCallsign &callsign, const QJsonObject &jsonObject, qint64 currentOffsetMs);
-            //! @}
-
-            //! Guess situation "on ground" and update model's CG if applicable
-            //! \remark updates CG and ground flag in situation
-            bool guessOnGroundAndUpdateModelCG(Aviation::CAircraftSituation &situation, const Aviation::CAircraftSituationChange &change, const CAircraftModel &aircraftModel);
-
-            //! Add an offset for testing
-            Aviation::CAircraftSituation addTestAltitudeOffsetToSituation(const Aviation::CAircraftSituation &situation) const;
-
-            //! What to log?
-            //! \threadsafe
-            ReverseLookupLogging whatToReverseLog() const;
-
-            //! Set ground elevation from elevation plane and guess ground
-            //! \note requires a sorted list latest first
-            static int setGroundElevationCheckedAndGuessGround(Aviation::CAircraftSituationList &situations, const Geo::CElevationPlane &elevationPlane, Aviation::CAircraftSituation::GndElevationInfo info, const Simulation::CAircraftModel &model, Aviation::CAircraftSituationChange *changeOut, bool *setForOnGroundPosition);
-
-        private:
-            //! Store the latest changes
-            //! \remark latest first
-            //! \threadsafe
-            void storeChange(const Aviation::CAircraftSituationChange &change);
-
-            Aviation::CAircraftSituationListPerCallsign m_situationsByCallsign;        //!< situations, for performance reasons per callsign, thread safe access required
-            Aviation::CAircraftSituationPerCallsign m_latestSituationByCallsign;       //!< latest situations, for performance reasons per callsign, thread safe access required
-            Aviation::CAircraftSituationPerCallsign m_latestOnGroundProviderElevation; //!< situations on ground with elevation from provider
-            Aviation::CAircraftPartsListPerCallsign m_partsByCallsign;                 //!< parts, for performance reasons per callsign, thread safe access required
-            Aviation::CAircraftSituationChangeListPerCallsign m_changesByCallsign;     //!< changes, for performance reasons per callsign, thread safe access required (same timestamps as corresponding situations)
-            Aviation::CCallsignSet m_aircraftWithParts;                                //!< aircraft supporting parts, thread safe access required
-            int m_situationsAdded = 0; //!< total number of situations added, thread safe access required
-            int m_partsAdded      = 0; //!< total number of parts added, thread safe access required
+        Q_OBJECT
+        Q_INTERFACES(BlackMisc::Simulation::IRemoteAircraftProvider)
+
+    public:
+        //! Log categories
+        static const QStringList &getLogCategories();
+
+        //! Constructor
+        CRemoteAircraftProvider(QObject *parent);
+
+        //! \ingroup remoteaircraftprovider
+        //! @{
+        virtual CSimulatedAircraftList getAircraftInRange() const override;
+        virtual Aviation::CCallsignSet getAircraftInRangeCallsigns() const override;
+        virtual CSimulatedAircraft getAircraftInRangeForCallsign(const Aviation::CCallsign &callsign) const override;
+        virtual CAircraftModel getAircraftInRangeModelForCallsign(const Aviation::CCallsign &callsign) const override;
+        virtual int getAircraftInRangeCount() const override;
+        virtual bool isAircraftInRange(const Aviation::CCallsign &callsign) const override;
+        virtual bool isVtolAircraft(const Aviation::CCallsign &callsign) const override;
+        virtual Aviation::CAircraftSituationList remoteAircraftSituations(const Aviation::CCallsign &callsign) const override;
+        virtual Aviation::CAircraftSituation remoteAircraftSituation(const Aviation::CCallsign &callsign, int index) const override;
+        virtual MillisecondsMinMaxMean remoteAircraftSituationsTimestampDifferenceMinMaxMean(const Aviation::CCallsign &callsign) const override;
+        virtual Aviation::CAircraftSituationList latestRemoteAircraftSituations() const override;
+        virtual Aviation::CAircraftSituationList latestOnGroundProviderElevations() const override;
+        virtual int remoteAircraftSituationsCount(const Aviation::CCallsign &callsign) const override;
+        virtual Aviation::CAircraftPartsList remoteAircraftParts(const Aviation::CCallsign &callsign) const override;
+        virtual int remoteAircraftPartsCount(const Aviation::CCallsign &callsign) const override;
+        virtual bool isRemoteAircraftSupportingParts(const Aviation::CCallsign &callsign) const override;
+        virtual int getRemoteAircraftSupportingPartsCount() const override;
+        virtual Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
+        virtual Aviation::CAircraftSituationChangeList remoteAircraftSituationChanges(const Aviation::CCallsign &callsign) const override;
+        virtual int remoteAircraftSituationChangesCount(const Aviation::CCallsign &callsign) const override;
+        virtual bool updateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRendering) override;
+        virtual bool setAircraftEnabledFlag(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;
+        virtual int updateMultipleAircraftEnabled(const Aviation::CCallsignSet &callsigns, bool enabledForRendering) override;
+        virtual bool updateAircraftModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator) override;
+        virtual bool updateAircraftNetworkModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator) override;
+        virtual bool updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
+        virtual bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered) override;
+        virtual int updateMultipleAircraftRendered(const Aviation::CCallsignSet &callsigns, bool rendered) override;
+        virtual int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info, bool *setForOnGroundPosition) override;
+        virtual bool updateCG(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg) override;
+        virtual bool updateCGAndModelString(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg, const QString &modelString) override;
+        virtual Aviation::CCallsignSet updateCGForModel(const QString &modelString, const PhysicalQuantities::CLength &cg) override;
+        virtual PhysicalQuantities::CLength getCGFromDB(const Aviation::CCallsign &callsign) const override;
+        virtual PhysicalQuantities::CLength getCGFromDB(const QString &modelString) const override;
+        virtual void rememberCGFromDB(const PhysicalQuantities::CLength &cgFromDB, const Aviation::CCallsign &callsign) override;
+        virtual void rememberCGFromDB(const PhysicalQuantities::CLength &cgFromDB, const QString &modelString) override;
+        virtual void updateMarkAllAsNotRendered() override;
+        virtual CStatusMessageList getAircraftPartsHistory(const Aviation::CCallsign &callsign) const override;
+        virtual bool isAircraftPartsHistoryEnabled() const override;
+        virtual void enableAircraftPartsHistory(bool enabled) override;
+        virtual int aircraftSituationsAdded() const override;
+        virtual int aircraftPartsAdded() const override;
+        virtual qint64 situationsLastModified(const Aviation::CCallsign &callsign) const override;
+        virtual qint64 partsLastModified(const Aviation::CCallsign &callsign) const override;
+        virtual Geo::CElevationPlane averageElevationOfNonMovingAircraft(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues = 1, int sufficientValues = 2) const override;
+        virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
+            QObject *receiver,
+            std::function<void(const Aviation::CAircraftSituation &)> addedSituationSlot,
+            std::function<void(const Aviation::CCallsign &, const Aviation::CAircraftParts &)> addedPartsSlot,
+            std::function<void(const Aviation::CCallsign &)> removedAircraftSlot,
+            std::function<void(const CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
+        ) override;
+        //! @}
+
+        //! \ingroup remoteaircraftprovider
+        //! \ingroup reverselookup
+        //! @{
+        virtual void enableReverseLookupMessages(ReverseLookupLogging enable) override;
+        virtual ReverseLookupLogging isReverseLookupMessagesEnabled() const override;
+        virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
+        //! @}
+
+        //! Reverse lookup messages
+        //! \threadsafe
+        //! \ingroup reverselookup
+        //! @{
+        void addReverseLookupMessages(const Aviation::CCallsign &callsign, const CStatusMessageList &messages);
+        void addReverseLookupMessage(const Aviation::CCallsign &callsign, const CStatusMessage &message);
+        void addReverseLookupMessage(
+            const Aviation::CCallsign &callsign, const QString &message,
+            CStatusMessage::StatusSeverity severity = CStatusMessage::SeverityInfo);
+        //! @}
+
+        //! \copydoc BlackMisc::IProvider::asQObject
+        virtual QObject *asQObject() override { return this; }
+
+        //! Clear all data
+        void clear();
+
+        // ------------------- testing ---------------
+
+        //! Has test offset value?
+        bool hasTestAltitudeOffset(const Aviation::CCallsign &callsign) const;
+
+        //! Has test offset value?
+        bool hasTestAltitudeOffsetGlobalValue() const;
+
+        //! Offset for callsign
+        bool testAddAltitudeOffset(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &offset);
+
+    signals:
+        //! A new aircraft appeared
+        void addedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
+
+        //! Parts added
+        void addedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
+
+        //! Situation added
+        void addedAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
+
+        //! Aircraft were changed
+        void changedAircraftInRange();
+
+        //! An aircraft disappeared
+        void removedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
+
+        //! \copydoc BlackCore::CAirspaceAnalyzer::airspaceAircraftSnapshot
+        void airspaceAircraftSnapshot(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
+
+    protected:
+        //! Remove all aircraft in range
+        //! \threadsafe
+        bool removeAircraft(const Aviation::CCallsign &callsign);
+
+        //! Remove all aircraft in range
+        //! \threadsafe
+        void removeAllAircraft();
+
+        //! Remove the lookup messages
+        //! \threadsafe
+        void removeReverseLookupMessages(const Aviation::CCallsign &callsign);
+
+        //! Add new aircraft, ignored if aircraft already exists
+        //! \threadsafe
+        bool addNewAircraftInRange(const CSimulatedAircraft &aircraft);
+
+        //! Init a new aircraft and add it or update model of existing aircraft
+        //! \threadsafe
+        CSimulatedAircraft addOrUpdateAircraftInRange(
+            const Aviation::CCallsign &callsign,
+            const QString &aircraftIcao, const QString &airlineIcao, const QString &livery, const QString &modelString,
+            CAircraftModel::ModelType modelType,
+            CStatusMessageList *log = nullptr);
+
+        //! Update aircraft
+        //! \threadsafe
+        int updateAircraftInRange(const Aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues = true);
+
+        //! Update aircraft bearing, distance and situation
+        //! \threadsafe
+        //! \remark does NOT emit signals
+        bool updateAircraftInRangeDistanceBearing(const Aviation::CCallsign &callsign, const Aviation::CAircraftSituation &situation, const PhysicalQuantities::CLength &distance, const PhysicalQuantities::CAngle &bearing);
+
+        //! Store an aircraft situation
+        //! \remark latest situations are kept first
+        //! \threadsafe
+        virtual Aviation::CAircraftSituation storeAircraftSituation(const Aviation::CAircraftSituation &situation, bool allowTestAltitudeOffset = true);
+
+        //! Store an aircraft part
+        //! \remark latest parts are kept first
+        //! \threadsafe
+        //! @{
+        void storeAircraftParts(const Aviation::CCallsign &callsign, const Aviation::CAircraftParts &parts, bool removeOutdated);
+        void storeAircraftParts(const Aviation::CCallsign &callsign, const QJsonObject &jsonObject, qint64 currentOffsetMs);
+        //! @}
+
+        //! Guess situation "on ground" and update model's CG if applicable
+        //! \remark updates CG and ground flag in situation
+        bool guessOnGroundAndUpdateModelCG(Aviation::CAircraftSituation &situation, const Aviation::CAircraftSituationChange &change, const CAircraftModel &aircraftModel);
+
+        //! Add an offset for testing
+        Aviation::CAircraftSituation addTestAltitudeOffsetToSituation(const Aviation::CAircraftSituation &situation) const;
+
+        //! What to log?
+        //! \threadsafe
+        ReverseLookupLogging whatToReverseLog() const;
+
+        //! Set ground elevation from elevation plane and guess ground
+        //! \note requires a sorted list latest first
+        static int setGroundElevationCheckedAndGuessGround(Aviation::CAircraftSituationList &situations, const Geo::CElevationPlane &elevationPlane, Aviation::CAircraftSituation::GndElevationInfo info, const Simulation::CAircraftModel &model, Aviation::CAircraftSituationChange *changeOut, bool *setForOnGroundPosition);
+
+    private:
+        //! Store the latest changes
+        //! \remark latest first
+        //! \threadsafe
+        void storeChange(const Aviation::CAircraftSituationChange &change);
+
+        Aviation::CAircraftSituationListPerCallsign m_situationsByCallsign;        //!< situations, for performance reasons per callsign, thread safe access required
+        Aviation::CAircraftSituationPerCallsign m_latestSituationByCallsign;       //!< latest situations, for performance reasons per callsign, thread safe access required
+        Aviation::CAircraftSituationPerCallsign m_latestOnGroundProviderElevation; //!< situations on ground with elevation from provider
+        Aviation::CAircraftPartsListPerCallsign m_partsByCallsign;                 //!< parts, for performance reasons per callsign, thread safe access required
+        Aviation::CAircraftSituationChangeListPerCallsign m_changesByCallsign;     //!< changes, for performance reasons per callsign, thread safe access required (same timestamps as corresponding situations)
+        Aviation::CCallsignSet m_aircraftWithParts;                                //!< aircraft supporting parts, thread safe access required
+        int m_situationsAdded = 0; //!< total number of situations added, thread safe access required
+        int m_partsAdded      = 0; //!< total number of parts added, thread safe access required
+
+        ReverseLookupLogging m_enableReverseLookupMsgs = RevLogSimplifiedInfo;     //!< shall we log. information about the matching process
+        Simulation::CSimulatedAircraftPerCallsign m_aircraftInRange;      //!< aircraft, thread safe access required
+        Aviation::CStatusMessageListPerCallsign m_reverseLookupMessages;  //!< reverse lookup messages
+        Aviation::CStatusMessageListPerCallsign m_aircraftPartsMessages;  //!< status messages for parts history
+        Aviation::CTimestampPerCallsign m_situationsLastModified;         //!< when situations last modified
+        Aviation::CTimestampPerCallsign m_partsLastModified;              //!< when parts last modified
+        Aviation::CLengthPerCallsign    m_testOffset;                     //!< offsets
+        Aviation::CLengthPerCallsign    m_dbCGPerCallsign;                //!< DB CG per callsign
+        QHash<QString, PhysicalQuantities::CLength> m_dbCGPerModelString; //!< DB CG per model string
 
-            ReverseLookupLogging m_enableReverseLookupMsgs = RevLogSimplifiedInfo;     //!< shall we log. information about the matching process
-            Simulation::CSimulatedAircraftPerCallsign m_aircraftInRange;      //!< aircraft, thread safe access required
-            Aviation::CStatusMessageListPerCallsign m_reverseLookupMessages;  //!< reverse lookup messages
-            Aviation::CStatusMessageListPerCallsign m_aircraftPartsMessages;  //!< status messages for parts history
-            Aviation::CTimestampPerCallsign m_situationsLastModified;         //!< when situations last modified
-            Aviation::CTimestampPerCallsign m_partsLastModified;              //!< when parts last modified
-            Aviation::CLengthPerCallsign    m_testOffset;                     //!< offsets
-            Aviation::CLengthPerCallsign    m_dbCGPerCallsign;                //!< DB CG per callsign
-            QHash<QString, PhysicalQuantities::CLength> m_dbCGPerModelString; //!< DB CG per model string
+        bool m_enableAircraftPartsHistory = true;  //!< shall we keep a history of aircraft parts
 
-            bool m_enableAircraftPartsHistory = true;  //!< shall we keep a history of aircraft parts
+        // locks
+        mutable QReadWriteLock m_lockSituations;   //!< lock for situations: m_situationsByCallsign
+        mutable QReadWriteLock m_lockParts;        //!< lock for parts: m_partsByCallsign, m_aircraftSupportingParts
+        mutable QReadWriteLock m_lockChanges;      //!< lock for changes: m_changesByCallsign
+        mutable QReadWriteLock m_lockAircraft;     //!< lock aircraft: m_aircraftInRange, m_dbCGPerCallsign
+        mutable QReadWriteLock m_lockMessages;     //!< lock for messages
+        mutable QReadWriteLock m_lockPartsHistory; //!< lock for aircraft parts
+    };
 
-            // locks
-            mutable QReadWriteLock m_lockSituations;   //!< lock for situations: m_situationsByCallsign
-            mutable QReadWriteLock m_lockParts;        //!< lock for parts: m_partsByCallsign, m_aircraftSupportingParts
-            mutable QReadWriteLock m_lockChanges;      //!< lock for changes: m_changesByCallsign
-            mutable QReadWriteLock m_lockAircraft;     //!< lock aircraft: m_aircraftInRange, m_dbCGPerCallsign
-            mutable QReadWriteLock m_lockMessages;     //!< lock for messages
-            mutable QReadWriteLock m_lockPartsHistory; //!< lock for aircraft parts
-        };
+    //! Class which can be directly used to access an \sa IRemoteAircraftProvider object
+    class BLACKMISC_EXPORT CRemoteAircraftAware : public IProviderAware<IRemoteAircraftProvider>
+    {
+    public:
+        //! Destructor
+        virtual ~CRemoteAircraftAware() override;
 
-        //! Class which can be directly used to access an \sa IRemoteAircraftProvider object
-        class BLACKMISC_EXPORT CRemoteAircraftAware : public IProviderAware<IRemoteAircraftProvider>
-        {
-        public:
-            //! Destructor
-            virtual ~CRemoteAircraftAware() override;
+        //! \copydoc IRemoteAircraftProvider::getAircraftInRange
+        CSimulatedAircraftList getAircraftInRange() const;
 
-            //! \copydoc IRemoteAircraftProvider::getAircraftInRange
-            CSimulatedAircraftList getAircraftInRange() const;
+        //! \copydoc IRemoteAircraftProvider::isAircraftInRange
+        bool isAircraftInRange(const Aviation::CCallsign &callsign) const;
 
-            //! \copydoc IRemoteAircraftProvider::isAircraftInRange
-            bool isAircraftInRange(const Aviation::CCallsign &callsign) const;
+        //! \copydoc IRemoteAircraftProvider::isVtolAircraft
+        bool isVtolAircraft(const Aviation::CCallsign &callsign) const;
 
-            //! \copydoc IRemoteAircraftProvider::isVtolAircraft
-            bool isVtolAircraft(const Aviation::CCallsign &callsign) const;
+        //! \copydoc IRemoteAircraftProvider::getAircraftInRangeCount
+        int getAircraftInRangeCount() const;
 
-            //! \copydoc IRemoteAircraftProvider::getAircraftInRangeCount
-            int getAircraftInRangeCount() const;
+        //! \copydoc IRemoteAircraftProvider::getAircraftInRangeCallsigns
+        Aviation::CCallsignSet getAircraftInRangeCallsigns() const;
 
-            //! \copydoc IRemoteAircraftProvider::getAircraftInRangeCallsigns
-            Aviation::CCallsignSet getAircraftInRangeCallsigns() const;
+        //! \copydoc IRemoteAircraftProvider::getAircraftInRangeForCallsign
+        CSimulatedAircraft getAircraftInRangeForCallsign(const Aviation::CCallsign &callsign) const;
 
-            //! \copydoc IRemoteAircraftProvider::getAircraftInRangeForCallsign
-            CSimulatedAircraft getAircraftInRangeForCallsign(const Aviation::CCallsign &callsign) const;
+        //! \copydoc IRemoteAircraftProvider::getAircraftInRangeModelForCallsign
+        CAircraftModel getAircraftInRangeModelForCallsign(const Aviation::CCallsign &callsign) const;
 
-            //! \copydoc IRemoteAircraftProvider::getAircraftInRangeModelForCallsign
-            CAircraftModel getAircraftInRangeModelForCallsign(const Aviation::CCallsign &callsign) const;
+        //! \copydoc IRemoteAircraftProvider::getLatestAirspaceAircraftSnapshot
+        CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const;
 
-            //! \copydoc IRemoteAircraftProvider::getLatestAirspaceAircraftSnapshot
-            CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const;
+        //! \copydoc IRemoteAircraftProvider::remoteAircraftSituations
+        Aviation::CAircraftSituationList remoteAircraftSituations(const Aviation::CCallsign &callsign) const;
 
-            //! \copydoc IRemoteAircraftProvider::remoteAircraftSituations
-            Aviation::CAircraftSituationList remoteAircraftSituations(const Aviation::CCallsign &callsign) const;
+        //! \copydoc IRemoteAircraftProvider::remoteAircraftSituation
+        Aviation::CAircraftSituation remoteAircraftSituation(const Aviation::CCallsign &callsign, int index) const;
 
-            //! \copydoc IRemoteAircraftProvider::remoteAircraftSituation
-            Aviation::CAircraftSituation remoteAircraftSituation(const Aviation::CCallsign &callsign, int index) const;
+        //! \copydoc IRemoteAircraftProvider::latestRemoteAircraftSituations
+        Aviation::CAircraftSituationList latestRemoteAircraftSituations() const;
 
-            //! \copydoc IRemoteAircraftProvider::latestRemoteAircraftSituations
-            Aviation::CAircraftSituationList latestRemoteAircraftSituations() const;
+        //! \copydoc IRemoteAircraftProvider::latestOnGroundProviderElevations
+        Aviation::CAircraftSituationList latestOnGroundProviderElevations() const;
 
-            //! \copydoc IRemoteAircraftProvider::latestOnGroundProviderElevations
-            Aviation::CAircraftSituationList latestOnGroundProviderElevations() const;
+        //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationsCount
+        int remoteAircraftSituationsCount(const Aviation::CCallsign &callsign) const;
 
-            //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationsCount
-            int remoteAircraftSituationsCount(const Aviation::CCallsign &callsign) const;
+        //! \copydoc IRemoteAircraftProvider::remoteAircraftParts
+        Aviation::CAircraftPartsList remoteAircraftParts(const Aviation::CCallsign &callsign) const;
 
-            //! \copydoc IRemoteAircraftProvider::remoteAircraftParts
-            Aviation::CAircraftPartsList remoteAircraftParts(const Aviation::CCallsign &callsign) const;
+        //! \copydoc IRemoteAircraftProvider::remoteAircraftPartsCount
+        int remoteAircraftPartsCount(const Aviation::CCallsign &callsign) const;
 
-            //! \copydoc IRemoteAircraftProvider::remoteAircraftPartsCount
-            int remoteAircraftPartsCount(const Aviation::CCallsign &callsign) const;
+        //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationChanges
+        Aviation::CAircraftSituationChangeList remoteAircraftSituationChanges(const Aviation::CCallsign &callsign) const;
 
-            //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationChanges
-            Aviation::CAircraftSituationChangeList remoteAircraftSituationChanges(const Aviation::CCallsign &callsign) const;
+        //! \copydoc IRemoteAircraftProvider::remoteAircraftSupportingParts
+        Aviation::CCallsignSet remoteAircraftSupportingParts() const;
 
-            //! \copydoc IRemoteAircraftProvider::remoteAircraftSupportingParts
-            Aviation::CCallsignSet remoteAircraftSupportingParts() const;
+        //! \copydoc IRemoteAircraftProvider::isRemoteAircraftSupportingParts
+        bool isRemoteAircraftSupportingParts(const Aviation::CCallsign &callsign) const;
 
-            //! \copydoc IRemoteAircraftProvider::isRemoteAircraftSupportingParts
-            bool isRemoteAircraftSupportingParts(const Aviation::CCallsign &callsign) const;
+        //! \copydoc IRemoteAircraftProvider::getRemoteAircraftSupportingPartsCount
+        int getRemoteAircraftSupportingPartsCount() const;
 
-            //! \copydoc IRemoteAircraftProvider::getRemoteAircraftSupportingPartsCount
-            int getRemoteAircraftSupportingPartsCount() const;
+        //! \copydoc IRemoteAircraftProvider::updateAircraftEnabled
+        bool updateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRendering);
 
-            //! \copydoc IRemoteAircraftProvider::updateAircraftEnabled
-            bool updateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRendering);
+        //! \copydoc IRemoteAircraftProvider::setAircraftEnabledFlag
+        bool setAircraftEnabledFlag(const Aviation::CCallsign &callsign, bool enabledForRendering);
 
-            //! \copydoc IRemoteAircraftProvider::setAircraftEnabledFlag
-            bool setAircraftEnabledFlag(const Aviation::CCallsign &callsign, bool enabledForRendering);
+        //! \copydoc IRemoteAircraftProvider::updateMultipleAircraftEnabled
+        bool updateMultipleAircraftEnabled(const Aviation::CCallsignSet &callsigns, bool enabledForRendering);
 
-            //! \copydoc IRemoteAircraftProvider::updateMultipleAircraftEnabled
-            bool updateMultipleAircraftEnabled(const Aviation::CCallsignSet &callsigns, bool enabledForRendering);
+        //! \copydoc IRemoteAircraftProvider::updateAircraftModel
+        bool updateAircraftModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator);
 
-            //! \copydoc IRemoteAircraftProvider::updateAircraftModel
-            bool updateAircraftModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator);
+        //! \copydoc IRemoteAircraftProvider::updateAircraftNetworkModel
+        bool updateAircraftNetworkModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator);
 
-            //! \copydoc IRemoteAircraftProvider::updateAircraftNetworkModel
-            bool updateAircraftNetworkModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator);
+        //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
+        bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered);
 
-            //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
-            bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered);
+        //! \copydoc IRemoteAircraftProvider::updateMultipleAircraftRendered
+        bool updateMultipleAircraftRendered(const Aviation::CCallsignSet &callsigns, bool rendered);
 
-            //! \copydoc IRemoteAircraftProvider::updateMultipleAircraftRendered
-            bool updateMultipleAircraftRendered(const Aviation::CCallsignSet &callsigns, bool rendered);
+        //! \copydoc IRemoteAircraftProvider::updateAircraftGroundElevation
+        int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info, bool *updateAircraftGroundElevation);
 
-            //! \copydoc IRemoteAircraftProvider::updateAircraftGroundElevation
-            int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info, bool *updateAircraftGroundElevation);
+        //! \copydoc IRemoteAircraftProvider::updateCG
+        bool updateCG(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg);
 
-            //! \copydoc IRemoteAircraftProvider::updateCG
-            bool updateCG(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg);
+        //! \copydoc IRemoteAircraftProvider::updateCGForModel
+        Aviation::CCallsignSet updateCGForModel(const QString &modelString, const PhysicalQuantities::CLength &cg);
 
-            //! \copydoc IRemoteAircraftProvider::updateCGForModel
-            Aviation::CCallsignSet updateCGForModel(const QString &modelString, const PhysicalQuantities::CLength &cg);
+        //! \copydoc IRemoteAircraftProvider::updateCGAndModelString
+        bool updateCGAndModelString(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg, const QString &modelString);
 
-            //! \copydoc IRemoteAircraftProvider::updateCGAndModelString
-            bool updateCGAndModelString(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg, const QString &modelString);
+        //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
+        void updateMarkAllAsNotRendered();
 
-            //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
-            void updateMarkAllAsNotRendered();
+        //! \copydoc IRemoteAircraftProvider::aircraftSituationsAdded
+        int aircraftSituationsAdded() const;
 
-            //! \copydoc IRemoteAircraftProvider::aircraftSituationsAdded
-            int aircraftSituationsAdded() const;
+        //! \copydoc IRemoteAircraftProvider::aircraftPartsAdded
+        int aircraftPartsAdded() const;
 
-            //! \copydoc IRemoteAircraftProvider::aircraftPartsAdded
-            int aircraftPartsAdded() const;
+        //! \copydoc IRemoteAircraftProvider::situationsLastModified
+        qint64 situationsLastModified(const Aviation::CCallsign &callsign) const;
 
-            //! \copydoc IRemoteAircraftProvider::situationsLastModified
-            qint64 situationsLastModified(const Aviation::CCallsign &callsign) const;
+        //! \copydoc IRemoteAircraftProvider::partsLastModified
+        qint64 partsLastModified(const Aviation::CCallsign &callsign) const;
 
-            //! \copydoc IRemoteAircraftProvider::partsLastModified
-            qint64 partsLastModified(const Aviation::CCallsign &callsign) const;
+        //! \copydoc IRemoteAircraftProvider::averageElevationOfNonMovingAircraft
+        Geo::CElevationPlane averageElevationOfNonMovingAircraft(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues = 1) const;
 
-            //! \copydoc IRemoteAircraftProvider::averageElevationOfNonMovingAircraft
-            Geo::CElevationPlane averageElevationOfNonMovingAircraft(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues = 1) const;
+        //! Set remote aircraft provider
+        void setRemoteAircraftProvider(IRemoteAircraftProvider *remoteAircraftProvider) { this->setProvider(remoteAircraftProvider); }
 
-            //! Set remote aircraft provider
-            void setRemoteAircraftProvider(IRemoteAircraftProvider *remoteAircraftProvider) { this->setProvider(remoteAircraftProvider); }
+        //! Get the aircraft provider
+        IRemoteAircraftProvider *getRemoteAircraftProvider() const { return this->getProvider(); }
 
-            //! Get the aircraft provider
-            IRemoteAircraftProvider *getRemoteAircraftProvider() const { return this->getProvider(); }
+    protected:
+        //! Default constructor
+        CRemoteAircraftAware() {}
 
-        protected:
-            //! Default constructor
-            CRemoteAircraftAware() {}
-
-            //! Constructor
-            CRemoteAircraftAware(IRemoteAircraftProvider *remoteAircraftProvider) : IProviderAware(remoteAircraftProvider) { Q_ASSERT(remoteAircraftProvider); }
-        };
-    } // namespace
+        //! Constructor
+        CRemoteAircraftAware(IRemoteAircraftProvider *remoteAircraftProvider) : IProviderAware(remoteAircraftProvider) { Q_ASSERT(remoteAircraftProvider); }
+    };
 } // namespace
 
 #endif // guard

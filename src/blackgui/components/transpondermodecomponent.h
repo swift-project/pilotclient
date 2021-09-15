@@ -18,42 +18,39 @@
 
 namespace Ui { class CTransponderModeComponent; }
 namespace BlackMisc { class CIdentifier; namespace Simulation { class CSimulatedAircraft; }}
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * Small component to display XPDR mode
+     */
+    class CTransponderModeComponent : public QFrame, BlackMisc::CIdentifiable
     {
-        /**
-         * Small component to display XPDR mode
-         */
-        class CTransponderModeComponent : public QFrame, BlackMisc::CIdentifiable
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            explicit CTransponderModeComponent(QWidget *parent = nullptr);
+    public:
+        //! Ctor
+        explicit CTransponderModeComponent(QWidget *parent = nullptr);
 
-            //! Dtor
-            virtual ~CTransponderModeComponent() override;
+        //! Dtor
+        virtual ~CTransponderModeComponent() override;
 
-        signals:
-            //! value has been changed
-            void changed();
+    signals:
+        //! value has been changed
+        void changed();
 
-        private:
-            QScopedPointer<Ui::CTransponderModeComponent> ui;
-            BlackMisc::Aviation::CTransponder m_transponder;
+    private:
+        QScopedPointer<Ui::CTransponderModeComponent> ui;
+        BlackMisc::Aviation::CTransponder m_transponder;
 
-            //! Init
-            void init();
+        //! Init
+        void init();
 
-            //! Clicked
-            void onClicked();
+        //! Clicked
+        void onClicked();
 
-            //! Changed cockpit data
-            void onChangedAircraftCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
-        };
-    } // ns
+        //! Changed cockpit data
+        void onChangedAircraftCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+    };
 } // ns
 
 #endif // guard

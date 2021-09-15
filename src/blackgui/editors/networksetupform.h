@@ -15,31 +15,28 @@
 #include <QScopedPointer>
 
 namespace Ui { class CNetworkSetupForm; }
-namespace BlackGui
+namespace BlackGui::Editors
 {
-    namespace Editors
+    //! Setup form
+    class CNetworkSetupForm : public CForm
     {
-        //! Setup form
-        class CNetworkSetupForm : public CForm
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CNetworkSetupForm(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CNetworkSetupForm(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CNetworkSetupForm() override;
+        //! Destructor
+        virtual ~CNetworkSetupForm() override;
 
-            //! \name Form class implementations
-            //! @{
-            virtual void setReadOnly(bool readonly) override;
-            //! @}
+        //! \name Form class implementations
+        //! @{
+        virtual void setReadOnly(bool readonly) override;
+        //! @}
 
-        private:
-            QScopedPointer<Ui::CNetworkSetupForm> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CNetworkSetupForm> ui;
+    };
 } // ns
 
 #endif // guard

@@ -16,31 +16,28 @@
 #include <QScopedPointer>
 
 namespace Ui { class CCoreSettingsDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * Core / swift pilot client settings as Dialog
+     */
+    class BLACKGUI_EXPORT CCoreSettingsDialog : public QDialog
     {
-        /**
-         * Core / swift pilot client settings as Dialog
-         */
-        class BLACKGUI_EXPORT CCoreSettingsDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CCoreSettingsDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CCoreSettingsDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CCoreSettingsDialog();
+        //! Destructor
+        virtual ~CCoreSettingsDialog();
 
-        private:
-            QScopedPointer<Ui::CCoreSettingsDialog> ui;
+    private:
+        QScopedPointer<Ui::CCoreSettingsDialog> ui;
 
-            //! Show the overview tab
-            void showOverview();
-        };
-    } // ns
+        //! Show the overview tab
+        void showOverview();
+    };
 } // ns
 
 #endif // guard

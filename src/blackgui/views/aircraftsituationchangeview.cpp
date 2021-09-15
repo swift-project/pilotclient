@@ -10,15 +10,12 @@
 
 using namespace BlackGui::Models;
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    CAircraftSituationChangeView::CAircraftSituationChangeView(QWidget *parent) :
+        CViewWithTimestampWithOffsetObjects(parent)
     {
-        CAircraftSituationChangeView::CAircraftSituationChangeView(QWidget *parent) :
-            CViewWithTimestampWithOffsetObjects(parent)
-        {
-            this->standardInit(new CAircraftSituationChangeListModel(this));
-            this->setMenu(MenuDefault);
-        }
-    } // ns
+        this->standardInit(new CAircraftSituationChangeListModel(this));
+        this->setMenu(MenuDefault);
+    }
 } // ns

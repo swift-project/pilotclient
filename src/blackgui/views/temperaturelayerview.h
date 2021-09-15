@@ -15,20 +15,17 @@
 #include "blackgui/models/temperaturelayerlistmodel.h"
 #include "blackgui/views/viewbase.h"
 
-namespace BlackMisc { namespace Weather { class CTemperatureLayer; } }
-namespace BlackGui
+namespace BlackMisc::Weather { class CTemperatureLayer; }
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Airports view
+    class BLACKGUI_EXPORT CTemperatureLayerView : public CViewBase<Models::CTemperatureLayerListModel>
     {
-        //! Airports view
-        class BLACKGUI_EXPORT CTemperatureLayerView : public CViewBase<Models::CTemperatureLayerListModel>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CTemperatureLayerView(QWidget *parent = nullptr);
-        };
-    }
+    public:
+        //! Constructor
+        explicit CTemperatureLayerView(QWidget *parent = nullptr);
+    };
 }
 #endif // guard

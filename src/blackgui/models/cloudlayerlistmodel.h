@@ -18,23 +18,20 @@
 
 class QObject;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Cloud layer list model
+    class BLACKGUI_EXPORT CCloudLayerListModel :
+        public CListModelBase<BlackMisc::Weather::CCloudLayerList, false>
     {
-        //! Cloud layer list model
-        class BLACKGUI_EXPORT CCloudLayerListModel :
-            public CListModelBase<BlackMisc::Weather::CCloudLayerList, false>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CCloudLayerListModel(QObject *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CCloudLayerListModel(QObject *parent = nullptr);
 
-            //! Destructor
-            virtual ~CCloudLayerListModel() {}
-        };
-    }
+        //! Destructor
+        virtual ~CCloudLayerListModel() {}
+    };
 }
 #endif // guard

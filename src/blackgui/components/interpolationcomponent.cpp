@@ -17,33 +17,30 @@ using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackGui::Views;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CInterpolationComponent::CInterpolationComponent(QWidget *parent) :
+        QFrame(parent),
+        ui(new Ui::CInterpolationComponent)
     {
-        CInterpolationComponent::CInterpolationComponent(QWidget *parent) :
-            QFrame(parent),
-            ui(new Ui::CInterpolationComponent)
-        {
-            ui->setupUi(this);
-            ui->tw_InterpolationSetup->setCurrentIndex(0);
+        ui->setupUi(this);
+        ui->tw_InterpolationSetup->setCurrentIndex(0);
 
-            connect(ui->comp_InterpolationSetup, &CInterpolationSetupComponent::requestRenderingRestrictionsWidget, this, &CInterpolationComponent::requestRenderingRestrictionsWidget);
-            connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validChangedCallsignEntered, this, &CInterpolationComponent::displayInterpolationMessages);
-            connect(ui->pb_ReloadInterpolationMessages, &QPushButton::released, this, &CInterpolationComponent::displayInterpolationMessages);
-        }
+        connect(ui->comp_InterpolationSetup, &CInterpolationSetupComponent::requestRenderingRestrictionsWidget, this, &CInterpolationComponent::requestRenderingRestrictionsWidget);
+        connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validChangedCallsignEntered, this, &CInterpolationComponent::displayInterpolationMessages);
+        connect(ui->pb_ReloadInterpolationMessages, &QPushButton::released, this, &CInterpolationComponent::displayInterpolationMessages);
+    }
 
-        CInterpolationComponent::~CInterpolationComponent()
-        { }
+    CInterpolationComponent::~CInterpolationComponent()
+    { }
 
-        void CInterpolationComponent::displayInterpolationMessages()
-        {
-            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
-            const CCallsign cs = ui->comp_CallsignCompleter->getCallsign();
-            if (!cs.isValid()) { return; }
+    void CInterpolationComponent::displayInterpolationMessages()
+    {
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+        const CCallsign cs = ui->comp_CallsignCompleter->getCallsign();
+        if (!cs.isValid()) { return; }
 
-            const CStatusMessageList messages = sGui->getIContextSimulator()->getInterpolationMessages(cs);
-            ui->tvp_InterpolationMessages->updateContainerMaybeAsync(messages);
-        }
-    } // ns
+        const CStatusMessageList messages = sGui->getIContextSimulator()->getInterpolationMessages(cs);
+        ui->tvp_InterpolationMessages->updateContainerMaybeAsync(messages);
+    }
 } // ns

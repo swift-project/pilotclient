@@ -30,45 +30,42 @@ namespace BlackMisc
     class CDBusServer;
     class CIdentifier;
 
-    namespace SharedState
+namespace SharedState::DBus
     {
-        namespace DBus
+        class IDuplex;
+
+        /*!
+         * Abstract interface for the hub in a star topology. An implementation detail of CDataLinkDBus.
+         */
+        class BLACKMISC_EXPORT IHub : public QObject
         {
-            class IDuplex;
+            Q_OBJECT
+            Q_CLASSINFO("D-Bus Interface", BLACKMISC_HUB_INTERFACE)
 
-            /*!
-             * Abstract interface for the hub in a star topology. An implementation detail of CDataLinkDBus.
-             */
-            class BLACKMISC_EXPORT IHub : public QObject
-            {
-                Q_OBJECT
-                Q_CLASSINFO("D-Bus Interface", BLACKMISC_HUB_INTERFACE)
+        public:
+            //! Construct a new hub.
+            static IHub *create(bool proxy, CDBusServer *server, const QDBusConnection &connection, const QString &service, QObject *parent = nullptr);
 
-            public:
-                //! Construct a new hub.
-                static IHub *create(bool proxy, CDBusServer *server, const QDBusConnection &connection, const QString &service, QObject *parent = nullptr);
+            //! Is connected?
+            virtual bool isConnected() const = 0;
 
-                //! Is connected?
-                virtual bool isConnected() const = 0;
+            //! Get a duplex object for the calling process.
+            virtual std::pair<QSharedPointer<IDuplex>, QFuture<void>> getDuplex(const CIdentifier &) = 0;
 
-                //! Get a duplex object for the calling process.
-                virtual std::pair<QSharedPointer<IDuplex>, QFuture<void>> getDuplex(const CIdentifier &) = 0;
+        public slots:
+            //! Create a duplex object for the identified process.
+            virtual bool openDuplex(const BlackMisc::CIdentifier &client) = 0;
 
-            public slots:
-                //! Create a duplex object for the identified process.
-                virtual bool openDuplex(const BlackMisc::CIdentifier &client) = 0;
+            //! Destroy the duplex object for the identified process.
+            virtual void closeDuplex(const BlackMisc::CIdentifier &client) = 0;
 
-                //! Destroy the duplex object for the identified process.
-                virtual void closeDuplex(const BlackMisc::CIdentifier &client) = 0;
+        protected:
+            //! Create a duplex object and return status via future.
+            virtual QFuture<void> openDuplexAsync(const CIdentifier &client) = 0;
 
-            protected:
-                //! Create a duplex object and return status via future.
-                virtual QFuture<void> openDuplexAsync(const CIdentifier &client) = 0;
-
-                //! Constructor.
-                IHub(QObject *parent = nullptr);
-            };
-        }
+            //! Constructor.
+            IHub(QObject *parent = nullptr);
+        };
     }
 }
 

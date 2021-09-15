@@ -17,36 +17,33 @@
 
 namespace Ui { class CSettingsVatsimReadersComponent; }
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Settings for readers
+     */
+    class CSettingsVatsimReadersComponent : public QFrame
     {
-        /*!
-         * Settings for readers
-         */
-        class CSettingsVatsimReadersComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CSettingsVatsimReadersComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CSettingsVatsimReadersComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CSettingsVatsimReadersComponent();
+        //! Destructor
+        virtual ~CSettingsVatsimReadersComponent();
 
-        private:
-            void onSettingsChanged();
-            void save();
-            void reload();
-            void initValues();
+    private:
+        void onSettingsChanged();
+        void save();
+        void reload();
+        void initValues();
 
-            QScopedPointer<Ui::CSettingsVatsimReadersComponent> ui;
-            BlackMisc::CSetting<BlackCore::Vatsim::TVatsimBookings> m_settingsBookings { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
-            BlackMisc::CSetting<BlackCore::Vatsim::TVatsimDataFile> m_settingsDataFile { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
-            BlackMisc::CSetting<BlackCore::Vatsim::TVatsimMetars>   m_settingsMetars   { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
-        };
-    } // ns
+        QScopedPointer<Ui::CSettingsVatsimReadersComponent> ui;
+        BlackMisc::CSetting<BlackCore::Vatsim::TVatsimBookings> m_settingsBookings { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
+        BlackMisc::CSetting<BlackCore::Vatsim::TVatsimDataFile> m_settingsDataFile { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
+        BlackMisc::CSetting<BlackCore::Vatsim::TVatsimMetars>   m_settingsMetars   { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
+    };
 } // ns
 
 #endif // guard

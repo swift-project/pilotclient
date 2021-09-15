@@ -18,22 +18,19 @@
 
 class QWidget;
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Matching statistics
+    class BLACKGUI_EXPORT CMatchingStatisticsView : public CViewBase<Models::CMatchingStatisticsModel>
     {
-        //! Matching statistics
-        class BLACKGUI_EXPORT CMatchingStatisticsView : public CViewBase<Models::CMatchingStatisticsModel>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CMatchingStatisticsView(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CMatchingStatisticsView(QWidget *parent = nullptr);
 
-            //! Set vie mode
-            void setStatisticsModelMode(Models::CMatchingStatisticsModel::MatchingStatisticsMode mode);
-        };
-    }
+        //! Set vie mode
+        void setStatisticsModelMode(Models::CMatchingStatisticsModel::MatchingStatisticsMode mode);
+    };
 } // ns
 #endif // guard

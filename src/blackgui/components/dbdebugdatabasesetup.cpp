@@ -16,36 +16,33 @@
 using namespace BlackCore::Data;
 using namespace BlackMisc;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CDbDebugDatabaseSetup::CDbDebugDatabaseSetup(QWidget *parent) :
+        QFrame(parent),
+        ui(new Ui::CDbDebugDatabaseSetup)
     {
-        CDbDebugDatabaseSetup::CDbDebugDatabaseSetup(QWidget *parent) :
-            QFrame(parent),
-            ui(new Ui::CDbDebugDatabaseSetup)
+        ui->setupUi(this);
+        const bool enabled = sGui->isDeveloperFlagSet();
+        this->setEnabled(enabled);
+        if (!enabled)
         {
-            ui->setupUi(this);
-            const bool enabled = sGui->isDeveloperFlagSet();
-            this->setEnabled(enabled);
-            if (!enabled)
-            {
-                this->setToolTip("Disabled, cannot be set!");
-            }
-            else
-            {
-                connect(ui->cb_EnableServerDebugging, &QCheckBox::toggled, this, &CDbDebugDatabaseSetup::onDebugChanged);
-            }
+            this->setToolTip("Disabled, cannot be set!");
         }
-
-        CDbDebugDatabaseSetup::~CDbDebugDatabaseSetup()
-        { }
-
-        void CDbDebugDatabaseSetup::onDebugChanged(bool set)
+        else
         {
-            CGlobalSetup gs(m_setup.getThreadLocal());
-            gs.setServerDebugFlag(set);
-            m_setup.set(gs);
+            connect(ui->cb_EnableServerDebugging, &QCheckBox::toggled, this, &CDbDebugDatabaseSetup::onDebugChanged);
         }
+    }
 
-    } // ns
+    CDbDebugDatabaseSetup::~CDbDebugDatabaseSetup()
+    { }
+
+    void CDbDebugDatabaseSetup::onDebugChanged(bool set)
+    {
+        CGlobalSetup gs(m_setup.getThreadLocal());
+        gs.setServerDebugFlag(set);
+        m_setup.set(gs);
+    }
+
 } // ns

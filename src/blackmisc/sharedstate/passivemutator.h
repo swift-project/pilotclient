@@ -16,39 +16,36 @@
 #include <QObject>
 #include <QSharedPointer>
 
-namespace BlackMisc
+namespace BlackMisc::SharedState
 {
-    namespace SharedState
+    class CActiveMutator;
+
+    /*!
+     * Endpoint which can emit events to subscribers.
+     * \ingroup SharedState
+     */
+    class BLACKMISC_EXPORT CPassiveMutator : public QObject, public QEnableSharedFromThis<CPassiveMutator>
     {
-        class CActiveMutator;
+        Q_OBJECT
+        friend CActiveMutator;
+        friend QSharedPointer<CPassiveMutator>;
 
-        /*!
-         * Endpoint which can emit events to subscribers.
-         * \ingroup SharedState
-         */
-        class BLACKMISC_EXPORT CPassiveMutator : public QObject, public QEnableSharedFromThis<CPassiveMutator>
-        {
-            Q_OBJECT
-            friend CActiveMutator;
-            friend QSharedPointer<CPassiveMutator>;
+        CPassiveMutator(QObject* parent) : QObject(parent) {}
 
-            CPassiveMutator(QObject* parent) : QObject(parent) {}
+    public:
+        //! Factory method.
+        static auto create(QObject *parent) { return QSharedPointer<CPassiveMutator>::create(parent); }
 
-        public:
-            //! Factory method.
-            static auto create(QObject *parent) { return QSharedPointer<CPassiveMutator>::create(parent); }
+        //! Emit an event.
+        void postEvent(const CVariant &param);
 
-            //! Emit an event.
-            void postEvent(const CVariant &param);
+        //! Get a QWeakPointer pointing to this object.
+        QWeakPointer<const CPassiveMutator> weakRef() const { return sharedFromThis(); }
 
-            //! Get a QWeakPointer pointing to this object.
-            QWeakPointer<const CPassiveMutator> weakRef() const { return sharedFromThis(); }
-
-        signals:
-            //! Emitted by postEvent.
-            void eventPosted(const BlackMisc::CVariant &param);
-        };
-    }
+    signals:
+        //! Emitted by postEvent.
+        void eventPosted(const BlackMisc::CVariant &param);
+    };
 }
 
 #endif

@@ -13,13 +13,10 @@
 
 #include "blackmisc/blackmiscexport.h"
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
-    {
-        //! Register metadata for simulation
-        BLACKMISC_EXPORT void registerMetadata();
-    } // ns
+    //! Register metadata for simulation
+    BLACKMISC_EXPORT void registerMetadata();
 } // ns
 
 #endif // guard

@@ -15,29 +15,26 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CDbLiveryColorSearchDialog::CDbLiveryColorSearchDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CDbLiveryColorSearchDialog)
     {
-        CDbLiveryColorSearchDialog::CDbLiveryColorSearchDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CDbLiveryColorSearchDialog)
-        {
-            ui->setupUi(this);
-            connect(this, &CDbLiveryColorSearchDialog::accepted, this, &CDbLiveryColorSearchDialog::onAccepted);
-        }
+        ui->setupUi(this);
+        connect(this, &CDbLiveryColorSearchDialog::accepted, this, &CDbLiveryColorSearchDialog::onAccepted);
+    }
 
-        CDbLiveryColorSearchDialog::~CDbLiveryColorSearchDialog()
-        { }
+    CDbLiveryColorSearchDialog::~CDbLiveryColorSearchDialog()
+    { }
 
-        const CLivery &CDbLiveryColorSearchDialog::getLivery() const
-        {
-            return m_foundLivery;
-        }
+    const CLivery &CDbLiveryColorSearchDialog::getLivery() const
+    {
+        return m_foundLivery;
+    }
 
-        void CDbLiveryColorSearchDialog::onAccepted()
-        {
-            m_foundLivery = ui->comp_LiverySearch->getLivery();
-        }
-    } // ns
+    void CDbLiveryColorSearchDialog::onAccepted()
+    {
+        m_foundLivery = ui->comp_LiverySearch->getLivery();
+    }
 } // ns

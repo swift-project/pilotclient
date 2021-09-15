@@ -20,28 +20,25 @@
 
 using namespace BlackMisc;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    CApplicationInfoListModel::CApplicationInfoListModel(QObject *parent) :
+        CListModelBase("ModelApplicationInfoListModel", parent)
     {
-        CApplicationInfoListModel::CApplicationInfoListModel(QObject *parent) :
-            CListModelBase("ModelApplicationInfoListModel", parent)
-        {
-            m_columns.addColumn(CColumn::standardString("version", CApplicationInfo::IndexVersionString));
-            m_columns.addColumn(CColumn::standardString("OS", CApplicationInfo::IndexPlatformInfo));
-            m_columns.addColumn(CColumn::standardString("exe.path", CApplicationInfo::IndexExecutablePath));
-            m_columns.addColumn(CColumn("e.?", "existing?", CApplicationInfo::IndexExecutablePathExisting, new CBoolIconFormatter("directory existing", "directory not existing")));
-            m_columns.addColumn(CColumn::standardString("data.path", CApplicationInfo::IndexApplicationDataPath));
-            m_columns.setWidthPercentages({20, 15, 30, 5, 30});
+        m_columns.addColumn(CColumn::standardString("version", CApplicationInfo::IndexVersionString));
+        m_columns.addColumn(CColumn::standardString("OS", CApplicationInfo::IndexPlatformInfo));
+        m_columns.addColumn(CColumn::standardString("exe.path", CApplicationInfo::IndexExecutablePath));
+        m_columns.addColumn(CColumn("e.?", "existing?", CApplicationInfo::IndexExecutablePathExisting, new CBoolIconFormatter("directory existing", "directory not existing")));
+        m_columns.addColumn(CColumn::standardString("data.path", CApplicationInfo::IndexApplicationDataPath));
+        m_columns.setWidthPercentages({20, 15, 30, 5, 30});
 
-            // default sort order
-            this->setSortColumnByPropertyIndex(CApplicationInfo::IndexVersionString);
-            m_sortOrder = Qt::DescendingOrder;
-        }
+        // default sort order
+        this->setSortColumnByPropertyIndex(CApplicationInfo::IndexVersionString);
+        m_sortOrder = Qt::DescendingOrder;
+    }
 
-        void CApplicationInfoListModel::otherSwiftVersionsFromDataDirectories(bool reinit)
-        {
-            this->update(CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories(reinit));
-        }
-    }  // namespace
+    void CApplicationInfoListModel::otherSwiftVersionsFromDataDirectories(bool reinit)
+    {
+        this->update(CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories(reinit));
+    }
 } // namespace

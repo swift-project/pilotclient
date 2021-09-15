@@ -22,74 +22,71 @@ class QPixmap;
 class QWidget;
 
 namespace Ui { class CDataMainInfoAreaComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    class CDataInfoAreaComponent;
+    class CDbMappingComponent;
+    class CLogComponent;
+    class CDataSettingsComponent;
+
+    /**
+     * Main info area for data entry tool
+     */
+    class BLACKGUI_EXPORT CDataMainInfoAreaComponent :
+        public BlackGui::CInfoArea
     {
-        class CDataInfoAreaComponent;
-        class CDbMappingComponent;
-        class CLogComponent;
-        class CDataSettingsComponent;
+        Q_OBJECT
 
-        /**
-         * Main info area for data entry tool
-         */
-        class BLACKGUI_EXPORT CDataMainInfoAreaComponent :
-            public BlackGui::CInfoArea
-       {
-            Q_OBJECT
-
-        public:
-            //! Info areas
-            enum InfoArea
-            {
-                // index must match tab index!
-                InfoAreaMapping       =  0,
-                InfoAreaData          =  1,
-                InfoAreaSettings      =  2,
-                InfoAreaLog           =  3,
-                InfoAreaNone          = -1
-            };
-
-            //! Constructor
-            explicit CDataMainInfoAreaComponent(QWidget *parent = nullptr);
-
-            //! Destructor
-            virtual ~CDataMainInfoAreaComponent() override;
-
-            //! Log component
-            CLogComponent *getLogComponent() const;
-
-            //! Mapping component
-            CDbMappingComponent *getMappingComponent() const;
-
-            //! Info area component
-            CDataInfoAreaComponent *getDataInfoAreaComponent() const;
-
-            //! Settings component
-            BlackGui::Components::CDataSettingsComponent *getDataSettingsComponent() const;
-
-            //! Display the log
-            void displayLog();
-
-            //! Display console
-            void displayConsole();
-
-        public slots:
-            //! Select log area
-            void selectLog();
-
-        protected:
-            //! \copydoc CInfoArea::getPreferredSizeWhenFloating
-            virtual QSize getPreferredSizeWhenFloating(int areaIndex) const override;
-
-            //! \copydoc CInfoArea::indexToPixmap
-            virtual const QPixmap &indexToPixmap(int areaIndex) const override;
-
-        private:
-            QScopedPointer <Ui::CDataMainInfoAreaComponent> ui;
+    public:
+        //! Info areas
+        enum InfoArea
+        {
+            // index must match tab index!
+            InfoAreaMapping       =  0,
+            InfoAreaData          =  1,
+            InfoAreaSettings      =  2,
+            InfoAreaLog           =  3,
+            InfoAreaNone          = -1
         };
-    } // ns
+
+        //! Constructor
+        explicit CDataMainInfoAreaComponent(QWidget *parent = nullptr);
+
+        //! Destructor
+        virtual ~CDataMainInfoAreaComponent() override;
+
+        //! Log component
+        CLogComponent *getLogComponent() const;
+
+        //! Mapping component
+        CDbMappingComponent *getMappingComponent() const;
+
+        //! Info area component
+        CDataInfoAreaComponent *getDataInfoAreaComponent() const;
+
+        //! Settings component
+        BlackGui::Components::CDataSettingsComponent *getDataSettingsComponent() const;
+
+        //! Display the log
+        void displayLog();
+
+        //! Display console
+        void displayConsole();
+
+    public slots:
+        //! Select log area
+        void selectLog();
+
+    protected:
+        //! \copydoc CInfoArea::getPreferredSizeWhenFloating
+        virtual QSize getPreferredSizeWhenFloating(int areaIndex) const override;
+
+        //! \copydoc CInfoArea::indexToPixmap
+        virtual const QPixmap &indexToPixmap(int areaIndex) const override;
+
+    private:
+        QScopedPointer <Ui::CDataMainInfoAreaComponent> ui;
+    };
 } // ns
 
 #endif // guard

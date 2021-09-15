@@ -15,76 +15,73 @@
 #include <QDialog>
 
 namespace Ui { class CSetupLoadingDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    class CCopyModelsFromOtherSwiftVersionsDialog;
+
+    /**
+     * Setup dialog, if something goes wrong allows to copy bootstrap file
+     */
+    class CSetupLoadingDialog : public QDialog
     {
-        class CCopyModelsFromOtherSwiftVersionsDialog;
+        Q_OBJECT
 
-        /**
-         * Setup dialog, if something goes wrong allows to copy bootstrap file
-         */
-        class CSetupLoadingDialog : public QDialog
-        {
-            Q_OBJECT
+    public:
+        //! Ctor
+        explicit CSetupLoadingDialog(QWidget *parent = nullptr);
 
-        public:
-            //! Ctor
-            explicit CSetupLoadingDialog(QWidget *parent = nullptr);
+        //! Ctor with messages
+        CSetupLoadingDialog(const BlackMisc::CStatusMessageList &msgs, QWidget *parent = nullptr);
 
-            //! Ctor with messages
-            CSetupLoadingDialog(const BlackMisc::CStatusMessageList &msgs, QWidget *parent = nullptr);
+        //! Dtor
+        virtual ~CSetupLoadingDialog();
 
-            //! Dtor
-            virtual ~CSetupLoadingDialog();
+    private:
+        QScopedPointer<Ui::CSetupLoadingDialog> ui;
+        QScopedPointer<CCopyModelsFromOtherSwiftVersionsDialog> m_copyFromOtherSwiftVersion;
 
-        private:
-            QScopedPointer<Ui::CSetupLoadingDialog> ui;
-            QScopedPointer<CCopyModelsFromOtherSwiftVersionsDialog> m_copyFromOtherSwiftVersion;
+        //! Cached setup available?
+        bool hasCachedSetup() const;
 
-            //! Cached setup available?
-            bool hasCachedSetup() const;
+        //! Setup reader?
+        bool hasSetupReader() const;
 
-            //! Setup reader?
-            bool hasSetupReader() const;
+        //! Set info fields
+        void displayBootstrapUrls();
 
-            //! Set info fields
-            void displayBootstrapUrls();
+        //! Display bootstrap URL
+        void displayCmdBoostrapUrl();
 
-            //! Display bootstrap URL
-            void displayCmdBoostrapUrl();
+        //! Display global setup
+        void displayGlobalSetup();
 
-            //! Display global setup
-            void displayGlobalSetup();
+        //! Open the help page
+        void openHelpPage();
 
-            //! Open the help page
-            void openHelpPage();
+        //! Try again without explicit bootstrap URL
+        void tryAgainWithoutBootstrapUrl();
 
-            //! Try again without explicit bootstrap URL
-            void tryAgainWithoutBootstrapUrl();
+        //! Try to fix
+        void tryToFix();
 
-            //! Try to fix
-            void tryToFix();
+        //! Prefill setup cache
+        void prefillSetupCache();
 
-            //! Prefill setup cache
-            void prefillSetupCache();
+        //! Display the setup cache info
+        void displaySetupCacheInfo();
 
-            //! Display the setup cache info
-            void displaySetupCacheInfo();
+        //! Display other versions info
+        void displayOtherVersionsInfo();
 
-            //! Display other versions info
-            void displayOtherVersionsInfo();
+        //! Open directory
+        void openDirectory();
 
-            //! Open directory
-            void openDirectory();
+        //! Copy from other swift versions
+        void copyFromOtherSwiftVersions();
 
-            //! Copy from other swift versions
-            void copyFromOtherSwiftVersions();
-
-            //! Setup loading has been completed
-            void onSetupHandlingCompleted(bool success);
-        };
-    } // ns
+        //! Setup loading has been completed
+        void onSetupHandlingCompleted(bool success);
+    };
 } // ns
 
 #endif // guard

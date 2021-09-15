@@ -19,53 +19,50 @@
 
 using namespace BlackGui;
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+
+    CCheckBoxDelegate::CCheckBoxDelegate(QObject *parent) : QItemDelegate(parent)
+    { }
+
+    CCheckBoxDelegate::CCheckBoxDelegate(const QString &iconCheckedUrl, const QString &iconUncheckedUrl, QObject *parent) :
+        QItemDelegate(parent), m_iconCheckedUrl(iconCheckedUrl), m_iconUncheckedUrl(iconUncheckedUrl)
+    { }
+
+    CCheckBoxDelegate::~CCheckBoxDelegate() { }
+
+    QWidget *CCheckBoxDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
-
-        CCheckBoxDelegate::CCheckBoxDelegate(QObject *parent) : QItemDelegate(parent)
-        { }
-
-        CCheckBoxDelegate::CCheckBoxDelegate(const QString &iconCheckedUrl, const QString &iconUncheckedUrl, QObject *parent) :
-            QItemDelegate(parent), m_iconCheckedUrl(iconCheckedUrl), m_iconUncheckedUrl(iconUncheckedUrl)
-        { }
-
-        CCheckBoxDelegate::~CCheckBoxDelegate() { }
-
-        QWidget *CCheckBoxDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+        Q_UNUSED(index);
+        Q_UNUSED(option);
+        QCheckBox *cb = new QCheckBox(parent);
+        if (!m_iconCheckedUrl.isEmpty() && !m_iconUncheckedUrl.isEmpty())
         {
-            Q_UNUSED(index);
-            Q_UNUSED(option);
-            QCheckBox *cb = new QCheckBox(parent);
-            if (!m_iconCheckedUrl.isEmpty() && !m_iconUncheckedUrl.isEmpty())
-            {
-                const QString style = CStyleSheetUtility::styleForIconCheckBox(m_iconCheckedUrl, m_iconUncheckedUrl);
-                cb->setStyleSheet("");
-                cb->setStyleSheet(style);
-            }
-            return cb;
+            const QString style = CStyleSheetUtility::styleForIconCheckBox(m_iconCheckedUrl, m_iconUncheckedUrl);
+            cb->setStyleSheet("");
+            cb->setStyleSheet(style);
         }
+        return cb;
+    }
 
-        void CCheckBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
-        {
-            const bool v = index.model()->data(index, Qt::UserRole).toBool();
-            QCheckBox *cb = qobject_cast<QCheckBox *>(editor);
-            cb->setChecked(v);
-        }
+    void CCheckBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+    {
+        const bool v = index.model()->data(index, Qt::UserRole).toBool();
+        QCheckBox *cb = qobject_cast<QCheckBox *>(editor);
+        cb->setChecked(v);
+    }
 
-        void CCheckBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
-        {
-            QCheckBox *cb = qobject_cast<QCheckBox *>(editor);
-            const bool v = cb->isChecked();
-            model->setData(index, QVariant(v), Qt::EditRole);
-        }
+    void CCheckBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+    {
+        QCheckBox *cb = qobject_cast<QCheckBox *>(editor);
+        const bool v = cb->isChecked();
+        model->setData(index, QVariant(v), Qt::EditRole);
+    }
 
-        void CCheckBoxDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
-        {
-            Q_UNUSED(index);
-            editor->setGeometry(option.rect);
-        }
+    void CCheckBoxDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    {
+        Q_UNUSED(index);
+        editor->setGeometry(option.rect);
+    }
 
-    } // namespace
 } // namespace

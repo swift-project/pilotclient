@@ -8,25 +8,22 @@
 
 #include "aircraftmodelsetprovider.h"
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    // pin vtables to this file
+    void CAircraftModelSetAware::anchor()
+    { }
+
+    CAircraftModelList CAircraftModelSetAware::getModelSet() const
     {
-        // pin vtables to this file
-        void CAircraftModelSetAware::anchor()
-        { }
+        if (!this->hasProvider()) { return CAircraftModelList(); }
+        return this->provider()->getModelSet();
+    }
 
-        CAircraftModelList CAircraftModelSetAware::getModelSet() const
-        {
-            if (!this->hasProvider()) { return CAircraftModelList(); }
-            return this->provider()->getModelSet();
-        }
+    int CAircraftModelSetAware::getModelSetCount() const
+    {
+        if (!this->hasProvider()) { return -1; }
+        return this->provider()->getModelSetCount();
+    }
 
-        int CAircraftModelSetAware::getModelSetCount() const
-        {
-            if (!this->hasProvider()) { return -1; }
-            return this->provider()->getModelSetCount();
-        }
-
-    } // ns
 } // ns

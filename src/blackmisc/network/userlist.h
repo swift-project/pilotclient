@@ -19,27 +19,24 @@
 
 #include <QMetaType>
 
-namespace BlackMisc
+namespace BlackMisc::Network
 {
-    namespace Network
+    //! Value object encapsulating a list of voice rooms.
+    class BLACKMISC_EXPORT CUserList :
+        public CSequence<CUser>,
+        public Aviation::ICallsignObjectList<CUser, CUserList>,
+        public Mixin::MetaType<CUserList>
     {
-        //! Value object encapsulating a list of voice rooms.
-        class BLACKMISC_EXPORT CUserList :
-            public CSequence<CUser>,
-            public Aviation::ICallsignObjectList<CUser, CUserList>,
-            public Mixin::MetaType<CUserList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CUserList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CUserList)
+        using CSequence::CSequence;
 
-            //! Default constructor.
-            CUserList();
+        //! Default constructor.
+        CUserList();
 
-            //! Construct from a base class object.
-            CUserList(const CSequence &other);
-        };
-    } //namespace
+        //! Construct from a base class object.
+        CUserList(const CSequence &other);
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Network::CUserList)

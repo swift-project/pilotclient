@@ -16,36 +16,33 @@
 #include <QScopedPointer>
 
 namespace Ui { class CSimBriefDownloadDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Download from SimBrief
+    class CSimBriefDownloadDialog : public QDialog
     {
-        //! Download from SimBrief
-        class CSimBriefDownloadDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            explicit CSimBriefDownloadDialog(QWidget *parent = nullptr);
+    public:
+        //! Ctor
+        explicit CSimBriefDownloadDialog(QWidget *parent = nullptr);
 
-            //! Dtor
-            virtual ~CSimBriefDownloadDialog() override;
+        //! Dtor
+        virtual ~CSimBriefDownloadDialog() override;
 
-            //! SimBrief data
-            BlackMisc::Aviation::CSimBriefData getSimBriefData() const;
+        //! SimBrief data
+        BlackMisc::Aviation::CSimBriefData getSimBriefData() const;
 
-            //! Set UI values from data
-            void setSimBriefData(const BlackMisc::Aviation::CSimBriefData &data);
+        //! Set UI values from data
+        void setSimBriefData(const BlackMisc::Aviation::CSimBriefData &data);
 
-            //! \copydoc QDialog::exec
-            virtual int exec() override;
+        //! \copydoc QDialog::exec
+        virtual int exec() override;
 
-        private:
-            QScopedPointer<Ui::CSimBriefDownloadDialog> ui;
-            BlackMisc::CData<BlackMisc::Aviation::Data::TSimBriefData> m_simBrief { this };
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CSimBriefDownloadDialog> ui;
+        BlackMisc::CData<BlackMisc::Aviation::Data::TSimBriefData> m_simBrief { this };
+    };
 } // ns
 
 #endif // guard

@@ -20,58 +20,55 @@
 #include <QString>
 
 namespace Ui { class CAircraftCombinedTypeSelector; }
-namespace BlackMisc { namespace Aviation { class CAircraftIcaoCode; } }
-namespace BlackGui
+namespace BlackMisc::Aviation { class CAircraftIcaoCode; }
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Select by comined type ("L2J", "H1T", ...)
+     */
+    class BLACKGUI_EXPORT CAircraftCombinedTypeSelector : public QFrame
     {
-        /*!
-         * Select by comined type ("L2J", "H1T", ...)
-         */
-        class BLACKGUI_EXPORT CAircraftCombinedTypeSelector : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAircraftCombinedTypeSelector(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAircraftCombinedTypeSelector(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAircraftCombinedTypeSelector() override;
+        //! Destructor
+        virtual ~CAircraftCombinedTypeSelector() override;
 
-            //! Set comined code, e.g. L1P
-            void setCombinedType(const QString &combinedCode);
+        //! Set comined code, e.g. L1P
+        void setCombinedType(const QString &combinedCode);
 
-            //! Combined code from aircraft ICAO
-            void setCombinedType(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+        //! Combined code from aircraft ICAO
+        void setCombinedType(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
 
-            //! Clear
-            void clear();
+        //! Clear
+        void clear();
 
-            //! Read only
-            void setReadOnly(bool readOnly);
+        //! Read only
+        void setReadOnly(bool readOnly);
 
-            //! Get the combined type, e.g. "L2P"
-            QString getCombinedType() const;
+        //! Get the combined type, e.g. "L2P"
+        QString getCombinedType() const;
 
-        signals:
-            //! Combined type has beend changed
-            void changedCombinedType(const QString &cominedType);
+    signals:
+        //! Combined type has beend changed
+        void changedCombinedType(const QString &cominedType);
 
-        private:
-            //! Code has been entered
-            void combinedTypeEntered();
+    private:
+        //! Code has been entered
+        void combinedTypeEntered();
 
-            //! Changed combobox
-            void changedComboBox(const QString &text);
+        //! Changed combobox
+        void changedComboBox(const QString &text);
 
-            //! Combined type from comboboxes
-            QString getCombinedTypeFromComboBoxes() const;
+        //! Combined type from comboboxes
+        QString getCombinedTypeFromComboBoxes() const;
 
-            QString m_cc;
-            QScopedPointer<Ui::CAircraftCombinedTypeSelector> ui;
-        };
-    } // ns
+        QString m_cc;
+        QScopedPointer<Ui::CAircraftCombinedTypeSelector> ui;
+    };
 } // ns
 
 #endif // guard

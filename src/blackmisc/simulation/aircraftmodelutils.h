@@ -15,31 +15,28 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    //! Utilities for aircraft models
+    class BLACKMISC_EXPORT CAircraftModelUtilities
     {
-        //! Utilities for aircraft models
-        class BLACKMISC_EXPORT CAircraftModelUtilities
-        {
-        public:
-            //! No constructor
-            CAircraftModelUtilities() = delete;
+    public:
+        //! No constructor
+        CAircraftModelUtilities() = delete;
 
-            //! Merge with vPilot data if possible
-            //! \deprecated vPilot parts might be removed
-            static bool mergeWithVPilotData(BlackMisc::Simulation::CAircraftModelList &modelToBeModified, const BlackMisc::Simulation::CAircraftModelList &vPilotModels, bool force = false);
+        //! Merge with vPilot data if possible
+        //! \deprecated vPilot parts might be removed
+        static bool mergeWithVPilotData(BlackMisc::Simulation::CAircraftModelList &modelToBeModified, const BlackMisc::Simulation::CAircraftModelList &vPilotModels, bool force = false);
 
-            //! Matrix airlines/aircraft ICAOs
-            static QString createIcaoAirlineAircraftHtmlMatrix(const BlackMisc::Simulation::CAircraftModelList &models);
+        //! Matrix airlines/aircraft ICAOs
+        static QString createIcaoAirlineAircraftHtmlMatrix(const BlackMisc::Simulation::CAircraftModelList &models);
 
-            //! Matrix airlines/aircraft ICAOs
-            static QString createIcaoAirlineAircraftHtmlMatrixFile(const BlackMisc::Simulation::CAircraftModelList &models, const QString &tempDir);
+        //! Matrix airlines/aircraft ICAOs
+        static QString createIcaoAirlineAircraftHtmlMatrixFile(const BlackMisc::Simulation::CAircraftModelList &models, const QString &tempDir);
 
-            //! Validate aircraft.cfg entries
-            static CStatusMessageList validateModelFiles(const CSimulatorInfo &simulator, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simulatorDir);
-        };
-    } //namespace
+        //! Validate aircraft.cfg entries
+        static CStatusMessageList validateModelFiles(const CSimulatorInfo &simulator, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simulatorDir);
+    };
 } // namespace
 
 #endif //guard

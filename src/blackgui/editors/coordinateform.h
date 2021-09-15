@@ -17,59 +17,56 @@
 #include "blackmisc/statusmessagelist.h"
 
 namespace Ui { class CCoordinateForm; }
-namespace BlackGui
+namespace BlackGui::Editors
 {
-    namespace Editors
+    /**
+     * Select / enter a geo position
+     */
+    class BLACKGUI_EXPORT CCoordinateForm : public CForm
     {
-        /**
-         * Select / enter a geo position
-         */
-        class BLACKGUI_EXPORT CCoordinateForm : public CForm
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            explicit CCoordinateForm(QWidget *parent = nullptr);
+    public:
+        //! Ctor
+        explicit CCoordinateForm(QWidget *parent = nullptr);
 
-            //! Dtor
-            virtual ~CCoordinateForm() override;
+        //! Dtor
+        virtual ~CCoordinateForm() override;
 
-            //! Get the coordinate
-            BlackMisc::Geo::CCoordinateGeodetic getCoordinate() const { return m_coordinate; }
+        //! Get the coordinate
+        BlackMisc::Geo::CCoordinateGeodetic getCoordinate() const { return m_coordinate; }
 
-            //! Set the coordinate
-            bool setCoordinate(const BlackMisc::Geo::ICoordinateGeodetic &coordinate);
+        //! Set the coordinate
+        bool setCoordinate(const BlackMisc::Geo::ICoordinateGeodetic &coordinate);
 
-            //! \name Form class implementations
-            //! @{
-            virtual void setReadOnly(bool readonly) override;
-            virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
-            //! @}
+        //! \name Form class implementations
+        //! @{
+        virtual void setReadOnly(bool readonly) override;
+        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        //! @}
 
-            //! Set button visible
-            void showSetButton(bool visible);
+        //! Set button visible
+        void showSetButton(bool visible);
 
-            //! Show elevation
-            void showElevation(bool show);
+        //! Show elevation
+        void showElevation(bool show);
 
-        signals:
-            //! Change coordinate
-            void changedCoordinate();
+    signals:
+        //! Change coordinate
+        void changedCoordinate();
 
-        private:
-            QScopedPointer<Ui::CCoordinateForm> ui;
+    private:
+        QScopedPointer<Ui::CCoordinateForm> ui;
 
-            void locationEntered();
-            void latEntered();
-            void latCombinedEntered();
-            void lngEntered();
-            void lngCombinedEntered();
-            void elvEntered();
-            void presetOwnAircraftPosition();
+        void locationEntered();
+        void latEntered();
+        void latCombinedEntered();
+        void lngEntered();
+        void lngCombinedEntered();
+        void elvEntered();
+        void presetOwnAircraftPosition();
 
-            BlackMisc::Geo::CCoordinateGeodetic m_coordinate;
-        };
-    } // ns
+        BlackMisc::Geo::CCoordinateGeodetic m_coordinate;
+    };
 } // ns
 #endif // guard

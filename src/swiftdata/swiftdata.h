@@ -25,7 +25,7 @@
 
 namespace Ui { class CSwiftData; }
 namespace BlackCore { class CWebDataServices; }
-namespace BlackGui { namespace Components { class CAutoPublishDialog; }}
+namespace BlackGui::Components { class CAutoPublishDialog; }
 
 /*!
  * swift data entry control (aka mapping tool)

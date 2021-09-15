@@ -13,13 +13,10 @@
 
 #include "blackmisc/blackmiscexport.h"
 
-namespace BlackMisc
+namespace BlackMisc::Weather
 {
-    namespace Weather
-    {
-        //! Register metadata for weather
-        BLACKMISC_EXPORT void registerMetadata();
-    } // ns
+    //! Register metadata for weather
+    BLACKMISC_EXPORT void registerMetadata();
 } // ns
 
 #endif // guard

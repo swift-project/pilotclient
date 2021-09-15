@@ -10,33 +10,30 @@
 #include "ui_modelbrowserdialog.h"
 #include "blackgui/guiapplication.h"
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CModelBrowserDialog::CModelBrowserDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CModelBrowserDialog)
     {
-        CModelBrowserDialog::CModelBrowserDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CModelBrowserDialog)
-        {
-            ui->setupUi(this);
-        }
+        ui->setupUi(this);
+    }
 
-        CModelBrowserDialog::~CModelBrowserDialog()
-        {
-            // void;
-        }
+    CModelBrowserDialog::~CModelBrowserDialog()
+    {
+        // void;
+    }
 
-        bool CModelBrowserDialog::event(QEvent *event)
-        {
-            if (CGuiApplication::triggerShowHelp(this, event)) { return true; }
-            return QDialog::event(event);
-        }
+    bool CModelBrowserDialog::event(QEvent *event)
+    {
+        if (CGuiApplication::triggerShowHelp(this, event)) { return true; }
+        return QDialog::event(event);
+    }
 
-        void CModelBrowserDialog::done(int r)
-        {
-            ui->comp_ModelBrowser->close();
-            QDialog::done(r);
-        }
+    void CModelBrowserDialog::done(int r)
+    {
+        ui->comp_ModelBrowser->close();
+        QDialog::done(r);
+    }
 
-    } // ns
 } // ns

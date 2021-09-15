@@ -15,28 +15,25 @@
 #include "blackmisc/pq/physicalquantity.h"
 #include <QPair>
 
-namespace BlackMisc
+namespace BlackMisc::PhysicalQuantities
 {
-    namespace PhysicalQuantities
+    /*!
+     * Speed class, e.g. "m/s", "NM/h", "km/h", "ft/s"
+     */
+    class BLACKMISC_EXPORT CSpeed : public CPhysicalQuantity<CSpeedUnit, CSpeed>
     {
-        /*!
-         * Speed class, e.g. "m/s", "NM/h", "km/h", "ft/s"
-         */
-        class BLACKMISC_EXPORT CSpeed : public CPhysicalQuantity<CSpeedUnit, CSpeed>
-        {
-        public:
-            //! Default constructor
-            CSpeed() : CPhysicalQuantity(0, CSpeedUnit::defaultUnit()) {}
+    public:
+        //! Default constructor
+        CSpeed() : CPhysicalQuantity(0, CSpeedUnit::defaultUnit()) {}
 
-            //! Init by double value
-            CSpeed(double value, const CSpeedUnit &unit) : CPhysicalQuantity(value, unit) {}
+        //! Init by double value
+        CSpeed(double value, const CSpeedUnit &unit) : CPhysicalQuantity(value, unit) {}
 
-            //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CSpeed(const QString &unitString) : CPhysicalQuantity(unitString) {}
-        };
+        //! \copydoc CPhysicalQuantity(const QString &unitString)
+        CSpeed(const QString &unitString) : CPhysicalQuantity(unitString) {}
+    };
 
-        using CSpeedPair  = QPair<CSpeed, CSpeed>;   //!< Pair of speeds
-    } // ns
+    using CSpeedPair  = QPair<CSpeed, CSpeed>;   //!< Pair of speeds
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CSpeed)

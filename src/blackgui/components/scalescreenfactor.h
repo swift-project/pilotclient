@@ -16,43 +16,40 @@
 #include <QScopedPointer>
 
 namespace Ui { class CScaleScreenFactor; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * UI to scale screen factor
+     */
+    class BLACKGUI_EXPORT CScaleScreenFactor : public QFrame
     {
-        /**
-         * UI to scale screen factor
-         */
-        class BLACKGUI_EXPORT CScaleScreenFactor : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CScaleScreenFactor(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CScaleScreenFactor(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CScaleScreenFactor() override;
+        //! Destructor
+        virtual ~CScaleScreenFactor() override;
 
-            //! Minimum/maximum values
-            void setMinMax(int min, int max);
+        //! Minimum/maximum values
+        void setMinMax(int min, int max);
 
-            //! Scale factor
-            qreal getScaleFactor() const;
+        //! Scale factor
+        qreal getScaleFactor() const;
 
-            //! Scale factor as string
-            QString getScaleFactorAsString() const;
+        //! Scale factor as string
+        QString getScaleFactorAsString() const;
 
-        private:
-            //! Slider value changed
-            void onSliderChanged(int value);
+    private:
+        //! Slider value changed
+        void onSliderChanged(int value);
 
-            //! Line edit change
-            void onEditFinished();
+        //! Line edit change
+        void onEditFinished();
 
-            QScopedPointer<Ui::CScaleScreenFactor> ui;
-        };
-    } // ns
+        QScopedPointer<Ui::CScaleScreenFactor> ui;
+    };
 }// ns
 
 #endif // guard

@@ -21,30 +21,27 @@
 #include <QMetaType>
 #include <QString>
 
-namespace BlackMisc
+namespace BlackMisc::Weather
 {
-    namespace Weather
+    //! Sequence of Metars
+    class BLACKMISC_EXPORT CMetarList :
+        public CSequence<CMetar>,
+        public BlackMisc::Mixin::MetaType<CMetarList>
     {
-        //! Sequence of Metars
-        class BLACKMISC_EXPORT CMetarList :
-            public CSequence<CMetar>,
-            public BlackMisc::Mixin::MetaType<CMetarList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CMetarList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CMetarList)
+        using CSequence::CSequence;
 
-            //! Default constructor.
-            CMetarList() = default;
+        //! Default constructor.
+        CMetarList() = default;
 
-            //! Construct from a base class object.
-            CMetarList(const CSequence<CMetar> &other);
+        //! Construct from a base class object.
+        CMetarList(const CSequence<CMetar> &other);
 
-            //! METAR for ICAO code
-            CMetar getMetarForAirport(const Aviation::CAirportIcaoCode &icao) const;
-        };
+        //! METAR for ICAO code
+        CMetar getMetarForAirport(const Aviation::CAirportIcaoCode &icao) const;
+    };
 
-    } //namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CMetarList)

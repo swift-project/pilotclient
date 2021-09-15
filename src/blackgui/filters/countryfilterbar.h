@@ -23,41 +23,38 @@ class QWidget;
 
 namespace BlackMisc { class CCountryList; }
 namespace Ui { class CCountryFilterBar; }
-namespace BlackGui
+namespace BlackGui::Filters
 {
-    namespace Filters
+    /*!
+     * Country filter bar
+     */
+    class BLACKGUI_EXPORT CCountryFilterBar :
+        public CFilterWidget,
+        public Models::IModelFilterProvider<BlackMisc::CCountryList>
     {
-        /*!
-         * Country filter bar
-         */
-        class BLACKGUI_EXPORT CCountryFilterBar :
-            public CFilterWidget,
-            public Models::IModelFilterProvider<BlackMisc::CCountryList>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CCountryFilterBar(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CCountryFilterBar(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CCountryFilterBar() override;
+        //! Destructor
+        virtual ~CCountryFilterBar() override;
 
-            //! \copydoc Models::IModelFilterProvider::createModelFilter
-            virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::CCountryList>> createModelFilter() const override;
+        //! \copydoc Models::IModelFilterProvider::createModelFilter
+        virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::CCountryList>> createModelFilter() const override;
 
-        public slots:
-            //! \copydoc CFilterWidget::onRowCountChanged
-            virtual void onRowCountChanged(int count, bool withFilter) override;
+    public slots:
+        //! \copydoc CFilterWidget::onRowCountChanged
+        virtual void onRowCountChanged(int count, bool withFilter) override;
 
-        protected:
-            //! Clear form
-            virtual void clearForm() override;
+    protected:
+        //! Clear form
+        virtual void clearForm() override;
 
-        private:
-            QScopedPointer<Ui::CCountryFilterBar> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CCountryFilterBar> ui;
+    };
 } // ns
 
 #endif // guard

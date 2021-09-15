@@ -30,7 +30,7 @@
 class QAction;
 
 namespace Ui { class CDbOwnModelSetComponent; }
-namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
+namespace BlackMisc::Simulation { class CAircraftModel; }
 namespace BlackGui
 {
     namespace Menus { class CMenuActions; }

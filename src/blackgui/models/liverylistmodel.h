@@ -16,33 +16,27 @@
 
 class QObject;
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
-    {
-        class CLivery;
-        class CLiveryList;
-    }
+    class CLivery;
+    class CLiveryList;
 }
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Distributor list model
+    class BLACKGUI_EXPORT CLiveryListModel :
+        public CListModelDbObjects<BlackMisc::Aviation::CLiveryList, int, true>
     {
-        //! Distributor list model
-        class BLACKGUI_EXPORT CLiveryListModel :
-            public CListModelDbObjects<BlackMisc::Aviation::CLiveryList, int, true>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CLiveryListModel(QObject *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CLiveryListModel(QObject *parent = nullptr);
 
-            //! Destructor
-            virtual ~CLiveryListModel() override {}
-        };
-    } // ns
+        //! Destructor
+        virtual ~CLiveryListModel() override {}
+    };
 } // ns
 
 #endif // guard

@@ -18,50 +18,47 @@
 #include <QObject>
 #include <QMutex>
 
-namespace BlackMisc
+namespace BlackMisc::SharedState
 {
-    namespace SharedState
+    class IDataLink;
+
+    /*!
+     * Non-template base class for CScalarJournal.
+     * \ingroup SharedState
+     */
+    class BLACKMISC_EXPORT CGenericScalarJournal : public QObject
     {
-        class IDataLink;
+        Q_OBJECT
 
-        /*!
-         * Non-template base class for CScalarJournal.
-         * \ingroup SharedState
-         */
-        class BLACKMISC_EXPORT CGenericScalarJournal : public QObject
-        {
-            Q_OBJECT
+    public:
+        //! Publish using the given transport mechanism.
+        void initialize(IDataLink *);
 
-        public:
-            //! Publish using the given transport mechanism.
-            void initialize(IDataLink *);
+    protected:
+        //! Constructor.
+        CGenericScalarJournal(QObject *parent) : QObject(parent) {}
 
-        protected:
-            //! Constructor.
-            CGenericScalarJournal(QObject *parent) : QObject(parent) {}
+    private:
+        CVariant handleRequest(const CVariant &param);
+        void handleEvent(const CVariant &param);
 
-        private:
-            CVariant handleRequest(const CVariant &param);
-            void handleEvent(const CVariant &param);
+        QSharedPointer<CActiveMutator> m_mutator = CActiveMutator::create(this, &CGenericScalarJournal::handleRequest);
+        QSharedPointer<CPassiveObserver> m_observer = CPassiveObserver::create(this, &CGenericScalarJournal::handleEvent);
+        CVariant m_value;
+    };
 
-            QSharedPointer<CActiveMutator> m_mutator = CActiveMutator::create(this, &CGenericScalarJournal::handleRequest);
-            QSharedPointer<CPassiveObserver> m_observer = CPassiveObserver::create(this, &CGenericScalarJournal::handleEvent);
-            CVariant m_value;
-        };
-
-        /*!
-         * Base class for an object that shares state with a corresponding CScalarObserver subclass object.
-         * \tparam T Datatype encapsulating the state to be shared.
-         * \ingroup SharedState
-         */
-        template <typename T>
-        class CScalarJournal : public CGenericScalarJournal
-        {
-        protected:
-            //! Constructor.
-            CScalarJournal(QObject *parent) : CGenericScalarJournal(parent) {}
-        };
-    }
+    /*!
+     * Base class for an object that shares state with a corresponding CScalarObserver subclass object.
+     * \tparam T Datatype encapsulating the state to be shared.
+     * \ingroup SharedState
+     */
+    template <typename T>
+    class CScalarJournal : public CGenericScalarJournal
+    {
+    protected:
+        //! Constructor.
+        CScalarJournal(QObject *parent) : CGenericScalarJournal(parent) {}
+    };
 }
 
 #endif

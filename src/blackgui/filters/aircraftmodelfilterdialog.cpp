@@ -16,27 +16,24 @@ using namespace BlackGui::Filters;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Network;
 
-namespace BlackGui
+namespace BlackGui::Filters
 {
-    namespace Filters
+    CAircraftModelFilterDialog::CAircraftModelFilterDialog(QWidget *parent) :
+        CFilterDialog(parent),
+        ui(new Ui::CAircraftModelFilterDialog)
     {
-        CAircraftModelFilterDialog::CAircraftModelFilterDialog(QWidget *parent) :
-            CFilterDialog(parent),
-            ui(new Ui::CAircraftModelFilterDialog)
-        {
-            ui->setupUi(this);
-            this->setWindowTitle("Filter models");
-            this->resize(640, 100);
-            ui->filter_Models->displayCount(false);
-            connect(ui->filter_Models, &CAircraftModelFilterBar::rejectDialog, this, &CAircraftModelFilterDialog::reject);
-        }
+        ui->setupUi(this);
+        this->setWindowTitle("Filter models");
+        this->resize(640, 100);
+        ui->filter_Models->displayCount(false);
+        connect(ui->filter_Models, &CAircraftModelFilterBar::rejectDialog, this, &CAircraftModelFilterDialog::reject);
+    }
 
-        CAircraftModelFilterDialog::~CAircraftModelFilterDialog()
-        { }
+    CAircraftModelFilterDialog::~CAircraftModelFilterDialog()
+    { }
 
-        std::unique_ptr<IModelFilter<CAircraftModelList>> CAircraftModelFilterDialog::createModelFilter() const
-        {
-            return ui->filter_Models->createModelFilter();
-        }
-    } // namespace
+    std::unique_ptr<IModelFilter<CAircraftModelList>> CAircraftModelFilterDialog::createModelFilter() const
+    {
+        return ui->filter_Models->createModelFilter();
+    }
 } // namespace

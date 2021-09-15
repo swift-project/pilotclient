@@ -12,25 +12,22 @@
 #include <QChar>
 #include <QtGlobal>
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
+    CAircraftEngine::CAircraftEngine(int number, bool on) : m_number(number), m_on(on)
     {
-        CAircraftEngine::CAircraftEngine(int number, bool on) : m_number(number), m_on(on)
-        {
-            Q_ASSERT_X(number > 0, "CAircraftEngine", "Engine numbers have to be > 1");
-        }
+        Q_ASSERT_X(number > 0, "CAircraftEngine", "Engine numbers have to be > 1");
+    }
 
-        void CAircraftEngine::setNumber(int number)
-        {
-            Q_ASSERT_X(number > 0, "setNumber", "Engine numbers have to be > 1");
-            m_number = number;
-        }
+    void CAircraftEngine::setNumber(int number)
+    {
+        Q_ASSERT_X(number > 0, "setNumber", "Engine numbers have to be > 1");
+        m_number = number;
+    }
 
-        QString CAircraftEngine::convertToQString(bool i18n) const
-        {
-            Q_UNUSED(i18n);
-            return QStringLiteral("%1: %2").arg(m_number).arg(BlackMisc::boolToOnOff(m_on));
-        }
-    } // namespace
+    QString CAircraftEngine::convertToQString(bool i18n) const
+    {
+        Q_UNUSED(i18n);
+        return QStringLiteral("%1: %2").arg(m_number).arg(BlackMisc::boolToOnOff(m_on));
+    }
 } // namespace

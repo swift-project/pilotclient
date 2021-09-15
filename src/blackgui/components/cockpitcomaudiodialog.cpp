@@ -9,20 +9,17 @@
 #include "cockpitcomaudiodialog.h"
 #include "ui_cockpitcomaudiodialog.h"
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CCockpitComAudioDialog::CCockpitComAudioDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CCockpitComAudioDialog)
     {
-        CCockpitComAudioDialog::CCockpitComAudioDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CCockpitComAudioDialog)
-        {
-            ui->setupUi(this);
-            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-        }
+        ui->setupUi(this);
+        this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    }
 
-        CCockpitComAudioDialog::~CCockpitComAudioDialog()
-        { }
+    CCockpitComAudioDialog::~CCockpitComAudioDialog()
+    { }
 
-    } // ns
 } // ns

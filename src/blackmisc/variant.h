@@ -301,25 +301,22 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::CVariant)
 
-namespace BlackMisc
+namespace BlackMisc::Private
 {
-    namespace Private
+    //! \private
+    template <typename T, typename>
+    void maybeRegisterMetaListConvert(int)
     {
-        //! \private
-        template <typename T, typename>
-        void maybeRegisterMetaListConvert(int)
-        {
-            if (QMetaType::hasRegisteredConverterFunction(qMetaTypeId<T>(), qMetaTypeId<QVector<CVariant>>())) { return; }
+        if (QMetaType::hasRegisteredConverterFunction(qMetaTypeId<T>(), qMetaTypeId<QVector<CVariant>>())) { return; }
 
-            QMetaType::registerConverter<T, QVector<CVariant>>([](const T &list) -> QVector<CVariant>
-            {
-                return list.transform([](const typename T::value_type &v) { return CVariant::from(v); });
-            });
-            QMetaType::registerConverter<QVector<CVariant>, T>([](const QVector<CVariant> &list) -> T
-            {
-                return makeRange(list).transform([](const CVariant &v) { return v.to<typename T::value_type>(); });
-            });
-        }
+        QMetaType::registerConverter<T, QVector<CVariant>>([](const T &list) -> QVector<CVariant>
+        {
+            return list.transform([](const typename T::value_type &v) { return CVariant::from(v); });
+        });
+        QMetaType::registerConverter<QVector<CVariant>, T>([](const QVector<CVariant> &list) -> T
+        {
+            return makeRange(list).transform([](const CVariant &v) { return v.to<typename T::value_type>(); });
+        });
     }
 } // namespace
 

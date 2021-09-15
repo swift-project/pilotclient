@@ -15,45 +15,42 @@
 #include "blackgui/blackguiexport.h"
 #include <QObject>
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    class CDbMappingComponent;
+
+    //! Allows subcomponents to gain access to model component
+    class BLACKGUI_EXPORT CDbMappingComponentAware
     {
-        class CDbMappingComponent;
+    public:
+        //! Set the corresponding component
+        virtual void setMappingComponent(CDbMappingComponent *component);
 
-        //! Allows subcomponents to gain access to model component
-        class BLACKGUI_EXPORT CDbMappingComponentAware
-        {
-        public:
-            //! Set the corresponding component
-            virtual void setMappingComponent(CDbMappingComponent *component);
+        //! Get the mapping component
+        CDbMappingComponent *getMappingComponent() const { return m_mappingComponent; }
 
-            //! Get the mapping component
-            CDbMappingComponent *getMappingComponent() const { return m_mappingComponent; }
+    protected:
+        //! Constructor
+        CDbMappingComponentAware(QObject *parent);
 
-        protected:
-            //! Constructor
-            CDbMappingComponentAware(QObject *parent);
+        //! Destructor
+        virtual ~CDbMappingComponentAware() {}
 
-            //! Destructor
-            virtual ~CDbMappingComponentAware() {}
+        //! Copy constructor
+        CDbMappingComponentAware(const CDbMappingComponentAware &) = default;
 
-            //! Copy constructor
-            CDbMappingComponentAware(const CDbMappingComponentAware &) = default;
+        //! Copy assignment operator
+        CDbMappingComponentAware &operator =(const CDbMappingComponentAware &) = default;
 
-            //! Copy assignment operator
-            CDbMappingComponentAware &operator =(const CDbMappingComponentAware &) = default;
+        //! Overlay messages
+        //! @{
+        bool showMappingComponentOverlayMessage(const BlackMisc::CStatusMessage &message, int timeoutMs = -1);
+        bool showMappingComponentOverlayHtmlMessage(const BlackMisc::CStatusMessage &message, int timeoutMs = -1);
+        //! @}
 
-            //! Overlay messages
-            //! @{
-            bool showMappingComponentOverlayMessage(const BlackMisc::CStatusMessage &message, int timeoutMs = -1);
-            bool showMappingComponentOverlayHtmlMessage(const BlackMisc::CStatusMessage &message, int timeoutMs = -1);
-            //! @}
-
-        private :
-            CDbMappingComponent *m_mappingComponent = nullptr; //!< reference to component
-        };
-    } // ns
+    private :
+        CDbMappingComponent *m_mappingComponent = nullptr; //!< reference to component
+    };
 } // ns
 
 Q_DECLARE_INTERFACE(BlackGui::Components::CDbMappingComponentAware, "org.swift-project.blackgui.components.dbmappingcomponentaware")

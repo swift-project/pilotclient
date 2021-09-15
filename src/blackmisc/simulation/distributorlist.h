@@ -22,65 +22,62 @@
 #include <QString>
 #include <QStringList>
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    class CAircraftModel;
+    class CSimulatorModel;
+
+    //! Value object encapsulating a list of distributors.
+    class BLACKMISC_EXPORT CDistributorList :
+        public CSequence<CDistributor>,
+        public Db::IDatastoreObjectList<CDistributor, CDistributorList, QString>,
+        public IOrderableList<CDistributor, CDistributorList>,
+        public Mixin::MetaType<CDistributorList>
     {
-        class CAircraftModel;
-        class CSimulatorModel;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CDistributorList)
+        using CSequence::CSequence;
 
-        //! Value object encapsulating a list of distributors.
-        class BLACKMISC_EXPORT CDistributorList :
-            public CSequence<CDistributor>,
-            public Db::IDatastoreObjectList<CDistributor, CDistributorList, QString>,
-            public IOrderableList<CDistributor, CDistributorList>,
-            public Mixin::MetaType<CDistributorList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CDistributorList)
-            using CSequence::CSequence;
+        //! Default constructor.
+        CDistributorList();
 
-            //! Default constructor.
-            CDistributorList();
+        //! Construct from a base class object.
+        CDistributorList(const CSequence<CDistributor> &other);
 
-            //! Construct from a base class object.
-            CDistributorList(const CSequence<CDistributor> &other);
+        //! Find by id or alias
+        CDistributor findByKeyOrAlias(const QString &keyOrAlias) const;
 
-            //! Find by id or alias
-            CDistributor findByKeyOrAlias(const QString &keyOrAlias) const;
+        //! Find by model string
+        //! \remark model strings may have a pattern which makes it impossible to find the distributor
+        CDistributor findByModelData(const CAircraftModel &model) const;
 
-            //! Find by model string
-            //! \remark model strings may have a pattern which makes it impossible to find the distributor
-            CDistributor findByModelData(const CAircraftModel &model) const;
+        //! Find the FS family standard distributors
+        CDistributorList findFsFamilyStandard() const;
 
-            //! Find the FS family standard distributors
-            CDistributorList findFsFamilyStandard() const;
+        //! Best match by given pattern
+        CDistributor smartDistributorSelector(const CDistributor &distributorPattern) const;
 
-            //! Best match by given pattern
-            CDistributor smartDistributorSelector(const CDistributor &distributorPattern) const;
+        //! Best match by given pattern
+        CDistributor smartDistributorSelector(const CDistributor &distributorPattern, const CAircraftModel &model) const;
 
-            //! Best match by given pattern
-            CDistributor smartDistributorSelector(const CDistributor &distributorPattern, const CAircraftModel &model) const;
+        //! At least is matching key or alias
+        bool matchesAnyKeyOrAlias(const QString &keyOrAlias) const;
 
-            //! At least is matching key or alias
-            bool matchesAnyKeyOrAlias(const QString &keyOrAlias) const;
+        //! All DB keys and aliases
+        QStringList getDbKeysAndAliases(bool sort) const;
 
-            //! All DB keys and aliases
-            QStringList getDbKeysAndAliases(bool sort) const;
+        //! Find for given simulator
+        CDistributorList matchesSimulator(const CSimulatorInfo &simulator) const;
 
-            //! Find for given simulator
-            CDistributorList matchesSimulator(const CSimulatorInfo &simulator) const;
+        //! Find all for all FS simulators
+        CDistributorList matchesAnyFsFamily() const;
 
-            //! Find all for all FS simulators
-            CDistributorList matchesAnyFsFamily() const;
+        //! All data from DB?
+        bool isCompletelyFromDb() const;
 
-            //! All data from DB?
-            bool isCompletelyFromDb() const;
-
-            //! Remove distributors not from DB
-            int removeIfNotLoadedFromDb();
-        };
-    } //namespace
+        //! Remove distributors not from DB
+        int removeIfNotLoadedFromDb();
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CDistributorList)

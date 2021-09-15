@@ -9,19 +9,16 @@
 #include "copymodelsfromotherswiftversionsdialog.h"
 #include "ui_copymodelsfromotherswiftversionsdialog.h"
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CCopyModelsFromOtherSwiftVersionsDialog::CCopyModelsFromOtherSwiftVersionsDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CCopyModelsFromOtherSwiftVersionsDialog)
     {
-        CCopyModelsFromOtherSwiftVersionsDialog::CCopyModelsFromOtherSwiftVersionsDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CCopyModelsFromOtherSwiftVersionsDialog)
-        {
-            ui->setupUi(this);
-            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-        }
+        ui->setupUi(this);
+        this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    }
 
-        CCopyModelsFromOtherSwiftVersionsDialog::~CCopyModelsFromOtherSwiftVersionsDialog()
-        { }
-    } // ns
+    CCopyModelsFromOtherSwiftVersionsDialog::~CCopyModelsFromOtherSwiftVersionsDialog()
+    { }
 } // ns

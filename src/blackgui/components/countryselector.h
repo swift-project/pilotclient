@@ -16,47 +16,44 @@
 #include <QScopedPointer>
 
 namespace Ui { class CCountrySelector; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * @brief Select a valid country
+     */
+    class CCountrySelector : public QFrame
     {
-        /**
-         * @brief Select a valid country
-         */
-        class CCountrySelector : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CCountrySelector(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CCountrySelector(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CCountrySelector();
+        //! Destructor
+        virtual ~CCountrySelector();
 
-            //! Set country
-            void setCountry(const BlackMisc::CCountry &country);
+        //! Set country
+        void setCountry(const BlackMisc::CCountry &country);
 
-            //! Get country
-            const BlackMisc::CCountry &getCountry() const { return m_current; }
+        //! Get country
+        const BlackMisc::CCountry &getCountry() const { return m_current; }
 
-        signals:
-            //! Changed country
-            void countryChanged(const BlackMisc::CCountry &country);
+    signals:
+        //! Changed country
+        void countryChanged(const BlackMisc::CCountry &country);
 
-        private:
-            //! Countries loaded
-            void onCountriesLoaded();
+    private:
+        //! Countries loaded
+        void onCountriesLoaded();
 
-            //! ISO has been changed
-            void onIsoChanged();
+        //! ISO has been changed
+        void onIsoChanged();
 
-            //! Country name has been changed
-            void onCountryNameChanged(const QString &name);
+        //! Country name has been changed
+        void onCountryNameChanged(const QString &name);
 
-            BlackMisc::CCountry m_current;
-            QScopedPointer<Ui::CCountrySelector> ui;
-        };
-    } // ns
+        BlackMisc::CCountry m_current;
+        QScopedPointer<Ui::CCountrySelector> ui;
+    };
 } // ns
 #endif // guard

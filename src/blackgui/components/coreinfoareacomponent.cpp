@@ -14,54 +14,51 @@
 using namespace BlackMisc;
 using namespace BlackGui;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CCoreInfoAreaComponent::CCoreInfoAreaComponent(QWidget *parent) :
+        CInfoArea(parent),
+        ui(new Ui::CCoreInfoAreaComponent)
     {
-        CCoreInfoAreaComponent::CCoreInfoAreaComponent(QWidget *parent) :
-            CInfoArea(parent),
-            ui(new Ui::CCoreInfoAreaComponent)
-        {
-            ui->setupUi(this);
-            initInfoArea();
-            toggleTabBarLocked(true);
-        }
+        ui->setupUi(this);
+        initInfoArea();
+        toggleTabBarLocked(true);
+    }
 
-        CCoreInfoAreaComponent::~CCoreInfoAreaComponent()
-        { }
+    CCoreInfoAreaComponent::~CCoreInfoAreaComponent()
+    { }
 
-        CLogComponent *CCoreInfoAreaComponent::getLogComponent()
-        {
-            return ui->comp_Log;
-        }
+    CLogComponent *CCoreInfoAreaComponent::getLogComponent()
+    {
+        return ui->comp_Log;
+    }
 
-        CCoreStatusComponent *CCoreInfoAreaComponent::getStatusComponent()
-        {
-            return ui->comp_Status;
-        }
+    CCoreStatusComponent *CCoreInfoAreaComponent::getStatusComponent()
+    {
+        return ui->comp_Status;
+    }
 
-        QSize CCoreInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
+    QSize CCoreInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
+    {
+        InfoArea area = static_cast<InfoArea>(areaIndex);
+        switch (area)
         {
-            InfoArea area = static_cast<InfoArea>(areaIndex);
-            switch (area)
-            {
-            case InfoAreaLog:
-                return QSize(400, 300);
-            default:
-                return QSize(400, 300);
-            }
+        case InfoAreaLog:
+            return QSize(400, 300);
+        default:
+            return QSize(400, 300);
         }
+    }
 
-        const QPixmap &CCoreInfoAreaComponent::indexToPixmap(int areaIndex) const
+    const QPixmap &CCoreInfoAreaComponent::indexToPixmap(int areaIndex) const
+    {
+        InfoArea area = static_cast<InfoArea>(areaIndex);
+        switch (area)
         {
-            InfoArea area = static_cast<InfoArea>(areaIndex);
-            switch (area)
-            {
-            case InfoAreaLog:
-                return CIcons::appLog16();
-            default:
-                return CIcons::statusBar16();
-            }
+        case InfoAreaLog:
+            return CIcons::appLog16();
+        default:
+            return CIcons::statusBar16();
         }
-    } // namespace
+    }
 } // namespace

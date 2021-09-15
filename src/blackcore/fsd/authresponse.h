@@ -11,48 +11,45 @@
 #ifndef BLACKCORE_FSD_AUTHRESPONSE_H
 #define BLACKCORE_FSD_AUTHRESPONSE_H
 
-#include "messagebase.h"
+#include "blackcore/fsd/messagebase.h"
 
-namespace BlackCore
+namespace BlackCore::Fsd
 {
-    namespace Fsd
+    //! Responds to an authentication challenge.
+    //! The protocol for formulating and responding to auth challenges restricted.
+    class BLACKCORE_EXPORT AuthResponse : public MessageBase
     {
-        //! Responds to an authentication challenge.
-        //! The protocol for formulating and responding to auth challenges restricted.
-        class BLACKCORE_EXPORT AuthResponse : public MessageBase
-        {
-        public:
-            //! Constructor
-            AuthResponse(const QString &sender, const QString &receiver, const QString &response);
+    public:
+        //! Constructor
+        AuthResponse(const QString &sender, const QString &receiver, const QString &response);
 
-            //! Message converted to tokens
-            QStringList toTokens() const;
+        //! Message converted to tokens
+        QStringList toTokens() const;
 
-            //! Construct from tokens
-            static AuthResponse fromTokens(const QStringList &tokens);
+        //! Construct from tokens
+        static AuthResponse fromTokens(const QStringList &tokens);
 
-            //! PDU identifier
-            static QString pdu() { return QStringLiteral("$ZR"); }
+        //! PDU identifier
+        static QString pdu() { return QStringLiteral("$ZR"); }
 
-            QString m_response; //!< response
+        QString m_response; //!< response
 
-        private:
-            AuthResponse();
-        };
+    private:
+        AuthResponse();
+    };
 
-        //! Equal to operator
-        inline bool operator==(const AuthResponse &lhs, const AuthResponse &rhs)
-        {
-            return  lhs.sender() == rhs.sender() &&
-                    lhs.receiver() == rhs.receiver() &&
-                    lhs.m_response == rhs.m_response;
-        }
+    //! Equal to operator
+    inline bool operator==(const AuthResponse &lhs, const AuthResponse &rhs)
+    {
+        return  lhs.sender() == rhs.sender() &&
+                lhs.receiver() == rhs.receiver() &&
+                lhs.m_response == rhs.m_response;
+    }
 
-        //! Not equal to operator
-        inline bool operator!=(const AuthResponse &lhs, const AuthResponse &rhs)
-        {
-            return !(lhs == rhs);
-        }
+    //! Not equal to operator
+    inline bool operator!=(const AuthResponse &lhs, const AuthResponse &rhs)
+    {
+        return !(lhs == rhs);
     }
 }
 

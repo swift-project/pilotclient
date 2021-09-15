@@ -15,34 +15,31 @@
 #include <QScopedPointer>
 
 namespace Ui { class CStringListDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * Select from a list of string
+     */
+    class CStringListDialog : public QDialog
     {
-        /**
-         * Select from a list of string
-         */
-        class CStringListDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            explicit CStringListDialog(QWidget *parent = nullptr);
+    public:
+        //! Ctor
+        explicit CStringListDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CStringListDialog() override;
+        //! Destructor
+        virtual ~CStringListDialog() override;
 
-            //! Strings
-            void setStrings(const QStringList &strings);
+        //! Strings
+        void setStrings(const QStringList &strings);
 
-            //! Selected value
-            QString getSelectedValue() const;
+        //! Selected value
+        QString getSelectedValue() const;
 
-        private:
-            QScopedPointer<Ui::CStringListDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CStringListDialog> ui;
+    };
 } // ns
 
 #endif // guard

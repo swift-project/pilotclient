@@ -14,32 +14,29 @@
 using namespace BlackMisc;
 using namespace BlackGui::Models;
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    CTextMessageView::CTextMessageView(QWidget *parent) : CViewBase(parent)
     {
-        CTextMessageView::CTextMessageView(QWidget *parent) : CViewBase(parent)
-        {
-            this->standardInit(new CTextMessageListModel(CTextMessageListModel::FromTo, this));
-            m_menus |= MenuClear;
-        }
+        this->standardInit(new CTextMessageListModel(CTextMessageListModel::FromTo, this));
+        m_menus |= MenuClear;
+    }
 
-        void CTextMessageView::setTextMessageMode(CTextMessageListModel::TextMessageMode mode)
-        {
-            Q_ASSERT(m_model);
-            m_model->setTextMessageMode(mode);
-            this->setSortIndicator();
-        }
+    void CTextMessageView::setTextMessageMode(CTextMessageListModel::TextMessageMode mode)
+    {
+        Q_ASSERT(m_model);
+        m_model->setTextMessageMode(mode);
+        this->setSortIndicator();
+    }
 
-        bool CTextMessageView::isSortedByTimestampProperty() const
-        {
-            return m_model->isSortedByTimestampProperty();
-        }
+    bool CTextMessageView::isSortedByTimestampProperty() const
+    {
+        return m_model->isSortedByTimestampProperty();
+    }
 
-        bool CTextMessageView::isSortedByTimestampPropertyLatestLast() const
-        {
-            return m_model->isSortedByTimestampProperty() && this->getSortOrder() == Qt::AscendingOrder;
-        }
+    bool CTextMessageView::isSortedByTimestampPropertyLatestLast() const
+    {
+        return m_model->isSortedByTimestampProperty() && this->getSortOrder() == Qt::AscendingOrder;
+    }
 
-    } // namespace
 } // namespace

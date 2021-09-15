@@ -15,55 +15,52 @@
 #include "blackmisc/logcategories.h"
 #include "blackmisc/blackmiscexport.h"
 
-namespace BlackMisc
+namespace BlackMisc::Geo
 {
-    namespace Geo
+    /*!
+     * KML utils
+     */
+    class BLACKMISC_EXPORT CKmlUtils
     {
-        /*!
-         * KML utils
-         */
-        class BLACKMISC_EXPORT CKmlUtils
+    public:
+        //! Log categories
+        static const QStringList &getLogCategories();
+
+        //! KML settings
+        struct KMLSettings
         {
-        public:
-            //! Log categories
-            static const QStringList &getLogCategories();
+            //! Ctor
+            KMLSettings(bool withAltitude, bool extrude) :
+                withAltitude(withAltitude), extrude(extrude)
+            { }
 
-            //! KML settings
-            struct KMLSettings
-            {
-                //! Ctor
-                KMLSettings(bool withAltitude, bool extrude) :
-                    withAltitude(withAltitude), extrude(extrude)
-                { }
-
-                //! Setting members
-                //! @{
-                bool withAltitude = true;
-                bool extrude      = false;
-                bool tessellate   = true;
-                QString altitudeMode = "absolute";
-                //! @}
-            };
-
-            //! Wrap as KML document
-            static QString wrapAsKmlDocument(const QString &content);
-
-            //! Wrap as KML coordinates
-            static QString wrapAsKmlCoordinates(const QString &content);
-
-            //! As raw coordinates
-            static QString asRawCoordinates(const Geo::ICoordinateGeodetic &coordinate, bool withAltitude);
-
-            //! As KML point
-            static QString asPoint(const Geo::ICoordinateGeodetic &coordinate, const KMLSettings &settings);
-
-            //! As KML placemark
-            static QString asPlacemark(const QString &name, const QString &description, const Geo::ICoordinateGeodetic &coordinate, const KMLSettings &settings);
-
-            //! As KML line
-            static QString asLineString(const QString &coordinatesRaw, const KMLSettings &settings);
+            //! Setting members
+            //! @{
+            bool withAltitude = true;
+            bool extrude      = false;
+            bool tessellate   = true;
+            QString altitudeMode = "absolute";
+            //! @}
         };
-    } // ns
+
+        //! Wrap as KML document
+        static QString wrapAsKmlDocument(const QString &content);
+
+        //! Wrap as KML coordinates
+        static QString wrapAsKmlCoordinates(const QString &content);
+
+        //! As raw coordinates
+        static QString asRawCoordinates(const Geo::ICoordinateGeodetic &coordinate, bool withAltitude);
+
+        //! As KML point
+        static QString asPoint(const Geo::ICoordinateGeodetic &coordinate, const KMLSettings &settings);
+
+        //! As KML placemark
+        static QString asPlacemark(const QString &name, const QString &description, const Geo::ICoordinateGeodetic &coordinate, const KMLSettings &settings);
+
+        //! As KML line
+        static QString asLineString(const QString &coordinatesRaw, const KMLSettings &settings);
+    };
 } // ns
 
 #endif // guard

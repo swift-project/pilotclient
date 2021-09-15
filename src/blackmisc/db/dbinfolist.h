@@ -20,33 +20,30 @@
 
 #include <initializer_list>
 
-namespace BlackMisc
+namespace BlackMisc::Db
 {
-    namespace Db
+    //! Value object encapsulating a list of info objects.
+    class BLACKMISC_EXPORT CDbInfoList :
+        public CSequence<CDbInfo>,
+        public BlackMisc::Db::IDatastoreObjectList<CDbInfo, CDbInfoList, int>,
+        public BlackMisc::Mixin::MetaType<CDbInfoList>
     {
-        //! Value object encapsulating a list of info objects.
-        class BLACKMISC_EXPORT CDbInfoList :
-            public CSequence<CDbInfo>,
-            public BlackMisc::Db::IDatastoreObjectList<CDbInfo, CDbInfoList, int>,
-            public BlackMisc::Mixin::MetaType<CDbInfoList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CDbInfoList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CDbInfoList)
+        using CSequence::CSequence;
 
-            //! Default constructor.
-            CDbInfoList();
+        //! Default constructor.
+        CDbInfoList();
 
-            //! Construct from a base class object.
-            CDbInfoList(const CSequence<CDbInfo> &other);
+        //! Construct from a base class object.
+        CDbInfoList(const CSequence<CDbInfo> &other);
 
-            //! Find by entity
-            CDbInfo findFirstByEntityOrDefault(BlackMisc::Network::CEntityFlags::Entity entity) const;
+        //! Find by entity
+        CDbInfo findFirstByEntityOrDefault(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
-            //! From our database JSON format
-            static CDbInfoList fromDatabaseJson(const QJsonArray &array);
-        };
-    } //namespace
+        //! From our database JSON format
+        static CDbInfoList fromDatabaseJson(const QJsonArray &array);
+    };
 } //namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Db::CDbInfoList)

@@ -9,42 +9,36 @@
 #include "modelsettings.h"
 #include "blackmisc/stringutils.h"
 
-namespace BlackMisc
+namespace BlackMisc::Simulation::Settings
 {
-    namespace Simulation
+    CModelSettings::CModelSettings()
+    { }
+
+    QString CModelSettings::convertToQString(bool i18n) const
     {
-        namespace Settings
+        Q_UNUSED(i18n);
+        return QStringLiteral("Allow exclude: %1").arg(boolToYesNo(this->m_allowExcludeModels));
+    }
+
+    QVariant CModelSettings::propertyByIndex(CPropertyIndexRef index) const
+    {
+        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
         {
-            CModelSettings::CModelSettings()
-            { }
+        case IndexAllowExclude: return QVariant::fromValue(this->m_allowExcludeModels);
+        default: return CValueObject::propertyByIndex(index);
+        }
+    }
 
-            QString CModelSettings::convertToQString(bool i18n) const
-            {
-                Q_UNUSED(i18n);
-                return QStringLiteral("Allow exclude: %1").arg(boolToYesNo(this->m_allowExcludeModels));
-            }
-
-            QVariant CModelSettings::propertyByIndex(CPropertyIndexRef index) const
-            {
-                if (index.isMyself()) { return QVariant::fromValue(*this); }
-                const ColumnIndex i = index.frontCasted<ColumnIndex>();
-                switch (i)
-                {
-                case IndexAllowExclude: return QVariant::fromValue(this->m_allowExcludeModels);
-                default: return CValueObject::propertyByIndex(index);
-                }
-            }
-
-            void CModelSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
-            {
-                if (index.isMyself()) { (*this) = variant.value<CModelSettings>(); return; }
-                const ColumnIndex i = index.frontCasted<ColumnIndex>();
-                switch (i)
-                {
-                case IndexAllowExclude: this->setAllowExcludedModels(variant.toBool()); break;
-                default: CValueObject::setPropertyByIndex(index, variant); break;
-                }
-            }
-        } // ns
-    } // ns
+    void CModelSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
+    {
+        if (index.isMyself()) { (*this) = variant.value<CModelSettings>(); return; }
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
+        {
+        case IndexAllowExclude: this->setAllowExcludedModels(variant.toBool()); break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
+        }
+    }
 } // ns

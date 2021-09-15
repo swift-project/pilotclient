@@ -12,25 +12,22 @@
 
 using namespace BlackGui::Models;
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    CDistributorView::CDistributorView(QWidget *parent) :
+        COrderableViewWithDbObjects(parent)
     {
-        CDistributorView::CDistributorView(QWidget *parent) :
-            COrderableViewWithDbObjects(parent)
-        {
-            this->standardInit(new CDistributorListModel(this));
-            this->setMenu(MenuDefaultDbViews);
-        }
+        this->standardInit(new CDistributorListModel(this));
+        this->setMenu(MenuDefaultDbViews);
+    }
 
-        void CDistributorView::setDistributorMode(CDistributorListModel::DistributorMode distributorMode)
-        {
-            derivedModel()->setDistributorMode(distributorMode);
-        }
+    void CDistributorView::setDistributorMode(CDistributorListModel::DistributorMode distributorMode)
+    {
+        derivedModel()->setDistributorMode(distributorMode);
+    }
 
-        CDistributorListModel::DistributorMode CDistributorView::getDistributorMode() const
-        {
-            return derivedModel()->getDistributorMode();
-        }
+    CDistributorListModel::DistributorMode CDistributorView::getDistributorMode() const
+    {
+        return derivedModel()->getDistributorMode();
     }
 } // namespace

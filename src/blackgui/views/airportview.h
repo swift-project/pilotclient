@@ -15,20 +15,17 @@
 #include "blackgui/models/airportlistmodel.h"
 #include "blackgui/views/viewbase.h"
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Airports view
+    class BLACKGUI_EXPORT CAirportView : public CViewBase<Models::CAirportListModel>
     {
-        //! Airports view
-        class BLACKGUI_EXPORT CAirportView : public CViewBase<Models::CAirportListModel>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAirportView(QWidget *parent = nullptr);
-        };
-    }
+    public:
+        //! Constructor
+        explicit CAirportView(QWidget *parent = nullptr);
+    };
 } // ns
 
 #endif // guard

@@ -24,52 +24,49 @@
 #include <QString>
 #include <tuple>
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    //! Preferences for distributors
+    class BLACKMISC_EXPORT CDistributorListPreferences :
+        public CValueObject<CDistributorListPreferences>
     {
-        //! Preferences for distributors
-        class BLACKMISC_EXPORT CDistributorListPreferences :
-            public CValueObject<CDistributorListPreferences>
-        {
-        public:
-            //! Default constructor.
-            CDistributorListPreferences();
+    public:
+        //! Default constructor.
+        CDistributorListPreferences();
 
-            //! Get distributors
-            const CDistributorList &getDistributors(const CSimulatorInfo &simulator) const;
+        //! Get distributors
+        const CDistributorList &getDistributors(const CSimulatorInfo &simulator) const;
 
-            //! Get distributor for simulator
-            CDistributor getFirstOrDefaultDistributor(const CSimulatorInfo &simulator) const;
+        //! Get distributor for simulator
+        CDistributor getFirstOrDefaultDistributor(const CSimulatorInfo &simulator) const;
 
-            //! Last updated simulator
-            const CSimulatorInfo &getLastUpdatedSimulator() const {  return m_lastUpdatedSimulator; }
+        //! Last updated simulator
+        const CSimulatorInfo &getLastUpdatedSimulator() const {  return m_lastUpdatedSimulator; }
 
-            //! Get distributors
-            void setDistributors(const CDistributorList &distributors, const CSimulatorInfo &simulator);
+        //! Get distributors
+        void setDistributors(const CDistributorList &distributors, const CSimulatorInfo &simulator);
 
-            //! \copydoc BlackMisc::Mixin::String::toQString
-            QString convertToQString(bool i18n = false) const;
+        //! \copydoc BlackMisc::Mixin::String::toQString
+        QString convertToQString(bool i18n = false) const;
 
-        private:
-            CDistributorList m_distributorsFsx;
-            CDistributorList m_distributorsP3d;
-            CDistributorList m_distributorsFs9;
-            CDistributorList m_distributorsXPlane;
-            CDistributorList m_distributorsFG;
-            CSimulatorInfo   m_lastUpdatedSimulator;
+    private:
+        CDistributorList m_distributorsFsx;
+        CDistributorList m_distributorsP3d;
+        CDistributorList m_distributorsFs9;
+        CDistributorList m_distributorsXPlane;
+        CDistributorList m_distributorsFG;
+        CSimulatorInfo   m_lastUpdatedSimulator;
 
-            BLACK_METACLASS(
-                CDistributorListPreferences,
-                BLACK_METAMEMBER(distributorsFsx),
-                BLACK_METAMEMBER(distributorsP3d),
-                BLACK_METAMEMBER(distributorsFs9),
-                BLACK_METAMEMBER(distributorsXPlane),
-                BLACK_METAMEMBER(distributorsFG),
-                BLACK_METAMEMBER(lastUpdatedSimulator)
-            );
-        };
-    } //namespace
+        BLACK_METACLASS(
+            CDistributorListPreferences,
+            BLACK_METAMEMBER(distributorsFsx),
+            BLACK_METAMEMBER(distributorsP3d),
+            BLACK_METAMEMBER(distributorsFs9),
+            BLACK_METAMEMBER(distributorsXPlane),
+            BLACK_METAMEMBER(distributorsFG),
+            BLACK_METAMEMBER(lastUpdatedSimulator)
+        );
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CDistributorListPreferences)

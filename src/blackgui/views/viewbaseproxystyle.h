@@ -16,31 +16,28 @@
 #include <QPainter>
 #include <QStyleOptionViewItem>
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    class CViewBaseNonTemplate;
+
+    /*!
+     * Proxy for style of our views
+     */
+    class CViewBaseProxyStyle : public QProxyStyle
     {
-        class CViewBaseNonTemplate;
+        Q_OBJECT
 
-        /*!
-         * Proxy for style of our views
-         */
-        class CViewBaseProxyStyle : public QProxyStyle
-        {
-            Q_OBJECT
+    public:
+        //! Constructor
+        CViewBaseProxyStyle(CViewBaseNonTemplate *view, QStyle *style = nullptr);
 
-        public:
-            //! Constructor
-            CViewBaseProxyStyle(CViewBaseNonTemplate *view, QStyle *style = nullptr);
+        //! \name Proxy style overrides
+        //! @{
+        virtual void drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const override;
+        //! @}
 
-            //! \name Proxy style overrides
-            //! @{
-            virtual void drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const override;
-            //! @}
-
-        private:
-            CViewBaseNonTemplate *m_view = nullptr; //!< "parent view"
-        };
-    } // namespace
+    private:
+        CViewBaseNonTemplate *m_view = nullptr; //!< "parent view"
+    };
 } // namespace
 #endif // guard

@@ -12,33 +12,30 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    CDistributorFilter::CDistributorFilter(const CSimulatorInfo &simulator) :
+        m_simulator(simulator)
     {
-        CDistributorFilter::CDistributorFilter(const CSimulatorInfo &simulator) :
-            m_simulator(simulator)
-        {
-            m_valid = true;
-        }
+        m_valid = true;
+    }
 
-        CDistributorList CDistributorFilter::filter(const CDistributorList &inDistributors) const
-        {
-            if (!this->isValid())        { return inDistributors; }
-            if (this->ignoreSimulator()) { return inDistributors; }
+    CDistributorList CDistributorFilter::filter(const CDistributorList &inDistributors) const
+    {
+        if (!this->isValid())        { return inDistributors; }
+        if (this->ignoreSimulator()) { return inDistributors; }
 
-            CDistributorList outContainer;
-            for (const CDistributor &distributor : inDistributors)
-            {
-                if (!distributor.getSimulator().matchesAnyOrNone(m_simulator)) { continue; }
-                outContainer.push_back(distributor);
-            }
-            return outContainer;
-        }
-
-        bool CDistributorFilter::ignoreSimulator() const
+        CDistributorList outContainer;
+        for (const CDistributor &distributor : inDistributors)
         {
-            return (m_simulator.isNoSimulator() || m_simulator.isAllSimulators());
+            if (!distributor.getSimulator().matchesAnyOrNone(m_simulator)) { continue; }
+            outContainer.push_back(distributor);
         }
-    } // namespace
+        return outContainer;
+    }
+
+    bool CDistributorFilter::ignoreSimulator() const
+    {
+        return (m_simulator.isNoSimulator() || m_simulator.isAllSimulators());
+    }
 } // namespace

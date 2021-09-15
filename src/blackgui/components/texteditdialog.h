@@ -19,31 +19,28 @@
 class QTextEdit;
 
 namespace Ui { class CTextEditDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Text edit as dialog
+    class BLACKGUI_EXPORT CTextEditDialog : public QDialog
     {
-        //! Text edit as dialog
-        class BLACKGUI_EXPORT CTextEditDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CTextEditDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CTextEditDialog(QWidget *parent = nullptr);
 
-            //! Dtor
-            virtual ~CTextEditDialog() override;
+        //! Dtor
+        virtual ~CTextEditDialog() override;
 
-            //! Access to text edit
-            QTextEdit *textEdit() const;
+        //! Access to text edit
+        QTextEdit *textEdit() const;
 
-            //! Set read only
-            void setReadOnly();
+        //! Set read only
+        void setReadOnly();
 
-        private:
-            QScopedPointer<Ui::CTextEditDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CTextEditDialog> ui;
+    };
 } // ns
 #endif // guard

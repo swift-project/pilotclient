@@ -31,66 +31,63 @@ namespace BlackMisc
     class CStatusMessageList;
     namespace Simulation { class CSimulatedAircraft; }
 }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Simulator component
+    class BLACKGUI_EXPORT CSimulatorComponent :
+        public QTabWidget,
+        public CEnableForDockWidgetInfoArea
     {
-        //! Simulator component
-        class BLACKGUI_EXPORT CSimulatorComponent :
-            public QTabWidget,
-            public CEnableForDockWidgetInfoArea
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Categories
-            static const QStringList &getLogCategories();
+    public:
+        //! Categories
+        static const QStringList &getLogCategories();
 
-            //! Constructor
-            explicit CSimulatorComponent(QWidget *parent = nullptr);
+        //! Constructor
+        explicit CSimulatorComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CSimulatorComponent();
+        //! Destructor
+        virtual ~CSimulatorComponent();
 
-            //! Number of entries
-            int rowCount() const;
+        //! Number of entries
+        int rowCount() const;
 
-            //! Clear
-            void clear(bool addInternalsAfterwards = false);
+        //! Clear
+        void clear(bool addInternalsAfterwards = false);
 
-            //! Update simulator
-            void update();
+        //! Update simulator
+        void update();
 
-        private:
-            //! \copydoc ISimulator::simulatorStatusChanged
-            void onSimulatorStatusChanged(int status);
+    private:
+        //! \copydoc ISimulator::simulatorStatusChanged
+        void onSimulatorStatusChanged(int status);
 
-            //! \copydoc ISimulator::addingRemoteModelFailed
-            void onAddingRemoteModelFailed(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool disabled, bool failover, const BlackMisc::CStatusMessage &message);
+        //! \copydoc ISimulator::addingRemoteModelFailed
+        void onAddingRemoteModelFailed(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool disabled, bool failover, const BlackMisc::CStatusMessage &message);
 
-            //! \copydoc ISimulator::onSimulatorMessages
-            void onSimulatorMessages(const BlackMisc::CStatusMessageList &messages);
+        //! \copydoc ISimulator::onSimulatorMessages
+        void onSimulatorMessages(const BlackMisc::CStatusMessageList &messages);
 
-            //! Refresh the internals
-            void refreshInternals();
+        //! Refresh the internals
+        void refreshInternals();
 
-            //! Update interval
-            int getUpdateIntervalMs() const;
+        //! Update interval
+        int getUpdateIntervalMs() const;
 
-            //! Simple add or update name / value pair
-            void addOrUpdateLiveDataByName(const QString &name, const QString &value, const BlackMisc::CIcon &icon);
+        //! Simple add or update name / value pair
+        void addOrUpdateLiveDataByName(const QString &name, const QString &value, const BlackMisc::CIcon &icon);
 
-            //! Simple add or update name / value pair
-            void addOrUpdateLiveDataByName(const QString &name, const QString &value, BlackMisc::CIcons::IconIndex iconIndex);
+        //! Simple add or update name / value pair
+        void addOrUpdateLiveDataByName(const QString &name, const QString &value, BlackMisc::CIcons::IconIndex iconIndex);
 
-            //! Remove name
-            void removeLiveDataByName(const QString &name);
+        //! Remove name
+        void removeLiveDataByName(const QString &name);
 
-            QScopedPointer<Ui::CSimulatorComponent> ui;
-            QTimer m_updateTimer;
-            BlackMisc::Simulation::CSimulatorInfo m_simulator;
-        };
-    } // ns
+        QScopedPointer<Ui::CSimulatorComponent> ui;
+        QTimer m_updateTimer;
+        BlackMisc::Simulation::CSimulatorInfo m_simulator;
+    };
 } // ns
 
 #endif // guard

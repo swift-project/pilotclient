@@ -15,38 +15,35 @@
 #include "blackgui/models/listmodelcallsignobjects.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 
-namespace BlackMisc { namespace Simulation { class CSimulatedAircraft; } }
-namespace BlackGui
+namespace BlackMisc::Simulation { class CSimulatedAircraft; }
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Aircraft list model
+    class BLACKGUI_EXPORT CSimulatedAircraftListModel :
+        public CListModelCallsignObjects<BlackMisc::Simulation::CSimulatedAircraftList, true>
     {
-        //! Aircraft list model
-        class BLACKGUI_EXPORT CSimulatedAircraftListModel :
-            public CListModelCallsignObjects<BlackMisc::Simulation::CSimulatedAircraftList, true>
+        Q_OBJECT
+
+    public:
+        //! Model modes
+        enum AircraftMode
         {
-            Q_OBJECT
-
-        public:
-            //! Model modes
-            enum AircraftMode
-            {
-                NetworkMode,  //!< like aircraft in range
-                RenderedMode, //!< focusing on used model
-                NotSet
-            };
-
-            //! Constructor
-            explicit CSimulatedAircraftListModel(QObject *parent = nullptr);
-
-            //! Destructor
-            virtual ~CSimulatedAircraftListModel() override {}
-
-            //! Mode
-            void setAircraftMode(AircraftMode mode);
-
-        private:
-            AircraftMode m_mode = NotSet;
+            NetworkMode,  //!< like aircraft in range
+            RenderedMode, //!< focusing on used model
+            NotSet
         };
-    } // ns
+
+        //! Constructor
+        explicit CSimulatedAircraftListModel(QObject *parent = nullptr);
+
+        //! Destructor
+        virtual ~CSimulatedAircraftListModel() override {}
+
+        //! Mode
+        void setAircraftMode(AircraftMode mode);
+
+    private:
+        AircraftMode m_mode = NotSet;
+    };
 } // ns
 #endif // guard

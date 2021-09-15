@@ -8,29 +8,26 @@
 
 #include "blackmisc/network/facilitytype.h"
 
-namespace BlackMisc
+namespace BlackMisc::Network
 {
-    namespace Network
+    QString CFacilityType::convertToQString(bool i18n) const
     {
-        QString CFacilityType::convertToQString(bool i18n) const
+        Q_UNUSED(i18n)
+
+        switch (m_facilityType)
         {
-            Q_UNUSED(i18n)
-
-            switch (m_facilityType)
-            {
-            case OBS: return QStringLiteral("OBS");
-            case FSS: return QStringLiteral("FSS");
-            case DEL: return QStringLiteral("DEL");
-            case GND: return QStringLiteral("GND");
-            case TWR: return QStringLiteral("TWR");
-            case APP: return QStringLiteral("APP");
-            case CTR: return QStringLiteral("CTR");
-            case Unknown: return QStringLiteral("Unknown");
-            }
-
-            Q_UNREACHABLE();
-            return QStringLiteral("Unknown");
+        case OBS: return QStringLiteral("OBS");
+        case FSS: return QStringLiteral("FSS");
+        case DEL: return QStringLiteral("DEL");
+        case GND: return QStringLiteral("GND");
+        case TWR: return QStringLiteral("TWR");
+        case APP: return QStringLiteral("APP");
+        case CTR: return QStringLiteral("CTR");
+        case Unknown: return QStringLiteral("Unknown");
         }
 
-    } // namespace
+        Q_UNREACHABLE();
+        return QStringLiteral("Unknown");
+    }
+
 } // namespace

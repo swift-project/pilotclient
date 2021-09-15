@@ -12,18 +12,15 @@
 using namespace BlackGui;
 using namespace BlackSimPlugin::FsxCommon;
 
-namespace BlackSimPlugin
+namespace BlackSimPlugin::Fsx
 {
-    namespace Fsx
+    CSimulatorFsxConfig::CSimulatorFsxConfig(QObject *parent) : QObject(parent)
     {
-        CSimulatorFsxConfig::CSimulatorFsxConfig(QObject *parent) : QObject(parent)
-        {
-            // void
-        }
+        // void
+    }
 
-        CPluginConfigWindow *CSimulatorFsxConfig::createConfigWindow(QWidget *parent)
-        {
-            return new CSimulatorFsxConfigWindow("FSX", parent);
-        }
+    CPluginConfigWindow *CSimulatorFsxConfig::createConfigWindow(QWidget *parent)
+    {
+        return new CSimulatorFsxConfigWindow("FSX", parent);
     }
 }

@@ -23,39 +23,36 @@
 class QWidget;
 
 namespace Ui { class CDbCountryComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * The countries
+     */
+    class BLACKGUI_EXPORT CDbCountryComponent :
+        public QFrame,
+        public CEnableForDockWidgetInfoArea,
+        public BlackGui::CEnableForViewBasedIndicator
     {
-        /*!
-         * The countries
-         */
-        class BLACKGUI_EXPORT CDbCountryComponent :
-            public QFrame,
-            public CEnableForDockWidgetInfoArea,
-            public BlackGui::CEnableForViewBasedIndicator
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CDbCountryComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CDbCountryComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CDbCountryComponent() override;
+        //! Destructor
+        virtual ~CDbCountryComponent() override;
 
-        private:
-            //! Countries have been read
-            void onCountriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count, const QUrl &url);
+    private:
+        //! Countries have been read
+        void onCountriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count, const QUrl &url);
 
-            //! Reload models
-            void onReload();
+        //! Reload models
+        void onReload();
 
-        private:
-            QScopedPointer<Ui::CDbCountryComponent> ui;
-        };
+    private:
+        QScopedPointer<Ui::CDbCountryComponent> ui;
+    };
 
-    } // ns
 } // ns
 
 #endif // guard

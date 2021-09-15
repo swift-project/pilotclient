@@ -18,27 +18,24 @@
 
 #include <QString>
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Country filter
+    class BLACKGUI_EXPORT CDistributorFilter : public IModelFilter<BlackMisc::Simulation::CDistributorList>
     {
-        //! Country filter
-        class BLACKGUI_EXPORT CDistributorFilter : public IModelFilter<BlackMisc::Simulation::CDistributorList>
-        {
-        public:
-            //! Constructor
-            CDistributorFilter(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+    public:
+        //! Constructor
+        CDistributorFilter(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-            //! \copydoc IModelFilter::filter
-            virtual BlackMisc::Simulation::CDistributorList filter(const BlackMisc::Simulation::CDistributorList &inDistributors) const override;
+        //! \copydoc IModelFilter::filter
+        virtual BlackMisc::Simulation::CDistributorList filter(const BlackMisc::Simulation::CDistributorList &inDistributors) const override;
 
-        private:
-            //! Ignore simulator filtering?
-            bool ignoreSimulator() const;
+    private:
+        //! Ignore simulator filtering?
+        bool ignoreSimulator() const;
 
-            BlackMisc::Simulation::CSimulatorInfo m_simulator;
-        };
-    } // namespace
+        BlackMisc::Simulation::CSimulatorInfo m_simulator;
+    };
 } // namespace
 
 #endif // guard

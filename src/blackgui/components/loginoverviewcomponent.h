@@ -33,67 +33,61 @@
 #include <QString>
 
 namespace Ui { class CLoginOverviewComponent; }
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
-    {
-        class CAircraftModel;
-        class CSimulatedAircraft;
-    }
+    class CAircraftModel;
+    class CSimulatedAircraft;
 }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Login component to flight network
+     */
+    class BLACKGUI_EXPORT CLoginOverviewComponent : public COverlayMessagesFrame
     {
-        /*!
-         * Login component to flight network
-         */
-        class BLACKGUI_EXPORT CLoginOverviewComponent : public COverlayMessagesFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Log categories
-            static const QStringList &getLogCategories();
+    public:
+        //! Log categories
+        static const QStringList &getLogCategories();
 
-            //! Constructor
-            explicit CLoginOverviewComponent(QWidget *parent = nullptr);
+        //! Constructor
+        explicit CLoginOverviewComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CLoginOverviewComponent() override;
+        //! Destructor
+        virtual ~CLoginOverviewComponent() override;
 
-            //! Set auto logoff
-            void setAutoLogoff(bool autoLogoff);
+        //! Set auto logoff
+        void setAutoLogoff(bool autoLogoff);
 
-            //! Login requested
-            void toggleNetworkConnection();
+        //! Login requested
+        void toggleNetworkConnection();
 
-            //! Show current values
-            void showCurrentValues();
+        //! Show current values
+        void showCurrentValues();
 
-        signals:
-            //! Login
-            void loginOrLogoffSuccessful();
+    signals:
+        //! Login
+        void loginOrLogoffSuccessful();
 
-            //! Cancelled
-            void closeOverview();
+        //! Cancelled
+        void closeOverview();
 
-        private:
-            // -------------- others -----------------
+    private:
+        // -------------- others -----------------
 
-            //! Login cancelled
-            void cancel();
+        //! Login cancelled
+        void cancel();
 
-            //! Has contexts?
-            bool hasValidContexts() const;
+        //! Has contexts?
+        bool hasValidContexts() const;
 
-            static constexpr int OverlayMessageMs = 5000;
-            static constexpr int LogoffIntervalSeconds = 20; //!< time before logoff
+        static constexpr int OverlayMessageMs = 5000;
+        static constexpr int LogoffIntervalSeconds = 20; //!< time before logoff
 
-            QScopedPointer<Ui::CLoginOverviewComponent> ui;
-            BlackCore::Data::CNetworkSetup m_networkSetup; //!< servers last used
-        };
-    } // namespace
+        QScopedPointer<Ui::CLoginOverviewComponent> ui;
+        BlackCore::Data::CNetworkSetup m_networkSetup; //!< servers last used
+    };
 } // namespace
 
 #endif // guard

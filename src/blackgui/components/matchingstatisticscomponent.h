@@ -15,31 +15,28 @@
 #include <QScopedPointer>
 
 namespace Ui { class CMatchingStatisticsComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Show statistics about matching results
+     */
+    class CMatchingStatisticsComponent : public QFrame
     {
-        /*!
-         * Show statistics about matching results
-         */
-        class CMatchingStatisticsComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CMatchingStatisticsComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CMatchingStatisticsComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CMatchingStatisticsComponent();
+        //! Destructor
+        virtual ~CMatchingStatisticsComponent();
 
-        private:
-            //! Show statistics
-            void onGenerateClicked();
+    private:
+        //! Show statistics
+        void onGenerateClicked();
 
-            QScopedPointer<Ui::CMatchingStatisticsComponent> ui;
-        };
-    } // ns
+        QScopedPointer<Ui::CMatchingStatisticsComponent> ui;
+    };
 } // ns
 
 #endif // guard

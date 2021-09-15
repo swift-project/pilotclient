@@ -21,56 +21,53 @@
 #include <QString>
 #include <QStringList>
 
-namespace BlackMisc
+namespace BlackMisc::Network
 {
-    namespace Network
+    //! Value object encapsulating a list of remote files.
+    class BLACKMISC_EXPORT CRemoteFileList :
+        public CSequence<CRemoteFile>,
+        public Mixin::MetaType<CRemoteFileList>
     {
-        //! Value object encapsulating a list of remote files.
-        class BLACKMISC_EXPORT CRemoteFileList :
-            public CSequence<CRemoteFile>,
-            public Mixin::MetaType<CRemoteFileList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CRemoteFileList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CRemoteFileList)
+        using CSequence::CSequence;
 
-            //! Default constructor.
-            CRemoteFileList();
+        //! Default constructor.
+        CRemoteFileList();
 
-            //! Construct from a base class object.
-            CRemoteFileList(const CSequence<CRemoteFile> &other);
+        //! Construct from a base class object.
+        CRemoteFileList(const CSequence<CRemoteFile> &other);
 
-            //! All file names
-            QStringList getNames(bool sorted = true) const;
+        //! All file names
+        QStringList getNames(bool sorted = true) const;
 
-            //! All file names plus size
-            QStringList getBaseNamesPlusSize(bool sorted = true) const;
+        //! All file names plus size
+        QStringList getBaseNamesPlusSize(bool sorted = true) const;
 
-            //! First by name of default
-            CRemoteFile findFirstByNameOrDefault(const QString &name) const;
+        //! First by name of default
+        CRemoteFile findFirstByNameOrDefault(const QString &name) const;
 
-            //! First by name contained of default
-            CRemoteFile findFirstContainingNameOrDefault(const QString &name, Qt::CaseSensitivity cs) const;
+        //! First by name contained of default
+        CRemoteFile findFirstContainingNameOrDefault(const QString &name, Qt::CaseSensitivity cs) const;
 
-            //! Find first matching name of default
-            CRemoteFile findFirstByMatchingBaseNameOrDefault(const QString &name) const;
+        //! Find first matching name of default
+        CRemoteFile findFirstByMatchingBaseNameOrDefault(const QString &name) const;
 
-            //! Find all executable files (decided by appendix)
-            CRemoteFileList findExecutableFiles() const;
+        //! Find all executable files (decided by appendix)
+        CRemoteFileList findExecutableFiles() const;
 
-            //! Size of all files
-            qint64 getTotalFileSize() const;
+        //! Size of all files
+        qint64 getTotalFileSize() const;
 
-            //! Size formatted
-            QString getTotalFileSizeHumanReadable() const;
+        //! Size formatted
+        QString getTotalFileSizeHumanReadable() const;
 
-            //! From our database JSON format
-            static CRemoteFileList fromDatabaseJson(const QJsonArray &array);
+        //! From our database JSON format
+        static CRemoteFileList fromDatabaseJson(const QJsonArray &array);
 
-            //! From our database JSON format
-            static CRemoteFileList fromDatabaseJson(const QString &json);
-        };
-    } //namespace
+        //! From our database JSON format
+        static CRemoteFileList fromDatabaseJson(const QString &json);
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Network::CRemoteFileList)

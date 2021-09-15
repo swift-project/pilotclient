@@ -21,58 +21,55 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace BlackMisc { namespace Network { class CAuthenticatedUser; } }
+namespace BlackMisc::Network { class CAuthenticatedUser; }
 namespace Ui { class CDbLoginComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * Login to DB
+     * \sa BlackCore::Db::CDatabaseAuthenticationService
+     */
+    class BLACKGUI_EXPORT CDbLoginComponent :
+        public QFrame,
+        public CLoadIndicatorEnabled
     {
-        /**
-         * Login to DB
-         * \sa BlackCore::Db::CDatabaseAuthenticationService
-         */
-        class BLACKGUI_EXPORT CDbLoginComponent :
-            public QFrame,
-            public CLoadIndicatorEnabled
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CDbLoginComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CDbLoginComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CDbLoginComponent() override;
+        //! Destructor
+        virtual ~CDbLoginComponent() override;
 
-            //! DB user
-            BlackMisc::Network::CAuthenticatedUser getDbUser() const;
+        //! DB user
+        BlackMisc::Network::CAuthenticatedUser getDbUser() const;
 
-            //! Is user authenticated?
-            bool isUserAuthenticated() const;
+        //! Is user authenticated?
+        bool isUserAuthenticated() const;
 
-        private:
-            QScopedPointer<Ui::CDbLoginComponent> ui;
-            BlackCore::Db::CDatabaseAuthenticationService m_loginService { this };  //!< login service
+    private:
+        QScopedPointer<Ui::CDbLoginComponent> ui;
+        BlackCore::Db::CDatabaseAuthenticationService m_loginService { this };  //!< login service
 
-            //! Overlay messages
-            void displayOverlayMessages(const BlackMisc::CStatusMessageList &msgs);
+        //! Overlay messages
+        void displayOverlayMessages(const BlackMisc::CStatusMessageList &msgs);
 
-            //! Mode login
-            void setModeLogin(bool modeLogin);
+        //! Mode login
+        void setModeLogin(bool modeLogin);
 
-            //! Set the user fields
-            void setUserInfo(const BlackMisc::Network::CAuthenticatedUser &user);
+        //! Set the user fields
+        void setUserInfo(const BlackMisc::Network::CAuthenticatedUser &user);
 
-            //! Login
-            void onLoginClicked();
+        //! Login
+        void onLoginClicked();
 
-            //! Logoff
-            void onLogoffClicked();
+        //! Logoff
+        void onLogoffClicked();
 
-            //! User authentication completed
-            void onAuthenticationFinished(const BlackMisc::Network::CAuthenticatedUser &user, const BlackMisc::CStatusMessageList &statusMsgs);
-        };
-    } // ns
+        //! User authentication completed
+        void onAuthenticationFinished(const BlackMisc::Network::CAuthenticatedUser &user, const BlackMisc::CStatusMessageList &statusMsgs);
+    };
 } // ns
 
 #endif // guard

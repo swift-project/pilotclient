@@ -17,66 +17,63 @@
 #include "blackmisc/network/fsdsetup.h"
 
 namespace Ui { class CFsdSetupForm; }
-namespace BlackGui
+namespace BlackGui::Editors
 {
-    namespace Editors
+    /*!
+     * Setup for FSD
+     */
+    class CFsdSetupForm : public CForm
     {
-        /*!
-         * Setup for FSD
-         */
-        class CFsdSetupForm : public CForm
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CFsdSetupForm(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CFsdSetupForm(QWidget *parent = nullptr);
 
-            //! Constructor
-            virtual ~CFsdSetupForm() override;
+        //! Constructor
+        virtual ~CFsdSetupForm() override;
 
-            //! FSD setup from GUI
-            BlackMisc::Network::CFsdSetup getValue() const;
+        //! FSD setup from GUI
+        BlackMisc::Network::CFsdSetup getValue() const;
 
-            //! FSD setup when disabled
-            const BlackMisc::Network::CFsdSetup &getDisabledValue() const;
+        //! FSD setup when disabled
+        const BlackMisc::Network::CFsdSetup &getDisabledValue() const;
 
-            //! Set to GUI
-            void setValue(const BlackMisc::Network::CFsdSetup &setup);
+        //! Set to GUI
+        void setValue(const BlackMisc::Network::CFsdSetup &setup);
 
-            //! Allow override even in read only mode
-            void setAlwaysAllowOverride(bool allow);
+        //! Allow override even in read only mode
+        void setAlwaysAllowOverride(bool allow);
 
-            //! Enabled?
-            bool isFsdSetupEnabled() const;
+        //! Enabled?
+        bool isFsdSetupEnabled() const;
 
-            //! Set enabled / disabled
-            void setFsdSetupEnabled(bool enabled);
+        //! Set enabled / disabled
+        void setFsdSetupEnabled(bool enabled);
 
-            //! Show the enable info
-            void showEnableInfo(bool visible);
+        //! Show the enable info
+        void showEnableInfo(bool visible);
 
-            //! Set default values
-            void resetToDefaultValues();
+        //! Set default values
+        void resetToDefaultValues();
 
-            //! \name Form class implementations
-            //! @{
-            virtual void setReadOnly(bool readonly) override;
-            virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
-            //! @}
+        //! \name Form class implementations
+        //! @{
+        virtual void setReadOnly(bool readonly) override;
+        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        //! @}
 
-        private:
-            //! Enable / disable
-            void enabledToggled(bool enabled);
+    private:
+        //! Enable / disable
+        void enabledToggled(bool enabled);
 
-            //! Show / hide visible "enable" info
-            void visibleEnableInfo(bool visible);
+        //! Show / hide visible "enable" info
+        void visibleEnableInfo(bool visible);
 
-            QScopedPointer<Ui::CFsdSetupForm> ui;
-            bool m_visibleEnableInfo   = true;
-            bool m_alwaysAllowOverride = false;
-        };
-    } // ns
+        QScopedPointer<Ui::CFsdSetupForm> ui;
+        bool m_visibleEnableInfo   = true;
+        bool m_alwaysAllowOverride = false;
+    };
 } // ns
 
 #endif // guard

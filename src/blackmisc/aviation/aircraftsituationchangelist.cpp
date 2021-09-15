@@ -9,32 +9,29 @@
 #include "blackmisc/aviation/aircraftsituationchangelist.h"
 #include <tuple>
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
+    CAircraftSituationChangeList::CAircraftSituationChangeList() { }
+
+    CAircraftSituationChangeList::CAircraftSituationChangeList(const CSequence<CAircraftSituationChange> &other) :
+        CSequence<CAircraftSituationChange>(other)
+    { }
+
+    CAircraftSituationChange CAircraftSituationChangeList::frontOrNull() const
     {
-        CAircraftSituationChangeList::CAircraftSituationChangeList() { }
+        if (this->isEmpty()) { return CAircraftSituationChange::null(); }
+        return this->front();
+    }
 
-        CAircraftSituationChangeList::CAircraftSituationChangeList(const CSequence<CAircraftSituationChange> &other) :
-            CSequence<CAircraftSituationChange>(other)
-        { }
+    CAircraftSituationChange CAircraftSituationChangeList::backOrNull() const
+    {
+        if (this->isEmpty()) { return CAircraftSituationChange::null(); }
+        return this->back();
+    }
 
-        CAircraftSituationChange CAircraftSituationChangeList::frontOrNull() const
-        {
-            if (this->isEmpty()) { return CAircraftSituationChange::null(); }
-            return this->front();
-        }
-
-        CAircraftSituationChange CAircraftSituationChangeList::backOrNull() const
-        {
-            if (this->isEmpty()) { return CAircraftSituationChange::null(); }
-            return this->back();
-        }
-
-        CAircraftSituationChange CAircraftSituationChangeList::indexOrNull(int index) const
-        {
-            if (this->size() > index) { return (*this)[index]; }
-            return CAircraftSituationChange::null();
-        }
-    } // namespace
+    CAircraftSituationChange CAircraftSituationChangeList::indexOrNull(int index) const
+    {
+        if (this->size() > index) { return (*this)[index]; }
+        return CAircraftSituationChange::null();
+    }
 } // namespace

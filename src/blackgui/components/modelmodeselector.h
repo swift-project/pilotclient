@@ -22,44 +22,41 @@ class QWidget;
 
 namespace Ui { class CModelModeSelector; }
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Select the mode
+     */
+    class BLACKGUI_EXPORT CModelModeSelector : public QFrame
     {
-        /*!
-         * Select the mode
-         */
-        class BLACKGUI_EXPORT CModelModeSelector : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CModelModeSelector(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CModelModeSelector(QWidget *parent = nullptr);
 
-            //! Destructor
-            ~CModelModeSelector();
+        //! Destructor
+        ~CModelModeSelector();
 
-            //! Get mode
-            BlackMisc::Simulation::CAircraftModel::ModelMode getMode() const;
+        //! Get mode
+        BlackMisc::Simulation::CAircraftModel::ModelMode getMode() const;
 
-            //! Set mode
-            void setValue(BlackMisc::Simulation::CAircraftModel::ModelMode mode);
+        //! Set mode
+        void setValue(BlackMisc::Simulation::CAircraftModel::ModelMode mode);
 
-            //! Set mode
-            void setValue(const BlackMisc::Simulation::CAircraftModel &model);
+        //! Set mode
+        void setValue(const BlackMisc::Simulation::CAircraftModel &model);
 
-            //! Read only
-            void setReadOnly(bool readOnly);
+        //! Read only
+        void setReadOnly(bool readOnly);
 
-        signals:
-            //! Value changed
-            void changed();
+    signals:
+        //! Value changed
+        void changed();
 
-        private:
-            QScopedPointer<Ui::CModelModeSelector> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CModelModeSelector> ui;
+    };
 } // ns
 
 #endif // guard

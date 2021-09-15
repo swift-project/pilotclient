@@ -11,33 +11,30 @@
 #ifndef BLACKSIMPLUGIN_FS9_DIRECTPLAYUTILS_H
 #define BLACKSIMPLUGIN_FS9_DIRECTPLAYUTILS_H
 
-namespace BlackSimPlugin
+namespace BlackSimPlugin::Fs9
 {
-    namespace Fs9
+    //! Safely release a COM allocated object
+    template <class T>
+    void SafeRelease(T*& pT)
     {
-        //! Safely release a COM allocated object
-        template <class T>
-        void SafeRelease(T*& pT)
-        {
-            if (pT) { pT->Release(); }
-            pT = nullptr;
-        }
+        if (pT) { pT->Release(); }
+        pT = nullptr;
+    }
 
-        //! Safely delete an allocated pointer
-        template <class T>
-        void SafeDelete(T*& pT)
-        {
-            delete pT;
-            pT = nullptr;
-        }
+    //! Safely delete an allocated pointer
+    template <class T>
+    void SafeDelete(T*& pT)
+    {
+        delete pT;
+        pT = nullptr;
+    }
 
-        //! Safely delete an allocated array
-        template <class T>
-        void SafeDeleteArray(T*& pT)
-        {
-            delete[] pT;
-            pT = nullptr;
-        }
+    //! Safely delete an allocated array
+    template <class T>
+    void SafeDeleteArray(T*& pT)
+    {
+        delete[] pT;
+        pT = nullptr;
     }
 }
 

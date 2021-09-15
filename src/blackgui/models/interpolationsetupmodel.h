@@ -16,23 +16,20 @@
 #include "blackgui/blackguiexport.h"
 #include <QString>
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Country list model
+    class BLACKGUI_EXPORT CInterpolationSetupListModel :
+        public CListModelCallsignObjects<BlackMisc::Simulation::CInterpolationSetupList, false>
     {
-        //! Country list model
-        class BLACKGUI_EXPORT CInterpolationSetupListModel :
-            public CListModelCallsignObjects<BlackMisc::Simulation::CInterpolationSetupList, false>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CInterpolationSetupListModel(QObject *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CInterpolationSetupListModel(QObject *parent = nullptr);
 
-            //! Destructor
-            virtual ~CInterpolationSetupListModel() override {}
-        };
-    } // ns
+        //! Destructor
+        virtual ~CInterpolationSetupListModel() override {}
+    };
 } // ns
 #endif // guard

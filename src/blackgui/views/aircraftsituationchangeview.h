@@ -18,20 +18,17 @@
 
 class QWidget;
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Aircraft situation change view
+    class BLACKGUI_EXPORT CAircraftSituationChangeView : public CViewWithTimestampWithOffsetObjects<Models::CAircraftSituationChangeListModel>
     {
-        //! Aircraft situation change view
-        class BLACKGUI_EXPORT CAircraftSituationChangeView : public CViewWithTimestampWithOffsetObjects<Models::CAircraftSituationChangeListModel>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAircraftSituationChangeView(QWidget *parent = nullptr);
-        };
-    } // ns
+    public:
+        //! Constructor
+        explicit CAircraftSituationChangeView(QWidget *parent = nullptr);
+    };
 } // ns
 
 #endif // guard

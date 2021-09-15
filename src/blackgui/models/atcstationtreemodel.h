@@ -18,44 +18,41 @@
 #include <QStandardItemModel>
 #include <QHash>
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! ATC list model
+    class BLACKGUI_EXPORT CAtcStationTreeModel : public QStandardItemModel
     {
-        //! ATC list model
-        class BLACKGUI_EXPORT CAtcStationTreeModel : public QStandardItemModel
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAtcStationTreeModel(QObject *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAtcStationTreeModel(QObject *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAtcStationTreeModel() override {}
+        //! Destructor
+        virtual ~CAtcStationTreeModel() override {}
 
-            //! Set columns
-            void setColumns(const CColumns &columns) { m_columns.setColumns(columns); }
+        //! Set columns
+        void setColumns(const CColumns &columns) { m_columns.setColumns(columns); }
 
-            //! Update container
-            void updateContainer(const BlackMisc::Aviation::CAtcStationList &stations);
+        //! Update container
+        void updateContainer(const BlackMisc::Aviation::CAtcStationList &stations);
 
-            //! Clear everything
-            //! \remark hiding QStandardItemModel::clear()
-            void clear();
+        //! Clear everything
+        //! \remark hiding QStandardItemModel::clear()
+        void clear();
 
-            //! Get container
-            const BlackMisc::Aviation::CAtcStationList &container() const { return m_stations; }
+        //! Get container
+        const BlackMisc::Aviation::CAtcStationList &container() const { return m_stations; }
 
-            //! Used to quickly update single station (better response for the user)
-            void changedAtcStationConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
+        //! Used to quickly update single station (better response for the user)
+        void changedAtcStationConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
 
-        private:
-            CColumns m_columns { "CAtcStationTreeModel" };
-            BlackMisc::Aviation::CAtcStationList m_stations;
-            QHash<QString, BlackMisc::Aviation::CAtcStationList> m_stationsBySuffix;
-            QStringList m_suffixes;
-        };
-    } // ns
+    private:
+        CColumns m_columns { "CAtcStationTreeModel" };
+        BlackMisc::Aviation::CAtcStationList m_stations;
+        QHash<QString, BlackMisc::Aviation::CAtcStationList> m_stationsBySuffix;
+        QStringList m_suffixes;
+    };
 } // ns
 #endif // guard

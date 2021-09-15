@@ -16,73 +16,70 @@
 #include <QScopedPointer>
 
 namespace Ui { class CAirportSmallCompleter; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    class CAirportDialog;
+
+    //! Smaller version of CAirportCompleter, using a CAirportDialog
+    class CAirportSmallCompleter : public QFrame
     {
-        class CAirportDialog;
+        Q_OBJECT
 
-        //! Smaller version of CAirportCompleter, using a CAirportDialog
-        class CAirportSmallCompleter : public QFrame
-        {
-            Q_OBJECT
+    public:
+        //! Constructor
+        explicit CAirportSmallCompleter(QWidget *parent = nullptr);
 
-        public:
-            //! Constructor
-            explicit CAirportSmallCompleter(QWidget *parent = nullptr);
+        //! Destructor
+        virtual ~CAirportSmallCompleter();
 
-            //! Destructor
-            virtual ~CAirportSmallCompleter();
+        //! Set airport
+        void setAirport(const BlackMisc::Aviation::CAirport &airport);
 
-            //! Set airport
-            void setAirport(const BlackMisc::Aviation::CAirport &airport);
+        //! Set airport
+        void setAirportIcaoCode(const BlackMisc::Aviation::CAirportIcaoCode &airportCode);
 
-            //! Set airport
-            void setAirportIcaoCode(const BlackMisc::Aviation::CAirportIcaoCode &airportCode);
+        //! Get airport
+        const BlackMisc::Aviation::CAirport &getAirport() const { return m_current; }
 
-            //! Get airport
-            const BlackMisc::Aviation::CAirport &getAirport() const { return m_current; }
+        //! Get airport ICAO code
+        BlackMisc::Aviation::CAirportIcaoCode getAirportIcaoCode() const;
 
-            //! Get airport ICAO code
-            BlackMisc::Aviation::CAirportIcaoCode getAirportIcaoCode() const;
+        //! The raw ICAO code text
+        QString getIcaoText() const;
 
-            //! The raw ICAO code text
-            QString getIcaoText() const;
+        //! Empty field
+        bool isEmpty() const;
 
-            //! Empty field
-            bool isEmpty() const;
+        //! Read only
+        void setReadOnly(bool readOnly);
 
-            //! Read only
-            void setReadOnly(bool readOnly);
+        //! Clear
+        void clear();
 
-            //! Clear
-            void clear();
+        //! Clear if code not valid
+        void clearIfInvalidCode(bool strictValidation);
 
-            //! Clear if code not valid
-            void clearIfInvalidCode(bool strictValidation);
+    signals:
+        //! Airport has been changed
+        void changedAirport(const BlackMisc::Aviation::CAirport &airport);
 
-        signals:
-            //! Airport has been changed
-            void changedAirport(const BlackMisc::Aviation::CAirport &airport);
+        //! \copydoc QLineEdit::editingFinished
+        void editingFinished();
 
-            //! \copydoc QLineEdit::editingFinished
-            void editingFinished();
+    private:
+        //! ICAO code has been changed in UI
+        void onIcaoChanged();
 
-        private:
-            //! ICAO code has been changed in UI
-            void onIcaoChanged();
+        //! Airports backend data changed
+        void onAirportsChanged();
 
-            //! Airports backend data changed
-            void onAirportsChanged();
+        //! Display dialog
+        void showAirportsDialog();
 
-            //! Display dialog
-            void showAirportsDialog();
-
-            QScopedPointer<Ui::CAirportSmallCompleter> ui;
-            QScopedPointer <CAirportDialog> m_airportsDialog; //!< UI completer
-            BlackMisc::Aviation::CAirport m_current; //!< this airport
-        };
-    } // ns
+        QScopedPointer<Ui::CAirportSmallCompleter> ui;
+        QScopedPointer <CAirportDialog> m_airportsDialog; //!< UI completer
+        BlackMisc::Aviation::CAirport m_current; //!< this airport
+    };
 } // ns
 
 #endif // guard

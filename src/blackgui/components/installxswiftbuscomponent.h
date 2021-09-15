@@ -24,105 +24,102 @@
 #include <QScopedPointer>
 
 namespace Ui { class CInstallXSwiftBusComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * Download and install XSwiftBus
+     */
+    class CInstallXSwiftBusComponent :
+        public COverlayMessagesFrame,
+        public CLoadIndicatorEnabled
     {
-        /**
-         * Download and install XSwiftBus
-         */
-        class CInstallXSwiftBusComponent :
-            public COverlayMessagesFrame,
-            public CLoadIndicatorEnabled
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Default constructor
-            explicit CInstallXSwiftBusComponent(QWidget *parent = nullptr);
+    public:
+        //! Default constructor
+        explicit CInstallXSwiftBusComponent(QWidget *parent = nullptr);
 
-            //! Dtor
-            virtual ~CInstallXSwiftBusComponent();
+        //! Dtor
+        virtual ~CInstallXSwiftBusComponent();
 
-            //! Set a default name for download
-            void setDefaultDownloadName(const QString &defaultDownload);
+        //! Set a default name for download
+        void setDefaultDownloadName(const QString &defaultDownload);
 
-        private:
-            static constexpr int OverlayMsgTimeoutMs = 5000; //!< how long overlay is displayed
+    private:
+        static constexpr int OverlayMsgTimeoutMs = 5000; //!< how long overlay is displayed
 
-            QScopedPointer<Ui::CInstallXSwiftBusComponent> ui;
-            BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for directories of XPlane
-            BlackMisc::CDataReadOnly<BlackMisc::Db::TUpdateInfo> m_updates { this, &CInstallXSwiftBusComponent::updatesChanged };
-            BlackMisc::CSettingReadOnly<BlackCore::Application::TUpdatePreferences> m_updateSettings { this }; //!< channel/platform selected
-            const QFileDialog::Options m_fileDialogOptions { QFileDialog::ShowDirsOnly | QFileDialog::ReadOnly | QFileDialog::DontResolveSymlinks };
+        QScopedPointer<Ui::CInstallXSwiftBusComponent> ui;
+        BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for directories of XPlane
+        BlackMisc::CDataReadOnly<BlackMisc::Db::TUpdateInfo> m_updates { this, &CInstallXSwiftBusComponent::updatesChanged };
+        BlackMisc::CSettingReadOnly<BlackCore::Application::TUpdatePreferences> m_updateSettings { this }; //!< channel/platform selected
+        const QFileDialog::Options m_fileDialogOptions { QFileDialog::ShowDirsOnly | QFileDialog::ReadOnly | QFileDialog::DontResolveSymlinks };
 
-            // the xSwiftBus artifacts
-            QString m_defaultDownloadName; //!< default name for download
-            BlackMisc::Db::CArtifactList m_xSwiftBusArtifacts; //!< selectable artifacts
+        // the xSwiftBus artifacts
+        QString m_defaultDownloadName; //!< default name for download
+        BlackMisc::Db::CArtifactList m_xSwiftBusArtifacts; //!< selectable artifacts
 
-            //! Select X-Plane plugin directory
-            void selectPluginDirectory();
+        //! Select X-Plane plugin directory
+        void selectPluginDirectory();
 
-            //! Select download directory
-            void selectDownloadDirectory();
+        //! Select download directory
+        void selectDownloadDirectory();
 
-            //! Install from download directory to X-Plane directory
-            void installXSwiftBus();
+        //! Install from download directory to X-Plane directory
+        void installXSwiftBus();
 
-            //! Trigger downloading of the XSwiftBus file
-            void triggerDownloadingOfXSwiftBusFile();
+        //! Trigger downloading of the XSwiftBus file
+        void triggerDownloadingOfXSwiftBusFile();
 
-            //! Downloaded XSwiftBus file
-            void downloadedXSwiftBusFile(const BlackMisc::CStatusMessage &status);
+        //! Downloaded XSwiftBus file
+        void downloadedXSwiftBusFile(const BlackMisc::CStatusMessage &status);
 
-            //! Full filename + path for the downloaded XSwiftBus file
-            BlackMisc::Network::CRemoteFile getRemoteFileSelected() const;
+        //! Full filename + path for the downloaded XSwiftBus file
+        BlackMisc::Network::CRemoteFile getRemoteFileSelected() const;
 
-            //! Download dir from UI
-            QString downloadDir() const;
+        //! Download dir from UI
+        QString downloadDir() const;
 
-            //! XSwiftBus dir from UI
-            QString xSwiftBusDir() const;
+        //! XSwiftBus dir from UI
+        QString xSwiftBusDir() const;
 
-            //! Is the download dir existing?
-            bool existsDownloadDir() const;
+        //! Is the download dir existing?
+        bool existsDownloadDir() const;
 
-            //! Is the install dir existing?
-            bool existsXSwiftBusPluginDir() const;
+        //! Is the install dir existing?
+        bool existsXSwiftBusPluginDir() const;
 
-            //! X-Plane directory from settings of default directory
-            QString getXPlanePluginDirectory() const;
+        //! X-Plane directory from settings of default directory
+        QString getXPlanePluginDirectory() const;
 
-            //! Updates have been changed
-            void updatesChanged();
+        //! Updates have been changed
+        void updatesChanged();
 
-            //! Show install dir
-            void openInstallDir();
+        //! Show install dir
+        void openInstallDir();
 
-            //! Show download dir
-            void openDownloadDir();
-        };
+        //! Show download dir
+        void openDownloadDir();
+    };
 
-        /**
-         * Wizard page for CInstallXSwiftBusWizardPage
-         */
-        class CInstallXSwiftBusWizardPage : public QWizardPage
-        {
-            Q_OBJECT
+    /**
+     * Wizard page for CInstallXSwiftBusWizardPage
+     */
+    class CInstallXSwiftBusWizardPage : public QWizardPage
+    {
+        Q_OBJECT
 
-        public:
-            //! Constructors
-            using QWizardPage::QWizardPage;
+    public:
+        //! Constructors
+        using QWizardPage::QWizardPage;
 
-            //! Set config
-            void setConfigComponent(CInstallXSwiftBusComponent *config) { m_config = config; }
+        //! Set config
+        void setConfigComponent(CInstallXSwiftBusComponent *config) { m_config = config; }
 
-            //! \copydoc QWizardPage::validatePage
-            virtual bool validatePage() override;
+        //! \copydoc QWizardPage::validatePage
+        virtual bool validatePage() override;
 
-        private:
-            CInstallXSwiftBusComponent *m_config = nullptr;
-        };
-    } // ns
+    private:
+        CInstallXSwiftBusComponent *m_config = nullptr;
+    };
 } // ns
 #endif // guard

@@ -18,23 +18,20 @@
 
 class QObject;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Temperature layer list model
+    class BLACKGUI_EXPORT CTemperatureLayerListModel :
+        public CListModelBase<BlackMisc::Weather::CTemperatureLayerList, false>
     {
-        //! Temperature layer list model
-        class BLACKGUI_EXPORT CTemperatureLayerListModel :
-            public CListModelBase<BlackMisc::Weather::CTemperatureLayerList, false>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CTemperatureLayerListModel(QObject *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CTemperatureLayerListModel(QObject *parent = nullptr);
 
-            //! Destructor
-            virtual ~CTemperatureLayerListModel() {}
-        };
-    }
+        //! Destructor
+        virtual ~CTemperatureLayerListModel() {}
+    };
 }
 #endif // guard

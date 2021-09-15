@@ -8,25 +8,22 @@
 
 #include "blackmisc/network/connectionstatus.h"
 
-namespace BlackMisc
+namespace BlackMisc::Network
 {
-    namespace Network
+    QString CConnectionStatus::convertToQString(bool i18n) const
     {
-        QString CConnectionStatus::convertToQString(bool i18n) const
+        Q_UNUSED(i18n);
+
+        switch (m_connectionStatus)
         {
-            Q_UNUSED(i18n);
-
-            switch (m_connectionStatus)
-            {
-            case Connected: return QStringLiteral("Connected");
-            case Connecting: return QStringLiteral("Connecting");
-            case Disconnecting: return QStringLiteral("Disconnecting");
-            case Disconnected: return QStringLiteral("Disconnected");
-            }
-
-            Q_UNREACHABLE();
-            return {};
+        case Connected: return QStringLiteral("Connected");
+        case Connecting: return QStringLiteral("Connecting");
+        case Disconnecting: return QStringLiteral("Disconnecting");
+        case Disconnected: return QStringLiteral("Disconnected");
         }
 
-    } // namespace
+        Q_UNREACHABLE();
+        return {};
+    }
+
 } // namespace

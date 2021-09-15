@@ -16,35 +16,32 @@
 #include <QScopedPointer>
 
 namespace Ui { class CAirportDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Dialog for finding an airport
+    class CAirportDialog : public QDialog
     {
-        //! Dialog for finding an airport
-        class CAirportDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAirportDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAirportDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAirportDialog();
+        //! Destructor
+        virtual ~CAirportDialog();
 
-            //! Set airport
-            void setAirport(const BlackMisc::Aviation::CAirport &airport);
+        //! Set airport
+        void setAirport(const BlackMisc::Aviation::CAirport &airport);
 
-            //! Get airport
-            BlackMisc::Aviation::CAirport getAirport() const;
+        //! Get airport
+        BlackMisc::Aviation::CAirport getAirport() const;
 
-            //! Clear the form
-            void clear();
+        //! Clear the form
+        void clear();
 
-        private:
-            QScopedPointer<Ui::CAirportDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CAirportDialog> ui;
+    };
 } // ns
 
 #endif // guard

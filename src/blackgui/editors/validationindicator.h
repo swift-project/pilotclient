@@ -25,58 +25,55 @@ class QWidget;
 
 namespace Ui { class CValidationIndicator; }
 
-namespace BlackGui
+namespace BlackGui::Editors
 {
-    namespace Editors
+    /*!
+     * Indication state of validation
+     */
+    class BLACKGUI_EXPORT CValidationIndicator : public QFrame
     {
-        /*!
-         * Indication state of validation
-         */
-        class BLACKGUI_EXPORT CValidationIndicator : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CValidationIndicator(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CValidationIndicator(QWidget *parent = nullptr);
 
-            //! Destructor
-            ~CValidationIndicator() override;
+        //! Destructor
+        ~CValidationIndicator() override;
 
-            //! Validation passed
-            void passed();
+        //! Validation passed
+        void passed();
 
-            //! Passed with warnings
-            void warnings();
+        //! Passed with warnings
+        void warnings();
 
-            //! Validation failed
-            void failed();
+        //! Validation failed
+        void failed();
 
-            //! Ok or failed validation?
-            void setState(bool ok);
+        //! Ok or failed validation?
+        void setState(bool ok);
 
-            //! Messages from status messages
-            void setState(const BlackMisc::CStatusMessageList &msgs);
+        //! Messages from status messages
+        void setState(const BlackMisc::CStatusMessageList &msgs);
 
-        public slots:
-            //! Cleared state
-            void clear();
+    public slots:
+        //! Cleared state
+        void clear();
 
-        protected:
-            //! \copydoc QFrame::paintEvent
-            virtual void paintEvent(QPaintEvent *paintEvent) override;
+    protected:
+        //! \copydoc QFrame::paintEvent
+        virtual void paintEvent(QPaintEvent *paintEvent) override;
 
-        private:
-            const int ResetInterval = 5000;
-            QScopedPointer<Ui::CValidationIndicator> ui;
+    private:
+        const int ResetInterval = 5000;
+        QScopedPointer<Ui::CValidationIndicator> ui;
 
-            //! Set background color
-            void setBackgroundColor(const QString &colorName);
+        //! Set background color
+        void setBackgroundColor(const QString &colorName);
 
-            QTimer m_resetTimer; //!< reset to neutral
-            QString m_originalStyleSheet; //!< stored, to be able to reset
-        };
-    } // ns
+        QTimer m_resetTimer; //!< reset to neutral
+        QString m_originalStyleSheet; //!< stored, to be able to reset
+    };
 } // ns
 
 #endif // guard

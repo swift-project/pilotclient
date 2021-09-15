@@ -22,59 +22,56 @@
 #include <memory>
 
 namespace Ui { class CAircraftModelFilterBar; }
-namespace BlackMisc { namespace Simulation { class CAircraftModelList; } }
-namespace BlackGui
+namespace BlackMisc::Simulation { class CAircraftModelList; }
+namespace BlackGui::Filters
 {
-    namespace Filters
+    /*!
+     * Filter bar for aircraft models
+     */
+    class BLACKGUI_EXPORT CAircraftModelFilterBar :
+        public CFilterWidget,
+        public Models::IModelFilterProvider<BlackMisc::Simulation::CAircraftModelList>
     {
-        /*!
-         * Filter bar for aircraft models
-         */
-        class BLACKGUI_EXPORT CAircraftModelFilterBar :
-            public CFilterWidget,
-            public Models::IModelFilterProvider<BlackMisc::Simulation::CAircraftModelList>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAircraftModelFilterBar(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAircraftModelFilterBar(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAircraftModelFilterBar() override;
+        //! Destructor
+        virtual ~CAircraftModelFilterBar() override;
 
-            //! Show count
-            void displayCount(bool show);
+        //! Show count
+        void displayCount(bool show);
 
-            //! \copydoc Models::IModelFilterProvider::createModelFilter
-            virtual std::unique_ptr<Models::IModelFilter<BlackMisc::Simulation::CAircraftModelList>> createModelFilter() const override;
+        //! \copydoc Models::IModelFilterProvider::createModelFilter
+        virtual std::unique_ptr<Models::IModelFilter<BlackMisc::Simulation::CAircraftModelList>> createModelFilter() const override;
 
-            //! \copydoc CFilterWidget::onRowCountChanged
-            virtual void onRowCountChanged(int count, bool withFilter) override;
+        //! \copydoc CFilterWidget::onRowCountChanged
+        virtual void onRowCountChanged(int count, bool withFilter) override;
 
-        protected:
-            //! \copydoc CFilterWidget::clearForm
-            virtual void clearForm() override;
+    protected:
+        //! \copydoc CFilterWidget::clearForm
+        virtual void clearForm() override;
 
-        private:
-            //! Simulator selection changed
-            void onSimulatorSelectionChanged(const BlackMisc::Simulation::CSimulatorInfo &info);
+    private:
+        //! Simulator selection changed
+        void onSimulatorSelectionChanged(const BlackMisc::Simulation::CSimulatorInfo &info);
 
-            //! Distributor changed
-            void onDistributorChanged(const BlackMisc::Simulation::CDistributor &distributor);
+        //! Distributor changed
+        void onDistributorChanged(const BlackMisc::Simulation::CDistributor &distributor);
 
-            //! Combined type changed
-            void onCombinedTypeChanged(const QString &combinedType);
+        //! Combined type changed
+        void onCombinedTypeChanged(const QString &combinedType);
 
-            //! Checkbox has been changed
-            void onCheckBoxChanged(bool state);
+        //! Checkbox has been changed
+        void onCheckBoxChanged(bool state);
 
-            //! Trigger filter by changing a value
-            void connectTriggerFilterSignals();
+        //! Trigger filter by changing a value
+        void connectTriggerFilterSignals();
 
-            QScopedPointer<Ui::CAircraftModelFilterBar> ui;
-        };
-    } // ns
+        QScopedPointer<Ui::CAircraftModelFilterBar> ui;
+    };
 } // ns
 
 #endif // guard

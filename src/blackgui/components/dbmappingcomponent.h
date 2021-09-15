@@ -38,13 +38,10 @@ class QAction;
 class QModelIndex;
 class QPoint;
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
-    {
-        class CAircraftIcaoCode;
-        class CLivery;
-    }
+    class CAircraftIcaoCode;
+    class CLivery;
 }
 namespace Ui { class CDbMappingComponent; }
 namespace BlackGui

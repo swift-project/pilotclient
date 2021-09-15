@@ -17,42 +17,39 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    template <typename T, bool UseCompare>
+    CListModelCallsignObjects<T, UseCompare>::CListModelCallsignObjects(const QString &translationContext, QObject *parent) :
+        CListModelBase<ContainerType, UseCompare>(translationContext, parent)
+    { }
+
+    template <typename T, bool UseCompare>
+    QVariant CListModelCallsignObjects<T, UseCompare>::data(const QModelIndex &index, int role) const
     {
-        template <typename T, bool UseCompare>
-        CListModelCallsignObjects<T, UseCompare>::CListModelCallsignObjects(const QString &translationContext, QObject *parent) :
-            CListModelBase<ContainerType, UseCompare>(translationContext, parent)
-        { }
+        if (role != Qt::BackgroundRole) { return CListModelBase<ContainerType, UseCompare>::data(index, role); }
+        if (isHighlightedIndex(index)) { return QBrush(m_highlightColor); }
+        return CListModelBase<ContainerType, UseCompare>::data(index, role);
+    }
 
-        template <typename T, bool UseCompare>
-        QVariant CListModelCallsignObjects<T, UseCompare>::data(const QModelIndex &index, int role) const
-        {
-            if (role != Qt::BackgroundRole) { return CListModelBase<ContainerType, UseCompare>::data(index, role); }
-            if (isHighlightedIndex(index)) { return QBrush(m_highlightColor); }
-            return CListModelBase<ContainerType, UseCompare>::data(index, role);
-        }
+    template <typename T, bool UseCompare>
+    BlackMisc::Aviation::CCallsign CListModelCallsignObjects<T, UseCompare>::callsignForIndex(const QModelIndex &index) const
+    {
+        if (!index.isValid()) { return CCallsign(); }
+        return this->at(index).getCallsign();
+    }
 
-        template <typename T, bool UseCompare>
-        BlackMisc::Aviation::CCallsign CListModelCallsignObjects<T, UseCompare>::callsignForIndex(const QModelIndex &index) const
-        {
-            if (!index.isValid()) { return CCallsign(); }
-            return this->at(index).getCallsign();
-        }
+    template <typename T, bool UseCompare>
+    bool CListModelCallsignObjects<T, UseCompare>::isHighlightedIndex(const QModelIndex &index) const
+    {
+        if (!index.isValid()) { return false; }
+        if (m_highlightCallsigns.isEmpty()) { return false; }
+        return m_highlightCallsigns.contains(callsignForIndex(index));
+    }
 
-        template <typename T, bool UseCompare>
-        bool CListModelCallsignObjects<T, UseCompare>::isHighlightedIndex(const QModelIndex &index) const
-        {
-            if (!index.isValid()) { return false; }
-            if (m_highlightCallsigns.isEmpty()) { return false; }
-            return m_highlightCallsigns.contains(callsignForIndex(index));
-        }
-
-        // see here for the reason of thess forward instantiations
-        // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
-        template class CListModelCallsignObjects<BlackMisc::Aviation::CAtcStationList, true>;
-        template class CListModelCallsignObjects<BlackMisc::Simulation::CSimulatedAircraftList, true>;
-        template class CListModelCallsignObjects<BlackMisc::Simulation::CInterpolationSetupList, false>;
-    } // namespace
+    // see here for the reason of thess forward instantiations
+    // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
+    template class CListModelCallsignObjects<BlackMisc::Aviation::CAtcStationList, true>;
+    template class CListModelCallsignObjects<BlackMisc::Simulation::CSimulatedAircraftList, true>;
+    template class CListModelCallsignObjects<BlackMisc::Simulation::CInterpolationSetupList, false>;
 } // namespace

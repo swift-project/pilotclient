@@ -13,13 +13,10 @@
 
 #include "blackmisc/blackmiscexport.h"
 
-namespace BlackMisc
+namespace BlackMisc::Audio
 {
-    namespace Audio
-    {
-        //! Register metadata for audio / voice
-        BLACKMISC_EXPORT void registerMetadata();
-    } // ns
+    //! Register metadata for audio / voice
+    BLACKMISC_EXPORT void registerMetadata();
 } // ns
 
 #endif // guard

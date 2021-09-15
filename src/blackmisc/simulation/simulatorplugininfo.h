@@ -20,105 +20,102 @@
 #include <QMetaType>
 #include <QString>
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    //! Describing a simulator plugin
+    class BLACKMISC_EXPORT CSimulatorPluginInfo : public CValueObject<CSimulatorPluginInfo>
     {
-        //! Describing a simulator plugin
-        class BLACKMISC_EXPORT CSimulatorPluginInfo : public CValueObject<CSimulatorPluginInfo>
-        {
-        public:
-            //! Default constructor
-            CSimulatorPluginInfo() = default;
+    public:
+        //! Default constructor
+        CSimulatorPluginInfo() = default;
 
-            //! Constructor (used with unit tests)
-            CSimulatorPluginInfo(const QString &identifier, const QString &name,
-                                 const QString &simulator, const QString &description, bool valid);
+        //! Constructor (used with unit tests)
+        CSimulatorPluginInfo(const QString &identifier, const QString &name,
+                                const QString &simulator, const QString &description, bool valid);
 
-            //! \copydoc BlackMisc::CValueObject::convertFromJson
-            void convertFromJson(const QJsonObject &json);
+        //! \copydoc BlackMisc::CValueObject::convertFromJson
+        void convertFromJson(const QJsonObject &json);
 
-            //! Unspecified simulator
-            bool isUnspecified() const;
+        //! Unspecified simulator
+        bool isUnspecified() const;
 
-            //! Check if the provided plugin metadata is valid.
-            //! Simulator plugin (driver) has to meet the following requirements:
-            //!  * implements org.swift-project.blackcore.simulatorinterface;
-            //!  * provides plugin name;
-            //!  * specifies simulator it handles.
-            //! Unspecified sim is considered as invalid.
-            bool isValid() const { return m_valid; }
+        //! Check if the provided plugin metadata is valid.
+        //! Simulator plugin (driver) has to meet the following requirements:
+        //!  * implements org.swift-project.blackcore.simulatorinterface;
+        //!  * provides plugin name;
+        //!  * specifies simulator it handles.
+        //! Unspecified sim is considered as invalid.
+        bool isValid() const { return m_valid; }
 
-            //! Identifier
-            const QString &getIdentifier() const { return m_identifier; }
+        //! Identifier
+        const QString &getIdentifier() const { return m_identifier; }
 
-            //! Name
-            const QString &getName() const { return m_name; }
+        //! Name
+        const QString &getName() const { return m_name; }
 
-            //! Simulator
-            const QString &getSimulator() const { return m_simulator; }
+        //! Simulator
+        const QString &getSimulator() const { return m_simulator; }
 
-            //! Simulator info object
-            const CSimulatorInfo &getSimulatorInfo() const { return m_info; }
+        //! Simulator info object
+        const CSimulatorInfo &getSimulatorInfo() const { return m_info; }
 
-            //! Is this the emulated driver?
-            bool isEmulatedPlugin() const;
+        //! Is this the emulated driver?
+        bool isEmulatedPlugin() const;
 
-            //! Description
-            const QString &getDescription() const { return m_description; }
+        //! Description
+        const QString &getDescription() const { return m_description; }
 
-            //! \copydoc BlackMisc::Mixin::String::toQString
-            QString convertToQString(bool i18n = false) const;
+        //! \copydoc BlackMisc::Mixin::String::toQString
+        QString convertToQString(bool i18n = false) const;
 
-            //! Simulator info to plugin indentifier, empty string if not single simulator
-            static const QString &identifierFromSimulatorInfo(const CSimulatorInfo &);
+        //! Simulator info to plugin indentifier, empty string if not single simulator
+        static const QString &identifierFromSimulatorInfo(const CSimulatorInfo &);
 
-            //! Plugin identifier (FSX)
-            static const QString &fsxPluginIdentifier();
+        //! Plugin identifier (FSX)
+        static const QString &fsxPluginIdentifier();
 
-            //! Plugin identifier (P3D)
-            static const QString &p3dPluginIdentifier();
+        //! Plugin identifier (P3D)
+        static const QString &p3dPluginIdentifier();
 
-            //! Plugin identifier (FS9)
-            static const QString &fs9PluginIdentifier();
+        //! Plugin identifier (FS9)
+        static const QString &fs9PluginIdentifier();
 
-            //! Plugin identifier (XPlane)
-            static const QString &xplanePluginIdentifier();
+        //! Plugin identifier (XPlane)
+        static const QString &xplanePluginIdentifier();
 
-            //! Plugin identifier (FlightGear)
-            static const QString &fgPluginIdentifier();
+        //! Plugin identifier (FlightGear)
+        static const QString &fgPluginIdentifier();
 
-            //! Plugin identifier (MSFS 2020)
-            static const QString &msfsPluginIdentifier();
+        //! Plugin identifier (MSFS 2020)
+        static const QString &msfsPluginIdentifier();
 
-            //! Plugin identifier (emulated simulator plugin)
-            static const QString &emulatedPluginIdentifier();
+        //! Plugin identifier (emulated simulator plugin)
+        static const QString &emulatedPluginIdentifier();
 
-            //! All valid identifiers
-            static const QStringList &allIdentifiers();
+        //! All valid identifiers
+        static const QStringList &allIdentifiers();
 
-            //! Guess default plugins
-            static QStringList guessDefaultPlugins();
+        //! Guess default plugins
+        static QStringList guessDefaultPlugins();
 
-        private:
-            QString m_identifier;
-            QString m_name;
-            QString m_simulator;
-            QString m_description;
-            CSimulatorInfo m_info;
-            bool m_valid { false };
+    private:
+        QString m_identifier;
+        QString m_name;
+        QString m_simulator;
+        QString m_description;
+        CSimulatorInfo m_info;
+        bool m_valid { false };
 
-            BLACK_METACLASS(
-                CSimulatorPluginInfo,
-                BLACK_METAMEMBER(identifier, 0, CaseInsensitiveComparison),
-                BLACK_METAMEMBER(name, 0, DisabledForComparison | DisabledForHashing),
-                BLACK_METAMEMBER(simulator, 0, DisabledForComparison | DisabledForHashing),
-                BLACK_METAMEMBER(description, 0, DisabledForComparison | DisabledForHashing),
-                BLACK_METAMEMBER(info, 0, DisabledForComparison | DisabledForHashing),
-                BLACK_METAMEMBER(valid, 0, DisabledForComparison | DisabledForHashing)
-            );
-        };
-    } // ns
+        BLACK_METACLASS(
+            CSimulatorPluginInfo,
+            BLACK_METAMEMBER(identifier, 0, CaseInsensitiveComparison),
+            BLACK_METAMEMBER(name, 0, DisabledForComparison | DisabledForHashing),
+            BLACK_METAMEMBER(simulator, 0, DisabledForComparison | DisabledForHashing),
+            BLACK_METAMEMBER(description, 0, DisabledForComparison | DisabledForHashing),
+            BLACK_METAMEMBER(info, 0, DisabledForComparison | DisabledForHashing),
+            BLACK_METAMEMBER(valid, 0, DisabledForComparison | DisabledForHashing)
+        );
+    };
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorPluginInfo)

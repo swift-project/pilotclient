@@ -18,97 +18,94 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore::Context;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CCommandInput::CCommandInput(QWidget *parent) :
+        CLineEditHistory(parent),
+        CIdentifiable(this)
     {
-        CCommandInput::CCommandInput(QWidget *parent) :
-            CLineEditHistory(parent),
-            CIdentifiable(this)
+        if (!CSimpleCommandParser::registered("BlackGui::Components::CCommandInput"))
         {
-            if (!CSimpleCommandParser::registered("BlackGui::Components::CCommandInput"))
-            {
-                CSimpleCommandParser::registerCommand({".tooltip", "toggle dot command tooltip"});
-                CSimpleCommandParser::registerCommand({".help", "show help"});
-            }
-
-            if (this->placeholderText().isEmpty())
-            {
-                this->setPlaceholderText(".dot commands");
-            }
-
-            const QPointer<CCommandInput> myself(this);
-            QTimer::singleShot(5000, this, [ = ]
-            {
-                if (!myself) { return; }
-                m_dsCommandTooltip.inputSignal();
-            });
-
-            if (sGui && sGui->supportsContexts())
-            {
-                if (sGui->getIContextSimulator())
-                {
-                    connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CCommandInput::onSimulatorPluginChanged, Qt::QueuedConnection);
-                }
-                if (sGui->getIContextNetwork())
-                {
-                    connect(sGui->getIContextNetwork(), &IContextNetwork::connectedServerChanged, this, &CCommandInput::onConnectedServerChanged, Qt::QueuedConnection);
-                }
-            }
-            connect(this, &CCommandInput::returnPressedUnemptyLine, this, &CCommandInput::validateCommand, Qt::QueuedConnection);
+            CSimpleCommandParser::registerCommand({".tooltip", "toggle dot command tooltip"});
+            CSimpleCommandParser::registerCommand({".help", "show help"});
         }
 
-        void CCommandInput::showToolTip(bool show)
+        if (this->placeholderText().isEmpty())
         {
-            m_showToolTip = show;
-            this->setCommandToolTip();
+            this->setPlaceholderText(".dot commands");
         }
 
-        void CCommandInput::validateCommand()
+        const QPointer<CCommandInput> myself(this);
+        QTimer::singleShot(5000, this, [ = ]
         {
-            const QString c(this->getLastEnteredLineFormatted());
-            if (c.isEmpty()) { return; }
-            if (c.startsWith('.'))
-            {
-                if (c.contains("help",    Qt::CaseInsensitive)) { this->setCommandToolTip(); return; }
-                if (c.contains("tooltip", Qt::CaseInsensitive)) { this->showToolTip(!m_showToolTip); return; }
-                emit this->commandEntered(c, this->identifier());
-            }
-            else
-            {
-                emit this->textEntered(c, this->identifier());
-            }
-        }
-
-        void CCommandInput::setCommandToolTip()
-        {
-            const bool context = (sGui && sGui->getIContextApplication());
-            if (m_showToolTip)
-            {
-                this->setToolTip(context ?
-                                 sGui->getIContextApplication()->dotCommandsHtmlHelp() :
-                                 CSimpleCommandParser::commandsHtmlHelp());
-            }
-            else
-            {
-                this->setToolTip("");
-            }
-        }
-
-        void CCommandInput::onSimulatorPluginChanged(const CSimulatorPluginInfo &info)
-        {
-            Q_UNUSED(info)
-
-            // different simulators have different commands
+            if (!myself) { return; }
             m_dsCommandTooltip.inputSignal();
-        }
+        });
 
-        void CCommandInput::onConnectedServerChanged(const Network::CServer &server)
+        if (sGui && sGui->supportsContexts())
         {
-            Q_UNUSED(server)
-
-            // commands of network
-            m_dsCommandTooltip.inputSignal();
+            if (sGui->getIContextSimulator())
+            {
+                connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CCommandInput::onSimulatorPluginChanged, Qt::QueuedConnection);
+            }
+            if (sGui->getIContextNetwork())
+            {
+                connect(sGui->getIContextNetwork(), &IContextNetwork::connectedServerChanged, this, &CCommandInput::onConnectedServerChanged, Qt::QueuedConnection);
+            }
         }
-    } // ns
+        connect(this, &CCommandInput::returnPressedUnemptyLine, this, &CCommandInput::validateCommand, Qt::QueuedConnection);
+    }
+
+    void CCommandInput::showToolTip(bool show)
+    {
+        m_showToolTip = show;
+        this->setCommandToolTip();
+    }
+
+    void CCommandInput::validateCommand()
+    {
+        const QString c(this->getLastEnteredLineFormatted());
+        if (c.isEmpty()) { return; }
+        if (c.startsWith('.'))
+        {
+            if (c.contains("help",    Qt::CaseInsensitive)) { this->setCommandToolTip(); return; }
+            if (c.contains("tooltip", Qt::CaseInsensitive)) { this->showToolTip(!m_showToolTip); return; }
+            emit this->commandEntered(c, this->identifier());
+        }
+        else
+        {
+            emit this->textEntered(c, this->identifier());
+        }
+    }
+
+    void CCommandInput::setCommandToolTip()
+    {
+        const bool context = (sGui && sGui->getIContextApplication());
+        if (m_showToolTip)
+        {
+            this->setToolTip(context ?
+                                sGui->getIContextApplication()->dotCommandsHtmlHelp() :
+                                CSimpleCommandParser::commandsHtmlHelp());
+        }
+        else
+        {
+            this->setToolTip("");
+        }
+    }
+
+    void CCommandInput::onSimulatorPluginChanged(const CSimulatorPluginInfo &info)
+    {
+        Q_UNUSED(info)
+
+        // different simulators have different commands
+        m_dsCommandTooltip.inputSignal();
+    }
+
+    void CCommandInput::onConnectedServerChanged(const Network::CServer &server)
+    {
+        Q_UNUSED(server)
+
+        // commands of network
+        m_dsCommandTooltip.inputSignal();
+    }
 } // ns

@@ -16,33 +16,30 @@
 #include <QScopedPointer>
 
 namespace Ui { class CModelBrowserDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Model browser as dialog
+    class BLACKGUI_EXPORT CModelBrowserDialog : public QDialog
     {
-        //! Model browser as dialog
-        class BLACKGUI_EXPORT CModelBrowserDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CModelBrowserDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CModelBrowserDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CModelBrowserDialog() override;
+        //! Destructor
+        virtual ~CModelBrowserDialog() override;
 
-        protected:
-            //! \copydoc QObject::event
-            virtual bool event(QEvent *event) override;
+    protected:
+        //! \copydoc QObject::event
+        virtual bool event(QEvent *event) override;
 
-            //! \copydoc QDialog::closeEvent
-            virtual void done(int r) override;
+        //! \copydoc QDialog::closeEvent
+        virtual void done(int r) override;
 
-        private:
-            QScopedPointer<Ui::CModelBrowserDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CModelBrowserDialog> ui;
+    };
 } // ns
 
 #endif // guard

@@ -20,61 +20,58 @@
 #include <QScopedPointer>
 
 namespace Ui { class CSimConnectSettingsComponent; }
-namespace BlackSimPlugin
+namespace BlackSimPlugin::FsxCommon
 {
-    namespace FsxCommon
+    /*!
+     * A component that gathers all SimConnect related settings.
+     */
+    class FSXCOMMON_EXPORT CSimConnectSettingsComponent : public BlackGui::COverlayMessagesFrame
     {
-        /*!
-         * A component that gathers all SimConnect related settings.
-         */
-        class FSXCOMMON_EXPORT CSimConnectSettingsComponent : public BlackGui::COverlayMessagesFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            explicit CSimConnectSettingsComponent(QWidget *parent = nullptr);
+    public:
+        //! Ctor
+        explicit CSimConnectSettingsComponent(QWidget *parent = nullptr);
 
-            //! Dtor
-            virtual ~CSimConnectSettingsComponent();
+        //! Dtor
+        virtual ~CSimConnectSettingsComponent();
 
-        private:
-            //! Open simConnect.cfg using default application
-            void openSwiftSimConnectCfgFile();
+    private:
+        //! Open simConnect.cfg using default application
+        void openSwiftSimConnectCfgFile();
 
-            //! Open simConnect.cfg using default application
-            void openUserSimConnectCfgFile();
+        //! Open simConnect.cfg using default application
+        void openUserSimConnectCfgFile();
 
-            //! Delete simConnect.cfg file
-            void deleteSwiftSimConnectCfgFile();
+        //! Delete simConnect.cfg file
+        void deleteSwiftSimConnectCfgFile();
 
-            //! Check whether the simConnect.cfg file exists
-            void checkSwiftSimConnectCfgFile();
+        //! Check whether the simConnect.cfg file exists
+        void checkSwiftSimConnectCfgFile();
 
-            //! Test the SimConnect connectivity
-            void testSwiftSimConnectConnection();
+        //! Test the SimConnect connectivity
+        void testSwiftSimConnectConnection();
 
-            //! Save a SimConnect.cfg file for FSX/P3D
-            void saveSimConnectCfgFile();
+        //! Save a SimConnect.cfg file for FSX/P3D
+        void saveSimConnectCfgFile();
 
-            //! Save dialog for a SimConnect.ini file
-            void saveSimConnectIniFileDialog();
+        //! Save dialog for a SimConnect.ini file
+        void saveSimConnectIniFileDialog();
 
-            //! Set the simconnect info
-            void setSimConnectInfo();
+        //! Set the simconnect info
+        void setSimConnectInfo();
 
-            //! The the value in the combobox
-            void setComboBox(const QString &value);
+        //! The the value in the combobox
+        void setComboBox(const QString &value);
 
-            //! The P3D version has been changed
-            void onP3DVersionChanged(const QString &version);
+        //! The P3D version has been changed
+        void onP3DVersionChanged(const QString &version);
 
-            BlackMisc::Simulation::CSimulatorInfo m_simulator { BlackMisc::Simulation::CSimulatorInfo::FSX };
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TP3DVersion> m_p3dVersion { this };
-            QScopedPointer<Ui::CSimConnectSettingsComponent> ui;
-            bool m_p3d64bit = false;
-        };
-    } // ns
+        BlackMisc::Simulation::CSimulatorInfo m_simulator { BlackMisc::Simulation::CSimulatorInfo::FSX };
+        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TP3DVersion> m_p3dVersion { this };
+        QScopedPointer<Ui::CSimConnectSettingsComponent> ui;
+        bool m_p3d64bit = false;
+    };
 } // ns
 
 #endif // guard

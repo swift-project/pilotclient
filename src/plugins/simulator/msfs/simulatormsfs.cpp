@@ -19,48 +19,45 @@ using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Weather;
 using namespace BlackCore;
 
-namespace BlackSimPlugin
+namespace BlackSimPlugin::Msfs
 {
-    namespace Msfs
+    CSimulatorMsFs::CSimulatorMsFs(const CSimulatorPluginInfo &info,
+                                    IOwnAircraftProvider *ownAircraftProvider,
+                                    IRemoteAircraftProvider *remoteAircraftProvider,
+                                    IWeatherGridProvider *weatherGridProvider,
+                                    IClientProvider *clientProvider,
+                                    QObject *parent) :
+        CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
     {
-        CSimulatorMsFs::CSimulatorMsFs(const CSimulatorPluginInfo &info,
-                                     IOwnAircraftProvider *ownAircraftProvider,
-                                     IRemoteAircraftProvider *remoteAircraftProvider,
-                                     IWeatherGridProvider *weatherGridProvider,
-                                     IClientProvider *clientProvider,
-                                     QObject *parent) :
-            CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
+        this->setDefaultModel(
         {
-            this->setDefaultModel(
-            {
-                "Airbus A320 Neo Asobo",
-                CAircraftModel::TypeModelMatchingDefaultModel,
-                "Airbus A320 default model",
-                CAircraftIcaoCode("A320", "L2J")
-            });
-        }
+            "Airbus A320 Neo Asobo",
+            CAircraftModel::TypeModelMatchingDefaultModel,
+            "Airbus A320 default model",
+            CAircraftIcaoCode("A320", "L2J")
+        });
+    }
 
-        bool CSimulatorMsFs::connectTo()
-        {
-        #ifdef Q_OS_WIN64
-            if (!loadAndResolveMSFSimConnect()) { return false; }
-            return CSimulatorFsxCommon::connectTo();
-        #else
-            if (!loadAndResolveFsxSimConnect(true)) { return false; }
-            return CSimulatorFsxCommon::connectTo();
-        #endif
-        }
+    bool CSimulatorMsFs::connectTo()
+    {
+    #ifdef Q_OS_WIN64
+        if (!loadAndResolveMSFSimConnect()) { return false; }
+        return CSimulatorFsxCommon::connectTo();
+    #else
+        if (!loadAndResolveFsxSimConnect(true)) { return false; }
+        return CSimulatorFsxCommon::connectTo();
+    #endif
+    }
 
-        void CSimulatorMsFsListener::startImpl()
-        {
-        #ifdef Q_OS_WIN64
-            if (!loadAndResolveMSFSimConnect()) { return; }
-            CSimulatorFsxCommonListener::startImpl();
-        #else
-            if (!loadAndResolveFsxSimConnect(true)) { return; }
-            CSimulatorFsxCommonListener::startImpl();
-        #endif
-        }
+    void CSimulatorMsFsListener::startImpl()
+    {
+    #ifdef Q_OS_WIN64
+        if (!loadAndResolveMSFSimConnect()) { return; }
+        CSimulatorFsxCommonListener::startImpl();
+    #else
+        if (!loadAndResolveFsxSimConnect(true)) { return; }
+        CSimulatorFsxCommonListener::startImpl();
+    #endif
+    }
 
-    } // ns
 } // ns

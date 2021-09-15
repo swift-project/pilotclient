@@ -13,22 +13,16 @@
 
 #include "msgpack.hpp"
 
-namespace BlackCore
+namespace BlackCore::Afv::Crypto
 {
-    namespace Afv
+    //! DTO mode
+    enum class CryptoDtoMode
     {
-        namespace Crypto
-        {
-            //! DTO mode
-            enum class CryptoDtoMode
-            {
-                Undefined = 0, //!< undefined
-                None      = 1, //!< none
-                AEAD_ChaCha20Poly1305 = 2 //!< AEAD
-            };
+        Undefined = 0, //!< undefined
+        None      = 1, //!< none
+        AEAD_ChaCha20Poly1305 = 2 //!< AEAD
+    };
 
-        } // ns
-    } // ns
 } // ns
 
 //! \private

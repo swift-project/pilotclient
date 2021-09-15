@@ -19,50 +19,47 @@
 #include <QMetaType>
 #include <QString>
 
-namespace BlackMisc
+namespace BlackMisc::Network
 {
-    namespace Network
+    //! Value object encapsulating a list of servers.
+    class BLACKMISC_EXPORT CServerList :
+        public CSequence<CServer>,
+        public Mixin::MetaType<CServerList>
     {
-        //! Value object encapsulating a list of servers.
-        class BLACKMISC_EXPORT CServerList :
-            public CSequence<CServer>,
-            public Mixin::MetaType<CServerList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CServerList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CServerList)
+        using CSequence::CSequence;
 
-            //! Default constructor.
-            CServerList();
+        //! Default constructor.
+        CServerList();
 
-            //! Construct from a base class object.
-            CServerList(const CSequence<CServer> &other);
+        //! Construct from a base class object.
+        CServerList(const CSequence<CServer> &other);
 
-            //! Contains name
-            bool containsName(const QString &name) const;
+        //! Contains name
+        bool containsName(const QString &name) const;
 
-            //! Remove by name
-            bool removeByName(const QString &name);
+        //! Remove by name
+        bool removeByName(const QString &name);
 
-            //! Remove passwords
-            void removeUsers();
+        //! Remove passwords
+        void removeUsers();
 
-            //! Contains server with same address/port
-            bool containsAddressPort(const CServer &server);
+        //! Contains server with same address/port
+        bool containsAddressPort(const CServer &server);
 
-            //! Add if address not already exists
-            void addIfAddressNotExists(const CServer &server);
+        //! Add if address not already exists
+        void addIfAddressNotExists(const CServer &server);
 
-            //! Add if address not already exists
-            void addIfAddressNotExists(const CServerList &servers);
+        //! Add if address not already exists
+        void addIfAddressNotExists(const CServerList &servers);
 
-            //! Find all FSD servers
-            CServerList findFsdServers() const;
+        //! Find all FSD servers
+        CServerList findFsdServers() const;
 
-            //! Set FSD setup for all entries
-            void setFsdSetup(const CFsdSetup &setup);
-        };
-    } //namespace
+        //! Set FSD setup for all entries
+        void setFsdSetup(const CFsdSetup &setup);
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Network::CServerList)

@@ -10,13 +10,10 @@
 
 #include "blackmisc/sharedstate/activemutator.h"
 
-namespace BlackMisc
+namespace BlackMisc::SharedState
 {
-    namespace SharedState
+    QFuture<CVariant> CActiveMutator::handleRequest(const CVariant& param) const
     {
-        QFuture<CVariant> CActiveMutator::handleRequest(const CVariant& param) const
-        {
-            return m_requestHandler(param);
-        }
+        return m_requestHandler(param);
     }
 }

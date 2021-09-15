@@ -17,92 +17,89 @@
 #include <QMetaType>
 #include <QString>
 
-namespace BlackMisc
+namespace BlackMisc::Network
 {
-    namespace Network
+    //! Ecosystem of server belonging together.
+    class BLACKMISC_EXPORT CEcosystem : public CValueObject<CEcosystem>
     {
-        //! Ecosystem of server belonging together.
-        class BLACKMISC_EXPORT CEcosystem : public CValueObject<CEcosystem>
+    public:
+        //! Properties by index
+        enum ColumnIndex
         {
-        public:
-            //! Properties by index
-            enum ColumnIndex
-            {
-                IndexSystem = CPropertyIndexRef::GlobalIndexCEcosystem,
-                IndexSystemString
-            };
-
-            //! Known systems
-            enum System
-            {
-                Unspecified, //!< unspecified
-                NoSystem,    //!< no relevant ecosystem
-                VATSIM,      //!< VATSIM
-                SwiftTest,   //!< swift test server
-                Swift,       //!< Future usage
-                PrivateFSD   //!< Private FSD environment
-            };
-
-            //! Default constructor
-            CEcosystem() {}
-
-            //! Constructor
-            CEcosystem(System s) : m_system(static_cast<int>(s)) {}
-
-            //! Get system
-            System getSystem() const { return static_cast<System>(m_system); }
-
-            //! Unknown system?
-            bool isUnspecified() const { return this->getSystem() == Unspecified; }
-
-            //! Is system?
-            bool isSystem(System s) const { return this->getSystem() == s; }
-
-            //! Set the system
-            void setSystem(System system) { m_system = static_cast<int>(system); }
-
-            //! Get the system string
-            const QString &getSystemString() const;
-
-            //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-            CIcons::IconIndex toIcon() const;
-
-            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
-
-            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
-
-            //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
-            int comparePropertyByIndex(CPropertyIndexRef index, const CEcosystem &compareValue) const;
-
-            //! \copydoc BlackMisc::Mixin::String::toQString
-            QString convertToQString(bool i18n = false) const;
-
-            //! Unspecified
-            static const CEcosystem &unspecified();
-
-            //! VATSIM eco system
-            static const CEcosystem &vatsim();
-
-            //! swift eco system
-            static const CEcosystem &swift();
-
-            //! swift test eco system
-            static const CEcosystem &swiftTest();
-
-            //! FSD private
-            static const CEcosystem &privateFsd();
-
-        private:
-            int m_system = static_cast<int>(Unspecified);
-
-            BLACK_METACLASS(
-                CEcosystem,
-                BLACK_METAMEMBER(system)
-            );
+            IndexSystem = CPropertyIndexRef::GlobalIndexCEcosystem,
+            IndexSystemString
         };
-    } // namespace
+
+        //! Known systems
+        enum System
+        {
+            Unspecified, //!< unspecified
+            NoSystem,    //!< no relevant ecosystem
+            VATSIM,      //!< VATSIM
+            SwiftTest,   //!< swift test server
+            Swift,       //!< Future usage
+            PrivateFSD   //!< Private FSD environment
+        };
+
+        //! Default constructor
+        CEcosystem() {}
+
+        //! Constructor
+        CEcosystem(System s) : m_system(static_cast<int>(s)) {}
+
+        //! Get system
+        System getSystem() const { return static_cast<System>(m_system); }
+
+        //! Unknown system?
+        bool isUnspecified() const { return this->getSystem() == Unspecified; }
+
+        //! Is system?
+        bool isSystem(System s) const { return this->getSystem() == s; }
+
+        //! Set the system
+        void setSystem(System system) { m_system = static_cast<int>(system); }
+
+        //! Get the system string
+        const QString &getSystemString() const;
+
+        //! \copydoc BlackMisc::Mixin::Icon::toIcon()
+        CIcons::IconIndex toIcon() const;
+
+        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+        QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
+
+        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+        void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
+
+        //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
+        int comparePropertyByIndex(CPropertyIndexRef index, const CEcosystem &compareValue) const;
+
+        //! \copydoc BlackMisc::Mixin::String::toQString
+        QString convertToQString(bool i18n = false) const;
+
+        //! Unspecified
+        static const CEcosystem &unspecified();
+
+        //! VATSIM eco system
+        static const CEcosystem &vatsim();
+
+        //! swift eco system
+        static const CEcosystem &swift();
+
+        //! swift test eco system
+        static const CEcosystem &swiftTest();
+
+        //! FSD private
+        static const CEcosystem &privateFsd();
+
+    private:
+        int m_system = static_cast<int>(Unspecified);
+
+        BLACK_METACLASS(
+            CEcosystem,
+            BLACK_METAMEMBER(system)
+        );
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Network::CEcosystem)

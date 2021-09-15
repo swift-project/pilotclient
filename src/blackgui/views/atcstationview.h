@@ -24,7 +24,7 @@
 
 class QAction;
 
-namespace BlackMisc { namespace Aviation { class CCallsign; } }
+namespace BlackMisc::Aviation { class CCallsign; }
 namespace BlackGui
 {
     namespace Menus { class CMenuActions; }

@@ -15,18 +15,15 @@
 #include <QString>
 #include <QUrl>
 
-namespace BlackMisc
+namespace BlackMisc::Network
 {
-    namespace Network
-    {
-        //! Can ping the address?
-        //! \note uses OS ping
-        BLACKMISC_EXPORT bool canPing(const QString &hostAddress);
+    //! Can ping the address?
+    //! \note uses OS ping
+    BLACKMISC_EXPORT bool canPing(const QString &hostAddress);
 
-        //! Can ping the address?
-        //! \note uses OS ping
-        BLACKMISC_EXPORT bool canPing(const QUrl &url);
-    }
+    //! Can ping the address?
+    //! \note uses OS ping
+    BLACKMISC_EXPORT bool canPing(const QUrl &url);
 }
 
 #endif

@@ -24,86 +24,83 @@
 
 class QPushButton;
 
-namespace BlackMisc { namespace Simulation { class CSimulatedAircraft; } }
+namespace BlackMisc::Simulation { class CSimulatedAircraft; }
 namespace Ui { class CMainKeypadAreaComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Main keypad area as used with main info area
+    //! \sa CMainInfoAreaComponent
+    class BLACKGUI_EXPORT CMainKeypadAreaComponent : public QFrame
     {
-        //! Main keypad area as used with main info area
+        Q_OBJECT
+
+    public:
+        //! Constructor
+        explicit CMainKeypadAreaComponent(QWidget *parent = nullptr);
+
+        //! Destructor
+        virtual ~CMainKeypadAreaComponent() override;
+
+        //! Main info area changed
+        void onMainInfoAreaChanged(int currentTabIndex, const QList<int> &dockedIndexes, const QList<int> &floatingIndexes);
+
+        //! Focus in entry fields
+        void focusInEntryField();
+
+    signals:
+        //! Button to select main info area has been pressed
         //! \sa CMainInfoAreaComponent
-        class BLACKGUI_EXPORT CMainKeypadAreaComponent : public QFrame
-        {
-            Q_OBJECT
+        void selectedMainInfoAreaDockWidget(CMainInfoAreaComponent::InfoArea infoArea);
 
-        public:
-            //! Constructor
-            explicit CMainKeypadAreaComponent(QWidget *parent = nullptr);
+        //! Change opacity 0..30
+        void changedOpacity(int opacity);
 
-            //! Destructor
-            virtual ~CMainKeypadAreaComponent() override;
+        //! \copydoc CCommandInput::commandEntered
+        void commandEntered(const QString &commandLine, const BlackMisc::CIdentifier &originator);
 
-            //! Main info area changed
-            void onMainInfoAreaChanged(int currentTabIndex, const QList<int> &dockedIndexes, const QList<int> &floatingIndexes);
+        //! \copydoc CCommandInput::commandEntered
+        void textEntered(const QString &commandLine, const BlackMisc::CIdentifier &originator);
 
-            //! Focus in entry fields
-            void focusInEntryField();
+        //! Connect was pressed
+        void connectPressed();
 
-        signals:
-            //! Button to select main info area has been pressed
-            //! \sa CMainInfoAreaComponent
-            void selectedMainInfoAreaDockWidget(CMainInfoAreaComponent::InfoArea infoArea);
+        //! Ident pressed
+        void identPressed();
 
-            //! Change opacity 0..30
-            void changedOpacity(int opacity);
+        //! Request audio
+        void audioPressed();
 
-            //! \copydoc CCommandInput::commandEntered
-            void commandEntered(const QString &commandLine, const BlackMisc::CIdentifier &originator);
+    private:
+        //! Button was clicked
+        void buttonSelected();
 
-            //! \copydoc CCommandInput::commandEntered
-            void textEntered(const QString &commandLine, const BlackMisc::CIdentifier &originator);
+        //! \copydoc BlackCore::Context::IContextNetwork::connectionStatusChanged
+        void connectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
-            //! Connect was pressed
-            void connectPressed();
+        //! \copydoc BlackCore::Context::IContextOwnAircraft::changedAircraftCockpit
+        void ownAircraftCockpitChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
-            //! Ident pressed
-            void identPressed();
+        //! \copydoc BlackCore::Context::IContextAudio::changedMute
+        void muteChanged(bool muted);
 
-            //! Request audio
-            void audioPressed();
+        //! If button is info area, identify it
+        CMainInfoAreaComponent::InfoArea buttonToMainInfoArea(const QObject *button) const;
 
-        private:
-            //! Button was clicked
-            void buttonSelected();
+        //! Main info area to corresponding button
+        QPushButton *mainInfoAreaToButton(CMainInfoAreaComponent::InfoArea area) const;
 
-            //! \copydoc BlackCore::Context::IContextNetwork::connectionStatusChanged
-            void connectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+        //! Info area buttons
+        void unsetInfoAreaButtons();
 
-            //! \copydoc BlackCore::Context::IContextOwnAircraft::changedAircraftCockpit
-            void ownAircraftCockpitChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+        //! Update values
+        void update();
 
-            //! \copydoc BlackCore::Context::IContextAudio::changedMute
-            void muteChanged(bool muted);
+        //! Update connection status
+        void updateConnectionStatus();
 
-            //! If button is info area, identify it
-            CMainInfoAreaComponent::InfoArea buttonToMainInfoArea(const QObject *button) const;
-
-            //! Main info area to corresponding button
-            QPushButton *mainInfoAreaToButton(CMainInfoAreaComponent::InfoArea area) const;
-
-            //! Info area buttons
-            void unsetInfoAreaButtons();
-
-            //! Update values
-            void update();
-
-            //! Update connection status
-            void updateConnectionStatus();
-
-            QScopedPointer<Ui::CMainKeypadAreaComponent> ui;
-            BlackMisc::CIdentifier m_identifier { "MainKeypadAreaComponent", this };
-        };
-    } // namespace
+        QScopedPointer<Ui::CMainKeypadAreaComponent> ui;
+        BlackMisc::CIdentifier m_identifier { "MainKeypadAreaComponent", this };
+    };
 } // namespace
 
 #endif // guard

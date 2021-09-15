@@ -22,53 +22,50 @@
 #include <QString>
 
 namespace Ui { class CNetworkServerForm; }
-namespace BlackGui
+namespace BlackGui::Editors
 {
-    namespace Editors
+    //! Server form
+    class BLACKGUI_EXPORT CServerForm : public CForm
     {
-        //! Server form
-        class BLACKGUI_EXPORT CServerForm : public CForm
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CServerForm(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CServerForm(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CServerForm() override;
+        //! Destructor
+        virtual ~CServerForm() override;
 
-            //! Set server
-            void setServer(const BlackMisc::Network::CServer &server);
+        //! Set server
+        void setServer(const BlackMisc::Network::CServer &server);
 
-            //! Get server
-            BlackMisc::Network::CServer getServer() const;
+        //! Get server
+        BlackMisc::Network::CServer getServer() const;
 
-            //! Get currently selected server type
-            BlackMisc::Network::CServer::ServerType getServerType() const;
+        //! Get currently selected server type
+        BlackMisc::Network::CServer::ServerType getServerType() const;
 
-            //! Reset to 1st tab
-            void resetToFirstTab();
+        //! Reset to 1st tab
+        void resetToFirstTab();
 
-            //! \name Form class implementations
-            //! @{
-            virtual void setReadOnly(bool readonly) override;
-            virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
-            //! @}
+        //! \name Form class implementations
+        //! @{
+        virtual void setReadOnly(bool readonly) override;
+        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        //! @}
 
-            //! Show the password field
-            void showPasswordField(bool show);
+        //! Show the password field
+        void showPasswordField(bool show);
 
-        private:
-            void initServerTypes();
-            void onChangedServerType(const QString &text);
-            void onChangedEcoSystem(const QString &text);
-            void tempUnhidePassword();
+    private:
+        void initServerTypes();
+        void onChangedServerType(const QString &text);
+        void onChangedEcoSystem(const QString &text);
+        void tempUnhidePassword();
 
-            QScopedPointer<Ui::CNetworkServerForm> ui;
-            QString m_passwordNameLabel;
-        };
-    } // ns
+        QScopedPointer<Ui::CNetworkServerForm> ui;
+        QString m_passwordNameLabel;
+    };
 } // ns
 
 #endif // guard

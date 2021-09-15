@@ -11,30 +11,27 @@
 #include <QResizeEvent>
 #include <QWheelEvent>
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    CRadarView::CRadarView(QWidget *parent) : QGraphicsView(parent)
     {
-        CRadarView::CRadarView(QWidget *parent) : QGraphicsView(parent)
-        {
-            setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-            setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-            setBackgroundBrush(Qt::black);
-            setRenderHint(QPainter::Antialiasing);
-        }
+        setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        setBackgroundBrush(Qt::black);
+        setRenderHint(QPainter::Antialiasing);
+    }
 
-        void CRadarView::resizeEvent(QResizeEvent *event)
-        {
-            emit radarViewResized();
-            QGraphicsView::resizeEvent(event);
-        }
+    void CRadarView::resizeEvent(QResizeEvent *event)
+    {
+        emit radarViewResized();
+        QGraphicsView::resizeEvent(event);
+    }
 
-        void CRadarView::wheelEvent(QWheelEvent *event)
-        {
-            const QPoint delta = event->angleDelta();
-            event->accept();
-            const bool zoom = (delta.y() > 0);
-            emit zoomEvent(zoom);
-        }
-    } // ns
+    void CRadarView::wheelEvent(QWheelEvent *event)
+    {
+        const QPoint delta = event->angleDelta();
+        event->accept();
+        const bool zoom = (delta.y() > 0);
+        emit zoomEvent(zoom);
+    }
 } // ns

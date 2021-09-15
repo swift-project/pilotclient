@@ -12,55 +12,52 @@
 #include "blackmisc/sharedstate/datalink.h"
 #include "blackmisc/variantlist.h"
 
-namespace BlackMisc
+namespace BlackMisc::SharedState
 {
-    namespace SharedState
+    void CGenericListObserver::initialize(IDataLink *dataLink)
     {
-        void CGenericListObserver::initialize(IDataLink *dataLink)
-        {
-            dataLink->subscribe(m_observer.data());
-            m_watcher = dataLink->watcher();
-            connect(m_watcher, &CDataLinkConnectionWatcher::connected, this, &CGenericListObserver::reconstruct);
-        }
+        dataLink->subscribe(m_observer.data());
+        m_watcher = dataLink->watcher();
+        connect(m_watcher, &CDataLinkConnectionWatcher::connected, this, &CGenericListObserver::reconstruct);
+    }
 
-        void CGenericListObserver::setFilter(const CVariant &filter)
-        {
-            m_observer->setEventSubscription(filter);
-            if (m_watcher && m_watcher->isConnected()) { reconstruct(); }
-        }
+    void CGenericListObserver::setFilter(const CVariant &filter)
+    {
+        m_observer->setEventSubscription(filter);
+        if (m_watcher && m_watcher->isConnected()) { reconstruct(); }
+    }
 
-        void CGenericListObserver::reconstruct()
-        {
-            m_observer->requestAsync(m_observer->eventSubscription(), [this](const CVariant &list)
-            {
-                QMutexLocker lock(&m_listMutex);
-                m_list = list.to<CVariantList>();
-                lock.unlock();
-                onGenericElementsReplaced(allValues());
-            });
-        }
-
-        CVariantList CGenericListObserver::allValues() const
+    void CGenericListObserver::reconstruct()
+    {
+        m_observer->requestAsync(m_observer->eventSubscription(), [this](const CVariant &list)
         {
             QMutexLocker lock(&m_listMutex);
-            return m_list;
-        }
-
-        int CGenericListObserver::cleanValues()
-        {
-            QMutexLocker lock(&m_listMutex);
-            return m_list.removeIf([filter = m_observer->eventSubscription()](const CVariant &value)
-            {
-                return !value.matches(filter);
-            });
-        }
-
-        void CGenericListObserver::handleEvent(const CVariant &param)
-        {
-            QMutexLocker lock(&m_listMutex);
-            m_list.push_back(param);
+            m_list = list.to<CVariantList>();
             lock.unlock();
-            onGenericElementAdded(param);
-        }
+            onGenericElementsReplaced(allValues());
+        });
+    }
+
+    CVariantList CGenericListObserver::allValues() const
+    {
+        QMutexLocker lock(&m_listMutex);
+        return m_list;
+    }
+
+    int CGenericListObserver::cleanValues()
+    {
+        QMutexLocker lock(&m_listMutex);
+        return m_list.removeIf([filter = m_observer->eventSubscription()](const CVariant &value)
+        {
+            return !value.matches(filter);
+        });
+    }
+
+    void CGenericListObserver::handleEvent(const CVariant &param)
+    {
+        QMutexLocker lock(&m_listMutex);
+        m_list.push_back(param);
+        lock.unlock();
+        onGenericElementAdded(param);
     }
 }

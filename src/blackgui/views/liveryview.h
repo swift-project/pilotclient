@@ -15,20 +15,17 @@
 #include "blackgui/models/liverylistmodel.h"
 #include "blackgui/blackguiexport.h"
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Distributors
+    class BLACKGUI_EXPORT CLiveryView :
+        public CViewWithDbObjects<Models::CLiveryListModel>
     {
-        //! Distributors
-        class BLACKGUI_EXPORT CLiveryView :
-            public CViewWithDbObjects<Models::CLiveryListModel>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CLiveryView(QWidget *parent = nullptr);
-        };
-    } // ns
+    public:
+        //! Constructor
+        explicit CLiveryView(QWidget *parent = nullptr);
+    };
 } // ns
 #endif // guard

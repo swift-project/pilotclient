@@ -10,78 +10,72 @@
 
 using namespace BlackMisc::Aviation;
 
-namespace BlackCore
+namespace BlackCore::Afv::Model
 {
-    namespace Afv
+    CAfvMapReader::CAfvMapReader(QObject *parent) : QObject(parent)
     {
-        namespace Model
+        m_model = new CSampleAtcStationModel(this);
+        m_timer = new QTimer(this);
+        connect(m_timer, &QTimer::timeout, this, &CAfvMapReader::updateFromMap);
+        m_timer->start(3000);
+    }
+
+    void CAfvMapReader::updateFromMap()
+    {
+        if (!sApp || !sApp->getNetworkAccessManager() || sApp->isShuttingDown()) { return; }
+
+        QEventLoop loop(sApp);
+        connect(sApp->getNetworkAccessManager(), &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
+        connect(sApp, &CApplication::aboutToShutdown, &loop, &QEventLoop::quit);
+        QNetworkReply *reply = sApp->getNetworkAccessManager()->get(QNetworkRequest(QUrl("https://voice1.vatsim.uk/api/v1/network/online/callsigns")));
+        while (reply && !reply->isFinished() && sApp && !sApp->isShuttingDown())
         {
-            CAfvMapReader::CAfvMapReader(QObject *parent) : QObject(parent)
+            loop.exec();
+        }
+        const QByteArray jsonData = reply->readAll();
+        if (reply) { reply->deleteLater(); }
+
+        if (jsonData.isEmpty()) { return; }
+
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData);
+        if (jsonDoc.isArray())
+        {
+            const QJsonArray rootArray = jsonDoc.array();
+            QVector<CSampleAtcStation> transceivers;
+            QString callsign;
+
+            for (auto it = rootArray.begin(); it != rootArray.end(); ++it)
             {
-                m_model = new CSampleAtcStationModel(this);
-                m_timer = new QTimer(this);
-                connect(m_timer, &QTimer::timeout, this, &CAfvMapReader::updateFromMap);
-                m_timer->start(3000);
-            }
-
-            void CAfvMapReader::updateFromMap()
-            {
-                if (!sApp || !sApp->getNetworkAccessManager() || sApp->isShuttingDown()) { return; }
-
-                QEventLoop loop(sApp);
-                connect(sApp->getNetworkAccessManager(), &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
-                connect(sApp, &CApplication::aboutToShutdown, &loop, &QEventLoop::quit);
-                QNetworkReply *reply = sApp->getNetworkAccessManager()->get(QNetworkRequest(QUrl("https://voice1.vatsim.uk/api/v1/network/online/callsigns")));
-                while (reply && !reply->isFinished() && sApp && !sApp->isShuttingDown())
+                if (it->isObject())
                 {
-                    loop.exec();
-                }
-                const QByteArray jsonData = reply->readAll();
-                if (reply) { reply->deleteLater(); }
+                    const QJsonObject stationObject = it->toObject();
 
-                if (jsonData.isEmpty()) { return; }
-
-                QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData);
-                if (jsonDoc.isArray())
-                {
-                    const QJsonArray rootArray = jsonDoc.array();
-                    QVector<CSampleAtcStation> transceivers;
-                    QString callsign;
-
-                    for (auto it = rootArray.begin(); it != rootArray.end(); ++it)
+                    if (stationObject.contains("callsign"))
                     {
-                        if (it->isObject())
-                        {
-                            const QJsonObject stationObject = it->toObject();
-
-                            if (stationObject.contains("callsign"))
-                            {
-                                callsign = stationObject.value("callsign").toString();
-                            }
-
-                            if (callsign.isEmpty() || !CCallsign::looksLikeAtcCallsign(callsign)) { continue; }
-
-                            if (stationObject.contains("transceivers"))
-                            {
-                                QJsonArray txArray = stationObject.value("transceivers").toArray();
-                                for (auto jt = txArray.begin(); jt != txArray.end(); ++jt)
-                                {
-                                    const TransceiverDto transceiver = TransceiverDto::fromJson(jt->toObject());
-                                    transceivers.push_back({ callsign, transceiver});
-                                }
-                            }
-                        }
+                        callsign = stationObject.value("callsign").toString();
                     }
 
-                    if (transceivers.isEmpty()) { return; }
-                    transceivers.erase(std::remove_if(transceivers.begin(), transceivers.end(), [this](const CSampleAtcStation & s)
+                    if (callsign.isEmpty() || !CCallsign::looksLikeAtcCallsign(callsign)) { continue; }
+
+                    if (stationObject.contains("transceivers"))
                     {
-                        return s.callsign() == m_callsign;
-                    }),
-                    transceivers.end());
-                    m_model->updateAtcStations(transceivers);
+                        QJsonArray txArray = stationObject.value("transceivers").toArray();
+                        for (auto jt = txArray.begin(); jt != txArray.end(); ++jt)
+                        {
+                            const TransceiverDto transceiver = TransceiverDto::fromJson(jt->toObject());
+                            transceivers.push_back({ callsign, transceiver});
+                        }
+                    }
                 }
             }
-        } // ns
-    } // ns
+
+            if (transceivers.isEmpty()) { return; }
+            transceivers.erase(std::remove_if(transceivers.begin(), transceivers.end(), [this](const CSampleAtcStation & s)
+            {
+                return s.callsign() == m_callsign;
+            }),
+            transceivers.end());
+            m_model->updateAtcStations(transceivers);
+        }
+    }
 } // ns

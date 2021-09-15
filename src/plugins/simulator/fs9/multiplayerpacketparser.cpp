@@ -7,30 +7,24 @@
  */
 #include "multiplayerpacketparser.h"
 
-namespace BlackSimPlugin
+namespace BlackSimPlugin::Fs9::Private
 {
-    namespace Fs9
+    QByteArray readValue(const QByteArray &data, QString &val)
     {
-        namespace Private
-        {
-            QByteArray readValue(const QByteArray &data, QString &val)
-            {
-                val = QString(data);
+        val = QString(data);
 
-                // Up to know all packets with string data, had the string payload at the end
-                // of the packet. Therefore there should not be any data after the string.
-                // Remove the assert, if this will change in the future.
-                QByteArray leftOver = data.mid(val.size() + 1);
-                Q_ASSERT(leftOver.isEmpty());
+        // Up to know all packets with string data, had the string payload at the end
+        // of the packet. Therefore there should not be any data after the string.
+        // Remove the assert, if this will change in the future.
+        QByteArray leftOver = data.mid(val.size() + 1);
+        Q_ASSERT(leftOver.isEmpty());
 
-                return leftOver;
-            }
+        return leftOver;
+    }
 
-            QByteArray writeValue(QByteArray data, const QString &value)
-            {
-                data.append(qPrintable(value), value.size() + 1);
-                return data;
-            }
-        } // ns
-    } // ns
+    QByteArray writeValue(QByteArray data, const QString &value)
+    {
+        data.append(qPrintable(value), value.size() + 1);
+        return data;
+    }
 } // ns

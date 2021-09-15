@@ -17,23 +17,20 @@
 
 #include <QHash>
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
-    {
-        //! Status message per callsign
-        using CStatusMessagePerCallsign = QHash<CCallsign, CStatusMessage>;
+    //! Status message per callsign
+    using CStatusMessagePerCallsign = QHash<CCallsign, CStatusMessage>;
 
-        //! Status messages (list) per callsign
-        using CStatusMessageListPerCallsign = QHash<CCallsign, CStatusMessageList>;
+    //! Status messages (list) per callsign
+    using CStatusMessageListPerCallsign = QHash<CCallsign, CStatusMessageList>;
 
-        //! Timestamp der callsign
-        using CTimestampPerCallsign = QHash<CCallsign, qint64>;
+    //! Timestamp der callsign
+    using CTimestampPerCallsign = QHash<CCallsign, qint64>;
 
-        //! Lenght per callsign
-        using CLengthPerCallsign = QHash<CCallsign, PhysicalQuantities::CLength>;
+    //! Lenght per callsign
+    using CLengthPerCallsign = QHash<CCallsign, PhysicalQuantities::CLength>;
 
-    } // namespace
 } // namespace
 
 #endif // guard

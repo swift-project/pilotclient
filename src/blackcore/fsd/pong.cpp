@@ -10,35 +10,32 @@
 
 #include "blackmisc/logmessage.h"
 
-namespace BlackCore
+namespace BlackCore::Fsd
 {
-    namespace Fsd
+    Pong::Pong() : MessageBase()
+    { }
+
+    Pong::Pong(const QString &sender, const QString &receiver, const QString &timestamp)
+        : MessageBase(sender, receiver),
+            m_timestamp(timestamp)
+    { }
+
+    QStringList Pong::toTokens() const
     {
-        Pong::Pong() : MessageBase()
-        { }
+        QStringList tokens;
+        tokens.push_back(m_sender);
+        tokens.push_back(m_receiver);
+        tokens.push_back(m_timestamp);
+        return tokens;
+    }
 
-        Pong::Pong(const QString &sender, const QString &receiver, const QString &timestamp)
-            : MessageBase(sender, receiver),
-              m_timestamp(timestamp)
-        { }
-
-        QStringList Pong::toTokens() const
+    Pong Pong::fromTokens(const QStringList &tokens)
+    {
+        if (tokens.size() < 3)
         {
-            QStringList tokens;
-            tokens.push_back(m_sender);
-            tokens.push_back(m_receiver);
-            tokens.push_back(m_timestamp);
-            return tokens;
-        }
-
-        Pong Pong::fromTokens(const QStringList &tokens)
-        {
-            if (tokens.size() < 3)
-            {
-                BlackMisc::CLogMessage(static_cast<Pong *>(nullptr)).debug(u"Wrong number of arguments.");
-                return {};
-            };
-            return Pong(tokens[0], tokens[1], tokens[2]);
-        }
+            BlackMisc::CLogMessage(static_cast<Pong *>(nullptr)).debug(u"Wrong number of arguments.");
+            return {};
+        };
+        return Pong(tokens[0], tokens[1], tokens[2]);
     }
 }

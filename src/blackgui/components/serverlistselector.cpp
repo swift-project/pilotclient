@@ -20,136 +20,133 @@ using namespace BlackGui;
 using namespace BlackCore;
 using namespace BlackCore::Db;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CServerListSelector::CServerListSelector(QWidget *parent) :
+        QComboBox(parent)
     {
-        CServerListSelector::CServerListSelector(QWidget *parent) :
-            QComboBox(parent)
+        const CServer server = m_lastServer.get();
+        if (server.hasName())
         {
-            const CServer server = m_lastServer.get();
-            if (server.hasName())
-            {
-                m_pendingPreselect = server.getName();
-            }
-            connect(this, &QComboBox::currentTextChanged, this, &CServerListSelector::onServerTextChanged);
+            m_pendingPreselect = server.getName();
         }
+        connect(this, &QComboBox::currentTextChanged, this, &CServerListSelector::onServerTextChanged);
+    }
 
-        void CServerListSelector::setServers(const CServerList &servers, bool nameIsCountry)
+    void CServerListSelector::setServers(const CServerList &servers, bool nameIsCountry)
+    {
+        if (m_servers == servers) { return; }
+        this->setServerItems(servers, nameIsCountry);
+        if (!servers.isEmpty() && !m_pendingPreselect.isEmpty())
         {
-            if (m_servers == servers) { return; }
-            this->setServerItems(servers, nameIsCountry);
-            if (!servers.isEmpty() && !m_pendingPreselect.isEmpty())
-            {
-                this->preSelect(m_pendingPreselect);
-                m_pendingPreselect.clear();
-            }
+            this->preSelect(m_pendingPreselect);
+            m_pendingPreselect.clear();
         }
+    }
 
-        CServer CServerListSelector::currentServer() const
-        {
-            const int i = currentIndex();
-            if (i < 0 || i >= m_servers.size()) { return CServer(); }
-            return m_servers[i];
-        }
+    CServer CServerListSelector::currentServer() const
+    {
+        const int i = currentIndex();
+        if (i < 0 || i >= m_servers.size()) { return CServer(); }
+        return m_servers[i];
+    }
 
-        bool CServerListSelector::preSelect(const QString &name)
+    bool CServerListSelector::preSelect(const QString &name)
+    {
+        if (name.isEmpty()) { return false; }
+        if (m_servers.isEmpty())
         {
-            if (name.isEmpty()) { return false; }
-            if (m_servers.isEmpty())
-            {
-                m_pendingPreselect = name; // save for later
-                return false;
-            }
-            for (int i = 0; i < m_servers.size(); i++)
-            {
-                if (m_servers[i].matchesName(name))
-                {
-                    this->setCurrentIndex(i);
-                    return true;
-                }
-            }
+            m_pendingPreselect = name; // save for later
             return false;
         }
-
-        void CServerListSelector::setServerItems(const CServerList &servers, bool nameToCountry)
+        for (int i = 0; i < m_servers.size(); i++)
         {
-            QString currentlySelected(this->currentText());
-            int index = -1;
-            m_servers = servers;
-            m_items.clear();
-            this->clear(); // ui
-
-            nameToCountry = nameToCountry && knowsAllCountries();
-            for (const CServer &server : servers)
+            if (m_servers[i].matchesName(name))
             {
-                const QString d(server.getName() + ": " + server.getDescription());
-                m_items.append(d);
-                if (!currentlySelected.isEmpty() && index < 0 && d == currentlySelected)
-                {
-                    index = m_items.size() - 1;
-                }
+                this->setCurrentIndex(i);
+                return true;
+            }
+        }
+        return false;
+    }
 
-                if (nameToCountry)
+    void CServerListSelector::setServerItems(const CServerList &servers, bool nameToCountry)
+    {
+        QString currentlySelected(this->currentText());
+        int index = -1;
+        m_servers = servers;
+        m_items.clear();
+        this->clear(); // ui
+
+        nameToCountry = nameToCountry && knowsAllCountries();
+        for (const CServer &server : servers)
+        {
+            const QString d(server.getName() + ": " + server.getDescription());
+            m_items.append(d);
+            if (!currentlySelected.isEmpty() && index < 0 && d == currentlySelected)
+            {
+                index = m_items.size() - 1;
+            }
+
+            if (nameToCountry)
+            {
+                const CCountry country(this->findCountry(server));
+                if (country.getName().isEmpty())
                 {
-                    const CCountry country(this->findCountry(server));
-                    if (country.getName().isEmpty())
-                    {
-                        this->addItem(CIcons::empty16(), d);
-                    }
-                    else
-                    {
-                        this->addItem(CIcon(country.toIcon()).toPixmap(), d);
-                    }
+                    this->addItem(CIcons::empty16(), d);
                 }
                 else
                 {
-                    this->addItem(d);
+                    this->addItem(CIcon(country.toIcon()).toPixmap(), d);
                 }
             }
-
-            // reselect
-            if (m_items.isEmpty()) { return; }
-            if (m_items.size() == 1)
+            else
             {
-                this->setCurrentIndex(0);
-            }
-            else if (index >= 0)
-            {
-                this->setCurrentIndex(index);
+                this->addItem(d);
             }
         }
 
-        void CServerListSelector::onServerTextChanged(const QString &text)
+        // reselect
+        if (m_items.isEmpty()) { return; }
+        if (m_items.size() == 1)
         {
-            Q_UNUSED(text);
-            emit this->serverChanged(this->currentServer());
+            this->setCurrentIndex(0);
         }
-
-        bool CServerListSelector::knowsAllCountries()
+        else if (index >= 0)
         {
-            return (sGui && sGui->getWebDataServices() && sGui->getWebDataServices()->getCountriesCount() > 0);
+            this->setCurrentIndex(index);
         }
+    }
 
-        CCountry CServerListSelector::findCountry(const CServer &server)
+    void CServerListSelector::onServerTextChanged(const QString &text)
+    {
+        Q_UNUSED(text);
+        emit this->serverChanged(this->currentServer());
+    }
+
+    bool CServerListSelector::knowsAllCountries()
+    {
+        return (sGui && sGui->getWebDataServices() && sGui->getWebDataServices()->getCountriesCount() > 0);
+    }
+
+    CCountry CServerListSelector::findCountry(const CServer &server)
+    {
+        if (!CServerListSelector::knowsAllCountries()) { return CCountry(); }
+        static const CCountryList countries(sGui->getWebDataServices()->getCountries());
+        const CCountry ctryByName = countries.findBestMatchByCountryName(server.getName());
+        if (ctryByName.isValid()) { return ctryByName; }
+
+        // own approach, see if description contains a valid countr name
+        for (const CCountry &testCtry : countries)
         {
-            if (!CServerListSelector::knowsAllCountries()) { return CCountry(); }
-            static const CCountryList countries(sGui->getWebDataServices()->getCountries());
-            const CCountry ctryByName = countries.findBestMatchByCountryName(server.getName());
-            if (ctryByName.isValid()) { return ctryByName; }
-
-            // own approach, see if description contains a valid countr name
-            for (const CCountry &testCtry : countries)
+            if (testCtry.getName().isEmpty()) { continue; }
+            if (server.getDescription().contains(testCtry.getName(), Qt::CaseInsensitive))
             {
-                if (testCtry.getName().isEmpty()) { continue; }
-                if (server.getDescription().contains(testCtry.getName(), Qt::CaseInsensitive))
-                {
-                    return testCtry;
-                }
+                return testCtry;
             }
-
-            const CCountry ctryByDescription = countries.findBestMatchByCountryName(server.getDescription());
-            return ctryByDescription;
         }
-    } // ns
+
+        const CCountry ctryByDescription = countries.findBestMatchByCountryName(server.getDescription());
+        return ctryByDescription;
+    }
 } // ns

@@ -9,18 +9,15 @@
 #include "otherswiftversionsdialog.h"
 #include "ui_otherswiftversionsdialog.h"
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    COtherSwiftVersionsDialog::COtherSwiftVersionsDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::COtherSwiftVersionsDialog)
     {
-        COtherSwiftVersionsDialog::COtherSwiftVersionsDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::COtherSwiftVersionsDialog)
-        {
-            ui->setupUi(this);
-        }
+        ui->setupUi(this);
+    }
 
-        COtherSwiftVersionsDialog::~COtherSwiftVersionsDialog()
-        { }
-    } // ns
+    COtherSwiftVersionsDialog::~COtherSwiftVersionsDialog()
+    { }
 } // ns

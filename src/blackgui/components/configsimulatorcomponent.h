@@ -18,68 +18,65 @@
 #include <QScopedPointer>
 
 namespace Ui { class CConfigSimulatorComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * Simulator configuration
+     */
+    class CConfigSimulatorComponent : public QFrame
     {
-        /**
-         * Simulator configuration
-         */
-        class CConfigSimulatorComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CConfigSimulatorComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CConfigSimulatorComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CConfigSimulatorComponent();
+        //! Destructor
+        virtual ~CConfigSimulatorComponent();
 
-            //! Save data
-            void save();
+        //! Save data
+        void save();
 
-            //! Has unsaved changes
-            bool hasUnsavedChanges() const;
+        //! Has unsaved changes
+        bool hasUnsavedChanges() const;
 
-            //! Reset the flag
-            void resetUnsavedChanges();
+        //! Reset the flag
+        void resetUnsavedChanges();
 
-        private:
-            //! Preselect simulators
-            void preselectSimulators();
+    private:
+        //! Preselect simulators
+        void preselectSimulators();
 
-            //! Get the plugin ids
-            QStringList selectedSimsToPluginIds();
+        //! Get the plugin ids
+        QStringList selectedSimsToPluginIds();
 
-            BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this };
-            BlackMisc::Simulation::Data::CModelSetCaches m_modelSets { true, this };
-            QScopedPointer<Ui::CConfigSimulatorComponent> ui;
-        };
+        BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this };
+        BlackMisc::Simulation::Data::CModelSetCaches m_modelSets { true, this };
+        QScopedPointer<Ui::CConfigSimulatorComponent> ui;
+    };
 
-        /**
-         * Wizard page for CConfigSimulatorComponent
-         */
-        class CConfigSimulatorWizardPage : public QWizardPage
-        {
-            Q_OBJECT
+    /**
+     * Wizard page for CConfigSimulatorComponent
+     */
+    class CConfigSimulatorWizardPage : public QWizardPage
+    {
+        Q_OBJECT
 
-        public:
-            //! Constructors
-            using QWizardPage::QWizardPage;
+    public:
+        //! Constructors
+        using QWizardPage::QWizardPage;
 
-            //! Set config
-            void setConfigComponent(CConfigSimulatorComponent *config) { m_config = config; }
+        //! Set config
+        void setConfigComponent(CConfigSimulatorComponent *config) { m_config = config; }
 
-            //! \copydoc QWizardPage::initializePage
-            virtual void initializePage() override;
+        //! \copydoc QWizardPage::initializePage
+        virtual void initializePage() override;
 
-            //! \copydoc QWizardPage::validatePage
-            virtual bool validatePage() override;
+        //! \copydoc QWizardPage::validatePage
+        virtual bool validatePage() override;
 
-        private:
-            CConfigSimulatorComponent *m_config = nullptr;
-        };
-    } // ns
+    private:
+        CConfigSimulatorComponent *m_config = nullptr;
+    };
 } // ns
 #endif // guard

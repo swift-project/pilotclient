@@ -12,13 +12,10 @@
 using namespace BlackMisc;
 using namespace BlackGui::Models;
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    CCloudLayerView::CCloudLayerView(QWidget *parent) : CViewBase(parent)
     {
-        CCloudLayerView::CCloudLayerView(QWidget *parent) : CViewBase(parent)
-        {
-            this->standardInit(new CCloudLayerListModel(this));
-        }
+        this->standardInit(new CCloudLayerListModel(this));
     }
 } // namespace

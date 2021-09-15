@@ -16,19 +16,16 @@
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/countrylist.h"
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Countries
+    class BLACKGUI_EXPORT CCountryView : public CViewBase<Models::CCountryListModel>
     {
-        //! Countries
-        class BLACKGUI_EXPORT CCountryView : public CViewBase<Models::CCountryListModel>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CCountryView(QWidget *parent = nullptr);
-        };
-    } // ns
+    public:
+        //! Constructor
+        explicit CCountryView(QWidget *parent = nullptr);
+    };
 } // ns
 #endif // guard

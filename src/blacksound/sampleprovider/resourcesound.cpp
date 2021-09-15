@@ -17,53 +17,50 @@
 using namespace BlackMisc;
 using namespace BlackSound::Wav;
 
-namespace BlackSound
+namespace BlackSound::SampleProvider
 {
-    namespace SampleProvider
+    CResourceSound::CResourceSound() : m_data(new CResourceSoundData)
     {
-        CResourceSound::CResourceSound() : m_data(new CResourceSoundData)
-        {
-            // void
-        }
+        // void
+    }
 
-        CResourceSound::CResourceSound(const QString &audioFileName) : m_data(new CResourceSoundData)
-        {
-            m_data->fileName = audioFileName;
-        }
+    CResourceSound::CResourceSound(const QString &audioFileName) : m_data(new CResourceSoundData)
+    {
+        m_data->fileName = audioFileName;
+    }
 
-        bool CResourceSound::load()
-        {
-            if (!m_data || m_data->fileName.isEmpty()) { return false; }
+    bool CResourceSound::load()
+    {
+        if (!m_data || m_data->fileName.isEmpty()) { return false; }
 
-            CWavFile wavFile;
-            m_data->samples.clear();
-            if (wavFile.open(m_data->fileName))
+        CWavFile wavFile;
+        m_data->samples.clear();
+        if (wavFile.open(m_data->fileName))
+        {
+            if (wavFile.fileFormat().sampleType() == QAudioFormat::Float)
             {
-                if (wavFile.fileFormat().sampleType() == QAudioFormat::Float)
-                {
-                    // Not implemented
-                    // m_samples = convertFloatBytesTo16BitPCM(wavFile.audioData());
-                }
-                else
-                {
-                    m_data->samples = convertBytesTo32BitFloatPCM(wavFile.audioData());
-                }
+                // Not implemented
+                // m_samples = convertFloatBytesTo16BitPCM(wavFile.audioData());
             }
-
-            m_data->isLoaded = true;
-            return true;
+            else
+            {
+                m_data->samples = convertBytesTo32BitFloatPCM(wavFile.audioData());
+            }
         }
 
-        const QString &CResourceSound::getFileName() const
-        {
-            static const QString empty;
-            return m_data ? m_data->fileName : empty;
-        }
+        m_data->isLoaded = true;
+        return true;
+    }
 
-        bool CResourceSound::isSameFileName(const QString &fn) const
-        {
-            if (fn.isEmpty()) { return false; }
-            return stringCompare(fn, m_data->fileName, CFileUtils::osFileNameCaseSensitivity());
-        }
-    } // ns
+    const QString &CResourceSound::getFileName() const
+    {
+        static const QString empty;
+        return m_data ? m_data->fileName : empty;
+    }
+
+    bool CResourceSound::isSameFileName(const QString &fn) const
+    {
+        if (fn.isEmpty()) { return false; }
+        return stringCompare(fn, m_data->fileName, CFileUtils::osFileNameCaseSensitivity());
+    }
 } // ns

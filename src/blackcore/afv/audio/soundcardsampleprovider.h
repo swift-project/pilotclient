@@ -19,61 +19,55 @@
 #include <QAudioFormat>
 #include <QObject>
 
-namespace BlackCore
+namespace BlackCore::Afv::Audio
 {
-    namespace Afv
+    //! Soundcard sample
+    class CSoundcardSampleProvider : public BlackSound::SampleProvider::ISampleProvider
     {
-        namespace Audio
-        {
-            //! Soundcard sample
-            class CSoundcardSampleProvider : public BlackSound::SampleProvider::ISampleProvider
-            {
-                Q_OBJECT
+        Q_OBJECT
 
-            public:
-                //! Ctor
-                CSoundcardSampleProvider(int sampleRate, const QVector<quint16> &transceiverIDs, QObject *parent = nullptr);
+    public:
+        //! Ctor
+        CSoundcardSampleProvider(int sampleRate, const QVector<quint16> &transceiverIDs, QObject *parent = nullptr);
 
-                //! Wave format
-                const QAudioFormat &waveFormat() const { return m_waveFormat; }
+        //! Wave format
+        const QAudioFormat &waveFormat() const { return m_waveFormat; }
 
-                //! Bypass effects
-                void setBypassEffects(bool value);
+        //! Bypass effects
+        void setBypassEffects(bool value);
 
-                //! Update PTT
-                void pttUpdate(bool active, const QVector<TxTransceiverDto> &txTransceivers);
+        //! Update PTT
+        void pttUpdate(bool active, const QVector<TxTransceiverDto> &txTransceivers);
 
-                //! \copydoc BlackSound::SampleProvider::ISampleProvider::readSamples
-                virtual int readSamples(QVector<float> &samples, qint64 count) override;
+        //! \copydoc BlackSound::SampleProvider::ISampleProvider::readSamples
+        virtual int readSamples(QVector<float> &samples, qint64 count) override;
 
-                //! Add OPUS samples
-                void addOpusSamples(const IAudioDto &audioDto, const QVector<RxTransceiverDto> &rxTransceivers);
+        //! Add OPUS samples
+        void addOpusSamples(const IAudioDto &audioDto, const QVector<RxTransceiverDto> &rxTransceivers);
 
-                //! Update all tranceivers
-                void updateRadioTransceivers(const QVector<TransceiverDto> &radioTransceivers);
+        //! Update all tranceivers
+        void updateRadioTransceivers(const QVector<TransceiverDto> &radioTransceivers);
 
-                //! Receiving callsign as single string
-                QString getReceivingCallsignsString(quint16 transceiverID) const;
+        //! Receiving callsign as single string
+        QString getReceivingCallsignsString(quint16 transceiverID) const;
 
-                //! Receiving callsign as single string
-                BlackMisc::Aviation::CCallsignSet getReceivingCallsigns(quint16 transceiverID) const;
+        //! Receiving callsign as single string
+        BlackMisc::Aviation::CCallsignSet getReceivingCallsigns(quint16 transceiverID) const;
 
-                //! Setting gain for specified receiver
-                bool setGainRatioForTransceiver(quint16 transceiverID, double gainRatio);
+        //! Setting gain for specified receiver
+        bool setGainRatioForTransceiver(quint16 transceiverID, double gainRatio);
 
-            signals:
-                //! Changed callsigns
-                void receivingCallsignsChanged(const TransceiverReceivingCallsignsChangedArgs &args);
+    signals:
+        //! Changed callsigns
+        void receivingCallsignsChanged(const TransceiverReceivingCallsignsChangedArgs &args);
 
-            private:
-                QAudioFormat m_waveFormat;
-                BlackSound::SampleProvider::CMixingSampleProvider *m_mixer = nullptr;
-                QVector<CReceiverSampleProvider *> m_receiverInputs;
-                QVector<quint16> m_receiverIDs;
-            };
+    private:
+        QAudioFormat m_waveFormat;
+        BlackSound::SampleProvider::CMixingSampleProvider *m_mixer = nullptr;
+        QVector<CReceiverSampleProvider *> m_receiverInputs;
+        QVector<quint16> m_receiverIDs;
+    };
 
-        } // ns
-    } // ns
 } // ns
 
 #endif // guard

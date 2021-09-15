@@ -22,75 +22,72 @@
 #include <QScopedPointer>
 
 namespace Ui { class CAirlineIcaoForm; }
-namespace BlackGui
+namespace BlackGui::Editors
 {
-    namespace Editors
+    /*!
+     * Airline ICAO code form
+     */
+    class BLACKGUI_EXPORT CAirlineIcaoForm : public CForm
     {
-        /*!
-         * Airline ICAO code form
-         */
-        class BLACKGUI_EXPORT CAirlineIcaoForm : public CForm
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAirlineIcaoForm(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAirlineIcaoForm(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAirlineIcaoForm() override;
+        //! Destructor
+        virtual ~CAirlineIcaoForm() override;
 
-            //! Set value
-            void setValue(const BlackMisc::Aviation::CAirlineIcaoCode &icao = BlackMisc::Aviation::CAirlineIcaoCode());
+        //! Set value
+        void setValue(const BlackMisc::Aviation::CAirlineIcaoCode &icao = BlackMisc::Aviation::CAirlineIcaoCode());
 
-            //! Get value
-            BlackMisc::Aviation::CAirlineIcaoCode getValue() const;
+        //! Get value
+        BlackMisc::Aviation::CAirlineIcaoCode getValue() const;
 
-            //! Allow to drop
-            void allowDrop(bool allowDrop);
+        //! Allow to drop
+        void allowDrop(bool allowDrop);
 
-            //! Is drop allowed?
-            bool isDropAllowed() const;
+        //! Is drop allowed?
+        bool isDropAllowed() const;
 
-            //! \name Form class implementations
-            //! @{
-            virtual void setReadOnly(bool readonly) override;
-            virtual void setSelectOnly() override;
-            virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
-            //! @}
+        //! \name Form class implementations
+        //! @{
+        virtual void setReadOnly(bool readonly) override;
+        virtual void setSelectOnly() override;
+        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        //! @}
 
-            //! Clear
-            void clear();
+        //! Clear
+        void clear();
 
-            //! Reset value to current value
-            void resetValue();
+        //! Reset value to current value
+        void resetValue();
 
-        signals:
-            //! Airline has been changed
-            void airlineChanged(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao);
+    signals:
+        //! Airline has been changed
+        void airlineChanged(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao);
 
-            //! Airline has been changed
-            void airlineChangedDigest(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao);
+        //! Airline has been changed
+        void airlineChangedDigest(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao);
 
-        protected:
-            //! \copydoc CForm::jsonPasted
-            virtual void jsonPasted(const QString &json) override;
+    protected:
+        //! \copydoc CForm::jsonPasted
+        virtual void jsonPasted(const QString &json) override;
 
-            //! Variant has been dropped
-            void onDroppedCode(const BlackMisc::CVariant &variantDropped);
+        //! Variant has been dropped
+        void onDroppedCode(const BlackMisc::CVariant &variantDropped);
 
-            //! Id entered
-            void onIdEntered();
+        //! Id entered
+        void onIdEntered();
 
-            //! Emit the digest signal
-            void emitAirlineChangedDigest();
+        //! Emit the digest signal
+        void emitAirlineChangedDigest();
 
-        private:
-            QScopedPointer<Ui::CAirlineIcaoForm>  ui;
-            BlackMisc::CDigestSignal m_digestChanges { this, &CAirlineIcaoForm::airlineChanged, &CAirlineIcaoForm::emitAirlineChangedDigest, 500, 3 };
-            BlackMisc::Aviation::CAirlineIcaoCode m_currentCode; //!< object allowing to override values
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CAirlineIcaoForm>  ui;
+        BlackMisc::CDigestSignal m_digestChanges { this, &CAirlineIcaoForm::airlineChanged, &CAirlineIcaoForm::emitAirlineChangedDigest, 500, 3 };
+        BlackMisc::Aviation::CAirlineIcaoCode m_currentCode; //!< object allowing to override values
+    };
 } //ns
 
 #endif // guard

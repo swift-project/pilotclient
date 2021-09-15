@@ -22,51 +22,48 @@
 #include <QScopedPointer>
 
 namespace Ui { class CAudioNotificationComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Audio component, volume, ...
+    class BLACKGUI_EXPORT CAudioNotificationComponent : public QFrame
     {
-        //! Audio component, volume, ...
-        class BLACKGUI_EXPORT CAudioNotificationComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAudioNotificationComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAudioNotificationComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAudioNotificationComponent() override;
+        //! Destructor
+        virtual ~CAudioNotificationComponent() override;
 
-            //! Play any sounds?
-            bool playNotificationSounds() const;
+        //! Play any sounds?
+        bool playNotificationSounds() const;
 
-        private:
-            //! Init
-            void init();
+    private:
+        //! Init
+        void init();
 
-            //! Reload settings
-            void reloadSettings();
+        //! Reload settings
+        void reloadSettings();
 
-            //! Notification flags toggled
-            void onNotificationsToggled(bool checked);
+        //! Notification flags toggled
+        void onNotificationsToggled(bool checked);
 
-            //! Notification sounds dir
-            void selectNotificationSoundsDir();
+        //! Notification sounds dir
+        void selectNotificationSoundsDir();
 
-            //! Notification sounds dir
-            void resetNotificationSoundsDir();
+        //! Notification sounds dir
+        void resetNotificationSoundsDir();
 
-            //! Volume has been changed
-            void onNotificationVolumeChanged(int volume);
+        //! Volume has been changed
+        void onNotificationVolumeChanged(int volume);
 
-            //! CheckBox to flag
-            BlackMisc::Audio::CNotificationSounds::NotificationFlag checkBoxToFlag(const QCheckBox *cb) const;
+        //! CheckBox to flag
+        BlackMisc::Audio::CNotificationSounds::NotificationFlag checkBoxToFlag(const QCheckBox *cb) const;
 
-            QScopedPointer<Ui::CAudioNotificationComponent> ui;
-            BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &CAudioNotificationComponent::reloadSettings };
-        };
-    } // namespace
+        QScopedPointer<Ui::CAudioNotificationComponent> ui;
+        BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &CAudioNotificationComponent::reloadSettings };
+    };
 } // namespace
 
 #endif // guard

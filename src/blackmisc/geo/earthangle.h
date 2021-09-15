@@ -13,77 +13,74 @@
 
 #include "blackmisc/pq/angle.h"
 
-namespace BlackMisc
+namespace BlackMisc::Geo
 {
-    namespace Geo
+    class CLatitude;
+    class CLongitude;
+
+    /*!
+     * Base class for latitude / longitude
+     */
+    template <class LATorLON> class CEarthAngle : public PhysicalQuantities::CAngle
     {
-        class CLatitude;
-        class CLongitude;
+    public:
+        //! Plus operator +=
+        CEarthAngle &operator +=(const CEarthAngle &latOrLon);
+
+        //! Minus operator-=
+        CEarthAngle &operator -=(const CEarthAngle &latOrLon);
+
+        //! Multiply operator *=
+        CEarthAngle &operator *=(double multiply);
+
+        //! Plus operator +
+        LATorLON operator +(const CEarthAngle &latOrLon) const;
+
+        //! Minus operator -
+        LATorLON operator -(const CEarthAngle &latOrLon) const;
+
+        //! Multiply operator *
+        LATorLON operator *(double multiply) const;
+
+        //! \copydoc BlackMisc::Mixin::Icon::toIcon
+        CIcons::IconIndex toIcon() const;
 
         /*!
-         * Base class for latitude / longitude
+         * Latitude / Longitude from a WGS string such as
+         * \param wgsCoordinate 50° 2′ 0″ N / 8° 34′ 14″ E
+         * \return
          */
-        template <class LATorLON> class CEarthAngle : public PhysicalQuantities::CAngle
-        {
-        public:
-            //! Plus operator +=
-            CEarthAngle &operator +=(const CEarthAngle &latOrLon);
+        static LATorLON fromWgs84(const QString &wgsCoordinate);
 
-            //! Minus operator-=
-            CEarthAngle &operator -=(const CEarthAngle &latOrLon);
+    protected:
+        //! Default constructor
+        CEarthAngle();
 
-            //! Multiply operator *=
-            CEarthAngle &operator *=(double multiply);
+        //! Init by double value
+        CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit);
 
-            //! Plus operator +
-            LATorLON operator +(const CEarthAngle &latOrLon) const;
+        //! Init by CAngle value
+        CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle);
 
-            //! Minus operator -
-            LATorLON operator -(const CEarthAngle &latOrLon) const;
+        //! To WGS84 string
+        QString toWgs84(const QChar pos, const QChar neg, int fractionalDigits = 3) const;
 
-            //! Multiply operator *
-            LATorLON operator *(double multiply) const;
+    public:
+        //! \copydoc BlackMisc::Mixin::String::toQString
+        QString convertToQString(bool i18n = false) const;
 
-            //! \copydoc BlackMisc::Mixin::Icon::toIcon
-            CIcons::IconIndex toIcon() const;
+    private:
+        //! Easy access to derived class (CRTP template parameter)
+        LATorLON const *derived() const;
 
-            /*!
-             * Latitude / Longitude from a WGS string such as
-             * \param wgsCoordinate 50° 2′ 0″ N / 8° 34′ 14″ E
-             * \return
-             */
-            static LATorLON fromWgs84(const QString &wgsCoordinate);
+        //! Easy access to derived class (CRTP template parameter)
+        LATorLON *derived();
+    };
 
-        protected:
-            //! Default constructor
-            CEarthAngle();
-
-            //! Init by double value
-            CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit);
-
-            //! Init by CAngle value
-            CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle);
-
-            //! To WGS84 string
-            QString toWgs84(const QChar pos, const QChar neg, int fractionalDigits = 3) const;
-
-        public:
-            //! \copydoc BlackMisc::Mixin::String::toQString
-            QString convertToQString(bool i18n = false) const;
-
-        private:
-            //! Easy access to derived class (CRTP template parameter)
-            LATorLON const *derived() const;
-
-            //! Easy access to derived class (CRTP template parameter)
-            LATorLON *derived();
-        };
-
-        //! \cond PRIVATE
-        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CEarthAngle<CLatitude>;
-        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CEarthAngle<CLongitude>;
-        //! \endcond
-    } // ns
+    //! \cond PRIVATE
+    extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CEarthAngle<CLatitude>;
+    extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CEarthAngle<CLongitude>;
+    //! \endcond
 } // ns
 
 #endif // guard

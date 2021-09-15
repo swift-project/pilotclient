@@ -16,21 +16,18 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    CAudioDeviceInfoListModel::CAudioDeviceInfoListModel(QObject *parent) :
+        CListModelBase("AudioDeviceInfoListModel", parent)
     {
-        CAudioDeviceInfoListModel::CAudioDeviceInfoListModel(QObject *parent) :
-            CListModelBase("AudioDeviceInfoListModel", parent)
-        {
-            m_columns.addColumn(CColumn::standardString("type", CAudioDeviceInfo::IndexDeviceTypeAsString));
-            m_columns.addColumn(CColumn::standardString("name", CAudioDeviceInfo::IndexName));
-            m_columns.addColumn(CColumn::standardString("machine", { CAudioDeviceInfo::IndexIdentifier, CIdentifier::IndexMachineName }));
-            m_columns.addColumn(CColumn::standardString("process", { CAudioDeviceInfo::IndexIdentifier, CIdentifier::IndexProcessName }));
+        m_columns.addColumn(CColumn::standardString("type", CAudioDeviceInfo::IndexDeviceTypeAsString));
+        m_columns.addColumn(CColumn::standardString("name", CAudioDeviceInfo::IndexName));
+        m_columns.addColumn(CColumn::standardString("machine", { CAudioDeviceInfo::IndexIdentifier, CIdentifier::IndexMachineName }));
+        m_columns.addColumn(CColumn::standardString("process", { CAudioDeviceInfo::IndexIdentifier, CIdentifier::IndexProcessName }));
 
-            // default sort order
-            this->setSortColumnByPropertyIndex(CAudioDeviceInfo::IndexName);
-            m_sortOrder = Qt::AscendingOrder;
-        }
-    } // ns
+        // default sort order
+        this->setSortColumnByPropertyIndex(CAudioDeviceInfo::IndexName);
+        m_sortOrder = Qt::AscendingOrder;
+    }
 } // ns

@@ -18,32 +18,29 @@
 #include <QStringList>
 #include <QMetaType>
 
-namespace BlackMisc
+namespace BlackMisc::Network
 {
-    namespace Network
+    //! Value object encapsulating a list of voice rooms.
+    class BLACKMISC_EXPORT CEcosystemList :
+        public CSequence<CEcosystem>,
+        public BlackMisc::Mixin::MetaType<CEcosystemList>
     {
-        //! Value object encapsulating a list of voice rooms.
-        class BLACKMISC_EXPORT CEcosystemList :
-            public CSequence<CEcosystem>,
-            public BlackMisc::Mixin::MetaType<CEcosystemList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CEcosystemList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CEcosystemList)
+        using CSequence::CSequence;
 
-            //! Default constructor.
-            CEcosystemList();
+        //! Default constructor.
+        CEcosystemList();
 
-            //! Construct from a base class object.
-            CEcosystemList(const CSequence &other);
+        //! Construct from a base class object.
+        CEcosystemList(const CSequence &other);
 
-            //! All system strings
-            QStringList allSystemStrings() const;
+        //! All system strings
+        QStringList allSystemStrings() const;
 
-            //! All systems
-            static const CEcosystemList &allKnownSystems();
-        };
-    } //namespace
+        //! All systems
+        static const CEcosystemList &allKnownSystems();
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Network::CEcosystemList)

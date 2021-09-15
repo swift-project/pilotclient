@@ -13,30 +13,27 @@
 
 #include "blackgui/pluginconfig.h"
 
-namespace BlackSimPlugin
+namespace BlackSimPlugin::Emulated
 {
-    namespace Emulated
+    /*!
+     * Window for setting up the FSX plugin.
+     */
+    class CSimulatorEmulatedConfig : public QObject, public BlackGui::IPluginConfig
     {
-        /*!
-         * Window for setting up the FSX plugin.
-         */
-        class CSimulatorEmulatedConfig : public QObject, public BlackGui::IPluginConfig
-        {
-            Q_OBJECT
-            Q_PLUGIN_METADATA(IID "org.swift-project.blackgui.pluginconfiginterface" FILE "simulatoremulatedconfig.json")
-            Q_INTERFACES(BlackGui::IPluginConfig)
+        Q_OBJECT
+        Q_PLUGIN_METADATA(IID "org.swift-project.blackgui.pluginconfiginterface" FILE "simulatoremulatedconfig.json")
+        Q_INTERFACES(BlackGui::IPluginConfig)
 
-        public:
-            //! Ctor
-            CSimulatorEmulatedConfig(QObject *parent = nullptr);
+    public:
+        //! Ctor
+        CSimulatorEmulatedConfig(QObject *parent = nullptr);
 
-            //! Dtor
-            virtual ~CSimulatorEmulatedConfig() override {}
+        //! Dtor
+        virtual ~CSimulatorEmulatedConfig() override {}
 
-            //! \copydoc BlackGui::IPluginConfig::createConfigWindow()
-            BlackGui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;
-        };
-    } // ns
+        //! \copydoc BlackGui::IPluginConfig::createConfigWindow()
+        BlackGui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;
+    };
 } // ns
 
 #endif // guard

@@ -17,32 +17,29 @@
 #include <QScopedPointer>
 
 namespace Ui { class CAutoPublishDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! CAutoPublishComponent as dialog
+    class BLACKGUI_EXPORT CAutoPublishDialog : public QDialog
     {
-        //! CAutoPublishComponent as dialog
-        class BLACKGUI_EXPORT CAutoPublishDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            explicit CAutoPublishDialog(QWidget *parent = nullptr);
+    public:
+        //! Ctor
+        explicit CAutoPublishDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAutoPublishDialog() override;
+        //! Destructor
+        virtual ~CAutoPublishDialog() override;
 
-            //! \copydoc CAutoPublishComponent::readFiles
-            int readFiles();
+        //! \copydoc CAutoPublishComponent::readFiles
+        int readFiles();
 
-            //! Read files and show dialog
-            int readAndShow();
+        //! Read files and show dialog
+        int readAndShow();
 
-        private:
-            QScopedPointer<Ui::CAutoPublishDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CAutoPublishDialog> ui;
+    };
 } // ns
 
 #endif // guard

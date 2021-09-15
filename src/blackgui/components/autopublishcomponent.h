@@ -18,52 +18,49 @@
 #include <QScopedPointer>
 
 namespace Ui { class CAutoPublishComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Data automatically collected and be be sent to backend
+    class CAutoPublishComponent : public COverlayMessagesFrame
     {
-        //! Data automatically collected and be be sent to backend
-        class CAutoPublishComponent : public COverlayMessagesFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            explicit CAutoPublishComponent(QWidget *parent = nullptr);
+    public:
+        //! Ctor
+        explicit CAutoPublishComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAutoPublishComponent() override;
+        //! Destructor
+        virtual ~CAutoPublishComponent() override;
 
-            //! Read the files
-            int readFiles();
+        //! Read the files
+        int readFiles();
 
-            //! Data empty
-            bool isEmpty() const;
+        //! Data empty
+        bool isEmpty() const;
 
-        private:
-            QScopedPointer<Ui::CAutoPublishComponent> ui;
-            BlackMisc::Simulation::CAutoPublishData m_data;
-            BlackMisc::CData<BlackMisc::Simulation::Data::TLastAutoPublish> m_lastAutoPublish { this };
+    private:
+        QScopedPointer<Ui::CAutoPublishComponent> ui;
+        BlackMisc::Simulation::CAutoPublishData m_data;
+        BlackMisc::CData<BlackMisc::Simulation::Data::TLastAutoPublish> m_lastAutoPublish { this };
 
-            //! Analyze against DB data
-            void analyzeAgainstDBData();
+        //! Analyze against DB data
+        void analyzeAgainstDBData();
 
-            //! Send to DB
-            void sendToDb();
+        //! Send to DB
+        void sendToDb();
 
-            //! Display data in JSON text field
-            void displayData();
+        //! Display data in JSON text field
+        void displayData();
 
-            //! Delete all files
-            void deleteAllFiles();
+        //! Delete all files
+        void deleteAllFiles();
 
-            //! Auto publishing completed
-            void onAutoPublished(bool success, const QString &url, const BlackMisc::CStatusMessageList &msgs);
+        //! Auto publishing completed
+        void onAutoPublished(bool success, const QString &url, const BlackMisc::CStatusMessageList &msgs);
 
-            //! Close parent dialog (if any)
-            void closeParentDialog();
-        };
-    } // ns
+        //! Close parent dialog (if any)
+        void closeParentDialog();
+    };
 } // ns
 
 #endif // guard

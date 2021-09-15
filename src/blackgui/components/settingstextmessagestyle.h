@@ -16,69 +16,66 @@
 #include <QScopedPointer>
 
 namespace Ui { class CSettingsTextMessageStyle; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    class CSettingsFontDialog;
+    class CTextEditDialog;
+
+    //! Text message style
+    class CSettingsTextMessageStyle : public QFrame
     {
-        class CSettingsFontDialog;
-        class CTextEditDialog;
+        Q_OBJECT
 
-        //! Text message style
-        class CSettingsTextMessageStyle : public QFrame
-        {
-            Q_OBJECT
+    public:
+        //! Constructor
+        explicit CSettingsTextMessageStyle(QWidget *parent = nullptr);
 
-        public:
-            //! Constructor
-            explicit CSettingsTextMessageStyle(QWidget *parent = nullptr);
+        //! Destructor
+        virtual ~CSettingsTextMessageStyle() override;
 
-            //! Destructor
-            virtual ~CSettingsTextMessageStyle() override;
+        //! Fmily, size and style
+        QStringList getFamilySizeStyle() const;
 
-            //! Fmily, size and style
-            QStringList getFamilySizeStyle() const;
+        //! Style
+        const QString &getStyle() { return m_style; }
 
-            //! Style
-            const QString &getStyle() { return m_style; }
+        //! Style
+        void setStyle(const QString &style) { m_style = style; }
 
-            //! Style
-            void setStyle(const QString &style) { m_style = style; }
+        //! Font size
+        //! @{
+        void fontSizeMinus();
+        void fontSizePlus();
+        //! @}
 
-            //! Font size
-            //! @{
-            void fontSizeMinus();
-            void fontSizePlus();
-            //! @}
+        //! Reset style
+        void resetStyle() { m_style.clear(); }
 
-            //! Reset style
-            void resetStyle() { m_style.clear(); }
+    signals:
+        //! Font or style changed from within the component
+        void changed();
 
-        signals:
-            //! Font or style changed from within the component
-            void changed();
+    private:
+        QScopedPointer<Ui::CSettingsTextMessageStyle> ui;
+        CSettingsFontDialog *m_fontSettingsDialog = nullptr;
+        CTextEditDialog     *m_textEditDialog     = nullptr;
+        QString m_style;
 
-        private:
-            QScopedPointer<Ui::CSettingsTextMessageStyle> ui;
-            CSettingsFontDialog *m_fontSettingsDialog = nullptr;
-            CTextEditDialog     *m_textEditDialog     = nullptr;
-            QString m_style;
+        //! Change font
+        void changeFont();
 
-            //! Change font
-            void changeFont();
+        //! Change style
+        void changeStyle();
 
-            //! Change style
-            void changeStyle();
+        //! Update the font part
+        bool setFontFamilySizeStyle(const QStringList &familySizeStlye);
 
-            //! Update the font part
-            bool setFontFamilySizeStyle(const QStringList &familySizeStlye);
+        //! Replace the table style in style
+        void replaceTableStyle(const QString &newTableStyle);
 
-            //! Replace the table style in style
-            void replaceTableStyle(const QString &newTableStyle);
-
-            //! Increase/decrease font size
-            bool changeFontSize(bool increase);
-        };
-    } // ns
+        //! Increase/decrease font size
+        bool changeFontSize(bool increase);
+    };
 } // ns
 
 #endif // guard

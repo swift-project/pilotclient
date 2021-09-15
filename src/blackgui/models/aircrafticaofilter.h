@@ -17,35 +17,32 @@
 
 #include <QString>
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Filter for aircraft ICAO data
+    class BLACKGUI_EXPORT CAircraftIcaoFilter :
+        public IModelFilter<BlackMisc::Aviation::CAircraftIcaoCodeList>
     {
-        //! Filter for aircraft ICAO data
-        class BLACKGUI_EXPORT CAircraftIcaoFilter :
-            public IModelFilter<BlackMisc::Aviation::CAircraftIcaoCodeList>
-        {
-        public:
-            //! Constructor
-            CAircraftIcaoFilter(int id,
-                                const QString &designator,
-                                const QString &family,
-                                const QString &manufacturer,
-                                const QString &description,
-                                const QString &combinedType);
+    public:
+        //! Constructor
+        CAircraftIcaoFilter(int id,
+                            const QString &designator,
+                            const QString &family,
+                            const QString &manufacturer,
+                            const QString &description,
+                            const QString &combinedType);
 
-            //! \copydoc IModelFilter::filter
-            virtual BlackMisc::Aviation::CAircraftIcaoCodeList filter(const BlackMisc::Aviation::CAircraftIcaoCodeList &inContainer) const override;
+        //! \copydoc IModelFilter::filter
+        virtual BlackMisc::Aviation::CAircraftIcaoCodeList filter(const BlackMisc::Aviation::CAircraftIcaoCodeList &inContainer) const override;
 
-        private:
-            int m_id = -1;
-            QString m_designator;
-            QString m_family;
-            QString m_manufacturer;
-            QString m_description;
-            QString m_combinedType;
-        };
-    } // namespace
+    private:
+        int m_id = -1;
+        QString m_designator;
+        QString m_family;
+        QString m_manufacturer;
+        QString m_description;
+        QString m_combinedType;
+    };
 } // namespace
 
 #endif // guard

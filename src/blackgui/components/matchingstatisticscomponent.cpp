@@ -15,31 +15,28 @@ using namespace BlackMisc::Simulation;
 using namespace BlackCore::Context;
 using namespace BlackGui::Views;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CMatchingStatisticsComponent::CMatchingStatisticsComponent(QWidget *parent) :
+        QFrame(parent),
+        ui(new Ui::CMatchingStatisticsComponent)
     {
-        CMatchingStatisticsComponent::CMatchingStatisticsComponent(QWidget *parent) :
-            QFrame(parent),
-            ui(new Ui::CMatchingStatisticsComponent)
-        {
-            ui->setupUi(this);
-            connect(ui->pb_Generate, &QPushButton::clicked, this, &CMatchingStatisticsComponent::onGenerateClicked);
-            connect(ui->tvp_MatchingStatistics, &CMatchingStatisticsView::requestNewBackendData, this, &CMatchingStatisticsComponent::onGenerateClicked);
-            connect(ui->tvp_MatchingStatistics, &CMatchingStatisticsView::requestUpdate, this, &CMatchingStatisticsComponent::onGenerateClicked);
-        }
+        ui->setupUi(this);
+        connect(ui->pb_Generate, &QPushButton::clicked, this, &CMatchingStatisticsComponent::onGenerateClicked);
+        connect(ui->tvp_MatchingStatistics, &CMatchingStatisticsView::requestNewBackendData, this, &CMatchingStatisticsComponent::onGenerateClicked);
+        connect(ui->tvp_MatchingStatistics, &CMatchingStatisticsView::requestUpdate, this, &CMatchingStatisticsComponent::onGenerateClicked);
+    }
 
-        CMatchingStatisticsComponent::~CMatchingStatisticsComponent()
-        { }
+    CMatchingStatisticsComponent::~CMatchingStatisticsComponent()
+    { }
 
-        void CMatchingStatisticsComponent::onGenerateClicked()
-        {
-            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
-            Q_ASSERT_X(sGui->getIContextSimulator(), Q_FUNC_INFO, "Missing context");
+    void CMatchingStatisticsComponent::onGenerateClicked()
+    {
+        Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
+        Q_ASSERT_X(sGui->getIContextSimulator(), Q_FUNC_INFO, "Missing context");
 
-            const bool missingOnly = ui->rb_MissingOnly->isChecked();
-            const CMatchingStatistics stats = sGui->getIContextSimulator()->getCurrentMatchingStatistics(missingOnly);
-            ui->tvp_MatchingStatistics->updateContainerMaybeAsync(stats);
-        }
-    } // ns
+        const bool missingOnly = ui->rb_MissingOnly->isChecked();
+        const CMatchingStatistics stats = sGui->getIContextSimulator()->getCurrentMatchingStatistics(missingOnly);
+        ui->tvp_MatchingStatistics->updateContainerMaybeAsync(stats);
+    }
 } // ns

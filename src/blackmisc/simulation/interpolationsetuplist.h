@@ -17,30 +17,27 @@
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    //! Value object encapsulating a list of setups.
+    class BLACKMISC_EXPORT CInterpolationSetupList :
+        public CSequence<CInterpolationAndRenderingSetupPerCallsign>,
+        public Aviation::ICallsignObjectList<CInterpolationAndRenderingSetupPerCallsign, CInterpolationSetupList>,
+        public Mixin::MetaType<CInterpolationSetupList>
     {
-        //! Value object encapsulating a list of setups.
-        class BLACKMISC_EXPORT CInterpolationSetupList :
-            public CSequence<CInterpolationAndRenderingSetupPerCallsign>,
-            public Aviation::ICallsignObjectList<CInterpolationAndRenderingSetupPerCallsign, CInterpolationSetupList>,
-            public Mixin::MetaType<CInterpolationSetupList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CInterpolationSetupList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CInterpolationSetupList)
+        using CSequence::CSequence;
 
-            //! Default constructor.
-            CInterpolationSetupList();
+        //! Default constructor.
+        CInterpolationSetupList();
 
-            //! Single object
-            CInterpolationSetupList(const CInterpolationAndRenderingSetupPerCallsign &setup);
+        //! Single object
+        CInterpolationSetupList(const CInterpolationAndRenderingSetupPerCallsign &setup);
 
-            //! Construct from a base class object.
-            CInterpolationSetupList(const CSequence<CInterpolationAndRenderingSetupPerCallsign> &other);
-        };
-    } //namespace
+        //! Construct from a base class object.
+        CInterpolationSetupList(const CSequence<CInterpolationAndRenderingSetupPerCallsign> &other);
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CInterpolationSetupList)

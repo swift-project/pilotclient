@@ -11,56 +11,53 @@
 #ifndef BLACKCORE_FSD_ClientResponse_H
 #define BLACKCORE_FSD_ClientResponse_H
 
-#include "messagebase.h"
-#include "enums.h"
+#include "blackcore/fsd/messagebase.h"
+#include "blackcore/fsd/enums.h"
 
-namespace BlackCore
+namespace BlackCore::Fsd
 {
-    namespace Fsd
+    //! This packet is used to respond to a client data request.
+    class BLACKCORE_EXPORT ClientResponse : public MessageBase
     {
-        //! This packet is used to respond to a client data request.
-        class BLACKCORE_EXPORT ClientResponse : public MessageBase
-        {
-        public:
-            //! Constructor
-            ClientResponse(const QString &sender, const QString &receiver, ClientQueryType queryType, const QStringList &responseData);
+    public:
+        //! Constructor
+        ClientResponse(const QString &sender, const QString &receiver, ClientQueryType queryType, const QStringList &responseData);
 
-            //! Unknow query?
-            bool isUnknownQuery() const { return m_queryType == ClientQueryType::Unknown; }
+        //! Unknow query?
+        bool isUnknownQuery() const { return m_queryType == ClientQueryType::Unknown; }
 
-            //! Message converted to tokens
-            QStringList toTokens() const;
+        //! Message converted to tokens
+        QStringList toTokens() const;
 
-            //! Construct from tokens
-            static ClientResponse fromTokens(const QStringList &tokens);
+        //! Construct from tokens
+        static ClientResponse fromTokens(const QStringList &tokens);
 
-            //! PDU identifier
-            static QString pdu() { return "$CR"; }
+        //! PDU identifier
+        static QString pdu() { return "$CR"; }
 
-            //! Properties
-            //! @{
-            ClientQueryType m_queryType {};
-            QStringList     m_responseData;
-            //! @}
+        //! Properties
+        //! @{
+        ClientQueryType m_queryType {};
+        QStringList     m_responseData;
+        //! @}
 
-        private:
-            ClientResponse();
-        };
+    private:
+        ClientResponse();
+    };
 
-        //! Equal to operator
-        inline bool operator==(const ClientResponse &lhs, const ClientResponse &rhs)
-        {
-            return  lhs.sender() == rhs.sender() &&
-                    lhs.receiver() == rhs.receiver() &&
-                    lhs.m_queryType == rhs.m_queryType &&
-                    lhs.m_responseData == rhs.m_responseData;
-        }
+    //! Equal to operator
+    inline bool operator==(const ClientResponse &lhs, const ClientResponse &rhs)
+    {
+        return  lhs.sender() == rhs.sender() &&
+                lhs.receiver() == rhs.receiver() &&
+                lhs.m_queryType == rhs.m_queryType &&
+                lhs.m_responseData == rhs.m_responseData;
+    }
 
-        //! Not equal to operator
-        inline bool operator!=(const ClientResponse &lhs, const ClientResponse &rhs)
-        {
-            return !(lhs == rhs);
-        }
+    //! Not equal to operator
+    inline bool operator!=(const ClientResponse &lhs, const ClientResponse &rhs)
+    {
+        return !(lhs == rhs);
     }
 }
 

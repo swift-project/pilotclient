@@ -21,7 +21,7 @@
 #include <QScopedPointer>
 
 namespace Ui { class CDbDistributorComponent; }
-namespace BlackMisc { namespace Simulation { class CSimulatorInfo; }}
+namespace BlackMisc::Simulation { class CSimulatorInfo; }
 namespace BlackGui
 {
     namespace Views { class CDistributorView; }

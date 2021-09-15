@@ -11,58 +11,55 @@
 #include <QList>
 #include <tuple>
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    CSimulatorInfoList::CSimulatorInfoList() { }
+
+    CSimulatorInfoList::CSimulatorInfoList(const CSequence<CSimulatorInfo> &other) :
+        CSequence<CSimulatorInfo>(other)
+    { }
+
+    CSimulatorInfoList CSimulatorInfoList::withNoDuplicates() const
     {
-        CSimulatorInfoList::CSimulatorInfoList() { }
-
-        CSimulatorInfoList::CSimulatorInfoList(const CSequence<CSimulatorInfo> &other) :
-            CSequence<CSimulatorInfo>(other)
-        { }
-
-        CSimulatorInfoList CSimulatorInfoList::withNoDuplicates() const
+        if (this->isEmpty()) { return CSimulatorInfoList(); }
+        QList<int> simIndexes;
+        CSimulatorInfoList newList;
+        for (const CSimulatorInfo &simulator : *this)
         {
-            if (this->isEmpty()) { return CSimulatorInfoList(); }
-            QList<int> simIndexes;
-            CSimulatorInfoList newList;
-            for (const CSimulatorInfo &simulator : *this)
+            const int i = static_cast<int>(simulator.getSimulator());
+            if (simIndexes.contains(i)) { continue; }
+            newList.push_back(simulator);
+            simIndexes.append(i);
+        }
+        return newList;
+    }
+
+    CSimulatorInfoList CSimulatorInfoList::splitIntoSingleSimulators() const
+    {
+        if (this->isEmpty()) { return CSimulatorInfoList(); }
+        CSimulatorInfoList newList;
+        for (const CSimulatorInfo &simulator : *this)
+        {
+            if (simulator.isUnspecified() || simulator.isNoSimulator()) { continue; }
+            if (simulator.isSingleSimulator())
             {
-                const int i = static_cast<int>(simulator.getSimulator());
-                if (simIndexes.contains(i)) { continue; }
                 newList.push_back(simulator);
-                simIndexes.append(i);
             }
-            return newList;
-        }
-
-        CSimulatorInfoList CSimulatorInfoList::splitIntoSingleSimulators() const
-        {
-            if (this->isEmpty()) { return CSimulatorInfoList(); }
-            CSimulatorInfoList newList;
-            for (const CSimulatorInfo &simulator : *this)
+            else
             {
-                if (simulator.isUnspecified() || simulator.isNoSimulator()) { continue; }
-                if (simulator.isSingleSimulator())
-                {
-                    newList.push_back(simulator);
-                }
-                else
-                {
-                    newList.push_back(splitIntoSingleSimulators(simulator));
-                }
+                newList.push_back(splitIntoSingleSimulators(simulator));
             }
-            return newList;
         }
+        return newList;
+    }
 
-        CSimulatorInfoList CSimulatorInfoList::splitIntoSingleSimulators(const CSimulatorInfo &sim)
-        {
-            CSimulatorInfoList sims;
-            if (sim.isFS9()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::FS9)); }
-            if (sim.isFSX()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::FSX)); }
-            if (sim.isP3D()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::P3D)); }
-            if (sim.isXPlane()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::XPLANE)); }
-            return sims;
-        }
-    } // namespace
+    CSimulatorInfoList CSimulatorInfoList::splitIntoSingleSimulators(const CSimulatorInfo &sim)
+    {
+        CSimulatorInfoList sims;
+        if (sim.isFS9()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::FS9)); }
+        if (sim.isFSX()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::FSX)); }
+        if (sim.isP3D()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::P3D)); }
+        if (sim.isXPlane()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::XPLANE)); }
+        return sims;
+    }
 } // namespace

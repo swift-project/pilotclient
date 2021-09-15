@@ -21,31 +21,28 @@
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
 
-namespace BlackMisc
+namespace BlackMisc::PhysicalQuantities
 {
-    namespace PhysicalQuantities
+    void registerMetadata()
     {
-        void registerMetadata()
-        {
-            CAcceleration::registerMetadata();
-            CAccelerationUnit::registerMetadata();
-            CAngle::registerMetadata();
-            CAngleUnit::registerMetadata();
-            CFrequency::registerMetadata();
-            CFrequencyUnit::registerMetadata();
-            CLength::registerMetadata();
-            CLengthUnit::registerMetadata();
-            CMass::registerMetadata();
-            CMassUnit::registerMetadata();
-            CPqString::registerMetadata();
-            CPressure::registerMetadata();
-            CPressureUnit::registerMetadata();
-            CSpeed::registerMetadata();
-            CSpeedUnit::registerMetadata();
-            CTemperature::registerMetadata();
-            CTemperatureUnit::registerMetadata();
-            CTime::registerMetadata();
-            CTimeUnit::registerMetadata();
-        }
-    } // ns
+        CAcceleration::registerMetadata();
+        CAccelerationUnit::registerMetadata();
+        CAngle::registerMetadata();
+        CAngleUnit::registerMetadata();
+        CFrequency::registerMetadata();
+        CFrequencyUnit::registerMetadata();
+        CLength::registerMetadata();
+        CLengthUnit::registerMetadata();
+        CMass::registerMetadata();
+        CMassUnit::registerMetadata();
+        CPqString::registerMetadata();
+        CPressure::registerMetadata();
+        CPressureUnit::registerMetadata();
+        CSpeed::registerMetadata();
+        CSpeedUnit::registerMetadata();
+        CTemperature::registerMetadata();
+        CTemperatureUnit::registerMetadata();
+        CTime::registerMetadata();
+        CTimeUnit::registerMetadata();
+    }
 } // ns

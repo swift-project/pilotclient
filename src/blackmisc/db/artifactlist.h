@@ -22,98 +22,95 @@
 #include <QSet>
 #include <QString>
 
-namespace BlackMisc
+namespace BlackMisc::Db
 {
-    namespace Db
+    //! Multiple artifacts
+    class BLACKMISC_EXPORT CArtifactList :
+        public CSequence<CArtifact>,
+        public IDatastoreObjectList<CArtifact, CArtifactList, int>,
+        public Mixin::MetaType<CArtifactList>
     {
-        //! Multiple artifacts
-        class BLACKMISC_EXPORT CArtifactList :
-            public CSequence<CArtifact>,
-            public IDatastoreObjectList<CArtifact, CArtifactList, int>,
-            public Mixin::MetaType<CArtifactList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CArtifactList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CArtifactList)
+        using CSequence::CSequence;
 
-            //! Empty constructor.
-            CArtifactList();
+        //! Empty constructor.
+        CArtifactList();
 
-            //! Construct from a base class object.
-            CArtifactList(const CSequence<CArtifact> &other);
+        //! Construct from a base class object.
+        CArtifactList(const CSequence<CArtifact> &other);
 
-            //! All platforms for all channels
-            CPlatformSet getPlatforms() const;
+        //! All platforms for all channels
+        CPlatformSet getPlatforms() const;
 
-            //! Find first by platform
-            CArtifact findFirstByMatchingPlatformOrDefault(const CPlatform &platform) const;
+        //! Find first by platform
+        CArtifact findFirstByMatchingPlatformOrDefault(const CPlatform &platform) const;
 
-            //! FInd first by name
-            CArtifact findFirstByMatchingNameOrDefault(const QString &name, Qt::CaseSensitivity cs = Qt::CaseSensitive) const;
+        //! FInd first by name
+        CArtifact findFirstByMatchingNameOrDefault(const QString &name, Qt::CaseSensitivity cs = Qt::CaseSensitive) const;
 
-            //! Find by platform
-            CArtifactList findByMatchingPlatform(const CPlatform &platform) const;
+        //! Find by platform
+        CArtifactList findByMatchingPlatform(const CPlatform &platform) const;
 
-            //! Find by type
-            CArtifactList findByType(const CArtifact::ArtifactType type) const;
+        //! Find by type
+        CArtifactList findByType(const CArtifact::ArtifactType type) const;
 
-            //! Find for my platform
-            CArtifactList findMatchingForCurrentPlatform() const;
+        //! Find for my platform
+        CArtifactList findMatchingForCurrentPlatform() const;
 
-            //! Find by distribution
-            CArtifactList findByDistribution(const CDistribution &distribution, bool findMoreStableDistribution = false) const;
+        //! Find by distribution
+        CArtifactList findByDistribution(const CDistribution &distribution, bool findMoreStableDistribution = false) const;
 
-            //! Find artifacts with public (unrestricted) distributions
-            CArtifactList findWithUnrestrictedDistributions() const;
+        //! Find artifacts with public (unrestricted) distributions
+        CArtifactList findWithUnrestrictedDistributions() const;
 
-            //! Find by distribution and platform
-            CArtifactList findByDistributionAndPlatform(const CDistribution &distribution, const CPlatform &platform, bool findMoreStableDistributions = false) const;
+        //! Find by distribution and platform
+        CArtifactList findByDistributionAndPlatform(const CDistribution &distribution, const CPlatform &platform, bool findMoreStableDistributions = false) const;
 
-            //! Find by version
-            CArtifact findFirstByVersionOrDefault(const QVersionNumber &version) const;
+        //! Find by version
+        CArtifact findFirstByVersionOrDefault(const QVersionNumber &version) const;
 
-            //! Find by version
-            CArtifact findFirstByVersionOrDefault(const QString &version) const;
+        //! Find by version
+        CArtifact findFirstByVersionOrDefault(const QString &version) const;
 
-            //! All distributions related to these artifacts
-            CDistributionList getDistributions() const;
+        //! All distributions related to these artifacts
+        CDistributionList getDistributions() const;
 
-            //! Sort by version
-            void sortByVersion(Qt::SortOrder order = Qt::AscendingOrder);
+        //! Sort by version
+        void sortByVersion(Qt::SortOrder order = Qt::AscendingOrder);
 
-            //! Latest (newest) artifact
-            CArtifact getLatestArtifactOrDefault() const;
+        //! Latest (newest) artifact
+        CArtifact getLatestArtifactOrDefault() const;
 
-            //! As remote files
-            Network::CRemoteFileList asRemoteFiles() const;
+        //! As remote files
+        Network::CRemoteFileList asRemoteFiles() const;
 
-            //! Latest version
-            QString getLatestVersion() const;
+        //! Latest version
+        QString getLatestVersion() const;
 
-            //! Latest version
-            QVersionNumber getLatestQVersion() const;
+        //! Latest version
+        QVersionNumber getLatestQVersion() const;
 
-            //! All unique names
-            //! \note sorted by version, latest version first
-            QStringList getSortedNames() const;
+        //! All unique names
+        //! \note sorted by version, latest version first
+        QStringList getSortedNames() const;
 
-            //! All unique versions
-            //! \note sorted by version, latest version first
-            QStringList getSortedVersions() const;
+        //! All unique versions
+        //! \note sorted by version, latest version first
+        QStringList getSortedVersions() const;
 
-            //! Size of all artifacts
-            qint64 getTotalFileSize() const;
+        //! Size of all artifacts
+        qint64 getTotalFileSize() const;
 
-            //! Size of all artifacts
-            QString getTotalFileSizeHumanReadable() const;
+        //! Size of all artifacts
+        QString getTotalFileSizeHumanReadable() const;
 
-            //! From database JSON by array
-            static CArtifactList fromDatabaseJson(const QJsonArray &array);
+        //! From database JSON by array
+        static CArtifactList fromDatabaseJson(const QJsonArray &array);
 
-            //! From database JSON by string
-            static CArtifactList fromDatabaseJson(const QString &json);
-        };
-    } // ns
+        //! From database JSON by string
+        static CArtifactList fromDatabaseJson(const QString &json);
+    };
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Db::CArtifactList)

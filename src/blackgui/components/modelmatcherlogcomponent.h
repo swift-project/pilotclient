@@ -17,38 +17,35 @@
 #include <QTextDocument>
 
 namespace Ui { class CModelMatcherLogComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Special logs for matching and reverse lookup
+     */
+    class CModelMatcherLogComponent : public QFrame
     {
-        /*!
-         * Special logs for matching and reverse lookup
-         */
-        class CModelMatcherLogComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CModelMatcherLogComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CModelMatcherLogComponent(QWidget *parent = nullptr);
 
-            //! Constructor
-            virtual ~CModelMatcherLogComponent() override;
+        //! Constructor
+        virtual ~CModelMatcherLogComponent() override;
 
-        private:
-            QScopedPointer<Ui::CModelMatcherLogComponent> ui;
-            QTextDocument m_text { this };
+    private:
+        QScopedPointer<Ui::CModelMatcherLogComponent> ui;
+        QTextDocument m_text { this };
 
-            //! Contexts available
-            bool hasContexts() const;
+        //! Contexts available
+        bool hasContexts() const;
 
-            //! Enabled messages
-            bool enabledMessages() const;
+        //! Enabled messages
+        bool enabledMessages() const;
 
-            //! Callsign was entered
-            void callsignEntered();
-        };
-    } // ns
+        //! Callsign was entered
+        void callsignEntered();
+    };
 } // ns
 
 #endif // guard

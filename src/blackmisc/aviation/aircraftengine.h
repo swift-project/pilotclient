@@ -18,49 +18,46 @@
 #include <QMetaType>
 #include <QString>
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
+    //! Value object encapsulating information about aircraft's engines
+    class BLACKMISC_EXPORT CAircraftEngine : public CValueObject<CAircraftEngine>
     {
-        //! Value object encapsulating information about aircraft's engines
-        class BLACKMISC_EXPORT CAircraftEngine : public CValueObject<CAircraftEngine>
-        {
-        public:
-            //! Default constructor
-            CAircraftEngine() {}
+    public:
+        //! Default constructor
+        CAircraftEngine() {}
 
-            //! Constructor
-            //! \remark numbers are 1 based!
-            CAircraftEngine(int number, bool on);
+        //! Constructor
+        //! \remark numbers are 1 based!
+        CAircraftEngine(int number, bool on);
 
-            //! Get engine number
-            //! \remark numbers are 1 based!
-            int getNumber() const { return m_number; }
+        //! Get engine number
+        //! \remark numbers are 1 based!
+        int getNumber() const { return m_number; }
 
-            //! Set engine number
-            //! \remark numbers are 1 based!
-            void setNumber(int number);
+        //! Set engine number
+        //! \remark numbers are 1 based!
+        void setNumber(int number);
 
-            //! Is on/off?
-            bool isOn() const { return m_on; }
+        //! Is on/off?
+        bool isOn() const { return m_on; }
 
-            //! Set to on/off
-            void setOn(bool on) { m_on = on; }
+        //! Set to on/off
+        void setOn(bool on) { m_on = on; }
 
-            //! \copydoc BlackMisc::Mixin::String::toQString
-            QString convertToQString(bool i18n = false) const;
+        //! \copydoc BlackMisc::Mixin::String::toQString
+        QString convertToQString(bool i18n = false) const;
 
-        private:
-            int m_number = 1;
-            bool m_on = true;
+    private:
+        int m_number = 1;
+        bool m_on = true;
 
-            BLACK_METACLASS(
-                CAircraftEngine,
-                BLACK_METAMEMBER(number, 0, DisabledForJson),
-                BLACK_METAMEMBER(on)
-            );
-        };
-    } // namespace
+        BLACK_METACLASS(
+            CAircraftEngine,
+            BLACK_METAMEMBER(number, 0, DisabledForJson),
+            BLACK_METAMEMBER(on)
+        );
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftEngine)

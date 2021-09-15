@@ -18,48 +18,45 @@
 #include <QScopedPointer>
 
 namespace Ui { class CDownloadDialog; }
-namespace BlackMisc { namespace Network { class CRemoteFile; class CRemoteFileList; }}
-namespace BlackGui
+namespace BlackMisc::Network { class CRemoteFile; class CRemoteFileList; }
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * CDownloadComponent as dialog
+     */
+    class BLACKGUI_EXPORT CDownloadDialog : public QDialog
     {
-        /**
-         * CDownloadComponent as dialog
-         */
-        class BLACKGUI_EXPORT CDownloadDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CDownloadDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CDownloadDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CDownloadDialog() override;
+        //! Destructor
+        virtual ~CDownloadDialog() override;
 
-            //! \copydoc CDownloadComponent::setDownloadFile
-            void setDownloadFile(const BlackMisc::Network::CRemoteFile &remoteFile);
+        //! \copydoc CDownloadComponent::setDownloadFile
+        void setDownloadFile(const BlackMisc::Network::CRemoteFile &remoteFile);
 
-            //! \copydoc CDownloadComponent::setDownloadFiles
-            void setDownloadFiles(const BlackMisc::Network::CRemoteFileList &remoteFiles);
+        //! \copydoc CDownloadComponent::setDownloadFiles
+        void setDownloadFiles(const BlackMisc::Network::CRemoteFileList &remoteFiles);
 
-            //! \copydoc CDownloadComponent::triggerDownloadingOfFiles
-            void triggerDownloadingOfFiles(int delayMs);
+        //! \copydoc CDownloadComponent::triggerDownloadingOfFiles
+        void triggerDownloadingOfFiles(int delayMs);
 
-            //! \copydoc CDownloadComponent::setMode
-            void setMode(CDownloadComponent::Mode mode);
+        //! \copydoc CDownloadComponent::setMode
+        void setMode(CDownloadComponent::Mode mode);
 
-            //! Show and start the downloading
-            void showAndStartDownloading();
+        //! Show and start the downloading
+        void showAndStartDownloading();
 
-        protected:
-            //! \copydoc QDialog::accept
-            virtual void accept() override;
+    protected:
+        //! \copydoc QDialog::accept
+        virtual void accept() override;
 
-        private:
-            QScopedPointer<Ui::CDownloadDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CDownloadDialog> ui;
+    };
 } // ns
 
 #endif // guard

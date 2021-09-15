@@ -24,51 +24,48 @@
 #include <QTimer>
 
 namespace Ui { class CUserComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! User componenet (users, clients)
+    class BLACKGUI_EXPORT CUserComponent :
+        public QTabWidget,
+        public CEnableForDockWidgetInfoArea
     {
-        //! User componenet (users, clients)
-        class BLACKGUI_EXPORT CUserComponent :
-            public QTabWidget,
-            public CEnableForDockWidgetInfoArea
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CUserComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CUserComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CUserComponent() override;
+        //! Destructor
+        virtual ~CUserComponent() override;
 
-            //! Number of clients
-            int countClients() const;
+        //! Number of clients
+        int countClients() const;
 
-            //! Number of users
-            int countUsers() const;
+        //! Number of users
+        int countUsers() const;
 
-            //! Update users
-            void update();
+        //! Update users
+        void update();
 
-        signals:
-            //! Request a text message
-            void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
+    signals:
+        //! Request a text message
+        void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
 
-        private:
-            //! Number of elements changed
-            void onCountChanged(int count, bool withFilter);
+    private:
+        //! Number of elements changed
+        void onCountChanged(int count, bool withFilter);
 
-            //! Connection status
-            void onConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+        //! Connection status
+        void onConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
-            //! Settings have been changed
-            void onSettingsChanged();
+        //! Settings have been changed
+        void onSettingsChanged();
 
-            QScopedPointer<Ui::CUserComponent> ui;
-            QTimer m_updateTimer;
-            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CUserComponent::onSettingsChanged };
-        };
-    } // ns
+        QScopedPointer<Ui::CUserComponent> ui;
+        QTimer m_updateTimer;
+        BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CUserComponent::onSettingsChanged };
+    };
 } // ns
 #endif // guard

@@ -16,39 +16,36 @@ using namespace BlackMisc::Network;
 using namespace BlackGui::Models;
 using namespace BlackGui::Menus;
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    CUserView::CUserView(QWidget *parent) : CViewBase(parent)
     {
-        CUserView::CUserView(QWidget *parent) : CViewBase(parent)
-        {
-            this->standardInit(new CUserListModel(CUserListModel::UserDetailed, this));
-        }
+        this->standardInit(new CUserListModel(CUserListModel::UserDetailed, this));
+    }
 
-        void CUserView::setUserMode(CUserListModel::UserMode userMode)
-        {
-            Q_ASSERT(m_model);
-            m_model->setUserMode(userMode);
-        }
+    void CUserView::setUserMode(CUserListModel::UserMode userMode)
+    {
+        Q_ASSERT(m_model);
+        m_model->setUserMode(userMode);
+    }
 
-        void CUserView::customMenu(CMenuActions &menuActions)
-        {
-            if (this->hasSelection())
-            {
-                const CUser user(this->selectedObject());
-                if (user.hasCallsign())
-                {
-                    menuActions.addMenuCom();
-                    menuActions.addAction(CIcons::appTextMessages16(), "Show text messages", CMenuAction::pathClientCom(), { this, &CUserView::requestTextMessage });
-                }
-            }
-        }
-
-        void CUserView::requestTextMessage()
+    void CUserView::customMenu(CMenuActions &menuActions)
+    {
+        if (this->hasSelection())
         {
             const CUser user(this->selectedObject());
-            if (!user.hasCallsign()) { return; }
-            emit this->requestTextMessageWidget(user.getCallsign());
+            if (user.hasCallsign())
+            {
+                menuActions.addMenuCom();
+                menuActions.addAction(CIcons::appTextMessages16(), "Show text messages", CMenuAction::pathClientCom(), { this, &CUserView::requestTextMessage });
+            }
         }
-    } // ns
+    }
+
+    void CUserView::requestTextMessage()
+    {
+        const CUser user(this->selectedObject());
+        if (!user.hasCallsign()) { return; }
+        emit this->requestTextMessageWidget(user.getCallsign());
+    }
 } // ns

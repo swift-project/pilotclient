@@ -11,42 +11,38 @@
 
 #include "blackmisc/logmessage.h"
 
-namespace BlackCore
+namespace BlackCore::Fsd
 {
-    namespace Fsd
+    RevBClientParts::RevBClientParts()
+    { }
+
+    RevBClientParts::RevBClientParts(const QString &sender, const QString &partsval1, const QString &partsval2, const QString &partsval3)
+        : MessageBase(sender),
+            m_partsval1(partsval1),
+            m_partsval2(partsval2),
+            m_partsval3(partsval3)
+
+    { }
+
+    QStringList RevBClientParts::toTokens() const
     {
-        RevBClientParts::RevBClientParts()
-        { }
+        QStringList tokens;
+        tokens.push_back(m_sender);
+        tokens.push_back(m_partsval1);
+        tokens.push_back(m_partsval2);
+        tokens.push_back(m_partsval3);
+        return tokens;
+    }
 
-        RevBClientParts::RevBClientParts(const QString &sender, const QString &partsval1, const QString &partsval2, const QString &partsval3)
-            : MessageBase(sender),
-              m_partsval1(partsval1),
-              m_partsval2(partsval2),
-              m_partsval3(partsval3)
 
-        { }
-
-        QStringList RevBClientParts::toTokens() const
+    RevBClientParts RevBClientParts::fromTokens(const QStringList &tokens)
+    {
+        if (tokens.size() < 4)
         {
-            QStringList tokens;
-            tokens.push_back(m_sender);
-            tokens.push_back(m_partsval1);
-            tokens.push_back(m_partsval2);
-            tokens.push_back(m_partsval3);
-            return tokens;
+            BlackMisc::CLogMessage(static_cast<RevBClientParts *>(nullptr)).debug(u"Wrong number of arguments.");
+            return {};
         }
-
-
-        RevBClientParts RevBClientParts::fromTokens(const QStringList &tokens)
-        {
-            if (tokens.size() < 4)
-            {
-                BlackMisc::CLogMessage(static_cast<RevBClientParts *>(nullptr)).debug(u"Wrong number of arguments.");
-                return {};
-            }
-            return RevBClientParts(tokens[0], tokens[1], tokens[2], tokens[3]);
-        }
-
+        return RevBClientParts(tokens[0], tokens[1], tokens[2], tokens[3]);
     }
 
 }

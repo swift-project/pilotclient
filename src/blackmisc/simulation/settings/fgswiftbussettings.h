@@ -16,31 +16,25 @@
 #include "blackmisc/settingscache.h"
 #include "blackmisc/dbusserver.h"
 
-namespace BlackMisc
+namespace BlackMisc::Simulation::Settings
 {
-    namespace Simulation
+    /*!
+     * Setting for FGSwiftBus.
+     */
+    struct TFGSwiftBusServer : public BlackMisc::TSettingTrait<QString>
     {
-        namespace Settings
-        {
-            /*!
-             * Setting for FGSwiftBus.
-             */
-            struct TFGSwiftBusServer : public BlackMisc::TSettingTrait<QString>
-            {
-                //! \copydoc BlackMisc::TSettingTrait::key
-                static const char *key() { return "fgswiftbus/server"; }
+        //! \copydoc BlackMisc::TSettingTrait::key
+        static const char *key() { return "fgswiftbus/server"; }
 
-                //! \copydoc BlackCore::TSettingTrait::humanReadable
-                static const QString &humanReadable() { static const QString name("FGSwiftBus"); return name; }
+        //! \copydoc BlackCore::TSettingTrait::humanReadable
+        static const QString &humanReadable() { static const QString name("FGSwiftBus"); return name; }
 
-                //! \copydoc BlackMisc::TSettingTrait::defaultValue
-                static QString defaultValue() { return "tcp:host=127.0.0.1,port=45003"; }
+        //! \copydoc BlackMisc::TSettingTrait::defaultValue
+        static QString defaultValue() { return "tcp:host=127.0.0.1,port=45003"; }
 
-                //! \copydoc BlackMisc::TSettingTrait::isValid
-                static bool isValid(const QString &dBusAddress, QString &) { return BlackMisc::CDBusServer::isSessionOrSystemAddress(dBusAddress) || BlackMisc::CDBusServer::isQtDBusAddress(dBusAddress); }
-            };
-        } // ns
-    } // ns
+        //! \copydoc BlackMisc::TSettingTrait::isValid
+        static bool isValid(const QString &dBusAddress, QString &) { return BlackMisc::CDBusServer::isSessionOrSystemAddress(dBusAddress) || BlackMisc::CDBusServer::isQtDBusAddress(dBusAddress); }
+    };
 } // ns
 
 #endif // guard

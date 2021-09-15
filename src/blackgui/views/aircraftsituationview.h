@@ -15,36 +15,33 @@
 #include "blackgui/models/aircraftsituationlistmodel.h"
 #include "blackgui/blackguiexport.h"
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Aircraft situations view
+    class BLACKGUI_EXPORT CAircraftSituationView : public CViewWithTimestampWithOffsetObjects<Models::CAircraftSituationListModel>
     {
-        //! Aircraft situations view
-        class BLACKGUI_EXPORT CAircraftSituationView : public CViewWithTimestampWithOffsetObjects<Models::CAircraftSituationListModel>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAircraftSituationView(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAircraftSituationView(QWidget *parent = nullptr);
 
-            //! Enable menu
-            void setWithMenuRequestElevation(bool enable);
+        //! Enable menu
+        void setWithMenuRequestElevation(bool enable);
 
-        signals:
-            //! Request elevation
-            void requestElevation(const BlackMisc::Aviation::CAircraftSituation &situation);
+    signals:
+        //! Request elevation
+        void requestElevation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
-        protected:
-            //! \copydoc CViewBase::customMenu
-            virtual void customMenu(Menus::CMenuActions &menuActions) override;
+    protected:
+        //! \copydoc CViewBase::customMenu
+        virtual void customMenu(Menus::CMenuActions &menuActions) override;
 
-        private:
-            //! Request elevation
-            void emitRequestElevationForSituation();
+    private:
+        //! Request elevation
+        void emitRequestElevationForSituation();
 
-            bool m_withMenuRequestElevation = false;
-        };
-    } // ns
+        bool m_withMenuRequestElevation = false;
+    };
 } // ns
 #endif // guard

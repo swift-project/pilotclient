@@ -21,126 +21,123 @@ class QPixmap;
 class QWidget;
 
 namespace Ui { class CMainInfoAreaComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    // forward declaration to break compile dependency from all components
+    class CAircraftComponent;
+    class CAtcStationComponent;
+    class CCockpitComponent;
+    class CFlightPlanComponent;
+    class CLogComponent;
+    class CMappingComponent;
+    class CInterpolationComponent;
+    class CRadarComponent;
+    class CSettingsComponent;
+    class CSimulatorComponent;
+    class CTextMessageComponent;
+    class CUserComponent;
+    class CWeatherComponent;
+
+    //! Main info area of pilot client
+    class BLACKGUI_EXPORT CMainInfoAreaComponent : public BlackGui::CInfoArea
     {
-        // forward declaration to break compile dependency from all components
-        class CAircraftComponent;
-        class CAtcStationComponent;
-        class CCockpitComponent;
-        class CFlightPlanComponent;
-        class CLogComponent;
-        class CMappingComponent;
-        class CInterpolationComponent;
-        class CRadarComponent;
-        class CSettingsComponent;
-        class CSimulatorComponent;
-        class CTextMessageComponent;
-        class CUserComponent;
-        class CWeatherComponent;
+        Q_OBJECT
 
-        //! Main info area of pilot client
-        class BLACKGUI_EXPORT CMainInfoAreaComponent : public BlackGui::CInfoArea
+    public:
+        //! Constructor
+        explicit CMainInfoAreaComponent(QWidget *parent = nullptr);
+
+        //! Destructor
+        virtual ~CMainInfoAreaComponent() override;
+
+        //! Info areas
+        enum InfoArea
         {
-            Q_OBJECT
-
-        public:
-            //! Constructor
-            explicit CMainInfoAreaComponent(QWidget *parent = nullptr);
-
-            //! Destructor
-            virtual ~CMainInfoAreaComponent() override;
-
-            //! Info areas
-            enum InfoArea
-            {
-                // index must match tab index!
-                InfoAreaCockpit       = 0,
-                InfoAreaAircraft      = 1,
-                InfoAreaAtc           = 2,
-                InfoAreaUsers         = 3,
-                InfoAreaTextMessages  = 4,
-                InfoAreaSimulator     = 5,
-                InfoAreaFlightPlan    = 6,
-                InfoAreaWeather       = 7,
-                InfoAreaMapping       = 8, //!< aka rendering, models
-                InfoAreaInterpolation = 9,
-                InfoAreaSettings      = 10,
-                InfoAreaLog           = 11,
-                InfoAreaRadar         = 12,
-                InfoAreaNone          = -1
-            };
-
-            //! Cockpit
-            CCockpitComponent *getCockpitComponent();
-
-            //! ATC stations
-            CAtcStationComponent *getAtcStationComponent();
-
-            //! Aircrafts
-            CAircraftComponent *getAircraftComponent();
-
-            //! Mappings
-            CMappingComponent *getMappingComponent();
-
-            //! Interpolation
-            CInterpolationComponent *getInterpolationComponent();
-
-            //! User component
-            CUserComponent *getUserComponent();
-
-            //! Flight plan
-            CFlightPlanComponent *getFlightPlanComponent();
-
-            //! Settings
-            CSettingsComponent *getSettingsComponent();
-
-            //! Weather component
-            CWeatherComponent *getWeatherComponent();
-
-            //! Log messages
-            CLogComponent *getLogComponent();
-
-            //! Simulator
-            CSimulatorComponent *getSimulatorComponent();
-
-            //! Text messages
-            CTextMessageComponent *getTextMessageComponent();
-
-            //! Radar
-            CRadarComponent *getRadarComponent();
-
-            //! Display the log
-            void displayLog();
-
-            //! Display console
-            void displayConsole();
-
-            //! Toggle floating of given area
-            void toggleFloating(InfoArea infoArea) { CInfoArea::toggleFloatingByIndex(static_cast<int>(infoArea)); }
-
-            //! Select area
-            void selectArea(InfoArea infoArea);
-
-            //! Select log
-            void selectLog();
-
-            //! Select settings with given area
-            void selectSettingsTab(int index);
-
-            //! Select the audio tab
-            void selectAudioTab();
-
-        protected:
-            // CInfoArea overrides
-            virtual QSize getPreferredSizeWhenFloating(int areaIndex) const override;
-            virtual const QPixmap &indexToPixmap(int areaIndex) const override;
-
-        private:
-            QScopedPointer<Ui::CMainInfoAreaComponent> ui;
+            // index must match tab index!
+            InfoAreaCockpit       = 0,
+            InfoAreaAircraft      = 1,
+            InfoAreaAtc           = 2,
+            InfoAreaUsers         = 3,
+            InfoAreaTextMessages  = 4,
+            InfoAreaSimulator     = 5,
+            InfoAreaFlightPlan    = 6,
+            InfoAreaWeather       = 7,
+            InfoAreaMapping       = 8, //!< aka rendering, models
+            InfoAreaInterpolation = 9,
+            InfoAreaSettings      = 10,
+            InfoAreaLog           = 11,
+            InfoAreaRadar         = 12,
+            InfoAreaNone          = -1
         };
-    } // ns
+
+        //! Cockpit
+        CCockpitComponent *getCockpitComponent();
+
+        //! ATC stations
+        CAtcStationComponent *getAtcStationComponent();
+
+        //! Aircrafts
+        CAircraftComponent *getAircraftComponent();
+
+        //! Mappings
+        CMappingComponent *getMappingComponent();
+
+        //! Interpolation
+        CInterpolationComponent *getInterpolationComponent();
+
+        //! User component
+        CUserComponent *getUserComponent();
+
+        //! Flight plan
+        CFlightPlanComponent *getFlightPlanComponent();
+
+        //! Settings
+        CSettingsComponent *getSettingsComponent();
+
+        //! Weather component
+        CWeatherComponent *getWeatherComponent();
+
+        //! Log messages
+        CLogComponent *getLogComponent();
+
+        //! Simulator
+        CSimulatorComponent *getSimulatorComponent();
+
+        //! Text messages
+        CTextMessageComponent *getTextMessageComponent();
+
+        //! Radar
+        CRadarComponent *getRadarComponent();
+
+        //! Display the log
+        void displayLog();
+
+        //! Display console
+        void displayConsole();
+
+        //! Toggle floating of given area
+        void toggleFloating(InfoArea infoArea) { CInfoArea::toggleFloatingByIndex(static_cast<int>(infoArea)); }
+
+        //! Select area
+        void selectArea(InfoArea infoArea);
+
+        //! Select log
+        void selectLog();
+
+        //! Select settings with given area
+        void selectSettingsTab(int index);
+
+        //! Select the audio tab
+        void selectAudioTab();
+
+    protected:
+        // CInfoArea overrides
+        virtual QSize getPreferredSizeWhenFloating(int areaIndex) const override;
+        virtual const QPixmap &indexToPixmap(int areaIndex) const override;
+
+    private:
+        QScopedPointer<Ui::CMainInfoAreaComponent> ui;
+    };
 } // ns
 
 #endif // guard

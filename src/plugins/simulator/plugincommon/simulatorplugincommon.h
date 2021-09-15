@@ -16,57 +16,54 @@
 #include <QObject>
 #include <QPointer>
 
-namespace BlackGui { namespace Components { class CInterpolationLogDisplayDialog; }}
-namespace BlackSimPlugin
+namespace BlackGui::Components { class CInterpolationLogDisplayDialog; }
+namespace BlackSimPlugin::Common
 {
-    namespace Common
+    //! Common base class for simulator plugins
+    class SIMULATORPLUGINCOMMON_EXPORT CSimulatorPluginCommon : public BlackCore::ISimulator
     {
-        //! Common base class for simulator plugins
-        class SIMULATORPLUGINCOMMON_EXPORT CSimulatorPluginCommon : public BlackCore::ISimulator
-        {
-            Q_OBJECT
-            Q_INTERFACES(BlackCore::ISimulator)
-            Q_INTERFACES(BlackMisc::Simulation::ISimulationEnvironmentProvider)
-            Q_INTERFACES(BlackMisc::Simulation::IInterpolationSetupProvider)
+        Q_OBJECT
+        Q_INTERFACES(BlackCore::ISimulator)
+        Q_INTERFACES(BlackMisc::Simulation::ISimulationEnvironmentProvider)
+        Q_INTERFACES(BlackMisc::Simulation::IInterpolationSetupProvider)
 
-        public:
-            //! Destructor
-            virtual ~CSimulatorPluginCommon() override;
+    public:
+        //! Destructor
+        virtual ~CSimulatorPluginCommon() override;
 
-            // --------- ISimulator implementations ------------
-            virtual void unload() override;
-            virtual bool disconnectFrom() override;
+        // --------- ISimulator implementations ------------
+        virtual void unload() override;
+        virtual bool disconnectFrom() override;
 
-        protected:
-            //! Constructor
-            CSimulatorPluginCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                                   BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
-                                   BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
-                                   BlackMisc::Weather::IWeatherGridProvider       *weatherGridProvider,
-                                   BlackMisc::Network::IClientProvider            *clientProvider,
-                                   QObject *parent = nullptr);
+    protected:
+        //! Constructor
+        CSimulatorPluginCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+                                BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
+                                BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
+                                BlackMisc::Weather::IWeatherGridProvider       *weatherGridProvider,
+                                BlackMisc::Network::IClientProvider            *clientProvider,
+                                QObject *parent = nullptr);
 
-            //! \addtogroup swiftdotcommands
-            //! @{
-            //! <pre>
-            //! .drv intdisplay interpolation log display
-            //! </pre>
-            //! @}
-            virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
+        //! \addtogroup swiftdotcommands
+        //! @{
+        //! <pre>
+        //! .drv intdisplay interpolation log display
+        //! </pre>
+        //! @}
+        virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
 
-            //! Register help
-            static void registerHelp();
+        //! Register help
+        static void registerHelp();
 
-        private:
-            //! Show the interpolator display
-            void showInterpolationDisplay();
+    private:
+        //! Show the interpolator display
+        void showInterpolationDisplay();
 
-            //! Clean up the interpolation log.display if any
-            void deleteInterpolationDisplay();
+        //! Clean up the interpolation log.display if any
+        void deleteInterpolationDisplay();
 
-            QPointer<BlackGui::Components::CInterpolationLogDisplayDialog> m_interpolationDisplayDialog; //!< can be owned by main window after setting a parent
-        };
-    } // namespace
+        QPointer<BlackGui::Components::CInterpolationLogDisplayDialog> m_interpolationDisplayDialog; //!< can be owned by main window after setting a parent
+    };
 } // namespace
 
 #endif // guard

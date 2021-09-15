@@ -412,256 +412,253 @@ QJsonObject &operator<<(QJsonObject &json, const std::pair<CExplicitLatin1String
     return json;
 }
 
-namespace BlackMisc
+namespace BlackMisc::Json
 {
-    namespace Json
+    QJsonObject jsonObjectFromString(const QString &json, bool acceptCacheFormat)
     {
-        QJsonObject jsonObjectFromString(const QString &json, bool acceptCacheFormat)
-        {
-            if (json.isEmpty()) { return QJsonObject();}
-            const QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
-            return acceptCacheFormat ? Json::unwrapCache(jsonDoc.object()) : jsonDoc.object();
-        }
+        if (json.isEmpty()) { return QJsonObject();}
+        const QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
+        return acceptCacheFormat ? Json::unwrapCache(jsonDoc.object()) : jsonDoc.object();
+    }
 
-        QString stringFromJsonObject(const QJsonObject &jsonObject, QJsonDocument::JsonFormat format)
-        {
-            const QJsonDocument doc(jsonObject);
-            const QString strJson(doc.toJson(format));
-            return strJson;
-        }
+    QString stringFromJsonObject(const QJsonObject &jsonObject, QJsonDocument::JsonFormat format)
+    {
+        const QJsonDocument doc(jsonObject);
+        const QString strJson(doc.toJson(format));
+        return strJson;
+    }
 
-        QJsonArray jsonArrayFromString(const QString &json)
-        {
-            if (json.isEmpty()) { return QJsonArray();}
-            const QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
-            return jsonDoc.array();
-        }
+    QJsonArray jsonArrayFromString(const QString &json)
+    {
+        if (json.isEmpty()) { return QJsonArray();}
+        const QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
+        return jsonDoc.array();
+    }
 
-        QJsonObject &appendJsonObject(QJsonObject &target, const QJsonObject &toBeAppended)
+    QJsonObject &appendJsonObject(QJsonObject &target, const QJsonObject &toBeAppended)
+    {
+        if (toBeAppended.isEmpty()) return target;
+        const QStringList keys = toBeAppended.keys();
+        foreach (const QString &key, keys)
         {
-            if (toBeAppended.isEmpty()) return target;
-            const QStringList keys = toBeAppended.keys();
-            foreach (const QString &key, keys)
+            target.insert(key, toBeAppended.value(key));
+        }
+        return target;
+    }
+
+    QJsonObject getIncrementalObject(const QJsonObject &previousObject, const QJsonObject &currentObject)
+    {
+        QJsonObject incrementalObject = currentObject;
+        for (const auto &key : previousObject.keys()) // clazy:exclude=range-loop
+        {
+            if (previousObject.value(key).isObject())
             {
-                target.insert(key, toBeAppended.value(key));
+                auto child = getIncrementalObject(previousObject.value(key).toObject(), currentObject.value(key).toObject());
+                if (child.isEmpty()) incrementalObject.remove(key);
+                else incrementalObject.insert(key, child);
             }
-            return target;
-        }
-
-        QJsonObject getIncrementalObject(const QJsonObject &previousObject, const QJsonObject &currentObject)
-        {
-            QJsonObject incrementalObject = currentObject;
-            for (const auto &key : previousObject.keys()) // clazy:exclude=range-loop
+            else
             {
-                if (previousObject.value(key).isObject())
-                {
-                    auto child = getIncrementalObject(previousObject.value(key).toObject(), currentObject.value(key).toObject());
-                    if (child.isEmpty()) incrementalObject.remove(key);
-                    else incrementalObject.insert(key, child);
-                }
-                else
-                {
-                    if (currentObject.value(key) == previousObject.value(key))
-                        incrementalObject.remove(key);
-                }
+                if (currentObject.value(key) == previousObject.value(key))
+                    incrementalObject.remove(key);
             }
-            return incrementalObject;
         }
+        return incrementalObject;
+    }
 
-        QJsonObject applyIncrementalObject(const QJsonObject &previousObject, const QJsonObject &incrementalObject)
+    QJsonObject applyIncrementalObject(const QJsonObject &previousObject, const QJsonObject &incrementalObject)
+    {
+        QJsonObject currentObject = previousObject;
+        for (const auto &key : incrementalObject.keys()) // clazy:exclude=range-loop
         {
-            QJsonObject currentObject = previousObject;
-            for (const auto &key : incrementalObject.keys()) // clazy:exclude=range-loop
+            // If it is not an object, just insert the value
+            if (!incrementalObject.value(key).isObject())
             {
-                // If it is not an object, just insert the value
-                if (!incrementalObject.value(key).isObject())
-                {
-                    currentObject.insert(key, incrementalObject.value(key));
-                }
-                else
-                {
-                    auto child = applyIncrementalObject(currentObject.value(key).toObject(), incrementalObject.value(key).toObject());
-                    currentObject.insert(key, child);
-                }
+                currentObject.insert(key, incrementalObject.value(key));
             }
-            return currentObject;
-        }
-
-        bool looksLikeJson(const QString &json)
-        {
-            if (json.isEmpty()) { return false; }
-            const QString t = json.trimmed();
-            return t.startsWith('{') && t.endsWith('}');
-        }
-
-        bool looksLikeSwiftJson(const QString &json)
-        {
-            // further checks would go here
-            return looksLikeJson(json);
-        }
-
-        bool looksLikeSwiftDataObjectJson(const QJsonObject &object)
-        {
-            // key
-            // - type
-            // - value
-            if (object.size() != 1) { return false; }
-            const QStringList keys = object.keys();
-            if (keys.size() != 1) { return false; }
-            const QString key = keys.front();
-            const QJsonObject cacheObject = object.value(key).toObject();
-            return (cacheObject.contains("type") && cacheObject.contains("value"));
-        }
-
-        QJsonObject swiftDataObjectValue(const QString &jsonString)
-        {
-            const QJsonObject obj = jsonObjectFromString(jsonString);
-            if (obj.isEmpty()) { return obj; }
-            return swiftDataObjectValue(obj);
-        }
-
-        QJsonObject swiftDataObjectValue(const QJsonObject &object)
-        {
-            // key
-            // - type
-            // - value
-            if (object.size() != 1) { return object; } // no cache format
-            const QJsonObject cacheObject = object.constBegin()->toObject();
-            if (cacheObject.contains("type") && cacheObject.contains("value"))
+            else
             {
+                auto child = applyIncrementalObject(currentObject.value(key).toObject(), incrementalObject.value(key).toObject());
+                currentObject.insert(key, child);
+            }
+        }
+        return currentObject;
+    }
+
+    bool looksLikeJson(const QString &json)
+    {
+        if (json.isEmpty()) { return false; }
+        const QString t = json.trimmed();
+        return t.startsWith('{') && t.endsWith('}');
+    }
+
+    bool looksLikeSwiftJson(const QString &json)
+    {
+        // further checks would go here
+        return looksLikeJson(json);
+    }
+
+    bool looksLikeSwiftDataObjectJson(const QJsonObject &object)
+    {
+        // key
+        // - type
+        // - value
+        if (object.size() != 1) { return false; }
+        const QStringList keys = object.keys();
+        if (keys.size() != 1) { return false; }
+        const QString key = keys.front();
+        const QJsonObject cacheObject = object.value(key).toObject();
+        return (cacheObject.contains("type") && cacheObject.contains("value"));
+    }
+
+    QJsonObject swiftDataObjectValue(const QString &jsonString)
+    {
+        const QJsonObject obj = jsonObjectFromString(jsonString);
+        if (obj.isEmpty()) { return obj; }
+        return swiftDataObjectValue(obj);
+    }
+
+    QJsonObject swiftDataObjectValue(const QJsonObject &object)
+    {
+        // key
+        // - type
+        // - value
+        if (object.size() != 1) { return object; } // no cache format
+        const QJsonObject cacheObject = object.constBegin()->toObject();
+        if (cacheObject.contains("type") && cacheObject.contains("value"))
+        {
 #ifdef QT_DEBUG
-                const QString key = object.constBegin().key(); // clazy:exclude=unused-non-trivial-variable
-                const QString type = cacheObject.value("type").toString(); // clazy:exclude=unused-non-trivial-variable
-                Q_UNUSED(key);
-                Q_UNUSED(type);
+            const QString key = object.constBegin().key(); // clazy:exclude=unused-non-trivial-variable
+            const QString type = cacheObject.value("type").toString(); // clazy:exclude=unused-non-trivial-variable
+            Q_UNUSED(key);
+            Q_UNUSED(type);
 #endif
-                return cacheObject.value("value").toObject();
-            }
-            return object;
+            return cacheObject.value("value").toObject();
+        }
+        return object;
+    }
+
+    QJsonObject unwrapCache(const QJsonObject &object)
+    {
+        if (object.size() != 1) { return object; } // no cache format
+        const QJsonObject cacheObject = object.constBegin()->toObject();
+        if (cacheObject.contains("type") && cacheObject.contains("value"))
+        {
+            // return object in form type/value
+            const QString type = cacheObject.value("type").toString(); // just to verify in debugger
+            Q_UNUSED(type);
+            return cacheObject;
+        }
+        return object;
+    }
+
+
+    QJsonObject unwrapCache(const QString &jsonString)
+    {
+        const QJsonObject obj = jsonObjectFromString(jsonString);
+        if (obj.isEmpty()) { return obj; }
+        return unwrapCache(obj);
+    }
+
+    bool looksLikeSwiftContainerJson(const QJsonObject &object)
+    {
+        // CContainerbase::convertFromJson
+        return object.contains("containerbase");
+    }
+
+    bool looksLikeSwiftTypeValuePairJson(const QJsonObject &object)
+    {
+        return (object.contains("type") && object.contains("value"));
+    }
+
+    bool looksLikeSwiftDbJson(const QJsonObject &object)
+    {
+        return (object.contains("data"));
+    }
+
+    QString firstJsonValueAsString(const QString &json)
+    {
+        static const QString empty;
+        if (json.isEmpty()) { return empty; }
+        const QJsonObject obj = jsonObjectFromString(json);
+        return firstJsonValueAsString(obj);
+    }
+
+    QString firstJsonValueAsString(const QJsonObject &json)
+    {
+        static const QString empty;
+        if (json.isEmpty()) { return empty; }
+        const QStringList keys1 = json.keys();
+        if (keys1.isEmpty()) { return empty; }
+        if (keys1.contains("value", Qt::CaseInsensitive))
+        {
+            return json.value("value").toString();
         }
 
-        QJsonObject unwrapCache(const QJsonObject &object)
+        const QJsonObject jsonLevel1 = json.value(keys1.front()).toObject();
+        return jsonLevel1.value("value").toString();
+    }
+
+    QStringList firstJsonValueAsStringList(const QString &json)
+    {
+        static const QStringList empty;
+        if (json.isEmpty()) { return empty; }
+        const QJsonObject obj = jsonObjectFromString(json);
+        return firstJsonValueAsStringList(obj);
+    }
+
+    int firstJsonValueAsInt(const QString &json, int defaultValue, bool *ok)
+    {
+        if (ok) { *ok = false; }
+        if (json.isEmpty()) { return defaultValue; }
+        const QJsonObject obj = jsonObjectFromString(json);
+        return firstJsonValueAsInt(obj, defaultValue, ok);
+    }
+
+    int firstJsonValueAsInt(const QJsonObject &json, int defaultValue, bool *ok)
+    {
+        if (ok) { *ok = false; }
+        if (json.isEmpty()) { return defaultValue; }
+        const QStringList keys1 = json.keys();
+        if (keys1.isEmpty()) { return defaultValue; }
+        if (keys1.contains("value", Qt::CaseInsensitive))
         {
-            if (object.size() != 1) { return object; } // no cache format
-            const QJsonObject cacheObject = object.constBegin()->toObject();
-            if (cacheObject.contains("type") && cacheObject.contains("value"))
-            {
-                // return object in form type/value
-                const QString type = cacheObject.value("type").toString(); // just to verify in debugger
-                Q_UNUSED(type);
-                return cacheObject;
-            }
-            return object;
-        }
-
-
-        QJsonObject unwrapCache(const QString &jsonString)
-        {
-            const QJsonObject obj = jsonObjectFromString(jsonString);
-            if (obj.isEmpty()) { return obj; }
-            return unwrapCache(obj);
-        }
-
-        bool looksLikeSwiftContainerJson(const QJsonObject &object)
-        {
-            // CContainerbase::convertFromJson
-            return object.contains("containerbase");
-        }
-
-        bool looksLikeSwiftTypeValuePairJson(const QJsonObject &object)
-        {
-            return (object.contains("type") && object.contains("value"));
-        }
-
-        bool looksLikeSwiftDbJson(const QJsonObject &object)
-        {
-            return (object.contains("data"));
-        }
-
-        QString firstJsonValueAsString(const QString &json)
-        {
-            static const QString empty;
-            if (json.isEmpty()) { return empty; }
-            const QJsonObject obj = jsonObjectFromString(json);
-            return firstJsonValueAsString(obj);
-        }
-
-        QString firstJsonValueAsString(const QJsonObject &json)
-        {
-            static const QString empty;
-            if (json.isEmpty()) { return empty; }
-            const QStringList keys1 = json.keys();
-            if (keys1.isEmpty()) { return empty; }
-            if (keys1.contains("value", Qt::CaseInsensitive))
-            {
-                return json.value("value").toString();
-            }
-
-            const QJsonObject jsonLevel1 = json.value(keys1.front()).toObject();
-            return jsonLevel1.value("value").toString();
-        }
-
-        QStringList firstJsonValueAsStringList(const QString &json)
-        {
-            static const QStringList empty;
-            if (json.isEmpty()) { return empty; }
-            const QJsonObject obj = jsonObjectFromString(json);
-            return firstJsonValueAsStringList(obj);
-        }
-
-        int firstJsonValueAsInt(const QString &json, int defaultValue, bool *ok)
-        {
-            if (ok) { *ok = false; }
-            if (json.isEmpty()) { return defaultValue; }
-            const QJsonObject obj = jsonObjectFromString(json);
-            return firstJsonValueAsInt(obj, defaultValue, ok);
-        }
-
-        int firstJsonValueAsInt(const QJsonObject &json, int defaultValue, bool *ok)
-        {
-            if (ok) { *ok = false; }
-            if (json.isEmpty()) { return defaultValue; }
-            const QStringList keys1 = json.keys();
-            if (keys1.isEmpty()) { return defaultValue; }
-            if (keys1.contains("value", Qt::CaseInsensitive))
-            {
-                if (ok) { *ok = true; }
-                return json.value("value").toInt(defaultValue);
-            }
-
-            const QJsonObject jsonLevel1 = json.value(keys1.front()).toObject();
-            if (!jsonLevel1.contains("value")) { return defaultValue; }
             if (ok) { *ok = true; }
-            return jsonLevel1.value("value").toInt(defaultValue);
+            return json.value("value").toInt(defaultValue);
         }
 
-        QStringList firstJsonValueAsStringList(const QJsonObject &json)
+        const QJsonObject jsonLevel1 = json.value(keys1.front()).toObject();
+        if (!jsonLevel1.contains("value")) { return defaultValue; }
+        if (ok) { *ok = true; }
+        return jsonLevel1.value("value").toInt(defaultValue);
+    }
+
+    QStringList firstJsonValueAsStringList(const QJsonObject &json)
+    {
+        static const QStringList empty;
+        if (json.isEmpty()) { return empty; }
+        const QStringList keys1 = json.keys();
+        if (keys1.isEmpty()) { return empty; }
+        if (keys1.contains("value", Qt::CaseInsensitive))
         {
-            static const QStringList empty;
-            if (json.isEmpty()) { return empty; }
-            const QStringList keys1 = json.keys();
-            if (keys1.isEmpty()) { return empty; }
-            if (keys1.contains("value", Qt::CaseInsensitive))
-            {
-                return arrayToQStringList(json.value("value").toArray());
-            }
-
-            const QJsonObject jsonLevel1 = json.value(keys1.front()).toObject();
-            return arrayToQStringList(jsonLevel1.value("value").toArray());
+            return arrayToQStringList(json.value("value").toArray());
         }
 
-        QStringList arrayToQStringList(const QJsonArray &array)
+        const QJsonObject jsonLevel1 = json.value(keys1.front()).toObject();
+        return arrayToQStringList(jsonLevel1.value("value").toArray());
+    }
+
+    QStringList arrayToQStringList(const QJsonArray &array)
+    {
+        QStringList sl;
+        if (array.isEmpty()) { return sl; }
+        for (int i = 0; i < array.size(); i++)
         {
-            QStringList sl;
-            if (array.isEmpty()) { return sl; }
-            for (int i = 0; i < array.size(); i++)
-            {
-                if (!array.at(i).isString()) { continue; }
-                sl.push_back(array.at(i).toString());
-            }
-            return sl;
+            if (!array.at(i).isString()) { continue; }
+            sl.push_back(array.at(i).toString());
         }
-    } // ns
+        return sl;
+    }
 } // ns
 
 QDataStream &operator<<(QDataStream &s, const std::string &v) { s << QString::fromStdString(v); return s; }

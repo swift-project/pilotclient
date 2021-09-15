@@ -18,65 +18,62 @@
 #include <QWizardPage>
 
 namespace Ui { class CLegalInfoComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * swift legal information
+     */
+    class CLegalInfoComponent : public COverlayMessagesFrame
     {
-        /**
-         * swift legal information
-         */
-        class CLegalInfoComponent : public COverlayMessagesFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CLegalInfoComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CLegalInfoComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CLegalInfoComponent();
+        //! Destructor
+        virtual ~CLegalInfoComponent();
 
-            //! Agreed with?
-            bool isAgreedTo() const;
+        //! Agreed with?
+        bool isAgreedTo() const;
 
-            //! Validate that the agreement is accepted
-            bool validateAgreement();
+        //! Validate that the agreement is accepted
+        bool validateAgreement();
 
-        private:
-            //! Allow crash dumps
-            void onAllowCrashDumps(bool checked);
+    private:
+        //! Allow crash dumps
+        void onAllowCrashDumps(bool checked);
 
-            //! Crashdum hint
-            void showCrashDumpHint();
+        //! Crashdum hint
+        void showCrashDumpHint();
 
-            //! Set the checklist info
-            void setChecklistInfo();
+        //! Set the checklist info
+        void setChecklistInfo();
 
-            QScopedPointer<Ui::CLegalInfoComponent> ui;
-            BlackMisc::CSetting<BlackCore::Application::TCrashDumpSettings> m_crashDumpSettings { this };
-        };
+        QScopedPointer<Ui::CLegalInfoComponent> ui;
+        BlackMisc::CSetting<BlackCore::Application::TCrashDumpSettings> m_crashDumpSettings { this };
+    };
 
-        /**
-         * Wizard page for CLegalInfoComponent
-         */
-        class CLegalInfoWizardPage : public QWizardPage
-        {
-            Q_OBJECT
+    /**
+     * Wizard page for CLegalInfoComponent
+     */
+    class CLegalInfoWizardPage : public QWizardPage
+    {
+        Q_OBJECT
 
-        public:
-            //! Constructors
-            using QWizardPage::QWizardPage;
+    public:
+        //! Constructors
+        using QWizardPage::QWizardPage;
 
-            //! Set config
-            void setConfigComponent(CLegalInfoComponent *config) { m_legalInfo = config; }
+        //! Set config
+        void setConfigComponent(CLegalInfoComponent *config) { m_legalInfo = config; }
 
-            //! \copydoc QWizardPage::validatePage
-            virtual bool validatePage() override;
+        //! \copydoc QWizardPage::validatePage
+        virtual bool validatePage() override;
 
-        private:
-            CLegalInfoComponent *m_legalInfo = nullptr;
-        };
-    } // ns
+    private:
+        CLegalInfoComponent *m_legalInfo = nullptr;
+    };
 } // ns
 
 #endif // guard

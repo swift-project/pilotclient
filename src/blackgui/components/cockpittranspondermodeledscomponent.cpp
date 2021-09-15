@@ -22,123 +22,120 @@ using namespace BlackMisc::Simulation;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CCockpitTransponderModeLedsComponent::CCockpitTransponderModeLedsComponent(QWidget *parent) :
+        QFrame(parent),
+        CIdentifiable(this),
+        m_ledStandby(new CLedWidget(false, CLedWidget::Blue, CLedWidget::Black, CLedWidget::Rounded, "standby", "", LedWidth, this)),
+        m_ledModes(new CLedWidget(false, CLedWidget::Green, CLedWidget::Black, CLedWidget::Rounded, "mode C", "", LedWidth, this)),
+        m_ledIdent(new CLedWidget(false, CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Rounded, "ident", "", LedWidth, this))
     {
-        CCockpitTransponderModeLedsComponent::CCockpitTransponderModeLedsComponent(QWidget *parent) :
-            QFrame(parent),
-            CIdentifiable(this),
-            m_ledStandby(new CLedWidget(false, CLedWidget::Blue, CLedWidget::Black, CLedWidget::Rounded, "standby", "", LedWidth, this)),
-            m_ledModes(new CLedWidget(false, CLedWidget::Green, CLedWidget::Black, CLedWidget::Rounded, "mode C", "", LedWidth, this)),
-            m_ledIdent(new CLedWidget(false, CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Rounded, "ident", "", LedWidth, this))
+        this->init(true);
+
+        Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
+        connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CCockpitTransponderModeLedsComponent::onAircraftCockpitChanged);
+    }
+
+    void CCockpitTransponderModeLedsComponent::onAircraftCockpitChanged(const CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator)
+    {
+        if (isMyIdentifier(originator)) { return; }
+        this->setMode(aircraft.getTransponderMode(), true);
+    }
+
+    void CCockpitTransponderModeLedsComponent::onLedClicked()
+    {
+        QWidget *w = qobject_cast<QWidget *>(QObject::sender());
+        if (!w) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return; }
+        CTransponder::TransponderMode mode;
+        if (m_ledStandby.data() == w)
         {
-            this->init(true);
-
-            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
-            connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CCockpitTransponderModeLedsComponent::onAircraftCockpitChanged);
+            mode = CTransponder::StateStandby;
         }
-
-        void CCockpitTransponderModeLedsComponent::onAircraftCockpitChanged(const CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator)
+        else if (m_ledIdent.data() == w)
         {
-            if (isMyIdentifier(originator)) { return; }
-            this->setMode(aircraft.getTransponderMode(), true);
+            mode = CTransponder::StateIdent;
         }
-
-        void CCockpitTransponderModeLedsComponent::onLedClicked()
+        else if (m_ledModes.data() == w)
         {
-            QWidget *w = qobject_cast<QWidget *>(QObject::sender());
-            if (!w) { return; }
-            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return; }
-            CTransponder::TransponderMode mode;
-            if (m_ledStandby.data() == w)
-            {
-                mode = CTransponder::StateStandby;
-            }
-            else if (m_ledIdent.data() == w)
-            {
-                mode = CTransponder::StateIdent;
-            }
-            else if (m_ledModes.data() == w)
-            {
-                mode = CTransponder::ModeC;
-            }
-            else
-            {
-                return;
-            }
-            CSimulatedAircraft ownAircraft(this->getOwnAircraft());
-            if (ownAircraft.getTransponderMode() == mode) { return; }
-
-            this->setMode(mode, true);
-            CTransponder xpdr = ownAircraft.getTransponder();
-            xpdr.setTransponderMode(mode);
-
-            if (sGui)
-            {
-                sGui->getIContextOwnAircraft()->updateCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), xpdr, identifier());
-            }
+            mode = CTransponder::ModeC;
         }
-
-        void CCockpitTransponderModeLedsComponent::init(bool horizontal)
+        else
         {
-            QBoxLayout *ledLayout = nullptr;
-            if (horizontal) { ledLayout = new QHBoxLayout(this); }
-            else { ledLayout = new QVBoxLayout(this); }
-
-            ledLayout->setMargin(0);
-            ledLayout->addWidget(m_ledStandby.data());
-            ledLayout->addWidget(m_ledModes.data());
-            ledLayout->addWidget(m_ledIdent.data());
-            connect(m_ledIdent.data(), &CLedWidget::clicked, this, &CCockpitTransponderModeLedsComponent::onLedClicked);
-            connect(m_ledModes.data(), &CLedWidget::clicked, this, &CCockpitTransponderModeLedsComponent::onLedClicked);
-            connect(m_ledStandby.data(), &CLedWidget::clicked, this, &CCockpitTransponderModeLedsComponent::onLedClicked);
-            this->setLayout(ledLayout);
-
-            // if context is already available set mode
-            if (sGui && sGui->getIContextOwnAircraft()) { this->setMode(getOwnTransponder().getTransponderMode(), true); }
+            return;
         }
+        CSimulatedAircraft ownAircraft(this->getOwnAircraft());
+        if (ownAircraft.getTransponderMode() == mode) { return; }
 
-        void CCockpitTransponderModeLedsComponent::setMode(CTransponder::TransponderMode mode, bool force)
+        this->setMode(mode, true);
+        CTransponder xpdr = ownAircraft.getTransponder();
+        xpdr.setTransponderMode(mode);
+
+        if (sGui)
         {
-            if (!force && m_mode == mode) { return; }
-            m_ledStandby->setOn(false);
-            m_ledModes->setOn(false);
-            m_ledIdent->setOn(false);
-
-            switch (mode)
-            {
-            case CTransponder::ModeA:
-            case CTransponder::ModeC:
-            case CTransponder::ModeS:
-            case CTransponder::ModeMil1:
-            case CTransponder::ModeMil2:
-            case CTransponder::ModeMil3:
-            case CTransponder::ModeMil4:
-            case CTransponder::ModeMil5:
-                m_ledModes->setOn(true);
-                break;
-            case CTransponder::StateIdent:
-                m_ledModes->setOn(true);
-                m_ledIdent->setOn(true);
-                break;
-            default:
-            case CTransponder::StateStandby:
-                m_ledStandby->setOn(true);
-                break;
-            }
+            sGui->getIContextOwnAircraft()->updateCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), xpdr, identifier());
         }
+    }
 
-        CTransponder CCockpitTransponderModeLedsComponent::getOwnTransponder() const
+    void CCockpitTransponderModeLedsComponent::init(bool horizontal)
+    {
+        QBoxLayout *ledLayout = nullptr;
+        if (horizontal) { ledLayout = new QHBoxLayout(this); }
+        else { ledLayout = new QVBoxLayout(this); }
+
+        ledLayout->setMargin(0);
+        ledLayout->addWidget(m_ledStandby.data());
+        ledLayout->addWidget(m_ledModes.data());
+        ledLayout->addWidget(m_ledIdent.data());
+        connect(m_ledIdent.data(), &CLedWidget::clicked, this, &CCockpitTransponderModeLedsComponent::onLedClicked);
+        connect(m_ledModes.data(), &CLedWidget::clicked, this, &CCockpitTransponderModeLedsComponent::onLedClicked);
+        connect(m_ledStandby.data(), &CLedWidget::clicked, this, &CCockpitTransponderModeLedsComponent::onLedClicked);
+        this->setLayout(ledLayout);
+
+        // if context is already available set mode
+        if (sGui && sGui->getIContextOwnAircraft()) { this->setMode(getOwnTransponder().getTransponderMode(), true); }
+    }
+
+    void CCockpitTransponderModeLedsComponent::setMode(CTransponder::TransponderMode mode, bool force)
+    {
+        if (!force && m_mode == mode) { return; }
+        m_ledStandby->setOn(false);
+        m_ledModes->setOn(false);
+        m_ledIdent->setOn(false);
+
+        switch (mode)
         {
-            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return CTransponder(); }
-            return sGui->getIContextOwnAircraft()->getOwnAircraft().getTransponder();
+        case CTransponder::ModeA:
+        case CTransponder::ModeC:
+        case CTransponder::ModeS:
+        case CTransponder::ModeMil1:
+        case CTransponder::ModeMil2:
+        case CTransponder::ModeMil3:
+        case CTransponder::ModeMil4:
+        case CTransponder::ModeMil5:
+            m_ledModes->setOn(true);
+            break;
+        case CTransponder::StateIdent:
+            m_ledModes->setOn(true);
+            m_ledIdent->setOn(true);
+            break;
+        default:
+        case CTransponder::StateStandby:
+            m_ledStandby->setOn(true);
+            break;
         }
+    }
 
-        CSimulatedAircraft CCockpitTransponderModeLedsComponent::getOwnAircraft() const
-        {
-            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return CSimulatedAircraft(); }
-            return sGui->getIContextOwnAircraft()->getOwnAircraft();
-        }
-    } // namespace
+    CTransponder CCockpitTransponderModeLedsComponent::getOwnTransponder() const
+    {
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return CTransponder(); }
+        return sGui->getIContextOwnAircraft()->getOwnAircraft().getTransponder();
+    }
+
+    CSimulatedAircraft CCockpitTransponderModeLedsComponent::getOwnAircraft() const
+    {
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return CSimulatedAircraft(); }
+        return sGui->getIContextOwnAircraft()->getOwnAircraft();
+    }
 } // namespace

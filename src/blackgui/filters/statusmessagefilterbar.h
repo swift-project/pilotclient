@@ -17,52 +17,49 @@
 #include <QFrame>
 
 namespace Ui { class CStatusMessageFilterBar; }
-namespace BlackGui
+namespace BlackGui::Filters
 {
-    namespace Filters
+    /*!
+     * Filter status messages
+     */
+    class CStatusMessageFilterBar :
+        public CFilterWidget,
+        public BlackGui::Models::IModelFilterProvider<BlackMisc::CStatusMessageList>
     {
-        /*!
-         * Filter status messages
-         */
-        class CStatusMessageFilterBar :
-            public CFilterWidget,
-            public BlackGui::Models::IModelFilterProvider<BlackMisc::CStatusMessageList>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CStatusMessageFilterBar(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CStatusMessageFilterBar(QWidget *parent = nullptr);
 
-            //! Show count
-            void displayCount(bool show);
+        //! Show count
+        void displayCount(bool show);
 
-            //! Destructor
-            virtual ~CStatusMessageFilterBar() override;
+        //! Destructor
+        virtual ~CStatusMessageFilterBar() override;
 
-            //! Use icons with radio buttons
-            void useRadioButtonDescriptiveIcons(bool oneCharacterText);
+        //! Use icons with radio buttons
+        void useRadioButtonDescriptiveIcons(bool oneCharacterText);
 
-            //! \copydoc Models::IModelFilterProvider::createModelFilter
-            virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::CStatusMessageList>> createModelFilter() const override;
+        //! \copydoc Models::IModelFilterProvider::createModelFilter
+        virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::CStatusMessageList>> createModelFilter() const override;
 
-        public slots:
-            //! \copydoc CFilterWidget::onRowCountChanged
-            virtual void onRowCountChanged(int count, bool withFilter) override;
+    public slots:
+        //! \copydoc CFilterWidget::onRowCountChanged
+        virtual void onRowCountChanged(int count, bool withFilter) override;
 
-        protected:
-            //! \copydoc CFilterWidget::clearForm
-            virtual void clearForm() override;
+    protected:
+        //! \copydoc CFilterWidget::clearForm
+        virtual void clearForm() override;
 
-        private:
-            QScopedPointer<Ui::CStatusMessageFilterBar> ui;
+    private:
+        QScopedPointer<Ui::CStatusMessageFilterBar> ui;
 
-            //! Radio button was changed
-            void radioButtonChanged();
+        //! Radio button was changed
+        void radioButtonChanged();
 
-            //! Get the selected severity
-            BlackMisc::CStatusMessage::StatusSeverity getSelectedSeverity() const;
-        };
-    } // ns
+        //! Get the selected severity
+        BlackMisc::CStatusMessage::StatusSeverity getSelectedSeverity() const;
+    };
 } // ns
 #endif // guard

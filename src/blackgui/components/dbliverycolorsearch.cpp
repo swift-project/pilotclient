@@ -15,36 +15,33 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CDbLiveryColorSearch::CDbLiveryColorSearch(QWidget *parent) :
+        QFrame(parent),
+        ui(new Ui::CDbLiveryColorSearch)
     {
-        CDbLiveryColorSearch::CDbLiveryColorSearch(QWidget *parent) :
-            QFrame(parent),
-            ui(new Ui::CDbLiveryColorSearch)
-        {
-            ui->setupUi(this);
-            this->setFocusProxy(ui->comp_FuselageSelector);
-        }
+        ui->setupUi(this);
+        this->setFocusProxy(ui->comp_FuselageSelector);
+    }
 
-        CDbLiveryColorSearch::~CDbLiveryColorSearch()
-        { }
+    CDbLiveryColorSearch::~CDbLiveryColorSearch()
+    { }
 
-        CLivery CDbLiveryColorSearch::getLivery() const
-        {
-            const CRgbColor fuselage = ui->comp_FuselageSelector->getColor();
-            const CRgbColor tail = ui->comp_TailSelector->getColor();
-            const CLiveryList liveries(sGui->getWebDataServices()->getLiveries());
-            return liveries.findClosestColorLiveryOrDefault(fuselage, tail);
-        }
+    CLivery CDbLiveryColorSearch::getLivery() const
+    {
+        const CRgbColor fuselage = ui->comp_FuselageSelector->getColor();
+        const CRgbColor tail = ui->comp_TailSelector->getColor();
+        const CLiveryList liveries(sGui->getWebDataServices()->getLiveries());
+        return liveries.findClosestColorLiveryOrDefault(fuselage, tail);
+    }
 
-        void CDbLiveryColorSearch::presetColorLivery(const CLivery &livery)
+    void CDbLiveryColorSearch::presetColorLivery(const CLivery &livery)
+    {
+        if (livery.isColorLivery())
         {
-            if (livery.isColorLivery())
-            {
-                ui->comp_FuselageSelector->setColor(livery.getColorFuselage());
-                ui->comp_TailSelector->setColor(livery.getColorTail());
-            }
+            ui->comp_FuselageSelector->setColor(livery.getColorFuselage());
+            ui->comp_TailSelector->setColor(livery.getColorTail());
         }
-    } // ns
+    }
 } // ns

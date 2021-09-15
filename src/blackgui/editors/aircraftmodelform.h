@@ -17,79 +17,76 @@
 #include "blackmisc/simulation/distributor.h"
 
 namespace Ui { class CAircraftModelForm; }
-namespace BlackGui
+namespace BlackGui::Editors
 {
-    namespace Editors
+    /**
+     * Combined form of Livery, ICAOs, distributor
+     */
+    class CAircraftModelForm : public CForm
     {
-        /**
-         * Combined form of Livery, ICAOs, distributor
-         */
-        class CAircraftModelForm : public CForm
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAircraftModelForm(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAircraftModelForm(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAircraftModelForm() override;
+        //! Destructor
+        virtual ~CAircraftModelForm() override;
 
-            //! Allow to drop data
-            void allowDrop(bool allowDrop);
+        //! Allow to drop data
+        void allowDrop(bool allowDrop);
 
-            //! \copydoc BlackGui::Editors::CForm::setReadOnly
-            virtual void setReadOnly(bool readOnly) override;
+        //! \copydoc BlackGui::Editors::CForm::setReadOnly
+        virtual void setReadOnly(bool readOnly) override;
 
-            //! \copydoc BlackGui::Editors::CForm::setSelectOnly
-            virtual void setSelectOnly() override;
+        //! \copydoc BlackGui::Editors::CForm::setSelectOnly
+        virtual void setSelectOnly() override;
 
-            //! \copydoc BlackGui::Editors::CForm::validate
-            virtual BlackMisc::CStatusMessageList validate(bool withNestedForms = true) const override;
+        //! \copydoc BlackGui::Editors::CForm::validate
+        virtual BlackMisc::CStatusMessageList validate(bool withNestedForms = true) const override;
 
-            //! \copydoc BlackGui::Editors::CForm::validate
-            virtual BlackMisc::CStatusMessageList validateLivery(bool withNestedForms = true) const;
+        //! \copydoc BlackGui::Editors::CForm::validate
+        virtual BlackMisc::CStatusMessageList validateLivery(bool withNestedForms = true) const;
 
-            //! \copydoc BlackGui::Editors::CForm::validate
-            virtual BlackMisc::CStatusMessageList validateAircraftIcao(bool withNestedForms = true) const;
+        //! \copydoc BlackGui::Editors::CForm::validate
+        virtual BlackMisc::CStatusMessageList validateAircraftIcao(bool withNestedForms = true) const;
 
-            //! \copydoc BlackGui::Editors::CForm::validate
-            virtual BlackMisc::CStatusMessageList validateDistributor(bool withNestedForms = true) const;
+        //! \copydoc BlackGui::Editors::CForm::validate
+        virtual BlackMisc::CStatusMessageList validateDistributor(bool withNestedForms = true) const;
 
-            //! Livery
-            BlackMisc::Aviation::CLivery getLivery() const;
+        //! Livery
+        BlackMisc::Aviation::CLivery getLivery() const;
 
-            //! Aircraft ICAO
-            BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcao() const;
+        //! Aircraft ICAO
+        BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcao() const;
 
-            //! Distributor
-            BlackMisc::Simulation::CDistributor getDistributor() const;
+        //! Distributor
+        BlackMisc::Simulation::CDistributor getDistributor() const;
 
-            //! Livery
-            bool setLivery(const BlackMisc::Aviation::CLivery &livery);
+        //! Livery
+        bool setLivery(const BlackMisc::Aviation::CLivery &livery);
 
-            //! Aircraft
-            bool setAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+        //! Aircraft
+        bool setAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
 
-            //! Distributor
-            bool setDistributor(const BlackMisc::Simulation::CDistributor &distributor);
+        //! Distributor
+        bool setDistributor(const BlackMisc::Simulation::CDistributor &distributor);
 
-            //! Clear entire form
-            void clear();
+        //! Clear entire form
+        void clear();
 
-            //! \copydoc BlackGui::Editors::CLiveryForm::clear
-            void clearLivery();
+        //! \copydoc BlackGui::Editors::CLiveryForm::clear
+        void clearLivery();
 
-            //! \copydoc BlackGui::Editors::CAircraftIcaoForm::clear
-            void clearAircraftIcao();
+        //! \copydoc BlackGui::Editors::CAircraftIcaoForm::clear
+        void clearAircraftIcao();
 
-            //! \copydoc BlackGui::Editors::CDistributorForm::clear
-            void clearDistributor();
+        //! \copydoc BlackGui::Editors::CDistributorForm::clear
+        void clearDistributor();
 
-        private:
-            QScopedPointer<Ui::CAircraftModelForm> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CAircraftModelForm> ui;
+    };
 } // ns
 
 #endif // guard

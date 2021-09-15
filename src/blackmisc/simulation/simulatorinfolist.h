@@ -18,35 +18,32 @@
 
 #include <QMetaType>
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    //! Value object encapsulating a list of distributors.
+    class BLACKMISC_EXPORT CSimulatorInfoList :
+        public BlackMisc::CSequence<CSimulatorInfo>,
+        public BlackMisc::Mixin::MetaType<CSimulatorInfoList>
     {
-        //! Value object encapsulating a list of distributors.
-        class BLACKMISC_EXPORT CSimulatorInfoList :
-            public BlackMisc::CSequence<CSimulatorInfo>,
-            public BlackMisc::Mixin::MetaType<CSimulatorInfoList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CSimulatorInfoList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CSimulatorInfoList)
+        using CSequence::CSequence;
 
-            //! Default constructor.
-            CSimulatorInfoList();
+        //! Default constructor.
+        CSimulatorInfoList();
 
-            //! Construct from a base class object.
-            CSimulatorInfoList(const CSequence<CSimulatorInfo> &other);
+        //! Construct from a base class object.
+        CSimulatorInfoList(const CSequence<CSimulatorInfo> &other);
 
-            //! Find by id or alias
-            CSimulatorInfoList withNoDuplicates() const;
+        //! Find by id or alias
+        CSimulatorInfoList withNoDuplicates() const;
 
-            //! Split into single simulators, unknown simulators are ignored
-            CSimulatorInfoList splitIntoSingleSimulators() const;
+        //! Split into single simulators, unknown simulators are ignored
+        CSimulatorInfoList splitIntoSingleSimulators() const;
 
-            //! Split into single simulators, unknown simulators are ignored
-            static CSimulatorInfoList splitIntoSingleSimulators(const CSimulatorInfo &sim);
-        };
-    } //namespace
+        //! Split into single simulators, unknown simulators are ignored
+        static CSimulatorInfoList splitIntoSingleSimulators(const CSimulatorInfo &sim);
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorInfoList)

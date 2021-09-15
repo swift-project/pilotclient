@@ -15,40 +15,37 @@
 #include <QFile>
 #include <QAudioFormat>
 
-namespace BlackSound
+namespace BlackSound::Wav
 {
-    namespace Wav
+    //! * WAV file
+    class CWavFile : public QFile
     {
-        //! * WAV file
-        class CWavFile : public QFile
-        {
-        public:
-            //! Ctor
-            CWavFile(QObject *parent = nullptr);
+    public:
+        //! Ctor
+        CWavFile(QObject *parent = nullptr);
 
-            //! Standard open
-            using QFile::open;
+        //! Standard open
+        using QFile::open;
 
-            //! Open
-            bool open(const QString &fileName);
+        //! Open
+        bool open(const QString &fileName);
 
-            //! Audio format
-            const QAudioFormat &fileFormat() const;
+        //! Audio format
+        const QAudioFormat &fileFormat() const;
 
-            //! Header length
-            qint64 headerLength() const;
+        //! Header length
+        qint64 headerLength() const;
 
-            //! The audio data
-            const QByteArray &audioData() const { return m_audioData; }
+        //! The audio data
+        const QByteArray &audioData() const { return m_audioData; }
 
-        private:
-            bool readHeader();
+    private:
+        bool readHeader();
 
-            QAudioFormat m_fileFormat;
-            qint64 m_headerLength;
-            QByteArray m_audioData;
-        };
-    } // ns
+        QAudioFormat m_fileFormat;
+        qint64 m_headerLength;
+        QByteArray m_audioData;
+    };
 } // ns
 
 #endif // guard

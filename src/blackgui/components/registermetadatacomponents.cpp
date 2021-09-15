@@ -11,13 +11,10 @@
 
 #include <QMetaType>
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    void registerMetadata()
     {
-        void registerMetadata()
-        {
-            qRegisterMetaType<TextMessageTab>();
-        }
-    } // ns
+        qRegisterMetaType<TextMessageTab>();
+    }
 } // ns

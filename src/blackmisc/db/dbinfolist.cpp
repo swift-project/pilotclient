@@ -10,35 +10,32 @@
 
 using namespace BlackMisc::Network;
 
-namespace BlackMisc
+namespace BlackMisc::Db
 {
-    namespace Db
+    CDbInfoList::CDbInfoList() { }
+
+    CDbInfoList::CDbInfoList(const CSequence<CDbInfo> &other) :
+        CSequence<CDbInfo>(other)
+    { }
+
+    CDbInfo CDbInfoList::findFirstByEntityOrDefault(CEntityFlags::Entity entity) const
     {
-        CDbInfoList::CDbInfoList() { }
-
-        CDbInfoList::CDbInfoList(const CSequence<CDbInfo> &other) :
-            CSequence<CDbInfo>(other)
-        { }
-
-        CDbInfo CDbInfoList::findFirstByEntityOrDefault(CEntityFlags::Entity entity) const
+        for (const CDbInfo &info : *this)
         {
-            for (const CDbInfo &info : *this)
-            {
-                if (info.matchesEntity(entity)) { return info; }
-            }
-            return CDbInfo();
+            if (info.matchesEntity(entity)) { return info; }
         }
+        return CDbInfo();
+    }
 
-        CDbInfoList CDbInfoList::fromDatabaseJson(const QJsonArray &array)
+    CDbInfoList CDbInfoList::fromDatabaseJson(const QJsonArray &array)
+    {
+        CDbInfoList infoObjects;
+        for (const QJsonValue &value : array)
         {
-            CDbInfoList infoObjects;
-            for (const QJsonValue &value : array)
-            {
-                const CDbInfo info(CDbInfo::fromDatabaseJson(value.toObject()));
-                infoObjects.push_back(info);
-            }
-            infoObjects.sortByKey(); // make sure the data are in proper order
-            return infoObjects;
+            const CDbInfo info(CDbInfo::fromDatabaseJson(value.toObject()));
+            infoObjects.push_back(info);
         }
-    } // namespace
+        infoObjects.sortByKey(); // make sure the data are in proper order
+        return infoObjects;
+    }
 } // namespace

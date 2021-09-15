@@ -16,41 +16,38 @@
 #include "blackgui/blackguiexport.h"
 
 namespace Ui { class CSettingsSwiftPlugin; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * Settings for the swift pseudo driver
+     */
+    class BLACKGUI_EXPORT CSettingsSwiftPlugin : public QFrame
     {
-        /**
-         * Settings for the swift pseudo driver
-         */
-        class BLACKGUI_EXPORT CSettingsSwiftPlugin : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            explicit CSettingsSwiftPlugin(QWidget *parent = nullptr);
+    public:
+        //! Ctor
+        explicit CSettingsSwiftPlugin(QWidget *parent = nullptr);
 
-            //! Dtor
-            virtual ~CSettingsSwiftPlugin();
+        //! Dtor
+        virtual ~CSettingsSwiftPlugin();
 
-            //! Get the plugin settings
-            BlackMisc::Simulation::Settings::CSwiftPluginSettings getPluginSettings() const;
+        //! Get the plugin settings
+        BlackMisc::Simulation::Settings::CSwiftPluginSettings getPluginSettings() const;
 
-        private:
-            //! Settings changed
-            void onSettingsChanged();
+    private:
+        //! Settings changed
+        void onSettingsChanged();
 
-            //! Save
-            void save();
+        //! Save
+        void save();
 
-            //! Get settings
-            BlackMisc::Simulation::Settings::CSwiftPluginSettings getSettings() const;
+        //! Get settings
+        BlackMisc::Simulation::Settings::CSwiftPluginSettings getSettings() const;
 
-            QScopedPointer<Ui::CSettingsSwiftPlugin> ui;
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSwiftPlugin> m_settings { this, &CSettingsSwiftPlugin::onSettingsChanged };
-        };
-    } // ns
+        QScopedPointer<Ui::CSettingsSwiftPlugin> ui;
+        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSwiftPlugin> m_settings { this, &CSettingsSwiftPlugin::onSettingsChanged };
+    };
 } // ns
 
 #endif // guard

@@ -18,52 +18,49 @@
 #include <QScopedPointer>
 
 namespace Ui { class CCoordinateDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Coordinate form as dialog
+    //! \sa BlackGui::Editors::CCoordinateForm
+    class BLACKGUI_EXPORT CCoordinateDialog : public QDialog
     {
-        //! Coordinate form as dialog
-        //! \sa BlackGui::Editors::CCoordinateForm
-        class BLACKGUI_EXPORT CCoordinateDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CCoordinateDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CCoordinateDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CCoordinateDialog();
+        //! Destructor
+        virtual ~CCoordinateDialog();
 
-            //! \copydoc BlackGui::Editors::CCoordinateForm::getCoordinate
-            BlackMisc::Geo::CCoordinateGeodetic getCoordinate() const;
+        //! \copydoc BlackGui::Editors::CCoordinateForm::getCoordinate
+        BlackMisc::Geo::CCoordinateGeodetic getCoordinate() const;
 
-            //! \copydoc BlackGui::Editors::CCoordinateForm::setCoordinate
-            void setCoordinate(const BlackMisc::Geo::ICoordinateGeodetic &coordinate);
+        //! \copydoc BlackGui::Editors::CCoordinateForm::setCoordinate
+        void setCoordinate(const BlackMisc::Geo::ICoordinateGeodetic &coordinate);
 
-            //! \copydoc BlackGui::Editors::CCoordinateForm::setReadOnly
-            void setReadOnly(bool readonly);
+        //! \copydoc BlackGui::Editors::CCoordinateForm::setReadOnly
+        void setReadOnly(bool readonly);
 
-            //! \copydoc BlackGui::Editors::CCoordinateForm::setSelectOnly
-            void setSelectOnly();
+        //! \copydoc BlackGui::Editors::CCoordinateForm::setSelectOnly
+        void setSelectOnly();
 
-            //! \copydoc BlackGui::Editors::CCoordinateForm::showElevation
-            void showElevation(bool show);
+        //! \copydoc BlackGui::Editors::CCoordinateForm::showElevation
+        void showElevation(bool show);
 
-            //! \copydoc BlackGui::Editors::CCoordinateForm::validate
-            BlackMisc::CStatusMessageList validate(bool nested = false) const;
+        //! \copydoc BlackGui::Editors::CCoordinateForm::validate
+        BlackMisc::CStatusMessageList validate(bool nested = false) const;
 
-        signals:
-            //! \copydoc BlackGui::Editors::CCoordinateForm::changedCoordinate
-            void changedCoordinate();
+    signals:
+        //! \copydoc BlackGui::Editors::CCoordinateForm::changedCoordinate
+        void changedCoordinate();
 
-        private:
-            QScopedPointer<Ui::CCoordinateDialog> ui;
+    private:
+        QScopedPointer<Ui::CCoordinateDialog> ui;
 
-            //! disable default buttons
-            void noDefaultButtons();
-        };
-    } // ns
+        //! disable default buttons
+        void noDefaultButtons();
+    };
 } // ns
 
 #endif // guard

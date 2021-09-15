@@ -17,66 +17,63 @@
 
 using namespace BlackMisc;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CStatusMessageForm::CStatusMessageForm(QWidget *parent) :
+        QFrame(parent),
+        ui(new Ui::CStatusMessageForm)
     {
-        CStatusMessageForm::CStatusMessageForm(QWidget *parent) :
-            QFrame(parent),
-            ui(new Ui::CStatusMessageForm)
-        {
-            ui->setupUi(this);
-        }
+        ui->setupUi(this);
+    }
 
-        CStatusMessageForm::~CStatusMessageForm()
-        { }
+    CStatusMessageForm::~CStatusMessageForm()
+    { }
 
-        void CStatusMessageForm::setVariant(const CVariant &messageVariant)
-        {
-            if (!this->isVisible()) { return; }
-            this->setValue(messageVariant.value<CStatusMessage>());
-        }
+    void CStatusMessageForm::setVariant(const CVariant &messageVariant)
+    {
+        if (!this->isVisible()) { return; }
+        this->setValue(messageVariant.value<CStatusMessage>());
+    }
 
-        void CStatusMessageForm::setValue(const CStatusMessage &message)
+    void CStatusMessageForm::setValue(const CStatusMessage &message)
+    {
+        ui->te_Message->setPlainText(message.getMessage());
+        ui->lbl_SeverityIcon->setPixmap(CIcon(message.toIcon()));
+        const QString hrc(CLogPattern::humanReadableNamesFrom(message).join(", "));
+        if (hrc.isEmpty())
         {
-            ui->te_Message->setPlainText(message.getMessage());
-            ui->lbl_SeverityIcon->setPixmap(CIcon(message.toIcon()));
-            const QString hrc(CLogPattern::humanReadableNamesFrom(message).join(", "));
-            if (hrc.isEmpty())
-            {
-                ui->le_Categories->setText(message.getCategories().toQString());
-                ui->le_Categories->setToolTip("");
-            }
-            else
-            {
-                ui->le_Categories->setText(hrc);
-                ui->le_Categories->setToolTip(message.getCategories().toQString());
-            }
-            ui->le_Severity->setText(message.getSeverityAsString());
-            ui->le_Timestamp->setText(message.getFormattedUtcTimestampYmdhms());
+            ui->le_Categories->setText(message.getCategories().toQString());
+            ui->le_Categories->setToolTip("");
         }
+        else
+        {
+            ui->le_Categories->setText(hrc);
+            ui->le_Categories->setToolTip(message.getCategories().toQString());
+        }
+        ui->le_Severity->setText(message.getSeverityAsString());
+        ui->le_Timestamp->setText(message.getFormattedUtcTimestampYmdhms());
+    }
 
-        void CStatusMessageForm::clear()
-        {
-            ui->le_Timestamp->clear();
-            ui->le_Categories->clear();
-            ui->le_Severity->clear();
-        }
+    void CStatusMessageForm::clear()
+    {
+        ui->le_Timestamp->clear();
+        ui->le_Categories->clear();
+        ui->le_Severity->clear();
+    }
 
-        void CStatusMessageForm::toggleVisibility()
-        {
-            this->setVisible(!isVisible());
-        }
+    void CStatusMessageForm::toggleVisibility()
+    {
+        this->setVisible(!isVisible());
+    }
 
-        void CStatusMessageForm::setReducedInfo(bool reduced)
-        {
-            ui->le_Timestamp->setVisible(!reduced);
-            ui->lbl_Timestamp->setVisible(!reduced);
-            ui->le_Categories->setVisible(!reduced);
-            ui->lbl_Categories->setVisible(!reduced);
-            ui->le_Severity->setVisible(!reduced);
-            ui->lbl_SeverityIcon->setVisible(!reduced);
-            ui->lbl_Severity->setVisible(!reduced);
-        }
-    } // ns
+    void CStatusMessageForm::setReducedInfo(bool reduced)
+    {
+        ui->le_Timestamp->setVisible(!reduced);
+        ui->lbl_Timestamp->setVisible(!reduced);
+        ui->le_Categories->setVisible(!reduced);
+        ui->lbl_Categories->setVisible(!reduced);
+        ui->le_Severity->setVisible(!reduced);
+        ui->lbl_SeverityIcon->setVisible(!reduced);
+        ui->lbl_Severity->setVisible(!reduced);
+    }
 } // ns

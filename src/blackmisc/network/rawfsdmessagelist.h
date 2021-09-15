@@ -20,33 +20,30 @@
 #include <QMetaType>
 #include <initializer_list>
 
-namespace BlackMisc
+namespace BlackMisc::Network
 {
-    namespace Network
+    //! Value object encapsulating a list raw FSD messages.
+    class BLACKMISC_EXPORT CRawFsdMessageList :
+        public CSequence<CRawFsdMessage>,
+        public Mixin::MetaType<CRawFsdMessageList>,
+        public ITimestampObjectList<CRawFsdMessage, CRawFsdMessageList>
     {
-        //! Value object encapsulating a list raw FSD messages.
-        class BLACKMISC_EXPORT CRawFsdMessageList :
-            public CSequence<CRawFsdMessage>,
-            public Mixin::MetaType<CRawFsdMessageList>,
-            public ITimestampObjectList<CRawFsdMessage, CRawFsdMessageList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CRawFsdMessageList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CRawFsdMessageList)
+        using CSequence::CSequence;
 
-            //! Default constructor.
-            CRawFsdMessageList();
+        //! Default constructor.
+        CRawFsdMessageList();
 
-            //! Construct from a base class object.
-            CRawFsdMessageList(const CSequence &other);
+        //! Construct from a base class object.
+        CRawFsdMessageList(const CSequence &other);
 
-            //! Find by a given list of raw messages which are type
-            CRawFsdMessageList findByPacketType(const QString &type) const;
+        //! Find by a given list of raw messages which are type
+        CRawFsdMessageList findByPacketType(const QString &type) const;
 
-            //! Find by a given list of models by strings
-            CRawFsdMessageList findByContainsString(const QString &str) const;
-        };
-    } //namespace
+        //! Find by a given list of models by strings
+        CRawFsdMessageList findByContainsString(const QString &str) const;
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Network::CRawFsdMessageList)

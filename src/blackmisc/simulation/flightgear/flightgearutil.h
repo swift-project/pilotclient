@@ -15,37 +15,31 @@
 
 #include <QStringList>
 
-namespace BlackMisc
+namespace BlackMisc::Simulation::Flightgear
 {
-    namespace Simulation
+    //! Flightgear utils
+    class BLACKMISC_EXPORT CFlightgearUtil
     {
-        namespace Flightgear
-        {
-            //! Flightgear utils
-            class BLACKMISC_EXPORT CFlightgearUtil
-            {
-            public:
-                //! Constructor
-                CFlightgearUtil() = delete;
+    public:
+        //! Constructor
+        CFlightgearUtil() = delete;
 
-                //! Flightgear root directory
-                //! Currently only available for windows and if Flightgear is installed through installer.
-                static const QString &flightgearRootDir();
+        //! Flightgear root directory
+        //! Currently only available for windows and if Flightgear is installed through installer.
+        static const QString &flightgearRootDir();
 
-                //! Is the flightgearRootDir existing?
-                static bool isFlightgearRootDirExisting();
+        //! Is the flightgearRootDir existing?
+        static bool isFlightgearRootDirExisting();
 
-                //! Model directories from simulator directory
-                static QStringList modelDirectoriesFromSimDir(const QString &simulatorDir);
+        //! Model directories from simulator directory
+        static QStringList modelDirectoriesFromSimDir(const QString &simulatorDir);
 
-                //! Directories with models
-                static const QStringList &flightgearModelDirectories();
+        //! Directories with models
+        static const QStringList &flightgearModelDirectories();
 
-                //! Exclude directories for models
-                static const QStringList &flightgearModelExcludeDirectoryPatterns();
-            };
-        } // namespace
-    } // namespace
+        //! Exclude directories for models
+        static const QStringList &flightgearModelExcludeDirectoryPatterns();
+    };
 } // namespace
 
 #endif // guard

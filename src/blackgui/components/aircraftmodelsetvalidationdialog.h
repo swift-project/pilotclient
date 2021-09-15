@@ -26,36 +26,33 @@ namespace BlackMisc
         class CAircraftModelList;
     }
 }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * Dialog for CAircraftModelValidationComponent
+     * \remark aircraft model view has a simplified version BlackGui::Views::CAircraftModelValidationDialog
+     */
+    class BLACKGUI_EXPORT CAircraftModelSetValidationDialog : public QDialog
     {
-        /**
-         * Dialog for CAircraftModelValidationComponent
-         * \remark aircraft model view has a simplified version BlackGui::Views::CAircraftModelValidationDialog
-         */
-        class BLACKGUI_EXPORT CAircraftModelSetValidationDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAircraftModelSetValidationDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAircraftModelSetValidationDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAircraftModelSetValidationDialog() override;
+        //! Destructor
+        virtual ~CAircraftModelSetValidationDialog() override;
 
-            //! \copydoc CAircraftModelValidationComponent::validatedModelSet
-            void validatedModelSet(const BlackMisc::Simulation::CSimulatorInfo &simulator, const BlackMisc::Simulation::CAircraftModelList &valid, const BlackMisc::Simulation::CAircraftModelList &invalid, bool stopped, const BlackMisc::CStatusMessageList &msgs);
+        //! \copydoc CAircraftModelValidationComponent::validatedModelSet
+        void validatedModelSet(const BlackMisc::Simulation::CSimulatorInfo &simulator, const BlackMisc::Simulation::CAircraftModelList &valid, const BlackMisc::Simulation::CAircraftModelList &invalid, bool stopped, const BlackMisc::CStatusMessageList &msgs);
 
-        protected:
-            //! \copydoc QObject::event
-            virtual bool event(QEvent *event) override;
+    protected:
+        //! \copydoc QObject::event
+        virtual bool event(QEvent *event) override;
 
-        private:
-            QScopedPointer<Ui::CAircraftModelSetValidationDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CAircraftModelSetValidationDialog> ui;
+    };
 } // ns
 
 #endif // guard

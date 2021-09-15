@@ -21,32 +21,29 @@
 #include <initializer_list>
 #include <tuple>
 
-namespace BlackMisc
+namespace BlackMisc::Input
 {
-    namespace Input
+    //! Value object encapsulating a list of keyboard keys.
+    class BLACKMISC_EXPORT CKeyboardKeyList :
+        public CSequence<CKeyboardKey>,
+        public Mixin::MetaType<CKeyboardKeyList>
     {
-        //! Value object encapsulating a list of keyboard keys.
-        class BLACKMISC_EXPORT CKeyboardKeyList :
-            public CSequence<CKeyboardKey>,
-            public Mixin::MetaType<CKeyboardKeyList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CKeyboardKeyList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CKeyboardKeyList)
+        using CSequence::CSequence;
 
-            //! Default constructor
-            CKeyboardKeyList();
+        //! Default constructor
+        CKeyboardKeyList();
 
-            //! Construct from a base class object.
-            CKeyboardKeyList(const CSequence<CKeyboardKey> &baseClass);
+        //! Construct from a base class object.
+        CKeyboardKeyList(const CSequence<CKeyboardKey> &baseClass);
 
-            //! All key strings
-            QStringList getKeyStrings() const;
+        //! All key strings
+        QStringList getKeyStrings() const;
 
-            //! Get all supported keys
-            static const CKeyboardKeyList &allSupportedKeys();
-        };
-    } //namespace
+        //! Get all supported keys
+        static const CKeyboardKeyList &allSupportedKeys();
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Input::CKeyboardKeyList)

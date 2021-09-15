@@ -17,38 +17,35 @@
 #include <QByteArray>
 #include <QVector>
 
-namespace BlackSound
+namespace BlackSound::Codecs
 {
-    namespace Codecs
+    //! OPUS encoder
+    class BLACKSOUND_EXPORT COpusEncoder
     {
-        //! OPUS encoder
-        class BLACKSOUND_EXPORT COpusEncoder
-        {
-        public:
-            //! Ctor
-            COpusEncoder(int sampleRate, int channels, int application = OPUS_APPLICATION_VOIP);
+    public:
+        //! Ctor
+        COpusEncoder(int sampleRate, int channels, int application = OPUS_APPLICATION_VOIP);
 
-            //! Dtor
-            ~COpusEncoder();
+        //! Dtor
+        ~COpusEncoder();
 
-            //! Non copyable
-            COpusEncoder(const COpusEncoder &temp_obj) = delete;
+        //! Non copyable
+        COpusEncoder(const COpusEncoder &temp_obj) = delete;
 
-            //! Non assignable
-            COpusEncoder &operator=(const COpusEncoder &temp_obj) = delete;
+        //! Non assignable
+        COpusEncoder &operator=(const COpusEncoder &temp_obj) = delete;
 
-            //! Bit rate
-            void setBitRate(int bitRate);
+        //! Bit rate
+        void setBitRate(int bitRate);
 
-            //! Encode
-            QByteArray encode(const QVector<qint16> &pcmSamples, int samplesLength, int *encodedLength);
+        //! Encode
+        QByteArray encode(const QVector<qint16> &pcmSamples, int samplesLength, int *encodedLength);
 
-        private:
-            OpusEncoder *opusEncoder = nullptr;
+    private:
+        OpusEncoder *opusEncoder = nullptr;
 
-            static constexpr int maxDataBytes = 4000;
-        };
-    } // ns
+        static constexpr int maxDataBytes = 4000;
+    };
 } // ns
 
 #endif // guard

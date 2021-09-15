@@ -16,20 +16,17 @@
 #include "blackgui/views/viewbase.h"
 #include "blackmisc/network/clientlist.h"
 
-namespace BlackMisc { namespace Network { class CClient; } }
-namespace BlackGui
+namespace BlackMisc::Network { class CClient; }
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Client view
+    class BLACKGUI_EXPORT CClientView : public CViewBase<Models::CClientListModel>
     {
-        //! Client view
-        class BLACKGUI_EXPORT CClientView : public CViewBase<Models::CClientListModel>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CClientView(QWidget *parent = nullptr);
-        };
-    }
+    public:
+        //! Constructor
+        explicit CClientView(QWidget *parent = nullptr);
+    };
 }
 #endif // guard

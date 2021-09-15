@@ -8,20 +8,17 @@
 
 #include "listmodelbase.cpp"
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
-    {
-        // see here for the reason of thess forward instantiations
-        // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
-        template class CListModelBase<BlackMisc::Aviation::CLiveryList, true>;
-        template class CListModelBase<BlackMisc::Aviation::CAtcStationList, true>;
-        template class CListModelBase<BlackMisc::Aviation::CAirportList, true>;
-        template class CListModelBase<BlackMisc::Aviation::CAircraftIcaoCodeList, true>;
-        template class CListModelBase<BlackMisc::Aviation::CAircraftCategoryList, true>;
-        template class CListModelBase<BlackMisc::Aviation::CAirlineIcaoCodeList, true>;
-        template class CListModelBase<BlackMisc::Aviation::CAircraftPartsList, true>;
-        template class CListModelBase<BlackMisc::Aviation::CAircraftSituationList, true>;
-        template class CListModelBase<BlackMisc::Aviation::CAircraftSituationChangeList, true>;
-    } // namespace
+    // see here for the reason of thess forward instantiations
+    // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
+    template class CListModelBase<BlackMisc::Aviation::CLiveryList, true>;
+    template class CListModelBase<BlackMisc::Aviation::CAtcStationList, true>;
+    template class CListModelBase<BlackMisc::Aviation::CAirportList, true>;
+    template class CListModelBase<BlackMisc::Aviation::CAircraftIcaoCodeList, true>;
+    template class CListModelBase<BlackMisc::Aviation::CAircraftCategoryList, true>;
+    template class CListModelBase<BlackMisc::Aviation::CAirlineIcaoCodeList, true>;
+    template class CListModelBase<BlackMisc::Aviation::CAircraftPartsList, true>;
+    template class CListModelBase<BlackMisc::Aviation::CAircraftSituationList, true>;
+    template class CListModelBase<BlackMisc::Aviation::CAircraftSituationChangeList, true>;
 } // namespace

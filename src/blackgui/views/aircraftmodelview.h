@@ -30,15 +30,12 @@
 
 class QDropEvent;
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
-    {
-        class CAircraftIcaoCode;
-        class CLivery;
-    }
+    class CAircraftIcaoCode;
+    class CLivery;
 }
-namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
+namespace BlackMisc::Simulation { class CAircraftModel; }
 namespace BlackGui
 {
     namespace Filters { class CAircraftModelFilterDialog; }

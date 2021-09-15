@@ -18,62 +18,59 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
 using namespace BlackGui::Views;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CDbAircraftCategoryComponent::CDbAircraftCategoryComponent(QWidget *parent) :
+        COverlayMessagesFrame(parent),
+        ui(new Ui::CDbAircraftCategoryComponent)
     {
-        CDbAircraftCategoryComponent::CDbAircraftCategoryComponent(QWidget *parent) :
-            COverlayMessagesFrame(parent),
-            ui(new Ui::CDbAircraftCategoryComponent)
+        ui->setupUi(this);
+        this->setViewWithIndicator(ui->tvp_AircraftCategoryView);
+
+        ui->tvp_AircraftCategoryView->setResizeMode(CAircraftCategoryView::ResizingOff);
+        ui->tvp_AircraftCategoryView->allowDragDrop(true, false);
+        ui->tvp_AircraftCategoryView->menuAddItems(CViewBaseNonTemplate::MenuCopy);
+        // ui->tvp_AircraftCategoryView->setFilterWidget(ui->filter_AircraftIcao);
+
+        connect(ui->tvp_AircraftCategoryView, &CAircraftCategoryView::requestNewBackendData, this, &CDbAircraftCategoryComponent::onReload);
+        connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAircraftCategoryComponent::onCategoryRead, Qt::QueuedConnection);
+        connect(sGui->getWebDataServices(), &CWebDataServices::entityDownloadProgress, this, &CDbAircraftCategoryComponent::onEntityDownloadProgress, Qt::QueuedConnection);
+        this->onCategoryRead(CEntityFlags::AircraftCategoryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getAircraftCategoriesCount());
+    }
+
+    CDbAircraftCategoryComponent::~CDbAircraftCategoryComponent()
+    { }
+
+    void CDbAircraftCategoryComponent::onCategoryRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+    {
+        Q_UNUSED(count);
+        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
+        if (!entity.testFlag(CEntityFlags::AircraftCategoryEntity)) { return; }
+
+        if (CEntityFlags::isFinishedReadState(readState))
         {
-            ui->setupUi(this);
-            this->setViewWithIndicator(ui->tvp_AircraftCategoryView);
-
-            ui->tvp_AircraftCategoryView->setResizeMode(CAircraftCategoryView::ResizingOff);
-            ui->tvp_AircraftCategoryView->allowDragDrop(true, false);
-            ui->tvp_AircraftCategoryView->menuAddItems(CViewBaseNonTemplate::MenuCopy);
-            // ui->tvp_AircraftCategoryView->setFilterWidget(ui->filter_AircraftIcao);
-
-            connect(ui->tvp_AircraftCategoryView, &CAircraftCategoryView::requestNewBackendData, this, &CDbAircraftCategoryComponent::onReload);
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAircraftCategoryComponent::onCategoryRead, Qt::QueuedConnection);
-            connect(sGui->getWebDataServices(), &CWebDataServices::entityDownloadProgress, this, &CDbAircraftCategoryComponent::onEntityDownloadProgress, Qt::QueuedConnection);
-            this->onCategoryRead(CEntityFlags::AircraftCategoryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getAircraftCategoriesCount());
+            this->showOverlayHTMLMessage(QStringLiteral("Updating %1").arg(CEntityFlags::entitiesToString(entity)), 2000);
+            const CAircraftCategoryList categories = sGui->getWebDataServices()->getAircraftCategories();
+            ui->tvp_AircraftCategoryView->updateContainerMaybeAsync(categories);
+            ui->tvp_AircraftCategoryTree->updateContainer(categories);
         }
-
-        CDbAircraftCategoryComponent::~CDbAircraftCategoryComponent()
-        { }
-
-        void CDbAircraftCategoryComponent::onCategoryRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+        else
         {
-            Q_UNUSED(count);
-            if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
-            if (!entity.testFlag(CEntityFlags::AircraftCategoryEntity)) { return; }
-
-            if (CEntityFlags::isFinishedReadState(readState))
-            {
-                this->showOverlayHTMLMessage(QStringLiteral("Updating %1").arg(CEntityFlags::entitiesToString(entity)), 2000);
-                const CAircraftCategoryList categories = sGui->getWebDataServices()->getAircraftCategories();
-                ui->tvp_AircraftCategoryView->updateContainerMaybeAsync(categories);
-                ui->tvp_AircraftCategoryTree->updateContainer(categories);
-            }
-            else
-            {
-                this->showOverlayHTMLMessage(u"Current state: " % CEntityFlags::entitiesToString(entity) % u" " % CEntityFlags::stateToString(readState), 10000);
-            }
+            this->showOverlayHTMLMessage(u"Current state: " % CEntityFlags::entitiesToString(entity) % u" " % CEntityFlags::stateToString(readState), 10000);
         }
+    }
 
-        void CDbAircraftCategoryComponent::onEntityDownloadProgress(CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url)
-        {
-            if (!entity.testFlag(CEntityFlags::AircraftCategoryEntity)) { return; }
-            this->showDownloadProgress(progress, current, max, url, 5000);
-            Q_UNUSED(logId);
-        }
+    void CDbAircraftCategoryComponent::onEntityDownloadProgress(CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url)
+    {
+        if (!entity.testFlag(CEntityFlags::AircraftCategoryEntity)) { return; }
+        this->showDownloadProgress(progress, current, max, url, 5000);
+        Q_UNUSED(logId);
+    }
 
-        void CDbAircraftCategoryComponent::onReload()
-        {
-            if (!sGui || sGui->isShuttingDown()) { return; }
-            sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::AircraftCategoryEntity, QDateTime());
-        }
+    void CDbAircraftCategoryComponent::onReload()
+    {
+        if (!sGui || sGui->isShuttingDown()) { return; }
+        sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::AircraftCategoryEntity, QDateTime());
+    }
 
-    } // ns
 } // ns

@@ -16,47 +16,44 @@
 #include <QScopedPointer>
 
 namespace Ui { class CModelMatcherLogEnable; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Enable/disable matching logs
+    class CModelMatcherLogEnable : public QFrame
     {
-        //! Enable/disable matching logs
-        class CModelMatcherLogEnable : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CModelMatcherLogEnable(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CModelMatcherLogEnable(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CModelMatcherLogEnable() override;
+        //! Destructor
+        virtual ~CModelMatcherLogEnable() override;
 
-            //! Reverse lookup enabled?
-            bool isReverseLookupLogEnabled() const;
+        //! Reverse lookup enabled?
+        bool isReverseLookupLogEnabled() const;
 
-            //! Matching log.enabled
-            bool isMatchingLogEnabled() const;
+        //! Matching log.enabled
+        bool isMatchingLogEnabled() const;
 
-        private:
-            QScopedPointer<Ui::CModelMatcherLogEnable> ui;
+    private:
+        QScopedPointer<Ui::CModelMatcherLogEnable> ui;
 
-            //! Flag changed
-            void enabledCheckboxChanged(bool enabled);
+        //! Flag changed
+        void enabledCheckboxChanged(bool enabled);
 
-            //! Init GUI
-            void initGui();
+        //! Init GUI
+        void initGui();
 
-            //! Has required context
-            bool hasContexts() const;
+        //! Has required context
+        bool hasContexts() const;
 
-            //! When values changed elsewhere
-            void valuesChanged();
+        //! When values changed elsewhere
+        void valuesChanged();
 
-            //! Connection status has been changed
-            void connectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
-        };
-    } // ns
+        //! Connection status has been changed
+        void connectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+    };
 } // ns
 
 #endif // guard

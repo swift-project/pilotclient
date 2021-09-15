@@ -15,28 +15,25 @@
 #include <QScopedPointer>
 
 namespace Ui { class CCopyModelsFromOtherSwiftVersionsDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * Copy models from other swift versions as dialog
+     */
+    class CCopyModelsFromOtherSwiftVersionsDialog : public QDialog
     {
-        /**
-         * Copy models from other swift versions as dialog
-         */
-        class CCopyModelsFromOtherSwiftVersionsDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CCopyModelsFromOtherSwiftVersionsDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CCopyModelsFromOtherSwiftVersionsDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CCopyModelsFromOtherSwiftVersionsDialog();
+        //! Destructor
+        virtual ~CCopyModelsFromOtherSwiftVersionsDialog();
 
-        private:
-            QScopedPointer<Ui::CCopyModelsFromOtherSwiftVersionsDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CCopyModelsFromOtherSwiftVersionsDialog> ui;
+    };
 } // ns
 
 #endif // guard

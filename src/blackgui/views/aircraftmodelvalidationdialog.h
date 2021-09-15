@@ -16,45 +16,42 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 
 namespace Ui { class CAircraftModelValidationDialog; }
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    /**
+     * Model validation
+     * \remark there is also a more specific validation version BlackGui::Components::CAircraftModelSetValidationDialog
+     */
+    class CAircraftModelValidationDialog : public QDialog
     {
-        /**
-         * Model validation
-         * \remark there is also a more specific validation version BlackGui::Components::CAircraftModelSetValidationDialog
-         */
-        class CAircraftModelValidationDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAircraftModelValidationDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAircraftModelValidationDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAircraftModelValidationDialog() override;
+        //! Destructor
+        virtual ~CAircraftModelValidationDialog() override;
 
-            //! Models
-            void setModels(
-                const BlackMisc::Simulation::CAircraftModelList &models,
-                const BlackMisc::Simulation::CSimulatorInfo &simulator,
-                const QString &simulatorDir
-            );
+        //! Models
+        void setModels(
+            const BlackMisc::Simulation::CAircraftModelList &models,
+            const BlackMisc::Simulation::CSimulatorInfo &simulator,
+            const QString &simulatorDir
+        );
 
-            //! Trigger a validation
-            void triggerValidation(int delayMs = 2500);
+        //! Trigger a validation
+        void triggerValidation(int delayMs = 2500);
 
-        private:
-            //! Validate
-            void validate();
+    private:
+        //! Validate
+        void validate();
 
-            QScopedPointer<Ui::CAircraftModelValidationDialog> ui;
-            BlackMisc::Simulation::CAircraftModelList m_models;
-            BlackMisc::Simulation::CSimulatorInfo m_simulator { BlackMisc::Simulation::CSimulatorInfo::None };
-            QString m_simulatorDir;
-        };
-    } // ns
+        QScopedPointer<Ui::CAircraftModelValidationDialog> ui;
+        BlackMisc::Simulation::CAircraftModelList m_models;
+        BlackMisc::Simulation::CSimulatorInfo m_simulator { BlackMisc::Simulation::CSimulatorInfo::None };
+        QString m_simulatorDir;
+    };
 } // ns
 
 #endif // guard

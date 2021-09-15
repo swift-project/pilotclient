@@ -19,52 +19,49 @@
 #include <QFrame>
 
 namespace Ui { class CRawFsdMessagesComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! GUI displaying raw FSD messages
+    class BLACKGUI_EXPORT CRawFsdMessagesComponent : public QFrame
     {
-        //! GUI displaying raw FSD messages
-        class BLACKGUI_EXPORT CRawFsdMessagesComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CRawFsdMessagesComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CRawFsdMessagesComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CRawFsdMessagesComponent();
+        //! Destructor
+        virtual ~CRawFsdMessagesComponent();
 
-        private:
-            void setupConnections();
-            void enableDisableRawFsdMessages();
-            void expandFilters(bool expand);
-            void expandWritingToFile(bool expand);
-            void changeStringFilter();
-            void changePacketTypeFilter(const QString &type);
-            void changeMaxDisplayedMessages();
-            void filterDisplayedMessages();
-            void selectFileDir();
-            void changeFileWritingMode();
-            void addFsdMessage(const BlackMisc::Network::CRawFsdMessage &rawFsdMessage);
-            void clearAllMessages();
-            void readSettings();
+    private:
+        void setupConnections();
+        void enableDisableRawFsdMessages();
+        void expandFilters(bool expand);
+        void expandWritingToFile(bool expand);
+        void changeStringFilter();
+        void changePacketTypeFilter(const QString &type);
+        void changeMaxDisplayedMessages();
+        void filterDisplayedMessages();
+        void selectFileDir();
+        void changeFileWritingMode();
+        void addFsdMessage(const BlackMisc::Network::CRawFsdMessage &rawFsdMessage);
+        void clearAllMessages();
+        void readSettings();
 
-            static QString rawFsdMessageToString(const BlackMisc::Network::CRawFsdMessage &rawFsdMessage);
+        static QString rawFsdMessageToString(const BlackMisc::Network::CRawFsdMessage &rawFsdMessage);
 
-            BlackMisc::CSetting<BlackCore::Vatsim::TRawFsdMessageSetting> m_setting { this };
+        BlackMisc::CSetting<BlackCore::Vatsim::TRawFsdMessageSetting> m_setting { this };
 
-            QScopedPointer<Ui::CRawFsdMessagesComponent> ui;
-            BlackMisc::CConnectionGuard m_signalConnections;  //!< connected signal/slots
+        QScopedPointer<Ui::CRawFsdMessagesComponent> ui;
+        BlackMisc::CConnectionGuard m_signalConnections;  //!< connected signal/slots
 
-            QString m_filterString;
-            QString m_filterPacketType;
+        QString m_filterString;
+        QString m_filterPacketType;
 
-            BlackMisc::Network::CRawFsdMessageList m_buffer;
+        BlackMisc::Network::CRawFsdMessageList m_buffer;
 
-            int m_maxDisplayedMessages = 100;
-            int m_maxBufferSize = 1000;
-        };
-    } // ns
+        int m_maxDisplayedMessages = 100;
+        int m_maxBufferSize = 1000;
+    };
 } // ns
 #endif // guard

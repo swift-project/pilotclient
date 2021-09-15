@@ -15,38 +15,33 @@
 #include <type_traits>
 #include <cstddef>
 
-namespace BlackMisc
+namespace BlackMisc::Private
 {
-
     //! \cond PRIVATE
-    namespace Private
+
+    // Remove elements from an index_sequence for which a pack parameter fails to satisfy a given predicate.
+    template <typename, typename T, bool...>
+    struct MaskSequenceImpl
     {
+        using type = T;
+    };
 
-        // Remove elements from an index_sequence for which a pack parameter fails to satisfy a given predicate.
-        template <typename, typename T, bool...>
-        struct MaskSequenceImpl
-        {
-            using type = T;
-        };
+    template <size_t I, size_t... Is, bool... Mask, size_t... Js>
+    struct MaskSequenceImpl<std::index_sequence<I, Is...>, std::index_sequence<Js...>, true, Mask...>
+    {
+        using type = typename MaskSequenceImpl<std::index_sequence<Is...>, std::index_sequence<Js..., I>, Mask...>::type;
+    };
 
-        template <size_t I, size_t... Is, bool... Mask, size_t... Js>
-        struct MaskSequenceImpl<std::index_sequence<I, Is...>, std::index_sequence<Js...>, true, Mask...>
-        {
-            using type = typename MaskSequenceImpl<std::index_sequence<Is...>, std::index_sequence<Js..., I>, Mask...>::type;
-        };
+    template <size_t I, size_t... Is, bool... Mask, size_t... Js>
+    struct MaskSequenceImpl<std::index_sequence<I, Is...>, std::index_sequence<Js...>, false, Mask...>
+    {
+        using type = typename MaskSequenceImpl<std::index_sequence<Is...>, std::index_sequence<Js...>, Mask...>::type;
+    };
 
-        template <size_t I, size_t... Is, bool... Mask, size_t... Js>
-        struct MaskSequenceImpl<std::index_sequence<I, Is...>, std::index_sequence<Js...>, false, Mask...>
-        {
-            using type = typename MaskSequenceImpl<std::index_sequence<Is...>, std::index_sequence<Js...>, Mask...>::type;
-        };
+    template <typename Seq, bool... Mask>
+    using MaskSequence = typename MaskSequenceImpl<Seq, std::index_sequence<>, Mask...>::type;
 
-        template <typename Seq, bool... Mask>
-        using MaskSequence = typename MaskSequenceImpl<Seq, std::index_sequence<>, Mask...>::type;
-
-    } // namespace Private
     //! \endcond
-
 } // namespace BlackMisc
 
 #endif // guard

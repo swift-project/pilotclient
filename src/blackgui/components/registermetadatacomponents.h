@@ -13,13 +13,10 @@
 #ifndef BLACKGUI_COMPONENTS_REGISTERMETADATASIMULATION_H
 #define BLACKGUI_COMPONENTS_REGISTERMETADATASIMULATION_H
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
-    {
-        //! Register metadata for components
-        BLACKGUI_EXPORT void registerMetadata();
-    } // ns
+    //! Register metadata for components
+    BLACKGUI_EXPORT void registerMetadata();
 } // ns
 
 #endif // guard

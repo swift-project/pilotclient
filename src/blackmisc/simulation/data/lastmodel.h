@@ -14,23 +14,17 @@
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/datacache.h"
 
-namespace BlackMisc
+namespace BlackMisc::Simulation::Data
 {
-    namespace Simulation
+    //! Last model used
+    struct TLastModel : public BlackMisc::TDataTrait<CAircraftModel>
     {
-        namespace Data
-        {
-            //! Last model used
-            struct TLastModel : public BlackMisc::TDataTrait<CAircraftModel>
-            {
-                //! \copydoc BlackMisc::TSettingTrait::key
-                static const char *key() { return "lastaircraftmodel"; }
+        //! \copydoc BlackMisc::TSettingTrait::key
+        static const char *key() { return "lastaircraftmodel"; }
 
-                //! \copydoc BlackMisc::TSettingTrait::humanReadable
-                static const QString &humanReadable() { static const QString name("Own aircraft model"); return name; }
-            };
-        } // ns
-    } // ns
+        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        static const QString &humanReadable() { static const QString name("Own aircraft model"); return name; }
+    };
 } // ns
 
 #endif // guard

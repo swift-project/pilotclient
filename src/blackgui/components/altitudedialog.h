@@ -17,78 +17,75 @@
 #include <QScopedPointer>
 
 namespace Ui { class CAltitudeDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * Dialog to get a correct altitude
+     */
+    class CAltitudeDialog : public QDialog
     {
-        /**
-         * Dialog to get a correct altitude
-         */
-        class CAltitudeDialog : public QDialog
+        Q_OBJECT
+
+    public:
+        //! Which mode used to enter
+        enum Mode
         {
-            Q_OBJECT
-
-        public:
-            //! Which mode used to enter
-            enum Mode
-            {
-                Unknown,
-                StringOnly,
-                VFR,
-                FlightFlevelInFeet,
-                MetricLevelInTensOfMeters,
-                AltitudeInHundredsOfFeet,
-                AltitudeInTensOfMeters,
-                AltitudeInFeet,
-                AltitudeInMeters,
-                AltitudeInMetersConvertedToFeet
-            };
-
-            //! Constructor
-            explicit CAltitudeDialog(QWidget *parent = nullptr);
-
-            //! Destructor
-            virtual ~CAltitudeDialog() override;
-
-            //! Get mode
-            Mode getMode() const;
-
-            //! Set VATSIM flag
-            void setVatsim(bool vatsim);
-
-            //! Manual string mode
-            bool isStringOnly() const;
-
-            //! Altitude string
-            const BlackMisc::Aviation::CAltitude &getAltitude() const { return m_altitude; }
-
-            //! Altitude string
-            const QString &getAltitudeString() const { return m_altitudeStr; }
-
-        private:
-            QScopedPointer<Ui::CAltitudeDialog> ui;
-            BlackMisc::Aviation::CAltitude m_altitude;
-            QString m_altitudeStr;
-
-            //! Edit finished
-            void onEditFinished();
-
-            //! VFR selected
-            void onVFRSelected(bool selected);
-
-            //! String only selected
-            void onStringOnlySelected(bool selected);
-
-            //! On text edit
-            void onTextEdit(const QString &text);
-
-            //! Simplified format changed
-            void onSimplifiedVATSIMFormatChanged(bool checked);
-
-            //! Update style sheet
-            void updateStyleSheet();
+            Unknown,
+            StringOnly,
+            VFR,
+            FlightFlevelInFeet,
+            MetricLevelInTensOfMeters,
+            AltitudeInHundredsOfFeet,
+            AltitudeInTensOfMeters,
+            AltitudeInFeet,
+            AltitudeInMeters,
+            AltitudeInMetersConvertedToFeet
         };
-    } // ns
+
+        //! Constructor
+        explicit CAltitudeDialog(QWidget *parent = nullptr);
+
+        //! Destructor
+        virtual ~CAltitudeDialog() override;
+
+        //! Get mode
+        Mode getMode() const;
+
+        //! Set VATSIM flag
+        void setVatsim(bool vatsim);
+
+        //! Manual string mode
+        bool isStringOnly() const;
+
+        //! Altitude string
+        const BlackMisc::Aviation::CAltitude &getAltitude() const { return m_altitude; }
+
+        //! Altitude string
+        const QString &getAltitudeString() const { return m_altitudeStr; }
+
+    private:
+        QScopedPointer<Ui::CAltitudeDialog> ui;
+        BlackMisc::Aviation::CAltitude m_altitude;
+        QString m_altitudeStr;
+
+        //! Edit finished
+        void onEditFinished();
+
+        //! VFR selected
+        void onVFRSelected(bool selected);
+
+        //! String only selected
+        void onStringOnlySelected(bool selected);
+
+        //! On text edit
+        void onTextEdit(const QString &text);
+
+        //! Simplified format changed
+        void onSimplifiedVATSIMFormatChanged(bool checked);
+
+        //! Update style sheet
+        void updateStyleSheet();
+    };
 } // ns
 
 #endif // guard

@@ -16,50 +16,47 @@
 #include <QScopedPointer>
 
 namespace Ui { class COtherSwiftVersionsComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * Overview about other "swift" versions
+     */
+    class COtherSwiftVersionsComponent : public QFrame
     {
-        /**
-         * Overview about other "swift" versions
-         */
-        class COtherSwiftVersionsComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit COtherSwiftVersionsComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit COtherSwiftVersionsComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~COtherSwiftVersionsComponent();
+        //! Destructor
+        virtual ~COtherSwiftVersionsComponent();
 
-            //! Any version selected?
-            bool hasSelection() const;
+        //! Any version selected?
+        bool hasSelection() const;
 
-            //! Get the selected other version
-            BlackMisc::CApplicationInfo selectedOtherVersion() const;
+        //! Get the selected other version
+        BlackMisc::CApplicationInfo selectedOtherVersion() const;
 
-            //! Reload other versions
-            void reloadOtherVersions() { this->reloadOtherVersionsDeferred(0); }
+        //! Reload other versions
+        void reloadOtherVersions() { this->reloadOtherVersionsDeferred(0); }
 
-            //! Reload versions
-            void reloadOtherVersionsDeferred(int deferMs);
+        //! Reload versions
+        void reloadOtherVersionsDeferred(int deferMs);
 
-        signals:
-            //! Selection changed
-            void versionChanged(const BlackMisc::CApplicationInfo &info);
+    signals:
+        //! Selection changed
+        void versionChanged(const BlackMisc::CApplicationInfo &info);
 
-        private:
-            QScopedPointer<Ui::COtherSwiftVersionsComponent> ui;
+    private:
+        QScopedPointer<Ui::COtherSwiftVersionsComponent> ui;
 
-            //! Data directory
-            void openDataDirectory();
+        //! Data directory
+        void openDataDirectory();
 
-            //! Object has been selected
-            void onObjectSelected(const BlackMisc::CVariant &object);
-        };
-    } // ns
+        //! Object has been selected
+        void onObjectSelected(const BlackMisc::CVariant &object);
+    };
 } // ns
 
 #endif // guard

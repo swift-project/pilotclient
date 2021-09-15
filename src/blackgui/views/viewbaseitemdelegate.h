@@ -13,34 +13,31 @@
 
 #include <QStyledItemDelegate>
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    class CViewBaseNonTemplate;
+
+    /*!
+     * Delegate for our view items
+     */
+    class CViewBaseItemDelegate : public QStyledItemDelegate
     {
-        class CViewBaseNonTemplate;
+        Q_OBJECT
 
-        /*!
-         * Delegate for our view items
-         */
-        class CViewBaseItemDelegate : public QStyledItemDelegate
-        {
-            Q_OBJECT
+    public:
+        //! Constructor
+        CViewBaseItemDelegate(QObject *parent = nullptr) : QStyledItemDelegate(parent) {}
 
-        public:
-            //! Constructor
-            CViewBaseItemDelegate(QObject *parent = nullptr) : QStyledItemDelegate(parent) {}
+        //! \name QStyledItemDelegate overrides
+        //! @{
+        virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+        virtual QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+        //! @}
 
-            //! \name QStyledItemDelegate overrides
-            //! @{
-            virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
-            virtual QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
-            //! @}
-
-        private:
-            //! Related CViewBaseNonTemplate
-            CViewBaseNonTemplate *viewBase() const;
-        };
-    } // namespace
+    private:
+        //! Related CViewBaseNonTemplate
+        CViewBaseNonTemplate *viewBase() const;
+    };
 } // namespace
 
 #endif // guard

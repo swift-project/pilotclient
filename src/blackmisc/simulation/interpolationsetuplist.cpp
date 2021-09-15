@@ -8,20 +8,17 @@
 
 #include "interpolationsetuplist.h"
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    CInterpolationSetupList::CInterpolationSetupList() { }
+
+    CInterpolationSetupList::CInterpolationSetupList(const CInterpolationAndRenderingSetupPerCallsign &setup)
     {
-        CInterpolationSetupList::CInterpolationSetupList() { }
+        this->push_back(setup);
+    }
 
-        CInterpolationSetupList::CInterpolationSetupList(const CInterpolationAndRenderingSetupPerCallsign &setup)
-        {
-            this->push_back(setup);
-        }
+    CInterpolationSetupList::CInterpolationSetupList(const CSequence<CInterpolationAndRenderingSetupPerCallsign> &other) :
+        CSequence<CInterpolationAndRenderingSetupPerCallsign>(other)
+    { }
 
-        CInterpolationSetupList::CInterpolationSetupList(const CSequence<CInterpolationAndRenderingSetupPerCallsign> &other) :
-            CSequence<CInterpolationAndRenderingSetupPerCallsign>(other)
-        { }
-
-    } // namespace
 } // namespace

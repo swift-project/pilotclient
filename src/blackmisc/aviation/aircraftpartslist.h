@@ -20,37 +20,34 @@
 #include <QHash>
 #include <QMetaType>
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
+    //! Value object encapsulating a list of aircraft parts.
+    class BLACKMISC_EXPORT CAircraftPartsList :
+        public CSequence<CAircraftParts>,
+        public ITimestampWithOffsetObjectList<CAircraftParts, CAircraftPartsList>,
+        public Mixin::MetaType<CAircraftPartsList>
     {
-        //! Value object encapsulating a list of aircraft parts.
-        class BLACKMISC_EXPORT CAircraftPartsList :
-            public CSequence<CAircraftParts>,
-            public ITimestampWithOffsetObjectList<CAircraftParts, CAircraftPartsList>,
-            public Mixin::MetaType<CAircraftPartsList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftPartsList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftPartsList)
+        using CSequence::CSequence;
 
-            //! Default constructor.
-            CAircraftPartsList();
+        //! Default constructor.
+        CAircraftPartsList();
 
-            //! Construct from a base class object.
-            CAircraftPartsList(const CSequence<CAircraftParts> &other);
+        //! Construct from a base class object.
+        CAircraftPartsList(const CSequence<CAircraftParts> &other);
 
-            //! Set on ground for all entries
-            int setOnGround(bool onGround);
-        };
+        //! Set on ground for all entries
+        int setOnGround(bool onGround);
+    };
 
-        //! Parts per callsign
-        using CAircraftPartsPerCallsign = QHash<CCallsign, CAircraftParts>;
+    //! Parts per callsign
+    using CAircraftPartsPerCallsign = QHash<CCallsign, CAircraftParts>;
 
-        //! Parts (list) per callsign
-        using CAircraftPartsListPerCallsign = QHash<CCallsign, CAircraftPartsList>;
+    //! Parts (list) per callsign
+    using CAircraftPartsListPerCallsign = QHash<CCallsign, CAircraftPartsList>;
 
-    } //namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftPartsList)

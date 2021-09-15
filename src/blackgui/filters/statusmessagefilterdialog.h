@@ -24,32 +24,29 @@ class QWidget;
 namespace BlackMisc { class CStatusMessageList; }
 namespace Ui { class CStatusMessageFilterDialog; }
 
-namespace BlackGui
+namespace BlackGui::Filters
 {
-    namespace Filters
+    //! Form for a status message filter
+    class BLACKGUI_EXPORT CStatusMessageFilterDialog :
+        public CFilterDialog,
+        public BlackGui::Models::IModelFilterProvider<BlackMisc::CStatusMessageList>
     {
-        //! Form for a status message filter
-        class BLACKGUI_EXPORT CStatusMessageFilterDialog :
-            public CFilterDialog,
-            public BlackGui::Models::IModelFilterProvider<BlackMisc::CStatusMessageList>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CStatusMessageFilterDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CStatusMessageFilterDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CStatusMessageFilterDialog() override;
+        //! Destructor
+        virtual ~CStatusMessageFilterDialog() override;
 
-            //! \copydoc Models::IModelFilterProvider::createModelFilter
-            virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::CStatusMessageList>> createModelFilter() const override;
+        //! \copydoc Models::IModelFilterProvider::createModelFilter
+        virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::CStatusMessageList>> createModelFilter() const override;
 
-        private:
-            QScopedPointer<Ui::CStatusMessageFilterDialog> ui;
-        };
+    private:
+        QScopedPointer<Ui::CStatusMessageFilterDialog> ui;
+    };
 
-    } // namespace
 } // namespace
 
 #endif // guard

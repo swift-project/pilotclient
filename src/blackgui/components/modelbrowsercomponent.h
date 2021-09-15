@@ -19,48 +19,45 @@
 #include "blackmisc/variant.h"
 
 namespace Ui { class CModelBrowserComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Allow to browse thru the model set
+    class CModelBrowserComponent : public QFrame
     {
-        //! Allow to browse thru the model set
-        class CModelBrowserComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CModelBrowserComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CModelBrowserComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CModelBrowserComponent() override;
+        //! Destructor
+        virtual ~CModelBrowserComponent() override;
 
-            //! Browser has been closed
-            void close();
+        //! Browser has been closed
+        void close();
 
-        private:
-            void onSetRelativePosition();
-            void onSetAbsolutePosition();
-            void onSetPBH();
-            void onSetParts();
-            void onModelDblClicked(const BlackMisc::CVariant &object);
+    private:
+        void onSetRelativePosition();
+        void onSetAbsolutePosition();
+        void onSetPBH();
+        void onSetParts();
+        void onModelDblClicked(const BlackMisc::CVariant &object);
 
-            BlackMisc::Aviation::CAircraftParts getParts() const;
+        BlackMisc::Aviation::CAircraftParts getParts() const;
 
-            void display();
-            void remove();
-            void loadModelSet();
-            bool hasContexts() const;
-            void selectTabParts();
-            void onCGChecked(bool checked);
-            void updatePartsAndPBH(bool setPbh, bool setParts);
-            void fetchSimulatorValues();
+        void display();
+        void remove();
+        void loadModelSet();
+        bool hasContexts() const;
+        void selectTabParts();
+        void onCGChecked(bool checked);
+        void updatePartsAndPBH(bool setPbh, bool setParts);
+        void fetchSimulatorValues();
 
-            QScopedPointer <Ui::CModelBrowserComponent> ui;
-            BlackMisc::Aviation::CAircraftSituation   m_situation;
-            BlackMisc::Simulation::CSimulatedAircraft m_aircraft;
-        };
-    } // ns
+        QScopedPointer <Ui::CModelBrowserComponent> ui;
+        BlackMisc::Aviation::CAircraftSituation   m_situation;
+        BlackMisc::Simulation::CSimulatedAircraft m_aircraft;
+    };
 } // ns
 
 #endif // guard

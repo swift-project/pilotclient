@@ -23,57 +23,54 @@
 #include <initializer_list>
 #include <tuple>
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
+    //! Value object encapsulating a list of aircraft engines.
+    class BLACKMISC_EXPORT CAircraftEngineList :
+        public CSequence<CAircraftEngine>,
+        public Mixin::MetaType<CAircraftEngineList>,
+        public Mixin::JsonOperators<CAircraftEngineList>
     {
-        //! Value object encapsulating a list of aircraft engines.
-        class BLACKMISC_EXPORT CAircraftEngineList :
-            public CSequence<CAircraftEngine>,
-            public Mixin::MetaType<CAircraftEngineList>,
-            public Mixin::JsonOperators<CAircraftEngineList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftEngineList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftEngineList)
+        using CSequence::CSequence;
 
-            //! Default constructor.
-            CAircraftEngineList() = default;
+        //! Default constructor.
+        CAircraftEngineList() = default;
 
-            //! Construct by bool values for engines 1,2 ...
-            CAircraftEngineList(std::initializer_list<bool> enginesOnOff);
+        //! Construct by bool values for engines 1,2 ...
+        CAircraftEngineList(std::initializer_list<bool> enginesOnOff);
 
-            //! Construct from a base class object.
-            CAircraftEngineList(const CSequence<CAircraftEngine> &other);
+        //! Construct from a base class object.
+        CAircraftEngineList(const CSequence<CAircraftEngine> &other);
 
-            //! Get engine 1..n
-            //! \remark 1 based, not 0 based
-            CAircraftEngine getEngine(int engineNumber) const;
+        //! Get engine 1..n
+        //! \remark 1 based, not 0 based
+        CAircraftEngine getEngine(int engineNumber) const;
 
-            //! Engine number 1..x on?
-            //! \remark 1 based, not 0 based
-            bool isEngineOn(int engineNumber) const;
+        //! Engine number 1..x on?
+        //! \remark 1 based, not 0 based
+        bool isEngineOn(int engineNumber) const;
 
-            //! Set engine on/off
-            //! \remark 1 based, not 0 based
-            void setEngineOn(int engineNumber, bool on);
+        //! Set engine on/off
+        //! \remark 1 based, not 0 based
+        void setEngineOn(int engineNumber, bool on);
 
-            //! Copy one engine multiple times (number) and set the number of engines to number
-            void setEngines(const CAircraftEngine &engine, int engineNumber);
+        //! Copy one engine multiple times (number) and set the number of engines to number
+        void setEngines(const CAircraftEngine &engine, int engineNumber);
 
-            //! Init some engines
-            void initEngines(int engineNumber, bool on);
+        //! Init some engines
+        void initEngines(int engineNumber, bool on);
 
-            //! Is any engine on?
-            bool isAnyEngineOn() const;
+        //! Is any engine on?
+        bool isAnyEngineOn() const;
 
-            //! \copydoc BlackMisc::Mixin::JsonByMetaClass::toJson
-            QJsonObject toJson() const;
+        //! \copydoc BlackMisc::Mixin::JsonByMetaClass::toJson
+        QJsonObject toJson() const;
 
-            //! \copydoc BlackMisc::Mixin::JsonByMetaClass::convertFromJson
-            void convertFromJson(const QJsonObject &json);
-        };
-    } //namespace
+        //! \copydoc BlackMisc::Mixin::JsonByMetaClass::convertFromJson
+        void convertFromJson(const QJsonObject &json);
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftEngineList)

@@ -24,90 +24,87 @@
 
 namespace Ui { class CSettingsSimulatorComponent; }
 namespace BlackCore { class CPluginManagerSimulator; }
-namespace BlackMisc { namespace Simulation { class CSimulatorPluginInfo; } }
-namespace BlackGui
+namespace BlackMisc::Simulation { class CSimulatorPluginInfo; }
+namespace BlackGui::Components
 {
-    namespace Components
+    //! All simulator settings component (GUI)
+    class BLACKGUI_EXPORT CSettingsSimulatorComponent : public QFrame
     {
-        //! All simulator settings component (GUI)
-        class BLACKGUI_EXPORT CSettingsSimulatorComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CSettingsSimulatorComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CSettingsSimulatorComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CSettingsSimulatorComponent() override;
+        //! Destructor
+        virtual ~CSettingsSimulatorComponent() override;
 
-        private:
-            //! Driver plugin enabled/disabled
-            void pluginStateChanged(const QString &identifier, bool enabled);
+    private:
+        //! Driver plugin enabled/disabled
+        void pluginStateChanged(const QString &identifier, bool enabled);
 
-            //! Apply max.aircraft
-            void onApplyMaxRenderedAircraft();
+        //! Apply max.aircraft
+        void onApplyMaxRenderedAircraft();
 
-            //! Apply max.distance
-            void onApplyMaxRenderedDistance();
+        //! Apply max.distance
+        void onApplyMaxRenderedDistance();
 
-            //! Apply disable rendering
-            void onApplyDisableRendering();
+        //! Apply disable rendering
+        void onApplyDisableRendering();
 
-            //! Apply time synchronization
-            void onApplyTimeSync();
+        //! Apply time synchronization
+        void onApplyTimeSync();
 
-            //! Apply COM sync
-            void onApplyComSync();
+        //! Apply COM sync
+        void onApplyComSync();
 
-            //! Apply CG source
-            void onApplyCGSource();
+        //! Apply CG source
+        void onApplyCGSource();
 
-            //! Record GND
-            void onApplyRecordGnd();
+        //! Record GND
+        void onApplyRecordGnd();
 
-            //! Reload settings
-            void onReload();
+        //! Reload settings
+        void onReload();
 
-            //! Simulators changed
-            void onEnabledSimulatorsChanged();
+        //! Simulators changed
+        void onEnabledSimulatorsChanged();
 
-            //! Clear restricted rendering
-            void clearRestricedRendering();
+        //! Clear restricted rendering
+        void clearRestricedRendering();
 
-            //! Simulator plugin changed
-            void simulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
+        //! Simulator plugin changed
+        void simulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
-            //! Open plugin details window
-            void showPluginDetails(const QString &identifier);
+        //! Open plugin details window
+        void showPluginDetails(const QString &identifier);
 
-            //! Show plugin config
-            void showPluginConfig(const QString &identifier);
+        //! Show plugin config
+        void showPluginConfig(const QString &identifier);
 
-            //! Select/deselect enabled/disabled plugins
-            void reloadPluginConfig(const BlackMisc::Simulation::CSimulatorPluginInfoList &plugins);
+        //! Select/deselect enabled/disabled plugins
+        void reloadPluginConfig(const BlackMisc::Simulation::CSimulatorPluginInfoList &plugins);
 
-            //! Check plugins again
-            void checkSimulatorPlugins();
+        //! Check plugins again
+        void checkSimulatorPlugins();
 
-            //! Set the GUI values
-            void setGuiValues();
+        //! Set the GUI values
+        void setGuiValues();
 
-            //! Available plugins, auto pseudo plugin added
-            static BlackMisc::Simulation::CSimulatorPluginInfoList getAvailablePlugins();
+        //! Available plugins, auto pseudo plugin added
+        static BlackMisc::Simulation::CSimulatorPluginInfoList getAvailablePlugins();
 
-            //! Get the simulator settings
-            static BlackMisc::Simulation::Settings::CSimulatorSettings getSimulatorSettings(bool &ok);
+        //! Get the simulator settings
+        static BlackMisc::Simulation::Settings::CSimulatorSettings getSimulatorSettings(bool &ok);
 
-            //! Set the simulator settings
-            static void setSimulatorSettings(BlackMisc::Simulation::Settings::CSimulatorSettings &settings);
+        //! Set the simulator settings
+        static void setSimulatorSettings(BlackMisc::Simulation::Settings::CSimulatorSettings &settings);
 
-            QScopedPointer<Ui::CSettingsSimulatorComponent> ui; //!< UI
-            bool m_pluginLoaded = false; //!< plugin loaded?
-            BlackCore::CPluginManagerSimulator *m_plugins = nullptr;
-            BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CSettingsSimulatorComponent::onEnabledSimulatorsChanged };
-        };
-    } // namespace
+        QScopedPointer<Ui::CSettingsSimulatorComponent> ui; //!< UI
+        bool m_pluginLoaded = false; //!< plugin loaded?
+        BlackCore::CPluginManagerSimulator *m_plugins = nullptr;
+        BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CSettingsSimulatorComponent::onEnabledSimulatorsChanged };
+    };
 } // namespace
 
 #endif // guard

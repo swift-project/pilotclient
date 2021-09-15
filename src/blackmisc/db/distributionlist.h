@@ -20,63 +20,60 @@
 #include <QSet>
 #include <QString>
 
-namespace BlackMisc
+namespace BlackMisc::Db
 {
-    namespace Db
+    //! Multiple distributions for different channels:
+    //! - one CDistribution objects contains all artifacts for a channel
+    //! - a distribution list normally contains all artifacts for all channels
+    //! \sa CArtifact
+    class BLACKMISC_EXPORT CDistributionList :
+        public CSequence<CDistribution>,
+        public IDatastoreObjectList<CDistribution, CDistributionList, int>,
+        public Mixin::MetaType<CDistributionList>
     {
-        //! Multiple distributions for different channels:
-        //! - one CDistribution objects contains all artifacts for a channel
-        //! - a distribution list normally contains all artifacts for all channels
-        //! \sa CArtifact
-        class BLACKMISC_EXPORT CDistributionList :
-            public CSequence<CDistribution>,
-            public IDatastoreObjectList<CDistribution, CDistributionList, int>,
-            public Mixin::MetaType<CDistributionList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CDistributionList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CDistributionList)
+        using CSequence::CSequence;
 
-            //! Empty constructor.
-            CDistributionList();
+        //! Empty constructor.
+        CDistributionList();
 
-            //! Construct from a base class object.
-            CDistributionList(const CSequence<CDistribution> &other);
+        //! Construct from a base class object.
+        CDistributionList(const CSequence<CDistribution> &other);
 
-            //! All channels
-            QStringList getChannels() const;
+        //! All channels
+        QStringList getChannels() const;
 
-            //! Stability
-            void sortByStability(Qt::SortOrder order = Qt::AscendingOrder);
+        //! Stability
+        void sortByStability(Qt::SortOrder order = Qt::AscendingOrder);
 
-            //! Contains distributions considered of same stability or more stable
-            bool containsEqualOrMoreStable(CDistribution &distribution) const;
+        //! Contains distributions considered of same stability or more stable
+        bool containsEqualOrMoreStable(CDistribution &distribution) const;
 
-            //! Contains any unrestricted
-            bool containsUnrestricted() const;
+        //! Contains any unrestricted
+        bool containsUnrestricted() const;
 
-            //! Contains channel?
-            bool containsChannel(const QString &channel) const;
+        //! Contains channel?
+        bool containsChannel(const QString &channel) const;
 
-            //! Find by channel
-            CDistribution findFirstByChannelOrDefault(const QString &channel) const;
+        //! Find by channel
+        CDistribution findFirstByChannelOrDefault(const QString &channel) const;
 
-            //! Find by restriction flag
-            CDistributionList findByRestriction(bool restricted) const;
+        //! Find by restriction flag
+        CDistributionList findByRestriction(bool restricted) const;
 
-            //! Most stable or default
-            CDistribution getMostStableOrDefault() const;
+        //! Most stable or default
+        CDistribution getMostStableOrDefault() const;
 
-            //! Least stable or default
-            CDistribution getLeastStableOrDefault() const;
+        //! Least stable or default
+        CDistribution getLeastStableOrDefault() const;
 
-            //! From database JSON by array
-            static CDistributionList fromDatabaseJson(const QJsonArray &array);
+        //! From database JSON by array
+        static CDistributionList fromDatabaseJson(const QJsonArray &array);
 
-            //! From database JSON by string
-            static CDistributionList fromDatabaseJson(const QString &json);
-        };
-    } // ns
+        //! From database JSON by string
+        static CDistributionList fromDatabaseJson(const QString &json);
+    };
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Db::CDistributionList)

@@ -30,79 +30,76 @@ class QDropEvent;
 class QWidget;
 
 namespace Ui { class CDbDistributorSelectorComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Distributor selector
+     */
+    class BLACKGUI_EXPORT CDbDistributorSelectorComponent :
+        public QFrame,
+        public CDropBase
     {
-        /*!
-         * Distributor selector
-         */
-        class BLACKGUI_EXPORT CDbDistributorSelectorComponent :
-            public QFrame,
-            public CDropBase
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CDbDistributorSelectorComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CDbDistributorSelectorComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CDbDistributorSelectorComponent() override;
+        //! Destructor
+        virtual ~CDbDistributorSelectorComponent() override;
 
-            //! Current distributor
-            void setDistributor(const BlackMisc::Simulation::CDistributor &distributor);
+        //! Current distributor
+        void setDistributor(const BlackMisc::Simulation::CDistributor &distributor);
 
-            //! Current Distributor
-            void setDistributor(const QString &distributorKeyOrAlias);
+        //! Current Distributor
+        void setDistributor(const QString &distributorKeyOrAlias);
 
-            //! Distributor
-            BlackMisc::Simulation::CDistributor getDistributor() const;
+        //! Distributor
+        BlackMisc::Simulation::CDistributor getDistributor() const;
 
-            //! Read only
-            void setReadOnly(bool readOnly);
+        //! Read only
+        void setReadOnly(bool readOnly);
 
-            //! Display distributor description
-            void withDistributorDescription(bool description);
+        //! Display distributor description
+        void withDistributorDescription(bool description);
 
-            //! Set with valid Distributor
-            bool isSet() const;
+        //! Set with valid Distributor
+        bool isSet() const;
 
-            //! Clear selection
-            void clear();
+        //! Clear selection
+        void clear();
 
-        signals:
-            //! Distributor was changed
-            void changedDistributor(const BlackMisc::Simulation::CDistributor &distributor);
+    signals:
+        //! Distributor was changed
+        void changedDistributor(const BlackMisc::Simulation::CDistributor &distributor);
 
-        protected:
-            //! \copydoc QWidget::dragEnterEvent
-            virtual void dragEnterEvent(QDragEnterEvent *event) override;
+    protected:
+        //! \copydoc QWidget::dragEnterEvent
+        virtual void dragEnterEvent(QDragEnterEvent *event) override;
 
-            //! \copydoc QWidget::dragMoveEvent
-            virtual void dragMoveEvent(QDragMoveEvent *event) override;
+        //! \copydoc QWidget::dragMoveEvent
+        virtual void dragMoveEvent(QDragMoveEvent *event) override;
 
-            //! \copydoc QWidget::dragLeaveEvent
-            virtual void dragLeaveEvent(QDragLeaveEvent *event) override;
+        //! \copydoc QWidget::dragLeaveEvent
+        virtual void dragLeaveEvent(QDragLeaveEvent *event) override;
 
-            //! \copydoc QWidget::dropEvent
-            virtual void dropEvent(QDropEvent *event) override;
+        //! \copydoc QWidget::dropEvent
+        virtual void dropEvent(QDropEvent *event) override;
 
-        private:
-            //! Distributors have been read
-            void onDistributorsRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+    private:
+        //! Distributors have been read
+        void onDistributorsRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
-            //! Data have been changed
-            void onDataChanged();
+        //! Data have been changed
+        void onDataChanged();
 
-            //! Data have been changed
-            void onCompleterActivated(const QString &distributorKeyOrAlias);
+        //! Data have been changed
+        void onCompleterActivated(const QString &distributorKeyOrAlias);
 
-            QScopedPointer<Ui::CDbDistributorSelectorComponent> ui;
-            QScopedPointer<QCompleter>          m_completerDistributors;
-            QMetaObject::Connection             m_signalConnection;
-            BlackMisc::Simulation::CDistributor m_currentDistributor;
-        };
-    } // ns
+        QScopedPointer<Ui::CDbDistributorSelectorComponent> ui;
+        QScopedPointer<QCompleter>          m_completerDistributors;
+        QMetaObject::Connection             m_signalConnection;
+        BlackMisc::Simulation::CDistributor m_currentDistributor;
+    };
 } // ns
 #endif // guard

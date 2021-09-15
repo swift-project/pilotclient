@@ -13,17 +13,14 @@
 
 #include "blackmisc/blackmiscexport.h"
 
-namespace BlackMisc
+namespace BlackMisc::Audio
 {
-    namespace Audio
-    {
-        //! Start the Windows mixer
-        BLACKMISC_EXPORT bool startWindowsMixer();
+    //! Start the Windows mixer
+    BLACKMISC_EXPORT bool startWindowsMixer();
 
-        //! On windows init the audio devices
-        //! \remarks workaround for WSAPI driver crashes, hoping that upfront init already sets global vars. etc.
-        BLACKMISC_EXPORT void initWindowsAudioDevices();
-    }
+    //! On windows init the audio devices
+    //! \remarks workaround for WSAPI driver crashes, hoping that upfront init already sets global vars. etc.
+    BLACKMISC_EXPORT void initWindowsAudioDevices();
 }
 
 #endif // guard

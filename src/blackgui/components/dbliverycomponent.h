@@ -23,7 +23,7 @@
 #include <QScopedPointer>
 
 namespace Ui { class CDbLiveryComponent; }
-namespace BlackMisc { namespace Aviation { class CLivery; } }
+namespace BlackMisc::Aviation { class CLivery; }
 namespace BlackGui
 {
     namespace Views { class CLiveryView; }

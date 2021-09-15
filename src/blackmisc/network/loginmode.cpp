@@ -8,23 +8,20 @@
 
 #include "blackmisc/network/loginmode.h"
 
-namespace BlackMisc
+namespace BlackMisc::Network
 {
-    namespace Network
+    QString CLoginMode::convertToQString(bool i18n) const
     {
-        QString CLoginMode::convertToQString(bool i18n) const
+        Q_UNUSED(i18n)
+
+        switch (m_loginMode)
         {
-            Q_UNUSED(i18n)
-
-            switch (m_loginMode)
-            {
-            case Pilot:    return QStringLiteral("Pilot");
-            case Observer: return QStringLiteral("Observer");
-            }
-
-            Q_UNREACHABLE();
-            return {};
+        case Pilot:    return QStringLiteral("Pilot");
+        case Observer: return QStringLiteral("Observer");
         }
 
-    } // namespace
+        Q_UNREACHABLE();
+        return {};
+    }
+
 } // namespace

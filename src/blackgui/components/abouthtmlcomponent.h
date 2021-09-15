@@ -17,34 +17,31 @@
 #include <QScopedPointer>
 
 namespace Ui { class CAboutHtmlComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * Display the HTML info "about swift"
+     */
+    class BLACKGUI_EXPORT CAboutHtmlComponent : public QFrame
     {
-        /**
-         * Display the HTML info "about swift"
-         */
-        class BLACKGUI_EXPORT CAboutHtmlComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAboutHtmlComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAboutHtmlComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAboutHtmlComponent() override;
+        //! Destructor
+        virtual ~CAboutHtmlComponent() override;
 
-        private:
-            //! Load credits and legal info
-            void loadAbout();
+    private:
+        //! Load credits and legal info
+        void loadAbout();
 
-            //! Anchor has been clicked
-            void onAnchorClicked(const QUrl &url);
+        //! Anchor has been clicked
+        void onAnchorClicked(const QUrl &url);
 
-            QScopedPointer<Ui::CAboutHtmlComponent> ui;
-        };
-    } // ns
+        QScopedPointer<Ui::CAboutHtmlComponent> ui;
+    };
 } // ns
 
 #endif // guard

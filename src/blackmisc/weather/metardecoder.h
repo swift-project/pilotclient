@@ -19,33 +19,30 @@
 #include <memory>
 #include <vector>
 
-namespace BlackMisc
+namespace BlackMisc::Weather
 {
-    namespace Weather
+    class IMetarDecoderPart;
+
+    //! Metar Decoder
+    class BLACKMISC_EXPORT CMetarDecoder : public QObject
     {
-        class IMetarDecoderPart;
+        Q_OBJECT
 
-        //! Metar Decoder
-        class BLACKMISC_EXPORT CMetarDecoder : public QObject
-        {
-            Q_OBJECT
+    public:
+        //! Default constructor
+        CMetarDecoder();
 
-        public:
-            //! Default constructor
-            CMetarDecoder();
+        //! Default destructor
+        virtual ~CMetarDecoder() override;
 
-            //! Default destructor
-            virtual ~CMetarDecoder() override;
+        //! Decode metar
+        CMetar decode(const QString &metarString) const;
 
-            //! Decode metar
-            CMetar decode(const QString &metarString) const;
+    private:
+        void allocateDecoders();
+        std::vector<std::unique_ptr<IMetarDecoderPart>> m_decoders;
+    };
 
-        private:
-            void allocateDecoders();
-            std::vector<std::unique_ptr<IMetarDecoderPart>> m_decoders;
-        };
-
-    } // namespace
 } // namespace
 
 #endif // guard

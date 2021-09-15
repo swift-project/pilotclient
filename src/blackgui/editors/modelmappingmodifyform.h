@@ -21,54 +21,51 @@
 class QCheckBox;
 
 namespace Ui { class CModelMappingModifyForm; }
-namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
-namespace BlackGui
+namespace BlackMisc::Simulation { class CAircraftModel; }
+namespace BlackGui::Editors
 {
-    namespace Editors
+    /*!
+     * Allows to modify individual fields of the model form
+     */
+    class BLACKGUI_EXPORT CModelMappingModifyForm : public CFormDbUser
     {
-        /*!
-         * Allows to modify individual fields of the model form
-         */
-        class BLACKGUI_EXPORT CModelMappingModifyForm : public CFormDbUser
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CModelMappingModifyForm(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CModelMappingModifyForm(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CModelMappingModifyForm() override;
+        //! Destructor
+        virtual ~CModelMappingModifyForm() override;
 
-            //! Get the values
-            BlackMisc::CPropertyIndexVariantMap getValues() const;
+        //! Get the values
+        BlackMisc::CPropertyIndexVariantMap getValues() const;
 
-            //! Set value
-            void setValue(const BlackMisc::Simulation::CAircraftModel &model);
+        //! Set value
+        void setValue(const BlackMisc::Simulation::CAircraftModel &model);
 
-            //! \copydoc CForm::setReadOnly
-            virtual void setReadOnly(bool readOnly) override;
+        //! \copydoc CForm::setReadOnly
+        virtual void setReadOnly(bool readOnly) override;
 
-        protected:
-            //! \copydoc CFormDbUser::userChanged
-            virtual void userChanged() override;
+    protected:
+        //! \copydoc CFormDbUser::userChanged
+        virtual void userChanged() override;
 
-        private:
-            //! Return pressed
-            void returnPressed();
+    private:
+        //! Return pressed
+        void returnPressed();
 
-            //! Data changed
-            void changed();
+        //! Data changed
+        void changed();
 
-            //! Checkbox from its corresponding widgte
-            QCheckBox *widgetToCheckbox(QObject *widget) const;
+        //! Checkbox from its corresponding widgte
+        QCheckBox *widgetToCheckbox(QObject *widget) const;
 
-            //! CG changed
-            void onCGEdited();
+        //! CG changed
+        void onCGEdited();
 
-            QScopedPointer<Ui::CModelMappingModifyForm> ui;
-        };
-    } // ns
+        QScopedPointer<Ui::CModelMappingModifyForm> ui;
+    };
 } // ns
 
 #endif // guard

@@ -10,37 +10,34 @@
 
 using namespace BlackMisc::Aviation;
 
-namespace BlackMisc
+namespace BlackMisc::Network
 {
-    namespace Network
+    CClientList::CClientList() { }
+
+    CClientList::CClientList(const CSequence &other) : CSequence<CClient>(other)
+    { }
+
+    bool CClientList::hasCapability(const Aviation::CCallsign &callsign, CClient::Capability capability) const
     {
-        CClientList::CClientList() { }
+        return this->getCapabilities(callsign).testFlag(capability);
+    }
 
-        CClientList::CClientList(const CSequence &other) : CSequence<CClient>(other)
-        { }
+    CClient::Capabilities CClientList::getCapabilities(const Aviation::CCallsign &callsign) const
+    {
+        if (this->isEmpty()) { return static_cast<CClient::Capabilities>(CClient::None); }
+        return this->findFirstByCallsign(callsign).getCapabilities();
+    }
 
-        bool CClientList::hasCapability(const Aviation::CCallsign &callsign, CClient::Capability capability) const
+    CClientList CClientList::filterPilotsByCallsign(const CCallsignSet &callsigns) const
+    {
+        CClientList filtered;
+        for (const CClient &client : *this)
         {
-            return this->getCapabilities(callsign).testFlag(capability);
-        }
-
-        CClient::Capabilities CClientList::getCapabilities(const Aviation::CCallsign &callsign) const
-        {
-            if (this->isEmpty()) { return static_cast<CClient::Capabilities>(CClient::None); }
-            return this->findFirstByCallsign(callsign).getCapabilities();
-        }
-
-        CClientList CClientList::filterPilotsByCallsign(const CCallsignSet &callsigns) const
-        {
-            CClientList filtered;
-            for (const CClient &client : *this)
+            if (client.isAtc() || callsigns.contains(client.getCallsign()))
             {
-                if (client.isAtc() || callsigns.contains(client.getCallsign()))
-                {
-                    filtered.push_back(client);
-                }
+                filtered.push_back(client);
             }
-            return filtered;
         }
-    } // namespace
+        return filtered;
+    }
 } // namespace

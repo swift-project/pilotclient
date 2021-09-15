@@ -12,24 +12,21 @@
 using namespace BlackGui;
 using namespace BlackCore::Db;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CDataSettingsComponent::CDataSettingsComponent(QWidget *parent) :
+        COverlayMessagesFrame(parent),
+        ui(new Ui::CDataSettingsComponent)
     {
-        CDataSettingsComponent::CDataSettingsComponent(QWidget *parent) :
-            COverlayMessagesFrame(parent),
-            ui(new Ui::CDataSettingsComponent)
-        {
-            ui->setupUi(this);
-            ui->comp_GuiSettings->hideOpacity(true);
-        }
+        ui->setupUi(this);
+        ui->comp_GuiSettings->hideOpacity(true);
+    }
 
-        CDataSettingsComponent::~CDataSettingsComponent()
-        { }
+    CDataSettingsComponent::~CDataSettingsComponent()
+    { }
 
-        void CDataSettingsComponent::setBackgroundUpdater(const CBackgroundDataUpdater *updater)
-        {
-            ui->comp_ModelSettings->setBackgroundUpdater(updater);
-        }
-    } // ns
+    void CDataSettingsComponent::setBackgroundUpdater(const CBackgroundDataUpdater *updater)
+    {
+        ui->comp_ModelSettings->setBackgroundUpdater(updater);
+    }
 } // ns

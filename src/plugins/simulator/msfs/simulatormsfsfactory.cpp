@@ -15,23 +15,20 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Weather;
 using namespace BlackCore;
 
-namespace BlackSimPlugin
+namespace BlackSimPlugin::Msfs
 {
-    namespace Msfs
+    ISimulator *CSimulatorMsFsFactory::create(const CSimulatorPluginInfo &info,
+            IOwnAircraftProvider *ownAircraftProvider,
+            IRemoteAircraftProvider *remoteAircraftProvider,
+            IWeatherGridProvider *weatherGridProvider,
+            IClientProvider *clientProvider)
     {
-        ISimulator *CSimulatorMsFsFactory::create(const CSimulatorPluginInfo &info,
-                IOwnAircraftProvider *ownAircraftProvider,
-                IRemoteAircraftProvider *remoteAircraftProvider,
-                IWeatherGridProvider *weatherGridProvider,
-                IClientProvider *clientProvider)
-        {
-            Q_ASSERT(ownAircraftProvider);
-            return new CSimulatorMsFs(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, this);
-        }
+        Q_ASSERT(ownAircraftProvider);
+        return new CSimulatorMsFs(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, this);
+    }
 
-        ISimulatorListener *CSimulatorMsFsFactory::createListener(const CSimulatorPluginInfo &info)
-        {
-            return new CSimulatorMsFsListener(info);
-        }
-    } // namespace
+    ISimulatorListener *CSimulatorMsFsFactory::createListener(const CSimulatorPluginInfo &info)
+    {
+        return new CSimulatorMsFsListener(info);
+    }
 } // namespace

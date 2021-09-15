@@ -10,13 +10,10 @@
 
 #include "blackmisc/sharedstate/passivemutator.h"
 
-namespace BlackMisc
+namespace BlackMisc::SharedState
 {
-    namespace SharedState
+    void CPassiveMutator::postEvent(const CVariant &param)
     {
-        void CPassiveMutator::postEvent(const CVariant &param)
-        {
-            emit eventPosted(param);
-        }
+        emit eventPosted(param);
     }
 }

@@ -10,27 +10,24 @@
 
 #include "blackmisc/sharedstate/passiveobserver.h"
 
-namespace BlackMisc
+namespace BlackMisc::SharedState
 {
-    namespace SharedState
+    void CPassiveObserver::setEventSubscription(const CVariant &param)
     {
-        void CPassiveObserver::setEventSubscription(const CVariant &param)
-        {
-            QMutexLocker lock(&m_eventSubscriptionMutex);
-            m_eventSubscription = param;
-            lock.unlock();
-            emit eventSubscriptionChanged(param);
-        }
+        QMutexLocker lock(&m_eventSubscriptionMutex);
+        m_eventSubscription = param;
+        lock.unlock();
+        emit eventSubscriptionChanged(param);
+    }
 
-        CVariant CPassiveObserver::eventSubscription() const
-        {
-            QMutexLocker lock(&m_eventSubscriptionMutex);
-            return m_eventSubscription;
-        }
+    CVariant CPassiveObserver::eventSubscription() const
+    {
+        QMutexLocker lock(&m_eventSubscriptionMutex);
+        return m_eventSubscription;
+    }
 
-        void CPassiveObserver::handleEvent(const CVariant& param) const
-        {
-            m_eventHandler(param);
-        }
+    void CPassiveObserver::handleEvent(const CVariant& param) const
+    {
+        m_eventHandler(param);
     }
 }

@@ -14,23 +14,17 @@
 #include "blackmisc/simulation/aircraftmatchersetup.h"
 #include "blackmisc/settingscache.h"
 
-namespace BlackMisc
+namespace BlackMisc::Simulation::Settings
 {
-    namespace Simulation
+    //! Trait for simulator settings
+    struct TModelMatching : public TSettingTrait<CAircraftMatcherSetup>
     {
-        namespace Settings
-        {
-            //! Trait for simulator settings
-            struct TModelMatching : public TSettingTrait<CAircraftMatcherSetup>
-            {
-                //! Key in data cache
-                static const char *key() { return "matching"; }
+        //! Key in data cache
+        static const char *key() { return "matching"; }
 
-                //! \copydoc BlackMisc::TSettingTrait::humanReadable
-                static const QString &humanReadable() { static const QString name("Model matching"); return name; }
-            };
-        } // ns
-    } // ns
+        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        static const QString &humanReadable() { static const QString name("Model matching"); return name; }
+    };
 } // ns
 
 #endif // guard

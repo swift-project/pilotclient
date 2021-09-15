@@ -29,55 +29,52 @@
 #endif
 #endif
 
-namespace BlackMisc
+namespace BlackMisc::Private
 {
-    namespace Private
+    // cppcheck-suppress unusedFunction
+    void failedVerify(const char *condition, const char *filename, int line, const char *context, const char *message, bool audit)
     {
-        // cppcheck-suppress unusedFunction
-        void failedVerify(const char *condition, const char *filename, int line, const char *context, const char *message, bool audit)
-        {
-            Q_UNUSED(condition)
-            Q_UNUSED(filename)
-            Q_UNUSED(line)
-            Q_UNUSED(context)
-            Q_UNUSED(message)
-            Q_UNUSED(audit)
+        Q_UNUSED(condition)
+        Q_UNUSED(filename)
+        Q_UNUSED(line)
+        Q_UNUSED(context)
+        Q_UNUSED(message)
+        Q_UNUSED(audit)
 
 #if defined(QT_DEBUG)
 #   if defined(Q_CC_MSVC)
-            if (!audit || IsDebuggerPresent())
-            {
-                __debugbreak();
-                return;
-            }
+        if (!audit || IsDebuggerPresent())
+        {
+            __debugbreak();
+            return;
+        }
 #   elif defined(BLACK_BUILTIN_DEBUGTRAP)
-            BLACK_BUILTIN_DEBUGTRAP();
+        BLACK_BUILTIN_DEBUGTRAP();
 #   elif defined(Q_PROCESSOR_X86)
-            __asm__ volatile("int $0x03");
+        __asm__ volatile("int $0x03");
 #   elif defined(Q_PROCESSOR_ARM)
-            __asm__ volatile(".inst 0xe7f001f0");
+        __asm__ volatile(".inst 0xe7f001f0");
 #   elif defined(Q_OS_UNIX)
-            raise(SIGTRAP);
+        raise(SIGTRAP);
 #   else
-            Q_ASSERT(false);
+        Q_ASSERT(false);
 #   endif
 #endif
 
 #if defined(QT_NO_DEBUG) || defined(Q_CC_MSVC)
-            QString log;
-            if (context && message)
-            {
-                log = QStringLiteral("Failed to verify: %1 (%2 in %3) in %4 line %5").arg(condition, message, context, filename, QString::number(line));
-            }
-            else
-            {
-                log = QStringLiteral("Failed to verify: %1 in %2 line %3").arg(condition, filename, QString::number(line));
-            }
-            QMessageLogger().warning(QLoggingCategory(qPrintable(CLogCategories::verification()))) << log;
+        QString log;
+        if (context && message)
+        {
+            log = QStringLiteral("Failed to verify: %1 (%2 in %3) in %4 line %5").arg(condition, message, context, filename, QString::number(line));
+        }
+        else
+        {
+            log = QStringLiteral("Failed to verify: %1 in %2 line %3").arg(condition, filename, QString::number(line));
+        }
+        QMessageLogger().warning(QLoggingCategory(qPrintable(CLogCategories::verification()))) << log;
 #   if defined(BLACK_USE_CRASHPAD)
-            CRASHPAD_SIMULATE_CRASH();
+        CRASHPAD_SIMULATE_CRASH();
 #   endif
 #endif
-        }
     }
 }

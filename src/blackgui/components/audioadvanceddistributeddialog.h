@@ -17,29 +17,26 @@
 #include <QScopedPointer>
 
 namespace Ui { class CAudioAdvancedDistributedDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Audio advanced setup as dialog
+    class BLACKGUI_EXPORT CAudioAdvancedDistributedDialog : public QDialog
     {
-        //! Audio advanced setup as dialog
-        class BLACKGUI_EXPORT CAudioAdvancedDistributedDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            explicit CAudioAdvancedDistributedDialog(QWidget *parent = nullptr);
+    public:
+        //! Ctor
+        explicit CAudioAdvancedDistributedDialog(QWidget *parent = nullptr);
 
-            //! Dtor
-            virtual ~CAudioAdvancedDistributedDialog() override;
+        //! Dtor
+        virtual ~CAudioAdvancedDistributedDialog() override;
 
-            //! Reload registered devices
-            void reloadRegisteredDevices();
+        //! Reload registered devices
+        void reloadRegisteredDevices();
 
-        private:
-            QScopedPointer<Ui::CAudioAdvancedDistributedDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CAudioAdvancedDistributedDialog> ui;
+    };
 } // ns
 
 #endif // guard

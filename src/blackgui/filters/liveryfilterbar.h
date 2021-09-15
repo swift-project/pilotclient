@@ -21,61 +21,55 @@
 #include <memory>
 
 namespace Ui { class CLiveryFilterBar; }
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
-    {
-        class CLivery;
-        class CLiveryList;
-    }
+    class CLivery;
+    class CLiveryList;
 }
-namespace BlackGui
+namespace BlackGui::Filters
 {
-    namespace Filters
+    /*!
+     * Livery filter bar
+     */
+    class BLACKGUI_EXPORT CLiveryFilterBar :
+        public CFilterWidget,
+        public Models::IModelFilterProvider<BlackMisc::Aviation::CLiveryList>
     {
-        /*!
-         * Livery filter bar
-         */
-        class BLACKGUI_EXPORT CLiveryFilterBar :
-            public CFilterWidget,
-            public Models::IModelFilterProvider<BlackMisc::Aviation::CLiveryList>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CLiveryFilterBar(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CLiveryFilterBar(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CLiveryFilterBar() override;
+        //! Destructor
+        virtual ~CLiveryFilterBar() override;
 
-            //! \copydoc Models::IModelFilterProvider::createModelFilter
-            virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CLiveryList>> createModelFilter() const override;
+        //! \copydoc Models::IModelFilterProvider::createModelFilter
+        virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CLiveryList>> createModelFilter() const override;
 
-            //! Filter by livery values
-            void filter(const BlackMisc::Aviation::CLivery &livery);
+        //! Filter by livery values
+        void filter(const BlackMisc::Aviation::CLivery &livery);
 
-            //! Filter by airline values
-            void filter(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao);
+        //! Filter by airline values
+        void filter(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao);
 
-        public slots:
-            //! \copydoc CFilterWidget::onRowCountChanged
-            virtual void onRowCountChanged(int count, bool withFilter) override;
+    public slots:
+        //! \copydoc CFilterWidget::onRowCountChanged
+        virtual void onRowCountChanged(int count, bool withFilter) override;
 
-        protected:
-            //! Clear form
-            virtual void clearForm() override;
+    protected:
+        //! Clear form
+        virtual void clearForm() override;
 
-        private:
-            //! Color changed
-            void onColorChanged(const BlackMisc::CRgbColor &color);
+    private:
+        //! Color changed
+        void onColorChanged(const BlackMisc::CRgbColor &color);
 
-            //! Color distance changed
-            void onColorDistanceChanged(int distance);
+        //! Color distance changed
+        void onColorDistanceChanged(int distance);
 
-            QScopedPointer<Ui::CLiveryFilterBar> ui;
-        };
-    } // ns
+        QScopedPointer<Ui::CLiveryFilterBar> ui;
+    };
 } // ns
 
 #endif // guard

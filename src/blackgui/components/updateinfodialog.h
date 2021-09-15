@@ -16,45 +16,42 @@
 #include <QDialog>
 
 namespace Ui { class CUpdateInfoDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * Download and install swift
+     */
+    class BLACKGUI_EXPORT CUpdateInfoDialog : public QDialog
     {
-        /**
-         * Download and install swift
-         */
-        class BLACKGUI_EXPORT CUpdateInfoDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CUpdateInfoDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CUpdateInfoDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CUpdateInfoDialog() override;
+        //! Destructor
+        virtual ~CUpdateInfoDialog() override;
 
-            //! A new version existing?
-            bool isNewVersionAvailable() const;
+        //! A new version existing?
+        bool isNewVersionAvailable() const;
 
-            //! \copydoc QDialog::exec
-            virtual int exec() override;
+        //! \copydoc QDialog::exec
+        virtual int exec() override;
 
-        protected:
-            //! \copydoc QObject::event
-            virtual bool event(QEvent *event) override;
+    protected:
+        //! \copydoc QObject::event
+        virtual bool event(QEvent *event) override;
 
-        private:
-            QScopedPointer<Ui::CUpdateInfoDialog> ui;
-            BlackMisc::CSetting<BlackGui::Settings::TUpdateNotificationSettings> m_setting { this }; //!< show again?
+    private:
+        QScopedPointer<Ui::CUpdateInfoDialog> ui;
+        BlackMisc::CSetting<BlackGui::Settings::TUpdateNotificationSettings> m_setting { this }; //!< show again?
 
-            //! Toggled checkbox
-            void onDontShowAgain(bool dontShowAgain);
+        //! Toggled checkbox
+        void onDontShowAgain(bool dontShowAgain);
 
-            //! Selection in distribution component changed
-            void selectionChanged();
-        };
-    } // ns
+        //! Selection in distribution component changed
+        void selectionChanged();
+    };
 } // ns
 
 #endif // guard

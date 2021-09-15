@@ -21,34 +21,31 @@
 
 class QWidget;
 
-namespace BlackMisc { namespace Simulation { class CAircraftModelList; } }
+namespace BlackMisc::Simulation { class CAircraftModelList; }
 namespace Ui { class CAircraftModelFilterDialog; }
 
-namespace BlackGui
+namespace BlackGui::Filters
 {
-    namespace Filters
+    //! Form for a aircraft model filter
+    class BLACKGUI_EXPORT CAircraftModelFilterDialog :
+        public CFilterDialog,
+        public Models::IModelFilterProvider<BlackMisc::Simulation::CAircraftModelList>
     {
-        //! Form for a aircraft model filter
-        class BLACKGUI_EXPORT CAircraftModelFilterDialog :
-            public CFilterDialog,
-            public Models::IModelFilterProvider<BlackMisc::Simulation::CAircraftModelList>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAircraftModelFilterDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAircraftModelFilterDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAircraftModelFilterDialog() override;
+        //! Destructor
+        virtual ~CAircraftModelFilterDialog() override;
 
-            //! \copydoc Models::IModelFilterProvider::createModelFilter
-            virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Simulation::CAircraftModelList>> createModelFilter() const override;
+        //! \copydoc Models::IModelFilterProvider::createModelFilter
+        virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Simulation::CAircraftModelList>> createModelFilter() const override;
 
-        private:
-            QScopedPointer<Ui::CAircraftModelFilterDialog> ui;
-        };
-    } // namespace
+    private:
+        QScopedPointer<Ui::CAircraftModelFilterDialog> ui;
+    };
 } // namespace
 
 #endif // guard

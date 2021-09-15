@@ -14,36 +14,33 @@
 #include "blackmisc/settingscache.h"
 #include <QString>
 
-namespace BlackCore
+namespace BlackCore::Audio
 {
-    namespace Audio
+    //! Audio input device settings
+    struct TInputDevice : public BlackMisc::TSettingTrait<QString>
     {
-        //! Audio input device settings
-        struct TInputDevice : public BlackMisc::TSettingTrait<QString>
-        {
-            //! \copydoc BlackMisc::TSettingTrait::key
-            static const char *key() { return "audio/%Application%/inputdevice"; }
+        //! \copydoc BlackMisc::TSettingTrait::key
+        static const char *key() { return "audio/%Application%/inputdevice"; }
 
-            //! \copydoc BlackMisc::TSettingTrait::humanReadable
-            static const QString &humanReadable() { static const QString name("Input device"); return name; }
+        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        static const QString &humanReadable() { static const QString name("Input device"); return name; }
 
-            //! \copydoc BlackMisc::TSettingTrait::defaultValue
-            static const QString &defaultValue() { static const QString device("default"); return device; }
-        };
+        //! \copydoc BlackMisc::TSettingTrait::defaultValue
+        static const QString &defaultValue() { static const QString device("default"); return device; }
+    };
 
-        //! Audio input device settings
-        struct TOutputDevice : public BlackMisc::TSettingTrait<QString>
-        {
-            //! \copydoc BlackMisc::TSettingTrait::key
-            static const char *key() { return "audio/%Application%/outputdevice"; }
+    //! Audio input device settings
+    struct TOutputDevice : public BlackMisc::TSettingTrait<QString>
+    {
+        //! \copydoc BlackMisc::TSettingTrait::key
+        static const char *key() { return "audio/%Application%/outputdevice"; }
 
-            //! \copydoc BlackMisc::TSettingTrait::humanReadable
-            static const QString &humanReadable() { static const QString name("Output device"); return name; }
+        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        static const QString &humanReadable() { static const QString name("Output device"); return name; }
 
-            //! \copydoc BlackMisc::TSettingTrait::defaultValue
-            static const QString &defaultValue() { static const QString device("default"); return device; }
-        };
-    } // ns
+        //! \copydoc BlackMisc::TSettingTrait::defaultValue
+        static const QString &defaultValue() { static const QString device("default"); return device; }
+    };
 } // ns
 
 #endif

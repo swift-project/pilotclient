@@ -20,23 +20,20 @@
 class QModelIndex;
 class QObject;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Aircraft parts list model
+    class BLACKGUI_EXPORT CAircraftPartsListModel : public CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftPartsList, true>
     {
-        //! Aircraft parts list model
-        class BLACKGUI_EXPORT CAircraftPartsListModel : public CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftPartsList, true>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAircraftPartsListModel(QObject *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAircraftPartsListModel(QObject *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAircraftPartsListModel() {}
-        };
-    } // namespace
+        //! Destructor
+        virtual ~CAircraftPartsListModel() {}
+    };
 } // namespace
 
 #endif // guard

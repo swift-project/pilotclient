@@ -17,30 +17,24 @@
 
 class QWidget;
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
-    {
-        class CAirlineIcaoCode;
-        class CAirlineIcaoCodeList;
-    }
+    class CAirlineIcaoCode;
+    class CAirlineIcaoCodeList;
 }
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Aircraft ICAO codes view
+    class BLACKGUI_EXPORT CAirlineIcaoCodeView :
+        public CViewWithDbObjects<Models::CAirlineIcaoCodeListModel>
     {
-        //! Aircraft ICAO codes view
-        class BLACKGUI_EXPORT CAirlineIcaoCodeView :
-            public CViewWithDbObjects<Models::CAirlineIcaoCodeListModel>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAirlineIcaoCodeView(QWidget *parent = nullptr);
-        };
-    }
+    public:
+        //! Constructor
+        explicit CAirlineIcaoCodeView(QWidget *parent = nullptr);
+    };
 }
 
 #endif // guard

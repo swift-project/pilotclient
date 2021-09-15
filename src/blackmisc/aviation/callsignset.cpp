@@ -14,66 +14,63 @@
 #include <QJsonObject>
 #include <QString>
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
+    CCallsignSet::CCallsignSet() { }
+
+    CCallsignSet::CCallsignSet(const QStringList &callsigns, CCallsign::TypeHint typeHint)
     {
-        CCallsignSet::CCallsignSet() { }
-
-        CCallsignSet::CCallsignSet(const QStringList &callsigns, CCallsign::TypeHint typeHint)
+        for (const QString &c : callsigns)
         {
-            for (const QString &c : callsigns)
-            {
-                if (c.isEmpty()) { continue; }
-                const CCallsign cs = CCallsign(c, typeHint);
-                this->push_back(cs);
-            }
+            if (c.isEmpty()) { continue; }
+            const CCallsign cs = CCallsign(c, typeHint);
+            this->push_back(cs);
         }
+    }
 
-        CCallsignSet::CCallsignSet(const CCallsign &callsign)
+    CCallsignSet::CCallsignSet(const CCallsign &callsign)
+    {
+        if (callsign.isEmpty()) { return; }
+        this->push_back(callsign);
+    }
+
+    CCallsignSet::CCallsignSet(const CCollection<CCallsign> &other) :
+        CCollection<CCallsign>(other)
+    { }
+
+    bool CCallsignSet::containsCallsign(const QString &callsign) const
+    {
+        return this->contains(CCallsign(callsign));
+    }
+
+    QStringList CCallsignSet::getCallsignStrings(bool sorted) const
+    {
+        QStringList callsigns;
+        for (const CCallsign &cs : *this)
         {
-            if (callsign.isEmpty()) { return; }
-            this->push_back(callsign);
+            callsigns.push_back(cs.asString());
         }
+        if (sorted) { callsigns.sort(); }
+        return callsigns;
+    }
 
-        CCallsignSet::CCallsignSet(const CCollection<CCallsign> &other) :
-            CCollection<CCallsign>(other)
-        { }
+    QString CCallsignSet::getCallsignsAsString(bool sorted, const QString &separator) const
+    {
+        if (this->isEmpty()) { return {}; }
+        return this->getCallsignStrings(sorted).join(separator);
+    }
 
-        bool CCallsignSet::containsCallsign(const QString &callsign) const
-        {
-            return this->contains(CCallsign(callsign));
-        }
-
-        QStringList CCallsignSet::getCallsignStrings(bool sorted) const
-        {
-            QStringList callsigns;
-            for (const CCallsign &cs : *this)
-            {
-                callsigns.push_back(cs.asString());
-            }
-            if (sorted) { callsigns.sort(); }
-            return callsigns;
-        }
-
-        QString CCallsignSet::getCallsignsAsString(bool sorted, const QString &separator) const
-        {
-            if (this->isEmpty()) { return {}; }
-            return this->getCallsignStrings(sorted).join(separator);
-        }
-
-        void CCallsignSet::registerMetadata()
-        {
-            qRegisterMetaType<BlackMisc::CSequence<CCallsign>>();
-            qDBusRegisterMetaType<BlackMisc::CSequence<CCallsign>>();
-            qRegisterMetaTypeStreamOperators<BlackMisc::CSequence<CCallsign>>();
-            qRegisterMetaType<BlackMisc::CCollection<CCallsign>>();
-            qDBusRegisterMetaType<BlackMisc::CCollection<CCallsign>>();
-            qRegisterMetaTypeStreamOperators<BlackMisc::CCollection<CCallsign>>();
-            qRegisterMetaType<CCallsignSet>();
-            qDBusRegisterMetaType<CCallsignSet>();
-            qRegisterMetaTypeStreamOperators<CCallsignSet>();
-            registerMetaValueType<CCallsignSet>();
-        }
-    } // namespace
+    void CCallsignSet::registerMetadata()
+    {
+        qRegisterMetaType<BlackMisc::CSequence<CCallsign>>();
+        qDBusRegisterMetaType<BlackMisc::CSequence<CCallsign>>();
+        qRegisterMetaTypeStreamOperators<BlackMisc::CSequence<CCallsign>>();
+        qRegisterMetaType<BlackMisc::CCollection<CCallsign>>();
+        qDBusRegisterMetaType<BlackMisc::CCollection<CCallsign>>();
+        qRegisterMetaTypeStreamOperators<BlackMisc::CCollection<CCallsign>>();
+        qRegisterMetaType<CCallsignSet>();
+        qDBusRegisterMetaType<CCallsignSet>();
+        qRegisterMetaTypeStreamOperators<CCallsignSet>();
+        registerMetaValueType<CCallsignSet>();
+    }
 } // namespace

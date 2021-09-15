@@ -18,64 +18,61 @@
 #include <QScopedPointer>
 
 namespace Ui { class CVoiceSetupForm; }
-namespace BlackGui
+namespace BlackGui::Editors
 {
-    namespace Editors
+    //! Voice form
+    class CVoiceSetupForm : public CForm
     {
-        //! Voice form
-        class CVoiceSetupForm : public CForm
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            explicit CVoiceSetupForm(QWidget *parent = nullptr);
+    public:
+        //! Ctor
+        explicit CVoiceSetupForm(QWidget *parent = nullptr);
 
-            //! Dtor
-            virtual ~CVoiceSetupForm() override;
+        //! Dtor
+        virtual ~CVoiceSetupForm() override;
 
-            //! Voice setup from GUI
-            BlackMisc::Audio::CVoiceSetup getValue() const;
+        //! Voice setup from GUI
+        BlackMisc::Audio::CVoiceSetup getValue() const;
 
-            //! Voice setup when disabled
-            const BlackMisc::Audio::CVoiceSetup &getDisabledValue() const;
+        //! Voice setup when disabled
+        const BlackMisc::Audio::CVoiceSetup &getDisabledValue() const;
 
-            //! Set to GUI
-            void setValue(const BlackMisc::Audio::CVoiceSetup &setup);
+        //! Set to GUI
+        void setValue(const BlackMisc::Audio::CVoiceSetup &setup);
 
-            //! Enabled?
-            bool isVoiceSetupEnabled() const;
+        //! Enabled?
+        bool isVoiceSetupEnabled() const;
 
-            //! Set enabled / disabled
-            void setVoiceSetupEnabled(bool enabled);
+        //! Set enabled / disabled
+        void setVoiceSetupEnabled(bool enabled);
 
-            //! Allow override even in read only mode
-            void setAlwaysAllowOverride(bool allow);
+        //! Allow override even in read only mode
+        void setAlwaysAllowOverride(bool allow);
 
-            //! Show the enable info
-            void showEnableInfo(bool visible);
+        //! Show the enable info
+        void showEnableInfo(bool visible);
 
-            //! Set default values
-            void resetToDefaultValues();
+        //! Set default values
+        void resetToDefaultValues();
 
-            //! \name Form class implementations
-            //! @{
-            virtual void setReadOnly(bool readonly) override;
-            virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
-            //! @}
+        //! \name Form class implementations
+        //! @{
+        virtual void setReadOnly(bool readonly) override;
+        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        //! @}
 
-        private:
-            //! Enable / disable
-            void enabledToggled(bool enabled);
+    private:
+        //! Enable / disable
+        void enabledToggled(bool enabled);
 
-            //! Show / hide visible "enable" info
-            void visibleEnableInfo(bool visible);
+        //! Show / hide visible "enable" info
+        void visibleEnableInfo(bool visible);
 
-            QScopedPointer<Ui::CVoiceSetupForm> ui;
-            bool m_alwaysAllowOverride = false;
-            bool m_visibleEnableInfo   = true;
-        };
-    } // ns
+        QScopedPointer<Ui::CVoiceSetupForm> ui;
+        bool m_alwaysAllowOverride = false;
+        bool m_visibleEnableInfo   = true;
+    };
 } // ns
 
 #endif // guard

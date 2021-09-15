@@ -19,34 +19,31 @@
 #include <QScopedPointer>
 
 namespace Ui { class CSettingsXSwiftBusComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * XSwiftBus setup
+     */
+    class BLACKGUI_EXPORT CSettingsXSwiftBusComponent : public QFrame
     {
-        /*!
-         * XSwiftBus setup
-         */
-        class BLACKGUI_EXPORT CSettingsXSwiftBusComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Log categories
-            static const QStringList &getLogCategories();
+    public:
+        //! Log categories
+        static const QStringList &getLogCategories();
 
-            //! Constructor
-            explicit CSettingsXSwiftBusComponent(QWidget *parent = nullptr);
+        //! Constructor
+        explicit CSettingsXSwiftBusComponent(QWidget *parent = nullptr);
 
-            //! Dtor
-            virtual ~CSettingsXSwiftBusComponent() override;
+        //! Dtor
+        virtual ~CSettingsXSwiftBusComponent() override;
 
-        private:
-            QScopedPointer<Ui::CSettingsXSwiftBusComponent> ui;
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusSettings> m_xSwiftBusSettings { this };
+    private:
+        QScopedPointer<Ui::CSettingsXSwiftBusComponent> ui;
+        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusSettings> m_xSwiftBusSettings { this };
 
-            void resetServer();
-            void saveServer();
-        };
-    } // ns
+        void resetServer();
+        void saveServer();
+    };
 } // ns
 #endif // guard

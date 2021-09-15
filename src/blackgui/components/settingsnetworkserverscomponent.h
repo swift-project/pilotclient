@@ -19,36 +19,33 @@
 #include <QScopedPointer>
 
 namespace Ui { class CSettingsNetworkServersComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Settings for network servers
+    class BLACKGUI_EXPORT CSettingsNetworkServersComponent : public QFrame
     {
-        //! Settings for network servers
-        class BLACKGUI_EXPORT CSettingsNetworkServersComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CSettingsNetworkServersComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CSettingsNetworkServersComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CSettingsNetworkServersComponent();
+        //! Destructor
+        virtual ~CSettingsNetworkServersComponent();
 
-        private:
-            //! Reload settings
-            void reloadSettings();
+    private:
+        //! Reload settings
+        void reloadSettings();
 
-            //! Network server selected
-            void serverSelected(const QModelIndex &index);
+        //! Network server selected
+        void serverSelected(const QModelIndex &index);
 
-            //! Alter traffic server
-            void alterTrafficServer();
+        //! Alter traffic server
+        void alterTrafficServer();
 
-            QScopedPointer<Ui::CSettingsNetworkServersComponent> ui;
-            BlackMisc::CSetting<BlackMisc::Network::Settings::TTrafficServers> m_trafficNetworkServers { this, &CSettingsNetworkServersComponent::reloadSettings };
-        };
-    } // ns
+        QScopedPointer<Ui::CSettingsNetworkServersComponent> ui;
+        BlackMisc::CSetting<BlackMisc::Network::Settings::TTrafficServers> m_trafficNetworkServers { this, &CSettingsNetworkServersComponent::reloadSettings };
+    };
 } // ns
 
 #endif // guard

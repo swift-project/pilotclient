@@ -17,22 +17,19 @@
 
 class QObject;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Server list model
+    class BLACKGUI_EXPORT CServerListModel : public CListModelBase<BlackMisc::Network::CServerList, true>
     {
-        //! Server list model
-        class BLACKGUI_EXPORT CServerListModel : public CListModelBase<BlackMisc::Network::CServerList, true>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CServerListModel(QObject *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CServerListModel(QObject *parent = nullptr);
 
-            //! Destructor
-            virtual ~CServerListModel() {}
-        };
-    } // ns
+        //! Destructor
+        virtual ~CServerListModel() {}
+    };
 } // ns
 #endif // guard

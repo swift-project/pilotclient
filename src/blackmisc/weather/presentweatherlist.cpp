@@ -8,13 +8,10 @@
 
 #include "blackmisc/weather/presentweatherlist.h"
 
-namespace BlackMisc
+namespace BlackMisc::Weather
 {
-    namespace Weather
-    {
-        CPresentWeatherList::CPresentWeatherList(const CSequence<CPresentWeather> &other) :
-            CSequence<CPresentWeather>(other)
-        { }
+    CPresentWeatherList::CPresentWeatherList(const CSequence<CPresentWeather> &other) :
+        CSequence<CPresentWeather>(other)
+    { }
 
-    } // namespace
 } // namespace

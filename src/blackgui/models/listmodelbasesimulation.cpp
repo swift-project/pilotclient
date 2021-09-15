@@ -8,17 +8,14 @@
 
 #include "listmodelbase.cpp"
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
-    {
-        // see here for the reason of thess forward instantiations
-        // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
-        template class CListModelBase<BlackMisc::Simulation::CAircraftModelList, true>;
-        template class CListModelBase<BlackMisc::Simulation::CSimulatedAircraftList, true>;
-        template class CListModelBase<BlackMisc::Simulation::CDistributorList, true>;
-        template class CListModelBase<BlackMisc::Simulation::CInterpolationSetupList, false>;
-        template class CListModelBase<BlackMisc::Simulation::CMatchingStatistics, true>;
+    // see here for the reason of thess forward instantiations
+    // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
+    template class CListModelBase<BlackMisc::Simulation::CAircraftModelList, true>;
+    template class CListModelBase<BlackMisc::Simulation::CSimulatedAircraftList, true>;
+    template class CListModelBase<BlackMisc::Simulation::CDistributorList, true>;
+    template class CListModelBase<BlackMisc::Simulation::CInterpolationSetupList, false>;
+    template class CListModelBase<BlackMisc::Simulation::CMatchingStatistics, true>;
 
-    } // namespace
 } // namespace

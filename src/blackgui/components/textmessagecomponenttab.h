@@ -13,19 +13,16 @@
 
 #include <QMetaType>
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Tabs
+    enum TextMessageTab
     {
-        //! Tabs
-        enum TextMessageTab
-        {
-            TextMessagesAll,
-            TextMessagesUnicom,
-            TextMessagesCom1,
-            TextMessagesCom2
-        };
-    } // ns
+        TextMessagesAll,
+        TextMessagesUnicom,
+        TextMessagesCom1,
+        TextMessagesCom2
+    };
 } // ns
 
 Q_DECLARE_METATYPE(BlackGui::Components::TextMessageTab)

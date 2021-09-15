@@ -16,34 +16,31 @@
 #include <QObject>
 #include <QVector>
 
-namespace BlackSound
+namespace BlackSound::SampleProvider
 {
-    namespace SampleProvider
+    //! Sample provider interface
+    class BLACKSOUND_EXPORT ISampleProvider : public QObject
     {
-        //! Sample provider interface
-        class BLACKSOUND_EXPORT ISampleProvider : public QObject
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            ISampleProvider(QObject *parent = nullptr) : QObject(parent) {}
+    public:
+        //! Ctor
+        ISampleProvider(QObject *parent = nullptr) : QObject(parent) {}
 
-            //! Dtor
-            virtual ~ISampleProvider() override {}
+        //! Dtor
+        virtual ~ISampleProvider() override {}
 
-            //! Read samples
-            virtual int readSamples(QVector<float> &samples, qint64 count) = 0;
+        //! Read samples
+        virtual int readSamples(QVector<float> &samples, qint64 count) = 0;
 
-            //! Finished?
-            virtual bool isFinished() const { return false; }
+        //! Finished?
+        virtual bool isFinished() const { return false; }
 
-        protected:
-            //! Verbose logs?
-            bool static verbose() { return BlackConfig::CBuildConfig::isLocalDeveloperDebugBuild(); }
-        };
+    protected:
+        //! Verbose logs?
+        bool static verbose() { return BlackConfig::CBuildConfig::isLocalDeveloperDebugBuild(); }
+    };
 
-    } // ns
 } // ns
 
 #endif // guard

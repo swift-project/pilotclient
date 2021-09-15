@@ -20,78 +20,75 @@
 #include <QString>
 #include <QtGlobal>
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
+    //! Value object for a flight plan
+    class BLACKMISC_EXPORT CSimBriefData : public CValueObject<CSimBriefData>
     {
-        //! Value object for a flight plan
-        class BLACKMISC_EXPORT CSimBriefData : public CValueObject<CSimBriefData>
+    public:
+        //! The log. catgeories
+        static const QStringList &getLogCategories();
+
+        //! Default constructor
+        CSimBriefData();
+
+        //! Constructor
+        CSimBriefData(const QString &url, const QString &username);
+
+        //! Properties by index
+        enum ColumnIndex
         {
-        public:
-            //! The log. catgeories
-            static const QStringList &getLogCategories();
-
-            //! Default constructor
-            CSimBriefData();
-
-            //! Constructor
-            CSimBriefData(const QString &url, const QString &username);
-
-            //! Properties by index
-            enum ColumnIndex
-            {
-                IndexUsername = CPropertyIndexRef::GlobalIndexCSimBriefData,
-                IndexUrl
-            };
-
-            //! Get username
-            const QString &getUsername() const { return m_username; }
-
-            //! Set username
-            void setUsername(const QString &un) { m_username = un; }
-
-            //! Get URL
-            const QString &getUrl() const { return m_url; }
-
-            //! Get URL plus username
-            Network::CUrl getUrlAndUsername() const;
-
-            //! Set URL
-            void setUrl(const QString &url) { m_url = url; }
-
-            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            QVariant propertyByIndex(CPropertyIndexRef index) const;
-
-            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
-
-            //! \copydoc BlackMisc::Mixin::String::toQString()
-            QString convertToQString(bool i18n = false) const;
-
-        private:
-            QString m_url;
-            QString m_username;
-
-            BLACK_METACLASS(
-                CSimBriefData,
-                BLACK_METAMEMBER(url),
-                BLACK_METAMEMBER(username)
-            );
+            IndexUsername = CPropertyIndexRef::GlobalIndexCSimBriefData,
+            IndexUrl
         };
 
-        namespace Data
-        {
-            //! Trait for global setup data
-            struct TSimBriefData : public BlackMisc::TDataTrait<CSimBriefData>
-            {
-                //! Key in data cache
-                static const char *key() { return "simbriefdata"; }
+        //! Get username
+        const QString &getUsername() const { return m_username; }
 
-                //! First load is synchronous
-                static constexpr bool isPinned() { return true; }
-            };
-        }
-    } // namespace
+        //! Set username
+        void setUsername(const QString &un) { m_username = un; }
+
+        //! Get URL
+        const QString &getUrl() const { return m_url; }
+
+        //! Get URL plus username
+        Network::CUrl getUrlAndUsername() const;
+
+        //! Set URL
+        void setUrl(const QString &url) { m_url = url; }
+
+        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+        QVariant propertyByIndex(CPropertyIndexRef index) const;
+
+        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+        void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
+
+        //! \copydoc BlackMisc::Mixin::String::toQString()
+        QString convertToQString(bool i18n = false) const;
+
+    private:
+        QString m_url;
+        QString m_username;
+
+        BLACK_METACLASS(
+            CSimBriefData,
+            BLACK_METAMEMBER(url),
+            BLACK_METAMEMBER(username)
+        );
+    };
+
+    namespace Data
+    {
+        //! Trait for global setup data
+        struct TSimBriefData : public BlackMisc::TDataTrait<CSimBriefData>
+        {
+            //! Key in data cache
+            static const char *key() { return "simbriefdata"; }
+
+            //! First load is synchronous
+            static constexpr bool isPinned() { return true; }
+        };
+    }
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CSimBriefData)

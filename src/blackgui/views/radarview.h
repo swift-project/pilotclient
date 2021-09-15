@@ -14,34 +14,31 @@
 #include "blackgui/blackguiexport.h"
 #include <QGraphicsView>
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Radar view
+    class BLACKGUI_EXPORT CRadarView : public QGraphicsView
     {
-        //! Radar view
-        class BLACKGUI_EXPORT CRadarView : public QGraphicsView
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            CRadarView(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        CRadarView(QWidget *parent = nullptr);
 
-        signals:
-            //! Signal emitted when the view is resized
-            void radarViewResized();
+    signals:
+        //! Signal emitted when the view is resized
+        void radarViewResized();
 
-            //! Signal emitted when the user zoomed in our out
-            void zoomEvent(bool zoomIn);
+        //! Signal emitted when the user zoomed in our out
+        void zoomEvent(bool zoomIn);
 
-        protected:
-            //! \copydoc QWidget::resizeEvent
-            virtual void resizeEvent(QResizeEvent *event) override;
+    protected:
+        //! \copydoc QWidget::resizeEvent
+        virtual void resizeEvent(QResizeEvent *event) override;
 
-            //! \copydoc QWidget::wheelEvent
-            virtual void wheelEvent(QWheelEvent *event) override;
-        };
-    } // ns
+        //! \copydoc QWidget::wheelEvent
+        virtual void wheelEvent(QWheelEvent *event) override;
+    };
 } // ns
 
 #endif // guard

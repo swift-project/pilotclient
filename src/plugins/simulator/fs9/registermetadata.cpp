@@ -10,14 +10,11 @@
 #include "fs9host.h"
 #include "fs9client.h"
 
-namespace BlackSimPlugin
+namespace BlackSimPlugin::Fs9
 {
-    namespace Fs9
+    void registerMetadata()
     {
-        void registerMetadata()
-        {
-            qRegisterMetaType<CFs9Host::HostStatus>();
-            qRegisterMetaType<CFs9Client::ClientStatus>();
-        }
+        qRegisterMetaType<CFs9Host::HostStatus>();
+        qRegisterMetaType<CFs9Client::ClientStatus>();
     }
 }

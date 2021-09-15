@@ -18,27 +18,24 @@
 #include "blackmisc/sequence.h"
 #include <QMetaType>
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
+    //! Value object for a list of flight plans.
+    class BLACKMISC_EXPORT CFlightPlanList :
+        public CSequence<CFlightPlan>,
+        public ICallsignObjectList<CFlightPlan, CFlightPlanList>,
+        public Mixin::MetaType<CFlightPlanList>
     {
-        //! Value object for a list of flight plans.
-        class BLACKMISC_EXPORT CFlightPlanList :
-            public CSequence<CFlightPlan>,
-            public ICallsignObjectList<CFlightPlan, CFlightPlanList>,
-            public Mixin::MetaType<CFlightPlanList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CFlightPlanList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CFlightPlanList)
+        using CSequence::CSequence;
 
-            //! Default constructor.
-            CFlightPlanList();
+        //! Default constructor.
+        CFlightPlanList();
 
-            //! Construct from a base class object.
-            CFlightPlanList(const CSequence<CFlightPlan> &other);
-        };
-    } //namespace
+        //! Construct from a base class object.
+        CFlightPlanList(const CSequence<CFlightPlan> &other);
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CFlightPlanList)

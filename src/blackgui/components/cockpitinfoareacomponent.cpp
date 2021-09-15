@@ -16,41 +16,38 @@
 
 using namespace BlackMisc;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CCockpitInfoAreaComponent::CCockpitInfoAreaComponent(QWidget *parent) :
+        CInfoArea(parent),
+        ui(new Ui::CCockpitInfoAreaComponent)
     {
-        CCockpitInfoAreaComponent::CCockpitInfoAreaComponent(QWidget *parent) :
-            CInfoArea(parent),
-            ui(new Ui::CCockpitInfoAreaComponent)
+        ui->setupUi(this);
+        this->initInfoArea();
+        this->setTabBarPosition(QTabWidget::North);
+        this->toggleTabBarLocked(true);
+    }
+
+    CCockpitInfoAreaComponent::~CCockpitInfoAreaComponent()
+    { }
+
+    QSize CCockpitInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
+    {
+        // see also CMainInfoAreaComponent::getPreferredSizeWhenFloating
+        Q_UNUSED(areaIndex)
+        return QSize(600, 400);
+    }
+
+    const QPixmap &CCockpitInfoAreaComponent::indexToPixmap(int areaIndex) const
+    {
+        const InfoArea area = static_cast<InfoArea>(areaIndex);
+        switch (area)
         {
-            ui->setupUi(this);
-            this->initInfoArea();
-            this->setTabBarPosition(QTabWidget::North);
-            this->toggleTabBarLocked(true);
+        case InfoAreaAudio:         return CIcons::appAudio16();
+        case InfoAreaNotifications: return CIcons::appVoiceRooms16();
+        case InfoAreaAdvanced:      return CIcons::appSettings16();
+        default:                    return CIcons::empty();
         }
+    }
 
-        CCockpitInfoAreaComponent::~CCockpitInfoAreaComponent()
-        { }
-
-        QSize CCockpitInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
-        {
-            // see also CMainInfoAreaComponent::getPreferredSizeWhenFloating
-            Q_UNUSED(areaIndex)
-            return QSize(600, 400);
-        }
-
-        const QPixmap &CCockpitInfoAreaComponent::indexToPixmap(int areaIndex) const
-        {
-            const InfoArea area = static_cast<InfoArea>(areaIndex);
-            switch (area)
-            {
-            case InfoAreaAudio:         return CIcons::appAudio16();
-            case InfoAreaNotifications: return CIcons::appVoiceRooms16();
-            case InfoAreaAdvanced:      return CIcons::appSettings16();
-            default:                    return CIcons::empty();
-            }
-        }
-
-    } // namespace
 } // namespace

@@ -16,59 +16,56 @@
 #include <QScopedPointer>
 
 namespace Ui { class CDBusServerAddressSelector; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Select DBus address such as session P2P, ...
+    class BLACKGUI_EXPORT CDBusServerAddressSelector : public QFrame
     {
-        //! Select DBus address such as session P2P, ...
-        class BLACKGUI_EXPORT CDBusServerAddressSelector : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            explicit CDBusServerAddressSelector(QWidget *parent = nullptr);
+    public:
+        //! Ctor
+        explicit CDBusServerAddressSelector(QWidget *parent = nullptr);
 
-            //! Dtor
-            virtual ~CDBusServerAddressSelector() override;
+        //! Dtor
+        virtual ~CDBusServerAddressSelector() override;
 
-            //! DBus address for P2P or empty
-            QString getP2PAddress() const;
+        //! DBus address for P2P or empty
+        QString getP2PAddress() const;
 
-            //! DBus address for all 3 options
-            QString getDBusAddress() const;
+        //! DBus address for all 3 options
+        QString getDBusAddress() const;
 
-            //! Get DBus cmd.line arguments
-            QStringList getDBusCmdLineArgs() const;
+        //! Get DBus cmd.line arguments
+        QStringList getDBusCmdLineArgs() const;
 
-            //! P2P DBus address
-            bool isP2P() const;
+        //! P2P DBus address
+        bool isP2P() const;
 
-            //! Set default P2P address
-            void setDefaultP2PAddress(const QString &address);
+        //! Set default P2P address
+        void setDefaultP2PAddress(const QString &address);
 
-            //! Set values
-            void set(const QString &dBus);
+        //! Set values
+        void set(const QString &dBus);
 
-            //! Set system DBus radio button visible/invisible
-            void setSystemDBusVisible(bool visible);
+        //! Set system DBus radio button visible/invisible
+        void setSystemDBusVisible(bool visible);
 
-            //! P2P visible
-            void setP2PDBusVisible(bool visible);
+        //! P2P visible
+        void setP2PDBusVisible(bool visible);
 
-            //! Set to be used for XSwiftBus
-            void setForXSwiftBus();
+        //! Set to be used for XSwiftBus
+        void setForXSwiftBus();
 
-        signals:
-            //! Is being edited
-            void editingFinished();
+    signals:
+        //! Is being edited
+        void editingFinished();
 
-        private:
-            QScopedPointer<Ui::CDBusServerAddressSelector> ui;
+    private:
+        QScopedPointer<Ui::CDBusServerAddressSelector> ui;
 
-            //! Radio button clicked
-            void onRadioButtonReleased();
-        };
-    } // ns
+        //! Radio button clicked
+        void onRadioButtonReleased();
+    };
 } // ns
 #endif // guard

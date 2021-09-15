@@ -18,49 +18,46 @@
 
 #include <QObject>
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    class CAtcStationTreeModel;
+
+    //! ATC list model
+    class BLACKGUI_EXPORT CAtcStationListModel : public CListModelCallsignObjects<BlackMisc::Aviation::CAtcStationList, true>
     {
-        class CAtcStationTreeModel;
+        Q_OBJECT
 
-        //! ATC list model
-        class BLACKGUI_EXPORT CAtcStationListModel : public CListModelCallsignObjects<BlackMisc::Aviation::CAtcStationList, true>
+    public:
+        //! What kind of stations
+        enum AtcStationMode
         {
-            Q_OBJECT
-
-        public:
-            //! What kind of stations
-            enum AtcStationMode
-            {
-                NotSet,
-                StationsBooked,
-                StationsOnline
-            };
-
-            //! Constructor
-            explicit CAtcStationListModel(AtcStationMode stationMode, QObject *parent = nullptr);
-
-            //! Destructor
-            virtual ~CAtcStationListModel() override {}
-
-            //! Set station mode
-            void setStationMode(AtcStationMode stationMode);
-
-            //! Station mode
-            AtcStationMode getStationMode() const { return this->m_stationMode; }
-
-            //! A group by type (TWR, APP, ...) model
-            CAtcStationTreeModel *toAtcTreeModel() const;
-
-        public slots:
-            //! Used to quickly update single station (better response for the user)
-            void changedAtcStationConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
-
-        private:
-            AtcStationMode m_stationMode = NotSet;
+            NotSet,
+            StationsBooked,
+            StationsOnline
         };
-    }
+
+        //! Constructor
+        explicit CAtcStationListModel(AtcStationMode stationMode, QObject *parent = nullptr);
+
+        //! Destructor
+        virtual ~CAtcStationListModel() override {}
+
+        //! Set station mode
+        void setStationMode(AtcStationMode stationMode);
+
+        //! Station mode
+        AtcStationMode getStationMode() const { return this->m_stationMode; }
+
+        //! A group by type (TWR, APP, ...) model
+        CAtcStationTreeModel *toAtcTreeModel() const;
+
+    public slots:
+        //! Used to quickly update single station (better response for the user)
+        void changedAtcStationConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
+
+    private:
+        AtcStationMode m_stationMode = NotSet;
+    };
 } // ns
 
 #endif // guard

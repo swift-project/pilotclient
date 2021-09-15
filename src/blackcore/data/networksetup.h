@@ -25,69 +25,66 @@
 #include <QString>
 #include <QObject>
 
-namespace BlackCore
+namespace BlackCore::Data
 {
-    namespace Data
+    //! Remembering the last servers and ecosystem.
+    class BLACKCORE_EXPORT CNetworkSetup : public QObject
     {
-        //! Remembering the last servers and ecosystem.
-        class BLACKCORE_EXPORT CNetworkSetup : public QObject
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Default constructor
-            CNetworkSetup();
+    public:
+        //! Default constructor
+        CNetworkSetup();
 
-            //! Destructor.
-            virtual ~CNetworkSetup() {}
+        //! Destructor.
+        virtual ~CNetworkSetup() {}
 
-            //! Last VATSIM server (VATSIM only)
-            BlackMisc::Network::CServer getLastVatsimServer() const;
+        //! Last VATSIM server (VATSIM only)
+        BlackMisc::Network::CServer getLastVatsimServer() const;
 
-            //! Set value of last VATSIM server
-            BlackMisc::CStatusMessage setLastVatsimServer(const BlackMisc::Network::CServer &server);
+        //! Set value of last VATSIM server
+        BlackMisc::CStatusMessage setLastVatsimServer(const BlackMisc::Network::CServer &server);
 
-            //! Save auto logoff
-            BlackMisc::CStatusMessage setAutoLogoff(bool autoLogoff);
+        //! Save auto logoff
+        BlackMisc::CStatusMessage setAutoLogoff(bool autoLogoff);
 
-            //! Last server (all networks)
-            BlackMisc::Network::CServer getLastServer() const;
+        //! Last server (all networks)
+        BlackMisc::Network::CServer getLastServer() const;
 
-            //! Set value of last server
-            BlackMisc::CStatusMessage setLastServer(const BlackMisc::Network::CServer &server);
+        //! Set value of last server
+        BlackMisc::CStatusMessage setLastServer(const BlackMisc::Network::CServer &server);
 
-            //! Last used eco system
-            BlackMisc::Network::CEcosystem getLastEcosystem() const;
+        //! Last used eco system
+        BlackMisc::Network::CEcosystem getLastEcosystem() const;
 
-            //! The other servers
-            BlackMisc::Network::CServerList getOtherServers() const;
+        //! The other servers
+        BlackMisc::Network::CServerList getOtherServers() const;
 
-            //! The other servers plus test servers
-            BlackMisc::Network::CServerList getOtherServersPlusPredefinedServers() const;
+        //! The other servers plus test servers
+        BlackMisc::Network::CServerList getOtherServersPlusPredefinedServers() const;
 
-            //! Last used with VATSIM?
-            bool wasLastUsedWithVatsim() const;
+        //! Last used with VATSIM?
+        bool wasLastUsedWithVatsim() const;
 
-            //! Used with an other server (i.e. non VATSIM)
-            bool wasLastUsedWithOtherServer() const;
+        //! Used with an other server (i.e. non VATSIM)
+        bool wasLastUsedWithOtherServer() const;
 
-            //! Auto logoff?
-            bool useAutoLogoff() const { return m_autoLogoff.get(); }
+        //! Auto logoff?
+        bool useAutoLogoff() const { return m_autoLogoff.get(); }
 
-        signals:
-            //! Setup changed
-            void setupChanged();
+    signals:
+        //! Setup changed
+        void setupChanged();
 
-        private:
-            //! Settings have been changed
-            void onSettingsChanged();
+    private:
+        //! Settings have been changed
+        void onSettingsChanged();
 
-            BlackMisc::CSettingReadOnly<BlackMisc::Network::Settings::TTrafficServers> m_otherTrafficNetworkServers { this, &CNetworkSetup::onSettingsChanged };
-            BlackMisc::CSetting<BlackMisc::Network::Settings::TAutoLogoff> m_autoLogoff { this, &CNetworkSetup::onSettingsChanged };
-            BlackMisc::CData<BlackMisc::Network::Data::TLastServer> m_lastServer { this, &CNetworkSetup::onSettingsChanged }; //!< recently used server (VATSIM, other)
-            BlackMisc::CData<BlackCore::Data::TVatsimLastServer> m_lastVatsimServer { this, &CNetworkSetup::onSettingsChanged }; //!< recently used VATSIM server
-        };
-    } // ns
+        BlackMisc::CSettingReadOnly<BlackMisc::Network::Settings::TTrafficServers> m_otherTrafficNetworkServers { this, &CNetworkSetup::onSettingsChanged };
+        BlackMisc::CSetting<BlackMisc::Network::Settings::TAutoLogoff> m_autoLogoff { this, &CNetworkSetup::onSettingsChanged };
+        BlackMisc::CData<BlackMisc::Network::Data::TLastServer> m_lastServer { this, &CNetworkSetup::onSettingsChanged }; //!< recently used server (VATSIM, other)
+        BlackMisc::CData<BlackCore::Data::TVatsimLastServer> m_lastVatsimServer { this, &CNetworkSetup::onSettingsChanged }; //!< recently used VATSIM server
+    };
 } // ns
 
 #endif // guard

@@ -20,53 +20,50 @@ namespace BlackMisc
 {
     class CDBusServer;
 
-    namespace SharedState
+    namespace SharedState::DBus
     {
-        namespace DBus
+        class CDuplex;
+
+        /*!
+         * Server side implementation of IHub. Maintains a collection of CDuplex objects.
+         */
+        class BLACKMISC_EXPORT CHub final : public IHub
         {
-            class CDuplex;
+            Q_OBJECT
+            Q_CLASSINFO("D-Bus Interface", BLACKMISC_HUB_INTERFACE)
 
-            /*!
-             * Server side implementation of IHub. Maintains a collection of CDuplex objects.
-             */
-            class BLACKMISC_EXPORT CHub final : public IHub
-            {
-                Q_OBJECT
-                Q_CLASSINFO("D-Bus Interface", BLACKMISC_HUB_INTERFACE)
+        public:
+            //! Constructor.
+            CHub(CDBusServer *server, QObject *parent = nullptr);
 
-            public:
-                //! Constructor.
-                CHub(CDBusServer *server, QObject *parent = nullptr);
+            //! Destructor.
+            virtual ~CHub() override;
 
-                //! Destructor.
-                virtual ~CHub() override;
+            //! Returns a range containing all duplex objects.
+            const auto &clients() const { return m_clients; }
 
-                //! Returns a range containing all duplex objects.
-                const auto &clients() const { return m_clients; }
+            //! \name Interface implementations
+            //! @{
+            virtual bool isConnected() const override { return true; }
+            virtual std::pair<QSharedPointer<IDuplex>, QFuture<void>> getDuplex(const CIdentifier &) override;
 
-                //! \name Interface implementations
-                //! @{
-                virtual bool isConnected() const override { return true; }
-                virtual std::pair<QSharedPointer<IDuplex>, QFuture<void>> getDuplex(const CIdentifier &) override;
+        public slots:
+            //! \name Interface implementations
+            //! @{
+            virtual bool openDuplex(const BlackMisc::CIdentifier &client) override;
+            virtual void closeDuplex(const BlackMisc::CIdentifier &client) override;
+            //! @}
 
-            public slots:
-                //! \name Interface implementations
-                //! @{
-                virtual bool openDuplex(const BlackMisc::CIdentifier &client) override;
-                virtual void closeDuplex(const BlackMisc::CIdentifier &client) override;
-                //! @}
+        protected:
+            //! \name Interface implementations
+            //! @{
+            virtual QFuture<void> openDuplexAsync(const CIdentifier &client) override;
+            //! @}
 
-            protected:
-                //! \name Interface implementations
-                //! @{
-                virtual QFuture<void> openDuplexAsync(const CIdentifier &client) override;
-                //! @}
-
-            private:
-                CDBusServer *m_server = nullptr;
-                QMap<CIdentifier, QSharedPointer<CDuplex>> m_clients;
-            };
-        }
+        private:
+            CDBusServer *m_server = nullptr;
+            QMap<CIdentifier, QSharedPointer<CDuplex>> m_clients;
+        };
     }
 }
 

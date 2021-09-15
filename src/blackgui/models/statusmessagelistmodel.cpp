@@ -17,124 +17,121 @@
 
 using namespace BlackMisc;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    CStatusMessageListModel::CStatusMessageListModel(QObject *parent) :
+        CListModelTimestampObjects<CStatusMessageList, true>("ViewStatusMessageList", parent)
     {
-        CStatusMessageListModel::CStatusMessageListModel(QObject *parent) :
-            CListModelTimestampObjects<CStatusMessageList, true>("ViewStatusMessageList", parent)
-        {
-            this->setSorting(CStatusMessage::IndexUtcTimestamp, Qt::DescendingOrder);
-            m_sortTieBreakers.push_front(CStatusMessage::IndexMessage);
-            m_sortTieBreakers.push_front(CStatusMessage::IndexSeverity);
-            this->setMode(Detailed);
+        this->setSorting(CStatusMessage::IndexUtcTimestamp, Qt::DescendingOrder);
+        m_sortTieBreakers.push_front(CStatusMessage::IndexMessage);
+        m_sortTieBreakers.push_front(CStatusMessage::IndexSeverity);
+        this->setMode(Detailed);
 
-            // force strings for translation in resource files
-            (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "time");
-            (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "severity");
-            (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "type");
-            (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "message");
-            (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "all categories");
+        // force strings for translation in resource files
+        (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "time");
+        (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "severity");
+        (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "type");
+        (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "message");
+        (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "all categories");
+    }
+
+    void CStatusMessageListModel::setMode(CStatusMessageListModel::Mode mode, const CStatusMessageList &messages)
+    {
+        switch (mode)
+        {
+        case DetailedWithOrder:
+        case Detailed:
+            this->setMode(messages.needsOrder() ? Detailed : DetailedWithOrder);
+            break;
+        case SimplifiedWithOrder:
+        case Simplified:
+            this->setMode(messages.needsOrder() ? Simplified : SimplifiedWithOrder);
+            break;
         }
+    }
 
-        void CStatusMessageListModel::setMode(CStatusMessageListModel::Mode mode, const CStatusMessageList &messages)
+    void CStatusMessageListModel::adjustOrderColumn(const CStatusMessageList &messages)
+    {
+        this->setMode(m_mode, messages);
+    }
+
+    bool CStatusMessageListModel::isSortedByTimestampOrOrder() const
+    {
+        const CPropertyIndex p = this->getSortProperty();
+        return sortedByTimestampOrOrder(p);
+    }
+
+    bool CStatusMessageListModel::sortedByTimestampOrOrder(const CPropertyIndex &p)
+    {
+        if (p.isEmpty()) { return false; }
+        const int last = p.indexVector().last();
+        return IOrderable::isAnyOrderIndex(last) || ITimestampBased::isAnyTimestampIndex(last);
+    }
+
+    void CStatusMessageListModel::setMode(CStatusMessageListModel::Mode mode)
+    {
+        const Qt::SortOrder  oldOrder = this->getSortOrder();
+        const CPropertyIndex oldIndex = this->getSortProperty();
+        m_columns.clear();
+        m_mode = mode;
+
+        switch (mode)
         {
-            switch (mode)
+        case DetailedWithOrder:
+            m_columns.addColumn(CColumn::orderColumn());
+            [[fallthrough]];
+        case Detailed:
             {
-            case DetailedWithOrder:
-            case Detailed:
-                this->setMode(messages.needsOrder() ? Detailed : DetailedWithOrder);
-                break;
-            case SimplifiedWithOrder:
-            case Simplified:
-                this->setMode(messages.needsOrder() ? Simplified : SimplifiedWithOrder);
-                break;
+                m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHmsz())));
+                CColumn col = CColumn("severity", CStatusMessage::IndexSeverityAsIcon);
+                col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
+                m_columns.addColumn(col);
+                m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
+                m_columns.addColumn(CColumn::standardString("category", CStatusMessage::IndexCategoriesAsString));
             }
-        }
-
-        void CStatusMessageListModel::adjustOrderColumn(const CStatusMessageList &messages)
-        {
-            this->setMode(m_mode, messages);
-        }
-
-        bool CStatusMessageListModel::isSortedByTimestampOrOrder() const
-        {
-            const CPropertyIndex p = this->getSortProperty();
-            return sortedByTimestampOrOrder(p);
-        }
-
-        bool CStatusMessageListModel::sortedByTimestampOrOrder(const CPropertyIndex &p)
-        {
-            if (p.isEmpty()) { return false; }
-            const int last = p.indexVector().last();
-            return IOrderable::isAnyOrderIndex(last) || ITimestampBased::isAnyTimestampIndex(last);
-        }
-
-        void CStatusMessageListModel::setMode(CStatusMessageListModel::Mode mode)
-        {
-            const Qt::SortOrder  oldOrder = this->getSortOrder();
-            const CPropertyIndex oldIndex = this->getSortProperty();
-            m_columns.clear();
-            m_mode = mode;
-
-            switch (mode)
+            break;
+        case SimplifiedWithOrder:
+            m_columns.addColumn(CColumn::orderColumn());
+            [[fallthrough]];
+        case Simplified:
             {
-            case DetailedWithOrder:
-                m_columns.addColumn(CColumn::orderColumn());
-                [[fallthrough]];
-            case Detailed:
-                {
-                    m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHmsz())));
-                    CColumn col = CColumn("severity", CStatusMessage::IndexSeverityAsIcon);
-                    col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
-                    m_columns.addColumn(col);
-                    m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
-                    m_columns.addColumn(CColumn::standardString("category", CStatusMessage::IndexCategoriesAsString));
-                }
-                break;
-            case SimplifiedWithOrder:
-                m_columns.addColumn(CColumn::orderColumn());
-                [[fallthrough]];
-            case Simplified:
-                {
-                    m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHmsz())));
-                    CColumn col = CColumn("severity", CStatusMessage::IndexSeverityAsIcon);
-                    col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
-                    m_columns.addColumn(col);
-                    m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
-                }
-                break;
+                m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHmsz())));
+                CColumn col = CColumn("severity", CStatusMessage::IndexSeverityAsIcon);
+                col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
+                m_columns.addColumn(col);
+                m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
             }
-            // m_columns.insertEmptyColumn();
+            break;
+        }
+        // m_columns.insertEmptyColumn();
 
-            // sorting
-            if (CStatusMessageListModel::sortedByTimestampOrOrder(oldIndex))
+        // sorting
+        if (CStatusMessageListModel::sortedByTimestampOrOrder(oldIndex))
+        {
+            if (mode == DetailedWithOrder || mode == SimplifiedWithOrder)
             {
-                if (mode == DetailedWithOrder || mode == SimplifiedWithOrder)
-                {
-                    this->setSorting(CStatusMessage::IndexOrder, oldOrder);
-                }
-                else
-                {
-                    this->setSorting(CStatusMessage::IndexUtcTimestamp, oldOrder);
-                }
+                this->setSorting(CStatusMessage::IndexOrder, oldOrder);
             }
             else
             {
-                // restore sorting
-                this->setSorting(oldIndex, oldOrder);
+                this->setSorting(CStatusMessage::IndexUtcTimestamp, oldOrder);
             }
         }
-
-        QVariant CStatusMessageListModel::data(const QModelIndex &index, int role) const
+        else
         {
-            if (role == Qt::ToolTipRole)
-            {
-                // the underlying model object as summary
-                const CStatusMessage msg(this->at(index));
-                return msg.toHtml(false, false);
-            }
-            return CListModelTimestampObjects::data(index, role);
+            // restore sorting
+            this->setSorting(oldIndex, oldOrder);
         }
-    } // namespace
+    }
+
+    QVariant CStatusMessageListModel::data(const QModelIndex &index, int role) const
+    {
+        if (role == Qt::ToolTipRole)
+        {
+            // the underlying model object as summary
+            const CStatusMessage msg(this->at(index));
+            return msg.toHtml(false, false);
+        }
+        return CListModelTimestampObjects::data(index, role);
+    }
 } // namespace

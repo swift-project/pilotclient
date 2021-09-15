@@ -12,23 +12,20 @@
 
 using namespace BlackMisc::Aviation;
 
-namespace BlackMisc
+namespace BlackMisc::Weather
 {
-    namespace Weather
+    CVisibilityLayerList::CVisibilityLayerList(const CSequence<CVisibilityLayer> &other) :
+        CSequence<CVisibilityLayer>(other)
+    { }
+
+    bool CVisibilityLayerList::containsBase(const CAltitude &base) const
     {
-        CVisibilityLayerList::CVisibilityLayerList(const CSequence<CVisibilityLayer> &other) :
-            CSequence<CVisibilityLayer>(other)
-        { }
+        return contains(&CVisibilityLayer::getBase, base);
+    }
 
-        bool CVisibilityLayerList::containsBase(const CAltitude &base) const
-        {
-            return contains(&CVisibilityLayer::getBase, base);
-        }
+    CVisibilityLayer CVisibilityLayerList::findByBase(const CAltitude &base) const
+    {
+        return findFirstByOrDefault(&CVisibilityLayer::getBase, base);
+    }
 
-        CVisibilityLayer CVisibilityLayerList::findByBase(const CAltitude &base) const
-        {
-            return findFirstByOrDefault(&CVisibilityLayer::getBase, base);
-        }
-
-    } // namespace
 } // namespace

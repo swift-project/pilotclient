@@ -11,38 +11,35 @@
 
 using namespace BlackMisc;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    CCountryFilter::CCountryFilter(const QString &isoCode, const QString &name) :
+        m_isoCode(isoCode.trimmed().toUpper()), m_name(name.trimmed())
     {
-        CCountryFilter::CCountryFilter(const QString &isoCode, const QString &name) :
-            m_isoCode(isoCode.trimmed().toUpper()), m_name(name.trimmed())
-        {
-            this->m_valid = !(this->m_isoCode.isEmpty() && this->m_name.isEmpty());
-        }
+        this->m_valid = !(this->m_isoCode.isEmpty() && this->m_name.isEmpty());
+    }
 
-        CCountryList CCountryFilter::filter(const CCountryList &inContainer) const
+    CCountryList CCountryFilter::filter(const CCountryList &inContainer) const
+    {
+        if (!this->isValid()) { return inContainer; }
+        CCountryList outContainer;
+        bool end = false;
+        for (const CCountry &country : inContainer)
         {
-            if (!this->isValid()) { return inContainer; }
-            CCountryList outContainer;
-            bool end = false;
-            for (const CCountry &country : inContainer)
+            if (!m_isoCode.isEmpty())
             {
-                if (!m_isoCode.isEmpty())
-                {
-                    if (country.getIsoCode() != m_isoCode) { continue; }
-                    end = true; // there should be only one designator
-                }
-
-                if (!this->m_name.isEmpty())
-                {
-                    if (!this->stringMatchesFilterExpression(country.getName(), this->m_name)) { continue; }
-                }
-
-                outContainer.push_back(country);
-                if (end) { break; }
+                if (country.getIsoCode() != m_isoCode) { continue; }
+                end = true; // there should be only one designator
             }
-            return outContainer;
+
+            if (!this->m_name.isEmpty())
+            {
+                if (!this->stringMatchesFilterExpression(country.getName(), this->m_name)) { continue; }
+            }
+
+            outContainer.push_back(country);
+            if (end) { break; }
         }
-    } // namespace
+        return outContainer;
+    }
 } // namespace

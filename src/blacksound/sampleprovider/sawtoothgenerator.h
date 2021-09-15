@@ -17,32 +17,29 @@
 #include <QVector>
 #include <array>
 
-namespace BlackSound
+namespace BlackSound::SampleProvider
 {
-    namespace SampleProvider
+    //! Saw tooth generator
+    class BLACKSOUND_EXPORT CSawToothGenerator : public ISampleProvider
     {
-        //! Saw tooth generator
-        class BLACKSOUND_EXPORT CSawToothGenerator : public ISampleProvider
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            CSawToothGenerator(double frequency, QObject *parent = nullptr);
+    public:
+        //! Ctor
+        CSawToothGenerator(double frequency, QObject *parent = nullptr);
 
-            //! \copydoc ISampleProvider::readSamples
-            virtual int readSamples(QVector<float> &samples, qint64 count) override;
+        //! \copydoc ISampleProvider::readSamples
+        virtual int readSamples(QVector<float> &samples, qint64 count) override;
 
-            //! Set the gain
-            void setGain(double gain) { m_gain = gain; }
+        //! Set the gain
+        void setGain(double gain) { m_gain = gain; }
 
-        private:
-            double m_gain       = 0.0;
-            double m_frequency  = 0.0;
-            double m_sampleRate = 48000;
-            int m_nSample       = 0;
-        };
-    } // ns
+    private:
+        double m_gain       = 0.0;
+        double m_frequency  = 0.0;
+        double m_sampleRate = 48000;
+        int m_nSample       = 0;
+    };
 } // ns
 
 #endif // guard

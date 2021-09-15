@@ -15,31 +15,28 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/blackmiscexport.h"
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    /*!
+     * Matching utils
+     */
+    class BLACKMISC_EXPORT CMatchingUtils
     {
-        /*!
-         * Matching utils
-         */
-        class BLACKMISC_EXPORT CMatchingUtils
-        {
-        public:
-            //! Specialized log for matching / reverse lookup
-            //! \threadsafe
-            static void addLogDetailsToList(
-                CStatusMessageList *log, const Simulation::CSimulatedAircraft &remoteAircraft,
-                const QString &message, const QStringList &extraCategories = {},
-                CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
+    public:
+        //! Specialized log for matching / reverse lookup
+        //! \threadsafe
+        static void addLogDetailsToList(
+            CStatusMessageList *log, const Simulation::CSimulatedAircraft &remoteAircraft,
+            const QString &message, const QStringList &extraCategories = {},
+            CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
-        private:
-            //! Default categories
-            static const CLogCategoryList &defaultCategories();
+    private:
+        //! Default categories
+        static const CLogCategoryList &defaultCategories();
 
-            //! Categories
-            static CLogCategoryList categories(const QStringList &extraCategories);
-        };
-    } // ns
+        //! Categories
+        static CLogCategoryList categories(const QStringList &extraCategories);
+    };
 } // ns
 
 #endif // guard

@@ -9,18 +9,15 @@
 #include "simulatoremulatedconfig.h"
 #include "simulatoremulatedconfigwidget.h"
 
-namespace BlackSimPlugin
+namespace BlackSimPlugin::Emulated
 {
-    namespace Emulated
+    CSimulatorEmulatedConfig::CSimulatorEmulatedConfig(QObject *parent) : QObject(parent)
     {
-        CSimulatorEmulatedConfig::CSimulatorEmulatedConfig(QObject *parent) : QObject(parent)
-        {
-            // void
-        }
+        // void
+    }
 
-        BlackGui::CPluginConfigWindow *CSimulatorEmulatedConfig::createConfigWindow(QWidget *parent)
-        {
-            return new CSimulatorEmulatedConfigWidget(parent);
-        }
-    } // ns
+    BlackGui::CPluginConfigWindow *CSimulatorEmulatedConfig::createConfigWindow(QWidget *parent)
+    {
+        return new CSimulatorEmulatedConfigWidget(parent);
+    }
 } // ns

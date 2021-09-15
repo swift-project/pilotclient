@@ -16,30 +16,27 @@
 #include "blackmisc/network/textmessagelist.h"
 #include "blackgui/blackguiexport.h"
 
-namespace BlackMisc { namespace Network { class CTextMessage; } }
-namespace BlackGui
+namespace BlackMisc::Network { class CTextMessage; }
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Airports view
+    class BLACKGUI_EXPORT CTextMessageView : public CViewBase<Models::CTextMessageListModel>
     {
-        //! Airports view
-        class BLACKGUI_EXPORT CTextMessageView : public CViewBase<Models::CTextMessageListModel>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CTextMessageView(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CTextMessageView(QWidget *parent = nullptr);
 
-            //! Set display mode
-            void setTextMessageMode(BlackGui::Models::CTextMessageListModel::TextMessageMode mode);
+        //! Set display mode
+        void setTextMessageMode(BlackGui::Models::CTextMessageListModel::TextMessageMode mode);
 
-            //! Sorted by a timestamp property
-            bool isSortedByTimestampProperty() const;
+        //! Sorted by a timestamp property
+        bool isSortedByTimestampProperty() const;
 
-            //! Sorted by a timestamp property, latest messages at the end
-            bool isSortedByTimestampPropertyLatestLast() const;
-        };
-    } // namespace
+        //! Sorted by a timestamp property, latest messages at the end
+        bool isSortedByTimestampPropertyLatestLast() const;
+    };
 } // namespace
 
 #endif // guard

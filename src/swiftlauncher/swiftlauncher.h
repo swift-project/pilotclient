@@ -32,13 +32,10 @@
 #include <QNetworkReply>
 
 namespace Ui { class CSwiftLauncher; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
-    {
-        class CConfigurationWizard;
-        class CTextEditDialog;
-    }
+    class CConfigurationWizard;
+    class CTextEditDialog;
 }
 
 /*!

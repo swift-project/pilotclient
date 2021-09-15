@@ -23,112 +23,109 @@
 #include <QMap>
 #include <QSet>
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    namespace Data
     {
-        namespace Data
+        //! Last selection
+        struct TLastAutoPublish : public TDataTrait<qint64>
         {
-            //! Last selection
-            struct TLastAutoPublish : public TDataTrait<qint64>
-            {
-                //! First load is synchronous
-                static constexpr bool isPinned() { return true; }
+            //! First load is synchronous
+            static constexpr bool isPinned() { return true; }
 
-                //! Default simulator
-                static const qint64 &defaultValue() { static constexpr qint64 d = -1; return d; }
+            //! Default simulator
+            static const qint64 &defaultValue() { static constexpr qint64 d = -1; return d; }
 
-                //! Key
-                static const char *key() { return "autopublishlast"; }
-            };
+            //! Key
+            static const char *key() { return "autopublishlast"; }
+        };
+    }
+
+    //! Which data have changed
+    struct ChangedAutoPublishData
+    {
+        bool modelKnown = false; //!< model known in DB
+        bool changedCG  = false; //!< CG changed
+        bool changedSim = false; //!< simulator changed
+
+        //! Set all to true;
+        void setAllTrue()
+        {
+            modelKnown = true;
+            changedCG  = true;
+            changedSim = true;
         }
+    };
 
-        //! Which data have changed
-        struct ChangedAutoPublishData
-        {
-            bool modelKnown = false; //!< model known in DB
-            bool changedCG  = false; //!< CG changed
-            bool changedSim = false; //!< simulator changed
+    //! Objects that can be use for auto-publishing.
+    //! Auto publishing means we sent those data to the DB.
+    class BLACKMISC_EXPORT CAutoPublishData
+    {
+    public:
+        //! Insert values we might want to update in the DB
+        //! @{
+        void insert(const QString &modelString, const PhysicalQuantities::CLength &cg);
+        void insert(const QString &modelString, const CSimulatorInfo &simulator);
+        //! @}
 
-            //! Set all to true;
-            void setAllTrue()
-            {
-                modelKnown = true;
-                changedCG  = true;
-                changedSim = true;
-            }
-        };
+        //! Clear all
+        void clear();
 
-        //! Objects that can be use for auto-publishing.
-        //! Auto publishing means we sent those data to the DB.
-        class BLACKMISC_EXPORT CAutoPublishData
-        {
-        public:
-            //! Insert values we might want to update in the DB
-            //! @{
-            void insert(const QString &modelString, const PhysicalQuantities::CLength &cg);
-            void insert(const QString &modelString, const CSimulatorInfo &simulator);
-            //! @}
+        //! Any data?
+        bool isEmpty() const;
 
-            //! Clear all
-            void clear();
+        //! Simple database JSON
+        QString toDatabaseJson() const;
 
-            //! Any data?
-            bool isEmpty() const;
+        //! Read from database JSON
+        int fromDatabaseJson(const QString &jsonData, bool clear = true);
 
-            //! Simple database JSON
-            QString toDatabaseJson() const;
+        //! Write to file
+        //! @{
+        bool writeJsonToFile() const;
+        bool writeJsonToFile(const QString &pathAndFile) const;
+        //! @}
 
-            //! Read from database JSON
-            int fromDatabaseJson(const QString &jsonData, bool clear = true);
+        //! Read from JSON file
+        bool readFromJsonFile(const QString &fileAndPath, bool clear = true);
 
-            //! Write to file
-            //! @{
-            bool writeJsonToFile() const;
-            bool writeJsonToFile(const QString &pathAndFile) const;
-            //! @}
+        //! Read all JSON files matching the base name
+        int readFromJsonFiles(const QString &dirPath = CSwiftDirectories::logDirectory());
 
-            //! Read from JSON file
-            bool readFromJsonFile(const QString &fileAndPath, bool clear = true);
+        //! Analyze against DB data
+        CStatusMessageList analyzeAgainstDBData(const CAircraftModelList &dbModels);
 
-            //! Read all JSON files matching the base name
-            int readFromJsonFiles(const QString &dirPath = CSwiftDirectories::logDirectory());
+        //! Summary
+        QString getSummary() const;
 
-            //! Analyze against DB data
-            CStatusMessageList analyzeAgainstDBData(const CAircraftModelList &dbModels);
+        //! All affected model strings
+        QSet<QString> allModelStrings() const;
 
-            //! Summary
-            QString getSummary() const;
+        //! File base name
+        static const QString &fileBaseName();
 
-            //! All affected model strings
-            QSet<QString> allModelStrings() const;
+        //! File appendix
+        static const QString &fileAppendix();
 
-            //! File base name
-            static const QString &fileBaseName();
+        //! Do any auto pubish files exist?
+        static bool existAutoPublishFiles(const QString &dirPath = CSwiftDirectories::logDirectory());
 
-            //! File appendix
-            static const QString &fileAppendix();
+        //! Delete any existing auto publish files
+        static int deleteAutoPublishFiles(const QString &dirPath = CSwiftDirectories::logDirectory());
 
-            //! Do any auto pubish files exist?
-            static bool existAutoPublishFiles(const QString &dirPath = CSwiftDirectories::logDirectory());
+        // ----------------- testing only ---------------
 
-            //! Delete any existing auto publish files
-            static int deleteAutoPublishFiles(const QString &dirPath = CSwiftDirectories::logDirectory());
+        //! Add some test data
+        //! \private testing only
+        void testData();
 
-            // ----------------- testing only ---------------
+    private:
+        //! All files matching the pattern
+        static QStringList findAndCleanupPublishFiles(const QString &dirPath);
 
-            //! Add some test data
-            //! \private testing only
-            void testData();
-
-        private:
-            //! All files matching the pattern
-            static QStringList findAndCleanupPublishFiles(const QString &dirPath);
-
-            QMap<QString, PhysicalQuantities::CLength> m_modelStringVsCG;
-            QMap<QString, CSimulatorInfo> m_modelStringVsSimulatorInfo;
-        };
-    } // namespace
+        QMap<QString, PhysicalQuantities::CLength> m_modelStringVsCG;
+        QMap<QString, CSimulatorInfo> m_modelStringVsSimulatorInfo;
+    };
 } // namespace
 
 #endif // guard

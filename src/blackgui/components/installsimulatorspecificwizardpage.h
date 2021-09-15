@@ -14,38 +14,35 @@
 #include "blackgui/overlaymessagesframe.h"
 #include <QWizard>
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    class CInstallXSwiftBusComponent;
+    class CInstallFsxTerrainProbeComponent;
+
+    /**
+     * Simulator specific installation
+     */
+    class CInstallSimulatorSpecificWizardPage : public COverlayMessagesWizardPage
     {
-        class CInstallXSwiftBusComponent;
-        class CInstallFsxTerrainProbeComponent;
+        Q_OBJECT
 
-        /**
-         * Simulator specific installation
-         */
-        class CInstallSimulatorSpecificWizardPage : public COverlayMessagesWizardPage
+    public:
+        //! Constructors
+        using COverlayMessagesWizardPage::COverlayMessagesWizardPage;
+
+        //! Set config
+        void setConfigComponent(CInstallXSwiftBusComponent *config, CInstallFsxTerrainProbeComponent *fsxTerrainProbe)
         {
-            Q_OBJECT
+            m_xSwiftBusConfig = config;
+            m_fsxTerrainProbe = fsxTerrainProbe;
+        }
 
-        public:
-            //! Constructors
-            using COverlayMessagesWizardPage::COverlayMessagesWizardPage;
+        //! \copydoc QWizardPage::validatePage
+        virtual bool validatePage() override { return true; }
 
-            //! Set config
-            void setConfigComponent(CInstallXSwiftBusComponent *config, CInstallFsxTerrainProbeComponent *fsxTerrainProbe)
-            {
-                m_xSwiftBusConfig = config;
-                m_fsxTerrainProbe = fsxTerrainProbe;
-            }
-
-            //! \copydoc QWizardPage::validatePage
-            virtual bool validatePage() override { return true; }
-
-        private:
-            CInstallXSwiftBusComponent *m_xSwiftBusConfig = nullptr;
-            CInstallFsxTerrainProbeComponent *m_fsxTerrainProbe = nullptr;
-        };
-    } // ns
+    private:
+        CInstallXSwiftBusComponent *m_xSwiftBusConfig = nullptr;
+        CInstallFsxTerrainProbeComponent *m_fsxTerrainProbe = nullptr;
+    };
 } // ns
 #endif // guard

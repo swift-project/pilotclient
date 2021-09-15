@@ -25,13 +25,10 @@ namespace BlackMisc
     namespace Simulation { class CSimulatedAircraft; }
 }
 
-namespace BlackCore
+namespace BlackCore::Context
 {
-    namespace Context
-    {
-        class IContextSimulator;
-        class IContextNetwork;
-    }
+    class IContextSimulator;
+    class IContextNetwork;
 }
 namespace BlackGui
 {

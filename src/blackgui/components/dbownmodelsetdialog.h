@@ -16,39 +16,36 @@
 #include <QScopedPointer>
 
 namespace Ui { class CDbOwnModelSetDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    class CDbOwnModelSetComponent;
+
+    //! Dialog version of
+    class CDbOwnModelSetDialog : public QDialog
     {
-        class CDbOwnModelSetComponent;
+        Q_OBJECT
 
-        //! Dialog version of
-        class CDbOwnModelSetDialog : public QDialog
-        {
-            Q_OBJECT
+    public:
+        //! Constructor
+        explicit CDbOwnModelSetDialog(QWidget *parent = nullptr);
 
-        public:
-            //! Constructor
-            explicit CDbOwnModelSetDialog(QWidget *parent = nullptr);
+        //! Destructor
+        virtual ~CDbOwnModelSetDialog() override;
 
-            //! Destructor
-            virtual ~CDbOwnModelSetDialog() override;
+        //! \copydoc CDbOwnModelSetComponent::setSimulator
+        void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-            //! \copydoc CDbOwnModelSetComponent::setSimulator
-            void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        //! Direct access to CDbOwnModelSetComponent
+        const CDbOwnModelSetComponent *modelSetComponent() const;
 
-            //! Direct access to CDbOwnModelSetComponent
-            const CDbOwnModelSetComponent *modelSetComponent() const;
+        //! Direct access to CDbOwnModelSetComponent
+        CDbOwnModelSetComponent *modelSetComponent();
 
-            //! Direct access to CDbOwnModelSetComponent
-            CDbOwnModelSetComponent *modelSetComponent();
+        //! Enable buttons
+        void enableButtons(bool firstSet, bool newSet);
 
-            //! Enable buttons
-            void enableButtons(bool firstSet, bool newSet);
-
-        private:
-            QScopedPointer<Ui::CDbOwnModelSetDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CDbOwnModelSetDialog> ui;
+    };
 } // ns
 #endif // guard

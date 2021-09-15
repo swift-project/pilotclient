@@ -19,31 +19,28 @@
 #include <QMetaType>
 #include <QStringList>
 
-namespace BlackMisc
+namespace BlackMisc::Weather
 {
-    namespace Weather
+    class CWeatherDataPluginInfo;
+
+    //! Value object encapsulating a list of CWeatherDataPluginInfo objects.
+    class BLACKMISC_EXPORT CWeatherDataPluginInfoList :
+        public BlackMisc::CSequence<CWeatherDataPluginInfo>,
+        public BlackMisc::Mixin::MetaType<CWeatherDataPluginInfoList>
     {
-        class CWeatherDataPluginInfo;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CWeatherDataPluginInfoList)
+        using CSequence::CSequence;
 
-        //! Value object encapsulating a list of CWeatherDataPluginInfo objects.
-        class BLACKMISC_EXPORT CWeatherDataPluginInfoList :
-            public BlackMisc::CSequence<CWeatherDataPluginInfo>,
-            public BlackMisc::Mixin::MetaType<CWeatherDataPluginInfoList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CWeatherDataPluginInfoList)
-            using CSequence::CSequence;
+        //! Default constructor
+        CWeatherDataPluginInfoList();
 
-            //! Default constructor
-            CWeatherDataPluginInfoList();
+        //! Construct from a base class object.
+        CWeatherDataPluginInfoList(const CSequence<CWeatherDataPluginInfo> &other);
 
-            //! Construct from a base class object.
-            CWeatherDataPluginInfoList(const CSequence<CWeatherDataPluginInfo> &other);
-
-            //! String list with meaningful representations
-            QStringList toStringList(bool i18n = false) const;
-        };
-    } // ns
+        //! String list with meaningful representations
+        QStringList toStringList(bool i18n = false) const;
+    };
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CWeatherDataPluginInfoList)

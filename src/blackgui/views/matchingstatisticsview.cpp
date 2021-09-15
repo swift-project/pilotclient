@@ -10,18 +10,15 @@
 
 using namespace BlackGui::Models;
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    CMatchingStatisticsView::CMatchingStatisticsView(QWidget *parent) : CViewBase(parent)
     {
-        CMatchingStatisticsView::CMatchingStatisticsView(QWidget *parent) : CViewBase(parent)
-        {
-            this->standardInit(new CMatchingStatisticsModel(CMatchingStatisticsModel::ForSingleSession, this));
-        }
+        this->standardInit(new CMatchingStatisticsModel(CMatchingStatisticsModel::ForSingleSession, this));
+    }
 
-        void CMatchingStatisticsView::setStatisticsModelMode(CMatchingStatisticsModel::MatchingStatisticsMode mode)
-        {
-            this->m_model->setMode(mode);
-        }
+    void CMatchingStatisticsView::setStatisticsModelMode(CMatchingStatisticsModel::MatchingStatisticsMode mode)
+    {
+        this->m_model->setMode(mode);
     }
 } // namespace

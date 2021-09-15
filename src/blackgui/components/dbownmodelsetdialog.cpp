@@ -11,40 +11,37 @@
 
 using namespace BlackMisc::Simulation;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CDbOwnModelSetDialog::CDbOwnModelSetDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CDbOwnModelSetDialog)
     {
-        CDbOwnModelSetDialog::CDbOwnModelSetDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CDbOwnModelSetDialog)
-        {
-            ui->setupUi(this);
-            ui->comp_OwnModelSet->setSimulatorSelectorMode(CSimulatorSelector::ComboBox);
-            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-        }
+        ui->setupUi(this);
+        ui->comp_OwnModelSet->setSimulatorSelectorMode(CSimulatorSelector::ComboBox);
+        this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    }
 
-        CDbOwnModelSetDialog::~CDbOwnModelSetDialog()
-        { }
+    CDbOwnModelSetDialog::~CDbOwnModelSetDialog()
+    { }
 
-        void CDbOwnModelSetDialog::setSimulator(const CSimulatorInfo &simulator)
-        {
-            ui->comp_OwnModelSet->setSimulator(simulator);
-        }
+    void CDbOwnModelSetDialog::setSimulator(const CSimulatorInfo &simulator)
+    {
+        ui->comp_OwnModelSet->setSimulator(simulator);
+    }
 
-        const CDbOwnModelSetComponent *CDbOwnModelSetDialog::modelSetComponent() const
-        {
-            return ui->comp_OwnModelSet;
-        }
+    const CDbOwnModelSetComponent *CDbOwnModelSetDialog::modelSetComponent() const
+    {
+        return ui->comp_OwnModelSet;
+    }
 
-        CDbOwnModelSetComponent *CDbOwnModelSetDialog::modelSetComponent()
-        {
-            return ui->comp_OwnModelSet;
-        }
+    CDbOwnModelSetComponent *CDbOwnModelSetDialog::modelSetComponent()
+    {
+        return ui->comp_OwnModelSet;
+    }
 
-        void CDbOwnModelSetDialog::enableButtons(bool firstSet, bool newSet)
-        {
-            ui->comp_OwnModelSet->enableButtons(firstSet, newSet);
-        }
-    } // ns
+    void CDbOwnModelSetDialog::enableButtons(bool firstSet, bool newSet)
+    {
+        ui->comp_OwnModelSet->enableButtons(firstSet, newSet);
+    }
 } // ns

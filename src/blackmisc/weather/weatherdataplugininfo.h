@@ -19,57 +19,54 @@
 #include <QMetaType>
 #include <QString>
 
-namespace BlackMisc
+namespace BlackMisc::Weather
 {
-    namespace Weather
+    //! Describing a weather data plugin
+    class BLACKMISC_EXPORT CWeatherDataPluginInfo : public BlackMisc::CValueObject<CWeatherDataPluginInfo>
     {
-        //! Describing a weather data plugin
-        class BLACKMISC_EXPORT CWeatherDataPluginInfo : public BlackMisc::CValueObject<CWeatherDataPluginInfo>
-        {
-        public:
-            //! Default constructor
-            CWeatherDataPluginInfo() = default;
+    public:
+        //! Default constructor
+        CWeatherDataPluginInfo() = default;
 
-            //! Constructor (used with unit tests)
-            CWeatherDataPluginInfo(const QString &identifier, const QString &name,
-                                   const QString &description, bool valid);
+        //! Constructor (used with unit tests)
+        CWeatherDataPluginInfo(const QString &identifier, const QString &name,
+                                const QString &description, bool valid);
 
-            //! \copydoc BlackMisc::CValueObject::convertFromJson
-            void convertFromJson(const QJsonObject &json);
+        //! \copydoc BlackMisc::CValueObject::convertFromJson
+        void convertFromJson(const QJsonObject &json);
 
-            //! Check if the provided plugin metadata is valid.
-            //! Weather data plugin has to meet the following requirements:
-            //!  * implements org.swift-project.blackcore.weatherdata;
-            //!  * provides plugin name;
-            bool isValid() const { return m_valid; }
+        //! Check if the provided plugin metadata is valid.
+        //! Weather data plugin has to meet the following requirements:
+        //!  * implements org.swift-project.blackcore.weatherdata;
+        //!  * provides plugin name;
+        bool isValid() const { return m_valid; }
 
-            //! Identifier
-            const QString &getIdentifier() const { return m_identifier; }
+        //! Identifier
+        const QString &getIdentifier() const { return m_identifier; }
 
-            //! Name
-            const QString &getName() const { return m_name; }
+        //! Name
+        const QString &getName() const { return m_name; }
 
-            //! Description
-            const QString &getDescription() const { return m_description; }
+        //! Description
+        const QString &getDescription() const { return m_description; }
 
-            //! \copydoc BlackMisc::Mixin::String::toQString
-            QString convertToQString(bool i18n = false) const;
+        //! \copydoc BlackMisc::Mixin::String::toQString
+        QString convertToQString(bool i18n = false) const;
 
-        private:
-            QString m_identifier;
-            QString m_name;
-            QString m_description;
-            bool m_valid { false };
+    private:
+        QString m_identifier;
+        QString m_name;
+        QString m_description;
+        bool m_valid { false };
 
-            BLACK_METACLASS(
-                CWeatherDataPluginInfo,
-                BLACK_METAMEMBER(identifier, 0, CaseInsensitiveComparison),
-                BLACK_METAMEMBER(name, 0, DisabledForComparison | DisabledForHashing),
-                BLACK_METAMEMBER(description, 0, DisabledForComparison | DisabledForHashing),
-                BLACK_METAMEMBER(valid, 0, DisabledForComparison | DisabledForHashing)
-            );
-        };
-    } // ns
+        BLACK_METACLASS(
+            CWeatherDataPluginInfo,
+            BLACK_METAMEMBER(identifier, 0, CaseInsensitiveComparison),
+            BLACK_METAMEMBER(name, 0, DisabledForComparison | DisabledForHashing),
+            BLACK_METAMEMBER(description, 0, DisabledForComparison | DisabledForHashing),
+            BLACK_METAMEMBER(valid, 0, DisabledForComparison | DisabledForHashing)
+        );
+    };
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CWeatherDataPluginInfo)

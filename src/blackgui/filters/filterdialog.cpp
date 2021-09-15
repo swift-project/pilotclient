@@ -13,25 +13,22 @@
 #include <QString>
 #include <Qt>
 
-namespace BlackGui
+namespace BlackGui::Filters
 {
-    namespace Filters
+    CFilterDialog::CFilterDialog(QWidget *parent) : QDialog(parent, Qt::Tool)
     {
-        CFilterDialog::CFilterDialog(QWidget *parent) : QDialog(parent, Qt::Tool)
-        {
-            this->setWindowTitle("Filter dialog");
-            this->onStyleSheetChanged();
-            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CFilterDialog::onStyleSheetChanged, Qt::QueuedConnection);
-        }
+        this->setWindowTitle("Filter dialog");
+        this->onStyleSheetChanged();
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CFilterDialog::onStyleSheetChanged, Qt::QueuedConnection);
+    }
 
-        CFilterDialog::~CFilterDialog()
-        { }
+    CFilterDialog::~CFilterDialog()
+    { }
 
-        void CFilterDialog::onStyleSheetChanged()
-        {
-            const QString qss = sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameFilterDialog());
-            this->setStyleSheet(qss);
-        }
+    void CFilterDialog::onStyleSheetChanged()
+    {
+        const QString qss = sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameFilterDialog());
+        this->setStyleSheet(qss);
+    }
 
-    } // namespace
 } // namespace

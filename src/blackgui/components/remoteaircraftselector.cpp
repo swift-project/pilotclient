@@ -27,114 +27,111 @@ using namespace BlackMisc::Simulation;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CRemoteAircraftSelector::CRemoteAircraftSelector(QWidget *parent) :
+        QFrame(parent),
+        ui(new Ui::CRemoteAircraftSelector)
     {
-        CRemoteAircraftSelector::CRemoteAircraftSelector(QWidget *parent) :
-            QFrame(parent),
-            ui(new Ui::CRemoteAircraftSelector)
-        {
-            ui->setupUi(this);
-            bool s = connect(sGui->getIContextNetwork(), &IContextNetwork::removedAircraft, this, &CRemoteAircraftSelector::onRemovedAircraft, Qt::QueuedConnection);
-            Q_ASSERT(s);
-            s = connect(sGui->getIContextNetwork(), &IContextNetwork::addedAircraft, this, &CRemoteAircraftSelector::onAddedAircraft, Qt::QueuedConnection);
-            Q_ASSERT(s);
-            s = connect(ui->cb_RemoteAircraftSelector, &QComboBox::currentTextChanged, this, &CRemoteAircraftSelector::comboBoxChanged);
-            Q_UNUSED(s);
-        }
+        ui->setupUi(this);
+        bool s = connect(sGui->getIContextNetwork(), &IContextNetwork::removedAircraft, this, &CRemoteAircraftSelector::onRemovedAircraft, Qt::QueuedConnection);
+        Q_ASSERT(s);
+        s = connect(sGui->getIContextNetwork(), &IContextNetwork::addedAircraft, this, &CRemoteAircraftSelector::onAddedAircraft, Qt::QueuedConnection);
+        Q_ASSERT(s);
+        s = connect(ui->cb_RemoteAircraftSelector, &QComboBox::currentTextChanged, this, &CRemoteAircraftSelector::comboBoxChanged);
+        Q_UNUSED(s);
+    }
 
-        CRemoteAircraftSelector::~CRemoteAircraftSelector() { }
+    CRemoteAircraftSelector::~CRemoteAircraftSelector() { }
 
-        BlackMisc::Aviation::CCallsign CRemoteAircraftSelector::getSelectedCallsign() const
-        {
-            static const CCallsign empty {};
-            const int index = ui->cb_RemoteAircraftSelector->currentIndex();
-            if (index < 0 || index > m_aircraft.size()) { return empty; }
-            return m_aircraft[index].getCallsign();
-        }
+    BlackMisc::Aviation::CCallsign CRemoteAircraftSelector::getSelectedCallsign() const
+    {
+        static const CCallsign empty {};
+        const int index = ui->cb_RemoteAircraftSelector->currentIndex();
+        if (index < 0 || index > m_aircraft.size()) { return empty; }
+        return m_aircraft[index].getCallsign();
+    }
 
-        void CRemoteAircraftSelector::indicatePartsEnabled(bool indicate)
-        {
-            m_showPartsEnabled = indicate;
-        }
+    void CRemoteAircraftSelector::indicatePartsEnabled(bool indicate)
+    {
+        m_showPartsEnabled = indicate;
+    }
 
-        void CRemoteAircraftSelector::showEvent(QShowEvent *event)
+    void CRemoteAircraftSelector::showEvent(QShowEvent *event)
+    {
+        // force new combobox when visible
+        m_dsFillComboBox.inputSignal(); // fill combo box
+        QWidget::showEvent(event);
+    }
+
+    void CRemoteAircraftSelector::onAddedAircraft(const CSimulatedAircraft &aircraft)
+    {
+        CCallsign cs(aircraft.getCallsign());
+        if (cs.isEmpty()) { return; }
+        if (m_aircraft.containsCallsign(cs)) { return; }
+        m_dsFillComboBox.inputSignal(); // fill combo box
+    }
+
+    void CRemoteAircraftSelector::onRemovedAircraft(const CCallsign &callsign)
+    {
+        if (callsign.isEmpty()) { return; }
+        if (m_aircraft.containsCallsign(callsign))
         {
-            // force new combobox when visible
             m_dsFillComboBox.inputSignal(); // fill combo box
-            QWidget::showEvent(event);
         }
+    }
 
-        void CRemoteAircraftSelector::onAddedAircraft(const CSimulatedAircraft &aircraft)
-        {
-            CCallsign cs(aircraft.getCallsign());
-            if (cs.isEmpty()) { return; }
-            if (m_aircraft.containsCallsign(cs)) { return; }
-            m_dsFillComboBox.inputSignal(); // fill combo box
-        }
+    void CRemoteAircraftSelector::comboBoxChanged(const QString &text)
+    {
+        if (m_currentText == text) { return; }
+        m_currentText = text;
+        emit this->changedCallsign();
+    }
 
-        void CRemoteAircraftSelector::onRemovedAircraft(const CCallsign &callsign)
+    void CRemoteAircraftSelector::fillComboBox()
+    {
+        if (!this->isVisible()) { return; } // for performance reasons
+        if (!sGui || sGui->isShuttingDown()) { return; }
+
+        const CCallsign currentSelection(this->getSelectedCallsign());
+        m_aircraft = sGui->getIContextNetwork()->getAircraftInRange().sortedByCallsign();
+        ui->cb_RemoteAircraftSelector->clear();
+        if (m_aircraft.isEmpty()) { return; }
+
+        QStringList items;
+        for (const CSimulatedAircraft &aircraft : m_aircraft)
         {
-            if (callsign.isEmpty()) { return; }
-            if (m_aircraft.containsCallsign(callsign))
+            if (aircraft.getCallsign().isEmpty()) { continue; }
+            QString i(aircraft.getCallsign().toQString());
+            if (aircraft.hasAircraftDesignator())
             {
-                m_dsFillComboBox.inputSignal(); // fill combo box
+                i += u" (" %
+                        aircraft.getAircraftIcaoCode().toQString(false) %
+                        u')';
             }
-        }
-
-        void CRemoteAircraftSelector::comboBoxChanged(const QString &text)
-        {
-            if (m_currentText == text) { return; }
-            m_currentText = text;
-            emit this->changedCallsign();
-        }
-
-        void CRemoteAircraftSelector::fillComboBox()
-        {
-            if (!this->isVisible()) { return; } // for performance reasons
-            if (!sGui || sGui->isShuttingDown()) { return; }
-
-            const CCallsign currentSelection(this->getSelectedCallsign());
-            m_aircraft = sGui->getIContextNetwork()->getAircraftInRange().sortedByCallsign();
-            ui->cb_RemoteAircraftSelector->clear();
-            if (m_aircraft.isEmpty()) { return; }
-
-            QStringList items;
-            for (const CSimulatedAircraft &aircraft : m_aircraft)
+            if (aircraft.hasRealName())
             {
-                if (aircraft.getCallsign().isEmpty()) { continue; }
-                QString i(aircraft.getCallsign().toQString());
-                if (aircraft.hasAircraftDesignator())
-                {
-                    i += u" (" %
-                         aircraft.getAircraftIcaoCode().toQString(false) %
-                         u')';
-                }
-                if (aircraft.hasRealName())
-                {
-                    i += u" - " % aircraft.getPilotRealName();
-                }
-                if (m_showPartsEnabled)
-                {
-                    if (aircraft.isPartsSynchronized())
-                    {
-                        i += QStringLiteral(" [parts]");
-                    }
-                }
-                items.append(i);
+                i += u" - " % aircraft.getPilotRealName();
             }
-
-            // new combobox
-            ui->cb_RemoteAircraftSelector->addItems(items);
-
-            // set old selection if possible
-            if (currentSelection.isEmpty()) { return; }
-            int index = m_aircraft.firstIndexOfCallsign(currentSelection);
-            if (index >= 0 && index < ui->cb_RemoteAircraftSelector->count())
+            if (m_showPartsEnabled)
             {
-                ui->cb_RemoteAircraftSelector->setCurrentIndex(index);
+                if (aircraft.isPartsSynchronized())
+                {
+                    i += QStringLiteral(" [parts]");
+                }
             }
+            items.append(i);
         }
-    } // namespace
+
+        // new combobox
+        ui->cb_RemoteAircraftSelector->addItems(items);
+
+        // set old selection if possible
+        if (currentSelection.isEmpty()) { return; }
+        int index = m_aircraft.firstIndexOfCallsign(currentSelection);
+        if (index >= 0 && index < ui->cb_RemoteAircraftSelector->count())
+        {
+            ui->cb_RemoteAircraftSelector->setCurrentIndex(index);
+        }
+    }
 } // namespace

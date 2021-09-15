@@ -15,28 +15,25 @@
 #include <QScopedPointer>
 
 namespace Ui { class COtherSwiftVersionsDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * COtherVersionsComponent as dialog
+     */
+    class COtherSwiftVersionsDialog : public QDialog
     {
-        /**
-         * COtherVersionsComponent as dialog
-         */
-        class COtherSwiftVersionsDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit COtherSwiftVersionsDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit COtherSwiftVersionsDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~COtherSwiftVersionsDialog();
+        //! Destructor
+        virtual ~COtherSwiftVersionsDialog();
 
-        private:
-            QScopedPointer<Ui::COtherSwiftVersionsDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::COtherSwiftVersionsDialog> ui;
+    };
 } // ns
 
 #endif // guard

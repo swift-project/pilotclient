@@ -22,91 +22,88 @@
 #include <QWizardPage>
 
 namespace Ui { class CFirstModelSetComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    class CDbOwnModelsDialog;
+    class CDbOwnModelsComponent;
+    class CDbOwnModelSetDialog;
+    class CDbOwnModelSetComponent;
+
+    //! Create a first model set
+    class CFirstModelSetComponent : public COverlayMessagesFrame
     {
-        class CDbOwnModelsDialog;
-        class CDbOwnModelsComponent;
-        class CDbOwnModelSetDialog;
-        class CDbOwnModelSetComponent;
+        Q_OBJECT
 
-        //! Create a first model set
-        class CFirstModelSetComponent : public COverlayMessagesFrame
-        {
-            Q_OBJECT
+    public:
+        //! Log categories
+        static const QStringList &getLogCategories();
 
-        public:
-            //! Log categories
-            static const QStringList &getLogCategories();
+        //! Constructor
+        explicit CFirstModelSetComponent(QWidget *parent = nullptr);
 
-            //! Constructor
-            explicit CFirstModelSetComponent(QWidget *parent = nullptr);
+        //! Destructor
+        virtual ~CFirstModelSetComponent();
 
-            //! Destructor
-            virtual ~CFirstModelSetComponent();
+    private:
+        QScopedPointer<Ui::CFirstModelSetComponent> ui;
+        QScopedPointer<CDbOwnModelsDialog>   m_modelsDialog;
+        QScopedPointer<CDbOwnModelSetDialog> m_modelSetDialog;
+        BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings { this };
 
-        private:
-            QScopedPointer<Ui::CFirstModelSetComponent> ui;
-            QScopedPointer<CDbOwnModelsDialog>   m_modelsDialog;
-            QScopedPointer<CDbOwnModelSetDialog> m_modelSetDialog;
-            BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings { this };
+        //! Simulator has been changed
+        void onSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-            //! Simulator has been changed
-            void onSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        //! Simulator settings changed
+        void onSettingsChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-            //! Simulator settings changed
-            void onSettingsChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        //! Models have been loaded
+        void onModelsLoaded(const BlackMisc::Simulation::CSimulatorInfo &simulator, int count);
 
-            //! Models have been loaded
-            void onModelsLoaded(const BlackMisc::Simulation::CSimulatorInfo &simulator, int count);
+        //! Asynchronously call onSettingsChanged
+        void triggerSettingsChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-            //! Asynchronously call onSettingsChanged
-            void triggerSettingsChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        //! Direct access to component
+        const CDbOwnModelsComponent *modelsComponent() const;
 
-            //! Direct access to component
-            const CDbOwnModelsComponent *modelsComponent() const;
+        //! Direct access to component
+        const CDbOwnModelSetComponent *modelSetComponent() const;
 
-            //! Direct access to component
-            const CDbOwnModelSetComponent *modelSetComponent() const;
+        //! Direct access to component's loader
+        BlackMisc::Simulation::IAircraftModelLoader *modelLoader() const;
 
-            //! Direct access to component's loader
-            BlackMisc::Simulation::IAircraftModelLoader *modelLoader() const;
+        //! Open own models dialog
+        void openOwnModelsDialog();
 
-            //! Open own models dialog
-            void openOwnModelsDialog();
+        //! Own model set dialog
+        void openOwnModelSetDialog();
 
-            //! Own model set dialog
-            void openOwnModelSetDialog();
+        //! Change model directory
+        void changeModelDirectory();
 
-            //! Change model directory
-            void changeModelDirectory();
+        //! Create the model set
+        void createModelSet();
 
-            //! Create the model set
-            void createModelSet();
+        //! Main window or this
+        QWidget *mainWindow();
+    };
 
-            //! Main window or this
-            QWidget *mainWindow();
-        };
+    //! Wizard page for CFirstModelSetComponent
+    class CFirstModelSetWizardPage : public QWizardPage
+    {
+        Q_OBJECT
 
-        //! Wizard page for CFirstModelSetComponent
-        class CFirstModelSetWizardPage : public QWizardPage
-        {
-            Q_OBJECT
+    public:
+        //! Constructors
+        using QWizardPage::QWizardPage;
 
-        public:
-            //! Constructors
-            using QWizardPage::QWizardPage;
+        //! Set config
+        void setFirstModelSet(CFirstModelSetComponent *firstModelSet) { m_firstModelSet = firstModelSet; }
 
-            //! Set config
-            void setFirstModelSet(CFirstModelSetComponent *firstModelSet) { m_firstModelSet = firstModelSet; }
+        //! \copydoc QWizardPage::validatePage
+        virtual bool validatePage() override;
 
-            //! \copydoc QWizardPage::validatePage
-            virtual bool validatePage() override;
-
-        private:
-            CFirstModelSetComponent *m_firstModelSet = nullptr;
-        };
-    } // ns
+    private:
+        CFirstModelSetComponent *m_firstModelSet = nullptr;
+    };
 } // ns
 #endif // guard

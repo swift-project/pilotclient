@@ -19,32 +19,29 @@
 class QWidget;
 
 namespace Ui { class CDataSettingsComponent; }
-namespace BlackCore { namespace Db { class CBackgroundDataUpdater; }}
-namespace BlackGui
+namespace BlackCore::Db { class CBackgroundDataUpdater; }
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * Settings
+     */
+    class BLACKGUI_EXPORT CDataSettingsComponent : public COverlayMessagesFrame
     {
-        /**
-         * Settings
-         */
-        class BLACKGUI_EXPORT CDataSettingsComponent : public COverlayMessagesFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CDataSettingsComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CDataSettingsComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CDataSettingsComponent();
+        //! Destructor
+        virtual ~CDataSettingsComponent();
 
-            //! Background updater
-            void setBackgroundUpdater(const BlackCore::Db::CBackgroundDataUpdater *updater);
+        //! Background updater
+        void setBackgroundUpdater(const BlackCore::Db::CBackgroundDataUpdater *updater);
 
-        private:
-            QScopedPointer<Ui::CDataSettingsComponent> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CDataSettingsComponent> ui;
+    };
 } // ns
 
 #endif // guard

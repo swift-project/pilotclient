@@ -17,41 +17,38 @@
 
 namespace Ui { class CMarginsInput; }
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Widget alows to enter margins
+     */
+    class CMarginsInput : public QFrame
     {
-        /*!
-         * Widget alows to enter margins
-         */
-        class CMarginsInput : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CMarginsInput(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CMarginsInput(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CMarginsInput() override;
+        //! Destructor
+        virtual ~CMarginsInput() override;
 
-            //! Set margins
-            void setMargins(const QMargins &margins);
+        //! Set margins
+        void setMargins(const QMargins &margins);
 
-            //! Current values of margins
-            QMargins getMargins() const;
+        //! Current values of margins
+        QMargins getMargins() const;
 
-        signals:
-            //! Margins changed
-            void changedMargins(const QMargins &margins);
+    signals:
+        //! Margins changed
+        void changedMargins(const QMargins &margins);
 
-        private:
-            //! Ok
-            void confirmed();
+    private:
+        //! Ok
+        void confirmed();
 
-            QScopedPointer<Ui::CMarginsInput> ui;
-        };
-    } // ns
+        QScopedPointer<Ui::CMarginsInput> ui;
+    };
 } // ns
 
 #endif // guard

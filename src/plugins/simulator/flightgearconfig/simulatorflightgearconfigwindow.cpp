@@ -17,35 +17,32 @@ using namespace BlackGui;
 using namespace BlackMisc;
 //using namespace BlackMisc::Simulation::Flightgear;
 
-namespace BlackSimPlugin
+namespace BlackSimPlugin::Flightgear
 {
-    namespace Flightgear
+    CSimulatorFlightgearConfigWindow::CSimulatorFlightgearConfigWindow(QWidget *parent) :
+        CPluginConfigWindow(parent),
+        ui(new Ui::CSimulatorFlightgearConfigWindow)
     {
-        CSimulatorFlightgearConfigWindow::CSimulatorFlightgearConfigWindow(QWidget *parent) :
-            CPluginConfigWindow(parent),
-            ui(new Ui::CSimulatorFlightgearConfigWindow)
+        ui->setupUi(this);
+        CGuiUtility::disableMinMaxCloseButtons(this);
+        ui->comp_SettingsFGSwiftBus->setDefaultP2PAddress(m_fgswiftbusServerSetting.getDefault());
+        ui->comp_SettingsFGSwiftBus->set(m_fgswiftbusServerSetting.getThreadLocal());
+
+        connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CSimulatorFlightgearConfigWindow::onSettingsAccepted);
+        connect(ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &CSimulatorFlightgearConfigWindow::close);
+    }
+
+    CSimulatorFlightgearConfigWindow::~CSimulatorFlightgearConfigWindow()
+    { }
+
+    void CSimulatorFlightgearConfigWindow::onSettingsAccepted()
+    {
+        const QString currentAddress = m_fgswiftbusServerSetting.getThreadLocal();
+        const QString updatedAddress = ui->comp_SettingsFGSwiftBus->getDBusAddress();
+        if (currentAddress != ui->comp_SettingsFGSwiftBus->getDBusAddress())
         {
-            ui->setupUi(this);
-            CGuiUtility::disableMinMaxCloseButtons(this);
-            ui->comp_SettingsFGSwiftBus->setDefaultP2PAddress(m_fgswiftbusServerSetting.getDefault());
-            ui->comp_SettingsFGSwiftBus->set(m_fgswiftbusServerSetting.getThreadLocal());
-
-            connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CSimulatorFlightgearConfigWindow::onSettingsAccepted);
-            connect(ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &CSimulatorFlightgearConfigWindow::close);
+            m_fgswiftbusServerSetting.set(updatedAddress);
         }
-
-        CSimulatorFlightgearConfigWindow::~CSimulatorFlightgearConfigWindow()
-        { }
-
-        void CSimulatorFlightgearConfigWindow::onSettingsAccepted()
-        {
-            const QString currentAddress = m_fgswiftbusServerSetting.getThreadLocal();
-            const QString updatedAddress = ui->comp_SettingsFGSwiftBus->getDBusAddress();
-            if (currentAddress != ui->comp_SettingsFGSwiftBus->getDBusAddress())
-            {
-                m_fgswiftbusServerSetting.set(updatedAddress);
-            }
-            close();
-        }
-    } // ns
+        close();
+    }
 } // ns

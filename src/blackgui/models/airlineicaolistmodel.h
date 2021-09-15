@@ -16,32 +16,26 @@
 
 class QObject;
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
-    {
-        class CAirlineIcaoCode;
-        class CAirlineIcaoCodeList;
-    }
+    class CAirlineIcaoCode;
+    class CAirlineIcaoCodeList;
 }
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Airport list model
+    class BLACKGUI_EXPORT CAirlineIcaoCodeListModel :
+        public CListModelDbObjects<BlackMisc::Aviation::CAirlineIcaoCodeList, int, true>
     {
-        //! Airport list model
-        class BLACKGUI_EXPORT CAirlineIcaoCodeListModel :
-            public CListModelDbObjects<BlackMisc::Aviation::CAirlineIcaoCodeList, int, true>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAirlineIcaoCodeListModel(QObject *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAirlineIcaoCodeListModel(QObject *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAirlineIcaoCodeListModel() {}
-        };
-    }
+        //! Destructor
+        virtual ~CAirlineIcaoCodeListModel() {}
+    };
 }
 #endif // guard

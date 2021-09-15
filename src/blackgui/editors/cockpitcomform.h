@@ -19,103 +19,100 @@
 #include <QScopedPointer>
 
 namespace Ui { class CCockpitComForm; }
-namespace BlackGui
+namespace BlackGui::Editors
 {
-    namespace Editors
+    /*!
+     * COM elements
+     */
+    class BLACKGUI_EXPORT CCockpitComForm : public CForm
     {
-        /*!
-         * COM elements
-         */
-        class BLACKGUI_EXPORT CCockpitComForm : public CForm
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CCockpitComForm(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CCockpitComForm(QWidget *parent = nullptr);
 
-            //! Destrutor
-            virtual ~CCockpitComForm() override;
+        //! Destrutor
+        virtual ~CCockpitComForm() override;
 
-            //! COM frequencies displayed
-            void setFrequencies(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
+        //! COM frequencies displayed
+        void setFrequencies(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
 
-            //! Set the XPDR values
-            void setTransponder(const BlackMisc::Aviation::CTransponder &transponder);
+        //! Set the XPDR values
+        void setTransponder(const BlackMisc::Aviation::CTransponder &transponder);
 
-            //! Set selected stations
-            void setSelectedAtcStations(const BlackMisc::Aviation::CAtcStationList &selectedStations);
+        //! Set selected stations
+        void setSelectedAtcStations(const BlackMisc::Aviation::CAtcStationList &selectedStations);
 
-            //! Set to BlackMisc::Aviation::CTransponder::StateIdent
-            void setTransponderModeStateIdent();
+        //! Set to BlackMisc::Aviation::CTransponder::StateIdent
+        void setTransponderModeStateIdent();
 
-            //! Set all values
-            void setValue(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+        //! Set all values
+        void setValue(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
-            //! Get SELCAL
-            BlackMisc::Aviation::CSelcal getSelcal() const;
+        //! Get SELCAL
+        BlackMisc::Aviation::CSelcal getSelcal() const;
 
-            //! Set SELCAL
-            void setSelcal(const BlackMisc::Aviation::CSelcal &selcal);
+        //! Set SELCAL
+        void setSelcal(const BlackMisc::Aviation::CSelcal &selcal);
 
-            //! \name Form class implementations
-            //! @{
-            virtual void setReadOnly(bool readonly) override;
-            virtual void setSelectOnly() override;
-            virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
-            //! @}
+        //! \name Form class implementations
+        //! @{
+        virtual void setReadOnly(bool readonly) override;
+        virtual void setSelectOnly() override;
+        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        //! @}
 
-        signals:
-            //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderModeChanged
-            void transponderModeChanged(BlackMisc::Aviation::CTransponder::TransponderMode newMode);
+    signals:
+        //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderModeChanged
+        void transponderModeChanged(BlackMisc::Aviation::CTransponder::TransponderMode newMode);
 
-            //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderStateIdentEnded
-            void transponderStateIdentEnded();
+        //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderStateIdentEnded
+        void transponderStateIdentEnded();
 
-            //! Request to test SELCAL
-            void testSelcal();
+        //! Request to test SELCAL
+        void testSelcal();
 
-            //! SELCAL value changed
-            void changedSelcal(const BlackMisc::Aviation::CSelcal &selcal);
+        //! SELCAL value changed
+        void changedSelcal(const BlackMisc::Aviation::CSelcal &selcal);
 
-            //! GUI values changed
-            void changedCockpitValues(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+        //! GUI values changed
+        void changedCockpitValues(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
-            //! Request COM text messages
-            //! @{
-            void requestCom1TextMessage();
-            void requestCom2TextMessage();
-            //! @}
+        //! Request COM text messages
+        //! @{
+        void requestCom1TextMessage();
+        void requestCom2TextMessage();
+        //! @}
 
-        private:
-            bool m_integratedWithSim = false; //!< Synced with simulator
+    private:
+        bool m_integratedWithSim = false; //!< Synced with simulator
 
-            //! Init LEDs
-            void initLeds();
+        //! Init LEDs
+        void initLeds();
 
-            //! Cockpit values to aircraft
-            BlackMisc::Simulation::CSimulatedAircraft cockpitValuesToAircraftObject();
+        //! Cockpit values to aircraft
+        BlackMisc::Simulation::CSimulatedAircraft cockpitValuesToAircraftObject();
 
-            //! GUI values have been changed, will trigger CCockpitComForm::guiChangedCockpitValues
-            void onGuiChangedCockpitValues();
+        //! GUI values have been changed, will trigger CCockpitComForm::guiChangedCockpitValues
+        void onGuiChangedCockpitValues();
 
-            //! SELCAL value changed (in selector)
-            void onSelcalChanged();
+        //! SELCAL value changed (in selector)
+        void onSelcalChanged();
 
-            //! Align the heights
-            void alignUiElementsHeight();
+        //! Align the heights
+        void alignUiElementsHeight();
 
-            //! Update UI for COM unit
-            void updateActiveCOMUnitLEDs(bool integratedWithSim, bool com1T, bool com1R, bool com2T, bool com2R);
+        //! Update UI for COM unit
+        void updateActiveCOMUnitLEDs(bool integratedWithSim, bool com1T, bool com1R, bool com2T, bool com2R);
 
-            //! Update from simulator context
-            void updateIntegratedFlagFromSimulatorContext();
+        //! Update from simulator context
+        void updateIntegratedFlagFromSimulatorContext();
 
-            //! Compare 2 frequencies (consider epsilon)
-            static bool isFrequenceEqual(double f1, double f2);
+        //! Compare 2 frequencies (consider epsilon)
+        static bool isFrequenceEqual(double f1, double f2);
 
-            QScopedPointer<Ui::CCockpitComForm> ui;
-        };
-    } // ns
+        QScopedPointer<Ui::CCockpitComForm> ui;
+    };
 } // ns
 #endif // guard

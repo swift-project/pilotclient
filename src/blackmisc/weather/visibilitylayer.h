@@ -22,73 +22,70 @@
 #include <QMetaType>
 #include <QString>
 
-namespace BlackMisc
+namespace BlackMisc::Weather
 {
-    namespace Weather
+    /*!
+     * Value object for a visibility layer
+     */
+    class BLACKMISC_EXPORT CVisibilityLayer : public CValueObject<CVisibilityLayer>
     {
-        /*!
-         * Value object for a visibility layer
-         */
-        class BLACKMISC_EXPORT CVisibilityLayer : public CValueObject<CVisibilityLayer>
+    public:
+        //! Properties by index
+        enum ColumnIndex
         {
-        public:
-            //! Properties by index
-            enum ColumnIndex
-            {
-                IndexBase = BlackMisc::CPropertyIndexRef::GlobalIndexCVisibilityLayer,
-                IndexTop,
-                IndexVisibility,
-            };
-
-            //! Default constructor.
-            CVisibilityLayer() = default;
-
-            //! Constructor
-            CVisibilityLayer(const BlackMisc::Aviation::CAltitude &base,
-                             const BlackMisc::Aviation::CAltitude &top,
-                             const PhysicalQuantities::CLength &visibility);
-
-            //! Set base
-            void setBase(const BlackMisc::Aviation::CAltitude &base) { m_base = base; }
-
-            //! Get base
-            BlackMisc::Aviation::CAltitude getBase() const { return m_base; }
-
-            //! Set top
-            void setTop(const BlackMisc::Aviation::CAltitude &top) { m_top = top; }
-
-            //! Get top
-            BlackMisc::Aviation::CAltitude getTop() const { return m_top; }
-
-            //! Set visibility
-            void setVisibility(const PhysicalQuantities::CLength &visibility) { m_visibility = visibility; }
-
-            //! Get visibility
-            PhysicalQuantities::CLength getVisibility() const { return m_visibility; }
-
-            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
-
-            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
-
-            //! \copydoc BlackMisc::Mixin::String::toQString
-            QString convertToQString(bool i18n = false) const;
-
-        private:
-            BlackMisc::Aviation::CAltitude m_base;
-            BlackMisc::Aviation::CAltitude m_top;
-            PhysicalQuantities::CLength m_visibility { 100 , PhysicalQuantities::CLengthUnit::km() };
-
-            BLACK_METACLASS(
-                CVisibilityLayer,
-                BLACK_METAMEMBER(base),
-                BLACK_METAMEMBER(top),
-                BLACK_METAMEMBER(visibility)
-            );
+            IndexBase = BlackMisc::CPropertyIndexRef::GlobalIndexCVisibilityLayer,
+            IndexTop,
+            IndexVisibility,
         };
 
-    } // namespace
+        //! Default constructor.
+        CVisibilityLayer() = default;
+
+        //! Constructor
+        CVisibilityLayer(const BlackMisc::Aviation::CAltitude &base,
+                            const BlackMisc::Aviation::CAltitude &top,
+                            const PhysicalQuantities::CLength &visibility);
+
+        //! Set base
+        void setBase(const BlackMisc::Aviation::CAltitude &base) { m_base = base; }
+
+        //! Get base
+        BlackMisc::Aviation::CAltitude getBase() const { return m_base; }
+
+        //! Set top
+        void setTop(const BlackMisc::Aviation::CAltitude &top) { m_top = top; }
+
+        //! Get top
+        BlackMisc::Aviation::CAltitude getTop() const { return m_top; }
+
+        //! Set visibility
+        void setVisibility(const PhysicalQuantities::CLength &visibility) { m_visibility = visibility; }
+
+        //! Get visibility
+        PhysicalQuantities::CLength getVisibility() const { return m_visibility; }
+
+        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+        QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
+
+        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+        void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
+
+        //! \copydoc BlackMisc::Mixin::String::toQString
+        QString convertToQString(bool i18n = false) const;
+
+    private:
+        BlackMisc::Aviation::CAltitude m_base;
+        BlackMisc::Aviation::CAltitude m_top;
+        PhysicalQuantities::CLength m_visibility { 100 , PhysicalQuantities::CLengthUnit::km() };
+
+        BLACK_METACLASS(
+            CVisibilityLayer,
+            BLACK_METAMEMBER(base),
+            BLACK_METAMEMBER(top),
+            BLACK_METAMEMBER(visibility)
+        );
+    };
+
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CVisibilityLayer)

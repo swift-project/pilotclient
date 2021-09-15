@@ -21,31 +21,28 @@
 #include <QString>
 
 namespace BlackMisc { class CNameVariantPair; }
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    //! User view
+    class BLACKGUI_EXPORT CNameVariantPairView : public CViewBase<Models::CNameVariantPairModel>
     {
-        //! User view
-        class BLACKGUI_EXPORT CNameVariantPairView : public CViewBase<Models::CNameVariantPairModel>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CNameVariantPairView(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CNameVariantPairView(QWidget *parent = nullptr);
 
-            //! Icon mode
-            void setIconMode(bool withIcon);
+        //! Icon mode
+        void setIconMode(bool withIcon);
 
-            //! Update or add value, QVariant version
-            bool addOrUpdateByName(const QString &name, const BlackMisc::CVariant &value, const BlackMisc::CIcon &icon = BlackMisc::CIcon(), bool isResizeConditionMet = true, bool skipEqualValues = true);
+        //! Update or add value, QVariant version
+        bool addOrUpdateByName(const QString &name, const BlackMisc::CVariant &value, const BlackMisc::CIcon &icon = BlackMisc::CIcon(), bool isResizeConditionMet = true, bool skipEqualValues = true);
 
-            //! Remove by name
-            void removeByName(const QString &name, bool isResizeConditionMet = true);
+        //! Remove by name
+        void removeByName(const QString &name, bool isResizeConditionMet = true);
 
-            //! Contains name
-            bool containsName(const QString &name);
-        };
-    }
+        //! Contains name
+        bool containsName(const QString &name);
+    };
 }
 #endif // guard

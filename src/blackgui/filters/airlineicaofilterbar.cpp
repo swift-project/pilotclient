@@ -25,84 +25,81 @@ using namespace BlackMisc::Aviation;
 using namespace BlackGui::Models;
 using namespace BlackGui::Components;
 
-namespace BlackGui
+namespace BlackGui::Filters
 {
-    namespace Filters
+    CAirlineIcaoFilterBar::CAirlineIcaoFilterBar(QWidget *parent) :
+        CFilterWidget(parent),
+        ui(new Ui::CAirlineIcaoFilterBar)
     {
-        CAirlineIcaoFilterBar::CAirlineIcaoFilterBar(QWidget *parent) :
-            CFilterWidget(parent),
-            ui(new Ui::CAirlineIcaoFilterBar)
+        ui->setupUi(this);
+        this->setButtonsAndCount(ui->filter_Buttons);
+
+        connect(ui->le_Designator, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+        connect(ui->le_Name, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+        connect(ui->le_AirlineId, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+        connect(ui->country_Selector, &CDbCountrySelectorComponent::countryChanged, this, &CAirlineIcaoFilterBar::ps_CountryChanged);
+
+        ui->le_Designator->setValidator(new CUpperCaseValidator(ui->le_Designator));
+        ui->le_AirlineId->setValidator(new QIntValidator(ui->le_AirlineId));
+
+        // reset form
+        this->clearForm();
+    }
+
+    CAirlineIcaoFilterBar::~CAirlineIcaoFilterBar() { }
+
+    std::unique_ptr<IModelFilter<CAirlineIcaoCodeList> > CAirlineIcaoFilterBar::createModelFilter() const
+    {
+        return std::make_unique<CAirlineIcaoFilter>(
+                    convertDbId(ui->le_AirlineId->text()),
+                    ui->le_Designator->text().trimmed(),
+                    ui->le_Name->text().trimmed(),
+                    ui->country_Selector->isSet() ? ui->country_Selector->getCountry().getIsoCode() : "",
+                    ui->cb_RealAirline->isChecked(),
+                    ui->cb_VirtualAirline->isChecked()
+                );
+    }
+
+    void CAirlineIcaoFilterBar::filter(const CAirlineIcaoCode &icao)
+    {
+        bool filter = false;
+        if (icao.hasValidDesignator())
         {
-            ui->setupUi(this);
-            this->setButtonsAndCount(ui->filter_Buttons);
-
-            connect(ui->le_Designator, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
-            connect(ui->le_Name, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
-            connect(ui->le_AirlineId, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
-            connect(ui->country_Selector, &CDbCountrySelectorComponent::countryChanged, this, &CAirlineIcaoFilterBar::ps_CountryChanged);
-
-            ui->le_Designator->setValidator(new CUpperCaseValidator(ui->le_Designator));
-            ui->le_AirlineId->setValidator(new QIntValidator(ui->le_AirlineId));
-
-            // reset form
-            this->clearForm();
+            ui->le_Designator->setText(icao.getVDesignator());
+            filter = true;
+        }
+        if (icao.hasName())
+        {
+            ui->le_Name->setText(icao.getName());
+            filter = true;
         }
 
-        CAirlineIcaoFilterBar::~CAirlineIcaoFilterBar() { }
-
-        std::unique_ptr<IModelFilter<CAirlineIcaoCodeList> > CAirlineIcaoFilterBar::createModelFilter() const
+        if (filter)
         {
-            return std::make_unique<CAirlineIcaoFilter>(
-                       convertDbId(ui->le_AirlineId->text()),
-                       ui->le_Designator->text().trimmed(),
-                       ui->le_Name->text().trimmed(),
-                       ui->country_Selector->isSet() ? ui->country_Selector->getCountry().getIsoCode() : "",
-                       ui->cb_RealAirline->isChecked(),
-                       ui->cb_VirtualAirline->isChecked()
-                   );
+            ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
         }
+    }
 
-        void CAirlineIcaoFilterBar::filter(const CAirlineIcaoCode &icao)
+    void CAirlineIcaoFilterBar::onRowCountChanged(int count, bool withFilter)
+    {
+        ui->filter_Buttons->onRowCountChanged(count, withFilter);
+    }
+
+    void CAirlineIcaoFilterBar::ps_CountryChanged(const CCountry &country)
+    {
+        if (country.hasIsoCode())
         {
-            bool filter = false;
-            if (icao.hasValidDesignator())
-            {
-                ui->le_Designator->setText(icao.getVDesignator());
-                filter = true;
-            }
-            if (icao.hasName())
-            {
-                ui->le_Name->setText(icao.getName());
-                filter = true;
-            }
-
-            if (filter)
-            {
-                ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
-            }
+            ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
         }
+    }
 
-        void CAirlineIcaoFilterBar::onRowCountChanged(int count, bool withFilter)
-        {
-            ui->filter_Buttons->onRowCountChanged(count, withFilter);
-        }
-
-        void CAirlineIcaoFilterBar::ps_CountryChanged(const CCountry &country)
-        {
-            if (country.hasIsoCode())
-            {
-                ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
-            }
-        }
-
-        void CAirlineIcaoFilterBar::clearForm()
-        {
-            ui->le_AirlineId->clear();
-            ui->le_Designator->clear();
-            ui->le_Name->clear();
-            ui->country_Selector->clear();
-            ui->cb_RealAirline->setChecked(true);
-            ui->cb_VirtualAirline->setChecked(true);
-        }
-    } // ns
+    void CAirlineIcaoFilterBar::clearForm()
+    {
+        ui->le_AirlineId->clear();
+        ui->le_Designator->clear();
+        ui->le_Name->clear();
+        ui->country_Selector->clear();
+        ui->cb_RealAirline->setChecked(true);
+        ui->cb_VirtualAirline->setChecked(true);
+    }
 } // ns

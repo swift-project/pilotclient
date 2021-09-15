@@ -21,7 +21,7 @@
 #include <QScopedPointer>
 
 namespace Ui { class CDbAircraftIcaoComponent; }
-namespace BlackMisc { namespace Aviation { class CAircraftIcaoCode; } }
+namespace BlackMisc::Aviation { class CAircraftIcaoCode; }
 namespace BlackGui
 {
     namespace Views { class CAircraftIcaoCodeView; }

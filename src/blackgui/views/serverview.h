@@ -17,19 +17,16 @@
 
 class QWidget;
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Network servers
+    class BLACKGUI_EXPORT CServerView : public CViewBase<Models::CServerListModel>
     {
-        //! Network servers
-        class BLACKGUI_EXPORT CServerView : public CViewBase<Models::CServerListModel>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CServerView(QWidget *parent = nullptr);
-        };
-    }
+    public:
+        //! Constructor
+        explicit CServerView(QWidget *parent = nullptr);
+    };
 } // ns
 #endif // guard

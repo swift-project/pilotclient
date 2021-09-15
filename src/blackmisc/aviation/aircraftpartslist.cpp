@@ -11,26 +11,23 @@
 
 #include <tuple>
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
+    CAircraftPartsList::CAircraftPartsList() { }
+
+    CAircraftPartsList::CAircraftPartsList(const CSequence<CAircraftParts> &other) :
+        CSequence<CAircraftParts>(other)
+    { }
+
+    int CAircraftPartsList::setOnGround(bool onGround)
     {
-        CAircraftPartsList::CAircraftPartsList() { }
-
-        CAircraftPartsList::CAircraftPartsList(const CSequence<CAircraftParts> &other) :
-            CSequence<CAircraftParts>(other)
-        { }
-
-        int CAircraftPartsList::setOnGround(bool onGround)
+        int c = 0;
+        for (CAircraftParts &p : *this)
         {
-            int c = 0;
-            for (CAircraftParts &p : *this)
-            {
-                if (p.isOnGround() == onGround) { continue; }
-                p.setOnGround(onGround);
-                c++;
-            }
-            return c;
+            if (p.isOnGround() == onGround) { continue; }
+            p.setOnGround(onGround);
+            c++;
         }
-    } // namespace
+        return c;
+    }
 } // namespace

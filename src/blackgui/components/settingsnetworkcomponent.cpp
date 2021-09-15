@@ -15,17 +15,14 @@
 
 using namespace BlackCore;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CSettingsNetworkComponent::CSettingsNetworkComponent(QWidget *parent) :
+        QFrame(parent),
+        ui(new Ui::CSettingsNetworkComponent)
     {
-        CSettingsNetworkComponent::CSettingsNetworkComponent(QWidget *parent) :
-            QFrame(parent),
-            ui(new Ui::CSettingsNetworkComponent)
-        {
-            ui->setupUi(this);
-        }
+        ui->setupUi(this);
+    }
 
-        CSettingsNetworkComponent::~CSettingsNetworkComponent() { }
-    } // ns
+    CSettingsNetworkComponent::~CSettingsNetworkComponent() { }
 } // ns

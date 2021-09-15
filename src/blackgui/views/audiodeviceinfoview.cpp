@@ -12,13 +12,10 @@
 using namespace BlackMisc;
 using namespace BlackGui::Models;
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    CAudioDeviceInfoView::CAudioDeviceInfoView(QWidget *parent) : CViewBase(parent)
     {
-        CAudioDeviceInfoView::CAudioDeviceInfoView(QWidget *parent) : CViewBase(parent)
-        {
-            this->standardInit(new CAudioDeviceInfoListModel(this));
-        }
+        this->standardInit(new CAudioDeviceInfoListModel(this));
     }
 } // namespace

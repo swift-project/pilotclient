@@ -11,20 +11,17 @@
 
 using namespace BlackGui;
 
-namespace BlackSimPlugin
+namespace BlackSimPlugin::Emulated
 {
-    namespace Emulated
+    CSimulatorEmulatedConfigWidget::CSimulatorEmulatedConfigWidget(QWidget *parent) :
+        BlackGui::CPluginConfigWindow(parent),
+        ui(new Ui::CSimulatorEmulatedConfigWidget)
     {
-        CSimulatorEmulatedConfigWidget::CSimulatorEmulatedConfigWidget(QWidget *parent) :
-            BlackGui::CPluginConfigWindow(parent),
-            ui(new Ui::CSimulatorEmulatedConfigWidget)
-        {
-            ui->setupUi(this);
-            CGuiUtility::disableMinMaxCloseButtons(this);
-            connect(ui->bb_Close, &QDialogButtonBox::rejected, this, &CSimulatorEmulatedConfigWidget::close);
-        }
+        ui->setupUi(this);
+        CGuiUtility::disableMinMaxCloseButtons(this);
+        connect(ui->bb_Close, &QDialogButtonBox::rejected, this, &CSimulatorEmulatedConfigWidget::close);
+    }
 
-        CSimulatorEmulatedConfigWidget::~CSimulatorEmulatedConfigWidget()
-        { }
-    } // ns
+    CSimulatorEmulatedConfigWidget::~CSimulatorEmulatedConfigWidget()
+    { }
 } // ns

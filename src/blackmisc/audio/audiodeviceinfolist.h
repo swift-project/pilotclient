@@ -21,87 +21,84 @@
 #include <QAudioDeviceInfo>
 #include <QStringList>
 
-namespace BlackMisc
+namespace BlackMisc::Audio
 {
-    namespace Audio
+    //! Value object encapsulating a list of audio devices.
+    class BLACKMISC_EXPORT CAudioDeviceInfoList :
+        public CSequence<CAudioDeviceInfo>,
+        public Mixin::MetaType<CAudioDeviceInfoList>
     {
-        //! Value object encapsulating a list of audio devices.
-        class BLACKMISC_EXPORT CAudioDeviceInfoList :
-            public CSequence<CAudioDeviceInfo>,
-            public Mixin::MetaType<CAudioDeviceInfoList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAudioDeviceInfoList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAudioDeviceInfoList)
+        using CSequence::CSequence;
 
-            //! Default constructor.
-            CAudioDeviceInfoList();
+        //! Default constructor.
+        CAudioDeviceInfoList();
 
-            //! Construct from a base class object.
-            CAudioDeviceInfoList(const CSequence &other);
+        //! Construct from a base class object.
+        CAudioDeviceInfoList(const CSequence &other);
 
-            //! Get output devices in that list
-            CAudioDeviceInfoList getOutputDevices() const;
+        //! Get output devices in that list
+        CAudioDeviceInfoList getOutputDevices() const;
 
-            //! Get output devices in that list
-            CAudioDeviceInfoList getInputDevices() const;
+        //! Get output devices in that list
+        CAudioDeviceInfoList getInputDevices() const;
 
-            //! Find by name
-            CAudioDeviceInfo findByName(const QString &name, bool strict = false) const;
+        //! Find by name
+        CAudioDeviceInfo findByName(const QString &name, bool strict = false) const;
 
-            //! Find by name
-            CAudioDeviceInfo findByNameOrDefault(const QString &name, const CAudioDeviceInfo &defaultDevice, bool strict = false) const;
+        //! Find by name
+        CAudioDeviceInfo findByNameOrDefault(const QString &name, const CAudioDeviceInfo &defaultDevice, bool strict = false) const;
 
-            //! Find by host name
-            CAudioDeviceInfoList findByHostName(const QString &hostName) const;
+        //! Find by host name
+        CAudioDeviceInfoList findByHostName(const QString &hostName) const;
 
-            //! Find registered device
-            CAudioDeviceInfo findRegisteredDeviceOrDefault(const CAudioDeviceInfo &device) const;
+        //! Find registered device
+        CAudioDeviceInfo findRegisteredDeviceOrDefault(const CAudioDeviceInfo &device) const;
 
-            //! Register device
-            void registerDevice(const CAudioDeviceInfo &device);
+        //! Register device
+        void registerDevice(const CAudioDeviceInfo &device);
 
-            //! Register devices
-            void registerDevices(const CAudioDeviceInfoList &devices);
+        //! Register devices
+        void registerDevices(const CAudioDeviceInfoList &devices);
 
-            //! Un-register device
-            void unRegisterDevice(const CAudioDeviceInfo &device);
+        //! Un-register device
+        void unRegisterDevice(const CAudioDeviceInfo &device);
 
-            //! Un-register devices
-            void unRegisterDevices(const CAudioDeviceInfoList &devices);
+        //! Un-register devices
+        void unRegisterDevices(const CAudioDeviceInfoList &devices);
 
-            //! Un-register devices
-            void unRegisterDevices(const CIdentifier &identifier);
+        //! Un-register devices
+        void unRegisterDevices(const CIdentifier &identifier);
 
-            //! Is that a registered device?
-            bool isRegisteredDevice(const CAudioDeviceInfo &device) const;
+        //! Is that a registered device?
+        bool isRegisteredDevice(const CAudioDeviceInfo &device) const;
 
-            //! Count (as of type)
-            int count(CAudioDeviceInfo::DeviceType type) const;
+        //! Count (as of type)
+        int count(CAudioDeviceInfo::DeviceType type) const;
 
-            //! All names
-            QStringList getDeviceNames() const;
+        //! All names
+        QStringList getDeviceNames() const;
 
-            //! Has same devices
-            bool hasSameDevices(const CAudioDeviceInfoList &compareDevices) const;
+        //! Has same devices
+        bool hasSameDevices(const CAudioDeviceInfoList &compareDevices) const;
 
-            //! Lists of all available devices
-            //! @{
-            static CAudioDeviceInfoList allInputDevices();
-            static CAudioDeviceInfoList allOutputDevices();
-            static CAudioDeviceInfoList allDevices();
-            static CAudioDeviceInfoList allInputDevicesPlusDefault();
-            static CAudioDeviceInfoList allOutputDevicesPlusDefault();
-            static CAudioDeviceInfoList allDevicesPlusDefault();
-            static QList<QAudioDeviceInfo> allQtInputDevices();
-            static QList<QAudioDeviceInfo> allQtOutputDevices();
-            static QAudioDeviceInfo defaultQtInputDevice();
-            static QAudioDeviceInfo defaultQtOutputDevice();
-            static CAudioDeviceInfo defaultInputDevice();
-            static CAudioDeviceInfo defaultOutputDevice();
-            //! @}
-        };
-    } //namespace
+        //! Lists of all available devices
+        //! @{
+        static CAudioDeviceInfoList allInputDevices();
+        static CAudioDeviceInfoList allOutputDevices();
+        static CAudioDeviceInfoList allDevices();
+        static CAudioDeviceInfoList allInputDevicesPlusDefault();
+        static CAudioDeviceInfoList allOutputDevicesPlusDefault();
+        static CAudioDeviceInfoList allDevicesPlusDefault();
+        static QList<QAudioDeviceInfo> allQtInputDevices();
+        static QList<QAudioDeviceInfo> allQtOutputDevices();
+        static QAudioDeviceInfo defaultQtInputDevice();
+        static QAudioDeviceInfo defaultQtOutputDevice();
+        static CAudioDeviceInfo defaultInputDevice();
+        static CAudioDeviceInfo defaultOutputDevice();
+        //! @}
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Audio::CAudioDeviceInfoList)

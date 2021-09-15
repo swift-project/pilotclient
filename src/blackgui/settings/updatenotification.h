@@ -14,23 +14,20 @@
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/settingscache.h"
 
-namespace BlackGui
+namespace BlackGui::Settings
 {
-    namespace Settings
+    //! Trait for directory settings
+    struct TUpdateNotificationSettings : public BlackMisc::TSettingTrait<bool>
     {
-        //! Trait for directory settings
-        struct TUpdateNotificationSettings : public BlackMisc::TSettingTrait<bool>
-        {
-            //! \copydoc BlackMisc::TSettingTrait::key
-            static const char *key() { return "guiupdatenotification/%Application%"; }
+        //! \copydoc BlackMisc::TSettingTrait::key
+        static const char *key() { return "guiupdatenotification/%Application%"; }
 
-            //! \copydoc BlackMisc::TSettingTrait::defaultValue
-            static const bool &defaultValue() { static const bool d = true; return d; }
+        //! \copydoc BlackMisc::TSettingTrait::defaultValue
+        static const bool &defaultValue() { static const bool d = true; return d; }
 
-            //! \copydoc BlackMisc::TSettingTrait::humanReadable
-            static const QString &humanReadable() { static const QString name("Update notification"); return name; }
-        };
-    } // ns
+        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        static const QString &humanReadable() { static const QString name("Update notification"); return name; }
+    };
 } // ns
 
 #endif // guard

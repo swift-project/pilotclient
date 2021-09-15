@@ -16,33 +16,30 @@
 #include <QScopedPointer>
 
 namespace Ui { class CInterpolationComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Interpolation
+    class BLACKGUI_EXPORT CInterpolationComponent : public QFrame
     {
-        //! Interpolation
-        class BLACKGUI_EXPORT CInterpolationComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CInterpolationComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CInterpolationComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CInterpolationComponent() override;
+        //! Destructor
+        virtual ~CInterpolationComponent() override;
 
-        signals:
-            //! Request redering restrictions widget
-            void requestRenderingRestrictionsWidget();
+    signals:
+        //! Request redering restrictions widget
+        void requestRenderingRestrictionsWidget();
 
-        private:
-            QScopedPointer<Ui::CInterpolationComponent> ui;
+    private:
+        QScopedPointer<Ui::CInterpolationComponent> ui;
 
-            //! Display log messages
-            void displayInterpolationMessages();
-        };
-    } // ns
+        //! Display log messages
+        void displayInterpolationMessages();
+    };
 } // ns
 
 #endif // guard

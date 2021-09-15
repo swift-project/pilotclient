@@ -12,13 +12,10 @@
 using namespace BlackMisc;
 using namespace BlackGui::Models;
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    CClientView::CClientView(QWidget *parent) : CViewBase(parent)
     {
-        CClientView::CClientView(QWidget *parent) : CViewBase(parent)
-        {
-            this->standardInit(new CClientListModel(this));
-        }
-    } // namespace
+        this->standardInit(new CClientListModel(this));
+    }
 } // namespace

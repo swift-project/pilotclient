@@ -15,31 +15,28 @@
 #include <QScopedPointer>
 
 namespace Ui { class CAboutDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * About dialog
+     */
+    class CAboutDialog : public QDialog
     {
-        /*!
-         * About dialog
-         */
-        class CAboutDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAboutDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAboutDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAboutDialog() override;
+        //! Destructor
+        virtual ~CAboutDialog() override;
 
-        private:
-            //! Init values
-            void init();
+    private:
+        //! Init values
+        void init();
 
-            QScopedPointer<Ui::CAboutDialog> ui;
-        };
-    } // ns
+        QScopedPointer<Ui::CAboutDialog> ui;
+    };
 } // ns
 
 #endif // guard

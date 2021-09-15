@@ -15,31 +15,28 @@
 #include <QDialog>
 
 namespace Ui { class CInstallXSwiftBusDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * CInstallXSwiftBusComponent as dialog
+     */
+    class CInstallXSwiftBusDialog : public QDialog
     {
-        /**
-         * CInstallXSwiftBusComponent as dialog
-         */
-        class CInstallXSwiftBusDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CInstallXSwiftBusDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CInstallXSwiftBusDialog(QWidget *parent = nullptr);
 
-            //! Dtor
-            virtual ~CInstallXSwiftBusDialog() override;
+        //! Dtor
+        virtual ~CInstallXSwiftBusDialog() override;
 
-            //! \copydoc CInstallXSwiftBusComponent::setDefaultDownloadName
-            void setDefaultDownloadName(const QString &defaultName);
+        //! \copydoc CInstallXSwiftBusComponent::setDefaultDownloadName
+        void setDefaultDownloadName(const QString &defaultName);
 
-        private:
-            QScopedPointer<Ui::CInstallXSwiftBusDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CInstallXSwiftBusDialog> ui;
+    };
 } // ns
 
 #endif // guard

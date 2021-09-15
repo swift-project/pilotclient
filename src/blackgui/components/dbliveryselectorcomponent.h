@@ -31,85 +31,82 @@ class QWidget;
 
 namespace Ui { class CDbLiverySelectorComponent; }
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Selector for liveries
+     */
+    class BLACKGUI_EXPORT CDbLiverySelectorComponent :
+        public QFrame,
+        public BlackGui::CDropBase
     {
-        /*!
-         * Selector for liveries
-         */
-        class BLACKGUI_EXPORT CDbLiverySelectorComponent :
-            public QFrame,
-            public BlackGui::CDropBase
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CDbLiverySelectorComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CDbLiverySelectorComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CDbLiverySelectorComponent();
+        //! Destructor
+        virtual ~CDbLiverySelectorComponent();
 
-            //! Current livery
-            void setLivery(const BlackMisc::Aviation::CLivery &livery);
+        //! Current livery
+        void setLivery(const BlackMisc::Aviation::CLivery &livery);
 
-            //! Current livery
-            void setLivery(const QString &code);
+        //! Current livery
+        void setLivery(const QString &code);
 
-            //! Livery
-            BlackMisc::Aviation::CLivery getLivery() const;
+        //! Livery
+        BlackMisc::Aviation::CLivery getLivery() const;
 
-            //! Livery combined code
-            QString getRawCombinedCode() const;
+        //! Livery combined code
+        QString getRawCombinedCode() const;
 
-            //! Show description
-            void withLiveryDescription(bool description);
+        //! Show description
+        void withLiveryDescription(bool description);
 
-            //! Read only
-            void setReadOnly(bool readOnly);
+        //! Read only
+        void setReadOnly(bool readOnly);
 
-            //! Set with valid Livery
-            bool isSet() const;
+        //! Set with valid Livery
+        bool isSet() const;
 
-            //! Clear selection
-            void clear();
+        //! Clear selection
+        void clear();
 
-        signals:
-            //! Distributor was changed
-            void changedLivery(const BlackMisc::Aviation::CLivery &livery);
+    signals:
+        //! Distributor was changed
+        void changedLivery(const BlackMisc::Aviation::CLivery &livery);
 
-        protected:
-            //! \copydoc QWidget::dragEnterEvent
-            virtual void dragEnterEvent(QDragEnterEvent *event) override;
+    protected:
+        //! \copydoc QWidget::dragEnterEvent
+        virtual void dragEnterEvent(QDragEnterEvent *event) override;
 
-            //! \copydoc QWidget::dragMoveEvent
-            virtual void dragMoveEvent(QDragMoveEvent *event) override;
+        //! \copydoc QWidget::dragMoveEvent
+        virtual void dragMoveEvent(QDragMoveEvent *event) override;
 
-            //! \copydoc QWidget::dragLeaveEvent
-            virtual void dragLeaveEvent(QDragLeaveEvent *event) override;
+        //! \copydoc QWidget::dragLeaveEvent
+        virtual void dragLeaveEvent(QDragLeaveEvent *event) override;
 
-            //! \copydoc QWidget::dropEvent
-            virtual void dropEvent(QDropEvent *event) override;
+        //! \copydoc QWidget::dropEvent
+        virtual void dropEvent(QDropEvent *event) override;
 
-        private:
-            //! Data have been changed
-            void onDataChanged();
+    private:
+        //! Data have been changed
+        void onDataChanged();
 
-            //! Completer activated
-            void onCompleterActivated(const QString &liveryCode);
+        //! Completer activated
+        void onCompleterActivated(const QString &liveryCode);
 
-            //! Distributors have been read
-            void onLiveriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count, const QUrl &url);
+        //! Distributors have been read
+        void onLiveriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count, const QUrl &url);
 
-            //! Strip extra info from livery code
-            QString stripExtraInfo(const QString &liveryCode) const;
+        //! Strip extra info from livery code
+        QString stripExtraInfo(const QString &liveryCode) const;
 
-            QScopedPointer<Ui::CDbLiverySelectorComponent> ui;
-            QScopedPointer<QCompleter>   m_completerLiveries;
-            BlackMisc::Aviation::CLivery m_currentLivery;
-        };
-    } // ns
+        QScopedPointer<Ui::CDbLiverySelectorComponent> ui;
+        QScopedPointer<QCompleter>   m_completerLiveries;
+        BlackMisc::Aviation::CLivery m_currentLivery;
+    };
 } // ns
 
 #endif // guard

@@ -18,48 +18,45 @@
 
 #include <QAction>
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Network servers
+    class BLACKGUI_EXPORT CApplicationInfoView : public CViewBase<Models::CApplicationInfoListModel>
     {
-        //! Network servers
-        class BLACKGUI_EXPORT CApplicationInfoView : public CViewBase<Models::CApplicationInfoListModel>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CApplicationInfoView(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CApplicationInfoView(QWidget *parent = nullptr);
 
-            //! BlackMisc::CApplicationInfoList::otherSwiftVersionsFromDataDirectories
-            int otherSwiftVersionsFromDataDirectories(bool reinitOtherVersions = false);
+        //! BlackMisc::CApplicationInfoList::otherSwiftVersionsFromDataDirectories
+        int otherSwiftVersionsFromDataDirectories(bool reinitOtherVersions = false);
 
-            //! Display versions and resize
-            int otherSwiftVersionsFromDataDiretoriesAndResize(bool reinitOtherVersion = false);
+        //! Display versions and resize
+        int otherSwiftVersionsFromDataDiretoriesAndResize(bool reinitOtherVersion = false);
 
-            //! Delete the selected directories
-            void deleteSelectedDataDirectories();
-        };
+        //! Delete the selected directories
+        void deleteSelectedDataDirectories();
+    };
 
-        //! Menu base class for aircraft model view menus
-        class CApplicationInfoMenu : public Menus::IMenuDelegate
-        {
-            Q_OBJECT
+    //! Menu base class for aircraft model view menus
+    class CApplicationInfoMenu : public Menus::IMenuDelegate
+    {
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            CApplicationInfoMenu(CApplicationInfoView *modelView) : Menus::IMenuDelegate(modelView)
-            {}
+    public:
+        //! Constructor
+        CApplicationInfoMenu(CApplicationInfoView *modelView) : Menus::IMenuDelegate(modelView)
+        {}
 
-            //! \copydoc Menus::IMenuDelegate::customMenu
-            virtual void customMenu(Menus::CMenuActions &menuActions) override;
+        //! \copydoc Menus::IMenuDelegate::customMenu
+        virtual void customMenu(Menus::CMenuActions &menuActions) override;
 
-        private:
-            //! Model view
-            CApplicationInfoView *view() const;
+    private:
+        //! Model view
+        CApplicationInfoView *view() const;
 
-            QAction *m_menuActionDeleteDirectory = nullptr; //!< action to delete menu
-        };
-    } // ns
+        QAction *m_menuActionDeleteDirectory = nullptr; //!< action to delete menu
+    };
 } // ns
 #endif // guard

@@ -11,41 +11,38 @@
 
 #include "blackmisc/logmessage.h"
 
-namespace BlackCore
+namespace BlackCore::Fsd
 {
-    namespace Fsd
+    ClientQuery::ClientQuery() : MessageBase()
+    { }
+
+    ClientQuery::ClientQuery(const QString &sender, const QString &clientToBeQueried, ClientQueryType queryType, const QStringList &queryData)
+        : MessageBase(sender, clientToBeQueried),
+            m_queryType(queryType),
+            m_queryData(queryData)
+    { }
+
+    QStringList ClientQuery::toTokens() const
     {
-        ClientQuery::ClientQuery() : MessageBase()
-        { }
+        QStringList tokens;
+        tokens.push_back(m_sender);
+        tokens.push_back(m_receiver);
+        tokens.push_back(toQString(m_queryType));
+        tokens.append(m_queryData);
+        return tokens;
+    }
 
-        ClientQuery::ClientQuery(const QString &sender, const QString &clientToBeQueried, ClientQueryType queryType, const QStringList &queryData)
-            : MessageBase(sender, clientToBeQueried),
-              m_queryType(queryType),
-              m_queryData(queryData)
-        { }
-
-        QStringList ClientQuery::toTokens() const
+    ClientQuery ClientQuery::fromTokens(const QStringList &tokens)
+    {
+        if (tokens.size() < 3)
         {
-            QStringList tokens;
-            tokens.push_back(m_sender);
-            tokens.push_back(m_receiver);
-            tokens.push_back(toQString(m_queryType));
-            tokens.append(m_queryData);
-            return tokens;
+            BlackMisc::CLogMessage(static_cast<ClientQuery *>(nullptr)).debug(u"Wrong number of arguments.");
+            return {};
         }
 
-        ClientQuery ClientQuery::fromTokens(const QStringList &tokens)
-        {
-            if (tokens.size() < 3)
-            {
-                BlackMisc::CLogMessage(static_cast<ClientQuery *>(nullptr)).debug(u"Wrong number of arguments.");
-                return {};
-            }
-
-            QStringList payload;
-            if (tokens.size() > 3) { payload = tokens.mid(3); }
-            return ClientQuery(tokens[0], tokens[1], fromQString<ClientQueryType>(tokens[2]), payload);
-        }
+        QStringList payload;
+        if (tokens.size() > 3) { payload = tokens.mid(3); }
+        return ClientQuery(tokens[0], tokens[1], fromQString<ClientQueryType>(tokens[2]), payload);
     }
 }
 

@@ -16,27 +16,24 @@
 #include <QSharedPointer>
 #include <QVector>
 
-namespace BlackSound
+namespace BlackSound::SampleProvider
 {
-    namespace SampleProvider
+    //! Mixer
+    class BLACKSOUND_EXPORT CMixingSampleProvider : public ISampleProvider
     {
-        //! Mixer
-        class BLACKSOUND_EXPORT CMixingSampleProvider : public ISampleProvider
-        {
-        public:
-            //! Ctor mixing provider
-            CMixingSampleProvider(QObject *parent = nullptr);
+    public:
+        //! Ctor mixing provider
+        CMixingSampleProvider(QObject *parent = nullptr);
 
-            //! Add a provider
-            void addMixerInput(ISampleProvider *provider);
+        //! Add a provider
+        void addMixerInput(ISampleProvider *provider);
 
-            //! \copydoc ISampleProvider::readSamples
-            virtual int readSamples(QVector<float> &samples, qint64 count) override;
+        //! \copydoc ISampleProvider::readSamples
+        virtual int readSamples(QVector<float> &samples, qint64 count) override;
 
-        private:
-            QVector<ISampleProvider *> m_sources;
-        };
-    } // ns
+    private:
+        QVector<ISampleProvider *> m_sources;
+    };
 } // ns
 
 #endif // guard

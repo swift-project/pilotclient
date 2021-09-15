@@ -21,54 +21,51 @@
 class QWidget;
 
 namespace Ui { class CFilterBarButtons; }
-namespace BlackGui
+namespace BlackGui::Filters
 {
-    namespace Filters
+    /*!
+     * Filter bar buttons
+     */
+    class BLACKGUI_EXPORT CFilterBarButtons : public QFrame
     {
-        /*!
-         * Filter bar buttons
-         */
-        class BLACKGUI_EXPORT CFilterBarButtons : public QFrame
+        Q_OBJECT
+
+    public:
+        //! Buttons
+        enum FilterButton
         {
-            Q_OBJECT
-
-        public:
-            //! Buttons
-            enum FilterButton
-            {
-                ClearForm,
-                Filter,
-                RemoveFilter
-            };
-
-            //! Constructor
-            explicit CFilterBarButtons(QWidget *parent = nullptr);
-
-            //! Destructor
-            virtual ~CFilterBarButtons();
-
-            //! Show the counter
-            void displayCount(bool show);
-
-        signals:
-            //! Filter button clicked
-            void buttonClicked(BlackGui::Filters::CFilterBarButtons::FilterButton filterButton);
-
-        public slots:
-            //! Row count has been changed
-            void onRowCountChanged(int count, bool withFilter);
-
-            //! Trigger button
-            void clickButton(BlackGui::Filters::CFilterBarButtons::FilterButton filterButton);
-
-        private slots:
-            //! Button was clicked
-            void ps_buttonClicked();
-
-        private:
-            QScopedPointer<Ui::CFilterBarButtons> ui;
+            ClearForm,
+            Filter,
+            RemoveFilter
         };
-    } // ns
+
+        //! Constructor
+        explicit CFilterBarButtons(QWidget *parent = nullptr);
+
+        //! Destructor
+        virtual ~CFilterBarButtons();
+
+        //! Show the counter
+        void displayCount(bool show);
+
+    signals:
+        //! Filter button clicked
+        void buttonClicked(BlackGui::Filters::CFilterBarButtons::FilterButton filterButton);
+
+    public slots:
+        //! Row count has been changed
+        void onRowCountChanged(int count, bool withFilter);
+
+        //! Trigger button
+        void clickButton(BlackGui::Filters::CFilterBarButtons::FilterButton filterButton);
+
+    private slots:
+        //! Button was clicked
+        void ps_buttonClicked();
+
+    private:
+        QScopedPointer<Ui::CFilterBarButtons> ui;
+    };
 } // ns
 
 Q_DECLARE_METATYPE(BlackGui::Filters::CFilterBarButtons::FilterButton)

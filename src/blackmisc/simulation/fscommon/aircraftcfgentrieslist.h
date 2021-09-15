@@ -25,59 +25,53 @@
 #include <Qt>
 #include <tuple>
 
-namespace BlackMisc
+namespace BlackMisc::Simulation::FsCommon
 {
-    namespace Simulation
+    //! Utility, providing FS aircraft.cfg entries
+    class BLACKMISC_EXPORT CAircraftCfgEntriesList :
+        public CSequence<CAircraftCfgEntries>,
+        public Mixin::MetaType<CAircraftCfgEntriesList>
     {
-        namespace FsCommon
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftCfgEntriesList)
+        using CSequence::CSequence;
+
+        //! Contains model with title?
+        bool containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive);
+
+        //! All titles (aka model names)
+        QStringList getTitles(bool sorted = false) const;
+
+        //! Titles as set in upper case
+        QSet<QString> getTitleSetUpperCase() const;
+
+        //! All titles as string
+        QString getTitlesAsString(bool sorted, const QString &separator = ", ") const;
+
+        //! As aircraft models
+        BlackMisc::Simulation::CAircraftModelList toAircraftModelList(bool ignoreDuplicatesAndEmptyModelStrings, CStatusMessageList &msgs) const;
+
+        //! As aircraft models for simulator
+        BlackMisc::Simulation::CAircraftModelList toAircraftModelList(const BlackMisc::Simulation::CSimulatorInfo &simInfo, bool ignoreDuplicatesAndEmptyModelStrings, CStatusMessageList &msgs) const;
+
+        //! Ambiguous titles
+        QStringList detectAmbiguousTitles() const;
+
+        //! Find by title
+        CAircraftCfgEntriesList findByTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive) const;
+
+        //! Can check if a title (model string) is known
+        bool containsTitle(const QString &title) const;
+
+    private:
+        //! Section within file
+        enum FileSection
         {
-            //! Utility, providing FS aircraft.cfg entries
-            class BLACKMISC_EXPORT CAircraftCfgEntriesList :
-                public CSequence<CAircraftCfgEntries>,
-                public Mixin::MetaType<CAircraftCfgEntriesList>
-            {
-            public:
-                BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftCfgEntriesList)
-                using CSequence::CSequence;
-
-                //! Contains model with title?
-                bool containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive);
-
-                //! All titles (aka model names)
-                QStringList getTitles(bool sorted = false) const;
-
-                //! Titles as set in upper case
-                QSet<QString> getTitleSetUpperCase() const;
-
-                //! All titles as string
-                QString getTitlesAsString(bool sorted, const QString &separator = ", ") const;
-
-                //! As aircraft models
-                BlackMisc::Simulation::CAircraftModelList toAircraftModelList(bool ignoreDuplicatesAndEmptyModelStrings, CStatusMessageList &msgs) const;
-
-                //! As aircraft models for simulator
-                BlackMisc::Simulation::CAircraftModelList toAircraftModelList(const BlackMisc::Simulation::CSimulatorInfo &simInfo, bool ignoreDuplicatesAndEmptyModelStrings, CStatusMessageList &msgs) const;
-
-                //! Ambiguous titles
-                QStringList detectAmbiguousTitles() const;
-
-                //! Find by title
-                CAircraftCfgEntriesList findByTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive) const;
-
-                //! Can check if a title (model string) is known
-                bool containsTitle(const QString &title) const;
-
-            private:
-                //! Section within file
-                enum FileSection
-                {
-                    General,
-                    Fltsim,
-                    Unknown
-                };
-            };
-        } // namespace
-    } // namespace
+            General,
+            Fltsim,
+            Unknown
+        };
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList)

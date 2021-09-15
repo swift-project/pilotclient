@@ -26,42 +26,39 @@ namespace BlackMisc
     class CNameVariantPair;
 }
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+
+    //! Simple model displaying name / variant values
+    class BLACKGUI_EXPORT CNameVariantPairModel : public CListModelBase<BlackMisc::CNameVariantPairList>
     {
+        Q_OBJECT
 
-        //! Simple model displaying name / variant values
-        class BLACKGUI_EXPORT CNameVariantPairModel : public CListModelBase<BlackMisc::CNameVariantPairList>
-        {
-            Q_OBJECT
+    public:
+        //! Constructor
+        explicit CNameVariantPairModel(bool withIcon, QObject *parent = nullptr);
 
-        public:
-            //! Constructor
-            explicit CNameVariantPairModel(bool withIcon, QObject *parent = nullptr);
+        //! Destructor
+        virtual ~CNameVariantPairModel() {}
 
-            //! Destructor
-            virtual ~CNameVariantPairModel() {}
+        //! Icon on / off
+        void setIconMode(bool withIcon);
 
-            //! Icon on / off
-            void setIconMode(bool withIcon);
+        //! Remove by given name
+        void removeByName(const QString &name);
 
-            //! Remove by given name
-            void removeByName(const QString &name);
+        //! Contains name already?
+        bool containsName(const QString &name) const;
 
-            //! Contains name already?
-            bool containsName(const QString &name) const;
+        //! Contains name / value?
+        bool containsNameValue(const QString &name, const BlackMisc::CVariant &value) const;
 
-            //! Contains name / value?
-            bool containsNameValue(const QString &name, const BlackMisc::CVariant &value) const;
+        //! Add our update a value
+        bool addOrUpdateByName(const QString &name, const BlackMisc::CVariant &value, const BlackMisc::CIcon &icon, bool skipEqualValues);
 
-            //! Add our update a value
-            bool addOrUpdateByName(const QString &name, const BlackMisc::CVariant &value, const BlackMisc::CIcon &icon, bool skipEqualValues);
+        //! Current row index of given name
+        int getRowIndexForName(const QString &name) const;
 
-            //! Current row index of given name
-            int getRowIndexForName(const QString &name) const;
-
-        };
-    }
+    };
 }
 #endif // guard

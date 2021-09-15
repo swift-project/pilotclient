@@ -8,14 +8,11 @@
 
 #include "viewbase.cpp"
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
-    {
-        template class CViewBase<BlackGui::Models::CAircraftModelListModel>;
-        template class CViewBase<BlackGui::Models::CDistributorListModel>;
-        template class CViewBase<BlackGui::Models::CInterpolationSetupListModel>;
-        template class CViewBase<BlackGui::Models::CMatchingStatisticsModel>;
-        template class CViewBase<BlackGui::Models::CSimulatedAircraftListModel>;
-    } // namespace
+    template class CViewBase<BlackGui::Models::CAircraftModelListModel>;
+    template class CViewBase<BlackGui::Models::CDistributorListModel>;
+    template class CViewBase<BlackGui::Models::CInterpolationSetupListModel>;
+    template class CViewBase<BlackGui::Models::CMatchingStatisticsModel>;
+    template class CViewBase<BlackGui::Models::CSimulatedAircraftListModel>;
 } // namespace

@@ -13,13 +13,10 @@
 
 #include "blackmisc/blackmiscexport.h"
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
-    {
-        //! Register metadata for aviation
-        BLACKMISC_EXPORT void registerMetadata();
-    } // ns
+    //! Register metadata for aviation
+    BLACKMISC_EXPORT void registerMetadata();
 } // ns
 
 #endif // guard

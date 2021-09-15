@@ -21,55 +21,52 @@
 
 class QNetworkReply;
 
-namespace BlackCore
+namespace BlackCore::Vatsim
 {
-    namespace Vatsim
+    //! Read bookings from VATSIM
+    class BLACKCORE_EXPORT CVatsimBookingReader :
+        public BlackCore::CThreadedReader,
+        public BlackMisc::Network::CEcosystemAware
     {
-        //! Read bookings from VATSIM
-        class BLACKCORE_EXPORT CVatsimBookingReader :
-            public BlackCore::CThreadedReader,
-            public BlackMisc::Network::CEcosystemAware
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CVatsimBookingReader(QObject *owner);
+    public:
+        //! Constructor
+        explicit CVatsimBookingReader(QObject *owner);
 
-            //! Read / re-read bookings
-            void readInBackgroundThread();
+        //! Read / re-read bookings
+        void readInBackgroundThread();
 
-        signals:
-            //! Bookings have been read and converted to BlackMisc::Aviation::CAtcStationList
-            void atcBookingsRead(const BlackMisc::Aviation::CAtcStationList &bookedStations);
+    signals:
+        //! Bookings have been read and converted to BlackMisc::Aviation::CAtcStationList
+        void atcBookingsRead(const BlackMisc::Aviation::CAtcStationList &bookedStations);
 
-            //! Bookings have been re-read but did not change
-            void atcBookingsReadUnchanged();
+        //! Bookings have been re-read but did not change
+        void atcBookingsReadUnchanged();
 
-            //! Data have been read
-            void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        //! Data have been read
+        void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
-        protected:
-            //! \name BlackCore::CThreadedReader overrides
-            //! @{
-            virtual void doWorkImpl() override;
-            //! @}
+    protected:
+        //! \name BlackCore::CThreadedReader overrides
+        //! @{
+        virtual void doWorkImpl() override;
+        //! @}
 
-        private:
-            //! Bookings have been read
-            //! \threadsafe
-            void parseBookings(QNetworkReply *nwReply);
+    private:
+        //! Bookings have been read
+        //! \threadsafe
+        void parseBookings(QNetworkReply *nwReply);
 
-            //! Do reading
-            void read();
+        //! Do reading
+        void read();
 
-            //! Settings changed
-            void settingsChanged();
+        //! Settings changed
+        void settingsChanged();
 
-            int m_failures = 0;
-            BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimBookings> m_settings { this, &CVatsimBookingReader::settingsChanged };
-        };
-    } // ns
+        int m_failures = 0;
+        BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimBookings> m_settings { this, &CVatsimBookingReader::settingsChanged };
+    };
 } // ns
 
 #endif // guard

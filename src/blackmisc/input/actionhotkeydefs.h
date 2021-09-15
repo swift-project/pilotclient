@@ -16,65 +16,62 @@
 
 #include <QString>
 
-namespace BlackMisc
+namespace BlackMisc::Input
 {
-    namespace Input
-    {
-        //! PTT key
-        BLACKMISC_EXPORT const QString &pttHotkeyAction();
+    //! PTT key
+    BLACKMISC_EXPORT const QString &pttHotkeyAction();
 
-        //! PTT key
-        BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex pttHotkeyIcon();
+    //! PTT key
+    BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex pttHotkeyIcon();
 
-        //! Audio volume + key
-        BLACKMISC_EXPORT const QString &audioVolumeIncreaseHotkeyAction();
+    //! Audio volume + key
+    BLACKMISC_EXPORT const QString &audioVolumeIncreaseHotkeyAction();
 
-        //! Audio volume - key
-        BLACKMISC_EXPORT const QString &audioVolumeDecreaseHotkeyAction();
+    //! Audio volume - key
+    BLACKMISC_EXPORT const QString &audioVolumeDecreaseHotkeyAction();
 
-        //! Audio volume + key
-        BLACKMISC_EXPORT const QString &audioVolumeIncreaseCom1HotkeyAction();
+    //! Audio volume + key
+    BLACKMISC_EXPORT const QString &audioVolumeIncreaseCom1HotkeyAction();
 
-        //! Audio volume - key
-        BLACKMISC_EXPORT const QString &audioVolumeDecreaseCom1HotkeyAction();
+    //! Audio volume - key
+    BLACKMISC_EXPORT const QString &audioVolumeDecreaseCom1HotkeyAction();
 
-        //! Audio volume + key
-        BLACKMISC_EXPORT const QString &audioVolumeIncreaseCom2HotkeyAction();
+    //! Audio volume + key
+    BLACKMISC_EXPORT const QString &audioVolumeIncreaseCom2HotkeyAction();
 
-        //! Audio volume - key
-        BLACKMISC_EXPORT const QString &audioVolumeDecreaseCom2HotkeyAction();
+    //! Audio volume - key
+    BLACKMISC_EXPORT const QString &audioVolumeDecreaseCom2HotkeyAction();
 
-        //! Audio icon volume +
-        BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex audioVolumeIncreaseHotkeyIcon();
+    //! Audio icon volume +
+    BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex audioVolumeIncreaseHotkeyIcon();
 
-        //! Audio icon volume -
-        BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex audioVolumeDecreaseHotkeyIcon();
+    //! Audio icon volume -
+    BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex audioVolumeDecreaseHotkeyIcon();
 
-        //! XPDR state
-        BLACKMISC_EXPORT const QString &toggleXPDRStateHotkeyAction();
+    //! XPDR state
+    BLACKMISC_EXPORT const QString &toggleXPDRStateHotkeyAction();
 
-        //! XPDR state
-        BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex toggleXPDRStateHotkeyIcon();
+    //! XPDR state
+    BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex toggleXPDRStateHotkeyIcon();
 
-        //! XPDR state
-        BLACKMISC_EXPORT const QString &toggleXPDRIdentHotkeyAction();
+    //! XPDR state
+    BLACKMISC_EXPORT const QString &toggleXPDRIdentHotkeyAction();
 
-        //! XPDR ident
-        BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex toggleXPDRIdentHotkeyIcon();
+    //! XPDR ident
+    BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex toggleXPDRIdentHotkeyIcon();
 
-        //! Radar zoom in
-        BLACKMISC_EXPORT const QString &radarZoomInHotkeyAction();
+    //! Radar zoom in
+    BLACKMISC_EXPORT const QString &radarZoomInHotkeyAction();
 
-        //! Radar zoom in
-        BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex radarZoomInHotkeyIcon();
+    //! Radar zoom in
+    BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex radarZoomInHotkeyIcon();
 
-        //! Radar zoom out
-        BLACKMISC_EXPORT const QString &radarZoomOutHotkeyAction();
+    //! Radar zoom out
+    BLACKMISC_EXPORT const QString &radarZoomOutHotkeyAction();
 
-        //! Radar zoom out
-        BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex radarZoomOutHotkeyIcon();
+    //! Radar zoom out
+    BLACKMISC_EXPORT BlackMisc::CIcons::IconIndex radarZoomOutHotkeyIcon();
 
-    } // ns
 } // ns
 
 #endif // guard

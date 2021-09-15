@@ -12,23 +12,20 @@
 
 using namespace BlackMisc::Aviation;
 
-namespace BlackMisc
+namespace BlackMisc::Weather
 {
-    namespace Weather
+    CWindLayerList::CWindLayerList(const CSequence<CWindLayer> &other) :
+        CSequence<CWindLayer>(other)
+    { }
+
+    bool CWindLayerList::containsLevel(const CAltitude &level) const
     {
-        CWindLayerList::CWindLayerList(const CSequence<CWindLayer> &other) :
-            CSequence<CWindLayer>(other)
-        { }
+        return contains(&CWindLayer::getLevel, level);
+    }
 
-        bool CWindLayerList::containsLevel(const CAltitude &level) const
-        {
-            return contains(&CWindLayer::getLevel, level);
-        }
+    CWindLayer CWindLayerList::findByLevel(const CAltitude &level) const
+    {
+        return findFirstByOrDefault(&CWindLayer::getLevel, level);
+    }
 
-        CWindLayer CWindLayerList::findByLevel(const CAltitude &level) const
-        {
-            return findFirstByOrDefault(&CWindLayer::getLevel, level);
-        }
-
-    } // namespace
 } // namespace

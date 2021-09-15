@@ -22,44 +22,41 @@ class QCompleter;
 class QWidget;
 
 namespace Ui { class CDbAirlineNameSelectorComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Select airline by name
+     */
+    class BLACKGUI_EXPORT CDbAirlineNameSelectorComponent : public CDbAirlineIcaoSelectorBase
     {
-        /*!
-         * Select airline by name
-         */
-        class BLACKGUI_EXPORT CDbAirlineNameSelectorComponent : public CDbAirlineIcaoSelectorBase
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CDbAirlineNameSelectorComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CDbAirlineNameSelectorComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            //! \note needed for forward declared QScopedPointer and needs to be in .cpp
-            virtual ~CDbAirlineNameSelectorComponent() override;
+        //! Destructor
+        //! \note needed for forward declared QScopedPointer and needs to be in .cpp
+        virtual ~CDbAirlineNameSelectorComponent() override;
 
-            //! \name Base class overrides
-            //! @{
-            virtual void setReadOnly(bool readOnly) override;
-            virtual bool setAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao) override;
-            virtual void clear() override;
-            //! @}
+        //! \name Base class overrides
+        //! @{
+        virtual void setReadOnly(bool readOnly) override;
+        virtual bool setAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao) override;
+        virtual void clear() override;
+        //! @}
 
-        protected:
-            //! \copydoc CDbAirlineIcaoSelectorBase::createCompleter
-            virtual QCompleter *createCompleter() override;
+    protected:
+        //! \copydoc CDbAirlineIcaoSelectorBase::createCompleter
+        virtual QCompleter *createCompleter() override;
 
-        private:
-            QScopedPointer<Ui::CDbAirlineNameSelectorComponent> ui;
+    private:
+        QScopedPointer<Ui::CDbAirlineNameSelectorComponent> ui;
 
-        private slots:
-            //! Data changed
-            void ps_dataChanged();
-        };
-    } // ns
+    private slots:
+        //! Data changed
+        void ps_dataChanged();
+    };
 } // ns
 
 #endif // guard

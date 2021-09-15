@@ -20,58 +20,55 @@
 #include <QVariant>
 #include <Qt>
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    class CActionItem;
+
+    /*!
+     * Action tree model, used with hotkey actions
+     * \remark data from CInputManager
+     */
+    class BLACKGUI_EXPORT CActionModel : public QAbstractItemModel
     {
-        class CActionItem;
+        Q_OBJECT
 
-        /*!
-         * Action tree model, used with hotkey actions
-         * \remark data from CInputManager
-         */
-        class BLACKGUI_EXPORT CActionModel : public QAbstractItemModel
+    public:
+        //! User roles
+        enum ItemRole
         {
-            Q_OBJECT
-
-        public:
-            //! User roles
-            enum ItemRole
-            {
-                ActionRole = Qt::UserRole
-            };
-
-            //! Constructor
-            CActionModel(QObject *parent = nullptr);
-
-            //! Destructor
-            virtual ~CActionModel() override;
-
-            //! \copydoc QAbstractItemModel::data
-            QVariant data(const QModelIndex &index, int role) const override;
-
-            //! \copydoc QAbstractItemModel::flags
-            Qt::ItemFlags flags(const QModelIndex &index) const override;
-
-            //! \copydoc QAbstractItemModel::index
-            QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
-
-            //! \copydoc QAbstractItemModel::parent
-            QModelIndex parent(const QModelIndex &index) const override;
-
-            //! \copydoc QAbstractItemModel::rowCount
-            int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-
-            //! \copydoc QAbstractItemModel::columnCount
-            int columnCount(const QModelIndex &parent = QModelIndex()) const override;
-
-        private:
-            //! Init model data
-            void setupModelData();
-
-            QScopedPointer<CActionItem> m_rootItem;
+            ActionRole = Qt::UserRole
         };
-    }
+
+        //! Constructor
+        CActionModel(QObject *parent = nullptr);
+
+        //! Destructor
+        virtual ~CActionModel() override;
+
+        //! \copydoc QAbstractItemModel::data
+        QVariant data(const QModelIndex &index, int role) const override;
+
+        //! \copydoc QAbstractItemModel::flags
+        Qt::ItemFlags flags(const QModelIndex &index) const override;
+
+        //! \copydoc QAbstractItemModel::index
+        QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
+
+        //! \copydoc QAbstractItemModel::parent
+        QModelIndex parent(const QModelIndex &index) const override;
+
+        //! \copydoc QAbstractItemModel::rowCount
+        int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+
+        //! \copydoc QAbstractItemModel::columnCount
+        int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+
+    private:
+        //! Init model data
+        void setupModelData();
+
+        QScopedPointer<CActionItem> m_rootItem;
+    };
 } // ns
 
 #endif // guard

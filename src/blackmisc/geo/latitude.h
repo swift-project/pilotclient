@@ -14,55 +14,52 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/geo/earthangle.h"
 
-namespace BlackMisc
+namespace BlackMisc::Geo
 {
-    namespace Geo
+    //! Latitude
+    class BLACKMISC_EXPORT CLatitude :
+        public CEarthAngle<CLatitude>,
+        public Mixin::MetaType<CLatitude>,
+        public Mixin::String<CLatitude>,
+        public Mixin::DBusOperators<CLatitude>,
+        public Mixin::DataStreamOperators<CLatitude>,
+        public Mixin::Index<CLatitude>
     {
-        //! Latitude
-        class BLACKMISC_EXPORT CLatitude :
-            public CEarthAngle<CLatitude>,
-            public Mixin::MetaType<CLatitude>,
-            public Mixin::String<CLatitude>,
-            public Mixin::DBusOperators<CLatitude>,
-            public Mixin::DataStreamOperators<CLatitude>,
-            public Mixin::Index<CLatitude>
+    public:
+        //! Base type
+        using base_type = CEarthAngle<CLatitude>;
+
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CLatitude)
+        BLACKMISC_DECLARE_USING_MIXIN_STRING(CLatitude)
+        BLACKMISC_DECLARE_USING_MIXIN_INDEX(CLatitude)
+
+        //! To WGS84 string
+        QString toWgs84(int fractionalDigits = 3) const
         {
-        public:
-            //! Base type
-            using base_type = CEarthAngle<CLatitude>;
+            return CEarthAngle<CLatitude>::toWgs84('N', 'S', fractionalDigits);
+        }
 
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CLatitude)
-            BLACKMISC_DECLARE_USING_MIXIN_STRING(CLatitude)
-            BLACKMISC_DECLARE_USING_MIXIN_INDEX(CLatitude)
-
-            //! To WGS84 string
-            QString toWgs84(int fractionalDigits = 3) const
+        //! \copydoc BlackMisc::Mixin::String::toQString
+        QString convertToQString(bool i18n = false) const
+        {
+            QString s(CEarthAngle::convertToQString(i18n));
+            if (!this->isZeroEpsilonConsidered())
             {
-                return CEarthAngle<CLatitude>::toWgs84('N', 'S', fractionalDigits);
+                s.append(this->isNegativeWithEpsilonConsidered() ? " S" : " N");
             }
+            return s;
+        }
 
-            //! \copydoc BlackMisc::Mixin::String::toQString
-            QString convertToQString(bool i18n = false) const
-            {
-                QString s(CEarthAngle::convertToQString(i18n));
-                if (!this->isZeroEpsilonConsidered())
-                {
-                    s.append(this->isNegativeWithEpsilonConsidered() ? " S" : " N");
-                }
-                return s;
-            }
+        //! Default constructor
+        CLatitude() = default;
 
-            //! Default constructor
-            CLatitude() = default;
+        //! Constructor
+        explicit CLatitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
 
-            //! Constructor
-            explicit CLatitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
-
-            //! Init by double value
-            //! \remark Latitude measurements range from 0° to (+/–)90°
-            CLatitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
-        };
-    } // ns
+        //! Init by double value
+        //! \remark Latitude measurements range from 0° to (+/–)90°
+        CLatitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
+    };
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Geo::CLatitude)

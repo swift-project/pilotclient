@@ -16,35 +16,32 @@
 #include <QScopedPointer>
 
 namespace Ui { class CSettingsSimulatorMessagesComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Configure what messages are sent to simulator
+     */
+    class CSettingsSimulatorMessagesComponent : public QFrame
     {
-        /*!
-         * Configure what messages are sent to simulator
-         */
-        class CSettingsSimulatorMessagesComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CSettingsSimulatorMessagesComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CSettingsSimulatorMessagesComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CSettingsSimulatorMessagesComponent() override;
+        //! Destructor
+        virtual ~CSettingsSimulatorMessagesComponent() override;
 
-        private:
-            //! Save the data
-            void save();
+    private:
+        //! Save the data
+        void save();
 
-            //! Load data
-            void load();
+        //! Load data
+        void load();
 
-        private:
-            QScopedPointer<Ui::CSettingsSimulatorMessagesComponent> ui;
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSimulatorMessages> m_settings { this }; //!< settings for messages
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CSettingsSimulatorMessagesComponent> ui;
+        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSimulatorMessages> m_settings { this }; //!< settings for messages
+    };
 } // ns
 #endif // guard

@@ -23,80 +23,77 @@
 #include <QList>
 #include <tuple>
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
+    //! Value object encapsulating a list of ICAO codes.
+    class BLACKMISC_EXPORT CAircraftCategoryList :
+        public CSequence<CAircraftCategory>,
+        public Db::IDatastoreObjectList<CAircraftCategory, CAircraftCategoryList, int>,
+        public Mixin::MetaType<CAircraftCategoryList>
     {
-        //! Value object encapsulating a list of ICAO codes.
-        class BLACKMISC_EXPORT CAircraftCategoryList :
-            public CSequence<CAircraftCategory>,
-            public Db::IDatastoreObjectList<CAircraftCategory, CAircraftCategoryList, int>,
-            public Mixin::MetaType<CAircraftCategoryList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftCategoryList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftCategoryList)
+        using CSequence::CSequence;
 
-            //! Default constructor.
-            CAircraftCategoryList();
+        //! Default constructor.
+        CAircraftCategoryList();
 
-            //! Construct from a base class object.
-            CAircraftCategoryList(const CSequence<CAircraftCategory> &other);
+        //! Construct from a base class object.
+        CAircraftCategoryList(const CSequence<CAircraftCategory> &other);
 
-            //! Find by name
-            CAircraftCategoryList findByName(const QString &name, Qt::CaseSensitivity cs = Qt::CaseInsensitive) const;
+        //! Find by name
+        CAircraftCategoryList findByName(const QString &name, Qt::CaseSensitivity cs = Qt::CaseInsensitive) const;
 
-            //! Sort by path
-            void sortByPath();
+        //! Sort by path
+        void sortByPath();
 
-            //! Sort by level
-            void sortByLevel();
+        //! Sort by level
+        void sortByLevel();
 
-            //! Get all level strings
-            QSet<QString> getLevelStrings() const;
+        //! Get all level strings
+        QSet<QString> getLevelStrings() const;
 
-            //! Get all level strings
-            QString getLevelsString(const QString &separator = ", ") const;
+        //! Get all level strings
+        QString getLevelsString(const QString &separator = ", ") const;
 
-            //! All levels sorted
-            QList<int> getFirstLevels() const;
+        //! All levels sorted
+        QList<int> getFirstLevels() const;
 
-            //! All levels sorted
-            QList<int> getSecondLevels() const;
+        //! All levels sorted
+        QList<int> getSecondLevels() const;
 
-            //! Find highest (top) level of categories
-            CAircraftCategoryList findHighestLevels(const CAircraftCategoryList &categories);
+        //! Find highest (top) level of categories
+        CAircraftCategoryList findHighestLevels(const CAircraftCategoryList &categories);
 
-            //! Find by first level
-            CAircraftCategoryList findByFirstLevel(int level) const;
+        //! Find by first level
+        CAircraftCategoryList findByFirstLevel(int level) const;
 
-            //! Find by levels
-            CAircraftCategoryList findByLevel(const QList<int> &level, bool noRootNode = false) const;
+        //! Find by levels
+        CAircraftCategoryList findByLevel(const QList<int> &level, bool noRootNode = false) const;
 
-            //! Find by exact levels
-            CAircraftCategory findByFullLevel(const QList<int> &level) const;
+        //! Find by exact levels
+        CAircraftCategory findByFullLevel(const QList<int> &level) const;
 
-            //! Find first levels
-            CAircraftCategoryList findFirstLevels() const;
+        //! Find first levels
+        CAircraftCategoryList findFirstLevels() const;
 
-            //! Find siblings
-            //! \remark if level is 3.2, siblings are 3.1 and 3.3
-            CAircraftCategoryList findSiblings(const CAircraftCategory &category) const;
+        //! Find siblings
+        //! \remark if level is 3.2, siblings are 3.1 and 3.3
+        CAircraftCategoryList findSiblings(const CAircraftCategory &category) const;
 
-            //! Find siblings
-            //! \remark if level is 3.2, finds 1.2, 2.2, and 4.2
-            CAircraftCategoryList findInParallelBranch(const CAircraftCategory &category) const;
+        //! Find siblings
+        //! \remark if level is 3.2, finds 1.2, 2.2, and 4.2
+        CAircraftCategoryList findInParallelBranch(const CAircraftCategory &category) const;
 
-            //! Remove by level
-            int removeIfLevel(const QList<int> &level);
+        //! Remove by level
+        int removeIfLevel(const QList<int> &level);
 
-            //! With removed categories
-            CAircraftCategoryList removedLevel(const QList<int> &level) const;
+        //! With removed categories
+        CAircraftCategoryList removedLevel(const QList<int> &level) const;
 
-            //! From our database JSON format
-            static CAircraftCategoryList fromDatabaseJson(const QJsonArray &array);
-        };
-    } //namespace
+        //! From our database JSON format
+        static CAircraftCategoryList fromDatabaseJson(const QJsonArray &array);
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftCategoryList)

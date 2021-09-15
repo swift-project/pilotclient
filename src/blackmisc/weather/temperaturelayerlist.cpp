@@ -12,23 +12,20 @@
 
 using namespace BlackMisc::Aviation;
 
-namespace BlackMisc
+namespace BlackMisc::Weather
 {
-    namespace Weather
+    CTemperatureLayerList::CTemperatureLayerList(const CSequence<CTemperatureLayer> &other) :
+        CSequence<CTemperatureLayer>(other)
+    { }
+
+    bool CTemperatureLayerList::containsLevel(const CAltitude &level) const
     {
-        CTemperatureLayerList::CTemperatureLayerList(const CSequence<CTemperatureLayer> &other) :
-            CSequence<CTemperatureLayer>(other)
-        { }
+        return contains(&CTemperatureLayer::getLevel, level);
+    }
 
-        bool CTemperatureLayerList::containsLevel(const CAltitude &level) const
-        {
-            return contains(&CTemperatureLayer::getLevel, level);
-        }
+    CTemperatureLayer CTemperatureLayerList::findByLevel(const CAltitude &level) const
+    {
+        return findFirstByOrDefault(&CTemperatureLayer::getLevel, level);
+    }
 
-        CTemperatureLayer CTemperatureLayerList::findByLevel(const CAltitude &level) const
-        {
-            return findFirstByOrDefault(&CTemperatureLayer::getLevel, level);
-        }
-
-    } // namespace
 } // namespace

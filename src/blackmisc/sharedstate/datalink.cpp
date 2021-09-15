@@ -12,33 +12,30 @@
 #include "blackmisc/promise.h"
 #include "blackmisc/variant.h"
 
-namespace BlackMisc
+namespace BlackMisc::SharedState
 {
-    namespace SharedState
+    void CDataLinkConnectionWatcher::setStatus(bool status)
     {
-        void CDataLinkConnectionWatcher::setStatus(bool status)
+        if (status != m_connected)
         {
-            if (status != m_connected)
-            {
-                m_connected = status;
-                if (m_connected) { emit connected(); }
-                else { emit disconnected(); }
-            }
+            m_connected = status;
+            if (m_connected) { emit connected(); }
+            else { emit disconnected(); }
         }
+    }
 
-        IDataLink::~IDataLink() = default;
+    IDataLink::~IDataLink() = default;
 
-        IDataLink::IDataLink()
-        {
-            qRegisterMetaType<CPromise<CVariant>>();
-        }
+    IDataLink::IDataLink()
+    {
+        qRegisterMetaType<CPromise<CVariant>>();
+    }
 
-        QString IDataLink::getChannelName(const QObject *object)
-        {
-            const QMetaObject *meta = object->parent()->metaObject();
-            const char *info = meta->classInfo(meta->indexOfClassInfo("SharedStateChannel")).value();
-            const QString name = object->parent()->objectName();
-            return name.isEmpty() ? QString(info) : (info % QLatin1Char(':') % name);
-        }
+    QString IDataLink::getChannelName(const QObject *object)
+    {
+        const QMetaObject *meta = object->parent()->metaObject();
+        const char *info = meta->classInfo(meta->indexOfClassInfo("SharedStateChannel")).value();
+        const QString name = object->parent()->objectName();
+        return name.isEmpty() ? QString(info) : (info % QLatin1Char(':') % name);
     }
 }

@@ -17,49 +17,46 @@
 #include <QScopedPointer>
 
 namespace Ui { class CSettingsGuiComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * General GUI settings
+     */
+    class CSettingsGuiComponent :
+        public QFrame,
+        public BlackGui::CSingleApplicationUi
     {
-        /*!
-         * General GUI settings
-         */
-        class CSettingsGuiComponent :
-            public QFrame,
-            public BlackGui::CSingleApplicationUi
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CSettingsGuiComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CSettingsGuiComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CSettingsGuiComponent();
+        //! Destructor
+        virtual ~CSettingsGuiComponent();
 
-            //! Hide opacity elements
-            void hideOpacity(bool hide);
+        //! Hide opacity elements
+        void hideOpacity(bool hide);
 
-            //! GUI Opacity 0-100%
-            void setGuiOpacity(double value);
+        //! GUI Opacity 0-100%
+        void setGuiOpacity(double value);
 
-        signals:
-            //! Change the windows opacity 0..100
-            void changedWindowsOpacity(int opacity);
+    signals:
+        //! Change the windows opacity 0..100
+        void changedWindowsOpacity(int opacity);
 
-        private:
-            //! Selection radio buttons changed
-            void selectionChanged();
+    private:
+        //! Selection radio buttons changed
+        void selectionChanged();
 
-            //! GUI settings changed
-            void guiSettingsChanged();
+        //! GUI settings changed
+        void guiSettingsChanged();
 
-            //! Widget style has changed
-            void widgetStyleChanged(const QString &widgetStyle);
+        //! Widget style has changed
+        void widgetStyleChanged(const QString &widgetStyle);
 
-            QScopedPointer<Ui::CSettingsGuiComponent> ui;
-            BlackMisc::CSetting<Settings::TGeneralGui> m_guiSettings { this, &CSettingsGuiComponent::guiSettingsChanged };
-        };
-    } // ns
+        QScopedPointer<Ui::CSettingsGuiComponent> ui;
+        BlackMisc::CSetting<Settings::TGeneralGui> m_guiSettings { this, &CSettingsGuiComponent::guiSettingsChanged };
+    };
 } // ns
 #endif // guard

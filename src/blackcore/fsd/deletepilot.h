@@ -11,49 +11,46 @@
 #ifndef BLACKCORE_FSD_DELETEPILOT_H
 #define BLACKCORE_FSD_DELETEPILOT_H
 
-#include "messagebase.h"
+#include "blackcore/fsd/messagebase.h"
 
-namespace BlackCore
+namespace BlackCore::Fsd
 {
-    namespace Fsd
+    //! Used to notify the server of the intention to close the connection.
+    //! If a client receives this packet it should remove the client from its internal database.
+    class BLACKCORE_EXPORT DeletePilot : public MessageBase
     {
-        //! Used to notify the server of the intention to close the connection.
-        //! If a client receives this packet it should remove the client from its internal database.
-        class BLACKCORE_EXPORT DeletePilot : public MessageBase
-        {
-        public:
-            //! Constructor
-            DeletePilot(const QString &sender, const QString &cid);
+    public:
+        //! Constructor
+        DeletePilot(const QString &sender, const QString &cid);
 
-            //! Message converted to tokens
-            QStringList toTokens() const;
+        //! Message converted to tokens
+        QStringList toTokens() const;
 
-            //! Construct from tokens
-            static DeletePilot fromTokens(const QStringList &tokens);
+        //! Construct from tokens
+        static DeletePilot fromTokens(const QStringList &tokens);
 
-            //! PDU identifier
-            static QString pdu() { return QStringLiteral("#DP"); }
+        //! PDU identifier
+        static QString pdu() { return QStringLiteral("#DP"); }
 
-            QString m_cid; //!< id
+        QString m_cid; //!< id
 
-        private:
-            //! Ctor
-            DeletePilot();
-        };
+    private:
+        //! Ctor
+        DeletePilot();
+    };
 
-        //! Equal to operator
-        inline bool operator==(const DeletePilot &lhs, const DeletePilot &rhs)
-        {
-            return  lhs.sender() == rhs.sender() &&
-                    lhs.receiver() == rhs.receiver() &&
-                    lhs.m_cid == rhs.m_cid;
-        }
+    //! Equal to operator
+    inline bool operator==(const DeletePilot &lhs, const DeletePilot &rhs)
+    {
+        return  lhs.sender() == rhs.sender() &&
+                lhs.receiver() == rhs.receiver() &&
+                lhs.m_cid == rhs.m_cid;
+    }
 
-        //! Not equal to operator
-        inline bool operator!=(const DeletePilot &lhs, const DeletePilot &rhs)
-        {
-            return !(lhs == rhs);
-        }
+    //! Not equal to operator
+    inline bool operator!=(const DeletePilot &lhs, const DeletePilot &rhs)
+    {
+        return !(lhs == rhs);
     }
 }
 

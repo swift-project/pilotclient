@@ -14,42 +14,39 @@
 
 using namespace BlackMisc;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CModelConverterXSetupComponent::CModelConverterXSetupComponent(QWidget *parent) :
+        QFrame(parent),
+        ui(new Ui::CModelConverterXSetupComponent)
     {
-        CModelConverterXSetupComponent::CModelConverterXSetupComponent(QWidget *parent) :
-            QFrame(parent),
-            ui(new Ui::CModelConverterXSetupComponent)
-        {
-            ui->setupUi(this);
-            connect(ui->pb_DirBrowser, &QPushButton::clicked, this, &CModelConverterXSetupComponent::selectBinary);
-            connect(ui->le_McxBinary, &QLineEdit::returnPressed, this, &CModelConverterXSetupComponent::saveSettings);
-            ui->le_McxBinary->setText(m_setting.get());
-        }
+        ui->setupUi(this);
+        connect(ui->pb_DirBrowser, &QPushButton::clicked, this, &CModelConverterXSetupComponent::selectBinary);
+        connect(ui->le_McxBinary, &QLineEdit::returnPressed, this, &CModelConverterXSetupComponent::saveSettings);
+        ui->le_McxBinary->setText(m_setting.get());
+    }
 
-        CModelConverterXSetupComponent::~CModelConverterXSetupComponent()
-        { }
+    CModelConverterXSetupComponent::~CModelConverterXSetupComponent()
+    { }
 
-        void CModelConverterXSetupComponent::selectBinary()
+    void CModelConverterXSetupComponent::selectBinary()
+    {
+        QString defaultValue = m_setting.get();
+        if (defaultValue.isEmpty())
         {
-            QString defaultValue = m_setting.get();
-            if (defaultValue.isEmpty())
-            {
-                defaultValue = QDir::currentPath();
-            }
-            const QString fileName = QFileDialog::getOpenFileName(nullptr,
-                                     tr("ModelConverterX binary"), defaultValue,
-                                     "*.exe");
-            ui->le_McxBinary->setText(fileName);
-            this->saveSettings();
+            defaultValue = QDir::currentPath();
         }
+        const QString fileName = QFileDialog::getOpenFileName(nullptr,
+                                    tr("ModelConverterX binary"), defaultValue,
+                                    "*.exe");
+        ui->le_McxBinary->setText(fileName);
+        this->saveSettings();
+    }
 
-        void CModelConverterXSetupComponent::saveSettings()
-        {
-            const QString t = ui->le_McxBinary->text();
-            const CStatusMessage msg = m_setting.setAndSave(t);
-            CLogMessage::preformatted(msg);
-        }
-    } // ns
+    void CModelConverterXSetupComponent::saveSettings()
+    {
+        const QString t = ui->le_McxBinary->text();
+        const CStatusMessage msg = m_setting.setAndSave(t);
+        CLogMessage::preformatted(msg);
+    }
 } // ns

@@ -9,33 +9,30 @@
 #include "stringlistdialog.h"
 #include "ui_stringlistdialog.h"
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CStringListDialog::CStringListDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CStringListDialog)
     {
-        CStringListDialog::CStringListDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CStringListDialog)
-        {
-            ui->setupUi(this);
-            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-            ui->lw_StringList->setSelectionMode(QAbstractItemView::SingleSelection);
-        }
+        ui->setupUi(this);
+        this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+        ui->lw_StringList->setSelectionMode(QAbstractItemView::SingleSelection);
+    }
 
-        CStringListDialog::~CStringListDialog()
-        { }
+    CStringListDialog::~CStringListDialog()
+    { }
 
-        void CStringListDialog::setStrings(const QStringList &strings)
-        {
-            ui->lw_StringList->clear();
-            ui->lw_StringList->addItems(strings);
-        }
+    void CStringListDialog::setStrings(const QStringList &strings)
+    {
+        ui->lw_StringList->clear();
+        ui->lw_StringList->addItems(strings);
+    }
 
-        QString CStringListDialog::getSelectedValue() const
-        {
-            const QList<QListWidgetItem *> selectedItems = ui->lw_StringList->selectedItems();
-            if (selectedItems.isEmpty()) { return {}; }
-            return selectedItems.front()->text();
-        }
-    } // ns
+    QString CStringListDialog::getSelectedValue() const
+    {
+        const QList<QListWidgetItem *> selectedItems = ui->lw_StringList->selectedItems();
+        if (selectedItems.isEmpty()) { return {}; }
+        return selectedItems.front()->text();
+    }
 } // ns

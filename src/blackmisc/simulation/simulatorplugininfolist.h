@@ -21,40 +21,37 @@
 #include <QString>
 #include <QStringList>
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    class CSimulatorPluginInfo;
+
+    //! Value object encapsulating a list of SimulatorInfo objects.
+    class BLACKMISC_EXPORT CSimulatorPluginInfoList :
+        public BlackMisc::CSequence<CSimulatorPluginInfo>,
+        public BlackMisc::Mixin::MetaType<CSimulatorPluginInfoList>
     {
-        class CSimulatorPluginInfo;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CSimulatorPluginInfoList)
+        using CSequence::CSequence;
 
-        //! Value object encapsulating a list of SimulatorInfo objects.
-        class BLACKMISC_EXPORT CSimulatorPluginInfoList :
-            public BlackMisc::CSequence<CSimulatorPluginInfo>,
-            public BlackMisc::Mixin::MetaType<CSimulatorPluginInfoList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CSimulatorPluginInfoList)
-            using CSequence::CSequence;
+        //! Default constructor
+        CSimulatorPluginInfoList();
 
-            //! Default constructor
-            CSimulatorPluginInfoList();
+        //! Construct from a base class object.
+        CSimulatorPluginInfoList(const CSequence<CSimulatorPluginInfo> &other);
 
-            //! Construct from a base class object.
-            CSimulatorPluginInfoList(const CSequence<CSimulatorPluginInfo> &other);
+        //! Is simulator supported
+        bool supportsSimulator(const QString &simulator) const;
 
-            //! Is simulator supported
-            bool supportsSimulator(const QString &simulator) const;
+        //! String list with meaningful representations
+        QStringList toStringList(bool i18n = false) const;
 
-            //! String list with meaningful representations
-            QStringList toStringList(bool i18n = false) const;
+        //! Find by identifier (unique)
+        CSimulatorPluginInfo findByIdentifier(const QString &identifier) const;
 
-            //! Find by identifier (unique)
-            CSimulatorPluginInfo findByIdentifier(const QString &identifier) const;
-
-            //! Find by simulator
-            CSimulatorPluginInfo findBySimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
-        };
-    } // ns
+        //! Find by simulator
+        CSimulatorPluginInfo findBySimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+    };
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorPluginInfoList)

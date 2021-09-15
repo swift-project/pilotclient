@@ -13,23 +13,20 @@
 using BlackMisc::PhysicalQuantities::CAngle;
 using BlackMisc::PhysicalQuantities::CAngleUnit;
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
+    QString CTrack::convertToQString(bool i18n) const
     {
-        QString CTrack::convertToQString(bool i18n) const
+        QString s = CAngle::convertToQString(i18n).append(" ");
+        if (i18n)
         {
-            QString s = CAngle::convertToQString(i18n).append(" ");
-            if (i18n)
-            {
-                return s.append(this->isMagneticTrack() ?
-                                QCoreApplication::translate("Aviation", "magnetic") :
-                                QCoreApplication::translate("Aviation", "true"));
-            }
-            else
-            {
-                return s.append(this->isMagneticTrack() ? "magnetic" : "true");
-            }
+            return s.append(this->isMagneticTrack() ?
+                            QCoreApplication::translate("Aviation", "magnetic") :
+                            QCoreApplication::translate("Aviation", "true"));
         }
-    } // namespace
+        else
+        {
+            return s.append(this->isMagneticTrack() ? "magnetic" : "true");
+        }
+    }
 } // namespace

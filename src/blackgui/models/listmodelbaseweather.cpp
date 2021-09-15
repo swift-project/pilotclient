@@ -9,15 +9,12 @@
 #include "listmodelbase.cpp"
 
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
-    {
-        // see here for the reason of thess forward instantiations
-        // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
-        template class CListModelBase<BlackMisc::Weather::CCloudLayerList, false>;
-        template class CListModelBase<BlackMisc::Weather::CTemperatureLayerList, false>;
-        template class CListModelBase<BlackMisc::Weather::CWindLayerList, false>;
+    // see here for the reason of thess forward instantiations
+    // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
+    template class CListModelBase<BlackMisc::Weather::CCloudLayerList, false>;
+    template class CListModelBase<BlackMisc::Weather::CTemperatureLayerList, false>;
+    template class CListModelBase<BlackMisc::Weather::CWindLayerList, false>;
 
-    } // namespace
 } // namespace

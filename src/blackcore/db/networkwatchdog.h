@@ -21,188 +21,185 @@
 #include <QReadWriteLock>
 #include <QNetworkAccessManager>
 
-namespace BlackCore
+namespace BlackCore::Db
 {
-    namespace Db
+    //! Monitoring the swift DB, internet access, shared URLs
+    class BLACKCORE_EXPORT CNetworkWatchdog : public BlackMisc::CContinuousWorker
     {
-        //! Monitoring the swift DB, internet access, shared URLs
-        class BLACKCORE_EXPORT CNetworkWatchdog : public BlackMisc::CContinuousWorker
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Log categories
-            static const QStringList &getLogCategories();
+    public:
+        //! Log categories
+        static const QStringList &getLogCategories();
 
-            //! Ctor
-            explicit CNetworkWatchdog(bool networkAccessible, QObject *owner);
+        //! Ctor
+        explicit CNetworkWatchdog(bool networkAccessible, QObject *owner);
 
-            //! Network status changed, use this function to inform the watchdog
-            //! \threadsafe
-            void setNetworkAccessibility(QNetworkAccessManager::NetworkAccessibility accessibility);
+        //! Network status changed, use this function to inform the watchdog
+        //! \threadsafe
+        void setNetworkAccessibility(QNetworkAccessManager::NetworkAccessibility accessibility);
 
-            //! Configuration updates completed as reported by QNetworkConfigurationManager::updateCompleted
-            void networkConfigurationsUpdateCompleted();
+        //! Configuration updates completed as reported by QNetworkConfigurationManager::updateCompleted
+        void networkConfigurationsUpdateCompleted();
 
-            //! Set online as reported by QNetworkConfigurationManager::onlineStateChanged
-            //! \threadsafe
-            void setOnline(bool online);
+        //! Set online as reported by QNetworkConfigurationManager::onlineStateChanged
+        //! \threadsafe
+        void setOnline(bool online);
 
-            //! DB available?
-            //! \threadsafe
-            bool isSwiftDbAccessible() const { return m_dbAccessible; }
+        //! DB available?
+        //! \threadsafe
+        bool isSwiftDbAccessible() const { return m_dbAccessible; }
 
-            //! Set DB as avialable (from external)
-            //! \remark if data was read from DB, this can save another check
-            //! \threadsafe
-            void setDbAccessibility(bool accessible);
+        //! Set DB as avialable (from external)
+        //! \remark if data was read from DB, this can save another check
+        //! \threadsafe
+        void setDbAccessibility(bool accessible);
 
-            //! DB is accessible
-            //! \threadsafe
-            void setDbIsAccessible() { this->setDbAccessibility(true); }
+        //! DB is accessible
+        //! \threadsafe
+        void setDbIsAccessible() { this->setDbAccessibility(true); }
 
-            //! DB is NOT accessible
-            //! \threadsafe
-            void setDbIsNotAccessible() { this->setDbAccessibility(false); }
+        //! DB is NOT accessible
+        //! \threadsafe
+        void setDbIsNotAccessible() { this->setDbAccessibility(false); }
 
-            //! Check the DB availability, can disable the check
-            //! \threadsafe
-            void setCheckDbAccessibility(bool check) { m_checkDbAccessibility = check; }
+        //! Check the DB availability, can disable the check
+        //! \threadsafe
+        void setCheckDbAccessibility(bool check) { m_checkDbAccessibility = check; }
 
-            //! Check the shared URL, can disable the check
-            //! \threadsafe
-            void setCheckSharedUrl(bool check) { m_checkSharedUrl = check; }
+        //! Check the shared URL, can disable the check
+        //! \threadsafe
+        void setCheckSharedUrl(bool check) { m_checkSharedUrl = check; }
 
-            //! Do a detailed check via HTTP
-            //! \threadsafe
-            void setDoDetailedCheck(bool check) { m_doDetailedCheck = check; }
+        //! Do a detailed check via HTTP
+        //! \threadsafe
+        void setDoDetailedCheck(bool check) { m_doDetailedCheck = check; }
 
-            //! Internet available?
-            //! \threadsafe
-            bool isInternetAccessible() const { return m_internetAccessible; }
+        //! Internet available?
+        //! \threadsafe
+        bool isInternetAccessible() const { return m_internetAccessible; }
 
-            //! Accesible or check disabled?
-            bool isNetworkkAccessibleOrCheckDisabled() const { return m_networkAccessible || m_disableNetworkCheck; }
+        //! Accesible or check disabled?
+        bool isNetworkkAccessibleOrCheckDisabled() const { return m_networkAccessible || m_disableNetworkCheck; }
 
-            //! Has working shared URL?
-            //! \threadsafe
-            bool hasWorkingSharedUrl() const;
+        //! Has working shared URL?
+        //! \threadsafe
+        bool hasWorkingSharedUrl() const;
 
-            //! A working shared URL
-            //! \threadsafe
-            BlackMisc::Network::CUrl getWorkingSharedUrl() const;
+        //! A working shared URL
+        //! \threadsafe
+        BlackMisc::Network::CUrl getWorkingSharedUrl() const;
 
-            //! Log.own status messages
-            //! \threadsafe
-            void setLogOwnMessages(bool log) { m_logOwnMessages = log; }
+        //! Log.own status messages
+        //! \threadsafe
+        void setLogOwnMessages(bool log) { m_logOwnMessages = log; }
 
-            //! Run a check
-            int triggerCheck();
+        //! Run a check
+        int triggerCheck();
 
-            //! Number of completed checks
-            //! \threadsafe
-            int getCheckCount() const { return m_totalCheckCount; }
+        //! Number of completed checks
+        //! \threadsafe
+        int getCheckCount() const { return m_totalCheckCount; }
 
-            //! Last URL used for ping /DB ping service)
-            QString getLastPingDbUrl() const;
+        //! Last URL used for ping /DB ping service)
+        QString getLastPingDbUrl() const;
 
-            //! Number of completed checks
-            //! \threadsafe
-            QString getCheckInfo() const;
+        //! Number of completed checks
+        //! \threadsafe
+        QString getCheckInfo() const;
 
-            //! Set working URL from external
-            //! \threadsafe
-            void setWorkingSharedUrl(const BlackMisc::Network::CUrl &workingUrl);
+        //! Set working URL from external
+        //! \threadsafe
+        void setWorkingSharedUrl(const BlackMisc::Network::CUrl &workingUrl);
 
-            //! Graceful shutdown
-            void gracefulShutdown();
+        //! Graceful shutdown
+        void gracefulShutdown();
 
-            //! Ping the DB server, fire and forget (no feedback etc)
-            void pingDbClientService(Data::CGlobalSetup::PingType type = Data::CGlobalSetup::PingUnspecific, bool force = false);
+        //! Ping the DB server, fire and forget (no feedback etc)
+        void pingDbClientService(Data::CGlobalSetup::PingType type = Data::CGlobalSetup::PingUnspecific, bool force = false);
 
-            //! Disable the network check
-            //! \remark if disabled network reports always accessible
-            //! \threadsafe
-            bool disableNetworkAccessibilityCheck(bool disable);
+        //! Disable the network check
+        //! \remark if disabled network reports always accessible
+        //! \threadsafe
+        bool disableNetworkAccessibilityCheck(bool disable);
 
-            //! Has network check been disabled?
-            //! \threadsafe
-            bool isNetworkAccessibilityCheckDisabled() const { return m_disableNetworkCheck; }
+        //! Has network check been disabled?
+        //! \threadsafe
+        bool isNetworkAccessibilityCheckDisabled() const { return m_disableNetworkCheck; }
 
-            //! Network check enabled?
-            //! \threadsafe
-            bool isNetworkAccessibilityCheckEnabled() const { return !this->isNetworkAccessibilityCheckDisabled(); }
+        //! Network check enabled?
+        //! \threadsafe
+        bool isNetworkAccessibilityCheckEnabled() const { return !this->isNetworkAccessibilityCheckDisabled(); }
 
-            //! URL referring to the DB
-            //! \remark depends on BlackCore::Application::getGlobalSetup()
-            static bool isDbUrl(const BlackMisc::Network::CUrl &url);
+        //! URL referring to the DB
+        //! \remark depends on BlackCore::Application::getGlobalSetup()
+        static bool isDbUrl(const BlackMisc::Network::CUrl &url);
 
-            //! The URL being tested
-            //! \remark depends on BlackCore::Application::getGlobalSetup()
-            //! \private primarily accessible for unit tests
-            static BlackMisc::Network::CUrl dbTestUrl();
+        //! The URL being tested
+        //! \remark depends on BlackCore::Application::getGlobalSetup()
+        //! \private primarily accessible for unit tests
+        static BlackMisc::Network::CUrl dbTestUrl();
 
-        signals:
-            //! DB was available, but not longer is and vice versa
-            void changedSwiftDbAccessibility(bool available, const BlackMisc::Network::CUrl &url);
+    signals:
+        //! DB was available, but not longer is and vice versa
+        void changedSwiftDbAccessibility(bool available, const BlackMisc::Network::CUrl &url);
 
-            //! Internet was available, but not longer is and vice versa
-            void changedInternetAccessibility(bool available);
+        //! Internet was available, but not longer is and vice versa
+        void changedInternetAccessibility(bool available);
 
-            //! Cleaned version of QNetworkAccessManager::networkAccessibleChanged
-            //! \remark does only fire if the accessibility changed
-            void changedNetworkAccessible(QNetworkAccessManager::NetworkAccessibility accessible);
+        //! Cleaned version of QNetworkAccessManager::networkAccessibleChanged
+        //! \remark does only fire if the accessibility changed
+        void changedNetworkAccessible(QNetworkAccessManager::NetworkAccessibility accessible);
 
-        private:
-            static constexpr int CanConnectTimeMs = 5000;
+    private:
+        static constexpr int CanConnectTimeMs = 5000;
 
-            //! Do work, i.e. check connectivity
-            void doWork();
+        //! Do work, i.e. check connectivity
+        void doWork();
 
-            //! Do check
-            bool doWorkCheck() const;
+        //! Do check
+        bool doWorkCheck() const;
 
-            //! Trigger the changed signals and avoid unneccessary signals
-            void triggerChangedSignals(bool oldDbAccessible, bool oldInternetAccessible);
+        //! Trigger the changed signals and avoid unneccessary signals
+        void triggerChangedSignals(bool oldDbAccessible, bool oldInternetAccessible);
 
-            //! Init a working shared URL
-            void initWorkingSharedUrlFromSetup();
+        //! Init a working shared URL
+        void initWorkingSharedUrlFromSetup();
 
-            //! Received reply of client service ping
-            void replyPingClientService(QNetworkReply *nwReply);
+        //! Received reply of client service ping
+        void replyPingClientService(QNetworkReply *nwReply);
 
-            //! The DB server
-            //! \remark depends on BlackCore::Application::getGlobalSetup()
-            static QString dbHost();
+        //! The DB server
+        //! \remark depends on BlackCore::Application::getGlobalSetup()
+        static QString dbHost();
 
-            //! Obtain working DB data file location URL
-            //! \remark depends on BlackCore::Application::getGlobalSetup()
-            static BlackMisc::Network::CUrl workingSharedUrlFromSetup();
+        //! Obtain working DB data file location URL
+        //! \remark depends on BlackCore::Application::getGlobalSetup()
+        static BlackMisc::Network::CUrl workingSharedUrlFromSetup();
 
-            std::atomic_bool m_logOwnMessages { true };
-            std::atomic_bool m_doDetailedCheck { true };
-            std::atomic_bool m_networkAccessible { true };
-            std::atomic_bool m_disableNetworkCheck { false };  //!< if this is true, network accessible always reports true/accessible
-            std::atomic_bool m_online { true };
-            std::atomic_bool m_internetAccessible { true };
-            std::atomic_bool m_dbAccessible { true };
-            std::atomic_bool m_lastClientPingSuccess { true }; //!< ping swift DB client service, real HTTP response
-            std::atomic_bool m_checkDbAccessibility { true };
-            std::atomic_bool m_checkSharedUrl { true };
-            std::atomic_bool m_checkInProgress { false };   //!< a check is currently in progress
-            std::atomic<qint64> m_nextPingSecsSinceEpoch { 0 }; //!< time at which next ping will be sent
-            std::atomic_int  m_networkAccessibility { QNetworkAccessManager::Accessible }; //!< last state
-            std::atomic_int  m_totalCheckCount { 0 };       //!< counting number of checks
-            std::atomic_int  m_totalBadCountDb { 0 };       //!< Total number of DB failing counts (only real responses when tried)
-            std::atomic_int  m_totalBadCountInternet { 0 }; //!< Total number of Internet failing count (only when network is accessible)
-            std::atomic_int  m_totalGoodCountDb { 0 };
-            std::atomic_int  m_totalGoodCountInternet  { 0 };
-            std::atomic_int  m_consecutivePingBadCount { 0 }; //!< Bad count of ping until a godd state is received
-            QString m_lastPingUrl;
-            BlackMisc::Network::CUrl m_workingSharedUrl;
-            mutable QReadWriteLock m_lockUrl;
-        };
-    } // ns
+        std::atomic_bool m_logOwnMessages { true };
+        std::atomic_bool m_doDetailedCheck { true };
+        std::atomic_bool m_networkAccessible { true };
+        std::atomic_bool m_disableNetworkCheck { false };  //!< if this is true, network accessible always reports true/accessible
+        std::atomic_bool m_online { true };
+        std::atomic_bool m_internetAccessible { true };
+        std::atomic_bool m_dbAccessible { true };
+        std::atomic_bool m_lastClientPingSuccess { true }; //!< ping swift DB client service, real HTTP response
+        std::atomic_bool m_checkDbAccessibility { true };
+        std::atomic_bool m_checkSharedUrl { true };
+        std::atomic_bool m_checkInProgress { false };   //!< a check is currently in progress
+        std::atomic<qint64> m_nextPingSecsSinceEpoch { 0 }; //!< time at which next ping will be sent
+        std::atomic_int  m_networkAccessibility { QNetworkAccessManager::Accessible }; //!< last state
+        std::atomic_int  m_totalCheckCount { 0 };       //!< counting number of checks
+        std::atomic_int  m_totalBadCountDb { 0 };       //!< Total number of DB failing counts (only real responses when tried)
+        std::atomic_int  m_totalBadCountInternet { 0 }; //!< Total number of Internet failing count (only when network is accessible)
+        std::atomic_int  m_totalGoodCountDb { 0 };
+        std::atomic_int  m_totalGoodCountInternet  { 0 };
+        std::atomic_int  m_consecutivePingBadCount { 0 }; //!< Bad count of ping until a godd state is received
+        QString m_lastPingUrl;
+        BlackMisc::Network::CUrl m_workingSharedUrl;
+        mutable QReadWriteLock m_lockUrl;
+    };
 } // ns
 
 #endif // guard

@@ -20,27 +20,24 @@
 #include <initializer_list>
 #include <tuple>
 
-namespace BlackMisc
+namespace BlackMisc::Input
 {
-    namespace Input
+    //! Value object encapsulating a list of joystick buttons.
+    class BLACKMISC_EXPORT CJoystickButtonList :
+        public CSequence<CJoystickButton>,
+        public BlackMisc::Mixin::MetaType<CJoystickButtonList>
     {
-        //! Value object encapsulating a list of joystick buttons.
-        class BLACKMISC_EXPORT CJoystickButtonList :
-            public CSequence<CJoystickButton>,
-            public BlackMisc::Mixin::MetaType<CJoystickButtonList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CJoystickButtonList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CJoystickButtonList)
+        using CSequence::CSequence;
 
-            //! Default constructor
-            CJoystickButtonList() = default;
+        //! Default constructor
+        CJoystickButtonList() = default;
 
-            //! Construct from a base class object.
-            CJoystickButtonList(const CSequence<CJoystickButton> &baseClass);
-        };
+        //! Construct from a base class object.
+        CJoystickButtonList(const CSequence<CJoystickButton> &baseClass);
+    };
 
-    } //namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Input::CJoystickButtonList)

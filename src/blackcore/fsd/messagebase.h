@@ -50,56 +50,53 @@ enum class MessageType
     RevBPilotDescription, // -PD IVAO only not handled in swift
 };
 
-namespace BlackCore
+namespace BlackCore::Fsd
 {
-    namespace Fsd
+    //! FSD message base class
+    class BLACKCORE_EXPORT MessageBase
     {
-        //! FSD message base class
-        class BLACKCORE_EXPORT MessageBase
-        {
-        public:
-            //! Default Constructor
-            MessageBase() {}
+    public:
+        //! Default Constructor
+        MessageBase() {}
 
-            //! Constructor
-            MessageBase(const QString &sender);
+        //! Constructor
+        MessageBase(const QString &sender);
 
-            //! Constructor
-            MessageBase(const QString &sender, const QString &receiver);
+        //! Constructor
+        MessageBase(const QString &sender, const QString &receiver);
 
-            //! Set callsign
-            void setCallsign(const QString &sender) { m_sender = sender; }
+        //! Set callsign
+        void setCallsign(const QString &sender) { m_sender = sender; }
 
-            //! get message sender
-            QString sender() const { return m_sender; }
+        //! get message sender
+        QString sender() const { return m_sender; }
 
-            //! Set message receiver
-            void setReceiver(const QString &receiver) { m_receiver = receiver; }
+        //! Set message receiver
+        void setReceiver(const QString &receiver) { m_receiver = receiver; }
 
-            //! Get message receiver
-            QString receiver() const { return m_receiver; }
+        //! Get message receiver
+        QString receiver() const { return m_receiver; }
 
-            //! Is message valid?
-            bool isValid() const { return m_isValid; }
+        //! Is message valid?
+        bool isValid() const { return m_isValid; }
 
-            //! set message valid
-            void setValid(bool isValid) { m_isValid = isValid; }
+        //! set message valid
+        void setValid(bool isValid) { m_isValid = isValid; }
 
-        protected:
-            QString m_sender;       //!< message sender
-            QString m_receiver;     //!< message receiver
+    protected:
+        QString m_sender;       //!< message sender
+        QString m_receiver;     //!< message receiver
 
-            bool m_isValid = true;  //!< is valid?
-        };
+        bool m_isValid = true;  //!< is valid?
+    };
 
-        //! String which will be send
-        template <class T>
-        QString messageToFSDString(const T &message)
-        {
-            if (!message.isValid()) return {};
-            return message.pdu() % message.toTokens().join(':') % QStringLiteral("\r\n");
-        }
-    } // ns
+    //! String which will be send
+    template <class T>
+    QString messageToFSDString(const T &message)
+    {
+        if (!message.isValid()) return {};
+        return message.pdu() % message.toTokens().join(':') % QStringLiteral("\r\n");
+    }
 } // ns
 
 #endif // guard

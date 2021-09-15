@@ -19,30 +19,27 @@
 #include <QString>
 
 //! Generate data for testing purposes.
-namespace BlackMisc
+namespace BlackMisc::Test
 {
-    namespace Test
+    //! Generate data for testing aviation classes
+    class BLACKMISC_EXPORT CTesting
     {
-        //! Generate data for testing aviation classes
-        class BLACKMISC_EXPORT CTesting
-        {
-        public:
-            //! Generate number of ATC stations
-            static BlackMisc::Aviation::CAtcStationList createAtcStations(int number, bool byPropertyIndex = false);
+    public:
+        //! Generate number of ATC stations
+        static BlackMisc::Aviation::CAtcStationList createAtcStations(int number, bool byPropertyIndex = false);
 
-            //! Single station, annotated by index
-            static BlackMisc::Aviation::CAtcStation createStation(int index, bool byPropertyIndex = false);
+        //! Single station, annotated by index
+        static BlackMisc::Aviation::CAtcStation createStation(int index, bool byPropertyIndex = false);
 
-            //! Get aircraft cfg entries
-            static BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList getAircraftCfgEntries(int number);
+        //! Get aircraft cfg entries
+        static BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList getAircraftCfgEntries(int number);
 
-            //! Get airports
-            static BlackMisc::Aviation::CAirportList getAirports(int number);
+        //! Get airports
+        static BlackMisc::Aviation::CAirportList getAirports(int number);
 
-            //! Get clients
-            static BlackMisc::Network::CClientList getClients(int number);
-        };
-    } // ns
+        //! Get clients
+        static BlackMisc::Network::CClientList getClients(int number);
+    };
 } // ns
 
 #endif // guard

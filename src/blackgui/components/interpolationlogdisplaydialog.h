@@ -21,40 +21,37 @@ namespace BlackCore
     class CAirspaceMonitor;
 }
 namespace Ui { class CInterpolationLogDisplayDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * CInterpolationLogDisplay as dialog
+     */
+    class BLACKGUI_EXPORT CInterpolationLogDisplayDialog : public QDialog
     {
-        /**
-         * CInterpolationLogDisplay as dialog
-         */
-        class BLACKGUI_EXPORT CInterpolationLogDisplayDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CInterpolationLogDisplayDialog(
-                BlackCore::ISimulator *simulator, BlackCore::CAirspaceMonitor *airspaceMonitor,
-                QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CInterpolationLogDisplayDialog(
+            BlackCore::ISimulator *simulator, BlackCore::CAirspaceMonitor *airspaceMonitor,
+            QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CInterpolationLogDisplayDialog() override;
+        //! Destructor
+        virtual ~CInterpolationLogDisplayDialog() override;
 
-            //! Set simulator
-            void setSimulator(BlackCore::ISimulator *simulator);
+        //! Set simulator
+        void setSimulator(BlackCore::ISimulator *simulator);
 
-            //! Set airspace monitor
-            void setAirspaceMonitor(BlackCore::CAirspaceMonitor *airspaceMonitor);
+        //! Set airspace monitor
+        void setAirspaceMonitor(BlackCore::CAirspaceMonitor *airspaceMonitor);
 
-        protected:
-            //! \copydoc QObject::event
-            virtual bool event(QEvent *event) override;
+    protected:
+        //! \copydoc QObject::event
+        virtual bool event(QEvent *event) override;
 
-        private:
-            QScopedPointer<Ui::CInterpolationLogDisplayDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CInterpolationLogDisplayDialog> ui;
+    };
 } // ns
 
 #endif // guard

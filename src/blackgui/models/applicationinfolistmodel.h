@@ -18,25 +18,22 @@
 
 class QStandardItemModel;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Application info list model
+    class BLACKGUI_EXPORT CApplicationInfoListModel : public CListModelBase<BlackMisc::CApplicationInfoList, true>
     {
-        //! Application info list model
-        class BLACKGUI_EXPORT CApplicationInfoListModel : public CListModelBase<BlackMisc::CApplicationInfoList, true>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CApplicationInfoListModel(QObject *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CApplicationInfoListModel(QObject *parent = nullptr);
 
-            //! Destructor
-            virtual ~CApplicationInfoListModel() {}
+        //! Destructor
+        virtual ~CApplicationInfoListModel() {}
 
-            //! \copydoc BlackMisc::CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories
-            void otherSwiftVersionsFromDataDirectories(bool reinit);
-        };
-    } // ns
+        //! \copydoc BlackMisc::CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories
+        void otherSwiftVersionsFromDataDirectories(bool reinit);
+    };
 } // ns
 #endif // guard

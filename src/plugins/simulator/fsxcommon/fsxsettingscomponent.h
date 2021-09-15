@@ -19,66 +19,63 @@
 
 namespace Ui { class CFsxSettingsComponent; }
 namespace BlackGui { class COverlayMessagesFrame; }
-namespace BlackSimPlugin
+namespace BlackSimPlugin::FsxCommon
 {
-    namespace FsxCommon
+    class CSimulatorFsxCommon;
+
+    //! FSX/P3D settings
+    class FSXCOMMON_EXPORT CFsxSettingsComponent : public QFrame
     {
-        class CSimulatorFsxCommon;
+        Q_OBJECT
 
-        //! FSX/P3D settings
-        class FSXCOMMON_EXPORT CFsxSettingsComponent : public QFrame
-        {
-            Q_OBJECT
+    public:
+        //! Constructor
+        explicit CFsxSettingsComponent(QWidget *parent = nullptr);
 
-        public:
-            //! Constructor
-            explicit CFsxSettingsComponent(QWidget *parent = nullptr);
+        //! Destructor
+        virtual ~CFsxSettingsComponent() override;
 
-            //! Destructor
-            virtual ~CFsxSettingsComponent() override;
+        //! Simulator, P3D/FSX
+        void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) { m_simulator = simulator; }
 
-            //! Simulator, P3D/FSX
-            void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) { m_simulator = simulator; }
+        //! Represented simulator
+        BlackMisc::Simulation::CSimulatorInfo getSimulator() const;
 
-            //! Represented simulator
-            BlackMisc::Simulation::CSimulatorInfo getSimulator() const;
+        //! Update the values
+        void refresh();
 
-            //! Update the values
-            void refresh();
+    private:
+        //! Trace checkbox changed
+        void onSimConnectTraceChanged();
 
-        private:
-            //! Trace checkbox changed
-            void onSimConnectTraceChanged();
+        //! Terrain probe checkbox changed
+        void onEnableTerrainProbeChanged();
 
-            //! Terrain probe checkbox changed
-            void onEnableTerrainProbeChanged();
+        //! Using simulated objects
+        void onSimulatedObjectChanged();
 
-            //! Using simulated objects
-            void onSimulatedObjectChanged();
+        //! FSUIPC setting changed
+        void onFsuipcChanged();
 
-            //! FSUIPC setting changed
-            void onFsuipcChanged();
+        //! Offsets on/off
+        void onSBOffsetsChanged();
 
-            //! Offsets on/off
-            void onSBOffsetsChanged();
+        //! Copy the terrain probe
+        void copyTerrainProbe();
 
-            //! Copy the terrain probe
-            void copyTerrainProbe();
+        //! Status has been changed
+        void onSimulatorStatusChanged(int status);
 
-            //! Status has been changed
-            void onSimulatorStatusChanged(int status);
+        //! Plugin changed
+        void onSimulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
-            //! Plugin changed
-            void onSimulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
+        //! Access the concrete implementation
+        CSimulatorFsxCommon *getFsxOrP3DSimulator() const;
 
-            //! Access the concrete implementation
-            CSimulatorFsxCommon *getFsxOrP3DSimulator() const;
-
-            BlackMisc::Simulation::CSimulatorInfo m_simulator { "FSX" };
-            BlackGui::COverlayMessagesFrame *m_mf = nullptr;
-            QScopedPointer<Ui::CFsxSettingsComponent> ui;
-        };
-    } // ns
+        BlackMisc::Simulation::CSimulatorInfo m_simulator { "FSX" };
+        BlackGui::COverlayMessagesFrame *m_mf = nullptr;
+        QScopedPointer<Ui::CFsxSettingsComponent> ui;
+    };
 } // ns
 
 #endif // guard

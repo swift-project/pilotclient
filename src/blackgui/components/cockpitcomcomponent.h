@@ -27,74 +27,71 @@
 class QPaintEvent;
 
 namespace Ui { class CCockpitComComponent; }
-namespace BlackMisc { namespace Aviation { class CComSystem; } }
-namespace BlackGui
+namespace BlackMisc::Aviation { class CComSystem; }
+namespace BlackGui::Components
 {
-    namespace Components
+    //! The main cockpit area
+    class BLACKGUI_EXPORT CCockpitComComponent :
+        public QFrame,
+        public BlackMisc::CIdentifiable,
+        public CEnableForDockWidgetInfoArea
     {
-        //! The main cockpit area
-        class BLACKGUI_EXPORT CCockpitComComponent :
-            public QFrame,
-            public BlackMisc::CIdentifiable,
-            public CEnableForDockWidgetInfoArea
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CCockpitComComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CCockpitComComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CCockpitComComponent() override;
+        //! Destructor
+        virtual ~CCockpitComComponent() override;
 
-            //! Set to BlackMisc::Aviation::CTransponder::StateIdent
-            void setTransponderModeStateIdent();
+        //! Set to BlackMisc::Aviation::CTransponder::StateIdent
+        void setTransponderModeStateIdent();
 
-        signals:
-            //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderModeChanged
-            void transponderModeChanged(BlackMisc::Aviation::CTransponder::TransponderMode newMode);
+    signals:
+        //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderModeChanged
+        void transponderModeChanged(BlackMisc::Aviation::CTransponder::TransponderMode newMode);
 
-            //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderStateIdentEnded
-            void transponderStateIdentEnded();
+        //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderStateIdentEnded
+        void transponderStateIdentEnded();
 
-            //! Request COM text messages
-            //! @{
-            void requestCom1TextMessage();
-            void requestCom2TextMessage();
-            //! @}
+        //! Request COM text messages
+        //! @{
+        void requestCom1TextMessage();
+        void requestCom2TextMessage();
+        //! @}
 
-        protected:
-            //! \copydoc QWidget::paintEvent
-            virtual void paintEvent(QPaintEvent *event) override;
+    protected:
+        //! \copydoc QWidget::paintEvent
+        virtual void paintEvent(QPaintEvent *event) override;
 
-        private:
-            //! Cockpit values have been changed in GUI
-            void testSelcal();
+    private:
+        //! Cockpit values have been changed in GUI
+        void testSelcal();
 
-            //! Get own aircraft
-            BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const;
+        //! Get own aircraft
+        BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const;
 
-            //! Cockpit updates
-            bool updateOwnCockpitInContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
+        //! Cockpit updates
+        bool updateOwnCockpitInContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
 
-            //! SELCAL changed in GUI
-            void updateSelcalInContext(const BlackMisc::Aviation::CSelcal &selcal);
+        //! SELCAL changed in GUI
+        void updateSelcalInContext(const BlackMisc::Aviation::CSelcal &selcal);
 
-            //! SELCAL was changed
-            void updateSelcalFromContext(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator);
+        //! SELCAL was changed
+        void updateSelcalFromContext(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator);
 
-            //! Update cockpit from context
-            void updateCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
+        //! Update cockpit from context
+        void updateCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
 
-            //! Update the cockpit from aircraft context
-            void forceCockpitUpdateFromOwnAircraftContext();
+        //! Update the cockpit from aircraft context
+        void forceCockpitUpdateFromOwnAircraftContext();
 
-            //! Stations changed
-            void onAtcStationsChanged();
+        //! Stations changed
+        void onAtcStationsChanged();
 
-            QScopedPointer<Ui::CCockpitComComponent> ui;
-        };
-    } // namespace
+        QScopedPointer<Ui::CCockpitComComponent> ui;
+    };
 } // namespace
 
 #endif // guard

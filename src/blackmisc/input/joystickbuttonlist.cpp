@@ -8,13 +8,10 @@
 
 #include "blackmisc/input/joystickbuttonlist.h"
 
-namespace BlackMisc
+namespace BlackMisc::Input
 {
-    namespace Input
-    {
-        CJoystickButtonList::CJoystickButtonList(const CSequence<CJoystickButton> &baseClass) :
-            CSequence<CJoystickButton>(baseClass)
-        { }
+    CJoystickButtonList::CJoystickButtonList(const CSequence<CJoystickButton> &baseClass) :
+        CSequence<CJoystickButton>(baseClass)
+    { }
 
-    } // namespace
 } // namespace

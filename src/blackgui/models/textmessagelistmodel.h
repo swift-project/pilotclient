@@ -17,45 +17,42 @@
 
 class QObject;
 
-namespace BlackMisc { namespace Network { class CTextMessage; } }
-namespace BlackGui
+namespace BlackMisc::Network { class CTextMessage; }
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Text message list model
+    class BLACKGUI_EXPORT CTextMessageListModel :
+        public CListModelTimestampObjects<BlackMisc::Network::CTextMessageList, true>
     {
-        //! Text message list model
-        class BLACKGUI_EXPORT CTextMessageListModel :
-            public CListModelTimestampObjects<BlackMisc::Network::CTextMessageList, true>
+        Q_OBJECT
+
+    public:
+        //! What kind of stations
+        enum TextMessageMode
         {
-            Q_OBJECT
-
-        public:
-            //! What kind of stations
-            enum TextMessageMode
-            {
-                NotSet,
-                FromTo,
-                From
-            };
-
-            //! Constructor
-            explicit CTextMessageListModel(TextMessageMode stationMode, QObject *parent = nullptr);
-
-            //! Destructor
-            virtual ~CTextMessageListModel() override {}
-
-            //! Set mode
-            void setTextMessageMode(TextMessageMode mode);
-
-            //! Mode
-            TextMessageMode getTextMessageMode() const { return m_textMessageMode; }
-
-            //! \copydoc QAbstractItemModel::data
-            virtual QVariant data(const QModelIndex &index, int role) const override;
-
-        private:
-            TextMessageMode m_textMessageMode = NotSet;
+            NotSet,
+            FromTo,
+            From
         };
-    } // ns
+
+        //! Constructor
+        explicit CTextMessageListModel(TextMessageMode stationMode, QObject *parent = nullptr);
+
+        //! Destructor
+        virtual ~CTextMessageListModel() override {}
+
+        //! Set mode
+        void setTextMessageMode(TextMessageMode mode);
+
+        //! Mode
+        TextMessageMode getTextMessageMode() const { return m_textMessageMode; }
+
+        //! \copydoc QAbstractItemModel::data
+        virtual QVariant data(const QModelIndex &index, int role) const override;
+
+    private:
+        TextMessageMode m_textMessageMode = NotSet;
+    };
 } // ns
 
 #endif // guard

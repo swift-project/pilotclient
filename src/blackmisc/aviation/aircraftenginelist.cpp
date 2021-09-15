@@ -13,100 +13,97 @@
 #include <QString>
 #include <QtGlobal>
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
+    CAircraftEngineList::CAircraftEngineList(std::initializer_list<bool> enginesOnOff)
     {
-        CAircraftEngineList::CAircraftEngineList(std::initializer_list<bool> enginesOnOff)
+        int no = 1; // engines 1 based
+        for (auto it = enginesOnOff.begin(); it != enginesOnOff.end(); ++it)
         {
-            int no = 1; // engines 1 based
-            for (auto it = enginesOnOff.begin(); it != enginesOnOff.end(); ++it)
+            CAircraftEngine engine(no++, *it);
+            this->push_back(engine);
+        }
+    }
+
+    CAircraftEngineList::CAircraftEngineList(const CSequence<CAircraftEngine> &other) :
+        CSequence<CAircraftEngine>(other)
+    { }
+
+    CAircraftEngine CAircraftEngineList::getEngine(int engineNumber) const
+    {
+        Q_ASSERT(engineNumber > 0);
+        return this->findBy(&CAircraftEngine::getNumber, engineNumber).frontOrDefault();
+    }
+
+    bool CAircraftEngineList::isEngineOn(int engineNumber) const
+    {
+        Q_ASSERT(engineNumber > 0);
+        return this->getEngine(engineNumber).isOn();
+    }
+
+    void CAircraftEngineList::setEngineOn(int engineNumber, bool on)
+    {
+        Q_ASSERT(engineNumber > 0);
+        for (CAircraftEngine &engine : *this)
+        {
+            if (engine.getNumber() == engineNumber)
             {
-                CAircraftEngine engine(no++, *it);
-                this->push_back(engine);
+                engine.setOn(on);
+                break;
             }
         }
+    }
 
-        CAircraftEngineList::CAircraftEngineList(const CSequence<CAircraftEngine> &other) :
-            CSequence<CAircraftEngine>(other)
-        { }
-
-        CAircraftEngine CAircraftEngineList::getEngine(int engineNumber) const
+    void CAircraftEngineList::setEngines(const CAircraftEngine &engine, int engineNumber)
+    {
+        this->clear();
+        for (int e = 0; e < engineNumber; e++)
         {
-            Q_ASSERT(engineNumber > 0);
-            return this->findBy(&CAircraftEngine::getNumber, engineNumber).frontOrDefault();
+            CAircraftEngine copy(engine);
+            copy.setNumber(e + 1); // 1 based
+            this->push_back(engine);
         }
+    }
 
-        bool CAircraftEngineList::isEngineOn(int engineNumber) const
+    void CAircraftEngineList::initEngines(int engineNumber, bool on)
+    {
+        this->clear();
+        for (int e = 0; e < engineNumber; e++)
         {
-            Q_ASSERT(engineNumber > 0);
-            return this->getEngine(engineNumber).isOn();
+            const CAircraftEngine engine(e + 1, on);
+            this->push_back(engine);
         }
+    }
 
-        void CAircraftEngineList::setEngineOn(int engineNumber, bool on)
+    bool CAircraftEngineList::isAnyEngineOn() const
+    {
+        return this->contains(&CAircraftEngine::isOn, true);
+    }
+
+    QJsonObject CAircraftEngineList::toJson() const
+    {
+        QJsonObject map;
+
+        for (const auto &e : *this)
         {
-            Q_ASSERT(engineNumber > 0);
-            for (CAircraftEngine &engine : *this)
-            {
-                if (engine.getNumber() == engineNumber)
-                {
-                    engine.setOn(on);
-                    break;
-                }
-            }
+            const QJsonObject value = e.toJson();
+            map.insert(QString::number(e.getNumber()), value);
         }
+        return map;
+    }
 
-        void CAircraftEngineList::setEngines(const CAircraftEngine &engine, int engineNumber)
+    void CAircraftEngineList::convertFromJson(const QJsonObject &json)
+    {
+        this->clear();
+        for (const auto &e : json.keys())
         {
-            this->clear();
-            for (int e = 0; e < engineNumber; e++)
-            {
-                CAircraftEngine copy(engine);
-                copy.setNumber(e + 1); // 1 based
-                this->push_back(engine);
-            }
+            CAircraftEngine engine;
+            const int number = e.toInt();
+            CJsonScope scope(e);
+            Q_UNUSED(scope);
+            engine.convertFromJson(json.value(e).toObject());
+            engine.setNumber(number);
+            push_back(engine);
         }
-
-        void CAircraftEngineList::initEngines(int engineNumber, bool on)
-        {
-            this->clear();
-            for (int e = 0; e < engineNumber; e++)
-            {
-                const CAircraftEngine engine(e + 1, on);
-                this->push_back(engine);
-            }
-        }
-
-        bool CAircraftEngineList::isAnyEngineOn() const
-        {
-            return this->contains(&CAircraftEngine::isOn, true);
-        }
-
-        QJsonObject CAircraftEngineList::toJson() const
-        {
-            QJsonObject map;
-
-            for (const auto &e : *this)
-            {
-                const QJsonObject value = e.toJson();
-                map.insert(QString::number(e.getNumber()), value);
-            }
-            return map;
-        }
-
-        void CAircraftEngineList::convertFromJson(const QJsonObject &json)
-        {
-            this->clear();
-            for (const auto &e : json.keys())
-            {
-                CAircraftEngine engine;
-                const int number = e.toInt();
-                CJsonScope scope(e);
-                Q_UNUSED(scope);
-                engine.convertFromJson(json.value(e).toObject());
-                engine.setNumber(number);
-                push_back(engine);
-            }
-        }
-    } // namespace
+    }
 } // namespace

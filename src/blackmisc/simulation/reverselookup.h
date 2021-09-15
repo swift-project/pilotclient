@@ -14,20 +14,17 @@
 #include <QMetaType>
 #include <QDBusArgument>
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    //! Lookup log.messages
+    enum ReverseLookupLoggingFlag
     {
-        //! Lookup log.messages
-        enum ReverseLookupLoggingFlag
-        {
-            RevLogDisabled          = 0,
-            RevLogEnabled           = 1 << 0,
-            RevLogSimplifiedInfo    = 1 << 1,
-            RevLogEnabledSimplified = RevLogEnabled | RevLogSimplifiedInfo
-        };
-        Q_DECLARE_FLAGS(ReverseLookupLogging, ReverseLookupLoggingFlag)
-    } // ns
+        RevLogDisabled          = 0,
+        RevLogEnabled           = 1 << 0,
+        RevLogSimplifiedInfo    = 1 << 1,
+        RevLogEnabledSimplified = RevLogEnabled | RevLogSimplifiedInfo
+    };
+    Q_DECLARE_FLAGS(ReverseLookupLogging, ReverseLookupLoggingFlag)
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::ReverseLookupLogging)

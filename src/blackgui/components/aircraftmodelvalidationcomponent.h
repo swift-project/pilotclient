@@ -29,60 +29,57 @@ namespace BlackMisc
         class CAircraftModelList;
     }
 }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * Handle validation result
+     */
+    class BLACKGUI_EXPORT CAircraftModelValidationComponent : public COverlayMessagesFrame
     {
-        /**
-         * Handle validation result
-         */
-        class BLACKGUI_EXPORT CAircraftModelValidationComponent : public COverlayMessagesFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAircraftModelValidationComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CAircraftModelValidationComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CAircraftModelValidationComponent() override;
+        //! Destructor
+        virtual ~CAircraftModelValidationComponent() override;
 
-            //! Validated a model set
-            //! \remark coming from BlackMisc::Simulation::CBackgroundValidation
-            void validatedModelSet(const BlackMisc::Simulation::CSimulatorInfo &simulator, const BlackMisc::Simulation::CAircraftModelList &valid, const BlackMisc::Simulation::CAircraftModelList &invalid, bool stopped, const BlackMisc::CStatusMessageList &msgs);
+        //! Validated a model set
+        //! \remark coming from BlackMisc::Simulation::CBackgroundValidation
+        void validatedModelSet(const BlackMisc::Simulation::CSimulatorInfo &simulator, const BlackMisc::Simulation::CAircraftModelList &valid, const BlackMisc::Simulation::CAircraftModelList &invalid, bool stopped, const BlackMisc::CStatusMessageList &msgs);
 
-        private:
-            QScopedPointer<Ui::CAircraftModelValidationComponent> ui;
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< settings
-            qint64 m_lastResults = -1; //!< when received last results
+    private:
+        QScopedPointer<Ui::CAircraftModelValidationComponent> ui;
+        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< settings
+        qint64 m_lastResults = -1; //!< when received last results
 
-            //! Invalid models
-            void tempDisableModels(const BlackMisc::Simulation::CAircraftModelList &models);
+        //! Invalid models
+        void tempDisableModels(const BlackMisc::Simulation::CAircraftModelList &models);
 
-            //! Enable/disable startup check
-            void onCheckAtStartupChanged(bool checked);
+        //! Enable/disable startup check
+        void onCheckAtStartupChanged(bool checked);
 
-            //! Only show ieth warnings/errors
-            void onOnlyErrorWarningChanged(bool checked);
+        //! Only show ieth warnings/errors
+        void onOnlyErrorWarningChanged(bool checked);
 
-            //! Trigger new validation
-            void triggerValidation();
+        //! Trigger new validation
+        void triggerValidation();
 
-            //! Last results if any
-            void requestLastResults();
+        //! Last results if any
+        void requestLastResults();
 
-            //! Button has been clicked
-            void onTempDisabledButtonClicked();
+        //! Button has been clicked
+        void onTempDisabledButtonClicked();
 
-            //! Remove from model set
-            void onRemoveButtonClicked();
+        //! Remove from model set
+        void onRemoveButtonClicked();
 
-            //! Show help
-            void showHelp();
+        //! Show help
+        void showHelp();
 
-            //! Save invalid models
-            void saveInvalidModels(const BlackMisc::Simulation::CAircraftModelList &models) const;
-        };
-    } // ns
+        //! Save invalid models
+        void saveInvalidModels(const BlackMisc::Simulation::CAircraftModelList &models) const;
+    };
 } // ns
 #endif // guard

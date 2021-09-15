@@ -11,13 +11,10 @@
 #ifndef BLACKSIMPLUGIN_REGISTERMETADATA_H
 #define BLACKSIMPLUGIN_REGISTERMETADATA_H
 
-namespace BlackSimPlugin
+namespace BlackSimPlugin::Fs9
 {
-    namespace Fs9
-    {
-        //! Register all relevant metadata in plugin
-        void registerMetadata();
-    } // ns
+    //! Register all relevant metadata in plugin
+    void registerMetadata();
 } // ns
 
 #endif // guard

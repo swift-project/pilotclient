@@ -22,48 +22,45 @@
 
 class QNetworkReply;
 
-namespace BlackCore
+namespace BlackCore::Vatsim
 {
-    namespace Vatsim
+    //! Sole purpose is to read the URLs where VATSIM data can be downloaded
+    //! \sa https://status.vatsim.net/
+    class BLACKCORE_EXPORT CVatsimStatusFileReader : public BlackCore::CThreadedReader
     {
-        //! Sole purpose is to read the URLs where VATSIM data can be downloaded
-        //! \sa https://status.vatsim.net/
-        class BLACKCORE_EXPORT CVatsimStatusFileReader : public BlackCore::CThreadedReader
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CVatsimStatusFileReader(QObject *owner);
+    public:
+        //! Constructor
+        explicit CVatsimStatusFileReader(QObject *owner);
 
-            //! METAR URLs
-            //! \threadsafe
-            BlackMisc::Network::CUrlList getMetarFileUrls() const;
+        //! METAR URLs
+        //! \threadsafe
+        BlackMisc::Network::CUrlList getMetarFileUrls() const;
 
-            //! Data file URLs
-            //! \threadsafe
-            BlackMisc::Network::CUrlList getDataFileUrls() const;
+        //! Data file URLs
+        //! \threadsafe
+        BlackMisc::Network::CUrlList getDataFileUrls() const;
 
-            //! Start reading in own thread
-            void readInBackgroundThread();
+        //! Start reading in own thread
+        void readInBackgroundThread();
 
-        signals:
-            //! Data have been read
-            void dataFileRead(int lines);
+    signals:
+        //! Data have been read
+        void dataFileRead(int lines);
 
-            //! Data have been read
-            void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+        //! Data have been read
+        void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
-        private:
-            //! Read / re-read data file
-            void read();
+    private:
+        //! Read / re-read data file
+        void read();
 
-            //! Data have been read, parse VATSIM file
-            void parseVatsimFile(QNetworkReply *nwReply);
+        //! Data have been read, parse VATSIM file
+        void parseVatsimFile(QNetworkReply *nwReply);
 
-            BlackMisc::CData<BlackCore::Data::TVatsimSetup> m_lastGoodSetup { this };
-        };
-    } // ns
+        BlackMisc::CData<BlackCore::Data::TVatsimSetup> m_lastGoodSetup { this };
+    };
 } // ns
 
 #endif // guard

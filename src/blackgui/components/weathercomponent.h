@@ -29,7 +29,7 @@
 #include <QWidget>
 #include <QtGlobal>
 
-namespace BlackMisc { namespace Weather { class CWeatherGrid; } }
+namespace BlackMisc::Weather { class CWeatherGrid; }
 namespace Ui { class CWeatherComponent; }
 
 namespace BlackGui

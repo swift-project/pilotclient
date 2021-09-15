@@ -13,36 +13,33 @@ using namespace BlackMisc::Aviation;
 using namespace BlackGui::Models;
 using namespace BlackGui::Menus;
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    CAircraftSituationView::CAircraftSituationView(QWidget *parent) :
+        CViewWithTimestampWithOffsetObjects(parent)
     {
-        CAircraftSituationView::CAircraftSituationView(QWidget *parent) :
-            CViewWithTimestampWithOffsetObjects(parent)
-        {
-            this->standardInit(new CAircraftSituationListModel(this));
-            this->setMenu(MenuDefault);
-        }
+        this->standardInit(new CAircraftSituationListModel(this));
+        this->setMenu(MenuDefault);
+    }
 
-        void CAircraftSituationView::setWithMenuRequestElevation(bool enable)
-        {
-            m_withMenuRequestElevation = enable;
-            this->setSingleSelection();
-        }
+    void CAircraftSituationView::setWithMenuRequestElevation(bool enable)
+    {
+        m_withMenuRequestElevation = enable;
+        this->setSingleSelection();
+    }
 
-        void CAircraftSituationView::customMenu(CMenuActions &menuActions)
+    void CAircraftSituationView::customMenu(CMenuActions &menuActions)
+    {
+        if (m_withMenuRequestElevation && this->hasSingleSelectedRow())
         {
-            if (m_withMenuRequestElevation && this->hasSingleSelectedRow())
-            {
-                menuActions.addAction(CIcons::geoPosition16(), "Request elevation", CMenuAction::pathClientSimulation(), { this, &CAircraftSituationView::emitRequestElevationForSituation });
-            }
+            menuActions.addAction(CIcons::geoPosition16(), "Request elevation", CMenuAction::pathClientSimulation(), { this, &CAircraftSituationView::emitRequestElevationForSituation });
         }
+    }
 
-        void CAircraftSituationView::emitRequestElevationForSituation()
-        {
-            if (!this->hasSingleSelectedRow()) { return; }
-            const CAircraftSituation situation = this->selectedObject();
-            emit this->requestElevation(situation);
-        }
-    } // ns
+    void CAircraftSituationView::emitRequestElevationForSituation()
+    {
+        if (!this->hasSingleSelectedRow()) { return; }
+        const CAircraftSituation situation = this->selectedObject();
+        emit this->requestElevation(situation);
+    }
 } // ns

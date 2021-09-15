@@ -17,31 +17,28 @@
 #include <QScopedPointer>
 
 namespace Ui { class CRegisterComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Show registered applications (registered with core) in the GUI
+    //! \sa BlackCore::Context::IContextApplication::getRegisteredApplications
+    class BLACKGUI_EXPORT CRegisterComponent : public QFrame
     {
-        //! Show registered applications (registered with core) in the GUI
-        //! \sa BlackCore::Context::IContextApplication::getRegisteredApplications
-        class BLACKGUI_EXPORT CRegisterComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CRegisterComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CRegisterComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CRegisterComponent();
+        //! Destructor
+        virtual ~CRegisterComponent();
 
-        private:
-            QScopedPointer<Ui::CRegisterComponent> ui;
-            QTimer m_updateTimer;
+    private:
+        QScopedPointer<Ui::CRegisterComponent> ui;
+        QTimer m_updateTimer;
 
-            //! Update data
-            void update();
-        };
-    } // ns
+        //! Update data
+        void update();
+    };
 } // ns
 
 #endif // guard

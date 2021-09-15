@@ -15,37 +15,31 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace BlackCore
+namespace BlackCore::Afv
 {
-    namespace Afv
-    {
-        namespace Model { class CAfvMapReader; }
-        namespace Clients { class CAfvClient;  }
-    }
+    namespace Model { class CAfvMapReader; }
+    namespace Clients { class CAfvClient;  }
 }
 namespace Ui { class CAfvMapDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! QML map to display ATC stations
+    class BLACKGUI_EXPORT CAfvMapDialog : public QDialog
     {
-        //! QML map to display ATC stations
-        class BLACKGUI_EXPORT CAfvMapDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            explicit CAfvMapDialog(QWidget *parent = nullptr);
+    public:
+        //! Ctor
+        explicit CAfvMapDialog(QWidget *parent = nullptr);
 
-            //! Dtor
-            virtual ~CAfvMapDialog() override;
+        //! Dtor
+        virtual ~CAfvMapDialog() override;
 
-        private:
-            QScopedPointer<Ui::CAfvMapDialog> ui;
-            BlackCore::Afv::Model::CAfvMapReader *m_afvMapReader = nullptr;
-            BlackCore::Afv::Clients::CAfvClient  *m_afvClient    = nullptr;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CAfvMapDialog> ui;
+        BlackCore::Afv::Model::CAfvMapReader *m_afvMapReader = nullptr;
+        BlackCore::Afv::Clients::CAfvClient  *m_afvClient    = nullptr;
+    };
 } // ns
 
 #endif // guard

@@ -20,47 +20,44 @@
 #include <memory>
 
 namespace Ui { class CDistributorFilterBar; }
-namespace BlackMisc { namespace Simulation { class CDistributorList; class CSimulatorInfo; }}
-namespace BlackGui
+namespace BlackMisc::Simulation { class CDistributorList; class CSimulatorInfo; }
+namespace BlackGui::Filters
 {
-    namespace Filters
+    /*!
+     * Distributor filter bar
+     */
+    class BLACKGUI_EXPORT CDistributorFilterBar :
+        public CFilterWidget,
+        public Models::IModelFilterProvider<BlackMisc::Simulation::CDistributorList>
     {
-        /*!
-         * Distributor filter bar
-         */
-        class BLACKGUI_EXPORT CDistributorFilterBar :
-            public CFilterWidget,
-            public Models::IModelFilterProvider<BlackMisc::Simulation::CDistributorList>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CDistributorFilterBar(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CDistributorFilterBar(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CDistributorFilterBar() override;
+        //! Destructor
+        virtual ~CDistributorFilterBar() override;
 
-            //! Set simulator
-            void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        //! Set simulator
+        void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-            //! \copydoc Models::IModelFilterProvider::createModelFilter
-            virtual std::unique_ptr<Models::IModelFilter<BlackMisc::Simulation::CDistributorList>> createModelFilter() const override;
+        //! \copydoc Models::IModelFilterProvider::createModelFilter
+        virtual std::unique_ptr<Models::IModelFilter<BlackMisc::Simulation::CDistributorList>> createModelFilter() const override;
 
-            //! \copydoc CFilterWidget::onRowCountChanged
-            virtual void onRowCountChanged(int count, bool withFilter) override;
+        //! \copydoc CFilterWidget::onRowCountChanged
+        virtual void onRowCountChanged(int count, bool withFilter) override;
 
-        protected:
-            //! Clear form
-            virtual void clearForm() override;
+    protected:
+        //! Clear form
+        virtual void clearForm() override;
 
-        private:
-            //! Trigger filter by changing a value
-            void connectTriggerFilterSignals();
+    private:
+        //! Trigger filter by changing a value
+        void connectTriggerFilterSignals();
 
-            QScopedPointer<Ui::CDistributorFilterBar> ui;
-        };
-    } // ns
+        QScopedPointer<Ui::CDistributorFilterBar> ui;
+    };
 } // ns
 
 #endif // guard

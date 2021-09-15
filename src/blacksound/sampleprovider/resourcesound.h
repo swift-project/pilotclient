@@ -20,47 +20,44 @@
 #include <QExplicitlySharedDataPointer>
 #include <atomic>
 
-namespace BlackSound
+namespace BlackSound::SampleProvider
 {
-    namespace SampleProvider
+    //! CResourceSound shared data
+    struct CResourceSoundData : public QSharedData
     {
-        //! CResourceSound shared data
-        struct CResourceSoundData : public QSharedData
-        {
-            QString fileName;       //!< file name
-            bool isLoaded = false;  //!< is audio loaded
-            QVector<float> samples; //!< audio samples
-        };
+        QString fileName;       //!< file name
+        bool isLoaded = false;  //!< is audio loaded
+        QVector<float> samples; //!< audio samples
+    };
 
-        //! File from resources
-        class CResourceSound
-        {
-        public:
-            //! Constructor
-            CResourceSound();
+    //! File from resources
+    class CResourceSound
+    {
+    public:
+        //! Constructor
+        CResourceSound();
 
-            //! Sound of audio file
-            CResourceSound(const QString &audioFileName);
+        //! Sound of audio file
+        CResourceSound(const QString &audioFileName);
 
-            //! Load the attached resource file
-            bool load();
+        //! Load the attached resource file
+        bool load();
 
-            //! Is resource already loaded?
-            bool isLoaded() { return m_data->isLoaded; }
+        //! Is resource already loaded?
+        bool isLoaded() { return m_data->isLoaded; }
 
-            //! Audio data
-            const QVector<float> &audioData() const { return m_data->samples; }
+        //! Audio data
+        const QVector<float> &audioData() const { return m_data->samples; }
 
-            //! Corresponding file
-            const QString &getFileName() const;
+        //! Corresponding file
+        const QString &getFileName() const;
 
-            //! Is same file?
-            bool isSameFileName(const QString &fn) const;
+        //! Is same file?
+        bool isSameFileName(const QString &fn) const;
 
-        private:
-            QExplicitlySharedDataPointer<CResourceSoundData> m_data;
-        };
-    } // ns
+    private:
+        QExplicitlySharedDataPointer<CResourceSoundData> m_data;
+    };
 } // ns
 
 #endif // guard

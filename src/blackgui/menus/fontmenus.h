@@ -20,53 +20,50 @@
 class QAction;
 class QShortcut;
 
-namespace BlackGui
+namespace BlackGui::Menus
 {
-    namespace Menus
+    //! Standard font (size, style) menus.
+    //! Can be used as nested menu or via getActions added manually
+    class CFontMenu : public IMenuDelegate
     {
-        //! Standard font (size, style) menus.
-        //! Can be used as nested menu or via getActions added manually
-        class CFontMenu : public IMenuDelegate
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            CFontMenu(QWidget *widget, Qt::ShortcutContext shortcutContext = Qt::WidgetShortcut);
+    public:
+        //! Constructor
+        CFontMenu(QWidget *widget, Qt::ShortcutContext shortcutContext = Qt::WidgetShortcut);
 
-            //! Log.categories
-            static const QStringList &getLogCategories();
+        //! Log.categories
+        static const QStringList &getLogCategories();
 
-            //! \copydoc IMenuDelegate::customMenu
-            virtual void customMenu(CMenuActions &menuActions) override;
+        //! \copydoc IMenuDelegate::customMenu
+        virtual void customMenu(CMenuActions &menuActions) override;
 
-            //! Allow to use the actions directly
-            QList<QAction *> getActions() const;
+        //! Allow to use the actions directly
+        QList<QAction *> getActions() const;
 
-            //! The shortcus owned by QWidget
-            QList<QShortcut *> getShortcuts() const;
+        //! The shortcus owned by QWidget
+        QList<QShortcut *> getShortcuts() const;
 
-        signals:
-            //! Font size signals
-            //! @{
-            void fontSizePlus();
-            void fontSizeMinus();
-            //! @}
+    signals:
+        //! Font size signals
+        //! @{
+        void fontSizePlus();
+        void fontSizeMinus();
+        //! @}
 
-        private:
-            void changeFontDialog();
-            void onFontSizePlus();
-            void onFontSizeMinus();
-            void onFontReset();
+    private:
+        void changeFontDialog();
+        void onFontSizePlus();
+        void onFontSizeMinus();
+        void onFontReset();
 
-            QWidget *m_widget = nullptr;
-            QShortcut *m_fontSizePlusShortcut = nullptr;  //! owned by widget
-            QShortcut *m_fontSizeMinusShortcut = nullptr; //! owned by widget
-            QShortcut *m_fontResetShortcut = nullptr;     //! owned by widget
-            QScopedPointer<QAction> m_fontDialogAction;
-            QScopedPointer<BlackGui::Components::CSettingsFontDialog> m_dialog;
-        };
-    } // ns
+        QWidget *m_widget = nullptr;
+        QShortcut *m_fontSizePlusShortcut = nullptr;  //! owned by widget
+        QShortcut *m_fontSizeMinusShortcut = nullptr; //! owned by widget
+        QShortcut *m_fontResetShortcut = nullptr;     //! owned by widget
+        QScopedPointer<QAction> m_fontDialogAction;
+        QScopedPointer<BlackGui::Components::CSettingsFontDialog> m_dialog;
+    };
 } // ns
 
 #endif // guard

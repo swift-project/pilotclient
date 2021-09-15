@@ -14,28 +14,25 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/physicalquantity.h"
 
-namespace BlackMisc
+namespace BlackMisc::PhysicalQuantities
 {
-    namespace PhysicalQuantities
+
+    /*!
+     * Physical unit temperature
+     */
+    class BLACKMISC_EXPORT CTemperature : public CPhysicalQuantity<CTemperatureUnit, CTemperature>
     {
+    public:
+        //! Default constructor
+        CTemperature() : CPhysicalQuantity(0, CTemperatureUnit::defaultUnit()) {}
 
-        /*!
-         * Physical unit temperature
-         */
-        class BLACKMISC_EXPORT CTemperature : public CPhysicalQuantity<CTemperatureUnit, CTemperature>
-        {
-        public:
-            //! Default constructor
-            CTemperature() : CPhysicalQuantity(0, CTemperatureUnit::defaultUnit()) {}
+        //! Init by double value
+        CTemperature(double value, const CTemperatureUnit &unit): CPhysicalQuantity(value, unit) {}
 
-            //! Init by double value
-            CTemperature(double value, const CTemperatureUnit &unit): CPhysicalQuantity(value, unit) {}
+        //! \copydoc CPhysicalQuantity(const QString &unitString)
+        CTemperature(const QString &unitString) : CPhysicalQuantity(unitString) {}
+    };
 
-            //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CTemperature(const QString &unitString) : CPhysicalQuantity(unitString) {}
-        };
-
-    }
 }
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTemperature)

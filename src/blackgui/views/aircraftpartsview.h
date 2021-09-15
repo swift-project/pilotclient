@@ -15,20 +15,17 @@
 #include "blackgui/models/aircraftpartslistmodel.h"
 #include "blackgui/blackguiexport.h"
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Aircraft parts
+    class BLACKGUI_EXPORT CAircraftPartsView : public CViewWithTimestampWithOffsetObjects<Models::CAircraftPartsListModel>
     {
-        //! Aircraft parts
-        class BLACKGUI_EXPORT CAircraftPartsView : public CViewWithTimestampWithOffsetObjects<Models::CAircraftPartsListModel>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAircraftPartsView(QWidget *parent = nullptr);
-        };
-    } // ns
+    public:
+        //! Constructor
+        explicit CAircraftPartsView(QWidget *parent = nullptr);
+    };
 } // ns
 
 #endif // guard

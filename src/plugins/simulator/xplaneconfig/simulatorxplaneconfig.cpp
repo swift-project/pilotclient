@@ -11,19 +11,16 @@
 
 class QWidget;
 
-namespace BlackSimPlugin
+namespace BlackSimPlugin::XPlane
 {
-    namespace XPlane
+    CSimulatorXPlaneConfig::CSimulatorXPlaneConfig(QObject *parent) : QObject(parent)
     {
-        CSimulatorXPlaneConfig::CSimulatorXPlaneConfig(QObject *parent) : QObject(parent)
-        {
-            // void
-        }
+        // void
+    }
 
-        BlackGui::CPluginConfigWindow *CSimulatorXPlaneConfig::createConfigWindow(QWidget *parent)
-        {
-            CSimulatorXPlaneConfigWindow* w = new CSimulatorXPlaneConfigWindow(parent);
-            return w;
-        }
-    } // ns
+    BlackGui::CPluginConfigWindow *CSimulatorXPlaneConfig::createConfigWindow(QWidget *parent)
+    {
+        CSimulatorXPlaneConfigWindow* w = new CSimulatorXPlaneConfigWindow(parent);
+        return w;
+    }
 } // ns

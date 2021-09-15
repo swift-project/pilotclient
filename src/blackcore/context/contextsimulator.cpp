@@ -20,84 +20,81 @@ using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 
-namespace BlackCore
+namespace BlackCore::Context
 {
-    namespace Context
+    const QString &IContextSimulator::InterfaceName()
     {
-        const QString &IContextSimulator::InterfaceName()
-        {
-            static const QString s(BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME);
-            return s;
-        }
+        static const QString s(BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME);
+        return s;
+    }
 
-        const QString &IContextSimulator::ObjectPath()
-        {
-            static const QString s(BLACKCORE_CONTEXTSIMULATOR_OBJECTPATH);
-            return s;
-        }
+    const QString &IContextSimulator::ObjectPath()
+    {
+        static const QString s(BLACKCORE_CONTEXTSIMULATOR_OBJECTPATH);
+        return s;
+    }
 
-        const PhysicalQuantities::CTime &IContextSimulator::HighlightTime()
-        {
-            static const CTime t(10.0, CTimeUnit::s());
-            return t;
-        }
+    const PhysicalQuantities::CTime &IContextSimulator::HighlightTime()
+    {
+        static const CTime t(10.0, CTimeUnit::s());
+        return t;
+    }
 
-        IContextSimulator *IContextSimulator::create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &connection)
+    IContextSimulator *IContextSimulator::create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &connection)
+    {
+        switch (mode)
         {
-            switch (mode)
-            {
-            case CCoreFacadeConfig::Local:
-            case CCoreFacadeConfig::LocalInDBusServer:
-                return (new CContextSimulator(mode, parent))->registerWithDBus(server);
-            case CCoreFacadeConfig::Remote:
-                return new CContextSimulatorProxy(CDBusServer::coreServiceName(connection), connection, mode, parent);
-            case CCoreFacadeConfig::NotUsed:
-            default:
-                return new CContextSimulatorEmpty(parent);
-            }
+        case CCoreFacadeConfig::Local:
+        case CCoreFacadeConfig::LocalInDBusServer:
+            return (new CContextSimulator(mode, parent))->registerWithDBus(server);
+        case CCoreFacadeConfig::Remote:
+            return new CContextSimulatorProxy(CDBusServer::coreServiceName(connection), connection, mode, parent);
+        case CCoreFacadeConfig::NotUsed:
+        default:
+            return new CContextSimulatorEmpty(parent);
         }
+    }
 
-        ISimulator::SimulatorStatus IContextSimulator::getSimulatorStatusEnum() const
-        {
-            return static_cast<ISimulator::SimulatorStatus>(this->getSimulatorStatus());
-        }
+    ISimulator::SimulatorStatus IContextSimulator::getSimulatorStatusEnum() const
+    {
+        return static_cast<ISimulator::SimulatorStatus>(this->getSimulatorStatus());
+    }
 
-        CSimulatorInfo IContextSimulator::getSimulatorInfo() const
-        {
-            return this->getSimulatorPluginInfo().getSimulatorInfo();
-        }
+    CSimulatorInfo IContextSimulator::getSimulatorInfo() const
+    {
+        return this->getSimulatorPluginInfo().getSimulatorInfo();
+    }
 
-        bool IContextSimulator::updateCurrentSettings(const Simulation::Settings::CSimulatorSettings &settings)
-        {
-            const CSimulatorInfo sim = this->getSimulatorInfo();
-            if (!sim.isSingleSimulator()) { return false; }
-            return this->setSimulatorSettings(settings, sim);
-        }
+    bool IContextSimulator::updateCurrentSettings(const Simulation::Settings::CSimulatorSettings &settings)
+    {
+        const CSimulatorInfo sim = this->getSimulatorInfo();
+        if (!sim.isSingleSimulator()) { return false; }
+        return this->setSimulatorSettings(settings, sim);
+    }
 
-        bool IContextSimulator::updateCurrentSettingComIntegration(bool comIntegration)
-        {
-            Simulation::Settings::CSimulatorSettings settings = this->getSimulatorSettings();
-            settings.setComIntegrated(comIntegration);
-            return this->updateCurrentSettings(settings);
-        }
+    bool IContextSimulator::updateCurrentSettingComIntegration(bool comIntegration)
+    {
+        Simulation::Settings::CSimulatorSettings settings = this->getSimulatorSettings();
+        settings.setComIntegrated(comIntegration);
+        return this->updateCurrentSettings(settings);
+    }
 
-        bool IContextSimulator::isSimulatorAvailable() const
-        {
-            return CBuildConfig::isCompiledWithFlightSimulatorSupport() && !this->getSimulatorPluginInfo().isUnspecified();
-        }
+    bool IContextSimulator::isSimulatorAvailable() const
+    {
+        return CBuildConfig::isCompiledWithFlightSimulatorSupport() && !this->getSimulatorPluginInfo().isUnspecified();
+    }
 
-        bool IContextSimulator::isSimulatorSimulating() const
-        {
-            if (!isSimulatorAvailable() || !getSimulatorStatusEnum().testFlag(ISimulator::Simulating)) { return false; }
-            return true;
-        }
+    bool IContextSimulator::isSimulatorSimulating() const
+    {
+        if (!isSimulatorAvailable() || !getSimulatorStatusEnum().testFlag(ISimulator::Simulating)) { return false; }
+        return true;
+    }
 
-        bool IContextSimulator::isSimulatorVital() const
-        {
-            if (!isSimulatorAvailable()) { return false; } // we cannot be vital
-            if (isSimulatorSimulating()) { return true; }  // we are vital
-            if (getSimulatorStatusEnum().testFlag(ISimulator::Paused)) { return true; }
-            return false;
-        }
-    } // namespace
+    bool IContextSimulator::isSimulatorVital() const
+    {
+        if (!isSimulatorAvailable()) { return false; } // we cannot be vital
+        if (isSimulatorSimulating()) { return true; }  // we are vital
+        if (getSimulatorStatusEnum().testFlag(ISimulator::Paused)) { return true; }
+        return false;
+    }
 } // namespace

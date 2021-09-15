@@ -16,36 +16,33 @@
 #include <QScopedPointer>
 
 namespace Ui { class CCGSourceSelector; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! CG (aka vertical offset) selector
+    class CCGSourceSelector : public QFrame
     {
-        //! CG (aka vertical offset) selector
-        class CCGSourceSelector : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            explicit CCGSourceSelector(QWidget *parent = nullptr);
+    public:
+        //! Ctor
+        explicit CCGSourceSelector(QWidget *parent = nullptr);
 
-            //! Dtor
-            virtual ~CCGSourceSelector() override;
+        //! Dtor
+        virtual ~CCGSourceSelector() override;
 
-            //! Get/set value
-            //! @{
-            BlackMisc::Simulation::Settings::CSimulatorSettings::CGSource getValue() const;
-            void setValue(const BlackMisc::Simulation::Settings::CSimulatorSettings &settings);
-            void setValue(BlackMisc::Simulation::Settings::CSimulatorSettings::CGSource source);
-            //! @}
+        //! Get/set value
+        //! @{
+        BlackMisc::Simulation::Settings::CSimulatorSettings::CGSource getValue() const;
+        void setValue(const BlackMisc::Simulation::Settings::CSimulatorSettings &settings);
+        void setValue(BlackMisc::Simulation::Settings::CSimulatorSettings::CGSource source);
+        //! @}
 
-        private:
-            //! Init the combobox
-            void initComboBox();
+    private:
+        //! Init the combobox
+        void initComboBox();
 
-            QScopedPointer<Ui::CCGSourceSelector> ui;
-        };
-    } // ns
+        QScopedPointer<Ui::CCGSourceSelector> ui;
+    };
 } // ns
 
 #endif // guard

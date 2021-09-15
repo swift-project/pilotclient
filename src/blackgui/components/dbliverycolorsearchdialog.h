@@ -16,37 +16,34 @@
 #include <QScopedPointer>
 
 namespace Ui { class CDbLiveryColorSearchDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Search for best matching color livery
+     */
+    class CDbLiveryColorSearchDialog : public QDialog
     {
-        /*!
-         * Search for best matching color livery
-         */
-        class CDbLiveryColorSearchDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CDbLiveryColorSearchDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CDbLiveryColorSearchDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CDbLiveryColorSearchDialog();
+        //! Destructor
+        virtual ~CDbLiveryColorSearchDialog();
 
-            //! Found livery if any, otherwise default
-            const BlackMisc::Aviation::CLivery &getLivery() const;
+        //! Found livery if any, otherwise default
+        const BlackMisc::Aviation::CLivery &getLivery() const;
 
-        private:
-            //! Dialog has been accepted
-            void onAccepted();
+    private:
+        //! Dialog has been accepted
+        void onAccepted();
 
-            BlackMisc::Aviation::CLivery m_foundLivery; //!< last livery found
+        BlackMisc::Aviation::CLivery m_foundLivery; //!< last livery found
 
-        private:
-            QScopedPointer<Ui::CDbLiveryColorSearchDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CDbLiveryColorSearchDialog> ui;
+    };
 } // ns
 
 #endif // guard

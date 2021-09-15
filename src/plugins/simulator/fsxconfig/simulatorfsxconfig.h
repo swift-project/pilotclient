@@ -14,30 +14,27 @@
 #include "blackgui/pluginconfig.h"
 #include "blackmisc/settingscache.h"
 
-namespace BlackSimPlugin
+namespace BlackSimPlugin::Fsx
 {
-    namespace Fsx
+    /*!
+     * Window for setting up the FSX plugin.
+     */
+    class CSimulatorFsxConfig : public QObject, public BlackGui::IPluginConfig
     {
-        /*!
-         * Window for setting up the FSX plugin.
-         */
-        class CSimulatorFsxConfig : public QObject, public BlackGui::IPluginConfig
-        {
-            Q_OBJECT
-            Q_PLUGIN_METADATA(IID "org.swift-project.blackgui.pluginconfiginterface" FILE "simulatorfsxconfig.json")
-            Q_INTERFACES(BlackGui::IPluginConfig)
+        Q_OBJECT
+        Q_PLUGIN_METADATA(IID "org.swift-project.blackgui.pluginconfiginterface" FILE "simulatorfsxconfig.json")
+        Q_INTERFACES(BlackGui::IPluginConfig)
 
-        public:
-            //! Ctor
-            CSimulatorFsxConfig(QObject *parent = nullptr);
+    public:
+        //! Ctor
+        CSimulatorFsxConfig(QObject *parent = nullptr);
 
-            //! Dtor
-            virtual ~CSimulatorFsxConfig() override {}
+        //! Dtor
+        virtual ~CSimulatorFsxConfig() override {}
 
-            //! \copydoc BlackGui::IPluginConfig::createConfigWindow()
-            BlackGui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;
-        };
-    } // ns
+        //! \copydoc BlackGui::IPluginConfig::createConfigWindow()
+        BlackGui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;
+    };
 } // ns
 
 #endif // guard

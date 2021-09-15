@@ -13,20 +13,14 @@
 #include "blackmisc/sharedstate/dbus/hubproxy.h"
 #include <QDBusConnection>
 
-namespace BlackMisc
+namespace BlackMisc::SharedState::DBus
 {
-    namespace SharedState
-    {
-        namespace DBus
-        {
-            IHub::IHub(QObject* parent) : QObject(parent)
-            {}
+    IHub::IHub(QObject* parent) : QObject(parent)
+    {}
 
-            IHub* IHub::create(bool proxy, CDBusServer *server, const QDBusConnection &connection, const QString &service, QObject* parent)
-            {
-                if (proxy) { return new CHubProxy(connection, service, parent); }
-                else { return new CHub(server, parent); }
-            }
-        }
+    IHub* IHub::create(bool proxy, CDBusServer *server, const QDBusConnection &connection, const QString &service, QObject* parent)
+    {
+        if (proxy) { return new CHubProxy(connection, service, parent); }
+        else { return new CHub(server, parent); }
     }
 }

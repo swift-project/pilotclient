@@ -16,37 +16,34 @@
 #include <QScopedPointer>
 
 namespace Ui { class CInstallFsxTerrainProbeComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Install the FSX/P3D terrain probe
+    class CInstallFsxTerrainProbeComponent : public QFrame
     {
-        //! Install the FSX/P3D terrain probe
-        class CInstallFsxTerrainProbeComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CInstallFsxTerrainProbeComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CInstallFsxTerrainProbeComponent(QWidget *parent = nullptr);
 
-            //! Destructors
-            virtual ~CInstallFsxTerrainProbeComponent();
+        //! Destructors
+        virtual ~CInstallFsxTerrainProbeComponent();
 
-        private:
-            QScopedPointer<Ui::CInstallFsxTerrainProbeComponent> ui;
+    private:
+        QScopedPointer<Ui::CInstallFsxTerrainProbeComponent> ui;
 
-            //! Select the directory
-            void selectSimObjectsDir();
+        //! Select the directory
+        void selectSimObjectsDir();
 
-            //! Copy probe
-            void copyProbe();
+        //! Copy probe
+        void copyProbe();
 
-            //! Simulator has been changed
-            void onSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        //! Simulator has been changed
+        void onSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-            BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for SimObjects directories
-        };
-    } // ns
+        BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for SimObjects directories
+    };
 } // ns
 
 #endif // guard

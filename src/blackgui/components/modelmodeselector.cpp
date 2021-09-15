@@ -13,55 +13,52 @@
 
 using namespace BlackMisc::Simulation;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CModelModeSelector::CModelModeSelector(QWidget *parent) :
+        QFrame(parent),
+        ui(new Ui::CModelModeSelector)
     {
-        CModelModeSelector::CModelModeSelector(QWidget *parent) :
-            QFrame(parent),
-            ui(new Ui::CModelModeSelector)
-        {
-            ui->setupUi(this);
-            connect(ui->rb_Include, &QRadioButton::released, this, &CModelModeSelector::changed);
-        }
+        ui->setupUi(this);
+        connect(ui->rb_Include, &QRadioButton::released, this, &CModelModeSelector::changed);
+    }
 
-        CModelModeSelector::~CModelModeSelector()
-        {
-            // void
-        }
+    CModelModeSelector::~CModelModeSelector()
+    {
+        // void
+    }
 
-        BlackMisc::Simulation::CAircraftModel::ModelMode CModelModeSelector::getMode() const
+    BlackMisc::Simulation::CAircraftModel::ModelMode CModelModeSelector::getMode() const
+    {
+        if (ui->rb_Include->isChecked())
         {
-            if (ui->rb_Include->isChecked())
-            {
-                return CAircraftModel::Include;
-            }
-            else
-            {
-                return CAircraftModel::Exclude;
-            }
+            return CAircraftModel::Include;
         }
+        else
+        {
+            return CAircraftModel::Exclude;
+        }
+    }
 
-        void CModelModeSelector::setValue(CAircraftModel::ModelMode mode)
+    void CModelModeSelector::setValue(CAircraftModel::ModelMode mode)
+    {
+        if (mode == CAircraftModel::Include)
         {
-            if (mode == CAircraftModel::Include)
-            {
-                ui->rb_Include->setChecked(true);
-            }
-            else
-            {
-                ui->rb_Exclude->setChecked(true);
-            }
+            ui->rb_Include->setChecked(true);
         }
+        else
+        {
+            ui->rb_Exclude->setChecked(true);
+        }
+    }
 
-        void CModelModeSelector::setValue(const CAircraftModel &model)
-        {
-            this->setValue(model.getModelMode());
-        }
+    void CModelModeSelector::setValue(const CAircraftModel &model)
+    {
+        this->setValue(model.getModelMode());
+    }
 
-        void CModelModeSelector::setReadOnly(bool readOnly)
-        {
-            this->setEnabled(!readOnly);
-        }
-    } // ns
+    void CModelModeSelector::setReadOnly(bool readOnly)
+    {
+        this->setEnabled(!readOnly);
+    }
 } // ns

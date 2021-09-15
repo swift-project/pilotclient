@@ -17,47 +17,44 @@
 #include <QScopedPointer>
 
 namespace Ui { class CAudioAdvancedDistributedComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Adv. and sitributed audio setup
+    class CAudioAdvancedDistributedComponent : public QFrame
     {
-        //! Adv. and sitributed audio setup
-        class CAudioAdvancedDistributedComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            explicit CAudioAdvancedDistributedComponent(QWidget *parent = nullptr);
+    public:
+        //! Ctor
+        explicit CAudioAdvancedDistributedComponent(QWidget *parent = nullptr);
 
-            //! Dtor
-            virtual ~CAudioAdvancedDistributedComponent() override;
+        //! Dtor
+        virtual ~CAudioAdvancedDistributedComponent() override;
 
-            //! Reload registered devices
-            void reloadRegisteredDevices();
+        //! Reload registered devices
+        void reloadRegisteredDevices();
 
-        private:
-            QScopedPointer<Ui::CAudioAdvancedDistributedComponent> ui;
+    private:
+        QScopedPointer<Ui::CAudioAdvancedDistributedComponent> ui;
 
-            //! Audio start/stop
-            void toggleAudioStartStop();
+        //! Audio start/stop
+        void toggleAudioStartStop();
 
-            //! Audio enable/disable
-            void toggleAudioEnableDisable();
+        //! Audio enable/disable
+        void toggleAudioEnableDisable();
 
-            //! Start/stop button
-            //! @{
-            void setButtons();
-            void setButtons(int delayMs);
-            //! @}
+        //! Start/stop button
+        //! @{
+        void setButtons();
+        void setButtons(int delayMs);
+        //! @}
 
-            void onAudioStarted(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
-            void onAudioStoppend();
+        void onAudioStarted(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
+        void onAudioStoppend();
 
-            //! Contexts
-            static bool hasContexts();
-        };
-    } // ns
+        //! Contexts
+        static bool hasContexts();
+    };
 } // ns
 
 #endif // guard

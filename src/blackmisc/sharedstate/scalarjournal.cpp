@@ -11,27 +11,24 @@
 #include "blackmisc/sharedstate/scalarjournal.h"
 #include "blackmisc/sharedstate/datalink.h"
 
-namespace BlackMisc
+namespace BlackMisc::SharedState
 {
-    namespace SharedState
+    void CGenericScalarJournal::initialize(IDataLink *dataLink)
     {
-        void CGenericScalarJournal::initialize(IDataLink *dataLink)
-        {
-            dataLink->publish(m_mutator.data());
-            dataLink->subscribe(m_observer.data());
-            m_observer->setEventSubscription(CVariant::from(CAnyMatch()));
-            m_mutator->postEvent(m_value);
-        }
+        dataLink->publish(m_mutator.data());
+        dataLink->subscribe(m_observer.data());
+        m_observer->setEventSubscription(CVariant::from(CAnyMatch()));
+        m_mutator->postEvent(m_value);
+    }
 
-        CVariant CGenericScalarJournal::handleRequest(const CVariant &param)
-        {
-            Q_UNUSED(param)
-            return m_value;
-        }
+    CVariant CGenericScalarJournal::handleRequest(const CVariant &param)
+    {
+        Q_UNUSED(param)
+        return m_value;
+    }
 
-        void CGenericScalarJournal::handleEvent(const CVariant &param)
-        {
-            m_value = param;
-        }
+    void CGenericScalarJournal::handleEvent(const CVariant &param)
+    {
+        m_value = param;
     }
 }

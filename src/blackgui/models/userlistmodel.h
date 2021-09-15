@@ -15,39 +15,36 @@
 #include "blackgui/models/listmodelbase.h"
 #include "blackmisc/network/userlist.h"
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    /*!
+     * User list model
+     */
+    class BLACKGUI_EXPORT CUserListModel :
+        public CListModelBase<BlackMisc::Network::CUserList, true>
     {
-        /*!
-         * User list model
-         */
-        class BLACKGUI_EXPORT CUserListModel :
-            public CListModelBase<BlackMisc::Network::CUserList, true>
+        Q_OBJECT
+
+    public:
+        //! What level of detail
+        enum UserMode
         {
-            Q_OBJECT
-
-        public:
-            //! What level of detail
-            enum UserMode
-            {
-                NotSet,
-                UserDetailed,
-                UserShort
-            };
-
-            //! Constructor
-            explicit CUserListModel(UserMode userMode, QObject *parent = nullptr);
-
-            //! Destructor
-            virtual ~CUserListModel() {}
-
-            //! Set station mode
-            void setUserMode(UserMode userMode);
-
-        private:
-            UserMode m_userMode = NotSet;
+            NotSet,
+            UserDetailed,
+            UserShort
         };
-    }
+
+        //! Constructor
+        explicit CUserListModel(UserMode userMode, QObject *parent = nullptr);
+
+        //! Destructor
+        virtual ~CUserListModel() {}
+
+        //! Set station mode
+        void setUserMode(UserMode userMode);
+
+    private:
+        UserMode m_userMode = NotSet;
+    };
 }
 #endif // guard

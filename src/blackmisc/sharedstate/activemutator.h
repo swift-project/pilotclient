@@ -18,40 +18,37 @@
 #include <QFuture>
 #include <functional>
 
-namespace BlackMisc
+namespace BlackMisc::SharedState
 {
-    namespace SharedState
+    /*!
+     * Extends CPassiveMutator with the ability to respond to requests.
+     * \ingroup SharedState
+     */
+    class BLACKMISC_EXPORT CActiveMutator final : public CPassiveMutator
     {
-        /*!
-         * Extends CPassiveMutator with the ability to respond to requests.
-         * \ingroup SharedState
-         */
-        class BLACKMISC_EXPORT CActiveMutator final : public CPassiveMutator
-        {
-            Q_OBJECT
-            friend QSharedPointer<CActiveMutator>;
+        Q_OBJECT
+        friend QSharedPointer<CActiveMutator>;
 
-            template <typename T, typename F>
-            CActiveMutator(T *parent, F requestHandler) :
-                CPassiveMutator(parent),
-                m_requestHandler([ = ](const CVariant &param) { return Private::invokeMethod(parent, requestHandler, param); })
-            {}
+        template <typename T, typename F>
+        CActiveMutator(T *parent, F requestHandler) :
+            CPassiveMutator(parent),
+            m_requestHandler([ = ](const CVariant &param) { return Private::invokeMethod(parent, requestHandler, param); })
+        {}
 
-        public:
-            //! Factory method.
-            template <typename T, typename F>
-            static auto create(T *parent, F requestHandler) { return QSharedPointer<CActiveMutator>::create(parent, requestHandler); }
+    public:
+        //! Factory method.
+        template <typename T, typename F>
+        static auto create(T *parent, F requestHandler) { return QSharedPointer<CActiveMutator>::create(parent, requestHandler); }
 
-            //! Respond to a request and return a reply.
-            QFuture<CVariant> handleRequest(const CVariant& param) const;
+        //! Respond to a request and return a reply.
+        QFuture<CVariant> handleRequest(const CVariant& param) const;
 
-            //! Get a QWeakPointer pointing to this object.
-            QWeakPointer<const CActiveMutator> weakRef() const { return qSharedPointerCast<const CActiveMutator>(CPassiveMutator::weakRef()); }
+        //! Get a QWeakPointer pointing to this object.
+        QWeakPointer<const CActiveMutator> weakRef() const { return qSharedPointerCast<const CActiveMutator>(CPassiveMutator::weakRef()); }
 
-        private:
-            const std::function<QFuture<CVariant>(const CVariant &)> m_requestHandler;
-        };
-    }
+    private:
+        const std::function<QFuture<CVariant>(const CVariant &)> m_requestHandler;
+    };
 }
 
 #endif

@@ -20,40 +20,37 @@
 #include <QScopedPointer>
 
 namespace Ui { class CDbAircraftCategoryComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /**
+     * DB aircraft categories
+     */
+    class BLACKGUI_EXPORT CDbAircraftCategoryComponent :
+        public COverlayMessagesFrame,
+        public CEnableForDockWidgetInfoArea,
+        public CEnableForViewBasedIndicator
     {
-        /**
-         * DB aircraft categories
-         */
-        class BLACKGUI_EXPORT CDbAircraftCategoryComponent :
-            public COverlayMessagesFrame,
-            public CEnableForDockWidgetInfoArea,
-            public CEnableForViewBasedIndicator
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CDbAircraftCategoryComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CDbAircraftCategoryComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CDbAircraftCategoryComponent();
+        //! Destructor
+        virtual ~CDbAircraftCategoryComponent();
 
-        private:
-            //! ICAO codes have been read
-            void onCategoryRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+    private:
+        //! ICAO codes have been read
+        void onCategoryRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
-            //! Download progress for an entity
-            void onEntityDownloadProgress(BlackMisc::Network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
+        //! Download progress for an entity
+        void onEntityDownloadProgress(BlackMisc::Network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
 
-            //! Reload models
-            void onReload();
+        //! Reload models
+        void onReload();
 
-            QScopedPointer<Ui::CDbAircraftCategoryComponent> ui;
-        };
-    } // ns
+        QScopedPointer<Ui::CDbAircraftCategoryComponent> ui;
+    };
 } // ns
 
 #endif // guard

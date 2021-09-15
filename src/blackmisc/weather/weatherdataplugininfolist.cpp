@@ -12,17 +12,14 @@
 
 #include <tuple>
 
-namespace BlackMisc
+namespace BlackMisc::Weather
 {
-    namespace Weather
+
+    CWeatherDataPluginInfoList::CWeatherDataPluginInfoList() { }
+
+    QStringList CWeatherDataPluginInfoList::toStringList(bool i18n) const
     {
+        return this->transform([i18n](const CWeatherDataPluginInfo & info) { return info.toQString(i18n); });
+    }
 
-        CWeatherDataPluginInfoList::CWeatherDataPluginInfoList() { }
-
-        QStringList CWeatherDataPluginInfoList::toStringList(bool i18n) const
-        {
-            return this->transform([i18n](const CWeatherDataPluginInfo & info) { return info.toQString(i18n); });
-        }
-
-    } // namespace
 } // namespace

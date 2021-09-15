@@ -11,32 +11,29 @@
 #include "ui_autopublishdialog.h"
 
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CAutoPublishDialog::CAutoPublishDialog(QWidget *parent) :
+        QDialog(parent),
+        ui(new Ui::CAutoPublishDialog)
     {
-        CAutoPublishDialog::CAutoPublishDialog(QWidget *parent) :
-            QDialog(parent),
-            ui(new Ui::CAutoPublishDialog)
-        {
-            ui->setupUi(this);
-            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-        }
+        ui->setupUi(this);
+        this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    }
 
-        CAutoPublishDialog::~CAutoPublishDialog()
-        { }
+    CAutoPublishDialog::~CAutoPublishDialog()
+    { }
 
-        int CAutoPublishDialog::readFiles()
-        {
-            return ui->comp_AutoPublish->readFiles();
-        }
+    int CAutoPublishDialog::readFiles()
+    {
+        return ui->comp_AutoPublish->readFiles();
+    }
 
-        int CAutoPublishDialog::readAndShow()
-        {
-            const int r = ui->comp_AutoPublish->readFiles();
-            this->show();
-            CGuiApplication::modalWindowToFront();
-            return r;
-        }
-    } // ns
+    int CAutoPublishDialog::readAndShow()
+    {
+        const int r = ui->comp_AutoPublish->readFiles();
+        this->show();
+        CGuiApplication::modalWindowToFront();
+        return r;
+    }
 } // ns

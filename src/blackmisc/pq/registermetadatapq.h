@@ -13,13 +13,10 @@
 
 #include "blackmisc/blackmiscexport.h"
 
-namespace BlackMisc
+namespace BlackMisc::PhysicalQuantities
 {
-    namespace PhysicalQuantities
-    {
-        //! Register metadata for PQs
-        BLACKMISC_EXPORT void registerMetadata();
-    } // ns
+    //! Register metadata for PQs
+    BLACKMISC_EXPORT void registerMetadata();
 } // ns
 
 #endif // guard

@@ -33,86 +33,83 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;
 
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    CSettingsNetworkServersComponent::CSettingsNetworkServersComponent(QWidget *parent) :
+        QFrame(parent),
+        ui(new Ui::CSettingsNetworkServersComponent)
     {
-        CSettingsNetworkServersComponent::CSettingsNetworkServersComponent(QWidget *parent) :
-            QFrame(parent),
-            ui(new Ui::CSettingsNetworkServersComponent)
-        {
-            ui->setupUi(this);
+        ui->setupUi(this);
 
-            // Settings server
-            connect(ui->pb_RemoveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::alterTrafficServer);
-            connect(ui->pb_SaveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::alterTrafficServer);
-            connect(ui->tvp_Servers, &QTableView::clicked, this, &CSettingsNetworkServersComponent::serverSelected);
-            this->reloadSettings();
+        // Settings server
+        connect(ui->pb_RemoveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::alterTrafficServer);
+        connect(ui->pb_SaveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::alterTrafficServer);
+        connect(ui->tvp_Servers, &QTableView::clicked, this, &CSettingsNetworkServersComponent::serverSelected);
+        this->reloadSettings();
+    }
+
+    CSettingsNetworkServersComponent::~CSettingsNetworkServersComponent()
+    { }
+
+    void CSettingsNetworkServersComponent::reloadSettings()
+    {
+        CServerList serverList(m_trafficNetworkServers.get());
+
+        // add swift test servers in case we have no servers:
+        // this is debug/bootstrap feature we can continue to test when something goes wrong
+        if (serverList.isEmpty() && CBuildConfig::isLocalDeveloperDebugBuild())
+        {
+            serverList.push_back(sGui->getGlobalSetup().getPredefinedServersPlusHardcodedServers());
         }
+        ui->tvp_Servers->updateContainer(serverList);
+    }
 
-        CSettingsNetworkServersComponent::~CSettingsNetworkServersComponent()
-        { }
+    void CSettingsNetworkServersComponent::serverSelected(const QModelIndex &index)
+    {
+        const CServer clickedServer = ui->tvp_Servers->at(index);
+        ui->form_Server->setServer(clickedServer);
+    }
 
-        void CSettingsNetworkServersComponent::reloadSettings()
+    void CSettingsNetworkServersComponent::alterTrafficServer()
+    {
+        const QObject *sender = QObject::sender();
+        const CServer server(ui->form_Server->getServer());
+
+        CServerList serverList(m_trafficNetworkServers.getThreadLocal());
+        CStatusMessage msg;
+        if (sender == ui->pb_RemoveServer)
         {
-            CServerList serverList(m_trafficNetworkServers.get());
-
-            // add swift test servers in case we have no servers:
-            // this is debug/bootstrap feature we can continue to test when something goes wrong
-            if (serverList.isEmpty() && CBuildConfig::isLocalDeveloperDebugBuild())
-            {
-                serverList.push_back(sGui->getGlobalSetup().getPredefinedServersPlusHardcodedServers());
-            }
-            ui->tvp_Servers->updateContainer(serverList);
+            // lenient name removal
+            serverList.removeByName(server.getName());
         }
-
-        void CSettingsNetworkServersComponent::serverSelected(const QModelIndex &index)
+        else if (sender == ui->pb_SaveServer)
         {
-            const CServer clickedServer = ui->tvp_Servers->at(index);
-            ui->form_Server->setServer(clickedServer);
-        }
+            CStatusMessageList msgs = server.validate();
+            if (!msgs.isEmpty()) { msgs.addCategories(this); }
 
-        void CSettingsNetworkServersComponent::alterTrafficServer()
-        {
-            const QObject *sender = QObject::sender();
-            const CServer server(ui->form_Server->getServer());
-
-            CServerList serverList(m_trafficNetworkServers.getThreadLocal());
-            CStatusMessage msg;
-            if (sender == ui->pb_RemoveServer)
+            // error?
+            if (msgs.isFailure())
             {
-                // lenient name removal
-                serverList.removeByName(server.getName());
-            }
-            else if (sender == ui->pb_SaveServer)
-            {
-                CStatusMessageList msgs = server.validate();
-                if (!msgs.isEmpty()) { msgs.addCategories(this); }
-
-                // error?
-                if (msgs.isFailure())
-                {
-                    CLogMessage::preformatted(msgs);
-                    return;
-                }
-
-                serverList.replaceOrAdd(&CServer::getName, server.getName(), server);
-            }
-            else
-            {
-                qFatal("Wrong sender");
-                // cppcheck-suppress duplicateBreak
+                CLogMessage::preformatted(msgs);
                 return;
             }
 
-            msg = m_trafficNetworkServers.setAndSave(serverList);
-            this->reloadSettings(); // call manually as local object
-
-            if (!msg.isEmpty())
-            {
-                msg.addCategories(this);
-                CLogMessage::preformatted(msg);
-            }
+            serverList.replaceOrAdd(&CServer::getName, server.getName(), server);
         }
-    } // namespace
+        else
+        {
+            qFatal("Wrong sender");
+            // cppcheck-suppress duplicateBreak
+            return;
+        }
+
+        msg = m_trafficNetworkServers.setAndSave(serverList);
+        this->reloadSettings(); // call manually as local object
+
+        if (!msg.isEmpty())
+        {
+            msg.addCategories(this);
+            CLogMessage::preformatted(msg);
+        }
+    }
 } // namespace

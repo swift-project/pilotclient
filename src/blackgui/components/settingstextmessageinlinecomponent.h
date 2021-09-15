@@ -17,41 +17,38 @@
 #include <QFrame>
 
 namespace Ui { class CSettingsTextMessageInlineComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Settings for text messages
+     */
+    class CSettingsTextMessageInlineComponent : public QFrame
     {
-        /*!
-         * Settings for text messages
-         */
-        class CSettingsTextMessageInlineComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CSettingsTextMessageInlineComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CSettingsTextMessageInlineComponent(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CSettingsTextMessageInlineComponent();
+        //! Destructor
+        virtual ~CSettingsTextMessageInlineComponent();
 
-        private:
-            //! Settings have been changed
-            void settingsChanged();
+    private:
+        //! Settings have been changed
+        void settingsChanged();
 
-            //! Change the settings
-            void changeSettings();
+        //! Change the settings
+        void changeSettings();
 
-            //! Disable all overlay messages
-            void disableAllOverlayMessages();
+        //! Disable all overlay messages
+        void disableAllOverlayMessages();
 
-            //! Reset all overlay messages
-            void resetOverlayMessages();
+        //! Reset all overlay messages
+        void resetOverlayMessages();
 
-            QScopedPointer<Ui::CSettingsTextMessageInlineComponent> ui;
-            BlackMisc::CSetting<BlackGui::Settings::TextMessageSettings> m_settings { this, &CSettingsTextMessageInlineComponent::settingsChanged }; //!< settings changed
-        };
-    } // ns
+        QScopedPointer<Ui::CSettingsTextMessageInlineComponent> ui;
+        BlackMisc::CSetting<BlackGui::Settings::TextMessageSettings> m_settings { this, &CSettingsTextMessageInlineComponent::settingsChanged }; //!< settings changed
+    };
 } // ns
 
 #endif // guard

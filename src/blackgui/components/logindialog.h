@@ -18,42 +18,39 @@
 #include <QScopedPointer>
 
 namespace Ui { class CLoginDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Login dialog
+    class BLACKGUI_EXPORT CLoginDialog : public QDialog
     {
-        //! Login dialog
-        class BLACKGUI_EXPORT CLoginDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CLoginDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CLoginDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CLoginDialog() override;
+        //! Destructor
+        virtual ~CLoginDialog() override;
 
-            //! Set auto logoff
-            void setAutoLogoff(bool logoff);
+        //! Set auto logoff
+        void setAutoLogoff(bool logoff);
 
-            //! Init and show
-            void show();
+        //! Init and show
+        void show();
 
-        signals:
-            //! Request server settings
-            void requestNetworkSettings();
+    signals:
+        //! Request server settings
+        void requestNetworkSettings();
 
-        private:
-            void init();
-            void onLoginOrLogoffCancelled();
-            void onLoginOrLogoffSuccessful();
-            void onRequestNetworkSettings();
-            void onNetworkStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+    private:
+        void init();
+        void onLoginOrLogoffCancelled();
+        void onLoginOrLogoffSuccessful();
+        void onRequestNetworkSettings();
+        void onNetworkStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
-            QScopedPointer<Ui::CLoginDialog> ui;
-        };
-    } // ns
+        QScopedPointer<Ui::CLoginDialog> ui;
+    };
 }// ns
 
 #endif // guard

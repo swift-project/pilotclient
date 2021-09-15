@@ -11,13 +11,10 @@
 #include <QString>
 #include <tuple>
 
-namespace BlackMisc
+namespace BlackMisc::Network
 {
-    namespace Network
-    {
-        CUserList::CUserList() { }
+    CUserList::CUserList() { }
 
-        CUserList::CUserList(const CSequence &other) : CSequence<CUser>(other)
-        { }
-    } // namespace
+    CUserList::CUserList(const CSequence &other) : CSequence<CUser>(other)
+    { }
 } // namespace

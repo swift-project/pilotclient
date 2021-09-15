@@ -6,19 +6,16 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "messagebase.h"
+#include "blackcore/fsd/messagebase.h"
 
-namespace BlackCore
+namespace BlackCore::Fsd
 {
-    namespace Fsd
-    {
-        MessageBase::MessageBase(const QString &sender)
-            : m_sender(sender)
-        { }
+    MessageBase::MessageBase(const QString &sender)
+        : m_sender(sender)
+    { }
 
-        MessageBase::MessageBase(const QString &sender, const QString &receiver)
-            : m_sender(sender),
-              m_receiver(receiver)
-        { }
-    }
+    MessageBase::MessageBase(const QString &sender, const QString &receiver)
+        : m_sender(sender),
+            m_receiver(receiver)
+    { }
 }

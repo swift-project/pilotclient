@@ -20,32 +20,29 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    CAircraftSituationListModel::CAircraftSituationListModel(QObject *parent) :
+        CListModelTimestampWithOffsetObjects<CAircraftSituationList, true>("ViewAircraftPartsList", parent)
     {
-        CAircraftSituationListModel::CAircraftSituationListModel(QObject *parent) :
-            CListModelTimestampWithOffsetObjects<CAircraftSituationList, true>("ViewAircraftPartsList", parent)
-        {
-            this->addTimestampOffsetColumns();
+        this->addTimestampOffsetColumns();
 
-            m_columns.addColumn(CColumn("altitude", CAircraftSituation::IndexAltitude, new CAltitudeFormatter()));
-            m_columns.addColumn(CColumn("CG", CAircraftSituation::IndexCG, new CPhysiqalQuantiyFormatter<CLengthUnit, CLength>(CLengthUnit::ft(), 1)));
-            m_columns.addColumn(CColumn("sc.os.", "scenery offset", CAircraftSituation::IndexSceneryOffset, new CPhysiqalQuantiyFormatter<CLengthUnit, CLength>(CLengthUnit::ft(), 1)));
-            m_columns.addColumn(CColumn("latitude", CAircraftSituation::IndexLatitude, new CLatLonFormatter()));
-            m_columns.addColumn(CColumn("longitude", CAircraftSituation::IndexLongitude, new CLatLonFormatter()));
-            m_columns.addColumn(CColumn("gs.", CAircraftSituation::IndexGroundSpeed, new CSpeedKtsFormatter()));
-            m_columns.addColumn(CColumn::standardString("PBH", "pitch bank heading", CAircraftSituation::IndexPBHInfo));
-            m_columns.addColumn(CColumn("on gnd.", "is on gnd.", CAircraftSituation::IndexIsOnGround, new CBoolIconFormatter("yes", "no"), true));
-            m_columns.addColumn(CColumn::standardString("reliability", CAircraftSituation::IndexOnGroundReliabilityString));
-            m_columns.addColumn(CColumn::standardString("gnd.elv.", CAircraftSituation::IndexGroundElevationPlusInfo));
-            m_columns.addColumn(CColumn::standardString("gnd.elv.alt.", { CAircraftSituation::IndexGroundElevationPlane, CElevationPlane::IndexGeodeticHeightAsString }));
-            m_columns.addColumn(CColumn("elv.radius", { CAircraftSituation::IndexGroundElevationPlane, CElevationPlane::IndexRadius }, new CPhysiqalQuantiyFormatter<CLengthUnit, CLength>(CLengthUnit::m(), 1)));
-            m_columns.addColumn(CColumn::standardString("cs.", "callsign", { CAircraftSituation::IndexCallsign, CCallsign::IndexCallsignStringAsSet }));
+        m_columns.addColumn(CColumn("altitude", CAircraftSituation::IndexAltitude, new CAltitudeFormatter()));
+        m_columns.addColumn(CColumn("CG", CAircraftSituation::IndexCG, new CPhysiqalQuantiyFormatter<CLengthUnit, CLength>(CLengthUnit::ft(), 1)));
+        m_columns.addColumn(CColumn("sc.os.", "scenery offset", CAircraftSituation::IndexSceneryOffset, new CPhysiqalQuantiyFormatter<CLengthUnit, CLength>(CLengthUnit::ft(), 1)));
+        m_columns.addColumn(CColumn("latitude", CAircraftSituation::IndexLatitude, new CLatLonFormatter()));
+        m_columns.addColumn(CColumn("longitude", CAircraftSituation::IndexLongitude, new CLatLonFormatter()));
+        m_columns.addColumn(CColumn("gs.", CAircraftSituation::IndexGroundSpeed, new CSpeedKtsFormatter()));
+        m_columns.addColumn(CColumn::standardString("PBH", "pitch bank heading", CAircraftSituation::IndexPBHInfo));
+        m_columns.addColumn(CColumn("on gnd.", "is on gnd.", CAircraftSituation::IndexIsOnGround, new CBoolIconFormatter("yes", "no"), true));
+        m_columns.addColumn(CColumn::standardString("reliability", CAircraftSituation::IndexOnGroundReliabilityString));
+        m_columns.addColumn(CColumn::standardString("gnd.elv.", CAircraftSituation::IndexGroundElevationPlusInfo));
+        m_columns.addColumn(CColumn::standardString("gnd.elv.alt.", { CAircraftSituation::IndexGroundElevationPlane, CElevationPlane::IndexGeodeticHeightAsString }));
+        m_columns.addColumn(CColumn("elv.radius", { CAircraftSituation::IndexGroundElevationPlane, CElevationPlane::IndexRadius }, new CPhysiqalQuantiyFormatter<CLengthUnit, CLength>(CLengthUnit::m(), 1)));
+        m_columns.addColumn(CColumn::standardString("cs.", "callsign", { CAircraftSituation::IndexCallsign, CCallsign::IndexCallsignStringAsSet }));
 
-            // default sort order
-            this->setSortColumnByPropertyIndex(CAircraftSituation::IndexAdjustedMsWithOffset);
-            m_sortOrder = Qt::DescendingOrder;
-        }
-    } // namespace
+        // default sort order
+        this->setSortColumnByPropertyIndex(CAircraftSituation::IndexAdjustedMsWithOffset);
+        m_sortOrder = Qt::DescendingOrder;
+    }
 } // namespace

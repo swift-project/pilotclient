@@ -15,32 +15,29 @@
 #include "blackmisc/pq/physicalquantity.h"
 #include <QPair>
 
-namespace BlackMisc
+namespace BlackMisc::PhysicalQuantities
 {
-    namespace PhysicalQuantities
+    //! Physical unit length (length)
+    class BLACKMISC_EXPORT CLength : public CPhysicalQuantity<CLengthUnit, CLength>
     {
-        //! Physical unit length (length)
-        class BLACKMISC_EXPORT CLength : public CPhysicalQuantity<CLengthUnit, CLength>
+    public:
+        //! Default constructor
+        CLength() : CPhysicalQuantity(0, CLengthUnit::defaultUnit()) {}
+
+        //! Init by double value
+        CLength(double value, const CLengthUnit &unit) : CPhysicalQuantity(value, unit) {}
+
+        //! Init by double value and switch unit
+        CLength(double value, const CLengthUnit &unit, const CLengthUnit &switchUnit) : CPhysicalQuantity(value, unit)
         {
-        public:
-            //! Default constructor
-            CLength() : CPhysicalQuantity(0, CLengthUnit::defaultUnit()) {}
+            this->switchUnit(switchUnit);
+        }
 
-            //! Init by double value
-            CLength(double value, const CLengthUnit &unit) : CPhysicalQuantity(value, unit) {}
+        //! \copydoc CPhysicalQuantity(const QString &unitString)
+        CLength(const QString &unitString) : CPhysicalQuantity(unitString) {}
+    };
 
-            //! Init by double value and switch unit
-            CLength(double value, const CLengthUnit &unit, const CLengthUnit &switchUnit) : CPhysicalQuantity(value, unit)
-            {
-                this->switchUnit(switchUnit);
-            }
-
-            //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CLength(const QString &unitString) : CPhysicalQuantity(unitString) {}
-        };
-
-        using CLengthPair = QPair<CLength, CLength>; //!< Pair of length
-    } // ns
+    using CLengthPair = QPair<CLength, CLength>; //!< Pair of length
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CLength)

@@ -17,36 +17,33 @@
 #include <QScopedPointer>
 
 namespace Ui { class CFlightPlanDialog; }
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Flight plan as dialog, also meant for other callsigns
+    class CFlightPlanDialog : public QDialog
     {
-        //! Flight plan as dialog, also meant for other callsigns
-        class CFlightPlanDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            explicit CFlightPlanDialog(QWidget *parent = nullptr);
+    public:
+        //! Ctor
+        explicit CFlightPlanDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CFlightPlanDialog() override;
+        //! Destructor
+        virtual ~CFlightPlanDialog() override;
 
-            //! Show a particular callsign flight plan
-            void showFlightPlan(const BlackMisc::Aviation::CCallsign &callsign);
+        //! Show a particular callsign flight plan
+        void showFlightPlan(const BlackMisc::Aviation::CCallsign &callsign);
 
-        private:
-            //! Title
-            void setDialogTitle(const BlackMisc::Aviation::CCallsign &callsign);
+    private:
+        //! Title
+        void setDialogTitle(const BlackMisc::Aviation::CCallsign &callsign);
 
-            //! Load FP
-            void loadFp();
+        //! Load FP
+        void loadFp();
 
-            QScopedPointer<Ui::CFlightPlanDialog> ui;
-        };
+        QScopedPointer<Ui::CFlightPlanDialog> ui;
+    };
 
-    } // ns
 } // ns
 
 #endif // guard

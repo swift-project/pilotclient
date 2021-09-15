@@ -11,16 +11,13 @@
 #ifndef BLACKCORE_AFV_CONSTANTS_H
 #define BLACKCORE_AFV_CONSTANTS_H
 
-namespace BlackCore
+namespace BlackCore::Afv
 {
-    namespace Afv
-    {
-        //! Audio channel count (mono)
-        constexpr int c_channelCount = 1;
+    //! Audio channel count (mono)
+    constexpr int c_channelCount = 1;
 
-        //! Sample rate [Hz]
-        constexpr int c_sampleRate = 48000;
-    } // ns
+    //! Sample rate [Hz]
+    constexpr int c_sampleRate = 48000;
 } // ns
 
 #endif // guard

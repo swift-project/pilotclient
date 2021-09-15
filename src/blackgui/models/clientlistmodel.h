@@ -20,25 +20,22 @@
 class QModelIndex;
 class QObject;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Client list model
+    class BLACKGUI_EXPORT CClientListModel : public CListModelBase<BlackMisc::Network::CClientList>
     {
-        //! Client list model
-        class BLACKGUI_EXPORT CClientListModel : public CListModelBase<BlackMisc::Network::CClientList>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CClientListModel(QObject *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CClientListModel(QObject *parent = nullptr);
 
-            //! Destructor
-            virtual ~CClientListModel() {}
+        //! Destructor
+        virtual ~CClientListModel() {}
 
-            //! \copydoc QAbstractListModel::data()
-            virtual QVariant data(const QModelIndex &index, int role) const override;
-        };
-    } // namespace
+        //! \copydoc QAbstractListModel::data()
+        virtual QVariant data(const QModelIndex &index, int role) const override;
+    };
 } // namespace
 #endif // guard

@@ -15,28 +15,25 @@
 #include <QScopedPointer>
 
 namespace Ui { class CSimulatorEmulatedConfigWidget; }
-namespace BlackSimPlugin
+namespace BlackSimPlugin::Emulated
 {
-    namespace Emulated
+    /**
+     * Configuration window for CSimulatorEmulatedConfig
+     */
+    class Q_DECL_EXPORT CSimulatorEmulatedConfigWidget : public BlackGui::CPluginConfigWindow
     {
-        /**
-         * Configuration window for CSimulatorEmulatedConfig
-         */
-        class Q_DECL_EXPORT CSimulatorEmulatedConfigWidget : public BlackGui::CPluginConfigWindow
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Ctor
-            explicit CSimulatorEmulatedConfigWidget(QWidget *parent = nullptr);
+    public:
+        //! Ctor
+        explicit CSimulatorEmulatedConfigWidget(QWidget *parent = nullptr);
 
-            //! Dtor
-            virtual ~CSimulatorEmulatedConfigWidget();
+        //! Dtor
+        virtual ~CSimulatorEmulatedConfigWidget();
 
-        private:
-            QScopedPointer <Ui::CSimulatorEmulatedConfigWidget> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer <Ui::CSimulatorEmulatedConfigWidget> ui;
+    };
 } // ns
 
 #endif // guard

@@ -59,7 +59,7 @@ class QDBusConnection;
 namespace BlackMisc { class CDBusServer; }
 namespace BlackCore
 {
-    namespace Afv { namespace Clients { class CAfvClient; }}
+    namespace Afv::Clients { class CAfvClient; }
     namespace Context
     {
         //! Audio context interface

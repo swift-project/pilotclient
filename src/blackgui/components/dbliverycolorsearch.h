@@ -16,34 +16,31 @@
 #include <QScopedPointer>
 
 namespace Ui { class CDbLiveryColorSearch; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Search for best matching color livery
+     */
+    class CDbLiveryColorSearch : public QFrame
     {
-        /*!
-         * Search for best matching color livery
-         */
-        class CDbLiveryColorSearch : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CDbLiveryColorSearch(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CDbLiveryColorSearch(QWidget *parent = nullptr);
 
-            //! Destructor
-            ~CDbLiveryColorSearch();
+        //! Destructor
+        ~CDbLiveryColorSearch();
 
-            //! Found livery if any, otherwise default
-            BlackMisc::Aviation::CLivery getLivery() const;
+        //! Found livery if any, otherwise default
+        BlackMisc::Aviation::CLivery getLivery() const;
 
-            //! Preset colors
-            void presetColorLivery(const BlackMisc::Aviation::CLivery &livery);
+        //! Preset colors
+        void presetColorLivery(const BlackMisc::Aviation::CLivery &livery);
 
-        private:
-            QScopedPointer<Ui::CDbLiveryColorSearch> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CDbLiveryColorSearch> ui;
+    };
 } // ns
 
 #endif // guard

@@ -23,15 +23,12 @@
 #include <QString>
 
 class QWidget;
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
-    {
-        class CCoreSettingsDialog;
-        class CRawFsdMessagesDialog;
-        class CCockpitComAudioDialog;
-        class CAudioAdvancedDistributedDialog;
-    }
+    class CCoreSettingsDialog;
+    class CRawFsdMessagesDialog;
+    class CCockpitComAudioDialog;
+    class CAudioAdvancedDistributedDialog;
 }
 namespace Ui { class CSwiftCore; }
 

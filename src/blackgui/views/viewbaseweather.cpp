@@ -8,12 +8,9 @@
 
 #include "viewbase.cpp"
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
-    {
-        template class CViewBase<BlackGui::Models::CCloudLayerListModel>;
-        template class CViewBase<BlackGui::Models::CTemperatureLayerListModel>;
-        template class CViewBase<BlackGui::Models::CWindLayerListModel>;
-    } // namespace
+    template class CViewBase<BlackGui::Models::CCloudLayerListModel>;
+    template class CViewBase<BlackGui::Models::CTemperatureLayerListModel>;
+    template class CViewBase<BlackGui::Models::CWindLayerListModel>;
 } // namespace

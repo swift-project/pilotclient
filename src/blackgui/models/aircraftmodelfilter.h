@@ -21,51 +21,48 @@
 
 #include <QString>
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Filter for aircraft models
+    class BLACKGUI_EXPORT CAircraftModelFilter : public IModelFilter<BlackMisc::Simulation::CAircraftModelList>
     {
-        //! Filter for aircraft models
-        class BLACKGUI_EXPORT CAircraftModelFilter : public IModelFilter<BlackMisc::Simulation::CAircraftModelList>
-        {
-        public:
-            //! Constructor
-            CAircraftModelFilter(int id,
-                                 const QString &modelKey, const QString &description,
-                                 BlackMisc::Simulation::CAircraftModel::ModelModeFilter modelMode,
-                                 BlackMisc::Db::DbKeyStateFilter dbKeyFilter,
-                                 Qt::CheckState military, Qt::CheckState colorLiveries,
-                                 const QString &aircraftIcao, const QString &aircraftManufacturer,
-                                 const QString &airlineIcao, const QString &airlineName,
-                                 const QString &liveryCode,
-                                 const QString &fileName,
-                                 const QString &combinedType,
-                                 const BlackMisc::Simulation::CSimulatorInfo &simInfo   = BlackMisc::Simulation::CSimulatorInfo::allSimulators(),
-                                 const BlackMisc::Simulation::CDistributor &distributor = BlackMisc::Simulation::CDistributor());
+    public:
+        //! Constructor
+        CAircraftModelFilter(int id,
+                                const QString &modelKey, const QString &description,
+                                BlackMisc::Simulation::CAircraftModel::ModelModeFilter modelMode,
+                                BlackMisc::Db::DbKeyStateFilter dbKeyFilter,
+                                Qt::CheckState military, Qt::CheckState colorLiveries,
+                                const QString &aircraftIcao, const QString &aircraftManufacturer,
+                                const QString &airlineIcao, const QString &airlineName,
+                                const QString &liveryCode,
+                                const QString &fileName,
+                                const QString &combinedType,
+                                const BlackMisc::Simulation::CSimulatorInfo &simInfo   = BlackMisc::Simulation::CSimulatorInfo::allSimulators(),
+                                const BlackMisc::Simulation::CDistributor &distributor = BlackMisc::Simulation::CDistributor());
 
-            //! \copydoc IModelFilter::filter
-            virtual BlackMisc::Simulation::CAircraftModelList filter(const BlackMisc::Simulation::CAircraftModelList &inContainer) const override;
+        //! \copydoc IModelFilter::filter
+        virtual BlackMisc::Simulation::CAircraftModelList filter(const BlackMisc::Simulation::CAircraftModelList &inContainer) const override;
 
-        private:
-            int m_id = -1;
-            QString m_modelKey;
-            QString m_description;
-            BlackMisc::Simulation::CAircraftModel::ModelModeFilter m_modelMode;
-            BlackMisc::Db::DbKeyStateFilter m_dbKeyFilter;
-            Qt::CheckState m_military;
-            Qt::CheckState m_colorLiveries;
-            QString m_aircraftIcao;
-            QString m_aircraftManufacturer;
-            QString m_airlineIcao;
-            QString m_airlineName;
-            QString m_liveryCode;
-            QString m_fileName;
-            QString m_combinedType;
-            BlackMisc::Simulation::CSimulatorInfo m_simulatorInfo;
-            BlackMisc::Simulation::CDistributor   m_distributor;
-            bool valid() const;
-        };
-    } // namespace
+    private:
+        int m_id = -1;
+        QString m_modelKey;
+        QString m_description;
+        BlackMisc::Simulation::CAircraftModel::ModelModeFilter m_modelMode;
+        BlackMisc::Db::DbKeyStateFilter m_dbKeyFilter;
+        Qt::CheckState m_military;
+        Qt::CheckState m_colorLiveries;
+        QString m_aircraftIcao;
+        QString m_aircraftManufacturer;
+        QString m_airlineIcao;
+        QString m_airlineName;
+        QString m_liveryCode;
+        QString m_fileName;
+        QString m_combinedType;
+        BlackMisc::Simulation::CSimulatorInfo m_simulatorInfo;
+        BlackMisc::Simulation::CDistributor   m_distributor;
+        bool valid() const;
+    };
 } // namespace
 
 #endif // guard

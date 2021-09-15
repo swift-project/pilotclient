@@ -16,22 +16,19 @@
 #include "blackmisc/identifier.h"
 #include "blackmisc/identifierlist.h"
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Originator list model
+    class BLACKGUI_EXPORT CIdentifierListModel : public CListModelBase<BlackMisc::CIdentifierList>
     {
-        //! Originator list model
-        class BLACKGUI_EXPORT CIdentifierListModel : public CListModelBase<BlackMisc::CIdentifierList>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CIdentifierListModel(QObject *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CIdentifierListModel(QObject *parent = nullptr);
 
-            //! Destructor
-            virtual ~CIdentifierListModel() {}
-        };
-    } // ns
+        //! Destructor
+        virtual ~CIdentifierListModel() {}
+    };
 } // ns
 #endif // guard

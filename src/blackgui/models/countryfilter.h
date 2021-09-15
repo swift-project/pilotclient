@@ -17,25 +17,22 @@
 
 #include <QString>
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    //! Country filter
+    class BLACKGUI_EXPORT CCountryFilter : public IModelFilter<BlackMisc::CCountryList>
     {
-        //! Country filter
-        class BLACKGUI_EXPORT CCountryFilter : public IModelFilter<BlackMisc::CCountryList>
-        {
-        public:
-            //! Constructor
-            CCountryFilter(const QString &isoCode, const QString &name);
+    public:
+        //! Constructor
+        CCountryFilter(const QString &isoCode, const QString &name);
 
-            //! \copydoc IModelFilter::filter
-            virtual BlackMisc::CCountryList filter(const BlackMisc::CCountryList &inContainer) const override;
+        //! \copydoc IModelFilter::filter
+        virtual BlackMisc::CCountryList filter(const BlackMisc::CCountryList &inContainer) const override;
 
-        private:
-            QString m_isoCode;
-            QString m_name;
-        };
-    } // namespace
+    private:
+        QString m_isoCode;
+        QString m_name;
+    };
 } // namespace
 
 #endif // guard

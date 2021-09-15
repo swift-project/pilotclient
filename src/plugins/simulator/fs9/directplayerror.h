@@ -17,13 +17,10 @@
 
 #include <dplay8.h>
 
-namespace BlackSimPlugin
+namespace BlackSimPlugin::Fs9
 {
-    namespace Fs9
-    {
-        //! Print the direct play error
-        HRESULT logDirectPlayError(HRESULT error);
-    }
+    //! Print the direct play error
+    HRESULT logDirectPlayError(HRESULT error);
 }
 
 #endif

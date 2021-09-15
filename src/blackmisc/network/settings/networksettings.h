@@ -20,45 +20,39 @@
 #include <QMetaType>
 #include <QString>
 
-namespace BlackMisc
+namespace BlackMisc::Network::Settings
 {
-    namespace Network
+    //! Network settings
+    //! \remark CURRENTLY a STUB not used
+    class BLACKMISC_EXPORT CNetworkSettings : public CValueObject<CNetworkSettings>
     {
-        namespace Settings
+    public:
+        //! Properties by index
+        enum ColumnIndex
         {
-            //! Network settings
-            //! \remark CURRENTLY a STUB not used
-            class BLACKMISC_EXPORT CNetworkSettings : public CValueObject<CNetworkSettings>
-            {
-            public:
-                //! Properties by index
-                enum ColumnIndex
-                {
-                    IndexDynamicOffsetTime = CPropertyIndexRef::GlobalIndexCNetworkSettings,
-                };
+            IndexDynamicOffsetTime = CPropertyIndexRef::GlobalIndexCNetworkSettings,
+        };
 
-                //! Constructor
-                CNetworkSettings() {}
+        //! Constructor
+        CNetworkSettings() {}
 
-                //! \copydoc BlackMisc::Mixin::String::toQString
-                QString convertToQString(bool i18n = false) const;
+        //! \copydoc BlackMisc::Mixin::String::toQString
+        QString convertToQString(bool i18n = false) const;
 
-                //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-                QVariant propertyByIndex(CPropertyIndexRef index) const;
+        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+        QVariant propertyByIndex(CPropertyIndexRef index) const;
 
-                //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-                void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
+        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+        void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
-            private:
-                bool m_dummy = false;
+    private:
+        bool m_dummy = false;
 
-                BLACK_METACLASS(
-                    CNetworkSettings,
-                    BLACK_METAMEMBER(dummy)
-                );
-            };
-        } // ns
-    } // ns
+        BLACK_METACLASS(
+            CNetworkSettings,
+            BLACK_METAMEMBER(dummy)
+        );
+    };
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Network::Settings::CNetworkSettings)

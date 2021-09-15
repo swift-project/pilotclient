@@ -20,87 +20,84 @@
 #include <QFrame>
 
 namespace Ui { class CUpdateInfoComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    class CInstallXSwiftBusDialog;
+    class CDownloadDialog;
+
+    /**
+     * Update info (distributions, artifacts etc.)
+     */
+    class BLACKGUI_EXPORT CUpdateInfoComponent : public QFrame
     {
-        class CInstallXSwiftBusDialog;
-        class CDownloadDialog;
+        Q_OBJECT
 
-        /**
-         * Update info (distributions, artifacts etc.)
-         */
-        class BLACKGUI_EXPORT CUpdateInfoComponent : public QFrame
-        {
-            Q_OBJECT
+    public:
+        //! Ctor
+        explicit CUpdateInfoComponent(QWidget *parent = nullptr);
 
-        public:
-            //! Ctor
-            explicit CUpdateInfoComponent(QWidget *parent = nullptr);
+        //! Dtor
+        virtual ~CUpdateInfoComponent() override;
 
-            //! Dtor
-            virtual ~CUpdateInfoComponent() override;
+        //! Is there a new version available return version, else empty string
+        BlackMisc::Db::CArtifact getLatestAvailablePilotClientArtifactForSelection() const;
 
-            //! Is there a new version available return version, else empty string
-            BlackMisc::Db::CArtifact getLatestAvailablePilotClientArtifactForSelection() const;
+        //! Is there a new version available?
+        bool isNewPilotClientVersionAvailable() const;
 
-            //! Is there a new version available?
-            bool isNewPilotClientVersionAvailable() const;
+        //! Trigger download
+        void triggerDownload();
 
-            //! Trigger download
-            void triggerDownload();
+        //! Current distribution
+        BlackMisc::Db::CDistribution getCurrentDistribution() const { return this->getSelectedOrDefaultDistribution(); }
 
-            //! Current distribution
-            BlackMisc::Db::CDistribution getCurrentDistribution() const { return this->getSelectedOrDefaultDistribution(); }
+    signals:
+        //! Update info loaded
+        void updateInfoAvailable();
 
-        signals:
-            //! Update info loaded
-            void updateInfoAvailable();
+        //! A newer pilot client is available
+        void newerPilotClientAvailable(const BlackMisc::Db::CArtifact &latestPilotClient);
 
-            //! A newer pilot client is available
-            void newerPilotClientAvailable(const BlackMisc::Db::CArtifact &latestPilotClient);
+        //! New platfrom or channel
+        void selectionChanged();
 
-            //! New platfrom or channel
-            void selectionChanged();
+    private:
+        QScopedPointer<Ui::CUpdateInfoComponent> ui;
+        QScopedPointer<CInstallXSwiftBusDialog> m_installXSwiftBusDialog; //!< dialog, install XSwiftXBus
+        QScopedPointer<CDownloadDialog> m_downloadDialog; //!< dialog, download installer
+        BlackMisc::CDataReadOnly<BlackMisc::Db::TUpdateInfo> m_updateInfo { this, &CUpdateInfoComponent::changedUpdateInfo }; //!< version cache
+        BlackMisc::CSetting<BlackCore::Application::TUpdatePreferences> m_updateSettings { this }; //!< channel/platform selected
+        BlackMisc::CDigestSignal m_dsDistributionAvailable { this, &CUpdateInfoComponent::updateInfoAvailable, 15000, 2 };
 
-        private:
-            QScopedPointer<Ui::CUpdateInfoComponent> ui;
-            QScopedPointer<CInstallXSwiftBusDialog> m_installXSwiftBusDialog; //!< dialog, install XSwiftXBus
-            QScopedPointer<CDownloadDialog> m_downloadDialog; //!< dialog, download installer
-            BlackMisc::CDataReadOnly<BlackMisc::Db::TUpdateInfo> m_updateInfo { this, &CUpdateInfoComponent::changedUpdateInfo }; //!< version cache
-            BlackMisc::CSetting<BlackCore::Application::TUpdatePreferences> m_updateSettings { this }; //!< channel/platform selected
-            BlackMisc::CDigestSignal m_dsDistributionAvailable { this, &CUpdateInfoComponent::updateInfoAvailable, 15000, 2 };
+        //! Load latest version
+        void requestLoadOfSetup();
 
-            //! Load latest version
-            void requestLoadOfSetup();
+        //! Loaded latest version
+        void changedUpdateInfo();
 
-            //! Loaded latest version
-            void changedUpdateInfo();
+        //! Channel has been changed
+        void channelChanged();
 
-            //! Channel has been changed
-            void channelChanged();
+        //! Platform changed
+        void platformChanged();
 
-            //! Platform changed
-            void platformChanged();
+        //! Selection changed
+        void uiSelectionChanged();
 
-            //! Selection changed
-            void uiSelectionChanged();
+        //! Install XSwiftBus dialog
+        void downloadXSwiftBusDialog();
 
-            //! Install XSwiftBus dialog
-            void downloadXSwiftBusDialog();
+        //! Download installer dialog
+        void downloadInstallerDialog();
 
-            //! Download installer dialog
-            void downloadInstallerDialog();
+        //! Save the current settings
+        void saveSettings();
 
-            //! Save the current settings
-            void saveSettings();
+        //! Selected platform from UI or guessed platform
+        const BlackMisc::CPlatform &getSelectedOrDefaultPlatform() const;
 
-            //! Selected platform from UI or guessed platform
-            const BlackMisc::CPlatform &getSelectedOrDefaultPlatform() const;
-
-            //! Selected or default distribution
-            BlackMisc::Db::CDistribution getSelectedOrDefaultDistribution() const;
-        };
-    } // ns
+        //! Selected or default distribution
+        BlackMisc::Db::CDistribution getSelectedOrDefaultDistribution() const;
+    };
 } // ns
 #endif // guard

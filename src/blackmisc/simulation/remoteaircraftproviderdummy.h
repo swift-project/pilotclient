@@ -19,38 +19,35 @@
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/blackmiscexport.h"
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    //! Dummy implementation for testing purpose
+    class BLACKMISC_EXPORT CRemoteAircraftProviderDummy : public CRemoteAircraftProvider
     {
-        //! Dummy implementation for testing purpose
-        class BLACKMISC_EXPORT CRemoteAircraftProviderDummy : public CRemoteAircraftProvider
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Singleton
-            static CRemoteAircraftProviderDummy *instance();
+    public:
+        //! Singleton
+        static CRemoteAircraftProviderDummy *instance();
 
-            //! Constructor
-            CRemoteAircraftProviderDummy(QObject *parent = nullptr);
+        //! Constructor
+        CRemoteAircraftProviderDummy(QObject *parent = nullptr);
 
-            //! For testing, add new situation and fire signals
-            //! @{
-            void insertNewSituation(const Aviation::CAircraftSituation &situation);
-            void insertNewSituations(const Aviation::CAircraftSituationList &situations);
-            void insertNewAircraftParts(const Aviation::CCallsign &callsign, const Aviation::CAircraftParts &parts, bool removeOutdatedParts);
-            void insertNewAircraftParts(const Aviation::CCallsign &callsign, const Aviation::CAircraftPartsList &partsList, bool removeOutdatedParts);
-            //! @}
+        //! For testing, add new situation and fire signals
+        //! @{
+        void insertNewSituation(const Aviation::CAircraftSituation &situation);
+        void insertNewSituations(const Aviation::CAircraftSituationList &situations);
+        void insertNewAircraftParts(const Aviation::CCallsign &callsign, const Aviation::CAircraftParts &parts, bool removeOutdatedParts);
+        void insertNewAircraftParts(const Aviation::CCallsign &callsign, const Aviation::CAircraftPartsList &partsList, bool removeOutdatedParts);
+        //! @}
 
-            //! Members not implenented or fully implenented by CRemoteAircraftProvider
-            //! \ingroup remoteaircraftprovider
-            //! @{
-            virtual QObject *asQObject() override { return this; }
-            virtual CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
-            //! @}
-        };
-    } // namespace
+        //! Members not implenented or fully implenented by CRemoteAircraftProvider
+        //! \ingroup remoteaircraftprovider
+        //! @{
+        virtual QObject *asQObject() override { return this; }
+        virtual CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
+        //! @}
+    };
 } // namespace
 
 #endif // guard

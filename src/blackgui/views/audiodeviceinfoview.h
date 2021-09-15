@@ -15,20 +15,17 @@
 #include "blackgui/views/viewbase.h"
 #include "blackgui/blackguiexport.h"
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Audio device view
+    class BLACKGUI_EXPORT CAudioDeviceInfoView : public CViewBase<Models::CAudioDeviceInfoListModel>
     {
-        //! Audio device view
-        class BLACKGUI_EXPORT CAudioDeviceInfoView : public CViewBase<Models::CAudioDeviceInfoListModel>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAudioDeviceInfoView(QWidget *parent = nullptr);
-        };
-    }
+    public:
+        //! Constructor
+        explicit CAudioDeviceInfoView(QWidget *parent = nullptr);
+    };
 } // ns
 
 #endif // guard

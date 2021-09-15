@@ -15,136 +15,133 @@
 
 using namespace BlackMisc::Math;
 
-namespace BlackMisc
+namespace BlackMisc::PhysicalQuantities
 {
-    namespace PhysicalQuantities
+    CAngle::CAngle(int degrees, int minutes, double seconds) :
+        CPhysicalQuantity(
+            degrees + minutes / 100.0 + seconds / 10000.0,
+            CAngleUnit::sexagesimalDeg())
     {
-        CAngle::CAngle(int degrees, int minutes, double seconds) :
-            CPhysicalQuantity(
-                degrees + minutes / 100.0 + seconds / 10000.0,
-                CAngleUnit::sexagesimalDeg())
+        Q_ASSERT_X((degrees >= 0 && minutes >= 0 && seconds >= 0) ||
+                    (degrees <= 0 && minutes <= 0 && seconds <= 0), Q_FUNC_INFO, "Same sign required");
+    }
+
+    CAngle::CAngle(int degrees, double minutes) :
+        CPhysicalQuantity(
+            degrees + minutes / 100.0,
+            CAngleUnit::sexagesimalDeg())
+    {
+        Q_ASSERT_X((degrees >= 0 && minutes >= 0) || (degrees <= 0 && minutes <= 0),
+                    Q_FUNC_INFO, "Same sign required");
+    }
+
+    void CAngle::unifySign(int degrees, int &minutes, double &seconds)
+    {
+        minutes = std::copysign(minutes, degrees == 0 ? minutes : degrees);
+        seconds = std::copysign(seconds, degrees == 0 ? minutes : degrees);
+    }
+
+    void CAngle::unifySign(int degrees, int &minutes)
+    {
+        if (degrees == 0) { return; }
+        minutes = std::copysign(minutes, degrees);
+    }
+
+    CIcons::IconIndex CAngle::toIcon() const
+    {
+        return CIcons::StandardIconArrowMediumNorth16;
+    }
+
+    CAngle::DegMinSecFractionalSec CAngle::asSexagesimalDegMinSec(bool range180Degrees) const
+    {
+        double dms = this->value(CAngleUnit::sexagesimalDeg());
+
+        if (range180Degrees)
         {
-            Q_ASSERT_X((degrees >= 0 && minutes >= 0 && seconds >= 0) ||
-                       (degrees <= 0 && minutes <= 0 && seconds <= 0), Q_FUNC_INFO, "Same sign required");
+            dms = std::fmod(dms + 180.0, 360.0);
+            dms += (dms < 0) ? 180.0 : -180.0;
         }
 
-        CAngle::CAngle(int degrees, double minutes) :
-            CPhysicalQuantity(
-                degrees + minutes / 100.0,
-                CAngleUnit::sexagesimalDeg())
+        DegMinSecFractionalSec values;
+        if (dms < 0)
         {
-            Q_ASSERT_X((degrees >= 0 && minutes >= 0) || (degrees <= 0 && minutes <= 0),
-                       Q_FUNC_INFO, "Same sign required");
+            values.sign = -1;
+            dms *= -1.0;
         }
 
-        void CAngle::unifySign(int degrees, int &minutes, double &seconds)
-        {
-            minutes = std::copysign(minutes, degrees == 0 ? minutes : degrees);
-            seconds = std::copysign(seconds, degrees == 0 ? minutes : degrees);
-        }
+        QString str = QStringLiteral("%1").arg(dms, 14, 'f', 10, '0'); // 000.0000000000
+        values.deg = str.midRef(0, 3).toInt();
+        values.min = str.midRef(4, 2).toInt();
+        values.sec = str.midRef(6, 2).toInt();
+        values.fractionalSec = str.midRef(8, 6).toInt() / 1000000.0;
+        return values;
+    }
 
-        void CAngle::unifySign(int degrees, int &minutes)
-        {
-            if (degrees == 0) { return; }
-            minutes = std::copysign(minutes, degrees);
-        }
+    double CAngle::piFactor() const
+    {
+        return Math::CMathUtils::round(this->value(CAngleUnit::rad()) / CMathUtils::PI(), 6);
+    }
 
-        CIcons::IconIndex CAngle::toIcon() const
-        {
-            return CIcons::StandardIconArrowMediumNorth16;
-        }
+    const double &CAngle::PI()
+    {
+        return CMathUtils::PI();
+    }
 
-        CAngle::DegMinSecFractionalSec CAngle::asSexagesimalDegMinSec(bool range180Degrees) const
-        {
-            double dms = this->value(CAngleUnit::sexagesimalDeg());
+    double CAngle::sin() const
+    {
+        return std::sin(this->value(CAngleUnit::rad()));
+    }
 
-            if (range180Degrees)
-            {
-                dms = std::fmod(dms + 180.0, 360.0);
-                dms += (dms < 0) ? 180.0 : -180.0;
-            }
+    double CAngle::cos() const
+    {
+        return std::cos(this->value(CAngleUnit::rad()));
+    }
 
-            DegMinSecFractionalSec values;
-            if (dms < 0)
-            {
-                values.sign = -1;
-                dms *= -1.0;
-            }
+    double CAngle::tan() const
+    {
+        return std::tan(this->value(CAngleUnit::rad()));
+    }
 
-            QString str = QStringLiteral("%1").arg(dms, 14, 'f', 10, '0'); // 000.0000000000
-            values.deg = str.midRef(0, 3).toInt();
-            values.min = str.midRef(4, 2).toInt();
-            values.sec = str.midRef(6, 2).toInt();
-            values.fractionalSec = str.midRef(8, 6).toInt() / 1000000.0;
-            return values;
-        }
+    void CAngle::normalizeToPlusMinus180Degrees()
+    {
+        const double v = normalizeDegrees180(this->value(CAngleUnit::deg()));
+        const CAngleUnit u = this->getUnit();
+        *this = CAngle(v, CAngleUnit::deg());
+        this->switchUnit(u);
+    }
 
-        double CAngle::piFactor() const
-        {
-            return Math::CMathUtils::round(this->value(CAngleUnit::rad()) / CMathUtils::PI(), 6);
-        }
+    void CAngle::normalizeTo360Degrees()
+    {
+        const double v = normalizeDegrees360(this->value(CAngleUnit::deg()));
+        const CAngleUnit u = this->getUnit();
+        *this = CAngle(v, CAngleUnit::deg());
+        this->switchUnit(u);
+    }
 
-        const double &CAngle::PI()
-        {
-            return CMathUtils::PI();
-        }
+    CAngle CAngle::normalizedToPlusMinus180Degrees() const
+    {
+        CAngle copy(*this);
+        copy.normalizeToPlusMinus180Degrees();
+        return copy;
+    }
 
-        double CAngle::sin() const
-        {
-            return std::sin(this->value(CAngleUnit::rad()));
-        }
+    CAngle CAngle::normalizedTo360Degrees() const
+    {
+        CAngle copy(*this);
+        copy.normalizeTo360Degrees();
+        return copy;
+    }
 
-        double CAngle::cos() const
-        {
-            return std::cos(this->value(CAngleUnit::rad()));
-        }
+    double CAngle::normalizeDegrees180(double degrees, int roundDigits)
+    {
+        double d = CMathUtils::normalizeDegrees360(degrees + 180.0) - 180.0;
+        if (d <= -180.0) { d = 180.0; } // -180 -> 180
+        return roundDigits < 0 ? d : CMathUtils::round(d, roundDigits);
+    }
 
-        double CAngle::tan() const
-        {
-            return std::tan(this->value(CAngleUnit::rad()));
-        }
-
-        void CAngle::normalizeToPlusMinus180Degrees()
-        {
-            const double v = normalizeDegrees180(this->value(CAngleUnit::deg()));
-            const CAngleUnit u = this->getUnit();
-            *this = CAngle(v, CAngleUnit::deg());
-            this->switchUnit(u);
-        }
-
-        void CAngle::normalizeTo360Degrees()
-        {
-            const double v = normalizeDegrees360(this->value(CAngleUnit::deg()));
-            const CAngleUnit u = this->getUnit();
-            *this = CAngle(v, CAngleUnit::deg());
-            this->switchUnit(u);
-        }
-
-        CAngle CAngle::normalizedToPlusMinus180Degrees() const
-        {
-            CAngle copy(*this);
-            copy.normalizeToPlusMinus180Degrees();
-            return copy;
-        }
-
-        CAngle CAngle::normalizedTo360Degrees() const
-        {
-            CAngle copy(*this);
-            copy.normalizeTo360Degrees();
-            return copy;
-        }
-
-        double CAngle::normalizeDegrees180(double degrees, int roundDigits)
-        {
-            double d = CMathUtils::normalizeDegrees360(degrees + 180.0) - 180.0;
-            if (d <= -180.0) { d = 180.0; } // -180 -> 180
-            return roundDigits < 0 ? d : CMathUtils::round(d, roundDigits);
-        }
-
-        double CAngle::normalizeDegrees360(double degrees, int roundDigits)
-        {
-            const double d = CMathUtils::normalizeDegrees360(degrees);
-            return roundDigits < 0 ? d : CMathUtils::round(d, roundDigits);
-        }
-    } // ns
+    double CAngle::normalizeDegrees360(double degrees, int roundDigits)
+    {
+        const double d = CMathUtils::normalizeDegrees360(degrees);
+        return roundDigits < 0 ? d : CMathUtils::round(d, roundDigits);
+    }
 } // ns

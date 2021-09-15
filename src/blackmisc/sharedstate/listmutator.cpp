@@ -11,18 +11,15 @@
 #include "blackmisc/sharedstate/listmutator.h"
 #include "blackmisc/sharedstate/datalink.h"
 
-namespace BlackMisc
+namespace BlackMisc::SharedState
 {
-    namespace SharedState
+    void CGenericListMutator::initialize(IDataLink *dataLink)
     {
-        void CGenericListMutator::initialize(IDataLink *dataLink)
-        {
-            dataLink->publish(m_mutator.data());
-        }
+        dataLink->publish(m_mutator.data());
+    }
 
-        void CGenericListMutator::addElement(const CVariant &value)
-        {
-            m_mutator->postEvent(value);
-        }
+    void CGenericListMutator::addElement(const CVariant &value)
+    {
+        m_mutator->postEvent(value);
     }
 }

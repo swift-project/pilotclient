@@ -21,62 +21,59 @@
 
 #include <QMetaType>
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
+    //! Value object for a list of airports.
+    class BLACKMISC_EXPORT CAirportList :
+        public CSequence<CAirport>,
+        public Db::IDatastoreObjectList<CAirport, CAirportList, int>,
+        public Geo::IGeoObjectWithRelativePositionList<CAirport, CAirportList>,
+        public Mixin::MetaType<CAirportList>
     {
-        //! Value object for a list of airports.
-        class BLACKMISC_EXPORT CAirportList :
-            public CSequence<CAirport>,
-            public Db::IDatastoreObjectList<CAirport, CAirportList, int>,
-            public Geo::IGeoObjectWithRelativePositionList<CAirport, CAirportList>,
-            public Mixin::MetaType<CAirportList>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAirportList)
-            using CSequence::CSequence;
+    public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAirportList)
+        using CSequence::CSequence;
 
-            //! Default constructor.
-            CAirportList();
+        //! Default constructor.
+        CAirportList();
 
-            //! Construct from a base class object.
-            CAirportList(const CSequence<CAirport> &other);
+        //! Construct from a base class object.
+        CAirportList(const CSequence<CAirport> &other);
 
-            //! Find 0..n airports by ICAO code
-            CAirportList findByIcao(const CAirportIcaoCode &icao) const;
+        //! Find 0..n airports by ICAO code
+        CAirportList findByIcao(const CAirportIcaoCode &icao) const;
 
-            //! Find first station by callsign, if not return given value / default
-            CAirport findFirstByIcao(const CAirportIcaoCode &icao, const CAirport &ifNotFound = CAirport()) const;
+        //! Find first station by callsign, if not return given value / default
+        CAirport findFirstByIcao(const CAirportIcaoCode &icao, const CAirport &ifNotFound = CAirport()) const;
 
-            //! Find first by name or location, if not return given value / default
-            CAirport findFirstByNameOrLocation(const QString &nameOrLocation, const CAirport &ifNotFound = CAirport()) const;
+        //! Find first by name or location, if not return given value / default
+        CAirport findFirstByNameOrLocation(const QString &nameOrLocation, const CAirport &ifNotFound = CAirport()) const;
 
-            //! Containing an airport with given ICAO code?
-            bool containsAirportWithIcaoCode(const CAirportIcaoCode &icao) const;
+        //! Containing an airport with given ICAO code?
+        bool containsAirportWithIcaoCode(const CAirportIcaoCode &icao) const;
 
-            //! Replace or add based on same ICAO code
-            void replaceOrAddByIcao(const CAirport &addedOrReplacedAirport);
+        //! Replace or add based on same ICAO code
+        void replaceOrAddByIcao(const CAirport &addedOrReplacedAirport);
 
-            //! Update this list from the other list
-            void updateMissingParts(const CAirportList &updateFromList);
+        //! Update this list from the other list
+        void updateMissingParts(const CAirportList &updateFromList);
 
-            //! All ICAO codes
-            QStringList allIcaoCodes(bool sorted) const;
+        //! All ICAO codes
+        QStringList allIcaoCodes(bool sorted) const;
 
-            //! All names
-            QStringList allDescriptivesNames(bool sorted) const;
+        //! All names
+        QStringList allDescriptivesNames(bool sorted) const;
 
-            //! All locations
-            //! \remark less locations than airports, since a location (e.g. New Yorrk) homes multiple airports
-            QStringList allLocations() const;
+        //! All locations
+        //! \remark less locations than airports, since a location (e.g. New Yorrk) homes multiple airports
+        QStringList allLocations() const;
 
-            //! All locations plus optional description
-            QStringList allLocationsPlusOptionalDescription(bool sorted) const;
+        //! All locations plus optional description
+        QStringList allLocationsPlusOptionalDescription(bool sorted) const;
 
-            //! From our DB JSON
-            static CAirportList fromDatabaseJson(const QJsonArray &array, CAirportList *inconsistent = nullptr);
-        };
-    } //namespace
+        //! From our DB JSON
+        static CAirportList fromDatabaseJson(const QJsonArray &array, CAirportList *inconsistent = nullptr);
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAirportList)

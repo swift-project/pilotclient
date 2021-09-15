@@ -9,35 +9,32 @@
 #include "authresponse.h"
 #include "blackmisc/logmessage.h"
 
-namespace BlackCore
+namespace BlackCore::Fsd
 {
-    namespace Fsd
+    AuthResponse::AuthResponse() : MessageBase()
+    {}
+
+    AuthResponse::AuthResponse(const QString &sender, const QString &receiver, const QString &response) :
+        MessageBase(sender, receiver),
+        m_response(response)
+    { }
+
+    QStringList AuthResponse::toTokens() const
     {
-        AuthResponse::AuthResponse() : MessageBase()
-        {}
+        auto tokens = QStringList {};
+        tokens.push_back(m_sender);
+        tokens.push_back(m_receiver);
+        tokens.push_back(m_response);
+        return tokens;
+    }
 
-        AuthResponse::AuthResponse(const QString &sender, const QString &receiver, const QString &response) :
-            MessageBase(sender, receiver),
-            m_response(response)
-        { }
-
-        QStringList AuthResponse::toTokens() const
+    AuthResponse AuthResponse::fromTokens(const QStringList &tokens)
+    {
+        if (tokens.size() < 3)
         {
-            auto tokens = QStringList {};
-            tokens.push_back(m_sender);
-            tokens.push_back(m_receiver);
-            tokens.push_back(m_response);
-            return tokens;
+            BlackMisc::CLogMessage(static_cast<AuthResponse *>(nullptr)).warning(u"Wrong number of arguments.");
+            return {};
         }
-
-        AuthResponse AuthResponse::fromTokens(const QStringList &tokens)
-        {
-            if (tokens.size() < 3)
-            {
-                BlackMisc::CLogMessage(static_cast<AuthResponse *>(nullptr)).warning(u"Wrong number of arguments.");
-                return {};
-            }
-            return AuthResponse(tokens[0], tokens[1], tokens[2]);
-        }
+        return AuthResponse(tokens[0], tokens[1], tokens[2]);
     }
 }

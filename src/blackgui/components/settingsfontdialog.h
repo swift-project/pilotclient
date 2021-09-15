@@ -16,43 +16,40 @@
 #include <QStringList>
 
 namespace Ui { class CSettingsFontDialog; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    /*!
+     * Dialog to edit fonts
+     * \see BlackMisc::Components::CSettingsFontComponent
+     */
+    class CSettingsFontDialog : public QDialog
     {
-        /*!
-         * Dialog to edit fonts
-         * \see BlackMisc::Components::CSettingsFontComponent
-         */
-        class CSettingsFontDialog : public QDialog
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CSettingsFontDialog(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CSettingsFontDialog(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CSettingsFontDialog() override;
+        //! Destructor
+        virtual ~CSettingsFontDialog() override;
 
-            //! Get stylesheet
-            const QString &getQss() const;
+        //! Get stylesheet
+        const QString &getQss() const;
 
-            //! Set the current font
-            void setFont(const QFont &font);
+        //! Set the current font
+        void setFont(const QFont &font);
 
-            //! Get font
-            QFont getFont() const;
+        //! Get font
+        QFont getFont() const;
 
-            //! Family, size and style
-            QStringList getFamilySizeStyle() const;
+        //! Family, size and style
+        QStringList getFamilySizeStyle() const;
 
-            //! With color selection
-            void setWithColorSelection(bool withColor);
+        //! With color selection
+        void setWithColorSelection(bool withColor);
 
-        private:
-            QScopedPointer<Ui::CSettingsFontDialog> ui;
-        };
-    } // ns
+    private:
+        QScopedPointer<Ui::CSettingsFontDialog> ui;
+    };
 } // ns
 #endif // guard

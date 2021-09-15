@@ -20,61 +20,58 @@
 #include <QScopedPointer>
 
 namespace Ui { class CModelMappingForm; }
-namespace BlackGui
+namespace BlackGui::Editors
 {
-    namespace Editors
+    /*!
+     * Model mapping form
+     */
+    class BLACKGUI_EXPORT CModelMappingForm : public CFormDbUser
     {
-        /*!
-         * Model mapping form
-         */
-        class BLACKGUI_EXPORT CModelMappingForm : public CFormDbUser
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CModelMappingForm(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CModelMappingForm(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CModelMappingForm() override;
+        //! Destructor
+        virtual ~CModelMappingForm() override;
 
-            //! Value
-            BlackMisc::Simulation::CAircraftModel getValue() const;
+        //! Value
+        BlackMisc::Simulation::CAircraftModel getValue() const;
 
-            //! Validate
+        //! Validate
 
-            //! \name Form class implementations
-            //! @{
-            virtual void setReadOnly(bool readonly) override;
-            virtual void setSelectOnly() override;
-            virtual BlackMisc::CStatusMessageList validate(bool withNestedObjects) const override;
-            //! @}
+        //! \name Form class implementations
+        //! @{
+        virtual void setReadOnly(bool readonly) override;
+        virtual void setSelectOnly() override;
+        virtual BlackMisc::CStatusMessageList validate(bool withNestedObjects) const override;
+        //! @}
 
-            //! Set model
-            void setValue(BlackMisc::Simulation::CAircraftModel &model);
+        //! Set model
+        void setValue(BlackMisc::Simulation::CAircraftModel &model);
 
-        signals:
-            //! Request stashing for model
-            void requestStash();
+    signals:
+        //! Request stashing for model
+        void requestStash();
 
-        protected:
-            //! \copydoc CFormDbUser::userChanged
-            virtual void userChanged() override;
+    protected:
+        //! \copydoc CFormDbUser::userChanged
+        virtual void userChanged() override;
 
-        private:
-            //! CG (aka vertical offset) from UI
-            BlackMisc::PhysicalQuantities::CLength getCGFromUI() const;
+    private:
+        //! CG (aka vertical offset) from UI
+        BlackMisc::PhysicalQuantities::CLength getCGFromUI() const;
 
-            //! Set CG value properly formatted
-            void setCGtoUI(const BlackMisc::PhysicalQuantities::CLength &cg);
+        //! Set CG value properly formatted
+        void setCGtoUI(const BlackMisc::PhysicalQuantities::CLength &cg);
 
-            //! CG edited
-            void onCgEditFinished();
+        //! CG edited
+        void onCgEditFinished();
 
-            QScopedPointer<Ui::CModelMappingForm> ui;
-            BlackMisc::Simulation::CAircraftModel m_originalModel;
-        };
-    } // ns
+        QScopedPointer<Ui::CModelMappingForm> ui;
+        BlackMisc::Simulation::CAircraftModel m_originalModel;
+    };
 } // ns
 
 #endif // guard

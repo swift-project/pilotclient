@@ -14,29 +14,26 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/physicalquantity.h"
 
-namespace BlackMisc
+namespace BlackMisc::PhysicalQuantities
 {
-    namespace PhysicalQuantities
+    /*!
+     * Physical unit frequency
+     */
+    class BLACKMISC_EXPORT CFrequency : public CPhysicalQuantity<CFrequencyUnit, CFrequency>
     {
-        /*!
-         * Physical unit frequency
-         */
-        class BLACKMISC_EXPORT CFrequency : public CPhysicalQuantity<CFrequencyUnit, CFrequency>
-        {
-        public:
-            //! Default constructor
-            CFrequency() : CPhysicalQuantity(0, CFrequencyUnit::defaultUnit()) {}
+    public:
+        //! Default constructor
+        CFrequency() : CPhysicalQuantity(0, CFrequencyUnit::defaultUnit()) {}
 
-            //! Init by double value
-            CFrequency(double value, const CFrequencyUnit &unit) : CPhysicalQuantity(value, unit) {}
+        //! Init by double value
+        CFrequency(double value, const CFrequencyUnit &unit) : CPhysicalQuantity(value, unit) {}
 
-            //! Init by int value converted to double
-            CFrequency(int value, const CFrequencyUnit &unit) : CFrequency(double(value), unit) {}
+        //! Init by int value converted to double
+        CFrequency(int value, const CFrequencyUnit &unit) : CFrequency(double(value), unit) {}
 
-            //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CFrequency(const QString &unitString) : CPhysicalQuantity(unitString) {}
-        };
-    }
+        //! \copydoc CPhysicalQuantity(const QString &unitString)
+        CFrequency(const QString &unitString) : CPhysicalQuantity(unitString) {}
+    };
 }
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CFrequency)

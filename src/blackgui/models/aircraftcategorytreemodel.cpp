@@ -28,74 +28,71 @@ using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 
-namespace BlackGui
+namespace BlackGui::Models
 {
-    namespace Models
+    CAircraftCategoryTreeModel::CAircraftCategoryTreeModel(QObject *parent) : QStandardItemModel(parent)
     {
-        CAircraftCategoryTreeModel::CAircraftCategoryTreeModel(QObject *parent) : QStandardItemModel(parent)
+        m_columns.addColumn(CColumn::standardString("id", CAircraftCategory::IndexDbIntegerKey));
+        m_columns.addColumn(CColumn::standardString("description", CAircraftCategory::IndexDescription));
+        m_columns.addColumn(CColumn::standardString("changed", CAircraftCategory::IndexUtcTimestampFormattedYmdhms));
+    }
+
+    void CAircraftCategoryTreeModel::updateContainer(const CAircraftCategoryList &categories)
+    {
+        Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Wrong thread");
+
+        this->clear();
+        if (categories.isEmpty())  { return; }
+
+        m_categories = categories;
+        m_categories.sortByLevel();
+        QMap<int, QStandardItem *> items;
+        this->setColumnCount(m_columns.size() + 1);
+
+        for (const CAircraftCategory &category : m_categories)
         {
-            m_columns.addColumn(CColumn::standardString("id", CAircraftCategory::IndexDbIntegerKey));
-            m_columns.addColumn(CColumn::standardString("description", CAircraftCategory::IndexDescription));
-            m_columns.addColumn(CColumn::standardString("changed", CAircraftCategory::IndexUtcTimestampFormattedYmdhms));
-        }
+            QList<QStandardItem *> categoryRow;
 
-        void CAircraftCategoryTreeModel::updateContainer(const CAircraftCategoryList &categories)
-        {
-            Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Wrong thread");
+            // ownership of QStandardItem is taken by model
+            QStandardItem *si = new QStandardItem(
+                category.isAssignable() ? CIcons::paperPlane16() : CIcons::folder16(),
+                category.getLevelAndName()
+            );
+            si->setEditable(false);
+            categoryRow.push_back(si);
 
-            this->clear();
-            if (categories.isEmpty())  { return; }
-
-            m_categories = categories;
-            m_categories.sortByLevel();
-            QMap<int, QStandardItem *> items;
-            this->setColumnCount(m_columns.size() + 1);
-
-            for (const CAircraftCategory &category : m_categories)
+            // add all clumns
+            for (const CColumn &column : m_columns.columns())
             {
-                QList<QStandardItem *> categoryRow;
-
-                // ownership of QStandardItem is taken by model
-                QStandardItem *si = new QStandardItem(
-                    category.isAssignable() ? CIcons::paperPlane16() : CIcons::folder16(),
-                    category.getLevelAndName()
-                );
-                si->setEditable(false);
+                const CPropertyIndex i(column.getPropertyIndex());
+                const CVariant v(category.propertyByIndex(i));
+                const CVariant f = column.getFormatter()->displayRole(v);
+                si = new QStandardItem(f.toQString(true));
+                si->setEditable(false); // make not editable
                 categoryRow.push_back(si);
+            } // columns
 
-                // add all clumns
-                for (const CColumn &column : m_columns.columns())
-                {
-                    const CPropertyIndex i(column.getPropertyIndex());
-                    const CVariant v(category.propertyByIndex(i));
-                    const CVariant f = column.getFormatter()->displayRole(v);
-                    si = new QStandardItem(f.toQString(true));
-                    si->setEditable(false); // make not editable
-                    categoryRow.push_back(si);
-                } // columns
+            // add all items
+            if (categoryRow.isEmpty()) { continue; }
 
-                // add all items
-                if (categoryRow.isEmpty()) { continue; }
-
-                QStandardItem *parent = categoryRow.first();
-                if (category.isFirstLevel())
-                {
-                    this->invisibleRootItem()->appendRow(categoryRow);
-                }
-                else
-                {
-                    const int p = category.getDepth() - 1;
-                    Q_ASSERT_X(items[p], Q_FUNC_INFO, "No parent item");
-                    items[p]->appendRow(categoryRow);
-                }
-                items.insert(category.getDepth(), parent);
+            QStandardItem *parent = categoryRow.first();
+            if (category.isFirstLevel())
+            {
+                this->invisibleRootItem()->appendRow(categoryRow);
             }
+            else
+            {
+                const int p = category.getDepth() - 1;
+                Q_ASSERT_X(items[p], Q_FUNC_INFO, "No parent item");
+                items[p]->appendRow(categoryRow);
+            }
+            items.insert(category.getDepth(), parent);
         }
+    }
 
-        void CAircraftCategoryTreeModel::clear()
-        {
-            m_categories.clear();
-            QStandardItemModel::clear();
-        }
-    }  // namespace
+    void CAircraftCategoryTreeModel::clear()
+    {
+        m_categories.clear();
+        QStandardItemModel::clear();
+    }
 } // namespace

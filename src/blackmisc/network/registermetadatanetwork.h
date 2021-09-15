@@ -13,13 +13,10 @@
 
 #include "blackmisc/blackmiscexport.h"
 
-namespace BlackMisc
+namespace BlackMisc::Network
 {
-    namespace Network
-    {
-        //! Register metadata for network
-        BLACKMISC_EXPORT void registerMetadata();
-    } // ns
+    //! Register metadata for network
+    BLACKMISC_EXPORT void registerMetadata();
 } // ns
 
 #endif // guard

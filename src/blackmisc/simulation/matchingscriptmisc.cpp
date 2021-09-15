@@ -8,23 +8,20 @@
 
 #include "matchingscriptmisc.h"
 
-namespace BlackMisc
+namespace BlackMisc::Simulation
 {
-    namespace Simulation
+    //! Enum as string
+    const QString &msToString(MatchingScript ms)
     {
-        //! Enum as string
-        const QString &msToString(MatchingScript ms)
+        static const QString r("Reverse lookup");
+        static const QString m("Matching stage");
+        static const QString d("Unknown");
+        switch (ms)
         {
-            static const QString r("Reverse lookup");
-            static const QString m("Matching stage");
-            static const QString d("Unknown");
-            switch (ms)
-            {
-            case ReverseLookup: return r;
-            case MatchingStage: return m;
-            default: break;
-            }
-            return d;
+        case ReverseLookup: return r;
+        case MatchingStage: return m;
+        default: break;
         }
-    } // namespace
+        return d;
+    }
 } // namespace

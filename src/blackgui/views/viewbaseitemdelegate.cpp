@@ -9,25 +9,22 @@
 #include "viewbaseitemdelegate.h"
 #include "viewbase.h"
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    void CViewBaseItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
-        void CViewBaseItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
-        {
-            const bool isMouseOver = option.state & QStyle::State_MouseOver;
-            viewBase()->mouseOverCallback(index, isMouseOver);
-            QStyledItemDelegate::paint(painter, option, index);
-        }
+        const bool isMouseOver = option.state & QStyle::State_MouseOver;
+        viewBase()->mouseOverCallback(index, isMouseOver);
+        QStyledItemDelegate::paint(painter, option, index);
+    }
 
-        QSize CViewBaseItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
-        {
-            return QStyledItemDelegate::sizeHint(option, index);
-        }
+    QSize CViewBaseItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+    {
+        return QStyledItemDelegate::sizeHint(option, index);
+    }
 
-        CViewBaseNonTemplate *CViewBaseItemDelegate::viewBase() const
-        {
-            return qobject_cast<CViewBaseNonTemplate *>(this->parent());
-        }
-    } // namespace
+    CViewBaseNonTemplate *CViewBaseItemDelegate::viewBase() const
+    {
+        return qobject_cast<CViewBaseNonTemplate *>(this->parent());
+    }
 } // namespace

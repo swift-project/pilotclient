@@ -27,91 +27,88 @@
 class QPoint;
 
 namespace Ui { class CInfoBarStatusComponent; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! Info bar displaying status (Network, Simulator, DBus)
+    class BLACKGUI_EXPORT CInfoBarStatusComponent : public QFrame
     {
-        //! Info bar displaying status (Network, Simulator, DBus)
-        class BLACKGUI_EXPORT CInfoBarStatusComponent : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CInfoBarStatusComponent(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CInfoBarStatusComponent(QWidget *parent = nullptr);
 
-            //!Destructor
-            virtual ~CInfoBarStatusComponent() override;
+        //!Destructor
+        virtual ~CInfoBarStatusComponent() override;
 
-            //! DBus used?
-            void setDBusStatus(bool dbus);
+        //! DBus used?
+        void setDBusStatus(bool dbus);
 
-            //! Tooltip for DBus
-            void setDBusTooltip(const QString &tooltip);
+        //! Tooltip for DBus
+        void setDBusTooltip(const QString &tooltip);
 
-            //! Set the spacing
-            void setSpacing(int spacing);
+        //! Set the spacing
+        void setSpacing(int spacing);
 
-        signals:
-            //! Mode changed
-            void transponderModeChanged();
+    signals:
+        //! Mode changed
+        void transponderModeChanged();
 
-        protected:
-            //! \copydoc QWidget::resizeEvent
-            virtual void resizeEvent(QResizeEvent *event) override;
+    protected:
+        //! \copydoc QWidget::resizeEvent
+        virtual void resizeEvent(QResizeEvent *event) override;
 
-        private:
-            QScopedPointer<Ui::CInfoBarStatusComponent> ui;
-            BlackCore::CActionBind m_actionPtt  { BlackMisc::Input::pttHotkeyAction(),     BlackMisc::Input::pttHotkeyIcon(), this, &CInfoBarStatusComponent::onPttChanged };
+    private:
+        QScopedPointer<Ui::CInfoBarStatusComponent> ui;
+        BlackCore::CActionBind m_actionPtt  { BlackMisc::Input::pttHotkeyAction(),     BlackMisc::Input::pttHotkeyIcon(), this, &CInfoBarStatusComponent::onPttChanged };
 
-            BlackMisc::CDigestSignal m_dsResize { this, &CInfoBarStatusComponent::adjustTextSize, 1000, 50 };
+        BlackMisc::CDigestSignal m_dsResize { this, &CInfoBarStatusComponent::adjustTextSize, 1000, 50 };
 
-            //! Audio available and NOT muted
-            static bool isAudioAvailableAndNotMuted();
+        //! Audio available and NOT muted
+        static bool isAudioAvailableAndNotMuted();
 
-            //! Init the LEDs
-            void initLeds();
+        //! Init the LEDs
+        void initLeds();
 
-            //! Init labels
-            void adjustTextSize();
+        //! Init labels
+        void adjustTextSize();
 
-            //! Simulator connection has been changed
-            void onSimulatorStatusChanged(int status);
+        //! Simulator connection has been changed
+        void onSimulatorStatusChanged(int status);
 
-            //! Network connection has been changed
-            void onNetworkConnectionChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+        //! Network connection has been changed
+        void onNetworkConnectionChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
-            //! Context menu requested
-            void onCustomAudioContextMenuRequested(const QPoint &position);
+        //! Context menu requested
+        void onCustomAudioContextMenuRequested(const QPoint &position);
 
-            //! Mute changed
-            void onMuteChanged(bool muted);
+        //! Mute changed
+        void onMuteChanged(bool muted);
 
-            //! Audio started
-            void onAudioStarted(const BlackMisc::Audio::CAudioDeviceInfo &input, const BlackMisc::Audio::CAudioDeviceInfo &output);
+        //! Audio started
+        void onAudioStarted(const BlackMisc::Audio::CAudioDeviceInfo &input, const BlackMisc::Audio::CAudioDeviceInfo &output);
 
-            //! Audio stopped
-            void onAudioStopped();
+        //! Audio stopped
+        void onAudioStopped();
 
-            //! Mapper is ready
-            void onMapperReady();
+        //! Mapper is ready
+        void onMapperReady();
 
-            //! PTT button changed
-            void onPttChanged(bool enabled);
+        //! PTT button changed
+        void onPttChanged(bool enabled);
 
-            //! PTT, as received in in audio
-            void onAudioPtt(bool active, BlackMisc::Audio::PTTCOM pttcom, const BlackMisc::CIdentifier &identifier);
+        //! PTT, as received in in audio
+        void onAudioPtt(bool active, BlackMisc::Audio::PTTCOM pttcom, const BlackMisc::CIdentifier &identifier);
 
-            //! Internet accessible?
-            void onInternetAccessibleChanged(bool access);
+        //! Internet accessible?
+        void onInternetAccessibleChanged(bool access);
 
-            //! Update values
-            void updateValues();
+        //! Update values
+        void updateValues();
 
-            //! Update spacing based on main window size
-            void updateSpacing();
-        };
-    } // ns
+        //! Update spacing based on main window size
+        void updateSpacing();
+    };
 } // ns
 
 #endif // guard

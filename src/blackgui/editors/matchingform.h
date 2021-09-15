@@ -18,72 +18,69 @@
 #include <QScopedPointer>
 
 namespace Ui { class CMatchingForm; }
-namespace BlackGui
+namespace BlackGui::Editors
 {
-    namespace Editors
+    //! Matching form
+    class CMatchingForm : public CForm
     {
-        //! Matching form
-        class CMatchingForm : public CForm
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CMatchingForm(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CMatchingForm(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CMatchingForm() override;
+        //! Destructor
+        virtual ~CMatchingForm() override;
 
-            //! \name Form class implementations
-            //! @{
-            virtual void setReadOnly(bool readonly) override;
-            virtual BlackMisc::CStatusMessageList validate(bool withNestedForms) const override;
-            //! @}
+        //! \name Form class implementations
+        //! @{
+        virtual void setReadOnly(bool readonly) override;
+        virtual BlackMisc::CStatusMessageList validate(bool withNestedForms) const override;
+        //! @}
 
-            //! Set valued
-            void setValue(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
+        //! Set valued
+        void setValue(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
 
-            //! Value
-            BlackMisc::Simulation::CAircraftMatcherSetup value() const;
+        //! Value
+        BlackMisc::Simulation::CAircraftMatcherSetup value() const;
 
-            //! Clear data
-            void clear();
+        //! Clear data
+        void clear();
 
-        private:
-            //! Algorithm
-            BlackMisc::Simulation::CAircraftMatcherSetup::MatchingAlgorithm algorithm() const;
+    private:
+        //! Algorithm
+        BlackMisc::Simulation::CAircraftMatcherSetup::MatchingAlgorithm algorithm() const;
 
-            //! Mode
-            BlackMisc::Simulation::CAircraftMatcherSetup::MatchingMode matchingMode() const;
+        //! Mode
+        BlackMisc::Simulation::CAircraftMatcherSetup::MatchingMode matchingMode() const;
 
-            //! Stragey
-            BlackMisc::Simulation::CAircraftMatcherSetup::PickSimilarStrategy pickStrategy() const;
+        //! Stragey
+        BlackMisc::Simulation::CAircraftMatcherSetup::PickSimilarStrategy pickStrategy() const;
 
-            //! Set the pick strategy
-            void setPickStrategy(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
+        //! Set the pick strategy
+        void setPickStrategy(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
 
-            //! Set the matching mode
-            void setMatchingAlgorithm(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
+        //! Set the matching mode
+        void setMatchingAlgorithm(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
 
-            //! Algorithm has been toggled
-            void onAlgorithmChanged();
+        //! Algorithm has been toggled
+        void onAlgorithmChanged();
 
-            //! Airline group changed
-            void onAirlineGroupChanged();
+        //! Airline group changed
+        void onAirlineGroupChanged();
 
-            //! Reset
-            //! @{
-            void resetByAlgorithm();
-            void resetAll();
-            //! @}
+        //! Reset
+        //! @{
+        void resetByAlgorithm();
+        void resetAll();
+        //! @}
 
-            //! Directory browser
-            void fileDialog();
+        //! Directory browser
+        void fileDialog();
 
-            BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_directories  { this }; //!< the swift directories
-            QScopedPointer<Ui::CMatchingForm> ui;
-        };
-    } // ns
+        BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_directories  { this }; //!< the swift directories
+        QScopedPointer<Ui::CMatchingForm> ui;
+    };
 } // ns
 
 

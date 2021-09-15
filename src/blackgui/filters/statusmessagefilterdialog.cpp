@@ -15,27 +15,24 @@ using namespace BlackGui::Models;
 using namespace BlackGui::Filters;
 using namespace BlackMisc;
 
-namespace BlackGui
+namespace BlackGui::Filters
 {
-    namespace Filters
+    CStatusMessageFilterDialog::CStatusMessageFilterDialog(QWidget *parent) :
+        CFilterDialog(parent),
+        ui(new Ui::CStatusMessageFilterDialog)
     {
-        CStatusMessageFilterDialog::CStatusMessageFilterDialog(QWidget *parent) :
-            CFilterDialog(parent),
-            ui(new Ui::CStatusMessageFilterDialog)
-        {
-            ui->setupUi(this);
-            this->setWindowTitle("Filter status messages");
-            this->resize(480, 75);
-            ui->filter_Messages->displayCount(false);
-            connect(ui->filter_Messages, &CStatusMessageFilterBar::rejectDialog, this, &CStatusMessageFilterDialog::reject);
-        }
+        ui->setupUi(this);
+        this->setWindowTitle("Filter status messages");
+        this->resize(480, 75);
+        ui->filter_Messages->displayCount(false);
+        connect(ui->filter_Messages, &CStatusMessageFilterBar::rejectDialog, this, &CStatusMessageFilterDialog::reject);
+    }
 
-        CStatusMessageFilterDialog::~CStatusMessageFilterDialog()
-        { }
+    CStatusMessageFilterDialog::~CStatusMessageFilterDialog()
+    { }
 
-        std::unique_ptr<IModelFilter<CStatusMessageList>> CStatusMessageFilterDialog::createModelFilter() const
-        {
-            return ui->filter_Messages->createModelFilter();
-        }
-    } // namespace
+    std::unique_ptr<IModelFilter<CStatusMessageList>> CStatusMessageFilterDialog::createModelFilter() const
+    {
+        return ui->filter_Messages->createModelFilter();
+    }
 } // namespace

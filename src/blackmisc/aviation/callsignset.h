@@ -21,41 +21,38 @@
 #include <QStringList>
 #include <tuple>
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
+    //! Value object for a set of callsigns.
+    class BLACKMISC_EXPORT CCallsignSet : public CCollection<CCallsign>
     {
-        //! Value object for a set of callsigns.
-        class BLACKMISC_EXPORT CCallsignSet : public CCollection<CCallsign>
-        {
-            using CCollection::CCollection;
+        using CCollection::CCollection;
 
-        public:
-            //! Default constructor
-            CCallsignSet();
+    public:
+        //! Default constructor
+        CCallsignSet();
 
-            //! By string list
-            CCallsignSet(const QStringList &callsigns, CCallsign::TypeHint typeHint = CCallsign::NoHint);
+        //! By string list
+        CCallsignSet(const QStringList &callsigns, CCallsign::TypeHint typeHint = CCallsign::NoHint);
 
-            //! Construct from single callsign
-            CCallsignSet(const CCallsign &callsign);
+        //! Construct from single callsign
+        CCallsignSet(const CCallsign &callsign);
 
-            //! Construct from a base class object.
-            CCallsignSet(const CCollection<CCallsign> &other);
+        //! Construct from a base class object.
+        CCallsignSet(const CCollection<CCallsign> &other);
 
-            //! Contains by string
-            bool containsCallsign(const QString &callsign) const;
+        //! Contains by string
+        bool containsCallsign(const QString &callsign) const;
 
-            //! The callsign strings
-            QStringList getCallsignStrings(bool sorted = false) const;
+        //! The callsign strings
+        QStringList getCallsignStrings(bool sorted = false) const;
 
-            //! Callsigns as string
-            QString getCallsignsAsString(bool sorted = false, const QString &separator = ", ") const;
+        //! Callsigns as string
+        QString getCallsignsAsString(bool sorted = false, const QString &separator = ", ") const;
 
-            //! Register metadata
-            static void registerMetadata();
-        };
-    } //namespace
+        //! Register metadata
+        static void registerMetadata();
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CCallsignSet)

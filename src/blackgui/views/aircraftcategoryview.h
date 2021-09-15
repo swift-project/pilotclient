@@ -15,20 +15,17 @@
 #include "blackgui/views/viewdbobjects.h"
 #include "blackgui/blackguiexport.h"
 
-namespace BlackGui
+namespace BlackGui::Views
 {
-    namespace Views
+    //! Aircraft ICAO codes view
+    class BLACKGUI_EXPORT CAircraftCategoryView :
+        public CViewWithDbObjects<Models::CAircraftCategoryListModel>
     {
-        //! Aircraft ICAO codes view
-        class BLACKGUI_EXPORT CAircraftCategoryView :
-            public CViewWithDbObjects<Models::CAircraftCategoryListModel>
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CAircraftCategoryView(QWidget *parent = nullptr);
-        };
-    } // ns
+    public:
+        //! Constructor
+        explicit CAircraftCategoryView(QWidget *parent = nullptr);
+    };
 } // ns
 #endif // guard

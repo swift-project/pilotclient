@@ -21,60 +21,57 @@
 #include <QStringList>
 #include <QList>
 
-namespace BlackGui
+namespace BlackGui::Graphs
 {
-    namespace Graphs
+    /**
+     * For axis labels
+     */
+    class CTextScaleDraw: public QwtScaleDraw
     {
-        /**
-         * For axis labels
-         */
-        class CTextScaleDraw: public QwtScaleDraw
-        {
-        public:
-            //! Constructorxs
-            CTextScaleDraw(const QStringList &texts);
+    public:
+        //! Constructorxs
+        CTextScaleDraw(const QStringList &texts);
 
-            //! Value to label
-            virtual QwtText label(double v) const override;
+        //! Value to label
+        virtual QwtText label(double v) const override;
 
-            //! Labels
-            void setLabels(const QStringList &labels) { m_labels = labels; }
+        //! Labels
+        void setLabels(const QStringList &labels) { m_labels = labels; }
 
-            //! Any labels?
-            bool hasLabels() const { return !m_labels.isEmpty(); }
+        //! Any labels?
+        bool hasLabels() const { return !m_labels.isEmpty(); }
 
-        private:
-            QStringList m_labels;
-        };
+    private:
+        QStringList m_labels;
+    };
 
-        /**
-         * Bar chart, modified version of QWT examples
-         */
-        class BLACKGUI_EXPORT CBarChart: public QwtPlot
-        {
-        public:
-            //! Constructor
-            CBarChart(QWidget * = nullptr);
+    /**
+     * Bar chart, modified version of QWT examples
+     */
+    class BLACKGUI_EXPORT CBarChart: public QwtPlot
+    {
+    public:
+        //! Constructor
+        CBarChart(QWidget * = nullptr);
 
-            //! Style
-            void setStyle(QwtPlotMultiBarChart::ChartStyle style);
+        //! Style
+        void setStyle(QwtPlotMultiBarChart::ChartStyle style);
 
-            //! Set number of symbols
-            void setSymbols(const QString &title, const QString &color);
+        //! Set number of symbols
+        void setSymbols(const QString &title, const QString &color);
 
-            //! Set number of symbols
-            void setSymbols(const QStringList &titles, const QStringList &colors);
+        //! Set number of symbols
+        void setSymbols(const QStringList &titles, const QStringList &colors);
 
-            //! Samples with 1 bar per sample
-            void setSamples1Bar(const QList<double> &samples, const QStringList &labels, Qt::Orientation orientation);
+        //! Samples with 1 bar per sample
+        void setSamples1Bar(const QList<double> &samples, const QStringList &labels, Qt::Orientation orientation);
 
-        private:
-            //! Orientation
-            void setOrientation(Qt::Orientation, const QStringList &labels);
+    private:
+        //! Orientation
+        void setOrientation(Qt::Orientation, const QStringList &labels);
 
-            QScopedPointer<QwtPlotMultiBarChart> m_barChartItem;
-        };
-    } // ns
+        QScopedPointer<QwtPlotMultiBarChart> m_barChartItem;
+    };
 } // ns
 
 #endif

@@ -32,14 +32,11 @@
 #include <QtGlobal>
 #include <atomic>
 
-namespace BlackMisc
+namespace BlackMisc::Aviation
 {
-    namespace Aviation
-    {
-        class CAircraftSituation;
-        class CCallsign;
-        class CTransponder;
-    }
+    class CAircraftSituation;
+    class CCallsign;
+    class CTransponder;
 }
 
 namespace BlackCore

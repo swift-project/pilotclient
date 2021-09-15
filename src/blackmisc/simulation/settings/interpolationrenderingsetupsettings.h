@@ -14,23 +14,17 @@
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/settingscache.h"
 
-namespace BlackMisc
+namespace BlackMisc::Simulation::Settings
 {
-    namespace Simulation
+    //! Last model used
+    struct TInterpolationAndRenderingSetupGlobal : public TSettingTrait<CInterpolationAndRenderingSetupGlobal>
     {
-        namespace Settings
-        {
-            //! Last model used
-            struct TInterpolationAndRenderingSetupGlobal : public TSettingTrait<CInterpolationAndRenderingSetupGlobal>
-            {
-                //! \copydoc BlackMisc::TSettingTrait::key
-                static const char *key() { return "settingsglobalinterpolationsetup"; }
+        //! \copydoc BlackMisc::TSettingTrait::key
+        static const char *key() { return "settingsglobalinterpolationsetup"; }
 
-                //! \copydoc BlackMisc::TSettingTrait::humanReadable
-                static const QString &humanReadable() { static const QString name("Interpolation setup"); return name; }
-            };
-        } // ns
-    } // ns
+        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        static const QString &humanReadable() { static const QString name("Interpolation setup"); return name; }
+    };
 } // ns
 
 #endif // guard

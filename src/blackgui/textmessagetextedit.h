@@ -22,7 +22,7 @@
 class QAction;
 class QPoint;
 
-namespace BlackMisc { namespace Network { class CTextMessage; } }
+namespace BlackMisc::Network { class CTextMessage; }
 namespace BlackGui
 {
     //! Specialized text edit for displaying text messages

@@ -9,89 +9,86 @@
 #include "blackmisc/network/serverlist.h"
 #include <tuple>
 
-namespace BlackMisc
+namespace BlackMisc::Network
 {
-    namespace Network
+    CServerList::CServerList() { }
+
+    CServerList::CServerList(const CSequence<CServer> &other) :
+        CSequence<CServer>(other)
+    { }
+
+    bool CServerList::containsName(const QString &name) const
     {
-        CServerList::CServerList() { }
-
-        CServerList::CServerList(const CSequence<CServer> &other) :
-            CSequence<CServer>(other)
-        { }
-
-        bool CServerList::containsName(const QString &name) const
+        for (const CServer &s : *this)
         {
-            for (const CServer &s : *this)
-            {
-                if (s.matchesName(name)) { return true; }
-            }
-            return false;
+            if (s.matchesName(name)) { return true; }
         }
+        return false;
+    }
 
-        bool CServerList::removeByName(const QString &name)
+    bool CServerList::removeByName(const QString &name)
+    {
+        if (name.isEmpty()) { return false; }
+        const CServerList copy(*this);
+        bool removed = false;
+        for (const CServer &server : copy)
         {
-            if (name.isEmpty()) { return false; }
-            const CServerList copy(*this);
-            bool removed = false;
-            for (const CServer &server : copy)
-            {
-                if (!server.matchesName(name)) { continue; }
-                this->remove(server);
-                removed = true;
-            }
-            return removed;
+            if (!server.matchesName(name)) { continue; }
+            this->remove(server);
+            removed = true;
         }
+        return removed;
+    }
 
-        void CServerList::removeUsers()
+    void CServerList::removeUsers()
+    {
+        for (CServer &s : *this)
         {
-            for (CServer &s : *this)
-            {
-                s.setUser(CUser());
-            }
+            s.setUser(CUser());
         }
+    }
 
-        bool CServerList::containsAddressPort(const CServer &server)
+    bool CServerList::containsAddressPort(const CServer &server)
+    {
+        for (const CServer &s : *this)
         {
-            for (const CServer &s : *this)
-            {
-                if (s.matchesAddressPort(server)) { return true; }
-            }
-            return false;
+            if (s.matchesAddressPort(server)) { return true; }
         }
+        return false;
+    }
 
-        void CServerList::addIfAddressNotExists(const CServer &server)
+    void CServerList::addIfAddressNotExists(const CServer &server)
+    {
+        if (!server.hasAddressAndPort() || server.getName().isEmpty()) { return; }
+        if (!this->containsAddressPort(server))
         {
-            if (!server.hasAddressAndPort() || server.getName().isEmpty()) { return; }
-            if (!this->containsAddressPort(server))
-            {
-                this->push_back(server);
-            }
+            this->push_back(server);
         }
+    }
 
-        void CServerList::addIfAddressNotExists(const CServerList &servers)
+    void CServerList::addIfAddressNotExists(const CServerList &servers)
+    {
+        for (const CServer &s : servers)
         {
-            for (const CServer &s : servers)
-            {
-                this->addIfAddressNotExists(s);
-            }
+            this->addIfAddressNotExists(s);
         }
+    }
 
-        CServerList CServerList::findFsdServers() const
+    CServerList CServerList::findFsdServers() const
+    {
+        CServerList fsdServers;
+        for (const CServer &s : *this)
         {
-            CServerList fsdServers;
-            for (const CServer &s : *this)
-            {
-                if (s.isFsdServer()) { fsdServers.push_back(s); }
-            }
-            return fsdServers;
+            if (s.isFsdServer()) { fsdServers.push_back(s); }
         }
+        return fsdServers;
+    }
 
-        void CServerList::setFsdSetup(const CFsdSetup &setup)
+    void CServerList::setFsdSetup(const CFsdSetup &setup)
+    {
+        for (CServer &s : *this)
         {
-            for (CServer &s : *this)
-            {
-                s.setFsdSetup(setup);
-            }
+            s.setFsdSetup(setup);
         }
-    } // namespace
+    }
 } // namespace

@@ -22,63 +22,60 @@
 class QWidget;
 
 namespace Ui { class CSelcalCodeSelector; }
-namespace BlackGui
+namespace BlackGui::Components
 {
-    namespace Components
+    //! SELCAL mode selector
+    class BLACKGUI_EXPORT CSelcalCodeSelector : public QFrame
     {
-        //! SELCAL mode selector
-        class BLACKGUI_EXPORT CSelcalCodeSelector : public QFrame
-        {
-            Q_OBJECT
+        Q_OBJECT
 
-        public:
-            //! Constructor
-            explicit CSelcalCodeSelector(QWidget *parent = nullptr);
+    public:
+        //! Constructor
+        explicit CSelcalCodeSelector(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CSelcalCodeSelector();
+        //! Destructor
+        virtual ~CSelcalCodeSelector();
 
-            //! SELCAL code
-            QString getSelcalCode() const;
+        //! SELCAL code
+        QString getSelcalCode() const;
 
-            //! SELCAL
-            BlackMisc::Aviation::CSelcal getSelcal() const;
+        //! SELCAL
+        BlackMisc::Aviation::CSelcal getSelcal() const;
 
-            //! Reset the SELCAL code
-            void resetSelcalCodes(bool allowEmptyValue = false);
+        //! Reset the SELCAL code
+        void resetSelcalCodes(bool allowEmptyValue = false);
 
-            //! Set the SELCAL code
-            void setSelcalCode(const QString &selcal);
+        //! Set the SELCAL code
+        void setSelcalCode(const QString &selcal);
 
-            //! Set the SELCAL code
-            void setSelcal(const BlackMisc::Aviation::CSelcal &selcal);
+        //! Set the SELCAL code
+        void setSelcal(const BlackMisc::Aviation::CSelcal &selcal);
 
-            //! Valid code?
-            bool hasValidCode() const;
+        //! Valid code?
+        bool hasValidCode() const;
 
-            //! Clear
-            void clear();
+        //! Clear
+        void clear();
 
-            //! The height of the combobox
-            int getComboBoxHeight() const;
+        //! The height of the combobox
+        int getComboBoxHeight() const;
 
-            //! Set the combobox height
-            void setComboBoxMinimumHeight(int h);
+        //! Set the combobox height
+        void setComboBoxMinimumHeight(int h);
 
-        signals:
-            //! Value has been changed
-            void valueChanged();
+    signals:
+        //! Value has been changed
+        void valueChanged();
 
-        private:
-            QScopedPointer<Ui::CSelcalCodeSelector> ui;
+    private:
+        QScopedPointer<Ui::CSelcalCodeSelector> ui;
 
-            //! SELCAL changed
-            void selcalIndexChanged(int index);
+        //! SELCAL changed
+        void selcalIndexChanged(int index);
 
-            //! Set valid/invalid icon
-            void setValidityHint();
-        };
-    } // ns
+        //! Set valid/invalid icon
+        void setValidityHint();
+    };
 } // ns
 
 #endif // guard
