@@ -16,6 +16,8 @@
 
 namespace BlackMisc
 {
+    class IOrderable;
+
     //! List of orderable IOrderable objects
     //! \remark Orerable objects shall implement BlackMisc::IOrderable
     template<class OBJ, class CONTAINER>
