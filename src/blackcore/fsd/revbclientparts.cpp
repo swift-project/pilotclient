@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "revbclientparts.h"
-#include "serializer.h"
+#include "blackcore/fsd/revbclientparts.h"
+#include "blackcore/fsd/serializer.h"
 
 #include "blackmisc/logmessage.h"
 

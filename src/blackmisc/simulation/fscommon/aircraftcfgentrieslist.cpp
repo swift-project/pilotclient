@@ -9,7 +9,7 @@
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "blackmisc/statusmessagelist.h"
-#include "stringutils.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/range.h"
 #include "blackmisc/setbuilder.h"

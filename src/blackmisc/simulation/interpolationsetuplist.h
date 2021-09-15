@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_SIMULATION_INTERPOLATIONSETUPLIST_H
 #define BLACKMISC_SIMULATION_INTERPOLATIONSETUPLIST_H
 
-#include "interpolationrenderingsetup.h"
+#include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"

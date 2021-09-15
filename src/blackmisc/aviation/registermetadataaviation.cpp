@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "registermetadataaviation.h"
-#include "aviation.h"
+#include "blackmisc/aviation/registermetadataaviation.h"
+#include "blackmisc/aviation/aviation.h"
 #include "blackmisc/variant.h"
 
 namespace BlackMisc

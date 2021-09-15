@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "coordinategeodeticlist.h"
+#include "blackmisc/geo/coordinategeodeticlist.h"
 #include "math/mathutils.h"
 
 #include <QJsonValue>

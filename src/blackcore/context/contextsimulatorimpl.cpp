@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "contextsimulatorimpl.h"
+#include "blackcore/context/contextsimulatorimpl.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextnetworkimpl.h"

@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "registermetadatapq.h"
+#include "blackmisc/pq/registermetadatapq.h"
 #include "blackmisc/pq/acceleration.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/frequency.h"

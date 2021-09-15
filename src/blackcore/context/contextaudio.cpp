@@ -6,15 +6,13 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "contextaudio.h"
-
-#include "blackcore/afv/clients/afvclient.h"
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/context/contextnetwork.h"      // for user login
 #include "blackcore/context/contextownaircraft.h"  // for COM integration
 #include "blackcore/context/contextsimulator.h"    // for COM intergration
 #include "blackcore/context/contextaudioimpl.h"
 #include "blackcore/context/contextaudioproxy.h"
+#include "blackcore/afv/clients/afvclient.h"
 #include "blackmisc/simplecommandparser.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/stringutils.h"

@@ -11,9 +11,9 @@
 #ifndef BLACKMISC_NETWORK_SERVER_H
 #define BLACKMISC_NETWORK_SERVER_H
 
-#include "user.h"
-#include "fsdsetup.h"
-#include "ecosystem.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/network/fsdsetup.h"
+#include "blackmisc/network/ecosystem.h"
 #include "blackmisc/audio/voicesetup.h"
 #include "blackmisc/obfuscation.h"
 #include "blackmisc/blackmiscexport.h"

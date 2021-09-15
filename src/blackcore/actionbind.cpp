@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "actionbind.h"
+#include "blackcore/actionbind.h"
 
 namespace BlackCore
 {

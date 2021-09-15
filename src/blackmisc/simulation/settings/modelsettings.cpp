@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "modelsettings.h"
+#include "blackmisc/simulation/settings/modelsettings.h"
 #include "blackmisc/stringutils.h"
 
 namespace BlackMisc::Simulation::Settings

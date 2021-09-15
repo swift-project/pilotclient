@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "cryptodtoserializer.h"
+#include "blackcore/afv/crypto/cryptodtoserializer.h"
 
 namespace BlackCore::Afv::Crypto
 {

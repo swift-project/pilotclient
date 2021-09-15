@@ -11,7 +11,7 @@
 #ifndef BLACKCORE_AFV_CRYPTO_CRYPTODTOHEADERDTO_H
 #define BLACKCORE_AFV_CRYPTO_CRYPTODTOHEADERDTO_H
 
-#include "cryptodtomode.h"
+#include "blackcore/afv/crypto/cryptodtomode.h"
 #include "msgpack.hpp"
 #include <QString>
 #include <cstdint>

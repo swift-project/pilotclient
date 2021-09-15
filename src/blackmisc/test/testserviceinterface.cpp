@@ -6,9 +6,9 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "testserviceinterface.h"
-#include "testservice.h"
-#include "testing.h"
+#include "blackmisc/test/testserviceinterface.h"
+#include "blackmisc/test/testservice.h"
+#include "blackmisc/test/testing.h"
 #include "blackmisc/test/testdata.h"
 #include "blackmisc/aviation/flightplan.h"
 #include <QTextStream>

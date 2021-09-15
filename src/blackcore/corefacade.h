@@ -11,7 +11,7 @@
 #ifndef BLACKCORE_COREFACADE_H
 #define BLACKCORE_COREFACADE_H
 
-#include "corefacadeconfig.h"
+#include "blackcore/corefacadeconfig.h"
 #include "blackcore/data/launchersetup.h"
 #include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/blackcoreexport.h"

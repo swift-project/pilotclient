@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTICAOCODE_H
 #define BLACKMISC_AVIATION_AIRCRAFTICAOCODE_H
 
-#include "aircraftcategory.h"
+#include "blackmisc/aviation/aircraftcategory.h"
 #include "blackmisc/db/datastore.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/blackmiscexport.h"

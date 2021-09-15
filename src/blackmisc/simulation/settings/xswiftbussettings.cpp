@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "xswiftbussettings.h"
-#include "xswiftbussettingsqtfree.inc"
+#include "blackmisc/simulation/settings/xswiftbussettings.h"
+#include "blackmisc/simulation/settings/xswiftbussettingsqtfree.inc"
 
 namespace BlackMisc::Simulation::Settings
 {

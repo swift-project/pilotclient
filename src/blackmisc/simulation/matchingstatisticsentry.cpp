@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "matchingstatisticsentry.h"
+#include "blackmisc/simulation/matchingstatisticsentry.h"
 #include "blackmisc/comparefunctions.h"
 
 namespace BlackMisc::Simulation

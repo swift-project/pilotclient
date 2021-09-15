@@ -6,9 +6,9 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "pilotdataupdate.h"
-#include "pbh.h"
-#include "serializer.h"
+#include "blackcore/fsd/pilotdataupdate.h"
+#include "blackcore/fsd/pbh.h"
+#include "blackcore/fsd/serializer.h"
 
 #include "blackmisc/logmessage.h"
 

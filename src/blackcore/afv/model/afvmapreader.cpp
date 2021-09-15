@@ -1,4 +1,4 @@
-#include "afvmapreader.h"
+#include "blackcore/afv/model/afvmapreader.h"
 #include "blackcore/application.h"
 #include "blackcore/afv/dto.h"
 #include "blackmisc/aviation/callsign.h"

@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "matchinglog.h"
+#include "blackmisc/simulation/matchinglog.h"
 #include <QStringList>
 
 namespace BlackMisc::Simulation

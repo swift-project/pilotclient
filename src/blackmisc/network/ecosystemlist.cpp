@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "ecosystemlist.h"
+#include "blackmisc/network/ecosystemlist.h"
 
 namespace BlackMisc::Network
 {

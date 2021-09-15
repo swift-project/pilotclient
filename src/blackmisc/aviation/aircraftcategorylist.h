@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTCATEGORYLIST_H
 #define BLACKMISC_AVIATION_AIRCRAFTCATEGORYLIST_H
 
-#include "aircraftcategory.h"
+#include "blackmisc/aviation/aircraftcategory.h"
 #include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"

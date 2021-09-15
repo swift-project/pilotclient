@@ -12,7 +12,7 @@
 #define BLACKCORE_AFV_CRYPTO_CRYPTODTOCHANNEL_H
 
 #include "blackcore/afv/dto.h"
-#include "cryptodtomode.h"
+#include "blackcore/afv/crypto/cryptodtomode.h"
 
 #include <QDateTime>
 #include <QByteArray>

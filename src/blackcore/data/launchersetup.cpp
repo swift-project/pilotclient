@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "launchersetup.h"
+#include "blackcore/data/launchersetup.h"
 #include "blackmisc/stringutils.h"
 
 using namespace BlackMisc;

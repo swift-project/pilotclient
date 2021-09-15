@@ -14,7 +14,6 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/weather/presentweather.h"
-#include "presentweather.h"
 
 #include <QMetaType>
 

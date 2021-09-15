@@ -8,7 +8,7 @@
 
 //! \file
 
-#include "githubpackagesreader.h"
+#include "blackcore/githubpackagesreader.h"
 #include "blackcore/application.h"
 #include "blackconfig/buildconfig.h"
 #include <QNetworkAccessManager>

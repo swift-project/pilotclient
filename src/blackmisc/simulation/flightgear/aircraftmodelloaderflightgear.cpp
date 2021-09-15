@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "aircraftmodelloaderflightgear.h"
+#include "blackmisc/simulation/flightgear/aircraftmodelloaderflightgear.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include <QDirIterator>
 namespace BlackMisc::Simulation::Flightgear

@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "webreaderflags.h"
+#include "blackcore/webreaderflags.h"
 
 using namespace BlackMisc::Network;
 

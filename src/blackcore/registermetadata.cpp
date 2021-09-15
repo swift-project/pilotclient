@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "registermetadata.h"
+#include "blackcore/registermetadata.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/data/launchersetup.h"
 #include "blackcore/data/globalsetup.h"

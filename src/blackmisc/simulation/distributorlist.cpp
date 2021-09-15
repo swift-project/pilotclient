@@ -6,9 +6,9 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "distributorlist.h"
-#include "simulatorinfo.h"
-#include "aircraftmodel.h"
+#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 
 #include <tuple>
 

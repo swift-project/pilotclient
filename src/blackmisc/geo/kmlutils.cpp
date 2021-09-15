@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "kmlutils.h"
+#include "blackmisc/geo/kmlutils.h"
 #include <QStringBuilder>
 
 using namespace BlackMisc;

@@ -6,13 +6,13 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
+#include "blackcore/db/infodatareader.h"
 #include "blackcore/application.h"
 #include "blackcore/webdataservices.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/verify.h"
-#include "infodatareader.h"
 
 #include <QTimer>
 #include <QJsonDocument>

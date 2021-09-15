@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "airlineicaocode.h"
-#include "callsign.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/icons.h"

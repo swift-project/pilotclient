@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "actionhotkeydefs.h"
+#include "blackmisc/input/actionhotkeydefs.h"
 
 namespace BlackMisc::Input
 {

@@ -11,8 +11,8 @@
 #ifndef BLACKGUI_WEATHERCOMPONENT_H
 #define BLACKGUI_WEATHERCOMPONENT_H
 
-#include "enablefordockwidgetinfoarea.h"
-#include "coordinatedialog.h"
+#include "blackgui/enablefordockwidgetinfoarea.h"
+#include "blackgui/components/coordinatedialog.h"
 #include "blackgui/blackguiexport.h"
 #include "blackcore/actionbind.h"
 #include "blackmisc/geo/coordinategeodetic.h"

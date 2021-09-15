@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "distribution.h"
+#include "blackmisc/db/distribution.h"
 #include <QRegularExpression>
 #include <QStringBuilder>
 

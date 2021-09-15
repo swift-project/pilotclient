@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "interpolationsetupprovider.h"
+#include "blackmisc/simulation/interpolationsetupprovider.h"
 
 using namespace BlackMisc::Aviation;
 

@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "textmessage.h"
+#include "blackcore/fsd/textmessage.h"
 
 #include "blackmisc/logmessage.h"
 

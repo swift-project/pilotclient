@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_DB_DISTRIBUTIONLIST_H
 #define BLACKMISC_DB_DISTRIBUTIONLIST_H
 
-#include "distribution.h"
+#include "blackmisc/db/distribution.h"
 #include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/platform.h"
 #include "blackmisc/blackmiscexport.h"

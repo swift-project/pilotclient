@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "elevationplane.h"
-#include "coordinategeodetic.h"
+#include "blackmisc/geo/elevationplane.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/propertyindexref.h"
 

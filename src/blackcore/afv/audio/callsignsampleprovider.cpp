@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "callsignsampleprovider.h"
-#include "callsigndelaycache.h"
+#include "blackcore/afv/audio/callsignsampleprovider.h"
+#include "blackcore/afv/audio/callsigndelaycache.h"
 
 #include "blackcore/afv/audio/receiversampleprovider.h"
 #include "blacksound/sampleprovider/samples.h"

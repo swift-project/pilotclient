@@ -11,8 +11,8 @@
 #ifndef BLACKCORE_CONTEXT_CONTEXTOWNAIRCRAFT_EMPTY_H
 #define BLACKCORE_CONTEXT_CONTEXTOWNAIRCRAFT_EMPTY_H
 
-#include "blackcoreexport.h"
-#include "contextownaircraft.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/context/contextownaircraft.h"
 #include "blackmisc/logmessage.h"
 
 // clazy:excludeall=const-signal-or-slot

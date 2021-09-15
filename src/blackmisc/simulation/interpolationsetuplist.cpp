@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "interpolationsetuplist.h"
+#include "blackmisc/simulation/interpolationsetuplist.h"
 
 namespace BlackMisc::Simulation
 {

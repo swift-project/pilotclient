@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_SIMULATION_INTERPOLATIONLOGGER_H
 #define BLACKMISC_SIMULATION_INTERPOLATIONLOGGER_H
 
-#include "interpolationrenderingsetup.h"
+#include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"

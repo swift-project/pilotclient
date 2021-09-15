@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "cryptodtochannel.h"
+#include "blackcore/afv/crypto/cryptodtochannel.h"
 #include "blackmisc/verify.h"
 
 using namespace BlackMisc;

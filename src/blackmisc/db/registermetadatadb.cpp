@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "registermetadatadb.h"
-#include "db.h"
+#include "blackmisc/db/registermetadatadb.h"
+#include "blackmisc/db/db.h"
 #include "blackmisc/variant.h"
 
 namespace BlackMisc

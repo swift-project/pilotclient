@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "clientlist.h"
+#include "blackmisc/network/clientlist.h"
 
 using namespace BlackMisc::Aviation;
 

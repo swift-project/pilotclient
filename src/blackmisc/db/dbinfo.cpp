@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "dbinfo.h"
+#include "blackmisc/db/dbinfo.h"
 #include "blackmisc/comparefunctions.h"
 #include <QStringBuilder>
 

@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "dbinfolist.h"
+#include "blackmisc/db/dbinfolist.h"
 
 using namespace BlackMisc::Network;
 

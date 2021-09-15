@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "testdata.h"
+#include "blackmisc/test/testdata.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/flightplan.h"

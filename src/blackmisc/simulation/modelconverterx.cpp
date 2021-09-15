@@ -6,10 +6,10 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
+#include "blackmisc/simulation/modelconverterx.h"
 #include "blackconfig/buildconfig.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/logmessage.h"
-#include "modelconverterx.h"
 #include <QFile>
 #include <QDir>
 

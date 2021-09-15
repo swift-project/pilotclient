@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "addpilot.h"
-#include "serializer.h"
+#include "blackcore/fsd/addpilot.h"
+#include "blackcore/fsd/serializer.h"
 
 #include "blackmisc/logmessage.h"
 

@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "authresponse.h"
+#include "blackcore/fsd/authresponse.h"
 #include "blackmisc/logmessage.h"
 
 namespace BlackCore::Fsd

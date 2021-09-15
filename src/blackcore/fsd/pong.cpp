@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "pong.h"
+#include "blackcore/fsd/pong.h"
 
 #include "blackmisc/logmessage.h"
 

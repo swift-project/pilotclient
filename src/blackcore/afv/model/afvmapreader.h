@@ -9,7 +9,7 @@
 #ifndef BLACKCORE_AFV_AFVMAPREADER_H
 #define BLACKCORE_AFV_AFVMAPREADER_H
 
-#include "atcstationmodel.h"
+#include "blackcore/afv/model/atcstationmodel.h"
 #include "blackcore/blackcoreexport.h"
 
 #include <QObject>

@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "planeinformation.h"
+#include "blackcore/fsd/planeinformation.h"
 
 #include "blackmisc/logmessage.h"
 

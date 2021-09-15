@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "apiserverconnection.h"
+#include "blackcore/afv/connection/apiserverconnection.h"
 
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/network/external/qjsonwebtoken.h"

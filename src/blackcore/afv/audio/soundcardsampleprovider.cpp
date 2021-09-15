@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "soundcardsampleprovider.h"
+#include "blackcore/afv/audio/soundcardsampleprovider.h"
 #include "blackmisc/metadatautils.h"
 #include "blackconfig/buildconfig.h"
 

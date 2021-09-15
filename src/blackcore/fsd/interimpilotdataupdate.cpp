@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "interimpilotdataupdate.h"
-#include "pbh.h"
+#include "blackcore/fsd/interimpilotdataupdate.h"
+#include "blackcore/fsd/pbh.h"
 
 #include "blackmisc/logmessage.h"
 

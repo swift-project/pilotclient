@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "interpolatorlinear.h"
-#include "interpolatorfunctions.h"
+#include "blackmisc/simulation/interpolatorlinear.h"
+#include "blackmisc/simulation/interpolatorfunctions.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/geo/coordinategeodetic.h"

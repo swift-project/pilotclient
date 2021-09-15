@@ -18,7 +18,6 @@
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/icons.h"
-#include "altitude.h"
 
 #include <Qt>
 #include <QtGlobal>

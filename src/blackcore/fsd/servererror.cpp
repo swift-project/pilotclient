@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "servererror.h"
+#include "blackcore/fsd/servererror.h"
 #include <QVector>
 
 #include "blackmisc/logmessage.h"

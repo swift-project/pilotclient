@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "ecosystemprovider.h"
+#include "blackmisc/network/ecosystemprovider.h"
 #include <QReadLocker>
 
 namespace BlackMisc::Network

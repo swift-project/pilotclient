@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "flightgearutil.h"
+#include "blackmisc/simulation/flightgear/flightgearutil.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/directoryutils.h"
 #include "blackconfig/buildconfig.h"

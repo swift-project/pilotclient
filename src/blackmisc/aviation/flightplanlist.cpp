@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "flightplanlist.h"
+#include "blackmisc/aviation/flightplanlist.h"
 #include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/iterator.h"
 #include "blackmisc/predicates.h"

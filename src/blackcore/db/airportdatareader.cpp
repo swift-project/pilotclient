@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "airportdatareader.h"
+#include "blackcore/db/airportdatareader.h"
 #include "blackcore/db/databaseutils.h"
 #include "blackcore/application.h"
 #include "blackmisc/network/networkutils.h"

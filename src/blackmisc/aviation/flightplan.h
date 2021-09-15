@@ -11,12 +11,12 @@
 #ifndef BLACKMISC_AVIATION_FLIGHTPLAN_H
 #define BLACKMISC_AVIATION_FLIGHTPLAN_H
 
-#include "airporticaocode.h"
-#include "aircrafticaocode.h"
-#include "altitude.h"
-#include "airlineicaocode.h"
-#include "callsign.h"
-#include "selcal.h"
+#include "blackmisc/aviation/airporticaocode.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/selcal.h"
 #include "blackmisc/network/voicecapabilities.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/pq/speed.h"

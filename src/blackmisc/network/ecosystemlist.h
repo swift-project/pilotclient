@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_NETWORK_ECOSYSTEMLIST_H
 #define BLACKMISC_NETWORK_ECOSYSTEMLIST_H
 
-#include "ecosystem.h"
+#include "blackmisc/network/ecosystem.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"

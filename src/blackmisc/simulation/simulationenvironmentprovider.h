@@ -11,8 +11,8 @@
 #ifndef BLACKMISC_SIMULATION_SIMULATIONENVIRONMENTPROVIDER_H
 #define BLACKMISC_SIMULATION_SIMULATIONENVIRONMENTPROVIDER_H
 
-#include "simulatorplugininfo.h"
-#include "aircraftmodel.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/percallsign.h"

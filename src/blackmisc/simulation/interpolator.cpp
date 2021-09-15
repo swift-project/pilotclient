@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "interpolator.h"
+#include "blackmisc/simulation/interpolator.h"
 #include "blackconfig/buildconfig.h"
 #include "blackmisc/simulation/interpolationlogger.h"
 #include "blackmisc/simulation/interpolatorlinear.h"

@@ -11,8 +11,8 @@
 #ifndef BLACKCORE_CONTEXT_CONTEXTSIMULATOR_EMPTY_H
 #define BLACKCORE_CONTEXT_CONTEXTSIMULATOR_EMPTY_H
 
-#include "blackcoreexport.h"
-#include "contextsimulator.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/context/contextsimulator.h"
 #include "blackmisc/logmessage.h"
 
 // clazy:excludeall=const-signal-or-slot

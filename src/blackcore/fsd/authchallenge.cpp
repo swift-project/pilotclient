@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "authchallenge.h"
+#include "blackcore/fsd/authchallenge.h"
 
 #include "blackmisc/logmessage.h"
 

@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_SIMULATION_INTERPOLANT_H
 #define BLACKMISC_SIMULATION_INTERPOLANT_H
 
-#include "interpolatorpbh.h"
+#include "blackmisc/simulation/interpolatorpbh.h"
 
 namespace BlackMisc::Simulation
 {

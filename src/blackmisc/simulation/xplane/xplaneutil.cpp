@@ -10,7 +10,7 @@
 #include "blackmisc/fileutils.h"
 #include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
-#include "qsystemdetection.h"
+#include <qsystemdetection.h>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>

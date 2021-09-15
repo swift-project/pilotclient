@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "interpolatorpbh.h"
-#include "interpolatorfunctions.h"
+#include "blackmisc/simulation/interpolatorpbh.h"
+#include "blackmisc/simulation/interpolatorfunctions.h"
 #include "blackmisc/verify.h"
 #include "blackconfig/buildconfig.h"
 

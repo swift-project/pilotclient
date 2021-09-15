@@ -6,8 +6,6 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "actionhotkeylist.h"
-
 #include "blackmisc/input/actionhotkeylist.h"
 #include "blackmisc/input/hotkeycombination.h"
 

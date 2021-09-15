@@ -8,7 +8,7 @@
 
 //! \file
 
-#include "input.h"
+#include "blackcore/afv/audio/input.h"
 #include "blacksound/audioutilities.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/verify.h"

@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "clientquery.h"
-#include "serializer.h"
+#include "blackcore/fsd/clientquery.h"
+#include "blackcore/fsd/serializer.h"
 
 #include "blackmisc/logmessage.h"
 

@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_NETWORK_CLIENTPROVIDER_H
 #define BLACKMISC_NETWORK_CLIENTPROVIDER_H
 
-#include "clientlist.h"
+#include "blackmisc/network/clientlist.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/provider.h"
 #include <QReadWriteLock>

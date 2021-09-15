@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "deletepilot.h"
+#include "blackcore/fsd/deletepilot.h"
 #include "blackmisc/logmessage.h"
 
 using namespace BlackMisc;

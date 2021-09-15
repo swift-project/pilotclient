@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "aircrafticaocodelist.h"
-#include "aircraftcategorylist.h"
+#include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/aviation/aircraftcategorylist.h"
 #include "blackmisc/range.h"
 #include "blackmisc/setbuilder.h"
 

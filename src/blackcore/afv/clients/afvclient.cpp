@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "afvclient.h"
+#include "blackcore/afv/clients/afvclient.h"
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulator.h"

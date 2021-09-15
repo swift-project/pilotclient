@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "atcdataupdate.h"
-#include "serializer.h"
+#include "blackcore/fsd/atcdataupdate.h"
+#include "blackcore/fsd/serializer.h"
 
 #include "blackmisc/logmessage.h"
 

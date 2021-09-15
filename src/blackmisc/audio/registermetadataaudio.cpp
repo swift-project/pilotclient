@@ -6,9 +6,9 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "registermetadataaudio.h"
-#include "audio.h"
-#include "ptt.h"
+#include "blackmisc/audio/registermetadataaudio.h"
+#include "blackmisc/audio/audio.h"
+#include "blackmisc/audio/ptt.h"
 #include "blackmisc/variant.h"
 #include <QDBusMetaType>
 

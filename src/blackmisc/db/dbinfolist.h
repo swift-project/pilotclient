@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_DB_DBINFOYLIST_H
 #define BLACKMISC_DB_DBINFOYLIST_H
 
-#include "dbinfo.h"
+#include "blackmisc/db/dbinfo.h"
 #include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/collection.h"

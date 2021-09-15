@@ -11,9 +11,9 @@
 #ifndef BLACKCORE_AFV_CRYPTO_CRYPTODTO_SERIALIZER_H
 #define BLACKCORE_AFV_CRYPTO_CRYPTODTO_SERIALIZER_H
 
-#include "cryptodtochannel.h"
-#include "cryptodtomode.h"
-#include "cryptodtoheaderdto.h"
+#include "blackcore/afv/crypto/cryptodtochannel.h"
+#include "blackcore/afv/crypto/cryptodtomode.h"
+#include "blackcore/afv/crypto/cryptodtoheaderdto.h"
 #include "sodium.h"
 
 #include <QByteArray>

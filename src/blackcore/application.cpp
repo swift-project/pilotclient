@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackconfig/buildconfig.h"
 #include "blackcore/application.h"
+#include "blackconfig/buildconfig.h"
 #include "blackcore/db/networkwatchdog.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulatorimpl.h"
@@ -39,7 +39,6 @@
 #include "blackmisc/stringutils.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/verify.h"
-#include "application.h"
 
 #include <stdbool.h>
 #include <stdio.h>

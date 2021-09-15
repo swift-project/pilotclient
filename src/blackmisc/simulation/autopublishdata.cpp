@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "autopublishdata.h"
+#include "blackmisc/simulation/autopublishdata.h"
 #include "blackmisc/swiftdirectories.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/json.h"

@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "networksettings.h"
+#include "blackmisc/network/settings/networksettings.h"
 #include "blackmisc/stringutils.h"
 
 #include <QtGlobal>

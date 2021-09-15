@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "killrequest.h"
+#include "blackcore/fsd/killrequest.h"
 
 #include "blackmisc/logmessage.h"
 

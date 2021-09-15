@@ -7,7 +7,7 @@
  */
 
 #include "blackcore/airspaceanalyzer.h"
-#include "airspacemonitor.h"
+#include "blackcore/airspacemonitor.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/transponder.h"

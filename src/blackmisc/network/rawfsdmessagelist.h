@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_NETWORK_RAWFSDMESSAGELIST_H
 #define BLACKMISC_NETWORK_RAWFSDMESSAGELIST_H
 
-#include "rawfsdmessage.h"
+#include "blackmisc/network/rawfsdmessage.h"
 #include "blackmisc/timestampobjectlist.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"

@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "remotefile.h"
+#include "blackmisc/network/remotefile.h"
 #include "blackmisc/stringutils.h"
 #include <QJsonValue>
 #include <QtGlobal>

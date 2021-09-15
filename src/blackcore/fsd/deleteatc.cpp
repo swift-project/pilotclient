@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "deleteatc.h"
+#include "blackcore/fsd/deleteatc.h"
 
 #include "blackmisc/logmessage.h"
 

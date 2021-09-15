@@ -11,8 +11,8 @@
 #ifndef BLACKMISC_DB_UPDATEINFO_H
 #define BLACKMISC_DB_UPDATEINFO_H
 
-#include "artifactlist.h"
-#include "distributionlist.h"
+#include "blackmisc/db/artifactlist.h"
+#include "blackmisc/db/distributionlist.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/valueobject.h"
 #include <QStringList>

@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "swiftpluginsettings.h"
+#include "blackmisc/simulation/settings/swiftpluginsettings.h"
 #include "blackmisc/stringutils.h"
 
 namespace BlackMisc::Simulation::Settings

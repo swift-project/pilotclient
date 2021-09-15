@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "interpolationrenderingsetup.h"
+#include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/network/client.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/verify.h"

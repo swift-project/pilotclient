@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "registermetadatanetwork.h"
-#include "network.h"
+#include "blackmisc/network/registermetadatanetwork.h"
+#include "blackmisc/network/network.h"
 #include "blackmisc/variant.h"
 
 namespace BlackMisc

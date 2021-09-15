@@ -6,6 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
+#include "blackmisc/test/testing.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/iterator.h"
@@ -17,7 +18,6 @@
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
-#include "testing.h"
 
 #include <QDateTime>
 #include <QList>

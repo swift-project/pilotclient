@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "registermetadatasimulation.h"
-#include "simulation.h"
+#include "blackmisc/simulation/registermetadatasimulation.h"
+#include "blackmisc/simulation/simulation.h"
 #include "blackmisc/variant.h"
 
 using namespace BlackMisc::Simulation;

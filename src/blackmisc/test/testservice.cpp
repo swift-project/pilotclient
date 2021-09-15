@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "testservice.h"
-#include "testing.h"
+#include "blackmisc/test/testservice.h"
+#include "blackmisc/test/testing.h"
 #include "blackmisc/dbusutils.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/comsystem.h"

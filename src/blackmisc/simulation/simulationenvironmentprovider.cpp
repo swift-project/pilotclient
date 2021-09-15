@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "simulationenvironmentprovider.h"
+#include "blackmisc/simulation/simulationenvironmentprovider.h"
 #include "blackmisc/aviation/aircraftsituationchange.h"
 
 #include "blackmisc/logmessage.h"

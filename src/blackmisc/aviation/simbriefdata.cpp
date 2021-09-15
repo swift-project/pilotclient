@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "simbriefdata.h"
+#include "blackmisc/aviation/simbriefdata.h"
 #include "blackmisc/logcategories.h"
 #include <QStringBuilder>
 

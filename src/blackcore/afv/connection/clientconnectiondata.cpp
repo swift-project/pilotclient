@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "clientconnectiondata.h"
+#include "blackcore/afv/connection/clientconnectiondata.h"
 #include "blackmisc/logmessage.h"
 #include <QDebug>
 

@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_NETWORK_REMOTEFILE_H
 #define BLACKMISC_NETWORK_REMOTEFILE_H
 
-#include "url.h"
+#include "blackmisc/network/url.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/metaclass.h"

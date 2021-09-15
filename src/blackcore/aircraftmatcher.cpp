@@ -22,7 +22,6 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
-#include "aircraftmatcher.h"
 
 #include <QList>
 #include <QStringList>

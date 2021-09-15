@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "updateinfo.h"
+#include "blackmisc/db/updateinfo.h"
 #include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
 #include <QStringBuilder>

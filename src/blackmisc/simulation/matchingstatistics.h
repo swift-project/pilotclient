@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_SIMULATION_MATCHINGSTATISTICS_H
 #define BLACKMISC_SIMULATION_MATCHINGSTATISTICS_H
 
-#include "matchingstatisticsentry.h"
+#include "blackmisc/simulation/matchingstatisticsentry.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/timestampobjectlist.h"
 #include "blackmisc/sequence.h"

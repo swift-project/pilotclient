@@ -11,8 +11,8 @@
 #ifndef BLACKMISC_DB_ARTIFACT_H
 #define BLACKMISC_DB_ARTIFACT_H
 
-#include "distributionlist.h"
-#include "datastore.h"
+#include "blackmisc/db/distributionlist.h"
+#include "blackmisc/db/datastore.h"
 #include "blackmisc/platform.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/network/remotefile.h"

@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_SIMULATION_SETTINGS_XSWIFTBUSSETTINGS_H
 #define BLACKMISC_SIMULATION_SETTINGS_XSWIFTBUSSETTINGS_H
 
-#include "xswiftbussettingsqtfree.h"
+#include "blackmisc/simulation/settings/xswiftbussettingsqtfree.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/dbusserver.h"

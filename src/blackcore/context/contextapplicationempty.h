@@ -11,9 +11,9 @@
 #ifndef BLACKCORE_CONTEXTAPPLICATION_EMPTY_H
 #define BLACKCORE_CONTEXTAPPLICATION_EMPTY_H
 
-#include "blackcoreexport.h"
-#include "contextapplication.h"
-#include "corefacade.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/context/contextapplication.h"
+#include "blackcore/corefacade.h"
 #include "blackmisc/identifierlist.h"
 
 // clazy:excludeall=const-signal-or-slot

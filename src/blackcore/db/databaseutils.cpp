@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
+#include "blackcore/db/databaseutils.h"
 #include "blackcore/application.h"
-#include "databaseutils.h"
 #include "blackcore/webdataservices.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/fileutils.h"

@@ -11,9 +11,9 @@
 #ifndef BLACKMISC_SIMULATION_INTERPOLATORSPLINE_H
 #define BLACKMISC_SIMULATION_INTERPOLATORSPLINE_H
 
-#include "interpolator.h"
-#include "interpolationlogger.h"
-#include "interpolant.h"
+#include "blackmisc/simulation/interpolator.h"
+#include "blackmisc/simulation/interpolationlogger.h"
+#include "blackmisc/simulation/interpolant.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/blackmiscexport.h"
 #include <QString>

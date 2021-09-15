@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "artifact.h"
+#include "blackmisc/db/artifact.h"
 #include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
 #include <QRegularExpression>

@@ -9,7 +9,7 @@
 #ifndef BLACKCORE_PROGRESS_H
 #define BLACKCORE_PROGRESS_H
 
-#include "application.h"
+#include "blackcore/application.h"
 
 namespace BlackCore
 {

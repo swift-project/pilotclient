@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_NETWORK_URLLOG_H
 #define BLACKMISC_NETWORK_URLLOG_H
 
-#include "url.h"
+#include "blackmisc/network/url.h"
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/blackmiscexport.h"

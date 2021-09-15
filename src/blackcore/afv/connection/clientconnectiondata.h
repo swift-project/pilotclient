@@ -12,7 +12,7 @@
 #define BLACKCORE_AFV_CONNECTION_CLIENTCONNECTIONDATA_H
 
 #include "blackcore/afv/dto.h"
-#include "apiserverconnection.h"
+#include "blackcore/afv/connection/apiserverconnection.h"
 #include "blackmisc/logcategories.h"
 #include "blackcore/afv/crypto/cryptodtochannel.h"
 

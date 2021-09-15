@@ -6,10 +6,10 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "categorymatcher.h"
-#include "simulatedaircraft.h"
-#include "aircraftmatchersetup.h"
-#include "matchingutils.h"
+#include "blackmisc/simulation/categorymatcher.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/aircraftmatchersetup.h"
+#include "blackmisc/simulation/matchingutils.h"
 #include "blackmisc/statusmessagelist.h"
 
 #include <QStringBuilder>

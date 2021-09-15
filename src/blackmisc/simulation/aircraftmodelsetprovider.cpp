@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "aircraftmodelsetprovider.h"
+#include "blackmisc/simulation/aircraftmodelsetprovider.h"
 
 namespace BlackMisc::Simulation
 {

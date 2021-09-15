@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "backgrounddataupdater.h"
+#include "blackcore/db/backgrounddataupdater.h"
 #include "blackcore/db/databaseutils.h"
 #include "blackcore/db/databasewriter.h"
 #include "blackcore/application.h"

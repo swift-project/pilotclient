@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_SIMULATION_CATEGORYMATCHER_H
 #define BLACKMISC_SIMULATION_CATEGORYMATCHER_H
 
-#include "aircraftmodellist.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/aviation/aircraftcategorylist.h"
 #include "blackmisc/blackmiscexport.h"
 

@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "output.h"
+#include "blackcore/afv/audio/output.h"
 #include "blacksound/audioutilities.h"
 #include "blackmisc/metadatautils.h"
 #include "blackmisc/logmessage.h"

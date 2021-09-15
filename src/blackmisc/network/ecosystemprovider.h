@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_NETWORK_ECOSYSTEMPROVIDER_H
 #define BLACKMISC_NETWORK_ECOSYSTEMPROVIDER_H
 
-#include "ecosystem.h"
+#include "blackmisc/network/ecosystem.h"
 #include "blackmisc/provider.h"
 #include <QReadWriteLock>
 

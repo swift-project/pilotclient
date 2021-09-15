@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "artifactlist.h"
+#include "blackmisc/db/artifactlist.h"
 #include "blackmisc/stringutils.h"
 
 using namespace BlackMisc::Network;

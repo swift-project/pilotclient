@@ -11,9 +11,9 @@
 #ifndef BLACKMISC_SIMULATION_INTERPOLATIONSETUPPROVIDER_H
 #define BLACKMISC_SIMULATION_INTERPOLATIONSETUPPROVIDER_H
 
-#include "interpolationsetuplist.h"
-#include "interpolationrenderingsetup.h"
-#include "interpolationsetuplist.h"
+#include "blackmisc/simulation/interpolationsetuplist.h"
+#include "blackmisc/simulation/interpolationrenderingsetup.h"
+#include "blackmisc/simulation/interpolationsetuplist.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/provider.h"
 #include <QMap>

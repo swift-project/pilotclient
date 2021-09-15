@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "registermetadataweather.h"
+#include "blackmisc/weather/registermetadataweather.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/weather/weather.h"
 #include "blackmisc/variant.h"

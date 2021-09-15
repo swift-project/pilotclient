@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "serializer.h"
+#include "blackcore/fsd/serializer.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/logcategories.h"

@@ -11,8 +11,8 @@
 #ifndef BLACKMISC_AVIATION_AIRLINEICAOCODELIST_H
 #define BLACKMISC_AVIATION_AIRLINEICAOCODELIST_H
 
-#include "airlineicaocode.h"
-#include "callsign.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/db/datastoreobjectlist.h"

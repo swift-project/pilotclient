@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_NETWORK_SERVERLIST_H
 #define BLACKMISC_NETWORK_SERVERLIST_H
 
-#include "server.h"
+#include "blackmisc/network/server.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"

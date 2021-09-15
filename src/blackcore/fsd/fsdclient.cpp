@@ -6,8 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "fsdclient.h"
-#include "fsdclient.h"
+#include "blackcore/fsd/fsdclient.h"
 
 #include "blackcore/application.h"
 #include "blackcore/fsd/addatc.h"

@@ -37,7 +37,6 @@
 #include "blackmisc/simplecommandparser.h"
 #include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
-#include "contextnetworkimpl.h"
 
 #include <stdbool.h>
 #include <QStringBuilder>

@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "networkwatchdog.h"
-#include "application.h"
+#include "blackcore/db/networkwatchdog.h"
+#include "blackcore/application.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/networkutils.h"
 

@@ -8,7 +8,7 @@
 
 //! \file
 
-#include "receiversampleprovider.h"
+#include "blackcore/afv/audio/receiversampleprovider.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/metadatautils.h"
 #include "blacksound/sampleprovider/resourcesoundsampleprovider.h"

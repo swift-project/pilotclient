@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "registermetadatageo.h"
-#include "geo.h"
+#include "blackmisc/geo/registermetadatageo.h"
+#include "blackmisc/geo/geo.h"
 #include "blackmisc/variant.h"
 
 namespace BlackMisc

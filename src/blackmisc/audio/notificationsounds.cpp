@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "notificationsounds.h"
+#include "blackmisc/audio/notificationsounds.h"
 #include <QStringList>
 #include <QString>
 

@@ -12,7 +12,7 @@
 #define BLACKCORE_ACTIONBIND_H
 
 #include "blackcore/application.h"
-#include "blackcoreexport.h"
+#include "blackcore/blackcoreexport.h"
 #include <QPixmap>
 
 namespace BlackCore

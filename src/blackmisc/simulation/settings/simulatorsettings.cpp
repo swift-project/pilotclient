@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "simulatorsettings.h"
+#include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/fscommon/fsdirectories.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"

@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "registermetadatainput.h"
-#include "input.h"
+#include "blackmisc/input/registermetadatainput.h"
+#include "blackmisc/input/input.h"
 #include "blackmisc/variant.h"
 
 #include <QDBusMetaType>

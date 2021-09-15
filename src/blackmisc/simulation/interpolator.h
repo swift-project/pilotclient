@@ -11,7 +11,7 @@
 #ifndef BLACKMISC_SIMULATION_INTERPOLATOR_H
 #define BLACKMISC_SIMULATION_INTERPOLATOR_H
 
-#include "interpolationrenderingsetup.h"
+#include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/interpolationsetupprovider.h"
 #include "blackmisc/simulation/simulationenvironmentprovider.h"

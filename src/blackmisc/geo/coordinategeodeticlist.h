@@ -11,9 +11,9 @@
 #ifndef BLACKMISC_GEO_COORDINATEGEODETICLIST_H
 #define BLACKMISC_GEO_COORDINATEGEODETICLIST_H
 
-#include "elevationplane.h"
-#include "coordinategeodetic.h"
-#include "geoobjectlist.h"
+#include "blackmisc/geo/elevationplane.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/geo/geoobjectlist.h"
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"

@@ -11,8 +11,8 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTSITUATIONCHANGE_H
 #define BLACKMISC_AVIATION_AIRCRAFTSITUATIONCHANGE_H
 
-#include "callsign.h"
-#include "altitude.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/altitude.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/metaclass.h"

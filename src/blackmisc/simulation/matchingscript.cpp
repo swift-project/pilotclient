@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "matchingscript.h"
+#include "blackmisc/simulation/matchingscript.h"
 #include "stringutils.h"
 
 using namespace BlackMisc::Aviation;

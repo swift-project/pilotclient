@@ -11,8 +11,8 @@
 #ifndef BLACKCORE_CONTEXT_CONTEXTNETWORK_EMPTY_H
 #define BLACKCORE_CONTEXT_CONTEXTNETWORK_EMPTY_H
 
-#include "blackcoreexport.h"
-#include "contextnetwork.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/context/contextnetwork.h"
 #include "blackmisc/logmessage.h"
 
 // clazy:excludeall=const-signal-or-slot

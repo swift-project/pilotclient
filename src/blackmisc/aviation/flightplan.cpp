@@ -6,10 +6,10 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "flightplan.h"
-#include "airlineicaocode.h"
-#include "flightplan.h"
-#include "altitude.h"
+#include "blackmisc/aviation/flightplan.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/flightplan.h"
+#include "blackmisc/aviation/altitude.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/iconlist.h"

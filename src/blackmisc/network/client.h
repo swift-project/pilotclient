@@ -11,8 +11,8 @@
 #ifndef BLACKMISC_NETWORK_CLIENT_H
 #define BLACKMISC_NETWORK_CLIENT_H
 
-#include "user.h"
-#include "voicecapabilities.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/network/voicecapabilities.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/blackmiscexport.h"

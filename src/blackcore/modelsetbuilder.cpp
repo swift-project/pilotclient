@@ -6,9 +6,9 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "application.h"
-#include "modelsetbuilder.h"
-#include "webdataservices.h"
+#include "blackcore/application.h"
+#include "blackcore/modelsetbuilder.h"
+#include "blackcore/webdataservices.h"
 #include "blackcore/db/databaseutils.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/simulation/aircraftmodel.h"

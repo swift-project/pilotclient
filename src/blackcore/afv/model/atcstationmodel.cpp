@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "atcstationmodel.h"
+#include "blackcore/afv/model/atcstationmodel.h"
 #include <QtMath>
 
 using namespace BlackCore::Afv;

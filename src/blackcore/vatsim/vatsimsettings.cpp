@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "vatsimsettings.h"
+#include "blackcore/vatsim/vatsimsettings.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;

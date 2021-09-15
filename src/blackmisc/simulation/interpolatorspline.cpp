@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "interpolatorspline.h"
-#include "interpolatorfunctions.h"
+#include "blackmisc/simulation/interpolatorspline.h"
+#include "blackmisc/simulation/interpolatorfunctions.h"
 #include "blackmisc/network/fsdsetup.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/verify.h"

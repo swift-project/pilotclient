@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "aircraftparts.h"
-#include "aircraftlights.h"
+#include "blackmisc/aviation/aircraftparts.h"
+#include "blackmisc/aviation/aircraftlights.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/stringutils.h"

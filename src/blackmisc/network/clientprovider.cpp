@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "clientprovider.h"
+#include "blackmisc/network/clientprovider.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/verify.h"
 
