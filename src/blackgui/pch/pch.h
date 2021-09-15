@@ -24,7 +24,11 @@
 
 #ifdef __cplusplus
 
-#include "blackcore/context/contextallinterfaces.h"
+#include "blackcore/context/contextapplication.h"
+#include "blackcore/context/contextaudio.h"
+#include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextownaircraft.h"
+#include "blackcore/context/contextsimulator.h"
 
 #include <QAbstractButton>
 #include <QAbstractItemModel>

@@ -10,7 +10,11 @@
 //! \file
 //! \ingroup testblackcore
 
-#include "blackcore/context/contextallproxies.h"
+#include "blackcore/context/contextapplicationproxy.h"
+#include "blackcore/context/contextaudioproxy.h"
+#include "blackcore/context/contextnetworkproxy.h"
+#include "blackcore/context/contextownaircraftproxy.h"
+#include "blackcore/context/contextsimulatorproxy.h"
 #include "blackcore/application.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/dbusutils.h"
