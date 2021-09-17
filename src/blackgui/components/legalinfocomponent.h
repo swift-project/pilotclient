@@ -20,7 +20,7 @@
 namespace Ui { class CLegalInfoComponent; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * swift legal information
      */
     class CLegalInfoComponent : public COverlayMessagesFrame
@@ -54,7 +54,7 @@ namespace BlackGui::Components
         BlackMisc::CSetting<BlackCore::Application::TCrashDumpSettings> m_crashDumpSettings { this };
     };
 
-    /**
+    /*!
      * Wizard page for CLegalInfoComponent
      */
     class CLegalInfoWizardPage : public QWizardPage

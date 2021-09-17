@@ -140,7 +140,7 @@ namespace BlackGui::Components
         BlackMisc::CData<BlackCore::Data::TVatsimLastServer> m_lastVatsimServer { this }; //!< recently used VATSIM server
     };
 
-    /**
+    /*!
      * Wizard page for CCopyConfigurationComponent
      */
     class CCopyConfigurationWizardPage : public QWizardPage

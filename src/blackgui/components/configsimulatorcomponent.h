@@ -20,7 +20,7 @@
 namespace Ui { class CConfigSimulatorComponent; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Simulator configuration
      */
     class CConfigSimulatorComponent : public QFrame
@@ -55,7 +55,7 @@ namespace BlackGui::Components
         QScopedPointer<Ui::CConfigSimulatorComponent> ui;
     };
 
-    /**
+    /*!
      * Wizard page for CConfigSimulatorComponent
      */
     class CConfigSimulatorWizardPage : public QWizardPage

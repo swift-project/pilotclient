@@ -27,7 +27,7 @@ namespace BlackGui
     namespace Views { class CDistributorView; }
     namespace Components
     {
-        /**
+        /*!
          * Distributors
          */
         class BLACKGUI_EXPORT CDbDistributorComponent :

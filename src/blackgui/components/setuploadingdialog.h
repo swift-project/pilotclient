@@ -19,7 +19,7 @@ namespace BlackGui::Components
 {
     class CCopyModelsFromOtherSwiftVersionsDialog;
 
-    /**
+    /*!
      * Setup dialog, if something goes wrong allows to copy bootstrap file
      */
     class CSetupLoadingDialog : public QDialog

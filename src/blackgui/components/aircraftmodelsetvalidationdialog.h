@@ -28,7 +28,7 @@ namespace BlackMisc
 }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Dialog for CAircraftModelValidationComponent
      * \remark aircraft model view has a simplified version BlackGui::Views::CAircraftModelValidationDialog
      */

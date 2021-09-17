@@ -18,7 +18,7 @@
 namespace Ui { class CCoreSettingsDialog; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Core / swift pilot client settings as Dialog
      */
     class BLACKGUI_EXPORT CCoreSettingsDialog : public QDialog

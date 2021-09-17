@@ -25,7 +25,7 @@ namespace BlackMisc::Network { class CAuthenticatedUser; }
 namespace Ui { class CDbLoginComponent; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Login to DB
      * \sa BlackCore::Db::CDatabaseAuthenticationService
      */

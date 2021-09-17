@@ -21,7 +21,7 @@
 
 namespace BlackGui
 {
-    /**
+    /*!
      * Own splash screen
      */
     class CSplashScreen : public QSplashScreen

@@ -18,7 +18,7 @@
 namespace Ui { class CAircraftModelValidationDialog; }
 namespace BlackGui::Views
 {
-    /**
+    /*!
      * Model validation
      * \remark there is also a more specific validation version BlackGui::Components::CAircraftModelSetValidationDialog
      */

@@ -24,7 +24,7 @@
 namespace Ui { class CCallsignCompleter; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Completer for aircraft callsigns
      */
     class BLACKGUI_EXPORT CCallsignCompleter : public QFrame

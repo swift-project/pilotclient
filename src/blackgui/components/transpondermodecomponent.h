@@ -20,7 +20,7 @@ namespace Ui { class CTransponderModeComponent; }
 namespace BlackMisc { class CIdentifier; namespace Simulation { class CSimulatedAircraft; }}
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Small component to display XPDR mode
      */
     class CTransponderModeComponent : public QFrame, BlackMisc::CIdentifiable

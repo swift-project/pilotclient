@@ -27,7 +27,7 @@ namespace BlackGui
     namespace Views { class CAirlineIcaoCodeView; }
     namespace Components
     {
-        /**
+        /*!
          * Airline ICAO code
          */
         class BLACKGUI_EXPORT CDbAirlineIcaoComponent :

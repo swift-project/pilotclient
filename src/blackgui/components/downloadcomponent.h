@@ -25,7 +25,7 @@
 namespace Ui { class CDownloadComponent; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Download a file
      */
     class BLACKGUI_EXPORT CDownloadComponent :

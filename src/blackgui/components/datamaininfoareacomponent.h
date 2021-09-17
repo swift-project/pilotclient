@@ -29,7 +29,7 @@ namespace BlackGui::Components
     class CLogComponent;
     class CDataSettingsComponent;
 
-    /**
+    /*!
      * Main info area for data entry tool
      */
     class BLACKGUI_EXPORT CDataMainInfoAreaComponent :

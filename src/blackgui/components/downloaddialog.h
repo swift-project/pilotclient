@@ -21,7 +21,7 @@ namespace Ui { class CDownloadDialog; }
 namespace BlackMisc::Network { class CRemoteFile; class CRemoteFileList; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * CDownloadComponent as dialog
      */
     class BLACKGUI_EXPORT CDownloadDialog : public QDialog

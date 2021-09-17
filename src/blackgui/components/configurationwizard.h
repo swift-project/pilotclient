@@ -18,7 +18,7 @@
 namespace Ui { class CConfigurationWizard; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Configure the most important settings
      */
     class BLACKGUI_EXPORT CConfigurationWizard : public QWizard

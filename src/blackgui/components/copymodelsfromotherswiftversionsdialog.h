@@ -17,7 +17,7 @@
 namespace Ui { class CCopyModelsFromOtherSwiftVersionsDialog; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Copy models from other swift versions as dialog
      */
     class CCopyModelsFromOtherSwiftVersionsDialog : public QDialog

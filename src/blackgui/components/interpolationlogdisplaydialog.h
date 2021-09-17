@@ -23,7 +23,7 @@ namespace BlackCore
 namespace Ui { class CInterpolationLogDisplayDialog; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * CInterpolationLogDisplay as dialog
      */
     class BLACKGUI_EXPORT CInterpolationLogDisplayDialog : public QDialog

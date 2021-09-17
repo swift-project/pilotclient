@@ -27,7 +27,7 @@ namespace BlackSimPlugin::Emulated
 {
     class CSimulatorEmulated;
 
-    /**
+    /*!
      * Monitor widget for the pseudo driver
      */
     class CSimulatorEmulatedMonitorDialog : public QDialog, public BlackMisc::CIdentifiable

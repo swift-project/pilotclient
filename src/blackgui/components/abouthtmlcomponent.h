@@ -19,7 +19,7 @@
 namespace Ui { class CAboutHtmlComponent; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Display the HTML info "about swift"
      */
     class BLACKGUI_EXPORT CAboutHtmlComponent : public QFrame

@@ -31,7 +31,7 @@ namespace BlackMisc
 }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Handle validation result
      */
     class BLACKGUI_EXPORT CAircraftModelValidationComponent : public COverlayMessagesFrame

@@ -19,7 +19,7 @@
 namespace Ui { class CAltitudeDialog; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Dialog to get a correct altitude
      */
     class CAltitudeDialog : public QDialog

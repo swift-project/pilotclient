@@ -19,7 +19,7 @@
 namespace Ui { class CCoordinateForm; }
 namespace BlackGui::Editors
 {
-    /**
+    /*!
      * Select / enter a geo position
      */
     class BLACKGUI_EXPORT CCoordinateForm : public CForm

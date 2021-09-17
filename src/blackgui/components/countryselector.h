@@ -18,7 +18,7 @@
 namespace Ui { class CCountrySelector; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * @brief Select a valid country
      */
     class CCountrySelector : public QFrame

@@ -19,7 +19,7 @@
 namespace Ui { class CSimulatorFsxConfigWindow; }
 namespace BlackSimPlugin::FsxCommon
 {
-    /**
+    /*!
      * A window that lets user set up the FSX plugin.
      */
     class FSXCOMMON_EXPORT CSimulatorFsxConfigWindow : public BlackGui::CPluginConfigWindow

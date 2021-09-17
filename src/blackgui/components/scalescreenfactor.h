@@ -18,7 +18,7 @@
 namespace Ui { class CScaleScreenFactor; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * UI to scale screen factor
      */
     class BLACKGUI_EXPORT CScaleScreenFactor : public QFrame

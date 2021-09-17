@@ -20,7 +20,7 @@
 namespace Ui { class CSimulatorXPlaneConfigWindow; }
 namespace BlackSimPlugin::XPlane
 {
-    /**
+    /*!
      * A window that shows all the X-Plane plugin options.
      */
     class CSimulatorXPlaneConfigWindow : public BlackGui::CPluginConfigWindow

@@ -20,7 +20,7 @@
 namespace Ui { class CSimulatorFlightgearConfigWindow; }
 namespace BlackSimPlugin::Flightgear
 {
-    /**
+    /*!
      * A window that shows all the Flightgear plugin options.
      */
     class CSimulatorFlightgearConfigWindow : public BlackGui::CPluginConfigWindow

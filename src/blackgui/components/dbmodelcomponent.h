@@ -26,7 +26,7 @@
 namespace Ui { class CDbModelComponent; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Database models. Those are the models loaaded from the DB.
      */
     class BLACKGUI_EXPORT CDbModelComponent :

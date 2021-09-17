@@ -19,7 +19,7 @@
 namespace Ui { class CAircraftModelForm; }
 namespace BlackGui::Editors
 {
-    /**
+    /*!
      * Combined form of Livery, ICAOs, distributor
      */
     class CAircraftModelForm : public CForm

@@ -17,7 +17,7 @@ class QWidget;
 
 namespace BlackGui
 {
-    /**
+    /*!
      * Enable / disable UI depending on how many swift applications are running
      */
     class CSingleApplicationUi

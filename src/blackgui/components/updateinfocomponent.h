@@ -25,7 +25,7 @@ namespace BlackGui::Components
     class CInstallXSwiftBusDialog;
     class CDownloadDialog;
 
-    /**
+    /*!
      * Update info (distributions, artifacts etc.)
      */
     class BLACKGUI_EXPORT CUpdateInfoComponent : public QFrame

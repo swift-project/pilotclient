@@ -66,7 +66,7 @@ namespace BlackGui::Components
         BlackCore::CActionBind m_action { "/Test/Message", BlackMisc::CIcons::StandardIconWrench16, this, &CSettingsHotkeyComponent::hotkeySlot };
     };
 
-    /**
+    /*!
      * Wizard page for CConfigSimulatorComponent
      */
     class CConfigHotkeyWizardPage : public QWizardPage

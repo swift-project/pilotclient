@@ -17,7 +17,7 @@
 namespace Ui { class CModelConverterXSetupComponent; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
     * Setup to start ModelConverterX
     */
     class CModelConverterXSetupComponent : public QFrame

@@ -23,7 +23,7 @@
 namespace Ui { class CDbAutoSimulatorStashingComponent; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Allows to automatically update models if found in own model set, but already existing
      * for a sibling simulator (ie. FSX/P3D/FS9)
      */

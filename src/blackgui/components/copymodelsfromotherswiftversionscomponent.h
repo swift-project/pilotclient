@@ -21,7 +21,7 @@
 namespace Ui { class CCopyModelsFromOtherSwiftVersionsComponent; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Copy models from another swift version
      */
     class CCopyModelsFromOtherSwiftVersionsComponent : public COverlayMessagesFrame
@@ -58,7 +58,7 @@ namespace BlackGui::Components
         BlackMisc::Simulation::Data::CModelSetCaches m_modelSetCaches { false, this };
     };
 
-    /**
+    /*!
      * Wizard page for CCopyModelsFromOtherSwiftVersionsComponent
      */
     class CCopyModelsFromOtherSwiftVersionsWizardPage : public QWizardPage

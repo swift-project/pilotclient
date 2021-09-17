@@ -18,7 +18,7 @@
 namespace Ui { class CInitialDataLoadComponent; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Initial data load to prefill caches
      * \remark Normally used in wizard
      */
@@ -46,7 +46,7 @@ namespace BlackGui::Components
         QScopedPointer<Ui::CInitialDataLoadComponent> ui;
     };
 
-    /**
+    /*!
     * Wizard page for CInitialDataLoadComponent
     */
     class CInitialDataLoadWizardPage : public QWizardPage

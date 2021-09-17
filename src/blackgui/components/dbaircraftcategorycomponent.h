@@ -22,7 +22,7 @@
 namespace Ui { class CDbAircraftCategoryComponent; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * DB aircraft categories
      */
     class BLACKGUI_EXPORT CDbAircraftCategoryComponent :

@@ -33,7 +33,7 @@ namespace BlackGui::Components
     class CDbModelComponent;
     class CDbAircraftCategoryComponent;
 
-    /**
+    /*!
      * Info area containing the DB data (models, liveries ...)
      */
     class BLACKGUI_EXPORT CDataInfoAreaComponent :

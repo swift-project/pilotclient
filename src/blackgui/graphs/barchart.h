@@ -23,7 +23,7 @@
 
 namespace BlackGui::Graphs
 {
-    /**
+    /*!
      * For axis labels
      */
     class CTextScaleDraw: public QwtScaleDraw
@@ -45,7 +45,7 @@ namespace BlackGui::Graphs
         QStringList m_labels;
     };
 
-    /**
+    /*!
      * Bar chart, modified version of QWT examples
      */
     class BLACKGUI_EXPORT CBarChart: public QwtPlot

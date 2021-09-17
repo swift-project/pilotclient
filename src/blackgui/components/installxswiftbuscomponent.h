@@ -26,7 +26,7 @@
 namespace Ui { class CInstallXSwiftBusComponent; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Download and install XSwiftBus
      */
     class CInstallXSwiftBusComponent :
@@ -101,7 +101,7 @@ namespace BlackGui::Components
         void openDownloadDir();
     };
 
-    /**
+    /*!
      * Wizard page for CInstallXSwiftBusWizardPage
      */
     class CInstallXSwiftBusWizardPage : public QWizardPage

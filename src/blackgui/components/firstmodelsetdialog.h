@@ -17,7 +17,7 @@
 namespace Ui { class CFirstModelSetDialog; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * First model set dialog
      */
     class CFirstModelSetDialog : public QDialog

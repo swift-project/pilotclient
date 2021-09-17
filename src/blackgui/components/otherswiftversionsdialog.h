@@ -17,7 +17,7 @@
 namespace Ui { class COtherSwiftVersionsDialog; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * COtherVersionsComponent as dialog
      */
     class COtherSwiftVersionsDialog : public QDialog

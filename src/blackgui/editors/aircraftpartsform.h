@@ -21,7 +21,7 @@ class QWidget;
 namespace Ui { class CAircraftPartsForm; }
 namespace BlackGui::Editors
 {
-    /**
+    /*!
      * Edit and set aircraft parts
      */
     class BLACKGUI_EXPORT CAircraftPartsForm : public CForm

@@ -15,7 +15,7 @@
 
 namespace BlackGui
 {
-    /**
+    /*!
      * Push button with elided text
      * \remark based on http://doc.qt.io/qt-5/qtwidgets-widgets-elidedlabel-example.html
      */

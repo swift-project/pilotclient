@@ -21,7 +21,7 @@ namespace BlackGui
 {
     class CPluginConfigWindow;
 
-    /**
+    /*!
      * The interface for the plugin config.
      * The plugin config plugin is always called from the GUI process in order
      * to make it possible to create a config window.

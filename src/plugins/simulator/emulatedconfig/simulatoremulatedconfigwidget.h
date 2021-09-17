@@ -17,7 +17,7 @@
 namespace Ui { class CSimulatorEmulatedConfigWidget; }
 namespace BlackSimPlugin::Emulated
 {
-    /**
+    /*!
      * Configuration window for CSimulatorEmulatedConfig
      */
     class Q_DECL_EXPORT CSimulatorEmulatedConfigWidget : public BlackGui::CPluginConfigWindow

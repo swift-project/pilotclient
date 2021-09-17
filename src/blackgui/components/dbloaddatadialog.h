@@ -23,7 +23,7 @@
 namespace Ui { class CDbLoadDataDialog; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Load data from DB as dialog
      */
     class BLACKGUI_EXPORT CDbLoadDataDialog : public QDialog

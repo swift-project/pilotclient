@@ -17,7 +17,7 @@
 
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Completer for model keys
      */
     class CDbModelKeyCompleter : public QLineEdit

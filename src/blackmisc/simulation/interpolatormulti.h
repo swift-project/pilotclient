@@ -49,7 +49,7 @@ namespace BlackMisc::Simulation
         CInterpolatorLinear m_linear;
     };
 
-    /**
+    /*!
      * CInterpolatorMulti which can be used with QMap/QHash
      * \remark Use case is emulated driver
      */

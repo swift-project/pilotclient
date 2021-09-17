@@ -30,7 +30,7 @@ namespace Ui { class CInterpolationLogDisplay; }
 namespace BlackCore  { class CAirspaceMonitor; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Display live data of interpolation
      */
     class BLACKGUI_EXPORT CInterpolationLogDisplay :

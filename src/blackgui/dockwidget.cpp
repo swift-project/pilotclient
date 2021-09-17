@@ -302,7 +302,7 @@ namespace BlackGui
         this->setFrameless(!frameless);
     }
 
-    /**
+    /*!
     void CDockWidget::toggleFramelessDeferred(int delayMs)
     {
         QPointer<CDockWidget> myself(this);

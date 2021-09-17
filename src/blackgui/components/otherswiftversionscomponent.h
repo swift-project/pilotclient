@@ -18,7 +18,7 @@
 namespace Ui { class COtherSwiftVersionsComponent; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Overview about other "swift" versions
      */
     class COtherSwiftVersionsComponent : public QFrame

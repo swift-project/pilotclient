@@ -18,7 +18,7 @@
 namespace Ui { class CUpdateInfoDialog; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Download and install swift
      */
     class BLACKGUI_EXPORT CUpdateInfoDialog : public QDialog

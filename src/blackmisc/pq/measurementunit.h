@@ -397,7 +397,7 @@ namespace BlackMisc::PhysicalQuantities
             return U::defaultUnit();
         }
 
-        /**
+        /*!
          * All symbols
          */
         template <class U> static const QStringList &allSymbols()
@@ -414,7 +414,7 @@ namespace BlackMisc::PhysicalQuantities
             return symbols;
         }
 
-        /**
+        /*!
          * All symbols case insensitive
          */
         template <class U> static const QStringList &allSymbolsLowerCase()
@@ -431,7 +431,7 @@ namespace BlackMisc::PhysicalQuantities
             return symbols;
         }
 
-        /**
+        /*!
          * Are symbols case sensitive?
          */
         template <class U> static bool hasCaseSensitiveSymbols()

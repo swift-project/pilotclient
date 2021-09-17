@@ -41,7 +41,7 @@
 namespace Ui { class CCopySettingsAndCachesComponent; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Copy settings and caches
      */
     class CCopySettingsAndCachesComponent : public COverlayMessagesFrame
@@ -140,7 +140,7 @@ namespace BlackGui::Components
         BlackMisc::CData<BlackMisc::Simulation::Data::TLastModel> m_cacheLastAircraftModel { this }; //!< recently used aircraft model
     };
 
-    /**
+    /*!
      * Wizard page for CCopySettingsAndCaches
      */
     class CCopySettingsAndCachesWizardPage : public QWizardPage

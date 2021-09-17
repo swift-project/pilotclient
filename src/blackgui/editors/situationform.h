@@ -20,7 +20,7 @@
 namespace Ui { class CSituationForm; }
 namespace BlackGui::Editors
 {
-    /**
+    /*!
      * Selector / entry
      */
     class BLACKGUI_EXPORT CSituationForm : public CForm

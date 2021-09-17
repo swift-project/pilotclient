@@ -19,7 +19,7 @@ namespace BlackGui::Components
     class CInstallXSwiftBusComponent;
     class CInstallFsxTerrainProbeComponent;
 
-    /**
+    /*!
      * Simulator specific installation
      */
     class CInstallSimulatorSpecificWizardPage : public COverlayMessagesWizardPage

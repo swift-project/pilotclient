@@ -17,7 +17,7 @@
 namespace Ui { class CInstallXSwiftBusDialog; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * CInstallXSwiftBusComponent as dialog
      */
     class CInstallXSwiftBusDialog : public QDialog

@@ -17,7 +17,7 @@
 namespace Ui { class CStringListDialog; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Select from a list of string
      */
     class CStringListDialog : public QDialog

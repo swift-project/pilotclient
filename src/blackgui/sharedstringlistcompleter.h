@@ -56,7 +56,7 @@ namespace BlackGui
         QStringListModel *getCompleterModel() const;
     };
 
-    /**
+    /*!
      * Utility functions
      */
     class BLACKGUI_EXPORT CompleterUtils

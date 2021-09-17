@@ -22,7 +22,7 @@ namespace Ui { class CDataSettingsComponent; }
 namespace BlackCore::Db { class CBackgroundDataUpdater; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Settings
      */
     class BLACKGUI_EXPORT CDataSettingsComponent : public COverlayMessagesFrame

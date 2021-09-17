@@ -18,7 +18,7 @@
 namespace Ui { class CSettingsSwiftPlugin; }
 namespace BlackGui::Components
 {
-    /**
+    /*!
      * Settings for the swift pseudo driver
      */
     class BLACKGUI_EXPORT CSettingsSwiftPlugin : public QFrame
