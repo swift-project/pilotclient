@@ -222,6 +222,14 @@ It must be closed before the installation can proceed</progressText>
                 </platformTest>
             </ruleList>
         </writeFile>
+        <writeFile>
+            <explanation>Create readme</explanation>
+            <path>${installdir}/readme.txt</path>
+            <show>0</show>
+            <text>swift pilot client version ${versionFull}
+
+https://swift-project.org/</text>
+        </writeFile>
         <runProgram>
             <program>${installdir}/bin/swiftlauncher</program>
             <programArguments>-i --bootstrapurl https://datastore.swift-project.org/shared/ &amp;</programArguments>
