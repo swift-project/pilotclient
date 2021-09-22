@@ -435,6 +435,8 @@ jobs:
         run: |
           mv swiftinstaller-*/* .
           mv xswiftbus-*/* .
+          mkdir swiftsymbols
+          mv swiftsymbols-*/* swiftsymbols
       - name: Create release
         uses: meeDamian/github-release@2.0
         id: create
@@ -445,13 +447,14 @@ jobs:
           body: Version ${{ needs.preBuild.outputs.version }}
           draft: true
           prerelease: true
-          gzip: false
+          gzip: folders
           files: >
             swiftinstaller-linux-64-${{ needs.preBuild.outputs.version }}.run
             swiftinstaller-windows-64-${{ needs.preBuild.outputs.version }}.exe
             swiftinstaller-windows-32-${{ needs.preBuild.outputs.version }}.exe
             swiftinstaller-macos-64-${{ needs.preBuild.outputs.version }}.dmg
             xswiftbus-fat-allos-${{ needs.preBuild.outputs.version }}.7z
+            swiftsymbols-allos-${{ needs.preBuild.outputs.version }}:swiftsymbols
 
   notify:
     runs-on: ubuntu-20.04
