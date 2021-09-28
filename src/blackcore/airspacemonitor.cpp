@@ -182,7 +182,7 @@ namespace BlackCore
 
             // with this little trick we try to make an asynchronous signal / slot based approach
             // a synchronous return value
-            CEventLoop eventLoop;
+            CEventLoop eventLoop(this);
             eventLoop.stopWhen(m_fsdClient, &CFSDClient::flightPlanReceived, [ = ](const auto &cs, const auto &) { return cs == callsign; });
             if (eventLoop.exec(1500))
             {

@@ -15,6 +15,7 @@
 
 #include <QObject>
 #include <QEventLoop>
+#include <QPointer>
 #include <QTimer>
 
 namespace BlackMisc
@@ -25,6 +26,16 @@ namespace BlackMisc
     class CEventLoop
     {
     public:
+        //! Constructor.
+        CEventLoop() : m_guard(&m_eventLoop) {}
+
+        //! Constructor. Guard object must exist, and will be checked again when the loop quits.
+        CEventLoop(QObject *guard) : m_guard(guard)
+        {
+            Q_ASSERT(guard);
+            QObject::connect(guard, &QObject::destroyed, &m_eventLoop, [this] { m_eventLoop.exit(TimedOut); });
+        }
+
         //! Event loop will stop if the given signal is received.
         template <typename T, typename F>
         void stopWhen(const T *sender, F signal)
@@ -43,14 +54,20 @@ namespace BlackMisc
         }
 
         //! Begin processing events until the timeout or stop condition occurs.
-        //! \return True if the signal was received, false if it timed out.
+        //! \return True if the signal was received, false if it timed out or the guard object died.
         bool exec(int timeoutMs)
         {
             if (timeoutMs >= 0)
             {
                 QTimer::singleShot(timeoutMs, &m_eventLoop, [this] { m_eventLoop.exit(TimedOut); });
             }
-            return m_eventLoop.exec() == GotSignal;
+            return m_eventLoop.exec() == GotSignal && isGuardAlive();
+        }
+
+        //! True if the guard object still exists.
+        bool isGuardAlive() const
+        {
+            return m_guard;
         }
 
     private:
@@ -60,6 +77,7 @@ namespace BlackMisc
             TimedOut,
         };
         QEventLoop m_eventLoop;
+        QPointer<QObject> m_guard;
     };
 } // ns
 
