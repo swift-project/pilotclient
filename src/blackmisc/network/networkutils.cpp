@@ -81,10 +81,11 @@ namespace BlackMisc::Network
         QObject::connect(&socket, &QTcpSocket::connected, &mapper, qOverload<>(&QSignalMapper::map));
         QObject::connect(&socket, qOverload<QAbstractSocket::SocketError>(&QTcpSocket::error), &mapper, qOverload<>(&QSignalMapper::map));
         mapper.setMapping(&socket, 0);
-        const bool timedOut = !CEventLoop::processEventsUntil(&mapper, qOverload<int>(&QSignalMapper::mapped), timeoutMs, [&]
-        {
-            socket.connectToHost(hostAddress, static_cast<quint16>(port));
-        });
+
+        CEventLoop eventLoop;
+        eventLoop.stopWhen(&mapper, qOverload<int>(&QSignalMapper::mapped));
+        socket.connectToHost(hostAddress, static_cast<quint16>(port));
+        const bool timedOut = !eventLoop.exec(timeoutMs);
 
         if (socket.state() != QTcpSocket::ConnectedState)
         {

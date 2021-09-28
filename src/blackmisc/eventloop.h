@@ -25,47 +25,41 @@ namespace BlackMisc
     class CEventLoop
     {
     public:
-        //! Deleted constructor
-        CEventLoop() = delete;
-
-        //! Wait for the given time, while processing events.
-        static void processEventsFor(int timeoutMs)
-        {
-            QEventLoop eventLoop;
-            QTimer::singleShot(timeoutMs, &eventLoop, &QEventLoop::quit);
-            eventLoop.exec();
-        }
-
-        //! Block, but keep processing events, until sender emits the signal or the timeout expires.
-        //! Return true if the signal was emitted, false if the timeout expired.
+        //! Event loop will stop if the given signal is received.
         template <typename T, typename F>
-        static bool processEventsUntil(const T *sender, F signal, int timeoutMs)
+        void stopWhen(const T *sender, F signal)
         {
-            return processEventsUntil(sender, signal, timeoutMs, [] {});
+            QObject::connect(sender, signal, &m_eventLoop, [this] { m_eventLoop.exit(GotSignal); });
         }
 
-        //! Overloaded version that executes an initial function after connecting the signal.
-        //! If the function's return type is convertible to bool, and it evaluates to true,
-        //! then the waiting will immediately time out and return true.
+        //! Event loop will stop if the given signal is received and condition returns true.
         template <typename T, typename F1, typename F2>
-        static bool processEventsUntil(const T *sender, F1 signal, int timeoutMs, F2 init)
+        void stopWhen(const T *sender, F1 signal, F2 &&condition)
         {
-            QEventLoop eventLoop;
-            bool result = false;
-            QObject::connect(sender, signal, &eventLoop, [ & ]
+            QObject::connect(sender, signal, &m_eventLoop, [this, condition = std::forward<F2>(condition)](auto &&... args)
             {
-                result = true;
-                eventLoop.quit();
+                if (condition(std::forward<decltype(args)>(args)...)) { m_eventLoop.exit(GotSignal); }
             });
-            if constexpr (std::is_void_v<decltype(init())>) { init(); }
-            else if (init()) { return true; }
-            if (timeoutMs > 0)
-            {
-                QTimer::singleShot(timeoutMs, &eventLoop, &QEventLoop::quit);
-            }
-            eventLoop.exec();
-            return result;
         }
+
+        //! Begin processing events until the timeout or stop condition occurs.
+        //! \return True if the signal was received, false if it timed out.
+        bool exec(int timeoutMs)
+        {
+            if (timeoutMs >= 0)
+            {
+                QTimer::singleShot(timeoutMs, &m_eventLoop, [this] { m_eventLoop.exit(TimedOut); });
+            }
+            return m_eventLoop.exec() == GotSignal;
+        }
+
+    private:
+        enum Result
+        {
+            GotSignal = 0,
+            TimedOut,
+        };
+        QEventLoop m_eventLoop;
     };
 } // ns
 

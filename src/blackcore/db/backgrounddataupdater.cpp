@@ -152,7 +152,8 @@ namespace BlackCore::Db
             {
                 // just give the system some time to relax, consolidation is time consuming
                 if (!this->doWorkCheck()) { return; }
-                CEventLoop::processEventsFor(1000);
+                CEventLoop eventLoop;
+                eventLoop.exec(1000);
             }
         }
     }

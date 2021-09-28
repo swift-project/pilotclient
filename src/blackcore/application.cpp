@@ -426,11 +426,12 @@ namespace BlackCore
     CStatusMessageList CApplication::waitForSetup(int timeoutMs)
     {
         if (!m_setupReader) { return CStatusMessage(this).error(u"No setup reader"); }
-        CEventLoop::processEventsUntil(this, &CApplication::setupHandlingCompleted, timeoutMs, [this]
+        CEventLoop eventLoop;
+        eventLoop.stopWhen(this, &CApplication::setupHandlingCompleted);
+        if (!m_setupReader->isSetupAvailable())
         {
-            // init, if this is true event queue is not started
-            return m_setupReader->isSetupAvailable();
-        });
+            eventLoop.exec(timeoutMs);
+        }
 
         // setup handling completed with success or failure, or we run into time out
         CStatusMessageList msgs;
