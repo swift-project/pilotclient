@@ -33,6 +33,7 @@
 #include "blackmisc/sequence.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/threadutils.h"
+#include "blackmisc/eventloop.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/worker.h"
@@ -181,17 +182,14 @@ namespace BlackCore
 
             // with this little trick we try to make an asynchronous signal / slot based approach
             // a synchronous return value
-            const QTime waitForFlightPlan = QTime::currentTime().addMSecs(1500);
-            while (sApp && !sApp->isShuttingDown() && QTime::currentTime() < waitForFlightPlan)
+            CEventLoop eventLoop;
+            eventLoop.stopWhen(m_fsdClient, &CFSDClient::flightPlanReceived, [ = ](const auto &cs, const auto &) { return cs == callsign; });
+            if (eventLoop.exec(1500))
             {
-                // process some other events and hope network answer is received already
-                // CEventLoop::processEventsUntil cannot be used, as a received flight plan might be for another callsign
-                sApp->processEventsFor(100);
                 if (!myself || !sApp || sApp->isShuttingDown()) { return CFlightPlan(); }
                 if (m_flightPlanCache.contains(callsign))
                 {
                     plan = m_flightPlanCache[callsign];
-                    break;
                 }
             }
         }
