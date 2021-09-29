@@ -8,6 +8,10 @@ on:
       - readthedocs
   pull_request:
 
+concurrency:
+  group:         ${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   do_vatsim_key: ${{ github.event_name == 'push' }}
   do_symbols:    ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/heads/develop/') }}
