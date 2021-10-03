@@ -12,6 +12,7 @@
 #define BLACKMISC_METACLASS_H
 
 #include "blackmisc/invoke.h"
+#include "blackmisc/tuple.h"
 #include <QHash>
 #include <QString>
 #include <QLatin1String>
@@ -120,9 +121,8 @@ namespace BlackMisc
         constexpr operator QLatin1String() const { return m_latin1; }
     };
 
-    // *INDENT-OFF*
     /*!
-     * Type wrapper for passing MetaFlag to CMetaClassIntrospector::with and CMetaClassIntrospector::without.
+     * Type wrapper for passing MetaFlag to CMetaMember::has.
      * \ingroup MetaClass
      */
     template <quint64 F>
@@ -189,19 +189,11 @@ namespace BlackMisc
     struct CMetaMemberList
     {
         //! Tuple of CMetaMember.
-        const std::tuple<Members...> m_members;
+        const Private::tuple<Members...> m_members;
 
         //! Number of members.
         static constexpr size_t c_size = sizeof...(Members);
-
-        //! Convenience method returning the member at index I.
-        template <size_t I>
-        constexpr auto at(std::integral_constant<size_t, I> = {}) const
-        {
-            return std::get<I>(m_members);
-        }
     };
-    // *INDENT-ON*
 
     /*!
      * Metadata flags attached to members of a meta class.
@@ -242,7 +234,7 @@ namespace BlackMisc
         template <typename... Members>
         constexpr static CMetaMemberList<Members...> makeMetaMemberList(Members... members)
         {
-            return { std::tuple<Members...>(members...) };
+            return { { { { members }... } } };
         }
 
         //! Return a CMetaMethod of type deduced from the type of the member.
@@ -255,13 +247,12 @@ namespace BlackMisc
         }
     };
 
-    // *INDENT-OFF*
     /*!
-     * Implementation of an introspector for the metaclass of T.
+     * An introspector for a metaclass.
      * Obtain an instance of this class via BlackMisc::introspect.
      * \ingroup MetaClass
      */
-    template <typename T, typename MetaClass, size_t... Is>
+    template <typename MetaClass>
     class CMetaClassIntrospector
     {
     public:
@@ -269,33 +260,20 @@ namespace BlackMisc
         template <typename F>
         static void forEachMember(F &&visitor)
         {
-            (static_cast<void>(std::forward<F>(visitor)(MetaClass::getMemberList().at(std::integral_constant<size_t, Is>()))), ...);
+            MetaClass::getMemberList().m_members.for_each(std::forward<F>(visitor));
         }
     };
-    // *INDENT-ON*
 
     namespace Private
     {
         //! \private Friend class of all value classes, so it can access the private nested class.
         struct CMetaClassAccessor
         {
-            template <typename T, size_t... Is>
-            constexpr static auto getIntrospector(std::index_sequence<Is...>)
-            {
-                return CMetaClassIntrospector<T, typename T::MetaClass, Is...>();
-            }
-
             template <typename T>
             constexpr static auto getIntrospector()
             {
-                return getIntrospector<T>(std::make_index_sequence<T::MetaClass::getMemberList().c_size>());
+                return CMetaClassIntrospector<typename T::MetaClass>();
             }
-
-            template <typename T>
-            constexpr static std::true_type hasMetaClass(int, typename T::MetaClass * = nullptr) { return {}; }
-
-            template <typename T>
-            constexpr static std::false_type hasMetaClass(...) { return {}; }
         };
     }
 
@@ -309,13 +287,6 @@ namespace BlackMisc
     {
         return Private::CMetaClassAccessor::getIntrospector<T>();
     }
-
-    /*!
-     * Trait that is true if T has a metaclass.
-     * \ingroup MetaClass
-     */
-    template <typename T>
-    struct THasMetaClass : public decltype(Private::CMetaClassAccessor::hasMetaClass<T>(0)) {};
 
 } // namespace
 
