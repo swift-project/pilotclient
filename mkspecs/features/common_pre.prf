@@ -221,7 +221,6 @@ win32:llvm {
         equals(WORD_SIZE,64): QMAKE_CXXFLAGS += --target=x86_64-pc-windows-gnu
     }
     else {
-        CONFIG += c++latest
         QMAKE_CXXFLAGS_WARN_ON += -Wno-deprecated-declarations
     }
 
