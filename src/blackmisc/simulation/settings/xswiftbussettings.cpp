@@ -9,6 +9,8 @@
 #include "blackmisc/simulation/settings/xswiftbussettings.h"
 #include "blackmisc/simulation/settings/xswiftbussettingsqtfree.inc"
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::Settings, CXSwiftBusSettings)
+
 namespace BlackMisc::Simulation::Settings
 {
     CXSwiftBusSettings::CXSwiftBusSettings() { }

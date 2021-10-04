@@ -12,6 +12,8 @@
 
 using namespace BlackMisc::Network;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CSimBriefData)
+
 namespace BlackMisc::Aviation
 {
     const QStringList &CSimBriefData::getLogCategories()

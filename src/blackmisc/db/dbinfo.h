@@ -16,6 +16,8 @@
 #include "blackmisc/valueobject.h"
 #include "blackmisc/blackmiscexport.h"
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Db, CDbInfo)
+
 namespace BlackMisc::Db
 {
     /*!

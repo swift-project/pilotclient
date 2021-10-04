@@ -22,6 +22,8 @@
 #include <QMetaType>
 #include <QStringList>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Input, CHotkeyCombination)
+
 namespace BlackMisc::Input
 {
     //! Value object representing hotkey sequence

@@ -16,6 +16,8 @@
 #include <QtGlobal>
 #include <QAudioDeviceInfo>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Audio, CAudioDeviceInfo)
+
 namespace BlackMisc::Audio
 {
     CAudioDeviceInfo::CAudioDeviceInfo() :

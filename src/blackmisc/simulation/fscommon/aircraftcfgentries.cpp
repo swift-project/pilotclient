@@ -20,6 +20,8 @@ using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::FsCommon, CAircraftCfgEntries)
+
 namespace BlackMisc::Simulation::FsCommon
 {
     CAircraftCfgEntries::CAircraftCfgEntries(const QString &fileName, int index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode, const QString &description) :

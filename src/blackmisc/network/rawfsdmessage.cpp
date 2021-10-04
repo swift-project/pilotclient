@@ -17,6 +17,8 @@
 
 using namespace BlackMisc;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CRawFsdMessage)
+
 namespace BlackMisc::Network
 {
     CRawFsdMessage::CRawFsdMessage(const QString &rawMessage)

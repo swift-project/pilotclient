@@ -20,6 +20,8 @@
 
 using namespace BlackMisc::Audio;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CServer)
+
 namespace BlackMisc::Network
 {
     const QList<int> &CServer::allServerTypes()

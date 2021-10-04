@@ -16,6 +16,8 @@
 #include <QtGlobal>
 #include <tuple>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc, CPixmap)
+
 namespace BlackMisc
 {
     CPixmap::CPixmap(const QPixmap &pixmap) : m_pixmap(pixmap), m_hasCachedPixmap(true)

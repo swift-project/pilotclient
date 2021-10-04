@@ -8,6 +8,8 @@
 
 #include "blackmisc/network/connectionstatus.h"
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CConnectionStatus)
+
 namespace BlackMisc::Network
 {
     QString CConnectionStatus::convertToQString(bool i18n) const

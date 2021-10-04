@@ -21,6 +21,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Input, CActionHotkey)
+
 namespace BlackMisc::Input
 {
     //! Value object encapsulating a action hotkey

@@ -23,6 +23,8 @@
 #include <QVersionNumber>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Db, CDistribution)
+
 namespace BlackMisc::Db
 {
     //! Distributions for channel

@@ -25,6 +25,8 @@
 #include <QPixmap>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Network, CTextMessage)
+
 namespace BlackMisc::Network
 {
     /*!

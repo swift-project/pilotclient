@@ -29,6 +29,8 @@
 #include <array>
 #include <tuple>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::XPlane, CNavDataReference)
+
 namespace BlackMisc::Simulation::XPlane
 {
     /*!

@@ -21,6 +21,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Audio, CVoiceSetup)
+
 namespace BlackMisc::Audio
 {
     //! Value object for a voice setup

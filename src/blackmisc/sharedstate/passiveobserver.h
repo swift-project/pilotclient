@@ -18,6 +18,8 @@
 #include <QSharedPointer>
 #include <QMutex>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::SharedState, CAnyMatch)
+
 namespace BlackMisc::SharedState
 {
     class CActiveObserver;

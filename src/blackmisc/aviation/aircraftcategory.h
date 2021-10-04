@@ -24,6 +24,8 @@
 #include <QStringList>
 #include <QMetaType>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftCategory)
+
 namespace BlackMisc::Aviation
 {
     //! Value object for aircraft categories

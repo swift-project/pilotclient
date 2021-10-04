@@ -20,6 +20,8 @@
 #include <QString>
 #include <QtGlobal>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Input, CJoystickButton)
+
 namespace BlackMisc::Input
 {
     //! Value object representing a joystick button

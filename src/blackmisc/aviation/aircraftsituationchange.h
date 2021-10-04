@@ -21,6 +21,8 @@
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/blackmiscexport.h"
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftSituationChange)
+
 namespace BlackMisc
 {
     namespace Simulation

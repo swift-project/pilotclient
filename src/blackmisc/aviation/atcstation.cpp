@@ -14,6 +14,7 @@
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/propertyindexvariantmap.h" // needed for Mixin::Index::apply
 
 #include <QCoreApplication>
 #include <QtGlobal>
@@ -23,6 +24,8 @@ using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
+
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAtcStation)
 
 namespace BlackMisc::Aviation
 {

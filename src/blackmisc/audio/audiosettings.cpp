@@ -16,6 +16,8 @@
 
 using namespace BlackMisc::Audio;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Audio, CSettings)
+
 namespace BlackMisc::Audio
 {
     int CSettings::fixOutVolume(int v)

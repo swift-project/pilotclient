@@ -26,6 +26,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Network, CServer)
+
 namespace BlackMisc::Network
 {
     //! Value object encapsulating information of a server

@@ -12,6 +12,8 @@
 #include <QDBusMetaType>
 #include <QJsonObject>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CSimulatorInternals)
+
 namespace BlackMisc::Simulation
 {
     void CSimulatorInternals::setValue(const QString &name, const QString &value)

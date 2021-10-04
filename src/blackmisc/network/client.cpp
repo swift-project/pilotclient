@@ -10,12 +10,15 @@
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/iconlist.h"
+#include "blackmisc/propertyindexvariantmap.h" // needed for Mixin::Index::apply
 
 #include <QPixmap>
 #include <QString>
 #include <QStringBuilder>
 #include <QStringList>
 #include <tuple>
+
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CClient)
 
 namespace BlackMisc::Network
 {

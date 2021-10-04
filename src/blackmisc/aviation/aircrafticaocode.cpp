@@ -28,6 +28,8 @@ using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::PhysicalQuantities;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftIcaoCode)
+
 namespace BlackMisc::Aviation
 {
     CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &combinedType) :

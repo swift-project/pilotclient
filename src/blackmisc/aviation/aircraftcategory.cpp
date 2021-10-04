@@ -26,6 +26,8 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftCategory)
+
 namespace BlackMisc::Aviation
 {
     CAircraftCategory::CAircraftCategory(const QString &name, const QString &description, const QString &path, bool assignable) :

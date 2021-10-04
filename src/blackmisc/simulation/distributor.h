@@ -26,6 +26,8 @@
 #include <QSet>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CDistributor)
+
 namespace BlackMisc::Simulation
 {
     //! Value object encapsulating information of software distributor.

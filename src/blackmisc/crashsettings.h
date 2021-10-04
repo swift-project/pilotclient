@@ -13,6 +13,8 @@
 
 #include "blackmisc/valueobject.h"
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Settings, CCrashSettings)
+
 namespace BlackMisc::Settings
 {
     /*!

@@ -9,6 +9,8 @@
 #include "blackmisc/simulation/matchingstatisticsentry.h"
 #include "blackmisc/comparefunctions.h"
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CMatchingStatisticsEntry)
+
 namespace BlackMisc::Simulation
 {
     CMatchingStatisticsEntry::CMatchingStatisticsEntry() { }

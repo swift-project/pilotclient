@@ -24,6 +24,8 @@
 #include <QString>
 #include <tuple>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CDistributorListPreferences)
+
 namespace BlackMisc::Simulation
 {
     //! Preferences for distributors

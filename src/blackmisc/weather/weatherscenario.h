@@ -17,6 +17,8 @@
 #include <QMetaType>
 #include <QVector>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Weather, CWeatherScenario)
+
 namespace BlackMisc::Weather
 {
     /*!

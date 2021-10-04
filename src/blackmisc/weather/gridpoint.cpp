@@ -15,6 +15,8 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Weather, CGridPoint)
+
 namespace BlackMisc::Weather
 {
     CGridPoint::CGridPoint(const QString &identifier,

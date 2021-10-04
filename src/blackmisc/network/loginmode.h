@@ -14,6 +14,8 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Network, CLoginMode)
+
 namespace BlackMisc::Network
 {
     //! Value object encapsulating information about login mode

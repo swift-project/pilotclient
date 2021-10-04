@@ -17,6 +17,8 @@
 
 #include <atomic>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CUrlLog)
+
 namespace BlackMisc::Network
 {
     CUrlLog::CUrlLog(const CUrl &url) :

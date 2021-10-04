@@ -15,6 +15,8 @@
 #include <algorithm>
 #include <tuple>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Input, CHotkeyCombination)
+
 namespace BlackMisc::Input
 {
     CHotkeyCombination::CHotkeyCombination(CKeyboardKey key) : CHotkeyCombination(CKeyboardKeyList { key })

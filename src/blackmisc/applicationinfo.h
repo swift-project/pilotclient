@@ -16,6 +16,8 @@
 #include <QMetaType>
 #include <QFlags>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc, CApplicationInfo)
+
 namespace BlackMisc
 {
     /*!

@@ -21,6 +21,8 @@
 #include <psapi.h>
 #endif
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc, CProcessInfo)
+
 namespace BlackMisc
 {
 

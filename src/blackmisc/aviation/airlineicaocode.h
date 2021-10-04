@@ -25,6 +25,8 @@
 #include <QMap>
 #include <QSet>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAirlineIcaoCode)
+
 namespace BlackMisc::Aviation
 {
     class CCallsign;

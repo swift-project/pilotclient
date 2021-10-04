@@ -15,6 +15,8 @@
 #include "blackmisc/valueobject.h"
 #include "blackmisc/timestampbased.h"
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CMatchingStatisticsEntry)
+
 namespace BlackMisc::Simulation
 {
     //! Value object for a matching statistics entry.

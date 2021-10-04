@@ -22,6 +22,8 @@
 #include <QString>
 #include <QtGlobal>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CInformationMessage)
+
 namespace BlackMisc::Aviation
 {
     //! Value object encapsulating information message (ATIS, METAR, TAF)

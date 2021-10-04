@@ -9,6 +9,8 @@
 #include "blackmisc/simulation/settings/swiftpluginsettings.h"
 #include "blackmisc/stringutils.h"
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::Settings, CSwiftPluginSettings)
+
 namespace BlackMisc::Simulation::Settings
 {
     CSwiftPluginSettings::CSwiftPluginSettings()

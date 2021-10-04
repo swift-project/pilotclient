@@ -10,6 +10,8 @@
 #include "blackmisc/propertyindexvariantmap.h"
 #include <tuple>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc, CNameVariantPair)
+
 namespace BlackMisc
 {
     CNameVariantPair::CNameVariantPair(const QString &name, const CVariant &variant, const CIcon &icon)

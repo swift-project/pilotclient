@@ -11,6 +11,9 @@
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackCore::Vatsim, CReaderSettings)
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackCore::Vatsim, CRawFsdMessageSettings)
+
 namespace BlackCore::Vatsim
 {
     CReaderSettings::CReaderSettings()

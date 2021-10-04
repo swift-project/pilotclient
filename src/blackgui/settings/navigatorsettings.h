@@ -20,6 +20,8 @@
 #include <QString>
 #include <QMetaType>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackGui::Settings, CNavigatorSettings)
+
 namespace BlackGui::Settings
 {
     //! Settings for navigator bar

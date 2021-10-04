@@ -17,6 +17,8 @@
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackCore::Data, CLauncherSetup)
+
 namespace BlackCore::Data
 {
     //! Launcher setup

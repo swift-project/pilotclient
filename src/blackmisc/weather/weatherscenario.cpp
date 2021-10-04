@@ -8,6 +8,8 @@
 
 #include "blackmisc/weather/weatherscenario.h"
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Weather, CWeatherScenario)
+
 namespace BlackMisc::Weather
 {
     void CWeatherScenario::registerMetadata()

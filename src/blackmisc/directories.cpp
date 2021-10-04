@@ -12,6 +12,8 @@
 #include <QFileInfo>
 #include <QDir>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc, CDirectories)
+
 namespace BlackMisc
 {
     QString CDirectories::getFlightPlanDirectoryOrDefault() const

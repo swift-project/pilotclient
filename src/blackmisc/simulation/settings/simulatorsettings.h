@@ -25,6 +25,10 @@
 #include <QStringList>
 #include <QObject>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::Settings, CSimulatorSettings)
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::Settings, CFsxP3DSettings)
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::Settings, CSimulatorMessagesSettings)
+
 namespace BlackMisc::Simulation::Settings
 {
     //! Settings for simulator

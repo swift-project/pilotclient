@@ -13,6 +13,8 @@
 
 using namespace BlackMisc::Aviation;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Weather, CCloudLayer)
+
 namespace BlackMisc::Weather
 {
 

@@ -11,6 +11,8 @@
 #include "blackmisc/verify.h"
 #include "blackmisc/comparefunctions.h"
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CEcosystem)
+
 namespace BlackMisc::Network
 {
     QString CEcosystem::convertToQString(bool i18n) const

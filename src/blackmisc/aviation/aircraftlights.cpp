@@ -11,6 +11,8 @@
 #include "blackmisc/comparefunctions.h"
 #include <QStringBuilder>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftLights)
+
 namespace BlackMisc::Aviation
 {
     CAircraftLights::CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn)

@@ -26,6 +26,8 @@ using namespace BlackMisc::Db;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Simulation::XPlane;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CSimulatorInfo)
+
 namespace BlackMisc::Simulation
 {
     CSimulatorInfo::CSimulatorInfo()

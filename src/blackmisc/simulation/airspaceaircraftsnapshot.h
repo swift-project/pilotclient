@@ -25,6 +25,8 @@
 #include <QString>
 #include <QtGlobal>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CAirspaceAircraftSnapshot)
+
 namespace BlackMisc::Simulation
 {
     //! Current situation in the skies analyzed.

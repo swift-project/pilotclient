@@ -16,6 +16,8 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindexref.h"
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::Settings, CModelSettings)
+
 namespace BlackMisc::Simulation::Settings
 {
     //! Settings for models

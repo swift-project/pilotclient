@@ -21,6 +21,8 @@
 #include <QString>
 #include <QMetaType>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackGui::Settings, CDockWidgetSettings)
+
 namespace BlackGui::Settings
 {
     //! Settings for dockwidget

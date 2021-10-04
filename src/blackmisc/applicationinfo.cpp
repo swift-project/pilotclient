@@ -16,6 +16,8 @@
 
 using namespace BlackConfig;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc, CApplicationInfo)
+
 namespace BlackMisc
 {
     CApplicationInfo::CApplicationInfo() {}

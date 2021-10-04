@@ -14,6 +14,8 @@
 #include "blackmisc/valueobject.h"
 #include "blackmisc/blackmiscexport.h"
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CAircraftMatcherSetup)
+
 namespace BlackMisc::Simulation
 {
     //! Matcher settings

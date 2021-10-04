@@ -12,6 +12,8 @@
 #include <QtGlobal>
 #include <QStringBuilder>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network::Settings, CNetworkSettings)
+
 namespace BlackMisc::Network::Settings
 {
     QString CNetworkSettings::convertToQString(bool i18n) const

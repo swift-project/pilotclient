@@ -17,6 +17,8 @@ using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackCore::Db, CDatabaseReaderConfig)
+
 namespace BlackCore::Db
 {
     CDatabaseReaderConfig::CDatabaseReaderConfig(CEntityFlags::Entity entities, CDbFlags::DataRetrievalMode retrievalFlags, const CTime &cacheLifetime) :

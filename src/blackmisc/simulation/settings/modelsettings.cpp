@@ -9,6 +9,8 @@
 #include "blackmisc/simulation/settings/modelsettings.h"
 #include "blackmisc/stringutils.h"
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::Settings, CModelSettings)
+
 namespace BlackMisc::Simulation::Settings
 {
     CModelSettings::CModelSettings()

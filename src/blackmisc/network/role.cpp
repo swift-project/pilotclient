@@ -11,6 +11,8 @@
 #include <QtGlobal>
 #include <QStringBuilder>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CRole)
+
 namespace BlackMisc::Network
 {
     CRole::CRole(const QString &name, const QString &description)

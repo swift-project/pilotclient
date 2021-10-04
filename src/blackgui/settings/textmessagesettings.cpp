@@ -14,6 +14,8 @@ using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackGui::Settings, CTextMessageSettings)
+
 namespace BlackGui::Settings
 {
     CTextMessageSettings::CTextMessageSettings()

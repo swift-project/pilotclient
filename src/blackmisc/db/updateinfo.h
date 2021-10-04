@@ -17,6 +17,8 @@
 #include "blackmisc/valueobject.h"
 #include <QStringList>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Db, CUpdateInfo)
+
 namespace BlackMisc::Db
 {
     //! Update info, i.e. artifacts and distributions

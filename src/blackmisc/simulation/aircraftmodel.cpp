@@ -32,6 +32,8 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Db;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CAircraftModel)
+
 namespace BlackMisc::Simulation
 {
     void CAircraftModel::registerMetadata()

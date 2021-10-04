@@ -22,6 +22,8 @@
 #include <QUuid>
 #include <QtGlobal>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc, CIdentifier)
+
 namespace BlackMisc
 {
     /*!

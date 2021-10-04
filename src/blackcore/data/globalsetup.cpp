@@ -28,6 +28,8 @@ using namespace BlackMisc;
 using namespace BlackMisc::Json;
 using namespace BlackMisc::Network;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackCore::Data, CGlobalSetup)
+
 namespace BlackCore::Data
 {
     CGlobalSetup::CGlobalSetup() :

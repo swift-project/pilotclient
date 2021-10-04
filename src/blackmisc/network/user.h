@@ -23,6 +23,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Network, CUser)
+
 namespace BlackMisc::Network
 {
     /*!

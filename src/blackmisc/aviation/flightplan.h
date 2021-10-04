@@ -35,6 +35,9 @@
 #include <QTime>
 #include <QtGlobal>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CFlightPlanRemarks)
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CFlightPlan)
+
 namespace BlackMisc::Aviation
 {
     //! Flight plan remarks, parsed values

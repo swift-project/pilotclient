@@ -14,6 +14,8 @@
 using namespace BlackMisc;
 using namespace BlackGui;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackGui::Settings, CDockWidgetSettings)
+
 namespace BlackGui::Settings
 {
     CDockWidgetSettings::CDockWidgetSettings()

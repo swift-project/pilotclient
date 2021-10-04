@@ -21,6 +21,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Network, CRole)
+
 namespace BlackMisc::Network
 {
     /*!

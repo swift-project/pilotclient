@@ -23,6 +23,8 @@
 #include <QRegularExpression>
 #include <QtDebug>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::PhysicalQuantities, CPqString)
+
 namespace BlackMisc::PhysicalQuantities
 {
     QString CPqString::convertToQString(bool /** i18n **/) const

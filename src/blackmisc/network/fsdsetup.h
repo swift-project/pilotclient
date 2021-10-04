@@ -20,6 +20,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Network, CFsdSetup)
+
 namespace BlackMisc::Network
 {
     //! Value object for a FSD setup

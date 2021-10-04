@@ -12,6 +12,8 @@
 
 using namespace BlackMisc::Network;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Db, CDbInfo)
+
 namespace BlackMisc::Db
 {
     CDbInfo::CDbInfo(int key, const QString &tableName, int entries) :

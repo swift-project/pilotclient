@@ -14,6 +14,8 @@
 #include "blackmisc/valueobject.h"
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc, CCrashInfo)
+
 namespace BlackMisc
 {
     /*!

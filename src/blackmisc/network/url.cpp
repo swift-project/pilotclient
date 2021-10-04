@@ -14,6 +14,8 @@
 #include <QPair>
 #include <QtGlobal>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CUrl)
+
 namespace BlackMisc::Network
 {
     CUrl::CUrl(const QString &fullUrl)

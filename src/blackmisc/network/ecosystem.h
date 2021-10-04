@@ -17,6 +17,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Network, CEcosystem)
+
 namespace BlackMisc::Network
 {
     //! Ecosystem of server belonging together.

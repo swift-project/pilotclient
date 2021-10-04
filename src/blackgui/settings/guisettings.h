@@ -18,6 +18,8 @@
 #include <QString>
 #include <QAbstractItemView>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackGui::Settings, CGeneralGuiSettings)
+
 namespace BlackGui::Settings
 {
     //! General GUI settings

@@ -20,6 +20,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CSimulatorPluginInfo)
+
 namespace BlackMisc::Simulation
 {
     //! Describing a simulator plugin

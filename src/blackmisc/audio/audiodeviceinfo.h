@@ -20,6 +20,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Audio, CAudioDeviceInfo)
+
 namespace BlackMisc::Audio
 {
     /*!

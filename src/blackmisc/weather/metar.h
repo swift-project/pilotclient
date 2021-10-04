@@ -26,6 +26,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Weather, CMetar)
+
 namespace BlackMisc::Weather
 {
     class CCloudLayer;

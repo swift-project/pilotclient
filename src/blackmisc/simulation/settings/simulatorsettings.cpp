@@ -22,6 +22,10 @@ using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Simulation::XPlane;
 using namespace BlackMisc::Simulation::Flightgear;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::Settings, CSimulatorSettings)
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::Settings, CFsxP3DSettings)
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::Settings, CSimulatorMessagesSettings)
+
 namespace BlackMisc::Simulation::Settings
 {
     const QString &CSimulatorSettings::cgSourceAsString(CSimulatorSettings::CGSource source)

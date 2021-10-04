@@ -15,6 +15,8 @@ using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackGui;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackGui::Settings, CViewUpdateSettings)
+
 namespace BlackGui::Settings
 {
     CViewUpdateSettings::CViewUpdateSettings()

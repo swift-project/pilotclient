@@ -28,6 +28,8 @@
 #include <QVector3D>
 #include <array>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAirport)
+
 namespace BlackMisc::Aviation
 {
     //! Value object encapsulating information about an airpot.

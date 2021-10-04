@@ -31,6 +31,8 @@
 #include <QVector3D>
 #include <array>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Geo, CCoordinateGeodetic)
+
 namespace BlackMisc
 {
     namespace Geo

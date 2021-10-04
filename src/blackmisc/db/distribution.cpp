@@ -14,6 +14,8 @@ using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Db, CDistribution)
+
 namespace BlackMisc::Db
 {
     CDistribution::CDistribution()

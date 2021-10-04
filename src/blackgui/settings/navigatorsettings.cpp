@@ -14,6 +14,8 @@
 using namespace BlackMisc;
 using namespace BlackGui;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackGui::Settings, CNavigatorSettings)
+
 namespace BlackGui::Settings
 {
     CNavigatorSettings::CNavigatorSettings()

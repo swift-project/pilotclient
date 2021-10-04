@@ -16,6 +16,8 @@
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CAirspaceAircraftSnapshot)
+
 namespace BlackMisc::Simulation
 {
     CAirspaceAircraftSnapshot::CAirspaceAircraftSnapshot()

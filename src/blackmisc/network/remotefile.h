@@ -22,6 +22,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Network, CRemoteFile)
+
 namespace BlackMisc::Network
 {
     /*!

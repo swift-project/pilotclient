@@ -17,6 +17,7 @@
 #include "blackmisc/verify.h"
 #include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
+#include "blackmisc/propertyindexvariantmap.h" // needed for Mixin::Index::apply
 
 #include "QStringBuilder"
 #include <QtGlobal>
@@ -24,6 +25,8 @@
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackConfig;
+
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftSituation)
 
 namespace BlackMisc::Aviation
 {

@@ -11,6 +11,7 @@
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/propertyindexvariantmap.h" // needed for Mixin::Index::apply
 
 #include <QChar>
 #include <QRegularExpression>
@@ -20,6 +21,8 @@
 #include <QStringBuilder>
 
 using namespace BlackMisc::Aviation;
+
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CUser)
 
 namespace BlackMisc::Network
 {

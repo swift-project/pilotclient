@@ -26,6 +26,8 @@
 #include <QMultiMap>
 #include <QStringList>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CSimulatorInfo)
+
 namespace BlackMisc::Simulation
 {
     //! Simple hardcoded info about the corresponding simulator.

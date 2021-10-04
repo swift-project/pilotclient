@@ -9,6 +9,8 @@
 #include "blackmisc/input/actionhotkey.h"
 #include <QStringBuilder>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Input, CActionHotkey)
+
 namespace BlackMisc::Input
 {
     CActionHotkey::CActionHotkey(const QString &action) :

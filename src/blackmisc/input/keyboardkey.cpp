@@ -15,6 +15,8 @@
 
 #include "blackmisc/propertyindexref.h"
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Input, CKeyboardKey)
+
 namespace BlackMisc::Input
 {
     CKeyboardKey::CKeyboardKey() :

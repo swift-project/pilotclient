@@ -12,6 +12,8 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackCore::Data, CVatsimSetup)
+
 namespace BlackCore::Data
 {
     CVatsimSetup::CVatsimSetup() :

@@ -8,6 +8,8 @@
 
 #include "blackmisc/network/facilitytype.h"
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CFacilityType)
+
 namespace BlackMisc::Network
 {
     QString CFacilityType::convertToQString(bool i18n) const

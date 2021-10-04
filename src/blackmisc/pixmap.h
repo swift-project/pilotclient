@@ -21,6 +21,8 @@
 #include <QReadWriteLock>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc, CPixmap)
+
 namespace BlackMisc
 {
     class CStatusMessage;

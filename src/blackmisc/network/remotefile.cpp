@@ -11,6 +11,8 @@
 #include <QJsonValue>
 #include <QtGlobal>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CRemoteFile)
+
 namespace BlackMisc::Network
 {
     CRemoteFile::CRemoteFile(const QString &name, const QString &description)

@@ -41,6 +41,8 @@
 #include <QDir>
 #include <tuple>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CAircraftModel)
+
 namespace BlackMisc
 {
     class CIcon;

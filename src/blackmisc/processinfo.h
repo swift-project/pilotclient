@@ -15,6 +15,8 @@
 #include <QCoreApplication>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc, CProcessInfo)
+
 namespace BlackMisc
 {
     /*!

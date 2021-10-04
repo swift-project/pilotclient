@@ -12,6 +12,8 @@
 #include <QChar>
 #include <QtGlobal>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftEngine)
+
 namespace BlackMisc::Aviation
 {
     CAircraftEngine::CAircraftEngine(int number, bool on) : m_number(number), m_on(on)

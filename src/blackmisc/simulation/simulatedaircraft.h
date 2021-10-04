@@ -39,6 +39,8 @@
 #include <QtGlobal>
 #include <array>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CSimulatedAircraft)
+
 namespace BlackMisc
 {
     namespace Aviation

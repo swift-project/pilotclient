@@ -14,6 +14,8 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Network, CFacilityType)
+
 namespace BlackMisc::Network
 {
     //! Value object encapsulating the ATC facility type, e.g. TWR, DEP, APP

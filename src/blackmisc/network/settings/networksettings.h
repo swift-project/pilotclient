@@ -20,6 +20,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Network::Settings, CNetworkSettings)
+
 namespace BlackMisc::Network::Settings
 {
     //! Network settings

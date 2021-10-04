@@ -15,6 +15,8 @@
 #include "blackmisc/settingscache.h"
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackGui::Settings, CAtcStationsSettings)
+
 namespace BlackGui::Settings
 {
     //! How to display ATC stations

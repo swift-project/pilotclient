@@ -23,6 +23,8 @@
 #include <QtGlobal>
 #include <tuple>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CTransponder)
+
 namespace BlackMisc::Aviation
 {
     //! Transponder

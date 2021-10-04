@@ -27,6 +27,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Weather, CGridPoint)
+
 namespace BlackMisc::Weather
 {
     /*!

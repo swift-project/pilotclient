@@ -12,6 +12,8 @@
 
 #include <QtGlobal>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::XPlane, CNavDataReference)
+
 namespace BlackMisc::Simulation::XPlane
 {
     CNavDataReference::CNavDataReference() = default;

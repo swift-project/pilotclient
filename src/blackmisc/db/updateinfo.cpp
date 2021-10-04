@@ -16,6 +16,8 @@
 
 using namespace BlackConfig;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Db, CUpdateInfo)
+
 namespace BlackMisc::Db
 {
     CUpdateInfo::CUpdateInfo(const CArtifactList &artifacts, const CDistributionList &distributions) :

@@ -11,12 +11,16 @@
 #include "blackmisc/stringutils.h"
 #include "blackmisc/verify.h"
 #include "blackconfig/buildconfig.h"
+#include "blackmisc/propertyindexvariantmap.h" // needed for Mixin::Index::apply
 #include <QStringBuilder>
 
 using namespace BlackConfig;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;
+
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CInterpolationAndRenderingSetupGlobal)
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CInterpolationAndRenderingSetupPerCallsign)
 
 namespace BlackMisc::Simulation
 {

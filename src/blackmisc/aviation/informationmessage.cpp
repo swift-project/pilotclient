@@ -9,6 +9,8 @@
 #include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/comparefunctions.h"
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CInformationMessage)
+
 namespace BlackMisc::Aviation
 {
     QString CInformationMessage::convertToQString(bool i18n) const

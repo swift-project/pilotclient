@@ -17,6 +17,8 @@
 #include <QStringBuilder>
 #include <QThreadStorage>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc, CStatusMessage)
+
 namespace BlackMisc
 {
     namespace Private

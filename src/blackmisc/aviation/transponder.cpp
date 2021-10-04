@@ -13,6 +13,8 @@
 #include <Qt>
 #include <QtDebug>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CTransponder)
+
 namespace BlackMisc::Aviation
 {
     void CTransponder::registerMetadata()

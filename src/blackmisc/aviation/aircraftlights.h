@@ -19,6 +19,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftLights)
+
 namespace BlackMisc::Aviation
 {
     //! Value object encapsulating information about aircraft's lights

@@ -19,6 +19,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::PhysicalQuantities, CPqString)
+
 namespace BlackMisc::PhysicalQuantities
 {
     /*!

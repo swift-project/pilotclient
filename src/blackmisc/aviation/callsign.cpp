@@ -17,6 +17,8 @@
 #include <Qt>
 #include <QtGlobal>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CCallsign)
+
 namespace BlackMisc::Aviation
 {
     CCallsign::CCallsign(const QString &callsign, CCallsign::TypeHint hint)

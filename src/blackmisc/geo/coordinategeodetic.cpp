@@ -20,6 +20,8 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Math;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Geo, CCoordinateGeodetic)
+
 namespace BlackMisc::Geo
 {
     ICoordinateGeodetic::~ICoordinateGeodetic()

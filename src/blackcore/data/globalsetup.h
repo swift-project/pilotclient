@@ -26,6 +26,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackCore::Data, CGlobalSetup)
+
 namespace BlackCore::Data
 {
     //! Global settings for readers, debug flags, etc.

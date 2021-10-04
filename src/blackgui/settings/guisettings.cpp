@@ -11,6 +11,8 @@
 
 using namespace BlackMisc;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackGui::Settings, CGeneralGuiSettings)
+
 namespace BlackGui::Settings
 {
     CGeneralGuiSettings::CGeneralGuiSettings()

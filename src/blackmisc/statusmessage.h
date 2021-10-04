@@ -23,6 +23,8 @@
 
 #include <QReadWriteLock>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc, CStatusMessage)
+
 namespace BlackMisc
 {
     namespace Private

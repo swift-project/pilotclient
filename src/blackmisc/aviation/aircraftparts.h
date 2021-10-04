@@ -22,6 +22,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftParts)
+
 namespace BlackMisc::Aviation
 {
     //! Value object encapsulating information of aircraft's parts

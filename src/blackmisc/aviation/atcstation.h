@@ -33,6 +33,8 @@
 #include <array>
 #include <tuple>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAtcStation)
+
 namespace BlackMisc::Aviation
 {
     //! Value object encapsulating information about an ATC station.

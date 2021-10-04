@@ -14,6 +14,8 @@
 using namespace BlackConfig;
 using namespace BlackMisc;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CSimulatorPluginInfo)
+
 namespace BlackMisc::Simulation
 {
     CSimulatorPluginInfo::CSimulatorPluginInfo(const QString &identifier, const QString &name, const QString &simulator, const QString &description, bool valid) :

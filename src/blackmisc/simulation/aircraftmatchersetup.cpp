@@ -10,6 +10,8 @@
 #include "blackmisc/stringutils.h"
 #include <QStringBuilder>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CAircraftMatcherSetup)
+
 namespace BlackMisc::Simulation
 {
     CAircraftMatcherSetup::CAircraftMatcherSetup()

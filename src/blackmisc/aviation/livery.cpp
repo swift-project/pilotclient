@@ -26,6 +26,8 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CLivery)
+
 namespace BlackMisc::Aviation
 {
     CLivery::CLivery()

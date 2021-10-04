@@ -21,6 +21,8 @@
 #include <QString>
 #include <QMetaType>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackGui::Settings, CViewUpdateSettings)
+
 namespace BlackGui::Settings
 {
     //! Settings about view update rates

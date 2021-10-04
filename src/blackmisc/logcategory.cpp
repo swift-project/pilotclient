@@ -10,6 +10,8 @@
 
 #include <QtGlobal>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc, CLogCategory)
+
 namespace BlackMisc
 {
     QString CLogCategory::convertToQString(bool i18n) const

@@ -19,6 +19,8 @@
 
 using namespace BlackConfig;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftParts)
+
 namespace BlackMisc::Aviation
 {
     CAircraftParts::CAircraftParts(int flapsPercent) : m_flapsPercentage(flapsPercent) {}

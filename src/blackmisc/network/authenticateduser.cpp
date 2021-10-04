@@ -17,6 +17,8 @@
 #include <QStringBuilder>
 #include <QtGlobal>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CAuthenticatedUser)
+
 namespace BlackMisc::Network
 {
     CAuthenticatedUser::CAuthenticatedUser()

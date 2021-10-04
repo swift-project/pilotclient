@@ -16,6 +16,8 @@
 #include <QSysInfo>
 #include <QStringBuilder>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc, CIdentifier)
+
 //! \private Escape characters not allowed in dbus paths
 QString toDBusPath(const QString &s)
 {

@@ -25,6 +25,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CLivery)
+
 namespace BlackMisc::Aviation
 {
     //! Value object encapsulating information about an airpot.

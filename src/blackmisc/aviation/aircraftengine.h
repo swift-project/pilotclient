@@ -18,6 +18,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftEngine)
+
 namespace BlackMisc::Aviation
 {
     //! Value object encapsulating information about aircraft's engines

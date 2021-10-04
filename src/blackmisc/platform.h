@@ -19,6 +19,8 @@
 #include <QMetaEnum>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc, CPlatform)
+
 namespace BlackMisc
 {
     /*!

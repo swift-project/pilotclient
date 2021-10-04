@@ -11,6 +11,8 @@
 
 using namespace BlackMisc;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackCore::Data, CLauncherSetup)
+
 namespace BlackCore::Data
 {
     QString CLauncherSetup::convertToQString(bool i18n) const

@@ -13,6 +13,8 @@
 
 using namespace BlackMisc;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Weather, CWeatherDataPluginInfo)
+
 namespace BlackMisc::Weather
 {
     CWeatherDataPluginInfo::CWeatherDataPluginInfo(const QString &identifier, const QString &name, const QString &description, bool valid) :

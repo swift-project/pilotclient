@@ -15,6 +15,8 @@
 
 using namespace BlackMisc;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CVoiceCapabilities)
+
 namespace BlackMisc::Network
 {
     CVoiceCapabilities::CVoiceCapabilities(const QString &flightPlanRemarks)

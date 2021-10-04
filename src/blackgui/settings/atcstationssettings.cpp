@@ -10,6 +10,8 @@
 
 using namespace BlackMisc;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackGui::Settings, CAtcStationsSettings)
+
 namespace BlackGui::Settings
 {
     CAtcStationsSettings::CAtcStationsSettings()

@@ -21,6 +21,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Input, CKeyboardKey)
+
 namespace BlackMisc::Input
 {
     //! Value object representing a keyboard key.

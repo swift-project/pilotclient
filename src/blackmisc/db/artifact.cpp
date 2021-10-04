@@ -15,6 +15,8 @@
 using namespace BlackConfig;
 using namespace BlackMisc::Network;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Db, CArtifact)
+
 namespace BlackMisc::Db
 {
     CArtifact::CArtifact()

@@ -16,6 +16,7 @@
 #include "blackmisc/fileutils.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/json.h"
+#include "blackmisc/propertyindexvariantmap.h" // needed for Mixin::Index::apply
 
 #include <QFile>
 #include <QDateTime>
@@ -26,6 +27,9 @@
 
 using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
+
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CFlightPlanRemarks)
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CFlightPlan)
 
 namespace BlackMisc::Aviation
 {

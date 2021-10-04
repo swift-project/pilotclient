@@ -20,6 +20,8 @@
 
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::Settings, CXSwiftBusSettings)
+
 namespace BlackMisc::Simulation::Settings
 {
     //! XSwiftBus settings

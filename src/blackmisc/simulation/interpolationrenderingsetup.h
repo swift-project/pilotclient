@@ -19,6 +19,9 @@
 #include "blackmisc/valueobject.h"
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CInterpolationAndRenderingSetupGlobal)
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CInterpolationAndRenderingSetupPerCallsign)
+
 namespace BlackMisc
 {
     namespace Network { class CClient; }

@@ -20,6 +20,8 @@
 #include <QString>
 #include <QtGlobal>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CSimBriefData)
+
 namespace BlackMisc::Aviation
 {
     //! Value object for a flight plan

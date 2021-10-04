@@ -18,6 +18,8 @@
 #include "blackmisc/network/remotefile.h"
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Db, CArtifact)
+
 namespace BlackMisc::Db
 {
     //! Artifacts ("our software" products)

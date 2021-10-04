@@ -20,6 +20,8 @@
 #include <QJsonObject>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Network, CUrlLog)
+
 namespace BlackMisc::Network
 {
     //! Information about accessing one URL over the network

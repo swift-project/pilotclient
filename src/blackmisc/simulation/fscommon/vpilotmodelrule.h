@@ -22,6 +22,8 @@
 #include <QString>
 #include <QtGlobal>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::FsCommon, CVPilotModelRule)
+
 namespace BlackMisc::Simulation::FsCommon
 {
     //! Value object encapsulating information of software distributor.

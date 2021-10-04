@@ -21,6 +21,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Audio, CSettings)
+
 namespace BlackMisc::Audio
 {
     //! Value object encapsulating information of audio related settings.

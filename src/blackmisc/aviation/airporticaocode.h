@@ -20,6 +20,8 @@
 #include <QString>
 #include <tuple>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAirportIcaoCode)
+
 namespace BlackMisc::Aviation
 {
     //! Value object encapsulating information of airport ICAO data.

@@ -20,6 +20,8 @@ using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAirport)
+
 namespace BlackMisc::Aviation
 {
     CAirport::CAirport()

@@ -16,6 +16,8 @@
 #include <QStringBuilder>
 #include <QtGlobal>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CDistributor)
+
 namespace BlackMisc::Simulation
 {
     CDistributor::CDistributor() { }

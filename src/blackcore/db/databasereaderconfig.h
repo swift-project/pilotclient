@@ -26,6 +26,8 @@
 #include <QTimer>
 #include <QtGlobal>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackCore::Db, CDatabaseReaderConfig)
+
 namespace BlackCore::Db
 {
     //! Details how to read a certain entity

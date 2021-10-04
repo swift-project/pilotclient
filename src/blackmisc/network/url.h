@@ -22,6 +22,8 @@
 #include <QString>
 #include <QUrl>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Network, CUrl)
+
 namespace BlackMisc::Network
 {
     //! Value object encapsulating information of a location,

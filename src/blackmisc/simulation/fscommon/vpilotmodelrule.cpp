@@ -18,6 +18,8 @@
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::FsCommon, CVPilotModelRule)
+
 namespace BlackMisc::Simulation::FsCommon
 {
     CVPilotModelRule::CVPilotModelRule() { }

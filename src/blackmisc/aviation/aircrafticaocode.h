@@ -25,6 +25,8 @@
 #include <QString>
 #include <QStringList>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftIcaoCode)
+
 namespace BlackMisc::Aviation
 {
     //! Value object for ICAO classification

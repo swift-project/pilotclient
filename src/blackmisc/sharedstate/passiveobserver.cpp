@@ -10,6 +10,8 @@
 
 #include "blackmisc/sharedstate/passiveobserver.h"
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::SharedState, CAnyMatch)
+
 namespace BlackMisc::SharedState
 {
     void CPassiveObserver::setEventSubscription(const CVariant &param)

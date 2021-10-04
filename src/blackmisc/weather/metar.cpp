@@ -17,6 +17,8 @@
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Weather, CMetar)
+
 namespace BlackMisc::Weather
 {
     CMetar::CMetar()

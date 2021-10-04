@@ -10,6 +10,8 @@
 
 #include <QtGlobal>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CDistributorListPreferences)
+
 namespace BlackMisc::Simulation
 {
     CDistributorListPreferences::CDistributorListPreferences() { }

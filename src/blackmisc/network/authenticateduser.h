@@ -25,11 +25,13 @@
 #include <QString>
 #include <QStringList>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Network, CAuthenticatedUser)
+
 namespace BlackMisc::Network
 {
     /*!
-    * Value object encapsulating information of an authentiated user.
-    */
+     * Value object encapsulating information of an authentiated user.
+     */
     class BLACKMISC_EXPORT CAuthenticatedUser :
         public CValueObject<CAuthenticatedUser>,
         public BlackMisc::Db::IDatastoreObjectWithIntegerKey

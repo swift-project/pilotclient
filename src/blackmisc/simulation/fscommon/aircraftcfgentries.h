@@ -21,6 +21,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::FsCommon, CAircraftCfgEntries)
+
 namespace BlackMisc::Simulation::FsCommon
 {
     //! Set of aircraft.cfg entries representing an aircraft (FSX)

@@ -31,6 +31,8 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAirlineIcaoCode)
+
 namespace BlackMisc::Aviation
 {
     CAirlineIcaoCode::CAirlineIcaoCode(const QString &airlineDesignator)

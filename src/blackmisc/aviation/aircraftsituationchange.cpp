@@ -27,6 +27,8 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Math;
 using namespace BlackConfig;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftSituationChange)
+
 namespace BlackMisc::Aviation
 {
     void CAircraftSituationChange::registerMetadata()

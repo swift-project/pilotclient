@@ -16,6 +16,8 @@
 
 using namespace BlackMisc::PhysicalQuantities;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CSelcal)
+
 namespace BlackMisc::Aviation
 {
     QString CSelcal::convertToQString(bool /** i18n **/) const

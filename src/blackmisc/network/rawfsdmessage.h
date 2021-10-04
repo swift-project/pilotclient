@@ -21,6 +21,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Network, CRawFsdMessage)
+
 namespace BlackMisc::Network
 {
     //! Value object for a raw FSD message

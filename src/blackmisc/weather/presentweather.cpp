@@ -9,6 +9,8 @@
 #include "blackmisc/weather/presentweather.h"
 #include "blackmisc/propertyindexref.h"
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Weather, CPresentWeather)
+
 namespace BlackMisc::Weather
 {
 

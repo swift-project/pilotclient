@@ -20,6 +20,9 @@
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/fileutils.h"
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackCore::Vatsim, CReaderSettings)
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackCore::Vatsim, CRawFsdMessageSettings)
+
 namespace BlackCore::Vatsim
 {
     /*!

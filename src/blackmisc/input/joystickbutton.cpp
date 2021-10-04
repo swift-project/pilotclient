@@ -8,6 +8,8 @@
 
 #include "blackmisc/input/joystickbutton.h"
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Input, CJoystickButton)
+
 namespace BlackMisc::Input
 {
     CJoystickButton::CJoystickButton(const QString &deviceName, int index) :

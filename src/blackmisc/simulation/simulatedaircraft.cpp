@@ -21,6 +21,8 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CSimulatedAircraft)
+
 namespace BlackMisc::Simulation
 {
     CSimulatedAircraft::CSimulatedAircraft()

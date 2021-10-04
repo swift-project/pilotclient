@@ -13,6 +13,8 @@
 #include <QFile>
 #include <QStringBuilder>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc, CCrashInfo)
+
 namespace BlackMisc
 {
     CCrashInfo::CCrashInfo() {}

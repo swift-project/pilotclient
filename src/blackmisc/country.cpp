@@ -14,6 +14,8 @@
 #include <QtGlobal>
 #include <QStringBuilder>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc, CCountry)
+
 namespace BlackMisc
 {
     CCountry::CCountry(const QString &iso, const QString &name) :

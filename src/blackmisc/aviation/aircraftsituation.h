@@ -33,6 +33,8 @@
 #include <QVector3D>
 #include <array>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftSituation)
+
 namespace BlackMisc
 {
     namespace Geo { class CElevationPlane; }

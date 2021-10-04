@@ -21,6 +21,8 @@
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CTextMessage)
+
 namespace BlackMisc::Network
 {
     CTextMessage::CTextMessage(const QString &message, const CFrequency &frequency, const CCallsign &senderCallsign)

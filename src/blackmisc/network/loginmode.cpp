@@ -8,6 +8,8 @@
 
 #include "blackmisc/network/loginmode.h"
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CLoginMode)
+
 namespace BlackMisc::Network
 {
     QString CLoginMode::convertToQString(bool i18n) const

@@ -22,6 +22,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Network, CClient)
+
 namespace BlackMisc::Network
 {
     //! Another client software.

@@ -16,6 +16,8 @@
 #include <Qt>
 #include <QtGlobal>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAirportIcaoCode)
+
 namespace BlackMisc::Aviation
 {
     QString CAirportIcaoCode::convertToQString(bool /** i18n **/) const

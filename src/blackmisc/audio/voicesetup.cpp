@@ -15,6 +15,8 @@
 #include <Qt>
 #include <QtGlobal>
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Audio, CVoiceSetup)
+
 namespace BlackMisc::Audio
 {
     QString CVoiceSetup::convertToQString(bool i18n) const

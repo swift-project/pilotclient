@@ -17,6 +17,8 @@
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/blackmiscexport.h"
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::Settings, CSwiftPluginSettings)
+
 namespace BlackMisc::Simulation::Settings
 {
     //! Settings for models

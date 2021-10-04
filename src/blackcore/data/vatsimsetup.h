@@ -25,6 +25,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackCore::Data, CVatsimSetup)
+
 namespace BlackCore::Data
 {
     //! VATSIM data (servers, URLs) cached as last known good setup.

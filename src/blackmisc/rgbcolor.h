@@ -22,6 +22,8 @@
 #include <QString>
 #include <tuple>
 
+BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc, CRgbColor)
+
 namespace BlackMisc
 {
     /*!

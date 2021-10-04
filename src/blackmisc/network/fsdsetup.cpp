@@ -19,6 +19,8 @@
 
 using namespace BlackMisc;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CFsdSetup)
+
 namespace BlackMisc::Network
 {
     CFsdSetup::CFsdSetup(SendReceiveDetails sendReceive) : m_sendReceive(sendReceive)

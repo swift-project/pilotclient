@@ -22,6 +22,8 @@
 
 using namespace BlackMisc;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc, CRgbColor)
+
 namespace BlackMisc
 {
     CRgbColor::CRgbColor(const QString &color, bool isName)

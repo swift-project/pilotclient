@@ -18,6 +18,8 @@
 
 using namespace BlackConfig;
 
+BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc, CPlatform)
+
 namespace BlackMisc
 {
     CPlatform::CPlatform(const QString &p) : m_platform(stringToPlatform(p))
