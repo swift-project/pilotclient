@@ -32,12 +32,4 @@ namespace BlackMisc
         }
     }
 
-#if defined(Q_OS_WIN) && defined(Q_CC_CLANG)
-    namespace Private
-    {
-        template void maybeRegisterMetaListConvert<Audio::CAudioDeviceInfoList>(int);
-        template void maybeRegisterMetaListConvert<CSequence<Audio::CAudioDeviceInfo>>(int);
-    } // ns
-#endif
-
 } // ns

@@ -24,12 +24,4 @@ namespace BlackMisc
         }
     }
 
-#if defined(Q_OS_WIN) && defined(Q_CC_CLANG)
-    namespace Private
-    {
-        template void maybeRegisterMetaListConvert<Geo::CCoordinateGeodeticList>(int);
-        template void maybeRegisterMetaListConvert<CSequence<Geo::CCoordinateGeodetic>>(int);
-    } // ns
-#endif
-
 } // ns

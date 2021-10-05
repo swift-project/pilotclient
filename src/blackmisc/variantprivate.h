@@ -13,6 +13,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/inheritancetraits.h"
+#include "blackmisc/propertyindexref.h"
 #include <QString>
 #include <QMetaType>
 #include <QDBusMetaType>
@@ -229,9 +230,9 @@ namespace BlackMisc
 
         //! \cond PRIVATE
         template <typename T, typename = std::enable_if_t<std::is_base_of_v<CSequence<typename T::value_type>, T> && ! std::is_same_v<typename T::value_type, CVariant>>>
-        void maybeRegisterMetaListConvert(int);
+        constexpr bool canConvertVariantList(int) { return true; }
         template <typename T>
-        void maybeRegisterMetaListConvert(...) {}
+        constexpr bool canConvertVariantList(...) { return false; }
 
         template <typename T>
         struct MetaTypeHelper
@@ -249,9 +250,10 @@ namespace BlackMisc
                     qDBusRegisterMetaType<T>();
                     qRegisterMetaTypeStreamOperators<T>();
                     registerMetaValueType<T>();
-                    maybeRegisterMetaListConvert<T>(0);
+                    maybeRegisterMetaList();
                 }
             }
+            static void maybeRegisterMetaList();
         };
         //! \endcond
     }

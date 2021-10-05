@@ -261,9 +261,9 @@ namespace BlackMisc::Aviation
     // see here for the reason of the forward instantiations
     // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
     //! \cond PRIVATE
-    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CModulator<CComSystem>;
-    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CModulator<CNavSystem>;
-    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CModulator<CAdfSystem>;
+    template class CModulator<CComSystem>;
+    template class CModulator<CNavSystem>;
+    template class CModulator<CAdfSystem>;
     //! \endcond
 
 } // namespace

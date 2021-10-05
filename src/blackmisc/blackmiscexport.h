@@ -31,20 +31,10 @@
  * \def BLACKMISC_EXPORT_DECLARE_TEMPLATE
  * Export explicit template declaration
  */
-
-/*!
- * \def BLACKMISC_EXPORT_DEFINE_TEMPLATE
- * Export explicit template definition
- */
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
 #  define BLACKMISC_EXPORT_DECLARE_TEMPLATE BLACKMISC_EXPORT
-#  define BLACKMISC_EXPORT_DEFINE_TEMPLATE
-#elif defined(Q_OS_WIN) && defined(Q_CC_CLANG)
-#  define BLACKMISC_EXPORT_DECLARE_TEMPLATE
-#  define BLACKMISC_EXPORT_DEFINE_TEMPLATE BLACKMISC_EXPORT
 #else
 #  define BLACKMISC_EXPORT_DECLARE_TEMPLATE
-#  define BLACKMISC_EXPORT_DEFINE_TEMPLATE
 #endif
 
 #endif // guard

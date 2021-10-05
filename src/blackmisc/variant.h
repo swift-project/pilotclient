@@ -20,7 +20,6 @@
 #include "blackmisc/mixin/mixinjson.h"
 #include "blackmisc/range.h"
 #include "blackmisc/mixin/mixinstring.h"
-#include "blackmisc/mixin/mixinmetatype.h"
 #include "blackmisc/variantprivate.h"
 #include "blackmisc/icons.h"
 
@@ -41,11 +40,27 @@ namespace BlackMisc
     class CPropertyIndex;
 
     /*!
+     * This registers the value type T with the BlackMisc meta type system,
+     * making it available for use with the extended feature set of BlackMisc::CVariant.
+     *
+     * The implementation (ab)uses the QMetaType converter function registration mechanism
+     * to store a type-erased representation of the set of operations supported by T.
+     */
+    template <typename T>
+    void registerMetaValueType()
+    {
+        if (QMetaType::hasRegisteredConverterFunction<T, Private::IValueObjectMetaInfo *>()) { return; }
+        auto converter = [](const T &) { static Private::CValueObjectMetaInfo<T> info; return &info; };
+        bool ok = QMetaType::registerConverter<T, Private::IValueObjectMetaInfo *>(converter);
+        Q_ASSERT(ok);
+        Q_UNUSED(ok);
+    }
+
+    /*!
      * Wrapper around QVariant which provides transparent access to CValueObject methods
      * of the contained object if it is registered with BlackMisc::registerMetaValueType.
      */
     class BLACKMISC_EXPORT CVariant :
-        public Mixin::MetaType<CVariant>,
         public Mixin::EqualsByCompare<CVariant>,
         public Mixin::LessThanByCompare<CVariant>,
         public Mixin::DBusOperators<CVariant>,
@@ -267,6 +282,18 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::Icon::toIcon
         CIcons::IconIndex toIcon() const;
 
+        //! \copydoc BlackMisc::Mixin::MetaType::registerMetadata
+        static void registerMetadata();
+
+        //! \copydoc BlackMisc::Mixin::MetaType::getMetaTypeId
+        int getMetaTypeId() const;
+
+        //! \copydoc BlackMisc::Mixin::MetaType::getClassName
+        QString getClassName() const;
+
+        //! \copydoc BlackMisc::Mixin::MetaType::isA
+        bool isA(int metaTypeId) const;
+
         //! If this is an event subscription, return true if it matches the given event.
         bool matches(const CVariant &event) const;
 
@@ -303,21 +330,25 @@ Q_DECLARE_METATYPE(BlackMisc::CVariant)
 
 namespace BlackMisc::Private
 {
-    //! \private
-    template <typename T, typename>
-    void maybeRegisterMetaListConvert(int)
+    //! \cond PRIVATE
+    template <typename T>
+    void MetaTypeHelper<T>::maybeRegisterMetaList()
     {
-        if (QMetaType::hasRegisteredConverterFunction(qMetaTypeId<T>(), qMetaTypeId<QVector<CVariant>>())) { return; }
+        if constexpr (canConvertVariantList<T>(0))
+        {
+            if (QMetaType::hasRegisteredConverterFunction(qMetaTypeId<T>(), qMetaTypeId<QVector<CVariant>>())) { return; }
 
-        QMetaType::registerConverter<T, QVector<CVariant>>([](const T &list) -> QVector<CVariant>
-        {
-            return list.transform([](const typename T::value_type &v) { return CVariant::from(v); });
-        });
-        QMetaType::registerConverter<QVector<CVariant>, T>([](const QVector<CVariant> &list) -> T
-        {
-            return makeRange(list).transform([](const CVariant &v) { return v.to<typename T::value_type>(); });
-        });
+            QMetaType::registerConverter<T, QVector<CVariant>>([](const T &list) -> QVector<CVariant>
+            {
+                return list.transform([](const typename T::value_type &v) { return CVariant::from(v); });
+            });
+            QMetaType::registerConverter<QVector<CVariant>, T>([](const QVector<CVariant> &list) -> T
+            {
+                return makeRange(list).transform([](const CVariant &v) { return v.to<typename T::value_type>(); });
+            });
+        }
     }
+    //! \endcond
 } // namespace
 
 #endif

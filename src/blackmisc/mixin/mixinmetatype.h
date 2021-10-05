@@ -13,7 +13,7 @@
 
 #include "blackmisc/inheritancetraits.h"
 #include "blackmisc/propertyindexref.h"
-#include "blackmisc/variantprivate.h"
+#include "blackmisc/variant.h"
 #include <QMetaType>
 #include <QtGlobal>
 #include <QString>
@@ -79,23 +79,6 @@ namespace BlackMisc
         // *INDENT-ON*
 
     } // Mixin
-
-    /*!
-     * This registers the value type T with the BlackMisc meta type system,
-     * making it available for use with the extended feature set of BlackMisc::CVariant.
-     *
-     * The implementation (ab)uses the QMetaType converter function registration mechanism
-     * to store a type-erased representation of the set of operations supported by T.
-     */
-    template <typename T>
-    void registerMetaValueType()
-    {
-        if (QMetaType::hasRegisteredConverterFunction<T, Private::IValueObjectMetaInfo *>()) { return; }
-        auto converter = [](const T &) { static Private::CValueObjectMetaInfo<T> info; return &info; };
-        bool ok = QMetaType::registerConverter<T, Private::IValueObjectMetaInfo *>(converter);
-        Q_ASSERT(ok);
-        Q_UNUSED(ok);
-    }
 } // namespace
 
 #endif

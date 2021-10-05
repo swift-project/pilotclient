@@ -17,7 +17,6 @@
  * \def BLACKGUI_EXPORT
  * Export a class or function from the library
  */
-
 #ifndef WITH_STATIC
 #  if defined(BUILD_BLACKGUI_LIB)
 #    define BLACKGUI_EXPORT Q_DECL_EXPORT
@@ -32,20 +31,10 @@
  * \def BLACKGUI_EXPORT_DECLARE_TEMPLATE
  * BLACKGUI Export explicit template declaration
  */
-
-/*!
- * \def BLACKGUI_EXPORT_DEFINE_TEMPLATE
- * BLACKGUI Export explicit template definition
- */
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
 #  define BLACKGUI_EXPORT_DECLARE_TEMPLATE BLACKGUI_EXPORT
-#  define BLACKGUI_EXPORT_DEFINE_TEMPLATE
-#elif defined(Q_OS_WIN) && defined(Q_CC_CLANG)
-#  define BLACKGUI_EXPORT_DECLARE_TEMPLATE
-#  define BLACKGUI_EXPORT_DEFINE_TEMPLATE BLACKGUI_EXPORT
 #else
 #  define BLACKGUI_EXPORT_DECLARE_TEMPLATE
-#  define BLACKGUI_EXPORT_DEFINE_TEMPLATE
 #endif
 
 #endif // guard

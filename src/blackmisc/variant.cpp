@@ -522,6 +522,28 @@ namespace BlackMisc
         return CIcon(toIcon()).toPixmap();
     }
 
+    void CVariant::registerMetadata()
+    {
+        Private::MetaTypeHelper<CVariant>::maybeRegisterMetaType();
+    }
+
+    int CVariant::getMetaTypeId() const
+    {
+        return Private::MetaTypeHelper<CVariant>::maybeGetMetaTypeId();
+    }
+
+    QString CVariant::getClassName() const
+    {
+        return QMetaType::typeName(getMetaTypeId());
+    }
+
+    bool CVariant::isA(int metaTypeId) const
+    {
+        if (metaTypeId == QMetaType::UnknownType) { return false; }
+        if (metaTypeId == getMetaTypeId()) { return true; }
+        return false;
+    }
+
     bool CVariant::matches(const CVariant &value) const
     {
         if (! isValid()) { return false; }

@@ -180,8 +180,8 @@ namespace BlackMisc::Geo
     // see here for the reason of thess forward instantiations
     // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
     //! \cond PRIVATE
-    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CEarthAngle<CLatitude>;
-    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CEarthAngle<CLongitude>;
+    template class CEarthAngle<CLatitude>;
+    template class CEarthAngle<CLongitude>;
     //! \endcond
 
 } // namespace

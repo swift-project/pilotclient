@@ -577,15 +577,15 @@ namespace BlackMisc::PhysicalQuantities
     // see here for the reason of thess forward instantiations
     // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
     //! \cond PRIVATE
-    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CPhysicalQuantity<CLengthUnit, CLength>;
-    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CPhysicalQuantity<CPressureUnit, CPressure>;
-    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CPhysicalQuantity<CFrequencyUnit, CFrequency>;
-    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CPhysicalQuantity<CMassUnit, CMass>;
-    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CPhysicalQuantity<CTemperatureUnit, CTemperature>;
-    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CPhysicalQuantity<CSpeedUnit, CSpeed>;
-    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CPhysicalQuantity<CAngleUnit, CAngle>;
-    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CPhysicalQuantity<CTimeUnit, CTime>;
-    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CPhysicalQuantity<CAccelerationUnit, CAcceleration>;
+    template class CPhysicalQuantity<CLengthUnit, CLength>;
+    template class CPhysicalQuantity<CPressureUnit, CPressure>;
+    template class CPhysicalQuantity<CFrequencyUnit, CFrequency>;
+    template class CPhysicalQuantity<CMassUnit, CMass>;
+    template class CPhysicalQuantity<CTemperatureUnit, CTemperature>;
+    template class CPhysicalQuantity<CSpeedUnit, CSpeed>;
+    template class CPhysicalQuantity<CAngleUnit, CAngle>;
+    template class CPhysicalQuantity<CTimeUnit, CTime>;
+    template class CPhysicalQuantity<CAccelerationUnit, CAcceleration>;
     //! \endcond
 
 } // namespace

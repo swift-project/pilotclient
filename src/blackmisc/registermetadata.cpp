@@ -108,26 +108,4 @@ namespace BlackMisc
         qRegisterMetaTypeStreamOperators<CSequence<double>>();
     }
 
-#if defined(Q_OS_WIN) && defined(Q_CC_CLANG)
-    namespace Private
-    {
-        template void maybeRegisterMetaListConvert<CApplicationInfoList>(int);
-        template void maybeRegisterMetaListConvert<CCountryList>(int);
-        template void maybeRegisterMetaListConvert<CIconList>(int);
-        template void maybeRegisterMetaListConvert<CIdentifierList>(int);
-        template void maybeRegisterMetaListConvert<CLogCategoryList>(int);
-        template void maybeRegisterMetaListConvert<CNameVariantPairList>(int);
-        template void maybeRegisterMetaListConvert<CPropertyIndexList>(int);
-        template void maybeRegisterMetaListConvert<CStatusMessageList>(int);
-        template void maybeRegisterMetaListConvert<CSequence<CApplicationInfo>>(int);
-        template void maybeRegisterMetaListConvert<CSequence<CCountry>>(int);
-        template void maybeRegisterMetaListConvert<CSequence<CIcon>>(int);
-        template void maybeRegisterMetaListConvert<CSequence<CIdentifier>>(int);
-        template void maybeRegisterMetaListConvert<CSequence<CLogCategory>>(int);
-        template void maybeRegisterMetaListConvert<CSequence<CNameVariantPair>>(int);
-        template void maybeRegisterMetaListConvert<CSequence<CPropertyIndex>>(int);
-        template void maybeRegisterMetaListConvert<CSequence<CStatusMessage>>(int);
-    }
-#endif
-
 } // ns

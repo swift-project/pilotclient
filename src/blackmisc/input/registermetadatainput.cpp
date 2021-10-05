@@ -30,16 +30,4 @@ namespace BlackMisc
         }
     }
 
-#if defined(Q_OS_WIN) && defined(Q_CC_CLANG)
-    namespace Private
-    {
-        template void maybeRegisterMetaListConvert<Input::CActionHotkeyList>(int);
-        template void maybeRegisterMetaListConvert<Input::CJoystickButtonList>(int);
-        template void maybeRegisterMetaListConvert<Input::CKeyboardKeyList>(int);
-        template void maybeRegisterMetaListConvert<CSequence<Input::CActionHotkey>>(int);
-        template void maybeRegisterMetaListConvert<CSequence<Input::CJoystickButton>>(int);
-        template void maybeRegisterMetaListConvert<CSequence<Input::CKeyboardKey>>(int);
-    } // ns
-#endif
-
 } // ns

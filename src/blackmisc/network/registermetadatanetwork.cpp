@@ -52,31 +52,4 @@ namespace BlackMisc
         }
     }
 
-#if defined(Q_OS_WIN) && defined(Q_CC_CLANG)
-    namespace Private
-    {
-        template void maybeRegisterMetaListConvert<Network::CClientList>(int);
-        template void maybeRegisterMetaListConvert<Network::CEcosystemList>(int);
-        template void maybeRegisterMetaListConvert<Network::CRawFsdMessageList>(int);
-        template void maybeRegisterMetaListConvert<Network::CRemoteFileList>(int);
-        template void maybeRegisterMetaListConvert<Network::CRoleList>(int);
-        template void maybeRegisterMetaListConvert<Network::CServerList>(int);
-        template void maybeRegisterMetaListConvert<Network::CTextMessageList>(int);
-        template void maybeRegisterMetaListConvert<Network::CUrlList>(int);
-        template void maybeRegisterMetaListConvert<Network::CFailoverUrlList>(int);
-        template void maybeRegisterMetaListConvert<Network::CUrlLogList>(int);
-        template void maybeRegisterMetaListConvert<Network::CUserList>(int);
-        template void maybeRegisterMetaListConvert<CSequence<Network::CClient>>(int);
-        template void maybeRegisterMetaListConvert<CSequence<Network::CEcosystem>>(int);
-        template void maybeRegisterMetaListConvert<CSequence<Network::CRawFsdMessage>>(int);
-        template void maybeRegisterMetaListConvert<CSequence<Network::CRemoteFile>>(int);
-        template void maybeRegisterMetaListConvert<CSequence<Network::CRole>>(int);
-        template void maybeRegisterMetaListConvert<CSequence<Network::CServer>>(int);
-        template void maybeRegisterMetaListConvert<CSequence<Network::CTextMessage>>(int);
-        template void maybeRegisterMetaListConvert<CSequence<Network::CUrl>>(int);
-        template void maybeRegisterMetaListConvert<CSequence<Network::CUrlLog>>(int);
-        template void maybeRegisterMetaListConvert<CSequence<Network::CUser>>(int);
-    } // ns
-#endif
-
 } // ns

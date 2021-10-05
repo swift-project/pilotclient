@@ -887,7 +887,7 @@ namespace BlackMisc::Simulation
     // see here for the reason of thess forward instantiations
     // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
     //! \cond PRIVATE
-    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CInterpolator<CInterpolatorLinear>;
-    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CInterpolator<CInterpolatorSpline>;
+    template class CInterpolator<CInterpolatorLinear>;
+    template class CInterpolator<CInterpolatorSpline>;
     //! \endcond
 } // namespace
