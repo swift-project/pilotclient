@@ -19,6 +19,8 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Math;
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAircraftSituation, CAircraftSituationList)
+
 namespace BlackMisc::Aviation
 {
     CAircraftSituationList::CAircraftSituationList()

@@ -11,6 +11,8 @@
 
 #include <tuple>
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc, CNameVariantPair, CNameVariantPairList)
+
 namespace BlackMisc
 {
     CNameVariantPairList::CNameVariantPairList() { }

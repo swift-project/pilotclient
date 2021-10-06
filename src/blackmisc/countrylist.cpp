@@ -14,6 +14,8 @@
 #include <QRegularExpression>
 #include <Qt>
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc, CCountry, CCountryList)
+
 namespace BlackMisc
 {
     CCountryList::CCountryList() {}

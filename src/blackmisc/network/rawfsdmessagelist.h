@@ -20,6 +20,8 @@
 #include <QMetaType>
 #include <initializer_list>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Network, CRawFsdMessage, CRawFsdMessageList)
+
 namespace BlackMisc::Network
 {
     //! Value object encapsulating a list raw FSD messages.

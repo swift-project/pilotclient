@@ -9,6 +9,8 @@
 #include "blackmisc/db/distributionlist.h"
 #include "blackmisc/stringutils.h"
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Db, CDistribution, CDistributionList)
+
 namespace BlackMisc::Db
 {
     CDistributionList::CDistributionList() { }

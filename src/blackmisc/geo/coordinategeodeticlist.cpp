@@ -16,6 +16,8 @@
 using namespace BlackMisc::Math;
 using namespace BlackMisc::PhysicalQuantities;
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Geo, CCoordinateGeodetic, CCoordinateGeodeticList)
+
 namespace BlackMisc::Geo
 {
     CCoordinateGeodeticList::CCoordinateGeodeticList()

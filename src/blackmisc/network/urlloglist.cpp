@@ -8,6 +8,8 @@
 
 #include "blackmisc/network/urlloglist.h"
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Network, CUrlLog, CUrlLogList)
+
 namespace BlackMisc::Network
 {
     CUrlLogList::CUrlLogList() { }

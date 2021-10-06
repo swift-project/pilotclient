@@ -11,6 +11,8 @@
 #include <QString>
 #include <tuple>
 
+BLACK_DEFINE_COLLECTION_MIXINS(BlackMisc, CIdentifier, CIdentifierSet)
+
 namespace BlackMisc
 {
     CIdentifierSet::CIdentifierSet() { }

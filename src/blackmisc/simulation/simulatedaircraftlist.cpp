@@ -24,6 +24,8 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Simulation, CSimulatedAircraft, CSimulatedAircraftList)
+
 namespace BlackMisc::Simulation
 {
     CSimulatedAircraftList::CSimulatedAircraftList() { }

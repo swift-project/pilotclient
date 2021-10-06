@@ -19,6 +19,8 @@
 
 #include <QMetaType>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Network, CUser, CUserList)
+
 namespace BlackMisc::Network
 {
     //! Value object encapsulating a list of voice rooms.

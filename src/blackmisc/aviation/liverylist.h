@@ -22,6 +22,8 @@
 #include <QString>
 #include <QStringList>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Aviation, CLivery, CLiveryList)
+
 namespace BlackMisc::Aviation
 {
     //! Value object for a list of airports.

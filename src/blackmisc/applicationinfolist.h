@@ -15,6 +15,8 @@
 #include "blackmisc/sequence.h"
 #include "blackmisc/collection.h"
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc, CApplicationInfo, CApplicationInfoList)
+
 namespace BlackMisc
 {
     /*!

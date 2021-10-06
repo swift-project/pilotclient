@@ -17,6 +17,8 @@
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Simulation, CInterpolationAndRenderingSetupPerCallsign, CInterpolationSetupList)
+
 namespace BlackMisc::Simulation
 {
     //! Value object encapsulating a list of setups.

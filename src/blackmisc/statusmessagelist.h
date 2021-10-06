@@ -25,6 +25,8 @@
 #include <QtGlobal>
 #include <QMap>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc, CStatusMessage, CStatusMessageList)
+
 namespace BlackMisc
 {
     //! Status messages, e.g. from Core -> GUI

@@ -21,6 +21,8 @@
 #include <QString>
 #include <QStringList>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Network, CRemoteFile, CRemoteFileList)
+
 namespace BlackMisc::Network
 {
     //! Value object encapsulating a list of remote files.

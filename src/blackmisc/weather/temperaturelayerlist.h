@@ -19,6 +19,8 @@
 #include <initializer_list>
 #include <tuple>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Weather, CTemperatureLayer, CTemperatureLayerList)
+
 namespace BlackMisc
 {
     namespace Aviation { class CAltitude; }

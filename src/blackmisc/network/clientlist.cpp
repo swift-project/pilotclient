@@ -10,6 +10,8 @@
 
 using namespace BlackMisc::Aviation;
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Network, CClient, CClientList)
+
 namespace BlackMisc::Network
 {
     CClientList::CClientList() { }

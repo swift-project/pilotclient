@@ -12,6 +12,8 @@
 
 #include <tuple>
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Weather, CWeatherDataPluginInfo, CWeatherDataPluginInfoList)
+
 namespace BlackMisc::Weather
 {
 

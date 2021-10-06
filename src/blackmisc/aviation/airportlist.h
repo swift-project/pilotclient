@@ -21,6 +21,8 @@
 
 #include <QMetaType>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAirport, CAirportList)
+
 namespace BlackMisc::Aviation
 {
     //! Value object for a list of airports.

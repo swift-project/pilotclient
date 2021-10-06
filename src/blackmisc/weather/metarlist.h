@@ -21,6 +21,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Weather, CMetar, CMetarList)
+
 namespace BlackMisc::Weather
 {
     //! Sequence of Metars

@@ -87,7 +87,12 @@ namespace BlackCore::Db
             BLACK_METAMEMBER(retrievalMode),
             BLACK_METAMEMBER(cacheLifetime));
     };
+}
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackCore::Db, CDatabaseReaderConfig, CDatabaseReaderConfigList)
+
+namespace BlackCore::Db
+{
     //! Value object encapsulating a list of reader configs.
     class BLACKCORE_EXPORT CDatabaseReaderConfigList :
         public BlackMisc::CSequence<CDatabaseReaderConfig>,

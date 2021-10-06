@@ -19,6 +19,8 @@
 #include <QMetaType>
 #include <QStringList>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Weather, CWeatherDataPluginInfo, CWeatherDataPluginInfoList)
+
 namespace BlackMisc::Weather
 {
     class CWeatherDataPluginInfo;

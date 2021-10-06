@@ -10,6 +10,8 @@
 
 using namespace BlackMisc::Network;
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Db, CDbInfo, CDbInfoList)
+
 namespace BlackMisc::Db
 {
     CDbInfoList::CDbInfoList() { }

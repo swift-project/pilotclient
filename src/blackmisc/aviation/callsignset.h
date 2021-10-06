@@ -21,12 +21,17 @@
 #include <QStringList>
 #include <tuple>
 
+BLACK_DECLARE_COLLECTION_MIXINS(BlackMisc::Aviation, CCallsign, CCallsignSet)
+
 namespace BlackMisc::Aviation
 {
     //! Value object for a set of callsigns.
-    class BLACKMISC_EXPORT CCallsignSet : public CCollection<CCallsign>
+    class BLACKMISC_EXPORT CCallsignSet :
+        public CCollection<CCallsign>,
+        public Mixin::MetaType<CCallsignSet>
     {
         using CCollection::CCollection;
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CCallsignSet)
 
     public:
         //! Default constructor

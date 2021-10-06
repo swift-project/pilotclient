@@ -25,6 +25,8 @@
 #include <QPair>
 #include <QHash>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAircraftSituation, CAircraftSituationList)
+
 namespace BlackMisc
 {
     namespace Geo { class CElevationPlane; }

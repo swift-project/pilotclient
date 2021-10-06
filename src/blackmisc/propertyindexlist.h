@@ -18,6 +18,8 @@
 
 #include <QMetaType>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc, CPropertyIndex, CPropertyIndexList)
+
 namespace BlackMisc
 {
     //! Value object encapsulating a list of property indexes.

@@ -9,6 +9,8 @@
 #include "blackmisc/input/actionhotkeylist.h"
 #include "blackmisc/input/hotkeycombination.h"
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Input, CActionHotkey, CActionHotkeyList)
+
 namespace BlackMisc::Input
 {
     CActionHotkeyList::CActionHotkeyList(const CSequence<CActionHotkey> &baseClass) :

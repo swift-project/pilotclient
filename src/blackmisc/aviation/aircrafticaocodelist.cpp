@@ -15,6 +15,8 @@
 #include <QJsonValue>
 #include <Qt>
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAircraftIcaoCode, CAircraftIcaoCodeList)
+
 namespace BlackMisc::Aviation
 {
     CAircraftIcaoCodeList::CAircraftIcaoCodeList()

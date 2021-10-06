@@ -24,14 +24,19 @@
 #include <QtGlobal>
 #include <tuple>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc, CIcon, CIconList)
+
 namespace BlackMisc
 {
     /*!
      * Icon list (swift standard icons)
      */
-    class BLACKMISC_EXPORT CIconList : public CSequence<CIcon>
+    class BLACKMISC_EXPORT CIconList :
+        public CSequence<CIcon>,
+        public Mixin::MetaType<CIconList>
     {
         using CSequence::CSequence;
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CIconList)
 
     public:
         //! Constructor

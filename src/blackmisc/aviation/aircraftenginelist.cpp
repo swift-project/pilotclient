@@ -13,6 +13,8 @@
 #include <QString>
 #include <QtGlobal>
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAircraftEngine, CAircraftEngineList)
+
 namespace BlackMisc::Aviation
 {
     CAircraftEngineList::CAircraftEngineList(std::initializer_list<bool> enginesOnOff)

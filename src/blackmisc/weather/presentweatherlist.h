@@ -17,6 +17,8 @@
 
 #include <QMetaType>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Weather, CPresentWeather, CPresentWeatherList)
+
 namespace BlackMisc::Weather
 {
     /*!

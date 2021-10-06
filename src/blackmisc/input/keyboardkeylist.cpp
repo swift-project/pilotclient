@@ -9,6 +9,8 @@
 #include "blackmisc/input/keyboardkeylist.h"
 #include "blackmisc/input/keycodes.h"
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Input, CKeyboardKey, CKeyboardKeyList)
+
 namespace BlackMisc::Input
 {
     CKeyboardKeyList::CKeyboardKeyList() { }

@@ -16,6 +16,8 @@
 #include <Qt>
 #include <tuple>
 
+BLACK_DEFINE_COLLECTION_MIXINS(BlackMisc::Simulation::FsCommon, CVPilotModelRule, CVPilotModelRuleSet)
+
 namespace BlackMisc::Simulation::FsCommon
 {
     CVPilotModelRuleSet::CVPilotModelRuleSet(const CCollection<CVPilotModelRule> &other) :

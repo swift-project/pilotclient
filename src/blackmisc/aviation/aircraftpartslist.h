@@ -20,6 +20,8 @@
 #include <QHash>
 #include <QMetaType>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAircraftParts, CAircraftPartsList)
+
 namespace BlackMisc::Aviation
 {
     //! Value object encapsulating a list of aircraft parts.

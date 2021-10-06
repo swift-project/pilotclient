@@ -19,12 +19,17 @@
 #include <QMetaType>
 #include <tuple>
 
+BLACK_DECLARE_COLLECTION_MIXINS(BlackMisc, CPlatform, CPlatformSet)
+
 namespace BlackMisc
 {
     //! Value object for a set of platforms.
-    class BLACKMISC_EXPORT CPlatformSet : public CCollection<CPlatform>
+    class BLACKMISC_EXPORT CPlatformSet :
+        public CCollection<CPlatform>,
+        public Mixin::MetaType<CPlatformSet>
     {
         using CCollection::CCollection;
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CPlatformSet)
 
     public:
         //! Default constructor.

@@ -18,6 +18,8 @@
 
 struct QMetaObject;
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc, CLogCategory, CLogCategoryList)
+
 namespace BlackMisc
 {
     void CLogCategoryList::appendCategoriesFromMetaObject(const QMetaObject &metaObject, const QMetaObject &super)

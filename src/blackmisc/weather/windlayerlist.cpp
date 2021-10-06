@@ -12,6 +12,8 @@
 
 using namespace BlackMisc::Aviation;
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Weather, CWindLayer, CWindLayerList)
+
 namespace BlackMisc::Weather
 {
     CWindLayerList::CWindLayerList(const CSequence<CWindLayer> &other) :

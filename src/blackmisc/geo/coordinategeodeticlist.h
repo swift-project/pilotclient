@@ -24,6 +24,8 @@
 #include <QMetaType>
 #include <initializer_list>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Geo, CCoordinateGeodetic, CCoordinateGeodeticList)
+
 namespace BlackMisc::Geo
 {
     //! Value object encapsulating a list of coordinates.

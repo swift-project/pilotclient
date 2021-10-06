@@ -22,6 +22,8 @@
 #include <QSet>
 #include <QString>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Db, CArtifact, CArtifactList)
+
 namespace BlackMisc::Db
 {
     //! Multiple artifacts

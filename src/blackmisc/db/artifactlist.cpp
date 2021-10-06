@@ -11,6 +11,8 @@
 
 using namespace BlackMisc::Network;
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Db, CArtifact, CArtifactList)
+
 namespace BlackMisc::Db
 {
     CArtifactList::CArtifactList() { }

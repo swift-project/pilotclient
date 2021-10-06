@@ -19,6 +19,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Network, CServer, CServerList)
+
 namespace BlackMisc::Network
 {
     //! Value object encapsulating a list of servers.

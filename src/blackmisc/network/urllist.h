@@ -20,6 +20,8 @@
 #include <QString>
 #include <QStringList>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Network, CUrl, CUrlList)
+
 namespace BlackMisc::Network
 {
     //! Value object encapsulating a list of URLs.

@@ -21,6 +21,46 @@
 #include <utility>
 #include <initializer_list>
 
+//! \cond
+#define BLACK_TEMPLATE_SEQUENCE_MIXINS(NS, T, List, Extern)             \
+    namespace NS { class List; }                                        \
+    namespace BlackMisc::Private                                        \
+    {                                                                   \
+        Extern template struct CValueObjectMetaInfo<NS::List>;          \
+        Extern template struct CValueObjectMetaInfo<CSequence<NS::T>>;  \
+        Extern template struct MetaTypeHelper<NS::List>;                \
+        Extern template struct MetaTypeHelper<CSequence<NS::T>>;        \
+    }                                                                   \
+    namespace BlackMisc::Mixin                                          \
+    {                                                                   \
+        Extern template class MetaType<NS::List>;                       \
+        Extern template class MetaType<CSequence<NS::T>>;               \
+        Extern template class DBusOperators<CSequence<NS::T>>;          \
+        Extern template class JsonOperators<CSequence<NS::T>>;          \
+        Extern template class String<CSequence<NS::T>>;                 \
+        Extern template class DataStreamOperators<CSequence<NS::T>>;    \
+        Extern template class Icon<CSequence<NS::T>>;                   \
+    }
+//! \endcond
+
+/*!
+ * \def BLACK_DECLARE_SEQUENCE_MIXINS
+ * Explicit template declaration of mixins for a CSequence subclass
+ * to be placed near the top of the header that defines the class
+ */
+
+/*!
+ * \def BLACK_DEFINE_SEQUENCE_MIXINS
+ * Explicit template definition of mixins for a CSequence subclass
+ */
+#if defined(Q_OS_WIN) && defined(Q_CC_GNU)
+#  define BLACK_DECLARE_SEQUENCE_MIXINS(Namespace, T, List)
+#  define BLACK_DEFINE_SEQUENCE_MIXINS(Namespace, T, List)
+#else
+#  define BLACK_DECLARE_SEQUENCE_MIXINS(Namespace, T, List) BLACK_TEMPLATE_SEQUENCE_MIXINS(Namespace, T, List, extern)
+#  define BLACK_DEFINE_SEQUENCE_MIXINS(Namespace, T, List)  BLACK_TEMPLATE_SEQUENCE_MIXINS(Namespace, T, List, )
+#endif
+
 namespace BlackMisc
 {
     /*!

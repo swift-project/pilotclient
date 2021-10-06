@@ -21,6 +21,8 @@
 #include "blackmisc/sequence.h"
 #include <QMetaType>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Simulation, CSimulatedAircraft, CSimulatedAircraftList)
+
 namespace BlackMisc
 {
     namespace Aviation

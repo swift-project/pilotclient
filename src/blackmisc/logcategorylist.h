@@ -29,14 +29,19 @@
 #include <tuple>
 #include <type_traits>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc, CLogCategory, CLogCategoryList)
+
 namespace BlackMisc
 {
     /*!
      * A sequence of log categories.
      */
-    class BLACKMISC_EXPORT CLogCategoryList : public CSequence<CLogCategory>
+    class BLACKMISC_EXPORT CLogCategoryList :
+        public CSequence<CLogCategory>,
+        public Mixin::MetaType<CLogCategoryList>
     {
         using CSequence::CSequence;
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CLogCategoryList)
 
     public:
         //! Empty constructor.

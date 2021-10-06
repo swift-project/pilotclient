@@ -21,6 +21,8 @@
 #include <QAudioDeviceInfo>
 #include <QStringList>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Audio, CAudioDeviceInfo, CAudioDeviceInfoList)
+
 namespace BlackMisc::Audio
 {
     //! Value object encapsulating a list of audio devices.

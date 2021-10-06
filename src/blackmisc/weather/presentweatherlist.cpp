@@ -8,6 +8,8 @@
 
 #include "blackmisc/weather/presentweatherlist.h"
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Weather, CPresentWeather, CPresentWeatherList)
+
 namespace BlackMisc::Weather
 {
     CPresentWeatherList::CPresentWeatherList(const CSequence<CPresentWeather> &other) :

@@ -22,6 +22,8 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/fscommon/vpilotmodelrule.h"
 
+BLACK_DECLARE_COLLECTION_MIXINS(BlackMisc::Simulation::FsCommon, CVPilotModelRule, CVPilotModelRuleSet)
+
 namespace BlackMisc::Simulation::FsCommon
 {
     //! Value object reading a set of vPilot rules

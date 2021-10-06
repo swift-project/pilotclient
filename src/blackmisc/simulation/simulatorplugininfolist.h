@@ -21,6 +21,8 @@
 #include <QString>
 #include <QStringList>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Simulation, CSimulatorPluginInfo, CSimulatorPluginInfoList)
+
 namespace BlackMisc::Simulation
 {
     class CSimulatorPluginInfo;

@@ -17,6 +17,8 @@
 #include "blackmisc/blackmiscexport.h"
 #include <QMetaType>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc, CIdentifier, CIdentifierList)
+
 namespace BlackMisc
 {
     /*!

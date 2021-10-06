@@ -14,6 +14,8 @@
 
 using namespace BlackConfig;
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc, CApplicationInfo, CApplicationInfoList)
+
 namespace BlackMisc
 {
     CApplicationInfoList::CApplicationInfoList() {}

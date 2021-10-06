@@ -8,6 +8,8 @@
 
 #include "blackmisc/simulation/matchingstatistics.h"
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Simulation, CMatchingStatisticsEntry, CMatchingStatistics)
+
 namespace BlackMisc::Simulation
 {
     CMatchingStatistics::CMatchingStatistics()

@@ -23,6 +23,8 @@
 #include <QList>
 #include <tuple>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAircraftCategory, CAircraftCategoryList)
+
 namespace BlackMisc::Aviation
 {
     //! Value object encapsulating a list of ICAO codes.

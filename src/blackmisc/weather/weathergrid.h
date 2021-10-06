@@ -20,6 +20,8 @@
 #include <QMetaType>
 #include <initializer_list>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Weather, CGridPoint, CWeatherGrid)
+
 namespace BlackMisc
 {
     namespace Geo { class ICoordinateGeodetic; }

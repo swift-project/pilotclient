@@ -8,6 +8,8 @@
 
 #include "blackmisc/simulation/interpolationsetuplist.h"
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Simulation, CInterpolationAndRenderingSetupPerCallsign, CInterpolationSetupList)
+
 namespace BlackMisc::Simulation
 {
     CInterpolationSetupList::CInterpolationSetupList() { }

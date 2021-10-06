@@ -16,6 +16,8 @@
 
 using namespace BlackMisc::PhysicalQuantities;
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAirport, CAirportList)
+
 namespace BlackMisc::Aviation
 {
     CAirportList::CAirportList() { }

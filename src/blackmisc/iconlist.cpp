@@ -12,6 +12,8 @@
 #include "blackmisc/range.h"
 #include <QDBusMetaType>
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc, CIcon, CIconList)
+
 namespace BlackMisc
 {
     CIconList::CIconList(const CSequence<CIcon> &other) :

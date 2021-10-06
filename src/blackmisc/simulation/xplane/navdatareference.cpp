@@ -13,6 +13,7 @@
 #include <QtGlobal>
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::XPlane, CNavDataReference)
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Simulation::XPlane, CNavDataReference, CNavDataReferenceList)
 
 namespace BlackMisc::Simulation::XPlane
 {

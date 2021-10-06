@@ -33,6 +33,8 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Weather, CGridPoint, CWeatherGrid)
+
 namespace BlackMisc::Weather
 {
     CWeatherGrid::CWeatherGrid(const CSequence<CGridPoint> &other) :

@@ -18,6 +18,8 @@
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Network, CTextMessage, CTextMessageList)
+
 namespace BlackMisc::Network
 {
 

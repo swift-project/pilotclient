@@ -12,6 +12,8 @@
 
 #include <tuple>
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Simulation, CDistributor, CDistributorList)
+
 namespace BlackMisc::Simulation
 {
     CDistributorList::CDistributorList() { }

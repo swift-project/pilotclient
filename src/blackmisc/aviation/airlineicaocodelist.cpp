@@ -16,6 +16,8 @@
 #include <QJsonValue>
 #include <QStringBuilder>
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAirlineIcaoCode, CAirlineIcaoCodeList)
+
 namespace BlackMisc::Aviation
 {
     const QStringList &CAirlineIcaoCodeList::getLogCategories()

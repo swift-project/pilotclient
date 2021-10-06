@@ -21,6 +21,8 @@
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAtcStation, CAtcStationList)
+
 namespace BlackMisc::Aviation
 {
     CAtcStationList::CAtcStationList() { }

@@ -12,6 +12,8 @@
 
 using namespace BlackMisc::Aviation;
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Weather, CCloudLayer, CCloudLayerList)
+
 namespace BlackMisc::Weather
 {
     CCloudLayerList::CCloudLayerList(const CSequence<CCloudLayer> &other) :

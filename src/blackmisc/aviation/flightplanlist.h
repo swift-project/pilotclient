@@ -18,6 +18,8 @@
 #include "blackmisc/sequence.h"
 #include <QMetaType>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Aviation, CFlightPlan, CFlightPlanList)
+
 namespace BlackMisc::Aviation
 {
     //! Value object for a list of flight plans.

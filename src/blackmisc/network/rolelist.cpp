@@ -13,6 +13,8 @@
 #include <QJsonValue>
 #include <tuple>
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Network, CRole, CRoleList)
+
 namespace BlackMisc::Network
 {
     CRoleList::CRoleList() { }

@@ -14,6 +14,8 @@
 #include <QJsonValue>
 #include <tuple>
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Network, CRemoteFile, CRemoteFileList)
+
 namespace BlackMisc::Network
 {
     CRemoteFileList::CRemoteFileList() { }

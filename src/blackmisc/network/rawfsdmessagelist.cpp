@@ -8,6 +8,8 @@
 
 #include "blackmisc/network/rawfsdmessagelist.h"
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Network, CRawFsdMessage, CRawFsdMessageList)
+
 namespace BlackMisc::Network
 {
     CRawFsdMessageList::CRawFsdMessageList() { }

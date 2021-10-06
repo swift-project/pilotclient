@@ -11,6 +11,8 @@
 #include <QList>
 #include <tuple>
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Simulation, CSimulatorInfo, CSimulatorInfoList)
+
 namespace BlackMisc::Simulation
 {
     CSimulatorInfoList::CSimulatorInfoList() { }

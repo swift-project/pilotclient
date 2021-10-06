@@ -24,6 +24,8 @@
 #include <QStringList>
 #include <tuple>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAirlineIcaoCode, CAirlineIcaoCodeList)
+
 namespace BlackMisc::Aviation
 {
     //! Value object encapsulating a list of ICAO codes.

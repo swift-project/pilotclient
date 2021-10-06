@@ -22,6 +22,8 @@
 #include <QString>
 #include <QStringList>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Simulation, CDistributor, CDistributorList)
+
 namespace BlackMisc::Simulation
 {
     class CAircraftModel;

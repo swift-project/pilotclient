@@ -25,6 +25,8 @@
 #include <Qt>
 #include <tuple>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Simulation::FsCommon, CAircraftCfgEntries, CAircraftCfgEntriesList)
+
 namespace BlackMisc::Simulation::FsCommon
 {
     //! Utility, providing FS aircraft.cfg entries

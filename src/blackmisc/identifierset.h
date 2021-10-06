@@ -16,14 +16,19 @@
 #include "blackmisc/blackmiscexport.h"
 #include <QMetaType>
 
+BLACK_DECLARE_COLLECTION_MIXINS(BlackMisc, CIdentifier, CIdentifierSet)
+
 namespace BlackMisc
 {
     /*!
      * Value object encapsulating a set of object identifiers
      */
-    class BLACKMISC_EXPORT CIdentifierSet : public CCollection<CIdentifier>
+    class BLACKMISC_EXPORT CIdentifierSet :
+        public CCollection<CIdentifier>,
+        public Mixin::MetaType<CIdentifierSet>
     {
         using CCollection::CCollection;
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CIdentifierSet)
 
     public:
         //! Default constructor.

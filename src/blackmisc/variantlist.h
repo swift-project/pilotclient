@@ -19,6 +19,8 @@
 #include <QMetaType>
 #include <iterator>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc, CVariant, CVariantList)
+
 namespace BlackMisc
 {
     /*!

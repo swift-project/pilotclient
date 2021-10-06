@@ -17,6 +17,8 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Simulation::FsCommon, CAircraftCfgEntries, CAircraftCfgEntriesList)
+
 namespace BlackMisc::Simulation::FsCommon
 {
     bool CAircraftCfgEntriesList::containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity)

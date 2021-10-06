@@ -16,6 +16,8 @@
 #include <QJsonObject>
 #include <QString>
 
+BLACK_DEFINE_COLLECTION_MIXINS(BlackMisc, CPlatform, CPlatformSet)
+
 namespace BlackMisc
 {
     CPlatformSet::CPlatformSet() { }

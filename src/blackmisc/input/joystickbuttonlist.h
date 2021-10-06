@@ -20,6 +20,8 @@
 #include <initializer_list>
 #include <tuple>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Input, CJoystickButton, CJoystickButtonList)
+
 namespace BlackMisc::Input
 {
     //! Value object encapsulating a list of joystick buttons.

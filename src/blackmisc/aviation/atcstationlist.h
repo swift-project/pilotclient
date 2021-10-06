@@ -24,6 +24,8 @@
 #include <QMetaType>
 #include <QHash>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAtcStation, CAtcStationList)
+
 namespace BlackMisc::Aviation
 {
     //! Value object for a list of ATC stations.

@@ -23,6 +23,8 @@
 #include <QStringList>
 #include <tuple>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc, CCountry, CCountryList)
+
 namespace BlackMisc
 {
     //! Value object encapsulating a list of countries.

@@ -14,6 +14,8 @@
 #include <algorithm>
 #include <tuple>
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Simulation, CSimulatorPluginInfo, CSimulatorPluginInfoList)
+
 namespace BlackMisc::Simulation
 {
     CSimulatorPluginInfoList::CSimulatorPluginInfoList() { }

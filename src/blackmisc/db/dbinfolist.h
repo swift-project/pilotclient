@@ -20,6 +20,8 @@
 
 #include <initializer_list>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Db, CDbInfo, CDbInfoList)
+
 namespace BlackMisc::Db
 {
     //! Value object encapsulating a list of info objects.

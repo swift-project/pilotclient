@@ -21,6 +21,8 @@
 #include <QString>
 #include <QStringList>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Network, CRole, CRoleList)
+
 namespace BlackMisc::Network
 {
     class CRole;

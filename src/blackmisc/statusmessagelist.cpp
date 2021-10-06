@@ -20,6 +20,8 @@
 #include <QStringList>
 #include <tuple>
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc, CStatusMessage, CStatusMessageList)
+
 namespace BlackMisc
 {
     CStatusMessageList::CStatusMessageList(const CSequence<CStatusMessage> &other) :

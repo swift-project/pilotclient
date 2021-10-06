@@ -16,6 +16,8 @@
 
 using namespace BlackMisc::Math;
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Network, CUrl, CUrlList)
+
 namespace BlackMisc::Network
 {
     CUrlList::CUrlList() { }

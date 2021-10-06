@@ -15,6 +15,8 @@
 #include <QString>
 #include <QtGlobal>
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CFlightPlan, CFlightPlanList)
+
 namespace BlackMisc::Aviation
 {
     CFlightPlanList::CFlightPlanList() { }

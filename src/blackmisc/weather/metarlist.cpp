@@ -10,6 +10,8 @@
 
 #include <tuple>
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Weather, CMetar, CMetarList)
+
 namespace BlackMisc::Weather
 {
     CMetarList::CMetarList(const CSequence<CMetar> &other) :

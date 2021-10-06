@@ -15,6 +15,8 @@
 #include <Qt>
 #include <QMap>
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAircraftCategory, CAircraftCategoryList)
+
 namespace BlackMisc::Aviation
 {
     CAircraftCategoryList::CAircraftCategoryList()

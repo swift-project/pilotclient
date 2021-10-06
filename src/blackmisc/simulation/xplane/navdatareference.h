@@ -30,6 +30,7 @@
 #include <tuple>
 
 BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::XPlane, CNavDataReference)
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Simulation::XPlane, CNavDataReference, CNavDataReferenceList)
 
 namespace BlackMisc::Simulation::XPlane
 {

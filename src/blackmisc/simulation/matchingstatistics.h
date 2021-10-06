@@ -18,6 +18,8 @@
 #include "blackmisc/collection.h"
 #include "blackmisc/mixin/mixinmetatype.h"
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Simulation, CMatchingStatisticsEntry, CMatchingStatistics)
+
 namespace BlackMisc::Simulation
 {
     //! Value object for matching statistics.

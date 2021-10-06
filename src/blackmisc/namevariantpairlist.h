@@ -20,6 +20,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc, CNameVariantPair, CNameVariantPairList)
+
 namespace BlackMisc
 {
     //! Value object encapsulating a list of name/variant pairs

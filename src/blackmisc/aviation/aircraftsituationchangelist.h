@@ -17,6 +17,8 @@
 #include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/timestampobjectlist.h"
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAircraftSituationChange, CAircraftSituationChangeList)
+
 namespace BlackMisc::Aviation
 {
     //! Value object encapsulating a list of aircraft parts.

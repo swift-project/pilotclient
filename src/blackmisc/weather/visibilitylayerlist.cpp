@@ -12,6 +12,8 @@
 
 using namespace BlackMisc::Aviation;
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Weather, CVisibilityLayer, CVisibilityLayerList)
+
 namespace BlackMisc::Weather
 {
     CVisibilityLayerList::CVisibilityLayerList(const CSequence<CVisibilityLayer> &other) :

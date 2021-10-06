@@ -11,6 +11,8 @@
 #include <QString>
 #include <tuple>
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Network, CUser, CUserList)
+
 namespace BlackMisc::Network
 {
     CUserList::CUserList() { }

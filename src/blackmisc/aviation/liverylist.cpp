@@ -15,6 +15,8 @@
 
 using namespace BlackMisc::Aviation;
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CLivery, CLiveryList)
+
 namespace BlackMisc::Aviation
 {
     CLiveryList::CLiveryList() { }

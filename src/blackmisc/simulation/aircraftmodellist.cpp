@@ -35,6 +35,8 @@ using namespace BlackMisc::Math;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Simulation, CAircraftModel, CAircraftModelList)
+
 namespace BlackMisc::Simulation
 {
     CAircraftModelList::CAircraftModelList() { }

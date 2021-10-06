@@ -18,6 +18,8 @@
 #include "blackmisc/sequence.h"
 #include <QNetworkReply>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Network, CUrlLog, CUrlLogList)
+
 namespace BlackMisc::Network
 {
     //! Value object encapsulating a list of voice rooms.

@@ -12,6 +12,8 @@
 
 using namespace BlackMisc::Aviation;
 
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Weather, CTemperatureLayer, CTemperatureLayerList)
+
 namespace BlackMisc::Weather
 {
     CTemperatureLayerList::CTemperatureLayerList(const CSequence<CTemperatureLayer> &other) :

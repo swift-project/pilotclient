@@ -37,6 +37,8 @@
 #include <QMap>
 #include <atomic>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Simulation, CAircraftModel, CAircraftModelList)
+
 namespace BlackMisc
 {
     namespace Aviation

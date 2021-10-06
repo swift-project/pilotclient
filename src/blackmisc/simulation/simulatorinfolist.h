@@ -18,6 +18,8 @@
 
 #include <QMetaType>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Simulation, CSimulatorInfo, CSimulatorPluginInfoList)
+
 namespace BlackMisc::Simulation
 {
     //! Value object encapsulating a list of distributors.

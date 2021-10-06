@@ -23,6 +23,8 @@
 #include <QMetaType>
 #include <QString>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Network, CTextMessage, CTextMessageList)
+
 namespace BlackMisc::Network
 {
     class CTextMessage;

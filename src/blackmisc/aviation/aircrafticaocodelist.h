@@ -22,6 +22,8 @@
 #include <QStringList>
 #include <tuple>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAircraftIcaoCode, CAircraftIcaoCodeList)
+
 namespace BlackMisc::Aviation
 {
     class CAircraftCategoryList;

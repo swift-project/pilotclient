@@ -14,6 +14,8 @@
 #include <QJsonObject>
 #include <QString>
 
+BLACK_DEFINE_COLLECTION_MIXINS(BlackMisc::Aviation, CCallsign, CCallsignSet)
+
 namespace BlackMisc::Aviation
 {
     CCallsignSet::CCallsignSet() { }

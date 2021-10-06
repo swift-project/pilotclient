@@ -20,6 +20,8 @@
 #include <QSet>
 #include <QString>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Db, CDistribution, CDistributionList)
+
 namespace BlackMisc::Db
 {
     //! Multiple distributions for different channels:

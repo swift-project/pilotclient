@@ -18,6 +18,8 @@
 #include <QStringList>
 #include <QMetaType>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Network, CEcosystem, CEcosystemList)
+
 namespace BlackMisc::Network
 {
     //! Value object encapsulating a list of voice rooms.

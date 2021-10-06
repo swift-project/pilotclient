@@ -18,6 +18,7 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackCore::Db, CDatabaseReaderConfig)
+BLACK_DEFINE_SEQUENCE_MIXINS(BlackCore::Db, CDatabaseReaderConfig, CDatabaseReaderConfigList)
 
 namespace BlackCore::Db
 {

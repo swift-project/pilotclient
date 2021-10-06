@@ -23,6 +23,8 @@
 #include <initializer_list>
 #include <tuple>
 
+BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAircraftEngine, CAircraftEngineList)
+
 namespace BlackMisc::Aviation
 {
     //! Value object encapsulating a list of aircraft engines.
