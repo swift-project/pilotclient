@@ -11,6 +11,16 @@
 
 #include <QCoreApplication>
 
+BLACK_DEFINE_UNIT_MIXINS(CAngleUnit)
+BLACK_DEFINE_UNIT_MIXINS(CLengthUnit)
+BLACK_DEFINE_UNIT_MIXINS(CPressureUnit)
+BLACK_DEFINE_UNIT_MIXINS(CFrequencyUnit)
+BLACK_DEFINE_UNIT_MIXINS(CMassUnit)
+BLACK_DEFINE_UNIT_MIXINS(CTemperatureUnit)
+BLACK_DEFINE_UNIT_MIXINS(CSpeedUnit)
+BLACK_DEFINE_UNIT_MIXINS(CTimeUnit)
+BLACK_DEFINE_UNIT_MIXINS(CAccelerationUnit)
+
 namespace BlackMisc::PhysicalQuantities
 {
     using BlackMisc::Math::CMathUtils;

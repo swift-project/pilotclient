@@ -36,6 +36,16 @@
 #include <limits>
 #include <cmath>
 
+BLACK_DEFINE_PQ_MIXINS(CAngleUnit, CAngle)
+BLACK_DEFINE_PQ_MIXINS(CLengthUnit, CLength)
+BLACK_DEFINE_PQ_MIXINS(CPressureUnit, CPressure)
+BLACK_DEFINE_PQ_MIXINS(CFrequencyUnit, CFrequency)
+BLACK_DEFINE_PQ_MIXINS(CMassUnit, CMass)
+BLACK_DEFINE_PQ_MIXINS(CTemperatureUnit, CTemperature)
+BLACK_DEFINE_PQ_MIXINS(CSpeedUnit, CSpeed)
+BLACK_DEFINE_PQ_MIXINS(CTimeUnit, CTime)
+BLACK_DEFINE_PQ_MIXINS(CAccelerationUnit, CAcceleration)
+
 namespace BlackMisc::PhysicalQuantities
 {
     template <class MU, class PQ>

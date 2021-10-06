@@ -29,6 +29,54 @@
 #include <QtMath>
 #include <cstddef>
 
+//! \cond
+#define BLACK_TEMPLATE_UNIT_MIXINS(MU, Extern, Export)                              \
+    namespace BlackMisc::PhysicalQuantities { class MU; }                           \
+    namespace BlackMisc::Private                                                    \
+    {                                                                               \
+        Extern template struct Export CValueObjectMetaInfo<PhysicalQuantities::MU>; \
+        Extern template struct Export MetaTypeHelper<PhysicalQuantities::MU>;       \
+    }                                                                               \
+    namespace BlackMisc::Mixin                                                      \
+    {                                                                               \
+        Extern template class Export MetaType<PhysicalQuantities::MU>;              \
+        Extern template class Export DBusOperators<PhysicalQuantities::MU>;         \
+        Extern template class Export DataStreamOperators<PhysicalQuantities::MU>;   \
+        Extern template class Export Index<PhysicalQuantities::MU>;                 \
+    }
+//! \endcond
+
+/*!
+ * \def BLACK_DECLARE_UNIT_MIXINS
+ * Explicit template declaration of mixins for a CMeasurementUnit subclass
+ * to be placed near the top of the header that defines the class
+ */
+
+/*!
+ * \def BLACK_DEFINE_UNIT_MIXINS
+ * Explicit template definition of mixins for a CMeasurementUnit subclass
+ */
+#if defined(Q_OS_WIN) && defined(Q_CC_GNU)
+#  define BLACK_DECLARE_UNIT_MIXINS(MU)
+#  define BLACK_DEFINE_UNIT_MIXINS(MU)
+#elif defined(Q_OS_WIN) && defined(Q_CC_CLANG)
+#  define BLACK_DECLARE_UNIT_MIXINS(MU) BLACK_TEMPLATE_UNIT_MIXINS(MU, extern, )
+#  define BLACK_DEFINE_UNIT_MIXINS(MU)  BLACK_TEMPLATE_UNIT_MIXINS(MU,       , BLACKMISC_EXPORT)
+#else
+#  define BLACK_DECLARE_UNIT_MIXINS(MU) BLACK_TEMPLATE_UNIT_MIXINS(MU, extern, )
+#  define BLACK_DEFINE_UNIT_MIXINS(MU)  BLACK_TEMPLATE_UNIT_MIXINS(MU,       , )
+#endif
+
+BLACK_DECLARE_UNIT_MIXINS(CAngleUnit)
+BLACK_DECLARE_UNIT_MIXINS(CLengthUnit)
+BLACK_DECLARE_UNIT_MIXINS(CPressureUnit)
+BLACK_DECLARE_UNIT_MIXINS(CFrequencyUnit)
+BLACK_DECLARE_UNIT_MIXINS(CMassUnit)
+BLACK_DECLARE_UNIT_MIXINS(CTemperatureUnit)
+BLACK_DECLARE_UNIT_MIXINS(CSpeedUnit)
+BLACK_DECLARE_UNIT_MIXINS(CTimeUnit)
+BLACK_DECLARE_UNIT_MIXINS(CAccelerationUnit)
+
 //
 // Used with the template for quantities. This is the reason for
 // having all units in one file, since template requires concrete instantiations

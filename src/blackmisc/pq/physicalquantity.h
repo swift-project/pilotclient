@@ -30,6 +30,62 @@
 
 namespace BlackMisc::PhysicalQuantities
 {
+    template <class MU, class PQ> class CPhysicalQuantity;
+}
+
+//! \cond
+#define BLACK_TEMPLATE_PQ_MIXINS(MU, PQ, Extern, Export)                                                                                        \
+    namespace BlackMisc::PhysicalQuantities { class PQ; }                                                                                       \
+    namespace BlackMisc::Private                                                                                                                \
+    {                                                                                                                                           \
+        Extern template struct Export CValueObjectMetaInfo<PhysicalQuantities::PQ>;                                                             \
+        Extern template struct Export MetaTypeHelper<PhysicalQuantities::PQ>;                                                                   \
+    }                                                                                                                                           \
+    namespace BlackMisc::Mixin                                                                                                                  \
+    {                                                                                                                                           \
+        Extern template class Export DBusOperators<PhysicalQuantities::CPhysicalQuantity<PhysicalQuantities::MU, PhysicalQuantities::PQ>>;      \
+        Extern template class Export DataStreamOperators<PhysicalQuantities::CPhysicalQuantity<PhysicalQuantities::MU, PhysicalQuantities::PQ>>;\
+        Extern template class Export JsonOperators<PhysicalQuantities::CPhysicalQuantity<PhysicalQuantities::MU, PhysicalQuantities::PQ>>;      \
+        Extern template class Export Index<PhysicalQuantities::PQ>;                                                                             \
+        Extern template class Export MetaType<PhysicalQuantities::PQ>;                                                                          \
+        Extern template class Export String<PhysicalQuantities::PQ>;                                                                            \
+        Extern template class Export Icon<PhysicalQuantities::CPhysicalQuantity<PhysicalQuantities::MU, PhysicalQuantities::PQ>>;               \
+    }
+//! \endcond
+
+/*!
+ * \def BLACK_DECLARE_PQ_MIXINS
+ * Explicit template declaration of mixins for a CPhysicalQuantity subclass
+ * to be placed near the top of the header that defines the class
+ */
+
+/*!
+ * \def BLACK_DEFINE_PQ_MIXINS
+ * Explicit template definition of mixins for a CPhysicalQuantity subclass
+ */
+#if defined(Q_OS_WIN) && defined(Q_CC_GNU)
+#  define BLACK_DECLARE_PQ_MIXINS(MU, PQ)
+#  define BLACK_DEFINE_PQ_MIXINS(MU, PQ)
+#elif defined(Q_OS_WIN) && defined(Q_CC_CLANG)
+#  define BLACK_DECLARE_PQ_MIXINS(MU, PQ) BLACK_TEMPLATE_PQ_MIXINS(MU, PQ, extern, )
+#  define BLACK_DEFINE_PQ_MIXINS(MU, PQ)  BLACK_TEMPLATE_PQ_MIXINS(MU, PQ,       , BLACKMISC_EXPORT)
+#else
+#  define BLACK_DECLARE_PQ_MIXINS(MU, PQ) BLACK_TEMPLATE_PQ_MIXINS(MU, PQ, extern, )
+#  define BLACK_DEFINE_PQ_MIXINS(MU, PQ)  BLACK_TEMPLATE_PQ_MIXINS(MU, PQ,       , )
+#endif
+
+BLACK_DECLARE_PQ_MIXINS(CAngleUnit, CAngle)
+BLACK_DECLARE_PQ_MIXINS(CLengthUnit, CLength)
+BLACK_DECLARE_PQ_MIXINS(CPressureUnit, CPressure)
+BLACK_DECLARE_PQ_MIXINS(CFrequencyUnit, CFrequency)
+BLACK_DECLARE_PQ_MIXINS(CMassUnit, CMass)
+BLACK_DECLARE_PQ_MIXINS(CTemperatureUnit, CTemperature)
+BLACK_DECLARE_PQ_MIXINS(CSpeedUnit, CSpeed)
+BLACK_DECLARE_PQ_MIXINS(CTimeUnit, CTime)
+BLACK_DECLARE_PQ_MIXINS(CAccelerationUnit, CAcceleration)
+
+namespace BlackMisc::PhysicalQuantities
+{
     class CAngle;
     class CLength;
     class CPressure;
@@ -38,7 +94,6 @@ namespace BlackMisc::PhysicalQuantities
     class CTemperature;
     class CSpeed;
     class CTime;
-    class CPressure;
     class CAcceleration;
 
     /*!
