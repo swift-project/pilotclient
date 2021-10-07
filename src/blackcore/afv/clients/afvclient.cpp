@@ -1286,6 +1286,11 @@ namespace BlackCore
                     QMutexLocker lock(&m_mutex);
                     const auto it = std::find_if(m_aliasedStations.constBegin(), m_aliasedStations.constEnd(), [roundedFrequencyHz](const StationDto & d)
                     {
+                        if (d.frequencyAliasHz > 100000000 && roundedFrequencyHz > 100000000) // both VHF
+                        {
+                            // disregard 6th digit (e.g. 132.070 == 132.075)
+                            return (d.frequencyAliasHz / 10000 * 10000) == (roundedFrequencyHz / 10000 * 10000);
+                        }
                         return d.frequencyAliasHz == roundedFrequencyHz;
                     });
 
