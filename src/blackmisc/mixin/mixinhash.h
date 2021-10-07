@@ -57,23 +57,32 @@ namespace BlackMisc
             }
 
         private:
-            static uint hashImpl(const Derived &value)
-            {
-                uint hash = baseHash(static_cast<const TBaseOfT<Derived> *>(&value));
-                introspect<Derived>().forEachMember([ & ](auto member)
-                {
-                    if constexpr (!decltype(member)::has(MetaFlags<DisabledForHashing>()))
-                    {
-                        hash ^= qHash(member.in(value));
-                    }
-                });
-                return hash;
-            }
+            static uint hashImpl(const Derived &value);
 
             template <typename T> static uint baseHash(const T *base) { return qHash(*base); }
-            static uint baseHash(const void *) { return 0; }
-            static uint baseHash(const CEmpty *) { return 0; }
+            static uint baseHash(const void *);
+            static uint baseHash(const CEmpty *);
         };
+
+        template <class Derived>
+        uint HashByMetaClass<Derived>::hashImpl(const Derived &value)
+        {
+            uint hash = baseHash(static_cast<const TBaseOfT<Derived> *>(&value));
+            introspect<Derived>().forEachMember([ & ](auto member)
+            {
+                if constexpr (!decltype(member)::has(MetaFlags<DisabledForHashing>()))
+                {
+                    hash ^= qHash(member.in(value));
+                }
+            });
+            return hash;
+        }
+
+        template <class Derived>
+        uint HashByMetaClass<Derived>::baseHash(const void *) { return 0; }
+
+        template <class Derived>
+        uint HashByMetaClass<Derived>::baseHash(const CEmpty *) { return 0; }
     }
 } // namespace BlackMisc
 

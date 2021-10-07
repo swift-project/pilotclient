@@ -32,39 +32,64 @@ namespace BlackMisc
         {
         public:
             //! Register metadata
-            static void registerMetadata()
-            {
-                Private::MetaTypeHelper<Derived>::maybeRegisterMetaType();
-            }
+            static void registerMetadata();
 
             //! Returns the Qt meta type ID of this object
             //! \remark for CVariant this returns the id of CVariant, not of the encapsulated object. valueVariant.userType()` returns metatype of the contained object
-            int getMetaTypeId() const
-            {
-                return Private::MetaTypeHelper<Derived>::maybeGetMetaTypeId();
-            }
+            int getMetaTypeId() const;
 
             //! Class name
-            QString getClassName() const
-            {
-                return QMetaType::typeName(getMetaTypeId());
-            }
+            QString getClassName() const;
 
             //! Returns true if this object is an instance of the class with the given meta type ID, or one of its subclasses.
-            bool isA(int metaTypeId) const
-            {
-                if (metaTypeId == QMetaType::UnknownType) { return false; }
-                if (metaTypeId == getMetaTypeId()) { return true; }
-                return baseIsA(static_cast<const TMetaBaseOfT<Derived> *>(derived()), metaTypeId);
-            }
+            bool isA(int metaTypeId) const;
 
         private:
-            const Derived *derived() const { return static_cast<const Derived *>(this); }
-            Derived *derived() { return static_cast<Derived *>(this); }
+            const Derived *derived() const;
+            Derived *derived();
 
-            template <typename Base2> static bool baseIsA(const Base2 *base, int metaTypeId) { return base->isA(metaTypeId); }
-            static bool baseIsA(const void *, int) { return false; }
+            template <typename Base2> static bool baseIsA(const Base2 *base, int metaTypeId);
+            static bool baseIsA(const void *, int);
         };
+
+        template <class Derived>
+        void MetaType<Derived>::registerMetadata()
+        {
+            Private::MetaTypeHelper<Derived>::maybeRegisterMetaType();
+        }
+
+        template <class Derived>
+        int MetaType<Derived>::getMetaTypeId() const
+        {
+            return Private::MetaTypeHelper<Derived>::maybeGetMetaTypeId();
+        }
+
+        template <class Derived>
+        QString MetaType<Derived>::getClassName() const
+        {
+            return QMetaType::typeName(getMetaTypeId());
+        }
+
+        template <class Derived>
+        bool MetaType<Derived>::isA(int metaTypeId) const
+        {
+            if (metaTypeId == QMetaType::UnknownType) { return false; }
+            if (metaTypeId == getMetaTypeId()) { return true; }
+            return baseIsA(static_cast<const TMetaBaseOfT<Derived> *>(derived()), metaTypeId);
+        }
+
+        template <class Derived>
+        const Derived *MetaType<Derived>::derived() const { return static_cast<const Derived *>(this); }
+
+        template <class Derived>
+        Derived *MetaType<Derived>::derived() { return static_cast<Derived *>(this); }
+
+        template <class Derived>
+        template <typename Base2>
+        bool MetaType<Derived>::baseIsA(const Base2 *base, int metaTypeId) { return base->isA(metaTypeId); }
+
+        template <class Derived>
+        bool MetaType<Derived>::baseIsA(const void *, int) { return false; }
 
         // *INDENT-OFF*
         /*!

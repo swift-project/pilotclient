@@ -31,12 +31,21 @@ namespace BlackMisc
         {
         public:
             //! As icon, not implemented by all classes
-            CIcons::IconIndex toIcon() const { return IconIndex; }
+            CIcons::IconIndex toIcon() const;
 
         private:
-            const Derived *derived() const { return static_cast<const Derived *>(this); }
-            Derived *derived() { return static_cast<Derived *>(this); }
+            const Derived *derived() const;
+            Derived *derived();
         };
+
+        template <class Derived, CIcons::IconIndex IconIndex>
+        CIcons::IconIndex Icon<Derived, IconIndex>::toIcon() const { return IconIndex; }
+
+        template <class Derived, CIcons::IconIndex IconIndex>
+        const Derived *Icon<Derived, IconIndex>::derived() const { return static_cast<const Derived *>(this); }
+
+        template <class Derived, CIcons::IconIndex IconIndex>
+        Derived *Icon<Derived, IconIndex>::derived() { return static_cast<Derived *>(this); }
 
         /*!
          * When a derived class and a base class both inherit from Mixin::Icon,

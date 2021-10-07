@@ -68,60 +68,92 @@ namespace BlackMisc
         {
         public:
             //! Marshall without begin/endStructure, for when composed within another object
-            void marshallToDbus(QDBusArgument &arg, Tags...) const
-            {
-                baseMarshall(static_cast<const TBaseOfT<Derived> *>(derived()), arg);
-                introspect<Derived>().forEachMember([ &, this ](auto member)
-                {
-                    if constexpr (!decltype(member)::has(MetaFlags<DisabledForMarshalling>()))
-                    {
-                        const auto &value = member.in(*this->derived());
-                        if constexpr (THasMarshallMethods<std::decay_t<decltype(value)>>::value)
-                        {
-                            if constexpr (member.has(MetaFlags<LosslessMarshalling>()))
-                            {
-                                value.marshallToDbus(arg, LosslessTag());
-                            }
-                            else { value.marshallToDbus(arg); }
-                        }
-                        else { arg << value; }
-                    }
-                });
-            }
+            void marshallToDbus(QDBusArgument &arg, Tags...) const;
 
             //! Unmarshall without begin/endStructure, for when composed within another object
-            void unmarshallFromDbus(const QDBusArgument &arg, Tags...)
-            {
-                baseUnmarshall(static_cast<TBaseOfT<Derived> *>(derived()), arg);
-                introspect<Derived>().forEachMember([ &, this ](auto member)
-                {
-                    if constexpr (!decltype(member)::has(MetaFlags<DisabledForMarshalling>()))
-                    {
-                        auto &value = member.in(*this->derived());
-                        if constexpr (THasMarshallMethods<std::decay_t<decltype(value)>>::value)
-                        {
-                            if constexpr (member.has(MetaFlags<LosslessMarshalling>()))
-                            {
-                                value.unmarshallFromDbus(arg, LosslessTag());
-                            }
-                            else { value.unmarshallFromDbus(arg); }
-                        }
-                        else { arg >> value; }
-                    }
-                });
-            }
+            void unmarshallFromDbus(const QDBusArgument &arg, Tags...);
 
         private:
-            const Derived *derived() const { return static_cast<const Derived *>(this); }
-            Derived *derived() { return static_cast<Derived *>(this); }
+            const Derived *derived() const;
+            Derived *derived();
 
-            template <typename T> static void baseMarshall(const T *base, QDBusArgument &arg) { base->marshallToDbus(arg, Tags()...); }
-            template <typename T> static void baseUnmarshall(T *base, const QDBusArgument &arg) { base->unmarshallFromDbus(arg, Tags()...); }
-            static void baseMarshall(const void *, QDBusArgument &) {}
-            static void baseUnmarshall(void *, const QDBusArgument &) {}
-            static void baseMarshall(const CEmpty *, QDBusArgument &) {}
-            static void baseUnmarshall(CEmpty *, const QDBusArgument &) {}
+            template <typename T> static void baseMarshall(const T *base, QDBusArgument &arg);
+            template <typename T> static void baseUnmarshall(T *base, const QDBusArgument &arg);
+            static void baseMarshall(const void *, QDBusArgument &);
+            static void baseUnmarshall(void *, const QDBusArgument &);
+            static void baseMarshall(const CEmpty *, QDBusArgument &);
+            static void baseUnmarshall(CEmpty *, const QDBusArgument &);
         };
+
+        template <class Derived, class... Tags>
+        void DBusByMetaClass<Derived, Tags...>::marshallToDbus(QDBusArgument &arg, Tags...) const
+        {
+            baseMarshall(static_cast<const TBaseOfT<Derived> *>(derived()), arg);
+            introspect<Derived>().forEachMember([ &, this ](auto member)
+            {
+                if constexpr (!decltype(member)::has(MetaFlags<DisabledForMarshalling>()))
+                {
+                    const auto &value = member.in(*this->derived());
+                    if constexpr (THasMarshallMethods<std::decay_t<decltype(value)>>::value)
+                    {
+                        if constexpr (member.has(MetaFlags<LosslessMarshalling>()))
+                        {
+                            value.marshallToDbus(arg, LosslessTag());
+                        }
+                        else { value.marshallToDbus(arg); }
+                    }
+                    else { arg << value; }
+                }
+            });
+        }
+
+        template <class Derived, class... Tags>
+        void DBusByMetaClass<Derived, Tags...>::unmarshallFromDbus(const QDBusArgument &arg, Tags...)
+        {
+            baseUnmarshall(static_cast<TBaseOfT<Derived> *>(derived()), arg);
+            introspect<Derived>().forEachMember([ &, this ](auto member)
+            {
+                if constexpr (!decltype(member)::has(MetaFlags<DisabledForMarshalling>()))
+                {
+                    auto &value = member.in(*this->derived());
+                    if constexpr (THasMarshallMethods<std::decay_t<decltype(value)>>::value)
+                    {
+                        if constexpr (member.has(MetaFlags<LosslessMarshalling>()))
+                        {
+                            value.unmarshallFromDbus(arg, LosslessTag());
+                        }
+                        else { value.unmarshallFromDbus(arg); }
+                    }
+                    else { arg >> value; }
+                }
+            });
+        }
+
+        template <class Derived, class... Tags>
+        const Derived *DBusByMetaClass<Derived, Tags...>::derived() const { return static_cast<const Derived *>(this); }
+
+        template <class Derived, class... Tags>
+        Derived *DBusByMetaClass<Derived, Tags...>::derived() { return static_cast<Derived *>(this); }
+
+        template <class Derived, class... Tags>
+        template <typename T>
+        void DBusByMetaClass<Derived, Tags...>::baseMarshall(const T *base, QDBusArgument &arg) { base->marshallToDbus(arg, Tags()...); }
+
+        template <class Derived, class... Tags>
+        template <typename T>
+        void DBusByMetaClass<Derived, Tags...>::baseUnmarshall(T *base, const QDBusArgument &arg) { base->unmarshallFromDbus(arg, Tags()...); }
+
+        template <class Derived, class... Tags>
+        void DBusByMetaClass<Derived, Tags...>::baseMarshall(const void *, QDBusArgument &) {}
+
+        template <class Derived, class... Tags>
+        void DBusByMetaClass<Derived, Tags...>::baseUnmarshall(void *, const QDBusArgument &) {}
+
+        template <class Derived, class... Tags>
+        void DBusByMetaClass<Derived, Tags...>::baseMarshall(const CEmpty *, QDBusArgument &) {}
+
+        template <class Derived, class... Tags>
+        void DBusByMetaClass<Derived, Tags...>::baseUnmarshall(CEmpty *, const QDBusArgument &) {}
 
         // *INDENT-OFF*
         /*!

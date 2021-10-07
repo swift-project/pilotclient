@@ -50,8 +50,7 @@ namespace BlackMisc
     void registerMetaValueType()
     {
         if (QMetaType::hasRegisteredConverterFunction<T, Private::IValueObjectMetaInfo *>()) { return; }
-        auto converter = [](const T &) { static Private::CValueObjectMetaInfo<T> info; return &info; };
-        bool ok = QMetaType::registerConverter<T, Private::IValueObjectMetaInfo *>(converter);
+        bool ok = QMetaType::registerConverter<T, Private::IValueObjectMetaInfo *>(Private::CValueObjectMetaInfo<T>::instance);
         Q_ASSERT(ok);
         Q_UNUSED(ok);
     }

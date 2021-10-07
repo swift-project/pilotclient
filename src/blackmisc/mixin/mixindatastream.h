@@ -55,42 +55,74 @@ namespace BlackMisc
         {
         public:
             //! Marshal a value to a QDataStream.
-            void marshalToDataStream(QDataStream &stream) const
-            {
-                baseMarshal(static_cast<const TBaseOfT<Derived> *>(derived()), stream);
-                introspect<Derived>().forEachMember([ &, this ](auto member)
-                {
-                    if constexpr (!decltype(member)::has(MetaFlags<DisabledForMarshalling>()))
-                    {
-                        stream << member.in(*this->derived());
-                    }
-                });
-            }
+            void marshalToDataStream(QDataStream &stream) const;
 
             //! Unmarshal a value from a QDataStream.
-            void unmarshalFromDataStream(QDataStream &stream)
-            {
-                baseUnmarshal(static_cast<TBaseOfT<Derived> *>(derived()), stream);
-                introspect<Derived>().forEachMember([ &, this ](auto member)
-                {
-                    if constexpr (!decltype(member)::has(MetaFlags<DisabledForMarshalling>()))
-                    {
-                        stream >> member.in(*this->derived());
-                    }
-                });
-            }
+            void unmarshalFromDataStream(QDataStream &stream);
 
         private:
-            const Derived *derived() const { return static_cast<const Derived *>(this); }
-            Derived *derived() { return static_cast<Derived *>(this); }
+            const Derived *derived() const;
+            Derived *derived();
 
-            template <typename T> static void baseMarshal(const T *base, QDataStream &stream) { base->marshalToDataStream(stream); }
-            template <typename T> static void baseUnmarshal(T *base, QDataStream &stream) { base->unmarshalFromDataStream(stream); }
-            static void baseMarshal(const void *, QDataStream &) {}
-            static void baseUnmarshal(void *, QDataStream &) {}
-            static void baseMarshal(const CEmpty *, QDataStream &) {}
-            static void baseUnmarshal(CEmpty *, QDataStream &) {}
+            template <typename T> static void baseMarshal(const T *base, QDataStream &stream);
+            template <typename T> static void baseUnmarshal(T *base, QDataStream &stream);
+            static void baseMarshal(const void *, QDataStream &);
+            static void baseUnmarshal(void *, QDataStream &);
+            static void baseMarshal(const CEmpty *, QDataStream &);
+            static void baseUnmarshal(CEmpty *, QDataStream &);
         };
+
+        template <class Derived>
+        void DataStreamByMetaClass<Derived>::marshalToDataStream(QDataStream &stream) const
+        {
+            baseMarshal(static_cast<const TBaseOfT<Derived> *>(derived()), stream);
+            introspect<Derived>().forEachMember([ &, this ](auto member)
+            {
+                if constexpr (!decltype(member)::has(MetaFlags<DisabledForMarshalling>()))
+                {
+                    stream << member.in(*this->derived());
+                }
+            });
+        }
+
+        template <class Derived>
+        void DataStreamByMetaClass<Derived>::unmarshalFromDataStream(QDataStream &stream)
+        {
+            baseUnmarshal(static_cast<TBaseOfT<Derived> *>(derived()), stream);
+            introspect<Derived>().forEachMember([ &, this ](auto member)
+            {
+                if constexpr (!decltype(member)::has(MetaFlags<DisabledForMarshalling>()))
+                {
+                    stream >> member.in(*this->derived());
+                }
+            });
+        }
+
+        template <class Derived>
+        const Derived *DataStreamByMetaClass<Derived>::derived() const { return static_cast<const Derived *>(this); }
+
+        template <class Derived>
+        Derived *DataStreamByMetaClass<Derived>::derived() { return static_cast<Derived *>(this); }
+
+        template <class Derived>
+        template <typename T>
+        void DataStreamByMetaClass<Derived>::baseMarshal(const T *base, QDataStream &stream) { base->marshalToDataStream(stream); }
+
+        template <class Derived>
+        template <typename T>
+        void DataStreamByMetaClass<Derived>::baseUnmarshal(T *base, QDataStream &stream) { base->unmarshalFromDataStream(stream); }
+
+        template <class Derived>
+        void DataStreamByMetaClass<Derived>::baseMarshal(const void *, QDataStream &) {}
+
+        template <class Derived>
+        void DataStreamByMetaClass<Derived>::baseUnmarshal(void *, QDataStream &) {}
+
+        template <class Derived>
+        void DataStreamByMetaClass<Derived>::baseMarshal(const CEmpty *, QDataStream &) {}
+
+        template <class Derived>
+        void DataStreamByMetaClass<Derived>::baseUnmarshal(CEmpty *, QDataStream &) {}
 
         /*!
          * When a derived class and a base class both inherit from Mixin::DataStreamByMetaClass,

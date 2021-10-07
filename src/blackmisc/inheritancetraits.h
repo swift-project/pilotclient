@@ -37,13 +37,19 @@ namespace BlackMisc
     //! \endcond
 
     /*!
+     * True if T has a member typedef base_type which is a registered metatype.
+     */
+    template <typename T>
+    inline constexpr bool THasMetaBaseV = QMetaTypeId<typename TBaseOf<T>::type>::Defined;
+
+    /*!
      * It T has a member typedef base_type which is a registered metatype, this trait will obtain it, otherwise void.
      */
     template <class T>
     struct TMetaBaseOf
     {
         //! Type of T::base_type, or void if not declared.
-        using type = std::conditional_t<QMetaTypeId<typename TBaseOf<T>::type>::Defined, typename TBaseOf<T>::type, void>;
+        using type = std::conditional_t<THasMetaBaseV<T>, typename TBaseOf<T>::type, void>;
     };
 
     /*!

@@ -62,22 +62,40 @@ namespace BlackMisc::Mixin
         }
 
         //! Cast as QString
-        QString toQString(bool i18n = false) const { return derived()->convertToQString(i18n); }
+        QString toQString(bool i18n = false) const;
 
         //! Cast to pretty-printed QString
         //! \deprecated not really used and just using toQString
-        QString toFormattedQString(bool i18n = false) const { return derived()->toQString(i18n); }
+        QString toFormattedQString(bool i18n = false) const;
 
         //! To std string
-        std::string toStdString(bool i18n = false) const { return derived()->convertToQString(i18n).toStdString(); }
+        std::string toStdString(bool i18n = false) const;
 
         //! String for streaming operators
-        QString stringForStreaming() const { return derived()->convertToQString(); }
+        QString stringForStreaming() const;
 
     private:
-        const Derived *derived() const { return static_cast<const Derived *>(this); }
-        Derived *derived() { return static_cast<Derived *>(this); }
+        const Derived *derived() const;
+        Derived *derived();
     };
+
+    template <class Derived>
+    QString String<Derived>::toQString(bool i18n) const { return derived()->convertToQString(i18n); }
+
+    template <class Derived>
+    QString String<Derived>::toFormattedQString(bool i18n) const { return derived()->toQString(i18n); }
+
+    template <class Derived>
+    std::string String<Derived>::toStdString(bool i18n) const { return derived()->convertToQString(i18n).toStdString(); }
+
+    template <class Derived>
+    QString String<Derived>::stringForStreaming() const { return derived()->convertToQString(); }
+
+    template <class Derived>
+    const Derived *String<Derived>::derived() const { return static_cast<const Derived *>(this); }
+
+    template <class Derived>
+    Derived *String<Derived>::derived() { return static_cast<Derived *>(this); }
 
     // *INDENT-OFF*
     /*!
