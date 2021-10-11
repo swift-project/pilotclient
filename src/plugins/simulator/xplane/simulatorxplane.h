@@ -79,6 +79,12 @@ namespace BlackSimPlugin::XPlane
         double pitchDeg = 0;                //!< Pitch [deg]
         double rollDeg = 0;                 //!< Roll  [deg]
         double trueHeadingDeg = 0;          //!< True heading [deg]
+        double localXVelocityMs = 0;        //!< Local x velocity [m/s]
+        double localYVelocityMs = 0;        //!< Local y velocity [m/s]
+        double localZVelocityMs = 0;        //!< Local z velocity [m/s]
+        double pitchRadPerSec = 0;          //!< Pitch angular velocity [rad/s]
+        double rollRadPerSec = 0;           //!< Roll angular velocity [rad/s]
+        double headingRadPerSec = 0;        //!< Heading angular velocity [rad/s]
         bool onGroundAll = false;           //!< All wheels on ground?
         int com1ActiveKhz = 122800;         //!< COM1 active  [kHz]
         int com1StandbyKhz = 122800;        //!< COM1 standby [kHz]

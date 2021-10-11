@@ -396,6 +396,27 @@ namespace XSwiftBus
                     sendDBusMessage(reply);
                 });
             }
+            else if (message.getMethodName() == "getOwnAircraftVelocityData")
+            {
+                queueDBusCall([ = ]()
+                {
+                    const double velocityX = m_velocityX.get();
+                    const double velocityY = m_velocityY.get();
+                    const double velocityZ = m_velocityZ.get();
+                    const double pitchVelocity = m_pitchVelocity.get();
+                    const double rollVelocity = m_rollVelocity.get();
+                    const double headingVelocity = m_headingVelocity.get();
+                    CDBusMessage reply = CDBusMessage::createReply(sender, serial);
+                    reply.beginArgumentWrite();
+                    reply.appendArgument(velocityX);
+                    reply.appendArgument(velocityY);
+                    reply.appendArgument(velocityZ);
+                    reply.appendArgument(pitchVelocity);
+                    reply.appendArgument(rollVelocity);
+                    reply.appendArgument(headingVelocity);
+                    sendDBusMessage(reply);
+                });
+            }
             else if (message.getMethodName() == "getOwnAircraftCom1Data")
             {
                 queueDBusCall([ = ]()
@@ -687,6 +708,48 @@ namespace XSwiftBus
                 queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getTrueHeadingDeg());
+                });
+            }
+            else if (message.getMethodName() == "getLocalXVelocityXMps")
+            {
+                queueDBusCall([ = ]()
+                {
+                    sendDBusReply(sender, serial, getLocalXVelocityMps());
+                });
+            }
+            else if (message.getMethodName() == "getLocalYVelocityYMps")
+            {
+                queueDBusCall([ = ]()
+                {
+                    sendDBusReply(sender, serial, getLocalYVelocityMps());
+                });
+            }
+            else if (message.getMethodName() == "getLocalZVelocityZMps")
+            {
+                queueDBusCall([ = ]()
+                {
+                    sendDBusReply(sender, serial, getLocalZVelocityMps());
+                });
+            }
+            else if (message.getMethodName() == "getPitchRadPerSec")
+            {
+                queueDBusCall([ = ]()
+                {
+                    sendDBusReply(sender, serial, getPitchRadPerSec());
+                });
+            }
+            else if (message.getMethodName() == "getRollRadPerSec")
+            {
+                queueDBusCall([ = ]()
+                {
+                    sendDBusReply(sender, serial, getRollRadPerSec());
+                });
+            }
+            else if (message.getMethodName() == "getHeadingRadPerSec")
+            {
+                queueDBusCall([ = ]()
+                {
+                    sendDBusReply(sender, serial, getHeadingRadPerSec());
                 });
             }
             else if (message.getMethodName() == "getAnyWheelOnGround")

@@ -75,6 +75,27 @@ namespace BlackSimPlugin::XPlane
         m_dbusInterface->callDBusAsync(QLatin1String("getOwnAircraftSituationData"), callback);
     }
 
+    void CXSwiftBusServiceProxy::getOwnAircraftVelocityDataAsync(XPlaneData *o_xplaneData)
+    {
+        if (!o_xplaneData) { return; }
+        QPointer<CXSwiftBusServiceProxy> myself(this);
+        std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
+        {
+            if (!myself) { return; }
+            QDBusPendingReply<double, double, double, double, double, double> reply = *watcher;
+            if (!reply.isError())
+            {
+                o_xplaneData->localXVelocityMs = reply.argumentAt<0>();
+                o_xplaneData->localYVelocityMs = reply.argumentAt<1>();
+                o_xplaneData->localZVelocityMs = reply.argumentAt<2>();
+                o_xplaneData->pitchRadPerSec = reply.argumentAt<3>();
+                o_xplaneData->rollRadPerSec = reply.argumentAt<4>();
+                o_xplaneData->headingRadPerSec = reply.argumentAt<5>();
+            }
+        };
+        m_dbusInterface->callDBusAsync(QLatin1String("getOwnAircraftVelocityData"), callback);
+    }
+
     void CXSwiftBusServiceProxy::getOwnAircraftCom1DataAsync(XPlaneData *o_xplaneData)
     {
         if (!o_xplaneData) { return; }
@@ -449,6 +470,60 @@ namespace BlackSimPlugin::XPlane
     void CXSwiftBusServiceProxy::getTrueHeadingDegAsync(double *o_heading)
     {
         m_dbusInterface->callDBusAsync(QLatin1String("getTrueHeadingDeg"), setterCallback(o_heading));
+    }
+
+    double CXSwiftBusServiceProxy::getLocalXVelocityMps() const
+    {
+        return m_dbusInterface->callDBusRet<double>(QLatin1String("getLocalXVelocityMps"));
+    }
+    void CXSwiftBusServiceProxy::getLocalXVelocityMpsAsync(double *o_velocity)
+    {
+        m_dbusInterface->callDBusAsync(QLatin1String("getLocalXVelocityMps"), setterCallback(o_velocity));
+    }
+
+    double CXSwiftBusServiceProxy::getLocalYVelocityMps() const
+    {
+        return m_dbusInterface->callDBusRet<double>(QLatin1String("getLocalYVelocityMps"));
+    }
+    void CXSwiftBusServiceProxy::getLocalYVelocityMpsAsync(double *o_velocity)
+    {
+        m_dbusInterface->callDBusAsync(QLatin1String("getLocalYVelocityMps"), setterCallback(o_velocity));
+    }
+
+    double CXSwiftBusServiceProxy::getLocalZVelocityMps() const
+    {
+        return m_dbusInterface->callDBusRet<double>(QLatin1String("getLocalZVelocityMps"));
+    }
+    void CXSwiftBusServiceProxy::getLocalZVelocityMpsAsync(double *o_velocity)
+    {
+        m_dbusInterface->callDBusAsync(QLatin1String("getLocalZVelocityMps"), setterCallback(o_velocity));
+    }
+
+    double CXSwiftBusServiceProxy::getPitchRadPerSec() const
+    {
+        return m_dbusInterface->callDBusRet<double>(QLatin1String("getPitchRadPerSec"));
+    }
+    void CXSwiftBusServiceProxy::getPitchRadPerSecAsync(double *o_radPerSec)
+    {
+        m_dbusInterface->callDBusAsync(QLatin1String("getPitchRadPerSec"), setterCallback(o_radPerSec));
+    }
+
+    double CXSwiftBusServiceProxy::getRollRadPerSec() const
+    {
+        return m_dbusInterface->callDBusRet<double>(QLatin1String("getRollRadPerSec"));
+    }
+    void CXSwiftBusServiceProxy::getRollRadPerSecAsync(double *o_radPerSec)
+    {
+        m_dbusInterface->callDBusAsync(QLatin1String("getRollRadPerSec"), setterCallback(o_radPerSec));
+    }
+
+    double CXSwiftBusServiceProxy::getHeadingRadPerSec() const
+    {
+        return m_dbusInterface->callDBusRet<double>(QLatin1String("getHeadingRadPerSec"));
+    }
+    void CXSwiftBusServiceProxy::getHeadingRadPerSecAsync(double *o_radPerSec)
+    {
+        m_dbusInterface->callDBusAsync(QLatin1String("getHeadingRadPerSec"), setterCallback(o_radPerSec));
     }
 
     bool CXSwiftBusServiceProxy::getAnyWheelOnGround() const
