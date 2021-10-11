@@ -120,6 +120,9 @@ namespace BlackSimPlugin::Flightgear
         //! Get own aircraft situation data
         void getOwnAircraftSituationData(FlightgearData *o_flightgearData);
 
+        //! Get own aircraft velocity data
+        void getOwnAircraftVelocityData(FlightgearData *o_flightgearData);
+
         //! Add a text message to the on-screen display
         void addTextMessage(const QString &text);
 
