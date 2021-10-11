@@ -854,6 +854,7 @@ namespace BlackCore::Fsd
             if (m_capabilities & Capabilities::OngoingCoord)   responseData.push_back(toQString(Capabilities::OngoingCoord) % "=1");
             if (m_capabilities & Capabilities::InterminPos)    responseData.push_back(toQString(Capabilities::InterminPos) % "=1");
             if (m_capabilities & Capabilities::FastPos)        responseData.push_back(toQString(Capabilities::FastPos) % "=1");
+            if (m_capabilities & Capabilities::VisPos)         responseData.push_back(toQString(Capabilities::VisPos) % "=1");
             if (m_capabilities & Capabilities::Stealth)        responseData.push_back(toQString(Capabilities::Stealth) % "=1");
             if (m_capabilities & Capabilities::AircraftConfig) responseData.push_back(toQString(Capabilities::AircraftConfig) % "=1");
             const ClientResponse clientResponse(ownCallsign, receiver, ClientQueryType::Capabilities, responseData);
@@ -1390,6 +1391,7 @@ namespace BlackCore::Fsd
             CClient::Capabilities caps = CClient::None;
             if (capabilities & Capabilities::AtcInfo) { caps |= CClient::FsdAtisCanBeReceived; }
             if (capabilities & Capabilities::FastPos) { caps |= CClient::FsdWithInterimPositions; }
+            if (capabilities & Capabilities::VisPos)  { caps |= CClient::FsdWithVisualPositions; }
             if (capabilities & Capabilities::AircraftInfo)   { caps |= CClient::FsdWithIcaoCodes; }
             if (capabilities & Capabilities::AircraftConfig) { caps |= CClient::FsdWithAircraftConfig; }
 
@@ -1780,6 +1782,12 @@ namespace BlackCore::Fsd
     {
         const CFsdSetup::SendReceiveDetails d = this->getSetupForServer().getSendReceiveDetails();
         return (d & CFsdSetup::ReceiveInterimPositions);
+    }
+
+    bool CFSDClient::isVisualPositionSendingEnabledForServer() const
+    {
+        const CFsdSetup::SendReceiveDetails d = this->getSetupForServer().getSendReceiveDetails();
+        return (d & CFsdSetup::SendVisualPositions);
     }
 
     const CFsdSetup &CFSDClient::getSetupForServer() const

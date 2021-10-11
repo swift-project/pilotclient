@@ -47,6 +47,7 @@ namespace BlackMisc::Network
         return ds.arg(boolToYesNo(details.testFlag(SendAircraftParts)),
                         boolToYesNo(details.testFlag(SendGndFlag)),
                         boolToYesNo(details.testFlag(SendInterimPositions)),
+                        boolToYesNo(details.testFlag(SendVisualPositions)),
                         boolToYesNo(details.testFlag(ReceiveAircraftParts)),
                         boolToYesNo(details.testFlag(ReceiveGndFlag)),
                         boolToYesNo(details.testFlag(ReceiveInterimPositions)),
@@ -54,7 +55,7 @@ namespace BlackMisc::Network
                         );
     }
 
-    void CFsdSetup::setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive, bool euroscopeSimDataReceive)
+    void CFsdSetup::setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive, bool visualSend, bool euroscopeSimDataReceive)
     {
         SendReceiveDetails s = Nothing;
         if (partsSend)    { s |= SendAircraftParts; }
@@ -63,6 +64,7 @@ namespace BlackMisc::Network
         if (gndReceive)   { s |= ReceiveGndFlag; }
         if (interimSend)  { s |= SendInterimPositions; }
         if (interimReceive) { s |= ReceiveInterimPositions; }
+        if (visualSend)   { s |= SendVisualPositions; }
         if (euroscopeSimDataReceive) { s |= ReceiveEuroscopeSimData; }
         this->setSendReceiveDetails(s);
     }

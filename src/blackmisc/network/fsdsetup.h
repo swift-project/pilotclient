@@ -46,9 +46,9 @@ namespace BlackMisc::Network
             ReceiveInterimPositions = 1 << 4, //!< fast position updates in
             ReceiveGndFlag          = 1 << 5, //!< gnd.flag in (position)
             Force3LetterAirlineICAO = 1 << 6, //!< force 3 letter airline ICAO code
-            // bit 7 reserved for VISUPDATE
+            SendVisualPositions     = 1 << 7, //!< visual positions out
             ReceiveEuroscopeSimData = 1 << 8, //!< euroscope SIMDATA in
-            AllSending              = SendAircraftParts | SendInterimPositions | SendGndFlag,          //!< all out
+            AllSending              = SendAircraftParts | SendInterimPositions | SendVisualPositions | SendGndFlag, //!< all out
             AllReceive              = ReceiveAircraftParts | ReceiveInterimPositions | ReceiveGndFlag, //!< all in
             All                     = AllReceive | AllSending, //!< all
             AllParts                = SendAircraftParts | ReceiveAircraftParts,       //!< send/receive parts
@@ -56,7 +56,7 @@ namespace BlackMisc::Network
             AllReceiveWithoutGnd    = AllReceive - ReceiveGndFlag,                    //!< all in, but no gnd.flag
             AllInterimPositions     = SendInterimPositions | ReceiveInterimPositions, //!< all interim positions
             AllWithoutGnd           = AllReceiveWithoutGnd | AllSendingWithoutGnd,    //!< all, but no gnd.flag
-            VATSIMDefault           = AllParts | Force3LetterAirlineICAO
+            VATSIMDefault           = AllParts | Force3LetterAirlineICAO | SendVisualPositions
         };
         Q_DECLARE_FLAGS(SendReceiveDetails, SendReceiveDetailsFlag)
 
@@ -95,13 +95,14 @@ namespace BlackMisc::Network
         void removeSendReceiveDetails(SendReceiveDetails sendReceive) { m_sendReceive &= ~sendReceive; }
 
         //! Set send / receive details
-        void setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive, bool euroscopeSimDataReceive);
+        void setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive, bool visualSend, bool euroscopeSimDataReceive);
 
         //! FSD setup flags
         //! @{
         bool sendAircraftParts() const { return this->getSendReceiveDetails().testFlag(SendAircraftParts); }
         bool sendGndFlag() const { return this->getSendReceiveDetails().testFlag(SendGndFlag); }
         bool sendInterimPositions() const { return this->getSendReceiveDetails().testFlag(SendInterimPositions); }
+        bool sendVisualPositions() const { return this->getSendReceiveDetails().testFlag(SendVisualPositions); }
 
         bool receiveAircraftParts() const { return this->getSendReceiveDetails().testFlag(ReceiveAircraftParts); }
         bool receiveGndFlag() const { return this->getSendReceiveDetails().testFlag(ReceiveGndFlag); }

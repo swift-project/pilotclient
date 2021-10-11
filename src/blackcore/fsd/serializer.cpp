@@ -407,6 +407,7 @@ namespace BlackCore::Fsd
         case Capabilities::AircraftInfo:   return "MODELDESC";
         case Capabilities::OngoingCoord:   return "ONGOINGCOORD";
         case Capabilities::InterminPos:    return "INTERIMPOS";
+        case Capabilities::VisPos:         return "VISUPDATE";
         case Capabilities::FastPos:        return "FASTPOS";
         case Capabilities::Stealth:        return "STEALTH";
         case Capabilities::AircraftConfig: return "ACCONFIG";
@@ -424,6 +425,7 @@ namespace BlackCore::Fsd
         else if (str == "ONGOINGCOORD") return Capabilities::OngoingCoord;
         else if (str == "INTERIMPOS")   return Capabilities::InterminPos;
         else if (str == "FASTPOS")      return Capabilities::FastPos;
+        else if (str == "VISUPDATE")    return Capabilities::VisPos;
         else if (str == "STEALTH")      return Capabilities::Stealth;
         else if (str == "ACCONFIG")     return Capabilities::AircraftConfig;
 

@@ -290,7 +290,7 @@ namespace BlackCore::Context
         }
 
         m_fsdClient->setClientIdAndKey(static_cast<quint16>(clientId), clientKey.toLocal8Bit());
-        m_fsdClient->setClientCapabilities(Capabilities::AircraftInfo | Capabilities::FastPos | Capabilities::AtcInfo | Capabilities::AircraftConfig);
+        m_fsdClient->setClientCapabilities(Capabilities::AircraftInfo | Capabilities::FastPos | Capabilities::VisPos | Capabilities::AtcInfo | Capabilities::AircraftConfig);
         m_fsdClient->setServer(server);
 
         m_fsdClient->setPilotRating(PilotRating::Student);
