@@ -30,6 +30,7 @@
 #include "blackcore/fsd/serializer.h"
 #include "blackcore/fsd/servererror.h"
 #include "blackcore/fsd/interimpilotdataupdate.h"
+#include "blackcore/fsd/visualpilotdataupdate.h"
 #include "blackcore/fsd/planeinforequest.h"
 #include "blackcore/fsd/planeinformation.h"
 #include "blackcore/fsd/planeinforequestfsinn.h"
@@ -113,6 +114,9 @@ namespace BlackCore::Fsd
 
         m_interimPositionUpdateTimer.setObjectName(this->objectName().append(":m_interimPositionUpdateTimer"));
         connect(&m_interimPositionUpdateTimer, &QTimer::timeout, this, &CFSDClient::sendInterimPilotDataUpdate);
+
+        m_visualPositionUpdateTimer.setObjectName(this->objectName().append(":m_visualPositionUpdateTimer"));
+        connect(&m_visualPositionUpdateTimer, &QTimer::timeout, this, &CFSDClient::sendVisualPilotDataUpdate);
 
         m_scheduledConfigUpdate.setObjectName(this->objectName().append(":m_scheduledConfigUpdate"));
         connect(&m_scheduledConfigUpdate, &QTimer::timeout, this, &CFSDClient::sendIncrementalAircraftConfig);
@@ -380,6 +384,44 @@ namespace BlackCore::Fsd
             sendQueudedMessage(interimPilotDataUpdate);
             // statistics
         }
+    }
+
+    void CFSDClient::sendVisualPilotDataUpdate()
+    {
+        if (this->getConnectionStatus().isDisconnected() && ! m_unitTestMode) { return; }
+        if (m_loginMode == CLoginMode::Observer || !isVisualPositionSendingEnabledForServer()) { return; }
+        const CSimulatedAircraft myAircraft(getOwnAircraft());
+
+        static constexpr double minVelocity = 0.00005;
+        if (std::abs(myAircraft.getVelocity().getVelocityX(CSpeedUnit::m_s())) < minVelocity &&
+            std::abs(myAircraft.getVelocity().getVelocityY(CSpeedUnit::m_s())) < minVelocity &&
+            std::abs(myAircraft.getVelocity().getVelocityZ(CSpeedUnit::m_s())) < minVelocity &&
+            std::abs(myAircraft.getVelocity().getPitchVelocity(CAngleUnit::rad(), CTimeUnit::s())) < minVelocity &&
+            std::abs(myAircraft.getVelocity().getRollVelocity(CAngleUnit::rad(), CTimeUnit::s())) < minVelocity &&
+            std::abs(myAircraft.getVelocity().getHeadingVelocity(CAngleUnit::rad(), CTimeUnit::s())) < minVelocity)
+        {
+            if (m_stoppedSendingVisualPositions) { return; }
+            m_stoppedSendingVisualPositions = true;
+        }
+        else
+        {
+            m_stoppedSendingVisualPositions = false;
+        }
+
+        VisualPilotDataUpdate visualPilotDataUpdate(getOwnCallsignAsString(),
+                myAircraft.latitude().value(CAngleUnit::deg()),
+                myAircraft.longitude().value(CAngleUnit::deg()),
+                myAircraft.getAltitude().value(CLengthUnit::ft()),
+                myAircraft.getPitch().value(CAngleUnit::deg()),
+                myAircraft.getBank().value(CAngleUnit::deg()),
+                myAircraft.getHeading().normalizedTo360Degrees().value(CAngleUnit::deg()),
+                myAircraft.getVelocity().getVelocityX(CSpeedUnit::m_s()),
+                myAircraft.getVelocity().getVelocityY(CSpeedUnit::m_s()),
+                myAircraft.getVelocity().getVelocityZ(CSpeedUnit::m_s()),
+                myAircraft.getVelocity().getPitchVelocity(CAngleUnit::rad(), CTimeUnit::s()),
+                myAircraft.getVelocity().getRollVelocity(CAngleUnit::rad(), CTimeUnit::s()),
+                myAircraft.getVelocity().getHeadingVelocity(CAngleUnit::rad(), CTimeUnit::s()));
+        sendQueudedMessage(visualPilotDataUpdate);
     }
 
     void CFSDClient::sendAtcDataUpdate(double latitude, double longitude)
@@ -975,6 +1017,7 @@ namespace BlackCore::Fsd
         m_messageTypeMapping["$DI"] = MessageType::FsdIdentification;
         m_messageTypeMapping["$!!"] = MessageType::KillRequest;
         m_messageTypeMapping["@"]   = MessageType::PilotDataUpdate;
+        m_messageTypeMapping["^"]   = MessageType::VisualPilotDataUpdate;
         m_messageTypeMapping["$PI"] = MessageType::Ping;
         m_messageTypeMapping["$PO"] = MessageType::Pong;
         m_messageTypeMapping["$ER"] = MessageType::ServerError;
@@ -1172,6 +1215,31 @@ namespace BlackCore::Fsd
         parts.setOnGround(data.m_onGround);
 
         emit euroscopeSimDataUpdatedReceived(situation, parts, currentOffsetTime(data.sender()), data.m_model, data.m_livery);
+    }
+
+    void CFSDClient::handleVisualPilotDataUpdate(const QStringList &tokens)
+    {
+        const VisualPilotDataUpdate dataUpdate = VisualPilotDataUpdate::fromTokens(tokens);
+        const CCallsign callsign(dataUpdate.sender(), CCallsign::Aircraft);
+
+        CAircraftSituation situation(
+            callsign,
+            CCoordinateGeodetic(dataUpdate.m_latitude, dataUpdate.m_longitude, dataUpdate.m_altitudeTrue),
+            CHeading(dataUpdate.m_heading, CHeading::True, CAngleUnit::deg()),
+            CAngle(dataUpdate.m_pitch, CAngleUnit::deg()),
+            CAngle(dataUpdate.m_bank, CAngleUnit::deg()));
+
+        // not used
+        //situation.setVelocity(CAircraftVelocity(
+        //    dataUpdate.m_xVelocity, dataUpdate.m_yVelocity, dataUpdate.m_zVelocity, CSpeedUnit::m_s(),
+        //    dataUpdate.m_pitchRadPerSec, dataUpdate.m_bankRadPerSec, dataUpdate.m_headingRadPerSec, CAngleUnit::rad(), CTimeUnit::s()));
+
+        // Ref T297, default offset time
+        situation.setCurrentUtcTime();
+        const qint64 offsetTimeMs = receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
+        situation.setTimeOffsetMs(offsetTimeMs);
+
+        emit visualPilotDataUpdateReceived(situation);
     }
 
     void CFSDClient::handlePing(const QStringList &tokens)
@@ -2077,6 +2145,7 @@ namespace BlackCore::Fsd
             case MessageType::TextMessage:       handleTextMessage(tokens);       break;
             case MessageType::PilotClientCom:    handleCustomPilotPacket(tokens); break;
             case MessageType::RevBClientParts:   handleRevBClientPartsPacket(tokens); break;
+            case MessageType::VisualPilotDataUpdate:   handleVisualPilotDataUpdate(tokens); break;
             case MessageType::EuroscopeSimData:  handleEuroscopeSimData(tokens);  break;
 
             // normally we should not get here
@@ -2138,12 +2207,15 @@ namespace BlackCore::Fsd
         // interim positions
         if (this->isInterimPositionSendingEnabledForServer()) { m_interimPositionUpdateTimer.start(c_updateInterimPostionIntervalMsec); }
         else { m_interimPositionUpdateTimer.stop(); }
+        if (this->isVisualPositionSendingEnabledForServer()) { m_visualPositionUpdateTimer.start(c_updateVisualPositionIntervalMsec); }
+        else { m_visualPositionUpdateTimer.stop(); }
     }
 
     void CFSDClient::stopPositionTimers()
     {
         m_positionUpdateTimer.stop();
         m_interimPositionUpdateTimer.stop();
+        m_visualPositionUpdateTimer.stop();
         m_scheduledConfigUpdate.stop();
         m_fsdSendMessageTimer.stop();
     }
