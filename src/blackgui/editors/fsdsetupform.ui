@@ -130,13 +130,20 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="4">
+   <item row="6" column="5">
     <widget class="QCheckBox" name="cb_3LetterAirlineICAO">
      <property name="toolTip">
       <string>force 3 letter airline ICAO code</string>
      </property>
      <property name="text">
       <string>3 letter airline</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="4">
+    <widget class="QCheckBox" name="cb_VisualPositionSend">
+     <property name="text">
+      <string>Send visual pos.</string>
      </property>
     </widget>
    </item>
@@ -161,9 +168,10 @@
   <tabstop>cb_GndFlagReceive</tabstop>
   <tabstop>cb_FastPositionSend</tabstop>
   <tabstop>cb_FastPositionReceive</tabstop>
+  <tabstop>cb_VisualPositionSend</tabstop>
+  <tabstop>cb_EuroscopeSimData</tabstop>
   <tabstop>le_TextCodec</tabstop>
   <tabstop>cb_3LetterAirlineICAO</tabstop>
-  <tabstop>cb_EuroscopeSimData</tabstop>
  </tabstops>
  <resources/>
  <connections/>
