@@ -72,7 +72,7 @@ namespace BlackCoreTest
         const CSimulatedAircraft aircraft;
         const CSimulatedAircraftList aircraftList;
 
-        constexpr int MaxSize = 210;
+        constexpr int MaxSize = 220; // max size in dbus spec is 255
         int s = CDBusUtils::dBusSignatureSize(model);
         QVERIFY2(s < MaxSize, "CAircraftModel");
 

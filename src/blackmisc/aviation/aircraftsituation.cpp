@@ -318,6 +318,7 @@ namespace BlackMisc::Aviation
         case IndexHeading:   return m_heading.propertyByIndex(index.copyFrontRemoved());
         case IndexPitch:     return m_pitch.propertyByIndex(index.copyFrontRemoved());
         case IndexPBHInfo:   return QVariant::fromValue(this->getPBHInfo());
+        case IndexVelocity:  return QVariant::fromValue(this->getVelocity());
         case IndexBank:      return m_bank.propertyByIndex(index.copyFrontRemoved());
         case IndexCG:        return m_cg.propertyByIndex(index.copyFrontRemoved());
         case IndexSceneryOffset: return m_sceneryOffset.propertyByIndex(index.copyFrontRemoved());
@@ -348,6 +349,7 @@ namespace BlackMisc::Aviation
         case IndexPosition: m_position.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexPitch:    m_pitch.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexBank:     m_bank.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexVelocity: m_velocity.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexCG:       m_cg.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexSceneryOffset: m_sceneryOffset.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexGroundSpeed:   m_groundSpeed.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
@@ -372,6 +374,7 @@ namespace BlackMisc::Aviation
         {
         case IndexPosition: return m_position.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPosition());
         case IndexAltitude: return this->getAltitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getAltitude());
+        case IndexVelocity: return m_velocity.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getVelocity());
         case IndexPBHInfo: // fall through
         case IndexPitch:         return m_pitch.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPitch());
         case IndexBank:          return m_bank.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getBank());
@@ -457,6 +460,7 @@ namespace BlackMisc::Aviation
         m_heading.setNull();
         m_pitch.setNull();
         m_bank.setNull();
+        m_velocity = {};
         m_groundElevationPlane.setNull();
         m_groundSpeed.setNull();
         m_onGroundDetails = CAircraftSituation::NotSetGroundDetails;
