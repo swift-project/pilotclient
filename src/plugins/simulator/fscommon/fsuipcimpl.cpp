@@ -370,6 +370,8 @@ namespace BlackSimPlugin::FsCommon
         qint32 flapsControlRaw = 0, gearControlRaw = 0, spoilersControlRaw = 0;
         qint16 numberOfEngines = 0;
         qint16 engine1CombustionFlag = 0, engine2CombustionFlag = 0, engine3CombustionFlag = 0, engine4CombustionFlag = 0;
+        double velocityWorld[3];
+        double rotationVelocityBody[3];
 
         // http://www.projectmagenta.com/all-fsuipc-offsets/
         // https://www.ivao.aero/softdev/ivap/fsuipc_sdk.asp
@@ -422,6 +424,14 @@ namespace BlackSimPlugin::FsCommon
             (situationN || FSUIPC_Read(0x057c, 4, &bankRaw,  &dwResult)) &&
             (situationN || FSUIPC_Read(0x0580, 4, &headingRaw,  &dwResult)) &&
             (situationN || FSUIPC_Read(0x0570, 8, &altitudeRaw, &dwResult)) &&
+
+            (situationN || FSUIPC_Read(0x3198, 8, &velocityWorld[0], &dwResult)) &&
+            (situationN || FSUIPC_Read(0x31a0, 8, &velocityWorld[1], &dwResult)) &&
+            (situationN || FSUIPC_Read(0x3190, 8, &velocityWorld[2], &dwResult)) &&
+
+            (situationN || FSUIPC_Read(0x30A8, 8, &rotationVelocityBody[0], &dwResult)) &&
+            (situationN || FSUIPC_Read(0x30B0, 8, &rotationVelocityBody[1], &dwResult)) &&
+            (situationN || FSUIPC_Read(0x30B8, 8, &rotationVelocityBody[2], &dwResult)) &&
 
             // Position
             (situationN || FSUIPC_Read(0x0560, 8, &latitudeRaw,  &dwResult)) &&
@@ -519,6 +529,8 @@ namespace BlackSimPlugin::FsCommon
                 situation.setGroundSpeed(groundspeed);
                 situation.setAltitude(altitude);
                 situation.setPressureAltitude(pressureAltitude);
+                situation.setVelocity({velocityWorld[0], velocityWorld[1], velocityWorld[2], CSpeedUnit::ft_s(), rotationVelocityBody[0],
+                                        rotationVelocityBody[1], rotationVelocityBody[2], CAngleUnit::rad(), CTimeUnit::s()});
                 aircraft.setSituation(situation);
                 aircraft.setCG(altitude - groundAltitude); // calculate the CG
             } // situation
