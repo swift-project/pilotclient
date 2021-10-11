@@ -86,6 +86,7 @@ namespace BlackCore
         connect(m_fsdClient, &CFSDClient::deleteAtcReceived,               this, &CAirspaceMonitor::onAtcControllerDisconnected);
         connect(m_fsdClient, &CFSDClient::pilotDataUpdateReceived,         this, &CAirspaceMonitor::onAircraftUpdateReceived);
         connect(m_fsdClient, &CFSDClient::interimPilotDataUpdatedReceived, this, &CAirspaceMonitor::onAircraftInterimUpdateReceived);
+        connect(m_fsdClient, &CFSDClient::visualPilotDataUpdateReceived,   this, &CAirspaceMonitor::onAircraftVisualUpdateReceived);
         connect(m_fsdClient, &CFSDClient::euroscopeSimDataUpdatedReceived, this, &CAirspaceMonitor::onAircraftSimDataUpdateReceived);
         connect(m_fsdClient, &CFSDClient::com1FrequencyResponseReceived,   this, &CAirspaceMonitor::onFrequencyReceived);
         connect(m_fsdClient, &CFSDClient::capabilityResponseReceived,      this, &CAirspaceMonitor::onCapabilitiesReplyReceived);
@@ -1344,6 +1345,54 @@ namespace BlackCore
             this->calculateDistanceToOwnAircraft(interimSituation),
             this->calculateBearingToOwnAircraft(interimSituation)
         );
+    }
+
+    void CAirspaceMonitor::onAircraftVisualUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation)
+    {
+        //! \fixme This method is almost identical to onAircraftInterimUpdateReceived. Refactor common parts?
+        Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Called in different thread");
+        if (!this->isConnectedAndNotShuttingDown()) { return; }
+
+        const CCallsign callsign(situation.getCallsign());
+
+        // checks
+        Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
+
+        if (isCopilotAircraft(callsign))        { return; }
+        if (!this->isAircraftInRange(callsign)) { return; }
+
+        if (CBuildConfig::isLocalDeveloperDebugBuild())
+        {
+            Q_ASSERT_X(!situation.isNaNVectorDouble(), Q_FUNC_INFO, "Detected NaN");
+            Q_ASSERT_X(!situation.isInfVectorDouble(), Q_FUNC_INFO, "Detected inf");
+            Q_ASSERT_X(situation.isValidVectorRange(), Q_FUNC_INFO, "out of range [-1,1]");
+        }
+
+        // Visual packets do not have groundspeed, hence set the last known value.
+        // If there is no full position available yet, throw this interim position away.
+        //! \todo Also use the onGround flag of the last known situation?
+        CAircraftSituation visualSituation(situation);
+        CAircraftSituationList history = this->remoteAircraftSituations(callsign);
+        if (history.empty()) { return; } // we need one full situation at least
+        const CAircraftSituation lastSituation = history.latestObject();
+
+        // changed position, continue and copy values
+        visualSituation.setCurrentUtcTime();
+        visualSituation.setGroundSpeed(lastSituation.getGroundSpeed());
+
+        // store situation history
+        //! \fixme Received visual position updates are currently ignored.
+        //this->storeAircraftSituation(visualSituation);
+
+        const bool samePosition = lastSituation.equalNormalVectorDouble(visualSituation);
+        if (samePosition) { return; } // nothing to update
+
+        // update aircraft
+        //this->updateAircraftInRangeDistanceBearing(
+        //    callsign, visualSituation,
+        //    this->calculateDistanceToOwnAircraft(visualSituation),
+        //    this->calculateBearingToOwnAircraft(visualSituation)
+        //);
     }
 
     void CAirspaceMonitor::onAircraftSimDataUpdateReceived(const CAircraftSituation &situation, const CAircraftParts &parts, qint64 currentOffsetMs, const QString &aircraftIcao, const QString &airlineIcao)
