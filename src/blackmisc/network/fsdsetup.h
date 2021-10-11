@@ -64,7 +64,7 @@ namespace BlackMisc::Network
         //! \remark related to CNetworkVatlib::c_updatePostionIntervalMsec / c_updateInterimPostionIntervalMsec
         //! @{
         static constexpr qint64 c_positionTimeOffsetMsec = 6000;        //!< offset time for received position updates Ref T297
-        static constexpr qint64 c_interimPositionTimeOffsetMsec = 1500; //!< offset time for received interim position updates Ref T297
+        static constexpr qint64 c_minimumPositionTimeOffsetMsec = 700;  //!< offset time for vatsim high frequency position updates
         //! @}
 
         //! Default constructor.
