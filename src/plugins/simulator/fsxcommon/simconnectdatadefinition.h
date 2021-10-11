@@ -70,6 +70,13 @@ namespace BlackSimPlugin::FsxCommon
         double engine3Combustion; //!< Engine 3 combustion flag
         double engine4Combustion; //!< Engine 4 combustion flag
         // 38
+        double velocityWorldX;          //!< Velocity World X
+        double velocityWorldY;          //!< Velocity World Y
+        double velocityWorldZ;          //!< Velocity World Z
+        double rotationVelocityBodyX;   //!< Rotation Velocity Body X
+        double rotationVelocityBodyY;   //!< Rotation Velocity Body Y
+        double rotationVelocityBodyZ;   //!< Rotation Velocity Body Z
+        // 44
     };
 
     //! Data struct of aircraft position

@@ -130,6 +130,12 @@ namespace BlackSimPlugin::FsxCommon
         hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GENERAL ENG COMBUSTION:2", "Bool");
         hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GENERAL ENG COMBUSTION:3", "Bool");
         hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GENERAL ENG COMBUSTION:4", "Bool");
+        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "VELOCITY WORLD X", "Feet per second");
+        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "VELOCITY WORLD Y", "Feet per second");
+        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "VELOCITY WORLD Z", "Feet per second");
+        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "ROTATION VELOCITY BODY X", "Radians per second");
+        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "ROTATION VELOCITY BODY Y", "Radians per second");
+        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "ROTATION VELOCITY BODY Z", "Radians per second");
 
         hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE", nullptr, SIMCONNECT_DATATYPE_STRING256);
         if (isFailure(hr))

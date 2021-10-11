@@ -683,6 +683,15 @@ namespace BlackSimPlugin::FsxCommon
         // it is duplicated in parts
         aircraftSituation.setOnGround(dtb(simulatorOwnAircraft.simOnGround) ? CAircraftSituation::OnGround : CAircraftSituation::NotOnGround, CAircraftSituation::OutOnGroundOwnAircraft);
 
+        CAircraftVelocity aircraftVelocity(simulatorOwnAircraft.velocityWorldX,
+                                            simulatorOwnAircraft.velocityWorldY,
+                                            simulatorOwnAircraft.velocityWorldZ, CSpeedUnit::ft_s(),
+                                            simulatorOwnAircraft.rotationVelocityBodyX,
+                                            simulatorOwnAircraft.rotationVelocityBodyZ,
+                                            simulatorOwnAircraft.rotationVelocityBodyY,
+                                            CAngleUnit::rad(), CTimeUnit::s());
+        aircraftSituation.setVelocity(aircraftVelocity);
+
         const CAircraftLights lights(dtb(simulatorOwnAircraft.lightStrobe), dtb(simulatorOwnAircraft.lightLanding), dtb(simulatorOwnAircraft.lightTaxi),
                                         dtb(simulatorOwnAircraft.lightBeacon), dtb(simulatorOwnAircraft.lightNav),     dtb(simulatorOwnAircraft.lightLogo));
 
