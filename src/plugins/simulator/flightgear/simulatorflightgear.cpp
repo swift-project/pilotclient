@@ -85,7 +85,7 @@ namespace
 namespace BlackSimPlugin::Flightgear
 {
     int FGSWIFTBUS_API_VERSION = -1;
-    QList<int> incompatibleVersions = {};
+    QList<int> incompatibleVersions = {1,2};
     CSimulatorFlightgear::CSimulatorFlightgear(const CSimulatorPluginInfo &info,
             IOwnAircraftProvider *ownAircraftProvider,
             IRemoteAircraftProvider *remoteAircraftProvider,
@@ -199,6 +199,7 @@ namespace BlackSimPlugin::Flightgear
         if (!this->isShuttingDownOrDisconnected())
         {
             m_serviceProxy->getOwnAircraftSituationData(&m_flightgearData);
+            m_serviceProxy->getOwnAircraftVelocityData(&m_flightgearData);
             m_serviceProxy->getCom1ActiveKhzAsync(&m_flightgearData.com1ActiveKhz);
             m_serviceProxy->getCom1StandbyKhzAsync(&m_flightgearData.com1StandbyKhz);
             m_serviceProxy->getCom2ActiveKhzAsync(&m_flightgearData.com2ActiveKhz);
@@ -220,6 +221,9 @@ namespace BlackSimPlugin::Flightgear
             situation.setBank({ m_flightgearData.rollDeg, CAngleUnit::deg() });
             situation.setGroundSpeed({ m_flightgearData.groundspeedKts, CSpeedUnit::kts() });
             situation.setGroundElevation(CAltitude(m_flightgearData.groundElevation, CAltitude::MeanSeaLevel, CLengthUnit::m()), CAircraftSituation::FromProvider);
+            situation.setVelocity({ m_flightgearData.velocityXMs, m_flightgearData.velocityYMs, m_flightgearData.velocityZMs,
+                CSpeedUnit::m_s(), m_flightgearData.pitchRateRadPerSec, m_flightgearData.rollRateRadPerSec, m_flightgearData.yawRateRadPerSec,
+                CAngleUnit::rad(), CTimeUnit::s()});
 
             // Updates
             // Do not update ICAO codes, as this overrides reverse lookups
