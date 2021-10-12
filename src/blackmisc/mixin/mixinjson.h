@@ -114,7 +114,7 @@ namespace BlackMisc
 
             //! Get object from JSON string
             template<class DerivedObj = Derived>
-            static Derived fromJsonNoThrow(const QString &jsonString, bool acceptCacheJson, bool &success, QString &errMsg);
+            static DerivedObj fromJsonNoThrow(const QString &jsonString, bool acceptCacheJson, bool &success, QString &errMsg);
 
         private:
             const Derived *derived() const;
@@ -205,10 +205,10 @@ namespace BlackMisc
 
         template <class Derived>
         template <class DerivedObj>
-        Derived JsonByMetaClass<Derived>::fromJsonNoThrow(const QString &jsonString, bool acceptCacheJson, bool &success, QString &errMsg)
+        DerivedObj JsonByMetaClass<Derived>::fromJsonNoThrow(const QString &jsonString, bool acceptCacheJson, bool &success, QString &errMsg)
         {
             success = false;
-            Derived obj;
+            DerivedObj obj;
             try
             {
                 if (jsonString.isEmpty()) { return obj; }
