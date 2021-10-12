@@ -209,6 +209,7 @@ defineTest(addLibraryDependency) {
 ################################
 
 msvc:greaterThan(QMAKE_MSC_VER, 1923): QMAKE_CXXFLAGS *= /permissive-
+msvc:greaterThan(QMAKE_MSC_VER, 1928):!llvm: QMAKE_CXXFLAGS *= /Zc:lambda
 msvc:contains(QMAKE_CXXFLAGS, /permissive-): QMAKE_CXXFLAGS *= /FI$${SourceRoot}\src\permissiveworkarounds.h
 
 ################################
