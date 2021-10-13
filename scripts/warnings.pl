@@ -39,16 +39,16 @@ print "::set-output name=warnings::$bool\n";
 
 sub extractWarning
 {
-    my $line = shift;
-    my %result = extractGccWarning($line);
+    my $text = shift;
+    my %result = extractGccWarning($text);
     return %result if %result;
-    return extractMsvcWarning($line);
+    return extractMsvcWarning($text);
 }
 
 sub extractGccWarning
 {
-    my $line = shift;
-    $line =~ m(^\s*(?<loc>.*?): warning: (?<msg>.*)$) or return ();
+    my $text = shift;
+    $text =~ m(^\s*(?<loc>.*?): warning: (?<msg>.*)$) or return ();
     my ($loc, $msg) = @+{ qw(loc msg) };
     $loc =~ m(^(?<file>.*?):(?<loc>[0-9:]+)$) or return (file => $loc, msg => $msg);
     my ($file, $line) = ($+{file}, split ':', $+{loc});
@@ -57,8 +57,8 @@ sub extractGccWarning
 
 sub extractMsvcWarning
 {
-    my $line = shift;
-    $line =~ m(^\s*(?<loc>.*?): warning (?<msg>[A-Z]+[0-9]+: .*)$) or return ();
+    my $text = shift;
+    $text =~ m(^\s*(?<loc>.*?): warning (?<msg>[A-Z]+[0-9]+: .*)$) or return ();
     my ($loc, $msg) = @+{ qw(loc msg) };
     $loc =~ m(^(?<file>.*)\((?<loc>[0-9,]+)\)$) or return (file => $loc, msg => $msg);
     my ($file, $line) = ($+{file}, split ',', $+{loc});
