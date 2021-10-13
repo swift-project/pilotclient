@@ -16,7 +16,8 @@
 
 use strict;
 use warnings;
-use Path::Class;
+use File::Spec;
+use Cwd;
 
 my %cmds;
 while (<<>>)
@@ -24,7 +25,8 @@ while (<<>>)
     chomp;
     my %result = extractWarning($_);
     next if not %result;
-    $result{file} = toRelativePath($result{file})->as_foreign('Unix');
+    $result{file} = toRelativePath($result{file});
+    $result{file} =~ s(\\)(/)g if $^O eq 'MSWin32';
     if (exists $result{line}) {
         ++$cmds{"::warning file=$result{file},line=$result{line}::$result{msg}"};
     } else {
@@ -66,8 +68,7 @@ sub extractMsvcWarning
 sub toRelativePath
 {
     my $path = shift;
-    my $file = file($path);
-    return $file if $file->is_relative;
-    return $file->relative if dir()->absolute()->subsumes($file);
-    return $file;
+    return $path if not File::Spec->file_name_is_absolute($path);
+    return File::Spec->rel2abs($path) if index($path, getcwd()) == 0;
+    return $path;
 }
