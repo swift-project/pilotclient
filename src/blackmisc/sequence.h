@@ -410,14 +410,6 @@ namespace BlackMisc
             return replaceIf(BlackMisc::Predicates::MemberEqual(key1, value1), replacement);
         }
 
-        //! Replace elements for which a given predicate returns true. If there is no match, push the new element on the end.
-        template <class Predicate>
-        void replaceOrAdd(Predicate p, const T &replacement)
-        {
-            if (this->containsBy(p)) { replaceIf(p, replacement); }
-            else { push_back(replacement); }
-        }
-
         //! Replace elements matching the given element. If there is no match, push the new element on the end.
         void replaceOrAdd(const T &original, const T &replacement)
         {
