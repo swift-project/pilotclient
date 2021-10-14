@@ -414,7 +414,7 @@ namespace BlackMisc
         template <class Predicate>
         void replaceOrAdd(Predicate p, const T &replacement)
         {
-            if (this->contains(p)) { replaceIf(p, replacement); }
+            if (this->containsBy(p)) { replaceIf(p, replacement); }
             else { push_back(replacement); }
         }
 
