@@ -14,12 +14,14 @@
 #include "blackmisc/containerbase.h"
 #include "blackmisc/mixin/mixinicon.h"
 #include "blackmisc/mixin/mixindatastream.h"
+#include "blackmisc/blackmiscexport.h"
 #include <QVector>
 #include <algorithm>
 #include <type_traits>
 #include <iterator>
 #include <utility>
 #include <initializer_list>
+#include <functional>
 
 //! \cond
 #define BLACK_TEMPLATE_SEQUENCE_MIXINS(NS, T, List, Extern)             \
@@ -63,6 +65,15 @@
 
 namespace BlackMisc
 {
+    namespace Private
+    {
+        //! \private Decouple finding from value type.
+        BLACKMISC_EXPORT BLACK_NO_INLINE QVector<int> findIndices(int size, const std::function<bool(int)> &predicate);
+
+        //! \private Decouple sorting from value type.
+        BLACKMISC_EXPORT BLACK_NO_INLINE QVector<int> sortIndices(int size, const std::function<bool(int, int)> &cmp);
+    }
+
     /*!
      * Generic sequential container with value semantics.
      * \tparam T the type of elements contained.
@@ -306,6 +317,20 @@ namespace BlackMisc
         //! Return an iterator to the first element equal to the given object, or the end iterator if not found. O(n).
         const_iterator find(const T &object) const { return std::find(cbegin(), cend(), object); }
 
+        using CContainerBase<CSequence<T>>::findBy;
+
+        //! \copydoc BlackMisc::CRangeBase::findBy
+        template <class Predicate>
+        CSequence findBy(Predicate p) const
+        {
+            QVector<T> found;
+            for (int i : Private::findIndices(size(), [&p, this](int i) { return p((*this)[i]); }))
+            {
+                found.push_back((*this)[i]);
+            }
+            return found;
+        }
+
         //! Modify by applying a value map to each element for which a given predicate returns true.
         //! \return The number of elements modified.
         template <class Predicate, class VariantMap>
@@ -460,7 +485,13 @@ namespace BlackMisc
         //! In-place sort by a given comparator predicate.
         template <class Predicate> void sort(Predicate p)
         {
-            std::sort(begin(), end(), p);
+            QVector<T> temp;
+            temp.reserve(size());
+            for (int i : Private::sortIndices(size(), [&p, this](int a, int b) { return p((*this)[a], (*this)[b]); }))
+            {
+                temp.push_back(std::move((*this)[i]));
+            }
+            m_impl = std::move(temp);
         }
 
         //! In-place sort by some particular key(s).

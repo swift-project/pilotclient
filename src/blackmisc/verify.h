@@ -13,14 +13,6 @@
 
 #include "blackmisc/blackmiscexport.h"
 
-//! \cond
-#ifdef Q_CC_MSVC
-#define BLACK_NO_INLINE __declspec(noinline)
-#else
-#define BLACK_NO_INLINE __attribute__((noinline))
-#endif
-//! \endcond
-
 namespace BlackMisc::Private
 {
     //! \private Do nothing.

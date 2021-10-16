@@ -37,4 +37,14 @@
 #  define BLACKMISC_EXPORT_DECLARE_TEMPLATE
 #endif
 
+/*!
+ * \def BLACK_NO_INLINE
+ * Prevent function inlining
+ */
+#ifdef Q_CC_MSVC
+#define BLACK_NO_INLINE __declspec(noinline)
+#else
+#define BLACK_NO_INLINE __attribute__((noinline))
+#endif
+
 #endif // guard

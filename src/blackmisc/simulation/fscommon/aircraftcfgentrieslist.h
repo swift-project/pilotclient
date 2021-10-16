@@ -38,6 +38,12 @@ namespace BlackMisc::Simulation::FsCommon
         BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftCfgEntriesList)
         using CSequence::CSequence;
 
+        //! Default constructor.
+        CAircraftCfgEntriesList();
+
+        //! Construct from a base class object.
+        CAircraftCfgEntriesList(const CSequence<CAircraftCfgEntries> &other);
+
         //! Contains model with title?
         bool containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive);
 

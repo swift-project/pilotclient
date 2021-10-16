@@ -21,6 +21,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Simulation::FsCommon, CAircraftCfgEntrie
 
 namespace BlackMisc::Simulation::FsCommon
 {
+    CAircraftCfgEntriesList::CAircraftCfgEntriesList() = default;
+
+    CAircraftCfgEntriesList::CAircraftCfgEntriesList(const CSequence<CAircraftCfgEntries>& other) : CSequence(other) {}
+
     bool CAircraftCfgEntriesList::containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity)
     {
         if (title.isEmpty()) { return false; }
