@@ -1,9 +1,22 @@
 #include "macosinpututils.h"
 
 #include <IOKit/hid/IOHIDKeys.h>
+#include <IOKit/hidsystem/IOHIDLib.h>
 
 namespace BlackInput
 {
+    bool CMacOSInputUtils::requestAccess()
+    {
+        if (@available(macOS 10.15, *))
+        {
+            return IOHIDRequestAccess(kIOHIDRequestTypeListenEvent);
+        }
+        else
+        {
+            return true;
+        }
+    }
+
     CFMutableDictionaryRef CMacOSInputUtils::createDeviceMatchingDictionary(UInt32 usagePage, UInt32 usage)
     {
         CFMutableDictionaryRef result = CFDictionaryCreateMutable(kCFAllocatorDefault, 0,
