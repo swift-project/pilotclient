@@ -30,6 +30,10 @@ namespace BlackInput
 
     bool CJoystickDevice::init(const IOHIDDeviceRef device)
     {
+        if (!CMacOSInputUtils::requestAccess())
+        {
+            CLogMessage(this).error(u"Access denied for joystick input monitoring");
+        }
         m_deviceRef = device;
 
         CFTypeRef property = IOHIDDeviceGetProperty(device, CFSTR(kIOHIDProductKey));

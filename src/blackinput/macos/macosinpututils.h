@@ -21,6 +21,9 @@ namespace BlackInput
     public:
         CMacOSInputUtils() = delete;
 
+        //! Request OS permission for input monitoring access
+        static bool requestAccess();
+
         //! Creates a new device matching dict using usagePage and usage
         static CFMutableDictionaryRef createDeviceMatchingDictionary(UInt32 usagePage, UInt32 usage);
     };

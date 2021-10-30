@@ -146,6 +146,10 @@ namespace BlackInput
 
     bool CKeyboardMacOS::init()
     {
+        if (!CMacOSInputUtils::requestAccess())
+        {
+            CLogMessage(this).error(u"Access denied for keyboard input monitoring");
+        }
         m_hidManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
 
         CFMutableArrayRef matchingArray = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
@@ -174,7 +178,16 @@ namespace BlackInput
 
         IOHIDManagerRegisterInputValueCallback(m_hidManager, valueCallback, this);
         IOHIDManagerScheduleWithRunLoop(m_hidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-        IOHIDManagerOpen(m_hidManager, kIOHIDOptionsTypeNone);
+        const auto result = IOHIDManagerOpen(m_hidManager, kIOHIDOptionsTypeNone);
+
+        if (result == kIOReturnSuccess)
+        {
+            CLogMessage(this).debug(u"Initialized");
+        }
+        else
+        {
+            CLogMessage(this).error(u"Failed to open HID manager for keyboard monitoring");
+        }
         return true;
     }
 
