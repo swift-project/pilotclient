@@ -1009,12 +1009,6 @@ namespace XSwiftBus
                 return 0;
             }
 
-            if (x < 1 || y < 1 || x >= w || y >= h)
-            {
-                WARNING_LOG("Screen w/h, and x/y" + std::to_string(w) + "/" + std::to_string(h) + " | " + std::to_string(x) + "/" + std::to_string(y));
-                return 0;
-            }
-
             // the 1.25 factor allows to turn around completely
             traffic->m_deltaCameraPosition.headingDeg = normalizeToZero360Deg(1.25 * 360.0 * static_cast<double>(x) / static_cast<double>(w)); // range 0-360
             double usedCameraPitchDeg                 = 60.0 - (60.0 * 2.0 * static_cast<double>(y) / static_cast<double>(h)); // range +-
