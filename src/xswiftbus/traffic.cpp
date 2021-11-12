@@ -986,12 +986,16 @@ namespace XSwiftBus
         // allow that.
         if (!traffic->m_deltaCameraPosition.isInitialized || traffic->m_isSpacePressed)
         {
-            int w = 0, h = 0, x = 0, y = 0;
+            int x = 0, y = 0, left = 0, top = 0, right = 0, bottom = 0;
             // First get the screen size and mouse location. We will use this to decide
             // what part of the orbit we are in. The mouse will move us up-down and around.
             // fixme: In a future update, change the orbit only while right mouse button is pressed.
-            XPLMGetScreenSize(&w, &h);
-            XPLMGetMouseLocation(&x, &y);
+            XPLMGetScreenBoundsGlobal(&left, &top, &right, &bottom);
+            XPLMGetMouseLocationGlobal(&x, &y);
+            int w = right - left;
+            int h = top - bottom;
+            x -= left;
+            y -= bottom;
             // cppcheck-suppress knownConditionTrueFalse
             if (DEBUG) { DEBUG_LOG("Follow aircraft coordinates w,h,x,y: " + std::to_string(w) + " " + std::to_string(h) + " " + std::to_string(x) + " " + std::to_string(y)); }
             if (traffic->m_lastMouseX == x && traffic->m_lastMouseY == y && traffic->m_lastMouseX >= 0 && traffic->m_lastMouseY >= 0)
