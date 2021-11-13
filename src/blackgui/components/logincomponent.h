@@ -196,7 +196,7 @@ namespace BlackGui::Components
         void setUiLoginState(bool connected);
 
         //! Make disconnect button flash briefly to catch the user's attention
-        void blinkDisconnectButton();
+        void blinkConnectButton();
 
         //! Own model and ICAO data for GUI and own aircraft
         void setOwnModelAndIcaoValues(const BlackMisc::Simulation::CAircraftModel &ownModel = {});

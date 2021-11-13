@@ -202,7 +202,7 @@ namespace BlackGui::Components
             this->setOwnModelAndIcaoValues();
             const bool isConnected = sGui->getIContextNetwork()->isConnected();
             this->setUiLoginState(isConnected);
-            if (isConnected) { this->blinkDisconnectButton(); }
+            this->blinkConnectButton();
         }
 
         // we decided to make it difficult for users to disable it
@@ -816,7 +816,7 @@ namespace BlackGui::Components
         ui->pb_Ok->setText(s);
     }
 
-    void CLoginComponent::blinkDisconnectButton()
+    void CLoginComponent::blinkConnectButton()
     {
         ui->pb_Ok->setProperty("blinkOn", true);
         static constexpr int blinkLength = 100;
