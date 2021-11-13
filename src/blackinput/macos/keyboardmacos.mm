@@ -23,9 +23,9 @@ namespace BlackInput
     static QHash<quint32, KeyCode> keyMapping
     {
         { kHIDUsage_Keyboard0, Key_0 },
-        { kHIDUsage_Keyboard0, Key_1 },
-        { kHIDUsage_Keyboard0, Key_2 },
-        { kHIDUsage_Keyboard0, Key_3 },
+        { kHIDUsage_Keyboard1, Key_1 },
+        { kHIDUsage_Keyboard2, Key_2 },
+        { kHIDUsage_Keyboard3, Key_3 },
         { kHIDUsage_Keyboard4, Key_4 },
         { kHIDUsage_Keyboard5, Key_5 },
         { kHIDUsage_Keyboard6, Key_6 },
@@ -58,8 +58,8 @@ namespace BlackInput
         { kHIDUsage_KeyboardX, Key_X },
         { kHIDUsage_KeyboardY, Key_Y },
         { kHIDUsage_KeyboardZ, Key_Z },
-        { kHIDUsage_KeypadPlus, Key_Plus },
-        { kHIDUsage_KeypadHyphen, Key_Minus },
+        { kHIDUsage_KeypadPlus, Key_NumpadPlus },
+        { kHIDUsage_KeypadHyphen, Key_NumpadMinus },
         { kHIDUsage_KeyboardHyphen, Key_Minus },
         { kHIDUsage_KeyboardPeriod, Key_Period },
         { kHIDUsage_KeypadAsterisk, Key_Multiply },
@@ -88,8 +88,6 @@ namespace BlackInput
         /** fixme Missing ones
         Key_Insert,
         Key_Delete,
-        Key_Esc = 27,
-        Key_Space = 32,
         CKeyboardKey(Key_NumpadEqual),
         CKeyboardKey(Key_OEM1),
         CKeyboardKey(Key_OEM2),
