@@ -68,12 +68,20 @@ namespace BlackMisc::Input
         case Key_Numpad8:  return QStringLiteral("Num8");
         case Key_Numpad9:  return QStringLiteral("Num9");
         case Key_NumpadEqual: return QStringLiteral("Num=");
+        case Key_NumpadMinus: return QStringLiteral("Num-");
+        case Key_NumpadPlus: return QStringLiteral("Num+");
+        case Key_NumpadDelete: return QStringLiteral("Num.");
         case Key_Esc:      return QStringLiteral("Esc");
         case Key_Space:    return QStringLiteral("Space");
         case Key_Tab:      return QStringLiteral("Tab");
         case Key_Back:     return QStringLiteral("Bksp");
         case Key_Insert:   return QStringLiteral("Ins");
         case Key_Delete:   return QStringLiteral("Del");
+        case Key_Home:     return QStringLiteral("Home");
+        case Key_End:      return QStringLiteral("End");
+        case Key_PageUp:   return QStringLiteral("PgUp");
+        case Key_PageDown: return QStringLiteral("PgDn");
+        case Key_CapsLock: return QStringLiteral("CapsLock");
         case Key_OEM1:     return QStringLiteral("OEM1");
         case Key_OEM2:     return QStringLiteral("OEM2");
         case Key_OEM3:     return QStringLiteral("OEM3");
@@ -84,6 +92,18 @@ namespace BlackMisc::Input
         case Key_OEM8:     return QStringLiteral("OEM8");
         case Key_OEM102:   return QStringLiteral("OEM102");
         case Key_DeadGrave: return QStringLiteral("DeadGrave");
+        case Key_Function1: return QStringLiteral("F1");
+        case Key_Function2: return QStringLiteral("F2");
+        case Key_Function3: return QStringLiteral("F3");
+        case Key_Function4: return QStringLiteral("F4");
+        case Key_Function5: return QStringLiteral("F5");
+        case Key_Function6: return QStringLiteral("F6");
+        case Key_Function7: return QStringLiteral("F7");
+        case Key_Function8: return QStringLiteral("F8");
+        case Key_Function9: return QStringLiteral("F9");
+        case Key_Function10: return QStringLiteral("F10");
+        case Key_Function11: return QStringLiteral("F11");
+        case Key_Function12: return QStringLiteral("F12");
         default: return QChar::fromLatin1(static_cast<char>(m_keyCode));
         }
     }

@@ -30,6 +30,11 @@ namespace BlackMisc::Input
         Key_Tab,
         Key_Insert,
         Key_Delete,
+        Key_Home,
+        Key_End,
+        Key_PageUp,
+        Key_PageDown,
+        Key_CapsLock,
         Key_Esc = 27,
         Key_Space = ' ',
         Key_DeadGrave, // message is sent for a combining key, such as a diacritic.
@@ -89,6 +94,9 @@ namespace BlackMisc::Input
         Key_Numpad8,
         Key_Numpad9,
         Key_NumpadEqual,
+        Key_NumpadPlus,
+        Key_NumpadMinus,
+        Key_NumpadDelete,
         // OEM Keys
         Key_OEM1,
         Key_OEM2,
@@ -98,7 +106,20 @@ namespace BlackMisc::Input
         Key_OEM6,
         Key_OEM7,
         Key_OEM8,
-        Key_OEM102
+        Key_OEM102,
+        // Function keys
+        Key_Function1,
+        Key_Function2,
+        Key_Function3,
+        Key_Function4,
+        Key_Function5,
+        Key_Function6,
+        Key_Function7,
+        Key_Function8,
+        Key_Function9,
+        Key_Function10,
+        Key_Function11,
+        Key_Function12,
     };
 
 } // namespace
