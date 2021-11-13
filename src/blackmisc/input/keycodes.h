@@ -31,14 +31,14 @@ namespace BlackMisc::Input
         Key_Insert,
         Key_Delete,
         Key_Esc = 27,
-        Key_Space = 32,
+        Key_Space = ' ',
         Key_DeadGrave, // message is sent for a combining key, such as a diacritic.
-        Key_Plus = 43,
+        Key_Plus = '+',
         Key_Comma,
         Key_Minus,
         Key_Period,
         // 0 - 9
-        Key_0 = 48,
+        Key_0 = '0',
         Key_1,
         Key_2,
         Key_3,
@@ -49,7 +49,7 @@ namespace BlackMisc::Input
         Key_8,
         Key_9,
         // A - Z
-        Key_A = 65,
+        Key_A = 'A',
         Key_B,
         Key_C,
         Key_D,

@@ -68,12 +68,12 @@ namespace BlackMisc::Input
         case Key_Numpad8:  return QStringLiteral("Num8");
         case Key_Numpad9:  return QStringLiteral("Num9");
         case Key_NumpadEqual: return QStringLiteral("Num=");
-        case Key_Esc:      return QStringLiteral("ESC");
+        case Key_Esc:      return QStringLiteral("Esc");
         case Key_Space:    return QStringLiteral("Space");
         case Key_Tab:      return QStringLiteral("Tab");
-        case Key_Back:     return QStringLiteral("Backspace");
-        case Key_Insert:   return QStringLiteral("Insert");
-        case Key_Delete:   return QStringLiteral("Delete");
+        case Key_Back:     return QStringLiteral("Bksp");
+        case Key_Insert:   return QStringLiteral("Ins");
+        case Key_Delete:   return QStringLiteral("Del");
         case Key_OEM1:     return QStringLiteral("OEM1");
         case Key_OEM2:     return QStringLiteral("OEM2");
         case Key_OEM3:     return QStringLiteral("OEM3");
