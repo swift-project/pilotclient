@@ -83,8 +83,6 @@ namespace BlackInput
         /** fixme Missing ones
         Key_Insert,
         Key_Delete,
-        Key_Esc = 27,
-        Key_Space = 32,
         CKeyboardKey(Key_NumpadEqual),
         CKeyboardKey(Key_OEM1),
         CKeyboardKey(Key_OEM2),
