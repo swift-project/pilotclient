@@ -578,6 +578,18 @@ namespace BlackMisc
         return pm;
     }
 
+    const QPixmap &CIcons::simulatorMSFS()
+    {
+        static const QPixmap pm(":/simulators/icons/simulators/MSFS.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::simulatorMSFS16()
+    {
+        static const QPixmap pm(simulatorMSFS().scaled(32, 16, Qt::KeepAspectRatio));
+        return pm;
+    }
+
     const QPixmap &CIcons::simulatorFG()
     {
         static const QPixmap pm(":/simulators/icons/simulators/FG.png");

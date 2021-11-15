@@ -171,6 +171,8 @@ namespace BlackMisc
             CIcon(CIcons::SimulatorFSX16, "FSX"),
             CIcon(CIcons::SimulatorP3D, "P3D"),
             CIcon(CIcons::SimulatorP3D16, "P3D"),
+            CIcon(CIcons::SimulatorMSFS, "MSFS"),
+            CIcon(CIcons::SimulatorMSFS16, "MSFS"),
             CIcon(CIcons::SimulatorXPlane, "XPlane"),
             CIcon(CIcons::SimulatorXPlane16, "XPlane"),
             CIcon(CIcons::StandardIconAppAircraft16, "aircraft"),

@@ -104,6 +104,8 @@ namespace BlackMisc
             SimulatorFSX16,
             SimulatorP3D,
             SimulatorP3D16,
+            SimulatorMSFS,
+            SimulatorMSFS16,
             SimulatorXPlane,
             SimulatorXPlane16,
             StandardIconAppAircraft16,
@@ -524,6 +526,12 @@ namespace BlackMisc
         //! @{
         static const QPixmap &simulatorFS9();
         static const QPixmap &simulatorFS916();
+        //! @}
+
+        //! Simulator MSFS
+        //! @{
+        static const QPixmap &simulatorMSFS();
+        static const QPixmap &simulatorMSFS16();
         //! @}
 
         //! Simulator FG

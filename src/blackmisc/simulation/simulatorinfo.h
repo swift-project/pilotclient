@@ -54,7 +54,7 @@ namespace BlackMisc::Simulation
             XPLANE      = 1 << 2,
             P3D         = 1 << 3,
             FG          = 1 << 4,
-            MSFS      = 1 << 5,
+            MSFS        = 1 << 5,
             FSX_P3D     = FSX | P3D,
             AllFsFamily = FSX | FS9 | P3D | MSFS,
             All         = FSX | FS9 | XPLANE | P3D | FG | MSFS

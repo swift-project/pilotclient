@@ -578,6 +578,7 @@
     <qresource prefix="/simulators">
         <file>icons/simulators/FS9.png</file>
         <file>icons/simulators/FSX.png</file>
+		<file>icons/simulators/MSFS.png</file>
         <file>icons/simulators/Prepar3D.png</file>
         <file>icons/simulators/XPlane.png</file>
         <file>icons/simulators/FG.png</file>
