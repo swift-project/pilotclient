@@ -120,6 +120,18 @@ namespace BlackMisc::Input
         Key_Function10,
         Key_Function11,
         Key_Function12,
+        Key_Function13,
+        Key_Function14,
+        Key_Function15,
+        Key_Function16,
+        Key_Function17,
+        Key_Function18,
+        Key_Function19,
+        Key_Function20,
+        Key_Function21,
+        Key_Function22,
+        Key_Function23,
+        Key_Function24,
     };
 
 } // namespace

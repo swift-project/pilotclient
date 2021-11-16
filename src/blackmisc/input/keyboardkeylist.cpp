@@ -126,6 +126,18 @@ namespace BlackMisc::Input
             CKeyboardKey(Key_Function10),
             CKeyboardKey(Key_Function11),
             CKeyboardKey(Key_Function12),
+            CKeyboardKey(Key_Function13),
+            CKeyboardKey(Key_Function14),
+            CKeyboardKey(Key_Function15),
+            CKeyboardKey(Key_Function16),
+            CKeyboardKey(Key_Function17),
+            CKeyboardKey(Key_Function18),
+            CKeyboardKey(Key_Function19),
+            CKeyboardKey(Key_Function20),
+            CKeyboardKey(Key_Function21),
+            CKeyboardKey(Key_Function22),
+            CKeyboardKey(Key_Function23),
+            CKeyboardKey(Key_Function24),
         };
 
         return allKeys;

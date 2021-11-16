@@ -102,6 +102,18 @@ namespace BlackMisc::Input
         case Key_Function10: return QStringLiteral("F10");
         case Key_Function11: return QStringLiteral("F11");
         case Key_Function12: return QStringLiteral("F12");
+        case Key_Function13: return QStringLiteral("F13");
+        case Key_Function14: return QStringLiteral("F14");
+        case Key_Function15: return QStringLiteral("F15");
+        case Key_Function16: return QStringLiteral("F16");
+        case Key_Function17: return QStringLiteral("F17");
+        case Key_Function18: return QStringLiteral("F18");
+        case Key_Function19: return QStringLiteral("F19");
+        case Key_Function20: return QStringLiteral("F20");
+        case Key_Function21: return QStringLiteral("F21");
+        case Key_Function22: return QStringLiteral("F22");
+        case Key_Function23: return QStringLiteral("F23");
+        case Key_Function24: return QStringLiteral("F24");
         default: return QChar::fromLatin1(static_cast<char>(m_keyCode));
         }
     }
