@@ -112,6 +112,18 @@ namespace BlackInput
             { VK_F10, Key_Function10 },
             { VK_F11, Key_Function11 },
             { VK_F12, Key_Function12 },
+            { VK_F13, Key_Function13 },
+            { VK_F14, Key_Function14 },
+            { VK_F15, Key_Function15 },
+            { VK_F16, Key_Function16 },
+            { VK_F17, Key_Function17 },
+            { VK_F18, Key_Function18 },
+            { VK_F19, Key_Function19 },
+            { VK_F20, Key_Function20 },
+            { VK_F21, Key_Function21 },
+            { VK_F22, Key_Function22 },
+            { VK_F23, Key_Function23 },
+            { VK_F24, Key_Function24 },
         };
         return hash;
     }

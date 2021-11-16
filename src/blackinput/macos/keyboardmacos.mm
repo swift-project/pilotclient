@@ -106,6 +106,18 @@ namespace BlackInput
         { kHIDUsage_KeyboardF10, Key_Function10 },
         { kHIDUsage_KeyboardF11, Key_Function11 },
         { kHIDUsage_KeyboardF12, Key_Function12 },
+        { kHIDUsage_KeyboardF13, Key_Function13 },
+        { kHIDUsage_KeyboardF14, Key_Function14 },
+        { kHIDUsage_KeyboardF15, Key_Function15 },
+        { kHIDUsage_KeyboardF16, Key_Function16 },
+        { kHIDUsage_KeyboardF17, Key_Function17 },
+        { kHIDUsage_KeyboardF18, Key_Function18 },
+        { kHIDUsage_KeyboardF19, Key_Function19 },
+        { kHIDUsage_KeyboardF20, Key_Function20 },
+        { kHIDUsage_KeyboardF21, Key_Function21 },
+        { kHIDUsage_KeyboardF22, Key_Function22 },
+        { kHIDUsage_KeyboardF23, Key_Function23 },
+        { kHIDUsage_KeyboardF24, Key_Function24 },
 
         /** fixme Missing ones
         CKeyboardKey(Key_NumpadEqual),
