@@ -224,6 +224,10 @@ namespace BlackInput
                 }
             }
         }
+        else
+        {
+            BlackMisc::CLogMessage(this).error(u"Failed to open keyboard device %1: %2") << inputFile->fileName() << inputFile->errorString();
+        }
     }
 
     void CKeyboardLinux::keyEvent(int keyCode, bool isPressed)
