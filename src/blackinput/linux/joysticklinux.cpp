@@ -120,6 +120,7 @@ namespace BlackInput
         }
         else
         {
+            BlackMisc::CLogMessage(this).error(u"Failed to open joystick device %1: %2") << fd->fileName() << fd->errorString();
             fd->close();
             fd->deleteLater();
         }
