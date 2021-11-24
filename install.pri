@@ -252,6 +252,7 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
     else:                   INSTALLER_DEBUG = 0
 
     create_installer.commands = $$shell_path($${bitrock_builder_bin}) quickbuild $${bitrock_project} $${INSTALLER_PLATFORM} \
+                                    --verbose \
                                     --license $$shell_path($$(HOME)/license.xml) \
                                     --setvars project.outputDirectory=$$shell_path($${PREFIX}/..) \
                                               project.installerFilename=$${INSTALLER_BASENAME}.$${INSTALLER_EXT} \
