@@ -167,6 +167,10 @@ namespace BlackSimPlugin::Fs9
     {
         closeConnection();
         SafeRelease(m_hostAddress);
+
+        // This needs to be disconnected before calling the base class destructor,
+        // otherwise the slot can be called after the derived class is destroyed.
+        disconnect(this, &CFs9Client::connectionComplete, this, &CFs9Client::handleConnectionCompleted);
     }
 
     void CFs9Client::sendTextMessage(const QString &textMessage)
