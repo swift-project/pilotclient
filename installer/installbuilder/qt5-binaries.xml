@@ -197,7 +197,7 @@
             <distributionFileList>
                 <distributionDirectory>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/audio</origin>
+                    <origin>../../dist/bin/audio/*</origin>
                     <excludeFiles>*/*wasapi*.dll</excludeFiles>
                 </distributionDirectory>
                 <distributionDirectory>
