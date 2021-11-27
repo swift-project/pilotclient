@@ -191,8 +191,10 @@ namespace BlackSimPlugin::FsxCommon
     //! Data struct simulator environment
     struct DataDefinitionSimEnvironment
     {
-        qint32 zuluTimeSeconds;  //!< Simulator zulu (GMT) ime in secs.
-        qint32 localTimeSeconds; //!< Simulator local time in secs.
+        qint32 zuluTimeSeconds; //!< Simulator zulu (GMT) time in secs.
+        qint32 zuluYear;        //!< Simulator zulu (GMT) year.
+        qint32 zuluMonth;       //!< Simulator zulu (GMT) month.
+        qint32 zuluDayOfMonth;  //!< Simulator zulu (GMT) day of the month.
     };
 
     //! The whole SB data area
