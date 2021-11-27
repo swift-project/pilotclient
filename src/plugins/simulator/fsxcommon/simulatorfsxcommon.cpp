@@ -2350,41 +2350,40 @@ namespace BlackSimPlugin::FsxCommon
 
         const int zh = simEnv->zuluTimeSeconds / 3600;
         const int zm = (simEnv->zuluTimeSeconds - (zh * 3600)) / 60;
-        const CTime zuluTimeSim(zh, zm);
-        // const int lh = simEnv->localTimeSeconds / 3600;
-        // const int lm = (simEnv->localTimeSeconds - (lh * 3600)) / 60;
-        // const CTime localTimeSim(lh, lm);
-        // Q_UNUSED(localTimeSim);
+        const QDateTime simDateTime({ simEnv->zuluYear, simEnv->zuluMonth, simEnv->zuluDayOfMonth }, { zh, zm }, Qt::UTC);
 
-        QDateTime myDateTime = QDateTime::currentDateTimeUtc();
+        QDateTime currentDateTime = QDateTime::currentDateTimeUtc();
         if (!m_syncTimeOffset.isZeroEpsilonConsidered())
         {
             int offsetSeconds = m_syncTimeOffset.valueInteger(CTimeUnit::s());
-            myDateTime = myDateTime.addSecs(offsetSeconds);
+            currentDateTime = currentDateTime.addSecs(offsetSeconds);
         }
-        const QTime myTime = myDateTime.time();
-        const DWORD h = static_cast<DWORD>(myTime.hour());
-        const DWORD m = static_cast<DWORD>(myTime.minute());
-        const int targetMins = myTime.hour() * 60 + myTime.minute();
-        const int simMins = zuluTimeSim.valueInteger(CTimeUnit::min());
-        const int diffMins = qAbs(targetMins - simMins);
-        if (diffMins < 2)
+
+        if (qAbs(simDateTime.secsTo(currentDateTime)) < 120)
         {
             // checked and no relevant difference
             m_syncTimeDeferredCounter = 10; // wait some time to check again
             return;
         }
+
+        const DWORD h = static_cast<DWORD>(currentDateTime.time().hour());
+        const DWORD m = static_cast<DWORD>(currentDateTime.time().minute());
+        const DWORD y = static_cast<DWORD>(currentDateTime.date().year());
+        const DWORD d = static_cast<DWORD>(currentDateTime.date().dayOfYear());
+
         const HRESULT hr1 = SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluHours, h, SIMCONNECT_GROUP_PRIORITY_STANDARD, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
         const HRESULT hr2 = SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluMinutes, m, SIMCONNECT_GROUP_PRIORITY_STANDARD, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+        const HRESULT hr3 = SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluYear, y, SIMCONNECT_GROUP_PRIORITY_STANDARD, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+        const HRESULT hr4 = SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluDay, d, SIMCONNECT_GROUP_PRIORITY_STANDARD, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
 
-        if (isFailure(hr1, hr2))
+        if (isFailure(hr1, hr2, hr3, hr4))
         {
             CLogMessage(this).warning(u"Sending time sync failed!");
         }
         else
         {
             m_syncTimeDeferredCounter = 5; // allow some time to sync
-            CLogMessage(this).info(u"Synchronized time to UTC: '%1'") << myTime.toString();
+            CLogMessage(this).info(u"Synchronized time to '%1' UTC") << currentDateTime.toString();
         }
     }
 

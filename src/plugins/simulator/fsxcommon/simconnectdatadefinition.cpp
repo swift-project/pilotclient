@@ -229,7 +229,9 @@ namespace BlackSimPlugin::FsxCommon
     {
         HRESULT hr = s_ok();
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataSimEnvironment, "ZULU TIME", "", SIMCONNECT_DATATYPE_INT32);
-        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataSimEnvironment, "LOCAL TIME", "", SIMCONNECT_DATATYPE_INT32);
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataSimEnvironment, "ZULU YEAR", "", SIMCONNECT_DATATYPE_INT32);
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataSimEnvironment, "ZULU MONTH OF YEAR", "", SIMCONNECT_DATATYPE_INT32);
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataSimEnvironment, "ZULU DAY OF MONTH", "", SIMCONNECT_DATATYPE_INT32);
         if (isFailure(hr))
         {
             CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error(u"SimConnect error: initSimulatorEnvironment %1") << hr;
