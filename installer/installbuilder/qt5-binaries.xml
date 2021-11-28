@@ -230,4 +230,15 @@
             </distributionFileList>
         </folder>
     </folderList>
+    <postInstallationActionList>
+        <deleteFile>
+            <path>${installdir}/bin/audio/*wasapi*.dll</path>
+            <progressText>Delete old version of Qt audio plugin</progressText>
+            <ruleList>
+                <platformTest>
+                    <type>windows</type>
+                </platformTest>
+            </ruleList>
+        </deleteFile>
+    </postInstallationActionList>
 </componentGroup>
