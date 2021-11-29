@@ -7,7 +7,7 @@
     <componentList>
         <component>
             <name>fs2004</name>
-            <description>MS Flight Simulator 2004</description>
+            <description>FS9: Flight Sim 2004</description>
             <canBeEdited>1</canBeEdited>
             <detailedDescription>MS Flight Simulator 2004 Simulator Plugin</detailedDescription>
             <selected>1</selected>
@@ -38,7 +38,7 @@
         </component>
         <component>
             <name>fsx</name>
-            <description>MS Flight Simulator X</description>
+            <description>FSX: Flight Sim X</description>
             <canBeEdited>1</canBeEdited>
             <detailedDescription>MS Flight Simulator X Simulator Plugin
 This plugin acts as the interface between swift and FSX.</detailedDescription>
@@ -73,7 +73,7 @@ This plugin acts as the interface between swift and FSX.</detailedDescription>
         </component>
         <component>
             <name>msfs</name>
-            <description>MS Flight Simulator 2020</description>
+            <description>MSFS: Flight Sim 2020</description>
             <canBeEdited>1</canBeEdited>
             <detailedDescription>MS Flight Simulator 2020 Simulator Plugin
 This plugin acts as the interface between swift and MSFS.</detailedDescription>
