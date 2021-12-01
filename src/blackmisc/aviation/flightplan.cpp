@@ -542,6 +542,7 @@ namespace BlackMisc::Aviation
                 }
                 fp.setCruiseAltitude(ca);
                 if (cruiseAltFt >= 10000) { fp.setFlightRule(CFlightPlan::IFR); } // good guess
+                else { fp.setFlightRule(CFlightPlan::VFR); }
             }
             else
             {
