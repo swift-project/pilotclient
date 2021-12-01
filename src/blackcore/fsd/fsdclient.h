@@ -461,6 +461,9 @@ namespace BlackCore::Fsd
         //! Get a short-lived, one-time-use token from Vatsim web service, to avoid sending plaintext password to FSD
         void getVatsimAuthToken(const QString &cid, const QString &password, const BlackMisc::CSlot<void(const QString &)> &callback);
 
+        //! Convert FlightRules to FlightType
+        static FlightType getFlightType(BlackMisc::Aviation::CFlightPlan::FlightRules flightRule);
+
         vatsim_auth *m_clientAuth = nullptr;
         vatsim_auth *m_serverAuth = nullptr;
         QString      m_lastServerAuthChallenge;

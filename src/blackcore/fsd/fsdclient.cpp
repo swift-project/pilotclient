@@ -704,15 +704,7 @@ namespace BlackCore::Fsd
         QString act = flightPlan.getCombinedPrefixIcaoSuffix();
         if (act.isEmpty()) { act = flightPlan.getAircraftIcao().getDesignator(); } // fallback
 
-        FlightType flightType = FlightType::IFR;
-        switch (flightPlan.getFlightRules())
-        {
-        case CFlightPlan::IFR:  flightType = FlightType::IFR;  break;
-        case CFlightPlan::VFR:  flightType = FlightType::VFR;  break;
-        case CFlightPlan::SVFR: flightType = FlightType::SVFR; break;
-        case CFlightPlan::DVFR: flightType = FlightType::DVFR; break;
-        default:                flightType = FlightType::IFR;  break;
-        }
+        FlightType flightType = getFlightType(flightPlan.getFlightRules());
 
         const QList<int> timePartsEnroute = flightPlan.getEnrouteTime().getHrsMinSecParts();
         const QList<int> timePartsFuel    = flightPlan.getFuelTime().getHrsMinSecParts();
@@ -2407,6 +2399,18 @@ namespace BlackCore::Fsd
         if (!input.contains(':')) { return input; }
         QString copy(input);
         return copy.remove(':');
+    }
+
+    FlightType CFSDClient::getFlightType(CFlightPlan::FlightRules flightRules)
+    {
+        switch (flightRules)
+        {
+        case CFlightPlan::IFR:  return FlightType::IFR;
+        case CFlightPlan::VFR:  return FlightType::VFR;
+        case CFlightPlan::SVFR: return FlightType::SVFR;
+        case CFlightPlan::DVFR: return FlightType::DVFR;
+        default:                return FlightType::IFR;
+        }
     }
 
     const QString &CFSDClient::messageTypeToString(MessageType mt) const
