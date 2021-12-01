@@ -186,7 +186,7 @@ namespace BlackMisc::Aviation
         static constexpr int MaxRouteAndRemarksLength = 624; //!< Max.length for Route and Remarks
 
         //! Default constructor
-        CFlightPlan();
+        CFlightPlan() = default;
 
         //! Constructor
         CFlightPlan(const CCallsign &callsign,
@@ -472,7 +472,7 @@ namespace BlackMisc::Aviation
         CAltitude m_cruiseAltitude;
         QString   m_cruiseAltitudeString;
         PhysicalQuantities::CSpeed m_cruiseTrueAirspeed;
-        FlightRules        m_flightRules;
+        FlightRules        m_flightRules{};
         QString            m_route;
         CFlightPlanRemarks m_remarks;
 
