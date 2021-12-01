@@ -853,7 +853,7 @@ namespace BlackMisc::Aviation
 
     const QStringList &CFlightPlan::flightRules()
     {
-        static const QStringList r({"VFR", "IFR", "SVFR", "DVFR" });
+        static const QStringList r({"IFR", "VFR", "SVFR", "DVFR" });
         return r;
     }
 
