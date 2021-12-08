@@ -442,9 +442,10 @@ jobs:
           mkdir swiftsymbols
           mv swiftsymbols-*/* swiftsymbols
       - name: Create release
-        uses: meeDamian/github-release@2.0
+        uses: swift-project/github-release@2.0-curlargs
         id: create
         with:
+          curl_args: --retry 5 --retry-all-errors
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: v${{ needs.preBuild.outputs.version }}
           commitish: ${{ github.sha }}
