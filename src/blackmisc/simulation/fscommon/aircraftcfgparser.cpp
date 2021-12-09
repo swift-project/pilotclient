@@ -176,7 +176,7 @@ namespace BlackMisc::Simulation::FsCommon
         const int airFilesCount = dirForAir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot, QDir::DirsLast).size();
         const bool hasAirFiles =  airFilesCount > 0;
 
-        if (CBuildConfig::buildWordSize() != 32 && !hasAirFiles)
+        if (getSimulator().isP3D() && !hasAirFiles)
         {
             const CStatusMessage m = CStatusMessage(this).warning(u"No \"air\" files in '%1'") << currentDir;
             messages.push_back(m);
@@ -204,8 +204,8 @@ namespace BlackMisc::Simulation::FsCommon
             }
             else
             {
-                // Enforce air files only for 64 bit P3D
-                if (CBuildConfig::buildWordSize() != 32 && !hasAirFiles) { continue; }
+                // Enforce air files only for P3D
+                if (getSimulator().isP3D() && !hasAirFiles) { continue; }
 
                 // due to the filter we expect only "aircraft.cfg"/"sim.cfg" here
                 // remark: in a 1st version I have used QSettings to parse to file as ini file
