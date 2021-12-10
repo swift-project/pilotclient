@@ -579,7 +579,7 @@ namespace swift::gui::components
                 if (!m_clearCacheActions[4])
                 {
                     m_clearCacheActions[4] = new QAction(CIcons::appModels16(), "Clear FG cache", this);
-                    connect(m_clearCacheActions[3], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
+                    connect(m_clearCacheActions[4], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
                         if (!ownModelsComp) { return; }
                         Q_UNUSED(checked)
                         ownModelsComp->clearSimulatorCache(CSimulatorInfo::fg());
