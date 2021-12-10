@@ -75,6 +75,12 @@ namespace BlackMisc::Simulation::FsCommon
         //! Exclude directories for simObjects
         static const QStringList &p3dSimObjectsExcludeDirectoryPatterns();
 
+        //! MSFS directory from different sources
+        static const QString &msfsDir();
+
+        //! MSFS's packages dir
+        static const QString &msfsPackagesDir();
+
         //! FS9 directory obtained from registry
         static const QString &fs9DirFromRegistry();
 

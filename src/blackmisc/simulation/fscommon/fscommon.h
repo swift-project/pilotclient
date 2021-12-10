@@ -6,7 +6,7 @@
 
 /*!
  * \namespace FsCommon
- * \brief Utility classes for FSX, P3D and FS9, OS and driver independent code
+ * \brief Utility classes for FSX, P3D and FS9, MSFS, OS and driver independent code
  */
 
 #endif // guard

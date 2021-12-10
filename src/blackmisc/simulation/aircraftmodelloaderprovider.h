@@ -39,6 +39,7 @@ namespace BlackMisc::Simulation
         IAircraftModelLoader *modelLoaderXP()  const { return m_loaderXP;  }
         IAircraftModelLoader *modelLoaderFS9() const { return m_loaderFS9; }
         IAircraftModelLoader *modelLoaderFG()  const { return m_loaderFG;  }
+        IAircraftModelLoader *modelLoaderMsfs()  const { return m_loaderMsfs;  }
         //! @}
 
     signals:
@@ -60,6 +61,7 @@ namespace BlackMisc::Simulation
         IAircraftModelLoader *m_loaderXP  = nullptr;
         IAircraftModelLoader *m_loaderFS9 = nullptr;
         IAircraftModelLoader *m_loaderFG  = nullptr;
+        IAircraftModelLoader *m_loaderMsfs  = nullptr;
 
         //! Init the loader
         IAircraftModelLoader *initLoader(const CSimulatorInfo &simulator);

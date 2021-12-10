@@ -77,6 +77,7 @@ namespace BlackMisc::Simulation
         if (s.testFlag(CSimulatorInfo::P3D))    { return CSimulatorPluginInfo::p3dPluginIdentifier(); }
         if (s.testFlag(CSimulatorInfo::XPLANE)) { return CSimulatorPluginInfo::xplanePluginIdentifier(); }
         if (s.testFlag(CSimulatorInfo::FG))     { return CSimulatorPluginInfo::fgPluginIdentifier(); }
+        if (s.testFlag(CSimulatorInfo::MSFS))   { return CSimulatorPluginInfo::msfsPluginIdentifier(); }
         return e;
     }
 

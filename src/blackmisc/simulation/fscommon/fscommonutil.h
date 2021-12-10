@@ -21,7 +21,7 @@
 
 namespace BlackMisc::Simulation::FsCommon
 {
-    //! FS9/FSX/P3D utils
+    //! FS9/FSX/P3D/MSFS utils
     class BLACKMISC_EXPORT CFsCommonUtil
     {
     public:
@@ -41,7 +41,7 @@ namespace BlackMisc::Simulation::FsCommon
         static int copyFsxTerrainProbeFiles(const QString &simObjectDir, CStatusMessageList &messages);
 
         //! Validate aircraft.cfg entries (sometimes also sim.cfg)
-        //! \remark only for FSX/P3D/FS9 models
+        //! \remark only for FSX/P3D/FS9/MSFS models
         static CStatusMessageList validateAircraftConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &wasStopped);
 
         //! Validate if known SimObjects path are used

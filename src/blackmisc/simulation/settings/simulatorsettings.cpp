@@ -208,6 +208,7 @@ namespace BlackMisc::Simulation::Settings
         case CSimulatorInfo::FS9:    return m_simSettingsFs9.get();
         case CSimulatorInfo::FSX:    return m_simSettingsFsx.get();
         case CSimulatorInfo::P3D:    return m_simSettingsP3D.get();
+        case CSimulatorInfo::MSFS:   return m_simSettingsMsfs.get();
         case CSimulatorInfo::XPLANE: return m_simSettingsXP.get();
 
         default:
@@ -231,6 +232,7 @@ namespace BlackMisc::Simulation::Settings
         case CSimulatorInfo::FS9: return m_simSettingsFs9.set(settings);
         case CSimulatorInfo::FSX: return m_simSettingsFsx.set(settings);
         case CSimulatorInfo::P3D: return m_simSettingsP3D.set(settings);
+        case CSimulatorInfo::MSFS: return m_simSettingsMsfs.set(settings);
         case CSimulatorInfo::XPLANE: return m_simSettingsXP.set(settings);
         default:
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
@@ -266,6 +268,7 @@ namespace BlackMisc::Simulation::Settings
         case CSimulatorInfo::FS9: break;
         case CSimulatorInfo::FSX: break;
         case CSimulatorInfo::P3D: break;
+        case CSimulatorInfo::MSFS: break;
         case CSimulatorInfo::XPLANE:
             {
                 if (settings.hasModelDirectories())
@@ -291,6 +294,7 @@ namespace BlackMisc::Simulation::Settings
         case CSimulatorInfo::FS9: return m_simSettingsFs9.setAndSave(settings);
         case CSimulatorInfo::FSX: return m_simSettingsFsx.setAndSave(settings);
         case CSimulatorInfo::P3D: return m_simSettingsP3D.setAndSave(settings);
+        case CSimulatorInfo::MSFS: return m_simSettingsMsfs.setAndSave(settings);
         case CSimulatorInfo::XPLANE: return m_simSettingsXP.setAndSave(settings);
         default:
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
@@ -313,6 +317,7 @@ namespace BlackMisc::Simulation::Settings
         case CSimulatorInfo::FS9: return m_simSettingsFs9.save();
         case CSimulatorInfo::FSX: return m_simSettingsFsx.save();
         case CSimulatorInfo::P3D: return m_simSettingsP3D.save();
+        case CSimulatorInfo::MSFS: return m_simSettingsMsfs.save();
         case CSimulatorInfo::XPLANE: return m_simSettingsXP.save();
         default:
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
@@ -388,6 +393,11 @@ namespace BlackMisc::Simulation::Settings
     void CMultiSimulatorSettings::onFs9SettingsChanged()
     {
         this->emitSettingsChanged(CSimulatorInfo::fs9());
+    }
+
+    void CMultiSimulatorSettings::onMsfsSettingsChanged()
+    {
+        this->emitSettingsChanged(CSimulatorInfo::msfs());
     }
 
     void CMultiSimulatorSettings::onXPSettingsChanged()
@@ -687,6 +697,12 @@ namespace BlackMisc::Simulation::Settings
                 static const QStringList md      = CFsDirectories::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(p3d, versionHint);
                 return md;
             }
+        case CSimulatorInfo::MSFS:
+            {
+                static const QString msfs = CFsDirectories::msfsPackagesDir();
+                static const QStringList md { msfs };
+                if (!msfs.isEmpty()) { return md; }
+            }
         case CSimulatorInfo::XPLANE:
             {
                 return CXPlaneUtil::xplaneModelDirectories();
@@ -708,6 +724,7 @@ namespace BlackMisc::Simulation::Settings
         case CSimulatorInfo::FS9:    return CFsDirectories::fs9Dir();
         case CSimulatorInfo::FSX:    return CFsDirectories::fsxDir();
         case CSimulatorInfo::P3D:    return CFsDirectories::p3dDir();
+        case CSimulatorInfo::MSFS:   return CFsDirectories::msfsDir();
         case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneRootDir();
         default:
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");

@@ -328,6 +328,16 @@ namespace BlackMisc::Simulation::Settings
         static const QString &humanReadable() { static const QString name("P3D settings"); return name; }
     };
 
+    //! Trait for simulator settings
+    struct TSimulatorMsfs : public TSettingTrait<CSimulatorSettings>
+    {
+        //! \copydoc BlackMisc::TSettingTrait::key
+        static const char *key() { return "settingssimulatormsfs"; }
+
+        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        static const QString &humanReadable() { static const QString name("MSFS settings"); return name; }
+    };
+
     //! Selected P3D version (64bit)
     struct TP3DVersion : public TSettingTrait<QString>
     {
@@ -500,6 +510,7 @@ namespace BlackMisc::Simulation::Settings
         CSetting<Settings::TSimulatorFsx> m_simSettingsFsx { this, &CMultiSimulatorSettings::onFsxSettingsChanged }; //!< FSX settings
         CSetting<Settings::TSimulatorFs9> m_simSettingsFs9 { this, &CMultiSimulatorSettings::onFs9SettingsChanged }; //!< FS9 settings
         CSetting<Settings::TSimulatorP3D> m_simSettingsP3D { this, &CMultiSimulatorSettings::onP3DSettingsChanged }; //!< P3D settings
+        CSetting<Settings::TSimulatorMsfs> m_simSettingsMsfs { this, &CMultiSimulatorSettings::onMsfsSettingsChanged }; //!< MSFS settings
         CSetting<Settings::TSimulatorXP>  m_simSettingsXP  { this, &CMultiSimulatorSettings::onXPSettingsChanged  }; //!< XP settings
         CSetting<Settings::TSimulatorFG>  m_simSettingsFG  { this, &CMultiSimulatorSettings::onFGSettingsChanged  }; //!< FG settings
 
@@ -508,6 +519,7 @@ namespace BlackMisc::Simulation::Settings
         void onFsxSettingsChanged();
         void onFs9SettingsChanged();
         void onP3DSettingsChanged();
+        void onMsfsSettingsChanged();
         void onXPSettingsChanged();
         void onFGSettingsChanged();
         //! @}

@@ -222,6 +222,7 @@ namespace BlackMisc::Simulation
         this->insert("testModelString4", CSimulatorInfo::p3d());
         this->insert("testModelString5", CSimulatorInfo::fsx());
         this->insert("testModelString6", CSimulatorInfo::fsx());
+        this->insert("testModelString7", CSimulatorInfo::msfs());
     }
 
     const QString &CAutoPublishData::fileBaseName()

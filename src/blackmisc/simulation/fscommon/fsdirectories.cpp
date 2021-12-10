@@ -27,6 +27,7 @@
 #include <QDomNodeList>
 #include <QSettings>
 #include <QStringBuilder>
+#include <QTextStream>
 
 using namespace BlackConfig;
 
@@ -93,6 +94,57 @@ namespace BlackMisc::Simulation::FsCommon
     const QString &CFsDirectories::fsxDir()
     {
         static const QString dir(fsxDirImpl());
+        return dir;
+    }
+
+    QString msfsDirImpl()
+    {
+        QStringList someDefaultDirs(
+        {
+            // C:\Users\rolan\AppData\Local\Packages\Microsoft.FlightSimulator_8wekyb3d8bbwe\
+            // todo msfs: add default simulator directory
+        });
+        const QStringList locations = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
+        for (const QString &path : locations)
+        {
+            const QString msfsPackage = CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path, "Packages"), "Microsoft.FlightSimulator_8wekyb3d8bbwe");
+            const QDir d(msfsPackage);
+            if (!d.exists()) { continue; }
+            return msfsPackage;
+        }
+        return {};
+    }
+
+    const QString &CFsDirectories::msfsDir()
+    {
+        static const QString dir(msfsDirImpl());
+        return dir;
+    }
+
+    QString msfsPackagesDirImpl()
+    {
+        QString msfsDirectory(CFsDirectories::msfsDir());
+        const QString userCfg = CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(msfsDirectory, "LocalCache"), "UserCfg.opt");
+        QFile file(userCfg);
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) { return {}; }
+
+        QTextStream in(&file);
+        while (!in.atEnd()) {
+            QString line = in.readLine();
+            if (line.contains("InstalledPackagesPath")) {
+                QStringList split = line.split(" ");
+                if (split.size() != 2) { return {}; }
+                QString packagePath = split[1].remove("\"");
+                const QDir dir(packagePath);
+                if (dir.exists()) { return packagePath; }
+            }
+        }
+        return {};
+    }
+
+    const QString &CFsDirectories::msfsPackagesDir()
+    {
+        static const QString dir(msfsPackagesDirImpl());
         return dir;
     }
 

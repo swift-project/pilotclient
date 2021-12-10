@@ -39,8 +39,11 @@ namespace BlackMisc::Simulation::Data
 
     QString IMultiSimulatorModelCaches::getInfoStringFsFamily() const
     {
-        static const QString is("FSX: %1 P3D: %2 FS9: %3");
-        return is.arg(this->getCachedModelsCount(CSimulatorInfo::FSX)).arg(this->getCachedModelsCount(CSimulatorInfo::P3D)).arg(this->getCachedModelsCount(CSimulatorInfo::FS9));
+        static const QString is("FSX: %1 P3D: %2 FS9: %3 MSFS: %4");
+        return is.arg(this->getCachedModelsCount(CSimulatorInfo::FSX))
+                .arg(this->getCachedModelsCount(CSimulatorInfo::P3D))
+                .arg(this->getCachedModelsCount(CSimulatorInfo::FS9))
+                .arg(this->getCachedModelsCount(CSimulatorInfo::MSFS));
     }
 
     QString IMultiSimulatorModelCaches::getCacheCountAndTimestamp(const CSimulatorInfo &simulator) const
@@ -64,6 +67,7 @@ namespace BlackMisc::Simulation::Data
         case CSimulatorInfo::P3D:    m_syncP3D = synchronized; break;
         case CSimulatorInfo::XPLANE: m_syncXPlane = synchronized; break;
         case CSimulatorInfo::FG:     m_syncFG = synchronized; break;
+        case CSimulatorInfo::MSFS:   m_syncMsfs = synchronized; break;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             break;
@@ -94,6 +98,7 @@ namespace BlackMisc::Simulation::Data
         if (this->hasOtherVersionFile(info, CSimulatorInfo::fs9())) { sim.addSimulator(CSimulatorInfo::fs9()); }
         if (this->hasOtherVersionFile(info, CSimulatorInfo::fg()))  { sim.addSimulator(CSimulatorInfo::fg()); }
         if (this->hasOtherVersionFile(info, CSimulatorInfo::xplane())) { sim.addSimulator(CSimulatorInfo::xplane()); }
+        if (this->hasOtherVersionFile(info, CSimulatorInfo::msfs())) { sim.addSimulator(CSimulatorInfo::msfs()); }
         return sim;
     }
 
@@ -106,6 +111,7 @@ namespace BlackMisc::Simulation::Data
             this->getFilename(CSimulatorInfo::P3D),
             this->getFilename(CSimulatorInfo::XPLANE),
             this->getFilename(CSimulatorInfo::FG),
+            this->getFilename(CSimulatorInfo::MSFS),
         });
     }
 
@@ -204,6 +210,7 @@ namespace BlackMisc::Simulation::Data
         case CSimulatorInfo::P3D:    return m_modelCacheP3D.get();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.get();
         case CSimulatorInfo::FG:     return m_modelCacheFG.get();
+        case CSimulatorInfo::MSFS:   return m_modelCacheMsfs.get();
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             return CAircraftModelList();
@@ -224,6 +231,7 @@ namespace BlackMisc::Simulation::Data
         case CSimulatorInfo::P3D:    msg = m_modelCacheP3D.set(setModels); break;
         case CSimulatorInfo::XPLANE: msg = m_modelCacheXP.set(setModels); break;
         case CSimulatorInfo::FG:     msg = m_modelCacheFG.set(setModels); break;
+        case CSimulatorInfo::MSFS:   msg = m_modelCacheMsfs.set(setModels); break;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             return CStatusMessage();
@@ -248,6 +256,7 @@ namespace BlackMisc::Simulation::Data
         case CSimulatorInfo::P3D:    return m_syncP3D;
         case CSimulatorInfo::XPLANE: return m_syncXPlane;
         case CSimulatorInfo::FG:     return m_syncFG;
+        case CSimulatorInfo::MSFS:   return m_syncMsfs;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             break;
@@ -281,6 +290,7 @@ namespace BlackMisc::Simulation::Data
         case CSimulatorInfo::P3D:    return m_modelCacheP3D.getAvailableTimestamp();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.getAvailableTimestamp();
         case CSimulatorInfo::FG:     return m_modelCacheFG.getAvailableTimestamp();
+        case CSimulatorInfo::MSFS:   return m_modelCacheMsfs.getAvailableTimestamp();
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             return QDateTime();
@@ -298,6 +308,7 @@ namespace BlackMisc::Simulation::Data
         case CSimulatorInfo::P3D:    return m_modelCacheP3D.set(m_modelCacheP3D.get(), ts.toMSecsSinceEpoch());
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.set(m_modelCacheXP.get(), ts.toMSecsSinceEpoch());
         case CSimulatorInfo::FG:     return m_modelCacheFG.set(m_modelCacheFG.get(), ts.toMSecsSinceEpoch());
+        case CSimulatorInfo::MSFS:   return m_modelCacheMsfs.set(m_modelCacheMsfs.get(), ts.toMSecsSinceEpoch());
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
             break;
@@ -325,6 +336,7 @@ namespace BlackMisc::Simulation::Data
         case CSimulatorInfo::P3D:    return m_modelCacheP3D.getFilename();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.getFilename();
         case CSimulatorInfo::FG:     return m_modelCacheFG.getFilename();
+        case CSimulatorInfo::MSFS:   return m_modelCacheMsfs.getFilename();
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             break;
@@ -342,6 +354,7 @@ namespace BlackMisc::Simulation::Data
         case CSimulatorInfo::P3D:    return m_modelCacheP3D.isSaved();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.isSaved();
         case CSimulatorInfo::FG:     return m_modelCacheFG.isSaved();
+        case CSimulatorInfo::MSFS:   return m_modelCacheMsfs.isSaved();
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             break;
@@ -361,6 +374,7 @@ namespace BlackMisc::Simulation::Data
         case CSimulatorInfo::P3D:    m_modelCacheP3D.synchronize(); break;
         case CSimulatorInfo::XPLANE: m_modelCacheXP.synchronize();  break;
         case CSimulatorInfo::FG:     m_modelCacheFG.synchronize();  break;
+        case CSimulatorInfo::MSFS:   m_modelCacheMsfs.synchronize();  break;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             break;
@@ -381,6 +395,7 @@ namespace BlackMisc::Simulation::Data
         case CSimulatorInfo::P3D:    m_modelCacheP3D.admit(); break;
         case CSimulatorInfo::XPLANE: m_modelCacheXP.admit();  break;
         case CSimulatorInfo::FG:     m_modelCacheFG.admit();  break;
+        case CSimulatorInfo::MSFS:   m_modelCacheMsfs.admit();  break;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             break;
@@ -423,6 +438,7 @@ namespace BlackMisc::Simulation::Data
         case CSimulatorInfo::P3D:    return m_modelCacheP3D.get();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.get();
         case CSimulatorInfo::FG:     return m_modelCacheFG.get();
+        case CSimulatorInfo::MSFS:   return m_modelCacheMsfs.get();
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             return CAircraftModelList();
@@ -460,6 +476,7 @@ namespace BlackMisc::Simulation::Data
         case CSimulatorInfo::P3D:    msg = m_modelCacheP3D.set(orderedModels); break;
         case CSimulatorInfo::XPLANE: msg = m_modelCacheXP.set(orderedModels);  break;
         case CSimulatorInfo::FG:     msg = m_modelCacheFG.set(orderedModels);  break;
+        case CSimulatorInfo::MSFS:   msg = m_modelCacheMsfs.set(orderedModels);  break;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             return CStatusMessage();
@@ -478,6 +495,7 @@ namespace BlackMisc::Simulation::Data
         case CSimulatorInfo::P3D:    return m_modelCacheP3D.getAvailableTimestamp();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.getAvailableTimestamp();
         case CSimulatorInfo::FG:     return m_modelCacheFG.getAvailableTimestamp();
+        case CSimulatorInfo::MSFS:   return m_modelCacheMsfs.getAvailableTimestamp();
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
             return QDateTime();
@@ -495,6 +513,7 @@ namespace BlackMisc::Simulation::Data
         case CSimulatorInfo::P3D:    return m_modelCacheP3D.set(m_modelCacheP3D.get(), ts.toMSecsSinceEpoch());
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.set(m_modelCacheXP.get(), ts.toMSecsSinceEpoch());
         case CSimulatorInfo::FG:     return m_modelCacheFG.set(m_modelCacheFG.get(), ts.toMSecsSinceEpoch());
+        case CSimulatorInfo::MSFS:   return m_modelCacheMsfs.set(m_modelCacheMsfs.get(), ts.toMSecsSinceEpoch());
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
             break;
@@ -522,6 +541,7 @@ namespace BlackMisc::Simulation::Data
         case CSimulatorInfo::P3D:    return m_modelCacheP3D.getFilename();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.getFilename();
         case CSimulatorInfo::FG:     return m_modelCacheFG.getFilename();
+        case CSimulatorInfo::MSFS:   return m_modelCacheMsfs.getFilename();
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
             break;
@@ -539,6 +559,7 @@ namespace BlackMisc::Simulation::Data
         case CSimulatorInfo::P3D:    return m_modelCacheP3D.isSaved();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.isSaved();
         case CSimulatorInfo::FG:     return m_modelCacheFG.isSaved();
+        case CSimulatorInfo::MSFS:   return m_modelCacheMsfs.isSaved();
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
             break;
@@ -558,6 +579,7 @@ namespace BlackMisc::Simulation::Data
         case CSimulatorInfo::P3D:    m_modelCacheP3D.synchronize(); break;
         case CSimulatorInfo::XPLANE: m_modelCacheXP.synchronize();  break;
         case CSimulatorInfo::FG:     m_modelCacheFG.synchronize();  break;
+        case CSimulatorInfo::MSFS:   m_modelCacheMsfs.synchronize();  break;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
             break;
@@ -578,6 +600,7 @@ namespace BlackMisc::Simulation::Data
         case CSimulatorInfo::P3D:    m_modelCacheP3D.admit(); break;
         case CSimulatorInfo::XPLANE: m_modelCacheXP.admit();  break;
         case CSimulatorInfo::FG:     m_modelCacheFG.admit();  break;
+        case CSimulatorInfo::MSFS:   m_modelCacheMsfs.admit();  break;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
             break;
