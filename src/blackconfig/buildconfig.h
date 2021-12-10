@@ -43,6 +43,9 @@ namespace BlackConfig
         //! with FG support?
         static constexpr bool isCompiledWithFGSupport();  // defined in buildconfig_gen.inc.in
 
+        //! with MSFS support?
+        static constexpr bool isCompiledWithMSFSSupport();  // defined in buildconfig_gen.inc.in
+
         //! with FSUIPC support?
         static constexpr bool isCompiledWithFsuipcSupport(); // defined in buildconfig_gen.inc.in
 

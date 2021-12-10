@@ -92,6 +92,15 @@ constexpr bool BlackConfig::CBuildConfig::isCompiledWithFGSupport()
 !!ENDIF
 }
 
+constexpr bool BlackConfig::CBuildConfig::isCompiledWithMSFSSupport()
+{
+!!IF swiftConfig(sims.msfs)
+    return true;
+!!ELSE
+    return false;
+!!ENDIF
+}
+
 constexpr bool BlackConfig::CBuildConfig::isCompiledWithGui()
 {
 !!IF swiftConfig(libs.blackgui)
