@@ -62,6 +62,7 @@ namespace BlackGui::Components
         const bool p3d = (sims.isP3D() || !CFsDirectories::p3dDir().isEmpty()) && CBuildConfig::isCompiledWithP3DSupport();
         const bool fsx = (sims.isFSX() || !CFsDirectories::fsxDir().isEmpty()) && CBuildConfig::isCompiledWithFsxSupport();
         const bool fs9 = (sims.isFS9() || !CFsDirectories::fs9Dir().isEmpty()) && CBuildConfig::isCompiledWithFs9Support();
+        const bool msfs = (sims.isMSFS() || !CFsDirectories::msfsDir().isEmpty()) && CBuildConfig::isCompiledWithMSFSSupport();
         const bool xp = sims.isXPlane() && CBuildConfig::isCompiledWithXPlaneSupport();
         const bool fg = sims.isFG() && CBuildConfig::isCompiledWithFGSupport();
 
@@ -70,18 +71,21 @@ namespace BlackGui::Components
         ui->cb_FS9->setChecked(fs9);
         ui->cb_XP->setChecked(xp);
         ui->cb_FG->setChecked(fg);
+        ui->cb_MSFS->setChecked(msfs);
 
         ui->cb_P3D->setEnabled(CBuildConfig::isCompiledWithP3DSupport());
         ui->cb_FSX->setEnabled(CBuildConfig::isCompiledWithFsxSupport());
         ui->cb_FS9->setEnabled(CBuildConfig::isCompiledWithFs9Support());
         ui->cb_XP->setEnabled(CBuildConfig::isCompiledWithXPlaneSupport());
         ui->cb_FG->setEnabled(CBuildConfig::isCompiledWithFGSupport());
+        ui->cb_MSFS->setEnabled(CBuildConfig::isCompiledWithMSFSSupport());
 
         CGuiUtility::checkBoxReadOnly(ui->cb_P3D, !CBuildConfig::isCompiledWithP3DSupport());
         CGuiUtility::checkBoxReadOnly(ui->cb_FSX, !CBuildConfig::isCompiledWithFsxSupport());
         CGuiUtility::checkBoxReadOnly(ui->cb_FS9, !CBuildConfig::isCompiledWithFs9Support());
         CGuiUtility::checkBoxReadOnly(ui->cb_XP,  !CBuildConfig::isCompiledWithXPlaneSupport());
         CGuiUtility::checkBoxReadOnly(ui->cb_FG,  !CBuildConfig::isCompiledWithFGSupport());
+        CGuiUtility::checkBoxReadOnly(ui->cb_MSFS,  !CBuildConfig::isCompiledWithMSFSSupport());
 
         /** does NOT work
         const qreal fadeOut = 0.25;
@@ -97,6 +101,7 @@ namespace BlackGui::Components
         else if (fs9) { ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::FS9)); }
         else if (xp)  { ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::XPLANE)); }
         else if (fg)  { ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::FG)); }
+        else if (msfs)  { ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::MSFS)); }
     }
 
     QStringList CConfigSimulatorComponent::selectedSimsToPluginIds()
@@ -109,6 +114,7 @@ namespace BlackGui::Components
         if (ui->cb_P3D->isChecked()) { ids << CSimulatorPluginInfo::p3dPluginIdentifier(); }
         if (ui->cb_XP->isChecked())  { ids << CSimulatorPluginInfo::xplanePluginIdentifier(); }
         if (ui->cb_FG->isChecked())  { ids << CSimulatorPluginInfo::fgPluginIdentifier(); }
+        if (ui->cb_MSFS->isChecked())  { ids << CSimulatorPluginInfo::msfsPluginIdentifier(); }
 
         return ids;
     }
