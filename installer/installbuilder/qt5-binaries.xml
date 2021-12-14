@@ -196,9 +196,10 @@
             <platforms>all</platforms>
             <distributionFileList>
                 <distributionDirectory>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/audio/*</origin>
-                    <excludeFiles>*/*wasapi*.dll</excludeFiles>
+                    <origin>../../dist/bin/audio</origin>
+                    <onPackingFilterList>
+                        <fileNameFilter pattern="*wasapi*.dll" logic="does_not_match" patternType="glob"/>
+                    </onPackingFilterList>
                 </distributionDirectory>
                 <distributionDirectory>
                     <origin>../../dist/bin/bearer</origin>
