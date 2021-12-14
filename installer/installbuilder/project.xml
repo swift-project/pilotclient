@@ -230,6 +230,10 @@ It must be closed before the installation can proceed</progressText>
 
 https://swift-project.org/</text>
         </writeFile>
+        <addFilesToUninstaller>
+            <files>${installdir}/readme.txt</files>
+            <show>0</show>
+        </addFilesToUninstaller>
         <runProgram>
             <program>${installdir}/bin/swiftlauncher</program>
             <programArguments>-i --bootstrapurl https://datastore.swift-project.org/shared/ &amp;</programArguments>
