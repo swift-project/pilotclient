@@ -182,9 +182,17 @@ win32-g++ {
 conf_target.path = $$PREFIX/xswiftbus
 conf_target.files *= xswiftbus.conf
 
+QMAKE_SUBSTITUTES += readme.txt
+readme.txt.input = readme.txt.in
+readme.txt.output = $$BuildRoot/generated/xswiftbus/readme.txt
+GENERATED_FILES +=  $$BuildRoot/generated/xswiftbus/readme.txt
+OTHER_FILES += readme.txt.in
+readme_target.path = $$PREFIX/xswiftbus
+readme_target.files *= $$BuildRoot/generated/xswiftbus/readme.txt
 
 INSTALLS += dep_target
 INSTALLS += legacy_data_target
 INSTALLS += conf_target
+INSTALLS += readme_target
 
 load(common_post)

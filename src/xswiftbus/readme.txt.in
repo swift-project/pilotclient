@@ -1,0 +1,3 @@
+xswiftbus version $$swiftConfig(version.full).$$VER_REV
+
+https://swift-project.org/
