@@ -136,7 +136,7 @@ It must be closed before the installation can proceed</progressText>
         </actionGroup>
         <setInstallerVariable>
             <name>installdir</name>
-            <value>${installBaseDir}/${project.shortName}-${project.version}-${architecture}bit</value>
+            <value>${installBaseDir}/${project.shortName}-velocity-${project.version}-${architecture}bit</value>
             <ruleList>
                 <platformTest>
                     <type>windows</type>
@@ -226,7 +226,7 @@ It must be closed before the installation can proceed</progressText>
             <explanation>Create readme</explanation>
             <path>${installdir}/readme.txt</path>
             <show>0</show>
-            <text>swift pilot client version ${versionFull}
+            <text>swift for velocity alpha version ${versionFull}
 
 https://swift-project.org/</text>
         </writeFile>
@@ -304,10 +304,10 @@ https://swift-project.org/</text>
     <osxUninstallerApplicationBundleIcon>../images/swiftinstaller.icns</osxUninstallerApplicationBundleIcon>
     <outputDirectory>.</outputDirectory>
     <productDisplayIcon>${installdir}/share/icons/swiftinstaller.ico</productDisplayIcon>
-    <productDisplayName>${product_fullname} ${project.version} (${architecture}bit)</productDisplayName>
+    <productDisplayName>${product_fullname} for velocity alpha ${project.version} (${architecture}bit)</productDisplayName>
     <requestedExecutionLevel>highestAvailable</requestedExecutionLevel>
     <saveRelativePaths>1</saveRelativePaths>
-    <startMenuGroupName>swift ${project.version} (${architecture}bit)</startMenuGroupName>
+    <startMenuGroupName>swift for velocity alpha ${project.version} (${architecture}bit)</startMenuGroupName>
     <vendor>swift Project</vendor>
     <windowsExecutableIcon>../images/swiftinstaller.ico</windowsExecutableIcon>
 
@@ -345,7 +345,7 @@ https://swift-project.org/</text>
                     <description>Installer.Parameter.installdir.description</description>
                     <explanation>Installer.Parameter.installdir.explanation</explanation>
                     <value></value>
-                    <default>${platform_install_prefix}/${project.shortName}-${project.version}-${architecture}bit</default>
+                    <default>${platform_install_prefix}/${project.shortName}-velocity-${project.version}-${architecture}bit</default>
                     <allowEmptyValue>0</allowEmptyValue>
                     <cliOptionName>prefix</cliOptionName>
                     <mustBeWritable>yes</mustBeWritable>

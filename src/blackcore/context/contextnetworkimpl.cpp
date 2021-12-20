@@ -651,7 +651,16 @@ namespace BlackCore::Context
     {
         Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "Missing data reader");
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        return sApp->getWebDataServices()->getVatsimFsdServers();
+        //return sApp->getWebDataServices()->getVatsimFsdServers();
+
+        // HARD-CODED VELOCITY TESTING SERVERS
+        return
+        {
+            { "Velocity 1", "Velocity Test Server 1 (VPS)", "vps.downstairsgeek.com", 6809, {},
+                CFsdSetup::vatsimStandard(), BlackMisc::Audio::CVoiceSetup::vatsimStandard(), CEcosystem::vatsim(), CServer::FSDServerVatsim },
+            { "Velocity 2", "Velocity Test Server 2 (C)", "c.downstairsgeek.com", 6809, {},
+                CFsdSetup::vatsimStandard(), BlackMisc::Audio::CVoiceSetup::vatsimStandard(), CEcosystem::vatsim(), CServer::FSDServerVatsim }
+        };
     }
 
     CServerList CContextNetwork::getVatsimVoiceServers() const

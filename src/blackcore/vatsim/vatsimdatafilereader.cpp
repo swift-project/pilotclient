@@ -275,6 +275,7 @@ namespace BlackCore::Vatsim
                 }
                 atcStations.push_back(parseController(atis.toObject()));
             }
+            /*
             for (QJsonValueRef server : jsonDoc["servers"].toArray())
             {
                 if (!this->doWorkCheck())
@@ -288,6 +289,16 @@ namespace BlackCore::Vatsim
 
             // Setup for VATSIM servers and sorting for comparison
             fsdServers.sortBy(&CServer::getName, &CServer::getDescription);
+            */
+
+            // HARD-CODED VELOCITY TESTING SERVERS
+            fsdServers =
+            {
+                { "Velocity 1", "Velocity Test Server 1 (VPS)", "vps.downstairsgeek.com", 6809, {},
+                    CFsdSetup::vatsimStandard(), CVoiceSetup::vatsimStandard(), CEcosystem::vatsim(), CServer::FSDServerVatsim },
+                { "Velocity 2", "Velocity Test Server 2 (C)", "c.downstairsgeek.com", 6809, {},
+                    CFsdSetup::vatsimStandard(), CVoiceSetup::vatsimStandard(), CEcosystem::vatsim(), CServer::FSDServerVatsim }
+            };
 
             // this part needs to be synchronized
             {

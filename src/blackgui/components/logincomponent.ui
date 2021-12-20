@@ -152,6 +152,16 @@
             <attribute name="title">
              <string>Other servers</string>
             </attribute>
+
+            <!-- TEMP VELOCITY TEST disable other servers -->
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="visible">
+             <bool>false</bool>
+            </property>
+            <!-- -->
+
             <layout class="QGridLayout" name="gl_OtherServers">
              <property name="leftMargin">
               <number>3</number>
