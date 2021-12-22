@@ -259,6 +259,12 @@ namespace BlackSimPlugin::FsxCommon
                         simulatorFsxP3D->synchronizeTime(simEnv);
                         break;
                     }
+                case CSimConnectDefinitions::RequestMSFSTransponder:
+                    {
+                        const DataDefinitionMSFSTransponderMode *transponderMode = reinterpret_cast<const DataDefinitionMSFSTransponderMode*>(&pObjData->dwData);
+                        simulatorFsxP3D->updateMSFSTransponderMode(*transponderMode);
+                        break;
+                    }
                 default:
                     {
                         const DWORD objectId = pObjData->dwObjectID;

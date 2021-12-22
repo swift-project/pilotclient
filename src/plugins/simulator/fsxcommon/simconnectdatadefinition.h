@@ -14,6 +14,7 @@
 #include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 #include "plugins/simulator/fsxcommon/simconnectwindows.h"
 #include "blackmisc/aviation/aircraftlights.h"
+#include <blackmisc/simulation/simulatorinfo.h>
 
 #include <algorithm>
 #include <QtGlobal>
@@ -245,6 +246,13 @@ namespace BlackSimPlugin::FsxCommon
         QString toQString() const;
     };
 
+    //! Data structure for MSFS transponder mode information
+    struct DataDefinitionMSFSTransponderMode
+    {
+        double transponderMode = 1; // Standby
+        double ident = 0; // ident = false
+    };
+
     //! Client areas
     enum ClientAreaId
     {
@@ -267,6 +275,7 @@ namespace BlackSimPlugin::FsxCommon
             DataRemoteAircraftModelData,   //!< model data eventually used and reported back from simulator
             DataRemoteAircraftSetData,     //!< set model data such as airline
             DataSimEnvironment,
+            DataTransponderModeMSFS,
             DataClientAreaSb,          //!< whole SB area, see http://squawkbox.ca/doc/sdk/fsuipc.php
             DataClientAreaSbIdent,     //!< SB ident single value 0x7b93/19
             DataClientAreaSbStandby,   //!< SB standby 0x7b91/17
@@ -281,6 +290,7 @@ namespace BlackSimPlugin::FsxCommon
             RequestOwnAircraftTitle,
             RequestSimEnvironment,
             RequestSbData,                //!< SB client area / XPDR mode
+            RequestMSFSTransponder,       //!< MSFS XPDR mode/ident
             RequestFacility,
             RequestEndMarker              //!< free request ids can start here
         };
@@ -308,7 +318,7 @@ namespace BlackSimPlugin::FsxCommon
         CSimConnectDefinitions();
 
         //! Initialize all data definitions
-        static HRESULT initDataDefinitionsWhenConnected(const HANDLE hSimConnect);
+        static HRESULT initDataDefinitionsWhenConnected(const HANDLE hSimConnect, const BlackMisc::Simulation::CSimulatorInfo &simInfo);
 
     private:
         //! Initialize data definition for our own aircraft
@@ -328,6 +338,9 @@ namespace BlackSimPlugin::FsxCommon
 
         //! Initialize the SB data are
         static HRESULT initSbDataArea(const HANDLE hSimConnect);
+
+        //! Initialize data definition for MSFS transponder
+        static HRESULT initMSFSTransponder(const HANDLE hSimConnect);
     };
 } // namespace
 
