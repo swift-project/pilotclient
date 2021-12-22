@@ -34,13 +34,13 @@ Contributing
 
 _swift_ is written in modern C++17 using the Qt framework.
 
-[![Development version](https://img.shields.io/badge/version-0.9.8-blue)](.)
-[![Build status](https://img.shields.io/github/workflow/status/swift-project/pilotclient/Build%20swift/develop/0.9.8)][3]
+[![Development version](https://img.shields.io/badge/version-0.9.9-blue)](.)
+[![Build status](https://img.shields.io/github/workflow/status/swift-project/pilotclient/Build%20swift/develop/0.9.9)][3]
 
 [3]: https://github.com/swift-project/pilotclient/actions
 
 Pull requests should be made against the current active development branch,
-which is `develop/0.9.8`.
+which is `develop/0.9.9`.
 
 [:blue_book: Developer guide](https://docs.swift-project.org/doku.php?id=developer_documentation)
 
