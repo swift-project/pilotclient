@@ -158,7 +158,7 @@ This plugin acts as the interface between swift and X-Plane</detailedDescription
             <canBeEdited>1</canBeEdited>
             <detailedDescription>FlightGear Simulator Plugin
 This plugin acts as the interface between swift and FlightGear</detailedDescription>
-            <selected>0</selected>
+            <selected>1</selected>
             <show>1</show>
             <folderList>
                 <folder>
