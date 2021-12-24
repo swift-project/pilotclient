@@ -438,7 +438,7 @@ namespace BlackMisc::Simulation
                 u" P3D: "    % QString::number(m_counts[1]) %
                 u" FS9: "    % QString::number(m_counts[2]) %
                 u" XPlane: " % QString::number(m_counts[3]) %
-                u" FG: "     % QString::number(m_counts[4]);
+                u" FG: "     % QString::number(m_counts[4]) %
                 u" MSFS: "   % QString::number(m_counts[5]);
     }
 

@@ -249,8 +249,8 @@ namespace BlackSimPlugin::FsxCommon
     //! Data structure for MSFS transponder mode information
     struct DataDefinitionMSFSTransponderMode
     {
-        double transponderMode = 1; // Standby
-        double ident = 0; // ident = false
+        double transponderMode = 1; //!< transponder state simvar
+        double ident = 0; //!< ident
     };
 
     //! Client areas

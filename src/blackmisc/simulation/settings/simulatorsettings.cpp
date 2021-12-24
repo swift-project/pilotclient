@@ -700,8 +700,9 @@ namespace BlackMisc::Simulation::Settings
         case CSimulatorInfo::MSFS:
             {
                 static const QString msfs = CFsDirectories::msfsPackagesDir();
+                if(msfs.isEmpty()) { return e; }
                 static const QStringList md { msfs };
-                if (!msfs.isEmpty()) { return md; }
+                return md;
             }
         case CSimulatorInfo::XPLANE:
             {
