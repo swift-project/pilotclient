@@ -56,13 +56,13 @@ namespace BlackMisc
         class CMemoizer : private CMemoTable<Ts>...
         {
         public:
-            //! If T is in Ts, return the index of member in the memo table.
-            template <typename T, std::enable_if_t<TIsOneOf<T, Ts...>::value, int> = 0>
-            int maybeMemoize(const T &member) { return this->CMemoTable<T>::getIndex(member); }
-
-            //! If T is not in Ts, return member.
-            template <typename T, std::enable_if_t<! TIsOneOf<T, Ts...>::value, int> = 0>
-            const T &maybeMemoize(const T &member) { return member; }
+            //! If T is in Ts, return the index of member in the memo table. Otherwise, return member.
+            template <typename T>
+            decltype(auto) maybeMemoize(const T &member)
+            {
+                if constexpr ((std::is_same_v<T, Ts> || ...)) { return this->CMemoTable<T>::getIndex(member); }
+                else { return std::as_const(member); }
+            }
 
             //! Return the values in the T table as a flat list.
             template <typename T>
@@ -78,23 +78,24 @@ namespace BlackMisc
             CSequence<T> &getTable() { return *this; }
 
             //! If T is in Ts, return proxy that will assign to member through the value at the given index in the flat list.
-            template <typename T, std::enable_if_t<TIsOneOf<T, Ts...>::value, int> = 0>
+            //! Otherwise, return member as std::reference_wrapper.
+            template <typename T>
             auto maybeUnmemoize(T &member) const
             {
-                struct Memo // clazy:exclude=rule-of-three
+                if constexpr ((std::is_same_v<T, Ts> || ...))
                 {
-                    int index;
-                    T &member;
-                    const CSequence<T> &list;
-                    int &get() { return index; }
-                    ~Memo() { if (index >= 0) { member = list[index]; } }
-                };
-                return Memo { -1, member, static_cast<const CSequence<T> &>(*this) };
+                    struct Memo // clazy:exclude=rule-of-three
+                    {
+                        int index;
+                        T &member;
+                        const CSequence<T> &list;
+                        int &get() { return index; }
+                        ~Memo() { if (index >= 0) { member = list[index]; } }
+                    };
+                    return Memo { -1, member, static_cast<const CSequence<T> &>(*this) };
+                }
+                else { return std::ref(member); }
             }
-
-            //! If T is not in Ts, return member as std::reference_wrapper.
-            template <typename T, std::enable_if_t<! TIsOneOf<T, Ts...>::value, int> = 0>
-            auto maybeUnmemoize(T &member) const { return std::ref(member); }
         };
     };
 }

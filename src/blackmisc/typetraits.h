@@ -155,12 +155,6 @@ namespace BlackMisc
     //! \endcond
 
     /*!
-     * Trait that detects if a type is a member of a parameter pack.
-     */
-    template <typename T, typename... Ts>
-    struct TIsOneOf : public std::disjunction<std::is_same<T, Ts>...> {};
-
-    /*!
      * Trait that detects if a type is QPrivateSignal.
      */
     template <typename T, typename = std::void_t<>>
