@@ -8,6 +8,7 @@
 
 #include "blackmisc/network/user.h"
 #include "blackmisc/aviation/airporticaocode.h"
+#include "blackmisc/comparefunctions.h"
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
@@ -266,9 +267,9 @@ namespace BlackMisc::Network
         switch (i)
         {
         case IndexEmail: this->setEmail(variant.value<QString>()); break;
+        case IndexId: // fallthru
+        case IndexId7Digit: this->setId(variant.value<QString>()); break;
         case IndexIdInteger: this->setId(QString::number(variant.toInt())); break;
-        case IndexId7Digit: // fallthru
-        case IndexId: this->setId(variant.value<QString>()); break;
         case IndexPassword: this->setPassword(variant.value<QString>()); break;
         case IndexRealName: this->setRealName(variant.value<QString>()); break;
         case IndexHomebase: m_homebase.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
@@ -286,11 +287,12 @@ namespace BlackMisc::Network
         case IndexEmail: return m_email.compare(compareValue.getEmail(), Qt::CaseInsensitive);
         case IndexId: return m_id.compare(compareValue.getId(), Qt::CaseInsensitive);
         case IndexId7Digit: return this->get7DigitId().compare(compareValue.get7DigitId(), Qt::CaseInsensitive);
+        case IndexIdInteger: return BlackMisc::Compare::compare(getIntegerId(), compareValue.getIntegerId());
         case IndexRealName: return m_realname.compare(compareValue.getRealName(), Qt::CaseInsensitive);
         case IndexHomebase: return m_homebase.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getHomeBase());
         case IndexCallsign: return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
         case IndexPassword: break;
-        default: break;
+        default: return CValueObject::comparePropertyByIndex(index, compareValue);
         }
         Q_ASSERT_X(false, Q_FUNC_INFO, "compare failed");
         return 0;
