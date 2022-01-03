@@ -953,7 +953,7 @@ namespace BlackCore::Fsd
 
         const QString dataStr = convertToUnicodeEscaped(QJsonDocument(QJsonObject { { "config", incrementalConfig } }).toJson(QJsonDocument::Compact));
 
-        sendAircraftConfiguration("@94835", dataStr);
+        sendAircraftConfiguration("@94836", dataStr);
         m_sentAircraftConfig = currentParts;
     }
 
