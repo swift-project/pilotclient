@@ -773,7 +773,7 @@ namespace BlackFsdTest
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
         CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
-        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>$CQABCD:@94835:ACC:{\"config\":{\"gear_down\":true}}");
+        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>$CQABCD:@94836:ACC:{\"config\":{\"gear_down\":true}}");
     }
 
     void CTestFSDClient::testCom1FreqQueryResponse()
