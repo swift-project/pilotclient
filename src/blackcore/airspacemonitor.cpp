@@ -1381,18 +1381,17 @@ namespace BlackCore
         visualSituation.setGroundSpeed(lastSituation.getGroundSpeed());
 
         // store situation history
-        //! \fixme Received visual position updates are currently ignored.
-        //this->storeAircraftSituation(visualSituation);
+        this->storeAircraftSituation(visualSituation);
 
         const bool samePosition = lastSituation.equalNormalVectorDouble(visualSituation);
         if (samePosition) { return; } // nothing to update
 
         // update aircraft
-        //this->updateAircraftInRangeDistanceBearing(
-        //    callsign, visualSituation,
-        //    this->calculateDistanceToOwnAircraft(visualSituation),
-        //    this->calculateBearingToOwnAircraft(visualSituation)
-        //);
+        this->updateAircraftInRangeDistanceBearing(
+            callsign, visualSituation,
+            this->calculateDistanceToOwnAircraft(visualSituation),
+            this->calculateBearingToOwnAircraft(visualSituation)
+        );
     }
 
     void CAirspaceMonitor::onAircraftSimDataUpdateReceived(const CAircraftSituation &situation, const CAircraftParts &parts, qint64 currentOffsetMs, const QString &aircraftIcao, const QString &airlineIcao)
