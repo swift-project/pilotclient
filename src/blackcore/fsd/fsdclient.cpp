@@ -388,8 +388,16 @@ namespace BlackCore::Fsd
 
     void CFSDClient::sendVisualPilotDataUpdate()
     {
-        if (this->getConnectionStatus().isDisconnected() && ! m_unitTestMode) { return; }
-        if (m_loginMode == CLoginMode::Observer || !isVisualPositionSendingEnabledForServer()) { return; }
+        if (this->getConnectionStatus().isDisconnected() && ! m_unitTestMode)
+        {
+            CLogMessage(this).debug(u"Won't send velocity packet: not connected");
+            return;
+        }
+        if (m_loginMode == CLoginMode::Observer || !isVisualPositionSendingEnabledForServer())
+        {
+            CLogMessage(this).debug(u"Won't send velocity packet: %1") << (m_loginMode == CLoginMode::Observer ? "observer mode" : "disabled");
+            return;
+        }
         const CSimulatedAircraft myAircraft(getOwnAircraft());
 
         static constexpr double minVelocity = 0.00005;
@@ -402,12 +410,15 @@ namespace BlackCore::Fsd
         {
             if (m_stoppedSendingVisualPositions) { return; }
             m_stoppedSendingVisualPositions = true;
+            CLogMessage(this).debug(u"Will stop sending velocity packets");
         }
         else
         {
             m_stoppedSendingVisualPositions = false;
+            CLogMessage(this).debug(u"Will start sending velocity packets");
         }
 
+        CLogMessage(this).debug(u"Sending velocity packet");
         VisualPilotDataUpdate visualPilotDataUpdate(getOwnCallsignAsString(),
                 myAircraft.latitude().value(CAngleUnit::deg()),
                 myAircraft.longitude().value(CAngleUnit::deg()),
@@ -1239,6 +1250,7 @@ namespace BlackCore::Fsd
         const qint64 offsetTimeMs = receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
         situation.setTimeOffsetMs(offsetTimeMs);
 
+        CLogMessage(this).debug(u"Received velocity packet for %1 at %2") << callsign << situation.getPosition();
         emit visualPilotDataUpdateReceived(situation);
     }
 
