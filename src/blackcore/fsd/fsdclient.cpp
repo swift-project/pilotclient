@@ -414,8 +414,8 @@ namespace BlackCore::Fsd
         }
         else
         {
+            if (m_stoppedSendingVisualPositions) { CLogMessage(this).debug(u"Will start sending velocity packets"); }
             m_stoppedSendingVisualPositions = false;
-            CLogMessage(this).debug(u"Will start sending velocity packets");
         }
 
         CLogMessage(this).debug(u"Sending velocity packet");
