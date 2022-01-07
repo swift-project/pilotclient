@@ -45,8 +45,8 @@ namespace BlackMisc
         class BLACKMISC_EXPORT IRemoteAircraftProvider : public IProvider
         {
         public:
-            static constexpr int MaxSituationsPerCallsign   = 6;  //!< How many situations we keep per callsign
-            static constexpr int MaxPartsPerCallsign        = 20; //!< How many parts we keep per callsign (we keep more parts than situations as parts can just come in)
+            static constexpr int MaxSituationsPerCallsign   = 50; //!< How many situations we keep per callsign
+            static constexpr int MaxPartsPerCallsign        = 50; //!< How many parts we keep per callsign
             static constexpr int MaxPartsAgePerCallsignSecs = 60; //!< How many seconds to keep parts for interpolation
 
             //! Destructor
