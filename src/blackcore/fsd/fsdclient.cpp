@@ -94,14 +94,14 @@ namespace BlackCore::Fsd
     }
 
     CFSDClient::CFSDClient(IClientProvider         *clientProvider,
-                            IOwnAircraftProvider    *ownAircraftProvider,
-                            IRemoteAircraftProvider *remoteAircraftProvider,
-                            QObject *owner)
+                           IOwnAircraftProvider    *ownAircraftProvider,
+                           IRemoteAircraftProvider *remoteAircraftProvider,
+                           QObject *owner)
         : CContinuousWorker(owner, "FSDClient"),
-            CClientAware(clientProvider),
-            COwnAircraftAware(ownAircraftProvider),
-            CRemoteAircraftAware(remoteAircraftProvider),
-            m_tokenBucket(10, 5000, 1)
+          CClientAware(clientProvider),
+          COwnAircraftAware(ownAircraftProvider),
+          CRemoteAircraftAware(remoteAircraftProvider),
+          m_tokenBucket(10, 5000, 1)
     {
         initializeMessageTypes();
         connect(&m_socket, &QTcpSocket::readyRead, this, &CFSDClient::readDataFromSocket,  Qt::QueuedConnection);
@@ -402,11 +402,11 @@ namespace BlackCore::Fsd
 
         static constexpr double minVelocity = 0.00005;
         if (std::abs(myAircraft.getVelocity().getVelocityX(CSpeedUnit::m_s())) < minVelocity &&
-            std::abs(myAircraft.getVelocity().getVelocityY(CSpeedUnit::m_s())) < minVelocity &&
-            std::abs(myAircraft.getVelocity().getVelocityZ(CSpeedUnit::m_s())) < minVelocity &&
-            std::abs(myAircraft.getVelocity().getPitchVelocity(CAngleUnit::rad(), CTimeUnit::s())) < minVelocity &&
-            std::abs(myAircraft.getVelocity().getRollVelocity(CAngleUnit::rad(), CTimeUnit::s())) < minVelocity &&
-            std::abs(myAircraft.getVelocity().getHeadingVelocity(CAngleUnit::rad(), CTimeUnit::s())) < minVelocity)
+                std::abs(myAircraft.getVelocity().getVelocityY(CSpeedUnit::m_s())) < minVelocity &&
+                std::abs(myAircraft.getVelocity().getVelocityZ(CSpeedUnit::m_s())) < minVelocity &&
+                std::abs(myAircraft.getVelocity().getPitchVelocity(CAngleUnit::rad(), CTimeUnit::s())) < minVelocity &&
+                std::abs(myAircraft.getVelocity().getRollVelocity(CAngleUnit::rad(), CTimeUnit::s())) < minVelocity &&
+                std::abs(myAircraft.getVelocity().getHeadingVelocity(CAngleUnit::rad(), CTimeUnit::s())) < minVelocity)
         {
             if (m_stoppedSendingVisualPositions) { return; }
             m_stoppedSendingVisualPositions = true;
@@ -644,7 +644,7 @@ namespace BlackCore::Fsd
         else { return; }
         const TextMessage textMessage(getOwnCallsignAsString(), receiver, message);
         sendQueudedMessage(textMessage);
-        if(receiver == QStringLiteral("*S"))
+        if (receiver == QStringLiteral("*S"))
         {
             const CCallsign sender(getOwnCallsignAsString());
             const CCallsign recipient(receiver);
@@ -962,9 +962,9 @@ namespace BlackCore::Fsd
             vatsim_get_system_unique_id(sysuid.data());
 
             const QString userInfo = QStringLiteral("CID=") % cid % " " % m_clientName % " IP=" % m_socket.localAddress().toString() %
-                                        " SYS_UID=" % sysuid.data() % " FSVER=" % m_hostApplication % " LT=" % QString::number(latitude) %
-                                        " LO=" % QString::number(longitude) % " AL=" % QString::number(altitude) %
-                                        " " % realName;
+                                     " SYS_UID=" % sysuid.data() % " FSVER=" % m_hostApplication % " LT=" % QString::number(latitude) %
+                                     " LO=" % QString::number(longitude) % " AL=" % QString::number(altitude) %
+                                     " " % realName;
 
             const TextMessage textMessage(ownCallsign, receiver, userInfo);
             sendQueudedMessage(textMessage);
@@ -1177,9 +1177,9 @@ namespace BlackCore::Fsd
         situation.setOnGround(dataUpdate.m_onGround);
 
         // Ref T297, default offset time
-        situation.setCurrentUtcTime();
-        const qint64 offsetTimeMs = receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
-        situation.setTimeOffsetMs(offsetTimeMs);
+        //situation.setCurrentUtcTime();
+        //const qint64 offsetTimeMs = receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
+        //situation.setTimeOffsetMs(offsetTimeMs);
 
         // I did have a situation where I got wrong transponder codes (KB)
         // So I now check for a valid code in order to detect such codes
@@ -1628,20 +1628,20 @@ namespace BlackCore::Fsd
         {
             const PlaneInformationFsinn planeInformationFsinn = PlaneInformationFsinn::fromTokens(tokens);
             emit planeInformationFsinnReceived(planeInformationFsinn.sender(),
-                                                planeInformationFsinn.m_airlineIcao,
-                                                planeInformationFsinn.m_aircraftIcao,
-                                                planeInformationFsinn.m_aircraftIcaoCombinedType,
-                                                planeInformationFsinn.m_sendMModelString);
+                                               planeInformationFsinn.m_airlineIcao,
+                                               planeInformationFsinn.m_aircraftIcao,
+                                               planeInformationFsinn.m_aircraftIcaoCombinedType,
+                                               planeInformationFsinn.m_sendMModelString);
         }
         else if (subType == "FSIPIR")
         {
             const PlaneInfoRequestFsinn planeInfoRequestFsinn = PlaneInfoRequestFsinn::fromTokens(tokens);
             sendPlaneInformationFsinn(planeInfoRequestFsinn.sender());
             emit planeInformationFsinnReceived(planeInfoRequestFsinn.sender(),
-                                                planeInfoRequestFsinn.m_airlineIcao,
-                                                planeInfoRequestFsinn.m_aircraftIcao,
-                                                planeInfoRequestFsinn.m_aircraftIcaoCombinedType,
-                                                planeInfoRequestFsinn.m_sendMModelString);
+                                               planeInfoRequestFsinn.m_airlineIcao,
+                                               planeInfoRequestFsinn.m_aircraftIcao,
+                                               planeInfoRequestFsinn.m_aircraftIcaoCombinedType,
+                                               planeInfoRequestFsinn.m_sendMModelString);
         }
         else
         {
