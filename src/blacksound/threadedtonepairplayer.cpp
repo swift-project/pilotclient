@@ -23,9 +23,6 @@ namespace BlackSound
           m_deviceInfo(device)
     { }
 
-    CThreadedTonePairPlayer::~CThreadedTonePairPlayer()
-    { }
-
     void CThreadedTonePairPlayer::play(int volume, const QList<CTonePair> &tonePairs)
     {
         QPointer<CThreadedTonePairPlayer> myself(this);
