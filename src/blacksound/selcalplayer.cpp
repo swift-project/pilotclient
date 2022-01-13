@@ -18,9 +18,9 @@ namespace BlackSound
 {
     CSelcalPlayer::CSelcalPlayer(const CAudioDeviceInfo &device, QObject *parent)
         : QObject(parent),
-          m_threadedPlayer(this, "CSelcalPlayer", device)
+          m_threadedPlayer(new CThreadedTonePairPlayer(this, "CSelcalPlayer", device))
     {
-        m_threadedPlayer.start();
+        m_threadedPlayer->start();
     }
 
     CSelcalPlayer::~CSelcalPlayer()
@@ -30,7 +30,7 @@ namespace BlackSound
 
     void CSelcalPlayer::gracefulShutdown()
     {
-        m_threadedPlayer.quitAndWait();
+        m_threadedPlayer->quitAndWait();
     }
 
     CTime CSelcalPlayer::play(int volume, const CSelcal &selcal)
@@ -46,7 +46,7 @@ namespace BlackSound
             const CTonePair t3(frequencies.at(2), frequencies.at(3), oneSec);
             QList<CTonePair> tonePairs;
             tonePairs << t1 << t2 << t3;
-            m_threadedPlayer.play(volume, tonePairs);
+            m_threadedPlayer->play(volume, tonePairs);
             duration = oneSec * 2.5;
         }
         return duration;

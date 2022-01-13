@@ -40,7 +40,7 @@ namespace BlackSound
         BlackMisc::PhysicalQuantities::CTime play(int volume, const BlackMisc::Aviation::CSelcal &selcal);
 
     private:
-        CThreadedTonePairPlayer m_threadedPlayer;
+        CThreadedTonePairPlayer *m_threadedPlayer = nullptr;
     };
 }
 
