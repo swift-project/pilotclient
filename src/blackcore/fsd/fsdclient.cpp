@@ -412,6 +412,7 @@ namespace BlackCore::Fsd
                 myAircraft.latitude().value(CAngleUnit::deg()),
                 myAircraft.longitude().value(CAngleUnit::deg()),
                 myAircraft.getAltitude().value(CLengthUnit::ft()),
+                myAircraft.getAltitude().value(CLengthUnit::ft()) - myAircraft.getGroundElevation().value(CLengthUnit::ft()),
                 myAircraft.getPitch().value(CAngleUnit::deg()),
                 myAircraft.getBank().value(CAngleUnit::deg()),
                 myAircraft.getHeading().normalizedTo360Degrees().value(CAngleUnit::deg()),
