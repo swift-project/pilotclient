@@ -1758,6 +1758,7 @@ namespace BlackCore::Fsd
 
     qint64 CFSDClient::receivedPositionFixTsAndGetOffsetTime(const CCallsign &callsign, qint64 markerTs)
     {
+        // \fixme This logic should be in a different class
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
 
         if (markerTs < 0) { markerTs = QDateTime::currentMSecsSinceEpoch(); }
@@ -1775,13 +1776,25 @@ namespace BlackCore::Fsd
 
         int count = 0;
         const qint64 avgTimeMs = this->averageOffsetTimeMs(callsign, count, 3); // latest average
-        qint64 offsetTime = CFsdSetup::c_positionTimeOffsetMsec;
+        qint64 targetOffsetTime = CFsdSetup::c_positionTimeOffsetMsec;
 
         if (avgTimeMs < CFsdSetup::c_minimumPositionTimeOffsetMsec && count >= 3)
         {
-            offsetTime = CFsdSetup::c_minimumPositionTimeOffsetMsec;
+            targetOffsetTime = CFsdSetup::c_minimumPositionTimeOffsetMsec;
         }
 
+        const qint64 previousInterpolatedOffsetTime = m_interpolatedOffsetTime.value(callsign, 0);
+        qint64 offsetDiff = 0;
+        if (targetOffsetTime < previousInterpolatedOffsetTime)
+        {
+            offsetDiff = std::max(targetOffsetTime - previousInterpolatedOffsetTime, diff / -c_offsetTimeInterpolationInverseRate);
+        }
+        else
+        {
+            offsetDiff = std::min(targetOffsetTime - previousInterpolatedOffsetTime, diff / c_offsetTimeInterpolationInverseRate);
+        }
+        qint64 offsetTime = previousInterpolatedOffsetTime + offsetDiff;
+        m_interpolatedOffsetTime.insert(callsign, offsetTime);
         return m_additionalOffsetTime + offsetTime;
     }
 
