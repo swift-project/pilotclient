@@ -55,7 +55,6 @@ namespace BlackCore::Data
         m_sharedUrls = CUrlList
         {
             "https://datastore.swift-project.net/shared/",
-            "http://www.siliconmind.de/datastore/shared/",
             "http://download.swift-project.org/shared/",
             "https://swift.fir-berlin.de/shared"
         };
