@@ -38,6 +38,7 @@
 #include "blackcore/fsd/servererror.h"
 #include "blackcore/fsd/interimpilotdataupdate.h"
 #include "blackcore/fsd/visualpilotdataupdate.h"
+#include "blackcore/fsd/visualpilotdatatoggle.h"
 #include "blackcore/fsd/planeinforequest.h"
 #include "blackcore/fsd/planeinformation.h"
 #include "blackcore/fsd/planeinforequestfsinn.h"
@@ -86,6 +87,7 @@ namespace BlackMiscTest
         void testPBH();
         void testPilotDataUpdate();
         void testVisualPilotDataUpdate();
+        void testVisualPilotDataToggle();
         void testPing();
         void testPlaneInfoRequest();
         void testPlaneInformation();
@@ -541,6 +543,25 @@ namespace BlackMiscTest
         QCOMPARE(0.0524, messageFromTokens.m_bankRadPerSec);
         QCOMPARE(0.0175, messageFromTokens.m_headingRadPerSec);
         QCOMPARE(0.0, messageFromTokens.m_noseGearAngle);
+    }
+
+    void CTestFsdMessages::testVisualPilotDataToggle()
+    {
+        const VisualPilotDataToggle message("SERVER", "ABCD", true);
+
+        QCOMPARE(QString("SERVER"), message.sender());
+        QCOMPARE(QString("ABCD"), message.m_client);
+        QCOMPARE(true, message.m_active);
+
+        QString stringRef("SERVER:ABCD:1");
+        QString str = message.toTokens().join(":");
+        QCOMPARE(str, stringRef);
+
+        QStringList tokens = QString("SERVER:ABCD:1").split(':');
+        auto messageFromTokens = VisualPilotDataToggle::fromTokens(tokens);
+        QCOMPARE(QString("SERVER"), messageFromTokens.sender());
+        QCOMPARE(QString("ABCD"), messageFromTokens.m_client);
+        QCOMPARE(true, messageFromTokens.m_active);
     }
 
     void CTestFsdMessages::testPing()

@@ -444,7 +444,7 @@ namespace BlackFsdTest
 
         m_client->sendPilotDataUpdate();
 
-        QCOMPARE(spy.count(), 1);
+        QCOMPARE(spy.count(), 2);
         const QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
         const CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
@@ -476,7 +476,7 @@ namespace BlackFsdTest
 
         m_client->sendPilotDataUpdate();
 
-        QCOMPARE(spy.count(), 1);
+        QCOMPARE(spy.count(), 2);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
         CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
@@ -509,7 +509,7 @@ namespace BlackFsdTest
 
         m_client->sendPilotDataUpdate();
 
-        QCOMPARE(spy.count(), 1);
+        QCOMPARE(spy.count(), 2);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
         CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();

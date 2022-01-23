@@ -262,7 +262,7 @@ namespace BlackCore::Fsd
         void sendDeleteAtc();
         void sendPilotDataUpdate();
         void sendInterimPilotDataUpdate();
-        void sendVisualPilotDataUpdate();
+        void sendVisualPilotDataUpdate(bool slowUpdate = false);
         void sendAtcDataUpdate(double latitude, double longitude);
         void sendPing(const QString &receiver);
         //
@@ -366,6 +366,7 @@ namespace BlackCore::Fsd
         void handleTextMessage(const QStringList &tokens);
         void handlePilotDataUpdate(const QStringList &tokens);
         void handleVisualPilotDataUpdate(const QStringList &tokens);
+        void handleVisualPilotDataToggle(const QStringList &tokens);
         void handleEuroscopeSimData(const QStringList &tokens);
         void handlePing(const QStringList &tokens);
         void handlePong(const QStringList &tokens);
@@ -568,6 +569,7 @@ namespace BlackCore::Fsd
         static int constexpr c_updateVisualPositionIntervalMsec = 200;  //!< interval for the VATSIM visual position updates (send our position and 6DOF velocity)
         static int constexpr c_sendFsdMsgIntervalMsec           = 10;   //!< interval for FSD send messages
         bool m_stoppedSendingVisualPositions = false; //!< for when velocity drops to zero
+        bool m_serverWantsVisualPositions = false;    //!< there are interested clients in range
     };
 } // ns
 

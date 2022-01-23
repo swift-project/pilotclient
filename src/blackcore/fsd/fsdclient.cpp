@@ -31,6 +31,7 @@
 #include "blackcore/fsd/servererror.h"
 #include "blackcore/fsd/interimpilotdataupdate.h"
 #include "blackcore/fsd/visualpilotdataupdate.h"
+#include "blackcore/fsd/visualpilotdatatoggle.h"
 #include "blackcore/fsd/planeinforequest.h"
 #include "blackcore/fsd/planeinformation.h"
 #include "blackcore/fsd/planeinforequestfsinn.h"
@@ -50,6 +51,7 @@
 #include <QHostAddress>
 #include <QStringBuilder>
 #include <QStringView>
+#include <QNetworkReply>
 
 using namespace BlackConfig;
 using namespace BlackCore::Vatsim;
@@ -116,7 +118,7 @@ namespace BlackCore::Fsd
         connect(&m_interimPositionUpdateTimer, &QTimer::timeout, this, &CFSDClient::sendInterimPilotDataUpdate);
 
         m_visualPositionUpdateTimer.setObjectName(this->objectName().append(":m_visualPositionUpdateTimer"));
-        connect(&m_visualPositionUpdateTimer, &QTimer::timeout, this, &CFSDClient::sendVisualPilotDataUpdate);
+        connect(&m_visualPositionUpdateTimer, &QTimer::timeout, this, [this] { sendVisualPilotDataUpdate(); });
 
         m_scheduledConfigUpdate.setObjectName(this->objectName().append(":m_scheduledConfigUpdate"));
         connect(&m_scheduledConfigUpdate, &QTimer::timeout, this, &CFSDClient::sendIncrementalAircraftConfig);
@@ -361,6 +363,11 @@ namespace BlackCore::Fsd
                                             myAircraft.getParts().isOnGround());
             sendQueudedMessage(pilotDataUpdate);
         }
+
+        if (this->isVisualPositionSendingEnabledForServer())
+        {
+            sendVisualPilotDataUpdate(true);
+        }
     }
 
     void CFSDClient::sendInterimPilotDataUpdate()
@@ -386,28 +393,35 @@ namespace BlackCore::Fsd
         }
     }
 
-    void CFSDClient::sendVisualPilotDataUpdate()
+    void CFSDClient::sendVisualPilotDataUpdate(bool slowUpdate)
     {
         if (this->getConnectionStatus().isDisconnected() && ! m_unitTestMode) { return; }
         if (m_loginMode == CLoginMode::Observer || !isVisualPositionSendingEnabledForServer()) { return; }
         const CSimulatedAircraft myAircraft(getOwnAircraft());
 
-        static constexpr double minVelocity = 0.00005;
-        if (std::abs(myAircraft.getVelocity().getVelocityX(CSpeedUnit::m_s())) < minVelocity &&
-            std::abs(myAircraft.getVelocity().getVelocityY(CSpeedUnit::m_s())) < minVelocity &&
-            std::abs(myAircraft.getVelocity().getVelocityZ(CSpeedUnit::m_s())) < minVelocity &&
-            std::abs(myAircraft.getVelocity().getPitchVelocity(CAngleUnit::rad(), CTimeUnit::s())) < minVelocity &&
-            std::abs(myAircraft.getVelocity().getRollVelocity(CAngleUnit::rad(), CTimeUnit::s())) < minVelocity &&
-            std::abs(myAircraft.getVelocity().getHeadingVelocity(CAngleUnit::rad(), CTimeUnit::s())) < minVelocity)
+        if (!slowUpdate)
         {
-            if (m_stoppedSendingVisualPositions) { return; }
-            m_stoppedSendingVisualPositions = true;
-        }
-        else
-        {
-            m_stoppedSendingVisualPositions = false;
-        }
+            static constexpr double minVelocity = 0.00005;
+            if (std::abs(myAircraft.getVelocity().getVelocityX(CSpeedUnit::m_s())) < minVelocity &&
+                std::abs(myAircraft.getVelocity().getVelocityY(CSpeedUnit::m_s())) < minVelocity &&
+                std::abs(myAircraft.getVelocity().getVelocityZ(CSpeedUnit::m_s())) < minVelocity &&
+                std::abs(myAircraft.getVelocity().getPitchVelocity(CAngleUnit::rad(), CTimeUnit::s())) < minVelocity &&
+                std::abs(myAircraft.getVelocity().getRollVelocity(CAngleUnit::rad(), CTimeUnit::s())) < minVelocity &&
+                std::abs(myAircraft.getVelocity().getHeadingVelocity(CAngleUnit::rad(), CTimeUnit::s())) < minVelocity)
+            {
+                if (m_stoppedSendingVisualPositions) { return; }
+                m_stoppedSendingVisualPositions = true;
+            }
+            else
+            {
+                m_stoppedSendingVisualPositions = false;
+            }
 
+            if (!m_serverWantsVisualPositions)
+            {
+                return;
+            }
+        }
         VisualPilotDataUpdate visualPilotDataUpdate(getOwnCallsignAsString(),
                 myAircraft.latitude().value(CAngleUnit::deg()),
                 myAircraft.longitude().value(CAngleUnit::deg()),
@@ -1062,6 +1076,7 @@ namespace BlackCore::Fsd
         m_messageTypeMapping["$!!"] = MessageType::KillRequest;
         m_messageTypeMapping["@"]   = MessageType::PilotDataUpdate;
         m_messageTypeMapping["^"]   = MessageType::VisualPilotDataUpdate;
+        m_messageTypeMapping["$SF"] = MessageType::VisualPilotDataToggle;
         m_messageTypeMapping["$PI"] = MessageType::Ping;
         m_messageTypeMapping["$PO"] = MessageType::Pong;
         m_messageTypeMapping["$ER"] = MessageType::ServerError;
@@ -1284,6 +1299,12 @@ namespace BlackCore::Fsd
         situation.setTimeOffsetMs(offsetTimeMs);
 
         emit visualPilotDataUpdateReceived(situation);
+    }
+
+    void CFSDClient::handleVisualPilotDataToggle(const QStringList& tokens)
+    {
+        const VisualPilotDataToggle toggle = VisualPilotDataToggle::fromTokens(tokens);
+        m_serverWantsVisualPositions = toggle.m_active;
     }
 
     void CFSDClient::handlePing(const QStringList &tokens)
@@ -1852,6 +1873,7 @@ namespace BlackCore::Fsd
     void CFSDClient::clearState()
     {
         m_stoppedSendingVisualPositions = false;
+        m_serverWantsVisualPositions = false;
         m_textMessagesToConsolidate.clear();
         m_pendingAtisQueries.clear();
         m_lastPositionUpdate.clear();
@@ -2204,6 +2226,7 @@ namespace BlackCore::Fsd
             case MessageType::PilotClientCom:    handleCustomPilotPacket(tokens); break;
             case MessageType::RevBClientParts:   handleRevBClientPartsPacket(tokens); break;
             case MessageType::VisualPilotDataUpdate:   handleVisualPilotDataUpdate(tokens); break;
+            case MessageType::VisualPilotDataToggle:   handleVisualPilotDataToggle(tokens); break;
             case MessageType::EuroscopeSimData:  handleEuroscopeSimData(tokens);  break;
 
             // normally we should not get here
