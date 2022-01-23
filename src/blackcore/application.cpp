@@ -747,7 +747,7 @@ namespace BlackCore
         if (!fi.dir().exists()) { return nullptr; }
 
         // function called with reply when done
-        CallbackSlot callbackSlot([ = ](QNetworkReply * reply)
+        CallbackSlot callbackSlot(this, [ = ](QNetworkReply * reply)
         {
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(reply);
             CStatusMessage msg;
@@ -769,9 +769,8 @@ namespace BlackCore
                 callback(msg);
             });
         });
-        callbackSlot.setObject(this); // object for thread
 
-        ProgressSlot progressSlot([ = ](int, qint64, qint64, const QUrl &)
+        ProgressSlot progressSlot(this, [ = ](int, qint64, qint64, const QUrl &)
         {
             // so far not implemented
         });
