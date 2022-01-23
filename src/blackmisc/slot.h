@@ -83,11 +83,6 @@ namespace BlackMisc
             Q_ASSERT_X(object, Q_FUNC_INFO, "Need object");
         }
 
-        //! Construct a slot from the given object passing a function
-        CSlot(std::function<R(Args...)> function) :
-            m_function(function)
-        {}
-
         //! Construct a slot from the given object passing a function and a object
         template <typename T>
         CSlot(T *object, std::function<R(Args...)> function) :
