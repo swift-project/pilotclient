@@ -293,11 +293,11 @@ namespace BlackCore::Fsd
         this->clearState();
     }
 
-    void CFSDClient::sendLogin()
+    void CFSDClient::sendLogin(const QString &token)
     {
         const CServer s = this->getServer();
         const QString cid      = s.getUser().getId();
-        const QString password = s.getUser().getPassword();
+        const QString password = token.isEmpty() ? s.getUser().getPassword() : token;
         const QString name     = s.getUser().getRealNameAndHomeBase(); // m_server.getUser().getRealName();
         const QString callsign = m_ownCallsign.asString();
 
@@ -976,9 +976,52 @@ namespace BlackCore::Fsd
         const QString cid = m_server.getUser().getId();
         const ClientIdentification clientIdentification(getOwnCallsignAsString(), vatsim_auth_get_client_id(m_clientAuth), m_clientName, m_versionMajor, m_versionMinor, cid, sysuid.data(), fsdChallenge);
         this->sendQueudedMessage(clientIdentification);
-        this->sendLogin();
-        this->updateConnectionStatus(CConnectionStatus::Connected);
+
+        if (getServer().getEcosystem().isSystem(CEcosystem::VATSIM))
+        {
+            this->getVatsimAuthToken(cid, m_server.getUser().getPassword(),
+            {
+                this, [this](const QString &token)
+                {
+                    this->sendLogin(token);
+                    this->updateConnectionStatus(CConnectionStatus::Connected);
+                }
+            });
+        }
+        else
+        {
+            this->sendLogin();
+            this->updateConnectionStatus(CConnectionStatus::Connected);
+        }
         increaseStatisticsValue(QStringLiteral("sendClientIdentification"));
+    }
+
+    void CFSDClient::getVatsimAuthToken(const QString &cid, const QString &password, const BlackMisc::CSlot<void(const QString &)> &callback)
+    {
+        QNetworkRequest nwRequest(QUrl("https://auth.vatsim.net/api/fsd-jwt"));
+        nwRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+        const QJsonObject jsonRequest { { "cid", cid }, { "password", password } };
+
+        sApp->postToNetwork(nwRequest, CApplication::NoLogRequestId, QJsonDocument(jsonRequest).toJson(),
+        {
+            this, [ = ](QNetworkReply *nwReply)
+            {
+                nwReply->deleteLater();
+                const QByteArray data = nwReply->readAll();
+                const QJsonObject json = QJsonDocument::fromJson(data).object();
+
+                if (json.value("success").toBool())
+                {
+                    callback(json.value("token").toString());
+                }
+                else
+                {
+                    const QString error = json.value("error_msg").isString() ? json.value("error_msg").toString() : nwReply->errorString();
+                    CLogMessage(this).error(u"Vatsim auth token endpoint: %1") << error;
+                    disconnectFromServer();
+                }
+            }
+        });
     }
 
     void CFSDClient::sendIncrementalAircraftConfig()

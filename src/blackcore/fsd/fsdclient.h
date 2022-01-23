@@ -257,7 +257,7 @@ namespace BlackCore::Fsd
         //! Convenience functions for sendClientQuery
         //! \remark really private, ONLY used by UNIT test, not CAirspaceMonitor
         //!  @{
-        void sendLogin();
+        void sendLogin(const QString &token = {});
         void sendDeletePilot();
         void sendDeleteAtc();
         void sendPilotDataUpdate();
@@ -455,6 +455,9 @@ namespace BlackCore::Fsd
 
         //! String withou colons
         static QString noColons(const QString &input);
+
+        //! Get a short-lived, one-time-use token from Vatsim web service, to avoid sending plaintext password to FSD
+        void getVatsimAuthToken(const QString &cid, const QString &password, const BlackMisc::CSlot<void(const QString &)> &callback);
 
         vatsim_auth *m_clientAuth = nullptr;
         vatsim_auth *m_serverAuth = nullptr;
