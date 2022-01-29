@@ -149,7 +149,7 @@ namespace BlackCore::Fsd
         const QString codecName(server.getFsdSetup().getTextCodec());
         QTextCodec *textCodec = QTextCodec::codecForName(codecName.toLocal8Bit());
         if (!textCodec) { textCodec = QTextCodec::codecForName("utf-8"); }
-        const int protocolRev = (server.getServerType() == CServer::FSDServerVatsim) ? PROTOCOL_REVISION_VATSIM_AUTH : PROTOCOL_REVISION_CLASSIC;
+        const int protocolRev = (server.getServerType() == CServer::FSDServerVatsim) ? PROTOCOL_REVISION_VATSIM_VELOCITY : PROTOCOL_REVISION_CLASSIC;
 
         QWriteLocker l(&m_lockUserClientBuffered);
         m_server           = server;

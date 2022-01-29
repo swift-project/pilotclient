@@ -379,7 +379,7 @@ namespace BlackFsdTest
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
         CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
-        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#APABCD:SERVER:1234567:123456:1:100:16:Test User");
+        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#APABCD:SERVER:1234567:123456:1:101:16:Test User");
     }
 
     void CTestFSDClient::testSendAtcLogin()
@@ -393,7 +393,7 @@ namespace BlackFsdTest
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
         CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
-        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#AAABCD:SERVER:Test User:1234567:123456:5:100");
+        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#AAABCD:SERVER:Test User:1234567:123456:5:101");
     }
 
     void CTestFSDClient::testSendDeletePilot()
