@@ -14,8 +14,8 @@ such as VATSIM, supporting the following simulators and operating systems:
 Downloads
 =========
 
-[![Beta version](https://img.shields.io/github/v/release/swift-project/pilotclient?sort=semver)][1]
-[![Alpha version](https://img.shields.io/github/v/release/swift-project/pilotclient?include_prereleases&sort=semver)][2]
+[![Beta version](https://img.shields.io/github/v/release/swift-project/pilotclient?sort=semver&color=blue&label=beta)][1]
+[![Alpha version](https://img.shields.io/github/v/release/swift-project/pilotclient?include_prereleases&sort=semver&label=alpha)][2]
 
 [1]: https://github.com/swift-project/pilotclient/releases/latest
 [2]: https://github.com/swift-project/pilotclient/releases
