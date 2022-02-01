@@ -1020,7 +1020,6 @@ namespace BlackCore::Fsd
         {
             this, [ = ](QNetworkReply *nwReply)
             {
-                nwReply->deleteLater();
                 const QByteArray data = nwReply->readAll();
                 const QJsonObject json = QJsonDocument::fromJson(data).object();
 
@@ -1034,6 +1033,7 @@ namespace BlackCore::Fsd
                     CLogMessage(this).error(u"Vatsim auth token endpoint: %1") << error;
                     disconnectFromServer();
                 }
+                nwReply->deleteLater();
             }
         });
     }
