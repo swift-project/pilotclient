@@ -87,9 +87,9 @@ namespace BlackSimPlugin::XPlane
             {
                 o_xplaneData->localXVelocityMs = reply.argumentAt<0>();
                 o_xplaneData->localYVelocityMs = reply.argumentAt<1>();
-                o_xplaneData->localZVelocityMs = reply.argumentAt<2>();
-                o_xplaneData->pitchRadPerSec = reply.argumentAt<3>();
-                o_xplaneData->rollRadPerSec = reply.argumentAt<4>();
+                o_xplaneData->localZVelocityMs = -reply.argumentAt<2>();
+                o_xplaneData->pitchRadPerSec = -reply.argumentAt<3>();
+                o_xplaneData->rollRadPerSec = -reply.argumentAt<4>();
                 o_xplaneData->headingRadPerSec = reply.argumentAt<5>();
             }
         };
