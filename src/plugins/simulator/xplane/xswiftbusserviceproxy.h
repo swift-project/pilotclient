@@ -329,6 +329,12 @@ namespace BlackSimPlugin::XPlane
         void getAllWheelsOnGroundAsync(bool *o_allWheels);
         //! @}
 
+        //! Get elevation of ground under the plane (in meters)
+        //! @{
+        double getGroundElevation() const;
+        void getGroundElevationAsync(double *o_elevationM);
+        //! @}
+
         //! \copydoc XSwiftBus::CService::getCom1ActiveKhz
         //! @{
         int getCom1ActiveKhz() const;

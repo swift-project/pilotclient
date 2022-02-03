@@ -19,6 +19,7 @@
 #include "datarefs.h"
 #include "messages.h"
 #include "navdatareference.h"
+#include "terrainprobe.h"
 #include <XPLM/XPLMNavigation.h>
 #include <string>
 #include <chrono>
@@ -173,6 +174,9 @@ namespace XSwiftBus
 
         //! Get whether all wheels are on the ground
         bool getAllWheelsOnGround() const { return m_onGroundAll.get(); }
+
+        //! Get elevation of ground under the plane in meters
+        double getGroundElevation() const { return m_terrainProbe.getElevation(m_latitude.get(), m_longitude.get(), m_elevation.get())[0]; }
 
         //! COM Selection 6/7
         //! @{
@@ -333,6 +337,7 @@ namespace XSwiftBus
         int  m_disapperMessageWindowTimeMs = 5000;
         std::chrono::system_clock::time_point m_disappearMessageWindowTime;
         std::vector<CNavDataReference> m_airports;
+        CTerrainProbe m_terrainProbe;
 
         void readAirportsDatabase();
         std::vector<CNavDataReference> findClosestAirports(int number, double latitude, double longitude);

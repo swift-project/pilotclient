@@ -544,6 +544,16 @@ namespace BlackSimPlugin::XPlane
         m_dbusInterface->callDBusAsync(QLatin1String("getAllWheelsOnGround"), setterCallback(o_allWheels));
     }
 
+    double CXSwiftBusServiceProxy::getGroundElevation() const
+    {
+        return m_dbusInterface->callDBusRet<double>(QLatin1String("getGroundElevation"));
+    }
+
+    void CXSwiftBusServiceProxy::getGroundElevationAsync(double* o_elevationM)
+    {
+        m_dbusInterface->callDBusAsync(QLatin1String("getGroundElevation"), setterCallback(o_elevationM));
+    }
+
     int CXSwiftBusServiceProxy::getCom1ActiveKhz() const
     {
         return m_dbusInterface->callDBusRet<int>(QLatin1String("getCom1ActiveKhz"));

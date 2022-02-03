@@ -766,6 +766,13 @@ namespace XSwiftBus
                     sendDBusReply(sender, serial, getAllWheelsOnGround());
                 });
             }
+            else if (message.getMethodName() == "getGroundElevation")
+            {
+                queueDBusCall([ = ]()
+                {
+                    sendDBusReply(sender, serial, getGroundElevation());
+                });
+            }
             else if (message.getMethodName() == "getCom1ActiveKhz")
             {
                 queueDBusCall([ = ]()

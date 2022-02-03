@@ -18,6 +18,13 @@ namespace XSwiftBus
 
     CTerrainProbe::~CTerrainProbe() { XPLMDestroyProbe(m_ref); }
 
+    std::array<double, 3> CTerrainProbe::getElevation(double degreesLatitude, double degreesLongitude, double metersAltitude) const
+    {
+        static const std::string callsign = "myself";
+        bool unused = false;
+        return getElevation(degreesLatitude, degreesLongitude, metersAltitude, callsign, unused);
+    }
+
     std::array<double, 3> CTerrainProbe::getElevation(double degreesLatitude, double degreesLongitude, double metersAltitude, const std::string &callsign, bool &o_isWater) const
     {
         double x, y, z;

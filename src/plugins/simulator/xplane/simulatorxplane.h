@@ -86,6 +86,7 @@ namespace BlackSimPlugin::XPlane
         double rollRadPerSec = 0;           //!< Roll angular velocity [rad/s]
         double headingRadPerSec = 0;        //!< Heading angular velocity [rad/s]
         bool onGroundAll = false;           //!< All wheels on ground?
+        double groundElevation = 0;         //!< Elevation of ground [m]
         int com1ActiveKhz = 122800;         //!< COM1 active  [kHz]
         int com1StandbyKhz = 122800;        //!< COM1 standby [kHz]
         bool isCom1Receiving = true;        //!< COM1 receiving
